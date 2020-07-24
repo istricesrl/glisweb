@@ -15,6 +15,26 @@
      *
      * architettura del framework
      * ==========================
+     * Il framework GlisWeb è strutturato in una griglia formata dall'intersezione di due suddivisioni, una verticale (i moduli)
+     * e una orizzontale (i livelli); i primi rappresentano gruppi indipendenti di funzionalità e caratteristiche che possono
+     * essere attivati alla bisogna, i secondi rappresentano i passi di esecuzione del framework; l'ordine in cui il codice viene
+     * eseguito è progressivo in questa griglia partendo dal livello più basso del modulo base, per finire al livello più alto
+     * dell'ultimo modulo. Ogni livello viene eseguito per ogni modulo attivo prima di passare al successivo, e la controparte
+     * custom di ogni blocco di codice viene eseguita subito dopo alla versione standard in modo da poterne aggiustare il
+     * comportamento. Prima di questa esecuzione a griglia vengono inclusi i file di libreria con una logica di customizzazione
+     * leggermente diversa (vedi sotto). Infine l'esecuzione passa al file che ha incluso il framework, e questo segna la
+     * transizione dal framework space allo user space. Nel caso lo user space usi un motore di rendering come Twig per produrre
+     * l'output finale, l'invocazione di questo motore segna un ulteriore passaggio dallo user space all'output space.
+     *
+     * gestione delle chiamate HTTP
+     * ----------------------------
+     * Le chiamate alla cartella dove è installato il framework vengono smistate tramite il file .htaccess in diversi modi; il
+     * più semplice è l'accesso diretto a un file nel caso che questo esista. In secondo luogo la chiamata può essere indirizzata
+     * a una delle API del framework. Infine, la chiamata può essere rifiutata per diverse ragioni. Un esame del file .htaccess
+     * chiarirà immediatamente questi aspetti, molto più di qualsiasi spiegazione.
+     *
+     * organizzazione del framework
+     * ============================
      * Il framework presenta due tipi di cartelle, facilmente distinguibili per la presenza (oppure l'assenza) del carattere
      * underscore iniziale nel nome. Le cartelle che iniziano per underscore sono anche chiamate cartelle «standard» del framework
      * e non dovrebbero essere modificate se non in fase di sviluppo. Ogni aspetto del framework può essere modificato, sovrascritto o
@@ -395,6 +415,8 @@
 	// die( print_r( get_included_files(), true ) );
 	// die( 'LIBRARY CONFIG DONE' );
 
+    // TODO bloccare l'esecuzione se non esistono le funzioni writeToFile() e logWrite()?
+
     // inclusione delle librerie esterne
 	require DIRECTORY_BASE . DIRECTORY_LIBRERIE . '_external/autoload.php';
 
@@ -439,6 +461,7 @@
 	// die( 'INIZIO ESECUZIONE RUNLEVELS' );
 
     // inclusione dei files di configurazione
+    // NOTA questa è l'esecuzione della griglia moduli/livelli
 	foreach( $arrayConfig as $configFile ) {
 
 	    // debug
