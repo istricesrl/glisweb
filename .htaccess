@@ -1,0 +1,123 @@
+# configurazione pagine di errore
+ErrorDocument 403 /_usr/_pages/_403.php
+ErrorDocument 404 /_usr/_pages/_404.php
+ErrorDocument 503 /_usr/_pages/_503.php
+
+# rimuovo la navigazione automatica
+Options -Indexes
+
+# impedisco l'accesso ai file che possono contenere informazioni sensibili
+<FilesMatch "\.(log|conf|info|htaccess|htpasswd|sql|dox|json|twig|lock)$">
+    Deny from all
+</FilesMatch>
+
+# configurazione rewriting
+<IfModule mod_rewrite.c>
+
+    # attivazione motore di rewriting
+    RewriteEngine on
+
+    # directory protette
+    RewriteRule ^usr/test/* - [F,L,NC]
+    RewriteRule ^var/log/* - [F,L,NC]
+    RewriteRule ^var/session/* - [F,L,NC]
+
+    # directory ad accesso diretto
+    RewriteRule ^usr/pages/* - [L,NC]
+    RewriteRule ^_usr/_pages/* - [L,NC]
+
+    # favicon di default
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} favicon.ico
+    RewriteRule ^favicon.ico _src/_img/_favicon.ico [L]
+
+    # redirect a HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteCond %{DOCUMENT_ROOT}/etc/https -d [OR]
+    RewriteCond %{DOCUMENT_ROOT}/etc/https.conf -f
+    RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # redirect a WWW se esiste il file /etc/www
+    RewriteCond %{HTTP_HOST} !^www\. [NC]
+    RewriteCond %{DOCUMENT_ROOT}/etc/www -d [OR]
+    RewriteCond %{DOCUMENT_ROOT}/etc/www.conf -f
+    RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+
+    # pagina di manutenzione temporanea
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{DOCUMENT_ROOT}/tmp/.upgrade -d [OR]
+    RewriteCond %{DOCUMENT_ROOT}/tmp/.upgrade -f
+    RewriteRule .* - [R=503,L]
+
+    # blocco dell'hotlinking se esiste il file /src/img/hotlink.png # TODO testare
+    # RewriteCond %{HTTP_REFERER} !^$ # TODO a cosa serve questa condizione?
+    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} !^([^@]*)@@(https|http)?://\1/.*
+    RewriteCond %{DOCUMENT_ROOT}/src/img/hotlink.png -f
+    RewriteRule .*\.(gif|jpg|jpeg|png|pdf|webp)$ src/img/hotlink.png [NC]
+
+    # proxy OSM
+    RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
+
+    # gestione delle API speciali
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_$1.php -f
+    RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_$1.php [L,QSA]
+
+    # gestione delle API generiche
+    RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_rest.php?__ws__=$1&__id__=$2 [L,QSA]
+
+    # gestione dei task generici
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_task/_$1.php [L,QSA]
+
+    # gestione dei report speciali
+    RewriteRule ^speed _src/_api/_report/_framework.speed.php [L]
+    RewriteRule ^status _src/_api/_report/_framework.status.php [L]
+    RewriteRule ^docs _usr/_docs/_build/html [L]
+
+    # gestione dei report generici
+    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_report/_$1.php [L,QSA]
+
+    # gestione home page
+    RewriteCond %{DOCUMENT_ROOT}/index.html !-f
+    RewriteCond %{DOCUMENT_ROOT}/index.php !-f
+    RewriteRule ^$ _src/_api/_pages.php [L,QSA]
+
+    # gestione delle pagine
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^([a-zA-Z0-9_\-\/]+)[\.]*([a-zA-Z0-9_\-]+)*[\.]*([a-zA-Z0-9_\-]+)* _src/_api/_pages.php?__rw__=$1&__lg__=$2&__id__=$3 [L,QSA]
+
+</IfModule>
+
+# configurazione compressione dell'output
+<ifmodule mod_deflate.c>
+
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+
+</ifmodule>
+
+# cache per i file HTML
+<FilesMatch ".(htm|html)$">
+    Header set Cache-Control "max-age=86400, public"
+</FilesMatch>
+
+# cache per le immagini
+<FilesMatch ".(jpg|jpeg|png|gif|ico|webp)$">
+    Header set Cache-Control "max-age=2628000, public"
+</FilesMatch>
+
+# cache per i file CSS e Js
+<FilesMatch ".(css|js)$">
+    Header set Cache-Control "max-age=2628000, public"
+</FilesMatch>
