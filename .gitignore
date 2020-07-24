@@ -1,0 +1,12 @@
+/_src/_lib/_external
+/etc
+/mod
+/src
+/tmp
+/usr
+/var
+/*.html
+/*.php
+/*.lock
+/*.xml
+/*.txt

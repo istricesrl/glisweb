@@ -289,9 +289,17 @@
 	    $cf['ob']['status']			= OB_NON_ATTIVO;
 	}
 
+    // CHIAVI DI CONFIGURAZIONE
+    // $cf['ob']				contiene le informazioni relative all'output buffering
+    // $cf['ob']['status']			contiene lo stato dell'output buffering
+
     // NOTA il file src/config/external/config.yaml è stato posizionato lì in modo che sia possibile
     // montare la cartella src/config/external/ come ConfigMap in Kubernetes - questo spiega anche
     // perché src/config/external/config.yaml ha la priorità su src/config/config.yaml
+
+    // NOTA visto che in caso di configurazione tramite mount di partizione su Kubernetes non dovrebbero
+    // essere presenti altri file di configurazione non si può semplificare src/config/external/ in
+    // src/config/ e montare quella?
 
     // NOTA si può usare path2custom() per i nomi dei file da includere
 
@@ -310,6 +318,19 @@
 	    $cf['config']['file']		= DIRECTORY_BASE . 'src/config.json';
 	}
 
+    // CHIAVI DI CONFIGURAZIONE
+    // $cf['config']				contiene informazioni generali sulla configurazione del framework
+    // $cf['config']['file']			contiene il percorso del file di configurazione aggiuntiva corrente
+
+    // REFACTORING
+    // sarebbe bello poter ricavare implicitamente i moduli attivi dalla struttura dell'array $cx/$cf senza doverli dichiarare
+    // esplicitamente in $cf['mods']['active']['array'] cosa che a volte ci si dimentica di fare causando poi errori piuttosto
+    // antipatici da debuggare
+
+    // NOTA si potrebbe sfruttare i numeri dei moduli per questo, in maniera simile a quello che già facciamo per i runlevel?
+    // c'è il problema che differentemente dai runlevel qui si tratta di fare dei glob() sul filesystem quindi serve in realtà
+    // il nome completo della cartella
+
     // debug
 	// echo $cf['config']['file'] . PHP_EOL;
 	// print_r( $cx );
@@ -322,13 +343,25 @@
 	} elseif( file_exists( str_replace( '_', '', DIRECTORY_BASE . DIRECTORY_MODULI ) ) ) {
 	    $cf['mods']['active']['array']	= array_values( array_diff( scandir( str_replace( '_', '', DIRECTORY_BASE . DIRECTORY_MODULI ) ) , array( '..' , '.' ) ) );
 	    $cf['mods']['active']['string']	= implode( ',', $cf['mods']['active']['array'] );
-	} elseif( ! empty( $_ENV['ACTIVE_MODULES'] ) ) {
-	    $cf['mods']['active']['array']	= explode( ',', $_ENV['ACTIVE_MODULES'] );
-	    $cf['mods']['active']['string']	= getenv( 'ACTIVE_MODULES' );
+#	} elseif( ! empty( $_ENV['ACTIVE_MODULES'] ) ) {
+#	    $cf['mods']['active']['array']	= explode( ',', $_ENV['ACTIVE_MODULES'] );
+#	    $cf['mods']['active']['string']	= getenv( 'ACTIVE_MODULES' );
 	} else {
 	    $cf['mods']['active']['array']	= array();
 	    $cf['mods']['active']['string']	= NULL;
 	}
+
+    // NOTA fra i tre alberi ci dev'essere corrispondenza completa nella struttura (al netto del fatto che ci sono informazioni
+    // in $cx/$cf che non vanno ribaltate su $ct in modo da evitare confusioni e dubbi sulla posizione dei dati, specialmente in
+    // fase di reperimento delle informazioni dal template manager
+
+    // CHIAVI DI CONFIGURAZIONE
+    // $cf['mods']				contiene informazioni sui moduli
+    // $cf['mods']['active']			contiene l'elenco dei moduli attivi
+    // $cf['mods']['active']['array']		contiene l'elenco dei moduli attivi in forma di array
+    // $cf['mods']['active']['string']		contiene l'elenco dei moduli attivi in forma di stringa separata da virgole
+
+    // NOTA la lettura dei moduli attivi dalle variabili d'ambiente è obsoleta
 
     // moduli attivi
 	define( 'MODULI_ATTIVI'			, $cf['mods']['active']['string'] );
@@ -340,6 +373,13 @@
 	$arrayLibrerieBase			= glob( DIRECTORY_BASE . DIRECTORY_LIBRERIE . '_*.*.php' );
 	$arrayLibrerieModuli			= glob( DIRECTORY_BASE . DIRECTORY_MODULI . '_{' . MODULI_ATTIVI . '}/' . DIRECTORY_LIBRERIE . '_*.*.php', GLOB_BRACE );
 	$arrayLibrerie				= array_merge( $arrayLibrerieBase , $arrayLibrerieModuli );
+
+    // TODO come è possibile saltare dei runlevel, dovrebbe essere possibile saltare delle librerie, sia con
+    // una specificazione inclusiva (tipo "voglio solo queste librerie") sia esclusiva (tipo "includi tutte le librerie
+    // tranne queste") in modo da alleggerire l'esecuzione del framework in caso non sia necessario includere tutte le
+    // librerie
+
+    // NOTA la strategia inclusiva andrebbe creata anche per i runlevel, che attualmente hanno solo quella esclusiva
 
     // inclusione dei files di libreria
 	foreach( $arrayLibrerie as $libreria ) {
@@ -370,11 +410,30 @@
     // NOTA in alcuni casi non tutti i runlevel sono necessari, quindi è possibile per uno specifico file richiedere
     // che alcuni di essi vengano saltati; questo migliora le prestazioni del framework e riduce lo spreco di risorse
 
+    // CHIAVI DI CONFIGURAZIONE
+    // $cf['runlevels']				contiene informazioni sui runlevel
+    // $cf['runlevels']['skip']			contiene l'array dei runlevel da saltare
+
+    // REFACTORING $cf['runlevels'] dovrebbe diventare $cf['lvls'] per analogia con $cf['mods']
+
     // filtro per runlevels
 	if( ! isset( $cf['runlevels']['skip'] ) ) { $cf['runlevels']['skip'] = array(); }
 
+    // NOTA le funzioni che hanno "to" nel nome per omogeneità con le altre dovrebbero diventare "2" ad esempio
+    // writeToFile() dovrebbe diventare write2file()
+
     // log
 	writeToFile( 'inizio esecuzione runlevels' . PHP_EOL, FILE_LATEST_RUN );
+
+    // NOTA il framework prevede alcuni file di log speciali, utili soprattutto per il debug; questi file vengono scritti
+    // a parte, direttamente con appendToFile(), senza passare dalla factory di log principale logWrite() per ridurre le
+    // possibilità che un problema di esecuzione ne pregiudichi l'integrità
+    //
+    // FILE_LATEST_RUN				contiene il tracciato dell'ultima esecuzione del framework, utile per capire
+    //						dove si trova il problema in caso di esecuzione parziale che termina con errore
+    // FILE_LATEST_CRON				contiene il tracciato dell'ultima esecuzione dei task e dei job pianificati
+    //						con cron, utile per verificare che cron stia girando e per monitorare il suo
+    //						output, altrimenti difficile da catturare in altra maniera
 
     // debug
 	// die( 'INIZIO ESECUZIONE RUNLEVELS' );
@@ -431,14 +490,21 @@
 
 		} else {
 
-		    logWrite( 'saltato runlevel: ' . $runLvlString, 'performances', LOG_DEBUG );
+		    logWrite( 'saltato runlevel: ' . $runLvlString, 'speed', LOG_DEBUG );
 
 		}
 
 	}
 
+    // CHIAVI DI CONFIGURAZIONE
+    // $cf['speed']				contiene informazioni sulla velocità e sulle performance del framework
+
     // debug
 	// die( 'CONFIG END' );
+
+    // NOTA le costanti e gli array $cx/$cf/$ct dovrebbero essere gli unici ad avere visibilità su file diversi; per evitare
+    // confusioni e collisioni le variabili dovrebbero sempre avere il loro ciclo di vita limitato al file in cui vengono
+    // dichiarate
 
     // debug
 	// print_r( get_included_files() );
