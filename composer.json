@@ -1,0 +1,21 @@
+{
+    "config": {
+        "vendor-dir": "_src/_lib/_ext"
+    },
+    "require": {
+        "phpoffice/phpword": "0.14.*",
+        "phpoffice/phpspreadsheet": "1.2.*",
+        "phpoffice/phppresentation": "0.9.*",
+        "html2text/html2text": "4.1.*",
+        "phpmailer/phpmailer": "5.2.*",
+        "tecnickcom/tcpdf": "6.2.*",
+        "twig/twig": "2.*",
+        "predis/predis": "*",
+        "codeception/codeception": "*",
+        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-asserts": "^1.0.0",
+        "google/cloud-logging": "*",
+        "paypal/paypal-checkout-sdk": "1.0.1",
+        "amzn/amazon-pay-api-sdk-php": "*"
+    }
+}
