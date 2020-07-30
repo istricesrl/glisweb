@@ -3,8 +3,14 @@ ErrorDocument 403 /_usr/_pages/_403.php
 ErrorDocument 404 /_usr/_pages/_404.php
 ErrorDocument 503 /_usr/_pages/_503.php
 
+# NOTA le pagine di errore sono fatte in modo da includere la controparte custom in modo che sia possibile
+# personalizzare i messaggi di errore mostrati agli utenti
+
 # rimuovo la navigazione automatica
 Options -Indexes
+
+# NOTA la rimozione della generazione di pagine automatiche per la navigazione attraverso il filesystem
+# è una blanda misura di sicurezza contro i curiosi
 
 # impedisco l'accesso ai file che possono contenere informazioni sensibili
 <FilesMatch "\.(log|conf|info|htaccess|htpasswd|sql|dox|json|twig|lock)$">
@@ -17,7 +23,7 @@ Options -Indexes
     # attivazione motore di rewriting
     RewriteEngine on
 
-    # directory protette
+    # directory ad accesso vietato
     RewriteRule ^usr/test/* - [F,L,NC]
     RewriteRule ^var/log/* - [F,L,NC]
     RewriteRule ^var/session/* - [F,L,NC]
@@ -37,7 +43,7 @@ Options -Indexes
     RewriteCond %{DOCUMENT_ROOT}/etc/https.conf -f
     RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # redirect a WWW se esiste il file /etc/www
+    # redirect a WWW
     RewriteCond %{HTTP_HOST} !^www\. [NC]
     RewriteCond %{DOCUMENT_ROOT}/etc/www -d [OR]
     RewriteCond %{DOCUMENT_ROOT}/etc/www.conf -f
@@ -49,14 +55,10 @@ Options -Indexes
     RewriteCond %{DOCUMENT_ROOT}/tmp/.upgrade -f
     RewriteRule .* - [R=503,L]
 
-    # blocco dell'hotlinking se esiste il file /src/img/hotlink.png # TODO testare
-    # RewriteCond %{HTTP_REFERER} !^$ # TODO a cosa serve questa condizione?
+    # blocco dell'hotlinking
     RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} !^([^@]*)@@(https|http)?://\1/.*
     RewriteCond %{DOCUMENT_ROOT}/src/img/hotlink.png -f
     RewriteRule .*\.(gif|jpg|jpeg|png|pdf|webp)$ src/img/hotlink.png [NC]
-
-    # proxy OSM
-    RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
 
     # gestione delle API speciali
     RewriteCond %{DOCUMENT_ROOT}/_src/_api/_$1.php -f
@@ -69,12 +71,16 @@ Options -Indexes
     RewriteRule ^task/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_task/_$1.php [L,QSA]
 
     # gestione dei report speciali
+    RewriteRule ^docs _usr/_docs/_build/html [L]
     RewriteRule ^speed _src/_api/_report/_framework.speed.php [L]
     RewriteRule ^status _src/_api/_report/_framework.status.php [L]
-    RewriteRule ^docs _usr/_docs/_build/html [L]
+    RewriteRule ^test _src/_api/_report/_framework.test.php [L]
 
     # gestione dei report generici
     RewriteRule ^report/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_report/_$1.php [L,QSA]
+
+    # proxy OSM
+    RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
 
     # gestione home page
     RewriteCond %{DOCUMENT_ROOT}/index.html !-f
@@ -84,7 +90,7 @@ Options -Indexes
     # gestione delle pagine
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^([a-zA-Z0-9_\-\/]+)[\.]*([a-zA-Z0-9_\-]+)*[\.]*([a-zA-Z0-9_\-]+)* _src/_api/_pages.php?__rw__=$1&__lg__=$2&__id__=$3 [L,QSA]
+    RewriteRule ^([a-zA-Z0-9_\-\/]+)[\.]*([a-zA-Z0-9_\-]+)* _src/_api/_pages.php?__rw__=$1&__lg__=$2 [L,QSA]
 
 </IfModule>
 
