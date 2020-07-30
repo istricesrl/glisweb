@@ -8,10 +8,10 @@
      * -# dichiarazione delle funzioni di base
      * -# dichiarazione delle costanti di base
      * -# avvio dell'output buffering
-     * -# lettura dei file di configurazione aggiuntivi
+     * -# lettura dei file di configurazione Json/Yaml
      * -# individuazione dei moduli attivi
-     * -# inclusione dei files di libreria
-     * -# inclusione dei files di configurazione
+     * -# inclusione dei file di libreria
+     * -# inclusione dei file di configurazione
      *
      * architettura del framework
      * ==========================
@@ -35,10 +35,10 @@
      *
      * organizzazione del framework
      * ============================
-     * Il framework presenta due tipi di cartelle, facilmente distinguibili per la presenza (oppure l'assenza) del carattere
+     * Il framework presenta due tipi di file e cartelle, facilmente distinguibili per la presenza (oppure l'assenza) del carattere
      * underscore iniziale nel nome. Le cartelle che iniziano per underscore sono anche chiamate cartelle «standard» del framework
-     * e non dovrebbero essere modificate se non in fase di sviluppo. Ogni aspetto del framework può essere modificato, sovrascritto o
-     * esteso tramite le corrispettive cartelle locali (senza underscore), e questo è quello che dovrebbero fare gli sviluppatori
+     * e non dovrebbero essere modificate se non in fase di sviluppo. Ogni aspetto del framework può essere modificato, sovrascritto
+     * o esteso tramite le corrispettive cartelle locali (senza underscore), e questo è quello che dovrebbero fare gli sviluppatori
      * che utilizzano il framework per realizzare le proprie applicazioni.
      *
      * GlisWeb implementa un meccanismo molto semplice di personalizzazione, basato sui nomi dei files. Se per esempio volete
@@ -54,31 +54,18 @@
      * annotati; a questo punto avrete completato la personalizzazione iniziale del framework e sarete pronti per utilizzarlo
      * al pieno delle sue potenzialità.
      *
+     * L'argomento più in dettaglio è affrontato nel capitolo relativo alle cartelle del manuale tecnico del framework.
+     *
      * le cartelle standard
      * --------------------
      * Le cartelle standard rappresentano la struttura del framework e vengono sovrascritte dagli aggiornamenti.
      *
      * cartella                  | descrizione
      * --------------------------|---------------------------------------------------------------------------------------
-     * _etc/                     | contiene file di configurazione
-     * _etc/_dictionaries/       | contiene file dei dizionari per la traduzione
+     * _etc/                     | contiene i file di informazione e dettaglio del framework
      * _mod/                     | contiene i moduli del framework
-     * _src/                     | contiene i file sorgenti del framework
-     * _src/_api/                | contiene le API standard del framework
-     * _src/_config/             | contiene i file di configurazione del framework
-     * _src/_img/                | contiene le immagini standard del framework
-     * _src/_img/_flags/         | contiene le bandiere degli stati
-     * _src/_inc/                | contiene gli script inclusi del framework
-     * _src/_inc/_pages/         | contiene le definizioni delle pagine
-     * _src/_lib/                | contiene i file di libreria
-     * _src/_lib/_external/      | contiene i file di libreria di terze parti
-     * _src/_test/               | contiene i file per i test
-     * _src/_test/_framework/    | contiene i file per i test delle funzionalità del framework
-     * _usr/                     | contiene files di vario tipo, che non fanno parte del codice sorgente del framework
-     * _usr/_database/           | contiene gli schemi e i dati di default per i database del framework
-     * _usr/_docs/               | contiene le pagine DOX della documentazione
-     * _usr/_docs/_build/        | contiene la documentazione compilata
-     * _usr/_docs/_etc/          | contiene i file di configurazione di Doxygen
+     * _src/                     | contiene i file sorgenti che fanno parte dell'esecuzione principale del framework
+     * _usr/                     | contiene i file sorgenti che non fanno parte dell'esecuzione principale
      *
      * le cartelle locali
      * ------------------
@@ -108,8 +95,8 @@
      * inviato tutto in una volta, eventualmente compresso, al client. Per ulteriori informazioni
      * si veda https://www.php.net/outcontrol
      *
-     * file di configurazione aggiuntivi
-     * =================================
+     * file di configurazione Json/Yaml
+     * ================================
      * Il framework supporta la configurazione tramite file JSON o YAML (vedi sotto), le informazioni contenute
      * nei file JSON e YAML vengono lette prima delle altre e poi sovrapposte a quelle standard, di conseguenza
      * è possibile ridefinirle tramite i file di configurazione PHP, anche se nella maggior parte dei casi
@@ -232,6 +219,16 @@
 	    return str_replace( '_', NULL, $p );
 	}
 
+    // TODO documentare
+	function glob2custom( $p ) {
+	    return str_replace( '_', '{,_}', $p );
+	}
+
+    // TODO documentare
+	function scandir2array( $p ) {
+	    return array_values( array_diff( scandir( $p ), array( '..', '.' ) ) );
+	}
+
     // REFACTORING le costanti DIRECTORY_* dovrebbero diventare per brevità DIR_* inoltre il nome dovrebbe rappresentare
     // il percorso (ad es. per DIRECTORY_LOG e DIRECTORY_LOG_LATEST dovrebbero diventare DIR_VAR_LOG e DIR_VAR_LOG_LATEST)
     // inoltre i percorsi dovrebbero essere composti concatenando le cartelle (ad es. DIR_VAR_LOG_LATEST = DIR_VAR_LOG . 'latest/')
@@ -248,32 +245,46 @@
 	define( 'START_TIME'			, microtime( true ) );
 
     // directory base
-	define( 'DIRECTORY_BASE'		, str_replace( '_src' , NULL , dirname( __FILE__ ) ) );
+	define( 'DIR_BASE'			, str_replace( '_src' , NULL , dirname( __FILE__ ) ) );
 
-    // directory
-	define( 'DIRECTORY_ETC'			, '_etc/' );
-	define( 'DIRECTORY_DIZIONARI'		, '_etc/_dictionaries/' );
-	define( 'DIRECTORY_MODULI'		, '_mod/' );
-	define( 'DIRECTORY_SRC'			, '_src/' );
-	define( 'DIRECTORY_CONFIGURAZIONE'	, '_src/_config/' );
-	define( 'DIRECTORY_INCLUSIONI'		, '_src/_inc/' );
-	define( 'DIRECTORY_CONTROLLER'		, '_src/_inc/_controllers/' );
-	define( 'DIRECTORY_LIBRERIE'		, '_src/_lib/' );
-	define( 'DIRECTORY_LIBRERIE_EX'		, '_src/_lib/_external/' );
-	define( 'DIRECTORY_TEMPORANEA'		, 'tmp/' );
-	define( 'DIRECTORY_VAR'			, 'var/' );
-	define( 'DIRECTORY_CACHE'		, 'var/cache/' );
-	define( 'DIRECTORY_IMMAGINI'		, 'var/immagini/' );
-	define( 'DIRECTORY_LOG'			, 'var/log/' );
-	define( 'DIRECTORY_LOG_LATEST'		, 'var/log/latest/' );
+    // directory standard
+	define( 'DIR_ETC'			, DIR_BASE . '_etc/' );
+	define( 'DIR_ETC_LOC'			, DIR_BASE . '_etc/_loc/' );
+	define( 'DIR_MOD'			, DIR_BASE . '_mod/' );
+	define( 'DIR_SRC'			, DIR_BASE . '_src/' );
+	define( 'DIR_SRC_CONFIG'		, DIR_BASE . '_src/_config/' );
+	define( 'DIR_SRC_CONFIG_EXT'		, DIR_BASE . '_src/_config/_ext/' );
+	define( 'DIR_SRC_HTML'			, DIR_BASE . '_src/_html/' );
+	define( 'DIR_SRC_INC'			, DIR_BASE . '_src/_inc/' );
+	define( 'DIR_SRC_INC_CONTENTS'		, DIR_BASE . '_src/_inc/_contents/' );
+	define( 'DIR_SRC_INC_CONTROLLERS'	, DIR_BASE . '_src/_inc/_controllers/' );
+	define( 'DIR_SRC_LIB'			, DIR_BASE . '_src/_lib/' );
+	define( 'DIR_SRC_LIB_EXT'		, DIR_BASE . '_src/_lib/_ext/' );
+
+    // directory solo custom
+	define( 'DIR_ETC_SITEMAP'		, DIR_BASE . 'etc/sitemap/' );
+	define( 'DIR_TMP'			, DIR_BASE . 'tmp/' );
+	define( 'DIR_VAR'			, DIR_BASE . 'var/' );
+	define( 'DIR_VAR_CACHE'			, DIR_BASE . 'var/cache/' );
+	define( 'DIR_VAR_CACHE_PAGES'		, DIR_BASE . 'var/cache/pages/' );
+	define( 'DIR_VAR_CACHE_TWIG'		, DIR_BASE . 'var/cache/twig/' );
+	define( 'DIR_VAR_IMMAGINI'		, DIR_BASE . 'var/immagini/' );
+	define( 'DIR_VAR_LOG'			, DIR_BASE . 'var/log/' );
+	define( 'DIR_VAR_LOG_LATEST'		, DIR_BASE . 'var/log/latest/' );
+	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
 
     // file
-	define( 'FILE_LATEST_RUN'		,  DIRECTORY_BASE . DIRECTORY_LOG_LATEST . 'run.latest.log');
-	define( 'FILE_LATEST_CRON'		,  DIRECTORY_BASE . DIRECTORY_LOG_LATEST . 'cron.latest.log');
+	define( 'FILE_CURRENT_VERSION'		, DIR_ETC . '_current.conf' );
+	define( 'FILE_LATEST_RUN'		, DIR_VAR_LOG_LATEST . 'run.latest.log');
+	define( 'FILE_LATEST_CRON'		, DIR_VAR_LOG_LATEST . 'cron.latest.log');
+	define( 'FILE_LATEST_UPDATE'		, path2custom( DIR_ETC ) . 'latest.conf' );
+	define( 'FILE_STATUS'			, path2custom( DIR_ETC ) . 'status.conf' );
+	define( 'FILE_LICENSE'			, path2custom( DIR_ETC ) . 'license.conf' );
+	define( 'FILE_REDIRECT'			, path2custom( DIR_ETC ) . 'redirect.csv' );
 
     // livelli di controllo
-	define( 'FILTERED_CONTROL'		, 'FILTERED' );
-	define( 'FULL_CONTROL'			, 'FULL' );
+	define( 'CONTROL_FILTERED'		, 'FILTERED' );
+	define( 'CONTROL_FULL'			, 'FULL' );
 
     // azioni
 	define( 'METHOD_DELETE'			, 'DELETE' );
@@ -323,19 +334,27 @@
 
     // NOTA si può usare path2custom() per i nomi dei file da includere
 
+    // file di configurazione da considerare nell'ordine
+	$cf['config']['files']['yaml'][]	= path2custom( DIR_SRC_CONFIG_EXT . 'config.yaml' );
+	$cf['config']['files']['yaml'][]	= path2custom( DIR_SRC . 'config.yaml' );
+	$cf['config']['files']['json'][]	= path2custom( DIR_SRC_CONFIG_EXT . 'config.json' );
+	$cf['config']['files']['json'][]	= path2custom( DIR_SRC . 'config.json' );
+
     // lettura del file di configurazione aggiuntivi YAML o JSON
-	if( file_exists( DIRECTORY_BASE . 'src/config/external/config.yaml' ) ) {
-	    $cx = yaml_parse( file_get_contents( DIRECTORY_BASE . 'src/config/external/config.yaml' ) );
-	    $cf['config']['file']		= DIRECTORY_BASE . 'src/config/external/config.yaml';
-	} elseif( file_exists( DIRECTORY_BASE . 'src/config.yaml' ) ) {
-	    $cx = yaml_parse( file_get_contents( DIRECTORY_BASE . 'src/config.yaml' ) );
-	    $cf['config']['file']		= DIRECTORY_BASE . 'src/config.yaml';
-	} elseif( file_exists( DIRECTORY_BASE . 'src/config/external/config.json' ) ) {
-	    $cx = json_decode( file_get_contents( DIRECTORY_BASE . 'src/config/external/config.json' ), true );
-	    $cf['config']['file']		= DIRECTORY_BASE . 'src/config/external/config.json';
-	} elseif( file_exists( DIRECTORY_BASE . 'src/config.json' ) ) {
-	    $cx = json_decode( file_get_contents( DIRECTORY_BASE . 'src/config.json' ), true );
-	    $cf['config']['file']		= DIRECTORY_BASE . 'src/config.json';
+	foreach( $cf['config']['files'] as $type => $files ) {
+	    foreach( $files as $file ) {
+		if( file_exists( $file ) ) {
+		    $cf['config']['file']	= $file;
+		    switch( $type ) {
+			case 'yaml':
+			    $cx			= yaml_parse( file_get_contents( $file ) );
+			break;
+			case 'json':
+			    $cx			= json_decode( file_get_contents( $file ), true );
+			break;
+		    }
+		}
+	    }
 	}
 
     // CHIAVI DI CONFIGURAZIONE
@@ -355,21 +374,25 @@
 	// echo $cf['config']['file'] . PHP_EOL;
 	// print_r( $cx );
 	// die( 'EXTERNAL CONFIG DONE' );
+	// var_dump( $cx );
 
     // array dei moduli attivi
 	if( isset( $cx['mods']['active']['array'] ) ) {
 	    $cf['mods']['active']['array']	= $cx['mods']['active']['array'];
-	    $cf['mods']['active']['string']	= implode( ',', $cf['mods']['active']['array'] );
-	} elseif( file_exists( str_replace( '_', '', DIRECTORY_BASE . DIRECTORY_MODULI ) ) ) {
-	    $cf['mods']['active']['array']	= array_values( array_diff( scandir( str_replace( '_', '', DIRECTORY_BASE . DIRECTORY_MODULI ) ) , array( '..' , '.' ) ) );
-	    $cf['mods']['active']['string']	= implode( ',', $cf['mods']['active']['array'] );
+#	    $cf['mods']['active']['string']	= implode( ',', $cf['mods']['active']['array'] );
+	} elseif( file_exists( path2custom( DIR_MOD ) ) ) {
+	    $cf['mods']['active']['array']	= scandir2array( path2custom( DIR_MOD ) );
+#	    $cf['mods']['active']['string']	= implode( ',', $cf['mods']['active']['array'] );
 #	} elseif( ! empty( $_ENV['ACTIVE_MODULES'] ) ) {
 #	    $cf['mods']['active']['array']	= explode( ',', $_ENV['ACTIVE_MODULES'] );
 #	    $cf['mods']['active']['string']	= getenv( 'ACTIVE_MODULES' );
 	} else {
 	    $cf['mods']['active']['array']	= array();
-	    $cf['mods']['active']['string']	= NULL;
+#	    $cf['mods']['active']['string']	= NULL;
 	}
+
+    // stringa dei moduli attivi
+	$cf['mods']['active']['string']		= implode( ',', $cf['mods']['active']['array'] );
 
     // NOTA fra i tre alberi ci dev'essere corrispondenza completa nella struttura (al netto del fatto che ci sono informazioni
     // in $cx/$cf che non vanno ribaltate su $ct in modo da evitare confusioni e dubbi sulla posizione dei dati, specialmente in
@@ -385,13 +408,15 @@
 
     // moduli attivi
 	define( 'MODULI_ATTIVI'			, $cf['mods']['active']['string'] );
+	define( 'DIR_MOD_ATTIVI'		, DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
+	define( 'DIR_MOD_ATTIVI_SRC_LIB'	, DIR_MOD . '_{' . MODULI_ATTIVI . '}/_src/_lib/' );
 
     // collego $ct
 	$ct['mods']				= &$cf['mods'];
 
     // ricerca dei files di libreria
-	$arrayLibrerieBase			= glob( DIRECTORY_BASE . DIRECTORY_LIBRERIE . '_*.*.php' );
-	$arrayLibrerieModuli			= glob( DIRECTORY_BASE . DIRECTORY_MODULI . '_{' . MODULI_ATTIVI . '}/' . DIRECTORY_LIBRERIE . '_*.*.php', GLOB_BRACE );
+	$arrayLibrerieBase			= glob( DIR_SRC_LIB . '_*.*.php' );
+	$arrayLibrerieModuli			= glob( DIR_MOD_ATTIVI_SRC_LIB . '_*.*.php', GLOB_BRACE );
 	$arrayLibrerie				= array_merge( $arrayLibrerieBase , $arrayLibrerieModuli );
 
     // TODO come è possibile saltare dei runlevel, dovrebbe essere possibile saltare delle librerie, sia con
@@ -418,13 +443,13 @@
     // TODO bloccare l'esecuzione se non esistono le funzioni writeToFile() e logWrite()?
 
     // inclusione delle librerie esterne
-	require DIRECTORY_BASE . DIRECTORY_LIBRERIE . '_external/autoload.php';
+	require DIR_SRC_LIB_EXT . 'autoload.php';
 
     // debug
 	// die( 'EXTERNAL LIBRARY CONFIG DONE' );
 
     // ricerca dei files di configurazione standard
-	$arrayConfig				= glob( DIRECTORY_BASE . DIRECTORY_CONFIGURAZIONE . '_*.*.php' );
+	$arrayConfig				= glob( DIR_SRC_CONFIG . '_*.*.php' );
 
     // ordinamento dei file trovati
 	sort( $arrayConfig );
@@ -433,13 +458,13 @@
     // che alcuni di essi vengano saltati; questo migliora le prestazioni del framework e riduce lo spreco di risorse
 
     // CHIAVI DI CONFIGURAZIONE
-    // $cf['runlevels']				contiene informazioni sui runlevel
-    // $cf['runlevels']['skip']			contiene l'array dei runlevel da saltare
+    // $cf['lvls']				contiene informazioni sui runlevel
+    // $cf['lvls']['skip']			contiene l'array dei runlevel da saltare
 
     // REFACTORING $cf['runlevels'] dovrebbe diventare $cf['lvls'] per analogia con $cf['mods']
 
     // filtro per runlevels
-	if( ! isset( $cf['runlevels']['skip'] ) ) { $cf['runlevels']['skip'] = array(); }
+	if( ! isset( $cf['lvls']['skip'] ) ) { $cf['lvls']['skip'] = array(); }
 
     // NOTA le funzioni che hanno "to" nel nome per omogeneità con le altre dovrebbero diventare "2" ad esempio
     // writeToFile() dovrebbe diventare write2file()
@@ -475,7 +500,7 @@
 		$runLvlString = array_shift( $runLvlArray );
 
 	    // salto i runlevel specificati
-		if( ! in_array( $runLvlString, $cf['runlevels']['skip'] ) ) {
+		if( ! in_array( $runLvlString, $cf['lvls']['skip'] ) ) {
 
 		    // inclusione file standard
 			require $configFile;
@@ -489,8 +514,11 @@
 			    appendToFile( 'esecuzione runlevel -> ' . $configFileLocale . PHP_EOL, FILE_LATEST_RUN );
 			}
 
+		    // debug
+			// echo str_replace( DIR_BASE, DIR_MOD_ATTIVI, $configFile ) . PHP_EOL;
+
 		    // controparte moduli
-			$arrayConfigModuli = glob( str_replace( DIRECTORY_BASE, DIRECTORY_BASE . DIRECTORY_MODULI . '_{' . MODULI_ATTIVI . '}/', $configFile ), GLOB_BRACE );
+			$arrayConfigModuli = glob( str_replace( DIR_BASE, DIR_MOD_ATTIVI, $configFile ), GLOB_BRACE );
 			foreach( $arrayConfigModuli as $configFileModuli ) {
 
 			    // debug
