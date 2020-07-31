@@ -379,16 +379,10 @@
     // array dei moduli attivi
 	if( isset( $cx['mods']['active']['array'] ) ) {
 	    $cf['mods']['active']['array']	= $cx['mods']['active']['array'];
-#	    $cf['mods']['active']['string']	= implode( ',', $cf['mods']['active']['array'] );
 	} elseif( file_exists( path2custom( DIR_MOD ) ) ) {
 	    $cf['mods']['active']['array']	= scandir2array( path2custom( DIR_MOD ) );
-#	    $cf['mods']['active']['string']	= implode( ',', $cf['mods']['active']['array'] );
-#	} elseif( ! empty( $_ENV['ACTIVE_MODULES'] ) ) {
-#	    $cf['mods']['active']['array']	= explode( ',', $_ENV['ACTIVE_MODULES'] );
-#	    $cf['mods']['active']['string']	= getenv( 'ACTIVE_MODULES' );
 	} else {
 	    $cf['mods']['active']['array']	= array();
-#	    $cf['mods']['active']['string']	= NULL;
 	}
 
     // stringa dei moduli attivi
@@ -493,7 +487,7 @@
 		// echo $configFile . PHP_EOL;
 
 	    // controparte locale
-		$configFileLocale = str_replace( '_', '', $configFile );
+		$configFileLocale = path2custom( $configFile );
 
 	    // calcolo runlevel
 		$runLvlArray = explode( '.', basename( $configFileLocale ) );
@@ -530,7 +524,7 @@
 				appendToFile( 'esecuzione runlevel -> ' . $configFileModuli . PHP_EOL, FILE_LATEST_RUN );
 
 			    // controparte modulo locale
-				$configFileModuliLocale = str_replace( '_', '', $configFileModuli );
+				$configFileModuliLocale = path2custom( $configFileModuli );
 				if( file_exists( $configFileModuliLocale ) ) {
 				    require $configFileModuliLocale;
 				    timerCheck( $cf['speed'], $configFileModuliLocale );
