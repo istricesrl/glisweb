@@ -30,6 +30,9 @@
 	    $tx = 'esito scrittura: ' . var_export( $r, true ) . PHP_EOL;
 	}
 
+    // riga vuota
+	$tx	.= PHP_EOL;
+
     // generazione di una stringa pseudocasuale
 	$t	= md5( microtime( true ) ) . PHP_EOL;
 
