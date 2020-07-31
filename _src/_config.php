@@ -78,9 +78,8 @@
      *
      * cartella                  | descrizione
      * --------------------------|---------------------------------------------------------------------------------------
-     * tmp/                      | cartella per i file temporanei
-     * var/cache/                | cartella per lo stoccaggio dei files di cache
-     * var/cache/twig/           | cartella per la cache della libreria Twig
+     * tmp/                      | contiene i file temporanei
+     * var/cache/                | contiene i files di cache
      * var/log/                  | contiene i log del framework
      *
      * dichiarazione delle costanti
@@ -214,19 +213,47 @@
     // debug
 	// die( 'CONFIG INIT' );
 
-    // TODO documentare
+    /**
+     *
+     * @todo documentare
+     *
+     */
 	function path2custom( $p ) {
 	    return str_replace( '_', NULL, $p );
 	}
 
-    // TODO documentare
+    /**
+     *
+     * @todo documentare
+     *
+     */
 	function glob2custom( $p ) {
 	    return str_replace( '_', '{,_}', $p );
 	}
 
-    // TODO documentare
+    /**
+     *
+     * @todo documentare
+     *
+     */
 	function scandir2array( $p ) {
 	    return array_values( array_diff( scandir( $p ), array( '..', '.' ) ) );
+	}
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+	function array2censored( &$a ) {
+	    array_walk_recursive(
+		$a,
+		function( &$v, $k ) {
+		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
+			$v = '***';
+		    }
+		}
+	    );
 	}
 
     // REFACTORING le costanti DIRECTORY_* dovrebbero diventare per brevità DIR_* inoltre il nome dovrebbe rappresentare
@@ -413,12 +440,18 @@
 	$arrayLibrerieModuli			= glob( DIR_MOD_ATTIVI_SRC_LIB . '_*.*.php', GLOB_BRACE );
 	$arrayLibrerie				= array_merge( $arrayLibrerieBase , $arrayLibrerieModuli );
 
-    // TODO come è possibile saltare dei runlevel, dovrebbe essere possibile saltare delle librerie, sia con
-    // una specificazione inclusiva (tipo "voglio solo queste librerie") sia esclusiva (tipo "includi tutte le librerie
-    // tranne queste") in modo da alleggerire l'esecuzione del framework in caso non sia necessario includere tutte le
-    // librerie
-
-    // NOTA la strategia inclusiva andrebbe creata anche per i runlevel, che attualmente hanno solo quella esclusiva
+    /**
+     *
+     * @todo implementare la possibilità di saltare delle librerie
+     *
+     * TODO come è possibile saltare dei runlevel, dovrebbe essere possibile saltare delle librerie, sia con
+     * una specificazione inclusiva (tipo "voglio solo queste librerie") sia esclusiva (tipo "includi tutte le librerie
+     * tranne queste") in modo da alleggerire l'esecuzione del framework in caso non sia necessario includere tutte le
+     * librerie
+     *
+     * NOTA la strategia inclusiva andrebbe creata anche per i runlevel, che attualmente hanno solo quella esclusiva
+     *
+     */
 
     // inclusione dei files di libreria
 	foreach( $arrayLibrerie as $libreria ) {
@@ -434,7 +467,11 @@
 	// die( print_r( get_included_files(), true ) );
 	// die( 'LIBRARY CONFIG DONE' );
 
-    // TODO bloccare l'esecuzione se non esistono le funzioni writeToFile() e logWrite()?
+    /**
+     *
+     * @todo bloccare l'esecuzione se non esistono le funzioni writeToFile() e logWrite()?
+     *
+     */
 
     // inclusione delle librerie esterne
 	require DIR_SRC_LIB_EXT . 'autoload.php';
@@ -454,8 +491,6 @@
     // CHIAVI DI CONFIGURAZIONE
     // $cf['lvls']				contiene informazioni sui runlevel
     // $cf['lvls']['skip']			contiene l'array dei runlevel da saltare
-
-    // REFACTORING $cf['runlevels'] dovrebbe diventare $cf['lvls'] per analogia con $cf['mods']
 
     // filtro per runlevels
 	if( ! isset( $cf['lvls']['skip'] ) ) { $cf['lvls']['skip'] = array(); }
