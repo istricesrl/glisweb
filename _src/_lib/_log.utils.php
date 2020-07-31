@@ -12,8 +12,8 @@
      *
      * costante                  | spiegazione
      * --------------------------|--------------------------------------------------------------
-     * DIRECTORY_LOG             | il percorso specifico dove scrivere i log (vedi _config.php)
-     * CURRENT_LOG_LEVEL         | il livello degli eventi da scrivere (vedi _000.debug.php)
+     * DIR_VAR_LOG               | il percorso specifico dove scrivere i log (vedi _config.php)
+     * LOG_CURRENT_LEVEL         | il livello degli eventi da scrivere (vedi _000.debug.php)
      *
      * dipendenze
      * ==========
