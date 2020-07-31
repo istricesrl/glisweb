@@ -1,0 +1,48 @@
+/*!
+
+    \page variabili variabili del framework
+
+    Descrizione delle strutture dati portanti del framework.
+
+    l'array $cf
+    ===========
+    L'array $cf contiene tutti i valori di lavoro e di funzionamento e i parametri di configurazione
+    e di controllo del framework.
+
+    $cf['config']
+    -------------
+    Questa chiave contiene informazioni generali sulla configurazione del framework. La seguente tabella riassume le
+    sue sotto chiavi.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    config.file               | il nome del file di configurazione Json/Yaml utilizzato per popolare $cx
+    config.files              | l'array dei file di configurazione Json/Yaml disponibili
+
+    $cf['lvls']
+    -----------
+    Questa chiave contiene informazioni sui livelli di esecuzione del framework.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    lvls.skip                 | i numeri dei runlevel da saltare
+
+    $cf['mods']
+    -----------
+    Questa chiave contiene informazioni sui moduli del framework.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    mods.active               | i moduli attivi
+    mods.active.array         | l'array dei moduli attivi
+    mods.active.string        | l'elenco dei moduli attivi separati da virgola
+
+    $cf['ob']
+    ---------
+    Questa chiave contiene informazioni sull'output buffering.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    ob.status                 | lo stato dell'output buffering
+
+*/
