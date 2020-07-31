@@ -40,6 +40,7 @@
     _usr/_docs/_build/        | contiene la documentazione compilata
     _usr/_docs/_etc/          | contiene i file di configurazione di Doxygen
     _usr/_examples/           | contiene gli esempi d'uso del framework
+    _usr/_examples/_framework | contiene gli esempi d'uso delle funzionalità core framework
 
     le cartelle locali
     ------------------
