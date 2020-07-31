@@ -21,30 +21,30 @@
 	$f	= DIR_TMP . time() . '.test';
 
     // test scrittura su file
-	$r	= writeToFile( $t, $f, $e );
+	$r	= writeToFile( $t, $f );
 
     // test di lettura da file
 	if( file_exists( $f ) ) {
-	    $tx = 'ho scritto:' . PHP_EOL . readFromFile( $f, READ_FILE_AS_STRING ) . 'su: ' . $f . PHP_EOL;
+	    $tx = 'ho scritto:' . PHP_EOL . readStringFromFile( $f ) . 'su: ' . $f . PHP_EOL;
 	} else {
-	    $tx = 'esito scrittura: ' . var_export( $r, true ) . PHP_EOL . $e . PHP_EOL;
+	    $tx = 'esito scrittura: ' . var_export( $r, true ) . PHP_EOL;
 	}
 
     // generazione di una stringa pseudocasuale
 	$t	= md5( microtime( true ) ) . PHP_EOL;
 
     // test scrittura su file
-	$r	= appendToFile( $t, $f, $e ) . PHP_EOL;
+	$r	= appendToFile( $t, $f ) . PHP_EOL;
 
     // test di lettura da file
 	if( file_exists( $f ) ) {
-	    $tx .= 'ho scritto:' . PHP_EOL . readFromFile( $f, READ_FILE_AS_STRING ) . 'su: ' . $f . PHP_EOL;
+	    $tx .= 'ho scritto:' . PHP_EOL . readStringFromFile( $f ) . 'su: ' . $f . PHP_EOL;
 	} else {
-	    $tx .= 'esito scrittura: ' . var_export( $r, true ) . PHP_EOL . $e . PHP_EOL;
+	    $tx .= 'esito scrittura: ' . var_export( $r, true ) . PHP_EOL;
 	}
 
     // test di cancellazione
-	emptyDir( DIRECTORY_TEMPORANEA );
+	emptyDir( DIR_TMP );
 
     // output
 	build( $tx );
