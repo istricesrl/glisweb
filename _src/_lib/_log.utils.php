@@ -36,8 +36,11 @@
      *
      * @param	string		$m	il messaggio da scrivere
      * @param	string		$f	la factory su cui scrivere
+     * @param	string		$d	la directory su cui scrivere
      * @param	int		$l	il livello di gravita' dell'evento (vedi sopra)
      * @param	int		$t	il livello di log corrente del sito
+     * @param	int		$s	lo status corrente del sito
+     *
      * @return	boolean			restituisce true se la scrittura ha avuto successo, false altrimenti
      *
      *

@@ -144,7 +144,6 @@
      *
      * @param string		$f	il nome del file al quale aggiungere comprensivo di percorso
      * @param string		$m	la modalita' con cui si desidera aprire il file
-     * @param string		&$e	il puntatore ad una stringa di testo contenente messaggi di errore(per debug). Opzionale, se non specificato viene settata a NULL.
      *
      * @returns resource		il puntatore al file
      *
@@ -212,7 +211,8 @@
      *
      * @param string		$t	la stringa da scrivere
      * @param string		$f	il nome del file su cui scrivere comprensivo di percorso
-     * @param string		&Se	il puntatore ad una stringa di testo contenente messaggi di errore (per debug). Opzionale, se non specificato viene settato a NULL 
+     * @param string		$m	la modalita' con cui si desidera aprire il file
+     *
      *
      * @todo				documentare &$e
      * 
@@ -262,7 +262,6 @@
      *
      * @param string		$t	la stringa da aggiungere
      * @param string		$f	il nome del file al quale aggiungere comprensivo di percorso
-     * @param string		&$e	il puntatore ad una stringa di testo contenente messaggi di errore (per debug). Opzionale, se non specificata viene settata a NULL. 
      *
      * @todo				finire di documentare
      * @todo				documentare &$e
@@ -349,6 +348,7 @@
     /**
      *
      * @todo implementare i controlli (vedi deleteDir)
+     * @todo mettere come opzionale la rimozione della cartella radice
      * @todo documentare
      *
      */
@@ -361,7 +361,6 @@
 	    }
 
 	// rimozione della cartella radice
-	// TODO questa cosa metterla come opzione
 	    rmdir( $f );
 
     }
@@ -388,6 +387,8 @@
      * legge il contenuto di un file in una stringa o in un array di stringhe
      *
      * @param string		$f	il nome del file dal quale leggere comprensivo di percorso
+     * @param string		$m	la modalita' con cui si desidera aprire il file
+     *
      * @todo finire di documentare
      *
      */
@@ -497,6 +498,7 @@
      * calcola ricorsivamente lo spazio occupato da una directory
      *
      * @param			$d	la directory da controllare
+     *
      * @return			int	la dimensione della cartella
      *
      */
