@@ -132,7 +132,7 @@
 				    $x = log2google(
 					$l,
 					$cf['site']['fqdn'] . '.' . strtolower( $cf['site']['status'] ) . '.' . $f,
-					$cf['debug'][ $s ]['gce']['pid'],
+					$spc['pid'],
 					str_replace( '§', "\n", $m ),
 					$r
 				    );
