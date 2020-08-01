@@ -54,7 +54,7 @@
      * annotati; a questo punto avrete completato la personalizzazione iniziale del framework e sarete pronti per utilizzarlo
      * al pieno delle sue potenzialità.
      *
-     * L'argomento più in dettaglio è affrontato nel capitolo relativo alle cartelle del manuale tecnico del framework.
+     * L'argomento più in dettaglio è affrontato nel \ref cartelle "capitolo relativo alle cartelle" della documentazione tecnica.
      *
      * le cartelle standard
      * --------------------
@@ -475,6 +475,7 @@
 
     // inclusione delle librerie esterne
 	require DIR_SRC_LIB_EXT . 'autoload.php';
+	timerCheck( $cf['speed'], DIR_SRC_LIB_EXT . 'autoload.php' );
 
     // debug
 	// die( 'EXTERNAL LIBRARY CONFIG DONE' );
