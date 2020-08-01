@@ -48,7 +48,8 @@
     utilizzo veloce del framework
     -----------------------------
     Una volta installato il framework, accedere alle sue funzionalità da un qualsiasi file PHP
-    è molto semplice, è sufficiente un'istruzione require come nel seguente esempio:
+    è molto semplice, è sufficiente un'istruzione require come nel seguente esempio (adattate il percorso alle
+    vostre esigenze):
 
     \code{.php}
     require '_src/_config.php';
