@@ -19,6 +19,43 @@
     config.file               | il nome del file di configurazione Json/Yaml utilizzato per popolare $cx
     config.files              | l'array dei file di configurazione Json/Yaml disponibili
 
+    $cf['debug']
+    ------------
+    Questa chiave contiene le configurazioni relative al debug e al sistema di log del framework. Contiene dei sotto
+    blocchi per i vari status di funzionamento (DEV, PROD, TEST) che hanno la stessa struttura di base e vengono applicati
+    quando il framework si trova nel relativo stato.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    debug.<s>                    | configurazioni relative allo status <s>
+    debug.<s>.<f>                | configurazioni che si applicano alla factory <f> dello status <s> (usare '*' per 'tutte')
+    debug.<s>.<f>.log            | configurazioni relative al log della factory <f> per lo status <s>
+    debug.<s>.<f>.log.lvl        | livello di log della factory <f> per lo status <s>
+    debug.<s>.<f>.log.rotation   | stringa per date() per la rotazione dei log della factory <f> per lo status <s>
+    debug.<s>.<f>.report         | configurazioni per gli eventi da mostrare a video per la factory <f> per lo status <s>
+    debug.<s>.<f>.report.lvl     | livello di gravità degli eventi da mostrare a video per la factory <f> per lo status <s>
+    debug.<s>.<f>.target         | configurazioni per la destinazione dei log della factory <f> per lo status <s>
+    debug.<s>.<f>.target.<l>     | configurazioni per la destinazione dei log di gravità <l> della factory <f> per lo status <s>
+    debug.<s>.<f>.target.<l>.<t> | configurazione del target dei log di gravità <l> della factory <f> per lo status <s>
+    debug.mem                    | configurazioni relative al debug della memoria
+
+    Per i target di log, si vedano le costanti definite in _000.debug.php; in alcuni casi è sufficiente indicare true
+    per attivare il target, in altri casi (ad esempio il log via mail) è necessario specificare alcuni dati aggiuntivi.
+
+    costante          | valore           | descrizione
+    ------------------|------------------|--------------------------------------------------------------------------------
+    LOG_TO_FILE       | LOG2FILE         | l'evento viene scritto sul log del framework; si attiva impostando true
+    LOG_TO_GOOGLE     | LOG2GCE          | l'evento viene scritto sul log del GCE; si attiva fornendo un array di configurazione
+
+    Per quanto riguarda il log tramite GCE, è particolarmente utile in scenari orchestrati (Kubernetes) e richiede un
+    array di attivazione contenente la chiave 'pid' valorizzata con l'id del progetto da utilizzare per il log:
+
+    chiave                               | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    debug.<s>.<f>.target.<l>.LOG2GCE.pid | l'id del progetto GCE su cui loggare gli eventi di livello <l> per la factory <f> allo status <s>
+
+    L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'] (vedi _000.debug.php).
+
     $cf['lvls']
     -----------
     Questa chiave contiene informazioni sui livelli di esecuzione del framework.
@@ -44,5 +81,9 @@
     chiave                    | descrizione
     --------------------------|---------------------------------------------------------------------------------------
     ob.status                 | lo stato dell'output buffering
+
+    $cf['speed']
+    ------------
+    Questa chiave contiene il dettaglio della cronologia di esecuzione del framework.
 
 */
