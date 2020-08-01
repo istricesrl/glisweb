@@ -249,7 +249,7 @@
 	    array_walk_recursive(
 		$a,
 		function( &$v, $k ) {
-		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
+		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ), true ) ) {
 			$v = '***';
 		    }
 		}
