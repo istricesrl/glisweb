@@ -27,4 +27,6 @@ allegati al framework in modo da creare le tabelle necessarie al suo funzionamen
 ### installazione tramite SSH
 Se potete accedere via SSH al server su cui volete installare GlisWeb, allora l'installazione risulterà più lineare.
 Sarà sufficiente scaricare il framework come sopra, ma direttamente nella document root del sito su cui volete
-installarlo, e lanciare lo script shell allegato al framework per caricare il database.
+installarlo, installare le dipendenze con composer e lanciare lo script shell allegato al framework per caricare
+il database. Lo script è interattivo e vi chiederà i dati del server di database per eseguire gli script SQL
+allegati al framework.
