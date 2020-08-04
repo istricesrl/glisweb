@@ -27,6 +27,11 @@
     - accesso FTP
     - accesso SSH
 
+    Si noti che il framework non comprende le librerie esterne installate con Composer; se installate il
+    framework via SSH, dovrete lanciare l'update di composer nella cartella dove avete installato il framework
+    per scaricarle. Se scegliete l'installazione via FTP, dovete effettuare questa operazione sulla vostra
+    macchina prima di procedere all'upload del framework sul server.
+
     ### accesso FTP ###
 
     Nel caso abbiate solo un accesso FTP, dovrete scaricare il framework sulla vostra macchina, scompattarlo,

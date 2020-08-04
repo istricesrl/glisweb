@@ -54,7 +54,7 @@
     -------------------------------------|---------------------------------------------------------------------------------------
     debug.<s>.<f>.target.<l>.LOG2GCE.pid | l'id del progetto GCE su cui loggare gli eventi di livello <l> per la factory <f> allo status <s>
 
-    L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'] (vedi _000.debug.php).
+    L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'], per ulteriori dettagli vedi _src/_config/_000.debug.php.
 
     $cf['lvls']
     -----------
@@ -76,11 +76,79 @@
 
     $cf['ob']
     ---------
-    Questa chiave contiene informazioni sull'output buffering.
+    Questa chiave contiene informazioni sull'output buffering; per ulteriori informazioni si veda https://www.php.net/manual/en/book.outcontrol.
 
     chiave                    | descrizione
     --------------------------|---------------------------------------------------------------------------------------
     ob.status                 | lo stato dell'output buffering
+
+    $cf['sites']
+    ------------
+    Questa chiave contiene la definizione dei siti gestiti dall'attuale installazione del framework.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    sites.<n>                    | configurazioni relative al sito <n>
+    sites.<n>.__label__          | etichetta del sito <n> per la tendina dei siti nel CMS
+    sites.<n>.alias              | alias del sito <n>
+    sites.<n>.alias.domains      | alias di dominio del sito <n>
+    sites.<n>.alias.domains.<s>  | array degli alias di dominio del sito <n> per lo status <s>
+    sites.<n>.alias.hosts        | alias di host del sito <n>
+    sites.<n>.alias.hosts.<s>    | array degli alias di host del sito <n> per lo status <s>
+    sites.<n>.domains            | domini del sito <n>
+    sites.<n>.domains.<s>        | dominio del sito <n> per lo status <s>
+    sites.<n>.folders            | cartelle del sito <n> (nel caso il framework sia installato in una sottocartella)
+    sites.<n>.folders.<s>        | cartelle del sito <n> per lo status <s>
+    sites.<n>.homes              | pagine home del sito <n> (pagina utilizzata in caso non sia specificata una pagina)
+    sites.<n>.homes.<s>          | id della pagina home del sito <n> per lo status <s>
+    sites.<n>.hosts              | hosts del sito <n> (ad es. www)
+    sites.<n>.hosts.<s>          | host del sito <n> per lo status <s>
+    sites.<n>.id                 | id del sito <n> (dev'essere uguale a <n>)
+    sites.<n>.name               | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
+    sites.<n>.name.<l>           | nome del sito <n> per la lingua <l>
+    sites.<n>.protocols          | protocolli del sito <n> (ad es. https)
+    sites.<n>.protocols.<s>      | protocollo del sito <n> per lo status <s>
+
+    Vediamo un esempio abbastanza classico, ecco la configurazione JSON per un ipotetico sito www.domain.bho con alias
+    di dominio do-main.bho e gestione delle versioni con e senza www, e versione di test su test.domain.bho:
+
+    \code{.json}
+    "sites": {
+      "1": {
+        "id": 1,
+        "__label__": "sito di esempio",
+        "homes": {
+          "TEST": "dashboard",
+          "PROD": "dashboard"
+        },
+        "name": {
+          "it-IT": "sito di esempio"
+        },
+        "protocols": {
+          "TEST": "http",
+          "PROD": "https"
+        },
+        "hosts": {
+          "TEST": "test",
+          "PROD": "www"
+        },
+        "alias": {
+          "domains": {
+            "PROD": [
+              "do-main.bho"
+            ]
+          }
+        },
+        "domains": {
+          "TEST": "domain.bho",
+          "PROD": "domain.bho"
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['sites'] viene integrato da $cx['sites'] ed è linkato a $ct['sites'], per ulteriori dettagli vedi
+    _src/_config/_000.debug.php.
 
     $cf['speed']
     ------------
