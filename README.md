@@ -14,3 +14,17 @@ server via FTP se utilizzate un hosting condiviso che non vi dà la possibilità
 È importante che nell'installazione e nel successivo uso del framework non alteriate né rimuoviate i file
 LICENSE.md e README.md che fanno parte integrante del framework stesso e ne garantiscono la circolazione
 come software Open Source.
+
+### installazione tramite FTP
+Il framework non include le dipendenze installate con composer, per cui se dovete utilizzare FTP per installarlo
+allora dovrete scaricare le dipendenze prima di effettuare l'upload. Scaricate GlisWeb in formato ZIP e scompattatelo,
+o clonate il repository, dopodiché lanciate composer localmente nella cartella dove si trova il file composer.json.
+Quando l'installazione delle librerie sarà completata, potrete installare il framework sul vostro server tramite FTP.
+
+Una volta completato l'upload, utilizzate l'interfaccia fornita dal vostro provider per eseguire gli script SQL
+allegati al framework in modo da creare le tabelle necessarie al suo funzionamento.
+
+### installazione tramite SSH
+Se potete accedere via SSH al server su cui volete installare GlisWeb, allora l'installazione risulterà più lineare.
+Sarà sufficiente scaricare il framework come sopra, ma direttamente nella document root del sito su cui volete
+installarlo, e lanciare lo script shell allegato al framework per caricare il database.
