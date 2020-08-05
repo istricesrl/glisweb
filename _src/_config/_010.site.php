@@ -26,6 +26,24 @@
      * per pubblicare contenuti sul web, la prima cosa da fare dovrebbe essere personalizzare in custom
      * (src/config/010.site.php) il sito di default.
      *
+     * installazione del framework in una sottocartella
+     * ------------------------------------------------
+     * La variabile $cf['site']['basefolders'] consente alla piattaforma di essere
+     * installata anche in una sottocartella della root del sito senza che si verifichino
+     * problemi. In altre parole la piattaforma GlisWeb non necessita di essere collocata
+     * nella radice dello spazio web per funzionare, ma può lavorare anche in una
+     * sottocartella come ad esempio <protocollo>://<url>/[path/].
+     *
+     * lingue disponibili per il sito
+     * ------------------------------
+     * Il framework ricava le lingue disponibili dalle chiavi dell'array $cf['site']['name'];
+     * in pratica, se si dà un nome al sito in una lingua, il framework suppone che si desideri
+     * rendere l'intero sito disponibile in quella lingua. Pertanto nella redazione del file
+     * scr/config/010.site.php si presti particolare attenzione a questo aspetto; inoltre,
+     * visto che il framework prevede già un titolo di default per l'italiano è importante
+     * sovrascriverlo oppure, se non si desidera rendere il sito disponibile in italiano,
+     * eliminarlo tramite la funzione unset.
+     *
      *
      *
      * @todo finire di documentare
@@ -56,8 +74,8 @@
      *
      */
 
-    // l'id del sito
-	$cf['sites'][ 1 ]['id']							= 1;
+#    // l'id del sito
+#	$cf['sites'][ 1 ]['id']							= 1;
 
     // l'etichetta del sito
 	$cf['sites'][ 1 ]['__label__']						= 'default';
