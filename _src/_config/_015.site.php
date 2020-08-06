@@ -30,16 +30,6 @@
      * in questa sede è solo necessario sottolineare che questo array contiene tutti i dati di configurazione del
      * sito corrente.
      *
-     * licenza commerciale
-     * -------------------
-     * Il framework GlisWeb è totalmente Open Source e gratuito, e lo rimarrà sempre. La presenza di una licenza commerciale
-     * non comporta differenze nel codice, nelle funzionalità o in qualsiasi altro aspetto del framework, ma dà semplicemente
-     * accesso all'assistenza di Fabio Mosti <fabio.mosti@istricesrl.it> e degli sviluppatori di Istrice srl che si occupano
-     * di manutenere e aggiornare il software. Se siete titolari di una licenza commerciale, potete inviare le vostre richieste
-     * di assistenza all'ufficio Produzione di Istricesrl <produzione@istricesrl.it>; mentre se non disponete di una licenza
-     * commerciale e siete interessati a procurarvene una potete diventare nostri sostenitori su GitHub (all'indirizzo
-     * https://github.com/istricesrl/glisweb) oppure contattare l'ufficio Commerciale di Istrice srl <commerciale@istricesrl.it>.
-     *
      *
      *
      * @todo visto che la licenza è per deploy (non per sito) dovrebbe essere $cf['license'] e non $cf['site']['license']
@@ -143,13 +133,6 @@
 	    $cf['site']['status']		=  readStringFromFile( FILE_STATUS );
 	} else {
 	    $cf['site']['status']		= TESTING;
-	}
-
-    // licenza commerciale
-	if( file_exists( FILE_LICENSE ) ) {
-	    $cf['license']['key']		= trim( readStringFromFile( FILE_LICENSE ) );
-	} else {
-	    $cf['license']['key']		= NULL;
 	}
 
     // status del sito
