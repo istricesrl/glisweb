@@ -7,6 +7,7 @@
      *
      * -# dichiarazione delle funzioni di base
      * -# dichiarazione delle costanti di base
+     * -# inizializzazione del generatore di numeri casuali
      * -# avvio dell'output buffering
      * -# lettura dei file di configurazione Json/Yaml
      * -# individuazione dei moduli attivi
@@ -256,18 +257,6 @@
 	    );
 	}
 
-    // REFACTORING le costanti DIRECTORY_* dovrebbero diventare per brevità DIR_* inoltre il nome dovrebbe rappresentare
-    // il percorso (ad es. per DIRECTORY_LOG e DIRECTORY_LOG_LATEST dovrebbero diventare DIR_VAR_LOG e DIR_VAR_LOG_LATEST)
-    // inoltre i percorsi dovrebbero essere composti concatenando le cartelle (ad es. DIR_VAR_LOG_LATEST = DIR_VAR_LOG . 'latest/')
-    // infine le cartelle figlie di DIR_BASE dovrebbero includere DIR_BASE (ad es. DIR_VAR = DIR_BASE . 'var/' e di conseguenza
-    // DIR_VAR_LOG = DIR_VAR . 'log/) questo per semplificare l'uso delle costanti di directory e ridurre il ricorso
-    // in concatenazione a DIR_BASE)
-
-    // REFACTORING conseguentemente dove possibile i nomi delle cartelle andrebbero ridotti a tre lettere (ad es. _src/_lib/_external
-    // può divnetare _src/_lib/_ext/ e _src/_inc/_controllers può diventare _src/_inc/_cnt/ e così via) lasciando come eccezione
-    // le cartelle custom che non esistono in standard (ad es. var/cache/ può rimanere così) anche se preferibilmente per i nomi
-    // delle cartelle andrebbe usato l'inglese (ad es. var/immagini/ dovrebbe essere var/images/)
-
     // controllo performances
 	define( 'START_TIME'			, microtime( true ) );
 
@@ -287,6 +276,11 @@
 	define( 'DIR_SRC_INC_CONTROLLERS'	, DIR_BASE . '_src/_inc/_controllers/' );
 	define( 'DIR_SRC_LIB'			, DIR_BASE . '_src/_lib/' );
 	define( 'DIR_SRC_LIB_EXT'		, DIR_BASE . '_src/_lib/_ext/' );
+	define( 'DIR_USR'			, DIR_BASE . '_usr/' );
+	define( 'DIR_USR_DOCS'			, DIR_BASE . '_usr/_docs/' );
+	define( 'DIR_USR_DOCS_BUILD'		, DIR_BASE . '_usr/_docs/build/' );
+	define( 'DIR_USR_DOCS_BUILD_HTML'	, DIR_BASE . '_usr/_docs/build/html/' );
+	define( 'DIR_USR_DOCS_BUILD_LATEX'	, DIR_BASE . '_usr/_docs/build/latex/' );
 
     // directory solo custom
 	define( 'DIR_ETC_SITEMAP'		, DIR_BASE . 'etc/sitemap/' );
@@ -305,9 +299,12 @@
 	define( 'FILE_LATEST_RUN'		, DIR_VAR_LOG_LATEST . 'run.latest.log');
 	define( 'FILE_LATEST_CRON'		, DIR_VAR_LOG_LATEST . 'cron.latest.log');
 	define( 'FILE_LATEST_UPDATE'		, path2custom( DIR_ETC ) . 'latest.conf' );
-	define( 'FILE_STATUS'			, path2custom( DIR_ETC ) . 'status.conf' );
 	define( 'FILE_LICENSE'			, path2custom( DIR_ETC ) . 'license.conf' );
+	define( 'FILE_LOREM'			, DIR_ETC . '_lorem.conf' );
+	define( 'FILE_MANUAL_HTML'		, DIR_USR_DOCS_BUILD_HTML . 'index.html' );
+	define( 'FILE_MANUAL_PDF'		, DIR_USR_DOCS_BUILD_LATEX . 'refman.pdf' );
 	define( 'FILE_REDIRECT'			, path2custom( DIR_ETC ) . 'redirect.csv' );
+	define( 'FILE_STATUS'			, path2custom( DIR_ETC ) . 'status.conf' );
 
     // livelli di controllo
 	define( 'CONTROL_FILTERED'		, 'FILTERED' );
@@ -338,6 +335,19 @@
 	define( 'SESSION_REDIS'			, 'SESS_REDIS' );
 	define( 'SESSION_MEMCACHE'		, 'SESS_MEMCACHE' );
 
+    // costanti per il contenuto
+	define( 'MIME_APPLICATION_JSON'		, 'application/json' );
+	define( 'MIME_APPLICATION_XML'		, 'application/xml' );
+	define( 'MIME_MULTIPART_FORM_DATA'	, 'multipart/form-data' );
+	define( 'MIME_TEXT_PLAIN'		, 'text/plain' );
+	define( 'MIME_TEXT_HTML'		, 'text/html' );
+
+    // costanti per l'encoding
+	define( 'ENCODING_UTF8'			, 'utf-8' );
+
+    // inizializzazione motore numeri casuali
+	mt_srand( ( double ) microtime() * 1000000 );
+
     // avvio dell'output buffer con compressione gzip se possibile, senza altrimenti
 	if( ob_start( 'ob_gzhandler' ) ) {
 	    $cf['ob']['status']			= OB_ATTIVO_CON_GZIP;
@@ -347,10 +357,6 @@
 	    $cf['ob']['status']			= OB_NON_ATTIVO;
 	}
 
-    // CHIAVI DI CONFIGURAZIONE
-    // $cf['ob']				contiene le informazioni relative all'output buffering
-    // $cf['ob']['status']			contiene lo stato dell'output buffering
-
     // NOTA il file src/config/external/config.yaml è stato posizionato lì in modo che sia possibile
     // montare la cartella src/config/external/ come ConfigMap in Kubernetes - questo spiega anche
     // perché src/config/external/config.yaml ha la priorità su src/config/config.yaml
@@ -358,8 +364,6 @@
     // NOTA visto che in caso di configurazione tramite mount di partizione su Kubernetes non dovrebbero
     // essere presenti altri file di configurazione non si può semplificare src/config/external/ in
     // src/config/ e montare quella?
-
-    // NOTA si può usare path2custom() per i nomi dei file da includere
 
     // file di configurazione da considerare nell'ordine
 	$cf['config']['files']['yaml'][]	= path2custom( DIR_SRC_CONFIG_EXT . 'config.yaml' );
@@ -383,10 +387,6 @@
 		}
 	    }
 	}
-
-    // CHIAVI DI CONFIGURAZIONE
-    // $cf['config']				contiene informazioni generali sulla configurazione del framework
-    // $cf['config']['file']			contiene il percorso del file di configurazione aggiuntiva corrente
 
     // REFACTORING
     // sarebbe bello poter ricavare implicitamente i moduli attivi dalla struttura dell'array $cx/$cf senza doverli dichiarare
@@ -418,12 +418,6 @@
     // NOTA fra i tre alberi ci dev'essere corrispondenza completa nella struttura (al netto del fatto che ci sono informazioni
     // in $cx/$cf che non vanno ribaltate su $ct in modo da evitare confusioni e dubbi sulla posizione dei dati, specialmente in
     // fase di reperimento delle informazioni dal template manager
-
-    // CHIAVI DI CONFIGURAZIONE
-    // $cf['mods']				contiene informazioni sui moduli
-    // $cf['mods']['active']			contiene l'elenco dei moduli attivi
-    // $cf['mods']['active']['array']		contiene l'elenco dei moduli attivi in forma di array
-    // $cf['mods']['active']['string']		contiene l'elenco dei moduli attivi in forma di stringa separata da virgole
 
     // NOTA la lettura dei moduli attivi dalle variabili d'ambiente è obsoleta
 
