@@ -18,6 +18,11 @@
      * Questa costante contiene l'ID del sito di default, che viene utilizzato nel caso non venga riscontrata alcuna
      * corrispondenza fra l'URL corrente e i dati dichiarati in $cf['sites'].
      *
+     * la costante SITE_CURRENT
+     * ------------------------
+     * Questa costante contiene l'ID del sito corrente, così come identificato tramite l'analisi dell'URL, oppure
+     * viene valorizzata a SITE_DEFAULT se l'analisi dell'URL non ha dato corrispondenze con i dati contenuti in $cf['sites'].
+     *
      * l'array $cf['site']
      * ===================
      * Le variabili del ramo 'site' definiscono in generale il sito corrente. Si veda la
@@ -27,12 +32,13 @@
      *
      * licenza commerciale
      * -------------------
-     *
-     *
-     *
-     *
-     *
-     *
+     * Il framework GlisWeb è totalmente Open Source e gratuito, e lo rimarrà sempre. La presenza di una licenza commerciale
+     * non comporta differenze nel codice, nelle funzionalità o in qualsiasi altro aspetto del framework, ma dà semplicemente
+     * accesso all'assistenza di Fabio Mosti <fabio.mosti@istricesrl.it> e degli sviluppatori di Istrice srl che si occupano
+     * di manutenere e aggiornare il software. Se siete titolari di una licenza commerciale, potete inviare le vostre richieste
+     * di assistenza all'ufficio Produzione di Istricesrl <produzione@istricesrl.it>; mentre se non disponete di una licenza
+     * commerciale e siete interessati a procurarvene una potete diventare nostri sostenitori su GitHub (all'indirizzo
+     * https://github.com/istricesrl/glisweb) oppure contattare l'ufficio Commerciale di Istrice srl <commerciale@istricesrl.it>.
      *
      *
      *
@@ -56,9 +62,6 @@
 	    // assegno l'id del sito corrente alla chiave 'id'
 		$site['id'] = $id;
 
-#L	    // ciclo sulle lingue del sito
-#L		// TODO
-
 	    // ciclo sugli stati del sito
 		foreach( $site['domains'] as $status => $domain ) {
 
@@ -76,23 +79,19 @@
 			    // per lo stato corrente, verifico se c'è un host specificato
 				if( isset( $site['hosts'][ $status ] ) ) {
 				    $hosts[] = $site['hosts'][ $status ];
-#L				    $hosts[] = $site['hosts'][ $status ][ $language ];
 				}
 
 			    // per lo stato corrente, verifico se ci sono degli alias di host
 				if( isset( $site['alias']['hosts'][ $status ] ) ) {
 				    $hosts = array_merge( $hosts, $site['alias']['hosts'][ $status ] );
-#L				    $hosts = array_merge( $hosts, $site['alias']['hosts'][ $status ][ $language ] );
 				}
 
 			    // per lo stato corrente, aggiungo il domain
 				$domains[] = $site['domains'][ $status ];
-#L				$domains[] = $site['domains'][ $status ][ $language ];
 
 			    // per lo stato corrente, verifico se ci sono degli alias di domain
 				if( isset( $site['alias']['domains'][ $status ] ) ) {
 				    $domains = array_merge( $domains, $site['alias']['domains'][ $status ] );
-#L				    $domains = array_merge( $domains, $site['alias']['domains'][ $status ][ $language ] );
 				}
 
 			    // numeratore host in base a www
@@ -120,15 +119,12 @@
 					// echo 'MATCH (' . $status . ') -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
 					define( 'SITE_CURRENT', $id ); 
 					$cStatus = $status;
-#L					$cLanguage = $language;
 				    }
 				}
 
 			}
 
 		}
-
-#L		} // fine ciclo sulle lingue
 
 	}
 
@@ -149,14 +145,11 @@
 	    $cf['site']['status']		= TESTING;
 	}
 
-    // lingua del sito
-#L	$_REQUEST['__lg__']			= $cLanguage;
-
     // licenza commerciale
 	if( file_exists( FILE_LICENSE ) ) {
-	    $cf['license']			= trim( readStringFromFile( FILE_LICENSE ) );
+	    $cf['license']['key']		= trim( readStringFromFile( FILE_LICENSE ) );
 	} else {
-	    $cf['license']			= NULL;
+	    $cf['license']['key']		= NULL;
 	}
 
     // status del sito

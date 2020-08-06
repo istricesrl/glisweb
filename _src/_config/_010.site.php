@@ -52,31 +52,6 @@
      *
      */
 
-    /*
-     * TODO per supportare l'identificazione della lingua corrente tramite sottodominio, dominio e cartella,
-     * le chiavi protocols, hosts, domains, e folders dovrebbero avere un ulteriore livello per la lingua:
-     *
-     * $cf['sites'][ 1 ]['domains']['it-IT'][ TESTING ]				= NULL;
-     *
-     * le modifiche al codice necessarie per gestire questa chiave in più sono tutte già pronte e commentate
-     * nel file _015.site.php tuttavia bisogna considerare anche le modifiche necessarie al file 320.pages.php
-     * relativamente alla generazione dei vari URL della pagina per le diverse lingue MA SOPRATTUTTO le modifiche
-     * da fare al file _025.site.php per la definizione dei parametri correnti del site, che non devono avere
-     * la lingua specificata ma necessitano della lingua per prelevare i valori corretti da sites
-     *
-     * prima di procedere, valutare attentamente le indicazioni di https://support.google.com/webmasters/answer/182192?hl=it
-     * e valutare anche di rimuovere il suffisso della lingua nel caso il sito abbia una sola lingua (oppure sempre,
-     * magari pensare a un'opzione per questo)
-     *
-     * NOTA attualmente questa modifica è in sospeso, in quanto è possibile gestire il multilingua per dominio
-     * o sotto dominio anche tramite il multisito, creando un sito separato per le varie lingue; in questo caso però
-     * il selettore a bandiere standard non funzionerà e andrà creato custom
-     *
-     */
-
-#    // l'id del sito
-#	$cf['sites'][ 1 ]['id']							= 1;
-
     // l'etichetta del sito
 	$cf['sites'][ 1 ]['__label__']						= 'default';
 
