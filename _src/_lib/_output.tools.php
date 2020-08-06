@@ -20,16 +20,6 @@
 	define( 'XHTML_EOL'			, '<\br>' . PHP_EOL );
 	define( 'XHTML_2EOL'			, '<\br>' . XHTML_EOL );
 
-    // costanti per il contenuto
-	define( 'MIME_TEXT_PLAIN'		, 'text/plain' );
-	define( 'MIME_TEXT_HTML'		, 'text/html' );
-	define( 'MIME_APPLICATION_JSON'		, 'application/json' );
-	define( 'MIME_APPLICATION_XML'		, 'application/xml' );
-	define( 'MIME_MULTIPART_FORM_DATA'	, 'multipart/form-data' );
-
-    // costanti per l'encoding
-	define( 'ENCODING_UTF8'			, 'utf-8' );
-
     /**
      *
      * @todo documentare
