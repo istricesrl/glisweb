@@ -19,6 +19,37 @@
     config.file               | il nome del file di configurazione Json/Yaml utilizzato per popolare $cx
     config.files              | l'array dei file di configurazione Json/Yaml disponibili
 
+    $cf['common']
+    -------------
+    Questa chiave contiene informazioni generali di comune utilità per l'esecuzione del framework.
+
+    chiave                          | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    common.docs                     | informazioni sulla documentazione
+    common.docs.tech                | informazioni sulla documentazione tecnica
+    common.docs.tech.html           | informazioni sulla documentazione tecnica in formato HTML
+    common.docs.tech.html.url       | URL della documentazione tecnica in formato HTML
+    common.docs.tech.pdf            | informazioni sulla documentazione tecnica in formato PDF
+    common.docs.tech.pdf.url        | URL della documentazione tecnica in formato PDF
+    common.docs.user                | informazioni sulla documentazione utente
+    common.docs.user.html           | informazioni sulla documentazione utente in formato HTML
+    common.docs.user.html.url       | URL della documentazione utente in formato HTML
+    common.http                     | informazioni sul protocollo HTTP
+    common.http.codes               | array dei codici di stato HTTP
+    common.license                  | informazioni sulla licenza del deploy corrente
+    common.license.id               | chiave di licenza del deploy corrente
+    common.lorem                    | testi per prove tipografiche (vedi https://it.lipsum.com/)
+    common.lorem.std                | testo standard per prove tipografiche
+    common.version                  | informazioni sulla versione del framework
+    common.version.current          | numero di versione del deploy corrente del framework
+    common.version.latest           | numero dell'ultima versione pubblicata del framework
+
+    L'ultima versione pubblicata del framework viene ricavata tramite una chiamata REST sul sito di sviluppo di GlisWeb
+    (https://glisweb.videoarts.it/current.conf).
+
+    L'array $cf['common'] viene integrato da $cx['common'] ed è linkato a $ct['common'], per ulteriori dettagli vedi
+    _src/_config/_030.common.php.
+
     $cf['debug']
     ------------
     Questa chiave contiene le configurazioni relative al debug e al sistema di log del framework. Contiene dei sotto
@@ -55,14 +86,6 @@
     debug.<s>.<f>.target.<l>.LOG2GCE.pid | l'id del progetto GCE su cui loggare gli eventi di livello <l> per la factory <f> allo status <s>
 
     L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'], per ulteriori dettagli vedi _src/_config/_000.debug.php.
-
-    $cf['license']
-    --------------
-    Questa chiave contiene le informazioni sulla chiave di licenza del deploy corrente del framework.
-
-    chiave                       | descrizione
-    -----------------------------|---------------------------------------------------------------------------------------
-    license.key                  | chiave di licenza del deploy corrente
 
     $cf['lvls']
     -----------
@@ -129,7 +152,9 @@
 
     L'array $cf['site'] viene integrato da $cx['site'] ed è linkato a $ct['site'], per ulteriori dettagli vedi
     _src/_config/_025.site.php. Si noti che le chiavi generate per $cf['site'] saranno visibili anche in
-    $cf['sites'][ $cf['site']['status'] ] in quanto il primo array è un collegamento simbolico al secondo.
+    $cf['sites'][ $cf['site']['status'] ] in quanto il primo array è un collegamento simbolico al secondo; per questo
+    motivo non vengono ripetute nella documentazione di $cf['sites'], ovvero perché appartengono solo al sito corrente
+    e non ad ogni sito dell'array.
 
     $cf['sites']
     ------------
