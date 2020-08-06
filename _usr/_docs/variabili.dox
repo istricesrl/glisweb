@@ -56,6 +56,14 @@
 
     L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'], per ulteriori dettagli vedi _src/_config/_000.debug.php.
 
+    $cf['license']
+    --------------
+    Questa chiave contiene le informazioni sulla chiave di licenza del deploy corrente del framework.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    license.key                  | chiave di licenza del deploy corrente
+
     $cf['lvls']
     -----------
     Questa chiave contiene informazioni sui livelli di esecuzione del framework.
@@ -81,6 +89,47 @@
     chiave                    | descrizione
     --------------------------|---------------------------------------------------------------------------------------
     ob.status                 | lo stato dell'output buffering
+
+    $cf['site']
+    ------------
+    Questa chiave contiene la definizione del sito corrente, è la mappatura su $cf['site'] di $cf['sites'][ SITE_CURRENT ],
+    per ulteriori informazioni si veda _src/_config/_015.site.php.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    site                         | configurazioni relative al sito <n>
+    site.__label__               | etichetta del sito <n> per la tendina dei siti nel CMS
+    site.alias                   | alias del sito <n>
+    site.alias.domains           | alias di dominio del sito <n>
+    site.alias.domains.<s>       | array degli alias di dominio del sito <n> per lo status <s>
+    site.alias.hosts             | alias di host del sito <n>
+    site.alias.hosts.<s>         | array degli alias di host del sito <n> per lo status <s>
+    site.domain                  | scorciatoia per site.domains<site.status>
+    site.domains                 | domini del sito <n>
+    site.domains.<s>             | dominio del sito <n> per lo status <s>
+    site.folders                 | cartelle del sito <n> (nel caso il framework sia installato in una sottocartella)
+    site.folders.<s>             | cartelle del sito <n> per lo status <s>
+    site.fqdn                    | FQDN del sito
+    site.home                    | scorciatoia per site.homes<site.status>
+    site.homes                   | pagine home del sito <n> (pagina utilizzata in caso non sia specificata una pagina)
+    site.homes.<s>               | id della pagina home del sito <n> per lo status <s>
+    site.host                    | scorciatoia per site.hosts<site.status>
+    site.hosts                   | hosts del sito <n> (ad es. www)
+    site.hosts.<s>               | host del sito <n> per lo status <s>
+    site.id                      | id del sito <n> (vedi _src/_config/_015.site.php)
+    site.name                    | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
+    site.name.<l>                | nome del sito <n> per la lingua <l>
+    site.protocols               | protocolli del sito <n> (ad es. https)
+    site.protocols.<s>           | protocollo del sito <n> per lo status <s>
+    site.root                    | path base del sito
+    site.status                  | status attribuito dal framework al sito <n>
+    site.url                     | scorciatoia per site.urls.<site.status>
+    site.urls                    | array degli URL del sito
+    site.urls.<s>                | URL del sito per lo status <s>
+
+    L'array $cf['site'] viene integrato da $cx['site'] ed è linkato a $ct['site'], per ulteriori dettagli vedi
+    _src/_config/_025.site.php. Si noti che le chiavi generate per $cf['site'] saranno visibili anche in
+    $cf['sites'][ $cf['site']['status'] ] in quanto il primo array è un collegamento simbolico al secondo.
 
     $cf['sites']
     ------------
@@ -108,6 +157,7 @@
     sites.<n>.name.<l>           | nome del sito <n> per la lingua <l>
     sites.<n>.protocols          | protocolli del sito <n> (ad es. https)
     sites.<n>.protocols.<s>      | protocollo del sito <n> per lo status <s>
+    sites.<n>.status             | status attribuito dal framework al sito <n>
 
     Vediamo un esempio abbastanza classico, ecco la configurazione JSON per un ipotetico sito www.domain.bho con alias
     di dominio do-main.bho e gestione delle versioni con e senza www, e versione di test su test.domain.bho:
@@ -115,7 +165,6 @@
     \code{.json}
     "sites": {
       "1": {
-        "id": 1,
         "__label__": "sito di esempio",
         "homes": {
           "TEST": "dashboard",
@@ -148,7 +197,7 @@
     \endcode
 
     L'array $cf['sites'] viene integrato da $cx['sites'] ed è linkato a $ct['sites'], per ulteriori dettagli vedi
-    _src/_config/_000.debug.php.
+    _src/_config/_010.site.php.
 
     $cf['speed']
     ------------
