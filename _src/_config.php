@@ -80,8 +80,7 @@
      * cartella                  | descrizione
      * --------------------------|---------------------------------------------------------------------------------------
      * tmp/                      | contiene i file temporanei
-     * var/cache/                | contiene i files di cache
-     * var/log/                  | contiene i log del framework
+     * var/                      | contiene i file che cambiano nel tempo, come cache, log e file caricati dagli utenti
      *
      * dichiarazione delle costanti
      * ============================
