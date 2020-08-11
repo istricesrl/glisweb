@@ -117,6 +117,33 @@
     memcache.stats                    | statistiche di Memcache
     memcache.stats.<n>                | statistiche di Memcache per il server <n> (vedi https://www.php.net/manual/en/memcache.getstats.php)
 
+    Vediamo un esempio di configurazione di memcache per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
+    stessa macchina del sito:
+
+    \code{.json}
+    "memcache": {
+      "servers": {
+        "localhost": {
+          "address": "127.0.0.1",
+          "port": "6379",
+          "ttl": "0",
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "localhost"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "localhost"
+          ]
+        }
+      }
+    }
+    \endcode
+
     L'array $cf['memcache'] viene integrato da $cx['memcache'] ed è linkato a $ct['memcache'], per ulteriori dettagli vedi
     _src/_config/_040.cache.php.
 
@@ -157,8 +184,46 @@
     redis.servers.<n>.port            | porta TCP del server <n>
     redis.servers.<n>.ttl             | TTL di default del server <n>
 
+    Vediamo un esempio di configurazione di Redis per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
+    stessa macchina del sito:
+
+    \code{.json}
+    "redis": {
+      "servers": {
+        "localhost": {
+          "address": "127.0.0.1",
+          "port": "6379",
+          "ttl": "0",
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "localhost"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "localhost"
+          ]
+        }
+      }
+    }
+    \endcode
+
     L'array $cf['redis'] viene integrato da $cx['redis'] ed è linkato a $ct['redis'], per ulteriori dettagli vedi
     _src/_config/_040.cache.php.
+
+    $cf['session']
+    --------------
+    Questa chiave è un collegamento a $_SESSION.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    session.id                        | l'ID della sessione corrente
+    session.used                      | la timestamp dell'ultimo utilizzo della sessione
+
+    L'array $cf['session'] è linkato a $ct['session'], per ulteriori dettagli vedi _src/_config/_055.session.php.
 
     $cf['site']
     ------------
