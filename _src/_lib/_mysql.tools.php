@@ -30,7 +30,7 @@
      *
      *
      *
-     *
+     * @todo raggruppare in una funzione mysqlHandleError() il codice per la gestione degli errori che è duplicato in mysqlQuery() e in mysqlPreparedQuery()
      * @todo documentare
      *
      * @file
@@ -69,7 +69,7 @@
     function mysqlQuery( $c, $q, $p = false, &$e = array() ) {
 
 	// log
-	    logWrite( md5( $q ) . ' ' . $q, 'mysql', LOG_DEBUG );
+	    logWrite( md5( $q ) . ' ' . $q, 'mysql' );
 
 	// verifico se c'è connessione e se la query è preparata o meno
 	    if( empty( $c ) ) {
@@ -204,7 +204,7 @@
 	    $rs = array();
 
 	// archivio il risultato in un array
-	// TODO controllare che sia un object result mysql
+	// @todo controllare che sia un object result mysql
 #	    if( ( is_resource( $r ) ? get_resource_type( $r ) : gettype( $r ) ) == 'mysql' ) {
 		while( $row = @mysqli_fetch_assoc( $r ) ) {
 		    $rs[] = $row;
@@ -568,6 +568,11 @@
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function mysqlInsertRow( $c, $r, $t, $d = true ) {
 
 	return mysqlQuery( $c,
@@ -579,18 +584,33 @@
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function array2mysqlFieldnames( $a ) {
 
 	return implode( ', ', addStr2arrayElements( array_keys( $a ), '`', '`' ) );
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function array2mysqlPlaceholders( $a ) {
 
 	return implode( ', ', array_fill( 0, count( $a ), '?' ) );
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function array2mysqlDuplicateKeyUpdateValues( $a ) {
 
 	$r = array();
@@ -605,6 +625,11 @@
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function array2mysqlStatementParameters( $a ) {
 
 	$r = array();
