@@ -149,6 +149,11 @@
 
 	    }
 
+	// debug
+	    // echo $m;
+	    // echo $l;
+	    // echo $t;
+
     }
 
 ?>
