@@ -423,7 +423,8 @@
     // moduli attivi
 	define( 'MODULI_ATTIVI'			, $cf['mods']['active']['string'] );
 	define( 'DIR_MOD_ATTIVI'		, DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
-	define( 'DIR_MOD_ATTIVI_SRC_LIB'	, DIR_MOD . '_{' . MODULI_ATTIVI . '}/_src/_lib/' );
+	define( 'DIR_MOD_ATTIVI_SRC_LIB'	, DIR_MOD_ATTIVI . '_src/_lib/' );
+	define( 'DIR_MOD_ATTIVI_ETC_LOC'	, DIR_MOD_ATTIVI . '_etc/_loc/' );
 
     // collego $ct
 	$ct['mods']				= &$cf['mods'];
@@ -448,7 +449,7 @@
 
     // inclusione dei files di libreria
 	foreach( $arrayLibrerie as $libreria ) {
-	    $locale = str_replace( '_' , '' , $libreria );
+	    $locale = path2custom( $libreria );
 	    if( file_exists( $locale ) ) {
 		require $locale;
 	    } else {
