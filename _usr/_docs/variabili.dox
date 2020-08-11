@@ -95,6 +95,31 @@
     --------------------------|---------------------------------------------------------------------------------------
     lvls.skip                 | i numeri dei runlevel da saltare
 
+    $cf['memcache']
+    ---------------
+    Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Memcache.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    memcache.connection               | la connessione corrente a Memcache (scorciatoia per memcache.connections, vedi _src/_config/_045.cache.php)
+    memcache.connections              | l'array delle connessioni a Memcache attive
+    memcache.profile                  | il profilo Memcache corrente (scorciatoia per memcache.profiles.<site.status>)
+    memcache.profiles                 | l'array dei profili memcache disponibili
+    memcache.profiles.<s>             | il profilo memcache per lo status <s>
+    memcache.profiles.<s>.servers     | array dei nomi dei server memcache disponibli per lo status <s>
+    memcache.server                   | il server memcache corrente (scorciatoia per memcache.servers, vedi _src/_config/_045.cache.php)
+    memcache.servers                  | array dei dettagli dei server memcache disponibili
+    memcache.servers.<n>              | dettagli del server <n>
+    memcache.servers.<n>.address      | indirizzo IP del server <n>
+    memcache.servers.<n>.port         | porta TCP del server <n>
+    memcache.servers.<n>.ttl          | TTL di default del server <n>
+    memcache.stat                     | statistiche di Memcache per il server corrente (scorciatoia per memcache.stats, vedi _src/_config/_045.cache.php)
+    memcache.stats                    | statistiche di Memcache
+    memcache.stats.<n>                | statistiche di Memcache per il server <n> (vedi https://www.php.net/manual/en/memcache.getstats.php)
+
+    L'array $cf['memcache'] viene integrato da $cx['memcache'] ed è linkato a $ct['memcache'], per ulteriori dettagli vedi
+    _src/_config/_040.cache.php.
+
     $cf['mods']
     -----------
     Questa chiave contiene informazioni sui moduli del framework.
@@ -112,6 +137,28 @@
     chiave                    | descrizione
     --------------------------|---------------------------------------------------------------------------------------
     ob.status                 | lo stato dell'output buffering
+
+    $cf['redis']
+    ------------
+    Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Redis.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    redis.connection                  | la connessione corrente a redis (scorciatoia per redis.connections, vedi _src/_config/_045.cache.php)
+    redis.connections                 | l'array delle connessioni a redis attive
+    redis.profile                     | il profilo redis corrente (scorciatoia per redis.profiles.<site.status>)
+    redis.profiles                    | l'array dei profili redis disponibili
+    redis.profiles.<s>                | il profilo redis per lo status <s>
+    redis.profiles.<s>.servers        | array dei nomi dei server redis disponibli per lo status <s>
+    redis.server                      | il server redis corrente (scorciatoia per redis.servers, vedi _src/_config/_045.cache.php)
+    redis.servers                     | array dei dettagli dei server redis disponibili
+    redis.servers.<n>                 | dettagli del server <n>
+    redis.servers.<n>.address         | indirizzo IP del server <n>
+    redis.servers.<n>.port            | porta TCP del server <n>
+    redis.servers.<n>.ttl             | TTL di default del server <n>
+
+    L'array $cf['redis'] viene integrato da $cx['redis'] ed è linkato a $ct['redis'], per ulteriori dettagli vedi
+    _src/_config/_040.cache.php.
 
     $cf['site']
     ------------
