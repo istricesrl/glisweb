@@ -57,13 +57,13 @@
     // link alla connessione corrente
 	$cf['memcache']['connection']			= NULL;
 
-    // TTL di default
-	$cf['memcache']['ttl']				= 0;
-
     // configurazione extra
 	if( isset( $cx['memcache'] ) ) {
 	    $cf['memcache'] = array_replace_recursive( $cf['memcache'], $cx['memcache'] );
 	}
+
+    // collegamento all'array $ct
+	$ct['memcache'] = &$cf['memcache'];
 
     // server redis disponibili
 	$cf['redis']['servers']				= array();
@@ -82,15 +82,16 @@
     // link alla connessione corrente
 	$cf['redis']['connection']			= NULL;
 
-    // TTL di default
-	$cf['redis']['ttl']				= 0;
-
     // configurazione extra
 	if( isset( $cx['redis'] ) ) {
 	    $cf['redis'] = array_replace_recursive( $cf['redis'], $cx['redis'] );
 	}
 
+    // collegamento all'array $ct
+	$ct['redis'] = &$cf['redis'];
+
     // debug
+	// print_r( $cf['memcache'] );
 	// print_r( $cf['redis'] );
 
 ?>
