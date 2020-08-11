@@ -87,6 +87,25 @@
 
     L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'], per ulteriori dettagli vedi _src/_config/_000.debug.php.
 
+    $cf['localization']
+    -------------------
+    Questa chiave contiene informazioni sulle lingue attive nel framework e sulla sua localizzazione.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    localization.charset              | il charset corrente
+    localization.currency             | informazioni sulle valute
+    localization.currency.iso4217     | il codice ISO4217 della valuta corrente
+    localization.language             | informazioni sulla lingua corrente (è una scorciatoia per localization.languages, vedi _src/_config/_070.localization.php)
+    localization.language.ietf        | il codice IETF della lingua corrente
+    localization.languages            | informazioni sulle lingue
+    localization.languages.<l>        | informazioni sulla lingua <l>
+    localization.languages.<l>.ietf   | il codice IETF della lingua <l>
+    localization.timezone             | informazioni sulla timezone corrente
+    localization.timezone.name        | il nome della timezone corrente
+
+    L'array $cf['localization'] è linkato a $ct['localization'], per ulteriori dettagli vedi _src/_config/_070.localization.php.
+
     $cf['lvls']
     -----------
     Questa chiave contiene informazioni sui livelli di esecuzione del framework.
@@ -126,7 +145,7 @@
         "localhost": {
           "address": "127.0.0.1",
           "port": "6379",
-          "ttl": "0",
+          "ttl": "0"
         }
       },
       "profiles": {
@@ -156,6 +175,60 @@
     mods.active               | i moduli attivi
     mods.active.array         | l'array dei moduli attivi
     mods.active.string        | l'elenco dei moduli attivi separati da virgola
+
+    $cf['mysql']
+    ---------------
+    Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Mysql.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    mysql.connection                  | la connessione corrente a mysql (scorciatoia per mysql.connections, vedi _src/_config/_125.mysql.php)
+    mysql.connections                 | l'array delle connessioni a mysql attive
+    mysql.profile                     | il profilo mysql corrente (scorciatoia per mysql.profiles.<site.status>)
+    mysql.profiles                    | l'array dei profili mysql disponibili
+    mysql.profiles.<s>                | il profilo mysql per lo status <s>
+    mysql.profiles.<s>.servers        | array dei nomi dei server mysql disponibli per lo status <s>
+    mysql.server                      | il server mysql corrente (scorciatoia per mysql.servers, vedi _src/_config/_125.mysql.php)
+    mysql.servers                     | array dei dettagli dei server mysql disponibili
+    mysql.servers.<n>                 | dettagli del server <n>
+    mysql.servers.<n>.address         | indirizzo IP del server <n>
+    mysql.servers.<n>.db              | database di default per il server <n>
+    mysql.servers.<n>.password        | password per la connessione al server <n>
+    mysql.servers.<n>.port            | porta TCP del server <n>
+    mysql.servers.<n>.username        | nome utente per la connessione al server <n>
+    mysql.servers.<n>.VERSION         | versione del server <n> (aggiunta automaticamente in _src/_config/_125.mysql.php)
+
+    Vediamo un esempio di configurazione di Mysql per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
+    stessa macchina del sito:
+
+    \code{.json}
+    "mysql": {
+      "servers": {
+        "localhost": {
+          "address": "127.0.0.1",
+          "port": "3306",
+          "username": "",
+          "password": "",
+          "db": ""
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "localhost"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "localhost"
+          ]
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['mysql'] viene integrato da $cx['mysql'] ed è linkato a $ct['mysql'], per ulteriori dettagli vedi
+    _src/_config/_120.mysql.php.
 
     $cf['ob']
     ---------
@@ -193,7 +266,7 @@
         "localhost": {
           "address": "127.0.0.1",
           "port": "6379",
-          "ttl": "0",
+          "ttl": "0"
         }
       },
       "profiles": {
@@ -339,5 +412,17 @@
     $cf['speed']
     ------------
     Questa chiave contiene il dettaglio della cronologia di esecuzione del framework.
+
+    $cf['tr']
+    ---------
+    Questo array contiene le tavole di traduzione per i microcontenuti.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    tr.<c>                       | tavola di traduzione per l'ambito <c>
+    tr.<c>.<k>                   | tavola di traduzione per l'espressione <k> nell'ambito <c>
+    tr.<c>.<k>.<l>               | traduzione nella lingua <l> per l'espressione <k> nell'ambito <c>
+
+    L'array $cf['tr'] è linkato a $ct['tr'], per ulteriori dettagli vedi _src/_config/_080.translation.php.
 
 */
