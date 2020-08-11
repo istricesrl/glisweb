@@ -65,6 +65,8 @@
 #		    echo 'array' . PHP_EOL;
 #		    $tx .= '<a href="?' . urlencode( http_build_query( $qs ) ) . '">' . $key . '</a><br/>';
 		    $tx .= '<li><a href="?' . htmlentities( http_build_query( $qs ) ) . '">' . $key . '</a></li>';
+		} elseif( is_object( $print[ $key ] ) ) {
+		    $tx .= '<li>' . $key . ' &#x2192; ' . ( ( empty( $print[ $key ] ) ) ? '(vuoto)' : print_r( $print[ $key ], true ) ) . '</li>';
 		} else {
 #		    echo 'stringa' . PHP_EOL;
 		    $tx .= '<li>' . $key . ' &#x2192; ' . ( ( empty( $print[ $key ] ) ) ? '(vuoto)' : $print[ $key ] ) . '</li>';
