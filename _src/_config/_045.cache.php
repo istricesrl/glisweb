@@ -5,6 +5,7 @@
      *
      *
      *
+     * @todo confrontare la struttura di questo file con _125.mysql.php
      * @todo perché Redis non ha la costante per il default TTL?
      * @todo aggiungere la verifica della connessione a memcache
      * @todo documentare
