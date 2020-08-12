@@ -105,8 +105,9 @@
 
     /**
      *
-    // TODO vanno bloccate le scritture per almeno un secondo dopo il flush,
-    // vedi http://php.net/manual/en/memcache.flush.php
+     * NOTA vanno bloccate le scritture per almeno un secondo dopo il flush,
+     * vedi http://php.net/manual/en/memcache.flush.php
+     *
      * @todo documentare
      *
      */
