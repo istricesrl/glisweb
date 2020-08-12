@@ -150,9 +150,7 @@
 	    }
 
 	// debug
-	    // echo $m;
-	    // echo $l;
-	    // echo $t;
+	    // echo $l . '/' . $t . ' -> ' . $m . PHP_EOL;
 
     }
 
