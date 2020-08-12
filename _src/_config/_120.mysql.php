@@ -57,16 +57,10 @@
     // connessioni disponibili
 	$cf['mysql']['connections']			= array();
 
-    // link alla connessione corrente
-	$cf['mysql']['connection']			= NULL;
-
     // configurazione extra
 	if( isset( $cx['mysql'] ) ) {
 	    $cf['mysql'] = array_replace_recursive( $cf['mysql'], $cx['mysql'] );
 	}
-
-    // link al profilo corrente
-	$cf['mysql']['profile']				= &$cf['mysql']['profiles'][ $cf['site']['status'] ];
 
     // collegamento all'array $ct
 	$ct['mysql']					= &$cf['mysql'];

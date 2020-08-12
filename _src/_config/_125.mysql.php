@@ -16,6 +16,12 @@
 	// die( $cf['site']['status'] );
 	// die( print_r( $cf['mysql'], true ) );
 
+    // link alla connessione corrente
+	$cf['mysql']['connection']			= NULL;
+
+    // link al profilo corrente
+	$cf['mysql']['profile']				= &$cf['mysql']['profiles'][ $cf['site']['status'] ];
+
     // verifico che sia presente alemno un server
 	if( isset( $cf['mysql']['profile']['servers'] ) && is_array( $cf['mysql']['profile']['servers'] ) ) {
 
