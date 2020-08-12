@@ -464,7 +464,7 @@
     function mysqlSelectRow( $c, $q, $p = false, &$e = array() ) {
 
 	// valore di ritorno
-	    $v = NULL;
+	    $v = array();
 
 	// risultato
 	    $r = mysqlQuery( $c, $q, $p, $e );
@@ -512,7 +512,7 @@
     function mysqlSelectCachedRow( $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
 
 	// valore di ritorno
-	    $v = NULL;
+	    $v = array();
 
 	// risultato
 	    $r = mysqlCachedQuery( $m, $c, $q, $p, $t, $e );
