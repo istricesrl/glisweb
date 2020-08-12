@@ -14,8 +14,11 @@
      *
      */
 
+    // link alla connessione corrente
+	$cf['memcache']['connection']			= NULL;
+
     // link al profilo corrente
-	$cf['memcache']['profile'] = &$cf['memcache']['profiles'][ $cf['site']['status'] ];
+	$cf['memcache']['profile']			= &$cf['memcache']['profiles'][ $cf['site']['status'] ];
 
     // creo le connessioni ai server attivi
 	if( function_exists( 'memcache_connect' ) ) {
@@ -74,6 +77,9 @@
     // costante per il default TTL
 	define( 'MEMCACHE_DEFAULT_TTL'		, ( ( isset( $cf['memcache']['server']['ttl'] ) ) ? $cf['memcache']['server']['ttl'] : 0 ) );
 
+    // link alla connessione corrente
+	$cf['redis']['connection']			= NULL;
+
     // link al profilo corrente
 	$cf['redis']['profile'] = &$cf['redis']['profiles'][ $cf['site']['status'] ];
 
@@ -123,6 +129,9 @@
 		logWrite( 'redis non installato', 'redis' );
 
 	}
+
+    // costante per il default TTL
+	define( 'REDIS_DEFAULT_TTL'			, ( ( isset( $cf['redis']['server']['ttl'] ) ) ? $cf['redis']['server']['ttl'] : 0 ) );
 
     // debug
 	// print_r( $cf['memcache']['profile'] );

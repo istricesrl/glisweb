@@ -3,6 +3,28 @@
     /**
      * file di configurazione delle cache
      *
+     * il sistema dei profili
+     * ======================
+     * In questo file incontriamo per la prima volta il sistema dei profili in tutta la sua completezza. In generale il
+     * framework adotta questo approccio ogni volta che le informazioni relative a determinati servizi cambiano a seconda
+     * dello status (DEV/TEST/PROD) in cui si trova il deploy. Noterete che lo schema si ripete invariato per servizi
+     * relativamente semplici (come la cache) fino a quelli più complessi come i database. Lo schema prevede sempre la
+     * stessa sequenza di passi, anche se alcuni possono essere assenti in determinati contesti; la sequenza nel primo file è:
+     *
+     * -# dichiarazione dei server disponibili ($cf[<servizio>]['servers'])
+     * -# dichiarazione dei profili per ogni status ($cf[<servizio>]['profiles'][<status>][...])
+     * -# inizializzazione dell'array delle connessioni ($cf[<servizio>]['connections'])
+     * -# applicazione della configurazione extra ($cx[<servizio>] su $cf[<servizio>])
+     * -# collegamento di $ct ($cf[<servizio>] collegato a $ct[<servizio>])
+     *
+     * Nel secondo file, quello esecutivo, la sequenza è:
+     *
+     * -# collegamento del profilo corrente ($cf[<servizio>]['profile'] collegato a $cf[<servizio>]['profiles'][<status>])
+     * -# collegamento della connessione corrente ($cf[<servizio>]['connection'] collegato a $cf[<servizio>]['connections'][0])
+     * -# collegamento del server corrente ($cf[<servizio>]['server'] collegato a $cf[<servizio>]['servers'][0])
+     *
+     * La rigidità e la ripetitività di questo schema
+     *
      * sistemi di cache
      * ================
      * Il framework supporta Memcache e Redis, oltre ad alcune cache su disco per velocizzare la rappresentazione
@@ -51,16 +73,10 @@
     // connessioni disponibili
 	$cf['memcache']['connections']			= array();
 
-    // link alla connessione corrente
-	$cf['memcache']['connection']			= NULL;
-
     // configurazione extra
 	if( isset( $cx['memcache'] ) ) {
 	    $cf['memcache'] = array_replace_recursive( $cf['memcache'], $cx['memcache'] );
 	}
-
-    // link al profilo corrente
-	$cf['memcache']['profile']			= &$cf['memcache']['profiles'][ $cf['site']['status'] ];
 
     // collegamento all'array $ct
 	$ct['memcache']					= &$cf['memcache'];
@@ -76,16 +92,10 @@
     // connessioni disponibili
 	$cf['redis']['connections']			= array();
 
-    // link alla connessione corrente
-	$cf['redis']['connection']			= NULL;
-
     // configurazione extra
 	if( isset( $cx['redis'] ) ) {
 	    $cf['redis'] = array_replace_recursive( $cf['redis'], $cx['redis'] );
 	}
-
-    // link al profilo corrente
-	$cf['redis']['profile']				= &$cf['redis']['profiles'][ $cf['site']['status'] ];
 
     // collegamento all'array $ct
 	$ct['redis']					= &$cf['redis'];
