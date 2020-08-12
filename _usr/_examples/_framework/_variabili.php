@@ -33,7 +33,7 @@
 	$print = $cf;
 
     // censuro l'array per evitare fughe accidentali di informazioni sensibili
-	array2censored( $cf );
+	array2censored( $print );
 
     // scendo nell'array
 	if( isset( $_REQUEST['lvl'] ) && is_array( $_REQUEST['lvl'] ) ) {
