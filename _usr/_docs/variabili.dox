@@ -329,7 +329,7 @@
     chiave                                    | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
     session.__view__                          | dettagli sulla visualizzazione
-    session.__view__.__language__             | l'ID del linguaggio collegato alla visualizzazione (@todo da approfondire)
+    session.__view__.__language__             | l'ID del linguaggio collegato alla visualizzazione
     session.account                           | dettagli sull'account collegato alla sessione corrente (appare dopo il login, vedi _src/_config/_210.auth.php)
     session.account.__label__                 | etichetta dell'account collegato alla sessione corrente
     session.account.attivo                    | indica se l'account collegato alla sessione corrente è attivo
@@ -354,6 +354,8 @@
     session.groups                            | gruppi collegati alla sessione corrente (appare dopo il login)
     session.id                                | l'ID della sessione corrente
     session.used                              | la timestamp dell'ultimo utilizzo della sessione
+
+    \todo approfondire gli aspetti legati a session.__view__
 
     L'array $cf['session'] è linkato a $ct['session'], per ulteriori dettagli vedi _src/_config/_055.session.php.
 
@@ -478,9 +480,9 @@
 
     chiave                       | descrizione
     -----------------------------|---------------------------------------------------------------------------------------
-    tr.<c>                       | tavola di traduzione per l'ambito <c>
-    tr.<c>.<k>                   | tavola di traduzione per l'espressione <k> nell'ambito <c>
-    tr.<c>.<k>.<l>               | traduzione nella lingua <l> per l'espressione <k> nell'ambito <c>
+    tr.<x>                       | tavola di traduzione per l'ambito <x>
+    tr.<x>.<k>                   | tavola di traduzione per l'espressione <k> nell'ambito <x>
+    tr.<x>.<k>.<l>               | traduzione nella lingua <l> per l'espressione <k> nell'ambito <x>
 
     L'array $cf['tr'] è linkato a $ct['tr'], per ulteriori dettagli vedi _src/_config/_080.translation.php.
 
