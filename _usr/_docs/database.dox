@@ -1,0 +1,101 @@
+/*!
+
+    \page database database del framework
+
+    Descrizione del layer di database del framework.
+
+    introduzione
+    ============
+    Il framework è in grado di operare su database multipli, anche di diverso tipo, sia per gestire i dati di
+    lavoro sia per recuperare informazioni necessarie al proprio funzionamento. In particolare, il database che
+    contiene i dati di funzionamento del framework è detto database di supporto, mentre gli altri sono detti
+    database di lavoro.
+
+    le tabelle di supporto
+    ----------------------
+    Il database di supporto contiene dati strutturali come lingue, geografia, fusi orari, unità di misura,
+    valute, e così via; anche se non è indispensabile dal momento che il framework può funzionare anche senza,
+    svolge comunque un ruolo importante e se è possibile si consiglia sempre di installarlo. Il database di
+    supporto può contenere sia tabelle di supporto che tabelle assistite o gestite (vedi sotto), mentre i
+    database di lavoro possono contenere solo tabelle assistite e gestite.
+
+    La differenza principale fra le tabelle di supporto e le tabelle di lavoro è che le prime contengono informazioni
+    non modificabili tramite l'interfaccia del framework, in quanto sono ritenute parte del framework stesso e la
+    loro modifica è considerata un aggiornamento; le tabelle di lavoro (gestite e assistite) invece sono pensate
+    proprio per essere modificate tramite le interfacce del framework.
+
+    Una caratteristica fondamentale delle tabelle di supporto è quella di integrare array già presenti nel
+    framework, aggiungendo dati e informazioni. Si veda ad esempio l'array $cf['localization']['languages']
+    prima e dopo il file _195.localization.php. La struttura dei dati nel database non corrisponde sempre
+    esattamente a quella degli array del framework, ma si è cercato di tenerle il più simili possibile per
+    semplificarne la lettura e la gestione e a tendere si cercherà di farle convergere con gli aggiornamenti.
+
+    tabelle e view
+    --------------
+    Normalmente il framework prevede che le tabelle abbiano una vista corrispondente, identificata dallo stesso
+    nome della tabella al quale si aggiunge il suffisso '_view'. Queste view hanno la funzione principale di
+    semplificare l'accesso ai dati, e vanno costruite in base agli indici delle tabelle per massimizzare le
+    performance. Le viste devono avere la colonna '__label__', che viene utilizzata normalmente nella creazione
+    dei selettori a tendina assieme al campo 'id'.
+
+    chiavi esterne
+    --------------
+
+
+    procedure e funzioni
+    --------------------
+
+
+    campi di servizio per inserimento e aggiornamento
+    -------------------------------------------------
+
+
+    le tabelle del database di supporto
+    ===================================
+    In questa sezione descriviamo tabella per tabella l'intero database di supporto del framework.
+
+    account
+    -------
+    Questa tabella contiene gli account presenti nel deploy corrente; è fondamentale per consentire il login degli utenti.
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    account.id                      | l'ID dell'account
+    account.id_anagrafica           | l'ID dell'anagrafica collegata all'account (referenzia la tabella anagrafica)
+    account.id_mail                 | l'ID della mail collegata all'account (referenzia la tabella mail)
+    account.username                | il nome utente dell'account
+    account.password                | la password dell'account cifrata in MD5
+    account.se_attivo               | se valorizzato a 1 indica che l'account è attivo, qualsiasi altro valore indica un account inattivo
+    account.token                   | token utilizzato per l'attivazione degli account creati tramite il modulo di registrazione automatica
+    account.timestamp_login         | timestamp dell'ultimo login effettuato dall'account (vedi _src/_config/_210.auth.php)
+
+    Per inserire rapidamente un account si può utilizzare il seguente codice SQL sostituendo <username> e <password>
+    con i valori desiderati:
+
+    \code{.sql}
+    INSERT INTO `account` (`id`, `id_anagrafica`, `id_mail`, `username`, `password`, `se_attivo`)
+    VALUES ('1', NULL, NULL, '<username>', MD5('<password>'), '1');
+    \endcode
+
+    La vista account_view relativa alla tabella account presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    account_view.id                      | vedi campo corrispondente sulla tabella relativa
+    account_view.id_anagrafica           | vedi campo corrispondente sulla tabella relativa
+    account_view.id_mail                 | vedi campo corrispondente sulla tabella relativa
+    account_view.username                | vedi campo corrispondente sulla tabella relativa
+    account_view.password                | vedi campo corrispondente sulla tabella relativa
+    account_view.se_attivo               | vedi campo corrispondente sulla tabella relativa
+    account_view.token                   | vedi campo corrispondente sulla tabella relativa
+    account_view.timestamp_login         | vedi campo corrispondente sulla tabella relativa
+    account_view.attivo                  | descrizione letterale dello status del campo se_attivo
+    account_view.utente                  | -
+    account_view.gruppi                  | -
+    account_view.id_gruppi               | -
+    account_view.gruppo_sede             | -
+    account_view.id_anagrafica_struttura | -
+    account_view.id_gruppi_attribuzione  | -
+    account_view.__label__               | -
+
+*/
