@@ -142,7 +142,7 @@
 
 				    // stabilisco quale chiave usare per il rewrite
 					if( ! isset( $v['rewrited'] ) || ! is_array( $v['rewrited'] ) || ! array_key_exists( $lk, $v['rewrited'] ) ) {
-					    $v['rewrited'][ $lk ] = string2urlRewrite(
+					    $v['rewrited'][ $lk ] = string2rewrite(
 						( isset( $v['custom'][ $lk ] ) && ! empty( $v['custom'][ $lk ] ) )
 						?
 						$v['custom'][ $lk ]
