@@ -39,10 +39,11 @@
 	if( isset( $_REQUEST['lvl'] ) && is_array( $_REQUEST['lvl'] ) ) {
 	    foreach( $_REQUEST['lvl'] as $lvl ) {
 #		echo $lvl . PHP_EOL;
-		if( isset( $print[ ( ( $lvl === 'NULL' ) ? NULL : $lvl ) ] ) ) {
+		if( $lvl === 'NULL' ) { $lvl = NULL; }
+		if( isset( $print[ $lvl ] ) ) {
 #		    print_r( $print );
 #		    echo $lvl . ' presente in: ' . print_r( $print, true );
-		    $print = $print[ ( ( $lvl === 'NULL' ) ? NULL : $lvl ) ];
+		    $print = $print[ $lvl ];
 #		} else {
 #		    echo $lvl . ' non presente in: ' . print_r( $print, true );
 		}
@@ -59,20 +60,20 @@
 	    $tx .= '<li>(vuoto)</li>';
 	} else {
 	    foreach( array_keys( $print ) as $key ) {
-#		echo $key . PHP_EOL;
-		if( empty( $key ) ) { $key = 'NULL'; }
-		$qs['lvl'] = array_merge( $_REQUEST['lvl'], array( $key ) );
-		if( is_array( $print[ ( ( $key === 'NULL' ) ? NULL : $key ) ] ) ) {
-#		    echo 'array' . PHP_EOL;
-#		    $tx .= '<a href="?' . urlencode( http_build_query( $qs ) ) . '">' . $key . '</a><br/>';
-		    $tx .= '<li><a href="?' . htmlentities( http_build_query( $qs ) ) . '">' . ( ( empty( $key ) ) ? '(vuoto)' : $key ) . '</a></li>';
-		} elseif( is_object( $print[ $key ] ) ) {
-		    $tx .= '<li>' . $key . ' &#x2192; ' . ( ( empty( $print[ $key ] ) ) ? '(vuoto)' : print_r( $print[ $key ], true ) ) . '</li>';
+
+		if( ! is_numeric( $key ) && empty( $key ) ) { $keyRef = 'NULL'; } else { $keyRef = $key; }
+
+		$qs['lvl'] = array_merge( $_REQUEST['lvl'], array( $keyRef ) );
+
+		if( isset( $print[ $key ] ) && is_array( $print[ $key ] ) ) {
+		    $tx .= '<li><a href="?' . htmlentities( http_build_query( $qs ) ) . '">' . ( ( ! is_numeric( $key ) && empty( $key ) ) ? '(vuoto)' : $key ) . '</a></li>';
+		} elseif( isset( $print[ $key ] ) && is_object( $print[ $key ] ) ) {
+		    $tx .= '<li>' . $key . ' &#x2192; ' . ( ( ! is_numeric( $key ) && empty( $print[ $key ] ) ) ? '(vuoto)' : print_r( $print[ $key ], true ) ) . '</li>';
 		} else {
-#		    echo 'stringa' . PHP_EOL;
-		    $tx .= '<li>' . $key . ' &#x2192; ' . ( ( empty( $print[ $key ] ) ) ? '(vuoto)' : $print[ $key ] ) . '</li>';
+		    $tx .= '<li>' . $key . ' &#x2192; ' . ( ( ! is_numeric( $key ) && empty( $print[ $key ] ) ) ? '(vuoto)' : $print[ $key ] ) . '</li>';
 		}
 	    }
+
 	}
 
     // debug
