@@ -384,6 +384,9 @@
 			    $cx			= json_decode( file_get_contents( $file ), true );
 			break;
 		    }
+		    if( empty( $cx ) ) {
+			die( 'file di configurazione ' . $file . ' danneggiato' );
+		    }
 		}
 	    }
 	}
