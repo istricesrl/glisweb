@@ -84,6 +84,7 @@
 	define( 'LOGIN_ERR_WRONG_PW'		, 'WRONGPW' );
 	define( 'LOGIN_ERR_INACTIVE'		, 'USERDOWN' );
 	define( 'LOGIN_SUCCESS'			, 'SUCCESS' );
+	define( 'LOGIN_LOGGED'			, 'LOGGED' );
 
     // chiave segreta per JWT
     // TODO abbiamo abbandonato per ora il progetto di implementare JWT

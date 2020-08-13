@@ -86,6 +86,10 @@
     // debug
 	// print_r( $_SESSION );
 
+    /*
+     * @todo $cf['auth']['status'] potrebbe contenere anche l'informazione se c'è un utente loggato o se si sta navigando come guest?
+     */
+
     // stato del login
     // NOTA a cosa serve questa cosa? dove viene usata?
 	$cf['auth']['status'] = NULL;
@@ -250,16 +254,23 @@
 						);
 
 					    // attribuzione dei gruppi e dei privilegi di gruppo
-						foreach( $_SESSION['groups'] as $gr ) {
-						    if( isset( $gr['nome'] ) ) {
-							if( isset( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] ) ) {
-							    foreach( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] as $pr ) {
-								if( ! isset( $_SESSION['account']['privilegi'] ) || ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
-								    $_SESSION['privilegi'][] = $pr;
+						if( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) {
+						    foreach( $_SESSION['groups'] as $gr ) {
+							if( isset( $gr['nome'] ) ) {
+							    if( isset( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] ) ) {
+								foreach( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] as $pr ) {
+								    if( ! isset( $_SESSION['account']['privilegi'] ) || ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
+									$_SESSION['account']['privilegi'][] = $pr;
+								    }
 								}
 							    }
 							}
 						    }
+						}
+
+					    // attribuzione dei privilegi utente
+						foreach( $_SESSION['account']['privilegi'] as $pr ) {
+						    $_SESSION['privilegi'][ $pr ] = &$cf['auth']['privileges'][ $pr ];
 						}
 
 					    // gruppi di attribuzione automatica dell'utente

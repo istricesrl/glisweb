@@ -23,6 +23,9 @@
      * </form>
      * \endcode
      *
+     * Volendo si può effettuare il logout anche tramite parametri GET aggiunti all'URL:
+     *
+     * http://glisweb.example.bho?__logout__=1
      *
      *
      * definizione di meccanismi custom per il logout
