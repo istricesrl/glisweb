@@ -38,6 +38,12 @@
     performance. Le viste devono avere la colonna '__label__', che viene utilizzata normalmente nella creazione
     dei selettori a tendina assieme al campo 'id'.
 
+
+    tabelle di ACL
+    --------------
+
+
+
     chiavi esterne
     --------------
 
@@ -74,7 +80,7 @@
 
     \code{.sql}
     INSERT INTO `account` (`id`, `id_anagrafica`, `id_mail`, `username`, `password`, `se_attivo`)
-    VALUES ('1', NULL, NULL, '<username>', MD5('<password>'), '1');
+    VALUES (NULL, NULL, NULL, '<username>', MD5('<password>'), '1');
     \endcode
 
     La vista account_view relativa alla tabella account presenta le seguenti colonne:
@@ -97,5 +103,83 @@
     account_view.id_anagrafica_struttura | -
     account_view.id_gruppi_attribuzione  | -
     account_view.__label__               | -
+
+    account_gruppi
+    --------------
+    Questa tabella mette in relazione molti a molti l'entità principale account con la secondaria gruppi.
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    account_gruppi.id                    | l'ID dell'associazione fra account e gruppo
+    account_gruppi.id_account            | l'ID dell'account associato (referenzia la tabella account)
+    account_gruppi.id_gruppo             | l'ID del gruppo associato (referenzia la tabella gruppi)
+    account_gruppi.se_amministratore     | indica se l'account è amministratore del gruppo
+
+    Per inserire rapidamente un'associazione fra account e gruppo si può utilizzare il seguente codice SQL sostituendo
+    <idAccount> e <idGruppo> con i valori desiderati:
+
+    \code{.sql}
+    INSERT INTO `account_gruppi` (`id`, `id_account`, `id_gruppo`) VALUES (NULL, '<idAccount>', '<idGruppo>');
+    \endcode
+
+    La vista account_gruppi_view relativa alla tabella account_gruppi presenta le seguenti colonne:
+
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    account_gruppi_view.id                    | vedi campo corrispondente sulla tabella relativa
+    account_gruppi_view.id_account            | vedi campo corrispondente sulla tabella relativa
+    account_gruppi_view.id_gruppo             | vedi campo corrispondente sulla tabella relativa
+    account_gruppi_view.se_amministratore     | vedi campo corrispondente sulla tabella relativa
+    account_gruppi_view.__label__             | -
+
+    gruppi
+    ------
+    Questa tabella contiene i gruppi presenti nel deploy corrente.
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    gruppi.id                            | l'ID del gruppo
+    gruppi.nome                          | il nome del gruppo
+    gruppi.id_genitore                   | l'ID del gruppo genitore (referenzia ricorsivamente la tabella gruppi)
+    gruppi.id_struttura                  | -
+
+    Per inserire rapidamente un gruppo si può utilizzare il seguente codice SQL sostituendo <nome> con il valore desiderato:
+
+    \code{.sql}
+    INSERT INTO `gruppi` (`id`, `nome`) VALUES (NULL, '<nome>');
+    \endcode
+
+    La vista gruppi_view relativa alla tabella gruppi presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    gruppi_view.id                       | vedi campo corrispondente sulla tabella relativa
+    gruppi_view.nome                     | vedi campo corrispondente sulla tabella relativa
+    gruppi_view.__label__                | -
+
+    redirect
+    --------
+    Questa tabella contiene i redirect presenti nel deploy corrente.
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    redirect.id                          | l'ID del redirect
+    redirect.codice                      | il codice HTTP da lanciare con il redirect
+    redirect.sorgente                    | l'URL che innesca il redirect
+    redirect.destinazione                | l'URL di destinazione del redirect
+
+    \code{.sql}
+    INSERT INTO `redirect` (`id`, `codice`, `sorgente`, `destinazione`) VALUES (NULL, '<code>', '<source>', '<target>');
+    \endcode
+
+    La vista redirect_view relativa alla tabella redirect presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    redirect.id                          | vedi campo corrispondente sulla tabella relativa
+    redirect.codice                      | vedi campo corrispondente sulla tabella relativa
+    redirect.sorgente                    | vedi campo corrispondente sulla tabella relativa
+    redirect.destinazione                | vedi campo corrispondente sulla tabella relativa
+    redirect.__label__                   | -
 
 */

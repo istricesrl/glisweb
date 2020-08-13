@@ -28,11 +28,21 @@
     auth.groups.<g>.id              | ID sul database del gruppo <g>
     auth.groups.<g>.nome            | nome del gruppo <g>
     auth.groups.<g>.privilegi       | array dei privilegi del gruppo <g>
+    auth.permissions                | array dei permessi disponibili
+    auth.permissions.<e>            | array dei permessi disponibili per l'entità <e>
+    auth.permissions.<e>.<l>        | array degli account con accesso <l> all'entità <e>
     auth.privileges                 | array dei privilegi disponibili
     auth.privileges.<k>             | dettagli del privilegio <k>
     auth.privileges.<k>.id          | ID del privilegio <k>
     auth.privileges.<k>.nome        | nome del privilegio <k>
     auth.status                     | stato dell'eventuale processo di login in corso
+
+    Per i livelli di permesso si faccia riferimento alla seguente tabella:
+
+    costante          | valore           | descrizione
+    ------------------|------------------|--------------------------------------------------------------------------------
+    CONTROL_FILTERED  | FILTERED         | accesso filtrato per riga agli oggetti membri dell'entità; occorre una tabella di ACL sul database (vedi \ref database "la documentazione relativa al database")
+    CONTROL_FULL      | FULL             | accesso completo a tutti gli oggetti membri dell'entità
 
     L'array $cf['auth'] viene integrato da $cx['auth'], per ulteriori dettagli vedi _src/_config/_200.auth.php.
 
@@ -77,6 +87,80 @@
     L'array $cf['common'] viene integrato da $cx['common'] ed è linkato a $ct['common'], per ulteriori dettagli vedi
     _src/_config/_030.common.php.
 
+    $cf['contents']
+    ---------------
+    Questa chiave contiene la struttura delle pagine e i contenuti; si tratta di una chiave molto estesa, la cui elaborazione
+    può essere molto onerosa in termini di tempo, e quindi viene solitamente scritta e letta dalla cache.
+
+    chiave                                       | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    contents.cached                              | vale true se i contenuti sono presenti in cache
+    contents.index                               | indice per la decodifica degli URL
+    contents.index.<l>                           | indice per la decodifica degli URL nella lingua <l>
+    contents.index.<l>.<k>                       | ID delle pagine candidate per la decodifica della stringa <k> degli URL nella lingua <l> (vedi _src/_config/_400.rewrite.php)
+    contents.pages                               | array contenente tutte le pagine presenti nel deploy corrente
+    contents.pages.<x>                           | dettagli della pagina <x>
+    contents.pages.<x>.auth                      | dettagli sulle autorizzazioni della pagina <x>
+    contents.pages.<x>.auth.groups               | gruppi autorizzati ad accedere alla pagina <x>
+    contents.pages.<x>.etc                       | ulteriori dettagli sulla pagina <x>
+    contents.pages.<x>.etc.tabs                  | dettagli sulla navigazione a schede della pagina <x> (vedi \ref templates "la documentazione relativa ai template")
+    contents.pages.<x>.h1                        | i tag H1 della pagina <x>
+    contents.pages.<x>.h1.<l>                    | il tag H1 della pagina <x> nella lingua <l>
+    contents.pages.<x>.macro                     | script PHP da eseguire prima del rendering della pagina <x>
+    contents.pages.<x>.menu                      | dettagli sui menu in cui è presente la pagina <x>
+    contents.pages.<x>.menu.<m>                  | dettagli della voce di menu della pagina <x> nel menu <m>
+    contents.pages.<x>.menu.<m>.label            | etichette della voce di menu della pagina <x> nel menu <m>
+    contents.pages.<x>.menu.<m>.label.<l>        | etichetta della voce di menu della pagina <x> nel menu <m> nella lingua <l>
+    contents.pages.<x>.menu.<m>.priority         | posizione della pagina <x> nel menu <m>
+    contents.pages.<x>.parent                    | dettagli del genitore della pagina <x>
+    contents.pages.<x>.parent.h1                 | i tag H1 del genitore della pagina <x>
+    contents.pages.<x>.parent.h1.<l>             | il tag H1 del genitore della pagina <x> nella lingua <l>
+    contents.pages.<x>.parent.id                 | ID del genitore della pagina <x>
+    contents.pages.<x>.parent.path               | i path (URL relativi) del genitore della pagina <x>
+    contents.pages.<x>.parent.path.<l>           | il path (URL relativo) del genitore della pagina <x> nella lingua <l>
+    contents.pages.<x>.parent.rewrited           | le chiavi di decodifica nell'URL del genitore della pagina <x>
+    contents.pages.<x>.parent.rewrited.<l>       | la chiave di decodifica nell'URL del genitore della pagina <x> nella lingua <l>
+    contents.pages.<x>.parent.title              | i tag title del genitore della pagina <x>
+    contents.pages.<x>.parent.title.<l>          | il tag title del genitore della pagina <x> nella lingua <l>
+    contents.pages.<x>.parents                   | dettagli dei genitori della pagina <x>
+    contents.pages.<x>.parents.h1                | tag H1 dei genitori della pagina <x>
+    contents.pages.<x>.parents.h1.<y>            | tag H1 del genitore <y> della pagina <x>
+    contents.pages.<x>.parents.h1.<y>.<l>        | tag H1 del genitore <y> della pagina <x> nella lingua <l>
+    contents.pages.<x>.parents.id                | array degli ID dei genitori della pagina <x>
+    contents.pages.<x>.parents.path              | path (URL relativi) dei genitori della pagina <x>
+    contents.pages.<x>.parents.path.<y>          | path (URL relativi) del genitore <y> della pagina <x>
+    contents.pages.<x>.parents.path.<y>.<l>      | path (URL relativo) del genitore <y> della pagina <x> nella lingua <l>
+    contents.pages.<x>.parents.rewrited          | chiavi di decodifica nell'URL dei genitori della pagina <x>
+    contents.pages.<x>.parents.rewrited.<y>      | chiavi di decodifica nell'URL del genitore <y> della pagina <x>
+    contents.pages.<x>.parents.rewrited.<y>.<l>  | chiave di decodifica nell'URL del genitore <y> della pagina <x> nella lingua <l>
+    contents.pages.<x>.parents.title             | tag title dei genitori della pagina <x>
+    contents.pages.<x>.parents.title.<y>         | tag title del genitore <y> della pagina <x>
+    contents.pages.<x>.parents.title.<y>.<l>     | tag title del genitore <y> della pagina <x> nella lingua <l>
+    contents.pages.<x>.path                      | i path (URL relativi) della pagina <x>
+    contents.pages.<x>.path.<l>                  | il path (URL relativo) della pagina <x> nella lingua <l>
+    contents.pages.<x>.rewrited                  | le chiavi di decodifica nell'URL della pagina <x>
+    contents.pages.<x>.rewrited.<l>              | la chiave di decodifica nell'URL della pagina <x> nella lingua <l>
+    contents.pages.<x>.sitemap                   | se uguale a true indica che la pagina <x> deve comparire nella sitemap
+    contents.pages.<x>.template                  | dettagli sul template della pagina <x>
+    contents.pages.<x>.template.path             | percorso del template della pagina <x>
+    contents.pages.<x>.template.schema           | schema della pagina <x>
+    contents.pages.<x>.template.theme            | tema della pagina <x>
+    contents.pages.<x>.title                     | i tag title della pagina <x>
+    contents.pages.<x>.title.<l>                 | il tag title della pagina <x> nella lingua <l>
+    contents.pages.<x>.tree                      | array ad albero del percorso dalla radice alla pagina <x>
+    contents.pages.<x>.url                       | gli URL della pagina <x>
+    contents.pages.<x>.url.<l>                   | l'URL della pagina <x> nella lingua <l>
+    contents.shortcuts                           | -
+    contents.tree                                | array ad albero delle pagine presenti nel deploy corrente
+    contents.updated                             | timestamp dell'ultimo aggiornamento dei contenuti
+
+    \todo la chiave contents.pages.<x>.template.theme è solo prevista in teoria e non ancora implementata
+
+    L'array $cf['contents'] viene integrato da $cx['contents']; in deroga al generale principio di simmetria fra $cf e $ct,
+    per ragioni di comodità e brevità di scrittura le chiavi salienti di $cf['contents'] sono linkate direttamente su $ct.
+    Per ulteriori dettagli vedi _src/_config/_300.pages.php, _src/_config/_310.pages.php, _src/_config/_320.pages.php,
+    _src/_config/_330.pages.php e _src/_config/_420.pages.php.
+
     $cf['debug']
     ------------
     Questa chiave contiene le configurazioni relative al debug e al sistema di log del framework. Contiene dei sotto
@@ -111,6 +195,26 @@
     chiave                               | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     debug.<s>.<f>.target.<l>.LOG2GCE.pid | l'id del progetto GCE su cui loggare gli eventi di livello <l> per la factory <f> allo status <s>
+
+    Vediamo un esempio molto semplice di settaggio dei livelli di log alla massima verbosità per l'ambiente di TEST e a una
+    verbosità ridotta per l'ambiente di produzione:
+
+    \code{.json}
+    "debug": {
+      "TEST": {
+        "*" : {
+          "log": { "lvl": 7 },
+          "report": { "lvl": 32767 }
+        }
+      },
+      "PROD": {
+        "*" : {
+          "log": { "lvl": 3 },
+          "report": { "lvl": 2 }
+        }
+      }
+    }
+    \endcode
 
     L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'], per ulteriori dettagli vedi _src/_config/_000.debug.php.
 
@@ -273,6 +377,35 @@
     --------------------------|---------------------------------------------------------------------------------------
     ob.status                 | lo stato dell'output buffering
 
+    $cf['redirect']
+    ---------------
+    Questa chiave contiene informazioni sui redirect.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    redirect                          | array dei redirect attivi
+    redirect.<r>                      | dettagli del redirect con URL di innesco <r>
+    redirect.<r>.codice               | il codice HTTP del redirect con URL di innesco <r>
+    redirect.<r>.destinazione         | l'URL di destinazione del redirect con URL di innesco <r>
+    redirect.<r>.sorgente             | l'URL che innesca il redirect con URL di innesco <r>
+
+    Vediamo un esempio di impostazione di redirect dal file Json:
+
+    \code{.json}
+    "redirect": [
+      {
+        "codice": "<codice>",
+        "destinazione": "<target>",
+        "sorgente": "<source>"
+      }
+    ]
+    \endcode
+
+    L'array $cf['redirect'] viene integrato da $cx['redirect']; per ulteriori dettagli vedi _src/_config/_340.redirect.php.
+
+    Si noti che la struttura del Json non richiede che venga specificata in chiave la destinazione del link, perché questa
+    operazione di indicizzazione viene svolta automaticamente in _src/_config/_345.redirect.php.
+
     $cf['redis']
     ------------
     Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Redis.
@@ -346,6 +479,7 @@
     session.account.last_access               | -
     session.account.password                  | la password dell'account collegato alla sessione corrente cifrata con MD5
     session.account.permissions               | array dei permessi per l'account collegato alla sessione corrente
+    session.account.privilegi                 | array dei privilegi per l'account collegato alla sessione corrente
     session.account.se_attivo                 | indica se l'account collegato alla sessione corrente è attivo
     session.account.timestamp_login           | timestamp dell'ultimo accesso all'account collegato alla sessione corrente
     session.account.token                     | token usato per la conferma dell'account creato tramite il modulo di registrazione automatica
@@ -353,9 +487,13 @@
     session.account.utente                    | -
     session.groups                            | gruppi collegati alla sessione corrente (appare dopo il login)
     session.id                                | l'ID della sessione corrente
+    session.privilegi                         | dettagli dei privilegi collegati alla sessione corrente (appare dopo il login)
+    session.privilegi.<x>                     | dettagli del privilegio <x> collegato alla sessione corrente
     session.used                              | la timestamp dell'ultimo utilizzo della sessione
 
     \todo approfondire gli aspetti legati a session.__view__
+    \todo sembra che ci sia un po' di ridondanza fra session.privilegi e session.account.privilegi e lo stesso per groups e gruppi, considerare di eliminare session.groups e session.privilegi se non vengono usati
+    \deprecated le chiavi session.groups e session.privilegi potrebbero essere eliminate in futuro
 
     L'array $cf['session'] è linkato a $ct['session'], per ulteriori dettagli vedi _src/_config/_055.session.php.
 
@@ -388,6 +526,7 @@
     site.id                      | id del sito <n> (vedi _src/_config/_015.site.php)
     site.name                    | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     site.name.<l>                | nome del sito <n> per la lingua <l>
+    site.pages                   | configurazioni aggiuntive per le pagine, da sovrapporre a $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
     site.protocols               | protocolli del sito <n> (ad es. https)
     site.protocols.<s>           | protocollo del sito <n> per lo status <s>
     site.root                    | path base del sito
@@ -426,6 +565,7 @@
     sites.<n>.id                 | id del sito <n> (dev'essere uguale a <n>)
     sites.<n>.name               | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     sites.<n>.name.<l>           | nome del sito <n> per la lingua <l>
+    sites.<n>.pages              | configurazioni aggiuntive per le pagine (integra $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
     sites.<n>.protocols          | protocolli del sito <n> (ad es. https)
     sites.<n>.protocols.<s>      | protocollo del sito <n> per lo status <s>
     sites.<n>.status             | status attribuito dal framework al sito <n>
