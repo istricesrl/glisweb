@@ -24,7 +24,11 @@
      *
      */
     function string2array( &$s, $c = ARRAY_SEPARATOR ) {
-	$s = explode( $c, $s );
+	if( empty( $s ) ) {
+	    return array();
+	} else {
+	    $s = explode( $c, $s );
+	}
     }
 
     /**
@@ -33,7 +37,11 @@
      *
      */
     function array2string( &$a, $c = ARRAY_SEPARATOR ) {
-	$a = implode( $c, $a );
+	if( empty( $a ) ) {
+	    return NULL;
+	} else {
+	    $a = implode( $c, $a );
+	}
     }
 
     /**
