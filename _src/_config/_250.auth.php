@@ -34,10 +34,10 @@
 	$cf['auth']['permissions'] = array(
 	    'account' => array(
 		CONTROL_FULL => array( 'roots' )
-#	    ),
-#	    'account_gruppi' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    ),
+	    'account_gruppi' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'account_gruppi_attribuzione' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -93,8 +93,8 @@
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )
 #	    ),
-#	    'gruppi' => array(
-#		CONTROL_FULL => array( 'roots' )
+	    'gruppi' => array(
+		CONTROL_FULL => array( 'roots' )
 #	    ),
 #	    'immagini' => array(
 #		CONTROL_FULL => array( 'roots' ),
