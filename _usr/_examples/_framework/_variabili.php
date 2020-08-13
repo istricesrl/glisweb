@@ -26,8 +26,7 @@
 	$tx	= NULL;
 	$tx	.= '<html>';
 	$tx	.= '<head></head>';
-	$tx	.= '<body>';
-	$tx	.= '<ul>';
+	$tx	.= '<body style="font-family: monospace;">';
 
     // array da stampare
 	$print = $cf;
@@ -35,10 +34,15 @@
     // censuro l'array per evitare fughe accidentali di informazioni sensibili
 	array2censored( $print );
 
+    // radice
+	$txl = array();
+	$txa = array( '<a href="?">$cf</a>' );
+
     // scendo nell'array
 	if( isset( $_REQUEST['lvl'] ) && is_array( $_REQUEST['lvl'] ) ) {
 	    foreach( $_REQUEST['lvl'] as $lvl ) {
-#		echo $lvl . PHP_EOL;
+		$txl['lvl'][] = $lvl;
+		$txa[] = '<a href="?' . htmlentities( http_build_query( $txl ) ) . '">' . $lvl . '</a>';
 		if( $lvl === 'NULL' ) { $lvl = NULL; }
 		if( isset( $print[ $lvl ] ) ) {
 #		    print_r( $print );
@@ -55,6 +59,10 @@
     // debug
 	// print_r( $print );
 
+    // output
+	$tx	.= '<p>' . implode( ' → ', $txa ) . '</p>';
+	$tx	.= '<ul>';
+
     // stampa
 	if( empty( $print ) ) {
 	    $tx .= '<li>(vuoto)</li>';
@@ -68,9 +76,9 @@
 		if( isset( $print[ $key ] ) && is_array( $print[ $key ] ) ) {
 		    $tx .= '<li><a href="?' . htmlentities( http_build_query( $qs ) ) . '">' . ( ( ! is_numeric( $key ) && empty( $key ) ) ? '(vuoto)' : $key ) . '</a></li>';
 		} elseif( isset( $print[ $key ] ) && is_object( $print[ $key ] ) ) {
-		    $tx .= '<li>' . $key . ' &#x2192; ' . ( ( ! is_numeric( $key ) && empty( $print[ $key ] ) ) ? '(vuoto)' : print_r( $print[ $key ], true ) ) . '</li>';
+		    $tx .= '<li>' . str_pad( $key . ' ', 16, '-' ) . ' &#x2192; ' . ( ( ! is_numeric( $key ) && empty( $print[ $key ] ) ) ? '(vuoto)' : print_r( $print[ $key ], true ) ) . '</li>';
 		} else {
-		    $tx .= '<li>' . $key . ' &#x2192; ' . ( ( ! is_numeric( $key ) && empty( $print[ $key ] ) ) ? '(vuoto)' : $print[ $key ] ) . '</li>';
+		    $tx .= '<li>' . str_pad( $key . ' ', 16, '-' ) . ' &#x2192; ' . ( ( ! is_numeric( $key ) && empty( $print[ $key ] ) ) ? '(vuoto)' : $print[ $key ] ) . '</li>';
 		}
 	    }
 
