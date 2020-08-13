@@ -273,6 +273,7 @@
 	define( 'DIR_SRC_INC'			, DIR_BASE . '_src/_inc/' );
 	define( 'DIR_SRC_INC_CONTENTS'		, DIR_BASE . '_src/_inc/_contents/' );
 	define( 'DIR_SRC_INC_CONTROLLERS'	, DIR_BASE . '_src/_inc/_controllers/' );
+	define( 'DIR_SRC_INC_MACRO'		, DIR_BASE . '_src/_inc/_macro/' );
 	define( 'DIR_SRC_LIB'			, DIR_BASE . '_src/_lib/' );
 	define( 'DIR_SRC_LIB_EXT'		, DIR_BASE . '_src/_lib/_ext/' );
 	define( 'DIR_USR'			, DIR_BASE . '_usr/' );
@@ -421,10 +422,11 @@
     // NOTA la lettura dei moduli attivi dalle variabili d'ambiente è obsoleta
 
     // moduli attivi
-	define( 'MODULI_ATTIVI'			, $cf['mods']['active']['string'] );
-	define( 'DIR_MOD_ATTIVI'		, DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
-	define( 'DIR_MOD_ATTIVI_SRC_LIB'	, DIR_MOD_ATTIVI . '_src/_lib/' );
-	define( 'DIR_MOD_ATTIVI_ETC_LOC'	, DIR_MOD_ATTIVI . '_etc/_loc/' );
+	define( 'MODULI_ATTIVI'				, $cf['mods']['active']['string'] );
+	define( 'DIR_MOD_ATTIVI'			, DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
+	define( 'DIR_MOD_ATTIVI_SRC_LIB'		, DIR_MOD_ATTIVI . '_src/_lib/' );
+	define( 'DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS'	, DIR_MOD_ATTIVI . '_src/_inc/_controllers/' );
+	define( 'DIR_MOD_ATTIVI_ETC_LOC'		, DIR_MOD_ATTIVI . '_etc/_loc/' );
 
     // collego $ct
 	$ct['mods']				= &$cf['mods'];
