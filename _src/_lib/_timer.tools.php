@@ -54,14 +54,14 @@
 
 	$curDelta = ( round( $curTime, 5 ) - $lastTime );
 	$curCheck = ( $curDelta < 0.1 ) ? 'OK' : 'NO';
-	$curDelta = sprintf( '%0.3f', $curDelta );
+	$curDelta = str_replace(',','.',sprintf( '%0.3f', $curDelta ));
 
 	$curMemory = str_pad( writeByte( memory_get_usage( true ) ), 11, '-', STR_PAD_LEFT );
 
-	$a[ 'T'.sprintf( '%024.21f', $curTime ) ] = 
-	    sprintf( '%0.3f', $curTime ) . 
-	    ' (+' . $curDelta . ' ' . $curCheck . ') ' . 
-	    $curMemory . ' -> ' . $c;
+	$a[ 'T'.str_replace(',','.',sprintf('%024.21f',$curTime )) ] = 
+	    str_replace(',','.',sprintf( '%0.3f', $curTime )) .
+	    ' (+' . $curDelta . ' ' . $curCheck . ') ' .
+	    $curMemory . ' → ' . str_replace( '->', '→', $c );
 
     }
 
