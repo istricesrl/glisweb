@@ -1,8 +1,13 @@
 # GlisWeb - framework per le applicazioni web
 Questo è il framework GlisWeb, sviluppato a partire da una base di codice originariamente scritto da Fabio Mosti
-<fabio.mosti@istricesrl.it> e Emiliano Volta alla fine degli anni '90, riordinato in un unico framework da
-Fabio Mosti nei primi anni 2000 e costantemente aggiornato fino alla versione attuale mantenuta in collaborazione
+<fabio.mosti@istricesrl.it> e Emiliano Volta all'inizio degli anni 2000, riordinato in un unico framework da
+Fabio Mosti fra il 2000 e il 2005, e costantemente aggiornato fino alla versione attuale mantenuta in collaborazione
 con il team di Istrice srl.
+
+Grazie ai suoi vent'anni di storia, GlisWeb può garantire una stabilità e una robustezza senza pari, pur
+essendo aggiornato alle più recenti conquiste delle tecnologie web. Modernità e tradizione si fondono in uno
+strumento rigoroso ed elegante, grazie al quale è possibile realizzare con semplicità progetti estremamente
+complessi.
 
 GlisWeb è un framework leggero, ampiamente personalizzabile, pensato per realizzare siti e web application
 nativamente rispettose degli standard e delle migliori pratiche vigenti nel mondo del web.
@@ -22,11 +27,12 @@ o clonate il repository, dopodiché lanciate composer localmente nella cartella 
 Quando l'installazione delle librerie sarà completata, potrete installare il framework sul vostro server tramite FTP.
 
 Una volta completato l'upload, utilizzate l'interfaccia fornita dal vostro provider per eseguire gli script SQL
-allegati al framework in modo da creare le tabelle necessarie al suo funzionamento.
+allegati al framework (in _usr/_database/, eseguite prima mysql.schema.sql e poi mysql.data.sql) in modo da creare le
+tabelle necessarie al suo funzionamento.
 
 ### installazione tramite SSH
 Se potete accedere via SSH al server su cui volete installare GlisWeb, allora l'installazione risulterà più lineare.
 Sarà sufficiente scaricare il framework come sopra, ma direttamente nella document root del sito su cui volete
-installarlo, installare le dipendenze con composer e lanciare lo script shell allegato al framework per caricare
-il database. Lo script è interattivo e vi chiederà i dati del server di database per eseguire gli script SQL
-allegati al framework.
+installarlo, installare le dipendenze con composer e lanciare lo script shell allegato al framework
+(_src/_sh/_mysql2install.sh) per caricare il database. Lo script è interattivo e vi chiederà i dati del server
+di database per eseguire gli script SQL allegati al framework.
