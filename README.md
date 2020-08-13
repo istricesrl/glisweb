@@ -36,3 +36,15 @@ Sarà sufficiente scaricare il framework come sopra, ma direttamente nella docum
 installarlo, installare le dipendenze con composer e lanciare lo script shell allegato al framework
 (_src/_sh/_mysql2install.sh) per caricare il database. Lo script è interattivo e vi chiederà i dati del server
 di database per eseguire gli script SQL allegati al framework.
+
+## configurazione
+Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
+che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
+verrà letto automaticamente dal framework. Per qualsiasi dubbio fate riferimento alla documentazione in _usr/_docs/
+oppure se preferite potete fare il build con Doxigen dei file in modo da poterli visualizzare via web, aggiungendo
+all'URL del vostro deploy il path _usr/_docs/_build/html/.
+
+### esempi
+Ricordate inoltre che trovate numerosi esempi e file utili nella cartella _usr/_examples/, che è un'ottima base di
+partenza per iniziare a capire come funziona GlisWeb. Alcuni degli strumenti che troverete in questa cartella vi saranno
+molto utili anche quando sarete divenuti più esperti!
