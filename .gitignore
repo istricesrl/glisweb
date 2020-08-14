@@ -11,4 +11,5 @@
 /*.lock
 /*.xml
 /*.txt
+.#*
 *.old
