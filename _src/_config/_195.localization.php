@@ -55,8 +55,8 @@
 
     // linguaggio gestito di default
 	if( empty( $_SESSION['__view__']['__language__'] ) && ! empty( $cf['localization']['language']['id'] ) ) {
-	    $_SESSION['__view__']['__language__'] = $cf['localization']['language']['id'];
-#	    $_SESSION['__view__']['__ietf__'] = $cf['localization']['language']['ietf'];
+	    $_SESSION['__view__']['__lang__'] = $cf['localization']['language']['id'];
+	    $_SESSION['__view__']['__ietf__'] = $cf['localization']['language']['ietf'];
 	}
 
     // debug
