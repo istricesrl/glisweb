@@ -10,7 +10,7 @@
     e di controllo del framework.
 
     $cf['auth']
-    -------------
+    -----------
     Questo array contiene le informazioni relative ai meccanismi di autenticazione e di autorizzazione del framework.
 
     chiave                          | descrizione
@@ -98,6 +98,7 @@
     contents.index                               | indice per la decodifica degli URL
     contents.index.<l>                           | indice per la decodifica degli URL nella lingua <l>
     contents.index.<l>.<k>                       | ID delle pagine candidate per la decodifica della stringa <k> degli URL nella lingua <l> (vedi _src/_config/_400.rewrite.php)
+    contents.page                                | scorciatoia per contents.pages, vedi sotto; per ulteriori dettagli vedi anche _src/_config/_420.pages.php
     contents.pages                               | array contenente tutte le pagine presenti nel deploy corrente
     contents.pages.<x>                           | dettagli della pagina <x>
     contents.pages.<x>.auth                      | dettagli sulle autorizzazioni della pagina <x>
@@ -156,10 +157,72 @@
 
     \todo la chiave contents.pages.<x>.template.theme è solo prevista in teoria e non ancora implementata
 
+    La chiave contents.page, per il ruolo speciale che svolge nella rappresentazione dei contenuti della pagina corrente,
+    riceve alcune chiavi aggiuntive:
+
+    chiave                                       | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    contents.page.canonical                      | contiene l'ID della pagina canonica se l'URL corrente non è fra gli URL canonici
+
+    Vediamo prima di tutto un semplice esempio di creazione di una nuova pagina tramite il file di configurazione Json:
+
+    \code{.json}
+    "contents": {
+      "pages": {
+        "testjson": {
+          "sitemap": false,
+          "title": { "it-IT": "test da Json" },
+          "h1": { "it-IT": "pagina di test da configurazione Json" },
+          "parent": { "id": null },
+          "template": { "path": "_src/_templates/_athena/" },
+          "menu": {
+            "main": {
+              "label": { "it-IT": "test Json" },
+              "priority": 10
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    La stessa cosa può essere ottenuta con il seguente codice PHP inserito nel file custom src/config/310.pages.php oppure
+    in un file di inclusione (ad esempio src/inc/pages/test.it-IT.php):
+
+    \code{.php}
+    <?php
+
+        // lingua di questo file
+            $l = 'it-IT';
+            $m = NULL;
+
+        // vista pagine
+            $p['testphp'] = array(
+                'sitemap'	=> false,
+                'title'		=> array( $l		=> 'test da PHP' ),
+                'h1'		=> array( $l		=> 'pagina di test da configurazione PHP' ),
+                'parent'	=> array( 'id'		=> NULL ),
+                'template'	=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'default.html' ),
+                'menu'		=> array( 'main'	=> array(	'label'		=> array( $l => 'test PHP' ),
+                                                                        'priority'	=> 100 ) )
+        );
+
+    ?>
+    \endcode
+
+    Ovviamente l'alternativa più comoda per l'utente per la creazione di pagine è l'utilizzo del CMS messo a disposizione
+    dal modulo 3000.contenuti, ma per piccoli progetti o per la realizzazione di web application la creazione di pagine
+    da file di configurazione può essere accettabile o addirittura raccomandabile.
+
     L'array $cf['contents'] viene integrato da $cx['contents']; in deroga al generale principio di simmetria fra $cf e $ct,
     per ragioni di comodità e brevità di scrittura le chiavi salienti di $cf['contents'] sono linkate direttamente su $ct.
     Per ulteriori dettagli vedi _src/_config/_300.pages.php, _src/_config/_310.pages.php, _src/_config/_320.pages.php,
-    _src/_config/_330.pages.php e _src/_config/_420.pages.php.
+    _src/_config/_330.pages.php e _src/_config/_420.pages.php. La mappatura è la seguente:
+
+    chiave in $cf                       | chiave in $ct
+    ------------------------------------|---------------------------------------------------------------------------------------
+    contents.page                       | page
+    contents.pages                      | pages
 
     $cf['debug']
     ------------
@@ -253,6 +316,51 @@
     --------------------------|---------------------------------------------------------------------------------------
     lvls.skip                 | i numeri dei runlevel da saltare
 
+    $cf['mail']
+    -----------
+    Questa chiave contiene informazioni sulla configurazione della posta elettronica.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    mail.postmaster           | dati dell'indirizzo di posta di Postmaster in forma di array associativo array( "nome" => "mail" )
+    mail.tpl                  | template disponibili per i messaggi di posta elettronica
+    mail.tpl.<t>              | dettagli del template <t>
+    mail.tpl.<t>.<l>          | dettagli del template <t> nella lingua <l>
+    mail.tpl.<t>.<l>.attach   | array degli allegati del template <t> nella lingua <l> in forma di array associativo array( "titolo del file" => "path del file" )
+    mail.tpl.<t>.<l>.from     | dettagli del mittente del template <t> nella lingua <l> in forma di array associativo array( "nome" => "mail" )
+    mail.tpl.<t>.<l>.oggetto  | oggetto del template <t> nella lingua <l>
+    mail.tpl.<t>.<l>.testo    | testo del template <t> nella lingua <l>
+    mail.tpl.<t>.type         | tipo del template <t>, per ora è supportato solo il valore "twig"
+
+    Si noti che i template delle mail vengono renderizzati tramite Twig, quindi è possibile utilizzare al loro interno
+    qualsiasi sintassi Twig valida. Per convenzione i template vengono costruiti aspettandosi di disporre della chiave
+    'ct' contenente $ct e della chiave 'dt' contenente l'array arbitrario dei dati della singola mail da spedire. Per
+    ulteriori informazioni si veda la libreria _src/_lib/_mail.tools.php e in particolare il codice della funzione
+    queueMailFromTemplate().
+
+    Vediamo la creazione di un semplice template per la posta elettronica tramite file di configurazione Json:
+
+    \code{.json}
+    "mail": {
+      "postmaster": { "<nomePostmaster>": "mailPostmaster" },
+      "tpl": {
+        "<NOME_DEL_TEMPLATE>": {
+          "type": "twig",
+          "it-IT": {
+            "from": { "<nomeDelMittente>": "<mailDelMittente>" },
+            "oggetto": "<oggettoDellaMail>",
+            "testo": "<testoDellaMail>",
+            "attach": {
+              "<nomeAllegato>": "<path/file/allegato>"
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['mail'] è linkato a $ct['mail'], per ulteriori dettagli vedi _src/_config/_500.mail.php.
+
     $cf['memcache']
     ---------------
     Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Memcache.
@@ -315,6 +423,22 @@
     mods.active.array         | l'array dei moduli attivi
     mods.active.string        | l'elenco dei moduli attivi separati da virgola
 
+    Vediamo un esempio di attivazione dei moduli 3000.contenuti e 3100.notizie tramite file di configurazione Json:
+
+    \code{.json}
+    "mods": {
+      "active": {
+        "array": [
+          "3000.contenuti",
+          "3100.notizie"
+        ]
+      }
+    }
+    \endcode
+
+    L'array $cf['mods']['active']['array'] viene sovrascritto da $cx['mods']['active']['array'] se presente; per ulteriori
+    dettagli vedi _src/_config.php.
+
     $cf['mysql']
     ---------------
     Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Mysql.
@@ -346,9 +470,9 @@
         "localhost": {
           "address": "127.0.0.1",
           "port": "3306",
-          "username": "",
-          "password": "",
-          "db": ""
+          "username": "<user>",
+          "password": "<pass>",
+          "db": "<database>"
         }
       },
       "profiles": {
@@ -455,14 +579,35 @@
     L'array $cf['redis'] viene integrato da $cx['redis'] ed è linkato a $ct['redis'], per ulteriori dettagli vedi
     _src/_config/_040.cache.php.
 
+    $cf['request']
+    --------------
+    Questa chiave è linkata a $_REQUEST e a sua volta è linkata da $ct['request'].
+
+    chiave                                    | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    request.__err__                           | dettagli sugli errori nell'esecuzione corrente
+    request.__err__.<e>                       | dettagli sugli errori nell'esecuzione corrente per l'entità <e>
+    request.__info__                          | ulteriori dettagli sull'esecuzione corrente
+    request.__info__.<e>                      | ulteriori dettagli sull'esecuzione corrente per l'entità <e>
+    request.__info__.<e>.__status__           | codice di stato HTTP risultante dall'esecuzione corrente per l'entità <e>
+    request.__view__                          | dettagli sulla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
+    request.__view__.__ietf__                 | il codice IETF del linguaggio collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
+    request.__view__.__lang__                 | l'ID del linguaggio collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
+    request.__view__.__site__                 | l'ID del sito collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
+
+    Per capire la relazione fra $cf['request'], $ct['request'], $_REQUEST, $cf['session'], $ct['session'], $_SESSION, occorre
+    fare riferimento al codice e in particolare a _src/_config/_055.session.php e _src/_config/_750.controller.php.
+
     $cf['session']
     --------------
     Questa chiave è un collegamento a $_SESSION.
 
     chiave                                    | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
-    session.__view__                          | dettagli sulla visualizzazione
-    session.__view__.__language__             | l'ID del linguaggio collegato alla visualizzazione
+    session.__view__                          | dettagli sulla visualizzazione corrente
+    session.__view__.__ietf__                 | il codice IETF del linguaggio collegato alla visualizzazione corrente
+    session.__view__.__lang__                 | l'ID del linguaggio collegato alla visualizzazione corrente
+    session.__view__.__site__                 | l'ID del sito collegato alla visualizzazione corrente
     session.account                           | dettagli sull'account collegato alla sessione corrente (appare dopo il login, vedi _src/_config/_210.auth.php)
     session.account.__label__                 | etichetta dell'account collegato alla sessione corrente
     session.account.attivo                    | indica se l'account collegato alla sessione corrente è attivo
@@ -494,6 +639,9 @@
     \todo approfondire gli aspetti legati a session.__view__
     \todo sembra che ci sia un po' di ridondanza fra session.privilegi e session.account.privilegi e lo stesso per groups e gruppi, considerare di eliminare session.groups e session.privilegi se non vengono usati
     \deprecated le chiavi session.groups e session.privilegi potrebbero essere eliminate in futuro
+
+    Si noti che la chiave $_SESSION['__view__'] viene linkata a $_REQUEST['__view__'] (vedi _src/_config/_715.session.php) in modo
+    da essere disponibile alla funzione controller() invocata nel successivo _src/_config/_750.controller.php.
 
     L'array $cf['session'] è linkato a $ct['session'], per ulteriori dettagli vedi _src/_config/_055.session.php.
 
@@ -610,6 +758,53 @@
     L'array $cf['sites'] viene integrato da $cx['sites'] ed è linkato a $ct['sites'], per ulteriori dettagli vedi
     _src/_config/_010.site.php.
 
+    $cf['smtp']
+    -----------
+    Questa chiave contiene informazioni sui server per la posta in uscita.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    smtp.profile              | il profilo SMTP corrente (scorciatoia per smtp.profiles.<site.status>)
+    smtp.profiles             | array dei profili SMTP disponibili
+    smtp.profiles.<s>         | dettagli del profilo SMTP <s>
+    smtp.profiles.<s>.servers | array dei nomi dei server SMTP disponibili per il profilo SMTP <s>
+    smtp.server               | il server SMTP corrente (scorciatoia per smtp.servers, vedi _src/_config/_515.smtp.php)
+    smtp.servers              | array dei server SMTP disponibili
+    smtp.servers.<k>          | dettagli del server SMTP <k>
+    smtp.servers.<k>.address  | indirizzo del server SMTP <k>
+    smtp.servers.<k>.password | password del server SMTP <k>
+    smtp.servers.<k>.port     | porta del server SMTP <k>
+    smtp.servers.<k>.username | username del server SMTP <k>
+
+    Vediamo ora una semplice configurazione SMTP tramite file di configurazione Json:
+
+    \code{.json}
+    "smtp": {
+      "servers": {
+        "<idServer>": {
+          "address": "<serverAddress>",
+          "port": "<smtpPort>",
+          "username": "<smtpUser>",
+          "password": "<smtpPassword>"
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "<idServer>"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "<idServer>"
+          ]
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['smtp'] viene integrato da $cx['smtp'], per ulteriori dettagli vedi _src/_config/_510.site.php.
+
     $cf['speed']
     ------------
     Questa chiave contiene il dettaglio della cronologia di esecuzione del framework.
@@ -625,5 +820,19 @@
     tr.<x>.<k>.<l>               | traduzione nella lingua <l> per l'espressione <k> nell'ambito <x>
 
     L'array $cf['tr'] è linkato a $ct['tr'], per ulteriori dettagli vedi _src/_config/_080.translation.php.
+
+    $cf['twig']
+    ---------
+    Questo array contiene la configurazione del template renderer Twig.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    twig.profile                 | il profilo di Twig corrente (è una scorciatoia per twig.profiles.<site.status>)
+    twig.profiles                | i profili di Twig disponibili
+    twig.profiles.<s>            | dettagli del profilo di Twig per lo status <s>
+    twig.profiles.<s>.cache      | percorso della cartella per la cache; se valorizzato indica che il caching è attivo per il profilo di Twig per lo status <s>
+    twig.profiles.<s>.debug      | se vale 1 indica che il debug è attivo per il profilo di Twig per lo status <s>
+
+    L'array $cf['twig'] è linkato a $ct['twig'], per ulteriori dettagli vedi _src/_config/_380.twig.php.
 
 */
