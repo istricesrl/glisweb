@@ -15,10 +15,17 @@
      *
      */
 
+    // debug
+	// print_r( $r );
+
     // indicizzazione dei redirect
 	if( is_array( $r ) ) {
 	    foreach( $r as $redir ) {
-		$cf['redirect'][ $redir['sorgente'] ] = $redir;
+		if( isset( $redir['sorgente'] ) ) {
+		    $cf['redirect'][ $redir['sorgente'] ] = $redir;
+		} else {
+		    logWrite( 'redirect malformato: ' . print_r( $redir, true ), 'redirect', LOG_ERR );
+		}
 	    }
 	}
 
