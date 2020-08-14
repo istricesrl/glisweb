@@ -71,10 +71,10 @@ Options -Indexes
     RewriteRule ^task/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_task/_$1.php [L,QSA]
 
     # gestione dei report speciali
-    RewriteRule ^docs _usr/_docs/_build/html [L]
-    RewriteRule ^speed _src/_api/_report/_framework.speed.php [L]
-    RewriteRule ^status _src/_api/_report/_framework.status.php [L]
-    RewriteRule ^test _src/_api/_report/_framework.test.php [L]
+    RewriteRule ^docs$ _usr/_docs/_build/html [L]
+    RewriteRule ^speed$ _src/_api/_report/_framework.speed.php [L]
+    RewriteRule ^status$ _src/_api/_report/_framework.status.php [L]
+    RewriteRule ^test$ _src/_api/_report/_framework.test.php [L]
 
     # gestione dei report generici
     RewriteRule ^report/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_report/_$1.php [L,QSA]
