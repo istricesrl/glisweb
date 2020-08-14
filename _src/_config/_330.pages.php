@@ -22,15 +22,18 @@
 #11	if( $cf['pages']['cacheable'] == true ) {
 	if( $cf['contents']['cached'] === false ) {
 
-	    // scrittura della cache
-		memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_KEY, $cf['contents']['pages'] );
-		memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] );
-		memcacheWrite( $cf['memcache']['connection'], CONTENTS_TREE_KEY, $cf['contents']['tree'] );
-		memcacheWrite( $cf['memcache']['connection'], CONTENTS_INDEX_KEY, $cf['contents']['index'] );
-		memcacheWrite( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY, $cf['contents']['shortcuts'] );
+	    // controllo connessione
+		if( ! empty( $cf['memcache']['connection'] ) ) {
 
-	    // timer
-		timerCheck( $cf['speed'], ' -> fine scrittura cache pagine' );
+		    // scrittura della cache
+			memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_KEY, $cf['contents']['pages'] );
+			memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] );
+			memcacheWrite( $cf['memcache']['connection'], CONTENTS_TREE_KEY, $cf['contents']['tree'] );
+			memcacheWrite( $cf['memcache']['connection'], CONTENTS_INDEX_KEY, $cf['contents']['index'] );
+			memcacheWrite( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY, $cf['contents']['shortcuts'] );
+
+		    // timer
+			timerCheck( $cf['speed'], ' -> fine scrittura cache pagine' );
 
 #11	} else {
 
@@ -38,11 +41,23 @@
 #11		$cf['contents']['pages']		= memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_KEY );
 #11		$cf['contents']['updated']		= memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED );
 
-	    // log
-		logWrite( 'struttura delle pagine scritta in cache', 'speed', LOG_ERR );
+		    // log
+			logWrite( 'struttura delle pagine scritta in cache', 'speed', LOG_ERR );
 
 	    // timer
 #11		timerCheck( $cf['speed'], ' -> fine lettura cache pagine' );
+
+		} else {
+
+		    // log
+			logWrite( 'impossibile scrivere le pagine in cache per mancanza di connessione a memcache', 'speed' );
+
+		}
+
+	} else {
+
+	    // log
+		logWrite( 'pagine già presenti in cache, nessuna scrittura richiesta', 'speed' );
 
 	}
 

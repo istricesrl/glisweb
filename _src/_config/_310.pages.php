@@ -214,6 +214,11 @@
 	    // ultimo aggiornamento delle pagine, per la generazione della sitemap
 		$cf['contents']['updated']		= NULL;
 
+	    // configurazione extra
+		if( isset( $cx['contents'] ) ) {
+		    $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
+		}
+
 	    // variabili di lavoro
 		$lingue					= '{' . LINGUE_ATTIVE . '}';
 		$folder					= '{,_}src/{,_}inc/{,_}pages/{,_}*';

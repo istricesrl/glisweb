@@ -32,14 +32,6 @@
     // elegibilità della cache
 	$cf['contents']['cached'] = ( ( defined( 'MEMCACHE_REFRESH' ) ) ? false : true );
 
-    // NOTA l'integrazione della configurazione extra non dovrebbe stare in _310.pages.php visto che può contenere informazioni
-    // passibili di modificare l'albero delle pagine?
-
-    // configurazione extra
-	if( isset( $cx['contents'] ) ) {
-	    $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
-	}
-
     // tento di leggere i valori dalla cache
 	$cf['contents']['updated']		= memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED );
 	$cf['contents']['pages']		= memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_KEY );
@@ -65,5 +57,6 @@
 
     // debug
 	// var_dump( $cf['contents']['cached'] );
+	// print_r( $cx['contents'] );
 
 ?>
