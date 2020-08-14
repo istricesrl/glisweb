@@ -212,6 +212,7 @@
 
     // debug
 	// die( 'CONFIG INIT' );
+	// die( print_r( $_REQUEST, true ) );
 
     /**
      *
