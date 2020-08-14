@@ -83,6 +83,9 @@
      *
      */
 
+    // debug
+	// print_r( $_REQUEST );
+
     // moduli attivi
 	define( 'LINGUE_ATTIVE'			, implode( ',', array_keys( $cf['site']['name'] ) ) );
 
@@ -91,15 +94,16 @@
 	    $cf['localization']['languages'][ $l ]['ietf'] = $l;
 	}
 
+    // lingua di default
+	$lg = current( array_keys( $cf['site']['name'] ) );
+
     // lingua richiesta o lingua di default
 	if( isset( $_REQUEST['__lg__'] ) && ! empty( $_REQUEST['__lg__'] ) ) {
 	    if( array_key_exists( $_REQUEST['__lg__'], $cf['site']['name'] ) ) {
 		$lg = $_REQUEST['__lg__'];
 	    } else {
-		logWrite( 'lingua ' . $lg . ' non supportata', 'localization' );
+		logWrite( 'lingua ' . $lg . ' non supportata', 'localization', LOG_NOTICE );
 	    }
-	} else {
-	    $lg = current( array_keys( $cf['site']['name'] ) );
 	}
 
     // localizzazione di default ricavata dal titolo del sito
