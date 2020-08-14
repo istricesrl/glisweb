@@ -1,0 +1,10 @@
+{
+  "mods": {
+    "active": {
+      "array": [
+        "3000.contenuti",
+        "3100.notizie"
+      ]
+    }
+  }
+}
