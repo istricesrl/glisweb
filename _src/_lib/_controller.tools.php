@@ -25,23 +25,22 @@
     function controller( $c, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array() ) {
 
 	// log
-	    logWrite( "${t}/${a}", 'controller', LOG_DEBUG );
+	    logWrite( "${t}/${a}", 'controller' );
 
 	// inizializzazioni
-	    $q					= NULL;
-	    $s					= array();
-	    $r					= false;
-	    $ks					= array();
-	    $vs					= array();
-	    $vm					= false;
-	    $rm					= '_view';
-//	    $vValues = array();
+	    $q					= NULL;				// la query MySQL che verrà eseguita
+	    $s					= array();			// 
+	    $r					= false;			// 
+	    $ks					= array();			// 
+	    $vs					= array();			// 
+	    $vm					= false;			// 
+	    $rm					= '_view';			// 
 
 	// inclusione dei controller
 	    $cb					= DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
 	    $cm					= DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS;
 
-	// array dati
+	// inizializzazione array dati
 	    if( empty( $d ) ) { $d		= array(); }
 
 	// modifico in NULL tutti i valori vuoti
@@ -49,39 +48,33 @@
 
 	// genero l'array delle chiavi, dei valori e dei sottomoduli
 	    foreach( $d as $k => $v ) {
-		if( is_array( $v ) && substr( $k, 0, 2 ) !== '__' ) {
-		    $s[ $k ] = $v;
-		} elseif( strtolower( $k )	== '__method__' ) {
-		    $a = strtoupper( $v );
-		} elseif( strtolower( $k )	== '__table__' ) {
-		    $t = $v;
-		} elseif( strtolower( $k )	== '__reset__' ) {
-		    $r = string2boolean( $v );
-		} elseif( strtolower( $k )	== '__view_mode__' ) {
-		    $vm = true;
-		} elseif( strtolower( $k )	== '__report_mode__' ) {
-		    $rm = NULL;
-#		} elseif( strtolower( $k )	== '__notify__' ) {
-#		    $n = string2boolean( $v );
-#		} elseif( strtolower( $k )	== '__execute__' ) {
-#		    $n = string2boolean( $v );
-		} elseif( substr( $k, 0, 2 )	!== '__' ) {
+		if( is_array( $v ) && substr( $k, 0, 2 ) !== '__' ) {		// nel caso il valore sia un subform, viene
+		    $s[ $k ] = $v;						// passato così com'è per la ricorsione
+		} elseif( strtolower( $k )	== '__method__' ) {		//
+		    $a = strtoupper( $v );					// impostazione esplicita del method del form
+		} elseif( strtolower( $k )	== '__table__' ) {		//
+		    $t = $v;							// impostazione esplicita della tabella del form
+		} elseif( strtolower( $k )	== '__reset__' ) {		//
+		    $r = string2boolean( $v );					// richiesta esplicita di svuotare $_REQUEST[ $t ]
+		} elseif( strtolower( $k )	== '__view_mode__' ) {		//
+		    $vm = true;							//
+		} elseif( strtolower( $k )	== '__report_mode__' ) {	//
+		    $rm = NULL;							//
+		} elseif( substr( $k, 0, 2 )	!== '__' ) {			//
 
-#		    if( strtolower( $v )	== 'null' )		{ $v = NULL; }
 		    if( strtolower( $v )	== '__null__' )		{ $v = NULL; }
 		    if( strtolower( $v )	== '__parent_id__' )	{ $v = $p; }
 		    if( strtolower( $v )	== '__self_id__' )	{ $v = ( isset( $d['id'] ) ) ? $d['id'] : NULL; }
 		    if( strtolower( $v )	== '__timestamp__' )	{ $v = time(); }
 		    if( strtolower( $v )	== '__date__' )		{ $v = date( 'Y-m-d' ); }
 
-		    $vs[ $k ]			= array( 's' => $v );
-		    $ks[]			= $k;
+		    $vs[ $k ]			= array( 's' => $v );		// array dei valori per il bind dei parametri
+		    $ks[]			= $k;				// array delle chiavi per la costruzione della query
 
 		}
 	    }
 
 	// controllo permessi (il gruppo può eseguire l'azione sull'entità?) getAclPermission()
-	// TODO gestire il codice di errore HTTP unauthorized
 	    if( getAclPermission( $t, $a, $i ) ) {
 
 		// se è stata effettuata una GET senza ID, passo alla modalità view
@@ -95,20 +88,19 @@
 			    // print_r( $i );
 
 			// vado a cercare il campo e la tabella per le ACL
-			    // TODO getAclTable() e getAclField() ???
 			    $aclTb = getAclRightsTable( $c, $t );
 			    $aclId = getAclRightsAccountId();
 
-			// vado a cercare l'ID per le ACL
-			    // TODO getAclId() ???
-
 			// campi da selezionare dalla vista
-			// TODO fatto così è soggetto a SQL injection?
 			    if( isset( $i['__fields__'] ) ) {
 				$fld = implode( ', ', preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) );
 			    } else {
 				$fld = "${t}$rm.*";
 			    }
+
+			/*
+			 * @todo testare __fields__ per eventuale SQL injection
+			 */
 
 			// preparo la query
 			    $q = "SELECT SQL_CALC_FOUND_ROWS ${fld} FROM ${t}$rm";
@@ -119,7 +111,6 @@
 			// unisco la tabella di ACL se presente
 			    if( ! empty( $aclTb ) ) {
 				$q .= " LEFT JOIN $aclTb ON ${aclTb}.id_entita = ${t}$rm.id ";
-# NON GERARCHICO		$q .= " LEFT JOIN account_gruppi ON account_gruppi.id_gruppo = ${aclTb}.id_gruppo ";
 				$q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) )";
 				$whr[] = "( account_gruppi.id_account = ? OR ${t}$rm.id_account_inserimento = ? )";
 				$vs[] = array( 's' => $aclId );
@@ -133,12 +124,6 @@
 				    $like = "%${tks}%";
 				    $cond = array();
 				    foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
-#					$cond[] = $field . " LIKE '${like}'";
-# NOTA - questa modifica è dovuta al fatto che usare LIKE su colonne generate da una stored function
-# se il parametro è passato come prepared sembra generare sempre un errore di collation; probabilmente
-# c'è una soluzione più elegante ma al momento non sono stato in grado di trovarla ed è un peccato;
-# lascio qui il codice bello nella speranza di riuscire a farlo andare prima o poi; non è da escludere
-# che il problema possa essere anche nella funzione mysqlPreparedQuery(), bisognerebbe fare dei test
 					$cond[] = $field . ' LIKE ?';
 					$vs[] = array( 's' => $like );
 				    }
@@ -154,10 +139,12 @@
 			// debug
 			    // print_r( $i['__filters__'] );
 
-			// TODO IMPORTANTE
-			// implementare filtri che implichino una JOIN con filtro sulla tabella di JOIN
-			// ad es. cercare sull'anagrafica quelli che hanno un'associazione con la categoria clienti
-			// sulla tabella anagrafica_categorie (adesso la cosa è gestita maldestramente con LK)
+			/*
+			 * @todo IMPORTANTE
+			 * implementare filtri che implichino una JOIN con filtro sulla tabella di JOIN
+			 * ad es. cercare sull'anagrafica quelli che hanno un'associazione con la categoria clienti
+			 * sulla tabella anagrafica_categorie (adesso la cosa è gestita maldestramente con LK)
+			 */
 
 			// gestione locale dei filtri
 			    if( isset( $i['__filters__'] ) && ! empty( $i['__filters__'] ) ) {
@@ -212,15 +199,7 @@
 					    }
 					}
 				    }
-/*				    if( $sn == 'EQ' ) {
-					foreach( $fc as $fk => $fv ) {
-					    if( $fv !== '' ) {
-						$whr[] = "${fk} = ?";
-						$vs[] = array( 's' => $fv );
-					    }
-					}
-				    }
-*/				}
+				}
 			    }
 
 			// aggiungo le clausole WHERE alla query
@@ -229,22 +208,31 @@
 			    }
 
 			// raggruppamenti della vista
-			// TODO fatto così è soggetto a SQL injection?
 			    if( isset( $i['__group__'] ) && array_filter( $i['__group__'] ) ) {
 				$q .= ' GROUP BY ' . implode( ', ', $i['__group__'] );
 			    }
 
+			/*
+			 * @todo testare __group__ per eventuale SQL injection
+			 */
+
 			// ordinamenti della vista
-			// TODO fatto così è soggetto a SQL injection?
 			    if( isset( $i['__sort__'] ) && array_filter( $i['__sort__'] ) ) {
 				$q .= ' ORDER BY ' . arrayKeyValuesImplode( $i['__sort__'], ' ', ', ' );
 			    }
 
+			/*
+			 * @todo testare __sort__ per eventuale SQL injection
+			 */
+
 			// paginazione della vista
-			// TODO fatto così è soggetto a SQL injection?
 			    if( isset( $i['__pager__']['page'] ) && isset( $i['__pager__']['rows'] ) ) {
 				$q .= ' LIMIT ' . ( $i['__pager__']['page'] * $i['__pager__']['rows'] ) . ',' . $i['__pager__']['rows'];
 			    }
+
+			/*
+			 * @todo testare __pager__ per eventuale SQL injection
+			 */
 
 			// debug
 			    // print_r( $i );
@@ -269,11 +257,8 @@
 			// TODO il valore di ritorno dipende da eventuali errori
 			    $i['__status__'] = 200;
 			    return $i['__status__'];
-//			    return 200;
 
-		// controllo diritti (esiste un id nel pacchetto dati e il gruppo può eseguire l'azione su di esso?
-		// OPPURE non esiste un id nel pacchetto dati?) getAclRights() ???
-		// if not isset id or getaclrights di entità e id è vero
+		// controllo diritti
 		    } elseif( ! isset( $d['id'] ) || getAclRights( $c, $t, $a, $d['id'], $i, $pi ) != false ) {
 
 			// log
@@ -435,7 +420,7 @@
 					    if( is_array( $d ) ) {
 						$d = array_shift( $d );
 					    }
-#if( $t == 'prodotti_caratteristiche' ) { echo $t . ' -> ' . $q . ' -> ' . print_r( $d, true ) . 'dati -> ' . PHP_EOL . print_r( $vs, true ) . PHP_EOL; }
+
 				    break;
 
 			    }
@@ -447,7 +432,7 @@
 			    // echo 'controller ' . $t . '/' . $a . ' -> ' . $q . PHP_EOL;
 
 			// gestione degli errori
-			    // TODO
+			    // @todo gestire gli errori
 
 			// variabile per confronto prima/dopo
 			    $after = NULL;
@@ -484,12 +469,13 @@
 			    foreach( $ct as $f ) { require $f; }
 
 			// reintegrazione dei sottomoduli
-			    // TODO serve? a cosa serve?
 			    if( is_array( $d ) ) {
 				$d = array_merge( $d, $s );
 			    }
 
-			// TODO passare anche $i ricorsivo come $d[$k][$x]
+			/*
+			 * @todo a cosa serve questa cosa qui sopra? inoltre, verificare come si comportano __info__, __err__, e __auth__ in scenari ricorsivi
+			 */
 
 			// elaborazione dei sottomoduli
 			    switch( strtoupper( $a ) ) {
@@ -501,7 +487,6 @@
 					if( is_array( $v ) ) {
 					    foreach( $v as $x => $y ) {
 						controller( $c, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__'] );
-//    function controller( $c, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array() ) {
 					    }
 					}
 				    }
@@ -534,7 +519,6 @@
 						    $i[ $ref['TABLE_NAME'] ][ $ix ] = array();
 //						    controller( $c, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $r, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ] );
 						    controller( $c, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ], $i['__auth__'] );
-//    						    controller( $c, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array() ) {
 						    $ix++;
 						}
 					    }
