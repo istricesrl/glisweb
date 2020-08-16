@@ -31,7 +31,15 @@
 
     cartella                  | descrizione
     --------------------------|---------------------------------------------------------------------------------------
+    _etc/                     | contiene i file di configurazione aggiuntivi del framework
+    _etc/_loc/                | contiene i dizionari di traduzione del framework
     _src/                     | contiene i file sorgenti del framework
+    _src/_api/                | contiene i file per le API del framework
+    _src/_api/_task/          | contiene i file dei task del framework
+    _src/_config/             | contiene i file di configurazione del framework
+    _src/_img/                | contiene i file di immagine del framework
+    _src/_inc/                | contiene i file di inclusione del framework
+    _src/_inc/_pages/         | contiene i file di configurazione inclusi per le pagine del framework
     _src/_lib/                | contiene i file di libreria
     _src/_lib/_ext/           | contiene i file di libreria di terze parti
     _src/_sh/                 | contiene gli script di shell utili per l'installazione e la gestione del framework
@@ -62,5 +70,12 @@
     var/log/                  | contiene i log del framework
     var/log/latest            | contiene i log relativi all'ultima esecuzione del framework
     var/log/slow              | contiene i log relativi alle prestazioni del framework
+
+    documentazione e utilizzo delle cartelle
+    ========================================
+
+    _src/_api/_task/
+    ----------------
+    
 
 */

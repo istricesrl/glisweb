@@ -587,8 +587,10 @@
     ------------------------------------------|---------------------------------------------------------------------------------------
     request.__err__                           | dettagli sugli errori nell'esecuzione corrente
     request.__err__.<e>                       | dettagli sugli errori nell'esecuzione corrente per l'entità <e>
+    request.__err__.<e>.__codes__             | codici degli errori (per lo più MySQL) nell'esecuzione corrente per l'entità <e>
     request.__info__                          | ulteriori dettagli sull'esecuzione corrente
     request.__info__.<e>                      | ulteriori dettagli sull'esecuzione corrente per l'entità <e>
+    request.__info__.<e>.__auth__             | informazioni sui permessi nell'esecuzione corrente per l'entità <e>
     request.__info__.<e>.__status__           | codice di stato HTTP risultante dall'esecuzione corrente per l'entità <e>
     request.__view__                          | dettagli sulla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
     request.__view__.__ietf__                 | il codice IETF del linguaggio collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
