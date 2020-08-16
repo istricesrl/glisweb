@@ -134,7 +134,7 @@
 #	    ),
 	    'redirect' => array(
 		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    ),
 #	    'settori' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -151,8 +151,8 @@
 #	    'template_mail' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'test' => array(
-#		CONTROL_FULL => array( 'roots' )
+	    'test' => array(
+		CONTROL_FULL => array( 'roots' )
 #	    ),
 #	    'tipologie_anagrafica' => array(
 #		CONTROL_FULL => array( 'roots' )

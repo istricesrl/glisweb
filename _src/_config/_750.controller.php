@@ -27,17 +27,27 @@
      * - form (POST/GET)
      *
      * Tuttavia i primi due vengono elaborati in modo tale da rientrare nel terzo caso, come
-     * vedremo fra poco.
+     * vedremo fra poco. Sulla falsariga di questo meccanismo è possibile implementare ulteriori
+     * canali di ingresso con estrema facilità.
      *
      * dati e entità
      * =============
+     * Un'entità nel framework è un concetto astratto che serve a indicare un insieme di dati con la stessa struttura
+     * che rappresentano oggetti omogenei del mondo reale. Un'entità è normalmente rappresentata nel framework da:
      *
+     * - una tabella nel database con nome uguale a <entità>
+     * - una view nel database con nome uguale a <entità>_view
+     * - una chiave in $cf['auth']['permissions'][<entità>] per la definizione dei permessi
+     * - un'API generata automaticamente come /api/<entità>
      *
+     * e opzionalmente da:
      *
-     *
+     * - una tabella di ACL nel database con nome uguale a __acl_<entità>__
      *
      * struttura delle entità
      * ----------------------
+     *
+     *
      *
      *
      *
@@ -59,16 +69,27 @@
      *
      *
      *
+     * l'array $_REQUEST['__info__']
+     * -----------------------------
+     *
+     *
+     *
+     *
+     *
+     *
      * modalità di ingresso dei dati
      * =============================
      *
      *
      *
      *
+     *
+     *
+     *
      * input tramite file di testo
      * ---------------------------
-     *
      * TODO ESEMPI DI FILE
+     *
      *
      *
      *
@@ -76,8 +97,8 @@
      *
      * input tramite chiamate REST
      * ---------------------------
-     *
      * TODO ESEMPI DI CHIAMATE CURL DA LIMEA DI COMANDO
+     *
      *
      *
      *
@@ -85,11 +106,8 @@
      *
      * input tramite form
      * ------------------
-     *
-     * TODO ESEMPIO DI FORM
-     *
-     *
-     *
+     * L'input di dati tramite form è di gran lunga il caso più comune; per un semplice esempio di form che
+     * invia un blocco dati ben formato alla controller si veda _usr/_examples/_framework/_form.php.
      *
      *
      *
@@ -153,7 +171,7 @@
      *
      * ricerca negli insiemi di dati
      * -----------------------------
-     * http://glisweb.videoarts.eu/api/test?test[__fields__][]=id&test[__fields__][]=nome&test[__search__]=prova%20js
+     * http://glisweb.videoarts.eu/api/test?test[__fields__][]=id&test[__fields__][]=nome&test[__search__]=root
      *
      *
      *
@@ -190,6 +208,14 @@
      *
      *
      *
+     *
+     *
+     *
+     *
+     *
+     *
+     * l'array $_REQUEST['__view__']
+     * -----------------------------
      *
      *
      *

@@ -91,7 +91,6 @@
      */
 
     // stato del login
-    // NOTA a cosa serve questa cosa? dove viene usata?
 	$cf['auth']['status'] = NULL;
 
     // intercetto eventuali richieste di autenticazione HTTP

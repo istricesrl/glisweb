@@ -36,6 +36,16 @@
 	    $_SESSION['__view__']['__site__'] = SITE_CURRENT;
 	}
 
+    // inizializzo l'array degli errori
+	if( ! isset( $_REQUEST['__err__'] ) ) {
+	    $_REQUEST['__err__'] = array();
+	}
+
+    // inizializzo l'array delle informazioni
+	if( ! isset( $_REQUEST['__info__'] ) ) {
+	    $_REQUEST['__info__'] = array();
+	}
+
     // debug
 	// print_r( $_REQUEST );
 	// print_r( $_SESSION );

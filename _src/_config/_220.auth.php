@@ -65,6 +65,8 @@
     // intercetto eventuali tentativi di logout
 	if( isset( $_REQUEST['__logout__'] ) ) {
 
+	    $cf['auth']['status'] = LOGIN_LOGOUT;
+
 	    if( ini_get( 'session.use_cookies' ) ) {
 
 		$params = session_get_cookie_params();
