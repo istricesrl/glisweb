@@ -824,7 +824,7 @@
     L'array $cf['tr'] è linkato a $ct['tr'], per ulteriori dettagli vedi _src/_config/_080.translation.php.
 
     $cf['twig']
-    ---------
+    -----------
     Questo array contiene la configurazione del template renderer Twig.
 
     chiave                       | descrizione
@@ -836,5 +836,22 @@
     twig.profiles.<s>.debug      | se vale 1 indica che il debug è attivo per il profilo di Twig per lo status <s>
 
     L'array $cf['twig'] è linkato a $ct['twig'], per ulteriori dettagli vedi _src/_config/_380.twig.php.
+
+    $cf['ws']
+    ---------
+    Questo array viene valorizzato e utilizzato in _src/_api/_rest.php. L'API REST standard del framework viene innescata
+    dalla presenza della chiave $_REQUEST['__ws__'], ricavata dall'URL tramite il file .htaccess.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    ws.accept                    | il tipo di dati accettati dal chiamante, è impostato uguale a $_SERVER['HTTP_ACCEPT']
+    ws.id                        | l'ID dell'entità su cui lavorare; è impostato uguale a $_REQUEST['__id__'] per URL del tipo /src/api/<entità>/<id>
+    ws.incoming                  | il tipo di dati in arrivo, è impostato uguale a $_SERVER['CONTENT_TYPE']
+    ws.input                     | i dati in arrivo, ricavati da file_get_contents('php://input')
+    ws.charset                   | il charset rilevato con mb_detect_encoding() per ws.input
+    ws.from                      | l'indirizzo del chiamante, è impostato uguale a $_SERVER['REMOTE_ADDR']
+    ws.table                     | l'entità su cui lavorare; è impostato uguale a $_REQUEST['__ws__'] per URL del tipo /src/api/<entità>
+
+    Per maggiori dettagli sul funzionamento delle API REST standard si faccia riferimento al codice di _src/_api/_rest.php.
 
 */
