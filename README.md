@@ -41,8 +41,8 @@ di database per eseguire gli script SQL allegati al framework.
 Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
 che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
 verrà letto automaticamente dal framework. Per qualsiasi dubbio fate riferimento alla documentazione in _usr/_docs/
-oppure se preferite potete fare il build con Doxigen dei file (utilizzando lo scritp _src/_sh/_doxygen.sh in modo da
-poterli visualizzare via web, aggiungendo all'URL del vostro deploy il path _usr/_docs/_build/html/.
+oppure se preferite potete fare il build con Doxigen dei file (utilizzando lo scritp _src/_sh/_doxygen.sh) in modo
+da poterli visualizzare via web, aggiungendo all'URL del vostro deploy il path _usr/_docs/_build/html/.
 
 ### esempi
 Ricordate inoltre che trovate numerosi esempi e file utili nella cartella _usr/_examples/, che è un'ottima base di
