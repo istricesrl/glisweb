@@ -431,8 +431,16 @@
 			// debug
 			    // echo 'controller ' . $t . '/' . $a . ' -> ' . $q . PHP_EOL;
 
+			// di default imposto lo stato a 'OK'
+			    $i['__status__'] = 200;
+
 			// gestione degli errori
 			    // @todo gestire gli errori
+			    // print_r( $e['__codes__'] );
+			    if( isset( $e['__codes__'] ) && array_key_exists( '1062', $e['__codes__'] ) ) {
+				$i['__status__'] = 409;
+				$i['__err__'] = $e['__codes__']['1062'][0];
+			    }
 
 			// variabile per confronto prima/dopo
 			    $after = NULL;
@@ -559,7 +567,6 @@
 			    }
 
 			// TODO il valore di ritorno di questo ramo dipende dall'esito delle operazioni sopra
-			    $i['__status__'] = 200;
 			    return $i['__status__'];
 
 		    }
