@@ -1,7 +1,7 @@
 <?php
 
     /**
-     *
+     * configurazione di Twig
      *
      *
      *

@@ -20,7 +20,7 @@
 	$cf['smtp']['profile']			= &$cf['smtp']['profiles'][ $cf['site']['status'] ];
 
     // link al server corrente
-	if( is_array( $cf['smtp']['profile']['servers'] ) ) {
+	if( isset( $cf['smtp']['profile']['servers'] ) && is_array( $cf['smtp']['profile']['servers'] ) ) {
 	    $cf['smtp']['server']		= &$cf['smtp']['servers'][ current( $cf['smtp']['profile']['servers'] ) ];
 	}
 

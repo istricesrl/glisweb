@@ -47,7 +47,7 @@
 	$ct['page']				= &$cf['contents']['page'];
 
     // versione canonica della pagina
-	if( ! in_array( $_SERVER['REQUEST_URI'], $cf['contents']['page']['path'] ) ) {
+	if( ! in_array( strtok( $_SERVER['REQUEST_URI'], '?' ), $cf['contents']['page']['path'] ) ) {
 	    $cf['contents']['page']['canonical'] = $cf['contents']['page']['id'];
 	}
 
@@ -86,7 +86,7 @@
 
     // forzatura dei contenuti correnti per one-char parameter debug
 	if( isset( $_REQUEST['j'] ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ]	= implode( PHP_EOL, array_fill( 0, $_REQUEST['j'], '<p>'.$cf['common']['lorem'].'</p>' ) );
+	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ]	= implode( PHP_EOL, array_fill( 0, $_REQUEST['j'], '<p>'.$cf['common']['lorem']['std'].'</p>' ) );
 	}
 
     /*

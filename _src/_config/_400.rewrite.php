@@ -116,6 +116,9 @@
 	     * è possibile unire i due meccanismi?
 	     */
 
+	    // log
+		logWrite( 'nessuna pagina richiesta esplicitamente', 'rewrite' );
+
 	    // verifico se la pagina corrente non è una shortcut
 		if( ! array_key_exists( strtok( $_SERVER['REQUEST_URI'], '?' ), $cf['contents']['shortcuts'] ) ) {
 

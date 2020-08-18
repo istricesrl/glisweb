@@ -92,6 +92,8 @@
 		    // aggiungo l'id pagina
 			$v['id'] = $k;
 
+		    // aggiungo l'id sito
+			if( ! isset( $v['id_sito'] ) ) { $v['id_sito'] = SITE_DEFAULT; }
 
 		    // controllo preliminare parent
 			if( isset( $v['parent'] ) && is_array( $v['parent'] ) && array_key_exists( 'id', $v['parent'] ) ) {
