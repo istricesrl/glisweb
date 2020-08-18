@@ -8,9 +8,9 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'admin' ),
 	    'h1'		=> array( $l		=> 'dashboard' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'metro.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.html' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'macro'		=> array( '_src/_inc/_macro/_default.dashboard.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_dashboard.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'dashboard' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'dashboard' ),
@@ -18,24 +18,24 @@
 	);
 
     // cancellazione
-	$p['cancellazione'] = array(
+	$p['delete'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cancellazione' ),
 	    'h1'		=> array( $l		=> 'cancellazione' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'delete.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_default.delete.php' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'delete.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_delete.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
     // file browser
-	$p['file_browser'] = array(
+	$p['browser'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'file browser' ),
 	    'h1'		=> array( $l		=> 'file browser' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'browser.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'browser.html' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'macro'		=> array( '_src/_inc/_macro/_default.browser.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_browser.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
