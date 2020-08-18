@@ -352,16 +352,29 @@
      * @todo documentare
      *
      */
-    function recursiveDelete( $f ) {
+    function recursiveDelete( $d ) {
 
-	// rimozione dei file
-	    foreach( getDirIterator( $d ) as $fileinfo ) {
-		$todo = ( $fileinfo->isDir() ) ? 'rmdir' : 'unlink';
-		$todo( $fileinfo->getRealPath() );
+	// path completo
+	    fullPath( $d );
+
+	// se la cartella esiste
+	    if( file_exists( $d ) ) {
+
+		// rimozione dei file
+		    foreach( getDirIterator( $d ) as $fileinfo ) {
+			$todo = ( $fileinfo->isDir() ) ? 'rmdir' : 'unlink';
+			$todo( $fileinfo->getRealPath() );
+		    }
+
+		// rimozione della cartella radice
+		    return rmdir( $d );
+
+	    } else {
+
+		// ritorno false
+		    return false;
+
 	    }
-
-	// rimozione della cartella radice
-	    rmdir( $f );
 
     }
 
