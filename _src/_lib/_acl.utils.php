@@ -25,6 +25,9 @@
 	// namespace globale
 	    global $cf;
 
+	// se viene passato $cf['page'] anziché l'ID della pagina
+	    if( is_array( $p ) ) { $p = $p['id']; }
+
 	// pagina su cui lavorare
 	    if( isset( $cf['contents']['pages'][ $p ] ) ) {
 
