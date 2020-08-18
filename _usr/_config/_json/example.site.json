@@ -1,0 +1,27 @@
+{
+  "sites": {
+    "1": {
+      "id": 1,
+      "__label__": "etichettaSito",
+      "name": {
+        "it-IT": "nomeSito"
+      },
+      "homes": {
+        "TEST": "idHomeSito",
+        "PROD": "idHomeSito"
+      },
+      "protocols": {
+        "TEST": "protocolloSito",
+        "PROD": "protocolloSito"
+      },
+      "hosts": {
+        "TEST": "nomeHost",
+        "PROD": "nomeHost"
+      },
+      "domains": {
+        "TEST": "nomeDominio",
+        "PROD": "nomeDominio"
+      }
+    }
+  }
+}

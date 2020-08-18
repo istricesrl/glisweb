@@ -1,0 +1,20 @@
+{
+  "mysql": {
+    "servers": {
+      "default": {
+        "address": "",
+        "port": "",
+        "username": "",
+        "password": "",
+        "db": ""
+      }
+    },
+    "profiles": {
+      "TEST": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  }
+}

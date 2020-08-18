@@ -1,0 +1,24 @@
+{
+  "smtp": {
+    "servers": {
+      "idServer": {
+        "address": "smtpServer",
+        "port": "smtpPort",
+        "username": "smtpUser",
+        "password": "smtpPassword"
+      }
+    },
+    "profiles": {
+      "TEST": {
+        "servers": [
+          "idServer"
+        ]
+      },
+      "PROD": {
+        "servers": [
+          "idServer"
+        ]
+      }
+    }
+  }
+}

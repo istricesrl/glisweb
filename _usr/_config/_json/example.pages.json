@@ -1,0 +1,19 @@
+{
+  "contents": {
+    "pages": {
+      "testjson": {
+        "sitemap": false,
+        "title": { "it-IT": "test da Json" },
+        "h1": { "it-IT": "pagina di test da configurazione Json" },
+        "parent": { "id": null },
+        "template": { "path": "_src/_templates/_athena/" },
+        "menu": {
+          "main": {
+            "label": { "it-IT": "test Json" },
+            "priority": 10
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "mail": {
+    "postmaster": { "nomePostmaster": "mailPostmaster" },
+    "tpl": {
+      "TEMPLATE_DI_PROVA": {
+        "type": "twig",
+        "it-IT": {
+          "from": { "nomeDelMittente": "mailDelMittente" },
+          "oggetto": "oggettoDellaMail",
+          "testo": "testoDellaMail",
+          "attach": {
+            "nomeAllegato": "path/file/allegato"
+          }
+        }
+      }
+    }
+  }
+}
