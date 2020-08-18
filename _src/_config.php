@@ -119,6 +119,22 @@
      * vista per le librerie principali, mentre i file di configurazione vengono inclusi, sempre con la
      * logica standard/custom vista sopra, solo se presenti nel modulo base.
      *
+     * moduli dipendenti e moduli correlati
+     * ------------------------------------
+     * Si noterà che i codici numerici dei moduli sono raggruppati per migliaia, da zero a nove; questo simbolegga
+     * i rapporti di dipendenza che ci sono fra i moduli individuati dalle migliaia e quelli con codice maggiore
+     * all'interno della stessa migliaia. Quando i codici di due moduli si trovano in questa situazione, si dice
+     * che il maggiore è dipendente dal minore; questo può significare che nel minore sono per esempio definite
+     * entità che sono richieste al minore per funzionare, oppure sono dichiarate funzioni necessarie all'esecuzione
+     * del codice del minore, e così via.
+     *
+     * La migliaia zero fa eccezione in questo senso, e i moduli che le appartengono non si trovano in rapporto
+     * di dipendenza gli uni dagli altri.
+     *
+     * Al di là di questo rapporto di dipendenza, è possibile che alcuni moduli siano correlati fra loro, ovverosia
+     * che la presenza di un modulo può modificare il comportamento dell'altro ma non ne è un prerequisito, e
+     * ovviamente viceversa.
+     *
      * inclusione dei files di libreria
      * ================================
      * La strategia di inclusione dei files di libreria (contenenti costanti e funzioni) è molto
@@ -301,6 +317,7 @@
 	define( 'FILE_CURRENT_VERSION'		, DIR_ETC . '_current.conf' );
 	define( 'FILE_LATEST_RUN'		, DIR_VAR_LOG_LATEST . 'run.latest.log');
 	define( 'FILE_LATEST_CRON'		, DIR_VAR_LOG_LATEST . 'cron.latest.log');
+	define( 'FILE_LATEST_SITEMAP'		, DIR_VAR_LOG_LATEST . 'sitemap.latest.log');
 	define( 'FILE_LATEST_UPDATE'		, path2custom( DIR_ETC ) . 'latest.conf' );
 	define( 'FILE_LICENSE'			, path2custom( DIR_ETC ) . 'license.conf' );
 	define( 'FILE_LOREM'			, DIR_ETC . '_lorem.conf' );
