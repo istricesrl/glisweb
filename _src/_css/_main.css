@@ -1,0 +1,79 @@
+/**
+ * INDICE
+ * - stili di base
+ * - stili dei bottoni
+ * - stili del footer
+ * - stili per il banner cookie
+ * - stili per font awesome
+ * - utility tipografiche
+ */
+
+/* stili di base */
+
+html, body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* stili dei bottoni */
+
+.btn {
+    cursor: pointer;
+}
+
+/* stili del footer */
+
+footer {
+    margin-top: auto;
+}
+
+/* stili per FontAwesome */
+
+.font-awesome {
+    font-family: FontAwesome;
+}
+
+/* stili per il banner cookie */
+
+#cookie {
+    bottom: 0px;
+    min-height: 50vh;
+    position: fixed;
+}
+
+/* utility tipografiche */
+
+.elliptic {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hidden {
+    display: none;
+}
+
+.monospace {
+    font-family: monospace;
+}
+
+.nowrap, .no-wrap {
+    white-space: nowrap;
+}
+
+.preserve-newlines {
+    white-space: pre-line;
+}
+
+.toggler {
+    cursor: pointer;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.vh-100 {
+    min-height: 100vh;
+}
