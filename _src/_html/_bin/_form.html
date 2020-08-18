@@ -1,0 +1,304 @@
+
+{# MACRO PER GLI ELEMENTI DEI FORM #}
+{# NOTA: IMPORTARE SEMPRE COME FRM #}
+
+{% macro stars( voto ) %}
+<ul class="stars">
+{% for i in 0..4 %}
+<li class="star {% if i < voto %}on{% endif %}"><i class="fa fa-star fa-fw"></i></li>
+{% endfor %}
+</ul>
+{% endmacro %}
+
+{% macro label( text, class ) %}
+<label class="col-form-label{{ class }}">{{ text }}</label>
+{% endmacro %}
+
+{% macro selectAuto( table, subtable, counter, field, placeholder, etc, request, default, required, noempty, class, disabled ) %}
+{% import _self as frm %}
+{{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, 1, required, noempty, class, disabled ) }}
+{% endmacro %}
+
+{% macro selectDisabled( table, subtable, counter, field, placeholder, etc, request, default, noempty, class ) %}
+{% import _self as frm %}
+{{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, '', '', noempty, class, 1 ) }}
+{% endmacro %}
+
+{# macro selectRequired( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, noempty, class, disabled ) #}
+{% macro selectRequired( table, subtable, counter, field, placeholder, etc, request, default, noempty, class, disabled ) %}
+{% import _self as frm %}
+{{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, '', 1, noempty, class, disabled ) }}
+{% endmacro %}
+
+{% macro selectAutoRequired( table, subtable, counter, field, placeholder, etc, request, default, noempty, class, disabled ) %}
+{% import _self as frm %}
+{{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, 1, 1, noempty, class, disabled ) }}
+{% endmacro %}
+
+{% macro select( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, disabled ) %}
+{% if subtable %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+{% else %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if autosubmit %}
+    {% if autosubmit == 1 %}{% set change = 'submit();' %}{% else %}{% set change = autosubmit %}{% endif %}
+{% endif %}
+{% if not vl %}{% set vl = default %}{% endif %}
+{% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
+{% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
+{% if disabled %}
+{% for option in etc %}{% if option.id == vl %}
+<input type="hidden" name="{{ nm }}" value="{{ option.id }}"  >
+<div class="form-control-plaintext {{ class }}">{{ option.__label__ }}</div>
+{% endif %}{% endfor %}
+{% else %}
+<select name="{{ nm }}" id="{{ id }}" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if required %} required{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true">
+    {% if not noempty %}<option value="">{# placeholder #}</option>{% endif %}
+    {% for option in etc %}
+    <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
+    {% endfor %}
+</select>
+{% endif %}
+{% endmacro %}
+
+{% macro selectPicker( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, disabled ) %}
+{% if subtable %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+{% else %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if vl is empty %}{% set vl = default %}{% endif %}
+<input type="hidden" {% if disabled %}readonly{% endif %} name="{{ nm }}" id="{{ id }}" value="{{ vl }}" {% if required %}required{% endif %}>
+<input type="text" class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ val }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %}>
+{% endmacro %}
+
+{% macro input( table, subtable, counter, field, placeholder, etc, request, default, type, required, class, disabled, step ) %}
+{% if subtable %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+{% else %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if vl is empty %}{% set vl = default %}{% endif %}
+<input type="{% if type %}{{ type }}{% else %}text{% endif %}" {% if step %}step={{ step }}  {% endif %} {% if disabled %}readonly{% endif %} name="{{ nm }}" id="{{ id }}" class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ vl }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %} {% if type == 'password' %}autocomplete="new-password" {% endif %}>
+{% endmacro %}
+
+{% macro inputRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class, disabled, step ) %}
+{% import _self as frm %}
+{{ frm.input( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class, disabled, step ) }}
+{% endmacro %}
+
+{% macro inputDisabled( table, subtable, counter, field, placeholder, etc, request, default, type, class ) %}
+{% import _self as frm %}
+{{ frm.input( table, subtable, counter, field, placeholder, etc, request, default, type, '', class, 1 ) }}
+{% endmacro %}
+
+{% macro checkbox( table, subtable, counter, field, placeholder, etc, request, default, class ) %}
+{% if subtable %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set df = request[ table ][ subtable ][ counter ].id %}
+{% else %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+    {% set df = request[ table ].id %}
+{% endif %}
+<input type="hidden" name="{{ nm }}" id="{{ id }}" class="" value="{% if vl or ( default and not df ) %}1{% else %}0{% endif %}">
+<input type="checkbox" class="form-check-input" {% if vl or ( default and not df ) %}checked{% endif %}>
+{% if placeholder %}
+<label class="form-check-label text-left" for="{{ id }}">{{ placeholder }}</label>
+{% endif %}
+{% endmacro %}
+
+{% macro textarea( table, subtable, counter, field, placeholder, rows, request, default, required, class, height, console, disabled ) %}
+{% if subtable %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+{% else %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if not vl %}{% set vl = default %}{% endif %}
+{% if disabled %}
+<input  type="hidden" name="{{ nm }}" value="{{ vl }}">
+<div class="form-control-plaintext {{ class }}">{{ vl }}</div>
+{% else %}
+<textarea   placeholder="{{ placeholder }}" name="{{ nm }}" id="{{ id }}" {% if height %}height="{{ height }}"{% else %}style="min-height: {{ rows * 30 }}px;"{% endif %} class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" placeholder="{{ placeholder }}" {% if console %}console="{{ console }}"{% endif %} {% if required %}required{% endif %}>{{ vl }}</textarea>
+{% endif %}
+{% endmacro %}
+
+{% macro textareaRequired( table, subtable, counter, field, placeholder, rows, request, default, class, height, console ) %}
+{% import _self as frm %}
+{{ frm.textarea( table, subtable, counter, field, placeholder, rows, request, default, true, class, height, console ) }}
+{% endmacro %}
+
+{% macro date( table, subtable, counter, field, placeholder, etc, request, default, type, required, class ) %}
+{% if subtable %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+{% else %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if not vl %}{% set vl = default %}{% endif %}
+<input type="date" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}" {% if required %}required{% endif %}>
+{% endmacro %}
+
+{% macro datetime( table, subtable, counter, field, placeholder, etc, request, default, type, required, class ) %}
+{% if subtable %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+{% else %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if not vl %}{% set vl = default %}{% endif %}
+<input type="datetime-local" {% if not request[ table ].id or (subtable and not request[ table ][ subtable ][ counter ].id  ) %}value="{{'now'|date('Y-m-d\\TH:i' ) }}"{% endif %} class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
+{% endmacro %}
+
+{% macro time( table, subtable, counter, field, placeholder, etc, request, default, type, required, class ) %}
+{% if subtable %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+{% else %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if not vl %}{% set vl = default %}{% endif %}
+<input type="time" {# if not request[ table ].id %}value="{{'now'|date('Y-m-d\\TH:i' ) }}"{% endif #} class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
+{% endmacro %}
+
+{% macro datetimeRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class ) %}
+{% import _self as frm %}
+{{ frm.datetime( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class ) }}
+{% endmacro %}
+
+{% macro button( text, type, class, onclick, placeholder ) %}
+<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" class="btn btn-sm {% if class %}{{ class }}{% else %}btn-secondary{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} >{{ text|raw }}</button>
+{% endmacro %}
+
+{% macro subformLegend( subtable, legend, class, disabled ) %}
+<legend>{% if not disabled %}<button class="btn btn-sm btn-secondary d-print-none" type="button" onclick="duplicate('{{ subtable }}');"><i class="fa fa-plus"></i></button> {% endif %}{{ legend }}</legend>
+{% endmacro %}
+
+{% macro uploader( table, subtable, counter, field, placeholder, etc, request, folder, site, edit, pages, lang, required, class, short, disabled ) %}
+{% if subtable %}
+    {% set pk = request[ table ][ subtable ][ counter ].id %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+{% else %}
+    {% set pk = request[ table ].id %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if not folder %}
+    {% if vl %}
+	{% set folder = vl|replace({ (vl|split('/')|last) : '' }) %}
+    {% else %}
+	{% set folder = 'var/contenuti/' %}
+    {% endif %}
+{% endif %}
+<div class="row form-row">
+    <input type="hidden" name="{{ nm }}" id="{{ id }}" value="{{ vl }}" />
+    <div class="col-auto text-left {{ class }}">
+	{% if vl %}
+	<button title="apri il file in una nuova pagina" class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ site.root }}{{ vl }}','_blank');"><i class="fa fa-external-link"></i></button>
+	{% endif %}
+	{% if not disabled %}
+	{% if edit and pk %}
+	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ pages[ edit ].path[ lang ] }}?{{ subtable }}[id]={{ pk }}','_blank');"><i class="fa fa-pencil"></i></button>
+	{% endif %}
+	<input type="file" style="display: none;" class="form-control-file-sm form-control-sm ajax-uploader" name="__{{ id }}_uploader__" id="{{ id }}_uploader" placeholder="{{ label }}" uploader-folder="{{ folder }}" uploader-field="{{ id }}" small>
+	<button title="seleziona il file"  class="btn btn-secondary btn-sm btn-sqr show-on-duplicate" type="button" onclick="$(this).prev('input').trigger('click');"><i class="fa fa-folder-open"></i></button>
+	{% endif %}
+    </div>
+    {% if vl %}
+    {% if not short %}
+    <div class="col col-form-label remove-on-duplicate text-left" style="overflow: hidden;">
+	{{ vl|split("/")|last }}
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro shortUploader( table, subtable, counter, field, placeholder, etc, request, folder, site, edit, pages, lang, required, class, disabled ) %}
+{{ frm.uploader( table, subtable, counter, field, placeholder, etc, request, folder, site, edit, pages, lang, required, class, '1', disabled ) }}
+{% endmacro %}
+
+{% macro checkPrivacy( form, contatti, pages, tr, lang, class, rclass, modulo ) %}
+{% if not class %}{% set class = 'col-12 col-md-10 offset-md-2' %}{% endif %}
+{% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
+{% if not modulo %}{% set modulo = '__contatti__[' ~ form ~ ']' %}{% endif %}
+<div class="{{ rclass }} row-privacy">
+    <div class="{{ class }}">
+	<div class="form-check">
+	    <input type="hidden" id="privacy_policy" name="{{ modulo }}[privacy][policy]" value="0">
+	    <input class="form-check-input" type="checkbox" required>
+	    <label class="form-check-label text-left" for="privacy_policy">
+		{{ tr.accetto_privacy[ lang ] | raw }}
+		<a href="{{ pages.privacy.path[ lang ] }}" target="_blank">{{ tr.privacy_policy_sito[ lang ] | raw }}</a> ({{ tr.obbligatorio[ lang ] | raw }})
+	    </label>
+	</div>
+    </div>
+</div>
+{% for label,check in contatti[ form ].privacy[ lang ].finalita %}
+<div class="{{ rclass }} row-privacy">
+    <div class="{{ class }}">
+	<div class="form-check">
+	    <input type="hidden" id="privacy_{{ label }}" name="{{ modulo }}[privacy][{{ label }}]" value="0">
+	    <input class="form-check-input" type="checkbox" {% if check.required %}required{% endif %}>
+	    <label class="form-check-label text-left" for="privacy_{{ label }}">
+		{{ check.label | raw }} ({% if check.required %}{{ tr.obbligatorio[ lang ] | raw }}{% else %}{{ tr.facoltativo[ lang ] | raw }}{% endif %})
+	    </label>
+	</div>
+    </div>
+</div>
+{% endfor %}
+{% for label,check in contatti[ form ].condizioni[ lang ] %}
+<div class="{{ rclass }} row-privacy">
+    <div class="{{ class }}">
+	<div class="form-check">
+	    <input type="hidden" id="condizioni_{{ label }}" name="{{ modulo }}[condizioni][{{ label }}]" value="0">
+	    <input class="form-check-input" type="checkbox" {% if check.required %}required{% endif %}>
+	    <label class="form-check-label text-left" for="condizioni_{{ label }}">
+		{{ tr.accetto_privacy[ lang ] | raw }}
+		<a href="{{ pages[ check.page ].path[ lang ] }}" target="_blank">{{ check.label | raw }}</a> ({% if check.required %}{{ tr.obbligatorio[ lang ] | raw }}{% else %}{{ tr.facoltativo[ lang ] | raw }}{% endif %})
+	    </label>
+	</div>
+    </div>
+</div>
+{% endfor %}
+{% endmacro %}
+
+{% macro selectModalitaPagamento( carrello, etc ) %}
+<select class="form-control form-control-sm hint-toggle" id="costo-pagamento" hint-toggle="modalita_pagamento" name="__carrello__[id_modalita_pagamento]">
+    {% for cons in etc.id_modalita_pagamento %}
+    <option value="{{ cons.id }}" min="{{ cons.importo_min }}" max="{{ cons.importo_max }}" prezzo="{{ cons.prezzo }}" relativo="{{ cons.prezzo_relativo }}" {% if cons.id == carrello.id_modalita_pagamento %}selected{% endif %}>{{ cons.__label__ }}</option>
+    {% endfor %}
+</select>
+{% endmacro %}

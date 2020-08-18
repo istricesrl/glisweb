@@ -1,0 +1,24 @@
+
+{# FILE PER LA GENERAZIONE DEL TAG <script> DI GOOGLE ADS ALL'INTERNO DEL TAG <head> #}
+
+{% if google.ads.profile.id %}
+<script>
+    gtag('config', '{{ google.ads.profile.id }}');
+    {% if google.ads.profile.conversion %}
+    function gtag_report_conversion(url) {
+	var callback = function () {
+	    if (typeof(url) != 'undefined') {
+		window.location = url;
+	    }
+	};
+	gtag('event', 'conversion', {
+	    'send_to': '{{ google.ads.profile.id }}/{{ google.ads.profile.conversion }}',
+	    'event_callback': callback
+	});
+	return false;
+    }
+    {% endif %}
+</script>
+{% else %}
+<!-- profilo Ads non settato -->
+{% endif %}

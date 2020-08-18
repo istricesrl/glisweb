@@ -1,0 +1,57 @@
+
+{# MACRO PER GLI ELEMENTI DI NAVIGAZIONE #}
+{# NOTA: IMPORTARE SEMPRE COME NAV #}
+
+{% macro menu( links, lang, site, query ) %}
+{% import _self as nav %}
+{% for link in links %}<li class="nav-item{% if link.active %} active{% elseif link.current %} current{% endif %}">
+    {% if link.label[ lang ] %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% endif %}
+    {% if link.content %}<ul>{{ nav.menu( link.content, lang, site, query ) }}</ul>{% endif %}
+</li>{% endfor %}
+{% endmacro %}
+
+{% macro selectMenu( links, lang, site, query, offset ) %}
+{% import _self as nav %}
+{% for link in links %}
+    <option class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}"{% if link.active or link.current %} selected{% endif %}>{{ offset }}{{ link.label[ lang ] }}</option>
+    {% if link.content %}
+    {{ nav.selectMenu( link.content, lang, site, query, offset ~ '— ' ) }}
+    {% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% macro lineMenu( links, lang, site, query ) %}
+{% import _self as nav %}
+<div>
+{% for link in links %}
+    <a class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}">{{ link.label[ lang ] }}</a>{% if not loop.last %} | {% endif %}
+    {% if link.content %}
+    {% set submenu = link.content %}
+    {% endif %}
+{% endfor %}
+</div>
+{% if submenu %}{{ nav.selectMenu( submenu , lang, site, query ) }}{% endif %}
+{% endmacro %}
+
+{% macro tabs( page, pages, lang, etc, request ) %}
+{% if pages[ page.id ].etc.tabs %}
+<section class="row d-print-none">
+    <div class="col-12">
+	<ul class="nav nav-tabs">
+	    {% for t in pages[ page.id ].etc.tabs %}
+	    <li class="nav-item"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ etc.table ].id %}?{{ etc.table }}[id]={{ request[ etc.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ etc.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% else %}{{ pages[ t ].h1[ lang ] }}{% endif %}</a></li>
+	    {% endfor %}
+	</ul>
+    </div>
+</section>
+{% endif %}
+{% endmacro %}
+
+{% macro breadcrumb( links, lang, site, query ) %}
+{% for link in links %}<li class="breadcrumb-item{% if link.active %} active{% endif %}"><a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a></li>{% endfor %}
+{% endmacro %}
+
+{% macro flags( links, lang, site, query ) %}
+{% for link in links %}<li class="flags-item{% if link.active %} active{% endif %}"><a href="{{ link.location }}{% if query %}?{{ query }}{% endif %}" class="flags-link"><img data-src="{{ site.root }}_src/_img/_flags/{{ link.country }}.png" alt="change language to {{ link.country }}" class="lazyload"></a></li>{% endfor %}
+{% endmacro %}
+

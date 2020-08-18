@@ -1,0 +1,40 @@
+
+{# FILE PER LA GENERAZIONE DEL CODICE STANDARD DI RICHIESTA ACCETTAZIONE COOKIE #}
+{# NOTA: VEDI LA DOCUMENTAZIONE TECNICA PER ULTERIORI INFORMAZIONI SULLA GESTIONE DEI COOKIE #}
+
+{% if privacy.cookie.terzi.analitici.identificativi %}
+{% set consensi = 0 %}
+{% for cookie, dettagli in privacy.cookie.terzi.analitici.identificativi %}
+{% if dettagli.consenso == '' %}
+{% set consensi = consensi + 1 %}
+{% endif %}
+{% endfor %}
+{% if consensi > 0 %}
+<div class="container-fluid" id="cookie">
+<div class="row">
+    {% for cookie, dettagli in privacy.cookie.terzi.analitici.identificativi %}
+    {% if dettagli.consenso == '' %}
+    <div class="col-12 col-md-6 pb-3">
+	<form action="{{ page.path[ localization.language.ietf ] }}" method="post">
+	    <input type="hidden" name="__cookie__[owner]" value="terzi">
+	    <input type="hidden" name="__cookie__[type]" value="analitici">
+	    <input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
+	    <input type="hidden" name="__cookie__[value]" value="1">
+	    <input type="submit" class="btn btn-default btn-light" value="{{ tr.accetta[ localization.language.ietf ] }} {{ dettagli.nome }}">
+	</form>
+    </div>
+    <div class="col-12 col-md-6 pb-3">
+	<form action="{{ page.path[ localization.language.ietf ] }}" method="post">
+	    <input type="hidden" name="__cookie__[owner]" value="terzi">
+	    <input type="hidden" name="__cookie__[type]" value="analitici">
+	    <input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
+	    <input type="hidden" name="__cookie__[value]" value="0">
+	    <input type="submit" class="btn btn-default btn-light" value="{{ tr.nega[ localization.language.ietf ] }} {{ dettagli.nome }}">
+	</form>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+</div>
+{% endif %}
+{% endif %}

@@ -1,0 +1,18 @@
+
+{# FILE PER LA GENERAZIONE DEL TAG <script> DI GOOGLE ANALYTICS ALL'INTERNO DEL TAG <head> #}
+
+{% if google.analytics.profile.ua %}
+{% if google.analytics.profile.anonymous or privacy.cookie.terzi.analitici.identificativi.GoogleAnalytics.consenso == 1 %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ google.analytics.profile.ua }}"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){ dataLayer.push( arguments ); }
+gtag( 'js', new Date() );
+gtag( 'config', '{{ google.analytics.profile.ua }}'{% if google.analytics.profile.anonymous %}, { 'anonymize_ip': true }{% endif %} );
+</script>
+{% else %}
+<!-- profilo Analytics settato {% if google.analytics.profile.anonymous %}anonimo{% else %}identificativo{% endif %}/{% if privacy.cookie.terzi.analitici.identificativi.GoogleAnalytics.consenso %}consenso prestato{% else %}consenso non prestato{% endif %} -->
+{% endif %}
+{% else %}
+<!-- profilo Analytics non settato -->
+{% endif %}
