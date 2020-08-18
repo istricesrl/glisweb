@@ -37,12 +37,17 @@
     _src/_api/                | contiene i file per le API del framework
     _src/_api/_task/          | contiene i file dei task del framework
     _src/_config/             | contiene i file di configurazione del framework
+    _src/_html/               | contiene il codice Twig standard del framework
+    _src/_html/_bin/          | contiene le librerie di macro Twig standard del framework
+    _src/_html/_inc/          | contiene i file di inclusione Twig standard del framework
     _src/_img/                | contiene i file di immagine del framework
     _src/_inc/                | contiene i file di inclusione del framework
+    _src/_inc/_contents/      | contiene i file di contenuto inclusi per le pagine del framework
     _src/_inc/_pages/         | contiene i file di configurazione inclusi per le pagine del framework
     _src/_lib/                | contiene i file di libreria
     _src/_lib/_ext/           | contiene i file di libreria di terze parti
     _src/_sh/                 | contiene gli script di shell utili per l'installazione e la gestione del framework
+    _src/_templates/          | contiene i template standard del framework
     _usr/                     | contiene files di vario tipo, che non fanno parte del codice sorgente del framework
     _usr/_docs/               | contiene le pagine DOX della documentazione
     _usr/_docs/_build/        | contiene la documentazione compilata
@@ -76,6 +81,8 @@
 
     _src/_api/_task/
     ----------------
-    
+
+    _src/_inc/_contents/
+    --------------------
 
 */

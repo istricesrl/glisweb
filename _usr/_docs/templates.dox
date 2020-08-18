@@ -1,0 +1,272 @@
+/*!
+
+    \page templates del framework
+
+    Descrizione tecnica della struttura dei template del framework.
+
+    struttura e funzione dei template
+    =================================
+    Sostanzialmente i template sono lo strumento con cui il framework GlisWeb renderizza i contenuti delle pagine. Ci
+    sono diverse opzioni per quanto riguarda il template manager, ma attualmente Twig è quello più largamente utilizzato
+    e supportato nel framework; pertanto tutti gli esempi fanno sempre riferimento ad esso.
+
+    Questa è una guida tecnica, se state cercando un HOWTO su come realizzare template per GlisWeb o su come personalizzare
+    quelli già esistenti consultate la documentazione per gli utilizzatori all'indirizzo https://s-url.it/gliswebdocs.
+
+    Per quanto riguarda l'utilizzo di Twig, si rimanda alla documentazione ufficiale sul sito https://twig.symfony.com/doc/3.x/.
+
+    Ogni template è composto da una o più basi (file HTML/Twig) che si trovano nella sottocartella ext/; questi file vengono
+    estesi dagli schemi (file HTML/Twig) che si trovano nella cartella radice del template. Per convenzione la base principale
+    del template prende il nome di main.html mentre gli schemi prendono più o meno liberamente il nome dalla pagina per cui
+    sono pensati a meno che non ricadano in uno di questi casi particolari:
+
+    schema                    | ruolo
+    --------------------------|---------------------------------------------------------------------------------------
+    default.html              | lo schema che viene utilizzato quando per la pagina non è specificato alcuno schema
+    login.html                | lo schema che viene utilizzato quando l'utente non ha i permessi per accedere alla pagina
+
+    Va sottolineato che ogni template deve contenere questi schemi speciali per essere ritenuto valido, in quanto il
+    framework dà per scontato che essi siano presenti.
+
+    Gli esempi seguenti fanno riferimento al codice del template Aurora (_src/_templates/_aurora/) che è pensato più come
+    template scuola e come base per lo sviluppo di template più complessi che come template pronto per l'uso; la sua
+    semplicità tuttavia lo rende ideale per iniziare a capire come funzionano i template in GlisWeb, prima di passare
+    a qualcosa di più complesso (per cui si rimanda alla documentazione su Google Drive).
+
+    struttura delle cartelle del template
+    -------------------------------------
+    Come tutto il resto del framework, anche i template presentano una rigida struttura organizzata in cartelle che
+    consente di trovare rapidamente i file e capirne al volo il ruolo all'interno del template stesso. Le cartelle che
+    potete aspettarvi di trovare all'interno di un template sono:
+
+    cartella                  | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    css/                      | contiene i fogli di stile CSS del template
+    etc/                      | contiene i file di configurazione del template
+    ext/                      | contiene i file Twig di base del template, che vengono poi estesi dagli schemi
+    img/                      | contiene gli elementi grafici del template
+    src/                      | contiene gli script del template
+    src/fnt/                  | contiene i font del template
+    src/js/                   | contiene gli script Javascript del template
+
+    A parte la cartella etc/, che dev'essere obbligatoriamente presente per contenere il file template.conf, tutte le
+    altre cartelle sono da considerarsi opzionali e vanno create alla bisogna.
+
+    il file etc/template.conf
+    -------------------------
+    Questo file, che deve rispettare la sintassi dei file .ini (https://www.php.net/manual/en/function.parse-ini-file.php),
+    contiene le informazioni essenziali riguardanti il template. Tali informazioni sono raggruppate in sezioni:
+
+    sezione                   | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    css.external              | array dei CSS da includere dal web (vedi _src/_html/_inc/_page.head.html)
+    css.internal              | array dei CSS da includere dalla cartella radice del deploy (vedi _src/_html/_inc/_page.head.html)
+    css.template              | array dei CSS da includere dalla cartella del template (vedi _src/_html/_inc/_page.head.html)
+    js.external               | array degli CSS da includere dal web (vedi _src/_html/_inc/_page.head.html)
+    js.internal               | array degli CSS da includere dalla cartella radice del deploy (vedi _src/_html/_inc/_page.head.html)
+    js.template               | array degli CSS da includere dalla cartella del template (vedi _src/_html/_inc/_page.head.html)
+    template                  | contiene le informazioni generali riguardanti il template, la più importante è type
+    template.type             | il tipo di template; attualmente è supportato soltanto il tipo "twig"
+    template.menu             | informazioni sui menu attivi nel template
+    template.menu.<m>         | chiave che indica la presenza del menu <m> nel template; va valorizzata a NULL, viene poi popolata dalla funzione buildMenu() (vedi _src/_api/_pages.php)
+
+    Un esempio di file template.conf per un template di tipo Twig comprendente un menu chiamato main potrebbe essere il seguente:
+
+    \code{.ini}
+    [template]
+    type = twig
+    menu[main] = NULL
+    \endcode
+
+    Sempre dal file di configurazione, popolando la sezione [css], è possibile specificare i CSS da includere nelle pagine,
+    ad esempio:
+
+    \code{.ini}
+    [template]
+    type = twig
+    menu[main] = NULL
+
+    [css]
+    template[] = css/main.css
+    \endcode
+
+    Allo stesso modo è possibile richiedere l'inclusione di script Javascript tramite la sezione [js]:
+
+    \code{.ini}
+    [template]
+    type = twig
+    menu[main] = NULL
+
+    [css]
+    internal[] = _src/_css/_main.css
+    template[] = css/main.css
+
+    [js]
+    template[] = src/js/main.js
+    \endcode
+
+    il file ext/main.html
+    ---------------------
+    Questo file ha il compito di fornire l'impalcatura generale della pagina, che verrà poi estesa dagli schemi tramite il meccanismo
+    dell'estensione di Twig (https://twig.symfony.com/doc/3.x/tags/extends.html). Un esempio di file ext/main.html per un template
+    molto semplice potrebbe essere il seguente:
+
+    \code{.html}
+    <!DOCTYPE html>
+        <html lang="{{ localization.language.ietf }}">
+
+            <head>
+
+                {% include '_inc/_page.head.html' %}
+
+            </head>
+
+            <body>
+
+                {% include '_inc/_page.open.html' %}
+
+                <header>
+                    {% block header %}
+                    {% include 'inc/header.html' %}
+                    {% endblock %}
+                </header>
+
+                <nav>
+                    {% block nav %}
+                    {% include 'inc/navbar.html' %}
+                    {% endblock %}
+                </nav>
+
+                <main>{% block main %}{% endblock %}</main>
+
+                <footer>
+                    {% block footer %}
+                    {% include 'inc/footer.html' %}
+                    {% endblock %}
+                </footer>
+
+                {% include '_inc/_page.close.html' %}
+
+                {% block javascript %}{% endblock %}
+
+        </body>
+
+    </html>
+    \endcode
+
+    Questo file, benché piuttosto semplice, si basa su alcuni concetti chiave che è opportuno sottolineare:
+
+    - esistono degli include standard che svolgono il lavoro tecnico e in particolare:
+      - tutte le sezioni principali della pagina sono trattate come blocchi
+      - _inc/_page.head.html si occupa di creare il tag head
+      - _inc/_page.open.html si occupa delle operazioni standard di apertura del contenuto
+      - _inc/_page.close.html si occupa delle operazioni standard di chiusura del contenuto (ad esempio includere gli script Javascript)
+      - il codice Javascript della pagina sta in un blocco a parte, subito prima della chiusura del tag body
+
+    Si noti che il codice ricorrente (ad esempio il footer) dovrebbe essere a sua volta scorporato dagli schemi e inserito in
+    un file incluso (ad esempio inc/footer.html) in modo da evitare di doverlo ripetere in ogni schema, ma salvando la possibilità
+    di specificarne uno diverso in alcuni schemi particolari; questo concetto sarà più chiaro fra poco, dopo alcuni esempi.
+
+    il file default.html
+    --------------------
+    Vediamo ora appunto un esempio di file default.html, in cui continuiamo a sviluppare i concetti introdotti nei paragrafi
+    precedenti.
+
+    \code{.html}
+    {% import '_contents.html' as cnt %}
+
+    {% extends "ext/main.html" %}
+
+    {% block main %}
+    <div>
+        {{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
+    </div>
+    {% endblock %}
+    \endcode
+
+    Anche qui ci sono alcuni concetti importanti su cui porre l'attenzione:
+
+    - esistono librerie standard (_src/_html/_bin/) che possono essere importate contengono macro utili per la rappresentazione dei contenuti
+    - il file _standard.html va incluso in tutte le pagine che potrebbero averne bisogno (gli include non si ereditano con l'estensione o l'inclusione)
+    - il file di schema estende il file base tramite la direttiva extends
+    - nel file di schema vengono dichiarati e valorizzati solo i blocchi effettivamente utilizzati
+
+    file di libreria e file includibili
+    -----------------------------------
+    Il framework mette a disposizione degli sviluppatori di template alcune librerie di macro Twig molto utili per sveltire
+    e semplificare il lavoro; è possibile trovarle nella cartella _src/_html/_bin/ e sono:
+
+    libreria                          | codice per l'inclusione                      | descrizione
+    ----------------------------------|----------------------------------------------|------------------------------------------------------
+    _src/_html/_bin/_contents.html    | {% import '_bin/_contents.html' as cnt %}    | contiene macro per renderizzare i contenuti delle pagine web
+    _src/_html/_bin/_form.html        | {% import '_bin/_form.html' as frm %}        | contiene macro per creare gli elementi dei form
+    _src/_html/_bin/_navigation.html  | {% import '_bin/_navigation.html' as frm %}  | contiene macro per creare gli elementi di navigazione delle pagine
+
+    Nella sottocartella _src/_html/_inc/ invece sono contenuti file che possono essere inclusi per svolgere compiti specifici,
+    come creare sezioni della pagina (ad esempio il tag head) oppure attivare determinati plugin eccetera; ecco l'elenco:
+
+    file                                      | codice per l'inclusione                        | descrizione
+    ------------------------------------------|------------------------------------------------|------------------------------------------------------
+    _src/_html/_inc/_ads.head.html            | {% include '_inc/_ads.head.html' %}            | crea il tag script di Google Ads all'interno del tag head della pagina, è incluso da _page.head.html
+    _src/_html/_inc/_analytics.head.html      | {% include '_inc/_analytics.head.html' %}      | crea il tag script di Google Analytics all'interno del tag head della pagina, è incluso da _page.head.html
+    _src/_html/_inc/_cookie.overlay.html      | {% include '_inc/_cookie.overlay.html' %}      | contiene il form di registrazione dei consensi relativi ai cookie, è incluso da _page.close.html
+    _src/_html/_inc/_facebook.head.html       | {% include '_inc/_facebook.head.html' %}       | crea il tag script per il pixel di Facebook all'interno del tag head della pagina, è incluso da _page.head.html
+    _src/_html/_inc/_facebook.noscript.html   | {% include '_inc/_facebook.noscript.html' %}   | crea il tag noscript per il pixel di Facebook all'inizio del tag body della pagina, è incluso da _page.open.html
+    _src/_html/_inc/_gtm.head.html            | {% include '_inc/_gtm.head.html' %}            | crea il tag script di GTM all'interno del tag head della pagina, è incluso da _page.head.html
+    _src/_html/_inc/_gtm.noscript.html        | {% include '_inc/_gtm.noscript.html' %}        | crea il tag noscript di GTM all'inizio del tag body, è incluso da _page.open.html
+    _src/_html/_inc/_hotjar.head.html         | {% include '_inc/_hotjar.head.html' %}         | crea il tag script di HotJar all'interno del tag head della pagina, è incluso da _page.head.html
+    _src/_html/_inc/_opengraph.head.html      | {% include '_inc/_opengraph.head.html' %}      | crea i meta tag per il protocollo OpenGraph all'interno del tag head della pagina, è incluso da _page.head.html
+    _src/_html/_inc/_page.close.html          | {% include '_inc/_page.close.html' %}          | esegue le operazioni di chiusura del contenuto della pagina
+    _src/_html/_inc/_page.head.html           | {% include '_inc/_page.head.html' %}           | popola il tag head della pagina
+    _src/_html/_inc/_page.open.html           | {% include '_inc/_page.open.html' %}           | esegue le operazioni di apertura del contenuto della pagina
+
+    librerie esterne
+    ----------------
+    Il framework GlisWeb è compatibile con una grande quantità di librerie esterne, in questa tabella cerchiamo di riassumere
+    quelle più utili e più di frequente utilizzate nei template standard, indicando la riga da aggiungere al file template.conf
+    nella sezione indicata in colonna:
+
+    libreria               | [css]                                                                                         | [js]
+    -----------------------|-----------------------------------------------------------------------------------------------|------------------------
+    Bootstrap 4.5.2        | external[] = https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css         | external[] = https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js
+    jQuery 3.5.1           | -                                                                                             | external[] = https://code.jquery.com/jquery-3.5.1.min.js
+    jQueryUI 1.12.1        | external[] = https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css                  | external[] = https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
+    FontAwesome 4.7        | external[] = https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css   | -
+
+    il template standard (_src/_templates/_athena/)
+    ===============================================
+    Il template standard Athena è di gran lunga il più importante del framework in quanto è solitamente utilizzato per tutte le
+    pagine del CMS. Di conseguenza è importante comprenderne il funzionamento e le logiche di fondo, anche a livello di
+    attribuzione dei nomi ai file, specialmente se si intende utilizzare GlisWeb per realizzare delle web application e non
+    dei semplici siti web.
+
+    Riguardo all'attribuzione dei nomi, in particolare ai nomi degli schemi e dei file delle macro, vanno precisati alcuni punti
+    essenziali al fine di semplificare il ritrovamento rapido dei file su cui intervenire in caso di necessità, dato che la grande
+    estensione del template può disorientare specialmente all'inizio; si tenga perciò presente che:
+
+    - esistono principalmente quattro categorie di pagine nel template standard del framework:
+      - le dashboard
+        - l'ID inizia per "dashboard"
+        - il nome dello schema inizia per "dashboard"
+        - il nome della macro PHP inizia per "dashboard"
+        - al nome viene aggiunto quello del modulo se presente
+      - le view
+        - l'ID inizia per "view"
+        - il nome dello schema inizia per "view"
+        - il nome della macro PHP inizia per "view"
+        - al nome viene aggiunto quello dell'entità rappresentata
+      - i moduli
+        - l'ID inizia per "modulo"
+        - il nome dello schema inizia per "modulo"
+        - il nome della macro PHP inizia per "modulo"
+        - al nome viene aggiunto quello dell'entità gestita
+      - le pagine standalone
+        - l'ID della pagina è solitamente descrittivo
+        - il nome dello schema corrisponde all'ID della pagina
+        - il nome della macro PHP corrisponde all'ID della pagina
+    - le macro PHP di default
+        - quando una macro è pensata per essere inclusa da più pagine il suo nome inizia per "default"
+    - riguardo ai caratteri utilizzabili nei nomi di file, si rammenti che:
+      - il carattere underscore è sempre sostituito da punto
+
+*/
