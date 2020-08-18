@@ -1,0 +1,60 @@
+/**
+ * INDICE
+ * - stili di base
+ * - stili dei titoli
+ * - stili dei link
+ * - stili delle view
+ * - stili dei form
+ * - stili del form speciali
+ * - stili dei bottoni
+ * - stili dell'header
+ * - stili del nav
+ * - stili delle tabs
+ * - stili della sidebar
+ * - stili delle breadcrumb
+ * - stili delle bandiere
+ * - stili del main
+ * - stili del footer
+ * - stili del carousel
+ * - stili del jumbotron
+ * - stili delle timeline
+ * - stili del file browser
+ * - stili dell'interfaccia metro
+ * - stili dell'agenda
+ * - utility
+ */
+
+/* stili di base */
+
+body {
+    background-color: #ffffff;
+    font-family: Helvetica, Verdana, FontAwesome;
+    font-size: 0.8em;
+}
+
+/* stili dei titoli */
+
+h1, h2, h3 {
+    display: block;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2, h3 {
+    font-size: 1.2em;
+}
+
+/* stili dei link */
+
+a,
+a:visited,
+a:hover,
+a:active {
+    color: #777777;
+}
+

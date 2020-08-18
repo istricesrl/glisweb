@@ -1,0 +1,36 @@
+{% extends "ext/login.html" %}
+
+{% block main %}
+<div class="row">
+    <form action="{{ page.path[ localization.language.ietf ] }}" class="draggable-item" id="form-login" method="post">
+	{% for e,d in get %}{% if d.id %}
+	<input type="hidden" name="{{ e }}[id]" value="{{ d.id }}">
+	<input type="hidden" name="{{ e }}[__method__]" value="get">
+	{% endif %}{% endfor %}
+	<fieldset>
+	    <legend>login</legend>
+	    <div class="form-group form-row">
+		<label class="d-none d-md-block col-md-4 col-form-label">username</label>
+		<div class="col-12 col-md-8"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="username"></div>
+	    </div>
+	    <div class="form-group form-row">
+		<label class="d-none d-md-block col-md-4 col-form-label">password</label>
+		<div class="col-12 col-md-8"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password"></div>
+	    </div>
+	    <div class="form-group form-row">
+		<div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">login</button></div>
+	    </div>
+	    {% if '0600.password' in mods.active.array %}
+	    <div class="form-group form-row">
+		<div class="col-12"><a href="{{ pages.reset_password.path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block">password dimenticata?</a></div>
+	    </div>
+	    {% endif %}
+	    {% if '0650.registrazione' in mods.active.array %}
+	    <div class="form-group form-row">
+		<div class="col-12"><a href="{{ pages.registrazione.path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block">registrati</a></div>
+	    </div>
+	    {% endif %}
+	</fieldset>
+    </form>
+</div>
+{% endblock %}
