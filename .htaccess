@@ -37,6 +37,10 @@ Options -Indexes
     RewriteCond %{REQUEST_FILENAME} favicon.ico
     RewriteRule ^favicon.ico _src/_img/_favicon.ico [L]
 
+    # sitemap
+    RewriteRule ^sitemap.xml etc/sitemap/sitemap.%{HTTP_HOST}.xml [L]
+    RewriteRule ^sitemap.csv etc/sitemap/sitemap.%{HTTP_HOST}.xml [L]
+
     # redirect a HTTPS
     RewriteCond %{HTTPS} off
     RewriteCond %{DOCUMENT_ROOT}/etc/https -d [OR]

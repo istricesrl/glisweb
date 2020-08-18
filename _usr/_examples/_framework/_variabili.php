@@ -44,12 +44,11 @@
 		$txl['lvl'][] = $lvl;
 		$txa[] = '<a href="?' . htmlentities( http_build_query( $txl ) ) . '">' . $lvl . '</a>';
 		if( $lvl === 'NULL' ) { $lvl = NULL; }
+		if( $lvl === 'ZERO' ) { $lvl = 0; }
 		if( isset( $print[ $lvl ] ) ) {
-#		    print_r( $print );
-#		    echo $lvl . ' presente in: ' . print_r( $print, true );
 		    $print = $print[ $lvl ];
-#		} else {
-#		    echo $lvl . ' non presente in: ' . print_r( $print, true );
+		} else {
+		    echo $lvl . ' non presente in: ' . print_r( $print, true );
 		}
 	    }
 	} else {
@@ -69,7 +68,9 @@
 	} else {
 	    foreach( array_keys( $print ) as $key ) {
 
-		if( ! is_numeric( $key ) && empty( $key ) ) { $keyRef = 'NULL'; } else { $keyRef = $key; }
+		if( ! is_numeric( $key ) && empty( $key ) ) { $keyRef = 'NULL'; }
+		elseif( is_numeric( $key ) && empty( $key ) ) { $keyRef = 'ZERO'; }
+		else { $keyRef = $key; }
 
 		$qs['lvl'] = array_merge( $_REQUEST['lvl'], array( $keyRef ) );
 

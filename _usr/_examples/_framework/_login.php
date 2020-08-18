@@ -28,7 +28,7 @@
 	$tx	.= '<body style="font-family: monospace;">';
 
     // test
-	if( $cf['auth']['status'] != LOGIN_LOGGED ) {
+	if( ! in_array( $cf['auth']['status'], array( LOGIN_LOGGED, LOGIN_SUCCESS ) ) ) {
 	    $tx	.= '<h1>login</h1>'
 		. '<form action="" method="post">'
 		. '<div><input type="text" name="__login__[user]" /></div>'
