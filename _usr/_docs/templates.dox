@@ -232,6 +232,7 @@
     jQuery 3.5.1           | -                                                                                             | external[] = https://code.jquery.com/jquery-3.5.1.min.js
     jQueryUI 1.12.1        | external[] = https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css                  | external[] = https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
     FontAwesome 4.7        | external[] = https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css   | -
+    Popper.js              | -                                                                                             | external[] = https://unpkg.com/@popperjs/core@2
 
     il template standard (_src/_templates/_athena/)
     ===============================================
@@ -244,23 +245,20 @@
     essenziali al fine di semplificare il ritrovamento rapido dei file su cui intervenire in caso di necessità, dato che la grande
     estensione del template può disorientare specialmente all'inizio; si tenga perciò presente che:
 
-    - esistono principalmente quattro categorie di pagine nel template standard del framework:
-      - le dashboard
-        - l'ID inizia per "dashboard"
-        - il nome dello schema inizia per "dashboard"
-        - il nome della macro PHP inizia per "dashboard"
-        - al nome viene aggiunto quello del modulo se presente
+    - esistono alcune categorie di pagine nel template standard del framework:
       - le view
         - l'ID inizia per "view"
-        - il nome dello schema inizia per "view"
+        - il nome dello schema inizia per "view" oppure è view.html
         - il nome della macro PHP inizia per "view"
+        - solitamente viene inclusa anche la macro "default.view.php
         - al nome viene aggiunto quello dell'entità rappresentata
-      - i moduli
-        - l'ID inizia per "modulo"
-        - il nome dello schema inizia per "modulo"
-        - il nome della macro PHP inizia per "modulo"
+      - le form
+        - l'ID inizia per "form"
+        - il nome dello schema inizia per "form"
+        - il nome della macro PHP inizia per "form"
+        - solitamente viene inclusa anche la macro "default.form.php
         - al nome viene aggiunto quello dell'entità gestita
-      - le pagine standalone
+      - le pagine standard
         - l'ID della pagina è solitamente descrittivo
         - il nome dello schema corrisponde all'ID della pagina
         - il nome della macro PHP corrisponde all'ID della pagina
@@ -268,5 +266,14 @@
         - quando una macro è pensata per essere inclusa da più pagine il suo nome inizia per "default"
     - riguardo ai caratteri utilizzabili nei nomi di file, si rammenti che:
       - il carattere underscore è sempre sostituito da punto
+
+    Vediamo alcuni esempi di pagine standard:
+
+    ID pagina                        | schema                                | macro
+    ---------------------------------|---------------------------------------|------------------------------------------------
+    browser                          | browser.html                          | _src/_inc/_macro/_browser.php
+    dashboard                        | dashboard.html                        | _src/_inc/_macro/_dashboard.php
+    delete                           | delete.html                           | _src/_inc/_macro/_delete.php
+    strumenti                        | strumenti.html                        | _src/_inc/_macro/_strumenti.php
 
 */
