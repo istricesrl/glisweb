@@ -112,7 +112,8 @@
 
     // link al manuale utente
 	$cf['common']['docs']['user']['html'] = array(
-	    'url' => 'http://bit.ly/gliswebuserdocs'
+	    'url' => 'https://s-url.it/gliswebdocs',
+	    'name' => array( 'it-IT' => 'su Google Docs' )
 	);
 
     // link alla documentazione tecnica in formato HTML
