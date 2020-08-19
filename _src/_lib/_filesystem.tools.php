@@ -352,7 +352,7 @@
      * @todo documentare
      *
      */
-    function recursiveDelete( $d ) {
+    function recursiveDelete( $d, $p = true ) {
 
 	// path completo
 	    fullPath( $d );
@@ -367,7 +367,11 @@
 		    }
 
 		// rimozione della cartella radice
-		    return rmdir( $d );
+		    if( $p === true ) {
+			return rmdir( $d );
+		    } else {
+			return true;
+		    }
 
 	    } else {
 

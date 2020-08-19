@@ -125,6 +125,7 @@
 
 			case 'CREATE':
 			case 'DROP':
+			case 'OPTIMIZE':
 			    $r = mysqli_query( $c, $q );
 			break;
 
