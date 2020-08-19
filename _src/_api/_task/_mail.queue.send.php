@@ -12,9 +12,7 @@
      */
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../_config.php';
-	}
+	require_once '../../_config.php';
 
     // inizializzo l'array del risultato
 	$status = array();
@@ -23,7 +21,7 @@
 	$out = NULL;
 
     // log
-	logWrite( 'richiesta di elaborazione della coda delle mail in uscita', 'mail', LOG_DEBUG );
+	logWrite( 'richiesta di elaborazione della coda delle mail in uscita', 'mail' );
 
     // lock delle tabelle della coda
 	$lock = mysqlQuery( $cf['mysql']['connection'], 'LOCK TABLES mail_out WRITE, mail_sent WRITE' );
@@ -33,6 +31,15 @@
 
 	    // timer
 		timerCheck( $cf['speed'], ' -> richiesto lock per evasione coda mail' );
+
+	    // forzo la timestamp di invio
+		if( isset( $_REQUEST['hard'] ) ) {
+		    logWrite( 'richiesta FORZATA di elaborazione della coda delle mail in uscita', 'mail' );
+		    mysqlQuery(
+			$cf['mysql']['connection'],
+			'UPDATE mail_out SET timestamp_invio = NULL ORDER BY id DESC LIMIT 1'
+		    );
+		}
 
 	    // prelevo una mail dalla coda
 		$mail = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM mail_out WHERE timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL ORDER BY timestamp_invio LIMIT 1' );
