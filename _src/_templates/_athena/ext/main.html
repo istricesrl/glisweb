@@ -1,35 +1,38 @@
+{% import '_bin/_navigation.html' as nav %}
+
 <!DOCTYPE html>
 <html lang="{{ localization.language.ietf }}">
 
     <head>
-
         {% include '_inc/_page.head.html' %}
-
     </head>
 
     <body>
 
         {% include '_inc/_page.open.html' %}
 
-        <header>
-            {% block header %}
-            {% include 'inc/header.html' %}
-            {% endblock %}
+        <header class="fixed-top">
+            {% block header %}{% include 'inc/header.html' %}{% endblock %}
         </header>
 
-        <nav>
-            {% block nav %}
-            {% include 'inc/navbar.html' %}
-            {% endblock %}
-        </nav>
+        <div class="container-fluid">
+            <div class="row">
 
-        <main>{% block main %}{% endblock %}</main>
+                {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
 
-        <footer>
-            {% block footer %}
-            {% include 'inc/footer.html' %}
-            {% endblock %}
-        </footer>
+                <main class="col col-md-10">
+
+                    {{ nav.tabs( page, pages, localization.language.ietf, etc, request ) }}
+
+                    {% block main %}{% endblock %}
+
+                </main>
+
+                {% block info %}{% include 'inc/info.html' %}{% endblock %}
+
+            </div>
+
+        </div>
 
         {% include '_inc/_page.close.html' %}
 

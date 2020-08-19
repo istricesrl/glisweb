@@ -1,0 +1,38 @@
+{% set cnt = 0 %}
+
+{% for k,m in page.contents.metros %}
+{% if page.contents.metro[ k ] %}
+{% if m.label %}<div class="form-row metro"><div class="col-12"><h3>{{ m.label }}</h3></div></div>{% endif %}
+{% for obj in page.contents.metro[ k ] %}
+    {% if obj.include %}
+    {% include obj.include %}
+    {% else %}
+    {% if cnt == 0 %}<div class="form-row metro">{% endif %}
+    <div class="col-12 col-md-4">
+	{% if obj.url %}
+	<a href="{{ obj.url }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
+	{% elseif obj.modal %}
+	<a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}">
+	{% elseif obj.ws %}
+	<a href="#" onclick="$(this).metroWs('{{ obj.ws }}');">
+	{% endif %}
+	    <div class="media">
+		<div class="media-left">
+		    <i class="fa {{ obj.fa }}"></i>
+		</div>
+		<div class="media-body">
+		    <h5 class="media-title">{{ obj.title }}</h5>
+		    <p class="media-text">{{ obj.text }}</p>
+		</div>
+	    </div>
+	</a>
+    </div>
+    {% if cnt == 3 or loop.last %}</div>
+	{% set cnt = 0 %}
+	{% else %}
+	{% set cnt = cnt + 1 %}
+    {% endif %}
+    {% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}

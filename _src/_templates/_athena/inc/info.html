@@ -1,0 +1,29 @@
+<div id="info">
+    <h2>GlisWeb framework</h2>
+    {% if site.license %}<p><strong>{{ site.license }}</strong></p>{% endif %}
+    <p>versione corrente
+        <strong>{{ common.version.current }}</strong>
+        {% if common.version.latest|trim > common.version.current|trim %}<i class="fa fa-exclamation-triangle"></i>{% endif %}</p>
+    <p>utente connesso
+        <strong>{{ session.account.username }}</strong>
+        {% if session.account.gruppi %} ({{ session.account.gruppi|join(', ') }}){% endif %}</p>
+    <p>ultima attività
+        <strong>{{ session.used|date('Y-m-d H:i:s') }}</strong></p>
+    <p>breakpoint corrente
+        <strong class="d-inline-block d-sm-none">XS</strong>
+        <strong class="d-none d-sm-inline-block d-md-none">SM</strong>
+        <strong class="d-none d-md-inline-block d-lg-none">MD</strong>
+        <strong class="d-none d-lg-inline-block d-xl-none">LG</strong>
+        <strong class="d-none d-xl-inline-block">XL</strong></p>
+    <p>memoria utilizzata
+        <strong>{{ debug.mem.now.php }}</strong></p>
+    <p>memcache
+        <strong>{% if memcache.stat %}utilizzati {{ memcache.stat.usage }} ({{ memcache.stat.percent }}){% else %}inattivo{% endif %}</strong></p>
+    <p>leggi la
+        <strong><a href="{{ pages.licenza.path[ localization.language.ietf] }}" target="_blank">licenza d'uso</a></strong></p>
+    <p>documentazione tecnica
+        <strong><a href="/_usr/_docs/_build/html/index.html" target="_blank">HTML</a></strong> |
+        <strong><a href="/_usr/_docs/_build/latex/refman.pdf" target="_blank">PDF</a></strong></p>
+    <p>manuale d'uso
+        <strong><a href="{{ common.docs.user.html.url }}" target="_blank">{{ common.docs.user.html.name[ localization.language.ietf ] }}</a></strong></p>
+</div>

@@ -5,23 +5,20 @@
  * - stili dei link
  * - stili delle view
  * - stili dei form
- * - stili del form speciali
  * - stili dei bottoni
  * - stili dell'header
  * - stili del nav
- * - stili delle tabs
+ * - stili delle tab
  * - stili della sidebar
  * - stili delle breadcrumb
- * - stili delle bandiere
  * - stili del main
  * - stili del footer
- * - stili del carousel
- * - stili del jumbotron
  * - stili delle timeline
  * - stili del file browser
  * - stili dell'interfaccia metro
  * - stili dell'agenda
- * - utility
+ * - stili della struttura anagrafica
+ * - stili della tabella di descrizione formato importazione
  */
 
 /* stili di base */
@@ -58,3 +55,667 @@ a:active {
     color: #777777;
 }
 
+/* stili delle view */
+
+.view-table {
+    width: 100%;
+    font-size: 1em;
+}
+
+.view-table th, td {
+    min-height: 31px;
+    padding: 5px;
+    text-align: center;
+    vertical-align: top;
+}
+
+.view-table th {
+    border-bottom: 1px solid #cccccc;
+    padding: 0px;
+}
+
+.view-table.clickable tbody tr:hover {
+    background-color: #eeeeee;
+    cursor: pointer;
+}
+
+.view-table tbody tr {
+    border-bottom: 1px solid #eeeeee;
+}
+
+.view-table tbody tr:last-child {
+    border-bottom: 1px solid #cccccc;
+}
+
+.view-table.line-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.view-table thead tr th select {
+    border: 0px;
+    display: block;
+    font-weight: bold;
+    padding: 2px 6px;
+}
+
+.view-table thead tr th select:hover {
+    background-color: #eeeeee;
+    border-top-radius: 5px;
+}
+
+.view-controls button {
+    height: 31px;
+    padding: 3px;
+    width: 31px;
+}
+
+.view-controls .input-group button:first-of-type {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    height: 31px;
+    padding: 3px;
+    width: 26px;
+}
+
+.view-controls .input-group button:last-of-type {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    height: 31px;
+    padding: 3px;
+    width: 26px;
+}
+
+.view-controls .input-group select {
+    border-radius: 0px;
+    height: 31px;
+}
+
+/* stili dei form */
+
+.col.col-form-label,
+label.col-form-label {
+    font-size: .9em;
+    font-weight: bold;
+    height: 31px;
+    margin-bottom: 0px;
+    text-align: right;
+}
+
+label.form-check-label {
+    font-size: .9em;
+}
+
+.label-top {
+    font-size: .85em;
+    height: 1.75em;
+    color: #777777;
+}
+
+legend {
+    border-bottom: 1px solid #dddddd;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+legend .btn-sm {
+    width: 1.95em;
+    height: 1.95em;
+    border-radius: 1.95em;
+    font-size: 0.67em;
+    padding: 0px 4px;
+    margin-bottom: 3px;
+}
+
+legend small {
+    color: #999999;
+    font-size: 0.75em;
+}
+
+.form-control-sm {
+    font-size: .9em;
+    height: 31px;
+}
+
+label {
+    height: 31px;
+}
+
+label.form-check-label {
+    height: auto;
+}
+
+fieldset {
+    margin-bottom: 0px;
+}
+
+fieldset.form-controls,
+fieldset.form-controls-free {
+    border-top: 1px solid #dddddd;
+    padding-top: 10px;
+}
+
+fieldset.form-controls button {
+    height: 31px;
+    padding: 3px;
+    width: 31px;
+}
+
+.bootstrap-select.form-control-sm .dropdown-toggle {
+    height: 31px;
+    color: #495057;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+}
+
+fieldset.interlinee > div:not(:first-of-type) {
+    border-top: 1px solid #dddddd;
+    padding-top: 10px;
+}
+
+fieldset.import-schema p,
+fieldset.static-history p {
+    margin-bottom: 0px;
+}
+
+fieldset.static-history p:first-child {
+    font-weight: bold;
+}
+
+fieldset.static-history > .form-row > div:first-child {
+    font-weight: bold;
+    border-right: 1px solid #dddddd;
+}
+
+.form-row {
+    margin-bottom: 0px;
+}
+
+.form-row > div,
+.form-row > label {
+    margin-bottom: 10px;
+}
+
+.form-row .form-row .col,
+.form-row .form-row .col-auto,
+.form-row .form-row {
+    margin-bottom: 0px;
+}
+
+.form-row button.btn-sqr {
+    height: 31px;
+    width: 31px;
+}
+
+.form-row button.btn-spin {
+    height: 31px;
+    width: 31px;
+    padding: 3px;
+}
+
+.form-row .picture-gestione img {
+    max-height: 475px;
+    max-width: 100%;
+}
+
+select {
+    cursor: pointer;
+}
+
+.form-check-input {
+    margin-top: .25em;
+}
+
+/* stili dei bottoni */
+
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.btn-sm {
+    font-size: 1em;
+}
+
+.btn-xsm {
+    font-size: .8em;
+    padding: 1px 4px;
+}
+
+.btn-sm-1x1 {
+    height: 31px;
+    width: 31px;
+}
+
+.btn-xsm-1x1 {
+    height: 1.75em;
+    width: 1.75em;
+}
+
+/* stili dell'header */
+
+#widget .btn {
+    border-radius: 0px;
+    font-size: 1.6em;
+    height: 45px;
+    width: 45px;
+}
+
+header {
+    background-color: #aaaaaa;
+    height: 45px;
+}
+
+header a,
+header a:visited {
+    color: #333333;
+}
+
+header a:hover,
+header a:active {
+    color: #666666;
+    text-decoration: none;
+}
+
+header.subform-intestazione {
+    background-color: transparent;
+    border-bottom: 1px solid #dddddd;
+    font-weight: bold;
+    height: auto;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+#info {
+    background-color: #6c757d;
+    color: #ffffff;
+    display: none;
+    padding: 15px;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    z-index: 999;
+}
+
+#info h2 {
+    font-size: 1.6em;
+    margin: 0px;
+}
+
+#info p {
+    margin: 0px;
+    margin-top: 5px;
+}
+
+#info a,
+#info a:visited,
+#info a:hover,
+#info a:active {
+    color: #ffffff;
+}
+
+#form-logout .btn {
+    border-radius: 0px;
+    font-size: 1.6em;
+    height: 45px;
+    width: 45px;
+}
+
+#form-language select,
+#form-multisite select,
+#form-navigation select {
+    border: 0px;
+    border-radius: 0px;
+    cursor: pointer;
+    height: 45px;
+}
+
+/* stili del nav */
+
+nav {
+    background-color: #cccccc;
+    padding-top: 45px;
+    width: 100%;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+nav li.nav-item > a.nav-link,
+nav li.nav-item > a.nav-link:visited {
+    color: #333333;
+    font-weight: bold;
+    transition: background-color 100ms linear;
+}
+
+nav li.nav-item.current > a.nav-link {
+    background-color: #ffffff;
+    text-decoration: underline;
+}
+
+nav li.nav-item.active > a.nav-link,
+nav li.nav-item > a.nav-link:hover,
+nav li.nav-item > a.nav-link:active {
+    background-color: #ffffff;
+    text-decoration: underline;
+    transition: background-color 100ms linear;
+}
+
+nav ul ul {
+    background-color: #ffffff;
+}
+
+nav ul ul ul {
+    background-color: #ffffff;
+}
+
+/* stili delle tab */
+
+.nav-tabs {
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 10px;
+}
+
+.nav-tabs-secondary {
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
+.nav-tabs .nav-item {
+    cursor: pointer;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    border-color: #dddddd #dddddd #ffffff;
+}
+
+ul.nav-tabs li.nav-item > a.nav-link,
+ul.nav-tabs li.nav-item > a.nav-link:visited {
+    color: #333333;
+    font-weight: bold;
+}
+
+ul.nav-tabs li.nav-item.active > a.nav-link,
+ul.nav-tabs li.nav-item > a.nav-link:hover,
+ul.nav-tabs li.nav-item > a.nav-link:active {
+    color: #333333;
+    font-weight: bold;
+}
+
+/* stili della sidebar */
+
+.sidebar {
+    background-color: #cccccc;
+    padding: 0px;
+    min-height: 100vh;
+}
+
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+}
+
+/* stili delle breadcrumb */
+
+.breadcrumb {
+    background-color: transparent;
+    display: block !important;
+    margin: 0px;
+    padding: 10px 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.breadcrumb .breadcrumb-item {
+    display: inline;
+}
+
+/* stili del main */
+
+main {
+    padding-top: 60px;
+    padding-bottom: 15px;
+    z-index: 150;
+}
+
+/* stili del footer */
+
+footer {
+    display: inline-block;
+    margin-top: auto;
+    z-index: 100;
+}
+
+/* stili delle timeline */
+
+.timeline {
+    font-size: .9em;
+}
+
+.timeline {
+    background: linear-gradient( 0deg, transparent 48%, #cccccc 49%, transparent 51% );
+    padding: 0px !important;
+}
+
+.timeline > div {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    margin: 0px;
+    padding: 5px 10px;
+}
+
+/* stili del file browser */
+
+main.container-fluid.browser {
+    padding: 10px 15px;
+}
+
+.browse {
+    cursor: pointer;
+    margin: 10px 0px;
+}
+
+.browse:hover {
+    background-color: #cccccc;
+}
+
+.browse-dir {
+    background-color: #dddddd;
+}
+
+.browse-file {
+    background-color: #eeeeee;
+}
+
+.browse div {
+    padding: 10px;
+}
+
+.browse .fa {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 0px 10px;
+}
+
+/* stili dell'interfaccia metro */
+
+.metro h1 {
+    font-size: 3em;
+    margin: 10px;
+}
+
+.metro h3 {
+    border-bottom: 1px solid #dddddd;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin: 0px;
+    padding: 3px;
+}
+
+.metro h4 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0px;
+    padding: 3px;
+}
+
+.metro ul.dotted {
+    padding-left: 20px;
+    margin: 0px;
+}
+
+.metro ul.dotted li {
+    margin-bottom: 5px;
+}
+
+.metro a,
+.metro a:visited,
+.metro a:hover,
+.metro a:active {
+    color: #333333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.metro a:hover .media,
+.metro a:active .media {
+    background-color: #eeeeee;
+}
+
+.metro .media {
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+}
+
+.metro .media-left {
+    padding: 10px;
+    padding-right: 5px;
+}
+
+.metro .media-left h1 {
+    font-size: 2.25em;
+    margin: 0px;
+    padding-right: 5px;
+}
+
+.metro .media-left i {
+    font-size: 2.5em;
+}
+
+.metro .media-body {
+    padding: 10px;
+}
+
+.metro .media-body:not('first-child') {
+    padding-left: 5px;
+}
+
+.metro .valore .media-body {
+    background-color: #eeeeee;
+    padding-left: 10px;
+}
+
+.metro .progetto .media-left {
+    width: 360px;
+}
+
+.metro .progetto .media-left h1 {
+    font-size: 1.25em;
+}
+
+.metro .progetto .media-left h2 {
+    font-size: 1.15em;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.metro h5 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0px;
+}
+
+.metro p {
+    font-size: .9em;
+    margin: 0px;
+}
+
+/* stili dell'agenda */
+
+.agenda-row:hover {
+    background-color: #eeeeee;
+}
+
+.agenda-row > div {
+    margin: 0px;
+}
+
+.agenda-row .metro {
+    padding: 10px;
+}
+
+.agenda-row .metro a:hover .media {
+    background-color: #dddddd;
+}
+
+
+/* stili della struttura anagrafica */
+
+.browsing-tree .current > a {
+    font-weight: bold;
+    display: block;
+}
+
+.browsing-tree .current > a, div.current_details {
+    background-color: #eeeeee;
+}
+
+.browsing-tree a {
+    padding-left: 0;
+    margin-left: 1.5rem;
+    display: inline;
+}
+
+.browsing-tree i + a {
+    margin-left: calc(1.5rem - 10.97px);
+}
+
+ul.browsing-tree {
+    list-style-type: none;
+    padding-inline-start: 20px;
+
+}
+
+.browsing-tree li {
+    margin-top: 3px;
+}
+
+.browsing-tree i {
+    cursor: pointer;
+}
+
+/* stile tabella descrizione formato di importazione */
+
+.import-schema table {
+    margin-bottom: 0px;
+    font-size: .85em;
+}
+
+.import-schema table.table th {
+    background-color: #dddddd;
+    white-space: nowrap;
+}
+
+.import-schema table.table th,
+.import-schema table.table td {
+    border-right: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    padding: 5px;
+}
