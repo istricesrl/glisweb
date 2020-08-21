@@ -4,69 +4,69 @@
 	$l = 'it-IT';
 
     // vista anagrafica
-	$p['view_anagrafica'] = array(
+	$p['anagrafica.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'anagrafica' ),
 	    'h1'		=> array( $l		=> 'anagrafica' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_view.anagrafica.php', '_src/_inc/_macro/_default.view.php' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'anagrafica', 
-									'anagrafica_archivio',
-									'anagrafica_azioni' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'anagrafica.view',
+									'anagrafica.archivio.view',
+									'anagrafica.tools' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'anagrafica' ),
 									'priority'	=> 50 ) )
 	);
 
-/*
-    // vista anagrafica archiviati
-	$p['anagrafica_archivio'] = array(
+    // vista archivio anagrafica
+	$p['anagrafica.archivio.view'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'archivio_anagrafica' ),
+	    'title'		=> array( $l		=> 'archivio' ),
 	    'h1'		=> array( $l		=> 'archivio' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.archivio.view.php', '_src/_inc/_macro/_default.view.php' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.archivio.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['anagrafica']['etc']['tabs'])
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.view']['etc']['tabs'] )
 	);
 
-    // macro delle azioni sull'anaagrafica 
-	$p['anagrafica_azioni'] = array(
+    // tools anagrafica
+	$p['anagrafica.tools'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'anagrafica_azioni' ),
+	    'title'		=> array( $l		=> 'azioni' ),
 	    'h1'		=> array( $l		=> 'azioni' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'metro.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.azioni.php' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['anagrafica']['etc']['tabs'])
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.view']['etc']['tabs'] )
 	);
 
     // gestione anagrafica
-	$p['anagrafica_gestione'] = array(
+	$p['anagrafica.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'anagrafica.gestione.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.gestione.php' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'anagrafica_gestione',
-									'anagrafica_gestione_informazioni',
-									'anagrafica_gestione_amministrazione',
-									'anagrafica_gestione_collaboratori',
-									'anagrafica_gestione_clienti',
-									'anagrafica_gestione_fornitori',
-									'anagrafica_gestione_struttura',
-									'anagrafica_gestione_attivita',
-									'anagrafica_gestione_promemoria',
-									'anagrafica_gestione_immagini',
-									'anagrafica_gestione_archiviazione',
-									'anagrafica_gestione_stampe' ) )
+	    'etc'		=> array( 'tabs'	=> array(	'anagrafica.form',
+									'anagrafica.form.informazioni',
+									'anagrafica.form.amministrazione',
+									'anagrafica.form.collaboratori',
+									'anagrafica.form.clienti',
+									'anagrafica.form.fornitori',
+									'anagrafica.form.struttura',
+									'anagrafica.form.attivita',
+									'anagrafica.form.promemoria',
+									'anagrafica.form.immagini',
+									'anagrafica.form.archiviazione',
+									'anagrafica.form.stampe' ) )
 	);
 
+/*
     // scheda bibliografia
 	if( in_array( '3100.notizie', $cf['mods']['active']['array'] ) || in_array( '3200.stampa', $cf['mods']['active']['array'] )|| in_array( '3500.documenti', $cf['mods']['active']['array'] ) ) {
 	    arrayInsertSeq( 'anagrafica_gestione_stampe', $p['anagrafica_gestione']['etc']['tabs'], array( 'anagrafica_gestione_contenuti' ) );
