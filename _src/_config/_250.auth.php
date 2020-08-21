@@ -41,18 +41,18 @@
 #	    'account_gruppi_attribuzione' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'anagrafica' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'anagrafica' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 #	    'anagrafica_archiviati' => array(
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )
 #	    ),
-#	    'anagrafica_categorie' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'anagrafica_categorie' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 #	    'anagrafica_cittadinanze' => array(
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )
@@ -103,20 +103,20 @@
 #	    'immagini_anagrafica' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'indirizzi' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'indirizzi' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 #	    'job' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
 #	    'luoghi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'mail' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'mail' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 #	    'mail_out' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -144,10 +144,10 @@
 #	    'sms_sent' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'telefoni' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'telefoni' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 #	    'template_mail' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
