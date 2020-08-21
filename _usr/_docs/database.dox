@@ -38,6 +38,15 @@
     performance. Le viste devono avere la colonna '__label__', che viene utilizzata normalmente nella creazione
     dei selettori a tendina assieme al campo 'id'.
 
+    view virtuali
+    -------------
+
+
+
+    tabelle di report
+    -----------------
+
+
 
     tabelle di ACL
     --------------
@@ -48,12 +57,15 @@
     --------------
 
 
+
     procedure e funzioni
     --------------------
 
 
+
     campi di servizio per inserimento e aggiornamento
     -------------------------------------------------
+
 
 
     le tabelle del database di supporto

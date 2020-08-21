@@ -673,9 +673,32 @@
     request.__view__.__ietf__                 | il codice IETF del linguaggio collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
     request.__view__.__lang__                 | l'ID del linguaggio collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
     request.__view__.__site__                 | l'ID del sito collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
+    request.__view__.<e>                      | configurazione della view con ID <e>
+    request.__view__.<e>.__fields__           | colonne della view con ID <e>
+    request.__view__.<e>.__filters__          | colonne di filtro della view con ID <e>
+    request.__view__.<e>.__filters__.<c>      | strategie di filtro della colonna <c> della view con ID <e> (vedi sotto)
+    request.__view__.<e>.__pager__            | informazioni sulla paginazione della view con ID <e>
+    request.__view__.<e>.__pager__.page       | la pagina corrente della view con ID <e> (la numerazione inizia da zero)
+    request.__view__.<e>.__pager__.rows       | il numero di righe per pagina della view con ID <e>
+    request.__view__.<e>.__search__           | ricerca genericha della view con ID <e>
+    request.__view__.<e>.__status__           | codice di stato HTTP per l'esecuzione della view con ID <e>
 
     Per capire la relazione fra $cf['request'], $ct['request'], $_REQUEST, $cf['session'], $ct['session'], $_SESSION, occorre
     fare riferimento al codice e in particolare a _src/_config/_055.session.php e _src/_config/_750.controller.php.
+
+    Le strategie di filtro sono criteri con cui la funzione controller() effettua il confronto fra i valori dati come filtro
+    e quelli presenti in colonna. Sono collegate alle possibilità di filtro di MySQL e sono:
+
+    codice      | strategia                       | descrizione
+    ------------|---------------------------------|-------------------------------------------------------------------------
+    EQ          | <f> = <v>                       | filtra il campo <f> per i valori uguali a <v>
+    GE          | <f> >= <v>                      | filtra il campo <f> per i valori maggiori o uguali a <v>
+    GT          | <f> > <v>                       | filtra il campo <f> per i valori maggiori di <v>
+    LE          | <f> <= <v>                      | filtra il campo <f> per i valori minori o uguali a <v>
+    LT          | <f> < <v>                       | filtra il campo <f> per i valori minori di <v>
+    LK          | <f> LIKE %<v>%                  | filtra il campo <f> per i valori che contengono <v>
+    NL          | <f> IS NULL                     | filtra il campo <f> per i valori uguali a NULL
+    NN          | <f> IS NOT NULL                 | filtra il campo <f> per i valori diversi da NULL
 
     $cf['session']
     --------------

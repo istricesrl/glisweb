@@ -41,16 +41,21 @@
 
     cartella                  | descrizione
     --------------------------|---------------------------------------------------------------------------------------
+    bin/                      | contiene le macro Twig del template (quelle che vengono importate)
     css/                      | contiene i fogli di stile CSS del template
     etc/                      | contiene i file di configurazione del template
     ext/                      | contiene i file Twig di base del template, che vengono poi estesi dagli schemi
     img/                      | contiene gli elementi grafici del template
+    inc/                      | contiene gli schemi aggiuntivi (quelli che vengono inclusi)
     src/                      | contiene gli script del template
     src/fnt/                  | contiene i font del template
     src/js/                   | contiene gli script Javascript del template
 
     A parte la cartella etc/, che dev'essere obbligatoriamente presente per contenere il file template.conf, tutte le
     altre cartelle sono da considerarsi opzionali e vanno create alla bisogna.
+
+    Si noti la differenza fra la cartella bin/ e la cartella inc/, nella prima vanno inseriti i file di libreria che
+    vengono poi importati mentre nella seconda vanno gli schemi aggiuntivi che vengono inclusi.
 
     il file etc/template.conf
     -------------------------
@@ -246,34 +251,110 @@
     estensione del template può disorientare specialmente all'inizio; si tenga perciò presente che:
 
     - esistono alcune categorie di pagine nel template standard del framework:
-      - le view
-        - l'ID inizia per "view"
-        - il nome dello schema inizia per "view" oppure è view.html
-        - il nome della macro PHP inizia per "view"
-        - solitamente viene inclusa anche la macro "default.view.php
-        - al nome viene aggiunto quello dell'entità rappresentata
-      - le form
-        - l'ID inizia per "form"
-        - il nome dello schema inizia per "form"
-        - il nome della macro PHP inizia per "form"
-        - solitamente viene inclusa anche la macro "default.form.php
-        - al nome viene aggiunto quello dell'entità gestita
       - le pagine standard
         - l'ID della pagina è solitamente descrittivo
         - il nome dello schema corrisponde all'ID della pagina
         - il nome della macro PHP corrisponde all'ID della pagina
+      - le pagine view
+        - l'ID termina per "view"
+        - il nome dello schema termina per "view" oppure è "default.view.html"
+        - il nome della macro PHP termina per "view"
+        - solitamente viene inclusa anche la macro "_default.view.php"
+        - il nome inizia con quello dell'entità rappresentata
+      - le pagine form
+        - l'ID termina per "form"
+        - il nome dello schema termina per "form"
+        - il nome della macro PHP termina per "form"
+        - solitamente viene inclusa anche la macro "_default.form.php"
+        - il nome inizia con quello dell'entità gestita
+      - le pagine tools
+        - l'ID termina per "tools"
+        - il nome dello schema termina per "tools"
+        - il nome della macro PHP termina per "tools"
+        - il nome inizia con quello dell'entità gestita
     - le macro PHP di default
-        - quando una macro è pensata per essere inclusa da più pagine il suo nome inizia per "default"
-    - riguardo ai caratteri utilizzabili nei nomi di file, si rammenti che:
-      - il carattere underscore è sempre sostituito da punto
+      - quando una macro è pensata per essere inclusa da più pagine il suo nome inizia per "default"
+    - gli schemi Twig di default
+      - quando uno schema è pensato per essere incluso da più pagine il suo nome inizia per "default"
+    - gli schemi Twig inclusi (con il comando Twig include)
+      - vanno sempre nella sottocartella inc/
+      - se appartengono a uno schema preciso
+        - il loro nome deve iniziare con il nome dello schema che li include
+        - se contengono filtri aggiuntivi per una view, devono riportare il suffisso "filters"
+        - se contengono un modal, devono riportare il suffisso "modal" più un suffisso univoco che ne identifichi il ruolo
+    - i file contenenti macro Twig
+      - vanno sempre nella sottocartella bin/
+      - se appartengono a uno schema preciso
+        - il loro nome deve iniziare con il nome dello schema che li importa
+        - se contengono subform, devono riportare il suffisso "sub"
 
     Vediamo alcuni esempi di pagine standard:
 
-    ID pagina                        | schema                                | macro
-    ---------------------------------|---------------------------------------|------------------------------------------------
-    browser                          | browser.html                          | _src/_inc/_macro/_browser.php
-    dashboard                        | dashboard.html                        | _src/_inc/_macro/_dashboard.php
-    delete                           | delete.html                           | _src/_inc/_macro/_delete.php
-    strumenti                        | strumenti.html                        | _src/_inc/_macro/_strumenti.php
+    ID pagina          | ID parent              | schema                         | macro
+    -------------------|------------------------|--------------------------------|------------------------------------------------
+    browser            | NULL                   | browser.html                   | _src/_inc/_macro/_browser.php
+    dashboard          | NULL                   | dashboard.html                 | _src/_inc/_macro/_dashboard.php
+    delete             | NULL                   | delete.html                    | _src/_inc/_macro/_delete.php
+    strumenti          | NULL                   | strumenti.html                 | _src/_inc/_macro/_strumenti.php
+
+    le pagine view
+    --------------
+    Questo tipo di pagine è pensato per rappresentare dei dati in forma tabellare, filtrabili, ordinabili e suddivisi in pagine.
+    In pratica è il meccanismo più frequente con cui vengono visualizzati gli elenchi nel template Athena. Tipicamente, una
+    pagina di tipo view si basa su un insieme di file così formato:
+
+    - la macro _src/_inc/_macro/_<entità>.view.php
+      - solitamente, questa poi a sua volta include la macro _src/_inc/_macro/_default.view.php
+    - lo schema _src/_templates/_athena/<entità>.view.html
+      - in alternativa, lo schema di default _src/_templates/_athena/default.view.html
+
+    In via opzionale, si può avere:
+
+    - un file di inclusione per i filtri in _src/_templates/_athena/inc/<entità>.view.filters.html
+
+    Per capire le logiche di funzionamento delle view, è necessario studiare il codice del template di default
+    _src/_templates/_athena/_default.view.html in modo da osservare come le variabili prodotte dallo user space vengono
+    poi utilizzate nell'output space.
+
+    La parte più complessa da comprendere delle pagine di tipo view è la struttura dei dati su cui lavorano; iniziamo
+    a vederli nel dettaglio partendo dall'array $ct['etc']:
+
+    chiave                                       | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    etc.include.filters                          | indica allo schema _view.html di includere uno schema addizionale per i filtri
+    etc.select.<e>                               | contenuto della tendina per l'entità <e>
+
+    La creazione delle tendine va fatta di preferenza utilizzando la funzione mysqlCachedQuery() per non sovraccaricare
+    il database.
+
+    L'array $ct['view'] configura e popola la vista vera e propria, e viene dichiarato nella macro specifica di ogni pagina
+    di tipo view, dopodiché viene ulteriormente elaborato nella macro di default (vedi _src/_inc/_macro/_default.view.php):
+
+    chiave                  | descrizione
+    ------------------------|---------------------------------------------------------------------------------------
+    view.table              | il nome dell'entità su cui lavorare, di solito una tabella del database (ma potrebbe anche trattarsi di una view virtuale, vedi \ref database "la documentazione relativa al database" per ulteriori dettagli)
+    view.cols               | un array associativo in cui le chiavi rappresentano i nomi dei campi del database mentre i valori le etichette da porre in intestazione di tabella
+    view.class              | un array associativo in cui le chiavi rappresentano i nomi dei campi del database mentre i valori le classi CSS da applicare alle celle della relativa colonna
+    view.open.page          | l'ID della pagina a cui portare l'utente quando fa click su una riga; il link porta con sé la query string <entità>[id]=<idEntità> (di solito una pagina di tipo form con ID form_<entità>)
+    view.open.table         | il nome della tabella del database da utilizzare per aprire la riga; questo è necessario soprattutto quando la view fa riferimento a un'entità virtuale (vedi \ref database "la documentazione relativa al database")
+
+    Visto il ruolo fondamentale che gioca nella composizione della vista, si studi attentamente anche la struttura dell'array
+    $cf['request']['__view__'] nella \ref variabili "documentazione relativa alle variabili del framework".
+
+    le pagine form
+    --------------
+    Questo tipo di pagine è pensato per gestire i dati di una tabella del database, una riga alla volta. Tipicamente, una pagina
+    di tipo form si basa su un insieme di file così formato:
+
+    - la macro _src/_inc/_macro/_<entità>.form.php
+      - solitamente, questa poi a sua volta include la macro _src/_inc/_macro/_default.form.php
+    - lo schema _src/_templates/_athena/<entità>.form.html
+      - in alternativa, lo schema di default _src/_templates/_athena/default.form.html
+
+    L'array $ct['form'] contiene i dati di configurazione delle form (vedi anche _src/_inc/_macro/_default.form.php):
+
+    chiave                  | descrizione
+    ------------------------|---------------------------------------------------------------------------------------
+    form.table              | il nome dell'entità su cui lavorare, di solito una tabella del database
 
 */
