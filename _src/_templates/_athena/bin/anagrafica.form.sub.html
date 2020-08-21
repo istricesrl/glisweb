@@ -1,0 +1,162 @@
+{% macro mail( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable }}">
+    {{ frm.subformLegend( subtable, legend ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}{% else %}{% set t = 0 %}{% endif %}
+    {% for i in 0..t %}
+    {% set r = request[ table ][ subtable ][ i ] %}
+    <div id="{{ subtable }}_{{ i }}">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
+	<div class="form-group form-row">
+	    <div class="col-auto">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">notifiche</span>{% endif %}
+		{{ frm.select( table, subtable, i, 'se_notifiche', '', etc.select.se_notifiche, request ) }}
+	    </div>
+	    <div class="col">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">indirizzo</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'indirizzo', 'indirizzo e-mail', '', request ) }}
+	    </div>
+	    <div class="col-auto">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">se pec</span>{% endif %}
+		{{ frm.select( table, subtable, i, 'se_pec', '', etc.select.se_pec, request ) }}
+	    </div>
+	    <div class="col-12 col-md">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
+	    </div>
+	    {% if r.id %}
+	    <div class="col-auto text-right remove-on-duplicate d-print-none">
+		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary remove-on-duplicate', 'window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~'&__delete__[id]=' ~ r.id ~ '&__delete__[target]=' ~ page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ '","_self")' ) }}
+	    </div>
+	    {% endif %}
+	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}
+
+{% macro telefoni( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable }}">
+    {{ frm.subformLegend( subtable, legend ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}{% else %}{% set t = 0 %}{% endif %}
+    {% for i in 0..t %}
+    {% set r = request[ table ][ subtable ][ i ] %}
+    <div id="{{ subtable }}_{{ i }}">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
+	<div class="form-group form-row">
+	    <div class="col-auto">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">notifiche</span>{% endif %}
+		{{ frm.select( table, subtable, i, 'se_notifiche', '', etc.select.se_notifiche, request ) }}
+	    </div>
+	    <div class="col">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">numero</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'numero', 'numero di telefono', '', request ) }}
+	    </div>
+	    <div class="col-auto">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia</span>{% endif %}
+		{{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_telefoni, request, '', '', '', '', 'font-awesome' ) }}
+	    </div>
+	    <div class="col-12 col-md">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
+	    </div>
+	    {% if r.id %}
+	    <div class="col-auto text-right remove-on-duplicate d-print-none">
+		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary remove-on-duplicate', 'window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~'&__delete__[id]=' ~ r.id ~ '&__delete__[target]=' ~ page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ '","_self")' ) }}
+	    </div>
+	    {% endif %}
+	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}
+
+{% macro indirizzi( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable }}">
+    {{ frm.subformLegend( subtable, legend ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}{% else %}{% set t = 0 %}{% endif %}
+    {% for i in 0..t %}
+    {% set r = request[ table ][ subtable ][ i ] %}
+    <div id="{{ subtable }}_{{ i }}">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
+	<div class="form-group form-row">
+	    <div class="col-auto">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia</span>{% endif %}
+		{{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_indirizzi, request, '', '', '', '', 'font-awesome' ) }}
+	    </div>
+	    <div class="col">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">indirizzo</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'indirizzo', 'indirizzo (parte nominale)', '', request ) }}
+	    </div>
+	    <div class="col-3 col-md-1">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">civico</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'civico', 'n°', '', request ) }}
+	    </div>
+	    <div class="col-3 col-md-1">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">cap</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'cap', 'CAP', '', request ) }}
+	    </div>
+	    <div class="col-6 col-md">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">località</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'localita', 'località', '', request ) }}
+	    </div>
+	    <div class="col-6 col-md">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">comune</span>{% endif %}
+		{{ frm.select( table, subtable, i, 'id_comune', 'comune', etc.select.comuni, request, '', '', '', '', 'selectpicker' ) }}
+	    </div>
+	    <div class="col-12 col-md">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione e note</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
+	    </div>
+	    {% if r.id %}
+	    <div class="col-auto text-right remove-on-duplicate d-print-none">
+		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary remove-on-duplicate', 'window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~'&__delete__[id]=' ~ r.id ~ '&__delete__[target]=' ~ page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ '","_self")' ) }}
+	    </div>
+	    {% endif %}
+	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}
+
+{% macro categorie( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable }}">
+    {{ frm.subformLegend( subtable, legend ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}{% else %}{% set t = 0 %}{% endif %}
+    {% for i in 0..t %}
+    {% set r = request[ table ][ subtable ][ i ] %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
+    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}{% else %}{% set action = 'inserimento' %}{% endif %}
+    <div id="{{ subtable }}_{{ i }}">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_account_' ~ action, '', '', '', account, 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden' ) }}
+	<div class="form-group form-row">
+	    <div class="col">
+		{{ frm.selectRequired( table, subtable, i, 'id_categoria', '', etc.select.categorie_anagrafica, request, '2' ) }}
+	    </div>
+	    {% if r.id %}
+	    <div class="col-auto text-right remove-on-duplicate d-print-none">
+		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary remove-on-duplicate', 'window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~'&__delete__[id]=' ~ r.id ~ '&__delete__[target]=' ~ page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ '","_self")' ) }}
+	    </div>
+	    {% endif %}
+	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}

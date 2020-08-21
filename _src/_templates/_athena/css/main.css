@@ -375,6 +375,9 @@ header.subform-intestazione {
 
 nav {
     background-color: #cccccc;
+    background-image: url('../img/sfondo.png');
+    background-position: bottom left;
+    background-repeat: no-repeat;
     padding-top: 45px;
     width: 100%;
 }

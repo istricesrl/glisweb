@@ -1,7 +1,7 @@
 {# MACRO DI DEFAULT PER IL TEMPLATE STANDARD #}
 
 {% macro controls( page, pages, lang, session, table, request, localization, download, short ) %}
-{% import _bin/_form.html as frm %}
+{% import '_bin/_form.html' as frm %}
 {% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ lang ] %}{% endif %}
 <div class="row no-gutters d-print-none">
     <div class="col-auto col-md-5">

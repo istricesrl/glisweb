@@ -32,16 +32,17 @@
 
 		<thead>
 		    <tr>
-			{% for key,col in view.cols %}
+			{# for key,col in view.cols #}
+			{% for key in view.fields %}
 			<th class="{{ view.class[key] }}">
-			    {% if col %}
+			    {% if view.cols[ key ] %}
 			    <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
 			    <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
-				<option value="">{{ col }}</option>
-				<option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ col }} &#xf0d8;</span></option>
-				<option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ col }} &#xf0d7;</option>
+				<option value="">{{ view.cols[ key ] }}</option>
+				<option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
+				<option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
 			    </select>
-			    <span class="d-none d-print-inline">{{ col }}</span>
+			    <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
 			    {% endif %}
 			</th>
 			{% endfor %}
@@ -51,7 +52,8 @@
 		<tbody>
 		    {% for row in view.data %}
 		    <tr{% if view.open.path %} onClick="window.open('{{ view.open.path }}?{% if row[ view.open.field ] %}{{ view.open.table }}[id]={{ row[ view.open.field ] }}{% endif %}{% if view.master.table %}&{{ view.master.table }}[id]={{ row[ view.master.field ] }}{% endif %}{% for tbl,flds in view.open.extra %}{% for fld in flds %}&{{tbl}}[{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% for tbl,flds in view.open.preset %}{% for fld in flds %}&__preset__[{{tbl}}][{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% if view.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"{% endif %}>
-			{% for key,col in view.cols %}
+			{# for key,col in view.cols #}
+			{% for key in view.fields %}
 			<td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
 			{% endfor %}
 		    </tr>

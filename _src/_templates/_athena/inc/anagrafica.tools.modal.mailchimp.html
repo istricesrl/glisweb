@@ -1,0 +1,39 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function esporta() {
+	var data = $('#_id_categoria').val();
+	getws(
+	    '/_src/_api/_print/_esportazione.anagrafica.csv.php',
+	    '__categoria__=' + data,
+	    function() {
+		window.open( '/_src/_api/_print/_esportazione.anagrafica.csv.php?__categoria__='+data, '_blank');
+	    }
+	);
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="esporta_per_mail">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">esporta CSV categoria anagrafica</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			    <label class="d-none d-md-block col-md col-form-label">categoria</label>
+			<div class="col-10">
+			    {{ frm.selectRequired( table, '', '', 'id_categoria', 'tutte', etc.select.id_categoria, request, '', '','selectpicker' ) }}
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="esporta();">esporta</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
