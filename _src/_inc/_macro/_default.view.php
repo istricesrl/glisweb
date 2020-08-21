@@ -27,6 +27,16 @@
 	    ) );
 	}
 */
+
+    // contatore per i campi della vista
+	$i = 10;
+
+    // campi della vista
+	foreach( $ct['view']['cols'] as $field => $label ) {
+	    $ct['view']['fields'][ $i ] = $field;
+	    $i += 10;
+	}
+
     // id della vista
 	if( ! isset( $ct['view']['id'] ) ) {
 	    $ct['view']['id'] = md5(
