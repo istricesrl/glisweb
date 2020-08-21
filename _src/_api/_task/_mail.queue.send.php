@@ -92,7 +92,7 @@
 								$out = $mail;
 
 							    // log
-								logWrite( 'spostamento della mail #' . $mail['id'] . ' dalla mail_out alla mail_sent completato', 'mail', LOG_ERR );
+								logWrite( 'spostamento della mail #' . $mail['id'] . ' dalla mail_out alla mail_sent completato', 'mail', LOG_NOTICE );
 
 /*
 							    // invio la mail
@@ -235,7 +235,7 @@
 			if( $r !== false ) {
 
 			    // log
-				logWrite( 'invio della mail #' . $out['id'] . ' completato: ' . $r, 'mail', LOG_ERR );
+				logWrite( 'invio della mail #' . $out['id'] . ' completato: ' . $r, 'mail', LOG_NOTICE );
 
 			} else {
 
@@ -315,7 +315,7 @@
 					} else {
 
 					    // log
-						logWrite( 'avviare la transazione per riportare in mail_sent la mail #' . $out['id'] . ' in OUT', 'mail', LOG_ERR );
+						logWrite( 'impossibile avviare la transazione per riportare in mail_sent la mail #' . $out['id'] . ' in OUT', 'mail', LOG_ERR );
 
 					}
 
