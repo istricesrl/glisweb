@@ -34,14 +34,14 @@ tabelle necessarie al suo funzionamento.
 Se potete accedere via SSH al server su cui volete installare GlisWeb, allora l'installazione risulterà più lineare.
 Sarà sufficiente scaricare il framework come sopra, ma direttamente nella document root del sito su cui volete
 installarlo, installare le dipendenze con composer e lanciare lo script shell allegato al framework
-(_src/_sh/_mysql2install.sh) per caricare il database. Lo script è interattivo e vi chiederà i dati del server
+(_src/_sh/_gw.mysql.install.sh) per caricare il database. Lo script è interattivo e vi chiederà i dati del server
 di database per eseguire gli script SQL allegati al framework.
 
 ## configurazione
 Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
 che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
 verrà letto automaticamente dal framework. Per qualsiasi dubbio fate riferimento alla documentazione in _usr/_docs/
-oppure se preferite potete fare il build con Doxigen dei file (utilizzando lo scritp _src/_sh/_doxygen.sh) in modo
+oppure se preferite potete fare il build con Doxigen dei file (utilizzando lo scritp _src/_sh/_gw.doxygen.build.sh) in modo
 da poterli visualizzare via web, aggiungendo all'URL del vostro deploy il path _usr/_docs/_build/html/.
 
 ### esempi
