@@ -37,16 +37,18 @@
 
 	if( empty( $conn ) ) {
 
-		// TODO qui loggare
+		logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
 
 		return false;
 
 	} else {
 
-		$r = memcache_set( $conn, $key, $data, MEMCACHE_COMPRESSED, $ttl );
+		$conn->setOption( Memcached::OPT_COMPRESSION, true );
+
+		$r = $conn->set( $key, $data, $ttl );
 
 		if( $r == false ) {
-		    logWrite( 'impossibile scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
+		    logWrite( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
 		} else {
 		    logWrite( 'scrittura effettuata, chiave: ' . $key, 'memcache', LOG_DEBUG );
 		}
@@ -64,22 +66,20 @@
      */
     function memcacheRead( $conn, $key ) {
 
-	// TODO questa logica complica il log della connessione vuota
-
 	memcacheUniqueKey( $key );
 
 	if( empty( $conn ) ) {
 
-		// TODO qui loggare
+		logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache', LOG_ERR );
 
 		return false;
 
 	} else {
 
-		$r = memcache_get( $conn, $key );
+		$r = $conn->get( $key );
 
 		if( $r == false ) {
-		    logWrite( 'impossibile leggere la chiave: ' . $key, 'memcache', LOG_DEBUG );
+		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache', LOG_DEBUG );
 		} else {
 		    logWrite( 'lettura effettuata, chiave: ' . $key, 'memcache', LOG_DEBUG );
 		}
@@ -99,7 +99,7 @@
 
 	memcacheUniqueKey( $key );
 
-	return memcache_delete( $conn, $key );
+	return $conn->delete( $key );
 
     }
 
@@ -113,11 +113,7 @@
      */
     function memcacheFlush( $conn ) {
 
-	$t = memcache_flush( $conn );
-
-	sleep( 2 );
-
-	return $t;
+	return $conn->flush();
 
     }
 

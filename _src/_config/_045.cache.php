@@ -28,19 +28,23 @@
 
 		    foreach( $cf['memcache']['profile']['servers'] as $server ) {
 
+			// inizializzazione
+			    $cn = new Memcached();
+
 			// connessione
-			    $cn = @memcache_connect(
+			    $cn->addServer(
 				$cf['memcache']['servers'][ $server ]['address'],
 				$cf['memcache']['servers'][ $server ]['port']
 			    );
 
 			// registro la connessione
 			    if( ! empty( $cn ) ) {
+				$stats = $cn->getStats();
 				$cf['memcache']['connections'][ $server ] = $cn;
-				$cf['memcache']['stats'][ $server ] = memcache_get_stats( $cn );
+				$cf['memcache']['stats'][ $server ] = array_shift( $stats );
 				logWrite( 'connessione effettuata al server ' . $server, 'memcache' );
 			    } else {
-				logWrite( 'impossibile connettersi al server ' . $server, 'memcache', LOG_ERR );
+				logWrite( 'impossibile (' . $cn->getResultCode() . ') connettersi a ' . $server, 'memcache', LOG_ERR );
 			    }
 
 		    }
