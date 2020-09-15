@@ -33,13 +33,13 @@
 {% if submenu %}{{ nav.selectMenu( submenu , lang, site, query ) }}{% endif %}
 {% endmacro %}
 
-{% macro tabs( page, pages, lang, etc, request ) %}
+{% macro tabs( page, pages, lang, etc, form, request ) %}
 {% if pages[ page.id ].etc.tabs %}
 <section class="row d-print-none">
     <div class="col-12">
 	<ul class="nav nav-tabs">
 	    {% for t in pages[ page.id ].etc.tabs %}
-	    <li class="nav-item"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ etc.table ].id %}?{{ etc.table }}[id]={{ request[ etc.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ etc.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% else %}{{ pages[ t ].h1[ lang ] }}{% endif %}</a></li>
+	    <li class="nav-item"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% else %}{{ pages[ t ].h1[ lang ] }}{% endif %}</a></li>
 	    {% endfor %}
 	</ul>
     </div>
