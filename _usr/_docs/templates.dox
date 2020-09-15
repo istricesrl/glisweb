@@ -1,6 +1,6 @@
 /*!
 
-    \page templates del framework
+    \page templates templates del framework
 
     Descrizione tecnica della struttura dei template del framework.
 
@@ -242,7 +242,7 @@
     il template standard (_src/_templates/_athena/)
     ===============================================
     Il template standard Athena è di gran lunga il più importante del framework in quanto è solitamente utilizzato per tutte le
-    pagine del CMS. Di conseguenza è importante comprenderne il funzionamento e le logiche di fondo, anche a livello di
+    pagine del CMS. Di conseguenza è fondamentale comprenderne il funzionamento e le logiche di fondo, anche a livello di
     attribuzione dei nomi ai file, specialmente se si intende utilizzare GlisWeb per realizzare delle web application e non
     dei semplici siti web.
 
@@ -356,5 +356,175 @@
     chiave                  | descrizione
     ------------------------|---------------------------------------------------------------------------------------
     form.table              | il nome dell'entità su cui lavorare, di solito una tabella del database
+
+    La creazione degli schemi di tipo form è una delle operazioni più delicate quando si lavora con il template standard; ci sono
+    diverse cose da ricordare, ed è anche essenziale rispettare le convenzioni stilistiche e strutturali del template per
+    garantire la leggibilità dello schema. La prima parte è dedicata alle operazioni preparatorie:
+
+    \code{.html}
+    {% import '_bin/_form.html' as frm %}
+    {% import 'bin/default.html' as def %}
+    {% import 'bin/anagrafica.form.sub.html' as sub %}
+
+    {% extends "ext/main.html" %}
+
+    {% block main %}
+
+    {# DEFINIZIONI #}
+    {% set table = form.table %}
+    {% set ietf = localization.language.ietf %}
+
+    {# ACCOUNT #}
+    {% if session.account.id %}
+        {% set account = session.account.id %}
+    {% else %}
+        {% set account = '__null__' %}
+    {% endif %}
+
+    {# TIPO DI METODO E ATTIVITA' SVOLTA #}
+    {% if request[ table ].id %}
+        {% set method = 'update' %}
+        {% set activity = 'aggiornamento' %}
+        {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+    {% else %}
+        {% set method = 'post' %}
+        {% set activity = 'inserimento' %}
+        {% set legend = 'inserimento nuovo oggetto' %}
+    {% endif %}
+    \endcode
+
+    Qui c'è da osservare innanzitutto l'importazione dei file di macro, lo standard _bin/_form.html soprattutto che contiene
+    le macro necessarie a creare i campi del form. Il file bin/default.html contiene invece le macro di default del template,
+    la più importante è quella che genera i controlli di chiusura del form (bottoni di salvataggio, cancellazione, eccetera).
+
+    Una menzione particolare va fatta per il file bin/anagrafca.form.sub.html che contiene i subform (vedi sopra); ogni schema
+    ha il suo (oppure no, se non prevede subform). Le subform sono importantissime per rendere veloce e comodo l'accesso alle
+    entità collegate a quella principale, e i file che le contengono devono rispettare rigidi criteri strutturali e stilistici
+    per essere leggibili e facili da manutenere (vedi sotto). Quando le entità collegate sono molte, o comunque c'è la
+    possibilità di compromettere le performance del modulo principale è tuttavia preferibile utilizzare le subview (vedi sotto).
+
+    La variabile table porta abbreviato nell'output space il valore di $ct['form']['table'] già visto in precedenza, mentre
+    ietf fa lo stesso per $ct['localization']['language']['ietf'].
+
+    La definizione delle variabili method e activity si ricollega alle colonne standard che registrano la timestamp e l'id account
+    di inserimento e aggiornamento delle righe (vedi la \ref database "documentazione relativa al database" per ulteriori
+    dettagli); lo schema stabilisce se si trova in uno scenario di inserimento o aggiornamento in base all'assenza o alla presenza
+    di un ID di riga (se non c'è, vuol dire che si sta inserendo un nuovo oggetto).
+
+    Una volta effettuata la preparazione dello schema è possibile iniziare a comporre l'HTML; in particolare, si rispetti
+    la seguente gerarchia dei tag per assicurarsi che le macro di creazione dei campi si trovino a lavorare nel contesto corretto
+    (si veda il codice dello schema _src/_templates/_athena/anagrafica.form.html per l'esempio completo):
+
+    \code{.html}
+    {# FORM DI GESTIONE #}
+    <section class="row">
+        <div class="col-md-12">
+            <form id="form-{{ table }}" class="" action="{{ page.path[ ietf ] }}" method="post">
+
+                {# CAMPI HIDDEN DI BASE #}
+                <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+                <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+                <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+                <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+                <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+                <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+                {# MODULO PRINCIPALE #}
+                <fieldset>
+                    <legend>dati generali <small>{{ legend }}</small></legend>
+
+                    <div class="form-group form-row">
+                        <div class="col-auto">
+                            <span class="label-top">sigla</span>
+                            {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_anagrafica, request ) }}
+                        </div>
+                    </div>
+
+                    {# ... ALTRI CAMPI ... #}
+
+                </fieldset>
+
+                {# SUBFORM INDIRIZZI E-MAIL #}
+                {{ sub.mail( table, 'mail', 'indirizzi e-mail', site, page, pages, ietf, etc, request, session ) }}
+
+                {# ... ALTRI SUBFORM ... #}
+
+                {# BOTTONI E COMANDI DEL MODULO #}
+                <fieldset class="form-controls">
+                    {{ def.controls( page, pages, ietf, session, table, request ) }}
+                </fieldset>
+
+            </form>
+        </div>
+    </section>
+
+    {% endblock %}
+    \endcode
+
+    Si noti che qui viene chiuso il blocco aperto nel frammento di codice visto sopra. Sottolineiamo l'importanza di attenersi
+    strettamente a questa struttura di markup per garantire la continuità grafica fra i form e il corretto funzionamento non
+    solo delle macro Twig ma anche dei Javascript standard.
+
+    Vediamo ora un esempio di subform tratto da bin/anagrafica.form.sub.html; anche in questo caso è essenziale rispettare
+    rigidamente la struttura dei tag e lo stile del codice:
+
+    \code{.html}
+    {% macro mail( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+    {% import '_bin/_form.html' as frm %}
+    {% set counter = 0 %}
+    <fieldset id="{{ subtable }}">
+        {{ frm.subformLegend( subtable, legend ) }}
+        {% if request[ table ][ subtable ]|length %}
+            {% set t = request[ table ][ subtable ]|length - 1 %}
+        {% else %}
+            {% set t = 0 %}
+        {% endif %}
+        {% for i in 0..t %}
+        {% set r = request[ table ][ subtable ][ i ] %}
+        <div id="{{ subtable }}_{{ i }}">
+            {{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+            {{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
+            <div class="form-group form-row">
+                <div class="col-auto">
+                    {% if i == 0 %}<span class="label-top remove-after-duplicate">notifiche</span>{% endif %}
+                    {{ frm.select( table, subtable, i, 'se_notifiche', '', etc.select.se_notifiche, request ) }}
+                </div>
+
+                {# ... ALTRI CAMPI ... #}
+
+                {% if r.id %}
+                <div class="col-auto text-right remove-on-duplicate d-print-none">
+                    {% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+                    {{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </fieldset>
+    {% endmacro %}
+    \endcode
+
+    La logica dei subform è molto semplice, viene utilizzato un ciclo che riproduce una riga per ogni entità collegata,
+    al minimo viene generata una riga vuota per il primo inserimento. La duplicazione delle righe è affidata alla funzione
+    Javascript duplicate() alla quale si rimanda per ulteriori dettagli; qui preme evidenziare che sono sempre richiesti
+    i campi nascosti per il salvataggio dell'ID e dell'ID dell'entità genitore, e che il tasto di cancellazione della riga,
+    che appare solo per le entità già salvate, viene generato tramite la macro standard trashButton() per via della
+    sua complessità.
+
+    È possibile che a volte le entità correlate abbiano le colonne standard per ID account e timestamp di modifica e
+    inserimento; in questo caso vanno aggiunte le logiche e i campi hidden necessari:
+
+    \code{.html}
+    \endcode
+
+    il meccanismo di cancellazione
+    ------------------------------
+
+    il meccanismo del backurl
+    -------------------------
+
+    le subview
+    ----------
 
 */
