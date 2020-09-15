@@ -12,7 +12,9 @@
      */
 
     // inclusione del framework
-	require_once '../../_config.php';
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    require '../../_config.php';
+	}
 
     // inizializzo l'array del risultato
 	$status = array();
@@ -28,6 +30,8 @@
 	}
 
     // output
-	buildJson( array( 'status' => 'OK' ) );
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    buildJson( $status );
+	}
 
 ?>

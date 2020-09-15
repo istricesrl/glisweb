@@ -12,18 +12,22 @@
      */
 
     // inclusione del framework
-	require_once '../../_config.php';
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    require '../../_config.php';
+	}
 
     // inizializzo l'array del risultato
 	$status = array();
 
     // faccio il flush della cache
-	$st['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES );
+	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES );
 
     // headers
 	header( 'Access-Control-Allow-Origin: *' );
 
     // output
-	buildJson( $st );
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    buildJson( $status );
+	}
 
 ?>
