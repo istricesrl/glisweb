@@ -35,4 +35,10 @@
 
     }
 
+    function escpos_setDate( $h, $d = NULL ) {
+
+	escpos_write( $h, '"' . ( ( $d !== NULL ) ? $d : date( 'dmyHi' ) ) . '"D' );
+
+    }
+
 ?>
