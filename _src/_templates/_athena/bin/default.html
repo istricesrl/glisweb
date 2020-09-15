@@ -9,7 +9,8 @@
     </div>
     <div class="col col-md-2 text-center">
 	{% if request[ table ].id %}
-	{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary', 'submitFormOkay = true; window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ table ~'&__delete__[id]=' ~ request[ table ].id ~ '&__delete__[target]=' ~ back ~ '","_self")','elimina' ) }}
+	{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary', 'submitFormOkay = true; window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ table ~'&__delete__[id]=' ~ request[ table ].id ~ '&__delete__[target]=' ~ back ~ '","_self")','elimina' ) #}
+	{{ frm.trashButton( table, '', page, pages, '', lang, request, back ) }}
 	{% endif %}
     </div>
     <div class="col-auto col-md-5 text-right">

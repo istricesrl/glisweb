@@ -3,7 +3,8 @@
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
     {{ frm.subformLegend( subtable, legend ) }}
-    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}{% else %}{% set t = 0 %}{% endif %}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
     <div id="{{ subtable }}_{{ i }}">
@@ -29,7 +30,7 @@
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
-		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary remove-on-duplicate', 'window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~'&__delete__[id]=' ~ r.id ~ '&__delete__[target]=' ~ page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ '","_self")' ) }}
+		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
 	    </div>
 	    {% endif %}
 	</div>
@@ -43,7 +44,8 @@
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
     {{ frm.subformLegend( subtable, legend ) }}
-    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}{% else %}{% set t = 0 %}{% endif %}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
     <div id="{{ subtable }}_{{ i }}">
@@ -69,7 +71,7 @@
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
-		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary remove-on-duplicate', 'window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~'&__delete__[id]=' ~ r.id ~ '&__delete__[target]=' ~ page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ '","_self")' ) }}
+		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
 	    </div>
 	    {% endif %}
 	</div>
@@ -83,7 +85,8 @@
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
     {{ frm.subformLegend( subtable, legend ) }}
-    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}{% else %}{% set t = 0 %}{% endif %}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
     <div id="{{ subtable }}_{{ i }}">
@@ -121,7 +124,7 @@
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
-		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary remove-on-duplicate', 'window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~'&__delete__[id]=' ~ r.id ~ '&__delete__[target]=' ~ page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ '","_self")' ) }}
+		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
 	    </div>
 	    {% endif %}
 	</div>
@@ -135,12 +138,14 @@
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
     {{ frm.subformLegend( subtable, legend ) }}
-    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}{% else %}{% set t = 0 %}{% endif %}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
     {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
-    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}{% else %}{% set action = 'inserimento' %}{% endif %}
     <div id="{{ subtable }}_{{ i }}">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
@@ -152,7 +157,7 @@
 	    </div>
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
-		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary remove-on-duplicate', 'window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~'&__delete__[id]=' ~ r.id ~ '&__delete__[target]=' ~ page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ '","_self")' ) }}
+		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
 	    </div>
 	    {% endif %}
 	</div>

@@ -1,25 +1,25 @@
-{% extends 'ext/main.html' %}
+{% extends 'ext/blank.html' %}
 
 {% block main %}
 {% if request.__delete__.conferma != 1 %}
-<form id="form-delete" class="" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+<form id="form-delete" class="d-flex flex-column w-100 h-100 align-items-center justify-content-center" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 
     <input type="hidden" name="__delete__[conferma]" value="1">
     <input type="hidden" name="__delete__[target]" value="{{ request.__delete__.target }}">
     <input type="hidden" name="{{ request.__delete__.table }}[__method__]" value="delete">
     <input type="hidden" name="{{ request.__delete__.table }}[id]" value="{{ request.__delete__.id }}">
 
-    <fieldset>
+    <fieldset class="delete w-100">
 	<div class="form-group form-row">
 	    <div class="col-12 text-center">
-		<h4>confermi la cancellazione di:</h4>
-		<h4>{{ request.__delete__.table }}</h4>
-		<h3>{% if __delete__.__label__ %}{{ __delete__.__label__ }}{% else %}riga #{{ request.__delete__.id }}{% endif %}</h3>
+		<h2>confermi la cancellazione di</h2>
+		<h1>{% if __delete__.__label__ %}{{ __delete__.__label__ }}{% else %}riga #{{ request.__delete__.id }}{% endif %}</h1>
+		<h2>dalla tabella {{ request.__delete__.table }}</h2>
 	    </div>
 	</div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="w-100 form-controls">
 	<div class="form-group form-row">
 	    <div class="col-6 text-center">
 		<input type="submit" class="btn btn-secondary btn-sm" value="sì">

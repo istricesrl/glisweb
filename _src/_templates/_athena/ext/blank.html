@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.html' %}
+
+    </head>
+
+    <body>
+
+        {% include '_inc/_page.open.html' %}
+
+        <main class="d-flex container-fluid w-100 vh-100">
+            {% block main %}{% endblock %}
+        </main>
+
+        {% include '_inc/_page.close.html' %}
+
+        {% block javascript %}{% endblock %}
+
+    </body>
+</html>
