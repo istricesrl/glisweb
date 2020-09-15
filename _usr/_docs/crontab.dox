@@ -1,0 +1,41 @@
+/*!
+
+    \page crontab meccanismi di esecuzione pianificata del framework
+
+    Descrizione dei meccanismi di esecuzione pianificata del framework.
+
+    task e job
+    ==========
+    Prima di addentrarsi nei meccanismi dell'esecuzione pianificata in GlisWeb è necessario comprendere la differenza
+    fra i due tipi di operazioni che l'API cron è in grado di eseguire, i task e i job. Mentre i primi sono compiti
+    ricorrenti, che vengono eseguiti periodicamente e non hanno una conclusione vera e propria, i secondi per contro
+    sono dei veri e propri processi che hanno un inizio, un'esecuzione prolungata nel tempo, e una fine.
+
+    Si può meglio comprendere la natura di questa differenza con alcuni esempi. Un esempio di task è la gestione della
+    coda della posta in uscita; ogni volta che questo task viene attivato controlla se ci sono messaggi da inviare,
+    se ce ne sono invia il primo, e termina. In questo modo la coda può essere riempita mentre viene anche svuotata,
+    e non ci sono problemi perché ogni esecuzione del task non ha memoria di quelle precedenti né ha cognizione di
+    quelle successive.
+
+    L'importazione dei dati da un file, invece, è un job; alla prima esecuzione del job il file viene esaminato, si
+    stabilisce quante righe contiene, e in base a quante righe vanno processate per ogni ciclo si può prevedere
+    quanto durerà l'esecuzione del job; ogni esecuzione ha cognizione di quelle precedenti, perché deve proseguire
+    il lavoro da dove si è interrotto, e ha cognizione di quante esecuzioni parziali mancano al completamento
+    del job stesso.
+
+    lo script di appoggio in /etc/cron.d/
+    -------------------------------------
+
+
+
+    struttura e gestione dei task
+    -----------------------------
+
+
+
+    struttura e gestione dei job
+    ----------------------------
+
+
+
+*/
