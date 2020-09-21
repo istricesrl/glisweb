@@ -5,6 +5,24 @@
      *
      *
      *
+     *
+     *
+     * -# dichiarazione tabella della vista
+     * -# dichiarazione della pagina di apertura
+     * -# dichiarazione delle colonne della vista
+     * -# dichiarazione delle classi delle colonne
+     * -# aggiunta delle colonne variabili
+     * -# inclusione dei filtri speciali
+     * -# popolazione tendine
+     * -# trasformazioni
+     * -# macro di default
+     *
+     *
+     *
+     *
+     *
+     * @todo finire di documentare
+     *
      * @file
      *
      */
@@ -36,7 +54,7 @@
 	    'categorie' => 'text-left'
 	);
 
-    // colonne custom
+    // colonne variabili
 	if( isset( $_SESSION['account']['se_agente'] ) && ! empty( $_SESSION['account']['se_agente'] ) ) {
 	    arrayInsertAssoc( '__label__', $ct['view']['cols'], array( 'provincia' => 'provincia' ) );
 	    arrayInsertAssoc( '__label__', $ct['view']['class'], array( 'provincia' => 'text-left' ) );
@@ -44,7 +62,7 @@
 	    $ct['view']['class']['agente'] = 'text-left';
 	}
 
-    // template filtri custom
+    // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/anagrafica.view.filters.html';
 
     // tendina categoria
@@ -54,7 +72,7 @@
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
 
-    // gestione default
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
 ?>

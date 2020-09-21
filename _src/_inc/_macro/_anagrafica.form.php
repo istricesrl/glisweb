@@ -4,6 +4,15 @@
      *
      *
      *
+     *
+     * -# definizione della tabella del modulo
+     * -# popolazione delle tendine
+     *
+     *
+     *
+     *
+     *
+     *
      * @todo documentare
      *
      * @file
@@ -14,7 +23,8 @@
 	$ct['form']['table'] = 'anagrafica';
 
     // tendina tipologie anagrafica
-	$ct['etc']['select']['tipologie_anagrafica'] = mysqlCachedQuery(
+	$ct['etc']['select']['tipologie_anagrafica'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY nome ASC'
@@ -40,28 +50,32 @@
 	);
 
     // tendina categorie anagrafica
-	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedQuery(
+	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
 
     // tendina tipologie telefoni
-	$ct['etc']['select']['tipologie_telefoni'] = mysqlCachedQuery(
+	$ct['etc']['select']['tipologie_telefoni'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_telefoni_view'
 	);
 
     // tendina tipologie indirizzi
-	$ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedQuery(
+	$ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_indirizzi_view'
 	);
 
     // tendina comuni
-	$ct['etc']['select']['comuni'] = mysqlCachedQuery(
+	$ct['etc']['select']['comuni'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM comuni_view'
@@ -186,7 +200,7 @@
 	}
 */
 
-    // gestione default
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
 ?>
