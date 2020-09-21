@@ -18,6 +18,7 @@
 
     // controllo la cartella per la cache di Twig
 	if( isset( $cf['twig']['profile']['cache'] ) ) {
+	    fullPath( $cf['twig']['profile']['cache'] );
 	    checkFolder( $cf['twig']['profile']['cache'] );
 	}
 
