@@ -266,14 +266,15 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica_gestione']['etc']['tabs'] )
 	);
+*/
 
     // vista account
-	$p['account'] = array(
+	$p['account.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'account' ),
 	    'h1'		=> array( $l		=> 'account' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_account.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'account' ),
@@ -281,18 +282,19 @@
 	);
 
     // gestione account
-	$p['account_gestione'] = array(
+	$p['account.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'account' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'account.gestione.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_account.gestione.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'account_gestione',
-								  'account_gestione_azioni' ) ),
+	    'parent'		=> array( 'id'		=> 'account.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'account.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_account.form.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'account.form',
+								  'account.form.tools' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
+/*
     // gestione account - azioni
 	$p['account_gestione_azioni'] = array(
 	    'sitemap'		=> false,
