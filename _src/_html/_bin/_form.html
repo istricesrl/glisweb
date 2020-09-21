@@ -81,6 +81,47 @@
 <input type="text" class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ val }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %}>
 {% endmacro %}
 
+{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, disabled ) %}
+{% if subtable %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+{% else %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if autosubmit %}
+    {% if autosubmit == 1 %}{% set change = 'submit();' %}{% else %}{% set change = autosubmit %}{% endif %}
+{% endif %}
+{% if not vl %}{% set vl = default %}{% endif %}
+{% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
+{% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
+{% if disabled %}
+{% for option in etc %}{% if option.id == vl %}
+<input type="hidden" name="{{ nm }}" value="{{ option.id }}"  >
+<div class="form-control-plaintext {{ class }}">{{ option.__label__ }}</div>
+{% endif %}{% endfor %}
+{% else %}
+<div class="row m-0">
+    <div class="col combobox-container p-0">
+	<select name="{{ nm }}" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" class="selectbox form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true">
+	    {% if not noempty %}<option value="">{# placeholder #}</option>{% endif %}
+	    {% for option in etc %}
+	    <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
+	    {% endfor %}
+	</select>
+    </div>
+    {% if edit and vl %}<div class="col-auto p-0 pl-1">
+	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ edit }}','_self')"><i class="fa fa-pencil"></i></button>
+    </div>{% endif %}
+    {% if add %}<div class="col-auto p-0 pl-1">
+	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ add }}','_self')"><i class="fa fa-plus"></i></button>
+    </div>{% endif %}
+</div>
+{% endif %}
+{% endmacro %}
+
 {% macro input( table, subtable, counter, field, placeholder, etc, request, default, type, required, class, disabled, step ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}

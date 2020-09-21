@@ -1,0 +1,68 @@
+/**
+ * INDICE
+ * - stili per la tendina intelligente
+ */
+
+/* stili per la tendina intelligente */
+
+/*
+.dropdown-menu {
+    font-size: 1em;
+}
+
+.dropdown-menu li a.dropdown-item {
+    padding: .25em .75em;
+    margin: 0px;
+}
+
+.dropdown-menu .dropdown-item.active {
+    background-color: #666666;
+}
+
+.bs-searchbox > input.form-control {
+    height: 31px;
+    padding: .25rem .5rem;
+    font-size: .9em;
+    line-height: 1.5;
+    border-radius: .2rem;
+}
+*/
+
+.dropdown-toggle {
+    /* NOTA - provvisorio, cercare una soluzione più stabile */
+    width:  32px;
+    color: #ffffff;
+    cursor: pointer;
+    background-color: #6c757d;
+    font-size: 1.4em;
+    padding: 0px 6px;
+    padding-top: 4px;
+    border-top-right-radius: .2rem;
+    border-bottom-right-radius: .2rem;
+}
+
+div.combobox-container {
+    position: relative;
+}
+
+ul.combobox-dropdown {
+    background-color: #eeeeee;
+    border: 1px solid #dddddd;
+    border-bottom-right-radius: 0.2rem;
+    border-bottom-left-radius: 0.2rem;
+    list-style-type: none;
+    position: absolute;
+    width: 100%;
+    padding: 0px;
+    z-index: 999;
+}
+
+ul.combobox-dropdown li {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+ul.combobox-dropdown li:hover {
+    background-color: #dddddd;
+}
+
