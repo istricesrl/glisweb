@@ -947,6 +947,26 @@
     twig.profiles.<s>.cache      | percorso della cartella per la cache; se valorizzato indica che il caching è attivo per il profilo di Twig per lo status <s>
     twig.profiles.<s>.debug      | se vale 1 indica che il debug è attivo per il profilo di Twig per lo status <s>
 
+    Vediamo un esempio di configurazione di Twig tramite Json:
+
+    \code{.json}
+    "twig": {
+      "profiles": {
+        "DEV": {
+          "debug": true,
+        },
+        "TEST": {
+          "debug": false,
+          "cache": "var/cache/twig/"
+        },
+        "PROD": {
+          "debug": false,
+          "cache": "var/cache/twig/"
+        }
+      }
+    }
+    \endcode
+
     L'array $cf['twig'] è linkato a $ct['twig'], per ulteriori dettagli vedi _src/_config/_380.twig.php.
 
     $cf['ws']
