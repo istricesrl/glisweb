@@ -42,7 +42,34 @@
      * @todo documentare
      *
      */
-    function mysqlCachedQuery( $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function mysqlGetQueryTables( $q ) {
+
+	$r = array();
+
+	if( preg_match_all( '/((FROM|JOIN) ([a-z_]+))/', $q, $m ) ) {
+	    $r = array_unique( $m[3] );
+	    array_walk( $r, function( &$v, $k ) { $v = str_replace( '_view', NULL, $v ); } );
+	}
+
+	return $r;
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+	return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function mysqlCachedQuery( $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array(), &$i = array() ) {
 
 	// calcolo la chiave della query
 	    $k = md5( $q . serialize( $p ) );
@@ -54,6 +81,12 @@
 	    if( empty( $r ) || $t === false ) {
 		$r = mysqlQuery( $c, $q, $p, $e );
 		memcacheWrite( $m, $k, $r, $t );
+		logWrite( 'query ' . $k . ' non presente in cache', 'speed' );
+		foreach( mysqlGetQueryTables( $q ) as $j ) {
+		    $i[ $j ]['query'][ memcacheUniqueKey( $k ) ] = time();
+		}
+	    } else {
+		logWrite( 'query ' . $k . ' letta dalla cache', 'speed' );
 	    }
 
 	// restituisco il risultato
@@ -180,7 +213,7 @@
 		    } else {
 
 			// log
-			    logWrite( md5( $q ) . ' -> OK', 'mysql', LOG_DEBUG );
+			    logWrite( md5( $q ) . ' -> OK', 'mysql' );
 
 			// restituisco il risultato
 			    return $r;
@@ -225,7 +258,7 @@
     function mysqlPreparedQuery( $c, $q, $params = array(), &$e = array() ) {
 
 	// log
-	    logWrite( md5( $q ) . ' PREPARED ' . $q, 'mysql', LOG_DEBUG );
+	    logWrite( md5( $q ) . ' PREPARED ' . $q, 'mysql' );
 
 	// verifico se c'è connessione
 	    if( empty( $c ) ) {
@@ -301,7 +334,7 @@
 			    } else {
 
 				// log
-				    logWrite( md5( $q ) . ' -> OK', 'mysql', LOG_DEBUG );
+				    logWrite( md5( $q ) . ' -> OK', 'mysql' );
 
 				// valore di ritorno a seconda del tipo di query
 				    switch( current( explode( ' ', $q ) ) ) {
@@ -474,7 +507,7 @@
 	    if( is_array( $r ) && count( $r ) > 0 ) {
 		$v = array_shift( $r );
 	    } else {
-		logWrite( 'nessuna riga trovata nel risultato', 'mysql', LOG_DEBUG );
+		logWrite( 'nessuna riga trovata nel risultato', 'mysql' );
 	    }
 
 	// ritorno

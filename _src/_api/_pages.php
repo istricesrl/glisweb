@@ -122,6 +122,12 @@
 
     // @todo documentare questa cosa delle favicon
 
+    // scrittura dell'indice della cache
+	memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['cache']['index'] );
+
+    // timer
+	timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
+
     // ricerca favicons
 	$favicons = glob( DIR_BASE . $ct['page']['template']['path'] . 'img/favicons/*.png', GLOB_BRACE );
 	$ct['page']['template']['favicons'] = array();

@@ -50,9 +50,9 @@
 	    || $cf['contents']['shortcuts']	=== false
 	) {
 	    $cf['contents']['cached'] = false;
-	    logWrite( 'struttura delle pagine non presente in cache', 'performances', LOG_NOTICE );
+	    logWrite( 'struttura delle pagine non presente in cache', 'speed', LOG_NOTICE );
 	} else {
-	    logWrite( 'struttura delle pagine presente in cache', 'performances' );
+	    logWrite( 'struttura delle pagine presente in cache', 'speed' );
 	}
 
     // debug

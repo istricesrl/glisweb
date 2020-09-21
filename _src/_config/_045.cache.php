@@ -20,34 +20,32 @@
     // link al profilo corrente
 	$cf['memcache']['profile']			= &$cf['memcache']['profiles'][ $cf['site']['status'] ];
 
-    // creo le connessioni ai server attivi
-	if( function_exists( 'memcache_connect' ) ) {
+    // ciclo sui server disponibili
+	if( isset( $cf['memcache']['profile']['servers'] ) && is_array( $cf['memcache']['profile']['servers'] ) ) {
 
-	    // ciclo sui server disponibili
-		if( isset( $cf['memcache']['profile']['servers'] ) && is_array( $cf['memcache']['profile']['servers'] ) ) {
+	    // ciclo sui server del profilo corrente
+		foreach( $cf['memcache']['profile']['servers'] as $server ) {
 
-		    foreach( $cf['memcache']['profile']['servers'] as $server ) {
+		    // inizializzazione
+			$cn = new Memcached();
 
-			// inizializzazione
-			    $cn = new Memcached();
+		    // connessione
+			$cn->addServer(
+			    $cf['memcache']['servers'][ $server ]['address'],
+			    $cf['memcache']['servers'][ $server ]['port']
+			);
 
-			// connessione
-			    $cn->addServer(
-				$cf['memcache']['servers'][ $server ]['address'],
-				$cf['memcache']['servers'][ $server ]['port']
-			    );
+		    // registro la connessione
+			if( ! empty( $cn ) ) {
+			    $stats = $cn->getStats();
+			    $cf['memcache']['connections'][ $server ] = $cn;
+			    $cf['memcache']['stats'][ $server ] = array_shift( $stats );
+			    logWrite( 'connessione effettuata al server ' . $server, 'memcache' );
+			} else {
+			    logWrite( 'impossibile (' . $cn->getResultCode() . ') connettersi a ' . $server, 'memcache', LOG_ERR );
+			}
 
-			// registro la connessione
-			    if( ! empty( $cn ) ) {
-				$stats = $cn->getStats();
-				$cf['memcache']['connections'][ $server ] = $cn;
-				$cf['memcache']['stats'][ $server ] = array_shift( $stats );
-				logWrite( 'connessione effettuata al server ' . $server, 'memcache' );
-			    } else {
-				logWrite( 'impossibile (' . $cn->getResultCode() . ') connettersi a ' . $server, 'memcache', LOG_ERR );
-			    }
-
-		    }
+		}
 
 	    // connessione di default
 		if( count( $cf['memcache']['connections'] ) ) {
@@ -64,17 +62,10 @@
 		    }
 		}
 
-		} else {
-
-		    // log
-			logWrite( 'nessun profilo memcache impostato per il livello di funzionamento corrente', 'memcache' );
-
-		}
-
 	} else {
 
 	    // log
-		logWrite( 'memcache non installato', 'memcache' );
+		logWrite( 'nessun profilo memcache impostato per il livello di funzionamento corrente', 'memcache' );
 
 	}
 
@@ -87,30 +78,28 @@
     // link al profilo corrente
 	$cf['redis']['profile'] = &$cf['redis']['profiles'][ $cf['site']['status'] ];
 
-    // creo le connessioni ai server attivi
-	if( true ) {
+    // ciclo sui server disponibili
+	if( isset( $cf['redis']['profile']['servers'] ) && is_array( $cf['redis']['profile']['servers'] ) ) {
 
-	    // ciclo sui server disponibili
-		if( isset( $cf['redis']['profile']['servers'] ) && is_array( $cf['redis']['profile']['servers'] ) ) {
+	    // ciclo sui server del profilo corrente
+		foreach( $cf['redis']['profile']['servers'] as $server ) {
 
-		    foreach( $cf['redis']['profile']['servers'] as $server ) {
+		    // connessione
+			$cn = new Predis\Client([
+			    'scheme' => 'tcp',
+			    'host'   => $cf['redis']['servers'][ $server ]['address'],
+			    'port'   => $cf['redis']['servers'][ $server ]['port']
+			]);
 
-			// connessione
-			    $cn = new Predis\Client([
-				'scheme' => 'tcp',
-				'host'   => $cf['redis']['servers'][ $server ]['address'],
-				'port'   => $cf['redis']['servers'][ $server ]['port']
-			    ]);
+		    // registro la connessione
+			if( ! empty( $cn ) ) {
+			    $cf['redis']['connections'][ $server ] = $cn;
+			    logWrite( 'connessione effettuata al server ' . $server, 'redis' );
+			} else {
+			    logWrite( 'impossibile connettersi al server ' . $server, 'redis', LOG_ERR );
+			}
 
-			// registro la connessione
-			    if( ! empty( $cn ) ) {
-				$cf['redis']['connections'][ $server ] = $cn;
-				logWrite( 'connessione effettuata al server ' . $server, 'redis' );
-			    } else {
-				logWrite( 'impossibile connettersi al server ' . $server, 'redis', LOG_ERR );
-			    }
-
-		    }
+		}
 
 	    // connessione di default
 		if( count( $cf['redis']['connections'] ) ) {
@@ -120,22 +109,23 @@
 		    $cf['redis']['server'] = &$cf['redis']['servers'][ $key ];
 		}
 
-		} else {
-
-		    // log
-			logWrite( 'nessun profilo redis impostato per il livello di funzionamento corrente', 'redis' );
-
-		}
-
 	} else {
 
 	    // log
-		logWrite( 'redis non installato', 'redis' );
+		logWrite( 'nessun profilo redis impostato per il livello di funzionamento corrente', 'redis' );
 
 	}
 
     // costante per il default TTL
 	define( 'REDIS_DEFAULT_TTL'			, ( ( isset( $cf['redis']['server']['ttl'] ) ) ? $cf['redis']['server']['ttl'] : 0 ) );
+
+    // lettura indici della cache
+	$cf['cache']['index'] = memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' );
+
+    // inizializzazione indice della cache
+	if( empty( $cf['cache']['index'] ) ){
+	    $cf['cache']['index'] = array();
+	}
 
     // debug
 	// print_r( $cf['memcache']['profile'] );

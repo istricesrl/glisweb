@@ -22,7 +22,7 @@
      * @todo documentare
      *
      */
-    function controller( $c, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array() ) {
+    function controller( $c, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array() ) {
 
 	// log
 	    logWrite( "${t}/${a}", 'controller' );
