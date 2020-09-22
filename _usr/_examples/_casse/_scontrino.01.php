@@ -21,6 +21,8 @@
     // inclusione del framework
 	require '../../../_src/_config.php';
 
+    // NOTA scontrino di prova 0,01 € su REP.1
+
     // test
 	try {
 

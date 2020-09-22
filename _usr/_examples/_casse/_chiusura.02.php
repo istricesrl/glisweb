@@ -24,13 +24,11 @@
     // connessione
 	$h = escpos_connect( '192.168.1.137' );
 
-    // NOTA scontrino di prova a 0,01 € su REP.1
-    // 1H -> 0,01 € 1R -> REP.1
-    // 1T -> totale
+    // NOTA azzeramento fiscale
+    // 1F -> azzeramento
 
     // scrittura di test
-	escpos_write( $h, '1H1R' );
-	escpos_write( $h, '1T' );
+	escpos_write( $h, '1F' );
 
     // chiusura
 	escpos_disconnect( $h );

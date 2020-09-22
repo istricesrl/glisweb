@@ -25,7 +25,7 @@
     function escpos_write( $h, $t ) {
 
 	$h->text( $t );
-	sleep( 1 );
+	sleep( 2 );
 
     }
 
