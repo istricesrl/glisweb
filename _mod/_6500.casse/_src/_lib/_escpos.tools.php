@@ -10,6 +10,8 @@
 
 	    $h = new Mike42\Escpos\Printer( $c );
 
+	    $h->initialize();
+
 	    return $h;
 
 	} catch( Exception $e ) {
