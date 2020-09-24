@@ -10,6 +10,9 @@ cd $RL
 ## informazioni
 echo "lavoro su: $(pwd)"
 
+## installazione di Apache
+apt-get install -y apache2
+
 ## attivazione del modulo rewrite
 a2enmod rewrite
 
@@ -20,42 +23,42 @@ a2enmod expires
 a2enmod headers
 
 ## installazione di PHP
-apt-get install php
+apt-get install -y php
 
 ## installazione di composer
-apt-get install composer
+apt-get install -y composer
 
 ## installazione degli strumenti di sviluppo
-apt-get install php-dev
+apt-get install -y php-dev
 
 ## installazione di PEAR
-apt-get install php-pear
+apt-get install -y php-pear
 
 ## installazione di CURL
-apt-get install php-curl
+apt-get install -y php-curl
 
 ## installazione di SSH
-apt-get install php-ssh2
+apt-get install -y php-ssh2
 
 ## installazione di GD
-apt-get install php-gd
+apt-get install -y php-gd
 
 ## installazione libreria per xml
-apt-get install php-xml
+apt-get install -y php-xml
 
 ## installazione di memcache
-apt-get install memcached
-apt-get install php-memcache
+apt-get install -y memcached
+apt-get install -y php-memcache
 
 ## installazione di redis
-apt-get install redis-server
-apt-get install php-redis
+apt-get install -y redis-server
+apt-get install -y php-redis
 
 ## installazione di php-zip
-apt-get install php-zip
+apt-get install -y php-zip
 
 ## installazione di certbot
-apt-get install python-certbot-apache
+apt-get install -y python-certbot-apache
 
 ## aggiorno composer
 composer update
