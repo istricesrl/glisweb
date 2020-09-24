@@ -39,11 +39,13 @@
 	    $cf['casse']['printer']['port']
 	);
 
-    // NOTA rendiconto fiscale
-    // 1f -> rendiconto
+    // NOTA scontrino di prova a 0,01 € su REP.1
+    // 0H -> 0,00 € 1R -> REP.1
+    // 1T -> totale
 
     // scrittura di test
-	escpos_write( $h, '1f' );
+	escpos_write( $h, '0H1R' );
+	escpos_write( $h, '1T' );
 
     // chiusura
 	escpos_disconnect( $h );
