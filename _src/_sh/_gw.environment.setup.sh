@@ -62,3 +62,6 @@ apt-get install -y python-certbot-apache
 
 ## aggiorno composer
 composer update
+
+## permessi
+_src/_sh/_gw.permissions.reset.sh
