@@ -9,6 +9,9 @@
     // file
 	define( 'FILE_ESCPOS_TRANSCRIPT'	, DIR_VAR_LOG_ESCPOS . date( 'YmdH' ) . '.log' );
 
+    // array di base
+	$cf['casse'] = array();
+
     // configurazione extra
 	if( isset( $cx['casse'] ) ) {
 	    $cf['casse'] = array_replace_recursive( $cf['casse'], $cx['casse'] );
