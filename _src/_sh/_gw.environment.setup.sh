@@ -58,7 +58,7 @@ apt-get install -y php-redis
 apt-get install -y php-zip
 
 ## installazione di certbot
-apt-get install -y python-certbot-apache
+apt-get install -y python3-certbot-apache
 
 ## aggiorno composer
 composer update
