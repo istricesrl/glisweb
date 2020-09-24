@@ -46,6 +46,30 @@
 
     L'array $cf['auth'] viene integrato da $cx['auth'], per ulteriori dettagli vedi _src/_config/_200.auth.php.
 
+    $cf['casse']
+    ------------
+    Questa chiave contiene le configurazioni del modulo casse.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    casse.printer             | informazioni sulla stampante fiscale
+    casse.printer.address     | l'indirizzo IP della stampante fiscale collegata alla postazione corrente
+    casse.printer.port        | la porta della stampante fiscale collegata alla postazione corrente
+
+    Vediamo un esempio di configurazione della stampante fiscale tramite Json:
+
+    \code{.json}
+    "casse": {
+      "printer": {
+        "address": "192.168.1.137",
+        "port": "9100"
+      }
+    }
+    \endcode
+
+    L'array $cf['casse'] viene integrato da $cx['casse'], per ulteriori dettagli
+    vedi _mod/_6500.casse/_src/_config/_030.common.php.
+
     $cf['config']
     -------------
     Questa chiave contiene informazioni generali sulla configurazione del framework. La seguente tabella riassume le
