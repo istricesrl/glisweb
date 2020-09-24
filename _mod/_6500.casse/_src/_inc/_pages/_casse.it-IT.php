@@ -7,16 +7,16 @@
 	$m = DIR_MOD . '_6500.casse/';
 
     // pagina degli strumenti
-	$p['cassa'] = array(
+	$p['dashboard.cassa'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cassa' ),
 	    'h1'		=> array( $l		=> 'cassa' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_tyche/', 'schema' => 'cassa.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_cassa.php' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_dashboard.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'cassa' ),
-									'priority'	=> 970 ) )
+									'priority'	=> 650 ) )
 	);
 
     // debug

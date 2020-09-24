@@ -24,8 +24,11 @@
 
     function escpos_write( $h, $t ) {
 
+	appendToFile( FILE_ESCPOS_TRANSCRIPT, date( 'Y-m-d H:i:s' ) . ' ' . $t );
+
 	$h->text( $t );
-	sleep( 2 );
+
+	sleep( 1 );
 
     }
 

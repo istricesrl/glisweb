@@ -24,11 +24,11 @@
     // connessione
 	$h = escpos_connect( '192.168.1.137' );
 
-    // NOTA azzeramento fiscale
-    // 1F -> azzeramento
+    // NOTA rendiconto fiscale
+    // 1F -> rendiconto
 
     // scrittura di test
-	escpos_write( $h, '1F' );
+	escpos_write( $h, '1f' );
 
     // chiusura
 	escpos_disconnect( $h );
