@@ -18,6 +18,9 @@
 	$ct['page']['contents']['metros'] = array(
 	    'rendiconti' => array(
 		'label' => 'rendiconti'
+	    ),
+	    'utils' => array(
+		'label' => 'utility e test'
 	    )
 	);
 
@@ -29,6 +32,16 @@
 	    'fa' => 'fa-print',
 	    'title' => 'rendiconto fisc. giornaliero',
 	    'text' => 'stampa il rendiconto fiscale giornaliero'
+	);
+
+    // stampa scontrino di test
+	$ct['page']['contents']['metro']['rendiconti'][] = array(
+	    'host' => 'http://localhost',
+	    'ws' => $base . 'sct.test.zero',
+	    'icon' => NULL,
+	    'fa' => 'fa-print',
+	    'title' => 'stampa scontrino di test',
+	    'text' => 'stampa uno scontrino di test a zero euro'
 	);
 
     // debug
