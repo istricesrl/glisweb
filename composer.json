@@ -11,7 +11,6 @@
         "tecnickcom/tcpdf": "6.2.*",
         "twig/twig": "2.*",
         "predis/predis": "*",
-        "mike42/escpos-php": "*",
         "codeception/codeception": "*",
         "codeception/module-phpbrowser": "^1.0.0",
         "codeception/module-asserts": "^1.0.0",

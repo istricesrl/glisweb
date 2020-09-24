@@ -57,6 +57,9 @@ apt-get install -y php-redis
 ## installazione di php-zip
 apt-get install -y php-zip
 
+## installazione di php-intl
+apt-get install -y php-intl
+
 ## installazione di certbot
 apt-get install -y python3-certbot-apache
 
