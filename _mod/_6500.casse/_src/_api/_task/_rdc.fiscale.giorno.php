@@ -20,6 +20,7 @@
 
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
+	    header( 'Access-Control-Allow-Origin: *' );
 	    require '../../../_src/_config.php';
 	}
 
