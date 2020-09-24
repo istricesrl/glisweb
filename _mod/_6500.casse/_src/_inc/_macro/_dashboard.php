@@ -35,7 +35,7 @@
 	);
 
     // stampa scontrino di test
-	$ct['page']['contents']['metro']['rendiconti'][] = array(
+	$ct['page']['contents']['metro']['utils'][] = array(
 	    'host' => 'http://localhost',
 	    'ws' => $base . 'sct.test.zero',
 	    'icon' => NULL,
