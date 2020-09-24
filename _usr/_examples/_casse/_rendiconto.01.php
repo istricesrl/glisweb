@@ -25,7 +25,7 @@
 	$h = escpos_connect( '192.168.1.137' );
 
     // NOTA rendiconto fiscale
-    // 1F -> rendiconto
+    // 1f -> rendiconto
 
     // scrittura di test
 	escpos_write( $h, '1f' );
