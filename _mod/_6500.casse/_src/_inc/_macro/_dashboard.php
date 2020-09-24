@@ -19,6 +19,9 @@
 	    'rendiconti' => array(
 		'label' => 'rendiconti'
 	    ),
+	    'chiusure' => array(
+		'label' => 'chiusure'
+	    ),
 	    'utils' => array(
 		'label' => 'utility e test'
 	    )
@@ -34,10 +37,30 @@
 	    'text' => 'stampa il rendiconto fiscale giornaliero'
 	);
 
+    // stampa chiusura fiscale
+	$ct['page']['contents']['metro']['chiusure'][] = array(
+	    'host' => 'http://localhost',
+	    'ws' => $base . 'cls.fiscale.giorno',
+	    'icon' => NULL,
+	    'fa' => 'fa-print',
+	    'title' => 'chiusura cassa',
+	    'text' => 'effettua la chiusura fiscale giornaliera'
+	);
+
+    // aggiorna data e ora
+	$ct['page']['contents']['metro']['utils'][] = array(
+	    'host' => 'http://localhost',
+	    'ws' => $base . 'utl.date.set',
+	    'icon' => NULL,
+	    'fa' => 'fa-print',
+	    'title' => 'aggiorna data e ora',
+	    'text' => 'aggiorna data e ora (la cassa deve essere chiusa)'
+	);
+
     // stampa scontrino di test
 	$ct['page']['contents']['metro']['utils'][] = array(
 	    'host' => 'http://localhost',
-	    'ws' => $base . 'sct.test.zero',
+	    'ws' => $base . 'utl.test.zero',
 	    'icon' => NULL,
 	    'fa' => 'fa-print',
 	    'title' => 'stampa scontrino di test',
