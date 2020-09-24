@@ -10,11 +10,11 @@
     {% if cnt == 0 %}<div class="form-row metro">{% endif %}
     <div class="col-12 col-md-4">
 	{% if obj.url %}
-	<a href="{{ obj.url }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
+	<a href="{{ obj.host }}{{ obj.url }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
 	{% elseif obj.modal %}
 	<a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}">
 	{% elseif obj.ws %}
-	<a href="#" onclick="$(this).metroWs('{{ obj.ws }}');">
+	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}');">
 	{% endif %}
 	    <div class="media">
 		<div class="media-left">
