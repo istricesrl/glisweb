@@ -24,7 +24,7 @@
 
     function escpos_write( $h, $t ) {
 
-	appendToFile( FILE_ESCPOS_TRANSCRIPT, date( 'Y-m-d H:i:s' ) . ' ' . $t );
+	appendToFile( date( 'Y-m-d H:i:s' ) . ' ' . $t, FILE_ESCPOS_TRANSCRIPT );
 
 	$h->text( $t );
 
