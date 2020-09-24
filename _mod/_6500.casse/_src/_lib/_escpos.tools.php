@@ -29,7 +29,7 @@
 
     function escpos_write( $h, $t ) {
 
-	appendToFile( date( 'Y-m-d H:i:s' ) . ' ' . $t, FILE_ESCPOS_TRANSCRIPT );
+	appendToFile( date( 'Y-m-d H:i:s' ) . ' ' . $t . PHP_EOL, FILE_ESCPOS_TRANSCRIPT );
 
 #	$h->text( $t );
 	socket_write( $h, $t );
