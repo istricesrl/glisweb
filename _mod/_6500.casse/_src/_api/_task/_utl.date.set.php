@@ -44,7 +44,7 @@
     // 1T -> totale
 
     // scrittura di test
-	escpos_setDate( $h, '1T' );
+	escpos_setDate( $h );
 
     // chiusura
 	escpos_disconnect( $h );
