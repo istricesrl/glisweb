@@ -21,7 +21,7 @@
 #		$cf['sites'][ $_SESSION['__view__']['__site__'] ]['domains'][ $cf['site']['status'] ] . '/' .
 #		( ( isset( $cf['sites'][ $_SESSION['__view__']['__site__'] ]['folders'][ $cf['site']['status'] ] ) ) ? $cf['sites'][ $_SESSION['__view__']['__site__'] ]['folders'][ $cf['site']['status'] ] : NULL );
 #	} else {
-	    $base = '/';
+	    $base = '/task/';
 #	}
 
     // NOTA la variabile $base causa problemi nel multi sito fatta in questo modo, per cui ho commentato tutto
@@ -48,7 +48,7 @@
     // aggiornamento cache
 	if( isset( $cf['memcache']['connection'] ) ) {
 	    $ct['page']['contents']['metro']['cache'][] = array(
-		'ws' => $base . 'task/memcache.clean',
+		'ws' => $base . 'memcache.clean',
 		'icon' => NULL,
 		'fa' => 'fa-clock-o',
 		'title' => 'aggiornamento memcache',
@@ -59,7 +59,7 @@
 
 	if( file_exists( DIR_VAR_CACHE_TWIG ) ) {
 	    $ct['page']['contents']['metro']['cache'][] = array(
-		'ws' => $base . 'task/twig.cache.clean',
+		'ws' => $base . 'twig.cache.clean',
 		'icon' => NULL,
 		'fa' => 'fa-recycle',
 		'title' => 'aggiornamento cache di Twig',
@@ -70,7 +70,7 @@
 
 	if( file_exists( DIR_VAR_CACHE_PAGES ) ) {
 	    $ct['page']['contents']['metro']['cache'][] = array(
-		'ws' => $base . 'task/pages.cache.clean',
+		'ws' => $base . 'pages.cache.clean',
 		'icon' => NULL,
 		'fa' => 'fa-eraser',
 		'title' => 'aggiornamento cache pagine',
@@ -81,7 +81,7 @@
 
 	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM mail_sent LIMIT 1' ) > 0 ) {
 	    $ct['page']['contents']['metro']['mail'][] = array(
-		'ws' => $base . 'task/mail.queue.clean.sent',
+		'ws' => $base . 'mail.queue.clean.sent',
 		'icon' => NULL,
 		'fa' => 'fa-envelope',
 		'title' => 'svuotamento coda mail inviate',
@@ -92,14 +92,14 @@
 
 	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM mail_out LIMIT 1' ) > 0 ) {
 	    $ct['page']['contents']['metro']['mail'][] = array(
-		'ws' => $base . 'task/mail.queue.clean.out',
+		'ws' => $base . 'mail.queue.clean.out',
 		'icon' => NULL,
 		'fa' => 'fa-envelope-o',
 		'title' => 'svuotamento coda mail in uscita',
 		'text' => 'cancella la coda delle mail in uscita'
 	    );
 	    $ct['page']['contents']['metro']['mail'][] = array(
-		'ws' => $base . 'task/mail.queue.send?hard=1',
+		'ws' => $base . 'mail.queue.send?hard=1',
 		'icon' => NULL,
 		'fa' => 'fa-share-square-o',
 		'title' => 'elabora coda mail in uscita',
@@ -110,7 +110,7 @@
 
 	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM sms_sent LIMIT 1' ) > 0 ) {
 	    $ct['page']['contents']['metro']['sms'][] = array(
-		'ws' => $base . 'task/sms.queue.clean.sent',
+		'ws' => $base . 'sms.queue.clean.sent',
 		'icon' => NULL,
 		'fa' => 'fa-commenting',
 		'title' => 'svuotamento coda SMS inviati',
@@ -121,7 +121,7 @@
 
 	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM sms_out LIMIT 1' ) > 0 ) {
 	    $ct['page']['contents']['metro']['sms'][] = array(
-		'ws' => $base . 'task/sms.queue.clean.out',
+		'ws' => $base . 'sms.queue.clean.out',
 		'icon' => NULL,
 		'fa' => 'fa-commenting-o',
 		'title' => 'svuotamento coda SMS in uscita',
@@ -132,7 +132,7 @@
 
 	if( count( glob( DIR_VAR_LOG . '{*/,}*.log', GLOB_BRACE ) ) > 0 ) {
 	    $ct['page']['contents']['metro']['log'][] = array(
-		'ws' => $base . 'task/log.clean',
+		'ws' => $base . 'log.clean',
 		'icon' => NULL,
 		'fa' => 'fa-trash-o',
 		'title' => 'pulizia dei log',
@@ -143,7 +143,7 @@
 
 	if( count( glob( DIR_TMP . '*' ) ) > 0 ) {
 	    $ct['page']['contents']['metro']['log'][] = array(
-		'ws' => $base . 'task/tmp.clean',
+		'ws' => $base . 'tmp.clean',
 		'icon' => NULL,
 		'fa' => 'fa-hourglass-end',
 		'title' => 'pulizia dei file temporanei',
