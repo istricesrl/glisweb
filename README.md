@@ -13,6 +13,9 @@ GlisWeb è un framework leggero, ampiamente personalizzabile, pensato per realiz
 nativamente rispettose degli standard e delle migliori pratiche vigenti nel mondo del web.
 
 ## installazione
+Il framework può essere installato nelle seguenti 3 modalità:
+
+### installazione tramite Git Clone
 Potete installare GlisWeb semplicemente clonando il repository nella document root del vostro server web
 (o del vostro sito se il server gestisce più siti); potete anche scaricare il sorgente e caricarlo sul vostro
 server via FTP se utilizzate un hosting condiviso che non vi dà la possibilità di lanciare comandi via SSH.
