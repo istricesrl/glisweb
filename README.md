@@ -13,7 +13,8 @@ GlisWeb è un framework leggero, ampiamente personalizzabile, pensato per realiz
 nativamente rispettose degli standard e delle migliori pratiche vigenti nel mondo del web.
 
 ## installazione
-Il framework può essere installato nelle seguenti 3 modalità:
+Il framework può essere installato clonando il repository GitHub del progetto, caricando i file sul server tramite
+FTP oppure lanciando direttamente alcuni comandi di shell sul server, da console oppure tramite SSH.
 
 ### installazione tramite Git Clone
 Potete installare GlisWeb semplicemente clonando il repository nella document root del vostro server web
@@ -33,7 +34,7 @@ Una volta completato l'upload, utilizzate l'interfaccia fornita dal vostro provi
 allegati al framework (in _usr/_database/, eseguite prima mysql.schema.sql e poi mysql.data.sql) in modo da creare le
 tabelle necessarie al suo funzionamento.
 
-### installazione tramite SSH
+### installazione tramite console o SSH
 Se potete accedere via SSH al server su cui volete installare GlisWeb, allora l'installazione risulterà più lineare.
 Sarà sufficiente scaricare il framework come sopra, ma direttamente nella document root del sito su cui volete
 installarlo, installare le dipendenze con composer e lanciare lo script shell allegato al framework
