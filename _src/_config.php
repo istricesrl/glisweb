@@ -314,6 +314,7 @@
 	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
 
     // file
+    define( 'FILE_AUTOLOAD'         ,  DIR_SRC_LIB_EXT . 'autoload.php' );
 	define( 'FILE_CURRENT_VERSION'		, DIR_ETC . '_current.conf' );
 	define( 'FILE_LATEST_RUN'		, DIR_VAR_LOG_LATEST . 'run.latest.log');
 	define( 'FILE_LATEST_CRON'		, DIR_VAR_LOG_LATEST . 'cron.latest.log');
@@ -493,8 +494,12 @@
      */
 
     // inclusione delle librerie esterne
-	require DIR_SRC_LIB_EXT . 'autoload.php';
-	timerCheck( $cf['speed'], DIR_SRC_LIB_EXT . 'autoload.php' );
+    if( file_exists( FILE_AUTOLOAD ) ) {
+        require FILE_AUTOLOAD;
+        timerCheck( $cf['speed'], FILE_AUTOLOAD );
+    } else {
+        die( 'autoload mancante, eseguire composer update' );
+    }
 
     // debug
 	// die( 'EXTERNAL LIBRARY CONFIG DONE' );
