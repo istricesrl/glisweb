@@ -1,9 +1,12 @@
 <?php
 
     /**
+     * macro view archivio anagrafica
      *
      *
      *
+     *
+     * @todo documentare
      *
      * @file
      *
