@@ -1,0 +1,26 @@
+<html>
+<head>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <style>
+    .grecaptcha-badge { 
+	bottom:65px !important; 
+    }
+    </style>
+</head>
+<body>
+
+<form action="backend01.php" method="post" id="demo-form">
+    <input type="text" name="test" />
+    <button class="g-recaptcha"
+        data-sitekey="6LeWItIZAAAAALCWk4emujEK8eM3nYnRC_4qwXWm"
+        data-callback='onSubmit'
+        data-action='submit'>Submit</button>
+</form>
+
+<script>
+   function onSubmit(token) {
+     document.getElementById("demo-form").submit();
+   }
+</script>
+</body>
+</html>
