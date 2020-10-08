@@ -66,6 +66,18 @@
 									'anagrafica.form.stampe' ) )
 	);
 
+    // gestione anagrafica
+	$p['anagrafica.form.informazioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'informazioni' ),
+	    'h1'		=> array( $l		=> 'informazioni' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.form' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.informazioni.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.informazioni.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+	
 /*
     // scheda bibliografia
 	if( in_array( '3100.notizie', $cf['mods']['active']['array'] ) || in_array( '3200.stampa', $cf['mods']['active']['array'] )|| in_array( '3500.documenti', $cf['mods']['active']['array'] ) ) {

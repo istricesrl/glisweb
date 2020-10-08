@@ -115,7 +115,7 @@
 	    </div>
 	    <div class="col-6 col-md">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">comune</span>{% endif %}
-		{{ frm.select( table, subtable, i, 'id_comune', 'comune', etc.select.comuni, request, '', '', '', '', 'selectpicker' ) }}
+		{{ frm.selectBox( table, subtable, i, 'id_comune', 'comune', etc.select.comuni, request ) }}
 	    </div>
 	    <div class="col-12 col-md">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione e note</span>{% endif %}

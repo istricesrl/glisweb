@@ -351,6 +351,14 @@
     - lo schema _src/_templates/_athena/<entità>.form.html
       - in alternativa, lo schema di default _src/_templates/_athena/default.form.html
 
+    Se la pagina è figlia di un form principale (ad esempio nel caso delle tab) si mantiene la gerarchia dei nomi aggiungendo la
+    specifica al nome del parent, ad esempio se la pagina form in questione è figlia di <entità>.form avremo:
+
+    - l'ID composto da <entità>.form.<specifica>
+    - il nome dello schema composto da <entità>.form.<specifica>.html
+    - la macro PHP composta da <entità>.form.<specifica>.php
+    - l'ID del parent che fa riferimento a <entità>.form
+
     L'array $ct['form'] contiene i dati di configurazione delle form (vedi anche _src/_inc/_macro/_default.form.php):
 
     chiave                  | descrizione
@@ -517,6 +525,12 @@
 
     \code{.html}
     \endcode
+
+    Ricapitolando, per creare una pagina di tipo form occorre:
+
+    - dichiarare l'array di definizione della pagina
+    - creare se necessario la macro PHP
+    - creare lo schema Twig
 
     il meccanismo di cancellazione
     ------------------------------

@@ -105,15 +105,7 @@
 
 
 
-    // tendina mesi
-	foreach( range( 1, 12 ) as $mese ) {
-	    $ct['etc']['select']['mese'][] = array( 'id' => $mese, '__label__' => int2month( $mese ) );
-	}
 
-    // tendina giorni
-	foreach( range( 1, 31 ) as $giorno ) {
-	    $ct['etc']['select']['giorno'][] = array( 'id' => $giorno.'', '__label__' =>  $giorno  );
-	}
 
     // tendina regime fiscale
 	$ct['etc']['select']['id_regime_fiscale'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM regimi_fiscali_view' );
