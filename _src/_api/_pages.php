@@ -24,9 +24,9 @@
 	require '../_config.php';
 
     // debug
-	ini_set( 'display_errors', 1 );
-	ini_set( 'display_startup_errors', 1 );
-	error_reporting( E_ALL );
+	// ini_set( 'display_errors', 1 );
+	// ini_set( 'display_startup_errors', 1 );
+	// error_reporting( E_ALL );
 
     // timer
 	timerCheck( $cf['speed'], 'inizio eleborazione API pages' );

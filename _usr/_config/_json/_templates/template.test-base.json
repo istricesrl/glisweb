@@ -1,0 +1,48 @@
+{
+  "sites": {
+    "1": {
+      "id": 1,
+      "__label__": "%etichetta del sito%",
+      "name": {
+        "it-IT": "%nome it-IT del sito%"
+      },
+      "homes": {
+        "TEST": "dashboard"
+      },
+      "protocols": {
+        "TEST": "%protocollo del sito, http o https%"
+      },
+      "hosts": {
+        "TEST": "%nome host del sito, ad es. bogon in bogon.nomedominio.bogus%"
+      },
+      "domains": {
+        "TEST": "%dominio del sito, ad es. nomedominio.bogus in bogon.nomedominio.bogus%"
+      }
+    }
+  },
+  "auth": {
+    "accounts": {
+      "root": {
+        "password": "%password di root%"
+      }
+    }
+  },
+  "mysql": {
+    "servers": {
+      "default": {
+        "address": "%indirizzo IP del serve MySQL%",
+        "port": "%porta del server MySQL%",
+        "username": "%nome utente del server MySQL%",
+        "password": "%password del server MySQL%",
+        "db": "%nome del server MySQL%"
+      }
+    },
+    "profiles": {
+      "TEST": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  }
+}
