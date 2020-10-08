@@ -269,7 +269,7 @@
         - il nome inizia con quello dell'entità gestita
       - le pagine tools
         - l'ID termina per "tools"
-        - il nome dello schema termina per "tools"
+        - il nome dello schema termina per "tools" oppure è "default.tools.html"
         - il nome della macro PHP termina per "tools"
         - il nome inizia con quello dell'entità gestita
     - le macro PHP di default

@@ -109,6 +109,7 @@
     - PHPMailer (http://phpmailer.worxware.com/)
     - TCPDF (http://www.tcpdf.org)
     - Twig template engine (http://twig.sensiolabs.org/)
+    - Doxygen (https://www.doxygen.nl/)
 
     Qualora i titolari dei software sopra citati rilevino un'irregolarità, o nel caso le licenze di
     distribuzione dei loro software entri per qualsiasi ragione in contrasto con quella del framework
