@@ -44,6 +44,21 @@
     CONTROL_FILTERED  | FILTERED         | accesso filtrato per riga agli oggetti membri dell'entità; occorre una tabella di ACL sul database (vedi \ref database "la documentazione relativa al database")
     CONTROL_FULL      | FULL             | accesso completo a tutti gli oggetti membri dell'entità
 
+    Una delle prime operazioni da svolgere quando si configura il framework è solitamente la creazione di una password per l'utente root.
+    Questo può essere fatto con Json, specificando come valore per l'attributo "password" l'hash MD5 della password che si desidera assegnare all'utente:
+
+    \code{.json}
+    "auth": {
+      "accounts": {
+        "root": {
+          "password": "<hash>"
+        }
+      }
+    }
+    \endcode
+
+    Per generare l'hash di una password si può utilizzare lo script _src/_sh/_gw.password.hash.sh.
+
     L'array $cf['auth'] viene integrato da $cx['auth'], per ulteriori dettagli vedi _src/_config/_200.auth.php.
 
     $cf['casse']
