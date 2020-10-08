@@ -3,13 +3,7 @@
 <script>
     function esporta() {
 	var data = $('#_id_categoria').val();
-	getws(
-	    '/_src/_api/_print/_esportazione.anagrafica.csv.php',
-	    '__categoria__=' + data,
-	    function() {
-		window.open( '/_src/_api/_print/_esportazione.anagrafica.csv.php?__categoria__='+data, '_blank');
-	    }
-	);
+	window.open( '/print/anagrafica.csv?__categoria__='+data, '_self');
     }
 </script>
 

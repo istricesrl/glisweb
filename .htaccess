@@ -84,6 +84,9 @@ Options -Indexes
     # gestione dei report generici
     RewriteRule ^report/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_report/_$1.php [L,QSA]
 
+    # gestione delle stampe generiche
+    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_print/_$1.php [L,QSA]
+
     # proxy OSM
     RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
 
