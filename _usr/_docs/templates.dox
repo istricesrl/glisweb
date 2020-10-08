@@ -529,7 +529,8 @@
     Ricapitolando, per creare una pagina di tipo form occorre:
 
     - dichiarare l'array di definizione della pagina
-    - 
+    - creare se necessario la macro PHP
+    - creare lo schema Twig
 
     il meccanismo di cancellazione
     ------------------------------

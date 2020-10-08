@@ -1,0 +1,87 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/anagrafica.form.informazioni.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row">
+    <div class="col-md-12">
+	<form id="form-{{ table }}" class="" action="{{ page.path[ ietf ] }}" method="post">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>data e luogo di nascita</legend>
+
+		<div class="form-group form-row">
+		    <div class="col-auto">
+				<span class="label-top">giorno</span>
+				{{ frm.select( table, '', '', 'giorno_nascita', '', etc.select.giorni, request ) }}
+			</div>
+		    <div class="col-auto">
+				<span class="label-top">mese</span>
+				{{ frm.select( table, '', '', 'mese_nascita', '', etc.select.mesi, request ) }}
+			</div>
+			<div class="col-2 col-md-1">
+				<span class="label-top">anno</span>
+				{{ frm.input( table, '', '', 'anno_nascita', 'anno di nascita', '', request ) }}
+		    </div>
+			<div class="col">
+				<span class="label-top">luogo</span>
+				{{ frm.input( table, '', '', 'luogo_nascita', 'luogo di nascita', '', request ) }}
+		    </div>
+
+			<div class="col col-md-4">
+				<span class="label-top">comune</span>
+				{{ frm.selectBox( table, '', '', 'id_comune', 'comune', etc.select.comuni, request ) }}
+		    </div>
+		</div>
+
+	    </fieldset>
+
+		{# SUBFORM INDIRIZZI E-MAIL #}
+	    {{ sub.cittadinanze( table, 'anagrafica_cittadinanze', 'cittadinanze', site, page, pages, ietf, etc, request, session ) }}
+
+	    {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls">
+		{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}
