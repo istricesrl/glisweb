@@ -53,10 +53,10 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'anagrafica_cittadinanze' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'anagrafica_cittadinanze' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 #	    'anagrafica_clienti' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
