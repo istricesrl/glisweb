@@ -1,4 +1,8 @@
 
+    // trigger per controllo modifica form
+	var formChanged = false;
+	var submitFormOkay = false;
+
     // duplica un subform
 	function duplicate( f ) {
 
@@ -101,6 +105,22 @@
 			$(this).prev().val('0');
 		    }
 		});
+
+	    // attivo le verifiche per le modifiche ai form
+		window.addEventListener("beforeunload", function(e) {
+		    if( formChanged == true && ! submitFormOkay ) {
+			var confirmationMessage = 'sei sicuro di voler abbandonare la pagina?';
+			( e || window.event ).returnValue = confirmationMessage;
+		    }
+		});
+
+		$('.warning-if-changed').on( 'keyup change', function() { formChanged = true; } );
+
+		if( typeof CKEDITOR !== 'undefined' && CKEDITOR != null ) {
+		    for( var i in CKEDITOR.instances) {
+			CKEDITOR.instances[i].on('change', function() { formChanged = true; } );
+		    }
+		}
 
 	    // SDF funzione che mostra e nasconde i figli nella struttura dell'anagrafica
 		$('ul.browsing-tree i').click(function() {

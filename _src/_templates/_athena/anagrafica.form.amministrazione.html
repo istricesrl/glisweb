@@ -31,7 +31,7 @@
 {# FORM DI GESTIONE #}
 <section class="row">
     <div class="col-md-12">
-	<form id="form-{{ table }}" class="" action="{{ page.path[ ietf ] }}" method="post">
+	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
