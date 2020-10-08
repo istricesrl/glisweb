@@ -93,6 +93,15 @@
     // operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
 
+	    // collego il campo hidden per le checkbox
+		$('input[type=checkbox]').click( function() {
+		    if( this.checked ) {
+			$(this).prev().val('1');
+		    } else {
+			$(this).prev().val('0');
+		    }
+		});
+
 	    // SDF funzione che mostra e nasconde i figli nella struttura dell'anagrafica
 		$('ul.browsing-tree i').click(function() {
 
