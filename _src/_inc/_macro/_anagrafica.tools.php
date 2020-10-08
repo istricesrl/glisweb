@@ -21,7 +21,7 @@
 	    'modal' => array( 'id' => 'esporta_per_mail', 'include' => 'inc/anagrafica.tools.modal.mailchimp.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-file-excel-o',
-	    'title' => 'esportazione contatti per MailChimp',
+	    'title' => 'esportazione per MailChimp',
 	    'text' => 'esporta i contatti anagrafici in formato CSV'
 	);
 
