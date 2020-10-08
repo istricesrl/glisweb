@@ -71,7 +71,7 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'informazioni' ),
 	    'h1'		=> array( $l		=> 'informazioni' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica.form' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.informazioni.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.informazioni.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),

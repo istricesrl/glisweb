@@ -531,14 +531,15 @@
     - dichiarare l'array di definizione della pagina
     - creare se necessario la macro PHP
     - creare lo schema Twig
+    - creare se necessario il file Twig per le subform
+
+    le subview
+    ----------
 
     il meccanismo di cancellazione
     ------------------------------
 
     il meccanismo del backurl
     -------------------------
-
-    le subview
-    ----------
 
 */
