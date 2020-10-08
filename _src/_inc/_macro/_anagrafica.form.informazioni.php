@@ -32,14 +32,6 @@
 	    $ct['etc']['select']['giorni'][] = array( 'id' => $giorno.'', '__label__' =>  $giorno  );
 	}
 
-	// tendina comuni
-	$ct['etc']['select']['comuni'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM comuni_view'
-	);
-
 	// tendina stati
 	$ct['etc']['select']['stati'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
