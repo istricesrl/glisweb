@@ -69,8 +69,8 @@
     // gestione anagrafica
 	$p['anagrafica.form.informazioni'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'title'		=> array( $l		=> 'informazioni' ),
+	    'h1'		=> array( $l		=> 'informazioni' ),
 	    'parent'		=> array( 'id'		=> 'anagrafica.form' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.informazioni.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.informazioni.php' ),
