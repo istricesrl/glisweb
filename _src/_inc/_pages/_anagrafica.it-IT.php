@@ -90,6 +90,18 @@
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 
+	// gestione anagrafica
+	$p['anagrafica.form.cliente'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'cliente' ),
+	    'h1'		=> array( $l		=> 'cliente' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.form' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.cliente.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.cliente.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
 /*
     // scheda bibliografia
 	if( in_array( '3100.notizie', $cf['mods']['active']['array'] ) || in_array( '3200.stampa', $cf['mods']['active']['array'] )|| in_array( '3500.documenti', $cf['mods']['active']['array'] ) ) {
