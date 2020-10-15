@@ -19,6 +19,7 @@
  * - stili dell'agenda
  * - stili della struttura anagrafica
  * - stili della tabella di descrizione formato importazione
+ * - stili del pannello cassa
  */
 
 /* stili di base */
@@ -276,6 +277,10 @@ select {
 
 .btn-sm {
     font-size: 1em;
+}
+
+.btn-lg {
+    font-size: 1.5em;
 }
 
 .btn-xsm {
@@ -721,4 +726,10 @@ ul.browsing-tree {
     border-right: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
     padding: 5px;
+}
+
+/* stili del pannello cassa */
+
+.pannello-cassa .btn-secondary {
+    border-radius: 0px;
 }
