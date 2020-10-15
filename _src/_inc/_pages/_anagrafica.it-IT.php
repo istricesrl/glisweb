@@ -66,7 +66,7 @@
 									'anagrafica.form.stampe' ) )
 	);
 
-    // gestione anagrafica
+    // gestione anagrafica informazioni
 	$p['anagrafica.form.informazioni'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'informazioni' ),

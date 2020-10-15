@@ -48,18 +48,14 @@
 		<legend>dati commerciali</legend>
 
 		
-		</fieldset>
-		
+		{# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls">
+		{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
 
 {% endblock %}
-
-    {% set method = 'update' %}
-    {% set activity = 'aggiornamento' %}
-    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
-{% else %}
-    {% set method = 'post' %}
-    {% set activity = 'inserimento' %}
-    {% set legend = 'inserimento nuovo oggetto' %}
-{% endif %}
-
-{# FORM DI GESTIONE #}
