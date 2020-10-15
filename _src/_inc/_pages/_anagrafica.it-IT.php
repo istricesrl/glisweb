@@ -56,7 +56,7 @@
 									'anagrafica.form.informazioni',
 									'anagrafica.form.amministrazione',
 									'anagrafica.form.collaboratori',
-									'anagrafica.form.clienti',
+									'anagrafica.form.cliente',
 									'anagrafica.form.fornitori',
 									'anagrafica.form.struttura',
 									'anagrafica.form.attivita',
@@ -66,7 +66,7 @@
 									'anagrafica.form.stampe' ) )
 	);
 
-    // gestione anagrafica
+    // gestione anagrafica informazioni
 	$p['anagrafica.form.informazioni'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'informazioni' ),
@@ -78,7 +78,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 	
-	 // gestione anagrafica
+	 // gestione anagrafica amministrazione
 	 $p['anagrafica.form.amministrazione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'amministrazione' ),
@@ -90,7 +90,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 
-	// gestione anagrafica
+	// gestione anagrafica cliente
 	$p['anagrafica.form.cliente'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cliente' ),
