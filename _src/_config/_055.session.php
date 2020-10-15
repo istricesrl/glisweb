@@ -19,7 +19,8 @@
 
     // costante per la durata massima della sessione
 	if( ! defined( 'SESSION_LIMIT' ) ) {
-	    define( 'SESSION_LIMIT'		, 3600 );
+#	    define( 'SESSION_LIMIT'		, 3600 );
+	    define( 'SESSION_LIMIT'		, 300 );
 	}
 
     // controllo output
@@ -36,8 +37,10 @@
 	    // registro l'id della sessione nell'array $cf
 		$_SESSION['id']				= session_id();
 
-	    // imposto il tempo se la sessione è appena stata creata
-		$_SESSION['used']			= time();
+		// imposto il tempo se la sessione è appena stata creata
+		if( ! isset( $_SESSION['used'] ) ) {
+			$_SESSION['used']			= time();
+		}
 
 	    // log
 		logWrite( 'avviata la sessione ' . session_id(), 'session' );

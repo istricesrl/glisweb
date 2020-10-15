@@ -27,18 +27,22 @@
                 </form>
                 {% endif %}
 
-                <div id="widget" class="col-auto p-0">
+                <div id="widget-session" class="widget col-auto p-0 hidden">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="getws('/report/session.status?renew=1');$(this).parent().fadeOut();" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="sessione in scadenza"><i class="fa fa-clock-o" aria-hidden="true"></i></button>
+                </div>
+
+                <div id="widget-info" class="widget col-auto p-0">
                     <button type="button" class="btn btn-secondary btn-sm" onclick="$('#info').slideToggle(400,'swing');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                 </div>
 
                 {% if common.documentation|length == 1 %}
-                <div id="widget" class="col-auto p-0">
+                <div id="widget-docs" class="widget col-auto p-0">
                     <button type="button" class="btn btn-secondary btn-sm" onclick="window.open( '{{ common.documentation|first.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
 
                 {% if slack.channel.url %}
-                <div id="widget" class="col-auto p-0">
+                <div id="widget-slack" class="widget col-auto p-0">
                     <button type="button" class="btn btn-secondary btn-sm" onclick="window.open( '{{ slack.channel.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-slack" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}

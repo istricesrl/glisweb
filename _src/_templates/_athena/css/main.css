@@ -100,7 +100,8 @@ a:active {
 
 .view-table thead tr th select:hover {
     background-color: #eeeeee;
-    border-top-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .view-controls button {
@@ -295,7 +296,7 @@ select {
 
 /* stili dell'header */
 
-#widget .btn {
+.widget .btn {
     border-radius: 0px;
     font-size: 1.6em;
     height: 45px;

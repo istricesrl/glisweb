@@ -504,8 +504,15 @@
     // debug
 	// die( 'EXTERNAL LIBRARY CONFIG DONE' );
 
+    // richiesta esplicita di esecuzione runlevel
+    if( isset( $cf['runlevels']['run'] ) ) {
+        $lvls2run = '{' . implode( ',', $cf['runlevels']['run'] ) . '}*';
+    } else {
+        $lvls2run = '*';
+    }
+
     // ricerca dei files di configurazione standard
-	$arrayConfig				= glob( DIR_SRC_CONFIG . '_*.*.php' );
+	$arrayConfig				= glob( DIR_SRC_CONFIG . '_' . $lvls2run . '.*.php', GLOB_BRACE );
 
     // ordinamento dei file trovati
 	sort( $arrayConfig );
@@ -517,7 +524,7 @@
     // $cf['lvls']				contiene informazioni sui runlevel
     // $cf['lvls']['skip']			contiene l'array dei runlevel da saltare
 
-    // filtro per runlevels
+    // filtri per runlevels
 	if( ! isset( $cf['lvls']['skip'] ) ) { $cf['lvls']['skip'] = array(); }
 
     // NOTA le funzioni che hanno "to" nel nome per omogeneità con le altre dovrebbero diventare "2" ad esempio

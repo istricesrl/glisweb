@@ -124,6 +124,16 @@
 		    }
 		}
 
+		// controllo in background dello status della sessione
+		setInterval( function() {
+			getws( '/report/session.status', null, function( d ){
+				var obj = JSON.parse( d );
+				if( obj.time > ( obj.expires - 120 ) ) {
+					$('#widget-session').fadeIn();
+				}
+			});
+		}, 60000 );
+
 	    // SDF funzione che mostra e nasconde i figli nella struttura dell'anagrafica
 		$('ul.browsing-tree i').click(function() {
 
