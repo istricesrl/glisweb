@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/anagrafica.form.sub.html' as sub %}
+{% import 'bin/anagrafica.form.cliente.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -19,25 +19,13 @@
 
 {# TIPO DI METODO E ATTIVITA' SVOLTA #}
 {% if request[ table ].id %}
-{% import '_standard.html' as std %}
-
-{% extends "ext/main.html" %}
-
-{% block main %}
-
-{# DEFINIZIONE TABELLA E IMPORTAZIONE MACRO BASE #}
-
-{% set table = etc.table %}
-{% import 'bin/'~table~'.gestione.html' as sub %}
-
-{# TIPO DI METODO E ATTIVITA' SVOLTA #}
-
-{% if request[ table ].id %}
     {% set method = 'update' %}
     {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
 {% else %}
     {% set method = 'post' %}
     {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
 {% endif %}
 
 {# FORM DI GESTIONE #}
@@ -58,44 +46,42 @@
 	    {# MODULO PRINCIPALE #}
 
 	    <fieldset>
-		<legend>dati commerciali</legend>
-
+		<legend>dati commerciali CUSTOM</legend>
+		
 		<div class="form-group form-row">
-		    <label class="d-none d-md-block col-2 col-form-label text-right">agente</label>
+		
+			
+			<label class="d-md-block col-2 col-form-label text-left">agente</label>
 		    <div class="col-12 col-md-10">
-			{{ std.select( table, '', '', 'id_agente', '', etc.id_agente, request ) }}
+				{{ frm.select( table, 'id_agente', '', 'id', '', etc.select.anagrafica, request ) }}
+			</div>
+			
+		    <div class="col-10">
+			{{ frm.textarea( table, '', '', 'note_amministrative', 'informazioni amministrative aggiuntive (ad uso interno)', 3, request ) }}
 		    </div>
-		</div>
+        </div>
+		
+		<fieldset>
+			<legend>condizioni di vendita</legend>
+			<div class="form-group form-row">
+				<div class="col-12">
+				{{ frm.textarea( table, '', '', 'condizioni_vendita', 'descrizione delle condizioni di vendita applicate al cliente', 3, request, '', '', 'ckEditor', 200 ) }}
+				</div>
+			</div>
+		</fieldset>
 
-		<div class="form-group form-row">
-		    <div class="col-12">
-			{{ std.textarea( table, '', '', 'note_commerciali', 'informazioni commerciali aggiuntive (ad uso interno)', 3, request ) }}
-		    </div>
-		</div>
-	    </fieldset>
+			<fieldset>
+				<legend>ranking CRM del cliente</legend>
+				<div class="form-group form-row">
+					<div class="col-12">
+					{{ frm.select( table, 'tipologie_crm', '', 'id', '', etc.select.tipologie_crm, request ) }}
+					</div>
+				</div>
+			</fieldset>
+		
 
-	    <fieldset>
-		<legend>condizioni di vendita</legend>
-
-		<div class="form-group form-row">
-		    <div class="col-12">
-			{{ std.textarea( table, '', '', 'condizioni_vendita', 'descrizione delle condizioni di vendita applicate al cliente', 3, request, '', '', 'ckEditor', 200 ) }}
-		    </div>
-		</div>
-	    </fieldset>
-
-	    <fieldset>
-		<legend>ranking CRM del cliente</legend>
-
-		<div class="form-group form-row">
-		    <div class="col-12">
-			{{ std.select( table, '', '', 'id_tipologia_crm', '', etc.id_tipologia_crm, request ) }}
-		    </div>
-		</div>
-
-	    </fieldset>
-
-	    {{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
+		{# SUBFORM SETTORI E ATTIVITA #}
+		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 
@@ -108,14 +94,3 @@
 </section>
 
 {% endblock %}
-
-    {% set method = 'update' %}
-    {% set activity = 'aggiornamento' %}
-    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
-{% else %}
-    {% set method = 'post' %}
-    {% set activity = 'inserimento' %}
-    {% set legend = 'inserimento nuovo oggetto' %}
-{% endif %}
-
-{# FORM DI GESTIONE #}
