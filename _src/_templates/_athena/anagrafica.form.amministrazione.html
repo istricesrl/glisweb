@@ -44,7 +44,7 @@
 
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
-        <legend>dati amministrativi <small>{{ legend }}</small></legend>
+        <legend>dati amministrativi</legend>
         
         <div class="form-group form-row">
 		    <div class="col-12">
@@ -52,7 +52,9 @@
 			{{ frm.textarea( table, '', '', 'note_amministrative', 'informazioni amministrative aggiuntive (ad uso interno)', 3, request ) }}
 		    </div>
         </div>
+        </fieldset>
         
+	    <fieldset>
         <legend>dati fiscali</legend>
 
         <div class="form-group form-row">
@@ -69,8 +71,10 @@
                 {{ frm.selectRequired( table, 'regimi_fiscali', '', 'id', '', etc.select.regimi_fiscali, request, '', 1 ) }}
             </div>
         </div>
+        </fieldset>
 
-        <legend>fatturazione elettronica</legend>
+	    <fieldset>
+            <legend>fatturazione elettronica</legend>
 
         <div class="form-group form-row">
             <div class="col-12 col-md-6">

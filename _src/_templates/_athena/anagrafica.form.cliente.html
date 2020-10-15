@@ -48,42 +48,47 @@
 		<legend>dati commerciali</legend>
 		
 		<div class="form-group form-row">
-			<label class="d-md-block col-2 col-form-label text-left">agente</label>
-		    <div class="col-12 col-md-10">
-				{{ frm.select( table, '', '', 'id_agente', '', etc.select.anagrafica, request ) }}
+		    <div class="col">
+				<span class="label-top">agente</span>
+				{{ frm.select( table, '', '', 'id_agente', '', etc.select.agenti, request ) }}
 			</div>
-			
-		    <div class="col-10">
-			{{ frm.textarea( table, '', '', 'note_commerciali', 'informazioni commerciali aggiuntive (ad uso interno)', 3, request ) }}
+		</div>
+		
+		<div class="form-group form-row">
+			<div class="col">
+				<span class="label-top">note commerciali</span>
+				{{ frm.textarea( table, '', '', 'note_commerciali', 'informazioni commerciali aggiuntive (ad uso interno)', 3, request ) }}
 		    </div>
         </div>
 		
-		<fieldset>
+		</fieldset>
+			<fieldset>
 			<legend>condizioni di vendita</legend>
 			<div class="form-group form-row">
-				<div class="col-12">
-				{{ frm.textarea( table, '', '', 'condizioni_vendita', 'descrizione delle condizioni di vendita applicate al cliente', 3, request, '', '', 'ckEditor', 200 ) }}
+				<div class="col">
+					<span class="label-top">condizioni di vendita</span>
+					{{ frm.textarea( table, '', '', 'condizioni_vendita', 'descrizione delle condizioni di vendita applicate al cliente', 3, request, '', '', 'ckEditor', 200 ) }}
 				</div>
 			</div>
-		</fieldset>
 
-			<fieldset>
-				<legend>ranking CRM del cliente</legend>
-				<div class="form-group form-row">
-					<div class="col-12">
-					{{ frm.select( table, 'tipologie_crm', '', '', '', etc.select.tipologie_crm, request ) }}
-					</div>
+		</fieldset>
+		<fieldset>
+		<legend>ranking CRM del cliente</legend>
+			<div class="form-group form-row">
+				<div class="col">
+				{{ frm.select( table, '', '', 'id_tipologia_crm', '', etc.select.tipologie_crm, request ) }}
 				</div>
-			</fieldset>
+			</div>
+
+		</fieldset>
 		
 
 		{# SUBFORM SETTORI E ATTIVITA #}
 		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
-
 	    <fieldset class="form-controls">
-		{{ std.controls( page, pages, localization.language.ietf, session, table, request ) }}
+		{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>
 
 	</form>

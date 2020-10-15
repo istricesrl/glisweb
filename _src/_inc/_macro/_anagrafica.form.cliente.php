@@ -23,27 +23,27 @@
 	$ct['form']['table'] = 'anagrafica';
 
     // tendina  agente
-	$ct['etc']['select']['id_agente'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['agenti'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view'
+	    'SELECT id, __label__ FROM anagrafica_view WHERE se_agente IS NOT NULL'
     );
     
      // tendina crm
-	$ct['etc']['select']['id_tipologie_crm'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['tipologie_crm'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view'
+	    'SELECT id, __label__ FROM tipologie_crm_view'
 	);
 
     // tendina settori e attività
-	$ct['etc']['select']['id_settori'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['settori'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_settori_view'
+	    'SELECT id, __label__ FROM settori_view'
 	);
 
 	// macro di default
