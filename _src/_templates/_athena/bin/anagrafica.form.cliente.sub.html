@@ -19,8 +19,13 @@
 	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden' ) }}
 	<div class="form-group form-row">
 	    <div class="col">
-		{{ frm.selectRequired( table, subtable, i, 'id_settore', '', etc.select.anagrafica_settori, request, '2' ) }}
-	    </div>
+		{{ frm.selectBox( table, subtable, i, 'id_settore', '', etc.select.settori, request ) }}
+    </div>
+    {% if r.id %}
+    <div class="col-auto text-right remove-on-duplicate d-print-none">
+    {{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+    </div>
+    {% endif %}
 	</div>
     </div>
     {% endfor %}

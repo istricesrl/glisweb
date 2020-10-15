@@ -11,6 +11,13 @@
     contiene i dati di funzionamento del framework è detto database di supporto, mentre gli altri sono detti
     database di lavoro.
 
+    Le tabelle del database di supporto si dividono in tre categorie secondo la politica di aggiornamento dei dati
+    da parte dell'utente:
+
+    - tabelle di supporto
+    - tabelle assistite
+    - tabelle di lavoro
+
     le tabelle di supporto
     ----------------------
     Il database di supporto contiene dati strutturali come lingue, geografia, fusi orari, unità di misura,
@@ -29,6 +36,12 @@
     prima e dopo il file _195.localization.php. La struttura dei dati nel database non corrisponde sempre
     esattamente a quella degli array del framework, ma si è cercato di tenerle il più simili possibile per
     semplificarne la lettura e la gestione e a tendere si cercherà di farle convergere con gli aggiornamenti.
+
+    le tabelle assistite
+    --------------------
+
+    le tabelle di lavoro
+    --------------------
 
     tabelle e view
     --------------
@@ -144,6 +157,18 @@
     account_gruppi_view.se_amministratore     | vedi campo corrispondente sulla tabella relativa
     account_gruppi_view.__label__             | -
 
+    anagrafica
+    ----------
+
+    anagrafica_categorie
+    --------------------
+
+    anagrafica_cittadinanze
+    -----------------------
+
+    anagrafica_settori
+    ------------------
+
     gruppi
     ------
     Questa tabella contiene i gruppi presenti nel deploy corrente.
@@ -169,6 +194,12 @@
     gruppi_view.nome                     | vedi campo corrispondente sulla tabella relativa
     gruppi_view.__label__                | -
 
+    indirizzi
+    ---------
+
+    mail
+    ----
+
     redirect
     --------
     Questa tabella contiene i redirect presenti nel deploy corrente.
@@ -193,5 +224,11 @@
     redirect.sorgente                    | vedi campo corrispondente sulla tabella relativa
     redirect.destinazione                | vedi campo corrispondente sulla tabella relativa
     redirect.__label__                   | -
+
+    telefoni
+    --------
+
+    test
+    ----
 
 */

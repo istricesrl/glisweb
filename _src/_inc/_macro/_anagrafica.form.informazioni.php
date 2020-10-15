@@ -40,6 +40,9 @@
 	    'SELECT id, __label__ FROM stati_view'
 	);
 
+    // macro di default per l'entità anagrafica
+	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 

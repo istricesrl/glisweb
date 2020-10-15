@@ -192,7 +192,10 @@
 	}
 */
 
-    // macro di default
+    // macro di default per l'entità anagrafica
+	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
+
+	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
 ?>

@@ -234,10 +234,22 @@
     libreria               | [css]                                                                                         | [js]
     -----------------------|-----------------------------------------------------------------------------------------------|------------------------
     Bootstrap 4.5.2        | external[] = https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css         | external[] = https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js
+    Ckeditor 4.10.0        | -                                                                                             | external[] = https://cdn.ckeditor.com/4.10.0/standard/ckeditor.js
     jQuery 3.5.1           | -                                                                                             | external[] = https://code.jquery.com/jquery-3.5.1.min.js
     jQueryUI 1.12.1        | external[] = https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css                  | external[] = https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
     FontAwesome 4.7        | external[] = https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css   | -
     Popper.js              | -                                                                                             | external[] = https://unpkg.com/@popperjs/core@2
+
+    librerie interne
+    ----------------
+    Le librerie interne al framework sono:
+
+    libreria               | [js]
+    -----------------------|------------------------------------------------------
+    helper REST            | internal[] = _src/_js/_lib/_rest.js
+    helper Selectbox       | internal[] = _src/_js/_lib/_selectbox.js
+    helper Ckeditor        | internal[] = _src/_js/_lib/_ckeditor.js
+    libreria generale      | internal[] = _src/_js/_main.js
 
     il template standard (_src/_templates/_athena/)
     ===============================================

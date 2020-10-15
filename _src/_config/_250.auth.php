@@ -63,9 +63,9 @@
 #	    'anagrafica_ruoli' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'anagrafica_settori' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'anagrafica_settori' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'attivita' => array(
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )

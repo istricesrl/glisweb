@@ -71,9 +71,9 @@
 
     // forzatura del template corrente per one-char parameter debug
 	if( isset( $_REQUEST['t'] ) ) {
-	    if( file_exists( DIRECTORY_BASE . 'src/templates/' . $_REQUEST['t'] . '/' ) ) {
+	    if( file_exists( DIR_BASE . 'src/templates/' . $_REQUEST['t'] . '/' ) ) {
 		$ct['page']['template']['path']	= 'src/templates/' . $_REQUEST['t'] . '/';
-	    } elseif( file_exists( DIRECTORY_BASE . '_src/_templates/_' . $_REQUEST['t'] . '/' ) ) {
+	    } elseif( file_exists( DIR_BASE . '_src/_templates/_' . $_REQUEST['t'] . '/' ) ) {
 		$ct['page']['template']['path']	= '_src/_templates/_' . $_REQUEST['t'] . '/';
 	    }
 	    $ct['page']['template']['schema']	= 'default.html';

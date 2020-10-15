@@ -88,6 +88,8 @@
 		    $(this).uploader();
 		});
 
+		$( base ).find('.selectbox').selectBox();
+
 		old.before( base );
 
 	    }
