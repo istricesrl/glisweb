@@ -19,8 +19,7 @@
 
     // costante per la durata massima della sessione
 	if( ! defined( 'SESSION_LIMIT' ) ) {
-#	    define( 'SESSION_LIMIT'		, 3600 );
-	    define( 'SESSION_LIMIT'		, 300 );
+	    define( 'SESSION_LIMIT'		, 3600 );
 	}
 
     // controllo output

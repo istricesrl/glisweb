@@ -128,7 +128,7 @@
 		setInterval( function() {
 			getws( '/report/session.status', null, function( d ){
 				var obj = JSON.parse( d );
-				if( obj.time > ( obj.expires - 120 ) ) {
+				if( obj.time > ( obj.expires - 600 ) ) {
 					$('#widget-session').fadeIn();
 				}
 			});
