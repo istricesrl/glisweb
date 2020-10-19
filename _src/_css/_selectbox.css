@@ -55,11 +55,17 @@ ul.combobox-dropdown {
     width: 100%;
     padding: 0px;
     z-index: 999;
+    overflow-y: auto;
+    max-height: 24em;
 }
 
 ul.combobox-dropdown li {
     padding: 10px 20px;
     cursor: pointer;
+}
+
+ul.combobox-dropdown li.selected {
+    background-color: #dddddd;
 }
 
 ul.combobox-dropdown li:hover {

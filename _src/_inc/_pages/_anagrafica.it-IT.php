@@ -22,7 +22,7 @@
     // vista archivio anagrafica
 	$p['anagrafica.archivio.view'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'archivio' ),
+		'title'		=> array( $l		=> 'archivio' ),
 	    'h1'		=> array( $l		=> 'archivio' ),
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
@@ -83,7 +83,7 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'amministrazione' ),
 	    'h1'		=> array( $l		=> 'amministrazione' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica.form' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.amministrazione.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.amministrazione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
@@ -95,7 +95,7 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cliente' ),
 	    'h1'		=> array( $l		=> 'cliente' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica.form' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.cliente.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.cliente.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
@@ -105,11 +105,25 @@
 	// gestione anagrafica archiviazione
 	$p['anagrafica.form.archiviazione'] = array(
 	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'archiviazione' ),
 	    'h1'		=> array( $l		=> 'archiviazione' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica.form' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.archiviazione.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.archiviazione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica stampe
+	$p['anagrafica.form.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.stampe.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
@@ -324,6 +338,7 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_account.view.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'account.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'account' ),
 									'priority'	=> 100 ) )

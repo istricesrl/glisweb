@@ -48,6 +48,10 @@
 		<legend>dati commerciali</legend>
 		
 		<div class="form-group form-row">
+			<div class="col">
+				<span class="label-top">ranking</span>
+				{{ frm.select( table, '', '', 'id_tipologia_crm', '', etc.select.tipologie_crm, request ) }}
+			</div>
 		    <div class="col">
 				<span class="label-top">agente</span>
 				{{ frm.select( table, '', '', 'id_agente', '', etc.select.agenti, request ) }}
@@ -73,15 +77,6 @@
 
 		</fieldset>
 		<fieldset>
-		<legend>ranking CRM del cliente</legend>
-			<div class="form-group form-row">
-				<div class="col">
-				{{ frm.select( table, '', '', 'id_tipologia_crm', '', etc.select.tipologie_crm, request ) }}
-				</div>
-			</div>
-
-		</fieldset>
-		
 
 		{# SUBFORM SETTORI E ATTIVITA #}
 		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}

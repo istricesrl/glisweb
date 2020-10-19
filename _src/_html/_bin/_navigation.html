@@ -38,10 +38,18 @@
 <section class="row d-print-none">
     <div class="col-12">
 	<ul class="nav nav-tabs">
-	    {% for t in pages[ page.id ].etc.tabs %}
-	    <li class="nav-item"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% else %}{{ pages[ t ].h1[ lang ] }}{% endif %}</a></li>
+        {% for t in pages[ page.id ].etc.tabs %}
+        {% if not pages[ t ].icon %}
+        <li class="nav-item"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% else %}{{ pages[ t ].h1[ lang ] }}{% endif %}</a></li>
+        {% endif %}
 	    {% endfor %}
-	</ul>
+        <span style="margin-left: auto;">        </span>
+        {% for t in pages[ page.id ].etc.tabs %}
+        {% if pages[ t ].icon %}
+        <li class="nav-item nav-icon"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{{ pages[ t ].icon|raw }}</a></li>
+        {% endif %}
+	    {% endfor %}
+    </ul>
     </div>
 </section>
 {% endif %}
