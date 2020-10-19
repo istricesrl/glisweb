@@ -1,0 +1,224 @@
+<?php
+
+    // lingua di questo file
+	$l = 'it-IT';
+
+    // modulo di questo file
+	$m = DIR_MOD . '_3000.contenuti/';
+
+    // dashboard del modulo
+	$p['dashboard.contenuti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'contenuti' ),
+	    'h1'		=> array( $l		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_dashboard.php' ),
+	    'parent'		=> array( 'id'		=> NULL ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'cassa' ),
+									'priority'	=> 300 ) )
+	);
+
+    // vista pagine
+	$p['pagine.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'pagine' ),
+	    'h1'		=> array( $l		=> 'pagine' ),
+	    'parent'		=> array( 'id'		=> 'dashboard.contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'pagine',
+									'pagine.tools' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'pagine' ),
+									'priority'	=> 100 ) )
+    );
+
+/*
+    // azioni sulle pagine
+	$p['contenuti_azioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'contenuti_azioni' ),
+	    'h1'		=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'metro.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.azioni.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['contenuti']['etc']['tabs'] )
+	);
+
+    // gestione pagine
+	$p['pagine_gestione'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'pagine_gestione',
+									'pagine_gestione_sem',
+									'pagine_gestione_contenuti',
+									'pagine_gestione_immagini',
+									'pagine_gestione_video',
+									'pagine_gestione_audio',
+									'pagine_gestione_file',
+									'pagine_gestione_menu',
+									'pagine_gestione_macro',
+									'pagine_gestione_metadati',
+#									'pagine_gestione_informazioni',
+									'pagine_gestione_azioni' ) )
+	);
+
+	$p['pagine_gestione_sem'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'SEM/SMM' ),
+	    'h1'		=> array( $l		=> 'SEM/SMM' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.sem.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php', $m . '_src/_inc/_macro/_pagine.gestione.sem.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+
+	$p['pagine_gestione_contenuti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.contenuti.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php', $m . '_src/_inc/_macro/_pagine.gestione.contenuti.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+
+	$p['pagine_gestione_immagini'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'immagini' ),
+	    'h1'		=> array( $l		=> 'immagini' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.immagini.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+
+	$p['pagine_gestione_video'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'video' ),
+	    'h1'		=> array( $l		=> 'video' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.video.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+
+	$p['pagine_gestione_audio'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'audio' ),
+	    'h1'		=> array( $l		=> 'audio' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.audio.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+
+	$p['pagine_gestione_file'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'allegati' ),
+	    'h1'		=> array( $l		=> 'allegati' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.file.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php', $m . '_src/_inc/_macro/_pagine.gestione.file.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+
+	$p['pagine_gestione_menu'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'menu' ),
+	    'h1'		=> array( $l		=> 'menu' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.menu.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+
+	$p['pagine_gestione_macro'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'macro' ),
+	    'h1'		=> array( $l		=> 'macro' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.macro.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+
+	$p['pagine_gestione_metadati'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'metadati' ),
+	    'h1'		=> array( $l		=> 'metadati' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.metadati.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+    );
+*/
+/*
+	$p['pagine_gestione_informazioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'informazioni' ),
+	    'h1'		=> array( $l		=> 'informazioni' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.informazioni.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php', $m . '_src/_inc/_macro/_pagine.gestione.informazioni.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+*/
+/*
+	// SDF
+	// azioni sulle pagine
+	$p['pagine_gestione_azioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'azioni' ),
+	    'h1'		=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'metro.html' ),
+	    'macro'		=> array(  $m . '_src/_inc/_macro/_pagine.gestione.php', $m . '_src/_inc/_macro/_pagine.gestione.azioni.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	);
+
+
+
+    // redirect
+	$p['redirect'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'redirect' ),
+	    'h1'		=> array( $l		=> 'redirect' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'macro'		=> array( '_src/_inc/_macro/_redirect.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'redirect' ),
+									'priority'	=> 800 ) )
+	);
+
+    // gestione redirect
+	$p['redirect_gestione'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione redirect' ),
+	    'h1'		=> array( $l		=> 'gestione redirect' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'redirect.gestione.html' ),
+	    'parent'		=> array( 'id'		=> 'redirect' ),
+	    'macro'		=> array( '_src/_inc/_macro/_redirect.gestione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	);
+*/
+?>

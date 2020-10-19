@@ -6,7 +6,7 @@
     // modulo di questo file
 	$m = DIR_MOD . '_6500.casse/';
 
-    // pagina degli strumenti
+    // dashboard del modulo
 	$p['dashboard.cassa'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cassa' ),
