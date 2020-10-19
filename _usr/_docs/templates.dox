@@ -283,6 +283,13 @@
       - le pagine form secondarie
         - si comportano come la form principale
         - aggiungono a tutti i nomi un suffisso che le identifica
+      - le pagine form multilingua
+        - si comportano come le altre pagine form (principali o secondarie)
+        - utilizzano un ciclo nello schema HTML per mostrare i campi della lingua corrente
+      - le pagine form view
+        - si comportano come le altre pagine form (principali o secondarie)
+        - la loro macro PHP si comporta come quella delle view, con un filtro bloccato
+        - il loro schema include lo schema di default delle view
       - le pagine tools
         - l'ID termina per "tools"
         - il nome dello schema termina per "tools" oppure è "default.tools.html"
@@ -313,13 +320,19 @@
     delete             | NULL                   | delete.html                    | _src/_inc/_macro/_delete.php
     strumenti          | NULL                   | strumenti.html                 | _src/_inc/_macro/_strumenti.php
 
+    Alcuni esempi di pagine view:
+
+    ID pagina          | ID parent              | schema                         | macro
+    -------------------|------------------------|--------------------------------|------------------------------------------------
+    anagrafica.view    | NULL                   | default.view.html              | _src/_inc/_macro/_anagrafica.view.php che include _src/_inc/_macro/_default.view.php
+
     Alcuni esempi di pagine form:
 
     ID pagina          | ID parent              | schema                         | macro
     -------------------|------------------------|--------------------------------|------------------------------------------------
     anagrafica.form    | NULL                   | anagrafica.form.html           | _src/_inc/_macro/_anagrafica.form.php che include _src/_inc/_macro/_anagrafica.form.default.php e _src/_inc/_macro/_default.form.php
 
-    
+    Volendo creare una nuova pagina di una data tipologia, si può anche per brevità partire dalla copia dei file di una delle pagine sopra citate ad esempio.    
 
     le pagine view
     --------------
