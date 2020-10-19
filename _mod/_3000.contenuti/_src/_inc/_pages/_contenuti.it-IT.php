@@ -14,7 +14,8 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.contenuti.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_dashboard.contenuti.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'dashboard.contenuti' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contenuti' ),
 									'priority'	=> '300' ) )
 	);
