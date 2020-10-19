@@ -6,7 +6,7 @@
     // modulo di questo file
 	$m = DIR_MOD . '_3000.contenuti/';
 
-    // dashboard del modulo
+    // dashboard contenuti
 	$p['dashboard.contenuti'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'contenuti' ),
@@ -14,7 +14,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.contenuti.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_dashboard.contenuti.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contenuti' ),
 									'priority'	=> '300' ) )
 	);
@@ -27,12 +27,46 @@
 	    'parent'		=> array( 'id'		=> 'dashboard.contenuti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.view.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'pagine',
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'pagine.view',
 									'pagine.tools' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'pagine' ),
 									'priority'	=> '010' ) )
     );
+
+    // gestione pagine
+	$p['pagine.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'pagine.form',
+													'pagine.form.sem',
+//													'pagine.form.contenuti',
+//													'pagine.form.immagini',
+//													'pagine.form.video',
+//													'pagine.form.audio',
+//													'pagine.form.file',
+//													'pagine.form.menu',
+//													'pagine.form.macro',
+//													'pagine.form.metadati',
+													'pagine.form.tools'
+												) )
+	);
+
+	$p['pagine.form.sem'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'SEM/SMM' ),
+	    'h1'		=> array( $l		=> 'SEM/SMM' ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.sem.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.sem.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
 
 /*
     // azioni sulle pagine
@@ -57,20 +91,20 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'pagine_gestione',
-									'pagine_gestione_sem',
-									'pagine_gestione_contenuti',
-									'pagine_gestione_immagini',
-									'pagine_gestione_video',
-									'pagine_gestione_audio',
-									'pagine_gestione_file',
-									'pagine_gestione_menu',
-									'pagine_gestione_macro',
-									'pagine_gestione_metadati',
-#									'pagine_gestione_informazioni',
-									'pagine_gestione_azioni' ) )
+									'pagine.form.sem',
+									'pagine.form.contenuti',
+									'pagine.form.immagini',
+									'pagine.form.video',
+									'pagine.form.audio',
+									'pagine.form.file',
+									'pagine.form.menu',
+									'pagine.form.macro',
+									'pagine.form.metadati',
+#									'pagine.form.informazioni',
+									'pagine.form.azioni' ) )
 	);
 
-	$p['pagine_gestione_sem'] = array(
+	$p['pagine.form.sem'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
@@ -81,7 +115,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
 	);
 
-	$p['pagine_gestione_contenuti'] = array(
+	$p['pagine.form.contenuti'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
@@ -92,7 +126,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
 	);
 
-	$p['pagine_gestione_immagini'] = array(
+	$p['pagine.form.immagini'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'immagini' ),
 	    'h1'		=> array( $l		=> 'immagini' ),
@@ -103,7 +137,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
 	);
 
-	$p['pagine_gestione_video'] = array(
+	$p['pagine.form.video'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'video' ),
 	    'h1'		=> array( $l		=> 'video' ),
@@ -114,7 +148,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
 	);
 
-	$p['pagine_gestione_audio'] = array(
+	$p['pagine.form.audio'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'audio' ),
 	    'h1'		=> array( $l		=> 'audio' ),
@@ -125,7 +159,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
 	);
 
-	$p['pagine_gestione_file'] = array(
+	$p['pagine.form.file'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'allegati' ),
 	    'h1'		=> array( $l		=> 'allegati' ),
@@ -136,7 +170,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
 	);
 
-	$p['pagine_gestione_menu'] = array(
+	$p['pagine.form.menu'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'menu' ),
 	    'h1'		=> array( $l		=> 'menu' ),
@@ -147,7 +181,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
 	);
 
-	$p['pagine_gestione_macro'] = array(
+	$p['pagine.form.macro'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'macro' ),
 	    'h1'		=> array( $l		=> 'macro' ),
@@ -158,7 +192,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
 	);
 
-	$p['pagine_gestione_metadati'] = array(
+	$p['pagine.form.metadati'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'metadati' ),
 	    'h1'		=> array( $l		=> 'metadati' ),
@@ -170,7 +204,7 @@
     );
 */
 /*
-	$p['pagine_gestione_informazioni'] = array(
+	$p['pagine.form.informazioni'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'informazioni' ),
 	    'h1'		=> array( $l		=> 'informazioni' ),
@@ -184,7 +218,7 @@
 /*
 	// SDF
 	// azioni sulle pagine
-	$p['pagine_gestione_azioni'] = array(
+	$p['pagine.form.azioni'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'azioni' ),
 	    'h1'		=> array( $l		=> 'azioni' ),
