@@ -45,10 +45,10 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'anagrafica_archiviati' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'anagrafica_archiviati' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 	    'anagrafica_categorie' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
