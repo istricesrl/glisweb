@@ -15,6 +15,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_dashboard.cassa.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'dashboard.cassa' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'cassa' ),
 									'priority'	=> 650 ) )
 	);
