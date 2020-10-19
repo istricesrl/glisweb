@@ -57,11 +57,11 @@
 									'anagrafica.form.amministrazione',
 //									'anagrafica.form.collaboratori',
 									'anagrafica.form.cliente',
-									'anagrafica.form.fornitore',
-									'anagrafica.form.struttura',
-									'anagrafica.form.attivita',
-									'anagrafica.form.promemoria',
-									'anagrafica.form.immagini',
+//									'anagrafica.form.fornitore',
+//									'anagrafica.form.struttura',
+//									'anagrafica.form.attivita',
+//									'anagrafica.form.promemoria',
+//									'anagrafica.form.immagini',
 									'anagrafica.form.archiviazione',
 									'anagrafica.form.stampe' ) )
 	);
@@ -98,6 +98,18 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.form' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.cliente.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.cliente.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica archiviazione
+	$p['anagrafica.form.archiviazione'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'archiviazione' ),
+	    'h1'		=> array( $l		=> 'archiviazione' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.form' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.archiviazione.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.archiviazione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
