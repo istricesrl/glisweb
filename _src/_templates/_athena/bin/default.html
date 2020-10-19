@@ -16,11 +16,6 @@
     <div class="col-auto col-md-5 text-right">
 	<div class="row">
 	<div class="col">
-	    {% if localization %}
-	    {{ frm.select( '__view__', '', '', '__language__', '', localization.languages, request, localization.language.id, 1, 0, 1 ) }}
-	    {% endif %}
-	</div>
-	<div class="col-auto">
 	    {% if request.__backurl__ %}
 	    {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
 	    {{ frm.button( '<i class="fa fa-arrow-circle-left"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#backurl").val("");$("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");','salva e torna alla pagina precedente' ) }}

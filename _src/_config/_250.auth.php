@@ -80,9 +80,9 @@
 #	    'comuni' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'contenuti' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'contenuti' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'cron' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
