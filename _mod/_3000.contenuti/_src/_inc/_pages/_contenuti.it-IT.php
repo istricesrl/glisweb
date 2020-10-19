@@ -11,12 +11,12 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'contenuti' ),
 	    'h1'		=> array( $l		=> 'contenuti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_dashboard.php' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.contenuti.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_dashboard.contenuti.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'cassa' ),
-									'priority'	=> 300 ) )
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contenuti' ),
+									'priority'	=> '300' ) )
 	);
 
     // vista pagine
@@ -31,7 +31,7 @@
 	    'etc'		=> array( 'tabs'	=> array(	'pagine',
 									'pagine.tools' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'pagine' ),
-									'priority'	=> 100 ) )
+									'priority'	=> '010' ) )
     );
 
 /*

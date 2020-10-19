@@ -13,7 +13,7 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'strumenti' ),
-									'priority'	=> 950 ) )
+									'priority'	=> '950' ) )
 	);
 /*
     // pagina gestione cron

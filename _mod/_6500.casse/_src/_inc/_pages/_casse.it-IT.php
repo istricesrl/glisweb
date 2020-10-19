@@ -16,7 +16,7 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'cassa' ),
-									'priority'	=> 650 ) )
+									'priority'	=> '650' ) )
 	);
 
     // debug

@@ -162,7 +162,7 @@
 	    }
 
 	// riordino l'array
-	    ksort( $nav, SORT_NUMERIC );
+	    ksort( $nav, SORT_NATURAL );
 
 	// debug
 	    // print_r( $nav );
