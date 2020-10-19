@@ -259,14 +259,18 @@
         - l'ID termina per "view"
         - il nome dello schema termina per "view" oppure è "default.view.html"
         - il nome della macro PHP termina per "view"
-        - solitamente viene inclusa anche la macro "_default.view.php"
+          - solitamente nella macro PHP viene inclusa anche la macro "_default.view.php"
         - il nome inizia con quello dell'entità rappresentata
       - le pagine form
         - l'ID termina per "form"
         - il nome dello schema termina per "form"
         - il nome della macro PHP termina per "form"
-        - solitamente viene inclusa anche la macro "_default.form.php"
+          - solitamente nella macro PHP viene inclusa anche la macro "_default.form.php"
+          - opzionalmente nella macro PHP può essere inclusa una macro di default per l'entità
         - il nome inizia con quello dell'entità gestita
+      - le pagine form secondarie
+        - si comportano come la form principale
+        - aggiungono a tutti i nomi un suffisso che le identifica
       - le pagine tools
         - l'ID termina per "tools"
         - il nome dello schema termina per "tools" oppure è "default.tools.html"
@@ -296,6 +300,14 @@
     dashboard          | NULL                   | dashboard.html                 | _src/_inc/_macro/_dashboard.php
     delete             | NULL                   | delete.html                    | _src/_inc/_macro/_delete.php
     strumenti          | NULL                   | strumenti.html                 | _src/_inc/_macro/_strumenti.php
+
+    Alcuni esempi di pagine form:
+
+    ID pagina          | ID parent              | schema                         | macro
+    -------------------|------------------------|--------------------------------|------------------------------------------------
+    anagrafica.form    | NULL                   | anagrafica.form.html           | _src/_inc/_macro/_anagrafica.form.php che include _src/_inc/_macro/_anagrafica.form.default.php e _src/_inc/_macro/_default.form.php
+
+    
 
     le pagine view
     --------------
