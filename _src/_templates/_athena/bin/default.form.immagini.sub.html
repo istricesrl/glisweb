@@ -8,7 +8,7 @@
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
     {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
-    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+    {% if r.id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
     <div id="{{ subtable }}_{{ i }}">
