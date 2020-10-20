@@ -7,15 +7,15 @@
 	$m = DIR_MOD . '_3000.contenuti/';
 
     // dashboard contenuti
-	$p['dashboard.contenuti'] = array(
+	$p['contenuti'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'contenuti' ),
 	    'h1'		=> array( $l		=> 'contenuti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.contenuti.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_dashboard.contenuti.php' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contenuti.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_contenuti.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'dashboard.contenuti' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'contenuti' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contenuti' ),
 									'priority'	=> '300' ) )
 	);
@@ -25,7 +25,7 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'pagine' ),
 	    'h1'		=> array( $l		=> 'pagine' ),
-	    'parent'		=> array( 'id'		=> 'dashboard.contenuti' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
