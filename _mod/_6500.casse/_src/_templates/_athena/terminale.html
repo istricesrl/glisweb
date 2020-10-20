@@ -6,7 +6,8 @@
     <div class="container-fluid pannello-cassa">
         <div class="row">
             <div id="chiudi" class="col-auto p-0">
-                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open( '{{ pages['cassa'].url[localization.language.ietf] }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+                {% set target = pages.cassa.url[ localization.language.ietf ] %}
+                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
             </div>
         </div>
     </div>
