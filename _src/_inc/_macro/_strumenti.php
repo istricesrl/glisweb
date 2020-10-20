@@ -132,13 +132,20 @@
 
 	if( count( glob( DIR_VAR_LOG . '{*/,}*.log', GLOB_BRACE ) ) > 0 ) {
 	    $ct['page']['contents']['metro']['log'][] = array(
-		'ws' => $base . 'log.clean',
-		'icon' => NULL,
-		'fa' => 'fa-trash-o',
-		'title' => 'pulizia dei log',
-		'text' => 'cancella i log base del framework'
+			'ws' => $base . 'log.clean',
+			'icon' => NULL,
+			'fa' => 'fa-trash-o',
+			'title' => 'pulizia dei log',
+			'text' => 'cancella i log base del framework'
 	    );
-	    timerCheck( $cf['speed'], '-> controllo log' );
+	    $ct['page']['contents']['metro']['log'][] = array(
+			'ws' => $base . 'log.clean?hard=1',
+			'icon' => NULL,
+			'fa' => 'fa-trash',
+			'title' => 'pulizia totale dei log',
+			'text' => 'cancella tutti i log del framework'
+			);
+		timerCheck( $cf['speed'], '-> controllo log' );
 	}
 
 	if( count( glob( DIR_TMP . '*' ) ) > 0 ) {
