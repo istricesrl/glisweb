@@ -7,27 +7,27 @@
 	$m = DIR_MOD . '_6500.casse/';
 
     // pagina degli strumenti
-	$p['dashboard.cassa'] = array(
+	$p['cassa'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cassa' ),
 	    'h1'		=> array( $l		=> 'cassa' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.cassa.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_dashboard.cassa.php' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cassa.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_cassa.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'dashboard.cassa' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'cassa' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'cassa' ),
 									'priority'	=> 650 ) )
 	);
 
-    // pannello della cassa
-	$p['pannello.cassa'] = array(
+    // terminale della cassa
+	$p['terminale'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'terminale' ),
 	    'h1'		=> array( $l		=> 'terminale' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pannello.cassa.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_pannello.cassa.php' ),
-	    'parent'		=> array( 'id'		=> 'dashboard.cassa' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'terminale.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_terminale.php' ),
+	    'parent'		=> array( 'id'		=> 'cassa' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'terminale' ),
 									'priority'	=> 100 ) )
