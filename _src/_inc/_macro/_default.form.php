@@ -21,7 +21,8 @@
 	    $backurl = $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ] . '&' . $tb . '[__method__]=get';
 	    $backmd5 = md5( $backurl );
 	    $_SESSION['backurls'][ $backmd5 ] = $backurl;
-	    $ct['page']['backurl'][ LINGUA_CORRENTE ] = $backmd5;
+		$ct['page']['backurl'][ LINGUA_CORRENTE ] = $backmd5;
+#		echo 'backurl('.$backmd5.')='.$backurl;
 #	} elseif( isset( $tb ) && ! empty( $tb ) ) {
 	} else {
 	    $backurl = $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ];

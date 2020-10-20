@@ -81,7 +81,7 @@
 <input type="text" class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ val }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %}>
 {% endmacro %}
 
-{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, disabled ) %}
+{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -90,6 +90,14 @@
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
+{% endif %}
+{# NOTA if per retrocompatibilità con le chiamate che passano ancora le stringhe estese degli URL #}
+{% if key %}
+    {% set editor = pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ request[ table ][ key ] ~ '&__backurl__=' ~ page.backurl[ ietf ] %}
+    {% set adder = pages[ add ].path[ ietf ] ~ '?__backurl__=' ~ page.backurl[ ietf ] %}
+{% else %}
+    {% set editor = edit %}
+    {% set adder = add %}
 {% endif %}
 {% if autosubmit %}
     {% if autosubmit == 1 %}{% set change = 'submit();' %}{% else %}{% set change = autosubmit %}{% endif %}
@@ -116,10 +124,10 @@
         <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#{{ id }}_inputbox').trigger('all');"><i class="fa fa-chevron-down"></i></button>
     </div>
     {% if edit and vl %}<div class="col-auto p-0 pl-1">
-	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ edit }}','_self')"><i class="fa fa-pencil"></i></button>
+	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
     </div>{% endif %}
     {% if add %}<div class="col-auto p-0 pl-1">
-	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ add }}','_self')"><i class="fa fa-plus"></i></button>
+	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
     </div>{% endif %}
 </div>
 {% endif %}
