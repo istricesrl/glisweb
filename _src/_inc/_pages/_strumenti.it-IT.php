@@ -28,7 +28,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'strumenti' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'strumenti' ),
-									'priority'	=> 950 ) )
+									'priority'	=> '950' ) )
 	);
 
 /*

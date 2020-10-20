@@ -40,7 +40,7 @@
     // id della vista
 	if( ! isset( $ct['view']['id'] ) ) {
 	    $ct['view']['id'] = md5(
-		$ct['view']['table']
+		$ct['view']['table'] . $_SESSION['__view__']['__site__']
 	    );
 	}
 

@@ -16,7 +16,7 @@
 									'anagrafica.archivio.view',
 									'anagrafica.tools' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'anagrafica' ),
-									'priority'	=> 50 ) )
+									'priority'	=> '050' ) )
 	);
 
     // vista archivio anagrafica
@@ -355,7 +355,7 @@
 	    'etc'		=> array( 'tabs'	=> array( 'account.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'account' ),
-									'priority'	=> 100 ) )
+									'priority'	=> '010' ) )
 	);
 
     // gestione account

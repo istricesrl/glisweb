@@ -6,7 +6,7 @@
     // modulo di questo file
 	$m = DIR_MOD . '_6500.casse/';
 
-    // pagina degli strumenti
+    // dashboard del modulo
 	$p['dashboard.cassa'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cassa' ),
@@ -16,7 +16,7 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'cassa' ),
-									'priority'	=> 650 ) )
+									'priority'	=> '650' ) )
 	);
 
     // debug

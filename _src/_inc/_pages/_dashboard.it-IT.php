@@ -14,7 +14,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'dashboard' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'dashboard' ),
-									'priority'	=> 10 ) )
+									'priority'	=> '010' ) )
 	);
 
     // cancellazione
