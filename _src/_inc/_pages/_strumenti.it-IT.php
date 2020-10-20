@@ -15,6 +15,20 @@
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'strumenti' ),
 									'priority'	=> 950 ) )
 	);
+
+    // pagina dell'archivio
+	$p['archivio'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'archivio' ),
+	    'h1'		=> array( $l		=> 'archivio' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'dashboard.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_archivio.php' ),
+	    'parent'		=> array( 'id'		=> NULL ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'strumenti' ),
+									'priority'	=> 950 ) )
+	);
+
 /*
     // pagina gestione cron
 	$p['cron'] = array(
