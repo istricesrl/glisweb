@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/anagrafica.form.immagini.sub.html' as sub %}
+{% import 'bin/default.form.immagini.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -43,8 +43,8 @@
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
              
-		{# SUBFORM IMMAGINI COLLEGATE #}
-        {{ sub.immaginiCollegate( table, 'immagini_anagrafica', 'immagini collegate', site, page, pages, localization.language.ietf, etc, request, session ) }}
+		{# SUBFORM IMMAGINI #}
+        {{ sub.immagini( table, 'immagini', 'immagini collegate', site, page, pages, localization.language.ietf, etc, request, session, 'id_anagrafica' ) }}
         
         {# BOTTONI E COMANDI DEL MODULO #}
         <fieldset class="form-controls">

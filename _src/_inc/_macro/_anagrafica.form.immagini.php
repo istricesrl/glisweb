@@ -23,11 +23,11 @@
     $ct['form']['table'] = 'anagrafica';
 
     // tendina ruolo immagini
-	$ct['etc']['select']['immagini_collegate'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['ruoli_immagini'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_immagini_view'
+	    'SELECT id, __label__ FROM ruoli_immagini_view WHERE se_anagrafica = 1'
 	);
 
     // macro di default per l'entità anagrafica
