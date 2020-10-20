@@ -96,12 +96,13 @@
 	    'gruppi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
-#	    'immagini' => array(
+	    'immagini' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
+#	    'immagini_anagrafica' => array(
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )
-#	    ),
-#	    'immagini_anagrafica' => array(
-#		CONTROL_FULL => array( 'roots' )
 #	    ),
 	    'indirizzi' => array(
 		CONTROL_FULL => array( 'roots' ),

@@ -38,6 +38,7 @@
 
 	    // prelevo il valore corrente
 	    var current = $( select ).find( 'option:selected' ).text();
+		var currvalue = $( select ).val();
 
 	    // imposto il valore corrente
 	    box.val( current );
@@ -45,20 +46,41 @@
 	    // TODO creo la <ul> con le opzioni
 	    var lista = $('<ul class="combobox-dropdown remove-on-duplicate" id="' + base_id + '_list"> </ul>');
 
+		// evento custom per mostrare l'intera lista
+		box.on( "all", function( e ) {
+			// alert('custom');
+			if( $( lista ).is(":visible") ) {
+				$( lista ).hide();
+				$( box ).css( 'background-color', '#ffffff' );
+			} else {
+				box.trigger("keyup",{"val":""});
+			}
+		});
+
 	    // faccio il bind della funzione principale di ricerca
-	    box.keyup( function( e ) {
+	    box.keyup( function( e, d ) {
+
+		// debug
+		console.log( d );
 
 		// filtro
-		var filtro = $(this).val();
+		if( typeof d !== 'undefined' && typeof d.val !== 'undefined' ) {
+			var filtro = d.val;
+			var force = true;
+		} else {
+			var filtro = $(this).val();
+			var force = false;
+			$( select ).val( '' );
+		}
 
-		// ...
-		$( select ).val( '' );
+		// debug
+	    console.log( 'valore della select al click -> ' + $( select ).val() );
 
 		// ...
 		$( box ).css( 'background-color', '#eeeeee' );
 
 		// se è stato inserito un filtro di lunghezza minima
-		if( filtro.length > min ) {
+		if( filtro.length > min || force == true ) {
 
 		    // svuoto la lista
 		    $( lista ).empty();
@@ -73,12 +95,17 @@
 		    select.find('option').each( function( idx, el ) {
 			var opzione = $( el ).html();
 			var valore = $( el ).attr( 'value' );
-			$( el ).prop( 'selected', false );
+			// $( el ).prop( 'selected', false );
 			// console.log( opzione + ' -> ' + valore );
 			// TODO filtro le opzioni in base al opzione del campo input
 			if( opzione.toLowerCase().indexOf( filtro.toLowerCase() ) >= 0 ) {
-			    // console.log( opzione + ' -> ' + filtro );
-			    var li = '<li value="' + valore + '">' + opzione + '</li>';
+				// console.log( opzione + ' -> ' + filtro );
+				if( valore == currvalue ) {
+					var classe = ' class="selected"';
+				} else {
+					var classe = '';
+				}
+			    var li = '<li value="' + valore + '"' + classe + '>' + opzione + '</li>';
 			    lista.append( li );
 			}
 		    });
@@ -88,7 +115,6 @@
 			var opzione = $( li ).html();
 			var valore = $( li ).attr( 'value' );
 			$( li ).bind( 'click', function() {
-			     console.log( 'click su li' );
 			    $( select ).val( valore );
 			    $( box ).val( opzione );
 			    $( box ).css( 'background-color', '#ffffff' );

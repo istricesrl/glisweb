@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/anagrafica.form.cliente.sub.html' as sub %}
+{% import 'bin/default.form.immagini.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -42,52 +42,16 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-
-	    <fieldset>
-		<legend>dati commerciali</legend>
-		
-		<div class="form-group form-row">
-			<div class="col">
-				<span class="label-top">ranking</span>
-				{{ frm.select( table, '', '', 'id_tipologia_crm', '', etc.select.tipologie_crm, request ) }}
-			</div>
-		    <div class="col">
-				<span class="label-top">agente</span>
-				{{ frm.select( table, '', '', 'id_agente', '', etc.select.agenti, request ) }}
-			</div>
-		</div>
-		
-		<div class="form-group form-row">
-			<div class="col">
-				<span class="label-top">note commerciali</span>
-				{{ frm.textarea( table, '', '', 'note_commerciali', 'informazioni commerciali aggiuntive (ad uso interno)', 3, request ) }}
-		    </div>
-        </div>
-		
-		</fieldset>
-			<fieldset>
-			<legend>condizioni di vendita</legend>
-			<div class="form-group form-row">
-				<div class="col">
-					<span class="label-top">condizioni di vendita</span>
-					{{ frm.textarea( table, '', '', 'condizioni_vendita', 'descrizione delle condizioni di vendita applicate al cliente', 3, request, '', '', 'ckEditor', 200 ) }}
-				</div>
-			</div>
-
-		</fieldset>
-		<fieldset>
-
-		{# SUBFORM SETTORI E ATTIVITA #}
-		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
-
-	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls">
-		{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
-
-	</form>
-    </div>
+		{# SUBFORM IMMAGINI #}
+        {{ sub.immagini( table, 'immagini', 'immagini collegate', site, page, pages, localization.language.ietf, etc, request, session, 'id_anagrafica' ) }}
+        
+        {# BOTTONI E COMANDI DEL MODULO #}
+        <fieldset class="form-controls">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
+        </fieldset>
+        
+    </form>
+</div>
 </section>
 
 {% endblock %}

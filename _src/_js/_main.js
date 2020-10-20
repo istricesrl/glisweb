@@ -1,5 +1,28 @@
 
-    // operazioni da eseguire al caricamento della pagina
+    // rimuove le lettere accentate
+	function strClean( st ) {
+
+	    var st = st.split('');
+	    var stOut = new Array();
+	    var stLen = st.length;
+	    var accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+	    var accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+
+	    for( var y = 0; y < stLen; y++ ) {
+		if( accents.indexOf( st[y] ) != -1 ) {
+		    stOut[y] = accentsOut.substr( accents.indexOf( st[y] ), 1 );
+		} else {
+		    stOut[y] = st[y];
+		}
+	    }
+
+	    stOut = stOut.join('');
+
+	    return stOut;
+
+	}
+
+	// operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
 
 	    // mostro l'overlay dei cookie

@@ -433,6 +433,11 @@ nav ul ul ul {
     cursor: pointer;
 }
 
+.nav-tabs .nav-item.nav-icon a.nav-link {
+    font-size: 1.55em;
+    padding: .15em .5em;
+}
+
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
     border-color: #dddddd #dddddd #ffffff;
 }
