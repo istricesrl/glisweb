@@ -22,6 +22,7 @@
     // vista archivio anagrafica
 	$p['anagrafica.archivio.view'] = array(
 	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
 		'title'		=> array( $l		=> 'archivio' ),
 	    'h1'		=> array( $l		=> 'archivio' ),
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),

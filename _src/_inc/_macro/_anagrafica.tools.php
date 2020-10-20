@@ -11,13 +11,13 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'general' => array(
-		'label' => NULL
+	    'esportazioni' => array(
+		'label' => 'esportazioni'
 	    )
 	);
 
     // importazione contatti anagrafica
-	$ct['page']['contents']['metro']['general'][] = array(
+	$ct['page']['contents']['metro']['esportazioni'][] = array(
 	    'modal' => array( 'id' => 'esporta_per_mail', 'include' => 'inc/anagrafica.tools.modal.mailchimp.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-file-excel-o',
@@ -26,7 +26,7 @@
 	);
 
     // categorie anagrafica
-	$ct['etc']['select']['id_categoria'] = mysqlCachedQuery(
+	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedQuery(
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
