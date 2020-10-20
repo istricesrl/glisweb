@@ -47,7 +47,7 @@
 	    'etc'		=> array( 'tabs'	=> array(	'pagine.form',
 													'pagine.form.sem',
 //													'pagine.form.contenuti',
-//													'pagine.form.immagini',
+													'pagine.form.immagini',
 //													'pagine.form.video',
 //													'pagine.form.audio',
 //													'pagine.form.file',
@@ -69,6 +69,19 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
+	// gestione pagine immagini
+	$p['pagine.form.immagini'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'immagini' ),
+		'h1'		=> array( $l		=> 'immagini' ),
+		'parent'		=> array( 'id'		=> 'pagine.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.immagini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.immagini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+	
 /*
     // azioni sulle pagine
 	$p['contenuti_azioni'] = array(
