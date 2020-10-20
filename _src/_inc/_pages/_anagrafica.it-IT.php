@@ -61,7 +61,7 @@
 //									'anagrafica.form.struttura',
 //									'anagrafica.form.attivita',
 //									'anagrafica.form.promemoria',
-//									'anagrafica.form.immagini',
+									'anagrafica.form.immagini',
 									'anagrafica.form.archiviazione',
 									'anagrafica.form.stampe' ) )
 	);
@@ -127,6 +127,20 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
+
+	// gestione anagrafica immagini
+	$p['anagrafica.form.immagini'] = array(
+	    'sitemap'		=> false,
+	    'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'immagini' ),
+	    'h1'		=> array( $l		=> 'immagini' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.immagini.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.immagini.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
 
 /*
     // scheda bibliografia
