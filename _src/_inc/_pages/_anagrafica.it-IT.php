@@ -33,7 +33,8 @@
 
     // tools anagrafica
 	$p['anagrafica.tools'] = array(
-	    'sitemap'		=> false,
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'azioni' ),
 	    'h1'		=> array( $l		=> 'azioni' ),
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
