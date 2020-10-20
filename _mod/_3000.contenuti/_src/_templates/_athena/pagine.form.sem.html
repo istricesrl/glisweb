@@ -71,10 +71,10 @@
 
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
-		<legend>opzioni URL</legend>
+			<legend>opzioni URL</legend>
 
-		<div class="form-group form-row">
-		    <div class="col-12 col-md-4">
+			<div class="form-group form-row">
+		    	<div class="col-12 col-md-4">
 					<span class="label-top">path custom</span>
 					{{ frm.input( table, subtable, i, 'path_custom', 'alias non canonico (IMPORTANTE iniziare sempre con slash)', '', request ) }}
 				</div>
@@ -86,17 +86,73 @@
 					<span class="label-top">rewrite custom</span>
 					{{ frm.input( table, subtable, i, 'rewrite_custom', 'rewrite custom (sostituisce il tag title ai fini del rewrite)', '', request ) }}
 				</div>
-		</div>
+			</div>
 
 	    </fieldset>
 
 	    <fieldset>
 			<legend>meta tag</legend>
-	    </fieldset>
+
+			<div class="form-group form-row">
+		    	<div class="col-12 col-md-4">
+					<span class="label-top">tag title</span>
+					{{ frm.input( table, subtable, i, 'title', 'tag title', '', request ) }}
+				</div>
+				<div class="col-12 col-md-8">
+					<span class="label-top">tag keywords</span>
+					{{ frm.input( table, subtable, i, 'keywords', 'tag keywords', '', request ) }}
+				</div>
+			</div>
+			<div class="form-group form-row">
+				<div class="col-12">
+					<span class="label-top">tag description</span>
+					{{ frm.textarea( table, subtable, i, 'description', 'tag description', 3, request ) }}
+				</div>
+			</div>
+
+		</fieldset>
 
 	    <fieldset>
 			<legend>OpenGraph protocol</legend>
-	    </fieldset>
+
+			<div class="form-group form-row">
+		    	<div class="col-12 col-md-3">
+					<span class="label-top">OG:type</span>
+					{{ frm.input( table, subtable, i, 'og_type', 'og:type', '', request ) }}
+				</div>
+				<div class="col-3">
+					<span class="label-top">OG:determiner</span>
+					{{ frm.input( table, subtable, i, 'og_determiner', 'og:determiner', '', request ) }}
+				</div>
+				<div class="col-9 col-md-6">
+					<span class="label-top">OG:title</span>
+					{{ frm.input( table, subtable, i, 'og_title', 'og:title', '', request ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+		    	<div class="col-12 col-md-4">
+					<span class="label-top">OG:image</span>
+					{{ frm.input( table, subtable, i, 'og_image', 'og:image', '', request ) }}
+				</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">OG:audio</span>
+					{{ frm.input( table, subtable, i, 'og_audio', 'og:audio', '', request ) }}
+				</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">OG:video</span>
+					{{ frm.input( table, subtable, i, 'og_video', 'og:video', '', request ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-12">
+					<span class="label-top">OG:description</span>
+					{{ frm.textarea( table, subtable, i, 'og_description', 'og:description', 3, request ) }}
+				</div>
+			</div>
+
+		</fieldset>
 
 		{% endif %}
 
