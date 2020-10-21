@@ -46,7 +46,7 @@
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {% if autosubmit %}
-    {% if autosubmit == 1 %}{% set change = 'submit();' %}{% else %}{% set change = autosubmit %}{% endif %}
+    {% if autosubmit == 1 %}{% set change = 'submitFormOkay=true;submit();' %}{% else %}{% set change = autosubmit %}{% endif %}
 {% endif %}
 {% if not vl %}{% set vl = default %}{% endif %}
 {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
