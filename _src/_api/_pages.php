@@ -309,7 +309,7 @@
 			$ct['page']['template']['paths'] = array_replace_recursive(
 			    ( isset( $ct['page']['template']['paths'] ) ) ? $ct['page']['template']['paths'] : array(),
 #			    array_unique( glob( DIRECTORY_BASE . '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/' . str_replace( '_', '{,_}', $ct['page']['template']['path'] ), GLOB_BRACE ) )
-			    array_unique( glob( DIR_MOD_ATTIVI . '/' . glob2custom( $ct['page']['template']['path'] ), GLOB_BRACE ) )
+			    array_unique( glob( DIR_MOD_ATTIVI . glob2custom( $ct['page']['template']['path'] ), GLOB_BRACE ) )
 			);
 
 		    // aggiungo la versione locale del template
@@ -325,6 +325,9 @@
 			foreach( $ct['page']['template']['paths'] as $add ) {
 			    $loader->prependPath( $add );
 			}
+
+			// log
+			logWrite( 'path dei template aggiuntivi: ' . implode( ', ', $ct['page']['template']['paths'] ), 'twig' );
 
 		    // debug
 			// print_r( $cf['twig']['profile'] );
