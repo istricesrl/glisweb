@@ -58,6 +58,7 @@
 												) )
 	);
 
+	// gestione pagine SEM/SMM
 	$p['pagine.form.sem'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
