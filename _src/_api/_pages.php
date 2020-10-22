@@ -356,11 +356,17 @@
 			    $loader->addPath( path2custom( DIR_SRC_HTML ) );
 			}
 
+			// log
+			appendToFile( 'fine inserimento dei path custom aggiuntivi in Twig' . PHP_EOL, FILE_LATEST_RUN );
+
 		    // ambiente
 			$twig = new Twig\Environment( $loader, $cf['twig']['profile'] );
 
 		    // timer
 			timerCheck( $cf['speed'], '-> -> creazione ambiente Twig' );
+
+			// log
+			appendToFile( 'fine creazione ambiente Twig' . PHP_EOL, FILE_LATEST_RUN );
 
 		    // estensioni
 			$twig->addExtension( new Twig\Extension\StringLoaderExtension() );
