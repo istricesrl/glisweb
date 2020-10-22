@@ -375,6 +375,9 @@
 		    // timer
 			timerCheck( $cf['speed'], '-> -> estensioni Twig' );
 
+			// log
+			appendToFile( 'fine inclusione estensioni Twig' . PHP_EOL, FILE_LATEST_RUN );
+
 		    // debug
 			// print_r( $ct['page'] );
 			// print_r( $ct['contatti'] );
