@@ -342,7 +342,7 @@
 			logWrite( 'path dei template aggiuntivi: ' . implode( ', ', $ct['page']['template']['paths'] ), 'twig' );
 
 			// log
-			appendToFile( 'fine inserimento dei path aggiuntivi in Twig' . PHP_EOL, FILE_LATEST_RUN );
+			appendToFile( 'fine inserimento dei path aggiuntivi in Twig: ' . implode( ', ', $ct['page']['template']['paths'] ) . PHP_EOL, FILE_LATEST_RUN );
 
 		    // debug
 			// print_r( $cf['twig']['profile'] );
