@@ -94,6 +94,17 @@
                 {{ frm.input( table, subtable, i, 'cappello', 'cappello della pagina (se applicabile)', '', request ) }}
             </div>
         </div>
+    </fieldset>
+
+    <fieldset>
+        <div class="form-group form-row">
+            <div class="col">
+                <span class="label-top"></span>
+                {{ frm.textArea( table, subtable, i, 'testo', '', 10, request, '', '', 'ckEditor', 200 ) }}
+            </div>
+        </div>
+
+    </fieldset>
 
 
         {% endif %}
