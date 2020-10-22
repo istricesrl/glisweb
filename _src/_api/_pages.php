@@ -310,7 +310,7 @@
 			timerCheck( $cf['speed'], '-> -> caricamento template' );
 
 			// log
-			appendToFile( 'fine caricamento template Twig' . PHP_EOL, FILE_LATEST_RUN );
+			appendToFile( 'fine caricamento template Twig ' . $ct['page']['template']['path'] . PHP_EOL, FILE_LATEST_RUN );
 
 		    // debug
 			// print_r( $cf['twig']['profile'] );
@@ -388,6 +388,9 @@
 		    // timer
 			timerCheck( $cf['speed'], '-> fine render template' );
 
+			// log
+			appendToFile( 'fine render template Twig' . PHP_EOL, FILE_LATEST_RUN );
+
 		    // output
 			build( $html, MIME_TEXT_HTML );
 
@@ -444,6 +447,9 @@
     // timer
 	timerCheck( $cf['speed'], 'fine headers' );
 
+	// log
+	appendToFile( 'fine invio headers HTTP' . PHP_EOL, FILE_LATEST_RUN );
+
     // TODO documentare i parametri a una sola lettera (sono nei Google Docs?)
 
     // rivelazione dei dati
@@ -490,6 +496,9 @@
 
     // timer
 	timerCheck( $cf['speed'], 'fine esecuzione framework' );
+
+	// log
+	appendToFile( 'fine esecuzione framework' . PHP_EOL, FILE_LATEST_RUN );
 
     // calcolo tempi
 	$tms = array_keys( $cf['speed'] );
