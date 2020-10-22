@@ -295,7 +295,7 @@
 
 		    // avvio di Twig
 #			Twig_Autoloader::register();
-			$loader = new Twig_Loader_Filesystem( DIR_BASE . $ct['page']['template']['path'] );
+			$loader = new Twig\Loader\FilesystemLoader( DIR_BASE . $ct['page']['template']['path'] );
 
 		    // timer
 			timerCheck( $cf['speed'], '-> -> caricamento template' );
@@ -342,14 +342,14 @@
 			}
 
 		    // ambiente
-			$twig = new Twig_Environment( $loader, $cf['twig']['profile'] );
+			$twig = new Twig\Environment( $loader, $cf['twig']['profile'] );
 
 		    // timer
 			timerCheck( $cf['speed'], '-> -> creazione ambiente Twig' );
 
 		    // estensioni
-			$twig->addExtension( new Twig_Extension_StringLoader() );
-			$twig->addExtension( new Twig_Extension_Debug() );
+			$twig->addExtension( new Twig\Extension\StringLoaderExtension() );
+			// $twig->addExtension( new Twig_Extension_Debug() );
 
 		    // timer
 			timerCheck( $cf['speed'], '-> -> estensioni Twig' );
