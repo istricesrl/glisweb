@@ -1,4 +1,6 @@
 {
+    "name": "istricesrl/glisweb",
+    "description": "GlisWeb framework for web developement",
     "config": {
         "vendor-dir": "_src/_lib/_ext"
     },

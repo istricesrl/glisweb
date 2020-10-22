@@ -120,6 +120,9 @@
     // timer
 	timerCheck( $cf['speed'], 'fine inclusione contenuti statici' );
 
+	// log
+	appendToFile( 'fine inclusione contenuti statici' . PHP_EOL, FILE_LATEST_RUN );
+
     // @todo documentare questa cosa delle favicon
 
     // scrittura dell'indice della cache
@@ -164,6 +167,9 @@
     // timer
 	timerCheck( $cf['speed'], 'fine ricerca favicons' );
 
+	// log
+	appendToFile( 'fine ricerca favicons' . PHP_EOL, FILE_LATEST_RUN );
+
     // debug
 	// print_r( $ct['page'] );
 	// print_r( $ct['page']['template']['menu'] );
@@ -187,6 +193,9 @@
 
     // timer
 	timerCheck( $cf['speed'], 'fine generazione elementi secondari di navigazione' );
+
+	// log
+	appendToFile( 'fine generazione elementi secondari di navigazione' . PHP_EOL, FILE_LATEST_RUN );
 
     // debug
 	// print_r( $ct['page']['template'] );
@@ -299,6 +308,9 @@
 
 		    // timer
 			timerCheck( $cf['speed'], '-> -> caricamento template' );
+
+			// log
+			appendToFile( 'fine caricamento template Twig' . PHP_EOL, FILE_LATEST_RUN );
 
 		    // debug
 			// print_r( $cf['twig']['profile'] );
