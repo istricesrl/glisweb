@@ -46,7 +46,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'pagine.form',
 													'pagine.form.sem',
-													'pagine.form.testo.',
+													'pagine.form.testo',
 //													'pagine.form.contenuti',
 													'pagine.form.immagini',
 //													'pagine.form.video',
@@ -85,7 +85,7 @@
 	);
 
 	// gestione pagine testo
-	$p['pagine.form.sem'] = array(
+	$p['pagine.form.testo'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
