@@ -46,6 +46,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'pagine.form',
 													'pagine.form.sem',
+													'pagine.form.testo.',
 //													'pagine.form.contenuti',
 													'pagine.form.immagini',
 //													'pagine.form.video',
@@ -82,6 +83,19 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
+
+	// gestione pagine testo
+	$p['pagine.form.sem'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.testo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+
 	
 /*
     // azioni sulle pagine
