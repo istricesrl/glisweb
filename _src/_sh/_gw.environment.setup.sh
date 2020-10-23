@@ -46,6 +46,9 @@ apt-get install -y php-gd
 ## installazione libreria per xml
 apt-get install -y php-xml
 
+## installazione libreria per yaml
+apt-get install -y php-yaml
+
 ## installazione di memcache
 apt-get install -y memcached
 apt-get install -y php-memcache

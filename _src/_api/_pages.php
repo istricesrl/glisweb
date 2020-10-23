@@ -80,8 +80,8 @@
 	    foreach( $ct['page']['macro'] as $macro ) {
 		$macroAlternative = path2custom( str_replace( '.php', '.alt.php', $macro ) );
 		if( file_exists( fullPath( $macroAlternative ) ) ) {
-		    timerCheck( $cf['speed'], $macroAlternative );
 		    require fullPath( $macroAlternative );
+		    timerCheck( $cf['speed'], $macroAlternative );
 		    appendToFile( 'inclusione macro -> ' . $macroAlternative . PHP_EOL, FILE_LATEST_RUN );
 		} else {
 		    timerCheck( $cf['speed'], fullPath( $macro ) );
@@ -89,8 +89,8 @@
 		    appendToFile( 'inclusione macro -> ' . $macro . PHP_EOL, FILE_LATEST_RUN );
 		    $macroLocal = path2custom( $macro );
 		    if( file_exists( fullPath( $macroLocal ) ) && $macro !== $macroLocal ) {
-			timerCheck( $cf['speed'], $macroLocal );
 			require fullPath( $macroLocal );
+			timerCheck( $cf['speed'], $macroLocal );
 			appendToFile( 'inclusione macro -> ' . $macroLocal . PHP_EOL, FILE_LATEST_RUN );
 		    }
 		}
@@ -100,6 +100,9 @@
     // debug
 	// print_r( $ct['page']['macro'] );
 	// print_r( get_included_files() );
+
+    // timer
+	timerCheck( $cf['speed'], 'fine inclusione macro' );
 
     // log
 	appendToFile( 'fine inclusione macro' . PHP_EOL, FILE_LATEST_RUN );
