@@ -394,8 +394,23 @@
 	    'parent'		=> array( 'id'		=> 'gruppi.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'gruppi.form.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_gruppi.form.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'gruppi.form') ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array( 'gruppi.form',
+												'gruppi.form.membri'												
+		) ),
+		
+	);
+
+	// gestione gruppi
+	$p['gruppi.form.membri'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'membri' ),
+		'h1'		=> array( $l		=> 'membri' ),
+		'parent'		=> array( 'id'		=> 'gruppi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'gruppi.form.membri.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_gruppi.form.membri.php' ),
+		'etc'		=> array( 'tabs'	=> $p['gruppi.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
 /*
