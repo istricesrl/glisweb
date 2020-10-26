@@ -373,6 +373,36 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
+	 // vista gruppi
+	 $p['gruppi.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gruppi' ),
+	    'h1'		=> array( $l		=> 'gruppi' ),
+	    'parent'		=> array( 'id'		=> 'account' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_gruppi.view.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'gruppi.view',
+													'gruppi.tools' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gruppi' ),
+									'priority'	=> '120' ) )
+	);
+
+    // gestione gruppi
+	$p['gruppi.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'gruppi.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'gruppi.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_gruppi.form.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> array( 'gruppi.form' ,
+														'gruppi.form.tools'										
+			) )
+	
+	);
+
 /*
     // gestione account - azioni
 	$p['account_gestione_azioni'] = array(
