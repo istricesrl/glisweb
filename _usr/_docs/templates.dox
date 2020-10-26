@@ -375,7 +375,8 @@
     view.open.page          | l'ID della pagina a cui portare l'utente quando fa click su una riga; il link porta con sé la query string <entità>[id]=<idEntità> (di solito una pagina di tipo form con ID form_<entità>)
     view.open.table         | il nome della tabella del database da utilizzare per aprire la riga; questo è necessario soprattutto quando la view fa riferimento a un'entità virtuale (vedi \ref database "la documentazione relativa al database")
 
-    Si noti che... 
+    Si noti che l'intestazione delle colonne dichiarate in entità.view.php è molto importante in quanto lavorano sulla select che andarà a estrarre le colonne da mostrare nella view. Non è detto che le colonne dichiarate debbano essere visibili
+    nella view, queste possono essere anche nascoste nel caso in cui si voglia filtrare la view senza mostrare effettivamente il campo.
 
     Visto il ruolo fondamentale che gioca nella composizione della vista, si studi attentamente anche la struttura dell'array
     $cf['request']['__view__'] nella \ref variabili "documentazione relativa alle variabili del framework".
