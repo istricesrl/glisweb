@@ -2,6 +2,10 @@
 
     // runlevel da saltare
     	$cf['runlevels']['run'] = array(
+            '000', '005',
+            '010', '015',
+            '020', '025',
+            '040', '045',
             '050', '055'
 	    );
 
@@ -28,9 +32,16 @@
                 'lifetime' => SESSION_LIMIT,
                 'expires' => ( $_SESSION['used'] + SESSION_LIMIT ),
                 'time' => time(),
-                'notes' =>
-                    'used ' . date( 'Y-m-d H:i:s', $_SESSION['used'] ) . ' ' .
-                    'expire ' . date( 'Y-m-d H:i:s', $_SESSION['used'] + SESSION_LIMIT )
+                'notes' => array(
+                    'used ' => date( 'Y-m-d H:i:s', $_SESSION['used'] ),
+                    'expire ' => date( 'Y-m-d H:i:s', $_SESSION['used'] + SESSION_LIMIT ),
+                    'files' => get_included_files(),
+                    'redis' => (
+                        ( isset( $cf['redis']['connection'] ) && ! empty( $cf['redis']['connection'] ) ) 
+                        ? 1
+                        : 0
+                    )
+                )
             )
         );
 
