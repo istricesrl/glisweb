@@ -1,9 +1,5 @@
-    {% if etc.table and request[ table ].id %}
-    <input type="hidden" id="table" name="{{ etc.table }}[id]" value="{{ request[ etc.table ].id }}">
-    <input type="hidden" id="method" name="{{ etc.table }}[__method__]" value="get">
-    {% endif %}
-    {% if etc.include.filters %}
-	{% include etc.include.filters %}
+    {% if view.include.filters %}
+	{% include view.include.filters %}
     {% else %}
     <div class="form-row view-filters d-print-none">
 	<div class="col">
@@ -12,10 +8,10 @@
 	<div class="col-auto">
 	    <button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-search"></i></button>
 	    {% if view.insert.path %}
-	    <button type="button" class="btn btn-secondary btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ etc.table ].id }}{% endif %}{% if view.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
+	    <button type="button" class="btn btn-secondary btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ view.table ].id }}{% endif %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
 	    {% endif %}
 	    {% if page.parents.path|length() > 1 and view.dashboard.sezione %}
-	    <button type="button" class="btn btn-secondary btn-sm" onclick="$('#reset').val(1);$('#form-{{ etc.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ etc.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
+	    <button type="button" class="btn btn-secondary btn-sm" onclick="$('#reset').val(1);$('#form-{{ view.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ view.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
 	    {% endif %}
 	</div>
     </div>
@@ -47,7 +43,7 @@
 
 		<tbody>
 		    {% for row in view.data %}
-		    <tr{% if view.open.path %} onClick="window.open('{{ view.open.path }}?{% if row[ view.open.field ] %}{{ view.open.table }}[id]={{ row[ view.open.field ] }}{% endif %}{% if view.master.table %}&{{ view.master.table }}[id]={{ row[ view.master.field ] }}{% endif %}{% for tbl,flds in view.open.extra %}{% for fld in flds %}&{{tbl}}[{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% for tbl,flds in view.open.preset %}{% for fld in flds %}&__preset__[{{tbl}}][{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% if view.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"{% endif %}>
+		    <tr{% if view.open.path %} onClick="window.open('{{ view.open.path }}?{% if row[ view.open.field ] %}{{ view.open.table }}[id]={{ row[ view.open.field ] }}{% endif %}{% if view.master.table %}&{{ view.master.table }}[id]={{ row[ view.master.field ] }}{% endif %}{% for tbl,flds in view.open.extra %}{% for fld in flds %}&{{tbl}}[{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% for tbl,flds in view.open.preset %}{% for fld in flds %}&__preset__[{{tbl}}][{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"{% endif %}>
 			{# for key,col in view.cols #}
 			{% for key in view.fields %}
 			<td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
@@ -92,7 +88,7 @@
 	    </div>
 	    <div class="col-2 text-right">
 		{% if view.insert.path %}
-		    <button type="button" class="btn btn-secondary btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ etc.table ].id }}{% endif %}{% if view.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
+		    <button type="button" class="btn btn-secondary btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ view.table ].id }}{% endif %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
 		{% endif %}
 	    </div>
 	    {% else %}
