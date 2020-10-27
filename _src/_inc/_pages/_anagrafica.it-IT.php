@@ -401,7 +401,7 @@
 		
 	);
 
-	// gestione gruppi
+	// gestione membri gruppi
 	$p['gruppi.form.membri'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'membri' ),

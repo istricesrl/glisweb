@@ -31,7 +31,7 @@
 {# FORM DI GESTIONE #}
 <section class="row">
     <div class="col-md-12">
-	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post">
+	<form id="form-{{ table }}" class="" action="{{ page.path[ ietf ] }}" method="post">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -42,17 +42,9 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-	    <fieldset>
-		
-			
+		{# VIEW PRINCIPALE #}
+		{% include 'inc/view.html' %}
 
-	    </fieldset>
-
-        {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls">
-		{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
 	</form>
     </div>
 </section>

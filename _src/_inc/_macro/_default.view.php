@@ -44,6 +44,11 @@
 	    );
 	}
 
+	// filtri presettati
+	if( isset( $ct['view']['__restrict__'] ) ) {
+		$_REQUEST['__view__'][ $ct['view']['id'] ]['__restrict__'] = $ct['view']['__restrict__'];
+	}
+
     // aggiungo le colonne da prelevare
 	// $_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = array_keys( $ct['view']['cols'] );
 	// $ct['view']['data']['__fields__'] = array_keys( $ct['view']['cols'] );
