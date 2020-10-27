@@ -76,6 +76,7 @@ if [ -n "$SRVPASS" ]; then
     sudo /etc/init.d/mysql stop
     sudo mysqld --skip-grant-tables &
     mysql -u root mysql -e "UPDATE mysql.user SET authentication_string=MD5('$SRVPASS') WHERE User='root'; FLUSH PRIVILEGES; exit;"
+    service mysql restart
 fi
 
 ## installazione di certbot
