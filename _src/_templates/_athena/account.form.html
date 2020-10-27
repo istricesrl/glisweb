@@ -82,11 +82,10 @@
 	    {{ sub.attribuzione( table, 'account_gruppi_attribuzione', 'attribuzione automatica', site, page, pages, ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
-
 	    <fieldset class="form-controls">
-		{{ def.controls( page, pages, localization.language.ietf, '', table, request ) }}
-	    </fieldset>
-
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+		</fieldset>
+	
 	</form>
     </div>
 </section>
