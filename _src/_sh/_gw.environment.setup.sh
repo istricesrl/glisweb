@@ -75,7 +75,7 @@ read -p "inserisci la password per MySQL root (vuoto per saltare): " SRVPASS
 if [ -n "$SRVPASS" ]; then
     sudo /etc/init.d/mysql stop
     sudo mysqld --skip-grant-tables &
-    mysql -u root mysql -e "UPDATE mysql.user SET authentication_string=MD5('$SRVPASS'), plugin = 'mysql_native_password' WHERE User='root'; FLUSH PRIVILEGES; exit;"
+    mysql -u root mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$SRVPASS'; FLUSH PRIVILEGES; exit;"
     service mysql restart
 fi
 
