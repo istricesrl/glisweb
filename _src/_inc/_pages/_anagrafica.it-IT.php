@@ -381,6 +381,7 @@
 	    'parent'		=> array( 'id'		=> 'account.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_gruppi.view.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'gruppi.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gruppi' ),
 									'priority'	=> '120' ) )
