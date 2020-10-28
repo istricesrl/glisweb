@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DEPLOY" default="default">
+    
+    <!-- inclusione file proprietà -->
+    <property file="../../../usr/deploy/phing/build.properties" />
+
+    <!-- proprietà derivate -->
+    <property name="dst.dir" value="${dst.fld}/${dst.stg}" />
+    <property name="src.dir" value="${src.fld}/${src.stg}" />
+
+    <!-- target di default -->
+    <target name="default">
+        <echo msg="avvio operazioni con procedura standard..." />
+        <phingcall target="dist.interactive" />
+    </target>
+
+    <!-- distribuzione interattiva (chiede il tipo di release -->
+    <target name="dist.interactive">
+        <echo msg="ATTENZIONE! inserire il tipo di release (le etichette sono case sensitive)" />
+        <echo msg="ATTENZIONE! se non si desidera aumentare la versione, lasciare il campo in bianco" />
+        <propertyprompt propertyName="prj.inc" defaultValue="" promptText="tipo di distribuzione (Major|Minor|Bugfix)" />
+        <if>
+            <equals arg1="${prj.inc}" arg2="" />
+            <then>
+                <echo msg="deploy senza incremento di versione" />
+            </then>
+            <else>
+                <if>
+                    <not>
+                        <available file="${src.dir}/etc/version.conf"/>
+                    </not>
+                    <then>
+                        <touch file="${src.dir}/etc/version.conf"/>
+                        <mkdir dir="${src.dir}/etc" />
+                        <echo msg="0.0.0" file="${src.dir}/etc/version.conf" />
+                    </then>
+                </if>
+                <version releasetype="${prj.inc}" file="${src.dir}/etc/version.conf" property="rev.num"/>
+            </else>
+        </if>
+        <phingcall target="dist.exec" />
+    </target>
+
+    <!-- git commit & push -->
+    <target name="git.push">
+        <if>
+            <available file="${src.stg}/.gita/"/>
+            <then>
+                <if>
+                    <equals arg1="${prj.inc}" arg2="" />
+                    <then>
+                        <echo msg="nessun push richiesto in caso di deploy senza avanzamento di versione" />
+                    </then>
+                    <else>
+                        <echo msg="git checkout..." />
+                        <exec command="cd ${src.stg} &amp;&amp; git checkout master" />
+                        <echo msg="git commit..." />
+                        <exec command="cd ${src.stg} &amp;&amp; git add . &amp;&amp; git commit -m 'distribuzione della versione ${version}'" />
+                        <echo msg="git tag..." />
+                        <echo msg="tag: v${version}" />
+                        <exec command="cd ${src.stg} &amp;&amp; git tag -a 'v${version}' -m 'versione ${version}'" />
+                        <echo msg="git push..." />
+                        <exec command="cd ${src.stg} &amp;&amp; git push --follow-tags" />
+                    </else>
+                </if>
+            </then>
+            <else>
+                <echo msg="nessun repository git presente per il progetto" />
+            </else>
+        </if>
+    </target>
+
+    <!-- esecuzione del deploy -->
+    <target name="dist.exec" depends="git.push">
+        <echo msg="progetto: ${prj.nme}" />
+        <echo msg="distribuzione da ${src.stg} a ${dst.stg}..." />
+        <echo msg="licenza: ${lcs.key}" />
+        <echo msg="tipo di release: ${prj.inc}" />
+        <echo msg="versione: ${rev.num}" />
+    </target>
+
+</project>
