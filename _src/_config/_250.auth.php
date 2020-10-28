@@ -74,9 +74,9 @@
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )
 #	    ),
-#	    'categorie_anagrafica' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'categorie_anagrafica' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'comuni' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),

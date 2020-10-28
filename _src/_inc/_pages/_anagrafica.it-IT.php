@@ -155,7 +155,7 @@
 	    'etc'		=> array( 'tabs'	=> array( 'account.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'account' ),
-									'priority'	=> '010' ) )
+									'priority'	=> '050' ) )
 	);
 
     // form account
@@ -213,30 +213,30 @@
 	);
 
  	// vista categorie anagrafica
-	$p['categorie.view'] = array(
+	$p['categorie.anagrafica.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'categorie' ),
 	    'h1'		=> array( $l		=> 'categorie' ),
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_categorie.view.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'categorie.view' ) ),
+		'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'categorie.anagrafica.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
-									'priority'	=> 600 ) )
+									'priority'	=> '010' ) )
 	);
-
 
     // form categorie anagrafica
-	$p['categorie.form'] = array(
+	$p['categorie.anagrafica.form'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'categorie' ),
-	    'h1'		=> array( $l		=> 'categorie' ),
-	    'parent'		=> array( 'id'		=> 'categorie.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_categorie.form.php' ),
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'categorie.anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.anagrafica.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
+
 /*
     // scheda bibliografia
 	if( in_array( '3100.notizie', $cf['mods']['active']['array'] ) || in_array( '3200.stampa', $cf['mods']['active']['array'] )|| in_array( '3500.documenti', $cf['mods']['active']['array'] ) ) {
