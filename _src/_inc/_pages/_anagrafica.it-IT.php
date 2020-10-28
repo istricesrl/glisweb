@@ -144,6 +144,99 @@
 	);
 
 
+    // vista account
+	$p['account.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'account' ),
+	    'h1'		=> array( $l		=> 'account' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_account.view.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'account.view' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'account' ),
+									'priority'	=> '010' ) )
+	);
+
+    // form account
+	$p['account.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'account.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'account.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_account.form.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'account.form',
+								  'account.form.tools' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	 // vista gruppi
+	 $p['gruppi.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gruppi' ),
+	    'h1'		=> array( $l		=> 'gruppi' ),
+	    'parent'		=> array( 'id'		=> 'account.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_gruppi.view.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'gruppi.view' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gruppi' ),
+									'priority'	=> '120' ) )
+	);
+
+    // gestione gruppi
+	$p['gruppi.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'gruppi.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'gruppi.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_gruppi.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array( 'gruppi.form',
+												'gruppi.form.membri'												
+		) ),
+		
+	);
+
+	// gestione membri gruppi
+	$p['gruppi.form.membri'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'membri' ),
+		'h1'		=> array( $l		=> 'membri' ),
+		'parent'		=> array( 'id'		=> 'gruppi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'gruppi.form.membri.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_gruppi.form.membri.php' ),
+		'etc'		=> array( 'tabs'	=> $p['gruppi.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+ 	// vista categorie anagrafica
+	$p['categorie.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'categorie' ),
+	    'h1'		=> array( $l		=> 'categorie' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_categorie.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'categorie.view' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
+									'priority'	=> 600 ) )
+	);
+
+
+    // form categorie anagrafica
+	$p['categorie.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'categorie' ),
+	    'h1'		=> array( $l		=> 'categorie' ),
+	    'parent'		=> array( 'id'		=> 'categorie.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_categorie.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
 /*
     // scheda bibliografia
 	if( in_array( '3100.notizie', $cf['mods']['active']['array'] ) || in_array( '3200.stampa', $cf['mods']['active']['array'] )|| in_array( '3500.documenti', $cf['mods']['active']['array'] ) ) {
@@ -346,74 +439,6 @@
 	);
 */
 
-    // vista account
-	$p['account.view'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'account' ),
-	    'h1'		=> array( $l		=> 'account' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_account.view.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'account.view' ) ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'account' ),
-									'priority'	=> '010' ) )
-	);
-
-    // gestione account
-	$p['account.form'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'account.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'account.form.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_account.form.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'account.form',
-								  'account.form.tools' ) ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
-	);
-
-	 // vista gruppi
-	 $p['gruppi.view'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gruppi' ),
-	    'h1'		=> array( $l		=> 'gruppi' ),
-	    'parent'		=> array( 'id'		=> 'account.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_gruppi.view.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'gruppi.view' ) ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gruppi' ),
-									'priority'	=> '120' ) )
-	);
-
-    // gestione gruppi
-	$p['gruppi.form'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'gruppi.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'gruppi.form.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_gruppi.form.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> array( 'gruppi.form',
-												'gruppi.form.membri'												
-		) ),
-		
-	);
-
-	// gestione membri gruppi
-	$p['gruppi.form.membri'] = array(
-		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'membri' ),
-		'h1'		=> array( $l		=> 'membri' ),
-		'parent'		=> array( 'id'		=> 'gruppi.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'gruppi.form.membri.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_gruppi.form.membri.php' ),
-		'etc'		=> array( 'tabs'	=> $p['gruppi.form']['etc']['tabs'] ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) )
-	);
-
 /*
     // gestione account - azioni
 	$p['account_gestione_azioni'] = array(
@@ -461,30 +486,6 @@
 	    'macro'		=> array( '_src/_inc/_macro/_gruppi.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['gruppi_gestione']['etc']['tabs'] )
-	);
-
-    // vista categorie anagrafica
-	$p['categorie_anagrafica'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'categorie' ),
-	    'h1'		=> array( $l		=> 'categorie' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.view.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
-									'priority'	=> 600 ) )
-	);
-
-    // gestione categorie anagrafica
-	$p['categorie_anagrafica_gestione'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'categorie_anagrafica' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'categorie.anagrafica.gestione.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.gestione.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
     // vista tipologie crm
