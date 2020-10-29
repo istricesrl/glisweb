@@ -19,7 +19,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM account_gruppi_attribuzione_view'
+	    'SELECT id, __label__ FROM gruppi_view'
     );
     
     // impedisco che la password cifrata venga inviata al modulo

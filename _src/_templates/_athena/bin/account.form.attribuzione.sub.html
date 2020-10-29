@@ -14,7 +14,7 @@
 	<div class="form-group form-row">
 	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">gruppo</span>{% endif %}
-		{{ frm.select( table, subtable, i, 'id_gruppo', '', etc.id_gruppo, request ) }}
+		{{ frm.select( table, subtable, i, 'id_gruppo', '', etc.select.gruppi, request ) }}
 	    </div>
 	    <div class="col-4">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">entità collegata</span>{% endif %}

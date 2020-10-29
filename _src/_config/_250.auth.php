@@ -38,9 +38,9 @@
 	    'account_gruppi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
-#	    'account_gruppi_attribuzione' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'account_gruppi_attribuzione' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'anagrafica' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
