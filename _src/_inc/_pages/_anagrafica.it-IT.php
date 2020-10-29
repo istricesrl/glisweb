@@ -233,8 +233,22 @@
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'parent'		=> array( 'id'		=> 'categorie.anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.anagrafica.form.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
+		'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'categorie.anagrafica.form',
+													'categorie.anagrafica.form.membri' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+	
+    // form categorie anagrafica membri
+	$p['categorie.anagrafica.form.membri'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'membri' ),
+	    'h1'		=> array( $l		=> 'membri' ),
+	    'parent'		=> array( 'id'		=> 'categorie.anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.anagrafica.form.membri.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.membri.php' ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.anagrafica.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
 /*
