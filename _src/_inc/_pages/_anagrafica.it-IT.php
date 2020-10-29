@@ -369,10 +369,21 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'account.form.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_account.form.php' ),
 	    'etc'		=> array( 'tabs'	=> array( 'account.form',
-								  'account.form.tools' ) ),
+								  'account.form.attribuzione' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
+	// gestione account attribuzione
+	$p['account.form.attribuzione'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'attribuzione' ),
+	    'h1'		=> array( $l		=> 'attribuzione' ),
+	    'parent'		=> array( 'id'		=> 'gruppi.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'account.form.attribuzione.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_account.form.attribuzione.php' ),
+		'etc'		=> array( 'tabs'	=> $p['account.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
 	 // vista gruppi
 	 $p['gruppi.view'] = array(
 	    'sitemap'		=> false,

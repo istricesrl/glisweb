@@ -1,4 +1,5 @@
-{% macro gruppi( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+
+{% macro attribuzione( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
@@ -13,11 +14,11 @@
 	<div class="form-group form-row">
 	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">gruppo</span>{% endif %}
-		{{ frm.selectRequired( table, subtable, i, 'id_gruppo', '', etc.select.gruppi, request ) }}
+		{{ frm.select( table, subtable, i, 'id_gruppo', '', etc.id_gruppo, request ) }}
 	    </div>
 	    <div class="col-4">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">ruolo</span>{% endif %}
-		{{ frm.selectRequired( table, subtable, i, 'se_amministratore', '', etc.select.se_amministratore, request, '0', '', 'default-value-on-duplicate' ) }}
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">entità collegata</span>{% endif %}
+		{{ frm.input( table, subtable, i, 'entita', '', '', request ) }}
 	    </div>
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
