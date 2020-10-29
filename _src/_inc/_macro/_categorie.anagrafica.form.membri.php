@@ -52,4 +52,7 @@
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    // macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';
+
 ?>
