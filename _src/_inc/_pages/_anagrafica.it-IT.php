@@ -384,7 +384,8 @@
 		'etc'		=> array( 'tabs'	=> $p['account.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
-	 // vista gruppi
+
+	// vista gruppi
 	 $p['gruppi.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gruppi' ),
