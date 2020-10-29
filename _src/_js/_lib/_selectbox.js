@@ -29,7 +29,7 @@
 	    $( select ).hide();
 
 	    // creo il campo input
-	    var box = $('<input type="text" class="form-control form-control-sm selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox">');
+	    var box = $('<input type="text" class="form-control form-control-sm selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '">');
 
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'data-required' ) == 'true' ) {
