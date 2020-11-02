@@ -50,6 +50,12 @@
                             <equals arg1="${prj.git}" arg2="framework" />
                             <then>
 
+                                <!-- messaggi -->
+                                <echo msg="effettuare manualmente il push sul repository standard" />
+
+                            </then>
+                            <else>
+
                                 <!-- passo al ramo master -->
                                 <echo msg="git checkout..." />
                                 <exec command="cd ${src.dir}/ &amp;&amp; git checkout master" />
@@ -66,12 +72,6 @@
                                 <!-- faccio il push pubblicando il tag -->
                                 <echo msg="git push..." />
                                 <exec command="cd ${src.dir}/ &amp;&amp; git push --follow-tags" />
-
-                            </then>
-                            <else>
-
-                                <!-- messaggi -->
-                                <echo msg="effettuare manualmente il push sul repository standard" />
 
                             </else>
                         </if>
