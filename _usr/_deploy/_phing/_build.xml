@@ -31,7 +31,7 @@
 
         <!-- se c'è un repository di progetto -->
         <if>
-            <available file="${src.stg}/.git/" />
+            <available file="${src.dir}/.git/" />
             <then>
 
                 <!-- se c'è un avanzamento di versione -->
@@ -83,6 +83,30 @@
 
                 <!-- messaggi -->
                 <echo msg="nessun repository git presente per il progetto" />
+
+            </else>
+        </if>
+    </target>
+
+    <!-- notifica via Slack -->
+    <target name="notify.slack">
+
+        <!-- messaggi -->
+        <echo msg="invio la notifica via Slack..." />
+
+        <!-- se Slack è collegato -->
+        <if>
+            <equals arg1="${slck.sa}" arg2="" />
+            <then>
+
+                <!-- messaggi -->
+                <echo msg="Slack non configurato" />
+
+            </then>
+            <else>
+
+                <!-- invio il messaggio-->
+                <exec command="va.slack.msg.sh ${slack.sa} ${slack.sb} ${slack.sc} 'abbiamo rilasciato un aggiornamento in ${dst.stg} su ${dst.url}, vi preghiamo di prendere visione'" />
 
             </else>
         </if>
@@ -218,6 +242,24 @@
 
             </else>
         </if>
+
+        <!-- se è settato un URL del progetto di destinazione -->
+        <if>
+            <equals arg1="${dst.url}" arg2="" />
+            <then>
+
+                <!-- messaggi -->
+                <echo msg="URL del progetto di destinazione non settato!" />
+
+            </then>
+            <else>
+
+                <!-- notifica su Slack -->
+                <phingcall target="notify.slack" />
+
+            </else>
+        </if>
+
     </target>
 
 </project>
