@@ -43,8 +43,50 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-        {# VIEW PRINCIPALE #}
-		{% include 'inc/view.html' %}
+        {# MODULO PRINCIPALE #}
+        <fieldset>
+        <legend>dati generali <small>{{ legend }}</small></legend>
+    
+        <div class="form-group form-row">
+            <div class="col-2  col-md-1">
+            <span class="label-top">tipologia</span>
+            {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_indirizzi, request ) }}
+            </div>
+            <div class="col-8 col-md">
+            <span class="label-top ">indirizzo</span>
+                {{ frm.input( table, subtable, 'indirizzo', 'indirizzo (parte nominale)', '', request ) }}
+            </div>
+            <div class="col-2 col-md-1">
+                <span class="label-top ">civico</span>
+                {{ frm.input( table, subtable, 'civico', 'n°', '', request ) }}
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <div class="col-2 col-md-1">
+            <span class="label-top">cap</span>
+            {{ frm.input( table, subtable, 'cap', 'CAP', '', request ) }}
+            </div>
+            <div class="col-6 col-md">
+                <span class="label-top ">località</span>
+                {{ frm.input( table, subtable, 'localita', 'località', '', request ) }}
+            </div>
+            <div class="col-4 col-md">
+            <span class="label-top ">comune</span>
+                {{ frm.selectBox( table, subtable, i ,'id_comune', 'comune', etc.select.comuni, request ) }}
+            </div>
+        </div>
+        <div class="col-auto">
+            <span class="label-top remove-after-duplicate">descrizione e note</span>
+            {{ frm.input( table, subtable, 'descrizione', 'descrizione e note', '', request ) }}
+        </div>
+       
+        </fieldset>
+		
+		
+    {# BOTTONI E COMANDI DEL MODULO #}
+	<fieldset class="form-controls">
+    {{ def.controls( page, pages, ietf, session, table, request ) }}
+	</fieldset>
 	
 	</form>
     </div>

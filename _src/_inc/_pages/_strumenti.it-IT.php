@@ -36,13 +36,27 @@
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
 		'h1'		=> array( $l		=> 'gestione' ),
-		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+		'parent'		=> array( 'id'		=> 'indirrizzi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'indirizzi.form' ) ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array( 'indirizzi.form',
+												'indirizzi.form.associazione' ) )
+		
 	);
 
+	// gestione associazione indirizzi
+	$p['indirizzi.form.associazione'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'associazione' ),
+		'h1'		=> array( $l		=> 'associazione' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.associazione.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.associazione.php' ),
+		'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+	
     // pagina degli strumenti
 	$p['strumenti'] = array(
 	    'sitemap'		=> false,

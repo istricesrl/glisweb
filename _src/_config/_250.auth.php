@@ -77,9 +77,9 @@
 	    'categorie_anagrafica' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
-#	    'comuni' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'comuni' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'contenuti' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
