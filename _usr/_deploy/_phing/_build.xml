@@ -8,38 +8,21 @@
     <property name="dst.dir" value="${dst.fld}/${dst.stg}" />
     <property name="src.dir" value="${src.fld}/${src.stg}" />
 
-    <!-- target di default -->
-    <target name="default">
-        <echo msg="avvio operazioni con procedura standard..." />
-        <phingcall target="dist.interactive" />
-    </target>
+    <!-- fileset del progetto -->
+    <fileset dir="${src.stg}" id="files.project" expandsymboliclinks="true">
 
-    <!-- distribuzione interattiva (chiede il tipo di release -->
-    <target name="dist.interactive">
-        <echo msg="ATTENZIONE! inserire il tipo di release (le etichette sono case sensitive)" />
-        <echo msg="ATTENZIONE! se non si desidera aumentare la versione, lasciare il campo in bianco" />
-        <propertyprompt propertyName="prj.inc" defaultValue="" promptText="tipo di distribuzione (Major|Minor|Bugfix)" />
-        <if>
-            <equals arg1="${prj.inc}" arg2="" />
-            <then>
-                <echo msg="deploy senza incremento di versione" />
-            </then>
-            <else>
-                <if>
-                    <not>
-                        <available file="${src.dir}/etc/version.conf"/>
-                    </not>
-                    <then>
-                        <touch file="${src.dir}/etc/version.conf"/>
-                        <mkdir dir="${src.dir}/etc" />
-                        <echo msg="0.0.0" file="${src.dir}/etc/version.conf" />
-                    </then>
-                </if>
-                <version releasetype="${prj.inc}" file="${src.dir}/etc/version.conf" property="rev.num"/>
-            </else>
-        </if>
-        <phingcall target="dist.exec" />
-    </target>
+        <include name="_**/*" />
+        <include name="etc/**/*" />
+        <include name="mod/**/*" />
+        <include name="src/**/*" />
+        <include name="usr/**/*" />
+        <include name=".htaccess" />
+        <include name="composer.json" />
+
+        <exclude name="robots.txt" />
+        <exclude name="build.properties" />
+
+    </fileset>
 
     <!-- git commit & push -->
     <target name="git.push">
@@ -70,13 +53,86 @@
         </if>
     </target>
 
+    <!-- target di default -->
+    <target name="default">
+        <echo msg="avvio operazioni con procedura standard..." />
+        <phingcall target="dist.interactive" />
+    </target>
+
+    <!-- distribuzione via rsync in locale -->
+    <target name="dist.rsync.local">
+
+        <!-- abilito la pagina 503 -->
+        <mkdir dir="${src.dir}/tmp" />
+        <touch file="${src.dir}/tmp/.upgrade" />
+
+        <!-- sincronizzo le cartelle -->
+        <echo msg="rsync ${src.dir} -> ${dst.dir}" />
+        <filesync sourcedir="${src.dir}/" destinationdir="${dst.dir}/" exclude="tmp,var,usr,.git,.gitignore,robots.txt,sitemap.xml,sitemap.csv,googlemerchant.xml,googlereviews.xml" delete="true" verbose="false" />
+
+        <!-- disabilito la pagina 503 -->
+        <delete file="${src.dir}/tmp/.upgrade" />
+
+    </target>
+
+    <!-- avanzamento di versione -->
+    <target name="version.increment">
+        <if>
+            <equals arg1="${prj.inc}" arg2="" />
+            <then>
+                <echo msg="deploy senza incremento di versione" />
+            </then>
+            <else>
+                <if>
+                    <not>
+                        <available file="${src.dir}/etc/version.conf"/>
+                    </not>
+                    <then>
+                        <mkdir dir="${src.dir}/etc" />
+                        <touch file="${src.dir}/etc/version.conf"/>
+                        <echo msg="0.0.0" file="${src.dir}/etc/version.conf" />
+                    </then>
+                </if>
+                <version releasetype="${prj.inc}" file="${src.dir}/etc/version.conf" property="rev.num"/>
+            </else>
+        </if>
+    </target>
+
+    <!-- distribuzione interattiva (chiede il tipo di release -->
+    <target name="dist.interactive">
+        <echo msg="ATTENZIONE! inserire il tipo di release (le etichette sono case sensitive)" />
+        <echo msg="ATTENZIONE! se non si desidera aumentare la versione, lasciare il campo in bianco" />
+        <propertyprompt propertyName="prj.inc" defaultValue="" promptText="tipo di distribuzione (Major|Minor|Bugfix)" />
+        <phingcall target="dist.exec" />
+    </target>
+
+    <!-- distribuzione bugfix -->
+    <target name="dist.bugfix">
+        <property name="prj.inc" value="Bugfix" override="true" />
+        <echo msg="impostato avanzamento: ${prj.inc}" />
+        <phingcall target="dist.exec" />
+    </target>
+
     <!-- esecuzione del deploy -->
-    <target name="dist.exec" depends="git.push">
+    <target name="dist.exec" depends="version.increment,git.push">
         <echo msg="progetto: ${prj.nme}" />
         <echo msg="distribuzione da ${src.stg} a ${dst.stg}..." />
         <echo msg="licenza: ${lcs.key}" />
         <echo msg="tipo di release: ${prj.inc}" />
         <echo msg="versione: ${rev.num}" />
+
+        <if>
+            <equals arg1="${dst.hst}" arg2="" />
+            <then>
+                <echo msg="deploy locale su: ${dst.dir}" />
+
+            </then>
+            <else>
+                <echo msg="deploy remoto su: ${dst.hst}${dst.dir}" />
+
+            </else>
+        </if>
+
     </target>
 
 </project>

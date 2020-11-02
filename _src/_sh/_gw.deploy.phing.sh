@@ -8,7 +8,7 @@ cd $(dirname "$0")
 cd $RL
 
 ## pacchetti
-apt-get install -y phing
+apt-get install -y phing rsync
 
 ## informazioni
 echo "lavoro su: $(pwd)"
@@ -17,4 +17,4 @@ echo "lavoro su: $(pwd)"
 clear
 
 ## avvio deploy
-phing -f ./_usr/_deploy/_phing/_build.xml
+phing -f ./_usr/_deploy/_phing/_build.xml $1
