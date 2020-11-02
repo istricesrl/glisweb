@@ -17,7 +17,7 @@
 									'priority'	=> 930 ) )
 	);
 
-	// vista indirizzi archivio
+	// vista indirizzi
 	$p['indirizzi.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'indirizzi' ),
@@ -31,12 +31,12 @@
 									'priority'	=> '050' ) )
 	);
 
-	// gestione indirizzi archivio
+	// gestione indirizzi
 	$p['indirizzi.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
 		'h1'		=> array( $l		=> 'gestione' ),
-		'parent'		=> array( 'id'		=> 'indirrizzi.view' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
