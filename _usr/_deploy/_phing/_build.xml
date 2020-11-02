@@ -123,22 +123,6 @@
 
     </target>
 
-    <!-- distribuzione via rsync in locale -->
-    <target name="dist.rsync.local">
-
-        <!-- abilito la pagina 503 -->
-        <mkdir dir="${dst.dir}/tmp" />
-        <touch file="${dst.dir}/tmp/.upgrade" />
-
-        <!-- sincronizzo le cartelle -->
-        <echo msg="rsync ${src.dir} -> ${dst.dir}" />
-        <filesync sourcedir="${src.dir}/" destinationdir="${dst.dir}/" exclude="tmp,var,usr,.git,.gitignore,robots.txt,sitemap.xml,sitemap.csv,googlemerchant.xml,googlereviews.xml" delete="true" verbose="false" />
-
-        <!-- disabilito la pagina 503 -->
-        <delete file="${dst.dir}/tmp/.upgrade" />
-
-    </target>
-
     <!-- avanzamento di versione -->
     <target name="version.increment">
 
@@ -184,6 +168,22 @@
         </if>
     </target>
 
+    <!-- distribuzione via rsync in locale -->
+    <target name="dist.rsync.local">
+
+        <!-- abilito la pagina 503 -->
+        <mkdir dir="${dst.dir}/tmp" />
+        <touch file="${dst.dir}/tmp/.upgrade" />
+
+        <!-- sincronizzo le cartelle -->
+        <echo msg="rsync ${src.dir} -> ${dst.dir}" />
+        <filesync sourcedir="${src.dir}/" destinationdir="${dst.dir}/" exclude="tmp,var,usr,.git,.gitignore,robots.txt,sitemap.xml,sitemap.csv,googlemerchant.xml,googlereviews.xml" delete="true" verbose="false" />
+
+        <!-- disabilito la pagina 503 -->
+        <delete file="${dst.dir}/tmp/.upgrade" />
+
+    </target>
+
     <!-- distribuzione interattiva (chiede il tipo di release -->
     <target name="dist.interactive">
 
@@ -193,6 +193,34 @@
 
         <!-- richiedo il tipo di deploy -->
         <propertyprompt propertyName="prj.inc" defaultValue="" promptText="tipo di distribuzione (Major|Minor|Bugfix)" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
+
+    </target>
+
+    <!-- distribuzione major -->
+    <target name="dist.major">
+
+        <!-- forzo il tipo di avanzamento a Major -->
+        <property name="prj.inc" value="Major" override="true" />
+
+        <!-- messaggi -->
+        <echo msg="impostato avanzamento: ${prj.inc}" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
+
+    </target>
+
+    <!-- distribuzione minor -->
+    <target name="dist.minor">
+
+        <!-- forzo il tipo di avanzamento a Minor -->
+        <property name="prj.inc" value="Minor" override="true" />
+
+        <!-- messaggi -->
+        <echo msg="impostato avanzamento: ${prj.inc}" />
 
         <!-- passo all'esecuzione del deploy -->
         <phingcall target="dist.exec" />
