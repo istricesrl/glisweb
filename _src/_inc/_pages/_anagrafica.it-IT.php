@@ -261,5 +261,32 @@
 		'etc'		=> array( 'tabs'	=> $p['categorie.anagrafica.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
+   
+	// vista indirizzi
+	$p['indirizzi.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'indirizzi' ),
+		'h1'		=> array( $l		=> 'indirizzi' ),
+		'parent'		=> array( 'id'		=> 'anagrafica.archivio.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_indirizzi.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'indirizzi.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'indirizzi' ),
+									'priority'	=> '130' ) )
+	);
+
+	// gestione indirizzi 
+	$p['indirizzi.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'anagrafica.archivio.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array( 'indirizzi.form'	) ),
+		
+	);
 
 ?>
