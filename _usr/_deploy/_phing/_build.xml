@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="DEPLOY" default="default">
+<project name="DEPLOY" default="dist.interactive">
     
     <!-- inclusione file proprietà -->
     <property file="../../../usr/deploy/phing/build.properties" />
@@ -7,6 +7,15 @@
     <!-- proprietà derivate -->
     <property name="dst.dir" value="${dst.fld}/${dst.stg}" />
     <property name="src.dir" value="${src.fld}/${src.stg}" />
+
+    <!-- proprietà generate -->
+    <tstamp>
+        <format property="bak.ext" pattern="%Y%m%d%H%M%S" locale="it,IT" />
+    </tstamp>
+
+    <!-- comandi -->
+    <property name="cmd.bak" value="tar -cvzf /var/backups/${prj.nme}.${bak.ext}.tar.gz ${dst.dir}" />
+    <property name="cmd.cps" value="cd ${dst.dir} &amp;&amp; composer update --quiet" />
 
     <!-- fileset del progetto -->
     <fileset dir="${src.stg}" id="files.project" expandsymboliclinks="true">
@@ -21,6 +30,8 @@
         <include name="composer.json" />
 
         <!-- file esclusi -->
+        <exclude name=".git/**/*" />
+        <exclude name=".github/**/*" />
         <exclude name="robots.txt" />
         <exclude name="build.properties" />
 
@@ -88,6 +99,18 @@
         </if>
     </target>
 
+    <!-- backup per distribuzione locale -->
+    <target name="backup.local">
+
+        <!-- messaggi -->
+        <echo msg="backup della destinazione..." />
+        <echo msg="${cmd.bak}" />
+
+        <!-- esecuzione del backup -->
+        <exec command="${cmd.bak}" />
+
+    </target>
+
     <!-- notifica via Slack -->
     <target name="notify.slack">
 
@@ -110,16 +133,59 @@
 
             </else>
         </if>
+    
     </target>
 
-    <!-- target di default -->
-    <target name="default">
+    <!-- notifica via mail -->
+    <target name="notify.email">
 
         <!-- messaggi -->
-        <echo msg="avvio operazioni con procedura standard..." />
+        <echo msg="invio la notifica via mail..." />
 
-        <!-- passo alla richiesta interattiva della tipologia di deploy -->
-        <phingcall target="dist.interactive" />
+        <!-- se il destinatario è configurato -->
+        <if>
+            <equals arg1="${eml.adr}" arg2="" />
+            <then>
+
+                <!-- messaggi -->
+                <echo msg="destinatario mail non configurato" />
+
+            </then>
+            <else>
+
+                <!-- messaggi -->
+                <echo msg="invio mail di notifica a ${eml.adr}" />
+
+                <mail tolist="${eml.adr},produzione@istricesrl.it" subject="deploy in ${dst.stg}" from="produzione@istricesrl.it">
+                    <![CDATA[
+                    Gentile ${eml.nme},
+                    siamo lieti di informarla che il suo progetto "${prj.nme}" è stato correttamente
+                    aggiornato in ${dst.stg} a partire dalla versione di ${src.stg} da voi approvata
+                    all'indirizzo ${src.url}.
+
+                    La versione corrente del progetto è la ${rev.num}.
+
+                    La licenza per questo deploy è ${prj.key};
+                    questo codice vi dà diritto agli aggiornamenti automatici e al supporto in uso
+                    e sviluppo relativo al framework GlisWeb.
+
+                    Può vedere il progetto online all'indirizzo ${dst.url}
+
+                    La preghiamo di esaminare attentamente le modifiche e di segnalarci qualsiasi
+                    anomalia dovesse eventualmente riscontrare, che provvederemo senz'altro a
+                    gestire con la massima tempestività.
+
+                    L'occasione ci è gradita per porgerle i nostri più cordiali saluti,
+
+                    Istrice srl
+                    via F. De Giovanni 25
+                    40129 Bologna BO
+                    produzione@istricesrl.it
+                    051.374789]]>
+                </mail>
+
+            </else>
+        </if>
 
     </target>
 
@@ -169,7 +235,7 @@
     </target>
 
     <!-- distribuzione via rsync in locale -->
-    <target name="dist.rsync.local">
+    <target name="dist.rsync.local" depends="backup.local">
 
         <!-- abilito la pagina 503 -->
         <mkdir dir="${dst.dir}/tmp" />
@@ -177,7 +243,11 @@
 
         <!-- sincronizzo le cartelle -->
         <echo msg="rsync ${src.dir} -> ${dst.dir}" />
-        <filesync sourcedir="${src.dir}/" destinationdir="${dst.dir}/" exclude="tmp,var,usr,.git,.gitignore,robots.txt,sitemap.xml,sitemap.csv,googlemerchant.xml,googlereviews.xml" delete="true" verbose="false" />
+        <filesync sourcedir="${src.dir}/" destinationdir="${dst.dir}/" exclude="tmp,var,usr,.git,.github,.gitignore,robots.txt,sitemap.xml,sitemap.csv,googlemerchant.xml,googlereviews.xml" delete="true" verbose="false" />
+
+        <!-- aggiorno composer -->
+        <echo msg="aggiorno composer in ${dst.dir}" />
+        <exec command="${cmd.cps}" />
 
         <!-- disabilito la pagina 503 -->
         <delete file="${dst.dir}/tmp/.upgrade" />
@@ -247,7 +317,7 @@
         <!-- messaggi -->
         <echo msg="progetto: ${prj.nme}" />
         <echo msg="distribuzione da ${src.stg} a ${dst.stg}..." />
-        <echo msg="licenza: ${lcs.key}" />
+        <echo msg="licenza: ${prj.key}" />
         <echo msg="tipo di release: ${prj.inc}" />
         <echo msg="versione: ${rev.num}" />
 
@@ -284,6 +354,9 @@
 
                 <!-- notifica su Slack -->
                 <phingcall target="notify.slack" />
+
+                <!-- notifica via mail -->
+                <phingcall target="notify.email" />
 
             </else>
         </if>
