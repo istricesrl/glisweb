@@ -18,7 +18,7 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    '__label__' => 'account',
+	    '__label__' => 'indirizzo',
 	  
 	);
 
@@ -31,10 +31,5 @@
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
-
-    // trasformazione icona attivo/inattivo
-	foreach( $ct['view']['data'] as &$row ) {
-	    if( $row['se_attivo'] == 1 ) { $row['se_attivo'] = '<i class="fa fa-check"></i>'; }
-	}
 
 ?>
