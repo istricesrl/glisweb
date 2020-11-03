@@ -38,9 +38,9 @@
 	    'account_gruppi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
-#	    'account_gruppi_attribuzione' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'account_gruppi_attribuzione' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'anagrafica' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
@@ -74,12 +74,12 @@
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )
 #	    ),
-#	    'categorie_anagrafica' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
-#	    'comuni' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'categorie_anagrafica' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
+	    'comuni' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'contenuti' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -96,13 +96,13 @@
 	    'gruppi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
-#	    'immagini' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
-#	    'immagini_anagrafica' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'immagini' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
+	    'immagini_anagrafica' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'indirizzi' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
