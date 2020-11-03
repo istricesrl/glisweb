@@ -65,6 +65,7 @@
 //									'anagrafica.form.promemoria',
 									'anagrafica.form.immagini',
 									'anagrafica.form.video',
+									'anagrafica.form.audio',
 									'anagrafica.form.file',
 									'anagrafica.form.metadati',
 									'anagrafica.form.archiviazione',
@@ -168,6 +169,19 @@
 		'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.video.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.video.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica audio
+	$p['anagrafica.form.audio'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'audio' ),
+		'h1'		=> array( $l		=> 'audio' ),
+		'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.audio.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.audio.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
