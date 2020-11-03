@@ -14,7 +14,7 @@
     </tstamp>
 
     <!-- proprietà di base -->
-    <property name="rsc.xcd" value="tmp,var,usr,.git,.github" />
+    <property name="rsc.xcd" value="etc/sitemap,tmp,var,usr,.git,.github" />
     <property name="rsc.xcf" value=".gitignore,robots.txt,sitemap.xml,sitemap.csv,build.properties" />
     <property name="rsc.xcl" value="${rsc.xcd},${rsc.xcf}" />
 
@@ -47,6 +47,7 @@
         <include name="mod/**/*" />
         <include name="src/**/*" />
         <include name="usr/**/*" />
+        <include name="*.md" />
         <include name=".htaccess" />
         <include name="composer.json" />
 
@@ -182,8 +183,13 @@
             </then>
             <else>
 
+                <!-- compongo il messaggio -->
+                <property name="slack.01" value="rilasciato aggiornamento *${rev.num}* in *${dst.stg}*, vi preghiamo di prenderne visione su: " />
+                <property name="slack.02" value="${dst.url}" />
+                <property name="slack.03" value="vi preghiamo di prendere visione" />
+
                 <!-- invio il messaggio-->
-                <exec command="va.slack.msg.sh ${slack.sa} ${slack.sb} ${slack.sc} 'rilasciato aggiornamento ${rev.num} in ${dst.stg} su ${dst.url}, vi preghiamo di prendere visione'" />
+                <exec command="va.slack.msg.sh ${slack.sa} ${slack.sb} ${slack.sc} '${slack.01}\n${slack.02}'" />
 
             </else>
         </if>
@@ -207,27 +213,39 @@
             </then>
             <else>
 
+                <!-- messaggio per il codice di licenza -->
+                <if>
+                    <equals arg1="${prj.key}" arg2="" />
+                    <then>
+                        <property name="key.msg" value="ATTENZIONE! questo deploy non è coperto da licenza." />
+                    </then>
+                    <else>
+                        <property name="key.msg" value="La licenza per questo deploy è ${prj.key}." />
+                    </else>
+                </if>
+
                 <!-- messaggi -->
                 <echo msg="invio mail di notifica a ${eml.adr}" />
 
                 <mail tolist="${eml.adr},produzione@istricesrl.it" subject="deploy in ${dst.stg}" from="produzione@istricesrl.it">
                     <![CDATA[
+
                     Gentile ${eml.nme},
                     siamo lieti di informarla che il suo progetto "${prj.nme}" è stato correttamente
                     aggiornato in ${dst.stg} a partire dalla versione di ${src.stg} da voi approvata
-                    all'indirizzo ${src.url}.
+                    all'indirizzo:
 
-                    La versione corrente del progetto è la ${rev.num}.
+                    ${src.url}
 
-                    La licenza per questo deploy è ${prj.key};
-                    questo codice vi dà diritto agli aggiornamenti automatici e al supporto in uso
-                    e sviluppo relativo al framework GlisWeb.
+                    Può vedere la versione corrente del progetto ${rev.num} all'indirizzo:
 
-                    Può vedere il progetto online all'indirizzo ${dst.url}
+                    ${dst.url}
 
                     La preghiamo di esaminare attentamente le modifiche e di segnalarci qualsiasi
                     anomalia dovesse eventualmente riscontrare, che provvederemo senz'altro a
                     gestire con la massima tempestività.
+
+                    ${key.msg}
 
                     L'occasione ci è gradita per porgerle i nostri più cordiali saluti,
 
@@ -235,7 +253,9 @@
                     via F. De Giovanni 25
                     40129 Bologna BO
                     produzione@istricesrl.it
-                    051.374789]]>
+                    051.374789
+                    
+                    ]]>
                 </mail>
 
             </else>
@@ -315,7 +335,6 @@
     </target>
 
     <!-- distribuzione via scp -->
-    <!-- TODO TESTARE -->
     <target name="dist.scp">
 
         <!-- abilito la pagina 503 -->
@@ -339,7 +358,6 @@
     </target>
 
     <!-- distribuzione via rsync in remoto -->
-    <!-- TODO TESTARE -->
     <target name="dist.rsync.remote">
 
         <!-- abilito la pagina 503 -->
@@ -480,12 +498,18 @@
                     <!-- messaggi -->
                     <echo msg="deploy remoto via scp" />
 
+                <!-- esecuzione del deploy tramite scp -->
+                <phingcall target="dist.scp" />
+
                 </then>
             </elseif>
             <else>
 
                 <!-- messaggi -->
                 <echo msg="deploy remoto via rsync" />
+
+                <!-- esecuzione del deploy tramite rsync -->
+                <phingcall target="dist.rsync.remote" />
 
             </else>
         </if>
