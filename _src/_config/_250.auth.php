@@ -154,7 +154,7 @@
 #	    ),
 	    'test' => array(
 		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    ),
 #	    'tipologie_anagrafica' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -164,9 +164,10 @@
 #	    'tipologie_crm' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'video' => array(
-#		CONTROL_FULL => array( 'roots' )
-	    )
+	    'video' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		)
 	);
 
 ?>
