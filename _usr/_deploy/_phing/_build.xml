@@ -13,12 +13,25 @@
         <format property="bak.ext" pattern="%Y%m%d%H%M%S" locale="it,IT" />
     </tstamp>
 
+    <!-- proprietà di base -->
+    <property name="rsc.xcd" value="tmp,var,usr,.git,.github" />
+    <property name="rsc.xcf" value=".gitignore,robots.txt,sitemap.xml,sitemap.csv,build.properties" />
+    <property name="rsc.xcl" value="${rsc.xcd},${rsc.xcf}" />
+
     <!-- comandi -->
+    <property name="cmd.amp" value="&amp;&amp;" />
     <property name="cmd.bak" value="tar -cvzf /var/backups/${prj.nme}.${bak.ext}.tar.gz ${dst.dir}" />
-    <property name="cmd.cps" value="cd ${dst.dir} &amp;&amp; composer update --quiet" />
+    <property name="cmd.cds" value="cd ${src.dir}" />
+    <property name="cmd.cdd" value="cd ${dst.dir}" />
+    <property name="cmd.cps" value="composer update --quiet" />
+    <property name="cmd.503" value="mkdir -p ./tmp ${cmd.amp} touch ./tmp/.upgrade" />
+    <property name="cmd.200" value="rm -f ./tmp/.upgrade" />
+    <property name="cmd.F53" value="echo upgrade | ncftpput -u ${ftp.usr} -p ${ftp.psw} -m -c ${ftp.hst} ${ftp.dir}tmp/.upgrade" />
+    <property name="cmd.F20" value="ncftpget -u ${ftp.usr} -p ${ftp.psw} -DD -c ${ftp.hst} ${ftp.dir}tmp/.upgrade > /dev/null" />
+    <property name="cmd.FX1" value="echo | ncftpput -u ${ftp.usr} -p ${ftp.psw} -m -c ${ftp.hst} ${ftp.dir}src/bugfix.json" />
 
     <!-- fileset del progetto -->
-    <fileset dir="${src.stg}" id="files.project" expandsymboliclinks="true">
+    <fileset dir="${src.dir}" id="files.project" expandsymboliclinks="true">
 
         <!-- file inclusi -->
         <include name="_**/*" />
@@ -32,8 +45,8 @@
         <!-- file esclusi -->
         <exclude name=".git/**/*" />
         <exclude name=".github/**/*" />
+        <exclude name="usr/deploy/phing/build.properties" />
         <exclude name="robots.txt" />
-        <exclude name="build.properties" />
 
     </fileset>
 
@@ -73,7 +86,7 @@
 
                                 <!-- effettuo il commit delle eventuali modifiche in sospeso -->
                                 <echo msg="git commit..." />
-                                <exec command="cd ${src.dir}/ &amp;&amp; git add . &amp;&amp; git commit -m 'distribuzione della versione ${version}'" />
+                                <exec command="cd ${src.dir}/ &amp;&amp; git add . &amp;&amp; git commit -m 'distribuzione della versione ${rev.num}'" />
 
                                 <!-- applico il tag di versione -->
                                 <echo msg="git tag..." />
@@ -129,7 +142,7 @@
             <else>
 
                 <!-- invio il messaggio-->
-                <exec command="va.slack.msg.sh ${slack.sa} ${slack.sb} ${slack.sc} 'abbiamo rilasciato un aggiornamento in ${dst.stg} su ${dst.url}, vi preghiamo di prendere visione'" />
+                <exec command="va.slack.msg.sh ${slack.sa} ${slack.sb} ${slack.sc} 'rilasciato aggiornamento ${rev.num} in ${dst.stg} su ${dst.url}, vi preghiamo di prendere visione'" />
 
             </else>
         </if>
@@ -234,22 +247,96 @@
         </if>
     </target>
 
+    <!-- distribuzione via FTP -->
+    <target name="dist.ftp">
+
+        <!-- bugfix per "impossibile creare la cartella src/ -->
+        <exec command="${cmd.FX1}" />
+
+        <!-- abilito la pagina 503 -->
+        <echo msg="abilito la pagina di cortesia..." />
+        <exec command="${cmd.F53}" />
+
+        <!-- aggiorno composer nella cartella sorgente -->
+        <echo msg="aggiorno composer in ${src.dir}" />
+        <exec command="${cmd.cds} ${cmd.amp} ${cmd.cps}" />
+
+        <!-- carico i file via FTP -->
+        <echo msg="FTP ${src.dir} -> ${ftp.usr}@${dst.hst}:${ftp.dir}" />
+        <ftpdeploy host="${dst.hst}" port="21" username="${ftp.usr}" password="${ftp.psw}" dir="${ftp.dir}" passive="true" level="debug" depends="true" rawdatafallback="true">
+            <fileset refid="files.project" />
+        </ftpdeploy>
+
+        <!-- disabilito la pagina 503 -->
+        <echo msg="disabilito la pagina di cortesia..." />
+        <exec command="${cmd.F20}" />
+
+    </target>
+
+    <!-- distribuzione via scp -->
+    <!-- TODO TESTARE -->
+    <target name="dist.scp">
+
+        <!-- abilito la pagina 503 -->
+        <echo msg="abilito la pagina di cortesia..." />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.503}" />
+
+        <!-- copia remota -->
+        <echo msg="scp ${src.dir} -> ${key.usr}@${dst.hst}:${dst.dir}" />
+        <scp username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" todir="${dst.dir}">
+            <fileset refid="files.project" />
+        </scp>
+
+        <!-- aggiorno composer -->
+        <echo msg="aggiorno composer in ${dst.dir}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.cps}" />
+
+        <!-- disabilito la pagina 503 -->
+        <echo msg="disabilito la pagina di cortesia..." />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.200}" />
+
+    </target>
+
+    <!-- distribuzione via rsync in remoto -->
+    <!-- TODO TESTARE -->
+    <target name="dist.rsync.remote">
+
+        <!-- abilito la pagina 503 -->
+        <echo msg="abilito la pagina di cortesia..." />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.503}" />
+
+        <!-- sincronizzo le cartelle -->
+        <echo msg="rsync ${src.dir} -> ${key.usr}@${dst.hst}:${dst.dir}" />
+        <filesync sourcedir="${src.dir}/" destinationdir="${key.usr}@${dst.hst}:${dst.dir}/" exclude="${rsc.xcl}" delete="true" verbose="false" />
+
+        <!-- aggiorno composer -->
+        <echo msg="aggiorno composer in ${dst.dir}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.cps}" />
+
+        <!-- disabilito la pagina 503 -->
+        <echo msg="disabilito la pagina di cortesia..." />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.200}" />
+
+    </target>
+
     <!-- distribuzione via rsync in locale -->
     <target name="dist.rsync.local" depends="backup.local">
 
         <!-- abilito la pagina 503 -->
+        <echo msg="abilito la pagina di cortesia..." />
         <mkdir dir="${dst.dir}/tmp" />
         <touch file="${dst.dir}/tmp/.upgrade" />
 
         <!-- sincronizzo le cartelle -->
         <echo msg="rsync ${src.dir} -> ${dst.dir}" />
-        <filesync sourcedir="${src.dir}/" destinationdir="${dst.dir}/" exclude="tmp,var,usr,.git,.github,.gitignore,robots.txt,sitemap.xml,sitemap.csv,googlemerchant.xml,googlereviews.xml" delete="true" verbose="false" />
+        <filesync sourcedir="${src.dir}/" destinationdir="${dst.dir}/" exclude="${rsc.xcl}" delete="true" verbose="false" />
 
         <!-- aggiorno composer -->
         <echo msg="aggiorno composer in ${dst.dir}" />
-        <exec command="${cmd.cps}" />
+        <exec command="${cmd.cdd} ${cmd.amp} ${cmd.cps}" />
 
         <!-- disabilito la pagina 503 -->
+        <echo msg="disabilito la pagina di cortesia..." />
         <delete file="${dst.dir}/tmp/.upgrade" />
 
     </target>
@@ -333,10 +420,31 @@
                 <phingcall target="dist.rsync.local" />
 
             </then>
+            <elseif>
+                <not><equals arg1="${ftp.hst}" arg2="" /></not>
+                <then>
+
+                    <!-- messaggi -->
+                    <echo msg="deploy remoto via FTP" />
+
+                    <!-- esecuzione del deploy tramite FTP -->
+                    <phingcall target="dist.ftp" />
+
+                </then>
+            </elseif>
+            <elseif>
+                <equals arg1="${dst.cmd}" arg2="scp" />
+                <then>
+
+                    <!-- messaggi -->
+                    <echo msg="deploy remoto via scp" />
+
+                </then>
+            </elseif>
             <else>
 
                 <!-- messaggi -->
-                <echo msg="deploy remoto su: ${dst.hst}${dst.dir}" />
+                <echo msg="deploy remoto via rsync" />
 
             </else>
         </if>
