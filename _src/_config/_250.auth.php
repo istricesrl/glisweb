@@ -60,6 +60,9 @@
 #	    'anagrafica_clienti' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'anagrafica_indirizzi' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
 #	    'anagrafica_ruoli' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),

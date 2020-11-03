@@ -93,31 +93,15 @@
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
-	    <div class="col-auto">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia</span>{% endif %}
-		{{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_indirizzi, request, '', '', '', '', 'font-awesome' ) }}
-	    </div>
-	    <div class="col">
+	    <div class="col-10 col-md">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">indirizzo</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'indirizzo', 'indirizzo (parte nominale)', '', request ) }}
+		{{ frm.selectBox( table, subtable, i, 'id_indirizzo', '', etc.select.indirizzi, request, '', '', '', '', 'font-awesome' ) }}
 	    </div>
-	    <div class="col-3 col-md-1">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">civico</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'civico', 'n°', '', request ) }}
-	    </div>
-	    <div class="col-3 col-md-1">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">cap</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'cap', 'CAP', '', request ) }}
-	    </div>
-	    <div class="col-6 col-md">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">località</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'localita', 'località', '', request ) }}
-	    </div>
-	    <div class="col-6 col-md">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">comune</span>{% endif %}
-		{{ frm.selectBox( table, subtable, i, 'id_comune', 'comune', etc.select.comuni, request ) }}
-	    </div>
-	    <div class="col-12 col-md">
+	    <div class="col-2 col-md-1">
+			{% if i == 0 %}<span class="label-top remove-after-duplicate">interno</span>{% endif %}
+			{{ frm.input( table, subtable, i, 'interno', 'interno', '', request ) }}
+			</div>
+			<div class="col-12 col-md">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione e note</span>{% endif %}
 		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
 	    </div>

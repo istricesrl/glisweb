@@ -43,6 +43,9 @@
 	// inizializzazione array dati
 	    if( empty( $d ) ) { $d		= array(); }
 
+	// debug
+		// var_dump( $d );
+
 	// modifico in NULL tutti i valori vuoti
 	    $d = array_map( 'empty2null', $d );
 
@@ -507,6 +510,8 @@
 #print_r( $x );
 					foreach( $x as $ref ) {
 #print_r( $ref );
+var_dump($q);
+var_dump($d);
 					    $idx = array_column( mysqlQuery( $c, 'SHOW INDEX FROM ' . $ref['TABLE_NAME'] . ' WHERE key_name = "SORTING"' ), 'Column_name' );
 					    $q = "SELECT id FROM ".$ref['TABLE_NAME']." WHERE ".$ref['COLUMN_NAME']." = '".$d['id']."'" . ( ( count( $idx ) ) ? ' ORDER BY ' . implode( ', ', $idx ) : NULL );
 					    $rows = mysqlQuery( $c, $q );
