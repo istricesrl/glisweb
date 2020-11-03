@@ -30,8 +30,11 @@
 	    'anagrafica' => 'd-none d-md-table-cell',
 	    'interno' => 'text-left',
 	    'descrizione' => 'text-left'
-	);
-    
+    );
+
+    // preset filtro custom progetti aperti
+	$ct['view']['__restrict__']['id_indirizzo']['LK'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
