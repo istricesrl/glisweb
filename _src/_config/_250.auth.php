@@ -70,10 +70,10 @@
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )
 #	    ),
-#	    'audio' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'audio' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 	    'categorie_anagrafica' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
