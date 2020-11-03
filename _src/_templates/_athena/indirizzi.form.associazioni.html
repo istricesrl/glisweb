@@ -43,12 +43,7 @@
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
         {# MODULO PRINCIPALE #}
-       
-
-    {# BOTTONI E COMANDI DEL MODULO #}
-	<fieldset class="form-controls">
-    {{ def.controls( page, pages, ietf, session, table, request ) }}
-	</fieldset>
+        {% include 'inc/view.html' %}
 	
 	</form>
     </div>

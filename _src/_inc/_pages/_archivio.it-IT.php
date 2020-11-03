@@ -53,8 +53,8 @@
 		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.associazioni.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.associazioni.php' ),
-		'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] )
 	);
 	
 ?>
