@@ -30,6 +30,14 @@
     <property name="cmd.F20" value="ncftpget -u ${ftp.usr} -p ${ftp.psw} -DD -c ${ftp.hst} ${ftp.dir}tmp/.upgrade > /dev/null" />
     <property name="cmd.FX1" value="echo | ncftpput -u ${ftp.usr} -p ${ftp.psw} -m -c ${ftp.hst} ${ftp.dir}src/bugfix.json" />
 
+    <!-- comandi da implementare
+    <property name="cmd.cll" value="cd ${dst.dir} &amp;&amp; rm -f ./var/log/*.log &amp;&amp; rm -f ./var/log/slow/*.log" />
+    <property name="cmd.clc" value="cd ${dst.dir} &amp;&amp; rm -rf ./var/cache/" />
+    <property name="cmd.pfx" value="va.lamp.permission.fix.sh ${dst.fld}" />
+    <property name="cmd.ckf" value="cd ${dst.dir} &amp;&amp; mkdir -p ./tmp" />
+    <property name="cmd.mnf" value="cd ${dst.dir} &amp;&amp; _src/_sh/_optimize.sh" />
+    -->
+
     <!-- fileset del progetto -->
     <fileset dir="${src.dir}" id="files.project" expandsymboliclinks="true">
 
@@ -49,6 +57,39 @@
         <exclude name="robots.txt" />
 
     </fileset>
+
+    <!-- target da implementare
+    <target name="mysql.diff">
+        <echo msg="confronto gli schemi dei database..." />
+        <if>
+            <equals arg1="${dbs.nme}" arg2="" />
+            <then>
+                <echo msg="nessun database impostato" />
+            </then>
+            <else>
+                <echo msg="dump di ${dbs.nme}..." />
+                <exec command="va.mysql.db.export.schema.sh ${dbs.nme} ${dbs.hst} ${dbs.usr} ${dbs.psv} /var/www/${dst.fld}/" />
+                <echo msg="dump di ${dbd.nme}..." />
+                <exec command="va.mysql.db.export.schema.sh ${dbd.nme} ${dbd.hst} ${dbd.usr} ${dbd.psv} /var/www/${dst.fld}/" />
+                <echo msg="esecuzione del diff..." />
+                <exec command="diff -r -u /var/www/${src.fld}/${dbs.nme}.sql /var/www/${src.fld}/${dbd.nme}.sql > dbdiff.log" />
+                <filesize file="/var/www/${src.fld}/dbdiff.log" propertyname="dff.sze" />
+                <if>
+                    <equals arg1="${dff.sze}" arg2="0" />
+                    <then>
+                        <exec command="rm -f /var/www/${src.fld}/*.sql" />
+                        <exec command="rm -f /var/www/${src.fld}/*.log" />
+                        <echo msg="nessuna differenza fra gli schemi rilevata" />
+                    </then>
+                    <else>
+                        <exec command="rm -f /var/www/${src.fld}/*.sql" />
+                        <fail message="ATTENZIONE! rilevate differenze fra gli schemi, procedura interrotta" />
+                    </else>
+                </if>
+            </else>
+        </if>
+    </target>
+    -->
 
     <!-- git commit & push -->
     <target name="git.push">
