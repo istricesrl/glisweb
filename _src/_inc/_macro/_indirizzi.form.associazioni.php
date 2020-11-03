@@ -15,19 +15,24 @@
     // tabella della vista
     $ct['view']['table'] = 'anagrafica_indirizzi';
     
-     // pagina per la gestione degli oggetti esistenti
-    $ct['view']['open']['page'] = 'indirizzi.form';
+    // pagina per la gestione degli oggetti esistenti
+    $ct['view']['open']['page'] = 'anagrafica.form';
+    $ct['view']['open']['table'] = 'anagrafica';
+    $ct['view']['open']['field'] = 'id_anagrafica';
 
      // campi della vista
 	$ct['view']['cols'] = array(
-	    'anagrafica' => 'anagrafica',
+        'id' => '#',
+        'anagrafica' => 'anagrafica',
+        'id_anagrafica' => 'ID anagrafica',
 	    'interno' => 'interno',
 	    'descrizione' => 'descrizione'
     );
     
     // stili della vista
 	$ct['view']['class'] = array(
-	    'anagrafica' => 'd-none d-md-table-cell',
+        'anagrafica' => 'text-left',
+        'id_anagrafica' => 'd-none',
 	    'interno' => 'text-left',
 	    'descrizione' => 'text-left'
     );

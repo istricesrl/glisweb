@@ -48,8 +48,8 @@
 	// gestione associazione indirizzi
 	$p['indirizzi.form.associazioni'] = array(
 		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'associazione' ),
-		'h1'		=> array( $l		=> 'associazione' ),
+		'title'		=> array( $l		=> 'associazioni' ),
+		'h1'		=> array( $l		=> 'associazioni' ),
 		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.associazioni.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.associazioni.php' ),
