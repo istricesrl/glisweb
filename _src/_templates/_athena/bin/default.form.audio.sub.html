@@ -16,32 +16,32 @@
         {{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden' ) }}
 	    <div class="form-group form-row">
             <div class="col-2 col-md-1">
-                {% if i == 0 %}<span class="label-top">ordine</span>{% endif %}
+                {% if i == 0 %}<span class="label-top remove-after-duplicate">ordine</span>{% endif %}
                 {{ frm.input( table, subtable, i, 'ordine', '#', '', request ) }}
             </div>
             <div class="col-4">
-                {% if i == 0 %}<span class="label-top">etichetta</span>{% endif %}
+                {% if i == 0 %}<span class="label-top remove-after-duplicate">etichetta</span>{% endif %}
                 {{ frm.input( table, subtable, i, 'nome', 'etichetta', '', request ) }}
             </div>
             <div class="col-4 col-md">
-                {% if i == 0 %}<span class="label-top">ruolo</span>{% endif %}
+                {% if i == 0 %}<span class="label-top remove-after-duplicate">ruolo</span>{% endif %}
                 {{ frm.selectRequired( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_audio, request ) }}
             </div>
             <div class="col-4 col-md">
-                {% if i == 0 %}<span class="label-top">tipologia embed</span>{% endif %}
+                {% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia embed</span>{% endif %}
                 {{ frm.selectRequired( table, subtable, i, 'id_tipologia_embed', '', etc.select.tipologie_embed, request ) }}
             </div>
             <div class="col-4">
-                {% if i == 0 %}<span class="label-top">codice embed</span>{% endif %}
+                {% if i == 0 %}<span class="label-top remove-after-duplicate">codice embed</span>{% endif %}
                 {{ frm.input( table, subtable, i, 'codice_embed', 'codice embed', '', request ) }}
             </div>
             <div class="col-4 col-md">
-                {% if i == 0 %}<span class="label-top">caricamento</span>{% endif %}
+                {% if i == 0 %}<span class="label-top remove-after-duplicate">caricamento</span>{% endif %}
                 {{ frm.uploader( table, subtable, i, 'path', 'file', '', request, 'var/contenuti/', site, 'anagrafica.form.audio', pages, lang, '', '', 1 ) }}
             </div>
             {% if r.id %}
             <div class="col-auto text-right remove-on-duplicate d-print-none">
-            {% if i == 0 %}<div class="label-top">&nbsp;</div>{% endif %}
+            {% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
             {{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
             </div>
             {% endif %}
