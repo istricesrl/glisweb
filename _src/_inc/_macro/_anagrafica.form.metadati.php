@@ -29,7 +29,10 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM lingue_view  WHERE se_anagrafica = 1'
 	);
-
+    
+    // macro di default per l'entità pagine
+    require DIR_SRC_INC_MACRO . '_default.form.multilingua.php';
+    
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
