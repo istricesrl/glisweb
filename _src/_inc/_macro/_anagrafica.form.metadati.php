@@ -22,9 +22,9 @@
     // tabella gestita
     $ct['form']['table'] = 'anagrafica';
 
-    // macro di default per l'entità pagine
-    require DIR_SRC_INC_MACRO . '_default.form.multilingua.php';
-    
+    // tendina lingue
+    $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
+
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
