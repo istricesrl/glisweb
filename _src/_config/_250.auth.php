@@ -73,10 +73,10 @@
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )
 #	    ),
-#	    'audio' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'audio' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 	    'categorie_anagrafica' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
@@ -92,10 +92,10 @@
 #	    'date' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'file' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'file' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 	    'gruppi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
@@ -127,9 +127,9 @@
 #	    'mail_sent' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'metadati' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'metadati' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'prezzi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -157,7 +157,7 @@
 #	    ),
 	    'test' => array(
 		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    ),
 #	    'tipologie_anagrafica' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -167,9 +167,9 @@
 #	    'tipologie_crm' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'video' => array(
-#		CONTROL_FULL => array( 'roots' )
-	    )
+	    'video' => array(
+			CONTROL_FULL => array( 'roots' )
+		)
 	);
 
 ?>

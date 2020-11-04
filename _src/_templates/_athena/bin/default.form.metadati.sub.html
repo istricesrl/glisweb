@@ -1,0 +1,40 @@
+{% macro metadati( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable }}">
+    {{ frm.subformLegend( subtable, legend ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = 0 %}{% endif %}
+    {% for i in 0..t %}
+    {% set r = request[ table ][ subtable ][ i ] %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if r.id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
+    <div id="{{ subtable }}_{{ i }}">
+        {{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+        {{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden' ) }}
+	    <div class="form-group form-row">
+            <div class="col-4 col-md-1">
+                {% if i == 0 %}<span class="label-top remove-after-duplicate">chiave</span>{% endif %}
+                {{ frm.input( table, subtable, i, 'nome', 'chiave', '', request ) }}
+            </div>
+            <div class="col-12 col-md-auto">
+                {% if i == 0 %}<span class="label-top remove-after-duplicate">lingua</span>{% endif %}
+                {{ frm.select( table, subtable, i, 'id', '', etc.select.lingue, request ) }}
+            </div>  
+            <div class="col-10 col-md">
+                {% if i == 0 %}<span class="label-top remove-after-duplicate">valore</span>{% endif %}
+                {{ frm.input( table, subtable, i, 'testo', 'valore', '', request ) }}
+            </div>
+            {% if r.id %}
+            <div class="col-auto text-right remove-on-duplicate d-print-none">
+            {% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+            {{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+            </div>
+            {% endif %}
+    	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}

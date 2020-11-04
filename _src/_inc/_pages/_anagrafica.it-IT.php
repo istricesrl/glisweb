@@ -64,6 +64,10 @@
 //									'anagrafica.form.attivita',
 //									'anagrafica.form.promemoria',
 									'anagrafica.form.immagini',
+									'anagrafica.form.video',
+									'anagrafica.form.audio',
+									'anagrafica.form.file',
+									'anagrafica.form.metadati',
 									'anagrafica.form.archiviazione',
 									'anagrafica.form.stampe' ) )
 	);
@@ -104,6 +108,19 @@
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 
+	// gestione anagrafica metadati
+	$p['anagrafica.form.metadati'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'metadati' ),
+	    'h1'		=> array( $l		=> 'metadati' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.metadati.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.metadati.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
 	// gestione anagrafica archiviazione
 	$p['anagrafica.form.archiviazione'] = array(
 	    'sitemap'		=> false,
@@ -128,6 +145,45 @@
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.stampe.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica file
+	$p['anagrafica.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.file.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica video
+	$p['anagrafica.form.video'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'video' ),
+		'h1'		=> array( $l		=> 'video' ),
+		'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.video.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.video.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica audio
+	$p['anagrafica.form.audio'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'audio' ),
+		'h1'		=> array( $l		=> 'audio' ),
+		'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.audio.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.audio.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 
 	// gestione anagrafica immagini
