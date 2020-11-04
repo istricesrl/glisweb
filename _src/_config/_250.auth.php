@@ -89,10 +89,10 @@
 #	    'date' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'file' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'file' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 	    'gruppi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
@@ -165,8 +165,7 @@
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
 	    'video' => array(
-			CONTROL_FULL => array( 'roots' ),
-			CONTROL_FILTERED => array( 'staff' )
+			CONTROL_FULL => array( 'roots' )
 		)
 	);
 
