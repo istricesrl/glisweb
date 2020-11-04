@@ -27,7 +27,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM lingue_view '
+	    'SELECT id, __label__ FROM lingue_view  WHERE se_anagrafica = 1'
 	);
 
     // macro di default per l'entità anagrafica

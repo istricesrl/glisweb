@@ -27,7 +27,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_video_view'
+	    'SELECT id, __label__ FROM ruoli_video_view  WHERE se_anagrafica = 1'
     );
     
     // tendina tipologia embed
@@ -35,7 +35,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_embed_view'
+	    'SELECT id, __label__ FROM tipologie_embed_view  WHERE se_video = 1'
 	);
 
 

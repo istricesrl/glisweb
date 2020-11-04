@@ -27,7 +27,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_audio_view'
+	    'SELECT id, __label__ FROM ruoli_audio_view  WHERE se_anagrafica = 1'
     );
     
     // tendina tipologia embed
@@ -35,8 +35,8 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_embed_view'
-	);
+	    'SELECT id, __label__ FROM tipologie_embed_view  WHERE se_audio = 1'
+	); 
 
 
     // macro di default per l'entità anagrafica
