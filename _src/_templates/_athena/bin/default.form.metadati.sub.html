@@ -21,7 +21,7 @@
             </div>
             <div class="col-12 col-md-auto">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">lingua</span>{% endif %}
-                {{ frm.selectRequired( table, subtable, i, 'id', '', etc.select.lingue, request ) }}
+                {{ frm.select( table, subtable, i, 'id', '', etc.select.lingue, request ) }}
             </div>  
             <div class="col-10 col-md">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">valore</span>{% endif %}
