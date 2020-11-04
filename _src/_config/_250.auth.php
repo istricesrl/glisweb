@@ -124,9 +124,9 @@
 #	    'mail_sent' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'metadati' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'metadati' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'prezzi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
