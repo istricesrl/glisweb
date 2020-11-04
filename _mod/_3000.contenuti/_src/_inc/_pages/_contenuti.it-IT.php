@@ -49,12 +49,12 @@
 													'pagine.form.testo',
 //													'pagine.form.contenuti',
 													'pagine.form.immagini',
-//													'pagine.form.video',
-//													'pagine.form.audio',
-//													'pagine.form.file',
+													'pagine.form.video',
+													'pagine.form.audio',
+													'pagine.form.file',
 //													'pagine.form.menu',
 //													'pagine.form.macro',
-//													'pagine.form.metadati',
+													'pagine.form.metadati',
 													'pagine.form.tools'
 												) )
 	);
@@ -67,6 +67,18 @@
 	    'parent'		=> array( 'id'		=> 'pagine.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.sem.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.sem.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+
+	// gestione pagine testo
+	$p['pagine.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.testo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.testo.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
@@ -84,18 +96,57 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
-	// gestione pagine testo
-	$p['pagine.form.testo'] = array(
+	// gestione pagine video
+	$p['pagine.form.video'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'video' ),
+		'h1'		=> array( $l		=> 'video' ),
+		'parent'		=> array( 'id'		=> 'pagine.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.video.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_pagine.form.video.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+	
+	// gestione pagina file
+	$p['pagine.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'pagine.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.file.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_pagine.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+
+	// gestione pagine audio
+	$p['pagine.form.audio'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'audio' ),
+		'h1'		=> array( $l		=> 'audio' ),
+		'parent'		=> array( 'id'		=> 'pagine.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.audio.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_pagine.form.audio.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+
+	// gestione pagine metadati
+	$p['pagine.form.metadati'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'testo' ),
-	    'h1'		=> array( $l		=> 'testo' ),
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'metadati' ),
+	    'h1'		=> array( $l		=> 'metadati' ),
 	    'parent'		=> array( 'id'		=> 'pagine.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.testo.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.testo.php' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.metadati.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_pagine.form.metadati.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
-
 	
 /*
     // azioni sulle pagine

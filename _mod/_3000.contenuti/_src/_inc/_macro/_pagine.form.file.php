@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form anagrafica
+     * macro form pagine
      *
      *
      *
@@ -23,20 +23,21 @@
 	$ct['form']['table'] = 'pagine';
 
     // sotto tabella gestita
-	$ct['form']['subtable'] = 'immagini';
+	$ct['form']['subtable'] = 'file';
 
     // tendina ruolo immagini
-	$ct['etc']['select']['ruoli_immagini'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['ruoli_file'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_immagini_view WHERE se_contenuti = 1'
+	    'SELECT id, __label__ FROM ruoli_file_view '
+         // WHERE se_anagrafica = 1'---> se_pagine = 1 ??
 	);
 
-	// macro di default per l'entità pagine
-//	require DIR_MOD . '_3000.contenuti/_src/_inc/_macro/_pagine.form.default.php';
+    // macro di default per l'entità pagine
+//   require DIR_SRC_INC_MACRO . '_pagine.form.default.php';
 
-	// macro di default
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
 ?>
