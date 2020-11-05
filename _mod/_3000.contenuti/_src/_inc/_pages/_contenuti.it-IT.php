@@ -96,7 +96,7 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
-	// gestione pagine video
+	// gestione pagine immagini
 	$p['pagine.form.video'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
@@ -104,7 +104,7 @@
 		'h1'		=> array( $l		=> 'video' ),
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.video.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_pagine.form.video.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.video.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
@@ -117,7 +117,7 @@
 		'h1'		=> array( $l		=> 'file' ),
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.file.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_pagine.form.file.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.file.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
@@ -130,22 +130,22 @@
 		'h1'		=> array( $l		=> 'audio' ),
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.audio.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_pagine.form.audio.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.audio.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
 	// gestione pagine metadati
 	$p['pagine.form.metadati'] = array(
-	    'sitemap'		=> false,
+		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'metadati' ),
-	    'h1'		=> array( $l		=> 'metadati' ),
-	    'parent'		=> array( 'id'		=> 'pagine.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.metadati.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_pagine.form.metadati.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'pagine.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 	
 /*
