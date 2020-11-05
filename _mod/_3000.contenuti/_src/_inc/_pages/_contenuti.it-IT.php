@@ -106,9 +106,22 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'redirect.view',
-									'redirect.tools' ) ),
+									'redirect.stats' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'redirect' ),
 									'priority'	=> '070' ) )
+    );
+
+	// statistiche redirect
+	$p['redirect.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche' ),
+	    'h1'		=> array( $l		=> 'statistiche' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['redirect.view']['etc']['tabs'] )
     );
 
     // gestione redirect
@@ -121,8 +134,21 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'redirect.form',
-													'redirect.form.tools') )
+													'redirect.form.stats') )
 	);
+
+	// statistiche form redirect
+	$p['redirect.form.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche' ),
+	    'h1'		=> array( $l		=> 'statistiche' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['redirect.form']['etc']['tabs'] )
+    );
 
 	// vista popup
 	$p['popup.view'] = array(
