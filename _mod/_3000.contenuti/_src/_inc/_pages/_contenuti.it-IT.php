@@ -108,10 +108,10 @@
 	    'etc'		=> array( 'tabs'	=> array(	'redirect.view',
 									'redirect.tools' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'redirect' ),
-									'priority'	=> '010' ) )
+									'priority'	=> '070' ) )
     );
 
-    // gestione pagine
+    // gestione redirect
 	$p['redirect.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
@@ -122,6 +122,34 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'redirect.form',
 													'redirect.form.tools') )
+	);
+
+	// vista popup
+	$p['popup.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'popup' ),
+	    'h1'		=> array( $l		=> 'popup' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_popup.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'popup.view',
+									'popup.tools' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'popup' ),
+									'priority'	=> '100' ) )
+    );
+
+    // gestione popup
+	$p['popup.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'popup.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'popup.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_popup.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'popup.form',
+													'popup.form.tools') )
 	);
 
 	

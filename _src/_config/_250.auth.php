@@ -169,6 +169,9 @@
 #	    ),
 	    'video' => array(
 			CONTROL_FULL => array( 'roots' )
+		),
+		'popup' => array(
+			CONTROL_FULL => array( 'roots' )
 		)
 	);
 
