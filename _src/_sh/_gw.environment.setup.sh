@@ -63,6 +63,12 @@ apt-get install -y php-zip
 ## installazione di php-intl
 apt-get install -y php-intl
 
+## installazione di Pear FTP
+pear install Net_FTP
+
+## installazione di ncftp
+apt-get install -y ncftp
+
 ## installazione di mysql
 apt-get install -y mysql-server
 
