@@ -42,63 +42,56 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
+        {# SELETTORE LINGUA #}
+	    <fieldset>
+		<legend>lingua</legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12">
+				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
+		    </div>
+		</div>
+
+	    </fieldset>
+
+		{# DEFINIZIONI SPECIALI #}
+		{% set subtable = form.subtable %}
+
+		{# CICLO SULLE LINGUE #}
+		{% set i = 0 %}
+		{% for l in localization.languages %}
+
+		{% set r = request[ table ][ subtable ][ i ] %}
+
+		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_popup', '', '', request, '__parent_id__', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
+
         {# MODULO PRINCIPALE #}
 	    <fieldset>
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
-		<div class="form-group form-row">
-		    <div class="col-3">
-			<span class="label-top">nome</span>
-			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-		    </div>
-		    <div class="col-3">
-			<span class="label-top">id html</span>
-			{{ frm.inputRequired( table, '', '', 'id_html', '', '', request ) }}
-            </div>
-            <div class="col-3">
-            <span class="label-top">classi html</span>
-            {{ frm.inputRequired( table, '', '', 'classi_html', '', '', request ) }}
-			</div>
-			<div class="col">
-			<span class="label-top">pubblicazione</span>
-			{{ frm.select( table, '', '', 'id_tipologia_pubblicazione', '', etc.select.tipologie_pubblicazioni, request) }}
-			</div>
-		</div>
-		</fieldset>
-
-		<fieldset>
-		<div class="form-group form-row">
-			<div class="col">
-			<span class="label-top">tipologia</span>
-			{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_popup, request) }}
-			</div>
-			<div class="col-3">
-			<span class="label-top">% scroll</span>
-			{{ frm.inputRequired( table, '', '', 'n_scroll', '', '', request ) }}
-			</div>
-			<div class="col-3">
-			<span class="label-top">n.secondi</span>
-			{{ frm.inputRequired( table, '', '', 'n_secondi', '', '', request ) }}
-			</div>
-			<div class="col-auto col-form-label">
-				<span class="label-top">&nbsp;</span>
-				<div class="form-check">
-					{{ frm.checkbox( table, '', '', 'se_ovunque', 'mostra ovunque', '', request, etc.attivo ) }}
-				</div>
-				</div>
-		</div>
-	</fieldset>
-		
-	<fieldset>
-		<div class="form-group form-row">
+		 <div class="form-group form-row">
             <div class="col">
-            <span class="label-top">note</span>
-			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+                <span class="label-top">titolo</span>
+                {{ frm.input( table, subtable, i,'h1', '', '', request ) }}
             </div>
         </div>
+        </fieldset>
+        
+        <fieldset>
+           <div class="form-group form-row">
+                <div class="col">
+                    <span class="label-top">contenuto del popup</span>
+                    {{ frm.textarea( table, subtable, i, 'testo', ' ', 3, request, '', '', 'ckEditor', 200 ) }}
+                </div>
+            </div>
+        
+        </fieldset>
 
-	</fieldset>
-
+	    {% set i = i + 1 %}
+        {% endfor %}
+        
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
@@ -109,3 +102,9 @@
 </section>
 
 {% endblock %}
+
+
+
+
+
+

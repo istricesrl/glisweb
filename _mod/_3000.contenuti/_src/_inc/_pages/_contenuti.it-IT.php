@@ -149,9 +149,21 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_popup.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'popup.form',
+													'popup.form.testo',
 													'popup.form.tools') )
 	);
 
+	// gestione testo popup
+	$p['popup.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'popup.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'popup.form.testo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_popup.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['popup.form']['etc']['tabs'] )
+	);
 	
 /*
     // azioni sulle pagine
