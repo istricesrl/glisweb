@@ -30,8 +30,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_file_view '
-         // WHERE se_anagrafica = 1'---> se_pagine = 1 ??
+	    'SELECT id, __label__ FROM ruoli_file_view WHERE se_contenuti = 1 '
 	);
 
     // macro di default
