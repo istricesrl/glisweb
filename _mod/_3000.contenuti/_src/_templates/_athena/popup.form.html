@@ -52,15 +52,15 @@
 		    </div>
 		    <div class="col-3">
 			<span class="label-top">id html</span>
-			{{ frm.inputRequired( table, '', '', 'id_html', '', '', request ) }}
+			{{ frm.input( table, '', '', 'id_html', '', '', request ) }}
             </div>
             <div class="col-3">
             <span class="label-top">classi html</span>
-            {{ frm.inputRequired( table, '', '', 'classi_html', '', '', request ) }}
+            {{ frm.input( table, '', '', 'classi_html', '', '', request ) }}
 			</div>
 			<div class="col">
 			<span class="label-top">pubblicazione</span>
-			{{ frm.select( table, '', '', 'id_tipologia_pubblicazione', '', etc.select.tipologie_pubblicazioni, request) }}
+			{{ frm.selectRequired( table, '', '', 'id_tipologia_pubblicazione', '', etc.select.tipologie_pubblicazioni, request) }}
 			</div>
 		</div>
 		</fieldset>
@@ -69,15 +69,15 @@
 		<div class="form-group form-row">
 			<div class="col">
 			<span class="label-top">tipologia</span>
-			{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_popup, request) }}
+			{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_popup, request) }}
 			</div>
 			<div class="col-3">
 			<span class="label-top">% scroll</span>
-			{{ frm.inputRequired( table, '', '', 'n_scroll', '', '', request ) }}
+			{{ frm.input( table, '', '', 'n_scroll', '', '', request ) }}
 			</div>
 			<div class="col-3">
 			<span class="label-top">n.secondi</span>
-			{{ frm.inputRequired( table, '', '', 'n_secondi', '', '', request ) }}
+			{{ frm.input( table, '', '', 'n_secondi', '', '', request ) }}
 			</div>
 			<div class="col-auto col-form-label">
 				<span class="label-top">&nbsp;</span>
