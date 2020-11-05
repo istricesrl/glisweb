@@ -96,6 +96,34 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
+	// vista redirect
+	$p['redirect.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'redirect' ),
+	    'h1'		=> array( $l		=> 'redirect' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'redirect.view',
+									'redirect.tools' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'redirect' ),
+									'priority'	=> '010' ) )
+    );
+
+    // gestione pagine
+	$p['redirect.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'redirect.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'redirect.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'redirect.form',
+													'redirect.form.tools') )
+	);
+
 	
 /*
     // azioni sulle pagine
