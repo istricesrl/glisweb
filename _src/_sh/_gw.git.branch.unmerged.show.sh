@@ -11,4 +11,4 @@ cd $RL
 echo "lavoro su: $(pwd)"
 
 ## pulizia repository
-git branch --no-merged
+git branch --no-merged develop
