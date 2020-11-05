@@ -141,8 +141,8 @@
 	$p['redirect.form.stats'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'statistiche' ),
-	    'h1'		=> array( $l		=> 'statistiche' ),
+	    'title'		=> array( $l		=> 'statistiche redirect' ),
+	    'h1'		=> array( $l		=> 'statistiche redirect' ),
 	    'parent'		=> array( 'id'		=> 'contenuti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.stats.php' ),
