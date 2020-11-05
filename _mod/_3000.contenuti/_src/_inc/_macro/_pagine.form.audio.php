@@ -42,10 +42,6 @@
 	    'SELECT id, __label__ FROM tipologie_embed_view  WHERE se_audio = 1'
 	); 
 
-
-    // macro di default per l'entità pagine
-//	require DIR_SRC_INC_MACRO . '_pagine.form.default.php';
-
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 

@@ -35,7 +35,7 @@
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">codice embed</span>{% endif %}
                 {{ frm.input( table, subtable, i, 'codice_embed', 'codice embed', '', request ) }}
             </div>
-            <div class="col-4 col-md">
+            <div class="col-auto">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">caricamento</span>{% endif %}
                 {{ frm.uploader( table, subtable, i, 'path', 'file', '', request, 'var/contenuti/', site, 'anagrafica.form.video', pages, lang, '', '', 1 ) }}
             </div>

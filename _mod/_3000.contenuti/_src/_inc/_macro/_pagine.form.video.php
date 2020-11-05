@@ -30,7 +30,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_video_view  '
+        'SELECT id, __label__ FROM ruoli_video_view '
         // WHERE se_anagrafica = 1'---> se_pagine = 1 ??
     );
     
@@ -41,9 +41,6 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_embed_view  WHERE se_video = 1'
 	);
-
-    // macro di default per l'entità pagine
-//	require DIR_SRC_INC_MACRO . '_pagine.form.default.php';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
