@@ -161,6 +161,19 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 	
+	// gestione azioni pagine
+	$p['pagine.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni pagina' ),
+	    'h1'		=> array( $l		=> 'azioni pagina' ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+
 /*
     // azioni sulle pagine
 	$p['contenuti_azioni'] = array(
