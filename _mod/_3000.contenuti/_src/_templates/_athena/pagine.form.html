@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/pagine.form.sub.html' as sub %}
+{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -47,9 +47,17 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
-		    <div class="col-12">
-			<span class="label-top">etichetta</span>
-			{{ frm.input( table, '', '', 'nome', 'etichetta della pagina (ad uso interno)', '', request ) }}
+			<div class="col-12 col-md-auto">
+				<span class="label-top">sito</span>
+				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
+			</div>  
+			<div class="col-12 col-md-auto">
+				<span class="label-top">genitore</span>
+				{{ frm.select( table, '', '', 'id_genitore', '', etc.select.pagine, request ) }}
+			</div>  
+			<div class="col-12 col-md">
+				<span class="label-top">etichetta</span>
+				{{ frm.input( table, '', '', 'nome', 'etichetta della pagina (ad uso interno)', '', request ) }}
 		    </div>
 		</div>
 
@@ -60,8 +68,31 @@
 		    </div>
 		</div>
 
-	    </fieldset>
+		</fieldset>
 
+	    <fieldset>
+		<legend>aspetto</legend>
+
+		<div class="form-group form-row">
+			<div class="col-12 col-md">
+				<span class="label-top">template</span>
+				{{ frm.select( table, '', '', 'template', '', etc.select.templates, request ) }}
+			</div>  
+			<div class="col-12 col-md">
+				<span class="label-top">schema</span>
+				{{ frm.select( table, '', '', 'schema_html', '', etc.select.schemi, request ) }}
+			</div>  
+			<div class="col-12 col-md">
+				<span class="label-top">tema</span>
+				{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
+			</div>  
+		</div>  
+
+		</fieldset>
+
+		{# SUBFORM PUBBLICAZIONE #}
+        {{ sub.pubblicazione( table, 'pubblicazione', 'pubblicazione', site, page, pages, localization.language.ietf, etc, request, session, 'id_pagina' ) }}
+        
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls">
 		{{ def.controls( page, pages, ietf, session, table, request ) }}
