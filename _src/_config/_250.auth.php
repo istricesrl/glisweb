@@ -130,6 +130,9 @@
 	    'metadati' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
+	    'pubblicazione' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
 #	    'prezzi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
