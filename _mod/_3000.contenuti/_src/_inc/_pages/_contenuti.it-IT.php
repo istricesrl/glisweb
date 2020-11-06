@@ -68,6 +68,7 @@
 //													'pagine.form.menu',
 //													'pagine.form.macro',
 													'pagine.form.metadati',
+													'pagine.form.gruppi',
 													'pagine.form.tools'
 												) )
 	);
@@ -109,7 +110,7 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
-	// gestione pagine immagini
+	// gestione pagine video
 	$p['pagine.form.video'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
@@ -157,6 +158,19 @@
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.metadati.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+	
+	// gestione pagine gruppi
+	$p['pagine.form.gruppi'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-users" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'gruppi' ),
+		'h1'		=> array( $l		=> 'gruppi' ),
+		'parent'		=> array( 'id'		=> 'pagine.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.gruppi.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.gruppi.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
