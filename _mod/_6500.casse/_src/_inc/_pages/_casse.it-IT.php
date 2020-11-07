@@ -35,8 +35,9 @@
     // strumenti cassa
 	$p['cassa.tools'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'strumenti' ),
-	    'h1'		=> array( $l		=> 'strumenti' ),
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'strumenti cassa' ),
+	    'h1'		=> array( $l		=> 'strumenti cassa' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_cassa.tools.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),

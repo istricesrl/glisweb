@@ -16,16 +16,16 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'utility' => array(
+	    '0-utility' => array(
 		'label' => 'utility'
 	    ),
-	    'test' => array(
+	    '1-test' => array(
 		'label' => 'test'
 	    )
 	);
 
     // aggiorna data e ora
-	$ct['page']['contents']['metro']['utility'][] = array(
+	$ct['page']['contents']['metro']['0-utility'][] = array(
 	    'host' => 'http://localhost',
 	    'ws' => $base . 'utl.date.set',
 	    'icon' => NULL,
@@ -35,7 +35,7 @@
 	);
 
     // stampa scontrino di test
-	$ct['page']['contents']['metro']['test'][] = array(
+	$ct['page']['contents']['metro']['1-test'][] = array(
 	    'host' => 'http://localhost',
 	    'ws' => $base . 'utl.test.zero',
 	    'icon' => NULL,
