@@ -104,6 +104,11 @@ a:active {
     border-top-right-radius: 5px;
 }
 
+.view-controls {
+    border-top: 1px solid #dddddd;
+    padding-top: 10px;
+}
+
 .view-controls button {
     height: 31px;
     padding: 3px;
@@ -154,10 +159,24 @@ label.form-check-label {
 
 legend {
     border-bottom: 1px solid #dddddd;
-    font-size: 1.3em;
-    font-weight: bold;
     margin: 0px;
     margin-bottom: 10px;
+}
+
+@media (max-width: 991.98px) {
+    .form-sub {
+        border-bottom: 1px solid #dddddd;
+        margin: 0px;
+        margin-bottom: 10px;
+    }
+    .form-sub:last-child {
+        border: 0px;
+    }
+}
+
+legend {
+    font-size: 1.3em;
+    font-weight: bold;
 }
 
 legend .btn-sm {
@@ -201,6 +220,23 @@ fieldset.form-controls button {
     height: 31px;
     padding: 3px;
     width: 31px;
+}
+
+@media (max-width: 991.98px) {
+    form.form-main,
+    form.form-filtro {
+        padding-bottom: 40px;
+    }
+    .view-controls,
+    fieldset.form-controls {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1030;
+        padding: 10px 15px;
+        background-color: #eeeeee;
+    }
 }
 
 .bootstrap-select.form-control-sm .dropdown-toggle {
@@ -453,6 +489,12 @@ ul.nav-tabs li.nav-item > a.nav-link:hover,
 ul.nav-tabs li.nav-item > a.nav-link:active {
     color: #333333;
     font-weight: bold;
+}
+
+select.select-tabs {
+    border: 0px;
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 10px;
 }
 
 /* stili della sidebar */

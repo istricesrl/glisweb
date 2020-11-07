@@ -7,7 +7,7 @@
     {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
-    <div id="{{ subtable }}_{{ i }}">
+    <div id="{{ subtable }}_{{ i }}" class="form-sub">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
@@ -22,8 +22,9 @@
 	    <div class="col-auto">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">se pec</span>{% endif %}
 		{{ frm.select( table, subtable, i, 'se_pec', '', etc.select.se_pec, request ) }}
-	    </div>
-	    <div class="col-12 col-md">
+		</div>
+		<div class="w-100 d-block d-md-none m-0"></div>
+	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione</span>{% endif %}
 		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
 	    </div>
@@ -48,7 +49,7 @@
     {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
-    <div id="{{ subtable }}_{{ i }}">
+    <div id="{{ subtable }}_{{ i }}" class="form-sub">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
@@ -63,8 +64,9 @@
 	    <div class="col-auto">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia</span>{% endif %}
 		{{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_telefoni, request, '', '', '', '', 'font-awesome' ) }}
-	    </div>
-	    <div class="col-12 col-md">
+		</div>
+		<div class="w-100 d-block d-md-none m-0"></div>
+	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione</span>{% endif %}
 		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
 	    </div>
@@ -89,19 +91,20 @@
     {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
-    <div id="{{ subtable }}_{{ i }}">
+    <div id="{{ subtable }}_{{ i }}" class="form-sub">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
-	    <div class="col-10 col-md">
+	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">indirizzo</span>{% endif %}
 		{{ frm.selectBox( table, subtable, i, 'id_indirizzo', '', etc.select.indirizzi, request, '', '', '', '', 'font-awesome' ) }}
-	    </div>
+		</div>
+		<div class="w-100 d-block d-md-none m-0"></div>
 	    <div class="col-2 col-md-1">
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">interno</span>{% endif %}
 			{{ frm.input( table, subtable, i, 'interno', 'interno', '', request ) }}
 			</div>
-			<div class="col-12 col-md">
+			<div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione e note</span>{% endif %}
 		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
 	    </div>

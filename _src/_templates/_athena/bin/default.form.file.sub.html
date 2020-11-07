@@ -11,7 +11,7 @@
     {% if r.id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
-    <div id="{{ subtable }}_{{ i }}">
+    <div id="{{ subtable }}_{{ i }}" class="form-sub">
         {{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
         {{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden' ) }}
 	    <div class="form-group form-row">
