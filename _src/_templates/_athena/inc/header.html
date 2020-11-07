@@ -32,7 +32,7 @@
                 </div>
 
                 <div id="widget-info" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="$('#info').slideToggle(400,'swing');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="$('#info').slideToggle(400,'swing');$(this).toggleClass('clicked');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                 </div>
 
                 {% if common.documentation|length == 1 %}

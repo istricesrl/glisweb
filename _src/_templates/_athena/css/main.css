@@ -163,6 +163,10 @@ legend {
     margin-bottom: 10px;
 }
 
+fieldset > legend > small {
+    white-space: nowrap;
+}
+
 @media (max-width: 991.98px) {
     .form-sub {
         border-bottom: 1px solid #dddddd;
@@ -330,6 +334,21 @@ select {
     width: 1.75em;
 }
 
+.btn-secondary {
+    border: 0px;
+}
+
+.btn-secondary {
+    background-color: #777777 !important;
+}
+
+.btn-secondary.clicked,
+.btn-secondary:hover,
+.btn-secondary:active,
+.btn-secondary:visited {
+    background-color: #555555 !important;
+}
+
 /* stili dell'header */
 
 .widget .btn {
@@ -365,7 +384,7 @@ header.subform-intestazione {
 }
 
 #info {
-    background-color: #6c757d;
+    background-color: #555555;
     color: #ffffff;
     display: none;
     padding: 15px;

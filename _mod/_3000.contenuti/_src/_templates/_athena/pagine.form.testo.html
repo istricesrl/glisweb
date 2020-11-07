@@ -29,9 +29,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row">
-    <div class="col-md-12">
-	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post">
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -74,15 +74,15 @@
 		<legend>contenuti della pagina <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
-		    <div class="col-4">
+		    <div class="col-12 col-md-4">
 			<span class="label-top">valore del tag h1</span>
                 {{ frm.input( table, subtable, i, 'h1', 'contenuto del tag h1 (se applicabile)', '', request ) }}
                 </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
             <span class="label-top">valore del tag h2</span>
                 {{ frm.input( table, subtable, i, 'h2', 'contenuto del tag h2 (se applicabile)', '', request ) }}
             </div>
-            <div class="col-4">
+            <div class="col-12 col-md-4">
             <span class="label-top">valore del tag h3</span>
                 {{ frm.input( table, subtable, i, 'h3', 'contenuto del tag h3 (se applicabile)', '', request ) }}
             </div>
@@ -124,8 +124,8 @@
 	    {% endfor %}
 
         {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls">
-		{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>
 
 	</form>

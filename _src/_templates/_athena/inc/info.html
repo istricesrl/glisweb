@@ -17,6 +17,8 @@
         <strong class="d-none d-xl-inline-block">XL</strong></p>
     <p>memoria utilizzata
         <strong>{{ debug.mem.now.php }}</strong></p>
+    <p>MySQL
+        <strong>{% if mysql.connection %}connesso{% else %}non connesso{% endif %}</strong></p>
     <p>memcache
         <strong>{% if memcache.stat %}utilizzati {{ memcache.stat.usage }} ({{ memcache.stat.percent }}){% else %}inattivo{% endif %}</strong></p>
     <p>leggi la

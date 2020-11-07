@@ -29,9 +29,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row">
-    <div class="col-md-12">
-	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -47,12 +47,12 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
-		    <div class="col">
+		    <div class="col-12 col-md">
 			<span class="label-top">anagrafica</span>
 			{# VECCHIO STILE frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', pages['anagrafica.form'].path[ ietf ] ~ '?anagrafica[id]=' ~ request[ table ].id_anagrafica ~ '&__backurl__=' ~ page.backurl[ ietf ], pages['anagrafica.form'].path[ ietf ] ~ '?__backurl__=' ~ page.backurl[ ietf ] ) #}
 			{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf ) }}
 			</div>
-		    <div class="col">
+		    <div class="col-12 col-md">
 			<span class="label-top">e-mail per recupero password</span>
 			{{ frm.select( table, '', '', 'id_mail', '', etc.select.mail, request ) }}
 		    </div>
@@ -80,7 +80,7 @@
 	    {{ sub.gruppi( table, 'account_gruppi', 'gruppi', site, page, pages, ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls">
+	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 		</fieldset>
 	

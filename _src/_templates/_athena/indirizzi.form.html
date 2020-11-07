@@ -29,9 +29,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row">
-    <div class="col-md-12">
-	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -47,11 +47,11 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
-            <div class="col-2  col-md-1">
+            <div class="col-auto">
             <span class="label-top">tipologia</span>
             {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_indirizzi, request ) }}
             </div>
-            <div class="col-8 col-md">
+            <div class="col">
             <span class="label-top ">indirizzo</span>
                 {{ frm.input( table, '', '', 'indirizzo', 'indirizzo (parte nominale)', '', request ) }}
             </div>
@@ -61,15 +61,15 @@
             </div>
         </div>
         <div class="form-group form-row">
-            <div class="col-2 col-md-1">
+            <div class="col-3 col-md-1">
             <span class="label-top">cap</span>
             {{ frm.input( table, '', '', 'cap', 'CAP', '', request ) }}
             </div>
-            <div class="col-6 col-md">
+            <div class="col">
                 <span class="label-top ">località</span>
                 {{ frm.input( table,  '', '', 'localita', 'località', '', request ) }}
             </div>
-            <div class="col-4 col-md">
+            <div class="col-12 col-md">
             <span class="label-top ">comune</span>
                 {{ frm.selectBox( table, '', '', 'id_comune', 'comune', etc.select.comuni, request ) }}
             </div>
@@ -85,8 +85,8 @@
     </fieldset>
 
     {# BOTTONI E COMANDI DEL MODULO #}
-	<fieldset class="form-controls">
-    {{ def.controls( page, pages, ietf, session, table, request ) }}
+    <fieldset class="form-controls mt-auto">
+        {{ def.controls( page, pages, ietf, session, table, request ) }}
 	</fieldset>
 	
 	</form>
