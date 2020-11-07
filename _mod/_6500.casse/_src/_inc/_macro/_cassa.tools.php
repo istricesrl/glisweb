@@ -16,32 +16,32 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'rendiconti' => array(
-		'label' => 'rendiconti'
+	    'utility' => array(
+		'label' => 'utility'
 	    ),
-	    'chiusure' => array(
-		'label' => 'chiusure'
+	    'test' => array(
+		'label' => 'test'
 	    )
 	);
 
-    // stampa rendiconto fiscale
-	$ct['page']['contents']['metro']['rendiconti'][] = array(
+    // aggiorna data e ora
+	$ct['page']['contents']['metro']['utility'][] = array(
 	    'host' => 'http://localhost',
-	    'ws' => $base . 'rdc.fiscale.giorno',
+	    'ws' => $base . 'utl.date.set',
 	    'icon' => NULL,
 	    'fa' => 'fa-print',
-	    'title' => 'rendiconto fisc. giornaliero',
-	    'text' => 'stampa il rendiconto fiscale giornaliero'
+	    'title' => 'aggiorna data e ora',
+	    'text' => 'aggiorna data e ora (la cassa deve essere chiusa)'
 	);
 
-    // stampa chiusura fiscale
-	$ct['page']['contents']['metro']['chiusure'][] = array(
+    // stampa scontrino di test
+	$ct['page']['contents']['metro']['test'][] = array(
 	    'host' => 'http://localhost',
-	    'ws' => $base . 'cls.fiscale.giorno',
+	    'ws' => $base . 'utl.test.zero',
 	    'icon' => NULL,
 	    'fa' => 'fa-print',
-	    'title' => 'chiusura cassa',
-	    'text' => 'effettua la chiusura fiscale giornaliera'
+	    'title' => 'stampa scontrino di test',
+	    'text' => 'stampa uno scontrino di test a zero euro'
 	);
 
     // debug
