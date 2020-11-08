@@ -43,6 +43,8 @@ installarlo, installare le dipendenze con composer e lanciare lo script shell al
 (_src/_sh/_gw.mysql.install.sh) per caricare il database. Lo script è interattivo e vi chiederà i dati del server
 di database per eseguire gli script SQL allegati al framework.
 
+Se avete appena installato (o non avete ancora installato) i server web e database, potreste trovare utile lo script di setup dell'ambiente (_src/_sh/_gw.environment.setup.sh) che vi aiuterà a installare e configurare i servizi necessari a far funzionare GlisWeb.
+
 ## configurazione
 Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
 che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
