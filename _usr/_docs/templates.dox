@@ -251,6 +251,70 @@
     helper Ckeditor        | internal[] = _src/_js/_lib/_ckeditor.js
     libreria generale      | internal[] = _src/_js/_main.js
 
+    temi del template
+    -----------------
+    Un template può avere più temi, anche definiti in custom, che consentono di modificarne l'aspetto senza dover creare un nuovo template. Il tema può essere specificato
+    a livello di sito, ad esempio:
+
+    \code{.json}
+    "sites": {
+      "1": {
+        "__label__": "sito di esempio",
+        "homes": {
+          "TEST": "dashboard",
+          "PROD": "dashboard"
+        },
+        "name": {
+          "it-IT": "sito di esempio"
+        },
+        "metadata":{
+            "theme": "css/themes/green.css"
+        },
+        "protocols": {
+          "TEST": "http",
+          "PROD": "https"
+        },
+        "hosts": {
+          "TEST": "test",
+          "PROD": "www"
+        },
+        "alias": {
+          "domains": {
+            "PROD": [
+              "do-main.bho"
+            ]
+          }
+        },
+        "domains": {
+          "TEST": "domain.bho",
+          "PROD": "domain.bho"
+        }
+      }
+    }
+    \endcode
+
+    Oppure a livello di pagina:
+
+    \code{.json}
+    "contents": {
+      "pages": {
+        "testjson": {
+          "sitemap": true,
+          "title": { "it-IT": "test da Json" },
+          "h1": { "it-IT": "pagina di test da configurazione Json" },
+          "parent": { "id": null },
+          "template": { "path": "_src/_templates/_athena/", "theme": "css/themes/green.css" },
+          "menu": {
+            "main": {
+              "label": { "it-IT": "test Json" },
+              "priority": 10
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
     il template standard (_src/_templates/_athena/)
     ===============================================
     Il template standard Athena è di gran lunga il più importante del framework in quanto è solitamente utilizzato per tutte le
