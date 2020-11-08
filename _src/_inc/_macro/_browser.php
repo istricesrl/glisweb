@@ -12,13 +12,13 @@
 
     // base
 	$path = ( isset( $_REQUEST['path'] ) ) ? $_REQUEST['path'] : 'var/contenuti/';
-	$base = DIRECTORY_BASE . $path;
-//	$path = DIRECTORY_BASE . 'var/contenuti/' . ( ( isset( $_REQUEST['path'] ) ) ? $_REQUEST['path'] : NULL );
+	$path = str_replace( '../', NULL, $path );
+	$base = DIR_BASE . $path;
 	$parent = dirname( $path );
 
     // creazione cartella
 	if( isset( $_REQUEST['cartella'] ) ) {
-	    $cartella = DIRECTORY_BASE . $path . $_REQUEST['cartella'];
+	    $cartella = DIR_BASE . $path . $_REQUEST['cartella'];
 //	    $cartella = $path . $_REQUEST['cartella'];
 	    checkFolder( $cartella );
 	}
