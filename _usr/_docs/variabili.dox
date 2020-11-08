@@ -150,7 +150,8 @@
     contents.pages.<x>.h1                        | i tag H1 della pagina <x>
     contents.pages.<x>.h1.<l>                    | il tag H1 della pagina <x> nella lingua <l>
     contents.pages.<x>.id_sito                   | l'ID del sito di appartenenza della pagina <x> (vedi 
-    contents.pages.<x>.macro                     | script PHP da eseguire prima del rendering della pagina <x>
+    contents.pages.<x>.macro                     | array degli script PHP da eseguire prima del rendering della pagina <x>
+    contents.pages.<x>.metadata                  | array dei metadati della pagina <x>
     contents.pages.<x>.menu                      | dettagli sui menu in cui è presente la pagina <x>
     contents.pages.<x>.menu.<m>                  | dettagli della voce di menu della pagina <x> nel menu <m>
     contents.pages.<x>.menu.<m>.label            | etichette della voce di menu della pagina <x> nel menu <m>
@@ -197,8 +198,6 @@
     contents.shortcuts                           | -
     contents.tree                                | array ad albero delle pagine presenti nel deploy corrente
     contents.updated                             | timestamp dell'ultimo aggiornamento dei contenuti
-
-    \todo la chiave contents.pages.<x>.template.theme è solo prevista in teoria e non ancora implementata
 
     La chiave contents.page, per il ruolo speciale che svolge nella rappresentazione dei contenuti della pagina corrente,
     riceve alcune chiavi aggiuntive:
@@ -813,6 +812,7 @@
     site.hosts                   | hosts del sito <n> (ad es. www)
     site.hosts.<s>               | host del sito <n> per lo status <s>
     site.id                      | id del sito <n> (vedi _src/_config/_015.site.php)
+    site.metadata                | array dei metadati del sito <n>
     site.name                    | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     site.name.<l>                | nome del sito <n> per la lingua <l>
     site.pages                   | configurazioni aggiuntive per le pagine, da sovrapporre a $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
@@ -864,6 +864,7 @@
     sites.<n>.hosts              | hosts del sito <n> (ad es. www)
     sites.<n>.hosts.<s>          | host del sito <n> per lo status <s>
     sites.<n>.id                 | id del sito <n> (dev'essere uguale a <n>)
+    sites.<n>.metadata           | array dei metadati del sito
     sites.<n>.name               | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     sites.<n>.name.<l>           | nome del sito <n> per la lingua <l>
     sites.<n>.pages              | configurazioni aggiuntive per le pagine (integra $cf['contents']['pages'], vedi _src/_config/_310.pages.php)

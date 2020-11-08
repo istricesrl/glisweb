@@ -84,10 +84,26 @@
 	    $ct['page']['template']['schema']	= $_REQUEST['s'] . '.html';
 	}
 
+    // forzatura del tema corrente per one-char parameter string
+	if( isset( $_REQUEST['c'] ) ) {
+	    $ct['page']['template']['theme']	= 'css/themes/' . $_REQUEST['c'] . '.css';
+	}
+
     // forzatura dei contenuti correnti per one-char parameter debug
 	if( isset( $_REQUEST['j'] ) ) {
 	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ]	= implode( PHP_EOL, array_fill( 0, $_REQUEST['j'], '<p>'.$cf['common']['lorem']['std'].'</p>' ) );
 	}
+
+    // assegnazione del tema per specificità
+    if( isset( $cf['site']['metadata']['theme'] ) ) {
+
+        if( ! isset( $ct['page']['template']['theme'] ) ) {
+
+            $ct['page']['template']['theme'] = $cf['site']['metadata']['theme'];
+
+        }
+
+    }
 
     /*
      * @todo prevedere la forzatura anche per il tema della pagina

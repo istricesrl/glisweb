@@ -59,6 +59,15 @@
     // log
 	appendToFile( 'fine caricamento file INI del template' . PHP_EOL, FILE_LATEST_RUN );
 
+	// aggiunta del tema ai CSS da caricare
+	if( isset( $ct['page']['template']['theme'] ) ) {
+		$ct['page']['css']['template'][] = $ct['page']['template']['theme'];
+		$customTheme = path2custom( $ct['page']['template']['path'] . $ct['page']['template']['theme'] );
+		if( file_exists( DIR_BASE . $customTheme ) ) {
+			$ct['page']['css']['custom'][] = $customTheme;
+		}
+	}
+	
     // log
 	appendToFile( 'inizio controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
 
