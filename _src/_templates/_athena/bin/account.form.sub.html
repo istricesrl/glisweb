@@ -7,15 +7,15 @@
     {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
-    <div id="{{ subtable }}_{{ i }}">
+    <div id="{{ subtable }}_{{ i }}" class="form-sub">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_account', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
-	    <div class="col">
+	    <div class="col-auto">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">gruppo</span>{% endif %}
 		{{ frm.selectRequired( table, subtable, i, 'id_gruppo', '', etc.select.gruppi, request ) }}
 	    </div>
-	    <div class="col-4">
+	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">ruolo</span>{% endif %}
 		{{ frm.selectRequired( table, subtable, i, 'se_amministratore', '', etc.select.se_amministratore, request, '0', '', 'default-value-on-duplicate' ) }}
 	    </div>

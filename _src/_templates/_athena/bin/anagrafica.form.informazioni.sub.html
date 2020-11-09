@@ -7,19 +7,19 @@
     {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
-    <div id="{{ subtable }}_{{ i }}">
+    <div id="{{ subtable }}_{{ i }}" class="form-sub">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
-	    <div class="col">
+	    <div class="col-12 col-md">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">cittadinanza</span>{% endif %}
 		{{ frm.selectBox( table, subtable, i, 'id_stato', '', etc.select.stati, request ) }}
 	    </div>
-	    <div class="col-auto">
+	    <div class="col col-md-auto">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">inizio</span>{% endif %}
 		{{ frm.date( table, subtable, i, 'data_inizio', 'data inizio', etc, request ) }}
 		</div>
-	    <div class="col-auto">
+	    <div class="col col-md-auto">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">fine</span>{% endif %}
 		{{ frm.date( table, subtable, i, 'data_fine', 'data fine', etc, request ) }}
 		</div>

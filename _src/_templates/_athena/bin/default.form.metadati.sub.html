@@ -11,19 +11,20 @@
     {% if r.id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
-    <div id="{{ subtable }}_{{ i }}">
+    <div id="{{ subtable }}_{{ i }}" class="form-sub">
         {{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
         {{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden' ) }}
 	    <div class="form-group form-row">
-            <div class="col-4 col-md-4">
+            <div class="col col-md-4">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">chiave</span>{% endif %}
                 {{ frm.input( table, subtable, i, 'nome', 'chiave', '', request ) }}
             </div>
-            <div class="col-12 col-md-auto">
+            <div class="col-auto">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">lingua</span>{% endif %}
                 {{ frm.select( table, subtable, i, 'id_lingua', '', etc.select.lingue, request ) }}
             </div>  
-            <div class="col-10 col-md">
+			<div class="w-100 d-block d-md-none m-0"></div>
+            <div class="col">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">valore</span>{% endif %}
                 {{ frm.input( table, subtable, i, 'testo', 'valore', '', request ) }}
             </div>

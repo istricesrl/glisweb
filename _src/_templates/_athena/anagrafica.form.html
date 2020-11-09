@@ -29,9 +29,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row">
-    <div class="col-md-12">
-	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -50,11 +50,12 @@
 		    <div class="col-auto">
 			<span class="label-top">sigla</span>
 			{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_anagrafica, request ) }}
-		    </div>
-		    <div class="col-12 col-md-6">
+			</div>
+			<div class="col">
 			<span class="label-top">nome</span>
 			{{ frm.input( table, '', '', 'nome', 'nome (persone fisiche)', '', request ) }}
-		    </div>
+			</div>
+			<div class="w-100 d-block d-md-none m-0"></div>
 		    <div class="col">
 			<span class="label-top">cognome</span>
 			{{ frm.input( table, '', '', 'cognome', 'cognome (persone fisiche)', '', request ) }}
@@ -62,7 +63,7 @@
 		    <div class="col-auto">
 			<span class="label-top">sesso</span>
 			{{ frm.selectRequired( table, '', '', 'sesso', '', etc.select.sesso, request, '', 1 ) }}
-		    </div>
+			</div>
 		</div>
 
 		<div class="form-group form-row">
@@ -98,7 +99,7 @@
 	    {{ sub.categorie( table, 'anagrafica_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls">
+	    <fieldset class="form-controls mt-auto">
 		{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>
 

@@ -11,7 +11,7 @@
     {% if r.id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
-    <div id="{{ subtable }}_{{ i }}">
+    <div id="{{ subtable }}_{{ i }}" class="form-sub">
         {{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
         {{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden' ) }}
 	    <div class="form-group form-row">
@@ -19,19 +19,21 @@
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">ordine</span>{% endif %}
                 {{ frm.input( table, subtable, i, 'ordine', '#', '', request ) }}
             </div>
-            <div class="col-4">
+            <div class="col">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">etichetta</span>{% endif %}
                 {{ frm.input( table, subtable, i, 'nome', 'etichetta', '', request ) }}
             </div>
-            <div class="col-4 col-md">
+			<div class="w-100 d-block d-md-none m-0"></div>
+            <div class="col col-md-auto">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">ruolo</span>{% endif %}
                 {{ frm.selectRequired( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_video, request ) }}
             </div>
-            <div class="col-4 col-md">
+            <div class="col col-md-auto">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia embed</span>{% endif %}
                 {{ frm.selectRequired( table, subtable, i, 'id_tipologia_embed', '', etc.select.tipologie_embed, request ) }}
             </div>
-            <div class="col-4">
+			<div class="w-100 d-block d-md-none m-0"></div>
+            <div class="col col-md-4">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">codice embed</span>{% endif %}
                 {{ frm.input( table, subtable, i, 'codice_embed', 'codice embed', '', request ) }}
             </div>

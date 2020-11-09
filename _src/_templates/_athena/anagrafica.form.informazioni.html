@@ -29,9 +29,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row">
-    <div class="col-md-12">
-	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -55,15 +55,16 @@
 				<span class="label-top">mese</span>
 				{{ frm.select( table, '', '', 'mese_nascita', '', etc.select.mesi, request ) }}
 			</div>
-			<div class="col-2 col-md-1">
+			<div class="col col-md-1">
 				<span class="label-top">anno</span>
 				{{ frm.input( table, '', '', 'anno_nascita', 'anno di nascita', '', request ) }}
 		    </div>
-			<div class="col">
+			<div class="w-100 d-block d-md-none m-0"></div>
+			<div class="col-12 col-md">
 				<span class="label-top">luogo</span>
 				{{ frm.input( table, '', '', 'luogo_nascita', 'luogo di nascita', '', request ) }}
 		    </div>
-			<div class="col col-md-4">
+			<div class="col-12 col-md-4">
 				<span class="label-top">stato</span>
 				{{ frm.selectBox( table, '', '', 'id_stato_nascita', 'comune', etc.select.stati, request ) }}
 		    </div>
@@ -82,8 +83,8 @@
 	    {{ sub.cittadinanze( table, 'anagrafica_cittadinanze', 'cittadinanze', site, page, pages, ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls">
-		{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>
 
 	</form>

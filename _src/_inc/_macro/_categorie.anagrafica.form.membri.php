@@ -35,7 +35,7 @@
 	    '__label__' => 'text-left no-wrap',
 	    'telefoni' => 'text-left',
 	    'mail' => 'text-left',
-	    'categorie' => 'text-left'
+	    'categorie' => 'text-left d-none d-md-block'
 	);
 
     // colonne variabili

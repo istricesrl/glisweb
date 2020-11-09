@@ -40,7 +40,7 @@
     // id della vista
 	if( ! isset( $ct['view']['id'] ) ) {
 	    $ct['view']['id'] = md5(
-		$ct['view']['table'] . $_SESSION['__view__']['__site__']
+		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
 	    );
 	}
 
@@ -117,7 +117,7 @@
 	// echo $ct['view']['open']['table'] . PHP_EOL;
 
     // pagina di inserimento
-	if( ! isset( $ct['view']['insert']['page'] ) && isset( $ct['view']['open']['page'] ) ) {
+	if( ! isset( $ct['view']['insert']['page'] ) && isset( $ct['view']['open']['page'] ) && ! isset( $ct['form']['table'] ) ) {
 	    $ct['view']['insert']['page'] = $ct['view']['open']['page'];
 	}
 
