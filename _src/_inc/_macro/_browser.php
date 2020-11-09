@@ -56,7 +56,8 @@
 	$ct['browse']['parent'] = $parent;
 	$ct['browse']['path'] = $path;
 
-    // debug
+	// debug
+	// echo '<pre>'.print_r( $ct['browse'], true ).'</pre>';
 	// echo $path.'<br>';
 	// echo $parent.'<br>';
 	// echo $base.'<br>';

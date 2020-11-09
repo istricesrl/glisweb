@@ -1,0 +1,39 @@
+{% import '_bin/_contents.html' as cnt %}
+
+{% extends 'ext/blank.html' %}
+
+{% block main %}
+
+{% for dir in browse.dirs %}
+<div class="row no-gutters m-0 browse browse-dir" onclick="window.open( '?{{ browse.get ~ dir ~ '/' }}', '_self' );">
+<div class="col-12">
+    {% if dir == browse.parent %}
+    <i class="fa fa-level-up" aria-hidden="true"></i>
+    {% else %}
+    <i class="fa fa-folder-o" aria-hidden="true"></i>
+    {{ dir|split('/')|last }}
+    {% endif %}
+</div>
+</div>
+{% endfor %}
+
+{% for file in browse.files %}
+<div class="row no-gutters m-0 browse browse-file" onclick="cmsReturnFileUrl('{{ '/' ~ file.path }}')">
+<div class="col-10">
+    <i class="fa fa-file-o" aria-hidden="true"></i>
+    {{ file.path|split('/')|last }}
+</div>
+<div class="col-2 text-right">{{ file.size }}</div>
+</div>
+{% endfor %}
+
+<div class="row">
+    <div class="col-md-9">
+    </div>
+    <div class="col-md-3 text-right">
+        <button class="btn btn-secondary btn-sm" style="padding: 5px 10px;" type="button" data-toggle="modal" data-target="#caricaFile">carica file</button>
+        <button class="btn btn-secondary btn-sm" style="padding: 5px 10px;" type="button" data-toggle="modal" data-target="#creaCartella">crea cartella</button>
+    </div>
+</div>
+
+{% endblock %}
