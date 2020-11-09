@@ -2,12 +2,14 @@
 
 {% block main %}
 {% if request.__delete__.conferma != 1 %}
+{% if request.__backurl__ %}{% set backurl = '&__backurl__=' ~ request.__backurl__ %}{% endif %}
 <form id="form-delete" class="d-flex flex-column w-100 h-100 align-items-center justify-content-center" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 
     <input type="hidden" name="__delete__[conferma]" value="1">
-    <input type="hidden" name="__delete__[target]" value="{{ request.__delete__.target }}">
+    <input type="hidden" name="__delete__[target]" value="{{ request.__delete__.target ~ backurl }}">
     <input type="hidden" name="{{ request.__delete__.table }}[__method__]" value="delete">
     <input type="hidden" name="{{ request.__delete__.table }}[id]" value="{{ request.__delete__.id }}">
+	<input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
     <fieldset class="delete w-100">
 	<div class="form-group form-row">
@@ -25,7 +27,7 @@
 		<input type="submit" class="btn btn-secondary btn-sm" value="sì">
 	    </div>
 	    <div class="col-6 text-center">
-		<input type="button" class="btn btn-secondary btn-sm" onclick="history.back();" value="no">
+		<input type="button" class="btn btn-secondary btn-sm" onclick="window.open('{{ request.__delete__.target ~ backurl }}','_self');" value="no">
 	    </div>
 	</div>
     </fieldset>
