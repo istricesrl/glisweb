@@ -7,3 +7,4 @@ var/
 composer.*
 robots.*
 sitemap.*
+*.md
