@@ -12,7 +12,6 @@
         "phpmailer/phpmailer": "6.1.*",
         "tecnickcom/tcpdf": "6.2.*",
         "twig/twig": "<2.14.0",
-        "twig/extra-bundle": "*",
         "predis/predis": "*",
         "codeception/codeception": "*",
         "codeception/module-phpbrowser": "^1.0.0",
@@ -20,5 +19,8 @@
         "google/cloud-logging": "*",
         "paypal/paypal-checkout-sdk": "1.0.1",
         "amzn/amazon-pay-api-sdk-php": "*"
+    },
+    "suggest": {
+        "twig/extra-bundle": "*"
     }
 }
