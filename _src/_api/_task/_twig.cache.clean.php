@@ -13,22 +13,17 @@
 
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
-
-	    $cf['lvls']['skip'] = array(
-		'300', '310', '320', '330', '345',
-		'400', '420',
-		'950', '980'
-	    );
-
 	    require '../../_config.php';
-
 	}
 
     // inizializzo l'array del risultato
 	$status = array();
 
     // faccio il flush della cache
-	$status['esito'] = recursiveDelete( DIR_TMP );
+	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_TWIG );
+
+    // headers
+	header( 'Access-Control-Allow-Origin: *' );
 
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {
