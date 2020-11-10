@@ -11,7 +11,7 @@
         "html2text/html2text": "4.1.*",
         "phpmailer/phpmailer": "6.1.*",
         "tecnickcom/tcpdf": "6.2.*",
-        "twig/twig": "2.13.*",
+        "twig/twig": "<2.14.0",
         "twig/extra-bundle": "*",
         "predis/predis": "*",
         "codeception/codeception": "*",
