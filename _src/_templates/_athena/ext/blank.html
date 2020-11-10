@@ -11,6 +11,10 @@
 
         {% include '_inc/_page.open.html' %}
 
+        <header class="fixed-top">
+            {% block header %}{% endblock %}
+        </header>
+
         <main class="d-flex flex-column container-fluid w-100 vh-100">
             {% block main %}{% endblock %}
         </main>
