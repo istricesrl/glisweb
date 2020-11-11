@@ -92,6 +92,9 @@
 #	    'date' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'contratti' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
 	    'file' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
@@ -167,6 +170,9 @@
 #	    'tipologie_crm' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'tipologie_contratti' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
 	    'video' => array(
 			CONTROL_FULL => array( 'roots' )
 		)

@@ -317,6 +317,61 @@
 		'etc'		=> array( 'tabs'	=> $p['categorie.anagrafica.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
+
+	// vista contratti
+	$p['contratti.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'contratti' ),
+	    'h1'		=> array( $l		=> 'contratti' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_contratti.view.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'contratti.view' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contratti' ),
+									'priority'	=> '010' ) )
+	);
+
+    // gestione contratti
+	$p['contratti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'contratti.form' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+
+
+// vista tipologie contratti
+$p['tipologie.contratti.view'] = array(
+	'sitemap'		=> false,
+	'title'		=> array( $l		=> 'tipologie' ),
+	'h1'		=> array( $l		=> 'tipologie' ),
+	'parent'		=> array( 'id'		=> 'contratti.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	'macro'		=> array( '_src/_inc/_macro/_tipologie.contratti.view.php' ),
+	'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.view' ) ),
+	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie' ),
+								'priority'	=> '120' ) )
+);
+
+
+// gestione tipologie contratti
+	$p['tipologie.contratti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'tipologie.contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.contratti.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_tipologie.contratti.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
+	);
+
    
 	// vista indirizzi
 	$p['indirizzi.view'] = array(
