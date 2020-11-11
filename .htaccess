@@ -71,8 +71,20 @@ Options -Indexes
     # gestione delle API generiche
     RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_rest.php?__ws__=$1&__id__=$2 [L,QSA]
 
-    # gestione dei task generici
+    # gestione dei task custom base
+    RewriteCond %{DOCUMENT_ROOT}/src/api/task/$1.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ src/api/task/$1.php [L,QSA]
+
+    # gestione dei task standard base
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_task/_$1.php -f
     RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ _src/_api/_task/_$1.php [L,QSA]
+
+    # gestione dei task custom moduli
+    RewriteCond %{DOCUMENT_ROOT}mod/$1/src/api/task/$2.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/task/$2.php [L,QSA]
+
+    # gestione dei task standard moduli
+    RewriteCond %{DOCUMENT_ROOT}_mod/_$1/_src/_api/_task/_$2.php -f
     RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_$2.php [L,QSA]
 
     # gestione dei report speciali
