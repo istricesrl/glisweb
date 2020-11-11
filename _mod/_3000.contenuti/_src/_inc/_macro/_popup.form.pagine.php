@@ -25,6 +25,12 @@
 	    'SELECT id, __label__ FROM popup_pagine_view'
     );
 
+    // tendina pollice per presenza del popup sulla pagina o meno
+	$ct['etc']['select']['se_presente'] = array(
+	    array( 'id' => NULL, '__label__' => '&#xf00c;' ),
+	    array( 'id' => 1, '__label__' => '&#xf05e;' )
+	);
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
