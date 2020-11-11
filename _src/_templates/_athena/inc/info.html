@@ -9,6 +9,8 @@
         {% if session.account.gruppi %} ({{ session.account.gruppi|join(', ') }}){% endif %}</p>
     <p>ultima attività
         <strong>{{ session.used|date('Y-m-d H:i:s') }}</strong></p>
+    <p>stage corrente
+        <strong>{{ site.status }}</strong></p>
     <p>breakpoint corrente
         <strong class="d-inline-block d-sm-none">XS</strong>
         <strong class="d-none d-sm-inline-block d-md-none">SM</strong>
