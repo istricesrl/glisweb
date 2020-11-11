@@ -21,9 +21,6 @@
 	    ),
 	    'chiusure' => array(
 		'label' => 'chiusure'
-	    ),
-	    'utils' => array(
-		'label' => 'utility e test'
 	    )
 	);
 
@@ -45,26 +42,6 @@
 	    'fa' => 'fa-print',
 	    'title' => 'chiusura cassa',
 	    'text' => 'effettua la chiusura fiscale giornaliera'
-	);
-
-    // aggiorna data e ora
-	$ct['page']['contents']['metro']['utils'][] = array(
-	    'host' => 'http://localhost',
-	    'ws' => $base . 'utl.date.set',
-	    'icon' => NULL,
-	    'fa' => 'fa-print',
-	    'title' => 'aggiorna data e ora',
-	    'text' => 'aggiorna data e ora (la cassa deve essere chiusa)'
-	);
-
-    // stampa scontrino di test
-	$ct['page']['contents']['metro']['utils'][] = array(
-	    'host' => 'http://localhost',
-	    'ws' => $base . 'utl.test.zero',
-	    'icon' => NULL,
-	    'fa' => 'fa-print',
-	    'title' => 'stampa scontrino di test',
-	    'text' => 'stampa uno scontrino di test a zero euro'
 	);
 
     // debug
