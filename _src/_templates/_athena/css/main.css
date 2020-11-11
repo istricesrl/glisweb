@@ -546,6 +546,13 @@ select.select-tabs {
     display: inline;
 }
 
+.breadcrumb-item+.breadcrumb-item::before {
+    display: inline-block;
+    padding-right: .5rem;
+    color: black;
+    content: "/";
+}
+
 /* stili del main */
 
 main {
