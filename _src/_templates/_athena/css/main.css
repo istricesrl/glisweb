@@ -359,6 +359,9 @@ select.font-awesome {
     border-radius: 0px;
     font-size: 1.6em;
     height: 45px;
+}
+
+.widget .btn-sqr {
     width: 45px;
 }
 
