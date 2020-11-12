@@ -1,4 +1,4 @@
--- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.47-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: 10.240.0.2    Database: __glisweb__
 -- ------------------------------------------------------
@@ -90,7 +90,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `ruoli_file` WRITE;
 /*!40000 ALTER TABLE `ruoli_file` DISABLE KEYS */;
-INSERT INTO `ruoli_file` VALUES (1,'allegato'),(2,'brochure'),(3,'documentazione'),(4,'driver'),(5,'manualistica'),(6,'press kit'),(7,'schede tecniche'),(8,'software');
+INSERT INTO `ruoli_file` VALUES (1,'allegato',NULL,NULL),(2,'brochure',NULL,NULL),(3,'documentazione',NULL,NULL),(4,'driver',NULL,NULL),(5,'manualistica',NULL,NULL),(6,'press kit',NULL,NULL),(7,'schede tecniche',NULL,NULL),(8,'software',NULL,NULL);
 /*!40000 ALTER TABLE `ruoli_file` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,4 +172,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-04  4:04:53
+-- Dump completed on 2020-11-12 14:20:58

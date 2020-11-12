@@ -1,4 +1,4 @@
--- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.47-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: 10.240.0.2    Database: __glisweb__
 -- ------------------------------------------------------
@@ -539,6 +539,7 @@ CREATE TABLE `account` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_cambio_password` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `id_anagrafica` (`id_anagrafica`),
@@ -547,11 +548,11 @@ CREATE TABLE `account` (
   KEY `se_attivo` (`se_attivo`),
   KEY `indice` (`id`,`id_anagrafica`,`username`,`password`,`se_attivo`,`token`),
   KEY `id_mail` (`id_mail`),
-  CONSTRAINT `account_ibfk_1` FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `account_ibfk_3_nofollow` FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `account_ibfk_1_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `account_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `account_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
+  CONSTRAINT `account_ibfk_4_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -570,9 +571,9 @@ CREATE TABLE `account_gruppi` (
   UNIQUE KEY `indice` (`id_account`,`id_gruppo`),
   KEY `id_account` (`id_account`),
   KEY `id_gruppo` (`id_gruppo`),
-  CONSTRAINT `account_gruppi_ibfk_1` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `account_gruppi_ibfk_2` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
+  CONSTRAINT `account_gruppi_ibfk_2_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `account_gruppi_ibfk_1` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -593,7 +594,7 @@ CREATE TABLE `account_gruppi_attribuzione` (
   KEY `id_gruppo` (`id_gruppo`),
   CONSTRAINT `account_gruppi_attribuzione_ibfk_1` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `account_gruppi_attribuzione_ibfk_2` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -651,6 +652,7 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `timestamp_cambio_password` tinyint NOT NULL,
   `attivo` tinyint NOT NULL,
   `utente` tinyint NOT NULL,
   `gruppi` tinyint NOT NULL,
@@ -704,6 +706,7 @@ CREATE TABLE `anagrafica` (
   `recapiti` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `se_importata` int(1) DEFAULT NULL,
+  `se_stampa_privacy` int(1) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
@@ -723,9 +726,9 @@ CREATE TABLE `anagrafica` (
   KEY `comune_nascita` (`comune_nascita`),
   KEY `id_diritto` (`id_diritto`),
   KEY `id_stato_nascita` (`id_stato_nascita`),
-  CONSTRAINT `anagrafica_ibfk_2` FOREIGN KEY (`id_stato_nascita`) REFERENCES `stati` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_1` FOREIGN KEY (`id_orientamento_sessuale`) REFERENCES `orientamenti_sessuali` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `anagrafica_ibfk_2` FOREIGN KEY (`id_stato_nascita`) REFERENCES `stati` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia_crm`) REFERENCES `tipologie_crm` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_4_nofollow` FOREIGN KEY (`id_pec_sdi`) REFERENCES `mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -734,7 +737,7 @@ CREATE TABLE `anagrafica` (
   CONSTRAINT `anagrafica_ibfk_7_nofollow` FOREIGN KEY (`id_regime_fiscale`) REFERENCES `regimi_fiscali` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `anagrafica_ibfk_8_nofollow` FOREIGN KEY (`comune_nascita`) REFERENCES `comuni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `anagrafica_ibfk_9_nofollow` FOREIGN KEY (`id_diritto`) REFERENCES `categorie_diritto` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=16539 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -832,7 +835,7 @@ CREATE TABLE `anagrafica_categorie` (
   CONSTRAINT `anagrafica_categorie_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_categorie_ibfk_2_nofollow` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `anagrafica_categorie_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2865 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -852,7 +855,7 @@ CREATE TABLE `anagrafica_categorie_diritto` (
   KEY `id_diritto` (`id_diritto`),
   CONSTRAINT `anagrafica_categorie_diritto_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `anagrafica_categorie_diritto_ibfk_2` FOREIGN KEY (`id_diritto`) REFERENCES `categorie_diritto` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -910,7 +913,7 @@ CREATE TABLE `anagrafica_cittadinanze` (
   KEY `id_stato` (`id_stato`),
   CONSTRAINT `anagrafica_cittadinanze_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `anagrafica_cittadinanze_ibfk_2` FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1028,6 +1031,47 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `anagrafica_indirizzi`
+--
+
+DROP TABLE IF EXISTS `anagrafica_indirizzi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `anagrafica_indirizzi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `interno` char(8) DEFAULT NULL,
+  `descrizione` text,
+  PRIMARY KEY (`id`),
+  KEY `id_indirizzo` (`id_indirizzo`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  CONSTRAINT `anagrafica_indirizzi_ibfk_1` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`),
+  CONSTRAINT `anagrafica_indirizzi_ibfk_2` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `anagrafica_indirizzi_view`
+--
+
+DROP TABLE IF EXISTS `anagrafica_indirizzi_view`;
+/*!50001 DROP VIEW IF EXISTS `anagrafica_indirizzi_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `anagrafica_indirizzi_view` (
+  `id` tinyint NOT NULL,
+  `id_indirizzo` tinyint NOT NULL,
+  `id_anagrafica` tinyint NOT NULL,
+  `interno` tinyint NOT NULL,
+  `descrizione` tinyint NOT NULL,
+  `anagrafica` tinyint NOT NULL,
+  `indirizzo` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `anagrafica_ruoli`
 --
 
@@ -1049,7 +1093,7 @@ CREATE TABLE `anagrafica_ruoli` (
   CONSTRAINT `anagrafica_ruoli_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `anagrafica_ruoli_ibfk_1_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `anagrafica_ruoli_ibfk_2_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `anagrafica_ruoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1088,7 +1132,7 @@ CREATE TABLE `anagrafica_settori` (
   KEY `id_settore` (`id_settore`),
   CONSTRAINT `anagrafica_settori_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `anagrafica_settori_ibfk_1_nofollow` FOREIGN KEY (`id_settore`) REFERENCES `settori` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1150,6 +1194,7 @@ SET character_set_client = utf8;
   `recapiti` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `se_importata` tinyint NOT NULL,
+  `se_stampa_privacy` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
@@ -1157,6 +1202,7 @@ SET character_set_client = utf8;
   `sigla_stato` tinyint NOT NULL,
   `cittadinanze` tinyint NOT NULL,
   `se_collaboratore` tinyint NOT NULL,
+  `se_dipendente` tinyint NOT NULL,
   `se_cliente` tinyint NOT NULL,
   `se_lead` tinyint NOT NULL,
   `se_prospect` tinyint NOT NULL,
@@ -1169,8 +1215,13 @@ SET character_set_client = utf8;
   `se_amministrazione` tinyint NOT NULL,
   `se_azienda_gestita` tinyint NOT NULL,
   `se_concorrente` tinyint NOT NULL,
+  `se_tutor` tinyint NOT NULL,
+  `se_classe` tinyint NOT NULL,
+  `se_docente` tinyint NOT NULL,
+  `se_allievo` tinyint NOT NULL,
   `__label__` tinyint NOT NULL,
   `denominazione_fiscale` tinyint NOT NULL,
+  `diritto` tinyint NOT NULL,
   `agente` tinyint NOT NULL,
   `categorie` tinyint NOT NULL,
   `telefoni` tinyint NOT NULL,
@@ -1195,6 +1246,7 @@ CREATE TABLE `articoli` (
   `id_taglia` int(11) DEFAULT NULL,
   `id_colore` int(11) DEFAULT NULL,
   `se_disponibile` int(1) DEFAULT '1',
+  `quantita_disponibile` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1228,6 +1280,7 @@ SET character_set_client = utf8;
   `id_taglia` tinyint NOT NULL,
   `id_colore` tinyint NOT NULL,
   `se_disponibile` tinyint NOT NULL,
+  `quantita_disponibile` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -1414,7 +1467,7 @@ CREATE TABLE `attivita` (
   CONSTRAINT `attivita_ibfk_7_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_8_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_9_nofollow` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=363 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1670,7 +1723,7 @@ CREATE TABLE `campagne` (
   CONSTRAINT `campagne_ibfk_1_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `campagne_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `campagne_ibfk_3_nofollow` FOREIGN KEY (`id_account_chiusura`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1712,7 +1765,7 @@ CREATE TABLE `caratteristiche_immobili` (
   `se_indirizzo` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1747,7 +1800,7 @@ CREATE TABLE `caratteristiche_prodotti` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1871,7 +1924,7 @@ CREATE TABLE `carrelli` (
   CONSTRAINT `carrelli_ibfk_7` FOREIGN KEY (`id_modalita_pagamento`) REFERENCES `modalita_pagamento` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `carrelli_ibfk_8` FOREIGN KEY (`spedizione_id_provincia`) REFERENCES `provincie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `carrelli_ibfk_9` FOREIGN KEY (`spedizione_id_stato`) REFERENCES `stati` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1911,7 +1964,7 @@ CREATE TABLE `carrelli_articoli` (
   CONSTRAINT `carrelli_articoli_ibfk_2_nofollow` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `carrelli_articoli_ibfk_3_nofollow` FOREIGN KEY (`id_modalita_spedizione`) REFERENCES `modalita_spedizione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `carrelli_articoli_ibfk_4_nofollow` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1982,6 +2035,7 @@ CREATE TABLE `categorie_anagrafica` (
   `se_fornitore` int(1) DEFAULT NULL,
   `se_produttore` int(1) DEFAULT NULL,
   `se_collaboratore` int(1) DEFAULT NULL,
+  `se_dipendente` int(1) DEFAULT NULL,
   `se_interno` int(1) DEFAULT NULL,
   `se_esterno` int(1) DEFAULT NULL,
   `se_agente` int(1) DEFAULT NULL,
@@ -1994,6 +2048,10 @@ CREATE TABLE `categorie_anagrafica` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `se_docente` int(1) DEFAULT NULL,
+  `se_tutor` int(1) DEFAULT NULL,
+  `se_classe` int(1) DEFAULT NULL,
+  `se_allievo` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_genitore` (`id_genitore`),
   KEY `indice` (`id`,`id_genitore`,`nome`),
@@ -2010,7 +2068,7 @@ CREATE TABLE `categorie_anagrafica` (
   CONSTRAINT `categorie_anagrafica_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `categorie_anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_anagrafica_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_anagrafica_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2032,6 +2090,7 @@ SET character_set_client = utf8;
   `se_fornitore` tinyint NOT NULL,
   `se_produttore` tinyint NOT NULL,
   `se_collaboratore` tinyint NOT NULL,
+  `se_dipendente` tinyint NOT NULL,
   `se_interno` tinyint NOT NULL,
   `se_esterno` tinyint NOT NULL,
   `se_agente` tinyint NOT NULL,
@@ -2044,6 +2103,10 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `se_docente` tinyint NOT NULL,
+  `se_tutor` tinyint NOT NULL,
+  `se_classe` tinyint NOT NULL,
+  `se_allievo` tinyint NOT NULL,
   `membri` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
@@ -2064,7 +2127,7 @@ CREATE TABLE `categorie_diritto` (
   KEY `nome` (`nome`),
   KEY `id_genitore` (`id_genitore`),
   CONSTRAINT `categorie_diritto_ibfk_1` FOREIGN KEY (`id_genitore`) REFERENCES `categorie_diritto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2103,7 +2166,7 @@ CREATE TABLE `categorie_documenti` (
   KEY `id_pagina` (`id_pagina`),
   CONSTRAINT `categorie_documenti_ibfk_1` FOREIGN KEY (`id_genitore`) REFERENCES `categorie_documenti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `categorie_documenti_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2155,7 +2218,7 @@ CREATE TABLE `categorie_eventi` (
   CONSTRAINT `categorie_eventi_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_eventi_ibfk_4_nofollow` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_eventi_ibfk_5_nofollow` FOREIGN KEY (`id_tipologia_pubblicazione`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2214,7 +2277,7 @@ CREATE TABLE `categorie_notizie` (
   CONSTRAINT `categorie_notizie_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_notizie_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_notizie_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia_pubblicazione`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2276,7 +2339,7 @@ CREATE TABLE `categorie_prodotti` (
   CONSTRAINT `categorie_prodotti_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_prodotti_ibfk_4_nofollow` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_prodotti_ibfk_5_nofollow` FOREIGN KEY (`id_tipologia_pubblicazione`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2301,7 +2364,7 @@ CREATE TABLE `categorie_prodotti_caratteristiche` (
   KEY `id_caratteristica` (`id_caratteristica`),
   CONSTRAINT `categorie_prodotti_caratteristiche_ibfk_1` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_prodotti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `categorie_prodotti_caratteristiche_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2368,7 +2431,7 @@ CREATE TABLE `classi_energetiche_immobili` (
   `rgb` char(8) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2405,7 +2468,7 @@ CREATE TABLE `colori` (
   `b` int(3) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2446,7 +2509,7 @@ CREATE TABLE `comuni` (
   KEY `id_provincia` (`id_provincia`),
   KEY `indice` (`id`,`id_provincia`,`nome`),
   CONSTRAINT `comuni_ibfk_2_nofollow` FOREIGN KEY (`id_provincia`) REFERENCES `provincie` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=25857 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2486,7 +2549,7 @@ CREATE TABLE `condizioni_immobili` (
   `nome` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2533,7 +2596,7 @@ CREATE TABLE `contatti` (
   CONSTRAINT `contatti_ibfk_3` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `contatti_ibfk_4` FOREIGN KEY (`id_account_inserimento`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `contatti_ibfk_5` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2623,6 +2686,10 @@ CREATE TABLE `contenuti` (
   `mittente_mail` char(128) DEFAULT NULL,
   `destinatario_nome` char(128) DEFAULT NULL,
   `destinatario_mail` char(128) DEFAULT NULL,
+  `destinatario_cc_nome` char(128) DEFAULT NULL,
+  `destinatario_cc_mail` char(128) DEFAULT NULL,
+  `destinatario_ccn_nome` char(128) DEFAULT NULL,
+  `destinatario_ccn_mail` char(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_prodotto_unico` (`id_prodotto`,`id_lingua`),
   UNIQUE KEY `id_categoria_prodotti_unico` (`id_categoria_prodotti`,`id_lingua`),
@@ -2693,7 +2760,7 @@ CREATE TABLE `contenuti` (
   CONSTRAINT `contenuti_ibfk_7` FOREIGN KEY (`id_rassegna_stampa`) REFERENCES `rassegna_stampa` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `contenuti_ibfk_8` FOREIGN KEY (`id_evento`) REFERENCES `eventi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `contenuti_ibfk_9` FOREIGN KEY (`id_data`) REFERENCES `date` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=11160 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2762,7 +2829,7 @@ CREATE TABLE `continenti` (
   `nome` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `indice` (`id`,`codice`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2777,6 +2844,83 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `codice` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `contratti`
+--
+
+DROP TABLE IF EXISTS `contratti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contratti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `note` text,
+  PRIMARY KEY (`id`),
+  KEY `id_tipologia` (`id_tipologia`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  CONSTRAINT `contratti_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_contratti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `contratti_ibfk_2` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `contratti_view`
+--
+
+DROP TABLE IF EXISTS `contratti_view`;
+/*!50001 DROP VIEW IF EXISTS `contratti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `contratti_view` (
+  `id` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `id_anagrafica` tinyint NOT NULL,
+  `data_inizio` tinyint NOT NULL,
+  `data_fine` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
+  `anagrafica` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `costi_contratti`
+--
+
+DROP TABLE IF EXISTS `costi_contratti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `costi_contratti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_contratto` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `costo_orario` decimal(16,5) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_contratto` (`id_contratto`),
+  CONSTRAINT `costi_contratti_ibfk_1` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `costi_contratti_view`
+--
+
+DROP TABLE IF EXISTS `costi_contratti_view`;
+/*!50001 DROP VIEW IF EXISTS `costi_contratti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `costi_contratti_view` (
+  `id` tinyint NOT NULL,
+  `id_contratto` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `costo_orario` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -2824,6 +2968,27 @@ CREATE TABLE `coupon_categorie_prodotti` (
   CONSTRAINT `coupon_categorie_prodotti_ibfk_2` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `coupon_categorie_prodotti_view`
+--
+
+DROP TABLE IF EXISTS `coupon_categorie_prodotti_view`;
+/*!50001 DROP VIEW IF EXISTS `coupon_categorie_prodotti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `coupon_categorie_prodotti_view` (
+  `id` tinyint NOT NULL,
+  `id_coupon` tinyint NOT NULL,
+  `id_categoria_prodotti` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL,
+  `nome_coupon` tinyint NOT NULL,
+  `inizio_validita` tinyint NOT NULL,
+  `fine_validita` tinyint NOT NULL,
+  `sconto_percentuale` tinyint NOT NULL,
+  `sconto_fisso` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `coupon_listini`
@@ -2923,6 +3088,8 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `inizio_validita` tinyint NOT NULL,
+  `fine_validita` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -2955,7 +3122,7 @@ CREATE TABLE `cron` (
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   CONSTRAINT `cron_ibfk_1` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `cron_ibfk_2` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2974,7 +3141,7 @@ CREATE TABLE `cron_log` (
   KEY `id_cron` (`id_cron`),
   KEY `indice` (`id`,`id_cron`,`timestamp_esecuzione`),
   CONSTRAINT `cron_log_ibfk_1_nofollow` FOREIGN KEY (`id_cron`) REFERENCES `cron` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1385618 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3057,7 +3224,7 @@ CREATE TABLE `date` (
   CONSTRAINT `date_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_date` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `date_ibfk_4_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `date_ibfk_5_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3101,7 +3268,7 @@ CREATE TABLE `disponibilita_immobili` (
   `se_disponibile` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3149,7 +3316,7 @@ CREATE TABLE `documenti` (
   CONSTRAINT `documenti_ibfk_3` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_documenti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_ibfk_4` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `documenti_ibfk_5` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3215,7 +3382,7 @@ CREATE TABLE `documenti_amministrativi` (
   CONSTRAINT `documenti_amministrativi_ibfk_7_nofollow` FOREIGN KEY (`id_sede_cliente`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_amministrativi_ibfk_8_nofollow` FOREIGN KEY (`id_fornitore`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_amministrativi_ibfk_9_nofollow` FOREIGN KEY (`id_referente_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3314,7 +3481,7 @@ CREATE TABLE `documenti_categorie` (
   KEY `id_documento` (`id_documento`),
   CONSTRAINT `documenti_categorie_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_documenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `documenti_categorie_ibfk_2` FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3403,7 +3570,7 @@ CREATE TABLE `esiti_attivita` (
   `se_positivo` int(1) DEFAULT NULL,
   `se_richiede_azione` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3435,7 +3602,7 @@ CREATE TABLE `esiti_incarichi_immobili` (
   `nome` char(32) DEFAULT NULL,
   `se_positivo` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3466,7 +3633,7 @@ CREATE TABLE `esiti_incroci_immobili` (
   `nome` char(32) DEFAULT NULL,
   `se_positivo` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3497,7 +3664,7 @@ CREATE TABLE `esiti_notizie_immobili` (
   `nome` char(32) DEFAULT NULL,
   `se_positivo` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3528,7 +3695,7 @@ CREATE TABLE `esiti_pratiche` (
   `nome` char(32) DEFAULT NULL,
   `se_positivo` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3559,7 +3726,7 @@ CREATE TABLE `esiti_richieste_immobili` (
   `nome` char(32) DEFAULT NULL,
   `se_positivo` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3602,7 +3769,7 @@ CREATE TABLE `eventi` (
   CONSTRAINT `eventi_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `eventi_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `eventi_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_eventi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3669,7 +3836,7 @@ CREATE TABLE `eventi_categorie` (
   CONSTRAINT `eventi_categorie_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `eventi_categorie_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia_pubblicazione`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `eventi_categorie_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_eventi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3720,7 +3887,7 @@ CREATE TABLE `fatturati` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `fatturato_unico` (`id_cliente`,`id_mandante`,`mese`,`anno`),
   KEY `id_emittente` (`id_emittente`)
-) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3827,6 +3994,7 @@ CREATE TABLE `file` (
   UNIQUE KEY `rassegna_stampa_unico` (`id_rassegna_stampa`,`id_ruolo`,`path`),
   UNIQUE KEY `evento_unico` (`id_evento`,`id_ruolo`,`path`),
   UNIQUE KEY `categoria_eventi_unico` (`id_categoria_eventi`,`id_ruolo`,`path`),
+  UNIQUE KEY `pratica_unico` (`id_pratica`,`id_ruolo`,`path`),
   KEY `path` (`path`),
   KEY `id_task` (`id_task`),
   KEY `indice` (`id`,`id_task`,`nome`,`path`),
@@ -3867,7 +4035,7 @@ CREATE TABLE `file` (
   CONSTRAINT `file_ibfk_7` FOREIGN KEY (`id_rassegna_stampa`) REFERENCES `rassegna_stampa` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_8` FOREIGN KEY (`id_evento`) REFERENCES `eventi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_9` FOREIGN KEY (`id_categoria_eventi`) REFERENCES `categorie_eventi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3986,7 +4154,7 @@ CREATE TABLE `gruppi` (
   CONSTRAINT `gruppi_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `gruppi_ibfk_2` FOREIGN KEY (`id_struttura`) REFERENCES `anagrafica_ruoli` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `gruppi_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4090,7 +4258,7 @@ CREATE TABLE `immagini` (
   CONSTRAINT `immagini_ibfk_7` FOREIGN KEY (`id_file`) REFERENCES `file` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_8` FOREIGN KEY (`id_categoria_eventi`) REFERENCES `categorie_eventi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_9` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4211,7 +4379,7 @@ CREATE TABLE `immobili` (
   CONSTRAINT `immobili_ibfk_4_nofollow` FOREIGN KEY (`id_disponibilita`) REFERENCES `disponibilita_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `immobili_ibfk_5_nofollow` FOREIGN KEY (`id_classe_energetica`) REFERENCES `classi_energetiche_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `immobili_ifbk_3_nofollow` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4241,7 +4409,7 @@ CREATE TABLE `immobili_anagrafica` (
   CONSTRAINT `immobili_anagrafica_ibfk_3` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_immobili_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `immobili_anagrafica_ibfk_4` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immobili_anagrafica_ibfk_5` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4262,7 +4430,7 @@ CREATE TABLE `immobili_caratteristiche` (
   KEY `id_caratteristica` (`id_caratteristica`),
   CONSTRAINT `immobili_caratteristiche_ibfk_1` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `immobili_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4588,7 +4756,7 @@ CREATE TABLE `incarichi_immobili` (
   CONSTRAINT `incarichi_immobili_ibfk_5` FOREIGN KEY (`id_agente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `incarichi_immobili_ibfk_6` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `incarichi_immobili_ibfk_7` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4779,7 +4947,7 @@ CREATE TABLE `incroci_immobili` (
   KEY `id_incarico` (`id_incarico`),
   KEY `id_richiesta` (`id_richiesta`),
   KEY `id_esito` (`id_esito`)
-) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4860,21 +5028,17 @@ CREATE TABLE `indirizzi` (
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   KEY `id_account_editor` (`id_account_editor`),
+  CONSTRAINT `indirizzi_ibfk_9_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `indirizzi_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `indirizzi_ibfk_1_nofollow` FOREIGN KEY (`id_comune`) REFERENCES `comuni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `indirizzi_ibfk_2` FOREIGN KEY (`id_agente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `indirizzi_ibfk_2_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `indirizzi_ibfk_3` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `indirizzi_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia_edificio`) REFERENCES `tipologie_edifici` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `indirizzi_ibfk_4` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `indirizzi_ibfk_4_nofollow` FOREIGN KEY (`id_condizione`) REFERENCES `condizioni_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `indirizzi_ibfk_5` FOREIGN KEY (`id_agente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `indirizzi_ibfk_5_nofollow` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `indirizzi_ibfk_6` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `indirizzi_ibfk_7` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `indirizzi_ibfk_8` FOREIGN KEY (`id_agente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `indirizzi_ibfk_9` FOREIGN KEY (`id_account_editor`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  CONSTRAINT `indirizzi_ibfk_6_nofollow` FOREIGN KEY (`id_agente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `indirizzi_ibfk_7_nofollow` FOREIGN KEY (`id_account_editor`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `indirizzi_ibfk_8_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4899,7 +5063,7 @@ CREATE TABLE `indirizzi_caratteristiche` (
   KEY `id_caratteristica` (`id_caratteristica`),
   CONSTRAINT `indirizzi_caratteristiche_ibfk_1` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `indirizzi_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5023,7 +5187,7 @@ CREATE TABLE `iva` (
   PRIMARY KEY (`id`),
   KEY `aliquota` (`aliquota`),
   KEY `indice` (`id`,`aliquota`,`nome`,`codice`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5068,7 +5232,7 @@ CREATE TABLE `job` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5149,7 +5313,7 @@ CREATE TABLE `lingue` (
   UNIQUE KEY `iso6393alpha3` (`iso6393alpha3`),
   UNIQUE KEY `ietf` (`ietf`),
   KEY `indice` (`id`,`nome`,`note`,`ietf`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5191,7 +5355,7 @@ CREATE TABLE `liste_mailing` (
   UNIQUE KEY `nome` (`nome`),
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5231,7 +5395,7 @@ CREATE TABLE `listini` (
   KEY `id_valuta` (`id_valuta`),
   KEY `indice` (`id`,`nome`,`id_valuta`),
   CONSTRAINT `listini_ibfk_1_nofollow` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5250,7 +5414,7 @@ CREATE TABLE `listini_clienti` (
   KEY `id_cliente` (`id_cliente`),
   CONSTRAINT `listini_clienti_ibfk_1` FOREIGN KEY (`id_listino`) REFERENCES `listini` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `listini_clienti_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5293,7 +5457,7 @@ CREATE TABLE `luoghi` (
   CONSTRAINT `luoghi_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `luoghi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `luoghi_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `luoghi_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5342,7 +5506,7 @@ CREATE TABLE `mail` (
   CONSTRAINT `mail_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mail_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `mail_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3119 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5361,7 +5525,7 @@ CREATE TABLE `mail_liste_mailing` (
   KEY `id_lista` (`id_lista`),
   CONSTRAINT `mail_liste_mailing_ibfk_1_nofollow` FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mail_liste_mailing_ibfk_2_nofollow` FOREIGN KEY (`id_lista`) REFERENCES `liste_mailing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2796 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5570,7 +5734,7 @@ CREATE TABLE `mailing` (
   CONSTRAINT `mailing_ibfk_1_nofollow` FOREIGN KEY (`id_job`) REFERENCES `job` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `mailing_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `mailing_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5589,7 +5753,7 @@ CREATE TABLE `mailing_liste` (
   KEY `id_lista` (`id_lista`),
   CONSTRAINT `mailing_liste_ibfk_1` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mailing_liste_ibfk_2_nofollow` FOREIGN KEY (`id_lista`) REFERENCES `liste_mailing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5626,7 +5790,7 @@ CREATE TABLE `mailing_mail` (
   KEY `id_mailing` (`id_mailing`),
   CONSTRAINT `mailing_mail_ibfk_1_nofollow` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `mailing_mail_ibfk_2_nofollow` FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5689,7 +5853,7 @@ CREATE TABLE `marchi` (
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   CONSTRAINT `marchi_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `marchi_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5812,7 +5976,7 @@ CREATE TABLE `metadati` (
   CONSTRAINT `metadati_ibfk_7` FOREIGN KEY (`id_evento`) REFERENCES `eventi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `metadati_ibfk_8` FOREIGN KEY (`id_categoria_eventi`) REFERENCES `categorie_eventi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `metadati_ibfk_9` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5917,7 +6081,7 @@ CREATE TABLE `modalita_pagamento` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`,`suggerimento`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5950,7 +6114,7 @@ CREATE TABLE `modalita_pagamento_prezzi` (
   CONSTRAINT `modalita_pagamento_prezzi_ibfk_4` FOREIGN KEY (`id_listino`) REFERENCES `listini` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `modalita_pagamento_prezzi_ibfk_5` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `modalita_pagamento_prezzi_ibfk_6` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6154,7 +6318,7 @@ CREATE TABLE `notizie` (
   CONSTRAINT `notizie_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_notizie` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `notizie_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `notizie_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6175,7 +6339,7 @@ CREATE TABLE `notizie_categorie` (
   KEY `indice` (`id`,`id_notizia`,`id_categoria`),
   CONSTRAINT `notizie_categorie_ibfk_1` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `notizie_categorie_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6194,7 +6358,7 @@ CREATE TABLE `notizie_categorie_prodotti` (
   KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
   CONSTRAINT `notizie_categorie_prodotti_ibfk_1` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `notizie_categorie_prodotti_ibfk_2` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6262,7 +6426,7 @@ CREATE TABLE `notizie_immobili` (
   CONSTRAINT `notizie_immobili_ibfk_2` FOREIGN KEY (`id_agenzia`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `notizie_immobili_ibfk_3` FOREIGN KEY (`id_agente`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `notizie_immobili_ibfk_4` FOREIGN KEY (`id_esito`) REFERENCES `esiti_notizie_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6397,7 +6561,7 @@ CREATE TABLE `notizie_prodotti` (
   KEY `id_prodotto` (`id_prodotto`),
   CONSTRAINT `notizie_prodotti_ibfk_1` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `notizie_prodotti_ibfk_2` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6462,6 +6626,43 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `orari_contratti`
+--
+
+DROP TABLE IF EXISTS `orari_contratti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orari_contratti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_contratto` int(11) NOT NULL,
+  `id_giorno` int(11) NOT NULL,
+  `ora_inizio` time NOT NULL,
+  `ora_fine` time NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_contratto` (`id_contratto`),
+  CONSTRAINT `orari_contratti_ibfk_1` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `orari_contratti_view`
+--
+
+DROP TABLE IF EXISTS `orari_contratti_view`;
+/*!50001 DROP VIEW IF EXISTS `orari_contratti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `orari_contratti_view` (
+  `id` tinyint NOT NULL,
+  `id_contratto` tinyint NOT NULL,
+  `id_giorno` tinyint NOT NULL,
+  `ora_inizio` tinyint NOT NULL,
+  `ora_fine` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `orientamenti_sessuali`
 --
 
@@ -6473,7 +6674,7 @@ CREATE TABLE `orientamenti_sessuali` (
   `nome` char(64) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6505,6 +6706,8 @@ CREATE TABLE `pagine` (
   `nome` char(255) DEFAULT NULL,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(32) DEFAULT NULL,
+  `id_contenuti` int(11) DEFAULT NULL,
   `id_tipologia_pubblicazione` int(11) DEFAULT NULL,
   `se_sitemap` int(1) DEFAULT NULL,
   `se_cacheable` int(1) DEFAULT NULL,
@@ -6518,11 +6721,13 @@ CREATE TABLE `pagine` (
   KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `id_contenuti` (`id_contenuti`),
+  CONSTRAINT `pagine_ibfk_1` FOREIGN KEY (`id_contenuti`) REFERENCES `contenuti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `pagine_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `pagine` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `pagine_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `pagine_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `pagine_ibfk_4_nofollow` FOREIGN KEY (`id_tipologia_pubblicazione`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6541,7 +6746,7 @@ CREATE TABLE `pagine_gruppi` (
   KEY `id_gruppo` (`id_gruppo`),
   CONSTRAINT `pagine_gruppi_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pagine_gruppi_ibfk_2` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6575,7 +6780,7 @@ CREATE TABLE `pagine_macro` (
   UNIQUE KEY `id_pagina` (`id_pagina`,`macro`),
   KEY `id_gruppo` (`macro`),
   CONSTRAINT `pagine_macro_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6616,7 +6821,7 @@ CREATE TABLE `pagine_menu` (
   KEY `id_lingua` (`id_lingua`),
   CONSTRAINT `pagine_menu_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pagine_menu_ibfk_2_nofollow` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6655,6 +6860,8 @@ SET character_set_client = utf8;
   `nome` tinyint NOT NULL,
   `template` tinyint NOT NULL,
   `schema_html` tinyint NOT NULL,
+  `tema_css` tinyint NOT NULL,
+  `id_contenuti` tinyint NOT NULL,
   `id_tipologia_pubblicazione` tinyint NOT NULL,
   `se_sitemap` tinyint NOT NULL,
   `se_cacheable` tinyint NOT NULL,
@@ -6687,7 +6894,7 @@ CREATE TABLE `patrocini_pratiche` (
   PRIMARY KEY (`id`),
   KEY `id_pratica` (`id_pratica`),
   CONSTRAINT `patrocini_pratiche_ibfk_1` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6735,7 +6942,7 @@ CREATE TABLE `popup` (
   KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
   CONSTRAINT `popup_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_popup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `popup_ibfk_2` FOREIGN KEY (`id_tipologia_pubblicazione`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6756,7 +6963,7 @@ CREATE TABLE `popup_pagine` (
   KEY `id_pagina` (`id_pagina`),
   CONSTRAINT `popup_pagine_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `popup_pagine_ibfk_2` FOREIGN KEY (`id_popup`) REFERENCES `popup` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6853,16 +7060,16 @@ CREATE TABLE `pratiche` (
   KEY `id_esito` (`id_esito`),
   KEY `id_esito_2` (`id_esito`),
   KEY `id_account_editor` (`id_account_editor`),
+  CONSTRAINT `pratiche_ibfk_4_nofollow` FOREIGN KEY (`id_account_chiusura`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `pratiche_ibfk_1` FOREIGN KEY (`id_sede_apertura`) REFERENCES `anagrafica` (`id`),
+  CONSTRAINT `pratiche_ibfk_1_nofollow` FOREIGN KEY (`id_account_editor`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `pratiche_ibfk_2` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_pratiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pratiche_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `pratiche_ibfk_3` FOREIGN KEY (`id_categoria_diritto`) REFERENCES `categorie_diritto` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pratiche_ibfk_3_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `pratiche_ibfk_4` FOREIGN KEY (`id_provenienza`) REFERENCES `provenienze_contatti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `pratiche_ibfk_5` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `pratiche_ibfk_6` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `pratiche_ibfk_7` FOREIGN KEY (`id_account_chiusura`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `pratiche_ibfk_8` FOREIGN KEY (`id_esito`) REFERENCES `esiti_pratiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `pratiche_ibfk_9` FOREIGN KEY (`id_account_editor`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
+  CONSTRAINT `pratiche_ibfk_8` FOREIGN KEY (`id_esito`) REFERENCES `esiti_pratiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7030,7 +7237,7 @@ CREATE TABLE `pratiche_assistiti` (
   KEY `id_anagrafica` (`id_anagrafica`),
   CONSTRAINT `pratiche_assistiti_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pratiche_assistiti_ibfk_2` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7067,13 +7274,21 @@ CREATE TABLE `pratiche_avvocati` (
   `id_anagrafica` int(11) NOT NULL,
   `id_pratica` int(11) NOT NULL,
   `se_responsabile` int(1) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unico` (`id_anagrafica`,`id_pratica`),
   KEY `id_anagrafica` (`id_anagrafica`),
   KEY `id_pratica` (`id_pratica`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  CONSTRAINT `pratiche_avvocati_ibfk_4_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `pratiche_avvocati_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `pratiche_avvocati_ibfk_2` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+  CONSTRAINT `pratiche_avvocati_ibfk_2` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pratiche_avvocati_ibfk_3_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7089,6 +7304,10 @@ SET character_set_client = utf8;
   `id_anagrafica` tinyint NOT NULL,
   `id_pratica` tinyint NOT NULL,
   `se_responsabile` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
   `__short_label__` tinyint NOT NULL,
   `lista_assistiti` tinyint NOT NULL,
   `data_apertura` tinyint NOT NULL,
@@ -7116,7 +7335,7 @@ CREATE TABLE `pratiche_servizi_contatto` (
   KEY `id_pratica` (`id_pratica`),
   CONSTRAINT `pratiche_servizi_contatto_ibfk_1` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pratiche_servizi_contatto_ibfk_2` FOREIGN KEY (`id_servizio_contatto`) REFERENCES `provenienze_contatti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7209,7 +7428,7 @@ CREATE TABLE `prezzi` (
   CONSTRAINT `prezzi_ibfk_2_nofollow` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `prezzi_ibfk_3_nofollow` FOREIGN KEY (`id_udm`) REFERENCES `udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `prezzi_ibfk_4` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7255,7 +7474,7 @@ CREATE TABLE `priorita` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`,`ordine`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7348,7 +7567,7 @@ CREATE TABLE `prodotti_caratteristiche` (
   KEY `id_caratteristica` (`id_caratteristica`),
   CONSTRAINT `prodotti_caratteristiche_ibfk_1` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `prodotti_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=258 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7394,7 +7613,7 @@ CREATE TABLE `prodotti_categorie` (
   CONSTRAINT `prodotti_categorie_ibfk_1` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `prodotti_categorie_ibfk_2_nofollow` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `prodotti_categorie_ibfk_3_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_prodotti_categorie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7412,7 +7631,9 @@ SET character_set_client = utf8;
   `id_ruolo` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
   `se_principale` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
+  `__label__` tinyint NOT NULL,
+  `prodotto` tinyint NOT NULL,
+  `pubblicazione` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -7453,7 +7674,7 @@ CREATE TABLE `prodotti_stagioni` (
   KEY `id_stagione` (`id_stagione`),
   CONSTRAINT `prodotti_stagioni_ibfk_1_nofollow` FOREIGN KEY (`id_stagione`) REFERENCES `stagioni_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `prodotti_stagioni_ibfk_2` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7698,7 +7919,7 @@ CREATE TABLE `provenienze_contatti` (
   `se_segnalato` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7736,7 +7957,7 @@ CREATE TABLE `provincie` (
   KEY `id_regione` (`id_regione`),
   KEY `indice` (`id`,`id_regione`,`nome`,`sigla`),
   CONSTRAINT `provincie_ibfk_3_nofollow` FOREIGN KEY (`id_regione`) REFERENCES `regioni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8162 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7758,6 +7979,64 @@ SET character_set_client = utf8;
   `stato` tinyint NOT NULL,
   `id_continente` tinyint NOT NULL,
   `continente` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `pubblicazione`
+--
+
+DROP TABLE IF EXISTS `pubblicazione`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pubblicazione` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_sito` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `template` char(32) DEFAULT NULL,
+  `schema_html` char(32) DEFAULT NULL,
+  `tema_css` char(32) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
+  `timestamp_pubblicazione` int(11) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_sito` (`id_sito`),
+  KEY `id_tipologia` (`id_tipologia`),
+  KEY `id_pagina` (`id_pagina`),
+  KEY `id_genitore` (`id_genitore`),
+  CONSTRAINT `pubblicazione_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `pubblicazione` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `pubblicazione_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `pubblicazione_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `pubblicazione_view`
+--
+
+DROP TABLE IF EXISTS `pubblicazione_view`;
+/*!50001 DROP VIEW IF EXISTS `pubblicazione_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `pubblicazione_view` (
+  `id` tinyint NOT NULL,
+  `id_sito` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `ordine` tinyint NOT NULL,
+  `id_pagina` tinyint NOT NULL,
+  `id_genitore` tinyint NOT NULL,
+  `template` tinyint NOT NULL,
+  `schema_html` tinyint NOT NULL,
+  `tema_css` tinyint NOT NULL,
+  `se_sitemap` tinyint NOT NULL,
+  `se_cacheable` tinyint NOT NULL,
+  `timestamp_pubblicazione` tinyint NOT NULL,
+  `timestamp_archiviazione` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -7785,7 +8064,7 @@ CREATE TABLE `rassegna_stampa` (
   KEY `id_tipologia` (`id_tipologia`),
   CONSTRAINT `rassegna_stampa_ibfk_1` FOREIGN KEY (`id_testata`) REFERENCES `testate` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `rassegna_stampa_ibfk_2` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_rassegna_stampa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7807,7 +8086,7 @@ CREATE TABLE `rassegna_stampa_anagrafica` (
   CONSTRAINT `rassegna_stampa_anagrafica_ibfk_1` FOREIGN KEY (`id_rassegna_stampa`) REFERENCES `rassegna_stampa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `rassegna_stampa_anagrafica_ibfk_2_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `rassegna_stampa_anagrafica_ibfk_3_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_rassegna_stampa` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7828,7 +8107,7 @@ CREATE TABLE `rassegna_stampa_eventi` (
   KEY `indice` (`id`,`id_rassegna_stampa`,`id_evento`),
   CONSTRAINT `rassegna_stampa_eventi_ibfk_1` FOREIGN KEY (`id_rassegna_stampa`) REFERENCES `rassegna_stampa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `rassegna_stampa_eventi_ibfk_2` FOREIGN KEY (`id_evento`) REFERENCES `eventi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7889,7 +8168,7 @@ CREATE TABLE `recensioni` (
   CONSTRAINT `recensioni_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `recensioni_ibfk_3_nofollow` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `recensioni_ibfk_4_nofollow` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7937,7 +8216,7 @@ CREATE TABLE `redirect` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `sorgente` (`sorgente`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7975,7 +8254,7 @@ CREATE TABLE `regimi_fiscali` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `indice` (`id`,`nome`,`codice`),
   KEY `codice` (`codice`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8010,7 +8289,7 @@ CREATE TABLE `regioni` (
   UNIQUE KEY `codice_istat` (`codice_istat`),
   KEY `id_stato` (`id_stato`),
   CONSTRAINT `regioni_ibfk_2_nofollow` FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8080,7 +8359,7 @@ CREATE TABLE `richieste_immobili` (
   CONSTRAINT `richieste_immobili_ibfk_6` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `richieste_immobili_ibfk_7` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `richieste_immobili_ibfk_8` FOREIGN KEY (`id_account_editor`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8152,7 +8431,7 @@ CREATE TABLE `richieste_immobili_caratteristiche` (
   KEY `id_richiesta` (`id_richiesta`),
   CONSTRAINT `richieste_immobili_caratteristiche_ibfk_1` FOREIGN KEY (`id_richiesta`) REFERENCES `richieste_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `richieste_immobili_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8199,7 +8478,7 @@ CREATE TABLE `richieste_immobili_classi_energetiche` (
   KEY `id_classe` (`id_classe`),
   CONSTRAINT `richieste_immobili_classi_energetiche_ibfk_1` FOREIGN KEY (`id_richiesta`) REFERENCES `richieste_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `richieste_immobili_classi_energetiche_ibfk_2` FOREIGN KEY (`id_classe`) REFERENCES `classi_energetiche_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8245,7 +8524,7 @@ CREATE TABLE `richieste_immobili_condizioni` (
   KEY `id_condizione` (`id_condizione`),
   CONSTRAINT `richieste_immobili_condizioni_ibfk_1` FOREIGN KEY (`id_richiesta`) REFERENCES `richieste_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `richieste_immobili_condizioni_ibfk_2` FOREIGN KEY (`id_condizione`) REFERENCES `condizioni_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8291,7 +8570,7 @@ CREATE TABLE `richieste_immobili_disponibilita` (
   KEY `id_disponibilita` (`id_disponibilita`),
   CONSTRAINT `richieste_immobili_disponibilita_ibfk_1` FOREIGN KEY (`id_richiesta`) REFERENCES `richieste_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `richieste_immobili_disponibilita_ibfk_2` FOREIGN KEY (`id_disponibilita`) REFERENCES `disponibilita_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8337,7 +8616,7 @@ CREATE TABLE `richieste_immobili_tipologie` (
   KEY `id_richiesta` (`id_richiesta`),
   CONSTRAINT `richieste_immobili_tipologie_ibfk_1` FOREIGN KEY (`id_richiesta`) REFERENCES `richieste_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `richieste_immobili_tipologie_ibfk_2` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8362,7 +8641,7 @@ CREATE TABLE `richieste_immobili_tipologie_edifici` (
   KEY `id_richiesta` (`id_richiesta`),
   CONSTRAINT `richieste_immobili_tipologie_edifici_ibfk_1` FOREIGN KEY (`id_richiesta`) REFERENCES `richieste_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `richieste_immobili_tipologie_edifici_ibfk_2` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_edifici` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8412,7 +8691,7 @@ CREATE TABLE `richieste_immobili_tipologie_incarichi` (
   CONSTRAINT `richieste_immobili_tipologie_incarichi_ibfk_1` FOREIGN KEY (`id_richiesta`) REFERENCES `richieste_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `richieste_immobili_tipologie_incarichi_ibfk_2` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_incarichi_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `richieste_immobili_tipologie_incarichi_ibfk_3` FOREIGN KEY (`id_tipologia_founding`) REFERENCES `tipologie_founding` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8534,7 +8813,7 @@ CREATE TABLE `richieste_immobili_zone` (
   KEY `id_richiesta` (`id_richiesta`),
   CONSTRAINT `richieste_immobili_zone_ibfk_1` FOREIGN KEY (`id_richiesta`) REFERENCES `richieste_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `richieste_immobili_zone_ibfk_2` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8632,7 +8911,7 @@ CREATE TABLE `righe_documenti_amministrativi` (
   CONSTRAINT `righe_documenti_amministrativi_ibfk_7_nofollow` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `righe_documenti_amministrativi_ibfk_8_nofollow` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `righe_documenti_amministrativi_ibfk_9_nofollow` FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=455 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8709,7 +8988,7 @@ CREATE TABLE `righe_fatturati` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unico` (`anno`,`mese`,`id_mandante`,`id_cliente`,`id_agente`,`id_emittente`,`riferimento_fattura`,`imponibile`),
   KEY `id_fatturato` (`id_fatturato`)
-) ENGINE=InnoDB AUTO_INCREMENT=750 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8863,7 +9142,7 @@ CREATE TABLE `ruoli_anagrafica` (
   `nome` char(128) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8891,10 +9170,12 @@ DROP TABLE IF EXISTS `ruoli_audio`;
 CREATE TABLE `ruoli_audio` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` char(64) NOT NULL,
+  `se_anagrafica` int(1) DEFAULT NULL,
+  `se_contenuti` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8908,6 +9189,8 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `ruoli_audio_view` (
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `se_anagrafica` tinyint NOT NULL,
+  `se_contenuti` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -8925,7 +9208,7 @@ CREATE TABLE `ruoli_eventi` (
   `locandina` char(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8954,10 +9237,12 @@ DROP TABLE IF EXISTS `ruoli_file`;
 CREATE TABLE `ruoli_file` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` char(64) NOT NULL,
+  `se_anagrafica` int(1) DEFAULT NULL,
+  `se_contenuti` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -8971,6 +9256,8 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `ruoli_file_view` (
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `se_anagrafica` tinyint NOT NULL,
+  `se_contenuti` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -8994,7 +9281,7 @@ CREATE TABLE `ruoli_immagini` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`,`ordine_scalamento`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9010,7 +9297,7 @@ CREATE TABLE `ruoli_immagini_anagrafica` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9060,7 +9347,7 @@ CREATE TABLE `ruoli_immobili_anagrafica` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` char(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9123,7 +9410,7 @@ CREATE TABLE `ruoli_rassegna_stampa` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9151,10 +9438,12 @@ DROP TABLE IF EXISTS `ruoli_video`;
 CREATE TABLE `ruoli_video` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` char(64) NOT NULL,
+  `se_anagrafica` int(1) DEFAULT NULL,
+  `se_contenuti` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9168,6 +9457,8 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `ruoli_video_view` (
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `se_anagrafica` tinyint NOT NULL,
+  `se_contenuti` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -9203,7 +9494,7 @@ CREATE TABLE `scadenze` (
   CONSTRAINT `scadenze_ibfk_2` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `scadenze_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `scadenze_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9249,7 +9540,7 @@ CREATE TABLE `settori` (
   KEY `id_genitore` (`id_genitore`),
   KEY `id` (`id`,`id_genitore`,`nome`),
   CONSTRAINT `settori_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `settori` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2750 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9419,7 +9710,7 @@ CREATE TABLE `stagioni_prodotti` (
   `new` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9457,7 +9748,7 @@ CREATE TABLE `stati` (
   KEY `id_continente` (`id_continente`),
   KEY `indice` (`id`,`id_continente`,`iso31661alpha2`,`iso31661alpha3`,`nome`),
   CONSTRAINT `stati_ibfk_1_nofollow` FOREIGN KEY (`id_continente`) REFERENCES `continenti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -9636,7 +9927,7 @@ CREATE TABLE `taglie` (
   UNIQUE KEY `taglia_unica` (`it`,`us`,`uk`,`fr`),
   KEY `id_tipologia` (`id_tipologia`),
   CONSTRAINT `taglie_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_taglie` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=172 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10090,7 +10381,7 @@ CREATE TABLE `task` (
   CONSTRAINT `task_ibfk_5_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `task_ibfk_6_nofollow` FOREIGN KEY (`id_responsabile`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `task_ibfk_7_nofollow` FOREIGN KEY (`id_cliente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10157,7 +10448,7 @@ CREATE TABLE `telefoni` (
   CONSTRAINT `telefoni_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `telefoni_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_telefoni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `telefoni_ibfk_2_nofollow` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10202,7 +10493,7 @@ CREATE TABLE `template_mail` (
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   CONSTRAINT `template_mail_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `template_mail_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10248,7 +10539,7 @@ CREATE TABLE `testate` (
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   CONSTRAINT `testate_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `testate_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10284,7 +10575,7 @@ CREATE TABLE `tipologie_anagrafica` (
   PRIMARY KEY (`id`),
   KEY `id_genitore` (`id_genitore`),
   CONSTRAINT `tipologie_anagrafica_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10330,7 +10621,7 @@ CREATE TABLE `tipologie_attivita` (
   UNIQUE KEY `indice` (`id`,`id_genitore`,`nome`,`html`),
   KEY `id_genitore` (`id_genitore`),
   CONSTRAINT `tipologie_attivita_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_attivita` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10430,6 +10721,35 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `tipologie_contratti`
+--
+
+DROP TABLE IF EXISTS `tipologie_contratti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tipologie_contratti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` char(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `tipologie_contratti_view`
+--
+
+DROP TABLE IF EXISTS `tipologie_contratti_view`;
+/*!50001 DROP VIEW IF EXISTS `tipologie_contratti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `tipologie_contratti_view` (
+  `id` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `tipologie_crm`
 --
 
@@ -10440,6 +10760,7 @@ CREATE TABLE `tipologie_crm` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` char(32) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -10452,7 +10773,7 @@ CREATE TABLE `tipologie_crm` (
   KEY `ordine` (`ordine`),
   CONSTRAINT `tipologie_crm_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `tipologie_crm_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10467,10 +10788,12 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `membri` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -10488,7 +10811,7 @@ CREATE TABLE `tipologie_date` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10518,7 +10841,7 @@ CREATE TABLE `tipologie_documenti` (
   `nome` char(64) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10540,7 +10863,7 @@ CREATE TABLE `tipologie_documenti_amministrativi` (
   `se_ordine` int(1) DEFAULT NULL,
   `se_ricevuta` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10594,7 +10917,7 @@ CREATE TABLE `tipologie_edifici` (
   `nome` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10622,10 +10945,12 @@ DROP TABLE IF EXISTS `tipologie_embed`;
 CREATE TABLE `tipologie_embed` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` char(64) NOT NULL,
+  `se_video` int(1) DEFAULT NULL,
+  `se_audio` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10639,6 +10964,8 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `tipologie_embed_view` (
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `se_video` tinyint NOT NULL,
+  `se_audio` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -10664,7 +10991,7 @@ CREATE TABLE `tipologie_eventi` (
   KEY `id_account_inserimento` (`id_account_inserimento`),
   CONSTRAINT `tipologie_eventi_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `tipologie_eventi_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10698,7 +11025,7 @@ CREATE TABLE `tipologie_founding` (
   `nome` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10730,7 +11057,7 @@ CREATE TABLE `tipologie_immobili` (
   `se_industriale` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10762,7 +11089,7 @@ CREATE TABLE `tipologie_incarichi_immobili` (
   `nome` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10797,7 +11124,7 @@ CREATE TABLE `tipologie_indirizzi` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`,`se_sede`,`se_operativa`,`se_abitazione`,`html`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10831,7 +11158,7 @@ CREATE TABLE `tipologie_interesse` (
   `nome` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10893,7 +11220,7 @@ CREATE TABLE `tipologie_notizie` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10923,7 +11250,7 @@ CREATE TABLE `tipologie_popup` (
   `nome` char(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10953,7 +11280,7 @@ CREATE TABLE `tipologie_pratiche` (
   `nome` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -10989,7 +11316,7 @@ CREATE TABLE `tipologie_prodotti` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `id` (`id`,`nome`,`se_colori`,`se_taglie`,`se_dimensioni`,`se_imballo`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11024,7 +11351,7 @@ CREATE TABLE `tipologie_progetti` (
   KEY `se_scalare` (`se_scalare`),
   KEY `se_commessa` (`se_commessa`),
   KEY `indice` (`id`,`nome`,`se_scalare`,`se_commessa`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11068,7 +11395,7 @@ CREATE TABLE `tipologie_pubblicazione` (
   KEY `se_pubblicato` (`se_pubblicato`),
   KEY `se_newsletter` (`se_newsletter`),
   KEY `ordine` (`ordine`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11115,7 +11442,7 @@ CREATE TABLE `tipologie_rassegna_stampa` (
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   CONSTRAINT `tipologie_rassegna_stampa_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `tipologie_rassegna_stampa_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11152,7 +11479,7 @@ CREATE TABLE `tipologie_righe_documenti_amministrativi` (
   `se_pratica` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11167,7 +11494,7 @@ CREATE TABLE `tipologie_soddisfazione` (
   `nome` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11197,7 +11524,7 @@ CREATE TABLE `tipologie_taglie` (
   `nome` char(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11270,7 +11597,7 @@ CREATE TABLE `tipologie_telefoni` (
   `html` char(16) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11302,7 +11629,7 @@ CREATE TABLE `tipologie_udm` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11337,7 +11664,7 @@ CREATE TABLE `tipologie_vani` (
   `percentuale_commerciale` decimal(5,2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11414,7 +11741,7 @@ CREATE TABLE `transcodifica_clienti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unico` (`id_mandante`,`id_cliente`,`id_cliente_mandante`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11456,7 +11783,7 @@ CREATE TABLE `udm` (
   KEY `id_tipologia` (`id_tipologia`),
   CONSTRAINT `udm_ibfk_1_nofollow` FOREIGN KEY (`id_udm`) REFERENCES `udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `udm_ibfk_2_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11609,7 +11936,7 @@ CREATE TABLE `valute` (
   UNIQUE KEY `html` (`html`),
   UNIQUE KEY `utf8` (`utf8`),
   KEY `indice` (`id`,`iso4217`,`html`,`utf8`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11661,7 +11988,7 @@ CREATE TABLE `vani_immobili` (
   CONSTRAINT `vani_immobili_ibfk_2` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_vani` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `vani_immobili_ibfk_3` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `vani_immobili_ibfk_4` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11925,7 +12252,7 @@ CREATE TABLE `video` (
   CONSTRAINT `video_ibfk_8_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_video` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `video_ibfk_9` FOREIGN KEY (`id_categoria_eventi`) REFERENCES `categorie_eventi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_9_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -11988,7 +12315,7 @@ CREATE TABLE `zone` (
   KEY `indice` (`id`,`nome`),
   KEY `id_genitore` (`id_genitore`),
   CONSTRAINT `zone_ibfk_1` FOREIGN KEY (`id_genitore`) REFERENCES `zone` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -12010,7 +12337,7 @@ CREATE TABLE `zone_cap` (
   UNIQUE KEY `cap` (`cap`),
   KEY `id_zona` (`id_zona`),
   CONSTRAINT `zone_cap_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -12051,7 +12378,7 @@ CREATE TABLE `zone_caratteristiche` (
   KEY `id_caratteristica` (`id_caratteristica`),
   CONSTRAINT `zone_caratteristiche_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `zone_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -13380,6 +13707,106 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `pubblicazione_path` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=CURRENT_USER() FUNCTION `pubblicazione_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
+    READS SQL DATA
+BEGIN
+
+	
+	
+
+	
+	
+
+	
+	
+
+	DECLARE path char( 255 ) DEFAULT '';
+	DECLARE step char( 255 ) DEFAULT '';
+	DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+	DECLARE righe int( 11 ) DEFAULT 0;
+
+	WHILE ( p1 IS NOT NULL ) DO
+
+	    SELECT
+		categorie_diritto.id_genitore,
+		categorie_diritto.nome,
+		count( categorie_diritto.id )
+	    FROM categorie_diritto
+	    WHERE categorie_diritto.id = p1
+	    INTO p1, step, righe;
+
+	    IF( p1 IS NULL ) THEN
+		SET separatore = '';
+	    END IF;
+
+	    SET path = concat( separatore, step, path );
+
+	END WHILE;
+
+	RETURN path;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `pubblicazione_path_check` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=CURRENT_USER() FUNCTION `pubblicazione_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
+    READS SQL DATA
+BEGIN
+
+	
+	
+	
+
+	
+	
+
+	
+	
+
+	WHILE ( p1 IS NOT NULL ) DO
+
+	    IF( p1 = p2 ) THEN
+		RETURN 1;
+	    END IF;
+
+	    SELECT
+		categorie_diritto.id_genitore
+	    FROM categorie_diritto
+	    WHERE categorie_diritto.id = p1
+	    INTO p1;
+
+	END WHILE;
+
+	RETURN 0;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP FUNCTION IF EXISTS `richieste_immobili_caratteristiche_check` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -14338,12 +14765,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `account_view` AS select `account`.`id` AS `id`,`account`.`id_anagrafica` AS `id_anagrafica`,`account`.`id_mail` AS `id_mail`,`account`.`username` AS `username`,`account`.`password` AS `password`,`account`.`se_attivo` AS `se_attivo`,`account`.`token` AS `token`,`account`.`timestamp_login` AS `timestamp_login`,`account`.`id_account_inserimento` AS `id_account_inserimento`,`account`.`timestamp_inserimento` AS `timestamp_inserimento`,`account`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`account`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,if((`account`.`se_attivo` = '1'),'attivo','inattivo') AS `attivo`,coalesce(`anagrafica`.`denominazione`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`),'') AS `utente`,group_concat(`gruppi`.`nome` order by `gruppi`.`id` ASC separator '|') AS `gruppi`,group_concat(`gruppi`.`id` order by `gruppi`.`id` ASC separator '|') AS `id_gruppi`,max(`gruppi`.`id`) AS `gruppo_sede`,`account_get_struttura`(`account`.`id`) AS `id_anagrafica_struttura`,group_concat(distinct concat(`account_gruppi_attribuzione`.`entita`,'#',`account_gruppi_attribuzione`.`id_gruppo`) order by `account_gruppi_attribuzione`.`entita` ASC,`account_gruppi_attribuzione`.`id_gruppo` ASC separator '|') AS `id_gruppi_attribuzione`,`account`.`username` AS `__label__` from ((((`account` left join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) left join `account_gruppi` on((`account_gruppi`.`id_account` = `account`.`id`))) left join `account_gruppi_attribuzione` on((`account_gruppi_attribuzione`.`id_account` = `account`.`id`))) left join `gruppi` on((`gruppi`.`id` = `account_gruppi`.`id_gruppo`))) group by `account`.`id` order by `account`.`username` */;
+/*!50001 VIEW `account_view` AS select `account`.`id` AS `id`,`account`.`id_anagrafica` AS `id_anagrafica`,`account`.`id_mail` AS `id_mail`,`account`.`username` AS `username`,`account`.`password` AS `password`,`account`.`se_attivo` AS `se_attivo`,`account`.`token` AS `token`,`account`.`timestamp_login` AS `timestamp_login`,`account`.`id_account_inserimento` AS `id_account_inserimento`,`account`.`timestamp_inserimento` AS `timestamp_inserimento`,`account`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`account`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`account`.`timestamp_cambio_password` AS `timestamp_cambio_password`,if((`account`.`se_attivo` = '1'),'attivo','inattivo') AS `attivo`,coalesce(`anagrafica`.`denominazione`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`),'') AS `utente`,group_concat(`gruppi`.`nome` order by `gruppi`.`id` ASC separator '|') AS `gruppi`,group_concat(`gruppi`.`id` order by `gruppi`.`id` ASC separator '|') AS `id_gruppi`,max(`gruppi`.`id`) AS `gruppo_sede`,`account_get_struttura`(`account`.`id`) AS `id_anagrafica_struttura`,group_concat(distinct concat(`account_gruppi_attribuzione`.`entita`,'#',`account_gruppi_attribuzione`.`id_gruppo`) order by `account_gruppi_attribuzione`.`entita` ASC,`account_gruppi_attribuzione`.`id_gruppo` ASC separator '|') AS `id_gruppi_attribuzione`,`account`.`username` AS `__label__` from ((((`account` left join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) left join `account_gruppi` on((`account_gruppi`.`id_account` = `account`.`id`))) left join `account_gruppi_attribuzione` on((`account_gruppi_attribuzione`.`id_account` = `account`.`id`))) left join `gruppi` on((`gruppi`.`id` = `account_gruppi`.`id_gruppo`))) group by `account`.`id` order by `account`.`username` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -14463,6 +14890,25 @@ DELIMITER ;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `anagrafica_indirizzi_view`
+--
+
+/*!50001 DROP TABLE IF EXISTS `anagrafica_indirizzi_view`*/;
+/*!50001 DROP VIEW IF EXISTS `anagrafica_indirizzi_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
+/*!50001 VIEW `anagrafica_indirizzi_view` AS select `anagrafica_indirizzi`.`id` AS `id`,`anagrafica_indirizzi`.`id_indirizzo` AS `id_indirizzo`,`anagrafica_indirizzi`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_indirizzi`.`interno` AS `interno`,`anagrafica_indirizzi`.`descrizione` AS `descrizione`,`anagrafica_view`.`__label__` AS `anagrafica`,`indirizzi_view`.`__label__` AS `indirizzo`,`anagrafica_indirizzi`.`descrizione` AS `__label__` from ((`anagrafica_indirizzi` join `anagrafica_view` on((`anagrafica_view`.`id` = `anagrafica_indirizzi`.`id_anagrafica`))) join `indirizzi_view` on((`indirizzi_view`.`id` = `anagrafica_indirizzi`.`id_indirizzo`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `anagrafica_ruoli_view`
 --
 
@@ -14514,7 +14960,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_view` AS select `anagrafica`.`id` AS `id`,`anagrafica`.`codice` AS `codice`,`anagrafica`.`id_tipologia` AS `id_tipologia`,`anagrafica`.`nome` AS `nome`,`anagrafica`.`cognome` AS `cognome`,`anagrafica`.`denominazione` AS `denominazione`,`anagrafica`.`soprannome` AS `soprannome`,`anagrafica`.`sesso` AS `sesso`,`anagrafica`.`id_orientamento_sessuale` AS `id_orientamento_sessuale`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,`anagrafica`.`partita_iva` AS `partita_iva`,`anagrafica`.`codice_sdi` AS `codice_sdi`,`anagrafica`.`id_pec_sdi` AS `id_pec_sdi`,`anagrafica`.`id_regime_fiscale` AS `id_regime_fiscale`,`anagrafica`.`note_amministrative` AS `note_amministrative`,`anagrafica`.`luogo_nascita` AS `luogo_nascita`,`anagrafica`.`stato_nascita` AS `stato_nascita`,`anagrafica`.`id_stato_nascita` AS `id_stato_nascita`,`anagrafica`.`comune_nascita` AS `comune_nascita`,`anagrafica`.`giorno_nascita` AS `giorno_nascita`,`anagrafica`.`mese_nascita` AS `mese_nascita`,`anagrafica`.`anno_nascita` AS `anno_nascita`,`anagrafica`.`id_diritto` AS `id_diritto`,`anagrafica`.`id_tipologia_crm` AS `id_tipologia_crm`,`anagrafica`.`id_agente` AS `id_agente`,`anagrafica`.`note_commerciali` AS `note_commerciali`,`anagrafica`.`condizioni_vendita` AS `condizioni_vendita`,`anagrafica`.`condizioni_acquisto` AS `condizioni_acquisto`,`anagrafica`.`note` AS `note`,`anagrafica`.`data_cessazione` AS `data_cessazione`,`anagrafica`.`note_cessazione` AS `note_cessazione`,`anagrafica`.`recapiti` AS `recapiti`,`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica`.`se_importata` AS `se_importata`,`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,group_concat(distinct `pec`.`indirizzo` separator ',') AS `pec_sdi`,group_concat(distinct `indirizzi_view`.`sigla_stato` separator ',') AS `sigla_stato`,group_concat(distinct `stati`.`nome` separator ' | ') AS `cittadinanze`,max(`categorie_anagrafica`.`se_collaboratore`) AS `se_collaboratore`,max(`categorie_anagrafica`.`se_cliente`) AS `se_cliente`,max(`categorie_anagrafica`.`se_lead`) AS `se_lead`,max(`categorie_anagrafica`.`se_prospect`) AS `se_prospect`,max(`categorie_anagrafica`.`se_mandante`) AS `se_mandante`,max(`categorie_anagrafica`.`se_fornitore`) AS `se_fornitore`,max(`categorie_anagrafica`.`se_produttore`) AS `se_produttore`,max(`categorie_anagrafica`.`se_agente`) AS `se_agente`,max(`categorie_anagrafica`.`se_interno`) AS `se_interno`,max(`categorie_anagrafica`.`se_esterno`) AS `se_esterno`,max(`categorie_anagrafica`.`se_amministrazione`) AS `se_amministrazione`,max(`categorie_anagrafica`.`se_azienda_gestita`) AS `se_azienda_gestita`,max(`categorie_anagrafica`.`se_concorrente`) AS `se_concorrente`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `__label__`,coalesce(`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `denominazione_fiscale`,coalesce(`aAgente`.`soprannome`,`aAgente`.`denominazione`,concat(`aAgente`.`cognome`,' ',`aAgente`.`nome`),'') AS `agente`,group_concat(distinct `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) separator ' | ') AS `categorie`,group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,group_concat(distinct `categorie_diritto`.`nome` separator ' | ') AS `specialita`,group_concat(distinct `provincie`.`sigla` separator ' | ') AS `provincia`,group_concat(distinct `regimi_fiscali`.`codice` separator ',') AS `codice_regime_fiscale` from (((((((((((((`anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) left join `telefoni` on((`telefoni`.`id_anagrafica` = `anagrafica`.`id`))) left join `mail` on((`mail`.`id_anagrafica` = `anagrafica`.`id`))) left join `regimi_fiscali` on((`regimi_fiscali`.`id` = `anagrafica`.`id_regime_fiscale`))) left join `mail` `pec` on(((`pec`.`id` = `anagrafica`.`id_pec_sdi`) and (`mail`.`se_pec` = 1)))) left join `anagrafica` `aAgente` on((`aAgente`.`id` = `anagrafica`.`id_agente`))) left join `indirizzi_view` on(((`indirizzi_view`.`id_anagrafica` = `anagrafica`.`id`) and (`indirizzi_view`.`se_sede` = 1)))) left join `provincie` on((`provincie`.`id` = `indirizzi_view`.`id_provincia`))) left join `anagrafica_categorie_diritto` on((`anagrafica_categorie_diritto`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_diritto` on((`categorie_diritto`.`id` = `anagrafica_categorie_diritto`.`id_diritto`))) left join `anagrafica_cittadinanze` on((`anagrafica_cittadinanze`.`id_anagrafica` = `anagrafica`.`id`))) left join `stati` on((`stati`.`id` = `anagrafica_cittadinanze`.`id_stato`))) where isnull(`anagrafica`.`data_cessazione`) group by `anagrafica`.`id` order by coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') */;
+/*!50001 VIEW `anagrafica_view` AS select `anagrafica`.`id` AS `id`,`anagrafica`.`codice` AS `codice`,`anagrafica`.`id_tipologia` AS `id_tipologia`,`anagrafica`.`nome` AS `nome`,`anagrafica`.`cognome` AS `cognome`,`anagrafica`.`denominazione` AS `denominazione`,`anagrafica`.`soprannome` AS `soprannome`,`anagrafica`.`sesso` AS `sesso`,`anagrafica`.`id_orientamento_sessuale` AS `id_orientamento_sessuale`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,`anagrafica`.`partita_iva` AS `partita_iva`,`anagrafica`.`codice_sdi` AS `codice_sdi`,`anagrafica`.`id_pec_sdi` AS `id_pec_sdi`,`anagrafica`.`id_regime_fiscale` AS `id_regime_fiscale`,`anagrafica`.`note_amministrative` AS `note_amministrative`,`anagrafica`.`luogo_nascita` AS `luogo_nascita`,`anagrafica`.`stato_nascita` AS `stato_nascita`,`anagrafica`.`id_stato_nascita` AS `id_stato_nascita`,`anagrafica`.`comune_nascita` AS `comune_nascita`,`anagrafica`.`giorno_nascita` AS `giorno_nascita`,`anagrafica`.`mese_nascita` AS `mese_nascita`,`anagrafica`.`anno_nascita` AS `anno_nascita`,`anagrafica`.`id_diritto` AS `id_diritto`,`anagrafica`.`id_tipologia_crm` AS `id_tipologia_crm`,`anagrafica`.`id_agente` AS `id_agente`,`anagrafica`.`note_commerciali` AS `note_commerciali`,`anagrafica`.`condizioni_vendita` AS `condizioni_vendita`,`anagrafica`.`condizioni_acquisto` AS `condizioni_acquisto`,`anagrafica`.`note` AS `note`,`anagrafica`.`data_cessazione` AS `data_cessazione`,`anagrafica`.`note_cessazione` AS `note_cessazione`,`anagrafica`.`recapiti` AS `recapiti`,`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica`.`se_importata` AS `se_importata`,`anagrafica`.`se_stampa_privacy` AS `se_stampa_privacy`,`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,group_concat(distinct `pec`.`indirizzo` separator ',') AS `pec_sdi`,group_concat(distinct `indirizzi_view`.`sigla_stato` separator ',') AS `sigla_stato`,group_concat(distinct `stati`.`nome` separator ' | ') AS `cittadinanze`,max(`categorie_anagrafica`.`se_collaboratore`) AS `se_collaboratore`,max(`categorie_anagrafica`.`se_dipendente`) AS `se_dipendente`,max(`categorie_anagrafica`.`se_cliente`) AS `se_cliente`,max(`categorie_anagrafica`.`se_lead`) AS `se_lead`,max(`categorie_anagrafica`.`se_prospect`) AS `se_prospect`,max(`categorie_anagrafica`.`se_mandante`) AS `se_mandante`,max(`categorie_anagrafica`.`se_fornitore`) AS `se_fornitore`,max(`categorie_anagrafica`.`se_produttore`) AS `se_produttore`,max(`categorie_anagrafica`.`se_agente`) AS `se_agente`,max(`categorie_anagrafica`.`se_interno`) AS `se_interno`,max(`categorie_anagrafica`.`se_esterno`) AS `se_esterno`,max(`categorie_anagrafica`.`se_amministrazione`) AS `se_amministrazione`,max(`categorie_anagrafica`.`se_azienda_gestita`) AS `se_azienda_gestita`,max(`categorie_anagrafica`.`se_concorrente`) AS `se_concorrente`,max(`categorie_anagrafica`.`se_tutor`) AS `se_tutor`,max(`categorie_anagrafica`.`se_classe`) AS `se_classe`,max(`categorie_anagrafica`.`se_docente`) AS `se_docente`,max(`categorie_anagrafica`.`se_allievo`) AS `se_allievo`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `__label__`,coalesce(`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `denominazione_fiscale`,`d`.`nome` AS `diritto`,coalesce(`aAgente`.`soprannome`,`aAgente`.`denominazione`,concat(`aAgente`.`cognome`,' ',`aAgente`.`nome`),'') AS `agente`,group_concat(distinct `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) separator ' | ') AS `categorie`,group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,group_concat(distinct `categorie_diritto`.`nome` separator ' | ') AS `specialita`,group_concat(distinct `provincie`.`sigla` separator ' | ') AS `provincia`,group_concat(distinct `regimi_fiscali`.`codice` separator ',') AS `codice_regime_fiscale` from ((((((((((((((`anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) left join `telefoni` on((`telefoni`.`id_anagrafica` = `anagrafica`.`id`))) left join `mail` on((`mail`.`id_anagrafica` = `anagrafica`.`id`))) left join `regimi_fiscali` on((`regimi_fiscali`.`id` = `anagrafica`.`id_regime_fiscale`))) left join `mail` `pec` on(((`pec`.`id` = `anagrafica`.`id_pec_sdi`) and (`mail`.`se_pec` = 1)))) left join `anagrafica` `aAgente` on((`aAgente`.`id` = `anagrafica`.`id_agente`))) left join `indirizzi_view` on(((`indirizzi_view`.`id_anagrafica` = `anagrafica`.`id`) and (`indirizzi_view`.`se_sede` = 1)))) left join `provincie` on((`provincie`.`id` = `indirizzi_view`.`id_provincia`))) left join `anagrafica_categorie_diritto` on((`anagrafica_categorie_diritto`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_diritto` on((`categorie_diritto`.`id` = `anagrafica_categorie_diritto`.`id_diritto`))) left join `categorie_diritto` `d` on((`d`.`id` = `anagrafica`.`id_diritto`))) left join `anagrafica_cittadinanze` on((`anagrafica_cittadinanze`.`id_anagrafica` = `anagrafica`.`id`))) left join `stati` on((`stati`.`id` = `anagrafica_cittadinanze`.`id_stato`))) where isnull(`anagrafica`.`data_cessazione`) group by `anagrafica`.`id` order by coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -14533,7 +14979,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `articoli_view` AS select `articoli`.`id` AS `id`,`articoli`.`id_prodotto` AS `id_prodotto`,`articoli`.`nome` AS `nome`,`articoli`.`id_taglia` AS `id_taglia`,`articoli`.`id_colore` AS `id_colore`,`articoli`.`se_disponibile` AS `se_disponibile`,`articoli`.`id_account_inserimento` AS `id_account_inserimento`,`articoli`.`timestamp_inserimento` AS `timestamp_inserimento`,`articoli`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`articoli`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`taglie`.`it` AS `it`,`tipologie_taglie`.`nome` AS `tipologia_taglia`,concat_ws(' ',`articoli`.`id`,`articoli`.`nome`) AS `__label__` from ((`articoli` left join `taglie` on((`taglie`.`id` = `articoli`.`id_taglia`))) left join `tipologie_taglie` on((`tipologie_taglie`.`id` = `taglie`.`id_tipologia`))) order by concat_ws(' ',`articoli`.`id`,`articoli`.`nome`) */;
+/*!50001 VIEW `articoli_view` AS select `articoli`.`id` AS `id`,`articoli`.`id_prodotto` AS `id_prodotto`,`articoli`.`nome` AS `nome`,`articoli`.`id_taglia` AS `id_taglia`,`articoli`.`id_colore` AS `id_colore`,`articoli`.`se_disponibile` AS `se_disponibile`,`articoli`.`quantita_disponibile` AS `quantita_disponibile`,`articoli`.`id_account_inserimento` AS `id_account_inserimento`,`articoli`.`timestamp_inserimento` AS `timestamp_inserimento`,`articoli`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`articoli`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`taglie`.`it` AS `it`,`tipologie_taglie`.`nome` AS `tipologia_taglia`,concat_ws(' ',`articoli`.`id`,`articoli`.`nome`) AS `__label__` from ((`articoli` left join `taglie` on((`taglie`.`id` = `articoli`.`id_taglia`))) left join `tipologie_taglie` on((`tipologie_taglie`.`id` = `taglie`.`id_tipologia`))) order by concat_ws(' ',`articoli`.`id`,`articoli`.`nome`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -14704,7 +15150,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `categorie_anagrafica_view` AS select `categorie_anagrafica`.`id` AS `id`,`categorie_anagrafica`.`id_genitore` AS `id_genitore`,`categorie_anagrafica`.`nome` AS `nome`,`categorie_anagrafica`.`se_lead` AS `se_lead`,`categorie_anagrafica`.`se_prospect` AS `se_prospect`,`categorie_anagrafica`.`se_cliente` AS `se_cliente`,`categorie_anagrafica`.`se_mandante` AS `se_mandante`,`categorie_anagrafica`.`se_fornitore` AS `se_fornitore`,`categorie_anagrafica`.`se_produttore` AS `se_produttore`,`categorie_anagrafica`.`se_collaboratore` AS `se_collaboratore`,`categorie_anagrafica`.`se_interno` AS `se_interno`,`categorie_anagrafica`.`se_esterno` AS `se_esterno`,`categorie_anagrafica`.`se_agente` AS `se_agente`,`categorie_anagrafica`.`se_concorrente` AS `se_concorrente`,`categorie_anagrafica`.`se_rassegna_stampa` AS `se_rassegna_stampa`,`categorie_anagrafica`.`se_azienda_gestita` AS `se_azienda_gestita`,`categorie_anagrafica`.`se_amministrazione` AS `se_amministrazione`,`categorie_anagrafica`.`se_notizie` AS `se_notizie`,`categorie_anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`categorie_anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`categorie_anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`categorie_anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,count(`anagrafica_categorie`.`id`) AS `membri`,`categorie_anagrafica_path`(`categorie_anagrafica`.`id`) AS `__label__` from (`categorie_anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_categoria` = `categorie_anagrafica`.`id`))) group by `categorie_anagrafica`.`id` order by `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) */;
+/*!50001 VIEW `categorie_anagrafica_view` AS select `categorie_anagrafica`.`id` AS `id`,`categorie_anagrafica`.`id_genitore` AS `id_genitore`,`categorie_anagrafica`.`nome` AS `nome`,`categorie_anagrafica`.`se_lead` AS `se_lead`,`categorie_anagrafica`.`se_prospect` AS `se_prospect`,`categorie_anagrafica`.`se_cliente` AS `se_cliente`,`categorie_anagrafica`.`se_mandante` AS `se_mandante`,`categorie_anagrafica`.`se_fornitore` AS `se_fornitore`,`categorie_anagrafica`.`se_produttore` AS `se_produttore`,`categorie_anagrafica`.`se_collaboratore` AS `se_collaboratore`,`categorie_anagrafica`.`se_dipendente` AS `se_dipendente`,`categorie_anagrafica`.`se_interno` AS `se_interno`,`categorie_anagrafica`.`se_esterno` AS `se_esterno`,`categorie_anagrafica`.`se_agente` AS `se_agente`,`categorie_anagrafica`.`se_concorrente` AS `se_concorrente`,`categorie_anagrafica`.`se_rassegna_stampa` AS `se_rassegna_stampa`,`categorie_anagrafica`.`se_azienda_gestita` AS `se_azienda_gestita`,`categorie_anagrafica`.`se_amministrazione` AS `se_amministrazione`,`categorie_anagrafica`.`se_notizie` AS `se_notizie`,`categorie_anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`categorie_anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`categorie_anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`categorie_anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`categorie_anagrafica`.`se_docente` AS `se_docente`,`categorie_anagrafica`.`se_tutor` AS `se_tutor`,`categorie_anagrafica`.`se_classe` AS `se_classe`,`categorie_anagrafica`.`se_allievo` AS `se_allievo`,count(`anagrafica_categorie`.`id`) AS `membri`,`categorie_anagrafica_path`(`categorie_anagrafica`.`id`) AS `__label__` from (`categorie_anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_categoria` = `categorie_anagrafica`.`id`))) group by `categorie_anagrafica`.`id` order by `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -14957,6 +15403,63 @@ DELIMITER ;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `contratti_view`
+--
+
+/*!50001 DROP TABLE IF EXISTS `contratti_view`*/;
+/*!50001 DROP VIEW IF EXISTS `contratti_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
+/*!50001 VIEW `contratti_view` AS select `contratti`.`id` AS `id`,`contratti`.`id_tipologia` AS `id_tipologia`,`contratti`.`id_anagrafica` AS `id_anagrafica`,`contratti`.`data_inizio` AS `data_inizio`,`contratti`.`data_fine` AS `data_fine`,`contratti`.`note` AS `note`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__` from ((`contratti` left join `anagrafica` on((`contratti`.`id_anagrafica` = `anagrafica`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) order by concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `costi_contratti_view`
+--
+
+/*!50001 DROP TABLE IF EXISTS `costi_contratti_view`*/;
+/*!50001 DROP VIEW IF EXISTS `costi_contratti_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
+/*!50001 VIEW `costi_contratti_view` AS select `costi_contratti`.`id` AS `id`,`costi_contratti`.`id_contratto` AS `id_contratto`,`costi_contratti`.`nome` AS `nome`,`costi_contratti`.`costo_orario` AS `costo_orario`,`costi_contratti`.`nome` AS `__label__` from `costi_contratti` order by `costi_contratti`.`nome` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `coupon_categorie_prodotti_view`
+--
+
+/*!50001 DROP TABLE IF EXISTS `coupon_categorie_prodotti_view`*/;
+/*!50001 DROP VIEW IF EXISTS `coupon_categorie_prodotti_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
+/*!50001 VIEW `coupon_categorie_prodotti_view` AS select `coupon_categorie_prodotti`.`id` AS `id`,`coupon_categorie_prodotti`.`id_coupon` AS `id_coupon`,`coupon_categorie_prodotti`.`id_categoria_prodotti` AS `id_categoria_prodotti`,concat(`coupon`.`nome`,' | ',`categorie_prodotti`.`nome`) AS `__label__`,`coupon`.`nome` AS `nome_coupon`,date_format(from_unixtime(`coupon`.`timestamp_inizio`),'%Y-%m-%d') AS `inizio_validita`,date_format(from_unixtime(`coupon`.`timestamp_fine`),'%Y-%m-%d') AS `fine_validita`,`coupon`.`sconto_percentuale` AS `sconto_percentuale`,`coupon`.`sconto_fisso` AS `sconto_fisso` from ((`coupon_categorie_prodotti` left join `categorie_prodotti` on((`coupon_categorie_prodotti`.`id_categoria_prodotti` = `categorie_prodotti`.`id`))) left join `coupon` on((`coupon_categorie_prodotti`.`id_coupon` = `coupon`.`id`))) order by concat(`coupon`.`nome`,' | ',`categorie_prodotti`.`nome`) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `coupon_view`
 --
 
@@ -14970,7 +15473,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `coupon_view` AS select `coupon`.`id` AS `id`,`coupon`.`nome` AS `nome`,`coupon`.`note` AS `note`,`coupon`.`timestamp_inizio` AS `timestamp_inizio`,`coupon`.`timestamp_fine` AS `timestamp_fine`,`coupon`.`sconto_percentuale` AS `sconto_percentuale`,`coupon`.`sconto_fisso` AS `sconto_fisso`,`coupon`.`se_multiuso` AS `se_multiuso`,`coupon`.`se_globale` AS `se_globale`,`coupon`.`id_account_inserimento` AS `id_account_inserimento`,`coupon`.`timestamp_inserimento` AS `timestamp_inserimento`,`coupon`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`coupon`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`coupon`.`nome` AS `__label__` from `coupon` order by `coupon`.`nome` */;
+/*!50001 VIEW `coupon_view` AS select `coupon`.`id` AS `id`,`coupon`.`nome` AS `nome`,`coupon`.`note` AS `note`,`coupon`.`timestamp_inizio` AS `timestamp_inizio`,`coupon`.`timestamp_fine` AS `timestamp_fine`,`coupon`.`sconto_percentuale` AS `sconto_percentuale`,`coupon`.`sconto_fisso` AS `sconto_fisso`,`coupon`.`se_multiuso` AS `se_multiuso`,`coupon`.`se_globale` AS `se_globale`,`coupon`.`id_account_inserimento` AS `id_account_inserimento`,`coupon`.`timestamp_inserimento` AS `timestamp_inserimento`,`coupon`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`coupon`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`coupon`.`timestamp_inizio`),'%Y-%m-%d') AS `inizio_validita`,date_format(from_unixtime(`coupon`.`timestamp_fine`),'%Y-%m-%d') AS `fine_validita`,`coupon`.`nome` AS `__label__` from `coupon` order by `coupon`.`nome` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -16154,6 +16657,25 @@ DELIMITER ;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `orari_contratti_view`
+--
+
+/*!50001 DROP TABLE IF EXISTS `orari_contratti_view`*/;
+/*!50001 DROP VIEW IF EXISTS `orari_contratti_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
+/*!50001 VIEW `orari_contratti_view` AS select `orari_contratti`.`id` AS `id`,`orari_contratti`.`id_contratto` AS `id_contratto`,`orari_contratti`.`id_giorno` AS `id_giorno`,`orari_contratti`.`ora_inizio` AS `ora_inizio`,`orari_contratti`.`ora_fine` AS `ora_fine`,concat(`orari_contratti`.`id_giorno`,' ',`orari_contratti`.`ora_inizio`,' ',`orari_contratti`.`ora_fine`) AS `__label__` from `orari_contratti` order by concat(`orari_contratti`.`id_giorno`,' ',`orari_contratti`.`ora_inizio`,' ',`orari_contratti`.`ora_fine`) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `orientamenti_sessuali_view`
 --
 
@@ -16243,7 +16765,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pagine_view` AS select `pagine`.`id` AS `id`,`pagine`.`id_genitore` AS `id_genitore`,`pagine`.`id_sito` AS `id_sito`,`pagine`.`nome` AS `nome`,`pagine`.`template` AS `template`,`pagine`.`schema_html` AS `schema_html`,`pagine`.`id_tipologia_pubblicazione` AS `id_tipologia_pubblicazione`,`pagine`.`se_sitemap` AS `se_sitemap`,`pagine`.`se_cacheable` AS `se_cacheable`,`pagine`.`note` AS `note`,`pagine`.`timestamp_inserimento` AS `timestamp_inserimento`,`pagine`.`id_account_inserimento` AS `id_account_inserimento`,`pagine`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pagine`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tipologie_pubblicazione`.`nome` AS `tipologia_pubblicazione`,`tipologie_pubblicazione`.`se_bozza` AS `se_bozza`,`tipologie_pubblicazione`.`se_pubblicato` AS `se_pubblicato`,group_concat(distinct `gruppi`.`nome` separator ' | ') AS `gruppi`,`pagine_path`(`pagine`.`id`) AS `__label__` from (((`pagine` left join `tipologie_pubblicazione` on((`tipologie_pubblicazione`.`id` = `pagine`.`id_tipologia_pubblicazione`))) left join `pagine_gruppi` on((`pagine`.`id` = `pagine_gruppi`.`id_pagina`))) left join `gruppi` on((`pagine_gruppi`.`id_gruppo` = `gruppi`.`id`))) group by `pagine`.`id` order by `pagine`.`id` desc */;
+/*!50001 VIEW `pagine_view` AS select `pagine`.`id` AS `id`,`pagine`.`id_genitore` AS `id_genitore`,`pagine`.`id_sito` AS `id_sito`,`pagine`.`nome` AS `nome`,`pagine`.`template` AS `template`,`pagine`.`schema_html` AS `schema_html`,`pagine`.`tema_css` AS `tema_css`,`pagine`.`id_contenuti` AS `id_contenuti`,`pagine`.`id_tipologia_pubblicazione` AS `id_tipologia_pubblicazione`,`pagine`.`se_sitemap` AS `se_sitemap`,`pagine`.`se_cacheable` AS `se_cacheable`,`pagine`.`note` AS `note`,`pagine`.`timestamp_inserimento` AS `timestamp_inserimento`,`pagine`.`id_account_inserimento` AS `id_account_inserimento`,`pagine`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pagine`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tipologie_pubblicazione`.`nome` AS `tipologia_pubblicazione`,`tipologie_pubblicazione`.`se_bozza` AS `se_bozza`,`tipologie_pubblicazione`.`se_pubblicato` AS `se_pubblicato`,group_concat(distinct `pagine_gruppi`.`id_gruppo` separator ' | ') AS `gruppi`,`pagine_path`(`pagine`.`id`) AS `__label__` from ((`pagine` left join `tipologie_pubblicazione` on((`tipologie_pubblicazione`.`id` = `pagine`.`id_tipologia_pubblicazione`))) left join `pagine_gruppi` on((`pagine`.`id` = `pagine_gruppi`.`id_pagina`))) group by `pagine`.`id` order by `pagine_path`(`pagine`.`id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -16395,7 +16917,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pratiche_avvocati_view` AS select `pratiche_avvocati`.`id` AS `id`,`pratiche_avvocati`.`id_anagrafica` AS `id_anagrafica`,`pratiche_avvocati`.`id_pratica` AS `id_pratica`,`pratiche_avvocati`.`se_responsabile` AS `se_responsabile`,`pratiche_view`.`__short_label__` AS `__short_label__`,`pratiche_view`.`lista_assistiti` AS `lista_assistiti`,`pratiche_view`.`data_apertura` AS `data_apertura`,`pratiche_view`.`data_chiusura` AS `data_chiusura`,`categorie_diritto_view`.`__label__` AS `diritto`,concat('relazione tra volontario ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),''),' e pratica ',`pratiche_view`.`__short_label__`) AS `__label__` from (((`pratiche_avvocati` left join `anagrafica` on((`anagrafica`.`id` = `pratiche_avvocati`.`id_anagrafica`))) left join `pratiche_all_view` `pratiche_view` on((`pratiche_view`.`id` = `pratiche_avvocati`.`id_pratica`))) left join `categorie_diritto_view` on((`categorie_diritto_view`.`id` = `pratiche_view`.`id_categoria_diritto`))) order by concat('relazione tra volontario ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),''),' e pratica ',`pratiche_view`.`__short_label__`) */;
+/*!50001 VIEW `pratiche_avvocati_view` AS select `pratiche_avvocati`.`id` AS `id`,`pratiche_avvocati`.`id_anagrafica` AS `id_anagrafica`,`pratiche_avvocati`.`id_pratica` AS `id_pratica`,`pratiche_avvocati`.`se_responsabile` AS `se_responsabile`,`pratiche_avvocati`.`timestamp_inserimento` AS `timestamp_inserimento`,`pratiche_avvocati`.`id_account_inserimento` AS `id_account_inserimento`,`pratiche_avvocati`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pratiche_avvocati`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pratiche_view`.`__short_label__` AS `__short_label__`,`pratiche_view`.`lista_assistiti` AS `lista_assistiti`,`pratiche_view`.`data_apertura` AS `data_apertura`,`pratiche_view`.`data_chiusura` AS `data_chiusura`,`categorie_diritto_view`.`__label__` AS `diritto`,concat('relazione tra volontario ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),''),' e pratica ',`pratiche_view`.`__short_label__`) AS `__label__` from (((`pratiche_avvocati` left join `anagrafica` on((`anagrafica`.`id` = `pratiche_avvocati`.`id_anagrafica`))) left join `pratiche_all_view` `pratiche_view` on((`pratiche_view`.`id` = `pratiche_avvocati`.`id_pratica`))) left join `categorie_diritto_view` on((`categorie_diritto_view`.`id` = `pratiche_view`.`id_categoria_diritto`))) order by concat('relazione tra volontario ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),''),' e pratica ',`pratiche_view`.`__short_label__`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -16504,12 +17026,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `prodotti_categorie_view` AS select `prodotti_categorie`.`id` AS `id`,`prodotti_categorie`.`id_prodotto` AS `id_prodotto`,`prodotti_categorie`.`id_categoria` AS `id_categoria`,`prodotti_categorie`.`id_ruolo` AS `id_ruolo`,`prodotti_categorie`.`ordine` AS `ordine`,`prodotti_categorie`.`se_principale` AS `se_principale`,`prodotti_categorie`.`id` AS `__label__` from `prodotti_categorie` */;
+/*!50001 VIEW `prodotti_categorie_view` AS select `prodotti_categorie`.`id` AS `id`,`prodotti_categorie`.`id_prodotto` AS `id_prodotto`,`prodotti_categorie`.`id_categoria` AS `id_categoria`,`prodotti_categorie`.`id_ruolo` AS `id_ruolo`,`prodotti_categorie`.`ordine` AS `ordine`,`prodotti_categorie`.`se_principale` AS `se_principale`,`prodotti_categorie`.`id` AS `__label__`,`prodotti`.`nome` AS `prodotto`,`tipologie_pubblicazione`.`nome` AS `pubblicazione` from ((`prodotti_categorie` left join `prodotti` on((`prodotti_categorie`.`id_prodotto` = `prodotti`.`id`))) left join `tipologie_pubblicazione` on((`prodotti`.`id_tipologia_pubblicazione` = `tipologie_pubblicazione`.`id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -16643,6 +17165,25 @@ DELIMITER ;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
 /*!50001 VIEW `provincie_view` AS select `provincie`.`id` AS `id`,`provincie`.`id_regione` AS `id_regione`,`provincie`.`nome` AS `nome`,`provincie`.`sigla` AS `sigla`,`provincie`.`codice_istat` AS `codice_istat`,`regioni_view`.`__label__` AS `regione`,`regioni_view`.`id_stato` AS `id_stato`,`regioni_view`.`stato` AS `stato`,`regioni_view`.`id_continente` AS `id_continente`,`regioni_view`.`continente` AS `continente`,coalesce(`provincie`.`sigla`,`provincie`.`nome`,'') AS `__label__` from (`provincie` join `regioni_view` on((`regioni_view`.`id` = `provincie`.`id_regione`))) order by coalesce(`provincie`.`sigla`,`provincie`.`nome`,'') */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `pubblicazione_view`
+--
+
+/*!50001 DROP TABLE IF EXISTS `pubblicazione_view`*/;
+/*!50001 DROP VIEW IF EXISTS `pubblicazione_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
+/*!50001 VIEW `pubblicazione_view` AS select `pubblicazione`.`id` AS `id`,`pubblicazione`.`id_sito` AS `id_sito`,`pubblicazione`.`id_tipologia` AS `id_tipologia`,`pubblicazione`.`ordine` AS `ordine`,`pubblicazione`.`id_pagina` AS `id_pagina`,`pubblicazione`.`id_genitore` AS `id_genitore`,`pubblicazione`.`template` AS `template`,`pubblicazione`.`schema_html` AS `schema_html`,`pubblicazione`.`tema_css` AS `tema_css`,`pubblicazione`.`se_sitemap` AS `se_sitemap`,`pubblicazione`.`se_cacheable` AS `se_cacheable`,`pubblicazione`.`timestamp_pubblicazione` AS `timestamp_pubblicazione`,`pubblicazione`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`pubblicazione_path`(`pubblicazione`.`id`) AS `__label__` from `pubblicazione` order by `pubblicazione_path`(`pubblicazione`.`id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -17055,12 +17596,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_audio_view` AS select `ruoli_audio`.`id` AS `id`,`ruoli_audio`.`nome` AS `nome`,`ruoli_audio`.`nome` AS `__label__` from `ruoli_audio` order by `ruoli_audio`.`nome` */;
+/*!50001 VIEW `ruoli_audio_view` AS select `ruoli_audio`.`id` AS `id`,`ruoli_audio`.`nome` AS `nome`,`ruoli_audio`.`se_anagrafica` AS `se_anagrafica`,`ruoli_audio`.`se_contenuti` AS `se_contenuti`,`ruoli_audio`.`nome` AS `__label__` from `ruoli_audio` order by `ruoli_audio`.`nome` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -17093,12 +17634,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_file_view` AS select `ruoli_file`.`id` AS `id`,`ruoli_file`.`nome` AS `nome`,`ruoli_file`.`nome` AS `__label__` from `ruoli_file` order by `ruoli_file`.`nome` */;
+/*!50001 VIEW `ruoli_file_view` AS select `ruoli_file`.`id` AS `id`,`ruoli_file`.`nome` AS `nome`,`ruoli_file`.`se_anagrafica` AS `se_anagrafica`,`ruoli_file`.`se_contenuti` AS `se_contenuti`,`ruoli_file`.`nome` AS `__label__` from `ruoli_file` order by `ruoli_file`.`nome` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -17207,12 +17748,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_video_view` AS select `ruoli_video`.`id` AS `id`,`ruoli_video`.`nome` AS `nome`,`ruoli_video`.`nome` AS `__label__` from `ruoli_video` order by `ruoli_video`.`nome` */;
+/*!50001 VIEW `ruoli_video_view` AS select `ruoli_video`.`id` AS `id`,`ruoli_video`.`nome` AS `nome`,`ruoli_video`.`se_anagrafica` AS `se_anagrafica`,`ruoli_video`.`se_contenuti` AS `se_contenuti`,`ruoli_video`.`nome` AS `__label__` from `ruoli_video` order by `ruoli_video`.`nome` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -17693,6 +18234,25 @@ DELIMITER ;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `tipologie_contratti_view`
+--
+
+/*!50001 DROP TABLE IF EXISTS `tipologie_contratti_view`*/;
+/*!50001 DROP VIEW IF EXISTS `tipologie_contratti_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
+/*!50001 VIEW `tipologie_contratti_view` AS select `tipologie_contratti`.`id` AS `id`,`tipologie_contratti`.`nome` AS `nome`,`tipologie_contratti`.`nome` AS `__label__` from `tipologie_contratti` order by `tipologie_contratti`.`nome` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `tipologie_crm_view`
 --
 
@@ -17701,12 +18261,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_crm_view` AS select `tipologie_crm`.`id` AS `id`,`tipologie_crm`.`nome` AS `nome`,`tipologie_crm`.`ordine` AS `ordine`,`tipologie_crm`.`id_account_inserimento` AS `id_account_inserimento`,`tipologie_crm`.`timestamp_inserimento` AS `timestamp_inserimento`,`tipologie_crm`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tipologie_crm`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_crm`.`nome` AS `__label__` from `tipologie_crm` order by `tipologie_crm`.`nome` */;
+/*!50001 VIEW `tipologie_crm_view` AS select `tipologie_crm`.`id` AS `id`,`tipologie_crm`.`nome` AS `nome`,`tipologie_crm`.`ordine` AS `ordine`,`tipologie_crm`.`note` AS `note`,`tipologie_crm`.`id_account_inserimento` AS `id_account_inserimento`,`tipologie_crm`.`timestamp_inserimento` AS `timestamp_inserimento`,`tipologie_crm`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tipologie_crm`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,count(`anagrafica`.`id`) AS `membri`,`tipologie_crm`.`nome` AS `__label__` from (`tipologie_crm` left join `anagrafica` on((`anagrafica`.`id_tipologia_crm` = `tipologie_crm`.`id`))) group by `tipologie_crm`.`id` order by `tipologie_crm`.`nome` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -17796,12 +18356,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_embed_view` AS select `tipologie_embed`.`id` AS `id`,`tipologie_embed`.`nome` AS `nome`,`tipologie_embed`.`nome` AS `__label__` from `tipologie_embed` order by `tipologie_embed`.`nome` */;
+/*!50001 VIEW `tipologie_embed_view` AS select `tipologie_embed`.`id` AS `id`,`tipologie_embed`.`nome` AS `nome`,`tipologie_embed`.`se_video` AS `se_video`,`tipologie_embed`.`se_audio` AS `se_audio`,`tipologie_embed`.`nome` AS `__label__` from `tipologie_embed` order by `tipologie_embed`.`nome` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -18461,4 +19021,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-04  4:04:53
+-- Dump completed on 2020-11-12 14:20:57
