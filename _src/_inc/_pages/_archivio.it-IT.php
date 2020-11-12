@@ -41,7 +41,9 @@
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array( 'indirizzi.form',
-												'indirizzi.form.associazioni' ) )
+												'indirizzi.form.associazioni',
+												'indirizzi.form.mappa',
+												'indirizzi.form.tools' ) )
 		
 	);
 
@@ -56,5 +58,30 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] )
 	);
-	
+
+	// gestione mappa indirizzi
+	$p['indirizzi.form.mappa'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'mappa' ),
+		'h1'		=> array( $l		=> 'mappa' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.mappa.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.mappa.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] )
+	);
+
+	// gestione indirizzi strumenti
+	$p['indirizzi.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni indirizzo' ),
+	    'h1'		=> array( $l		=> 'azioni indirizzo' ),
+	    'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] )
+	);
+
 ?>

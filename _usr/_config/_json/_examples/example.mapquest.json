@@ -1,0 +1,26 @@
+{
+  "mapquest": {
+    "servers": {
+      "default": {
+        "key": ""
+      }
+    },
+    "profiles": {
+      "DEV": {
+        "servers": [
+          "default"
+        ]
+      },
+      "TEST": {
+        "servers": [
+          "default"
+        ]
+      },
+      "PROD": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  }
+}
