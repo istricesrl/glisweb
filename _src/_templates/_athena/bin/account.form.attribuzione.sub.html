@@ -9,25 +9,25 @@
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
     <div id="{{ subtable }}_{{ i }}">
-	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	{{ frm.input( table, subtable, i, 'id_account', '', '', '', '__parent_id__', 'hidden' ) }}
-	<div class="form-group form-row">
-	    <div class="col">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">gruppo</span>{% endif %}
-		{{ frm.select( table, subtable, i, 'id_gruppo', '', etc.select.gruppi, request ) }}
-	    </div>
-	    <div class="col-4">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">entità collegata</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'entita', '', '', request ) }}
-	    </div>
-	    {% if r.id %}
-	    <div class="col-auto text-right remove-on-duplicate d-print-none">
-		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
-		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
-	    </div>
-	    {% endif %}
+		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+		{{ frm.input( table, subtable, i, 'id_account', '', '', '', '__parent_id__', 'hidden' ) }}
+		<div class="form-group form-row">
+			<div class="col">
+			{% if i == 0 %}<span class="label-top remove-after-duplicate">gruppo</span>{% endif %}
+			{{ frm.select( table, subtable, i, 'id_gruppo', '', etc.select.gruppi, request ) }}
+			</div>
+			<div class="col-4">
+			{% if i == 0 %}<span class="label-top remove-after-duplicate">entità collegata</span>{% endif %}
+			{{ frm.input( table, subtable, i, 'entita', '', '', request ) }}
+			</div>
+			{% if r.id %}
+			<div class="col-auto text-right remove-on-duplicate d-print-none">
+			{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+			{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+			</div>
+			{% endif %}
+		</div>
 	</div>
-    </div>
     {% endfor %}
 </fieldset>
 {% endmacro %}
