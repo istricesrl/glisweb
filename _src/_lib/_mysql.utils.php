@@ -8,6 +8,6 @@
             $cf['mysql']['connection'],
             'SELECT * FROM comuni WHERE nome = ?',
             array( array( 's' => $c ) )
-        )
+        );
 
     }
