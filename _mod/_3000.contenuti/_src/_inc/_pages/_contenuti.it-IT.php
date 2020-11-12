@@ -35,6 +35,19 @@
 									'priority'	=> '010' ) )
     );
 
+    // tools pagine
+	$p['pagine.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni' ),
+	    'h1'		=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.view']['etc']['tabs'] )
+    );
+
     // gestione pagine
 	$p['pagine.form'] = array(
 	    'sitemap'		=> false,
@@ -55,6 +68,7 @@
 //													'pagine.form.menu',
 //													'pagine.form.macro',
 													'pagine.form.metadati',
+													'pagine.form.gruppi',
 													'pagine.form.tools'
 												) )
 	);
@@ -96,7 +110,7 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
-	// gestione pagine immagini
+	// gestione pagine video
 	$p['pagine.form.video'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
@@ -148,6 +162,32 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 	
+	// gestione pagine gruppi
+	$p['pagine.form.gruppi'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-users" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'gruppi' ),
+		'h1'		=> array( $l		=> 'gruppi' ),
+		'parent'		=> array( 'id'		=> 'pagine.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.gruppi.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.gruppi.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+	
+	// gestione azioni pagine
+	$p['pagine.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni pagina' ),
+	    'h1'		=> array( $l		=> 'azioni pagina' ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+
 /*
     // azioni sulle pagine
 	$p['contenuti_azioni'] = array(
