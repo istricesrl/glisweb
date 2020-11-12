@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/anagrafica.form.cliente.sub.html' as sub %}
+{% import 'bin/anagrafica.form.informazioni.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -29,9 +29,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row">
-    <div class="col-md-12">
-	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -43,47 +43,32 @@
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
 	    {# MODULO PRINCIPALE #}
-
 	    <fieldset>
-		<legend>dati commerciali</legend>
-		
+		<legend>dati generali <small>{{ legend }}</small></legend>
+
 		<div class="form-group form-row">
-			<div class="col">
-				<span class="label-top">ranking</span>
-				{{ frm.select( table, '', '', 'id_tipologia_crm', '', etc.select.tipologie_crm, request ) }}
+		    <div class="col-12 col-md">
+			<span class="label-top">ordine</span>
+			{{ frm.inputRequired( table, '', '', 'ordine', 'ordine', '', request ) }}
 			</div>
-		    <div class="col">
-				<span class="label-top">agente</span>
-				{{ frm.selectBox( table, '', '', 'id_agente', '', etc.select.agenti, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_agente', page, pages, ietf ) }}
-			</div>
-		</div>
-		
-		<div class="form-group form-row">
-			<div class="col">
-				<span class="label-top">note commerciali</span>
-				{{ frm.textarea( table, '', '', 'note_commerciali', 'informazioni commerciali aggiuntive (ad uso interno)', 3, request ) }}
+		    <div class="col-12 col-md">
+			<span class="label-top">nome</span>
+			{{ frm.inputRequired( table, '', '', 'nome', 'nome', '', request ) }}
 		    </div>
         </div>
-		
-		</fieldset>
-			<fieldset>
-			<legend>condizioni di vendita</legend>
-			<div class="form-group form-row">
-				<div class="col">
-					<span class="label-top">condizioni di vendita</span>
-					{{ frm.textarea( table, '', '', 'condizioni_vendita', 'descrizione delle condizioni di vendita applicate al cliente', 3, request, '', '', 'ckEditor', 200 ) }}
-				</div>
-			</div>
+        
+        <div class="form-group form-row">
+			<div class="col">
+				<span class="label-top">note</span>
+				{{ frm.textarea( table, '', '', 'note', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
+		    </div>
+        </div>
 
-		</fieldset>
-		<fieldset>
-
-		{# SUBFORM SETTORI E ATTIVITA #}
-		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
-
-	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls">
-		{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+    
+        {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>
 
 	</form>
