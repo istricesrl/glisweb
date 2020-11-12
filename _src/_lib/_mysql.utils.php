@@ -10,4 +10,10 @@
             array( array( 's' => $c ) )
         );
 
+        if( ! empty( $comuni[0]['id'] ) ) {
+            return $comuni[0]['id'];
+        } else {
+            return NULL;
+        }
+
     }
