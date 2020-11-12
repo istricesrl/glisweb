@@ -42,6 +42,9 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
+		{# VIEW PRINCIPALE #}
+		{% include 'inc/view.html' %}
+
 		{# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 		{{ def.controls( page, pages, ietf, session, table, request ) }}

@@ -20,6 +20,9 @@
     // debug
 	// print_r( $_SESSION );
 
+	// tabella gestita
+	$ct['form']['table'] = 'pubblicazione';
+
     // tabella della vista
 	$ct['view']['table'] = 'pagine';
 
@@ -33,7 +36,7 @@
 	    '__label__' => 'pagina',
 	    'template' => 'template',
 	    'schema_html' => 'schema',
-	    'tema_css' => 'tema',
+	   'tema_css' => 'tema',
 	    'tipologia_pubblicazione' => 'pubblicazione'
 	);
 
