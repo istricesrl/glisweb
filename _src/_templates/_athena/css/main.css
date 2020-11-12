@@ -304,6 +304,10 @@ select {
     cursor: pointer;
 }
 
+select.font-awesome {
+    font-size: 1.3em !important;
+}
+
 .form-check-input {
     margin-top: .25em;
 }
