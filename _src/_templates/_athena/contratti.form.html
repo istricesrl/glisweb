@@ -47,21 +47,21 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
-            <div class="col-auto">
+            <div class="col-12 col-md-3">
             <span class="label-top">tipologia</span>
             {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_contratti, request ) }}
             </div>
-            <div class="col-auto">
+            <div class="col-12 col-md-5">
             <span class="label-top">anagrafica</span>
             {{ frm.select( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request ) }}
             </div>
-            <div class="col-3 col-md-1">
+            <div class="col-12 col-md-2">
                 <span class="label-top">data inizio</span>
-                {{ frm.input( table, '', '', 'data_inizio', 'data inizio', '', request ) }}
+                {{ frm.date( table, '', '', 'data_inizio', '', '', request, default ) }}
             </div>
-            <div class="col">
+            <div class="col-12 col-md-2">
                 <span class="label-top ">data fine</span>
-                {{ frm.input( table,  '', '', 'data_fine', 'data fine', '', request ) }}
+                {{ frm.date( table,  '', '', 'data_fine', '', '', request, default ) }}
             </div>
         </div>
 
