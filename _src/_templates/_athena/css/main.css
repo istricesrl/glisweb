@@ -633,7 +633,7 @@ main.container-fluid.browser {
     font-size: 1.3em;
     font-weight: bold;
     margin: 0px;
-    padding: 3px;
+    padding: 3px 0px;
 }
 
 .metro h4 {

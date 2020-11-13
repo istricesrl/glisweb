@@ -66,6 +66,19 @@
        
     </fieldset>
 
+
+    {# MAPPA #}
+    {% if request[ table ].latitudine and request[ table ].longitudine %}
+    <fieldset class="flex-fill">
+        <legend>mappa</legend>
+
+        <div class="form-group form-row flex-fill h-100">
+            <div id="map" class="col-12 col-md"></div>
+        </div>
+
+    </fieldset>
+    {% endif %}
+
     {# BOTTONI E COMANDI DEL MODULO #}
     <fieldset class="form-controls mt-auto">
         {{ def.controls( page, pages, ietf, session, table, request ) }}
@@ -75,4 +88,43 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block javascript %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+
+<script defer type="text/javascript">
+
+    window.addEventListener( 'DOMContentLoaded', function() {
+
+    var originalHeight = $('#map').height();
+    $('#map').css( 'height', originalHeight );
+
+	const center = ol.proj.fromLonLat([{{ request[ table ].longitudine }}, {{ request[ table ].latitudine }}]);
+
+	var vectorSource = new ol.source.Vector();
+
+	var vectorLayer = new ol.layer.Vector({
+	    source: vectorSource
+	});
+
+	var map = new ol.Map({
+	target: 'map',
+	    layers: [
+		new ol.layer.Tile({
+		    source: new ol.source.OSM({url: '/tiles/{z}/{x}/{y}.png'})
+		}), vectorLayer
+        ],
+	    view: new ol.View({
+		center: center,
+		zoom: 18,
+		maxZoom: 20
+	    })
+	});
+
+    });
+
+</script>
 {% endblock %}
