@@ -312,6 +312,11 @@
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
 	function mailString2array( $t ) {
 
 		$ar0 = array();
@@ -335,6 +340,11 @@
 
 	}
 
+    /**
+     *
+     * @todo documentare
+     *
+     */	
 	function array2mailString( $a ) {
 
 		$ar = array();
