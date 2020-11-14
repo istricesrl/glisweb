@@ -312,4 +312,41 @@
 
     }
 
+	function mailString2array( $t ) {
+
+		$ar0 = array();
+
+		$t = str_replace( ',', ';', $t );
+		$ar1 = explode( ';', $t );
+
+		foreach( $ar1 as $ds ) {
+
+			$dsa = array();
+
+			$r = preg_match( '/([\S\s]+)(<[\S\@\.]+>)/', $ds, $dsa );
+
+			if( ! empty( $r ) ) {
+				$ar0[ trim( $dsa[1] ) ] = trim( $dsa[2], '<>' );
+			}
+
+		}
+
+		return $ar0;
+
+	}
+
+	function array2mailString( $a ) {
+
+		$ar = array();
+
+		foreach( $a as $k => $m ) {
+
+			$ar[] = $k . ' <' . $m . '>';
+
+		}
+
+		return implode( ', ', $ar );
+
+	}
+
 ?>

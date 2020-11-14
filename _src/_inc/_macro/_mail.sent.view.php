@@ -47,4 +47,13 @@
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    // trasformazione indirizzi
+	foreach( $ct['view']['data'] as $key => &$row ) {
+        foreach( $row as $k => $v ) {
+            if( in_array( $k, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
+                $row[ $k ] = htmlentities( array2mailString( unserialize( $v ) ) );
+            }
+        }
+	}
+
 ?>

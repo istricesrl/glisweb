@@ -37,7 +37,7 @@
 	    $ct['page']['contents']['metro']['mail'][] = array(
 		'ws' => $base . 'mail.queue.clean.sent',
 		'icon' => NULL,
-		'fa' => 'fa-envelope',
+		'fa' => 'fa-envelope-o',
 		'title' => 'svuotamento coda mail inviate',
 		'text' => 'cancella la coda delle mail inviate'
 	    );
@@ -48,7 +48,7 @@
 	    $ct['page']['contents']['metro']['mail'][] = array(
 		'ws' => $base . 'mail.queue.clean.out',
 		'icon' => NULL,
-		'fa' => 'fa-envelope-o',
+		'fa' => 'fa-exclamation-triangle',
 		'title' => 'svuotamento coda mail in uscita',
 		'text' => 'cancella la coda delle mail in uscita senza inviare'
 	    );

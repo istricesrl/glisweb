@@ -20,7 +20,7 @@
     // vista mail in uscita
 	$p['mail.out.view'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'in uscita' ),
+	    'title'		=> array( $l		=> 'mail in uscita' ),
 	    'h1'		=> array( $l		=> 'in uscita' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_mail.out.view.php' ),
@@ -52,7 +52,7 @@
     // vista mail inviate
 	$p['mail.sent.view'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'inviate' ),
+	    'title'		=> array( $l		=> 'mail inviate' ),
 	    'h1'		=> array( $l		=> 'inviate' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_mail.sent.view.php' ),
@@ -78,7 +78,7 @@
     // vista template mail
 	$p['template.mail.view'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'template' ),
+	    'title'		=> array( $l		=> 'template mail' ),
 	    'h1'		=> array( $l		=> 'template' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_template.mail.view.php' ),
@@ -90,8 +90,8 @@
     // gestione template mail
 	$p['template.mail.form'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'template' ),
-	    'h1'		=> array( $l		=> 'template' ),
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_template.mail.form.php' ),
 	    'parent'		=> array( 'id'		=> 'template.mail.view' ),
