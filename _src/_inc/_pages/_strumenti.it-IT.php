@@ -35,6 +35,20 @@
 									'priority'	=> '950' ) )
 	);
 
+    // gestione mail in uscita
+	$p['mail.out.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.out.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.php' ),
+	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'mail.out.form',
+													'mail.out.form.tools'
+												 ) ),
+	);
+
     // vista mail inviate
 	$p['mail.sent.view'] = array(
 	    'sitemap'		=> false,
@@ -47,6 +61,20 @@
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
 	);
 
+    // gestione mail inviate
+	$p['mail.sent.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.sent.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.sent.form.php' ),
+	    'parent'		=> array( 'id'		=> 'mail.sent.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'mail.sent.form',
+													'mail.sent.form.tools'
+												 ) ),
+	);
+
     // vista template mail
 	$p['template.mail.view'] = array(
 	    'sitemap'		=> false,
@@ -57,6 +85,18 @@
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
+	);
+
+    // gestione template mail
+	$p['template.mail.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'template' ),
+	    'h1'		=> array( $l		=> 'template' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_template.mail.form.php' ),
+	    'parent'		=> array( 'id'		=> 'template.mail.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'template.mail.form' ) ),
 	);
 
     // strumenti mail
