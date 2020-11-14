@@ -314,6 +314,12 @@
     mail
     ----
 
+    mail_out
+    --------
+
+    mail_sent
+    ---------
+
     redirect
     --------
     Questa tabella *gestita* contiene i redirect presenti nel deploy corrente.
@@ -341,6 +347,9 @@
 
     telefoni
     --------
+
+    template_mail
+    -------------
 
     test
     ----
