@@ -17,6 +17,61 @@
 									'priority'	=> '950' ) )
 	);
 
+    // vista mail in uscita
+	$p['mail.out.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'in uscita' ),
+	    'h1'		=> array( $l		=> 'in uscita' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.out.view.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'mail.out.view',
+													'mail.sent.view',
+													'template.mail.view',
+													'mail.tools'
+												 ) ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'mail' ),
+									'priority'	=> '950' ) )
+	);
+
+    // vista mail inviate
+	$p['mail.sent.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'inviate' ),
+	    'h1'		=> array( $l		=> 'inviate' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.sent.view.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
+	);
+
+    // vista template mail
+	$p['template.mail.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'template' ),
+	    'h1'		=> array( $l		=> 'template' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_template.mail.view.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
+	);
+
+    // strumenti mail
+	$p['mail.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'strumenti mail' ),
+	    'h1'		=> array( $l		=> 'strumenti mail' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.tools.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
+	);
+
 /*
     // pagina gestione cron
 	$p['cron'] = array(
