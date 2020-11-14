@@ -164,15 +164,19 @@
 			// log
 			logWrite( 'impossibile inviare la mail #' . $mail['id'] . ' (errore phpMailer)', 'mail', LOG_ERR );
 
+			// incremento il numero di tentativi per la mail
+			$tnInvio = $mail['tentativi'] + 1;
+
 			// se l'invio dà errore, procrastino
-			$tsInvio = strtotime( '+' . ( 1 + $mail['tentativi'] ) . ' hour' );
+			$tsInvio = strtotime( '+' . $tnInvio . ' hour' );
 
 			// aggiorno la timestamp di invio
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'UPDATE mail_out SET timestamp_invio = ?, token = NULL WHERE token = ?',
+				'UPDATE mail_out SET timestamp_invio = ?, tentativi = ? token = NULL WHERE token = ?',
 				array(
 					array( 's' => $tsInvio ),
+					array( 's' => $tnInvio ),
 					array( 's' => $status['token'] )
 				)
 			);
