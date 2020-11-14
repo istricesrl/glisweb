@@ -112,6 +112,7 @@
 	    }
 
 	// allegati
+		if( is_array( $attach ) ) {
 	    foreach( $attach as $kAtch => $vAtch ) {
 		fullPath( $vAtch );
 		if( file_exists( $vAtch ) && is_readable( $vAtch ) ) {
@@ -119,7 +120,8 @@
 		} else {
 		    logWrite( 'impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT );
 		}
-	    }
+		}
+		}
 
 	// invio
 	    $status = $mail->Send();

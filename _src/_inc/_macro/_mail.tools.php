@@ -51,7 +51,8 @@
 		'fa' => 'fa-exclamation-triangle',
 		'title' => 'svuotamento coda mail in uscita',
 		'text' => 'cancella la coda delle mail in uscita senza inviare'
-	    );
+		);
+		if( ! empty( $cf['smtp']['server'] ) ) {
 	    $ct['page']['contents']['metro']['mail'][] = array(
 		'ws' => $base . 'mail.queue.send?hard=1',
 		'icon' => NULL,
@@ -59,7 +60,7 @@
 		'title' => 'elabora coda mail in uscita',
 		'text' => 'forza elaborazione della coda delle mail in uscita'
 	    );
-	    timerCheck( $cf['speed'], '-> mail inviate' );
+		}
 	}
 
     // debug

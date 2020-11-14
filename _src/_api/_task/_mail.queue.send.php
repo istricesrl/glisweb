@@ -20,7 +20,7 @@
 	$status = array();
 
     // status
-	$status['info'][] = 'inizio operazioni di geocode';
+	$status['info'][] = 'inizio evasione coda mail';
 
     // log
 	logWrite( 'richiesta di elaborazione della coda delle mail in uscita', 'mail' );
@@ -29,7 +29,7 @@
 	$status['token'] = getToken();
 
     // inizializzo la variabile per l'invio
-	$out = NULL;
+	$mail = NULL;
 
 	// timer
 	timerCheck( $cf['speed'], ' -> richiesto lock per evasione coda mail' );
@@ -86,11 +86,14 @@
 	// se c'è almeno una mail da inviare
 	if( ! empty( $mail ) ) {
 
+		// status
+		$status['info'][] = 'trovata una mail da evadere';
+
 		// prelevo i dati del server
-		// TODO questo è da fare meglio, i dati possono essere anche in $out e in $cf['smtp']['server'] non è detto che ci siano tutti OCCHIO che address sulle tabelle è host e username è user
+		// TODO questo è da fare meglio, i dati possono essere anche in $mail e in $cf['smtp']['server'] non è detto che ci siano tutti OCCHIO che address sulle tabelle è host e username è user
 		$smtp = (
-			( ! empty( $out['server'] ) )
-			? $cf['smtp']['servers'][ $out['server'] ]
+			( ! empty( $mail['server'] ) )
+			? $cf['smtp']['servers'][ $mail['server'] ]
 			: $cf['smtp']['server']
 		);
 
@@ -100,14 +103,14 @@
 		// invio la mail
 		$r = sendMail(
 			$smtp['address'],
-			unserialize( $out['mittente'] ),
-			unserialize( $out['destinatari'] ),
-			$out['oggetto'],
-			$out['corpo'],
-			unserialize( $out['destinatari_cc'] ),
-			unserialize( $out['destinatari_bcc'] ),
-			unserialize( $out['allegati'] ),
-			unserialize( $out['headers'] ),
+			unserialize( $mail['mittente'] ),
+			unserialize( $mail['destinatari'] ),
+			$mail['oggetto'],
+			$mail['corpo'],
+			unserialize( $mail['destinatari_cc'] ),
+			unserialize( $mail['destinatari_bcc'] ),
+			unserialize( $mail['allegati'] ),
+			unserialize( $mail['headers'] ),
 			$smtp['username'],
 			$smtp['password'],
 			$smtp['port']
@@ -176,6 +179,16 @@
 
 		}
 
+	} else {
+
+		// status
+		$status['info'][] = 'nessuna mail da evadere';
+
+	}
+
+    // output
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    buildJson( $status );
 	}
 
 ?>
