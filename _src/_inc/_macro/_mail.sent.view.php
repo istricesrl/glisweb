@@ -19,15 +19,15 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'mail_out';
+	$ct['view']['table'] = 'mail_sent';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'mail.out.form';
+	$ct['view']['open']['page'] = 'mail.sent.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'data_ora_invio' => 'invio previsto',
+	    'data_ora_invio' => 'inviata il',
 	    'destinatari' => 'destinatari',
 	    'destinatari_cc' => 'destinatari CC',
 	    'destinatari_bcc' => 'destinatari BCC',
