@@ -49,6 +49,21 @@
 												 ) ),
 	);
 
+    // gestione strumenti mail in uscita
+	$p['mail.out.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'strumenti code mail' ),
+	    'h1'		=> array( $l		=> 'strumenti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.tools.php' ),
+	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'mail.out.form',
+													'mail.out.form.tools'
+												 ) ),
+	);
+
     // vista mail inviate
 	$p['mail.sent.view'] = array(
 	    'sitemap'		=> false,
