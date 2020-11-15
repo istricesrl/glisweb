@@ -353,7 +353,19 @@
 	    'parent'		=> array( 'id'		=> 'contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'contratti.form' ) ),
+	    'etc'		=> array( 'tabs'	=> array( 'contratti.form', 'contratti.form.azioni' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// gestione contratti azioni
+	$p['contratti.form.azioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'azioni' ),
+	    'h1'		=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.azioni.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.azioni.php' ),
+	    'etc'		=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
