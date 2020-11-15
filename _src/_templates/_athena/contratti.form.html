@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.html' as sub %}
+{% import 'bin/contratti.form.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -73,6 +73,12 @@
         </div>
        
     </fieldset>
+
+    {# SUBFORM COSTI CONTRATTI #}
+    {{ sub.costi( table, 'costi_contratti', 'costi', site, page, pages, ietf, etc, request, session ) }}
+
+    {# SUBFORM ORARI CONTRATTI #}
+    {{ sub.orari( table, 'orari_contratti', 'orari', site, page, pages, ietf, etc, request, session ) }}
 
     {# BOTTONI E COMANDI DEL MODULO #}
     <fieldset class="form-controls mt-auto">
