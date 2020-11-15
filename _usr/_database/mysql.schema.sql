@@ -2862,6 +2862,10 @@ CREATE TABLE `contratti` (
   `data_inizio` date DEFAULT NULL,
   `data_fine` date DEFAULT NULL,
   `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_tipologia` (`id_tipologia`),
   KEY `id_anagrafica` (`id_anagrafica`),
@@ -2885,6 +2889,10 @@ SET character_set_client = utf8;
   `data_inizio` tinyint NOT NULL,
   `data_fine` tinyint NOT NULL,
   `note` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
   `anagrafica` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
@@ -5012,6 +5020,7 @@ CREATE TABLE `indirizzi` (
   `timestamp_geocode` int(11) DEFAULT NULL,
   `id_zona` int(11) DEFAULT NULL,
   `note` text CHARACTER SET utf8,
+  `token` char(128) COLLATE utf8_unicode_ci DEFAULT NULL,
   `id_account_editor` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -5028,7 +5037,7 @@ CREATE TABLE `indirizzi` (
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   KEY `id_account_editor` (`id_account_editor`),
-  CONSTRAINT `indirizzi_ibfk_9_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  KEY `token` (`token`),
   CONSTRAINT `indirizzi_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `indirizzi_ibfk_1_nofollow` FOREIGN KEY (`id_comune`) REFERENCES `comuni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `indirizzi_ibfk_2_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -5037,7 +5046,8 @@ CREATE TABLE `indirizzi` (
   CONSTRAINT `indirizzi_ibfk_5_nofollow` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `indirizzi_ibfk_6_nofollow` FOREIGN KEY (`id_agente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `indirizzi_ibfk_7_nofollow` FOREIGN KEY (`id_account_editor`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `indirizzi_ibfk_8_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `indirizzi_ibfk_8_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `indirizzi_ibfk_9_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5554,6 +5564,8 @@ CREATE TABLE `mail_out` (
   `password` char(254) DEFAULT NULL,
   `id_newsletter` int(11) DEFAULT NULL,
   `id_email` int(11) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT '0',
+  `token` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -5566,6 +5578,7 @@ CREATE TABLE `mail_out` (
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   KEY `indice` (`id`,`timestamp_composizione`,`timestamp_invio`,`id_newsletter`,`id_email`),
+  KEY `token` (`token`),
   CONSTRAINT `mail_out_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `mail_out_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5598,6 +5611,8 @@ SET character_set_client = utf8;
   `password` tinyint NOT NULL,
   `id_newsletter` tinyint NOT NULL,
   `id_email` tinyint NOT NULL,
+  `tentativi` tinyint NOT NULL,
+  `token` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -5633,6 +5648,8 @@ CREATE TABLE `mail_sent` (
   `password` char(254) DEFAULT NULL,
   `id_newsletter` int(11) DEFAULT NULL,
   `id_email` int(11) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT '0',
+  `token` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -5645,6 +5662,7 @@ CREATE TABLE `mail_sent` (
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   KEY `indice` (`id`,`timestamp_composizione`,`timestamp_invio`,`id_newsletter`,`id_email`),
+  KEY `token` (`token`),
   CONSTRAINT `mail_sent_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `mail_sent_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5677,6 +5695,8 @@ SET character_set_client = utf8;
   `password` tinyint NOT NULL,
   `id_newsletter` tinyint NOT NULL,
   `id_email` tinyint NOT NULL,
+  `tentativi` tinyint NOT NULL,
+  `token` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -15416,7 +15436,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `contratti_view` AS select `contratti`.`id` AS `id`,`contratti`.`id_tipologia` AS `id_tipologia`,`contratti`.`id_anagrafica` AS `id_anagrafica`,`contratti`.`data_inizio` AS `data_inizio`,`contratti`.`data_fine` AS `data_fine`,`contratti`.`note` AS `note`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__` from ((`contratti` left join `anagrafica` on((`contratti`.`id_anagrafica` = `anagrafica`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) order by concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) */;
+/*!50001 VIEW `contratti_view` AS select `contratti`.`id` AS `id`,`contratti`.`id_tipologia` AS `id_tipologia`,`contratti`.`id_anagrafica` AS `id_anagrafica`,`contratti`.`data_inizio` AS `data_inizio`,`contratti`.`data_fine` AS `data_fine`,`contratti`.`note` AS `note`,`contratti`.`id_account_inserimento` AS `id_account_inserimento`,`contratti`.`timestamp_inserimento` AS `timestamp_inserimento`,`contratti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`contratti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__` from ((`contratti` left join `anagrafica` on((`contratti`.`id_anagrafica` = `anagrafica`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) order by concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -16285,12 +16305,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mail_out_view` AS select `mail_out`.`id` AS `id`,`mail_out`.`timestamp_composizione` AS `timestamp_composizione`,`mail_out`.`timestamp_invio` AS `timestamp_invio`,`mail_out`.`server` AS `server`,`mail_out`.`mittente` AS `mittente`,`mail_out`.`destinatari` AS `destinatari`,`mail_out`.`destinatari_cc` AS `destinatari_cc`,`mail_out`.`destinatari_bcc` AS `destinatari_bcc`,`mail_out`.`oggetto` AS `oggetto`,`mail_out`.`corpo` AS `corpo`,`mail_out`.`allegati` AS `allegati`,`mail_out`.`headers` AS `headers`,`mail_out`.`host` AS `host`,`mail_out`.`port` AS `port`,`mail_out`.`user` AS `user`,`mail_out`.`password` AS `password`,`mail_out`.`id_newsletter` AS `id_newsletter`,`mail_out`.`id_email` AS `id_email`,`mail_out`.`id_account_inserimento` AS `id_account_inserimento`,`mail_out`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_out`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_out`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_out`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_out`.`oggetto` AS `__label__` from `mail_out` order by `mail_out`.`timestamp_invio` */;
+/*!50001 VIEW `mail_out_view` AS select `mail_out`.`id` AS `id`,`mail_out`.`timestamp_composizione` AS `timestamp_composizione`,`mail_out`.`timestamp_invio` AS `timestamp_invio`,`mail_out`.`server` AS `server`,`mail_out`.`mittente` AS `mittente`,`mail_out`.`destinatari` AS `destinatari`,`mail_out`.`destinatari_cc` AS `destinatari_cc`,`mail_out`.`destinatari_bcc` AS `destinatari_bcc`,`mail_out`.`oggetto` AS `oggetto`,`mail_out`.`corpo` AS `corpo`,`mail_out`.`allegati` AS `allegati`,`mail_out`.`headers` AS `headers`,`mail_out`.`host` AS `host`,`mail_out`.`port` AS `port`,`mail_out`.`user` AS `user`,`mail_out`.`password` AS `password`,`mail_out`.`id_newsletter` AS `id_newsletter`,`mail_out`.`id_email` AS `id_email`,`mail_out`.`tentativi` AS `tentativi`,`mail_out`.`token` AS `token`,`mail_out`.`id_account_inserimento` AS `id_account_inserimento`,`mail_out`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_out`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_out`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_out`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_out`.`oggetto` AS `__label__` from `mail_out` order by `mail_out`.`timestamp_invio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -16304,12 +16324,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mail_sent_view` AS select `mail_sent`.`id` AS `id`,`mail_sent`.`timestamp_composizione` AS `timestamp_composizione`,`mail_sent`.`timestamp_invio` AS `timestamp_invio`,`mail_sent`.`server` AS `server`,`mail_sent`.`mittente` AS `mittente`,`mail_sent`.`destinatari` AS `destinatari`,`mail_sent`.`destinatari_cc` AS `destinatari_cc`,`mail_sent`.`destinatari_bcc` AS `destinatari_bcc`,`mail_sent`.`oggetto` AS `oggetto`,`mail_sent`.`corpo` AS `corpo`,`mail_sent`.`allegati` AS `allegati`,`mail_sent`.`headers` AS `headers`,`mail_sent`.`host` AS `host`,`mail_sent`.`port` AS `port`,`mail_sent`.`user` AS `user`,`mail_sent`.`password` AS `password`,`mail_sent`.`id_newsletter` AS `id_newsletter`,`mail_sent`.`id_email` AS `id_email`,`mail_sent`.`id_account_inserimento` AS `id_account_inserimento`,`mail_sent`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_sent`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_sent`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_sent`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_sent`.`oggetto` AS `__label__` from `mail_sent` order by `mail_sent`.`timestamp_invio` desc */;
+/*!50001 VIEW `mail_sent_view` AS select `mail_sent`.`id` AS `id`,`mail_sent`.`timestamp_composizione` AS `timestamp_composizione`,`mail_sent`.`timestamp_invio` AS `timestamp_invio`,`mail_sent`.`server` AS `server`,`mail_sent`.`mittente` AS `mittente`,`mail_sent`.`destinatari` AS `destinatari`,`mail_sent`.`destinatari_cc` AS `destinatari_cc`,`mail_sent`.`destinatari_bcc` AS `destinatari_bcc`,`mail_sent`.`oggetto` AS `oggetto`,`mail_sent`.`corpo` AS `corpo`,`mail_sent`.`allegati` AS `allegati`,`mail_sent`.`headers` AS `headers`,`mail_sent`.`host` AS `host`,`mail_sent`.`port` AS `port`,`mail_sent`.`user` AS `user`,`mail_sent`.`password` AS `password`,`mail_sent`.`id_newsletter` AS `id_newsletter`,`mail_sent`.`id_email` AS `id_email`,`mail_sent`.`tentativi` AS `tentativi`,`mail_sent`.`token` AS `token`,`mail_sent`.`id_account_inserimento` AS `id_account_inserimento`,`mail_sent`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_sent`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_sent`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_sent`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_sent`.`oggetto` AS `__label__` from `mail_sent` order by `mail_sent`.`timestamp_invio` desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -19021,4 +19041,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-12 14:29:48
+-- Dump completed on 2020-11-15  5:08:49
