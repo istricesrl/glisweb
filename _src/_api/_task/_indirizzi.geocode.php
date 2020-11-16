@@ -99,6 +99,17 @@
         // NOTA il meccanismo deve essere in grado di ritardare i tentativi successivi in modo da non bloccare la coda
         if( ! empty( $gc ) ) {
 
+            // log
+            appendToFile(
+                print_r( $geocode, true ) . PHP_EOL . print_r( $gc, true ),
+                'var/log/geocode/' . string2rewrite( implode( ' ', array(
+                    $geocode['stato'],
+                    $geocode['comune'],
+                    $geocode['indirizzo'],
+                    $geocode['civico']
+                ) ) ) . '.log'
+            );
+
             // aggiornamento database
             mysqlQuery(
                 $cf['mysql']['connection'],
