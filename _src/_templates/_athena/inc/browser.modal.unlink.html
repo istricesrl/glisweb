@@ -1,19 +1,19 @@
-<div id="creaCartella" class="modal" tabindex="-1" role="dialog">
+<div id="cancellaFile" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">creazione cartella</h5>
+                <h5 class="modal-title">cancellazione file</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form action="" class="form-horizontal" method="post">
                     <div class="form-row form-group">
                         <div class="col-md-10">
-                            <input type="text" class="form-control form-control-sm" name="cartella" id="cartella"
-                                value="" placeholder="">
+                            <input type="hidden" name="rmfile" id="rmfile" value="" placeholder="">
+                            <span id="rmfilename"></span>
                         </div>
                         <div class="col-md-2 text-right">
-                            <button type="submit" class="btn btn-secondary btn-sm">crea</button>
+                            <button type="submit" class="btn btn-secondary btn-sm">cancella</button>
                         </div>
                     </div>
                 </form>

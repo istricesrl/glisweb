@@ -23,6 +23,21 @@
 	    checkFolder( $cartella );
 	}
 
+    // creazione cartella
+	if( isset( $_REQUEST['rmfile'] ) ) {
+	    $rmfile = DIR_BASE . $_REQUEST['rmfile'];
+//	    $cartella = $path . $_REQUEST['cartella'];
+	    deleteFile( $rmfile );
+	}
+
+	// tendina directory
+	foreach( dirTree2array( DIR_BASE . 'var/contenuti/' ) as $d ) {
+		$ct['etc']['select']['cartelle'][] = array(
+			'id' => shortPath( $d ),
+			'__label__' => shortPath( $d )
+		);
+	}
+
     // liste
 	$dirs = array();
 	$files = array();

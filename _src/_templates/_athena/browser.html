@@ -5,8 +5,8 @@
 {% block header %}
 <div class="row widget">
     <div class="col text-right">
-        <button class="btn btn-secondary btn-sm" style="padding: 5px 10px;" type="button" data-toggle="modal" data-target="#caricaFile">carica file</button>
-        <button class="btn btn-secondary btn-sm" style="padding: 5px 10px;" type="button" data-toggle="modal" data-target="#creaCartella">crea cartella</button>
+        <button class="btn btn-secondary btn-sm" type="button" data-toggle="modal" data-target="#caricaFile">carica file</button>
+        <button class="btn btn-secondary btn-sm" type="button" data-toggle="modal" data-target="#creaCartella">crea cartella</button>
     </div>
 </div>
 {% endblock %}
@@ -15,7 +15,7 @@
 
 {% for dir in browse.dirs %}
 <div class="row no-gutters m-0 browse browse-dir" onclick="window.open( '?{{ browse.get ~ dir ~ '/' }}', '_self' );">
-<div class="col-12">
+<div class="col">
     {% if dir == browse.parent %}
     <i class="fa fa-level-up" aria-hidden="true"></i>
     {% else %}
@@ -23,17 +23,47 @@
     {{ dir|split('/')|last }}
     {% endif %}
 </div>
+<div class="col-auto text-right p-0 d-flex">
+    <button class="btn btn-secondary btn-sm" type="button" data-toggle="modal" data-target="#spostaCartella">sposta</button>
+    <button class="btn btn-secondary btn-sm" type="button" data-toggle="modal" data-target="#cancellaCartella">cancella</button>
+</div>
 </div>
 {% endfor %}
 
 {% for file in browse.files %}
-<div class="row no-gutters m-0 browse browse-file" onclick="cmsReturnFileUrl('{{ '/' ~ file.path }}')">
-<div class="col">
+<div class="row no-gutters m-0 browse browse-file">
+<div class="col" onclick="cmsReturnFileUrl('{{ '/' ~ file.path }}')">
     <i class="fa fa-file-o" aria-hidden="true"></i>
     {{ file.path|split('/')|last }}
 </div>
-<div class="col-auto text-right">{{ file.size }}</div>
+<div class="col-auto text-right pr-3">{{ file.size }}</div>
+<div class="col-auto text-right p-0 d-flex">
+    <button class="btn btn-secondary btn-sm" type="button" onclick="window.open('/{{ file.path }}','_blank');">apri</button>
+    <button class="btn btn-secondary btn-sm" type="button" data-toggle="modal" data-target="#spostaFile">sposta</button>
+    <button class="btn btn-secondary btn-sm" type="button" data-toggle="modal" data-target="#cancellaFile" onclick="rmfile('{{ file.path }}');">cancella</button>
+</div>
 </div>
 {% endfor %}
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+function rmfile( f ) {
+        $('#rmfile').val( f );
+        $('#rmfilename').html( f );
+    }
+
+	// invia un URL di file a CKEDITOR
+	function cmsReturnFileUrl( path ) {
+		var funcNum = getUrlParam( 'CKEditorFuncNum' );
+		var fileUrl = path;
+		// window.open('','cms').CKEDITOR.tools.callFunction( funcNum, fileUrl );
+		window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
+		// console.log( path );
+		window.close();
+	}
+	
+</script>
 {% endblock %}

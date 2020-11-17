@@ -1,13 +1,3 @@
-	// invia un URL di file a CKEDITOR
-	function cmsReturnFileUrl( path ) {
-		var funcNum = getUrlParam( 'CKEditorFuncNum' );
-		var fileUrl = path;
-		// window.open('','cms').CKEDITOR.tools.callFunction( funcNum, fileUrl );
-		window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
-		// console.log( path );
-		window.close();
-	}
-	
 	// operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
 

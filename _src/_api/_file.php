@@ -20,6 +20,9 @@
     // log
 	logWrite( 'chiamata API file', 'uploader' );
 
+	// verifico che il path sia consentito
+	if( in_array( $_SERVER['HTTP_X_TARGET_FOLDER'], array( 'tmp/', 'var/contenuti/' ) ) ) {
+
     // TODO verifico che l'utente possa caricare il file
 	if( true ) {
 
@@ -126,6 +129,10 @@
 
 
 	}
+
+} else {
+	$reply['error'][] = 'percorso non consentito: ' . $_SERVER['HTTP_X_TARGET_FOLDER'];
+}
 
     // invio risposta
 	buildJson( $reply );

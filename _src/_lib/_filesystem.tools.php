@@ -383,6 +383,44 @@
     }
 
     /**
+     *
+     * @todo documentare
+     *
+     */
+    function dirTree2array( $d ) {
+
+        // path completo
+            fullPath( $d );
+
+        // array del risultato
+            $a = array();
+
+        // se la cartella esiste
+            if( file_exists( $d ) ) {
+    
+            // cartella base
+            $a[] = $d;
+
+            // aggiunta cartella
+                foreach( getDirIterator( $d ) as $fileinfo ) {
+                    if( $fileinfo->isDir() ) {
+                        $a[] = $fileinfo->getRealPath();
+                    }
+                }
+
+                // restituisco il risultato
+                return $a;
+
+            } else {
+    
+            // ritorno false
+                return false;
+    
+            }
+    
+        }
+    
+    /**
      * restituisce la dimensione di un file
      *
      * @param string		$f	il nome del file da controllare comprensivo di percorso
