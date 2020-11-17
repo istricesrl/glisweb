@@ -216,9 +216,6 @@
     // output
 	echo PHP_EOL;
 
-    // output
-	echo PHP_EOL;
-
     // controllo memcache
 	if( ! empty( $cf['memcache']['profiles'][ $cf['site']['status'] ]['servers'] ) ) {
 	    echo '[ -- ] backend memcache attivato' . PHP_EOL;

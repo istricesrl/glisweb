@@ -125,4 +125,3 @@ imagepng($im);
 #header('Content-Type: image/jpeg');
 #imagejpeg($im);
 #imagedestroy($im);
-
