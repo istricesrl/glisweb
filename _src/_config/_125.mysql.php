@@ -116,5 +116,3 @@
 	// print_r( $cf['mysql']['profile'] );
 	// print_r( $cf['mysql']['connections'] );
 	// print_r( $cf['mysql'] );
-
-?>

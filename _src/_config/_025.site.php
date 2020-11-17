@@ -94,5 +94,3 @@
 
     // debug
 	// dieText( print_r( $cf['site'], true ) );
-
-?>

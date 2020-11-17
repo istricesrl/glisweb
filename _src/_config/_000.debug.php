@@ -110,5 +110,3 @@
 
     // collegamento a $ct
 	$ct['debug']						= &$cf['debug'];
-
-?>

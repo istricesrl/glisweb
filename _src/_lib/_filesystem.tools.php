@@ -806,5 +806,3 @@
     function array2file( $f, $a ) {
 	return writeToFile( trim( implode( PHP_EOL, $a ) ), $f );
     }
-
-?>

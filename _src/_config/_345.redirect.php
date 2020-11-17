@@ -52,5 +52,3 @@
 
     // debug
 	// var_dump( strtok( $_SERVER['REQUEST_URI'], '?' ) );
-
-?>

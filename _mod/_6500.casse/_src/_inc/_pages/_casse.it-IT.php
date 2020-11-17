@@ -21,5 +21,3 @@
 
     // debug
 	// die( print_r( $p ) );
-
-?>

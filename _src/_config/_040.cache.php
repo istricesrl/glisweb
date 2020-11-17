@@ -103,5 +103,3 @@
     // debug
 	// print_r( $cf['memcache'] );
 	// print_r( $cf['redis'] );
-
-?>

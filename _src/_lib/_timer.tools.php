@@ -64,5 +64,3 @@
 	    $curMemory . ' → ' . str_replace( '->', '→', $c );
 
     }
-
-?>

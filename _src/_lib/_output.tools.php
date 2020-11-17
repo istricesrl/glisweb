@@ -157,5 +157,3 @@
 	    buildHeaders( array( 'Content-Type: ' . $t . '; charset=' . $e ) );
 
     }
-
-?>

@@ -121,5 +121,3 @@
 	// print_r( $ct['page']['etc']['tabs'] );
 	// print_r( $_SESSION['account']['gruppi'] );
 	// echo $cf['contents']['updated'];
-
-?>

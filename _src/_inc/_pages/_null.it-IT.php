@@ -25,5 +25,3 @@
 	    'content'		=> array( $l		=> '<p>pagina generata il ' . date( 'Y-m-d H:i:s' ) . '</p>' ),
 	    'rewrited'		=> array( $l		=> NULL )
 	);
-
-?>

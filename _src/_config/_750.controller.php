@@ -299,6 +299,4 @@
 
     // collegamenti speciali
 	$ct['get']				= &$_GET;
-	$ct['post']				= &$_POST
-
-?>
+	$ct['post']				= &$_POST;

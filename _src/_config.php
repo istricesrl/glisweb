@@ -623,5 +623,3 @@
 	// print_r( $cf );
 	// print_r( $ct );
 	// print_r( $cx );
-
-?>
