@@ -157,9 +157,9 @@
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
 	    'parent'		=> array( 'id'		=> 'contenuti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.sem.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php', $m . '_src/_inc/_macro/_pagine.gestione.sem.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php', $m . '_src/_inc/_macro/_pagine.form.sem.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
 	$p['pagine.form.contenuti'] = array(
@@ -168,9 +168,9 @@
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'contenuti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.contenuti.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.gestione.php', $m . '_src/_inc/_macro/_pagine.gestione.contenuti.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php', $m . '_src/_inc/_macro/_pagine.form.contenuti.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['pagine_gestione']['etc']['tabs'] )
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
 	$p['pagine.form.immagini'] = array(

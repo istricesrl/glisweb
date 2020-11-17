@@ -21,9 +21,9 @@
 	    array(
 		'popup' => array(
 		    CONTROL_FULL => array( 'roots' )
-//		),
-//		'popup_pagine' => array(
-//		    CONTROL_FULL => array( 'roots' )
+		),
+		'popup_pagine' => array(
+		    CONTROL_FULL => array( 'roots' )
 //		),
 //		'tipologie_popup' => array(
 //		    CONTROL_FULL => array( 'roots' )
