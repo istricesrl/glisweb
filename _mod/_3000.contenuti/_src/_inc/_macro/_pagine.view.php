@@ -33,8 +33,7 @@
 	    '__label__' => 'pagina',
 	    'template' => 'template',
 	    'schema_html' => 'schema',
-	   'tema_css' => 'tema',
-	    'tipologia_pubblicazione' => 'pubblicazione'
+	   'tema_css' => 'tema'
 	);
 
     // stili della vista
@@ -43,8 +42,7 @@
 	    'id_sito' => 'text-left',
 	    'template' => 'text-left',
 	    'schema_html' => 'text-left',
-	    'tema_css' => 'text-left',
-	    'tipologia_pubblicazione' => 'text-left'
+	    'tema_css' => 'text-left'
 	);
 
     // macro di default
