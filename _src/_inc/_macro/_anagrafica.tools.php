@@ -16,7 +16,7 @@
 	    )
 	);
 
-    // importazione contatti anagrafica
+    // esportazione contatti anagrafica
 	$ct['page']['contents']['metro']['esportazioni'][] = array(
 	    'modal' => array( 'id' => 'esporta_per_mail', 'include' => 'inc/anagrafica.tools.modal.mailchimp.html' ),
 	    'icon' => NULL,
