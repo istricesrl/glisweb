@@ -28,7 +28,8 @@
 	    'id' => '#',
 	    '__label__' => 'categoria',
         'id_tipologia_pubblicazione' => 'pubblicazione',
-        'numero_prodotti' => 'prodotti'
+        'numero_prodotti' => 'prodotti',
+        'id_pagina' => 'id_pagina'
 	);
 
     // stili della vista
