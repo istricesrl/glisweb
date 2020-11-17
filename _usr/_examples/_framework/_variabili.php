@@ -96,5 +96,3 @@
 
     // output
 	buildHtml( $tx );
-
-?>

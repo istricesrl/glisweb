@@ -267,7 +267,6 @@
                                                                         'priority'	=> 100 ) )
         );
 
-    ?>
     \endcode
 
     Ovviamente l'alternativa più comoda per l'utente per la creazione di pagine è l'utilizzo del CMS messo a disposizione

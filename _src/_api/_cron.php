@@ -180,5 +180,3 @@
 
     // output
 	buildJson( $cf['cron']['results'] );
-
-?>
