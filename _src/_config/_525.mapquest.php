@@ -25,6 +25,3 @@
 	} else {
         $cf['mapquest']['server']			= NULL;
     }
-
-?>
-

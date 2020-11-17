@@ -96,6 +96,3 @@
 		buildText( 'non autorizzato' );
 
 	}
-
-
-?>

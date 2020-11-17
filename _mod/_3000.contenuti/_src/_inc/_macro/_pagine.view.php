@@ -57,5 +57,3 @@
 	foreach( $ct['view']['data'] as &$row ) {
 	    $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
 	}
-
-?>

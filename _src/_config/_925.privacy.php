@@ -86,5 +86,3 @@
 	// print_r( $cf['privacy']['cookie'] );
 	// print_r( $_REQUEST['__cookie__'] );
 	// print_r( $cf['contents']['pages']['licenza']['content'] );
-
-?>

@@ -93,5 +93,3 @@
 
     // output
 	buildHtml( $tx, 'variabili del framework' );
-
-?>

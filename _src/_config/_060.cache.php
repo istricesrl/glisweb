@@ -44,5 +44,3 @@
 	    header( 'Content-type: text/html; charset=utf8' );
 	    die( file_get_contents( FILE_CACHE_PAGE ) . $cacheinfo );
 	}
-
-?>

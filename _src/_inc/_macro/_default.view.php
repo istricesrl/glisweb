@@ -143,5 +143,3 @@
 	// print_r( $ct['view']['data'] );
 	// print_r( $ct['view']['open'] );
 	// print_r( $ct['pages'] );
-
-?>

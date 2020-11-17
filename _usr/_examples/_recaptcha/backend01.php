@@ -11,5 +11,3 @@
 			$cf['google']['recaptcha']['profile']['secret']
 		)
 	);
-
-?>

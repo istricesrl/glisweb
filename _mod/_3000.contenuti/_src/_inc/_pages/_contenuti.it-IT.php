@@ -375,4 +375,3 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	);
 */
-?>
