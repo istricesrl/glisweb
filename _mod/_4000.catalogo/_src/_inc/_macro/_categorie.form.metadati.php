@@ -19,7 +19,7 @@
      *
      */
     // tabella gestita
-	$ct['form']['table'] = 'pagine';
+	$ct['form']['table'] = 'categorie_prodotti';
 
     // sotto tabella gestita
     $ct['form']['subtable'] = 'metadati';

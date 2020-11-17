@@ -54,6 +54,84 @@
 												) )
 	);
 
+	// gestione categorie immagini
+	$p['categorie.form.immagini'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'immagini' ),
+		'h1'		=> array( $l		=> 'immagini' ),
+		'parent'		=> array( 'id'		=> 'categorie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.immagini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.form.immagini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.form']['etc']['tabs'] )
+	);
+
+	// gestione categorie video
+	$p['categorie.form.video'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'video' ),
+		'h1'		=> array( $l		=> 'video' ),
+		'parent'		=> array( 'id'		=> 'categorie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.video.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.form.video.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.form']['etc']['tabs'] )
+	);
+	
+	// gestione pagina file
+	$p['categorie.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'categorie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.file.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.form']['etc']['tabs'] )
+	);
+
+	// gestione categorie audio
+	$p['categorie.form.audio'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'audio' ),
+		'h1'		=> array( $l		=> 'audio' ),
+		'parent'		=> array( 'id'		=> 'categorie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.audio.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.form.audio.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.form']['etc']['tabs'] )
+	);
+
+	// gestione categorie metadati
+	$p['categorie.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'categorie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.form']['etc']['tabs'] )
+	);
+	
+	// gestione categorie gruppi
+	$p['categorie.form.gruppi'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-users" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'gruppi' ),
+		'h1'		=> array( $l		=> 'gruppi' ),
+		'parent'		=> array( 'id'		=> 'categorie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.gruppi.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.form.gruppi.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.form']['etc']['tabs'] )
+	);
+
     // debug
 	// die( print_r( $p ) );
 

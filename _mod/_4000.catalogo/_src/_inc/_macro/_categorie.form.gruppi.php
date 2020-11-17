@@ -20,7 +20,7 @@
      */
     
      // tabella gestita
-    $ct['form']['table'] = 'pagine';
+    $ct['form']['table'] = 'categorie_prodotti';
     
     // tendina gruppi 
 	$ct['etc']['select']['gruppi'] = mysqlCachedIndexedQuery(
