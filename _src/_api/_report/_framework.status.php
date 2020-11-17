@@ -288,3 +288,6 @@
 		echo PHP_EOL;
 
 	}
+
+    // output
+	echo 'FINE REPORT' . PHP_EOL . PHP_EOL;
