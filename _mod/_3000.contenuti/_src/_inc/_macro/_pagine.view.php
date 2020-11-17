@@ -20,9 +20,6 @@
     // debug
 	// print_r( $_SESSION );
 
-	// tabella gestita
-	$ct['form']['table'] = 'pubblicazione';
-
     // tabella della vista
 	$ct['view']['table'] = 'pagine';
 
