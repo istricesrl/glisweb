@@ -285,7 +285,8 @@
 	define( 'DIR_MOD'			, DIR_BASE . '_mod/' );
 	define( 'DIR_SRC'			, DIR_BASE . '_src/' );
 	define( 'DIR_SRC_API'			, DIR_BASE . '_src/_api/' );
-	define( 'DIR_SRC_API_TASK'		, DIR_BASE . '_src/_api/_task/' );
+    define( 'DIR_SRC_API_REPORT'		, DIR_BASE . '_src/_api/_report/' );
+    define( 'DIR_SRC_API_TASK'		, DIR_BASE . '_src/_api/_task/' );
 	define( 'DIR_SRC_CONFIG'		, DIR_BASE . '_src/_config/' );
 	define( 'DIR_SRC_CONFIG_EXT'		, DIR_BASE . '_src/_config/_ext/' );
 	define( 'DIR_SRC_HTML'			, DIR_BASE . '_src/_html/' );
