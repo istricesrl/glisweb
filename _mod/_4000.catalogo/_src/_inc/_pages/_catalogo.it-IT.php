@@ -43,8 +43,14 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'categorie.form'
+	    'etc'		=> array( 'tabs'	=> array(	'categorie.form',
 												//	'categorie.form.sem'
+												'categorie.form.immagini',
+												'categorie.form.video',
+												'categorie.form.audio',
+												'categorie.form.file',
+												'categorie.form.metadati',
+												'categorie.form.gruppi'
 												) )
 	);
 
