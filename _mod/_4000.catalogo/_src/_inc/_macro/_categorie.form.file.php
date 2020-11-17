@@ -30,7 +30,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_file_view  '
+	    'SELECT id, __label__ FROM ruoli_file_view WHERE se_categorie_prodotti = 1'
 	);
 
     // macro di default
