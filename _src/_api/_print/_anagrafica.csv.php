@@ -1,7 +1,7 @@
 <?php
 
     // inclusione del framework
-	require '../../../_src/_config.php';
+	require '../../_config.php';
 
     // inclusione di PHPExcel
 	use PhpOffice\PhpSpreadsheet\Spreadsheet;
