@@ -27,7 +27,8 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
 	    '__label__' => 'categoria',
-	    'id_tipologia_pubblicazione' => 'pubblicazione',
+        'id_tipologia_pubblicazione' => 'pubblicazione',
+        'numero_prodotti' => 'prodotti'
 	);
 
     // stili della vista
