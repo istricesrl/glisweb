@@ -78,11 +78,11 @@
 	}
     
      // tendina id_tipologia_pubblicazione
-	$ct['etc']['select']['tipologia_pubblicazione'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologia_pubblicazione_view'
+	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
 	);
 
 	// macro di default
