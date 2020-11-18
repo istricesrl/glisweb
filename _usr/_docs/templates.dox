@@ -338,7 +338,7 @@
         - il nome della macro PHP termina per "view"
           - solitamente nella macro PHP viene inclusa anche la macro "_default.view.php"
         - il nome inizia con quello dell'entità rappresentata
-      - le pagine form
+      - le pagine form principali
         - l'ID termina per "form"
         - il nome dello schema termina per "form"
         - il nome della macro PHP termina per "form"
@@ -391,7 +391,7 @@
     -------------------|------------------------|--------------------------------|------------------------------------------------
     anagrafica.view    | NULL                   | default.view.html              | _src/_inc/_macro/_anagrafica.view.php che include _src/_inc/_macro/_default.view.php
 
-    Alcuni esempi di pagine form:
+    Alcuni esempi di pagine form principali:
 
     ID pagina          | ID parent              | schema                         | macro
     -------------------|------------------------|--------------------------------|------------------------------------------------
