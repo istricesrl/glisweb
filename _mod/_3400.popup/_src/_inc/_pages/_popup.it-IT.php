@@ -72,5 +72,3 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['popup.form']['etc']['tabs'] )
 	);
-
-?>
