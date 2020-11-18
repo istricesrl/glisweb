@@ -51,8 +51,8 @@
     // form pagine
 	$p['pagine.form'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'form' ),
-	    'h1'		=> array( $l		=> 'form' ),
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
 	    'parent'		=> array( 'id'		=> 'pagine.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php' ),
@@ -128,8 +128,8 @@
     // form redirect
 	$p['redirect.form'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'form' ),
-	    'h1'		=> array( $l		=> 'form' ),
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
 	    'parent'		=> array( 'id'		=> 'redirect.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'redirect.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.php' ),
