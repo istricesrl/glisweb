@@ -48,11 +48,11 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine.view']['etc']['tabs'] )
     );
 
-    // gestione pagine
+    // form pagine
 	$p['pagine.form'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'title'		=> array( $l		=> 'form' ),
+	    'h1'		=> array( $l		=> 'form' ),
 	    'parent'		=> array( 'id'		=> 'pagine.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php' ),
@@ -73,7 +73,7 @@
 												) )
 	);
 
-	// gestione pagine SEM/SMM
+	// form pagine SEM/SMM
 	$p['pagine.form.sem'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
@@ -85,7 +85,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
-	// gestione pagine testo
+	// form pagine testo
 	$p['pagine.form.testo'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'testo' ),
@@ -125,11 +125,11 @@
 	    'etc'		=> array( 'tabs'	=> $p['redirect.view']['etc']['tabs'] )
     );
 
-    // gestione redirect
+    // form redirect
 	$p['redirect.form'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'title'		=> array( $l		=> 'form' ),
+	    'h1'		=> array( $l		=> 'form' ),
 	    'parent'		=> array( 'id'		=> 'redirect.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'redirect.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.php' ),
@@ -156,7 +156,7 @@
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
 	    'parent'		=> array( 'id'		=> 'contenuti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.sem.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.sem.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php', $m . '_src/_inc/_macro/_pagine.form.sem.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
@@ -167,7 +167,7 @@
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'contenuti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'pagine.gestione.contenuti.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.contenuti.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php', $m . '_src/_inc/_macro/_pagine.form.contenuti.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
@@ -185,7 +185,7 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
-	// gestione pagine video
+	// form pagine video
 	$p['pagine.form.video'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
@@ -198,7 +198,7 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 	
-	// gestione pagina file
+	// form pagina file
 	$p['pagine.form.file'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
@@ -211,7 +211,7 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
-	// gestione pagine audio
+	// form pagine audio
 	$p['pagine.form.audio'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
@@ -224,7 +224,7 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
-	// gestione pagine metadati
+	// form pagine metadati
 	$p['pagine.form.metadati'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
@@ -237,7 +237,7 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 	
-	// gestione pagine gruppi
+	// form pagine gruppi
 	$p['pagine.form.gruppi'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-users" aria-hidden="true"></i>',
@@ -250,7 +250,7 @@
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 	
-	// gestione azioni pagine
+	// form azioni pagine
 	$p['pagine.form.tools'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',

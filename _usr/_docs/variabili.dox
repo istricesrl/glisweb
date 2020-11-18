@@ -262,7 +262,7 @@
                 'title'		=> array( $l		=> 'test da PHP' ),
                 'h1'		=> array( $l		=> 'pagina di test da configurazione PHP' ),
                 'parent'	=> array( 'id'		=> NULL ),
-                'template'	=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'default.html' ),
+                'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.html' ),
                 'menu'		=> array( 'main'	=> array(	'label'		=> array( $l => 'test PHP' ),
                                                                         'priority'	=> 100 ) )
         );

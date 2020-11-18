@@ -192,7 +192,6 @@
     Anche qui ci sono alcuni concetti importanti su cui porre l'attenzione:
 
     - esistono librerie standard (_src/_html/_bin/) che possono essere importate contengono macro utili per la rappresentazione dei contenuti
-    - il file _standard.html va incluso in tutte le pagine che potrebbero averne bisogno (gli include non si ereditano con l'estensione o l'inclusione)
     - il file di schema estende il file base tramite la direttiva extends
     - nel file di schema vengono dichiarati e valorizzati solo i blocchi effettivamente utilizzati
 
