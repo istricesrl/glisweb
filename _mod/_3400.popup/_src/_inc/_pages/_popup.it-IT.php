@@ -13,7 +13,7 @@
 	    'h1'		=> array( $l		=> 'popup' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'popup.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_popup.php' ),
-	    'parent'		=> array( 'id'		=> NULL ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'popup' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'popup' ),
@@ -31,10 +31,8 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_popup.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'popup.view',
-									'popup.tools' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'popup' ),
-									'priority'	=> '100' ) )
-    );
+									'popup.tools' ) )
+	    );
 
     // gestione popup
 	$p['popup.form'] = array(
