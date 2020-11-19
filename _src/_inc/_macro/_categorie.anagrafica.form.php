@@ -21,8 +21,6 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
-
- 
-    
+  
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
