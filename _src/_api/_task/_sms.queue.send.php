@@ -22,117 +22,160 @@
     // log
 	logWrite( 'richiesta di elaborazione della coda degli SMS in uscita', 'sms', LOG_DEBUG );
 
-    // lock delle tabelle della coda
-	mysqlQuery( $cf['mysql']['connection'], 'LOCK TABLES sms_out WRITE, sms_sent WRITE' );
+    // chiave di lock
+	$status['token'] = getToken();
 
-    // prelevo un SMS dalla coda
-	$sms = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM sms_out WHERE timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL ORDER BY timestamp_invio LIMIT 1' );
+	// modalità di evasione (specifica sms, evasione forzata, evasione naturale)
+	if( isset( $_REQUEST['id'] ) ) {
+
+		// token della riga
+        $status['id'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE sms_out SET token = ? WHERE id = ? AND token IS NULL',
+            array(
+                array( 's' => $status['token'] ),
+                array( 's' => $_REQUEST['id'] )
+            )
+        );
+
+	} elseif( isset( $_REQUEST['hard'] ) ) {
+
+		// token della riga
+        $status['id'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE sms_out SET token = ? WHERE token IS NULL '.
+            'ORDER BY timestamp_invio ASC LIMIT 1',
+            array(
+                array( 's' => $status['token'] )
+            )
+        );
+
+	} else {
+
+		// token della riga
+        $status['id'] = mysqlQuery(
+			$cf['mysql']['connection'],
+			'UPDATE sms_out SET token = ? '.
+			'WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL ) '.
+			'AND token IS NULL '.
+			'ORDER BY timestamp_invio ASC LIMIT 1',
+            array(
+                array( 's' => $status['token'] )
+            )
+		);
+
+	}
+
+	// prelevo una sms dalla coda
+	$sms = mysqlSelectRow(
+		$cf['mysql']['connection'],
+		'SELECT * FROM sms_out WHERE token = ?',
+		array(
+			array( 's' => $status['token'] )
+		)
+	);
 
     // se c'è almeno un SMS da inviare
 	if( ! empty( $sms ) ) {
 
-	    // inizio la transazione
-		if( mysqlQuery( $cf['mysql']['connection'], 'START TRANSACTION' ) ) {
+		// prelevo i dati del server
+		$srv = (
+			( ! empty( $sms['server'] ) )
+			? $cf['sms']['servers'][ $sms['server'] ]
+			: $cf['sms']['server']
+		);
 
-		    // sposto l'SMS da una coda all'altra
-			if( mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO sms_sent SELECT * FROM sms_out WHERE id = ?', array( array( 's' => $sms['id'] ) ) ) == false ) {
+		// invio l'SMS
+		switch( $srv['type'] ) {
+			case 'skebby':
+				$r = skebbySend(
+					$sms['corpo'],
+					array_values( unserialize( $sms['destinatari'] ) ),
+					$srv['username'],
+					$srv['password'],
+					current( array_keys( unserialize( $sms['mittente'] ) ) )
+				);
+			break;
+			case 'ehiweb':
+				$r = ehiwebSend(
+					$sms['corpo'],
+					array_values( unserialize( $sms['destinatari'] ) ),
+					$srv['username'],
+					$srv['password'],
+					current( array_keys( unserialize( $sms['mittente'] ) ) ),
+					$srv['id_api']
+				);
+			break;
+			default:
+				logWrite( 'metodo di invio SMS non supportato: ' . $srv['type'], 'sms', LOG_ERR );
+				$r = false;
+			break;
+		}
 
-			    // aggiorno la timestamp di invio
-				if( mysqlQuery( $cf['mysql']['connection'], 'UPDATE sms_sent SET timestamp_invio = ? WHERE id = ?', array( array( 's' => time() ), array( 's' => $sms['id'] ) ) ) ) {
+		// controllo l'esito dell'invio
+		if( $r !== false ) {
 
-				    // elimino l'SMS inviato dalla coda degli SMS in uscita
-					if( mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM sms_out WHERE id = ?', array( array( 's' => $sms['id'] ) ) ) ) {
+			// log
+			logWrite( 'invio SMS #' . $sms['id'] . ' completato: ' . $r, 'sms', LOG_NOTICE );
 
-					    // prelevo i dati del server
-						$srv = (
-						    ( ! empty( $sms['server'] ) )
-						    ? $cf['sms']['servers'][ $sms['server'] ]
-						    : $cf['sms']['server']
-						);
+			// sposto la sms nella coda delle inviate
+			$s1 = mysqlQuery(
+				$cf['mysql']['connection'],
+				'REPLACE INTO sms_sent SELECT * FROM sms_out WHERE token = ?',
+				array(
+					array( 's' => $status['token'] )
+				)
+			);
 
-					    // invio l'SMS
-						switch( $srv['type'] ) {
-						    case 'skebby':
-							$r = skebbySend(
-							    $sms['corpo'],
-							    array_values( unserialize( $sms['destinatari'] ) ),
-							    $srv['username'],
-							    $srv['password'],
-							    current( array_keys( unserialize( $sms['mittente'] ) ) )
-							);
-						    break;
-						    case 'ehiweb':
-							$r = ehiwebSend(
-							    $sms['corpo'],
-							    array_values( unserialize( $sms['destinatari'] ) ),
-							    $srv['username'],
-							    $srv['password'],
-							    current( array_keys( unserialize( $sms['mittente'] ) ) ),
-							    $srv['id_api']
-							);
-						    break;
-						    default:
-							logWrite( 'metodo di invio SMS non supportato: ' . $srv['type'], 'sms', LOG_ERR );
-							$r = false;
-						    break;
-						}
+			// log
+			logWrite( 'spostamento SMS #' . $sms['id'] . ' dalla sms_out alla sms_sent completato', 'sms', LOG_NOTICE );
 
-					    // controllo l'esito dell'invio
-						if( $r !== false ) {
+			// aggiorno la timestamp di invio
+			$s2 = mysqlQuery(
+				$cf['mysql']['connection'],
+				'UPDATE sms_sent SET timestamp_invio = ?, token = NULL WHERE token = ?',
+				array(
+					array( 's' => time() ),
+					array( 's' => $status['token'] )
+				)
+				);
 
-						    // commit
-							mysqlQuery( $cf['mysql']['connection'], 'COMMIT' );
+			// log
+			logWrite( 'timestamp di invio SMS #' . $sms['id'] . ' aggiornato', 'sms', LOG_NOTICE );
 
-						    // log
-							logWrite( 'invio SMS dalla coda completato: ' . var_export( $r, true ), 'sms', LOG_ERR );
+			// elimino la sms inviata dalla coda delle sms in uscita
+			$s3 = mysqlQuery(
+				$cf['mysql']['connection'],
+				'DELETE FROM sms_out WHERE token = ?',
+				array(
+					array( 's' => $status['token'] )
+				)
+			);
 
-						} else {
-
-						    // rollback
-							mysqlQuery( $cf['mysql']['connection'], 'ROLLBACK' );
-
-						    // se l'invio dà errore, procrastino
-							mysqlQuery( $cf['mysql']['connection'], 'UPDATE sms_out SET timestamp_invio = ? WHERE id = ?', array( array( 's' => strtotime( '+1 hour') ), array( 's' => $sms['id'] ) ) );
-
-						    // log
-							logWrite( 'impossibile inviare l\'SMS: ' . var_export( $r, true ), 'sms', LOG_ERR );
-
-						}
-
-					} else {
-
-					    // rollback
-						mysqlQuery( $cf['mysql']['connection'], 'ROLLBACK' );
-
-					    // log
-						logWrite( 'impossibile eliminare l\'SMS inviato da sms_out', 'sms', LOG_ERR );
-
-					}
-
-				} else {
-
-				    // rollback
-					mysqlQuery( $cf['mysql']['connection'], 'ROLLBACK' );
-
-				    // log
-					logWrite( 'impossibile aggiornare la timestamp_invio in sms_sent', 'sms', LOG_ERR );
-
-				}
-
-			} else {
-
-			    // rollback
-				mysqlQuery( $cf['mysql']['connection'], 'ROLLBACK' );
-
-			    // log
-				logWrite( 'impossibile spostare l\'SMS #' . $sms['id'] . ' da sms_out a sms_sent', 'sms', LOG_ERR );
-
-			}
+			// log
+			logWrite( 'SMS #' . $sms['id'] . ' rimosso dalla sms_out', 'sms', LOG_NOTICE );
 
 		} else {
 
-		    // log
-			logWrite( 'impossibile avviare la transazione per evadere la coda', 'sms', LOG_ERR );
+			// log
+			logWrite( 'impossibile inviare SMS #' . $sms['id'] . ' (errore phpsmser)', 'sms', LOG_ERR );
+
+			// incremento il numero di tentativi per l'SMS
+			$tnInvio = $sms['tentativi'] + 1;
+
+			// se l'invio dà errore, procrastino
+			$tsInvio = strtotime( '+' . $tnInvio . ' hour' );
+
+			// aggiorno la timestamp di invio
+			mysqlQuery(
+				$cf['mysql']['connection'],
+				'UPDATE sms_out SET timestamp_invio = ?, tentativi = ? token = NULL WHERE token = ?',
+				array(
+					array( 's' => $tsInvio ),
+					array( 's' => $tnInvio ),
+					array( 's' => $status['token'] )
+				)
+			);
 
 		}
 
@@ -145,9 +188,6 @@
 		$status['info'][] = 'nessun SMS in coda da processare';
 
 	}
-
-    // unlock delle tabelle
-	mysqlQuery( $cf['mysql']['connection'], 'UNLOCK TABLES' );
 
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {

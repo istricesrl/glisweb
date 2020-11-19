@@ -44,7 +44,7 @@
 	    '( mese = ?													OR mese IS NULL ) AND '.
 	    '( giorno_della_settimana = ?								OR giorno_della_settimana IS NULL ) AND '.
 	    '( settimana = ?											OR settimana IS NULL ) AND '.
-		'( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?	OR timestamp_esecuzione IS NULL ) AND'.
+		'( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?	OR timestamp_esecuzione IS NULL ) AND '.
 		'token IS NULL',
 	    array(
 			array( 's' => $cf['cron']['results']['token'] ),		//
@@ -59,7 +59,7 @@
 	);
 
     // seleziono i task a cui ho applicato il lock
-	$tasks = mysqlQuery(
+	$cf['cron']['tasks'] = mysqlQuery(
 	    $cf['mysql']['connection'],
 	    'SELECT * FROM cron WHERE token = ? ',
 		array(
@@ -78,6 +78,8 @@
 	    'cron'
 	);
 
+	/*
+
     // timestamp di esecuzione iniziale
 	foreach( $tasks as $task ) {
 	    if( file_exists( DIR_BASE . $task['task'] ) ) {
@@ -93,8 +95,6 @@
 		logWrite( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
 	    }
 	}
-
-	/*
 
     // seleziono i job attivi
 	$jobs = mysqlQuery(
@@ -133,7 +133,7 @@
 	// mysqlQuery( $cf['mysql']['connection'], 'UNLOCK TABLES' );
 
     // ciclo sui task
-	foreach( $tasks as $task ) {
+	foreach( $cf['cron']['tasks'] as $task ) {
 	    if( file_exists( DIR_BASE . $task['task'] ) ) {
 
 			// timestamp di esecuzione iniziale
@@ -163,7 +163,7 @@
 					logWrite( 'iterazione #' . $iter . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 					fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
 					require DIR_BASE . $task['task'];
-					$cf['cron']['results']['task'][ $task['task'] ][ $task['id'] ] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
+					$cf['cron']['results']['task'][ $task['task'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
 					if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = 3; }
 					sleep( $task['delay'] );
 				}
@@ -178,6 +178,7 @@
 				fwrite( $cHnd, print_r( $status, true ) . PHP_EOL );
 
 		} else {
+			$cf['cron']['results']['errors'][] = 'il file di task ' . $task['task'] . ' non esiste';
 			logWrite( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
 		}
 
@@ -208,7 +209,10 @@
 */
 
     // log
-	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), 'var/log/cron/' . date( 'Ymd' ) . '.log' );
+	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), 'var/log/cron/' . date( 'YmdH' ) . '.log' );
+
+	// log
+	writeToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), FILE_LATEST_CRON );
 
     // output
 	buildJson( $cf['cron']['results'] );

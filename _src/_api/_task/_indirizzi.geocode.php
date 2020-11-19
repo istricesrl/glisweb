@@ -148,7 +148,7 @@
     } else {
 
         // status
-        $status['info'][] = 'nessun indirizzo in coda';
+        $status['info'][] = 'nessun indirizzo da geolocalizzare';
 
         // log
         logWrite( 'nessun indirizzo in coda da geolocalizzare', 'geocode' );

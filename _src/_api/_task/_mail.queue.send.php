@@ -29,10 +29,7 @@
 	$status['token'] = getToken();
 
     // inizializzo la variabile per l'invio
-	$mail = NULL;
-
-	// timer
-	timerCheck( $cf['speed'], ' -> richiesto lock per evasione coda mail' );
+	// $mail = NULL;
 
 	// modalità di evasione (specifica mail, evasione forzata, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {

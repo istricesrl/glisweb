@@ -352,7 +352,7 @@
      * @todo documentare
      *
      */
-    function recursiveDelete( $d, $p = true ) {
+    function recursiveDelete( $d, $p = true, &$e = array() ) {
 
 	// path completo
 	    fullPath( $d );
@@ -362,8 +362,9 @@
 
 		// rimozione dei file
 		    foreach( getDirIterator( $d ) as $fileinfo ) {
-			$todo = ( $fileinfo->isDir() ) ? 'rmdir' : 'unlink';
-			$todo( $fileinfo->getRealPath() );
+                $e[] = $fileinfo->getRealPath();
+                $todo = ( $fileinfo->isDir() ) ? 'rmdir' : 'unlink';
+                $todo( $fileinfo->getRealPath() );
 		    }
 
 		// rimozione della cartella radice
