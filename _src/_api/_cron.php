@@ -23,7 +23,7 @@
 	logWrite( 'chiamata cron API', 'cron' );
 
     // lock delle tabelle
-	mysqlQuery( $cf['mysql']['connection'], 'LOCK TABLES cron WRITE, cron_log WRITE, job WRITE' );
+	// mysqlQuery( $cf['mysql']['connection'], 'LOCK TABLES cron WRITE, cron_log WRITE, job WRITE' );
 
     // tempo
 	$time = time();
@@ -31,26 +31,40 @@
     // output
 	$cf['cron']['results'] = array();
 
-    // seleziono i task con profili di schedulazione compatibili con l'orario corrente
+    // chiave di lock
+	$cf['cron']['results']['token'] = getToken();
+
+    // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
 	$tasks = mysqlQuery(
 	    $cf['mysql']['connection'],
-	    'SELECT * FROM cron WHERE '.
-	    '( minuto = ?						OR minuto IS NULL ) AND '.
-	    '( ora = ?							OR ora IS NULL ) AND '.
-	    '( giorno_del_mese = ?					OR giorno_del_mese IS NULL ) AND '.
-	    '( mese = ?							OR mese IS NULL ) AND '.
-	    '( giorno_della_settimana = ?				OR giorno_della_settimana IS NULL ) AND '.
-	    '( settimana = ?						OR settimana IS NULL ) AND '.
-	    '( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?	OR timestamp_esecuzione IS NULL ) ',
+	    'UPDATE cron SET token = ? WHERE '.
+	    '( minuto = ?												OR minuto IS NULL ) AND '.
+	    '( ora = ?													OR ora IS NULL ) AND '.
+	    '( giorno_del_mese = ?										OR giorno_del_mese IS NULL ) AND '.
+	    '( mese = ?													OR mese IS NULL ) AND '.
+	    '( giorno_della_settimana = ?								OR giorno_della_settimana IS NULL ) AND '.
+	    '( settimana = ?											OR settimana IS NULL ) AND '.
+		'( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?	OR timestamp_esecuzione IS NULL ) AND'.
+		'token IS NULL',
 	    array(
-		array( 's' => intval( date( 'i', $time ) ) ),		// 
-		array( 's' => date( 'G', $time ) ),			// 
-		array( 's' => date( 'j', $time ) ),			// 
-		array( 's' => date( 'n', $time ) ),			// 
-		array( 's' => date( 'w', $time ) ),			// 0 - 6, 0 -> domenica
-		array( 's' => date( 'W', $time ) ),			// 1 - 52/53
-		array( 's' => date( 'YmdHi', $time ) )
+			array( 's' => $cf['cron']['results']['token'] ),		//
+			array( 's' => intval( date( 'i', $time ) ) ),			// 
+			array( 's' => date( 'G', $time ) ),						// 
+			array( 's' => date( 'j', $time ) ),						// 
+			array( 's' => date( 'n', $time ) ),						// 
+			array( 's' => date( 'w', $time ) ),						// 0 - 6, 0 -> domenica
+			array( 's' => date( 'W', $time ) ),						// 1 - 52/53
+			array( 's' => date( 'YmdHi', $time ) )					//
 	    )
+	);
+
+    // seleziono i task a cui ho applicato il lock
+	$tasks = mysqlQuery(
+	    $cf['mysql']['connection'],
+	    'SELECT * FROM cron WHERE token = ? ',
+		array(
+			array( 's' => $cf['cron']['results']['token'] )
+		)
 	);
 
     // log
@@ -79,6 +93,8 @@
 		logWrite( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
 	    }
 	}
+
+	/*
 
     // seleziono i job attivi
 	$jobs = mysqlQuery(
@@ -111,48 +127,63 @@
 	    }
 	}
 
+	*/
+
     // unlock delle tabelle
-	mysqlQuery( $cf['mysql']['connection'], 'UNLOCK TABLES' );
+	// mysqlQuery( $cf['mysql']['connection'], 'UNLOCK TABLES' );
 
     // ciclo sui task
 	foreach( $tasks as $task ) {
 	    if( file_exists( DIR_BASE . $task['task'] ) ) {
 
-		// resetto lo status
-		    $status = array();
+			// timestamp di esecuzione iniziale
+			mysqlQuery(
+				$cf['mysql']['connection'],
+				'UPDATE cron SET timestamp_esecuzione = ? WHERE id = ?',
+				array(
+				array( 's' => $time ),
+				array( 's' => $task['id'] )
+				)
+			);
 
-		// latest
-		    fwrite( $cHnd, 'eseguo ' . $task['task']  . ' x' . $task['iterazioni'] . PHP_EOL );
+			// resetto lo status
+				$status = array();
 
-		// log
-		    logWrite( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
+			// latest
+				fwrite( $cHnd, 'eseguo ' . $task['task']  . ' x' . $task['iterazioni'] . PHP_EOL );
 
-#		// array dei risultati
-#		    $cf['cron']['results'] = array();
+			// log
+				logWrite( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
-		// eseguo il task
-		    for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
-			logWrite( 'iterazione #' . $iter . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
-			fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
-			require DIR_BASE . $task['task'];
-			$cf['cron']['results']['task'][ $task['task'] ][ $task['id'] ] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-			if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = 3; }
-			sleep( $task['delay'] );
-		    }
+	#		// array dei risultati
+	#		    $cf['cron']['results'] = array();
 
-		// aggiorno il log
-		    mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO cron_log ( id_cron, testo, timestamp_esecuzione ) VALUES ( ?, ?, ? )', array( array( 's' => $task['id'] ), array( 's' => json_encode( $cf['cron']['results'] ) ), array( 's' => $time ) ) );
+			// eseguo il task
+				for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
+					logWrite( 'iterazione #' . $iter . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
+					fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
+					require DIR_BASE . $task['task'];
+					$cf['cron']['results']['task'][ $task['task'] ][ $task['id'] ] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
+					if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = 3; }
+					sleep( $task['delay'] );
+				}
 
-		// aggiorno la tabella di pianificazione
-		    mysqlQuery( $cf['mysql']['connection'], 'UPDATE cron SET timestamp_esecuzione = ? WHERE id = ?', array( array( 's' => $time ), array( 's' => $task['id'] ) ) );
+			// aggiorno il log
+				mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO cron_log ( id_cron, testo, timestamp_esecuzione ) VALUES ( ?, ?, ? )', array( array( 's' => $task['id'] ), array( 's' => json_encode( $cf['cron']['results'] ) ), array( 's' => $time ) ) );
 
-		// latest
-		    fwrite( $cHnd, print_r( $status, true ) . PHP_EOL );
+			// aggiorno la tabella di pianificazione
+				mysqlQuery( $cf['mysql']['connection'], 'UPDATE cron SET timestamp_esecuzione = ?, token = NULL WHERE id = ?', array( array( 's' => $time ), array( 's' => $task['id'] ) ) );
 
-	    }
+			// latest
+				fwrite( $cHnd, print_r( $status, true ) . PHP_EOL );
+
+		} else {
+			logWrite( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
+		}
 
 	}
 
+/*
     // ciclo sui job
 	foreach( $jobs as $job ) {
 	    if( file_exists( DIR_BASE . $job['job'] ) ) {
@@ -174,6 +205,7 @@
 
 	    }
 	}
+*/
 
     // log
 	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), 'var/log/cron/' . date( 'Ymd' ) . '.log' );
