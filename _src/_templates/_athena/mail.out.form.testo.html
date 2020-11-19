@@ -45,17 +45,48 @@
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
         {# CAMPI HIDDEN SPECIFICI #}
-	    <input type="hidden" id="composizione" name="{{ table }}[timestamp_composizione]" value="{{ composizione }}">
+        <input type="hidden" id="composizione" name="{{ table }}[timestamp_composizione]" value="{{ composizione }}">
+        
+        {# SELETTORE LINGUA #}
+	    <fieldset>
+		<legend>lingua</legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12">
+				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
+		    </div>
+		</div>
+
+	    </fieldset>
+
+		{# DEFINIZIONI SPECIALI #}
+		{% set subtable = form.subtable %}
+
+		{# CICLO SULLE LINGUE #}
+		{% set i = 0 %}
+		{% for l in localization.languages %}
+
+		{% set r = request[ table ][ subtable ][ i ] %}
+
+		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_mail', '', '', request, '__parent_id__', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
+
+	    {% if r.id_lingua == session.__view__.__lang__ %}
 
         {# MODULO PRINCIPALE #}
         <fieldset>
-        <legend>contenuto<small>{{ legend }}</small></legend>
+        <legend>intestazione <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
-            <div class="col-12 col-md-4">
-                <span class="label-top ">mittente</span>
+            <div class="col-4 col-md-4">
+                <span class="label-top ">nome mittente</span>
                     {{ frm.input( table, '', '', 'mittente', '', '', request ) }}
-                </div>
+            </div>
+            <div class="col-4 col-md-4">
+                <span class="label-top ">mail mittente</span>
+                    {{ frm.input( table, '', '', 'mittente', '', '', request ) }}
+            </div>
             <div class="col">
             <span class="label-top ">oggetto</span>
                 {{ frm.input( table, '', '', 'oggetto', '', '', request ) }}
@@ -76,38 +107,40 @@
             
             <div class="form-group form-row">
                 <div class="col-12 col-md">
-                    <span class="label-top ">destinatari</span>
+                    <span class="label-top ">nome destinatario</span>
                         {{ frm.input( table, '', '', 'destinatari', '', '', request ) }}
                 </div>
                 <div class="col-12 col-md">
-                    <span class="label-top ">destinatari CC</span>
+                    <span class="label-top ">nome destinatari CC</span>
                         {{ frm.input( table, '', '', 'destinatari_cc', '', '', request ) }}
                 </div>
                 <div class="col-12 col-md">
-                    <span class="label-top ">destinatari BCC</span>
+                    <span class="label-top ">nome destinatari BCC</span>
+                        {{ frm.input( table, '', '', 'destinatari_bcc', '', '', request ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top ">mail destinatario</span>
+                        {{ frm.input( table, '', '', 'destinatari', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top ">mail destinatari CC</span>
+                        {{ frm.input( table, '', '', 'destinatari_cc', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top ">mail destinatari BCC</span>
                         {{ frm.input( table, '', '', 'destinatari_bcc', '', '', request ) }}
                 </div>
             </div>
 
         </fieldset>
-    
-        <fieldset>
-            <legend>invio</legend>
-            
-            <div class="form-group form-row">
-                <div class="col-12 col-md-3">
-                <span class="label-top">testo</span>
-                {{ frm.datetimeRequired( table, '', '', 'timestamp_invio', 'data e ora di invio', '', request ) }}
-                </div>
+      
+        {% endif %}
 
-                <div class="col">
-                    <span class="label-top">server</span>
-                    {{ frm.select( table, '', '', 'server', '', etc.select.server, request ) }}
-                </div>
-
-            </div>
-
-        </fieldset>
+	    {% set i = i + 1 %}
+	    {% endfor %}
     
         {# BOTTONI E COMANDI DEL MODULO #}
         <fieldset class="form-controls mt-auto">
