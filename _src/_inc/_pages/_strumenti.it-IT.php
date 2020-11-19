@@ -45,6 +45,7 @@
 	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'mail.out.form',
+													'mail.out.form.testo',
 													'mail.out.form.tools'
 												 ) ),
 	);
@@ -59,9 +60,19 @@
 	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.tools.php' ),
 	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'mail.out.form',
-													'mail.out.form.tools'
-												 ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.form']['etc']['tabs'] )
+	);
+
+	// gestione testo mail in uscita
+	$p['mail.out.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.out.form.testo.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.testo.php' ),
+	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.form']['etc']['tabs'] ),
 	);
 
     // vista mail inviate
