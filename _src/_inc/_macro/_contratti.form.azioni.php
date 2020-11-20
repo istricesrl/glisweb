@@ -26,14 +26,14 @@
 
     // duplica contratto
 	$ct['page']['contents']['metro']['variazione'][] = array(
-	    'host' => 'http://localhost',
-	    'ws' => $base . 'duplica.contratto',
+	    'url' => $base . 'duplica.contratto',
 	    'icon' => NULL,
 	    'fa' => 'fa-files-o',
 	    'title' => 'variazione contratto',
 	    'text' => 'crea un duplicato del contratto per inserire variazioni'
 	);
-    // debug
+
+	// debug
 	// print_r( $_SESSION );
 	// echo DIRECTORY_CACHE . 'twig';
 
