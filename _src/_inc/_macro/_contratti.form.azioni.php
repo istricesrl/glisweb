@@ -9,6 +9,10 @@
      *
      */
 
+
+	// tabella gestita
+	$ct['form']['table'] = 'contratti';
+	
     // percorsi
 	$base = '/task/';
 
@@ -26,15 +30,14 @@
 
     // duplica contratto
 	$ct['page']['contents']['metro']['variazione'][] = array(
-	    'url' => $base . 'duplica.contratto',
+	    'url' => $base . 'duplica.contratto?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
 	    'icon' => NULL,
 	    'fa' => 'fa-files-o',
 	    'title' => 'variazione contratto',
 	    'text' => 'crea un duplicato del contratto per inserire variazioni'
 	);
 
-	// debug
-	// print_r( $_SESSION );
-	// echo DIRECTORY_CACHE . 'twig';
+	// macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';
 
 ?>

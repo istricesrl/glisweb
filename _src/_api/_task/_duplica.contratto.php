@@ -14,10 +14,14 @@
      */
 
       // inclusione del framework
-    require '../../../../../_src/_config.php';
+    require '../../_config.php';
 
     // inizializzo l'array del risultato
     $status = array();
+
+    // inizializzo gli array
+    $oldCs = $oldOr = array();
+
     
     if( isset( $_REQUEST['id'] ) ){
         
@@ -31,16 +35,6 @@
             array( array( 's' => $oldCnId ) ) 
         );
 
-        // elenco degli orari associati al contratto corrente
-        $oldOr = mysqlQuery( 
-            $cf['mysql']['connection'], 
-            'SELECT * FROM orari_contratti WHERE id_contratto = ? AND id_costo = ?', 
-            array( 
-                array( 's' => $oldCnId ),
-                array( 's' => $oldCs )
-            ) 
-        );
-
 
         // duplico la riga di contratto e ottengo l'id della nuova riga creata
         $newCnId = mysqlDuplicateRow( $cf['mysql']['connection'], 'contratti', $oldCnId, NULL );
@@ -50,6 +44,19 @@
             
             // procedo con la duplicazione dei costi
 			foreach( $oldCs as $cs ) {
+
+                // elenco degli orari associati al contratto e costo corrente
+                $oldOr = mysqlQuery( 
+                    $cf['mysql']['connection'], 
+                    'SELECT * FROM orari_contratti WHERE id_contratto = ? AND id_costo = ?', 
+                    array( 
+                        array( 's' => $oldCnId ),
+                        array( 's' => $cs['id'] )
+                    ) 
+                );
+
+
+                // duplico il costo
                 $newCsId = mysqlDuplicateRow( $cf['mysql']['connection'], 'costi_contratti', $cs['id'], NULL, array( 'id_contratto' => $newCnId ) );
                 
                 // se la duplicazione del costo ha avuto successo...
@@ -68,4 +75,10 @@
         $status['error'] = true;
 	    $status['message'] = 'manca id_contratto';
     }
+
+    // header location sul nuovo id
+    if(  isset( $newCnId ) && is_int( $newCnId ) ){
+        header('Location: ' . $cf['contents']['pages']['contratti.form']['path']['it-IT'] . '?contratti[id]=' . $newCnId);
+    }
+    
 ?>
