@@ -24,9 +24,7 @@
 
     // output
 	$tx	= NULL;
-	$tx	.= '<html>';
-	$tx	.= '<head></head>';
-	$tx	.= '<body style="font-family: monospace;">';
+	$tx	.= '<span style="font-family: monospace;">';
 
     // array da stampare
 	$print = $cf;
@@ -91,10 +89,7 @@
 
     // output
 	$tx	.= '</ul>';
-	$tx	.= '</body>';
-	$tx	.= '</html>';
+	$tx	.= '</span>';
 
     // output
-	buildHtml( $tx );
-
-?>
+	buildHtml( $tx, 'variabili del framework' );

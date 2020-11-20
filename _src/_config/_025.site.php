@@ -74,7 +74,7 @@
 	$cf['site']['host']			= &$cf['site']['hosts'][ $cf['site']['status'] ];
 
     // FQDN corrente del sito
-	$cf['site']['fqdn']			= $cf['site']['host'] . ( ( ! empty( $cf['site']['domain'] ) ) ? '.' . $cf['site']['domain'] : NULL );
+	$cf['site']['fqdn']			= trim( $cf['site']['host'] . ( ( ! empty( $cf['site']['domain'] ) ) ? '.' . $cf['site']['domain'] : NULL ), ". \t\n\r\0\x0B" );
 
     // percorso della cartella root del sito
 	$cf['site']['root']			= '/' . ( ( isset( $cf['site']['folders'][ $cf['site']['status'] ] ) ) ? $cf['site']['folders'][ $cf['site']['status'] ] : NULL );
@@ -94,5 +94,3 @@
 
     // debug
 	// dieText( print_r( $cf['site'], true ) );
-
-?>

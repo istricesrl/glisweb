@@ -262,12 +262,11 @@
                 'title'		=> array( $l		=> 'test da PHP' ),
                 'h1'		=> array( $l		=> 'pagina di test da configurazione PHP' ),
                 'parent'	=> array( 'id'		=> NULL ),
-                'template'	=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'default.html' ),
+                'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.html' ),
                 'menu'		=> array( 'main'	=> array(	'label'		=> array( $l => 'test PHP' ),
                                                                         'priority'	=> 100 ) )
         );
 
-    ?>
     \endcode
 
     Ovviamente l'alternativa più comoda per l'utente per la creazione di pagine è l'utilizzo del CMS messo a disposizione
@@ -420,6 +419,49 @@
     \endcode
 
     L'array $cf['mail'] è linkato a $ct['mail'], per ulteriori dettagli vedi _src/_config/_500.mail.php.
+
+    $cf['mapquest']
+    ---------------
+    Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Mapquest.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    mapquest.profile                  | il profilo Mapquest corrente (scorciatoia per mapquest.profiles.<site.status>)
+    mapquest.profiles                 | l'array dei profili mapquest disponibili
+    mapquest.profiles.<s>             | il profilo mapquest per lo status <s>
+    mapquest.profiles.<s>.servers     | array dei nomi dei server mapquest disponibli per lo status <s>
+    mapquest.server                   | il server mapquest corrente (scorciatoia per mapquest.servers, vedi _src/_config/_525.mapquest.php)
+    mapquest.servers                  | array dei dettagli dei server mapquest disponibili
+    mapquest.servers.<n>              | dettagli del server <n>
+    mapquest.servers.<n>.key          | indirizzo IP del server <n>
+
+    Vediamo un esempio di configurazione di Mapquest per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
+    stessa macchina del sito:
+
+    \code{.json}
+    "mapquest": {
+      "servers": {
+        "default": {
+          "key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "default"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "default"
+          ]
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['mapquest'] viene integrato da $cx['mapquest'] ed è linkato a $ct['mapquest'], per ulteriori dettagli vedi
+    _src/_config/_520.mapquest.php.
 
     $cf['memcache']
     ---------------

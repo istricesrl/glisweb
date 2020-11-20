@@ -47,10 +47,6 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
-            <div class="col-auto">
-            <span class="label-top">tipologia</span>
-            {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_indirizzi, request ) }}
-            </div>
             <div class="col">
             <span class="label-top ">indirizzo</span>
                 {{ frm.input( table, '', '', 'indirizzo', 'indirizzo (parte nominale)', '', request ) }}

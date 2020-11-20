@@ -141,5 +141,3 @@
     // debug
 	// die( 'host: ' . $_SERVER['HTTP_HOST'] );
 	// print_r( $cf['site'] );
-
-?>

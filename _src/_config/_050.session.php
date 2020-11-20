@@ -51,5 +51,3 @@
 
     // debug
 	// die( ini_get( 'session.save_handler' ) );
-
-?>

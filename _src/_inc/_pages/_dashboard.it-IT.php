@@ -38,5 +38,3 @@
 	    'macro'		=> array( '_src/_inc/_macro/_browser.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
-
-?>

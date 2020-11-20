@@ -153,5 +153,3 @@
 
     // debug
 	// print_r( $cf['auth'] );
-
-?>

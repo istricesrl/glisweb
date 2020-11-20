@@ -1,6 +1,5 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/pagine.form.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -106,17 +105,17 @@
         </div>
     </div>
 
-    <div class="form-group form-row">
+    <div class="form-group form-row flex-fill">
         <div class="col cke-switch" id="cke-testo">
         {{ frm.textArea( table, subtable, i, 'testo', 'contenuto della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
-    </div>
+        </div>
         <div class="col cke-switch" id="cke-abstract" style="display: none;">
         {{ frm.textArea( table, subtable, i, 'abstract', 'abstract della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
         </div>
         <div class="col cke-switch" id="cke-specifiche" style="display: none;">
         {{ frm.textArea( table, subtable, i, 'specifiche', 'specifiche della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
         </div>
-    </div>
+        </div>
 
         {% endif %}
 

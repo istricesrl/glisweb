@@ -130,6 +130,9 @@
 	    'metadati' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
+	    'pubblicazione' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
 #	    'prezzi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -164,12 +167,10 @@
 #	    'tipologie_attivita' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'tipologie_crm' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'tipologie_crm' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'video' => array(
 			CONTROL_FULL => array( 'roots' )
 		)
 	);
-
-?>

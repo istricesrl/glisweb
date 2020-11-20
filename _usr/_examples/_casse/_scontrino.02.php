@@ -34,5 +34,3 @@
 
     // chiusura
 	escpos_disconnect( $h );
-
-?>

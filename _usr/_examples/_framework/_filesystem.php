@@ -51,5 +51,3 @@
 
     // output
 	build( $tx );
-
-?>

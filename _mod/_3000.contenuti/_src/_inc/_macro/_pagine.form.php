@@ -22,7 +22,60 @@
     // tabella gestita
 	$ct['form']['table'] = 'pagine';
 
+    // tendina siti
+    $ct['etc']['select']['siti'] = $cf['sites'];
+
+    // tendina tipologie pubblicazione
+	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
+	);
+
+    // tendina templates
+	$tpl = glob( DIR_BASE . '{_,}src/{_,}templates/*', GLOB_BRACE );
+	foreach( $tpl as $t ) {
+	    $ct['etc']['select']['templates'][] = array( 'id' => str_replace( DIR_BASE, '', $t ).'/', '__label__' => basename( $t ) );
+	}
+
+    // dati che dipendono dal sito
+	if( isset( $_REQUEST['pagine']['id_sito'] ) ) {
+
+        // tendina genitori
+		$ct['etc']['select']['pagine'] = mysqlCachedIndexedQuery(
+            $cf['cache']['index'],
+            $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM pagine_view WHERE id_sito = ? AND pagine_path_check( pagine_view.id, ? ) = 0',
+            array(
+                array( 's' => $_REQUEST['pagine']['id_sito'] ),
+                array( 's' => $_REQUEST['pagine']['id'] ) )
+            );
+
+    }
+
+    // dati che dipendono dal template
+	if( isset( $_REQUEST['pagine']['template'] ) ) {
+
+	    // controllo file
+		if( file_exists( DIR_BASE . $_REQUEST['pagine']['template'] . '/etc/template.conf' ) ) {
+
+		    // tendina schemi
+			$schemi = glob( DIR_BASE . $_REQUEST['pagine']['template'] . '/*.html', GLOB_BRACE );
+			foreach( $schemi as $t ) {
+			    $ct['etc']['select']['schemi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
+			}
+
+		    // tendina temi
+			$temi = glob( DIR_BASE . $_REQUEST['pagine']['template'] . '/css/*.css', GLOB_BRACE );
+			foreach( $temi as $t ) {
+			    $ct['etc']['select']['temi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
+			}
+
+		}
+
+	}
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
-
-?>

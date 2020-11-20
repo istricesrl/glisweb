@@ -159,8 +159,16 @@
 	    timerCheck( $cf['speed'], '-> controllo file temporanei' );
 	}
 
+	if( count( glob( DIR_ETC_SITEMAP . 'sitemap.*.{xml,csv}', GLOB_BRACE ) ) > 0 ) {
+	    $ct['page']['contents']['metro']['cache'][] = array(
+			'ws' => $base . 'sitemap.clean',
+			'icon' => NULL,
+			'fa' => 'fa-file-code-o',
+			'title' => 'pulizia delle sitemap',
+			'text' => 'forza la cancellazione delle sitemap'
+	    );
+	}
+
     // debug
 	// print_r( $_SESSION );
 	// echo DIRECTORY_CACHE . 'twig';
-
-?>

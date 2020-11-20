@@ -31,11 +31,9 @@
 //		),
 //		'pagine_metadati' => array(
 //		    CONTROL_FULL => array( 'roots' )
-//		),
-//		'pagine_gruppi' => array(
-//		    CONTROL_FULL => array( 'roots' )
+		),
+		'pagine_gruppi' => array(
+		    CONTROL_FULL => array( 'roots' )
 		)
 	    )
 	);
-
-?>

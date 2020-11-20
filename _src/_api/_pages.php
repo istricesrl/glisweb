@@ -528,5 +528,3 @@
 		DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
 	    );
 	}
-
-?>

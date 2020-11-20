@@ -34,5 +34,3 @@
 	// die( $cf['localization']['timezone']['name'] );
 	// print_r( $cf['localization']['timezone'] );
 	// die( date_default_timezone_get() );
-
-?>

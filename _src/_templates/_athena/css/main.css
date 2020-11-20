@@ -553,6 +553,13 @@ select.select-tabs {
     display: inline;
 }
 
+.breadcrumb-item+.breadcrumb-item::before {
+    display: inline-block;
+    padding-right: .5rem;
+    color: black;
+    content: "/";
+}
+
 /* stili del main */
 
 main {
@@ -633,7 +640,7 @@ main.container-fluid.browser {
     font-size: 1.3em;
     font-weight: bold;
     margin: 0px;
-    padding: 3px;
+    padding: 3px 0px;
 }
 
 .metro h4 {
