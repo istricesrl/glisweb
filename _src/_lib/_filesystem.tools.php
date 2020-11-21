@@ -682,7 +682,7 @@
 
 		if ( is_dir( $rfile ) ) {
 
-		    array_merge( $r , globRecursive( $rFile , $find ) );
+		    array_merge( $r , globRecursive( $rfile , $find ) );
 
 		} else {
 
