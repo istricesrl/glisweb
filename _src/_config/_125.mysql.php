@@ -98,6 +98,24 @@
 			    $cf['mysql']['server'] = &$cf['mysql']['servers'][ $key ];
 			}
 
+			// controllo livello di patch database
+			$cf['mysql']['profile']['patch'] = readStringFromFile( FILE_MYSQL_PATCH );
+			if( file_exists( path2custom( FILE_MYSQL_PATCH ) ) ) {
+				$cf['mysql']['profile']['patch'] = readStringFromFile( path2custom( FILE_MYSQL_PATCH ), true );
+			} else {
+				writeToFile( $cf['mysql']['profile']['patch'], path2custom( FILE_MYSQL_PATCH ) );
+			}
+
+			// cerco nuove patch
+			foreach ( getFileList( DIR_USR_DATABASE_PATCH, true ) as $patch ) {
+				if( getFileNameWithoutExtension( $patch ) >= $cf['mysql']['profile']['patch'] ) {
+					if( mysqlQuery( $cf['mysql']['connection'], readStringFromFile( $patch ) ) ) {
+						$cf['mysql']['profile']['patch'] = getFileNameWithoutExtension( $patch );
+						writeToFile( getFileNameWithoutExtension( $patch ), path2custom( FILE_MYSQL_PATCH ) );
+					}
+				}
+			}
+
 		} else {
 
 		    // log
