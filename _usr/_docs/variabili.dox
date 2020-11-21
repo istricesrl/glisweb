@@ -551,6 +551,8 @@
     mysql.connections                 | l'array delle connessioni a mysql attive
     mysql.profile                     | il profilo mysql corrente (scorciatoia per mysql.profiles.<site.status>)
     mysql.profile.patch               | informazioni sul livello di patch del database corrente
+    mysql.profile.patch.level         | il livello di patch del database corrente
+    mysql.profile.patch.list          | l'elenco delle patch disponibili
     mysql.profiles                    | l'array dei profili mysql disponibili
     mysql.profiles.<s>                | il profilo mysql per lo status <s>
     mysql.profiles.<s>.servers        | array dei nomi dei server mysql disponibli per lo status <s>
