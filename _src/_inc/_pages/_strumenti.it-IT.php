@@ -139,7 +139,7 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'template.mail.form',
 												'template.mail.form.testo',
-												'pemplate.mail.form.metadati' ) ),
+												'template.mail.form.metadati' ) ),
 	);
     // form template mail testo
 	$p['template.mail.form.testo'] = array(
