@@ -165,18 +165,7 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
-  // gestione strumenti mail in uscita
-  $p['mail.out.form.tools'] = array(
-	'sitemap'		=> false,
-	'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-	'title'		=> array( $l		=> 'strumenti code mail' ),
-	'h1'		=> array( $l		=> 'strumenti' ),
-	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	'macro'		=> array( '_src/_inc/_macro/_mail.out.form.tools.php' ),
-	'parent'		=> array( 'id'		=> 'mail.out.view' ),
-	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	'etc'		=> array( 'tabs'	=> $p['mail.out.form']['etc']['tabs'] )
-);
+ 
 /*
     // pagina gestione cron
 	$p['cron'] = array(
