@@ -91,6 +91,21 @@
     }
 
     /**
+     *
+     * @todo documentare
+     *
+     */
+    function getFileNameWithoutExtension( $f ) {
+
+        fullPath( $f );
+
+        $i = pathinfo( $f );
+
+        return $i['filename'];
+
+    }
+
+    /**
      * verifica l'esistenza di un path di directory creando quelle mancanti
      *
      * @param string		$p	il percorso da verificare
@@ -443,9 +458,11 @@
      * @todo documentare
      *
      */
-    function readStringFromFile( $f ) {
+    function readStringFromFile( $f, $trim = false ) {
 
-	return readFromFile( $f, FILE_READ_AS_STRING );
+        $t = readFromFile( $f, FILE_READ_AS_STRING );
+        if( $trim === true ) { $t = trim( $t ); }
+	    return $t;
 
     }
 
@@ -665,7 +682,7 @@
 
 		if ( is_dir( $rfile ) ) {
 
-		    array_merge( $r , globRecursive( $rFile , $find ) );
+		    array_merge( $r , globRecursive( $rfile , $find ) );
 
 		} else {
 
