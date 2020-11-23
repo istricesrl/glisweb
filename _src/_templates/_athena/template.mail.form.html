@@ -44,9 +44,6 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-        {# CAMPI HIDDEN SPECIFICI #}
-        <input type="hidden" id="composizione" name="{{ table }}[timestamp_composizione]" value="{{ composizione }}">
-      
         {# MODULO PRINCIPALE #}
         <fieldset>
         <legend>dati generali<small>{{ legend }}</small></legend>

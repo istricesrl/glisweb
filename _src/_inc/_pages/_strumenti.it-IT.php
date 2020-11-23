@@ -45,22 +45,9 @@
 	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'mail.out.form',
-													'mail.out.form.testo',
 													'mail.out.form.file',
 													'mail.out.form.tools'
 												 ) ),
-	);
-
-	// gestione testo mail in uscita
-	$p['mail.out.form.testo'] = array(
-		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'testo' ),
-		'h1'		=> array( $l		=> 'testo' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.out.form.testo.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_mail.out.form.testo.php' ),
-		'parent'		=> array( 'id'		=> 'mail.out.view' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> $p['mail.out.form']['etc']['tabs'] ),
 	);
 
 	// gestione file mail in uscita
@@ -137,7 +124,8 @@
 	    'macro'		=> array( '_src/_inc/_macro/_template.mail.form.php' ),
 	    'parent'		=> array( 'id'		=> 'template.mail.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'template.mail.form' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'template.mail.form',
+													'template.mail.form.testo') ),
 	);
 
     // strumenti mail
@@ -152,6 +140,19 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
 	);
+
+	// gestione testo template
+	$p['template.mail.form.testo'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'testo' ),
+		'h1'		=> array( $l		=> 'testo' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.testo.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.testo.php' ),
+		'parent'		=> array( 'id'		=> 'template.mail.view' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] ),
+	);
+
 
 /*
     // pagina gestione cron
