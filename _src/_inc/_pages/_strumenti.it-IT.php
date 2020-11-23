@@ -139,7 +139,7 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'template.mail.form',
 												'template.mail.form.testo',
-												'template.mail.form.metadati' ) ),
+												'template.mail.form.file' ) ),
 	);
     // form template mail testo
 	$p['template.mail.form.testo'] = array(
@@ -153,15 +153,15 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
-	// gestione template metadati
-	$p['template.mail.form.metadati'] = array(
+	// gestione template file
+	$p['template.mail.form.file'] = array(
 		'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
-		'title'		=> array( $l		=> 'metadati' ),
-		'h1'		=> array( $l		=> 'metadati' ),
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
 		'parent'		=> array( 'id'		=> 'template.mail.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.metadati.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.metadati.php' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.file.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.file.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);

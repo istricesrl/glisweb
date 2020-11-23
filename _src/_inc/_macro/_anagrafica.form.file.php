@@ -22,7 +22,7 @@
     // tabella gestita
     $ct['form']['table'] = 'anagrafica';
 
-    // tendina ruolo immagini
+    // tendina ruolo file
 	$ct['etc']['select']['ruoli_file'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
