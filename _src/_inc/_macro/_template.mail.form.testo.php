@@ -13,7 +13,7 @@
     $ct['form']['table'] = 'mail_out';
     
     // sotto tabella gestita
-    $ct['form']['subtable'] = 'mail';
+    $ct['form']['subtable'] = 'contenuti';
 
     // macro di default per l'entità pagine
     require DIR_SRC_INC_MACRO . '_default.form.multilingua.php';

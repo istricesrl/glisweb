@@ -43,10 +43,7 @@
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
-
-        {# CAMPI HIDDEN SPECIFICI #}
-        <input type="hidden" id="composizione" name="{{ table }}[timestamp_composizione]" value="{{ composizione }}">
-        
+ 
         {# SELETTORE LINGUA #}
 	    <fieldset>
 		<legend>lingua</legend>
@@ -69,7 +66,7 @@
 		{% set r = request[ table ][ subtable ][ i ] %}
 
 		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'id_mail', '', '', request, '__parent_id__', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_pagina', '', '', request, '__parent_id__', 'hidden' ) }}
 	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
 
 	    {% if r.id_lingua == session.__view__.__lang__ %}
