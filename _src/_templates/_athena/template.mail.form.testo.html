@@ -66,7 +66,7 @@
 		{% set r = request[ table ][ subtable ][ i ] %}
 
 		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'id_pagina', '', '', request, '__parent_id__', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_template_mail', '', '', request, '__parent_id__', 'hidden' ) }}
 	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
 
 	    {% if r.id_lingua == session.__view__.__lang__ %}
@@ -78,22 +78,22 @@
         <div class="form-group form-row">
             <div class="col-4 col-md-4">
                 <span class="label-top ">nome mittente</span>
-                    {{ frm.input( table, '', '', 'mittente', '', '', request ) }}
+                    {{ frm.input( table, subtable, i, 'mittente_nome', '', '', request ) }}
             </div>
             <div class="col-4 col-md-4">
                 <span class="label-top ">mail mittente</span>
-                    {{ frm.input( table, '', '', 'mittente', '', '', request ) }}
+                    {{ frm.input( table, subtable, i, 'mittente_mail', '', '', request ) }}
             </div>
             <div class="col">
             <span class="label-top ">oggetto</span>
-                {{ frm.input( table, '', '', 'oggetto', '', '', request ) }}
+                {{ frm.input( table, subtable, i, 'cappello', '', '', request ) }}
             </div>
         </div>
 
         <div class="form-group form-row">
             <div class="col">
             <span class="label-top">testo</span>
-            {{ frm.textarea( table, '', '', 'corpo', '', 3, request, '', '', 'ckEditor', 200 ) }}
+            {{ frm.textarea( table, subtable, i, 'testo', '', 3, request, '', '', 'ckEditor', 200 ) }}
             </div>
         </div>
        
@@ -105,30 +105,30 @@
             <div class="form-group form-row">
                 <div class="col-12 col-md">
                     <span class="label-top ">nome destinatario</span>
-                        {{ frm.input( table, '', '', 'destinatari', '', '', request ) }}
+                        {{ frm.input( table, subtable, i, 'destinatario_nome', '', '', request ) }}
                 </div>
                 <div class="col-12 col-md">
                     <span class="label-top ">nome destinatari CC</span>
-                        {{ frm.input( table, '', '', 'destinatari_cc', '', '', request ) }}
+                      
                 </div>
                 <div class="col-12 col-md">
                     <span class="label-top ">nome destinatari BCC</span>
-                        {{ frm.input( table, '', '', 'destinatari_bcc', '', '', request ) }}
+                    
                 </div>
             </div>
 
             <div class="form-group form-row">
                 <div class="col-12 col-md">
                     <span class="label-top ">mail destinatario</span>
-                        {{ frm.input( table, '', '', 'destinatari', '', '', request ) }}
+                        {{ frm.input( table, subtable, i, 'destinatario_mail', '', '', request ) }}
                 </div>
                 <div class="col-12 col-md">
                     <span class="label-top ">mail destinatari CC</span>
-                        {{ frm.input( table, '', '', 'destinatari_cc', '', '', request ) }}
+                      
                 </div>
                 <div class="col-12 col-md">
                     <span class="label-top ">mail destinatari BCC</span>
-                        {{ frm.input( table, '', '', 'destinatari_bcc', '', '', request ) }}
+                        
                 </div>
             </div>
 
