@@ -20,7 +20,6 @@
 	    'id' => '#',
         '__label__' => 'categoria',
         'membri' => 'membri'
-	   
 	);
 
     // stili della vista
