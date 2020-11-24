@@ -31,4 +31,6 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
     mysql -h $SRVADDR -u $SRVUSER -p$SRVPASS $SRVDBNAME < $FILE1
     mysql -h $SRVADDR -u $SRVUSER -p$SRVPASS $SRVDBNAME < $FILE2
 
+    cp _usr/_database/mysql.schema.version usr/database/mysql.schema.version
+
 fi

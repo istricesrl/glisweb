@@ -106,8 +106,14 @@
 				writeToFile( $cf['mysql']['profile']['patch']['level'], path2custom( FILE_MYSQL_PATCH ) );
 			}
 
+			// debug
+			// echo $cf['mysql']['profile']['patch']['level'] . '<br>';
+
 			// cerco nuove patch
 			$cf['mysql']['profile']['patch']['list'] = getFileList( DIR_USR_DATABASE_PATCH, true );
+			sort( $cf['mysql']['profile']['patch']['list'] );
+
+			// eseguo le patch
 			foreach( $cf['mysql']['profile']['patch']['list'] as $patch ) {
 				if( getFileNameWithoutExtension( $patch ) > $cf['mysql']['profile']['patch']['level'] ) {
 					$query = readStringFromFile( $patch );
@@ -116,9 +122,14 @@
 						$cf['mysql']['profile']['patch']['level'] = getFileNameWithoutExtension( $patch );
 						writeToFile( $cf['mysql']['profile']['patch']['level'], path2custom( FILE_MYSQL_PATCH ) );
 						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . basename( $patch ) );
+					} else {
+						var_dump( $qRes );
 					}
 				}
 			}
+
+			// debug
+			// echo print_r( $cf['mysql']['profile']['patch']['list'], true );
 
 		} else {
 
