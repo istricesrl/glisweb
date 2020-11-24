@@ -109,11 +109,11 @@
                 </div>
                 <div class="col-12 col-md">
                     <span class="label-top ">nome destinatari CC</span>
-                      
+                    {{ frm.input( table, subtable, i, 'destinatario_cc_nome', '', '', request ) }}
                 </div>
                 <div class="col-12 col-md">
-                    <span class="label-top ">nome destinatari BCC</span>
-                    
+                    <span class="label-top ">nome destinatari CCN</span>
+                    {{ frm.input( table, subtable, i, 'destinatario_ccn_nome', '', '', request ) }}
                 </div>
             </div>
 
@@ -124,11 +124,11 @@
                 </div>
                 <div class="col-12 col-md">
                     <span class="label-top ">mail destinatari CC</span>
-                      
+                    {{ frm.input( table, subtable, i, 'destinatario_cc_mail', '', '', request ) }}
                 </div>
                 <div class="col-12 col-md">
-                    <span class="label-top ">mail destinatari BCC</span>
-                        
+                    <span class="label-top ">mail destinatari CCN</span>
+                    {{ frm.input( table, subtable, i, 'destinatario_ccn_mail', '', '', request ) }}
                 </div>
             </div>
 

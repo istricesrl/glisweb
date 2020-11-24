@@ -49,16 +49,16 @@
         <legend>dati generali<small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
-            <div class="col-4 col-md-4">
+            <div class="col-12 col-md-4">
                 <span class="label-top ">nome</span>
                 {{ frm.input( table, '', '', 'nome', '', '', request ) }}
             </div>
-            <div class="col-4 col-md-4">
+            <div class="col-12 col-md-4">
                 <span class="label-top ">ruolo</span>
                 {{ frm.input( table, '', '', 'ruolo', '', '', request ) }}
             </div>
-            <div class="col-4 col-md-4">
-                <span class="label-top ">type</span>
+            <div class="col-12 col-md-4">
+                <span class="label-top ">tipo render del template</span>
                 {{ frm.select( table, '', '', 'type', '', etc.select.types, request ) }}  
             </div>
         </div>
