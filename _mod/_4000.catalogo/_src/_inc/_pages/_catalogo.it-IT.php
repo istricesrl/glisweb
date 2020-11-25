@@ -44,7 +44,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'categorie.form',
-												//	'categorie.form.sem'
+													'categorie.form.caratteristiche',
 												'categorie.form.immagini',
 												'categorie.form.video',
 												'categorie.form.audio',
@@ -52,6 +52,18 @@
 												'categorie.form.metadati',
 												'categorie.form.gruppi'
 												) )
+	);
+
+	// gestione categorie prodotti caratteristiche
+	$p['categorie.form.caratteristiche'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'caratteristiche' ),
+		'h1'		=> array( $l		=> 'caratteristiche' ),
+		'parent'		=> array( 'id'		=> 'categorie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.form.caratteristiche.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.form.caratteristiche.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.form']['etc']['tabs'] )
 	);
 
 	// gestione categorie immagini

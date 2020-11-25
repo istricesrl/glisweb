@@ -21,11 +21,9 @@
 	    array(
 		'categorie_prodotti' => array(
             CONTROL_FULL => array( 'roots' )
-        
-
-#		),
-#		'categorie_prodotti_caratteristiche' => array(
-#		    CONTROL_FULL => array( 'roots' )
+		),
+		'categorie_prodotti_caratteristiche' => array(
+		    CONTROL_FULL => array( 'roots' )
 #		),
 #		'marchi' => array(
 #		    CONTROL_FULL => array( 'roots' )
