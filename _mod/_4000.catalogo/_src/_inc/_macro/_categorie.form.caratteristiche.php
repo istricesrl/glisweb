@@ -22,9 +22,6 @@
     // tabella gestita
 	$ct['form']['table'] = 'categorie_prodotti';
 
-    // sotto tabella gestita
-	$ct['form']['subtable'] = 'categorie_prodotti_caratteristiche';
-
     // tendina id caratteristiche
 	$ct['etc']['select']['id_caratteristiche'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],

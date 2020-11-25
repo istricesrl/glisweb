@@ -21,7 +21,7 @@
             </div>
             <div class="col col-md-2">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">caratteristica</span>{% endif %}
-                {{ frm.selectRequired( table, subtable, i, 'id_ruolo', '', etc.select.id_caratteristiche, request ) }}
+                {{ frm.selectRequired( table, subtable, i, 'id_caratteristica', '', etc.select.id_caratteristiche, request ) }}
             </div>
             <div class="col-10 col-md">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">testo</span>{% endif %}
