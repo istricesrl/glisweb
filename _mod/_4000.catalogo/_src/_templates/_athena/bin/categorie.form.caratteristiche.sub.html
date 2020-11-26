@@ -29,11 +29,11 @@
             </div>
             <div class="col col-md-auto">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">presente</span>{% endif %}
-                {{ frm.selectRequired( table, subtable, i, 'se_non_presente', '', etc.select.se_non_presente, request, NULL, '' ,'',1  ) }}
+                {{ frm.select( table, subtable, i, 'se_non_presente', '', etc.select.se_non_presente, request ) }}
             </div>
             <div class="col col-md-auto">
                 {% if i == 0 %}<span class="label-top remove-after-duplicate">visibile</span>{% endif %}
-                {{ frm.selectRequired( table, subtable, i, 'se_visibile', '', etc.select.se_visibile, request, NULL, '' ,'',1  ) }}
+                {{ frm.select( table, subtable, i, 'se_visibile', '', etc.select.se_visibile, request ) }}
             </div>
             {% if r.id %}
             <div class="col-auto text-right remove-on-duplicate d-print-none">
