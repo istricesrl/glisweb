@@ -40,9 +40,6 @@
 			    // riduco il tempo massimo di connessione per evitare rallentamenti
 				mysqli_options( $cn, MYSQLI_OPT_CONNECT_TIMEOUT, 3 );
 
-				// character set
-				mysqli_set_charset( $cn, 'utf8' );
-
 				// connessione
 				mysqli_real_connect(
 				    $cn,
@@ -50,6 +47,9 @@
 				    $cf['mysql']['servers'][ $server ]['username'],
 				    $cf['mysql']['servers'][ $server ]['password']
 				);
+
+				// character set
+				mysqli_set_charset( $cn, 'utf8' );
 
 			    // controllo errori
 				if( mysqli_connect_errno() ) {
