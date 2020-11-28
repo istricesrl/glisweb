@@ -70,5 +70,3 @@
 	// print_r( $cf['contents']['index'] );
 	// print_r( $cf['contents']['pages']['licenza']['content'] );
 	// echo $cf['contents']['updated'];
-
-?>

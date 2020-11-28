@@ -53,5 +53,3 @@
 	if( isset( $cx['mail'] ) ) {
 	    $cf['mail'] = array_replace_recursive( $cf['mail'], $cx['mail'] );
 	}
-
-?>

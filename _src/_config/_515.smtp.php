@@ -27,4 +27,3 @@
     // debug
 	// print_r( $cf['contents']['pages']['licenza']['content'] );
 	// print_r($cf['smtp'] );
-?>

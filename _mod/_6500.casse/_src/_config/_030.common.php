@@ -16,5 +16,3 @@
 	if( isset( $cx['casse'] ) ) {
 	    $cf['casse'] = array_replace_recursive( $cf['casse'], $cx['casse'] );
 	}
-
-?>

@@ -132,5 +132,3 @@
 	// print_r( $cf['memcache']['profiles'] );
 	// echo $cf['site']['status'] . PHP_EOL;
 	// var_dump( $cf['memcache'] );
-
-?>

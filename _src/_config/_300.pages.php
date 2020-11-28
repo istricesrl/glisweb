@@ -58,5 +58,3 @@
     // debug
 	// var_dump( $cf['contents']['cached'] );
 	// print_r( $cx['contents'] );
-
-?>

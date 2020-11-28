@@ -285,7 +285,8 @@
 	define( 'DIR_MOD'			, DIR_BASE . '_mod/' );
 	define( 'DIR_SRC'			, DIR_BASE . '_src/' );
 	define( 'DIR_SRC_API'			, DIR_BASE . '_src/_api/' );
-	define( 'DIR_SRC_API_TASK'		, DIR_BASE . '_src/_api/_task/' );
+    define( 'DIR_SRC_API_REPORT'		, DIR_BASE . '_src/_api/_report/' );
+    define( 'DIR_SRC_API_TASK'		, DIR_BASE . '_src/_api/_task/' );
 	define( 'DIR_SRC_CONFIG'		, DIR_BASE . '_src/_config/' );
 	define( 'DIR_SRC_CONFIG_EXT'		, DIR_BASE . '_src/_config/_ext/' );
 	define( 'DIR_SRC_HTML'			, DIR_BASE . '_src/_html/' );
@@ -296,6 +297,8 @@
 	define( 'DIR_SRC_LIB'			, DIR_BASE . '_src/_lib/' );
 	define( 'DIR_SRC_LIB_EXT'		, DIR_BASE . '_src/_lib/_ext/' );
 	define( 'DIR_USR'			, DIR_BASE . '_usr/' );
+    define( 'DIR_USR_DATABASE'      , DIR_USR . '_database/');
+    define( 'DIR_USR_DATABASE_PATCH'      , DIR_USR_DATABASE . '_patch/');
 	define( 'DIR_USR_DOCS'			, DIR_BASE . '_usr/_docs/' );
 	define( 'DIR_USR_DOCS_BUILD'		, DIR_BASE . '_usr/_docs/build/' );
 	define( 'DIR_USR_DOCS_BUILD_HTML'	, DIR_BASE . '_usr/_docs/build/html/' );
@@ -309,7 +312,9 @@
 	define( 'DIR_VAR_CACHE_PAGES'		, DIR_BASE . 'var/cache/pages/' );
 	define( 'DIR_VAR_CACHE_TWIG'		, DIR_BASE . 'var/cache/twig/' );
 	define( 'DIR_VAR_IMMAGINI'		, DIR_BASE . 'var/immagini/' );
-	define( 'DIR_VAR_LOG'			, DIR_BASE . 'var/log/' );
+    define( 'DIR_VAR_LOG'			, DIR_BASE . 'var/log/' );
+    define( 'DIR_VAR_LOG_MYSQL'   , DIR_VAR_LOG . 'mysql/' );
+    define( 'DIR_VAR_LOG_MYSQL_PATCH'   , DIR_VAR_LOG_MYSQL . 'patch/' );
 	define( 'DIR_VAR_LOG_LATEST'		, DIR_BASE . 'var/log/latest/' );
 	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
 
@@ -323,7 +328,8 @@
 	define( 'FILE_LICENSE'			, path2custom( DIR_ETC ) . 'license.conf' );
 	define( 'FILE_LOREM'			, DIR_ETC . '_lorem.conf' );
 	define( 'FILE_MANUAL_HTML'		, DIR_USR_DOCS_BUILD_HTML . 'index.html' );
-	define( 'FILE_MANUAL_PDF'		, DIR_USR_DOCS_BUILD_LATEX . 'refman.pdf' );
+    define( 'FILE_MANUAL_PDF'		, DIR_USR_DOCS_BUILD_LATEX . 'refman.pdf' );
+    define( 'FILE_MYSQL_PATCH'      , DIR_USR_DATABASE . 'mysql.schema.version');
 	define( 'FILE_REDIRECT'			, path2custom( DIR_ETC ) . 'redirect.csv' );
 	define( 'FILE_STATUS'			, path2custom( DIR_ETC ) . 'status.conf' );
 
@@ -623,5 +629,3 @@
 	// print_r( $cf );
 	// print_r( $ct );
 	// print_r( $cx );
-
-?>

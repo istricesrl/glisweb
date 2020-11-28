@@ -64,5 +64,3 @@
 	// print_r( $dirs );
 	// print_r( $ct );
 	// die( 'wtf' );
-
-?>

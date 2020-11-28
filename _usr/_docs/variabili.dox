@@ -262,12 +262,11 @@
                 'title'		=> array( $l		=> 'test da PHP' ),
                 'h1'		=> array( $l		=> 'pagina di test da configurazione PHP' ),
                 'parent'	=> array( 'id'		=> NULL ),
-                'template'	=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'default.html' ),
+                'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.html' ),
                 'menu'		=> array( 'main'	=> array(	'label'		=> array( $l => 'test PHP' ),
                                                                         'priority'	=> 100 ) )
         );
 
-    ?>
     \endcode
 
     Ovviamente l'alternativa più comoda per l'utente per la creazione di pagine è l'utilizzo del CMS messo a disposizione
@@ -551,6 +550,9 @@
     mysql.connection                  | la connessione corrente a mysql (scorciatoia per mysql.connections, vedi _src/_config/_125.mysql.php)
     mysql.connections                 | l'array delle connessioni a mysql attive
     mysql.profile                     | il profilo mysql corrente (scorciatoia per mysql.profiles.<site.status>)
+    mysql.profile.patch               | informazioni sul livello di patch del database corrente
+    mysql.profile.patch.level         | il livello di patch del database corrente
+    mysql.profile.patch.list          | l'elenco delle patch disponibili
     mysql.profiles                    | l'array dei profili mysql disponibili
     mysql.profiles.<s>                | il profilo mysql per lo status <s>
     mysql.profiles.<s>.servers        | array dei nomi dei server mysql disponibli per lo status <s>

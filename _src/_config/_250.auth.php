@@ -174,5 +174,3 @@
 			CONTROL_FULL => array( 'roots' )
 		)
 	);
-
-?>

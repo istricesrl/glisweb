@@ -383,5 +383,3 @@
 		'etc'		=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
-
-?>

@@ -261,7 +261,9 @@
 
 	    // configurazione extra
 		if( isset( $cf['site']['pages'] ) ) {
-		    $cf['contents']['pages'] = array_replace_recursive( $cf['contents']['pages'], $cf['site']['pages'] );
+		    $cf['contents']['pages'] = array_replace_recursive(
+                $cf['contents']['pages'],
+                $cf['site']['pages'] );
 		}
 
 #11	} else {
@@ -280,5 +282,3 @@
 	// print_r( $cf['localization']['language'] );
 	// print_r( $cf['contents']['pages']['licenza']['content'] );
 	// print_r( $arrayPagine );
-
-?>

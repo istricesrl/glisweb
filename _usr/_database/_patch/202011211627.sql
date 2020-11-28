@@ -1,0 +1,1 @@
+INSERT INTO `test` (`id`, `nome`, `mail`) VALUES (1, 'root', 'root@domain.bho');

@@ -57,5 +57,3 @@
 
     // output
 	buildHTML( $tx );
-
-?>

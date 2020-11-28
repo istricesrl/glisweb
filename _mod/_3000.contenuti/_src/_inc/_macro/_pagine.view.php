@@ -20,9 +20,6 @@
     // debug
 	// print_r( $_SESSION );
 
-	// tabella gestita
-	$ct['form']['table'] = 'pubblicazione';
-
     // tabella della vista
 	$ct['view']['table'] = 'pagine';
 
@@ -36,8 +33,7 @@
 	    '__label__' => 'pagina',
 	    'template' => 'template',
 	    'schema_html' => 'schema',
-	   'tema_css' => 'tema',
-	    'tipologia_pubblicazione' => 'pubblicazione'
+	   'tema_css' => 'tema'
 	);
 
     // stili della vista
@@ -46,8 +42,7 @@
 	    'id_sito' => 'text-left',
 	    'template' => 'text-left',
 	    'schema_html' => 'text-left',
-	    'tema_css' => 'text-left',
-	    'tipologia_pubblicazione' => 'text-left'
+	    'tema_css' => 'text-left'
 	);
 
     // macro di default
@@ -57,5 +52,3 @@
 	foreach( $ct['view']['data'] as &$row ) {
 	    $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
 	}
-
-?>

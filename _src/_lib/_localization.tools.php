@@ -62,10 +62,3 @@ function string2utf8( $mixed ) {
     }
     return $mixed;
 }
-
-
-
-
-
-
-?>

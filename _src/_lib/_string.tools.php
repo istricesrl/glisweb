@@ -297,6 +297,3 @@
 	return ts2string( strtotime( $d ) );
 
     }
-
-
-?>

@@ -34,5 +34,3 @@
 	// print_r( $_REQUEST );
 	// print_r( $_SESSION );
 	// print_r( $cf['contents']['pages']['licenza']['content'] );
-
-?>

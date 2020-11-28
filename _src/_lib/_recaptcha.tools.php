@@ -29,5 +29,3 @@
     return $r['score'];
 
     }
-
-?>

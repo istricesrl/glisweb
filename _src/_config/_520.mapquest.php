@@ -39,6 +39,3 @@
     // link al server corrente
 	$cf['mapquest']['server']			= NULL;
 */
-
-?>
-

@@ -236,5 +236,3 @@
 
     // debug
 	// print_r( $cf['contents']['index'] );
-
-?>

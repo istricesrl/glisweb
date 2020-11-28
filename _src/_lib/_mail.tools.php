@@ -360,5 +360,3 @@
 		return implode( ', ', $ar );
 
 	}
-
-?>

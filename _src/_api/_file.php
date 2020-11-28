@@ -129,5 +129,3 @@
 
     // invio risposta
 	buildJson( $reply );
-
-?>

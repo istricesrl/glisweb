@@ -340,5 +340,3 @@
 	// echo $cf['contents']['updated'];
 	// print_r( $cf['contents']['pages'] );
 	// print_r( $cf['contents']['pages'][ NULL ] );
-
-?>

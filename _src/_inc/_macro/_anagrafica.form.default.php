@@ -18,5 +18,3 @@
             ['anagrafica.form.amministrazione']
         );
     }
-
-?>

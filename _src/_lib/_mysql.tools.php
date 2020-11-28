@@ -127,7 +127,7 @@
 		    // echo $q . PHP_EOL;
 
 		// in base al tipo di comando eseguo la query
-		    switch( current( explode( ' ', str_replace( "\n", ' ', $q ) ) ) ) {
+		    switch( current( explode( ' ', str_replace( "\n", ' ', trim( $q ) ) ) ) ) {
 
 			case 'SELECT':
 			case 'SHOW':
@@ -156,6 +156,7 @@
 			    $r = mysqli_query( $c, $q );
 			break;
 
+			case 'ALTER':
 			case 'CREATE':
 			case 'DROP':
 			case 'OPTIMIZE':
@@ -176,7 +177,7 @@
 			break;
 
 			default:
-			    logWrite( 'comando MySQL sconosciuto', 'mysql', LOG_ERR );
+			    logWrite( 'comando MySQL sconosciuto: ' . current( explode( ' ', str_replace( "\n", ' ', $q ) ) ), 'mysql', LOG_ERR );
 			    return false;
 			break;
 
@@ -678,4 +679,25 @@
 
     }
 
-?>
+	function split_sql($sql_text) {
+		// Return array of ; terminated SQL statements in $sql_text.
+		$re_split_sql = '%(?#!php/x re_split_sql Rev:20170816_0600)
+			# Match an SQL record ending with ";"
+			\s*                                     # Discard leading whitespace.
+			(                                       # $1: Trimmed non-empty SQL record.
+			  (?:                                   # Group for content alternatives.
+				\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'  # Either a single quoted string,
+			  | "[^"\\\\]*(?:\\\\.[^"\\\\]*)*"      # or a double quoted string,
+			  | /\*[^*]*\*+(?:[^*/][^*]*\*+)*/      # or a multi-line comment,
+			  | \#.*                                # or a # single line comment,
+			  | --.*                                # or a -- single line comment,
+			  | [^"\';#]                            # or one non-["\';#-]
+			  )+                                    # One or more content alternatives
+			  (?:;|$)                               # Record end is a ; or string end.
+			)                                       # End $1: Trimmed SQL record.
+			%x';  // End $re_split_sql.
+		if (preg_match_all($re_split_sql, $sql_text, $matches)) {
+			return $matches[1];
+		}
+		return array();
+	}
