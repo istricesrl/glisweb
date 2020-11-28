@@ -23,7 +23,7 @@
 	$status['info'][] = 'inizio operazioni di geocode';
 
     // chiave di lock
-	$status['token'] = md5( microtime( true ) * random_int( 0, 10000 ) );
+	$status['token'] = getToken();
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
@@ -31,7 +31,7 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE indirizzi SET token = ? WHERE id = ?',
+            'UPDATE indirizzi SET token = ? WHERE id = ? AND token IS NULL',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['id'] )
@@ -45,6 +45,7 @@
             $cf['mysql']['connection'],
             'UPDATE indirizzi SET token = ? WHERE ( latitudine IS NULL OR longitudine IS NULL OR cap IS NULL ) '.
             'AND ( timestamp_geocode IS NULL OR timestamp_geocode < ? OR timestamp_aggiornamento > timestamp_geocode ) '.
+            'AND token IS NULL '.
             'ORDER BY timestamp_geocode ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] ),
@@ -113,7 +114,9 @@
             // aggiornamento database
             mysqlQuery(
                 $cf['mysql']['connection'],
-                'UPDATE indirizzi SET latitudine = ?, longitudine = ?, cap = ?, timestamp_geocode = unix_timestamp() WHERE token = ?',
+                'UPDATE indirizzi '.
+                'SET latitudine = ?, longitudine = ?, cap = ?, timestamp_geocode = unix_timestamp() token = NULL '.
+                'WHERE token = ?',
                 array(
                 array( 'd' => $gc['lat'] ),
                 array( 'd' => $gc['lng'] ),
@@ -156,7 +159,7 @@
     } else {
 
         // status
-        $status['info'][] = 'nessun indirizzo in coda';
+        $status['info'][] = 'nessun indirizzo da geolocalizzare';
 
         // log
         logWrite( 'nessun indirizzo in coda da geolocalizzare', 'geocode' );

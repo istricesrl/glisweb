@@ -20,10 +20,10 @@
 	$status = array();
 
     // faccio il flush della cache
-	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES );
+	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES, false, $status['files'] );
 
     // headers
-	header( 'Access-Control-Allow-Origin: *' );
+	// header( 'Access-Control-Allow-Origin: *' );
 
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {

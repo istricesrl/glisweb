@@ -21,11 +21,12 @@
 
     // elimino i log
 	if( isset( $_REQUEST['hard'] ) ) {
-	    recursiveDelete( DIR_VAR_LOG, false );
+	    recursiveDelete( DIR_VAR_LOG, false, $status['files'] );
 	} else {
 	    $logs = glob( DIR_VAR_LOG . '*.log' );
 	    foreach( $logs as $log ) {
-		deleteFile( $log );
+			$status['files'][] = $log;
+			deleteFile( $log );
 	    }
 	}
 

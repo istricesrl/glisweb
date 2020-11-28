@@ -112,6 +112,7 @@
 	    }
 
 	// allegati
+		if( is_array( $attach ) ) {
 	    foreach( $attach as $kAtch => $vAtch ) {
 		fullPath( $vAtch );
 		if( file_exists( $vAtch ) && is_readable( $vAtch ) ) {
@@ -119,7 +120,8 @@
 		} else {
 		    logWrite( 'impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT );
 		}
-	    }
+		}
+		}
 
 	// invio
 	    $status = $mail->Send();
@@ -311,3 +313,50 @@
 	    }
 
     }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+	function mailString2array( $t ) {
+
+		$ar0 = array();
+
+		$t = str_replace( ',', ';', $t );
+		$ar1 = explode( ';', $t );
+
+		foreach( $ar1 as $ds ) {
+
+			$dsa = array();
+
+			$r = preg_match( '/([\S\s]+)(<[\S\@\.]+>)/', $ds, $dsa );
+
+			if( ! empty( $r ) ) {
+				$ar0[ trim( $dsa[1] ) ] = trim( $dsa[2], '<>' );
+			}
+
+		}
+
+		return $ar0;
+
+	}
+
+    /**
+     *
+     * @todo documentare
+     *
+     */	
+	function array2mailString( $a ) {
+
+		$ar = array();
+
+		foreach( $a as $k => $m ) {
+
+			$ar[] = $k . ' <' . $m . '>';
+
+		}
+
+		return implode( ', ', $ar );
+
+	}

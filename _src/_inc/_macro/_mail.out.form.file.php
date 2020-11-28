@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form anagrafica
+     * macro form mail_out
      *
      *
      *
@@ -20,18 +20,18 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'anagrafica';
+    $ct['form']['table'] = 'mail_out';
 
-    // tendina ruolo file
+    // sotto tabella gestita
+    $ct['form']['subtable'] = 'file';
+    
+    // tendina ruolo immagini
 	$ct['etc']['select']['ruoli_file'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_file_view  WHERE se_anagrafica = 1'
+	    'SELECT id, __label__ FROM ruoli_file_view  WHERE se_mail = 1'
 	);
-
-    // macro di default per l'entità anagrafica
-	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
