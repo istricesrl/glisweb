@@ -353,18 +353,19 @@
 	    'parent'		=> array( 'id'		=> 'contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'contratti.form', 'contratti.form.azioni' ) ),
+	    'etc'		=> array( 'tabs'	=> array( 'contratti.form', 'contratti.form.tools' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
-	// gestione contratti azioni
-	$p['contratti.form.azioni'] = array(
+	// gestione contratti tools
+	$p['contratti.form.tools'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'azioni' ),
-	    'h1'		=> array( $l		=> 'azioni' ),
+		'title'		=> array( $l		=> 'strumenti contratti' ),
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'h1'		=> array( $l		=> 'strumenti' ),
 	    'parent'		=> array( 'id'		=> 'contratti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.azioni.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.azioni.php' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.tools.php' ),
 	    'etc'		=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);

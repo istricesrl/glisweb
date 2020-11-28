@@ -43,7 +43,8 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM costi_contratti_view'
+        'SELECT id, __label__ FROM costi_contratti_view WHERE id_contratto = ?',
+        array( array( 's' => $_REQUEST['contratti']['id'] ) )
 	);
 
     // tendina giorni
