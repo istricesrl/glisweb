@@ -195,7 +195,7 @@
 		$jobs = mysqlQuery(
 			$cf['mysql']['connection'],
 			'UPDATE job SET token = ? WHERE '.
-			'timestamp_apertura <= ? AND timestamp_apertura IS NOT NULL AND timestamp_completamento IS NULL AND token IS NULL ',
+			'timestamp_apertura <= ? OK timestamp_apertura IS NULL AND timestamp_completamento IS NULL AND token IS NULL ',
 			array(
 				array( 's' => $cf['cron']['results']['token'] ),
 				array( 's' => $time )
