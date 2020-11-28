@@ -76,7 +76,6 @@
 		'etc'		=> array( 'tabs'	=> $p['mail.out.form']['etc']['tabs'] )
 	);
 
-	
     // vista mail inviate
 	$p['mail.sent.view'] = array(
 	    'sitemap'		=> false,
