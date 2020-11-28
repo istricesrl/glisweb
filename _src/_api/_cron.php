@@ -234,9 +234,6 @@
 				sleep( $job['delay'] );
 			}
 
-		// integro la timestamp di esecuzione
-		    $cf['cron']['results']['job'][ $job['job'] ][ $job['id'] ] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-
 		// aggiorno la tabella di avanzamento lavori
 		    mysqlQuery(
 				$cf['mysql']['connection'],
