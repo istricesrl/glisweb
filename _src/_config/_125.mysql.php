@@ -123,7 +123,7 @@
 						writeToFile( $cf['mysql']['profile']['patch']['level'], path2custom( FILE_MYSQL_PATCH ) );
 						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . basename( $patch ) );
 					} else {
-						var_dump( $qRes );
+						// var_dump( $qRes );
 					}
 				}
 			}
