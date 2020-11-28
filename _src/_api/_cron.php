@@ -197,8 +197,8 @@
 			'UPDATE job SET token = ? WHERE '.
 			'timestamp_apertura <= ? AND timestamp_apertura IS NOT NULL AND timestamp_completamento IS NULL AND token IS NULL ',
 			array(
-			array( 's' => $time ),
-			array( 's' => $cf['cron']['results']['token'] )
+				array( 's' => $cf['cron']['results']['token'] ),
+				array( 's' => $time )
 			)
 		);
 	
