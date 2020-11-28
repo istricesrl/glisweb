@@ -30,7 +30,15 @@
 	    'SELECT id, __label__ FROM tipologie_contratti_view'
     );
     
-    // tendina per le tipologie di costo
+     // tendina per le tipologie costi contratto
+     $ct['etc']['select']['tipologie_costi_contratti'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_costi_contratti_view'
+    );
+    
+    // tendina per i costi contratto
     $ct['etc']['select']['costi_contratti'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
