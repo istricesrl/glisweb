@@ -17,3 +17,21 @@
     e di conseguenza la natura stessa del task è quella di coincidere con la singola chiamata.
     Dall'altra parte, i job rappresentano lavori pianificati con un inizio e una fine e un'estensione
     predeterminata, in quanto hanno cognizione del contesto globale del compito da svolgere.
+
+    Un esempio di task è la gestione delle code della posta; ad ogni chimata, il task controlla se c'è
+    almeno una mail da inviare, se sì la invia, dopodiché termina, senza preoccuparsi di quante mail da
+    inviare ci siano nel complesso (perché è irrilevante dal suo punto di vista). Viceversa, un esempio
+    di job è l'importazione dell'elenco aggiornato dei comuni italiani; in questo caso, il job prima
+    scarica l'intero elenco dei comuni, poi pianifica il numero di esecuzioni necessarie per importarlo,
+    dopodiché ad ogni chiamata successiva esegue una parte del lavoro sapendo quanto ha già fatto e
+    quanto manca al completamento del compito, infine quando ha terminato l'importazione finisce e
+    registra la chiusura del procedimento.
+
+    l'API cron
+    ----------
+
+    i task
+    ------
+
+    i job
+    -----
