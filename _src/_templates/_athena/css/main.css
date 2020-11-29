@@ -555,10 +555,17 @@ main.container-fluid.browser {
     padding: 10px;
 }
 
-.browse .fa {
+.browse > .col:first-child > .fa {
     font-size: 1.2em;
     font-weight: bold;
     padding: 0px 10px;
+}
+
+.browse .btn-sqr {
+    font-size: 1.5em;
+    border-radius: 0px;
+    height: 40px;
+    width: 40px;
 }
 
 /* stili dell'interfaccia metro */

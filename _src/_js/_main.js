@@ -22,6 +22,11 @@
 
 	}
 
+	// restituisce un nome di file al netto del path
+	function basename(path) {
+		return path.split(/[\\/]/).pop();
+	}
+
     // prende un parametro dall'URL
 	function getUrlParam( paramName ) {
 	    var reParam = new RegExp( '(?:[\?&]|&)' + paramName + '=([^&]+)', 'i' );

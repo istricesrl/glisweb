@@ -12,7 +12,7 @@
                             <input type="hidden" name="cmsfile" id="cmsfile" value="">
                             <input type="file" class="form-control form-control-sm ajax-uploader" name="cmsfile_field"
                                 id="cmsfile_field" placeholder="file da caricare"
-                                uploader-folder="{% if request.path %}{{ request.path }}{% else %}var/contenuti{% endif %}"
+                                uploader-folder="{% if browse.base %}{{ browse.base }}{% else %}var/contenuti{% endif %}"
                                 uploader-field="cmsfile">
 
                         </div>
