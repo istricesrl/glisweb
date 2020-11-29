@@ -1,0 +1,19 @@
+/*!
+
+    \page pianificazioni sistema di esecuzione pianificata del framework
+
+    introduzione
+    ============
+    GlisWeb dispone di un potente e flessibile sistema di esecuzione pianificata, che appoggiandosi al
+    cron di sistema garantisce un'elevatissima affidabilità e prestazioni elevate. Dal lato del sistema,
+    una riga di /etc/crontab oppure uno script in /etc/cron.d/ che può essere installato anche tramite
+    lo script _src/_sh/_gw.crontab.install.sh devono richiamare l'API _src/_api/_cron.php del framework
+    ogni minuto. L'API si occuperà di controllare sulle tabelle task e job quali compiti vanno eseguiti
+    e provvederà a sbrigarli di conseguenza.
+
+    Come accennato, il meccanismo di esecuzione pianificata si articola su due diverse strategie,
+    rappresentate rispettivamente dai task e dai job. Da un lato i primi rappresentano un lavoro
+    puntuale, eseguito ad ogni chiamata senza cognizione del contesto complessivo delle cose da fare;
+    e di conseguenza la natura stessa del task è quella di coincidere con la singola chiamata.
+    Dall'altra parte, i job rappresentano lavori pianificati con un inizio e una fine e un'estensione
+    predeterminata, in quanto hanno cognizione del contesto globale del compito da svolgere.
