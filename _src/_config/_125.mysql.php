@@ -117,14 +117,22 @@
 			foreach( $cf['mysql']['profile']['patch']['list'] as $patch ) {
 				$cf['mysql']['profile']['patch']['latest'] = getFileNameWithoutExtension( $patch );
 				if( $cf['mysql']['profile']['patch']['latest'] > $cf['mysql']['profile']['patch']['current'] ) {
+
+					// applico la patch
 					$query = readStringFromFile( $patch );
 					$qRes = mysqlQuery( $cf['mysql']['connection'], $query );
+
+					// aggiorno il livello di patch
+					$cf['mysql']['profile']['patch']['current'] = $cf['mysql']['profile']['patch']['latest'];
+					writeToFile( $cf['mysql']['profile']['patch']['current'], path2custom( FILE_MYSQL_PATCH ) );
+
+					// log
 					if( $qRes !== false ) {
-						$cf['mysql']['profile']['patch']['current'] = getFileNameWithoutExtension( $patch );
-						writeToFile( $cf['mysql']['profile']['patch']['current'], path2custom( FILE_MYSQL_PATCH ) );
-						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . basename( $patch ) );
+						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . 'fail/' . basename( $patch ) );
+						logWrite( 'applicata patch ' . $cf['mysql']['profile']['patch']['current'], 'mysql/patch' );
 					} else {
-						var_dump( $qRes );
+						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . 'done/' . basename( $patch ) );
+						logWrite( 'impossibile applicare la patch ' . $cf['mysql']['profile']['patch']['current'], 'mysql/patch', LOG_CRIT );
 					}
 				}
 			}
