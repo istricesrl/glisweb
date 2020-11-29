@@ -1,0 +1,1 @@
+ALTER TABLE `job` ADD `token` CHAR(254) NULL DEFAULT NULL AFTER `workspace`, ADD INDEX (`token`) ;
