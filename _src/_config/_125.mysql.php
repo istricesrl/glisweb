@@ -99,15 +99,15 @@
 			}
 
 			// controllo livello di patch database
-			$cf['mysql']['profile']['patch']['level'] = readStringFromFile( FILE_MYSQL_PATCH );
+			$cf['mysql']['profile']['patch']['current'] = readStringFromFile( FILE_MYSQL_PATCH );
 			if( file_exists( path2custom( FILE_MYSQL_PATCH ) ) ) {
-				$cf['mysql']['profile']['patch']['level'] = readStringFromFile( path2custom( FILE_MYSQL_PATCH ), true );
+				$cf['mysql']['profile']['patch']['current'] = readStringFromFile( path2custom( FILE_MYSQL_PATCH ), true );
 			} else {
-				writeToFile( $cf['mysql']['profile']['patch']['level'], path2custom( FILE_MYSQL_PATCH ) );
+				writeToFile( $cf['mysql']['profile']['patch']['current'], path2custom( FILE_MYSQL_PATCH ) );
 			}
 
 			// debug
-			// echo $cf['mysql']['profile']['patch']['level'] . '<br>';
+			// echo $cf['mysql']['profile']['patch']['current'] . '<br>';
 
 			// cerco nuove patch
 			$cf['mysql']['profile']['patch']['list'] = getFileList( DIR_USR_DATABASE_PATCH, true );
@@ -115,12 +115,13 @@
 
 			// eseguo le patch
 			foreach( $cf['mysql']['profile']['patch']['list'] as $patch ) {
-				if( getFileNameWithoutExtension( $patch ) > $cf['mysql']['profile']['patch']['level'] ) {
+				$cf['mysql']['profile']['patch']['latest'] = getFileNameWithoutExtension( $patch );
+				if( $cf['mysql']['profile']['patch']['latest'] > $cf['mysql']['profile']['patch']['current'] ) {
 					$query = readStringFromFile( $patch );
 					$qRes = mysqlQuery( $cf['mysql']['connection'], $query );
 					if( $qRes !== false ) {
-						$cf['mysql']['profile']['patch']['level'] = getFileNameWithoutExtension( $patch );
-						writeToFile( $cf['mysql']['profile']['patch']['level'], path2custom( FILE_MYSQL_PATCH ) );
+						$cf['mysql']['profile']['patch']['current'] = getFileNameWithoutExtension( $patch );
+						writeToFile( $cf['mysql']['profile']['patch']['current'], path2custom( FILE_MYSQL_PATCH ) );
 						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . basename( $patch ) );
 					} else {
 						var_dump( $qRes );
