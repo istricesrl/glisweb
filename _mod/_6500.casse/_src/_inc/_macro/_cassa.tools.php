@@ -16,39 +16,16 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'rendiconti' => array(
-		'label' => 'rendiconti'
+	    '0-utility' => array(
+		'label' => 'utility'
 	    ),
-	    'chiusure' => array(
-		'label' => 'chiusure'
-	    ),
-	    'utils' => array(
-		'label' => 'utility e test'
+	    '1-test' => array(
+		'label' => 'test'
 	    )
 	);
 
-    // stampa rendiconto fiscale
-	$ct['page']['contents']['metro']['rendiconti'][] = array(
-	    'host' => 'http://localhost',
-	    'ws' => $base . 'rdc.fiscale.giorno',
-	    'icon' => NULL,
-	    'fa' => 'fa-print',
-	    'title' => 'rendiconto fisc. giornaliero',
-	    'text' => 'stampa il rendiconto fiscale giornaliero'
-	);
-
-    // stampa chiusura fiscale
-	$ct['page']['contents']['metro']['chiusure'][] = array(
-	    'host' => 'http://localhost',
-	    'ws' => $base . 'cls.fiscale.giorno',
-	    'icon' => NULL,
-	    'fa' => 'fa-print',
-	    'title' => 'chiusura cassa',
-	    'text' => 'effettua la chiusura fiscale giornaliera'
-	);
-
     // aggiorna data e ora
-	$ct['page']['contents']['metro']['utils'][] = array(
+	$ct['page']['contents']['metro']['0-utility'][] = array(
 	    'host' => 'http://localhost',
 	    'ws' => $base . 'utl.date.set',
 	    'icon' => NULL,
@@ -58,7 +35,7 @@
 	);
 
     // stampa scontrino di test
-	$ct['page']['contents']['metro']['utils'][] = array(
+	$ct['page']['contents']['metro']['1-test'][] = array(
 	    'host' => 'http://localhost',
 	    'ws' => $base . 'utl.test.zero',
 	    'icon' => NULL,
@@ -70,3 +47,5 @@
     // debug
 	// print_r( $_SESSION );
 	// echo DIRECTORY_CACHE . 'twig';
+
+?>

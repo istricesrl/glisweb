@@ -297,3 +297,39 @@
 	return ts2string( strtotime( $d ) );
 
     }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    if( ! function_exists( 'str_starts_with' ) ) {
+
+        function str_starts_with( $haystack, $needle ) {
+
+            if( strpos( $haystack, $needle ) === 0) {
+                return true;
+             } else {
+                 return false;
+             }
+
+        }
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function str_starts_with_array( $haystack, $needles ) {
+
+        foreach( $needles as $needle ) {
+            if( str_starts_with( $haystack, $needle ) ) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }

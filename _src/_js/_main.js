@@ -22,6 +22,18 @@
 
 	}
 
+	// restituisce un nome di file al netto del path
+	function basename(path) {
+		return path.split(/[\\/]/).pop();
+	}
+
+    // prende un parametro dall'URL
+	function getUrlParam( paramName ) {
+	    var reParam = new RegExp( '(?:[\?&]|&)' + paramName + '=([^&]+)', 'i' );
+	    var match = window.location.search.match( reParam );
+	    return ( match && match.length > 1 ) ? match[1] : null;
+	}
+
 	// operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
 

@@ -1,5 +1,7 @@
-    // operazioni da eseguire al caricamento della pagina
+	// operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
+
+		window.name = 'cms';
 
 	    var ckEditors = [];
 	    $('.ckEditor').each( function( i, obj ) {
