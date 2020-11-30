@@ -1,0 +1,1 @@
+ALTER TABLE `task` ADD `timestamp_pianificazione` INT NULL DEFAULT NULL AFTER `timestamp_apertura`;
