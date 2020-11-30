@@ -214,6 +214,10 @@
 			} else {
 				echo '[INFO] database successivo alla patch: ' . $cf['mysql']['profile']['patch']['latest'] . PHP_EOL;
 			}
+			$fails = glob( DIR_VAR_LOG . 'mysql/patch/fail/*.sql' );
+			foreach( $fails as $fail ) {
+				echo '[WARN] applicare manualmente la patch: ' . basename( $fail ) . PHP_EOL;
+			}
 	    } else {
 			echo( '[FAIL] connessione assente' . PHP_EOL );
 	    }

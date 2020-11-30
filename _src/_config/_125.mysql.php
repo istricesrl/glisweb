@@ -128,10 +128,10 @@
 
 					// log
 					if( $qRes !== false ) {
-						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . 'fail/' . basename( $patch ) );
+						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . 'done/' . basename( $patch ) );
 						logWrite( 'applicata patch ' . $cf['mysql']['profile']['patch']['current'], 'mysql/patch' );
 					} else {
-						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . 'done/' . basename( $patch ) );
+						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . 'fail/' . basename( $patch ) );
 						logWrite( 'impossibile applicare la patch ' . $cf['mysql']['profile']['patch']['current'], 'mysql/patch', LOG_CRIT );
 					}
 				}
