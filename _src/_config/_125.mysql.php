@@ -40,13 +40,16 @@
 			    // riduco il tempo massimo di connessione per evitare rallentamenti
 				mysqli_options( $cn, MYSQLI_OPT_CONNECT_TIMEOUT, 3 );
 
-			    // connessione
+				// connessione
 				mysqli_real_connect(
 				    $cn,
 				    $cf['mysql']['servers'][ $server ]['address'],
 				    $cf['mysql']['servers'][ $server ]['username'],
 				    $cf['mysql']['servers'][ $server ]['password']
 				);
+
+				// character set
+				mysqli_set_charset( $cn, 'utf8' );
 
 			    // controllo errori
 				if( mysqli_connect_errno() ) {
@@ -66,15 +69,12 @@
 					    logWrite( 'impossibile selezionare il database: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql', LOG_ERR );
 					}
 
-				    // character set
-#					mysqli_set_charset( $cn, 'utf8' );
-
 				    // collation
-					mysqlQuery( $cn, 'SET character_set_connection = utf8' );
+					// mysqlQuery( $cn, 'SET character_set_connection = utf8' );
 					mysqlQuery( $cn, 'SET collation_connection = utf8_general_ci' );
 
 				    // timezone
-					mysqlQuery( $cn, 'SET time_zone = ?', array( array( 's' => $cf['localization']['timezone']['name'] ) ) );
+					// mysqlQuery( $cn, 'SET time_zone = ?', array( array( 's' => $cf['localization']['timezone']['name'] ) ) );
 
 				    // localizzazione
 					mysqlQuery( $cn, 'SET lc_time_names = ?', array( array( 's' => str_replace( '-', '_', $cf['localization']['language']['ietf'] ) ) ) );
