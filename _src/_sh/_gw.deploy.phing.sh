@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## pulizia schermo
+clear
+
 ## livelli per la root del sito
 RL="../../"
 
@@ -12,9 +15,6 @@ apt-get install -y phing rsync
 
 ## informazioni
 echo "lavoro su: $(pwd)"
-
-## pulizia schermo
-clear
 
 ## avvio deploy
 phing -f ./_usr/_deploy/_phing/_build.xml $1

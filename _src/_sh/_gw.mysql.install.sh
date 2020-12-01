@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## pulizia schermo
+clear
+
 ## livelli per la root del sito
 RL="../../"
 
@@ -10,10 +13,9 @@ cd $RL
 ## informazioni
 echo "lavoro su: $(pwd)"
 
+## file da importare
 FILE1="_usr/_database/mysql.schema.sql"
 FILE2="_usr/_database/mysql.data.sql"
-
-clear
 
 ## se il file su cui lavorare è specificato
 if [ -f "$FILE1" -a -f "$FILE2" ]; then

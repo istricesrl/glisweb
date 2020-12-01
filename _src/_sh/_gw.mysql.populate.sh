@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## pulizia schermo
+clear
+
 ## livelli per la root del sito
 RL="../../"
 
@@ -9,9 +12,6 @@ cd $RL
 
 ## informazioni
 echo "lavoro su: $(pwd)"
-
-## pulizia schermo
-clear
 
 ## valori casuali
 NOMI=( "" "Mario" "Giovanna" "Luca" "Andrea" "Rossana" "Carla" "Francesco" "Alessandro" "Annalisa" "Giacomo" "Sara" )

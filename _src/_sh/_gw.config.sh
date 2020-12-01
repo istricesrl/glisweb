@@ -5,6 +5,9 @@ placeholder() {
     PLACEHOLDER="$( grep -m1 -Po '%[a-zA-Z0-9\-\., ]+%' $FILE )"
 }
 
+## pulizia schermo
+clear
+
 ## livelli per la root del sito
 RL="../../"
 
@@ -20,9 +23,6 @@ FILE="./src/config.json"
 
 ## placeholder
 PLACEHOLDER=""
-
-## pulizia schermo
-clear
 
 ## se il file su cui lavorare è specificato
 if [ -f "$FILE" ]; then
