@@ -28,9 +28,14 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
 
     read -p "database: " SRVDBNAME
 
-    mysql -h $SRVADDR -u $SRVUSER -p$SRVPASS $SRVDBNAME < $FILE1
-    mysql -h $SRVADDR -u $SRVUSER -p$SRVPASS $SRVDBNAME < $FILE2
+    if [ -n "$SRVPASS" ]; then
+        PASSC="-p$SRVPASS"
+    fi
 
+    mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE1
+    mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE2
+
+    mkdir -p usr/database/
     cp _usr/_database/mysql.schema.version usr/database/mysql.schema.version
 
 fi
