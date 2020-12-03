@@ -1,0 +1,1 @@
+ALTER TABLE `prodotti` ADD `ordine` INT NULL DEFAULT NULL AFTER `descrizione`;
