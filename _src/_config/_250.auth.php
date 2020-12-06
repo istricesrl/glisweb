@@ -82,7 +82,7 @@
 	    ),
 	    'comuni' => array(
 		CONTROL_FULL => array( 'roots' )
-	    ),
+		),
 	    'contenuti' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
@@ -99,7 +99,11 @@
 	    'gruppi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
-	    'immagini' => array(
+		'iban' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+		),
+		'immagini' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),

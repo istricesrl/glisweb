@@ -19,6 +19,7 @@
  * - stili dell'agenda
  * - stili della struttura anagrafica
  * - stili della tabella di descrizione formato importazione
+ * - stili del pannello cassa
  */
 
 /* stili di base */
@@ -323,6 +324,10 @@ select.font-awesome {
     font-size: 1em;
 }
 
+.btn-lg {
+    font-size: 1.5em;
+}
+
 .btn-xsm {
     font-size: .8em;
     padding: 1px 4px;
@@ -622,10 +627,17 @@ main.container-fluid.browser {
     padding: 10px;
 }
 
-.browse .fa {
+.browse > .col:first-child > .fa {
     font-size: 1.2em;
     font-weight: bold;
     padding: 0px 10px;
+}
+
+.browse .btn-sqr {
+    font-size: 1.5em;
+    border-radius: 0px;
+    height: 40px;
+    width: 40px;
 }
 
 /* stili dell'interfaccia metro */
@@ -801,4 +813,10 @@ ul.browsing-tree {
     border-right: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
     padding: 5px;
+}
+
+/* stili del pannello cassa */
+
+.pannello-cassa .btn-secondary {
+    border-radius: 0px;
 }

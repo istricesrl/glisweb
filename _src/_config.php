@@ -266,7 +266,7 @@
 	    array_walk_recursive(
 		$a,
 		function( &$v, $k ) {
-		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ), true ) ) {
+		    if( in_array( $k, array( 'password', 'private', 'key', 'secret', 'sa', 'sb', 'sc' ), true ) ) {
 			$v = '***';
 		    }
 		}
@@ -311,6 +311,7 @@
 	define( 'DIR_VAR_CACHE'			, DIR_BASE . 'var/cache/' );
 	define( 'DIR_VAR_CACHE_PAGES'		, DIR_BASE . 'var/cache/pages/' );
 	define( 'DIR_VAR_CACHE_TWIG'		, DIR_BASE . 'var/cache/twig/' );
+	define( 'DIR_VAR_CONTENUTI'		, DIR_BASE . 'var/contenuti/' );
 	define( 'DIR_VAR_IMMAGINI'		, DIR_BASE . 'var/immagini/' );
     define( 'DIR_VAR_LOG'			, DIR_BASE . 'var/log/' );
     define( 'DIR_VAR_LOG_MYSQL'   , DIR_VAR_LOG . 'mysql/' );

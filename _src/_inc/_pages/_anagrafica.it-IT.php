@@ -59,7 +59,7 @@
 									'anagrafica.form.amministrazione',
 //									'anagrafica.form.collaboratori',
 									'anagrafica.form.cliente',
-//									'anagrafica.form.fornitore',
+									'anagrafica.form.fornitore',
 //									'anagrafica.form.struttura',
 //									'anagrafica.form.attivita',
 //									'anagrafica.form.promemoria',
@@ -104,6 +104,18 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.cliente.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.cliente.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica fornitore
+	$p['anagrafica.form.fornitore'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'fornitore' ),
+	    'h1'		=> array( $l		=> 'fornitore' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.fornitore.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.fornitore.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);

@@ -3,7 +3,7 @@
 // Function to check response time
 function pingIp($domain,$port='80'){
     $starttime = microtime(true);
-    $file      = fsockopen ($domain, $port, $errno, $errstr, 10);
+    $file      = @fsockopen($domain, $port, $errno, $errstr, 10);
     $stoptime  = microtime(true);
     $status    = 0;
 

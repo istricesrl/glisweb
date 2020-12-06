@@ -18,3 +18,10 @@
             ['anagrafica.form.amministrazione']
         );
     }
+
+    if( max( [ $seFornitore ] ) != true ) {
+        $ct['page']['etc']['tabs'] = array_diff(
+            $ct['page']['etc']['tabs'],
+            ['anagrafica.form.fornitore']
+        );
+    }

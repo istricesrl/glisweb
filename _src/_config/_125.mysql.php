@@ -40,13 +40,16 @@
 			    // riduco il tempo massimo di connessione per evitare rallentamenti
 				mysqli_options( $cn, MYSQLI_OPT_CONNECT_TIMEOUT, 3 );
 
-			    // connessione
+				// connessione
 				mysqli_real_connect(
 				    $cn,
 				    $cf['mysql']['servers'][ $server ]['address'],
 				    $cf['mysql']['servers'][ $server ]['username'],
 				    $cf['mysql']['servers'][ $server ]['password']
 				);
+
+				// character set
+				mysqli_set_charset( $cn, 'utf8' );
 
 			    // controllo errori
 				if( mysqli_connect_errno() ) {
@@ -66,15 +69,12 @@
 					    logWrite( 'impossibile selezionare il database: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql', LOG_ERR );
 					}
 
-				    // character set
-#					mysqli_set_charset( $cn, 'utf8' );
-
 				    // collation
-					mysqlQuery( $cn, 'SET character_set_connection = utf8' );
+					// mysqlQuery( $cn, 'SET character_set_connection = utf8' );
 					mysqlQuery( $cn, 'SET collation_connection = utf8_general_ci' );
 
 				    // timezone
-					mysqlQuery( $cn, 'SET time_zone = ?', array( array( 's' => $cf['localization']['timezone']['name'] ) ) );
+					// mysqlQuery( $cn, 'SET time_zone = ?', array( array( 's' => $cf['localization']['timezone']['name'] ) ) );
 
 				    // localizzazione
 					mysqlQuery( $cn, 'SET lc_time_names = ?', array( array( 's' => str_replace( '-', '_', $cf['localization']['language']['ietf'] ) ) ) );
@@ -99,15 +99,15 @@
 			}
 
 			// controllo livello di patch database
-			$cf['mysql']['profile']['patch']['level'] = readStringFromFile( FILE_MYSQL_PATCH );
+			$cf['mysql']['profile']['patch']['current'] = readStringFromFile( FILE_MYSQL_PATCH );
 			if( file_exists( path2custom( FILE_MYSQL_PATCH ) ) ) {
-				$cf['mysql']['profile']['patch']['level'] = readStringFromFile( path2custom( FILE_MYSQL_PATCH ), true );
+				$cf['mysql']['profile']['patch']['current'] = readStringFromFile( path2custom( FILE_MYSQL_PATCH ), true );
 			} else {
-				writeToFile( $cf['mysql']['profile']['patch']['level'], path2custom( FILE_MYSQL_PATCH ) );
+				writeToFile( $cf['mysql']['profile']['patch']['current'], path2custom( FILE_MYSQL_PATCH ) );
 			}
 
 			// debug
-			// echo $cf['mysql']['profile']['patch']['level'] . '<br>';
+			// echo $cf['mysql']['profile']['patch']['current'] . '<br>';
 
 			// cerco nuove patch
 			$cf['mysql']['profile']['patch']['list'] = getFileList( DIR_USR_DATABASE_PATCH, true );
@@ -115,15 +115,24 @@
 
 			// eseguo le patch
 			foreach( $cf['mysql']['profile']['patch']['list'] as $patch ) {
-				if( getFileNameWithoutExtension( $patch ) > $cf['mysql']['profile']['patch']['level'] ) {
+				$cf['mysql']['profile']['patch']['latest'] = getFileNameWithoutExtension( $patch );
+				if( $cf['mysql']['profile']['patch']['latest'] > $cf['mysql']['profile']['patch']['current'] ) {
+
+					// applico la patch
 					$query = readStringFromFile( $patch );
 					$qRes = mysqlQuery( $cf['mysql']['connection'], $query );
+
+					// aggiorno il livello di patch
+					$cf['mysql']['profile']['patch']['current'] = $cf['mysql']['profile']['patch']['latest'];
+					writeToFile( $cf['mysql']['profile']['patch']['current'], path2custom( FILE_MYSQL_PATCH ) );
+
+					// log
 					if( $qRes !== false ) {
-						$cf['mysql']['profile']['patch']['level'] = getFileNameWithoutExtension( $patch );
-						writeToFile( $cf['mysql']['profile']['patch']['level'], path2custom( FILE_MYSQL_PATCH ) );
-						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . basename( $patch ) );
+						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . 'done/' . basename( $patch ) );
+						logWrite( 'applicata patch ' . $cf['mysql']['profile']['patch']['current'], 'mysql/patch' );
 					} else {
-						// var_dump( $qRes );
+						writeToFile( $query, DIR_VAR_LOG_MYSQL_PATCH . 'fail/' . basename( $patch ) );
+						logWrite( 'impossibile applicare la patch ' . $cf['mysql']['profile']['patch']['current'], 'mysql/patch', LOG_CRIT );
 					}
 				}
 			}

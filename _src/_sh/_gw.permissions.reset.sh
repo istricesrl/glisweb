@@ -1,6 +1,11 @@
 #!/bin/bash
 
+## pulizia schermo
+clear
+
 ## livelli per la root del sito
+# NOTA questo script deve girare nella cartella SUPERIORE a quella
+# di installazione!
 RL="../../../"
 
 ## directory corrente

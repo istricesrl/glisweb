@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## pulizia schermo
+clear
+
 ## livelli per la root del sito
 RL="../../"
 
@@ -20,9 +23,6 @@ FILE2=$DSTDIR"mysql.data.sql"
 
 ## file temporaneo
 FILEC=$FILE1".clean"
-
-## pulizia schermo
-clear
 
 ## se il file su cui lavorare è specificato
 if [ -f "$FILE1" -a -f "$FILE2" ]; then

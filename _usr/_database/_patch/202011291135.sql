@@ -1,0 +1,2 @@
+ALTER TABLE `iban`
+ADD CONSTRAINT `iban_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

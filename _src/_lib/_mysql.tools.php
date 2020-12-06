@@ -383,42 +383,21 @@
      * @todo documentare
      *
      */
-    function mysqlFetchPreparedResult( $r ) {
+    function mysqlFetchPreparedResult( $pq ) {
 
-	// array del risultato
-	    $arRs = array();
+		// array del risultato
+			$arRs = array();
 
-	// preleva il risultato dallo statement $r
-	    mysqli_stmt_store_result( $r );
+		// estraggo il resultset dallo statement
+			$r = mysqli_stmt_get_result( $pq );
 
-	// array dei nomi delle colonne del risultato
-	    $variables = array();
+		// fetch del risultato
+			while( $row = mysqli_fetch_assoc( $r ) ) {
+				$arRs[] = $row;
+			}
 
-	// array dei dati del risultato
-	    $data = array();
-
-	// metadati del risultato
-	    $meta = mysqli_stmt_result_metadata( $r );
-
-	// prelevo i nomi delle colonne dal risultato e li inserisco in $variables
-	    while( $field = mysqli_fetch_field( $meta ) ) {
-		$variables[] = &$data[ $field->name ];
-	    }
-
-	// chiama dinamicamente la funzione bind_result
-	    call_user_func_array( array( $r, 'bind_result' ), $variables );
-
-	// trasferisce i dati dal result all'array
-	    $i = 0;
-	    while( mysqli_stmt_fetch( $r ) ) {
-		$arRs[ $i ] = array();
-		foreach( $data as $k => $v )
-		    $arRs[ $i ][ $k ] = $v;
-		$i++;
-	    }
-
-	// restituisco il risultato
-	    return $arRs;
+		// restituisco il risultato
+			return $arRs;
 
     }
 

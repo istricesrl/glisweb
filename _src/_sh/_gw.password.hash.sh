@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## pulizia schermo
+clear
+
 ## livelli per la root del sito
 RL="../../"
 

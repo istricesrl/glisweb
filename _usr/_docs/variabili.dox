@@ -957,6 +957,65 @@
     L'array $cf['sites'] viene integrato da $cx['sites'] ed è linkato a $ct['sites'], per ulteriori dettagli vedi
     _src/_config/_010.site.php.
 
+    $cf['slack']
+    -----------
+    Questo array contiene la configurazione per l'integrazione con Slack.
+
+    chiave                                | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    slack.profile                         | il profilo di Slack corrente (è una scorciatoia per slack.profiles.<site.status>)
+    slack.profiles                        | i profili di Slack disponibili
+    slack.profiles.<s>                    | dettagli del profilo di Slack per lo status <s>
+    slack.profiles.<s>.webhooks           | webhook di Slack per lo status <s>
+    slack.profiles.<s>.webhooks.<w>       | dettagli del webhook <w> per il profilo dello status <s>
+    slack.profiles.<s>.webhooks.<w>.sa    | chiave A per il webhook <w> per il profilo dello status <s>
+    slack.profiles.<s>.webhooks.<w>.sb    | chiave B per il webhook <w> per il profilo dello status <s>
+    slack.profiles.<s>.webhooks.<w>.sc    | chiave C per il webhook <w> per il profilo dello status <s>
+
+    Vediamo un esempio di configurazione per l'intero deploy:
+
+    \code{.json}
+    "slack": {
+      "profiles": {
+        "DEV": {
+          "webhooks": {
+            "default": {
+              "sa": "",
+              "sb": "",
+              "sc": ""
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    Slack può essere configurato anche per specifico sito:
+
+    \code{.json}
+    "sites": {
+      "1": {
+        "id": 1,
+        "slack": {
+          "profiles": {
+            "DEV": {
+              "default-sito": {
+                "": {
+                  "sa": "",
+                  "sb": "",
+                  "sc": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['slack'] viene integrato da $cx['slack'] e da $cf['site']['slack'] ed è linkato a $ct['slack'], per ulteriori dettagli vedi
+    _src/_config/_550.slack.php.
+
     $cf['smtp']
     -----------
     Questa chiave contiene informazioni sui server per la posta in uscita.

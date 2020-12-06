@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## pulizia schermo
+clear
+
 ## azione
 if [ -n "$3" ]; then
     case "$1" in
