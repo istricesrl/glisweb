@@ -159,15 +159,20 @@
 	#		    $cf['cron']['results'] = array();
 
 			// eseguo il task
-				for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
-					logWrite( 'iterazione #' . $iter . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
-					// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
-					require DIR_BASE . $task['task'];
-					$cf['cron']['results']['task'][ $task['task'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-					if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = 3; }
-					sleep( $task['delay'] );
+				if( ! empty( $task['iterazioni'] ) ) {
+					for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
+						logWrite( 'iterazione #' . $iter . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
+						// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
+						require DIR_BASE . $task['task'];
+						$cf['cron']['results']['task'][ $task['task'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
+						if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = 3; }
+						sleep( $task['delay'] );
+					}
+				} else {
+					$cf['cron']['results']['errors'][] = 'il task ' . $job['task'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
+					logWrite( 'il task ' . $task['task'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
 				}
-
+	
 			// aggiorno il log
 				// mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO cron_log ( id_cron, testo, timestamp_esecuzione ) VALUES ( ?, ?, ? )', array( array( 's' => $task['id'] ), array( 's' => json_encode( $cf['cron']['results'] ) ), array( 's' => $time ) ) );
 
@@ -225,13 +230,18 @@
 			$job['workspace'] = json_decode( $job['workspace'], true );
 
 		// eseguo il job
-			for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
-				logWrite( 'iterazione #' . $iter . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
-				// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
-				require DIR_BASE . $job['job'];
-				$cf['cron']['results']['job'][ $job['job'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-				if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = 3; }
-				sleep( $job['delay'] );
+			if( ! empty( $job['iterazioni'] ) ) {
+				for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
+					logWrite( 'iterazione #' . $iter . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
+					// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
+					require DIR_BASE . $job['job'];
+					$cf['cron']['results']['job'][ $job['job'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
+					if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = 3; }
+					sleep( $job['delay'] );
+				}
+			} else {
+				$cf['cron']['results']['errors'][] = 'il job ' . $job['job'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
+				logWrite( 'il job ' . $job['job'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
 			}
 
 		// aggiorno la tabella di avanzamento lavori
