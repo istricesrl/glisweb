@@ -78,56 +78,8 @@
 	    'cron'
 	);
 
-	/*
-
-    // timestamp di esecuzione iniziale
-	foreach( $tasks as $task ) {
-	    if( file_exists( DIR_BASE . $task['task'] ) ) {
-		mysqlQuery(
-		    $cf['mysql']['connection'],
-		    'UPDATE cron SET timestamp_esecuzione = ? WHERE id = ?',
-		    array(
-			array( 's' => $time ),
-			array( 's' => $task['id'] )
-		    )
-		);
-	    } else {
-		logWrite( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
-	    }
-	}
-
-    // seleziono i job attivi
-	$jobs = mysqlQuery(
-	    $cf['mysql']['connection'],
-	    'SELECT * FROM job WHERE '.
-	    'timestamp_apertura <= ? AND timestamp_apertura IS NOT NULL AND timestamp_completamento IS NULL '.
-	    'AND ( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ? OR timestamp_esecuzione IS NULL )',
-	    array(
-		array( 's' => $time ),
-		array( 's' => date( 'YmdHi', $time ) )
-	    )
-	);
-
-    // log
-	logWrite( 'trovati ' . count( $jobs ) . ' job', 'cron' );
-
-    // timestamp di esecuzione iniziale
-	foreach( $jobs as $job ) {
-	    if( file_exists( DIR_BASE . $job['job'] ) ) {
-		mysqlQuery(
-		    $cf['mysql']['connection'],
-		    'UPDATE job SET timestamp_esecuzione = ? WHERE id = ?',
-		    array(
-			array( 's' => $time ),
-			array( 's' => $job['id'] )
-		    )
-		);
-	    } else {
-		logWrite( 'il file di job ' . $job['job'] . ' non esiste', 'cron', LOG_ERR );
-	    }
-	}
-
-	*/
+	// log
+	logWrite( 'task trovati: ' . print_r( $cf['cron']['tasks'], true), 'cron' );
 
     // unlock delle tabelle
 	// mysqlQuery( $cf['mysql']['connection'], 'UNLOCK TABLES' );
@@ -176,16 +128,6 @@
 			// aggiorno il log
 				// mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO cron_log ( id_cron, testo, timestamp_esecuzione ) VALUES ( ?, ?, ? )', array( array( 's' => $task['id'] ), array( 's' => json_encode( $cf['cron']['results'] ) ), array( 's' => $time ) ) );
 
-			// aggiorno la tabella di pianificazione
-				mysqlQuery(
-					$cf['mysql']['connection'],
-					'UPDATE cron SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
-					array(
-						array( 's' => $time ),
-						array( 's' => $task['id'] )
-					)
-				);
-
 			// latest
 				// fwrite( $cHnd, print_r( $status, true ) . PHP_EOL );
 
@@ -193,6 +135,16 @@
 			$cf['cron']['results']['errors'][] = 'il file di task ' . $task['task'] . ' non esiste';
 			logWrite( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
 		}
+
+		// aggiorno la tabella di pianificazione
+		mysqlQuery(
+			$cf['mysql']['connection'],
+			'UPDATE cron SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
+			array(
+				array( 's' => $time ),
+				array( 's' => $task['id'] )
+			)
+		);
 
 	}
 
@@ -216,12 +168,18 @@
 		)
 	);
 
-    // ciclo sui job
+	// log
+	logWrite( 'job trovati: ' . print_r( $cf['cron']['jobs'], true), 'cron' );
+
+	// ciclo sui job
 	foreach( $cf['cron']['jobs'] as $job ) {
 	    if( file_exists( DIR_BASE . $job['job'] ) ) {
 
 		// log
 		    logWrite( 'eseguo il job ' . $job['id'] . ' -> ' . $job['job'], 'cron', LOG_DEBUG );
+
+		// resetto lo status
+			$status = array();
 
 #		// array dei risultati
 #		    $cf['cron']['results'] = array();
@@ -256,9 +214,22 @@
 			);
 
 		} else {
+
 			$cf['cron']['results']['errors'][] = 'il file di job ' . $job['job'] . ' non esiste';
 			logWrite( 'il file di job ' . $job['job'] . ' non esiste', 'cron', LOG_ERR );
+
+			// aggiorno la tabella di avanzamento lavori
+			mysqlQuery(
+				$cf['mysql']['connection'],
+				'UPDATE job SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
+				array(
+					array( 's' => $time ),
+					array( 's' => $job['id'] )
+				)
+			);
+
 		}
+
 	}
 
     // log
