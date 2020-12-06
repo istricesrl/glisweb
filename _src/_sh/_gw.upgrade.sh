@@ -1,8 +1,5 @@
 #!/bin/bash
 
-## pulizia schermo
-clear
-
 ## livelli per la root del sito
 RL="../../"
 
@@ -40,18 +37,25 @@ else
     # scarico Glisweb
     wget https://github.com/istricesrl/glisweb/archive/$BRANCH.zip
 
+    # pulisco il nome del file zip dai prefissi
+    BRANCHZIP=$( echo $BRANCH | sed -e "s/^feature\///" )
+    BRANCHZIP=$( echo $BRANCHZIP | sed -e "s/^hotfix\///" )
+
+    # pulisco il nome della cartella dai prefissi
+    BRANCHDIR=${BRANCH////-}
+
     # scompatto Glisweb
-    unzip ./$BRANCH.zip
+    unzip ./$BRANCHZIP.zip
 
     # elimino il vecchio framework
     rm -rf ./_*
 
     # installo la nuova versione
-    rsync -a ./glisweb-$BRANCH/* ./
+    rsync -a ./glisweb-$BRANCHDIR/* ./
 
     # elimino la vecchia cartella
-    rm -rf ./glisweb-$BRANCH
-    rm -rf ./$BRANCH.zip
+    rm -rf ./glisweb-$BRANCHDIR
+    rm -rf ./$BRANCHZIP.zip
 
     # installo il .gitignore se è presente un repository .git
     if [ -f ./_usr/_deploy/_git/.gitignore -a -d ./.git ]; then
