@@ -1,0 +1,33 @@
+{
+  "sites": {
+    "1": {
+      "id": 1,
+      "slack": {
+        "profiles": {
+          "DEV": {
+            "default-sito": {
+              "": {
+                "sa": "",
+                "sb": "",
+                "sc": ""
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "slack": {
+    "profiles": {
+      "DEV": {
+        "webhooks": {
+          "default": {
+            "sa": "",
+            "sb": "",
+            "sc": ""
+          }
+        }
+      }
+    }
+  }
+}
