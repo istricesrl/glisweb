@@ -4,4 +4,4 @@
 	require '../../../_src/_config.php';
 
     // messaggio
-    print_r( slackTxtMsg( $cf['slack']['profile']['webhooks']['produzione-web'], 'prova' ) );
+    print_r( slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'prova' ) );
