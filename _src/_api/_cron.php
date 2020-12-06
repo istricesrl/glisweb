@@ -22,9 +22,6 @@
     // log
 	logWrite( 'chiamata cron API', 'cron' );
 
-    // lock delle tabelle
-	// mysqlQuery( $cf['mysql']['connection'], 'LOCK TABLES cron WRITE, cron_log WRITE, job WRITE' );
-
     // tempo
 	$time = time();
 
@@ -81,9 +78,6 @@
 	// log
 	logWrite( 'task trovati: ' . print_r( $cf['cron']['tasks'], true), 'cron' );
 
-    // unlock delle tabelle
-	// mysqlQuery( $cf['mysql']['connection'], 'UNLOCK TABLES' );
-
     // ciclo sui task
 	foreach( $cf['cron']['tasks'] as $task ) {
 	    if( file_exists( DIR_BASE . $task['task'] ) ) {
@@ -101,14 +95,8 @@
 			// resetto lo status
 				$status = array();
 
-			// latest
-				// fwrite( $cHnd, 'eseguo ' . $task['task']  . ' x' . $task['iterazioni'] . PHP_EOL );
-
 			// log
 				logWrite( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
-
-	#		// array dei risultati
-	#		    $cf['cron']['results'] = array();
 
 			// eseguo il task
 				if( ! empty( $task['iterazioni'] ) ) {
@@ -125,12 +113,6 @@
 					logWrite( 'il task ' . $task['task'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
 				}
 	
-			// aggiorno il log
-				// mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO cron_log ( id_cron, testo, timestamp_esecuzione ) VALUES ( ?, ?, ? )', array( array( 's' => $task['id'] ), array( 's' => json_encode( $cf['cron']['results'] ) ), array( 's' => $time ) ) );
-
-			// latest
-				// fwrite( $cHnd, print_r( $status, true ) . PHP_EOL );
-
 		} else {
 			$cf['cron']['results']['errors'][] = 'il file di task ' . $task['task'] . ' non esiste';
 			logWrite( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
@@ -180,9 +162,6 @@
 
 		// resetto lo status
 			$status = array();
-
-#		// array dei risultati
-#		    $cf['cron']['results'] = array();
 
 		// decodifica del workspace
 			$job['workspace'] = json_decode( $job['workspace'], true );
