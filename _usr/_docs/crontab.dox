@@ -4,25 +4,31 @@
 
     Descrizione dei meccanismi di esecuzione pianificata del framework.
 
-    task e job
-    ==========
-    Prima di addentrarsi nei meccanismi dell'esecuzione pianificata in GlisWeb è necessario comprendere la differenza
-    fra i due tipi di operazioni che l'API cron è in grado di eseguire, i task e i job. Mentre i primi sono compiti
-    ricorrenti, che vengono eseguiti periodicamente e non hanno una conclusione vera e propria, i secondi per contro
-    sono dei veri e propri processi che hanno un inizio, un'esecuzione prolungata nel tempo, e una fine.
+    introduzione
+    ============
+    GlisWeb dispone di un potente e flessibile sistema di esecuzione pianificata, che appoggiandosi al
+    cron di sistema garantisce un'elevatissima affidabilità e prestazioni elevate. Dal lato del sistema,
+    una riga di /etc/crontab oppure uno script in /etc/cron.d/ che può essere installato anche tramite
+    lo script _src/_sh/_gw.crontab.install.sh devono richiamare l'API _src/_api/_cron.php del framework
+    ogni minuto. L'API si occuperà di controllare sulle tabelle task e job quali compiti vanno eseguiti
+    e provvederà a sbrigarli di conseguenza.
 
-    Si può meglio comprendere la natura di questa differenza con alcuni esempi. Un esempio di task è la gestione della
-    coda della posta in uscita; ogni volta che questo task viene attivato controlla se ci sono messaggi da inviare,
-    se ce ne sono invia il primo, e termina. In questo modo la coda può essere riempita mentre viene anche svuotata,
-    e non ci sono problemi perché ogni esecuzione del task non ha memoria di quelle precedenti né ha cognizione di
-    quelle successive.
+    Come accennato, il meccanismo di esecuzione pianificata si articola su due diverse strategie,
+    rappresentate rispettivamente dai task e dai job. Da un lato i primi rappresentano un lavoro
+    puntuale, eseguito ad ogni chiamata senza cognizione del contesto complessivo delle cose da fare;
+    e di conseguenza la natura stessa del task è quella di coincidere con la singola chiamata.
+    Dall'altra parte, i job rappresentano lavori pianificati con un inizio e una fine e un'estensione
+    predeterminata, in quanto hanno cognizione del contesto globale del compito da svolgere.
 
-    L'importazione dei dati da un file, invece, è un job; alla prima esecuzione del job il file viene esaminato, si
-    stabilisce quante righe contiene, e in base a quante righe vanno processate per ogni ciclo si può prevedere
-    quanto durerà l'esecuzione del job; ogni esecuzione ha cognizione di quelle precedenti, perché deve proseguire
-    il lavoro da dove si è interrotto, e ha cognizione di quante esecuzioni parziali mancano al completamento
-    del job stesso.
-
+    Un esempio di task è la gestione delle code della posta; ad ogni chimata, il task controlla se c'è
+    almeno una mail da inviare, se sì la invia, dopodiché termina, senza preoccuparsi di quante mail da
+    inviare ci siano nel complesso (perché è irrilevante dal suo punto di vista). Viceversa, un esempio
+    di job è l'importazione dell'elenco aggiornato dei comuni italiani; in questo caso, il job prima
+    scarica l'intero elenco dei comuni, poi pianifica il numero di esecuzioni necessarie per importarlo,
+    dopodiché ad ogni chiamata successiva esegue una parte del lavoro sapendo quanto ha già fatto e
+    quanto manca al completamento del compito, infine quando ha terminato l'importazione finisce e
+    registra la chiusura del procedimento.
+    
     lo script di appoggio in /etc/cron.d/
     -------------------------------------
 
