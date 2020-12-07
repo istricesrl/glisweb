@@ -1,1 +1,1 @@
-ALTER TABLE `anagrafica_indirizzi` DROP FOREIGN KEY `anagrafica_indirizzi_ibfk_2`; ALTER TABLE `anagrafica_indirizzi` ADD CONSTRAINT `anagrafica_indirizzi_ibfk_2` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `anagrafica_indirizzi` DROP FOREIGN KEY `anagrafica_indirizzi_ibfk_2`; 
