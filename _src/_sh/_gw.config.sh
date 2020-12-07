@@ -32,46 +32,53 @@ if [ -f "$FILE" ]; then
 
     while [ -n "$PLACEHOLDER" ]; do
 
-	if [ "$PLACEHOLDER" = "%moduli%" ]; then
-	    echo "preconfigurazioni dei moduli disponibili:"
-	    for i in $( ls -d ./_usr/_config/mods.*.json ); do
-		MODS="$( basename $i )"
-		MODSBASENAME="${MODS%.*}"
-		echo "${MODSBASENAME#*.}"
-	    done
-	fi
+		if [ "$PLACEHOLDER" = "%moduli%" ]; then
 
-	read -p "${PLACEHOLDER//\%}: " VALUE
+			for mod in $( ls _mod ); do
 
-	if [ "$PLACEHOLDER" = "%password di root%" ]; then
-	    VALUE=$( echo -n $VALUE | md5sum | cut -c 1-32 )
-	elif [ "$PLACEHOLDER" = "%protocollo del sito, http o https%" ]; then
-	    PROTOCOL=$VALUE
-	elif [ "$PLACEHOLDER" = "%nome host del sito, ad es. bogon in bogon.nomedominio.bogus%" ]; then
-	    HOST=$VALUE
-	elif [ "$PLACEHOLDER" = "%dominio del sito, ad es. nomedominio.bogus in bogon.nomedominio.bogus%" ]; then
-	    DOMAIN=$VALUE
-#	elif [ "$PLACEHOLDER" = "%moduli%" ]; then
-#	    VALUE=$( cat ./_usr/_config/mods.$VALUE.json )
-	fi
+				read -p "vuoi attivare il modulo $mod?" SN
 
-	perl -pi -e "s/$PLACEHOLDER/$VALUE/g" $FILE
+				# TODO se l'utente dice sì, aggiungere il modulo a una variabile MODULI
+				# avendo cura di preporre una virgola se il modulo non è il primo aggiunto
 
-	placeholder
+				# TODO bisogna anche "pulire" il nome del modulo dal resto del path
+
+			done
+
+		else
+
+			read -p "${PLACEHOLDER//\%}: " VALUE
+
+			if [ "$PLACEHOLDER" = "%password di root%" ]; then
+				VALUE=$( echo -n $VALUE | md5sum | cut -c 1-32 )
+			elif [ "$PLACEHOLDER" = "%protocollo del sito%" ]; then
+				PROTOCOL=$VALUE
+			elif [ "$PLACEHOLDER" = "%nome host del sito%" ]; then
+				HOST=$VALUE
+			elif [ "$PLACEHOLDER" = "%dominio del sito%" ]; then
+				DOMAIN=$VALUE
+			fi
+
+		fi
+
+		perl -pi -e "s/$PLACEHOLDER/$VALUE/g" $FILE
+
+		placeholder
 
     done
 
     echo "nessun placeholder rimasto da sostituire"
 
     if [[ -n "$PROTOCOL" ]] && [[ -n "$HOST" ]] && [[ -n "$DOMAIN" ]]; then
-	./_src/_sh/_gw.crontab.install.sh install $PROTOCOL $HOST.$DOMAIN
+		./_src/_sh/_gw.crontab.install.sh install $PROTOCOL $HOST.$DOMAIN
     else
-	echo "non sono riuscito ad installare automaticamente il crontab, procedere manualmente"
+		echo "non sono riuscito ad installare automaticamente il crontab, procedere manualmente"
     fi
 
 elif [ -n "$1" ]; then
 
     mkdir -p ./src/
+
     cp ./_usr/_config/_json/_templates/template.$1.json ./src/config.json
 
     ./_src/_sh/_gw.config.sh
@@ -80,6 +87,7 @@ else
 
     echo "utilizzo: $( basename $0 ) template"
     echo "template disponibili:"
+
     for i in $( ls -d ./_usr/_config/_json/_templates/template.*.json ); do
         TEMPLATE="$( basename $i )"
         TEMPLATEBASENAME="${TEMPLATE%.*}"
@@ -87,3 +95,6 @@ else
     done
 
 fi
+
+# TODO alla fine bisognerebbe indentare il JSON, è possibile a linea di comando?
+# https://stackoverflow.com/questions/352098/how-can-i-pretty-print-json-in-a-shell-script
