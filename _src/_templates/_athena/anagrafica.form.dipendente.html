@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/anagrafica.form.sub.html' as sub %}
+{% import 'bin/anagrafica.form.default.sub.html' as dfs %}
 
 {% extends "ext/main.html" %}
 
@@ -44,18 +44,18 @@
 
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
-        <legend>note</legend>
+        <legend>condizioni di collaborazione</legend>
         
         <div class="form-group form-row">
 		    <div class="col-12">
-			<span class="label-top">note</span>
-            {{ frm.textarea( table, '', '', 'note', '', 3, request, '', '', 'ckEditor', 200 ) }}
+			<span class="label-top">condizioni di collaborazione</span>
+            {{ frm.textarea( table, '', '', '', '', 3, request, '', '', 'ckEditor', 200 ) }}
 		    </div>
         </div>
         </fieldset>
 
         {# SUBFORM IBAN #}
-		{{ sub.iban( table, 'iban', 'dati bancari', site, page, pages, localization.language.ietf, etc, request, session ) }}
+		{{ dfs.iban( table, 'iban', 'dati bancari', site, page, pages, localization.language.ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
