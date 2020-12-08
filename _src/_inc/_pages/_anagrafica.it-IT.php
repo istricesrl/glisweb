@@ -353,7 +353,19 @@
 	    'parent'		=> array( 'id'		=> 'contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'contratti.form', 'contratti.form.tools' ) ),
+	    'etc'		=> array( 'tabs'	=> array( 'contratti.form', 'contratti.form.orari', 'contratti.form.tools' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// gestione contratti orari
+	$p['contratti.form.orari'] = array(
+	    'sitemap'		=> false,
+		'title'		=> array( $l		=> 'orari contratti' ),
+	    'h1'		=> array( $l		=> 'orari' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.orari.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.orari.php' ),
+	    'etc'		=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
