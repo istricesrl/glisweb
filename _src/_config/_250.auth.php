@@ -60,8 +60,16 @@
 #	    'anagrafica_clienti' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'anagrafica_condizioni_pagamento' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+		),
 		'anagrafica_indirizzi' => array(
 		CONTROL_FULL => array( 'roots' )
+		),
+		'anagrafica_modalita_pagamento' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
 		),
 #	    'anagrafica_ruoli' => array(
 #		CONTROL_FULL => array( 'roots' )
