@@ -9,7 +9,7 @@
     {% set r = request[ table ][ subtable ][ i ] %}
     <div id="{{ subtable }}_{{ i }}" class="form-sub">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	{{ frm.input( table, subtable, i, 'id_account', '', '', '', '__parent_id__', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_pagina', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
 		<div class="col-2 col-md-1">
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">ordine</span>{% endif %}
