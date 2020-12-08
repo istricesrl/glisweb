@@ -12,6 +12,9 @@
      *
      */
 
+    // costanti PHP
+	define( 'PHP_2EOL'			, PHP_EOL . PHP_EOL );
+
     // costanti HTML
 	define( 'HTML_EOL'			, '<br>' . PHP_EOL );
 	define( 'HTML_2EOL'			, '<br>' . HTML_EOL );
