@@ -30,16 +30,13 @@
 	    'SELECT id, __label__ FROM tipologie_contratti_view'
     );
     
-    // tendina per i costi contratto
-    if( isset( $_REQUEST['contratti']['id'] ) ) {
-        $ct['etc']['select']['costi_contratti'] = mysqlCachedIndexedQuery(
-            $cf['cache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM costi_contratti_view WHERE id_contratto = ?',
-            array( array( 's' => $_REQUEST['contratti']['id'] ) )
-        );
-    }
+    // tendina per le tipologie costi contratto
+    $ct['etc']['select']['tipologie_costi_contratti'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_costi_contratti_view'
+    );
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
