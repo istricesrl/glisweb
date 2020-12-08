@@ -137,8 +137,10 @@
 
     // @todo documentare questa cosa delle favicon
 
-    // scrittura dell'indice della cache
-	memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['cache']['index'] );
+	// scrittura dell'indice della cache
+	// NOTA questa cosa viene fatta qui perché l'index potrebbe essere modificato dalle macro
+	memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
+	// memcacheWrite( $cf['memcache']['connection'], 'CACHE_REGISTRY', $cf['memcache']['registry'] );
 
     // timer
 	timerCheck( $cf['speed'], 'fine salvataggio indice cache' );

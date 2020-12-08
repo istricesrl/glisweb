@@ -16,7 +16,7 @@
 
     // tendina anagrafica
 	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view'
@@ -24,7 +24,7 @@
 
     // tendina account
 	$ct['etc']['select']['gruppi'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM gruppi_view'
@@ -41,7 +41,7 @@
 
 	    // tendina mail
 		$ct['etc']['select']['mail'] = mysqlCachedIndexedQuery(
-		    $cf['cache']['index'],
+		    $cf['memcache']['index'],
 		    $cf['memcache']['connection'],
 		    $cf['mysql']['connection'],
 		    'SELECT id, __label__ FROM mail_view WHERE id_anagrafica = ?',

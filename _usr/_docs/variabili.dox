@@ -471,6 +471,7 @@
     ----------------------------------|---------------------------------------------------------------------------------------
     memcache.connection               | la connessione corrente a Memcache (scorciatoia per memcache.connections, vedi _src/_config/_045.cache.php)
     memcache.connections              | l'array delle connessioni a Memcache attive
+    memcache.index                    | l'indice delle chiavi di memcache organizzate per entità
     memcache.profile                  | il profilo Memcache corrente (scorciatoia per memcache.profiles.<site.status>)
     memcache.profiles                 | l'array dei profili memcache disponibili
     memcache.profiles.<s>             | il profilo memcache per lo status <s>

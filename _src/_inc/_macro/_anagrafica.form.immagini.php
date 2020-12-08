@@ -24,7 +24,7 @@
 
     // tendina ruolo immagini
 	$ct['etc']['select']['ruoli_immagini'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM ruoli_immagini_view WHERE se_anagrafica = 1'

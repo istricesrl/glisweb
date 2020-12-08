@@ -274,6 +274,9 @@
 
 	}
 
+    // TODO questo file non innesca il meccanismo di refresh della cache dei contenuti,
+    // vedi _mod/_3000.contenuti/_src/_config/_310.pages.php
+
     // debug
 	// echo '300 STANDARD' . PHP_EOL;
 	// print_r( $cf['contents']['pages'][ NULL ] );
