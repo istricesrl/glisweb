@@ -80,6 +80,9 @@
 		{# SUBFORM SETTORI E ATTIVITA #}
 		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
 
+		{# SUBFORM IBAN #}
+		{{ sub.iban( table, 'iban', 'dati bancari', site, page, pages, localization.language.ietf, etc, request, session ) }}
+
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 		{{ def.controls( page, pages, ietf, session, table, request ) }}
