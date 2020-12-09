@@ -65,18 +65,14 @@
 		    {{ frm.select( table, subtable, i, 'id_costo', 'costo', etc.select.costi_contratti, request ) }}
         </div>
 
-        <div class="col-auto">
+        <div class="col">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">lavoro</span>{% endif %}
-            <div class="form-check">
-                {{ frm.checkbox( table, subtable, i, 'se_lavoro', '', '', request, 1 ) }}
-            </div>
+            {{ frm.select( table, subtable, i, 'se_lavoro', '', etc.select.se_lavoro, request ) }}
         </div>
 
-        <div class="col-auto">
+        <div class="col">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">disponibile</span>{% endif %}
-            <div class="form-check">
-                {{ frm.checkbox( table, subtable, i, 'se_disppnibile', '', '', request ) }}
-            </div>
+            {{ frm.select( table, subtable, i, 'se_disponibile', '', etc.select.se_disponibile, request ) }}
         </div>
 
 	    {% if r.id %}

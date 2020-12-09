@@ -32,8 +32,18 @@
         array( 'id' => '4', '__label__' => 'giovedi' ),
         array( 'id' => '5', '__label__' => 'venerdi' ),
         array( 'id' => '6', '__label__' => 'sabato' ),
-        array( 'id' => '0', '__label__' => 'domenica' )
+        array( 'id' => '7', '__label__' => 'domenica' )
     );
+
+     // tendina lavoro
+	$ct['etc']['select']['se_lavoro'] = array(
+        array( 'id' => 1, '__label__' => 'lavoro' )
+    );
+    
+     // tendina disponibilità
+	$ct['etc']['select']['se_disponibile'] = array(
+	    array( 'id' => 1, '__label__' => 'disponibile' )
+	);
     
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
