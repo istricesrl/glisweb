@@ -16,7 +16,7 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_attivita.view.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'attività' ),
-													'priority'	=> '70' ) )
+														'priority'	=> '100' ) )
 	);
 
 	// gestione attivita

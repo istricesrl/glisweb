@@ -45,15 +45,15 @@
 	    {% endfor %}
 	</select>
     </div>
-    <div class="col">
-    <span class="label-top">&nbsp;</span>
-	<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
-    </div>
-    <div class="col-auto">
-	<div class="label-top">&nbsp;</div>
-	<button type="submit" class="btn btn-secondary btn-sm"><i class="fa fa-search"></i></button>
-	{% if view.insert.path %}
-	<button type="button" class="btn btn-secondary btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
-	{% endif %}
-    </div>
+	<div class="col">
+		<div class="label-top">ricerca per parola chiave</div>
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+		</div>
+		<div class="col-auto">
+		<div class="label-top">&nbsp;</div>
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		{% if view.insert.path %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		{% endif %}
+	</div>
 </div>
