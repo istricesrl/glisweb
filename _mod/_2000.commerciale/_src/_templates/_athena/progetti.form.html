@@ -60,10 +60,15 @@
 		    </div>
 			<div class="col-12 col-md-4">
 				<span class="label-top">cliente</span>
-				{{ frm.select( table, '', '', 'id_cliente', '', etc.select.clienti, request ) }}
+				{{ frm.selectBox( table, '', '', 'id_cliente', '', etc.select.clienti, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_cliente', page, pages, ietf ) }}
 			</div>			
 		</div>
-
+		<div class="form-group form-row">
+		    <div class="col-12">
+			<span class="label-top">indirizzo</span>
+			{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, '', '', 1 ) }}
+		    </div>
+		</div>
 		<div class="form-group form-row">
 		    <div class="col-12">
 			<span class="label-top">note</span>

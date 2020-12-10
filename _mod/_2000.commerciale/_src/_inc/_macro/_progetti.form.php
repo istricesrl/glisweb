@@ -27,6 +27,14 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view WHERE se_cliente = 1'
     );
+
+    // tendina indirizzi
+	$ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM indirizzi_view'
+    );
     
     // tendina tipologie
 	$ct['etc']['select']['tipologie_progetti'] = mysqlCachedIndexedQuery(
