@@ -29,7 +29,7 @@
 	    $( select ).hide();
 
 	    // creo il campo input
-	    var box = $('<input type="text" class="form-control form-control-sm selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '">');
+	    var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '">');
 
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'data-required' ) == 'true' ) {
@@ -51,7 +51,9 @@
 			// alert('custom');
 			if( $( lista ).is(":visible") ) {
 				$( lista ).hide();
-				$( box ).css( 'background-color', '#ffffff' );
+				$( box ).addClass( 'combobox-base-background' );
+				$( box ).removeClass( 'combobox-active-background' );
+				// $( box ).css( 'background-color', '#ffffff' );
 			} else {
 				box.trigger("keyup",{"val":""});
 			}
@@ -77,7 +79,9 @@
 	    console.log( 'valore della select al click -> ' + $( select ).val() );
 
 		// ...
-		$( box ).css( 'background-color', '#eeeeee' );
+		$( box ).addClass( 'combobox-active-background' );
+		$( box ).removeClass( 'combobox-base-background' );
+		// $( box ).css( 'background-color', '#eeeeee' );
 
 		// se è stato inserito un filtro di lunghezza minima
 		if( filtro.length > min || force == true ) {
@@ -117,7 +121,9 @@
 			$( li ).bind( 'click', function() {
 			    $( select ).val( valore );
 			    $( box ).val( opzione );
-			    $( box ).css( 'background-color', '#ffffff' );
+				$( box ).addClass( 'combobox-base-background' );
+				$( box ).removeClass( 'combobox-active-background' );
+			    // $( box ).css( 'background-color', '#ffffff' );
 			    $( lista ).hide();
 			    // console.log( 'valore della select al click -> ' + $( select ).val() );
 			});
