@@ -1,0 +1,1 @@
+ALTER TABLE `progetti` ADD FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
