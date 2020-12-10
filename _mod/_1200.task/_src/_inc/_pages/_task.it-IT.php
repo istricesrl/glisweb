@@ -28,6 +28,18 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'task.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_task.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'			=> array( 'tabs'	=> array(	'task.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'task.form', 
+														'task.form.attivita' ) )
 	);
 
+	$p['task.form.attivita'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'task.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'task.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_task.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'task.form',
+														'task.form.attivita' ) )
+	);
