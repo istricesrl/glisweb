@@ -27,7 +27,7 @@
         // prelevo i contenuti della pagina corrente dal database
         $cnt = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT testo, abstract, specifiche, keywords, description FROM contenuti '.
+            'SELECT testo AS content, abstract, specifiche, keywords, description FROM contenuti '.
             'WHERE id_pagina = ? AND id_lingua = ?',
             array(
                 array( 's' => $cf['contents']['page']['id'] ),
@@ -38,25 +38,15 @@
         // se sono presenti contenuti
         if( ! empty( $cnt ) ) {
 
-            // assegno il testo
-            if( empty( $cf['contents']['page']['content'] ) ) {
-                $cf['contents']['page']['content'][ $cf['localization']['language']['ietf'] ] =
-                    "{% import '_bin/_contents.html' as cnt %}\n\n".
-                    "{% import 'bin/default.html' as def %}\n\n".
-                    $cnt['testo'];
+            // assegno i contenuti
+            foreach( array( 'content', 'abstract', 'specifiche' ) as $k ) {
+                if( empty( $cf['contents']['page'][ $k ] ) ) {
+                    $cf['contents']['page'][ $k ][ $cf['localization']['language']['ietf'] ] =
+                        "{% import '_bin/_contents.html' as cnt %}\n\n".
+                        "{% import 'bin/default.html' as def %}\n\n".
+                        $cnt[ $k ];
+                }
             }
-
-            // assegno l'abstract
-            $cf['contents']['page']['abstract'][ $cf['localization']['language']['ietf'] ] =
-                "{% import '_bin/_contents.html' as cnt %}\n\n".
-                "{% import 'bin/default.html' as def %}\n\n".
-                $cnt['abstract'];
-
-            // assegno le specifiche
-            $cf['contents']['page']['specifiche'][ $cf['localization']['language']['ietf'] ] =
-                "{% import '_bin/_contents.html' as cnt %}\n\n".
-                "{% import 'bin/default.html' as def %}\n\n".
-                $cnt['specifiche'];
 
             // assegno il meta tag keywords
             if( ! isset( $cf['contents']['page']['keywords'] ) || empty( $cf['contents']['page']['keywords'] ) ) {
