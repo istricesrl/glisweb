@@ -122,25 +122,13 @@
                         );
                     }
 
-                    // array delle immagini
-                    $img = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'SELECT immagini.*, ruoli_immagini.nome AS ruolo FROM immagini '
-                        .'INNER JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo '
-                        .'WHERE immagini.id_pagina = ? AND immagini.id_ruolo IN ( 4, 16, 29, 14 )',
-                        array( array( 's' => $pg['id'] ) )
+                    // aggiungo le immagini
+                    aggiungiImmagini(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        'id_pagina',
+                        $pg['id'],
+                        array( 4, 16, 29, 14 )
                     );
-
-                    // ciclo per le immagini
-                    foreach( $img as $im ) {
-
-                        // aggiungo il mime type
-                        $im['mimetype'] = findFileType( $im['path'] );
-
-                        // aggiungo l'immagine
-                        $cf['contents']['pages'][ $pg['id'] ]['contents']['images'][ $im['ruolo'] ][ $im['ordine'] ] = $im;
-
-                    }
 
                     // array dei metadati
                     $meta = mysqlQuery(
