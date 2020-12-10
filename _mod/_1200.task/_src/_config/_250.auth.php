@@ -22,6 +22,10 @@
 		'task' => array(
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
+        ),
+        'attivita' => array(
+		    CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
 		)
 	    )
 	);

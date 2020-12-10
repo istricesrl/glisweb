@@ -120,9 +120,12 @@
 
 	if( isset( $_REQUEST['__preset__']['attivita']['id_task']  ) ){
 	    $task = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM task_view WHERE id = ?', 
-	    array( array( 's' => $_REQUEST['__preset__']['attivita']['id_task'] ) ) );
+        array( array( 's' => $_REQUEST['__preset__']['attivita']['id_task'] ) ) );
+        
+        if( ! empty($task['id_cliente']) && ! empty($task['id_progetto']) ){
 	    $_REQUEST['__preset__']['attivita']['id_cliente'] = $task['id_cliente'];
-	    $_REQUEST['__preset__']['attivita']['id_progetto'] = $task['id_progetto'];
+        $_REQUEST['__preset__']['attivita']['id_progetto'] = $task['id_progetto'];
+        }
 	}
 
 	// macro di default

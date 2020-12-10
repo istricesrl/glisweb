@@ -59,7 +59,7 @@
 	$ct['etc']['include']['filters'] = 'inc/task.view.filters.html';
 
     // tendina clienti
-	$ct['etc']['select']['clienti'] = mysqlCachedQuery(
+	$ct['etc']['select']['id_cliente'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_cliente = 1');

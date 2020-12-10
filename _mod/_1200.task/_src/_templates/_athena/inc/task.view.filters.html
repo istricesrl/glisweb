@@ -1,5 +1,5 @@
 <div class="form-row view-filters d-print-none">
-    <div class="col-4 col-md-auto">
+    <!--div class="col-4 col-md-auto">
     <span class="label-top">stato</span>
 	<select name="__view__[{{ view.id }}][__filters__][completato][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 	    <option value="0" {% if request.__view__[ view.id ].__filters__.completato.EQ == "0" %}selected{% endif %}>task aperti</option>
@@ -7,7 +7,7 @@
 	    <option value="2" {% if request.__view__[ view.id ].__filters__.completato.EQ == "2" %}selected{% endif %}>task chiusi</option>
 	    <option value="" {% if request.__view__[ view.id ].__filters__.completato.EQ is empty %}selected{% endif %}>tutti i task</option>
 	</select>
-    </div>
+    </div-->
     <div class="col-4 col-md-auto">
     <span class="label-top">assegnato a</span>
 	<select name="__view__[{{ view.id }}][__extra__][assegnato]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
@@ -25,7 +25,7 @@
 	    {% endfor %}
 	</select>
     </div>
-    <div class="col-4 col-md-auto">
+    <!--div class="col-4 col-md-auto">
     <span class="label-top">priorità</span>
 	<select name="__view__[{{ view.id }}][__filters__][id_priorita][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 	    <option value="1" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ == "1" %}selected{% endif %}>non urgente né importante</option>
@@ -34,8 +34,7 @@
 	    <option value="4" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ == "4" %}selected{% endif %}>urgente importante</option>
 	    <option value="" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ is empty %}selected{% endif %}>tutte</option>
 	</select>
-    </div>
-
+    </div-->
     <div class="col">
 		<div class="label-top">ricerca per parola chiave</div>
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
