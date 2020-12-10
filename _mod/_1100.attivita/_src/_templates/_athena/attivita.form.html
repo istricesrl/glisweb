@@ -64,7 +64,7 @@
 				</div>
 				<div class="col-12 col-md">
 				<span class="label-top">esecutore</span>
-				{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', request[ table ].id_anagrafica , page, pages, ietf ) }}
+				{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf ) }}
 				</div>
 			</div>
 
@@ -91,20 +91,20 @@
 				<div class="col-12">
 				<span class="label-top">cliente</span>
 			
-					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','','anagrafica', request[ table ].id_anagrafica , page, pages, ietf ) }}
+					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','','anagrafica', 'id_cliente' , page, pages, ietf ) }}
 				</div>
 			</div>
-
+			<!--
 				<div class="form-group form-row">
 					<div class="col-12">
 					<span class="label-top">progetto</span>
-					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','anagrafica.form','','anagrafica', request[ table ].id_anagrafica , page, pages, ietf ) }}
+					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.form','','anagrafica', 'id_progetto', page, pages, ietf ) }}
 				</div>
-				</div>
+				</div>-->
 				<div class="form-group form-row">
 					<div class="col-12">
 					<span class="label-top">task</span>
-					{{ frm.selectBox( table, '', '', 'id_task', 'task', etc.select.id_task, request, '', '','','','','anagrafica.form','','anagrafica', request[ table ].id_anagrafica , page, pages, ietf ) }}
+					{{ frm.selectBox( table, '', '', 'id_task', 'task', etc.select.id_task, request, '', '','','','','task.form','','task', 'id_task', page, pages, ietf ) }}
 					</div>
 					</div>
 			</fieldset>
