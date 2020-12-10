@@ -139,6 +139,3 @@
 
     // collegamento all'array $ct
     $ct['common']					= &$cf['common'];
-    
-    // informazioni di licenza
-    echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_2EOL;

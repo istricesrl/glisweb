@@ -306,7 +306,9 @@
     // renderizzo il template
 	if( isset( $ct['page']['template']['type'] ) ) {
 
-	    switch( $ct['page']['template']['type'] ) {
+    	echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_2EOL;
+
+		switch( $ct['page']['template']['type'] ) {
 
 		case 'twig':
 
