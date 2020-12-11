@@ -90,6 +90,27 @@
 
 		$( base ).find('.selectbox').selectBox();
 
+// SDF questa è la parte aggiunta ma non funzionante
+		$( base ).find('input[type=checkbox]').click( function() {
+		    if( $(this).checked ) {
+				console.log('checked');
+			$(this).prev().val('1');
+		    } else {
+				console.log('NON checked');
+			$(this).prev().val('0');
+			}
+		});
+		
+		$( base ).find('input[type=checkbox]').each( function() {	
+			if( $(this).prev().val() == '1' ){
+				$(this).prop('checked', true);
+			}
+			else{
+				$(this).prop('checked', false);
+			}		
+		});
+// fine SDF
+
 		old.before( base );
 
 	    }
