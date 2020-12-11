@@ -90,13 +90,12 @@
 
 		$( base ).find('.selectbox').selectBox();
 
-// SDF questa è la parte aggiunta ma non funzionante
+// SDF questa è la parte aggiunta ma c'è ancora qualco sa che non funziona
+// creando una nuova riga di orario al check non applica correttamente i value...
 		$( base ).find('input[type=checkbox]').click( function() {
 		    if( $(this).checked ) {
-				console.log('checked');
 			$(this).prev().val('1');
 		    } else {
-				console.log('NON checked');
 			$(this).prev().val('0');
 			}
 		});
