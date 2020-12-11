@@ -1,0 +1,1 @@
+ALTER TABLE `categorie_anagrafica` ADD `se_interinale` INT(1) NULL DEFAULT NULL AFTER `se_dipendente`, ADD INDEX (`se_interinale`) ;
