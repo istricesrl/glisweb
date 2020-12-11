@@ -173,15 +173,15 @@
 #	    'tipologie_attivita' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'tipologie_contratti' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
 		'tipologie_costi_contratti' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 #	    'tipologie_crm' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-		'tipologie_contratti' => array(
-		CONTROL_FULL => array( 'roots' )
-		),
 	    'video' => array(
 			CONTROL_FULL => array( 'roots' )
 		)
