@@ -44,12 +44,11 @@
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE indirizzi SET token = ? WHERE ( latitudine IS NULL OR longitudine IS NULL OR cap IS NULL ) '.
-            'AND ( timestamp_geocode IS NULL OR timestamp_geocode < ? OR timestamp_aggiornamento > timestamp_geocode ) '.
+            'AND ( timestamp_geocode IS NULL OR timestamp_aggiornamento IS NULL OR timestamp_aggiornamento > timestamp_geocode ) '.
             'AND token IS NULL '.
             'ORDER BY timestamp_geocode ASC LIMIT 1',
             array(
-                array( 's' => $status['token'] ),
-                array( 's' => strtotime( '-3 months' ) )
+                array( 's' => $status['token'] )
             )
         );
 
@@ -115,7 +114,8 @@
             mysqlQuery(
                 $cf['mysql']['connection'],
                 'UPDATE indirizzi '.
-                'SET latitudine = ?, longitudine = ?, cap = ?, timestamp_geocode = unix_timestamp() token = NULL '.
+                'SET latitudine = ?, longitudine = ?, cap = ?, timestamp_geocode = unix_timestamp(), '.
+                'timestamp_aggiornamento = unix_timestamp(), token = NULL '.
                 'WHERE token = ?',
                 array(
                 array( 'd' => $gc['lat'] ),
