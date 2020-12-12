@@ -59,6 +59,7 @@
 									'anagrafica.form.amministrazione',
 //									'anagrafica.form.collaboratori',
 									'anagrafica.form.cliente',
+									'anagrafica.form.contratti',
 									'anagrafica.form.fornitore',
 //									'anagrafica.form.struttura',
 //									'anagrafica.form.attivita',
@@ -104,6 +105,18 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.cliente.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.cliente.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica contratti
+	$p['anagrafica.form.contratti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'elenco contratti' ),
+	    'h1'		=> array( $l		=> 'contratti' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.contratti.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.contratti.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
@@ -329,6 +342,115 @@
 		'etc'		=> array( 'tabs'	=> $p['categorie.anagrafica.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
+
+	// vista contratti
+	$p['contratti.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'contratti' ),
+	    'h1'		=> array( $l		=> 'contratti' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_contratti.view.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'contratti.view' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contratti' ),
+									'priority'	=> '010' ) )
+	);
+
+    // gestione contratti
+	$p['contratti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.php' ),
+	    'etc'		=> array( 'tabs'	=> array( 'contratti.form', 'contratti.form.orari', 'contratti.form.tools' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// gestione contratti orari
+	$p['contratti.form.orari'] = array(
+	    'sitemap'		=> false,
+		'title'		=> array( $l		=> 'orari contratti' ),
+	    'h1'		=> array( $l		=> 'orari' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.orari.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.orari.php' ),
+	    'etc'		=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// gestione contratti tools
+	$p['contratti.form.tools'] = array(
+	    'sitemap'		=> false,
+		'title'		=> array( $l		=> 'strumenti contratti' ),
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'h1'		=> array( $l		=> 'strumenti' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.tools.php' ),
+	    'etc'		=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+
+
+// vista tipologie contratti
+$p['tipologie.contratti.view'] = array(
+	'sitemap'		=> false,
+	'title'		=> array( $l		=> 'tipologie contratti' ),
+	'h1'		=> array( $l		=> 'tipologie contratti' ),
+	'parent'		=> array( 'id'		=> 'contratti.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	'macro'		=> array( '_src/_inc/_macro/_tipologie.contratti.view.php' ),
+	'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.view' ) ),
+	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie contratti' ),
+								'priority'	=> '120' ) )
+);
+
+
+// gestione tipologie contratti
+	$p['tipologie.contratti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'tipologie.contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.contratti.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.contratti.form.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.form' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
+	);
+
+
+	// vista tipologie costi contratti
+	$p['tipologie.costi.contratti.view'] = array(
+	'sitemap'		=> false,
+	'title'		=> array( $l		=> 'tipologie costi' ),
+	'h1'		=> array( $l		=> 'tipologie costi' ),
+	'parent'		=> array( 'id'		=> 'contratti.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	'macro'		=> array( '_src/_inc/_macro/_tipologie.costi.contratti.view.php' ),
+	'etc'		=> array( 'tabs'	=> array( 'tipologie.costi.contratti.view' ) ),
+	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie costi' ),
+								'priority'	=> '130' ) )
+	);
+
+
+// gestione tipologie costi contratti
+	$p['tipologie.costi.contratti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'tipologie.costi.contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.costi.contratti.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.costi.contratti.form.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.costi.contratti.form' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
+	);
+
    
 	// vista indirizzi
 	$p['indirizzi.view'] = array(

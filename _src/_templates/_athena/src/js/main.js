@@ -90,6 +90,26 @@
 
 		$( base ).find('.selectbox').selectBox();
 
+// SDF questa è la parte aggiunta ma c'è ancora qualco sa che non funziona
+// creando una nuova riga di orario al check non applica correttamente i value...
+		$( base ).find('input[type=checkbox]').click( function() {
+		    if( $(this).checked ) {
+			$(this).prev().val('1');
+		    } else {
+			$(this).prev().val('0');
+			}
+		});
+		
+		$( base ).find('input[type=checkbox]').each( function() {	
+			if( $(this).prev().val() == '1' ){
+				$(this).prop('checked', true);
+			}
+			else{
+				$(this).prop('checked', false);
+			}		
+		});
+// fine SDF
+
 		old.before( base );
 
 	    }
