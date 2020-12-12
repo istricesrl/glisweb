@@ -42,8 +42,8 @@
             foreach( array( 'content', 'abstract', 'specifiche' ) as $k ) {
                 if( empty( $cf['contents']['page'][ $k ] ) ) {
                     $cf['contents']['page'][ $k ][ $cf['localization']['language']['ietf'] ] =
-                        "{% import '_bin/_contents.html' as cnt %}\n\n".
-                        "{% import 'bin/default.html' as def %}\n\n".
+                        "{% import '_bin/_default.html' as cms %}\n\n".
+                        "{% import 'bin/default.html' as tpl %}\n\n".
                         $cnt[ $k ];
                 }
             }
