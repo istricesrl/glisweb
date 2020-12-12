@@ -20,7 +20,6 @@
 	    'id' => '#',
         '__label__' => 'categoria',
         'membri' => 'membri'
-	   
 	);
 
     // stili della vista
@@ -31,5 +30,3 @@
    
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
-
-?>

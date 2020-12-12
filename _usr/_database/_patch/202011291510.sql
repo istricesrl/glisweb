@@ -1,0 +1,1 @@
+ALTER TABLE `sms_out` ADD `token` CHAR(254) NULL DEFAULT NULL AFTER `id_telefono`, ADD INDEX (`token`) ;

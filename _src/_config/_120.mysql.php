@@ -70,5 +70,3 @@
 	// die( print_r( $cf['mysql']['profile'], true ) );
 	// print_r( $cf['mysql'] );
 	// print_r( $cx['mysql'] );
-
-?>

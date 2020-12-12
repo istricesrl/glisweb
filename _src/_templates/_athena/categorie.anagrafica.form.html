@@ -144,7 +144,35 @@
             </div>
     
             </fieldset>
+
+            <fieldset>
+            <legend>ruoli di formazione</legend>
     
+            <div class="form-group form-row">
+                <div class="col-4 col-md-2 col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_docente', 'docente', '', request ) }}
+                </div>
+                </div>
+                <div class="col-4 col-md-2 col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_tutor', 'tutor', '', request ) }}
+                </div>
+                </div>
+                <div class="col-4 col-md-2 col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_allievo', 'allievo', '', request ) }}
+                </div>
+                </div>
+                <div class="col-4 col-md-2 col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_classe', 'classe', '', request ) }}
+                </div>
+                </div>
+             </div>
+    
+            </fieldset>
+
             <fieldset>
             <legend>ruoli del CMS</legend>
     

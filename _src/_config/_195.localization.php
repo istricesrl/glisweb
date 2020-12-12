@@ -63,5 +63,3 @@
 	// print_r( $cf['localization'] );
 	// print_r( $cf['localization']['languages'] );
 	// print_r( $cf['localization']['language'] );
-
-?>

@@ -1,0 +1,32 @@
+<div id="spostaFile" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">spostamento file</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form action="" class="form-horizontal" method="post">
+                    <div class="form-row form-group">
+                        <div class="col-md-12">
+                            <input type="hidden" name="mvfile" id="mvfile" value="" placeholder="">
+                            <span id="mvfilename"></span>
+                        </div>
+                    </div>
+                    <div class="form-row form-group">
+                        <div class="col-md-10">
+                            <select name="mvfilepath" class="form-control form-control-sm">
+                                {% for d in etc.select.cartelle %}
+                                <option value="{{ d.id }}" {% if d.id == browse.base|trim('/') %} selected{% endif %}>{{ d.__label__ }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <button type="submit" class="btn btn-secondary btn-sm">sposta</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

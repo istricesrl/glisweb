@@ -82,7 +82,7 @@
 	    ),
 	    'comuni' => array(
 		CONTROL_FULL => array( 'roots' )
-	    ),
+		),
 	    'contenuti' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
@@ -105,7 +105,11 @@
 	    'gruppi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
-	    'immagini' => array(
+		'iban' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+		),
+		'immagini' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
@@ -127,16 +131,18 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'mail_out' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
-#	    'mail_sent' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'mail_out' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
+	    'mail_sent' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'metadati' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 		'orari_contratti' => array(
+	  ),
+	  'pubblicazione' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 #	    'prezzi' => array(
@@ -161,9 +167,9 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'template_mail' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'template_mail' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'test' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
@@ -182,9 +188,10 @@
 #	    'tipologie_crm' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+	    'tipologie_crm' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'video' => array(
 			CONTROL_FULL => array( 'roots' )
 		)
 	);
-
-?>

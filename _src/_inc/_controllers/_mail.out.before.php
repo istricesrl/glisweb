@@ -20,13 +20,15 @@
 	    case METHOD_REPLACE:
 	    case METHOD_UPDATE:
 
-		if( empty ( $vs['password']['s'] ) ) {
-		    unset( $vs['password'] );
-		    removeFromArray( $ks, 'password' );
-		}
+			// elaboro l'array dei valori
+			foreach( $vs as $vKey => $vVal ) {
+
+				if( in_array( $vKey, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
+					$vs[ $vKey ]['s'] = serialize( mailString2array( $vVal['s'] ) ) ;
+				}
+
+			}
 
 	    break;
 
 	}
-
-?>

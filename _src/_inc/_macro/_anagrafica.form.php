@@ -45,8 +45,8 @@
 
     // tendina PEC
 	$ct['etc']['select']['se_pec'] = array(
-	    array( 'id' => NULL, '__label__' => '&#xf003; mail' ),
-	    array( 'id' => 1, '__label__' => '&#xf0a3; PEC' )
+	    array( 'id' => NULL, '__label__' => '&#xf003;' ),
+	    array( 'id' => 1, '__label__' => '&#xf0a3;' )
 	);
 
     // tendina categorie anagrafica
@@ -62,7 +62,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_telefoni_view'
+	    'SELECT id, html AS __label__ FROM tipologie_telefoni_view'
 	);
 
 /*
@@ -203,5 +203,3 @@
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
-
-?>

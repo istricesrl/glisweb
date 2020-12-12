@@ -1,0 +1,7 @@
+_*/
+tmp/
+var/
+.htaccess
+composer.*
+robots.*
+sitemap.*

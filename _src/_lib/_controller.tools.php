@@ -34,7 +34,7 @@
 	    $ks					= array();			// 
 	    $vs					= array();			// 
 	    $vm					= false;			// 
-	    $rm					= '_view';			// 
+		$rm					= '_view';			// 
 
 	// inclusione dei controller
 	    $cb					= DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
@@ -82,6 +82,10 @@
 
 		// se è stata effettuata una GET senza ID, passo alla modalità view
 		    if( $a === METHOD_GET && ( ! array_key_exists( 'id', $d ) || $vm === true ) ) {
+
+			// TODO verifico se esiste la view statica
+				// ...
+				// ... $rm = '_view_static';
 
 			// log
 			    logWrite( "permessi sufficienti per ${t}/${a}", 'controller', LOG_DEBUG );
@@ -586,5 +590,3 @@
 	    return $i['__status__'];
 
     }
-
-?>

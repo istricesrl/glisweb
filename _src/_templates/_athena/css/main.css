@@ -19,6 +19,7 @@
  * - stili dell'agenda
  * - stili della struttura anagrafica
  * - stili della tabella di descrizione formato importazione
+ * - stili del pannello cassa
  */
 
 /* stili di base */
@@ -304,6 +305,10 @@ select {
     cursor: pointer;
 }
 
+select.font-awesome {
+    font-size: 1.3em !important;
+}
+
 .form-check-input {
     margin-top: .25em;
 }
@@ -317,6 +322,10 @@ select {
 
 .btn-sm {
     font-size: 1em;
+}
+
+.btn-lg {
+    font-size: 1.5em;
 }
 
 .btn-xsm {
@@ -355,6 +364,9 @@ select {
     border-radius: 0px;
     font-size: 1.6em;
     height: 45px;
+}
+
+.widget .btn-sqr {
     width: 45px;
 }
 
@@ -546,6 +558,13 @@ select.select-tabs {
     display: inline;
 }
 
+.breadcrumb-item+.breadcrumb-item::before {
+    display: inline-block;
+    padding-right: .5rem;
+    color: black;
+    content: "/";
+}
+
 /* stili del main */
 
 main {
@@ -608,10 +627,17 @@ main.container-fluid.browser {
     padding: 10px;
 }
 
-.browse .fa {
+.browse > .col:first-child > .fa {
     font-size: 1.2em;
     font-weight: bold;
     padding: 0px 10px;
+}
+
+.browse .btn-sqr {
+    font-size: 1.5em;
+    border-radius: 0px;
+    height: 40px;
+    width: 40px;
 }
 
 /* stili dell'interfaccia metro */
@@ -626,7 +652,7 @@ main.container-fluid.browser {
     font-size: 1.3em;
     font-weight: bold;
     margin: 0px;
-    padding: 3px;
+    padding: 3px 0px;
 }
 
 .metro h4 {
@@ -787,4 +813,10 @@ ul.browsing-tree {
     border-right: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
     padding: 5px;
+}
+
+/* stili del pannello cassa */
+
+.pannello-cassa .btn-secondary {
+    border-radius: 0px;
 }

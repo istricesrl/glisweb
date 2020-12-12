@@ -1,0 +1,33 @@
+
+{% macro pagine( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable }}">
+    {{ frm.subformLegend( subtable, legend ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = 0 %}{% endif %}
+    {% for i in 0..t %}
+    {% set r = request[ table ][ subtable ][ i ] %}
+    <div id="{{ subtable }}_{{ i }}" class= "form-sub">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_account', '', '', '', '__parent_id__', 'hidden' ) }}
+	<div class="form-group form-row">
+	    <div class="col">
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">pagina</span>{% endif %}
+		{{ frm.select( table, subtable, i, 'id_pagina', '', etc.select.popup_pagine, request ) }}
+        </div>
+		<div class="col-auto col-md-auto">
+			{% if i == 0 %}<span class="label-top remove-after-duplicate">presente</span>{% endif %}
+			{{ frm.select( table, subtable, i , 'se_presente', '', etc.select.se_presente, request, NULL, '' ,'',1 ) }}
+		</div>
+	    {% if r.id %}
+	    <div class="col-auto text-right remove-on-duplicate d-print-none">
+		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+	    </div>
+	    {% endif %}
+	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}

@@ -17,6 +17,154 @@
 									'priority'	=> '950' ) )
 	);
 
+    // vista mail in uscita
+	$p['mail.out.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'mail in uscita' ),
+	    'h1'		=> array( $l		=> 'in uscita' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.out.view.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'mail.out.view',
+													'mail.sent.view',
+													'template.mail.view',
+													'mail.tools'
+												 ) ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'mail' ),
+									'priority'	=> '950' ) )
+	);
+
+    // gestione mail in uscita
+	$p['mail.out.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.out.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.php' ),
+	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'mail.out.form',
+													'mail.out.form.file',
+													'mail.out.form.tools'
+												 ) ),
+	);
+
+	// gestione file mail in uscita
+	$p['mail.out.form.file'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.out.form.file.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.file.php' ),
+	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.form']['etc']['tabs'] )
+	);
+
+    // gestione strumenti mail in uscita
+	$p['mail.out.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'strumenti code mail' ),
+	    'h1'		=> array( $l		=> 'strumenti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.tools.php' ),
+	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.form']['etc']['tabs'] )
+	);
+
+    // vista mail inviate
+	$p['mail.sent.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'mail inviate' ),
+	    'h1'		=> array( $l		=> 'inviate' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.sent.view.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
+	);
+
+    // gestione mail inviate
+	$p['mail.sent.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.sent.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.sent.form.php' ),
+	    'parent'		=> array( 'id'		=> 'mail.sent.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'mail.sent.form',
+													'mail.sent.form.tools'
+												 ) ),
+	);
+
+	// strumenti mail
+	$p['mail.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'strumenti mail' ),
+		'h1'		=> array( $l		=> 'strumenti mail' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_mail.tools.php' ),
+		'parent'		=> array( 'id'		=> 'strumenti' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
+	);
+
+    // vista template mail
+	$p['template.mail.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'template mail' ),
+		'h1'		=> array( $l		=> 'template' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_template.mail.view.php' ),
+		'parent'	=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
+	);
+
+	// gestione template mail
+	$p['template.mail.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.php' ),
+		'parent'		=> array( 'id'		=> 'template.mail.view' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'template.mail.form',
+												'template.mail.form.testo',
+												'template.mail.form.file' ) ),
+	);
+    // form template mail testo
+	$p['template.mail.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'template.mail.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.testo.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.testo.php' ),
+		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// gestione template file
+	$p['template.mail.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'template.mail.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.file.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
+	);
+ 
 /*
     // pagina gestione cron
 	$p['cron'] = array(
@@ -256,4 +404,3 @@
 	    );
 	}
 */
-?>

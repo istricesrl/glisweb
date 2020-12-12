@@ -60,7 +60,7 @@
 //									'anagrafica.form.collaboratori',
 									'anagrafica.form.cliente',
 									'anagrafica.form.contratti',
-//									'anagrafica.form.fornitore',
+									'anagrafica.form.fornitore',
 //									'anagrafica.form.struttura',
 //									'anagrafica.form.attivita',
 //									'anagrafica.form.promemoria',
@@ -117,6 +117,18 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.contratti.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.contratti.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica fornitore
+	$p['anagrafica.form.fornitore'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'fornitore' ),
+	    'h1'		=> array( $l		=> 'fornitore' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.fornitore.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.fornitore.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
@@ -467,4 +479,41 @@ $p['tipologie.contratti.view'] = array(
 		
 	);
 
-?>
+	// vista ranking anagrafica
+	$p['ranking.anagrafica.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'ranking' ),
+	    'h1'		=> array( $l		=> 'ranking' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_ranking.anagrafica.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'ranking.anagrafica.view' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'ranking' ),
+									'priority'	=> '020' ) )
+	);
+
+    // form ranking anagrafica
+	$p['ranking.anagrafica.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'ranking.anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ranking.anagrafica.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_ranking.anagrafica.form.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'ranking.anagrafica.form',
+													'ranking.anagrafica.form.membri' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+	
+    // form ranking anagrafica membri
+	$p['ranking.anagrafica.form.membri'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'membri' ),
+	    'h1'		=> array( $l		=> 'membri' ),
+	    'parent'		=> array( 'id'		=> 'ranking.anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ranking.anagrafica.form.membri.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_ranking.anagrafica.form.membri.php' ),
+		'etc'		=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);

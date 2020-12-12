@@ -1,8 +1,11 @@
-    // operazioni da eseguire al caricamento della pagina
+	// operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
+
+		window.name = 'cms';
 
 	    var ckEditors = [];
 	    $('.ckEditor').each( function( i, obj ) {
+//		$(obj).attr('height',$(obj).parent().height());
 		if( obj.hasAttribute('height') ) { var hg = obj.attributes['height'].value; } else { var hg = 390; }
 		var editor = CKEDITOR.replace( obj.attributes['id'].value, {
 		    height: hg,
@@ -24,7 +27,7 @@
 			{ name: 'about', groups: [ 'about' ] }
 		    ],
 		    removeButtons: 'Save,Undo,Redo,NewPage,Preview,Print,Templates,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,Outdent,Indent,Blockquote,CreateDiv,BidiLtr,BidiRtl,Language,Flash,Smiley,PageBreak,Iframe,ShowBlocks,About,Styles,Cut,Copy,Paste,PasteText,PasteFromWord',
-		    extraPlugins: 'colorbutton,font,colordialog,ckawesome',
+		    extraPlugins: 'colorbutton,font,colordialog,ckawesome,autogrow',
 		    extraAllowedContent: 'img',
 		    filebrowserBrowseUrl: siteRoot + 'file-browser?type=Files'
 		});
@@ -33,7 +36,13 @@
 		CKEDITOR.dtd.$removeEmpty["i"] = false;
 		CKEDITOR.dtd.$removeEmpty["span"] = false;
 		CKEDITOR.plugins.basePath = siteRoot + '_src/_js/_lib/_external/ckeditor/plugins/';
+/*
+		CKEDITOR.on('instanceLoaded', function(e) {
+			var wt = $(obj).parent().width();
+			var hg = $(obj).parent().height();
+			console.log(wt+' '+hg);
+			e.editor.resize(wt, hg, false);
+		});
+	*/
 	    });
-
-
 	});

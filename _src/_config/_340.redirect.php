@@ -61,5 +61,3 @@
 	// print_r( $cx['redirect'] );
 	// var_dump( strtok( $_SERVER['REQUEST_URI'], '?' ) );
 	// var_dump( mysqlQuery( $cf['mysql']['connection'], 'SELECT codice,sorgente,destinazione FROM redirect_view' ) );
-
-?>

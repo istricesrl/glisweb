@@ -58,5 +58,3 @@
 	if( isset( $cx['twig'] ) ) {
 	    $cf['twig'] = array_replace_recursive( $cf['twig'], $cx['twig'] );
 	}
-
-?>

@@ -37,5 +37,3 @@
 
     // debug
 	// print_r( $ct['page'] );
-
-?>

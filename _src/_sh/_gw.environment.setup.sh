@@ -1,5 +1,8 @@
 #!/bin/bash
 
+## pulizia schermo
+clear
+
 ## livelli per la root del sito
 RL="../../"
 
@@ -63,6 +66,9 @@ apt-get install -y php-zip
 ## installazione di php-intl
 apt-get install -y php-intl
 
+## attivazione modulo mysqlnd
+phpenmod mysqlnd
+
 ## installazione di Pear FTP
 pear install Net_FTP
 
@@ -87,6 +93,9 @@ fi
 
 ## installazione di certbot
 apt-get install -y python3-certbot-apache
+
+## riavvio di Apache
+service apache2 restart
 
 ## aggiorno composer
 composer update

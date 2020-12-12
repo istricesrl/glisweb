@@ -16,7 +16,3 @@
 
     // log
 	logWrite( "controller default/append per ${t}/${a}", 'controller' );
-
-
-
-?>

@@ -14,7 +14,7 @@
 	{% elseif obj.modal %}
 	<a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}">
 	{% elseif obj.ws %}
-	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}');">
+	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
 	{% endif %}
 	    <div class="media">
 		<div class="media-left">
