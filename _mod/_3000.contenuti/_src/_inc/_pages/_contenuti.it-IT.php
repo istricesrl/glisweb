@@ -60,12 +60,11 @@
 	    'etc'		=> array( 'tabs'	=> array(	'pagine.form',
 													'pagine.form.sem',
 													'pagine.form.testo',
-//													'pagine.form.contenuti',
+													'pagine.form.menu',
 													'pagine.form.immagini',
 													'pagine.form.video',
 													'pagine.form.audio',
 													'pagine.form.file',
-//													'pagine.form.menu',
 //													'pagine.form.macro',
 													'pagine.form.metadati',
 													'pagine.form.gruppi',
@@ -93,6 +92,18 @@
 	    'parent'		=> array( 'id'		=> 'pagine.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.testo.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+
+	// form pagine menu
+	$p['pagine.form.menu'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'menu' ),
+	    'h1'		=> array( $l		=> 'menu' ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.menu.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.menu.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);

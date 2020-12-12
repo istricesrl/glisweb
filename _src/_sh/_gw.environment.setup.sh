@@ -55,6 +55,7 @@ apt-get install -y php-yaml
 ## installazione di memcache
 apt-get install -y memcached
 apt-get install -y php-memcache
+apt-get install -y php-memcached
 
 ## installazione di redis
 apt-get install -y redis-server

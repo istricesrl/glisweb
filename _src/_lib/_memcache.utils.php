@@ -22,11 +22,11 @@
 
 	logWrite( 'richiesta pulizia cache da indice per ' . $k, 'speed' );
 
-	if( isset( $cf['cache']['index'][ $k ] ) && is_array( $cf['cache']['index'][ $k ] ) ) {
-	    foreach( $cf['cache']['index'][ $k ] as $t => $l ) {
+	if( isset( $cf['memcache']['index'][ $k ] ) && is_array( $cf['memcache']['index'][ $k ] ) ) {
+	    foreach( $cf['memcache']['index'][ $k ] as $t => $l ) {
 		logWrite( 'pulizia cache da indice per ' . $k . '/' . $t, 'speed' );
 		foreach( $l as $j => $v ) {
-		    unset( $cf['cache']['index'][ $k ][ $t ][ $j ] );
+		    unset( $cf['memcache']['index'][ $k ][ $t ][ $j ] );
 		    memcacheDelete( $cf['memcache']['connection'], $j );
 		    logWrite( 'pulizia cache da indice per ' . $k . '/' . $t . '/' . $j, 'speed' );
 		}

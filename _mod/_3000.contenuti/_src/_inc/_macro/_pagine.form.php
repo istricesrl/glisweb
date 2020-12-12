@@ -27,7 +27,7 @@
 
     // tendina tipologie pubblicazione
 	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
@@ -44,7 +44,7 @@
 
         // tendina genitori
 		$ct['etc']['select']['pagine'] = mysqlCachedIndexedQuery(
-            $cf['cache']['index'],
+            $cf['memcache']['index'],
             $cf['memcache']['connection'],
                 $cf['mysql']['connection'],
             'SELECT id, __label__ FROM pagine_view WHERE id_sito = ? AND pagine_path_check( pagine_view.id, ? ) = 0',

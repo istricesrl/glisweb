@@ -31,31 +31,43 @@
      * @todo documentare
      *
      */
-    function memcacheWrite( $conn, $key, $data, $ttl = MEMCACHE_DEFAULT_TTL, $seed = MEMCACHE_UNIQUE_SEED ) {
+    function memcacheWrite( $conn, $key, $data, $ttl = MEMCACHE_DEFAULT_TTL ) {
 
-	memcacheUniqueKey( $key );
+        memcacheUniqueKey( $key );
 
-	if( empty( $conn ) ) {
+        if( empty( $conn ) ) {
 
-		logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
+            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
 
-		return false;
+            return false;
 
-	} else {
+        } else {
 
-		$conn->setOption( Memcached::OPT_COMPRESSION, true );
+            $conn->setOption( Memcached::OPT_COMPRESSION, true );
 
-		$r = $conn->set( $key, $data, $ttl );
+            $r = $conn->set( $key, $data, $ttl );
 
-		if( $r == false ) {
-		    logWrite( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
-		} else {
-		    logWrite( 'scrittura effettuata, chiave: ' . $key, 'memcache', LOG_DEBUG );
-		}
+            if( $r == false ) {
+                logWrite( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
+            } else {
+                memcacheWrite( $conn, $key . '_AGE', time() );
+                logWrite( 'scrittura effettuata, chiave: ' . $key, 'memcache', LOG_DEBUG );
+            }
 
-		return $r;
+            return $r;
 
-	}
+        }
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function memcacheGetKeyAge( $conn, $key ) {
+
+        return memcacheRead( $conn, $key . '_AGE' );
 
     }
 

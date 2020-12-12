@@ -137,8 +137,10 @@
 
     // @todo documentare questa cosa delle favicon
 
-    // scrittura dell'indice della cache
-	memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['cache']['index'] );
+	// scrittura dell'indice della cache
+	// NOTA questa cosa viene fatta qui perché l'index potrebbe essere modificato dalle macro
+	memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
+	// memcacheWrite( $cf['memcache']['connection'], 'CACHE_REGISTRY', $cf['memcache']['registry'] );
 
     // timer
 	timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
@@ -304,7 +306,9 @@
     // renderizzo il template
 	if( isset( $ct['page']['template']['type'] ) ) {
 
-	    switch( $ct['page']['template']['type'] ) {
+    	echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_2EOL;
+
+		switch( $ct['page']['template']['type'] ) {
 
 		case 'twig':
 

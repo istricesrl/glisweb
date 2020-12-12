@@ -225,7 +225,7 @@
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {% if not vl %}{% set vl = default %}{% endif %}
-<input type="datetime-local" {% if not request[ table ].id or (subtable and not request[ table ][ subtable ][ counter ].id  ) %}value="{{'now'|date('Y-m-d\\TH:i' ) }}"{% endif %} class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
+<input type="datetime-local" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
 {% endmacro %}
 
 {% macro time( table, subtable, counter, field, placeholder, etc, request, default, type, required, class ) %}
@@ -239,7 +239,7 @@
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {% if not vl %}{% set vl = default %}{% endif %}
-<input type="time" {# if not request[ table ].id %}value="{{'now'|date('Y-m-d\\TH:i' ) }}"{% endif #} class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
+<input type="time" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
 {% endmacro %}
 
 {% macro datetimeRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class ) %}

@@ -138,4 +138,4 @@
 	}
 
     // collegamento all'array $ct
-	$ct['common']					= &$cf['common'];
+    $ct['common']					= &$cf['common'];

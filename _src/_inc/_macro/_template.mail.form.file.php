@@ -24,7 +24,7 @@
 
      // tendina ruolo file
 	$ct['etc']['select']['ruoli_file'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM ruoli_file_view  WHERE se_mail = 1'

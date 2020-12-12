@@ -57,6 +57,7 @@
     // costanti per i blocchi di dati da salvare in cache
 	define( 'CONTENTS_PAGES_DATA'			, 'CONTENTS_PAGES_DATA' );
 	define( 'CONTENTS_PAGES_UPDATED'		, 'CONTENTS_PAGES_UPDATED' );
+	define( 'CONTENTS_PAGES_CACHED'		, 'CONTENTS_PAGES_CACHED' );
 	define( 'CONTENTS_INDEX_KEY'			, 'CONTENTS_INDEX_KEY' );
 	define( 'CONTENTS_TREE_KEY'			, 'CONTENTS_TREE_KEY' );
 	define( 'CONTENTS_PAGES_KEY'			, 'CONTENTS_PAGES_KEY' );
