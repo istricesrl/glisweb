@@ -1,0 +1,1 @@
+ALTER TABLE `immagini` ADD FOREIGN KEY (`id_lingua`) REFERENCES `__test__`.`lingue`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;
