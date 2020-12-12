@@ -54,7 +54,7 @@
 
         switch( $t ) {
             case 'immagini':
-                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno FROM immagini ';
+                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
                 $tf = 'id_immagine';
                 $tk = 'images';
             break;
@@ -70,7 +70,7 @@
                 // TODO
             break;
             case 'file':
-                $tc = 'file.url, main_lingue.ietf AS main_ietf FROM file LEFT JOIN lingue AS main_lingue ON main_lingue.id = file.id_lingua ';
+                $tc = 'file.url FROM file ';
                 $tf = 'id_file';
                 $tk = 'files';
             break;
@@ -79,12 +79,13 @@
         $cnt = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT contenuti.title, contenuti.h1, contenuti.h2, contenuti.h3, '.
-            'contenuti.testo, contenuti.cappello, lingue.ietf, '.
+            'contenuti.testo, contenuti.cappello, lingue.ietf, main_lingue.ietf AS main_ietf, '.
             'metadati.nome AS meta_nome, metadati.testo AS meta_testo, meta_lingue.ietf AS meta_ietf, '.
             'ruoli_'.$t.'.nome AS ruolo, '.$t.'.id, '.$t.'.ordine, '.$t.'.nome, '.$t.'.path, '.$tc.
             'LEFT JOIN ruoli_'.$t.' ON ruoli_'.$t.'.id = '.$t.'.id_ruolo '.
             'LEFT JOIN contenuti ON contenuti.'.$tf.' = '.$t.'.id '.
             'LEFT JOIN lingue ON lingue.id = contenuti.id_lingua '.
+            'LEFT JOIN lingue AS main_lingue ON main_lingue.id = '.$t.'.id_lingua '.
             'LEFT JOIN metadati ON metadati.'.$tf.' = '.$t.'.id '.
             'LEFT JOIN lingue AS meta_lingue ON meta_lingue.id = metadati.id_lingua '.
             'WHERE '.$t.'.' . $f . ' = ? '.
@@ -99,8 +100,8 @@
             $im = array(
                 'id'                => $cn['id'],
                 'nome'              => $cn['nome'],
-                'path'              => $cn['path'],
-                'mimetype'          => findFileType( $cn['path'] ),
+                'path'              => ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ),
+                'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ) ),
                 'title'		        => array( $cn['ietf']	=> $cn['title'] ),
                 'h1'		        => array( $cn['ietf']	=> $cn['h1'] ),
                 'h2'		        => array( $cn['ietf']	=> $cn['h2'] ),
@@ -114,14 +115,12 @@
                 )
             );
 
-            if( ! empty( $cn['main_ietf'] ) ) {
-                $im = array( $cn['main_ietf'] => $im );
-            }
-
             switch( $t ) {
                 case 'immagini':
                     $im = array_replace_recursive( $im, array(
                         'taglio'            => $cn['taglio'],
+                        'path_alternativo'  => ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ),
+                        'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),
                         'orientamento'      => $cn['orientamento'],
                         'anno'              => $cn['anno']
                     ) );
