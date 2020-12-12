@@ -7,13 +7,13 @@
         "it-IT": "%nome it-IT del sito%"
       },
       "protocols": {
-        "%stage del sito%": "%protocollo del sito%"
+        "DEV": "%protocollo del sito%"
       },
       "hosts": {
-        "%stage del sito%": "%nome host del sito%"
+        "DEV": "%nome host del sito%"
       },
       "domains": {
-        "%stage del sito%": "%dominio del sito%"
+        "DEV": "%dominio del sito%"
       }
     }
   },
@@ -35,39 +35,18 @@
       }
     },
     "profiles": {
-      "%stage del sito%": {
+      "DEV": {
         "servers": [
           "default"
         ]
-      }
-    }
-  },
-  "memcache": {
-    "servers": {
-      "default": {
-        "address": "%indirizzo del server memcache%",
-        "port": "%porta del server memcache%"
-      }
-    },
-    "profiles": {
-      "%stage del sito%": {
-        "servers": [
-          "default"
-        ]
-      }
-    }
-  },
-  "twig": {
-    "profiles": {
-      "%stage del sito%": {
-        "debug": false,
-        "cache": "var/cache/twig/"
       }
     }
   },%opzioni%
   "mods": {
     "active": {
-      "array": [%moduli%]
+      "array": [
+        %moduli%
+      ]
     }
   }
 }

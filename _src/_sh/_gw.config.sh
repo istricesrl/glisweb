@@ -2,7 +2,7 @@
 
 ## funzione di recupero token
 placeholder() {
-    PLACEHOLDER="$( grep -m1 -Po '%[a-zA-Z0-9\-\., ]+%' $FILE )"
+    PLACEHOLDER="$( grep -m1 -Po '%[a-zA-Z0-9\-\., ]+%' $FILE | head -1 )"
 }
 
 ## pulizia schermo
@@ -19,7 +19,11 @@ cd $RL
 echo "lavoro su: $(pwd)"
 
 ## file di lavoro
-FILE="./src/config.json"
+if [ -z "$2" ]; then
+	FILE="./src/config.json"
+else
+	FILE="$2"
+fi
 
 ## placeholder
 PLACEHOLDER=""
@@ -34,25 +38,56 @@ if [ -f "$FILE" ]; then
 
 		if [ "$PLACEHOLDER" = "%moduli%" ]; then
 
+			VALUE=""
+
 			for mod in $( ls _mod ); do
 
-				read -p "vuoi attivare il modulo $mod?" SN
+				md=${mod#*_}
 
-				# TODO se l'utente dice sì, aggiungere il modulo a una variabile MODULI
-				# avendo cura di preporre una virgola se il modulo non è il primo aggiunto
+				read -p "vuoi attivare il modulo $md (s/n)? " SN
 
-				# TODO bisogna anche "pulire" il nome del modulo dal resto del path
+				if [ "$SN" == "s" ]; then
+					if [ -n "$VALUE" ]; then
+						VALUE="$VALUE,"
+					fi
+					VALUE="$VALUE\n        \"$md\""
+				fi
+
+			done
+
+			if [ -n "$VALUE" ]; then
+				VALUE="$VALUE\n      "
+			fi
+
+		elif [ "$PLACEHOLDER" = "%opzioni%" ]; then
+
+			for opt in $( ls _usr/_config/_json/_templates/_options/ ); do
+
+				opf=${opt#*.}
+				op=${opf%.*}
+
+				read -p "vuoi attivare l'opzione $op (s/n)? " SN
+
+				if [ "$SN" == "s" ]; then
+					VALUE="$VALUE\n$(cat _usr/_config/_json/_templates/_options/$opt),"
+				fi
 
 			done
 
 		else
 
-			read -p "${PLACEHOLDER//\%}: " VALUE
+			if [ "$PLACEHOLDER" = "%stage del sito%" -a -n "$STAGE" ]; then
+				VALUE=$STAGE
+			else
+				read -p "${PLACEHOLDER//\%}: " VALUE
+			fi
 
 			if [ "$PLACEHOLDER" = "%password di root%" ]; then
 				VALUE=$( echo -n $VALUE | md5sum | cut -c 1-32 )
 			elif [ "$PLACEHOLDER" = "%protocollo del sito%" ]; then
 				PROTOCOL=$VALUE
+			elif [ "$PLACEHOLDER" = "%stage del sito%" ]; then
+				STAGE=$VALUE
 			elif [ "$PLACEHOLDER" = "%nome host del sito%" ]; then
 				HOST=$VALUE
 			elif [ "$PLACEHOLDER" = "%dominio del sito%" ]; then
@@ -62,6 +97,7 @@ if [ -f "$FILE" ]; then
 		fi
 
 		perl -pi -e "s/$PLACEHOLDER/$VALUE/g" $FILE
+		# sed -i "s/$PLACEHOLDER/$VALUE/" $FILE
 
 		placeholder
 
@@ -72,20 +108,22 @@ if [ -f "$FILE" ]; then
     if [[ -n "$PROTOCOL" ]] && [[ -n "$HOST" ]] && [[ -n "$DOMAIN" ]]; then
 		./_src/_sh/_gw.crontab.install.sh install $PROTOCOL $HOST.$DOMAIN
     else
-		echo "non sono riuscito ad installare automaticamente il crontab, procedere manualmente"
+		echo "ATTENZIONE installare il crontab manualmente"
     fi
 
 elif [ -n "$1" ]; then
 
     mkdir -p ./src/
 
-    cp ./_usr/_config/_json/_templates/template.$1.json ./src/config.json
+    cp ./_usr/_config/_json/_templates/template.$1.json $FILE
 
-    ./_src/_sh/_gw.config.sh
+    ./_src/_sh/_gw.config.sh $1 $FILE
 
 else
 
-    echo "utilizzo: $( basename $0 ) template"
+    echo "utilizzo: $( basename $0 ) template [path/to/file.json]"
+	echo "es: $( basename $0 ) base"
+	echo "es: $( basename $0 ) base ./src/prova.json"
     echo "template disponibili:"
 
     for i in $( ls -d ./_usr/_config/_json/_templates/template.*.json ); do
