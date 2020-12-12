@@ -64,16 +64,71 @@
                 $cf['mysql']['connection'],
                 'SELECT macro FROM pagine_macro WHERE id_pagina = ?',
                 array(
-                    array( 's' => $pg['id'] )
+                    array( 's' => $cf['contents']['page']['id'] )
                 )
             );
 
-            // aggiungo le immagini
-            aggiungiImmagini(
-                $cf['contents']['page'],
-                'id_pagina',
-                $pg['id']
-            );
+        }
+
+        // aggiungo le immagini
+        aggiungiImmagini(
+            $cf['contents']['page'],
+            'id_pagina',
+            $cf['contents']['page']['id']
+        );
+
+        // timer
+        timerCheck( $cf['speed'], ' -> fine inserimento immagini' );
+
+        // aggiungo i video
+        aggiungiVideo(
+            $cf['contents']['page'],
+            'id_pagina',
+            $cf['contents']['page']['id']
+        );
+
+        // timer
+        timerCheck( $cf['speed'], ' -> fine inserimento video' );
+
+        // aggiungo i file
+        aggiungiFile(
+            $cf['contents']['page'],
+            'id_pagina',
+            $cf['contents']['page']['id']
+        );
+
+        // timer
+        timerCheck( $cf['speed'], ' -> fine inserimento file' );
+
+        // prelevo i contenuti principali delle sotto pagine dal database
+        $subCnt = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT pagine.id,contenuti.cappello,contenuti.abstract '.
+            'FROM pagine INNER JOIN contenuti ON contenuti.id_pagina = pagine.id '.
+            'WHERE pagine.id_genitore = ? AND id_lingua = ?',
+            array(
+                array( 's' => $cf['contents']['page']['id'] ),
+                array( 's' => $cf['localization']['language']['id'] )
+            )
+        );
+
+        // se sono presenti contenuti
+        if( ! empty( $subCnt ) ) {
+
+            // assegno i sotto contenuti
+            foreach( $subCnt as $sc ) {
+
+                // assegno i contenuti
+                foreach( array( 'abstract', 'cappello' ) as $k ) {
+                    if( empty( $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] ) ) {
+                        $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] =
+                            "{% import '_bin/_contents.html' as cnt %}\n\n".
+                            "{% import 'bin/default.html' as def %}\n\n".
+                            $sc[ $k ];
+                    }
+                }
+
+            }
 
         }
 
