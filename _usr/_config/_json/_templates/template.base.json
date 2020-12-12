@@ -1,0 +1,73 @@
+{
+  "sites": {
+    "1": {
+      "id": 1,
+      "__label__": "%etichetta del sito%",
+      "name": {
+        "it-IT": "%nome it-IT del sito%"
+      },
+      "protocols": {
+        "%stage del sito%": "%protocollo del sito%"
+      },
+      "hosts": {
+        "%stage del sito%": "%nome host del sito%"
+      },
+      "domains": {
+        "%stage del sito%": "%dominio del sito%"
+      }
+    }
+  },
+  "auth": {
+    "accounts": {
+      "root": {
+        "password": "%password di root%"
+      }
+    }
+  },
+  "mysql": {
+    "servers": {
+      "default": {
+        "address": "%indirizzo IP del serve MySQL%",
+        "port": "%porta del server MySQL%",
+        "username": "%nome utente del server MySQL%",
+        "password": "%password del server MySQL%",
+        "db": "%indirizzo del server MySQL%"
+      }
+    },
+    "profiles": {
+      "%stage del sito%": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  },
+  "memcache": {
+    "servers": {
+      "default": {
+        "address": "%indirizzo del server memcache%",
+        "port": "%porta del server memcache%"
+      }
+    },
+    "profiles": {
+      "%stage del sito%": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  },
+  "twig": {
+    "profiles": {
+      "%stage del sito%": {
+        "debug": false,
+        "cache": "var/cache/twig/"
+      }
+    }
+  },%opzioni%
+  "mods": {
+    "active": {
+      "array": [%moduli%]
+    }
+  }
+}

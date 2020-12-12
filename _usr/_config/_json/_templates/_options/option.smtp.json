@@ -1,0 +1,17 @@
+  "smtp": {
+    "servers": {
+      "default": {
+        "address": "%indirizzo del server SMTP%",
+        "port": "%porta del server SMTP%",
+        "username": "%username del server SMTP%",
+        "password": "%password del server SMTP%"
+      }
+    },
+    "profiles": {
+      "%stage del sito%": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  }
