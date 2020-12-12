@@ -39,8 +39,8 @@
 {% endmacro %}
 
 {% macro image( page, lang, site, role, num, set, pictureclass, imgclass ) %}
-{% import _self as cnt %}
-{{ cnt.picture( page.contents.images[ role ][ num ], lang, site, set, pictureclass, imgclass ) }}
+{% import _self as cms %}
+{{ cms.picture( page.contents.images[ role ][ num ], lang, site, set, pictureclass, imgclass ) }}
 {% endmacro %}
 
 {% macro video( page, lang, site, role, num ) %}
@@ -66,7 +66,7 @@ VIMEO
 
 {% macro cardSlider( page, lang, site, name, images, auto, set ) %}
 {# richiede https://kenwheeler.github.io/slick/ #}
-{% import _self as cnt %}
+{% import _self as cms %}
 <div class="slider responsive" id="{{ name }}">
     {% set i = 0 %}
     {% for img in page.contents.images.card %}
@@ -74,7 +74,7 @@ VIMEO
 	<div class="index-card d-flex align-items-center" data-card-index="{{ i }}">
 	    {% if images and set %}
 	    <div class="col-md-12 text-center">
-		{{ cnt.picture( img, lang, site, set ) }}
+		{{ cms.picture( img, lang, site, set ) }}
 	    </div>
 	    {% endif %}
 	    <div class="col-md-12 text-center">
@@ -88,11 +88,11 @@ VIMEO
     {% set i = i + 1 %}
     {% endfor %}
 </div>
-{{ cnt.slickSlider( name, auto ) }}
+{{ cms.slickSlider( name, auto ) }}
 {% endmacro %}
 
 {% macro subpageCardSlider( page, pages, lang, site, name, auto, set ) %}
-{% import _self as cnt %}
+{% import _self as cms %}
 {% set cards = [] %}
 {% for v in page.children.id %}
 {% if pages[ v ].metadati.ruolo == 'cardslider' %}
@@ -104,7 +104,7 @@ VIMEO
     {% for k,v in cards|sort( ( a,b ) => a.metadati.ordine <=> b.metadati.ordine and b.metadati.ordine != '' ) %}
     <div class="col-12 col-md-3">
 	<a href="{{ v.url[ lang ] }}" class="index-card d-flex h-100" data-card-index="{{ i }}">
-		{% if v.contents.images.card %}{{ cnt.picture( v.contents.images.card|first.path, lang, site, set ) }}{% endif %}
+		{% if v.contents.images.card %}{{ cms.picture( v.contents.images.card|first.path, lang, site, set ) }}{% endif %}
 		<div class="card-body">
 		    <h5 class="card-title">{{ v.h1[ lang ] }}</h5>
 		    <div class="card-text">{{ v.cappello[ lang ] }}</div>
@@ -114,7 +114,7 @@ VIMEO
     {% set i = i + 1 %}
     {% endfor %}
 </div>
-{{ cnt.slickSlider( name, auto ) }}
+{{ cms.slickSlider( name, auto ) }}
 {% endmacro %}
 
 {% macro slickSlider( id, auto ) %}
@@ -152,12 +152,12 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% endmacro %}
 
 {% macro cardRack( page, lang, site, name, set ) %}
-{% import _self as cnt %}
+{% import _self as cms %}
 <div class="row">
     {% for img in page.contents.images.card %}
     <div class="col-12 col-md-6">
 	<div class="card" style="">
-	    {{ cnt.picture( img, lang, site, set ) }}
+	    {{ cms.picture( img, lang, site, set ) }}
 	    <div class="col-12 d-flex justify-content-center centered">{{ img.h1[ lang ] }}</div>
 	    <div>
 		<p>{{ img.cappello[ lang ]|raw }}</p>
@@ -169,7 +169,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% endmacro %}
 
 {% macro jumbotron( page, lang, site, name, class, img ) %}
-{% import _self as cnt %}
+{% import _self as cms %}
 <div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); background-size: cover;">
     <div class="container">
 	<div class="row">
@@ -202,7 +202,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	    </div>
 	</div>
     </div>
-    {{ cnt.image( page, lang, site, 'jumbotron', 10, img ) }}
+    {{ cms.image( page, lang, site, 'jumbotron', 10, img ) }}
     <div class="jumbotron">
 	<div class="container">
 	    <div class="row">
@@ -232,7 +232,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% endmacro %}
 
 {% macro carousel( page, lang, site, name, interval, set ) %}
-{% import _self as cnt %}
+{% import _self as cms %}
 <div id="{{ name }}" class="carousel slide {{ name }}" data-ride="carousel" data-interval="{{ interval }}">
     {% if page.contents.images.carousel|length > 1 %}
     <ol class="carousel-indicators">
@@ -246,7 +246,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	{% for img in page.contents.images.carousel %}
 	<div class="carousel-item{% if i == 0 %} active{% endif %}">
 	    {% if img.metadati.link %}<a href="{{ img.metadati.link[ lang ] }}"{% if img.metadati.target %} target="{{ img.metadati.target }}"{% endif %}>{% endif %}
-	    {{ cnt.picture( img, lang, site, set ) }}
+	    {{ cms.picture( img, lang, site, set ) }}
 	    {% if img.h1 or img.h2 or img.cappello %}
 	    <div class="{% if img.metadati.captionClasses %}{{ img.metadati.captionClasses }}{% else %}carousel-caption{% endif %}">
 		{% if img.h1 %}<h1>{{ img.h1[ lang ]|raw }}</h1>{% endif %}

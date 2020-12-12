@@ -135,7 +135,7 @@
                 foreach( array( 'abstract', 'cappello' ) as $k ) {
                     if( empty( $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] ) ) {
                         $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] =
-                            "{% import '_bin/_contents.html' as cnt %}\n\n".
+                            "{% import '_bin/_default.html' as cms %}\n\n".
                             "{% import 'bin/default.html' as def %}\n\n".
                             $sc[ $k ];
                     }
