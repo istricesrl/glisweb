@@ -135,13 +135,14 @@
 		CONTROL_FULL => array( 'roots' )
 	    ),
 	    'mail_sent' => array(
-		CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' )
 	    ),
 	    'metadati' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 		'orari_contratti' => array(
-	  ),
+			CONTROL_FULL => array( 'roots' )
+	  	),
 	  'pubblicazione' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
