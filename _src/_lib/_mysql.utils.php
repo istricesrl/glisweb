@@ -30,9 +30,21 @@
 
     }
 
+    function aggiungiAudio( &$p, $f, $id, $r = null ) {
+
+        aggiungiDati( $p, $f, $id, 'audio', $r );
+
+    }
+
     function aggiungiFile( &$p, $f, $id, $r = null ) {
 
         aggiungiDati( $p, $f, $id, 'file', $r );
+
+    }
+
+    function aggiungiRecensioni( &$p, $f, $id, $r = null ) {
+
+        aggiungiDati( $p, $f, $id, 'recensioni', $r );
 
     }
 
@@ -50,6 +62,12 @@
                 $tc = 'video.id_tipologia_embed, video.codice_embed FROM video ';
                 $tf = 'id_video';
                 $tk = 'video';
+            break;
+            case 'audio':
+                // TODO
+            break;
+            case 'recensioni':
+                // TODO
             break;
             case 'file':
                 $tc = 'file.url, main_lingue.ietf AS main_ietf FROM file LEFT JOIN lingue AS main_lingue ON main_lingue.id = file.id_lingua ';

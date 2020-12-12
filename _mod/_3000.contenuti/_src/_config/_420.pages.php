@@ -100,6 +100,19 @@
         // timer
         timerCheck( $cf['speed'], ' -> fine inserimento file' );
 
+/* TODO
+
+        // aggiungo le recensioni
+        aggiungiRecensioni(
+            $cf['contents']['page'],
+            'id_pagina',
+            $cf['contents']['page']['id']
+        );
+
+        // timer
+        timerCheck( $cf['speed'], ' -> fine inserimento recensioni' );
+*/
+
         // prelevo i contenuti principali delle sotto pagine dal database
         $subCnt = mysqlQuery(
             $cf['mysql']['connection'],
