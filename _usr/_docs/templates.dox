@@ -315,6 +315,45 @@
     }
     \endcode
 
+    la libreria di default (_src/_html/_bin/_default.html)
+    ======================================================
+
+    la macro audio()
+    ----------------
+
+    la macro cardRack()
+    -------------------
+
+    la macro cardSlider()
+    ---------------------
+
+    la macro carousel()
+    -------------------
+
+    la macro gallery2colorbox()
+    ---------------------------
+
+    la macro image()
+    ----------------
+
+    la macro jumbotron()
+    --------------------
+
+    la macro picture()
+    ------------------
+
+    la macro slickSlider()
+    ----------------------
+
+    la macro sliderGallery2colorbox()
+    ---------------------------------
+
+    la macro subpageCardSlider()
+    ----------------------------
+
+    la macro video()
+    ----------------
+
     il template standard (_src/_templates/_athena/)
     ===============================================
     Il template standard Athena è di gran lunga il più importante del framework in quanto è solitamente utilizzato per tutte le
