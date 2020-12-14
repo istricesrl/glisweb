@@ -14,7 +14,8 @@
 	    'parent'		=> array( 'id'		=> 'dashboard.produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_task.view.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'task.view' ) ),
 	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'task' ),
 														'priority'	=> '100' ) )
 	);
