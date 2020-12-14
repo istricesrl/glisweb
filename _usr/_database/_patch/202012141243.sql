@@ -1,0 +1,1 @@
+ALTER TABLE `audio` ADD `id_notizia` INT NULL DEFAULT NULL AFTER `id_categoria_prodotti`, ADD `id_categoria_notizie` INT NULL DEFAULT NULL AFTER `id_notizia`;
