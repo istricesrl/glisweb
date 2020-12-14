@@ -340,6 +340,10 @@
 
     L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'], per ulteriori dettagli vedi _src/_config/_000.debug.php.
 
+    $cf['image']
+    ------------
+    Questa chiave contiene informazioni sui formati di immagine gestiti dal framework.
+
     $cf['localization']
     -------------------
     Questa chiave contiene informazioni sulle lingue attive nel framework e sulla sua localizzazione.
