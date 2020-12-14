@@ -29,6 +29,18 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'			=> array( 'tabs'	=> array(	'attivita.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'attivita.form',
+														'attivita.form.feedback' ) )
 	);
 
+	// gestione attivita - feedback
+	$p['attivita.form.feedback'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'feedback' ),
+	    'h1'			=> array( $l		=> 'feedback' ),
+	    'parent'		=> array( 'id'		=> 'attivita.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.feedback.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
+	);

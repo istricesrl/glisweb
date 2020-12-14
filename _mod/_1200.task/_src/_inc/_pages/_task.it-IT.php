@@ -17,7 +17,7 @@
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'task.view' ) ),
 	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'task' ),
-														'priority'	=> '100' ) )
+														'priority'	=> '090' ) )
 	);
 
 	// gestione task
