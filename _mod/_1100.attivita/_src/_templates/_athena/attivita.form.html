@@ -48,27 +48,30 @@
 
 		
 			<div class="form-group form-row">
-				<div class="col-6 col-md-2">
-				<span class="label-top">data</span>
-				{% if not session.__latest__[ table ].data %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data %}{% endif %}
-				{{ frm.date( table, '', '', 'data', '', '', request, default ) }}
+				<div class="col-6 col-md-auto">
+					<span class="label-top">data</span>
+					{% if not session.__latest__[ table ].data %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data %}{% endif %}
+					{{ frm.date( table, '', '', 'data', '', '', request, default ) }}
 				</div>
-				<div class="col-6 col-md-2">
-				<span class="label-top">tipologia</span>
-				{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
+				<div class="col-3 col-md-auto">
+					<span class="label-top">ora inizio</span>
+					{{ frm.time( table, '', '', 'ora_inizio', '', '', request) }} 
 				</div>
-				
-				<div class="col-3 col-md-1">
-				<span class="label-top">ore</span>
-				{{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '','0.5' ) }} 
+				<div class="col-3 col-md-auto">
+					<span class="label-top">ora fine</span>
+					{{ frm.time( table, '', '', 'ora_fine', '', '', request) }} 
 				</div>
 				<div class="col-12 col-md">
-				<span class="label-top">esecutore</span>
-				{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf ) }}
+					<span class="label-top">esecutore</span>
+					{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf ) }}
 				</div>
 			</div>
 
 			<div class="form-group form-row">
+				<div class="col-6 col-md-2">
+					<span class="label-top">tipologia</span>
+					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
+				</div>
 			<div class="col">
 				<span class="label-top">descrizione</span>
 				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
@@ -78,7 +81,7 @@
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">note</span>
-				{{ frm.textarea( table, '', '', 'testo', 'note (ad uso interno)', 10, request ) }}
+				{{ frm.textarea( table, '', '', 'testo', 'note (ad uso interno)', 1, request ) }}
 				</div>
 			</div>
 	
@@ -88,20 +91,16 @@
 			<legend>attribuzione</legend>
 
 			<div class="form-group form-row">
-				<div class="col-12">
+				<div class="col-12 col-md-6">
 				<span class="label-top">cliente</span>
 					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','','anagrafica', 'id_cliente' , page, pages, ietf ) }}
 				</div>
-			</div>
-			<!--
-				<div class="form-group form-row">
-					<div class="col-12">
+				<!--
+					<div class="col-12 col-md-4">
 					<span class="label-top">progetto</span>
 					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.form','','anagrafica', 'id_progetto', page, pages, ietf ) }}
-				</div>
 				</div>-->
-				<div class="form-group form-row">
-					<div class="col-12">
+					<div class="col-12 col-md-6">
 					<span class="label-top">task</span>
 					{{ frm.selectBox( table, '', '', 'id_task', 'task', etc.select.id_task, request, '', '','','','','task.form','','task', 'id_task', page, pages, ietf ) }}
 					</div>

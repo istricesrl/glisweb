@@ -48,14 +48,20 @@
 			<fieldset>
 			<legend>feedback del cliente</legend>
 				<div class="form-row">
-			<div class="col-6 col-md-4">
-			<span class="label-top">interesse</span>
-			{{ frm.select( table, '', '', 'id_tipologia_interesse', '', etc.select.id_interesse, request) }}
-			</div>
-			<div class="col-6 col-md-4 ">
-			<span class="label-top">soddisfazione</span>
-			{{ frm.select( table, '', '', 'id_tipologia_soddisfazione', '', etc.select.id_soddisfazione, request) }}
-			</div>
+					<div class="col-6 col-md-4">
+						<span class="label-top">interesse</span>
+						{{ frm.select( table, '', '', 'id_tipologia_interesse', '', etc.select.id_interesse, request) }}
+					</div>
+					<div class="col-6 col-md-4 ">
+						<span class="label-top">soddisfazione</span>
+						{{ frm.select( table, '', '', 'id_tipologia_soddisfazione', '', etc.select.id_soddisfazione, request) }}
+					</div>
+				</div>
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">note</span>
+					{{ frm.textarea( table, '', '', 'note_feedback', 'note', 1, request ) }}
+					</div>
 				</div>
 			</fieldset>
         
