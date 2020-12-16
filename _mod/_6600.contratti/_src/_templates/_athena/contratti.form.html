@@ -48,20 +48,53 @@
     
         <div class="form-group form-row">
             <div class="col-12 col-md-3">
-            <span class="label-top">tipologia</span>
-            {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_contratti, request ) }}
+                <span class="label-top">tipologia</span>
+                {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_contratti, request ) }}
             </div>
-            <div class="col-12 col-md-5">
-            <span class="label-top">anagrafica</span>
-            {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf ) }}
+            <div class="col-12 col-md-9">
+                <span class="label-top">anagrafica</span>
+                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf ) }}
             </div>
-            <div class="col-12 col-md-2">
-                <span class="label-top">data inizio</span>
+        </div>
+
+        <div class="form-group form-row">          
+            <div class="col-12 col-md-3">
+                <span class="label-top">data inizio contratto</span>
                 {{ frm.date( table, '', '', 'data_inizio', '', '', request, default ) }}
             </div>
-            <div class="col-12 col-md-2">
-                <span class="label-top ">data fine</span>
+            <div class="col-12 col-md-3">
+                <span class="label-top ">data fine contratto</span>
                 {{ frm.date( table,  '', '', 'data_fine', '', '', request, default ) }}
+            </div>
+            <div class="col-12 col-md-3">
+                <span class="label-top">data inizio rapporto</span>
+                {{ frm.date( table, '', '', 'data_inizio_rapporto', '', '', request, default ) }}
+            </div>
+            <div class="col-12 col-md-3">
+                <span class="label-top ">data fine rapporto</span>
+                {{ frm.date( table,  '', '', 'data_fine_rapporto', '', '', request, default ) }}
+            </div>
+        </div>
+
+        <div class="form-group form-row">
+            <div class="col-12 col-md-2">
+                <span class="label-top">Livello</span>
+                {{ frm.input( table, '', '', 'livello', 'livello', '', request ) }}
+            </div>
+            <div class="col-12 col-md-3">
+                <span class="label-top">Qualifica INPS 1</span>
+                
+            </div>
+            <div class="col-12 col-md-3">
+                <span class="label-top">Qualifica INPS 2</span>
+                
+            </div>
+            <div class="col-12 col-md-1">
+                <span class="label-top">% part-time</span>
+                {{ frm.input( table, '', '', 'percentuale_part_time', '', '', request ) }}
+            </div>
+            <div class="col-12 col-md-3">
+                <span class="label-top">Qualifica INPS 3</span>
             </div>
         </div>
 
