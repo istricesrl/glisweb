@@ -86,18 +86,12 @@
 	    'contenuti' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
-		'costi_contratti' => array(
-		CONTROL_FULL => array( 'roots' )
-		),
 #	    'cron' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
 #	    'date' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-		'contratti' => array(
-		CONTROL_FULL => array( 'roots' )
-		),
 	    'file' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
@@ -140,9 +134,6 @@
 	    'metadati' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
-		'orari_contratti' => array(
-			CONTROL_FULL => array( 'roots' )
-	  	),
 	  'pubblicazione' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
@@ -180,12 +171,6 @@
 #	    'tipologie_attivita' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-		'tipologie_contratti' => array(
-		CONTROL_FULL => array( 'roots' )
-		),
-		'tipologie_costi_contratti' => array(
-		CONTROL_FULL => array( 'roots' )
-		),
 #	    'tipologie_crm' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
