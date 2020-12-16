@@ -95,6 +95,10 @@
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
+		<div class="col-auto">
+			{% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia</span>{% endif %}
+			{{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_indirizzi, request ) }}
+		</div>
 	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">indirizzo</span>{% endif %}
 		{{ frm.selectBox( table, subtable, i, 'id_indirizzo', '', etc.select.indirizzi, request, '', '', '', '', 'font-awesome' ) }}
