@@ -14,10 +14,23 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.view.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'contratti.view' ) ),
+	    'etc'		=> array( 'tabs'	=> array( 'contratti.view', 'contratti.archivio.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contratti' ),
 									'priority'	=> '200' ) )
+	);
+
+	// vista archivio contratti
+	$p['contratti.archivio.view'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'archivio' ),
+	    'h1'		=> array( $l		=> 'archivio' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_contratti.archivio.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['contratti.view']['etc']['tabs'] )
 	);
 
     // gestione contratti
