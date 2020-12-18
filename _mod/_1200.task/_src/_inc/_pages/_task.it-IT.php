@@ -11,7 +11,7 @@
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'task' ),
 	    'h1'			=> array( $l		=> 'task' ),
-	    'parent'		=> array( 'id'		=> 'dashboard.produzione' ),
+	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_task.view.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
