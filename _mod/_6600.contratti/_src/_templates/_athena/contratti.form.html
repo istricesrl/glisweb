@@ -82,19 +82,20 @@
                 {{ frm.input( table, '', '', 'livello', 'livello', '', request ) }}
             </div>
             <div class="col-12 col-md-3">
-                <span class="label-top">Qualifica INPS 1</span>
-                
+                <span class="label-top">Qualifica INPS</span>
+                {{ frm.select( table, '', '', 'id_tipologia_qualifica', '', etc.select.tipologie_qualifiche_inps, request ) }}
             </div>
             <div class="col-12 col-md-3">
-                <span class="label-top">Qualifica INPS 2</span>
-                
+                <span class="label-top">Orario INPS</span>
+                {{ frm.select( table, '', '', 'id_tipologia_orario', '', etc.select.tipologie_orari_inps, request ) }}
             </div>
             <div class="col-12 col-md-1">
                 <span class="label-top">% part-time</span>
                 {{ frm.input( table, '', '', 'percentuale_part_time', '', '', request ) }}
             </div>
             <div class="col-12 col-md-3">
-                <span class="label-top">Qualifica INPS 3</span>
+                <span class="label-top">Durata INPS</span>
+                {{ frm.select( table, '', '', 'id_tipologia_durata', '', etc.select.tipologie_durate_inps, request ) }}
             </div>
         </div>
 
