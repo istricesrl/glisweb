@@ -6,32 +6,19 @@
     // modulo di questo file
 	$m = DIR_MOD . '_3400.popup/';
 
-    // dashboard popup
-	$p['popup'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'popup' ),
-	    'h1'		=> array( $l		=> 'popup' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'popup.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_popup.php' ),
-	    'parent'		=> array( 'id'		=> 'contenuti' ),
-		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'popup' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'popup' ),
-									'priority'	=> '300' ) )
-	);
-
-
 	// vista popup
 	$p['popup.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'popup' ),
 	    'h1'		=> array( $l		=> 'popup' ),
-	    'parent'		=> array( 'id'		=> 'popup' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_popup.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'popup.view',
-									'popup.tools' ) )
+									'popup.tools' ) ),
+									'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'popup' ),
+									'priority'	=> '300' ) )
 	    );
 
     // gestione popup
