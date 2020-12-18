@@ -1269,6 +1269,19 @@ INSERT INTO `tipologie_anagrafica` (`id`, `id_genitore`, `nome`) VALUES
 -- NOTE
 -- questa tabella non ha dati standard
 
+-- tipologie_contratti
+-- tipologia: tabella assistita
+INSERT IGNORE INTO `tipologie_contratti` (`id`, `nome`) VALUES
+(1, 'dipendente'),
+(2, 'collaboratore');
+
+-- tipologie_costi_contratti
+-- tipologia: tabella assistita
+INSERT IGNORE INTO `tipologie_costi_contratti` (`id`, `nome`) VALUES
+(1, 'ordinario'),
+(2, 'straordinario'),
+(3, 'notturno');
+
 -- tipologie_date
 -- tipologia: tabella gestita
 -- NOTE

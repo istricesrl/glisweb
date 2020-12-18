@@ -1,0 +1,1 @@
+ALTER TABLE `anagrafica_view_static` ADD `matricola` CHAR(64) NULL DEFAULT NULL AFTER `codice` ;
