@@ -21,6 +21,14 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view'
     );
+
+    // tendina agenzia
+	$ct['etc']['select']['agenzia'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_view WHERE se_azienda_gestita = 1'
+    );
     
     // tendina per le tipologie di contratto
     $ct['etc']['select']['tipologie_contratti'] = mysqlCachedIndexedQuery(

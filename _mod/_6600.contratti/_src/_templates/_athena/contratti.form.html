@@ -47,11 +47,15 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-2">
                 <span class="label-top">tipologia</span>
                 {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_contratti, request ) }}
             </div>
-            <div class="col-12 col-md-9">
+            <div class="col-12 col-md-5">
+                <span class="label-top">agenzia</span>
+                {{ frm.selectBox( table, '', '', 'id_agenzia', '', etc.select.agenzia, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_agenzia', page, pages, ietf ) }}
+            </div>
+            <div class="col-12 col-md-5">
                 <span class="label-top">anagrafica</span>
                 {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf ) }}
             </div>
