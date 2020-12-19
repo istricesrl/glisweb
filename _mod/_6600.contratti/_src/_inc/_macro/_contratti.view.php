@@ -28,6 +28,16 @@
 	    '__label__' => 'text-left no-wrap'
 	);
 
+    // inclusione filtri speciali
+	$ct['etc']['include']['filters'] = 'inc/contratti.view.filters.html';
+
+    // tendina tipologia
+	$ct['etc']['select']['tipologie_contratti'] = mysqlCachedQuery(
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_contratti_view'
+    );
+    
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
