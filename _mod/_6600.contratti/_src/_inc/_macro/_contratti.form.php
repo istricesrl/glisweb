@@ -14,12 +14,12 @@
     // tabella gestita
     $ct['form']['table'] = 'contratti';
 
-    // tendina anagrafica
+     // tendina anagrafica
 	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view'
+	    'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 OR se_dipendente = 1 OR se_interinale = 1'
     );
 
     // tendina agenzia
@@ -27,7 +27,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view WHERE se_azienda_gestita = 1'
+	    'SELECT id, __label__ FROM anagrafica_view WHERE se_agenzia_interinale = 1'
     );
     
     // tendina per le tipologie di contratto
