@@ -1,61 +1,99 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
 {% block main %}
 
-{# DEFINIZIONI #}
-{% set table = form.table %}
-{% set ietf = localization.language.ietf %}
-
-{# ACCOUNT #}
-{% if session.account.id %}
-    {% set account = session.account.id %}
-{% else %}
-    {% set account = '__null__' %}
-{% endif %}
-
-{# TIPO DI METODO E ATTIVITA' SVOLTA #}
-{% if request[ table ].id %}
-    {% set method = 'update' %}
-    {% set activity = 'aggiornamento' %}
-    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
-{% else %}
-    {% set method = 'post' %}
-    {% set activity = 'inserimento' %}
-    {% set legend = 'inserimento nuovo oggetto' %}
-{% endif %}
-
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
-	    {# CAMPI HIDDEN DI BASE #}
-	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
-	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+    <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+        <div class="form-row view-filters d-print-none">
+            <div class="col-12 col-md-auto">
+            <span class="label-top">mese</span>
+            <select name="__view__[{{ view.id }}][__filters__][mese][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+            {% for idmese, nomemese in etc.select.mesi %}
+                <option value="{{ idmese }}" {% if request.__view__[ view.id ].__filters__.mese.EQ == idmese %}selected{% endif %}>{{ nomemese }}</option>
+            {% endfor %}
+            </select>
+            </div>
 
-        {# MODULO PRINCIPALE #}
-        <fieldset>
+            <div class="col-12 col-md-auto">
+                <span class="label-top">anno</span>
+                <select name="__view__[{{ view.id }}][__filters__][anno][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+                {% for idanno, nomeanno in etc.select.anni %}
+                    <option value="{{ idanno }}" {% if request.__view__[ view.id ].__filters__.anno.EQ == idanno %}selected{% endif %}>{{ nomeanno }}</option>
+                {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-12 col-md-auto">
+                <span class="label-top">operatore</span>
+                <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+                    <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>&nbsp;</option>
+                {% for operatore  in etc.select.operatori %}
+                    <option value="{{ operatore.id }}" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
+                {% endfor %}
+                </select>
+            </div>
             
-        </fieldset>
+        </div>
 
-
-	
-		   
-	    {# BOTTONI E COMANDI DEL MODULO #}
+        <div class="form-row">
+            <div class="col-md-12 text-center table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>data</th>
+                            {% for t in etc.tipologie_attivita %}
+                            <th>{{ t.__label__ }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k,v in etc.ore %}
+                        <tr>
+                            <td>{{ v.data }}</td>
+                            {% for t in etc.tipologie_attivita %}
+                            {% if v.tipologie[ t.id ] %}
+                            <td onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}','_self');">
+                            {{ v.tipologie[ t.id ] }}
+                            {% else %}
+                            <td>
+                                <input type="number" step="0.5" name="__cartellini__[{{ k }}_{{ t.id }}]">
+                            {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+        {# BOTTONI E COMANDI DEL MODULO #}
+        {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
 	    <fieldset class="form-controls mt-auto">
-			{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
-
-	</form>
+            {# def.controls( page, pages, ietf, session, table, request ) #}
+            <div class="row no-gutters d-print-none">
+                <div class="col-auto col-md-5">
+	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open(&quot;&quot;,&quot;_self&quot;)" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
+                </div>
+                <div class="col col-md-2 text-center"></div>
+                <div class="col-auto col-md-5 text-right">
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">SALVA CARTELLINO</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        {% endif %}
+    
+    </form>
     </div>
 </section>
 
