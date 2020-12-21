@@ -40,7 +40,7 @@
 	    'h1'			=> array( $l		=> 'feedback' ),
 	    'parent'		=> array( 'id'		=> 'attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.feedback.html' ),
-	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.feedback.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
