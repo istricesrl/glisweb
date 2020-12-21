@@ -860,5 +860,5 @@
      *
      */
     function array2file( $f, $a ) {
-	return writeToFile( trim( implode( PHP_EOL, $a ) ), $f );
+	return writeToFile( trim( implode( PHP_EOL, str_replace( PHP_EOL, NULL, $a ) ) ), $f );
     }

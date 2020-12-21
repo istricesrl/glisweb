@@ -93,7 +93,7 @@
 		),
 	    'contenuti' => array(
 		CONTROL_FULL => array( 'roots' )
-	    ),
+		),
 #	    'cron' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -137,12 +137,12 @@
 		CONTROL_FULL => array( 'roots' )
 	    ),
 	    'mail_sent' => array(
-		CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' )
 	    ),
 	    'metadati' => array(
 		CONTROL_FULL => array( 'roots' )
-	    ),
-	    'pubblicazione' => array(
+		),
+	  'pubblicazione' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 #	    'prezzi' => array(
@@ -177,6 +177,9 @@
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
 #	    'tipologie_attivita' => array(
+#		CONTROL_FULL => array( 'roots' )
+#	    ),
+#	    'tipologie_crm' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
 	    'tipologie_crm' => array(

@@ -16,7 +16,7 @@
 
     // tendina tipologie pubblicazioni
 	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
@@ -24,7 +24,7 @@
 
     // tendina tipologie popup
 	$ct['etc']['select']['tipologie_popup'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_popup_view'

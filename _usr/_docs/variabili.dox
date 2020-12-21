@@ -340,6 +340,10 @@
 
     L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'], per ulteriori dettagli vedi _src/_config/_000.debug.php.
 
+    $cf['image']
+    ------------
+    Questa chiave contiene informazioni sui formati di immagine gestiti dal framework.
+
     $cf['localization']
     -------------------
     Questa chiave contiene informazioni sulle lingue attive nel framework e sulla sua localizzazione.
@@ -471,6 +475,7 @@
     ----------------------------------|---------------------------------------------------------------------------------------
     memcache.connection               | la connessione corrente a Memcache (scorciatoia per memcache.connections, vedi _src/_config/_045.cache.php)
     memcache.connections              | l'array delle connessioni a Memcache attive
+    memcache.index                    | l'indice delle chiavi di memcache organizzate per entità
     memcache.profile                  | il profilo Memcache corrente (scorciatoia per memcache.profiles.<site.status>)
     memcache.profiles                 | l'array dei profili memcache disponibili
     memcache.profiles.<s>             | il profilo memcache per lo status <s>
@@ -956,6 +961,65 @@
 
     L'array $cf['sites'] viene integrato da $cx['sites'] ed è linkato a $ct['sites'], per ulteriori dettagli vedi
     _src/_config/_010.site.php.
+
+    $cf['slack']
+    -----------
+    Questo array contiene la configurazione per l'integrazione con Slack.
+
+    chiave                                | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    slack.profile                         | il profilo di Slack corrente (è una scorciatoia per slack.profiles.<site.status>)
+    slack.profiles                        | i profili di Slack disponibili
+    slack.profiles.<s>                    | dettagli del profilo di Slack per lo status <s>
+    slack.profiles.<s>.webhooks           | webhook di Slack per lo status <s>
+    slack.profiles.<s>.webhooks.<w>       | dettagli del webhook <w> per il profilo dello status <s>
+    slack.profiles.<s>.webhooks.<w>.sa    | chiave A per il webhook <w> per il profilo dello status <s>
+    slack.profiles.<s>.webhooks.<w>.sb    | chiave B per il webhook <w> per il profilo dello status <s>
+    slack.profiles.<s>.webhooks.<w>.sc    | chiave C per il webhook <w> per il profilo dello status <s>
+
+    Vediamo un esempio di configurazione per l'intero deploy:
+
+    \code{.json}
+    "slack": {
+      "profiles": {
+        "DEV": {
+          "webhooks": {
+            "default": {
+              "sa": "",
+              "sb": "",
+              "sc": ""
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    Slack può essere configurato anche per specifico sito:
+
+    \code{.json}
+    "sites": {
+      "1": {
+        "id": 1,
+        "slack": {
+          "profiles": {
+            "DEV": {
+              "default-sito": {
+                "": {
+                  "sa": "",
+                  "sb": "",
+                  "sc": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['slack'] viene integrato da $cx['slack'] e da $cf['site']['slack'] ed è linkato a $ct['slack'], per ulteriori dettagli vedi
+    _src/_config/_550.slack.php.
 
     $cf['smtp']
     -----------

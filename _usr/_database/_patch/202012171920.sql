@@ -1,0 +1,1 @@
+ALTER TABLE `popup` ADD `template` CHAR(255) NULL DEFAULT NULL AFTER `n_secondi`;

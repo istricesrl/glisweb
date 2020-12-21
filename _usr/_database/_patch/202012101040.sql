@@ -1,0 +1,1 @@
+ALTER TABLE `progetti` ADD `id_indirizzo` INT NULL DEFAULT NULL AFTER `id_cliente`, ADD INDEX (`id_indirizzo`) ;

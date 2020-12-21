@@ -83,22 +83,24 @@
      */
 
     // livello di errori dei log
-	$cf['debug'][ TESTING ]['*']['log']['lvl']		= LOG_NOTICE;
+	$cf['debug'][ DEVELOPEMENT ]['*']['log']['lvl']		= LOG_DEBUG;
 
     // frequenza di rotazione dei log
-	$cf['debug'][ TESTING ]['*']['log']['rotation']		= 'Ym';
+	$cf['debug'][ DEVELOPEMENT ]['*']['log']['rotation']		= 'Ym';
 
     // livello di PHP error_reporting()
-	$cf['debug'][ TESTING ]['*']['report']['lvl']		= E_ALL;
+	$cf['debug'][ DEVELOPEMENT ]['*']['report']['lvl']		= E_ALL;
 
     // destinazione dei log
-	$cf['debug'][ TESTING ]['*']['target']['*']		= array( LOG_TO_FILE => true );
+	$cf['debug'][ DEVELOPEMENT ]['*']['target']['*']		= array( LOG_TO_FILE => true );
 
-    // impostazione di base per DEVELOPEMENT
-	$cf['debug'][ DEVELOPEMENT ]				= $cf['debug'][ TESTING ];
+    // impostazioni aggiuntive per TESTING
+	$cf['debug'][ TESTING ]				= $cf['debug'][ DEVELOPEMENT ];
+	$cf['debug'][ TESTING ]['*']['log']['lvl']		= LOG_NOTICE;
 
-    // impostazione di base per PRODUCTION
-	$cf['debug'][ PRODUCTION ]				= $cf['debug'][ TESTING ];
+    // impostazioni aggiuntive per PRODUCTION
+	$cf['debug'][ PRODUCTION ]				= $cf['debug'][ DEVELOPEMENT ];
+	$cf['debug'][ PRODUCTION ]['*']['log']['lvl']		= LOG_ERR;
 
     // debug utilizzo memoria
 	$cf['debug']['mem']					= array();

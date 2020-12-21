@@ -59,6 +59,7 @@
 									'anagrafica.form.amministrazione',
 //									'anagrafica.form.collaboratori',
 									'anagrafica.form.cliente',
+									'anagrafica.form.contratti',
 									'anagrafica.form.fornitore',
 									'anagrafica.form.collaboratore',
 									'anagrafica.form.dipendente',
@@ -106,6 +107,18 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.cliente.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.cliente.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica contratti
+	$p['anagrafica.form.contratti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'elenco contratti' ),
+	    'h1'		=> array( $l		=> 'contratti' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.contratti.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.contratti.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);

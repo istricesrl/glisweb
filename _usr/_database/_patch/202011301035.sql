@@ -1,11 +1,13 @@
-DROP TABLE IF EXISTS `task_view`;
 CREATE OR REPLACE VIEW task_view AS SELECT
     task.id,
     from_unixtime( task.timestamp_apertura, '%Y-%m-%d %H:%i' ) AS data_ora_apertura,
+    from_unixtime( task.timestamp_pianificazione, '%Y-%m-%d %H:%i' ) AS data_ora_pianificazione,
     coalesce(
 	anagrafica_cliente.soprannome,
 	anagrafica_cliente.denominazione,
-	concat( anagrafica_cliente.cognome, ' ', anagrafica_cliente.nome ), ''
+	concat_ws(' ', coalesce(anagrafica_cliente.cognome, ''),
+	coalesce(anagrafica_cliente.nome, '') ),
+	''
     ) AS cliente,
     coalesce(
 	task.id_cliente,
@@ -16,11 +18,13 @@ CREATE OR REPLACE VIEW task_view AS SELECT
     tipologie_task.nome AS tipologia,
     priorita.nome AS priorita,
     task.nome,
+    task.id_luogo,
     task.id_priorita,
     task.ore_previste,
     task.id_progetto,
     task.anno_previsto,
     task.settimana_prevista,
+    task.timestamp_pianificazione,
     concat( anno_previsto, '/', lpad( settimana_prevista, 2, '0' ) ) AS pianificazione,
     coalesce( sum( attivita.ore ), 0 ) AS ore_lavorate,
     greatest( ( task.ore_previste - coalesce( sum( attivita.ore ), 0 ) ), 0 ) AS ore_residue,
@@ -48,29 +52,15 @@ CREATE OR REPLACE VIEW task_view AS SELECT
 	task.id_progetto,
 	task.nome
     ) AS __label__
-FROM
-    task
-LEFT JOIN anagrafica
-    ON anagrafica.id = task.id_anagrafica
-LEFT JOIN anagrafica AS anagrafica_cliente
-    ON anagrafica_cliente.id = task.id_cliente
-LEFT JOIN anagrafica AS anagrafica_responsabile
-    ON anagrafica_responsabile.id = task.id_responsabile
-LEFT JOIN attivita
-    ON attivita.id_task = task.id
-LEFT JOIN progetti
-    ON progetti.id = task.id_progetto
-LEFT JOIN priorita
-    ON priorita.id = task.id_priorita
-LEFT JOIN tipologie_task
-    ON tipologie_task.id = task.id_tipologia
-LEFT JOIN tipologie_crm
-    ON tipologie_crm.id = anagrafica_cliente.id_tipologia_crm
-GROUP BY
-    task.id
-ORDER BY
-    pianificazione ASC,
-    priorita.ordine DESC,
-    tipologie_crm.ordine ASC,
-    task.timestamp_apertura ASC
+FROM task
+LEFT JOIN anagrafica ON anagrafica.id = task.id_anagrafica
+LEFT JOIN anagrafica AS anagrafica_cliente ON anagrafica_cliente.id = task.id_cliente
+LEFT JOIN anagrafica AS anagrafica_responsabile ON anagrafica_responsabile.id = task.id_responsabile
+LEFT JOIN attivita ON attivita.id_task = task.id
+LEFT JOIN progetti ON progetti.id = task.id_progetto
+LEFT JOIN priorita ON priorita.id = task.id_priorita
+LEFT JOIN tipologie_task ON tipologie_task.id = task.id_tipologia
+LEFT JOIN tipologie_crm	ON tipologie_crm.id = anagrafica_cliente.id_tipologia_crm
+GROUP BY task.id
+ORDER BY pianificazione ASC, priorita.ordine DESC, tipologie_crm.ordine ASC, task.timestamp_apertura ASC
 ;

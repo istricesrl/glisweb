@@ -3,7 +3,9 @@
     "active": {
       "array": [
         "3000.contenuti",
-        "3100.notizie"
+        "3400.popup",
+        "4000.catalogo",
+        "6500.casse"
       ]
     }
   }

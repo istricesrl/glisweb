@@ -2,11 +2,11 @@
 
     /* tool per l'analisi del funzionamento del framework */
 
-    // header
-	header( 'Content-type: text/plain' );
-
     // inclusione del framework
 	require '../../_config.php';
+
+    // header
+	header( 'Content-type: text/plain' );
 
     // output
 	echo 'STATUS DEL FRAMEWORK' . PHP_EOL . PHP_EOL;

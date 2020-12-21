@@ -161,8 +161,8 @@
 //print_r( $d['ct'] );
 
 		    // avvio di Twig
-			$twig = new Twig_Environment( new Twig_Loader_Array( $t[ $l ] ) );
-			$from = new Twig_Environment( new Twig_Loader_Array( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) );
+			$twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( $t[ $l ] ) ) );
+			$from = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) ) );
 #			$to = new Twig_Environment( new Twig_Loader_Array( array( 'nome' => array_key_first( $t[ $l ]['to'] ), 'mail' => reset( $t[ $l ]['to'] ) ) ) );
 
 		    // variabili da passare a queueMail()
@@ -183,7 +183,7 @@
 			if( isset( $to ) ){
 			    foreach( $to as $k => $v ) {
 				$tm = array( 'nome' => $k, 'mail' => $v );
-				$tw = new Twig_Environment( new Twig_Loader_Array( $tm ) );
+				$tw = new \Twig\Environment( new \Twig\Loader\ArrayLoader( $tm ) );
 				$destinatari[ $tw->render( 'nome', $d ) ] = $tw->render( 'mail', $d );
 			    }
 			}

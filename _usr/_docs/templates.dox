@@ -178,7 +178,7 @@
     precedenti.
 
     \code{.html}
-    {% import '_contents.html' as cnt %}
+    {% import '_contents.html' as cms %}
 
     {% extends "ext/main.html" %}
 
@@ -202,7 +202,7 @@
 
     libreria                          | codice per l'inclusione                      | descrizione
     ----------------------------------|----------------------------------------------|------------------------------------------------------
-    _src/_html/_bin/_contents.html    | {% import '_bin/_contents.html' as cnt %}    | contiene macro per renderizzare i contenuti delle pagine web
+    _src/_html/_bin/_default.html    | {% import '_bin/_default.html' as cms %}    | contiene macro per renderizzare i contenuti delle pagine web
     _src/_html/_bin/_form.html        | {% import '_bin/_form.html' as frm %}        | contiene macro per creare gli elementi dei form
     _src/_html/_bin/_navigation.html  | {% import '_bin/_navigation.html' as frm %}  | contiene macro per creare gli elementi di navigazione delle pagine
 
@@ -314,6 +314,45 @@
       }
     }
     \endcode
+
+    la libreria di default (_src/_html/_bin/_default.html)
+    ======================================================
+
+    la macro audio()
+    ----------------
+
+    la macro cardRack()
+    -------------------
+
+    la macro cardSlider()
+    ---------------------
+
+    la macro carousel()
+    -------------------
+
+    la macro gallery2colorbox()
+    ---------------------------
+
+    la macro image()
+    ----------------
+
+    la macro jumbotron()
+    --------------------
+
+    la macro picture()
+    ------------------
+
+    la macro slickSlider()
+    ----------------------
+
+    la macro sliderGallery2colorbox()
+    ---------------------------------
+
+    la macro subpageCardSlider()
+    ----------------------------
+
+    la macro video()
+    ----------------
 
     il template standard (_src/_templates/_athena/)
     ===============================================

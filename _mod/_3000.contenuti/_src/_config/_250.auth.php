@@ -22,9 +22,9 @@
 		'pagine' => array(
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
-//		),
-//		'pagine_menu' => array(
-//		    CONTROL_FULL => array( 'roots' )
+		),
+		'menu' => array(
+		    CONTROL_FULL => array( 'roots' )
 //		),
 //		'pagine_macro' => array(
 //		    CONTROL_FULL => array( 'roots' )

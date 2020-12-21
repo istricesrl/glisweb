@@ -154,7 +154,11 @@
 								foreach( $cf['contents']['index'][ LINGUA_CORRENTE ][ $step ] as $candidate ) {
 
 								    // se la pagina attualmente controllata ha lo stesso id genitore della pagina step, allora e' lei
-									if( $cf['contents']['pages'][ $candidate ]['parent']['id'] == $parent ) {
+									if(
+									    $cf['contents']['pages'][ $candidate ]['parent']['id'] == $parent 
+									    ||
+									    empty( $cf['contents']['pages'][ $candidate ]['parent']['title'][ $lingua ] )
+									) {
 
 									    // la pagina trovata diventa la nuova pagina corrente
 										$page = $candidate;

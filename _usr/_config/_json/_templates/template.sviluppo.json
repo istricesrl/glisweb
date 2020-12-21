@@ -6,17 +6,14 @@
       "name": {
         "it-IT": "%nome it-IT del sito%"
       },
-      "homes": {
-        "TEST": "dashboard"
-      },
       "protocols": {
-        "TEST": "%protocollo del sito, http o https%"
+        "DEV": "%protocollo del sito%"
       },
       "hosts": {
-        "TEST": "%nome host del sito, ad es. bogon in bogon.nomedominio.bogus%"
+        "DEV": "%nome host del sito%"
       },
       "domains": {
-        "TEST": "%dominio del sito, ad es. nomedominio.bogus in bogon.nomedominio.bogus%"
+        "DEV": "%dominio del sito%"
       }
     }
   },
@@ -34,15 +31,22 @@
         "port": "%porta del server MySQL%",
         "username": "%nome utente del server MySQL%",
         "password": "%password del server MySQL%",
-        "db": "%nome del server MySQL%"
+        "db": "%indirizzo del server MySQL%"
       }
     },
     "profiles": {
-      "TEST": {
+      "DEV": {
         "servers": [
           "default"
         ]
       }
+    }
+  },%opzioni%
+  "mods": {
+    "active": {
+      "array": [
+        %moduli%
+      ]
     }
   }
 }

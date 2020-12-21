@@ -266,7 +266,7 @@
 	    array_walk_recursive(
 		$a,
 		function( &$v, $k ) {
-		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ), true ) ) {
+		    if( in_array( $k, array( 'password', 'private', 'key', 'secret', 'sa', 'sb', 'sc' ), true ) ) {
 			$v = '***';
 		    }
 		}
@@ -482,12 +482,16 @@
 
     // inclusione dei files di libreria
 	foreach( $arrayLibrerie as $libreria ) {
-	    $locale = path2custom( $libreria );
+        $locale = path2custom( $libreria );
+        $aggiuntiva = str_replace( '.php', '.add.php', $locale );
 	    if( file_exists( $locale ) ) {
 		require $locale;
 	    } else {
 		require $libreria;
-	    }
+        }
+        if( file_exists( $aggiuntiva ) ) {
+        require $aggiuntiva;
+        }
 	}
 
     // debug
