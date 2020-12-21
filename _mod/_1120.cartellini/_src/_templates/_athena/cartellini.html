@@ -38,12 +38,12 @@
                 {% endfor %}
                 </select>
             </div>
-            
+
         </div>
 
         <div class="form-row">
             <div class="col-md-12 text-center table-responsive">
-                <table>
+                <table class="view-table cartellini">
                     <thead>
                         <tr>
                             <th>data</th>
@@ -58,11 +58,11 @@
                             <td>{{ v.data }}</td>
                             {% for t in etc.tipologie_attivita %}
                             {% if v.tipologie[ t.id ] %}
-                            <!-- <td onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}','_self');"> -->
-                            <td><a href="{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}">    
+                             <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}','_self');"> 
+                        <!--    <td><a href="{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}">    -->
                             <div>{{ v.tipologie[ t.id ] }}</div></a>
                             {% else %}
-                            <td><input type="number" step="0.5" name="__cartellini__[{{ k }}_{{ t.id }}]">
+                            <td><input type="number" class="form-control form-control-sm" step="0.5" name="__cartellini__[{{ k }}_{{ t.id }}]">
                             {% endif %}
                             </td>
                             {% endfor %}
@@ -76,7 +76,6 @@
         {# BOTTONI E COMANDI DEL MODULO #}
         {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
 	    <fieldset class="form-controls mt-auto">
-            {# def.controls( page, pages, ietf, session, table, request ) #}
             <div class="row no-gutters d-print-none">
                 <div class="col-auto col-md-5">
 	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open(&quot;&quot;,&quot;_self&quot;)" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
