@@ -820,3 +820,16 @@ ul.browsing-tree {
 .pannello-cassa .btn-secondary {
     border-radius: 0px;
 }
+
+/* stili per i cartellini */
+.cartellini {
+    width: 50% !important;
+}
+
+.cartellini td{
+    vertical-align: middle!important;
+}
+
+.cartellini input{
+    height: 25px;
+}
