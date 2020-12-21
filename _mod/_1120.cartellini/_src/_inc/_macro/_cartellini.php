@@ -17,8 +17,7 @@
      *
      */
 
-
-	// tendina mesi
+		// tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
 	    $ct['etc']['select']['mesi'][ $mese ] =  int2month( $mese ) ;
 	}

@@ -32,12 +32,15 @@ if( isset( $_REQUEST['__cartellini__'] ) && is_array( $_REQUEST['__cartellini__'
 
             appendToFile('data: ' . $data . ', id_tipologia: ' . $id_tipologia . ', ore: ' . $v . PHP_EOL, 'var/log/cartellini.log');
     
-            mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (data, id_anagrafica, id_tipologia, ore) VALUES( ?, ?, ?, ? )',
+            mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (data, id_anagrafica, id_tipologia, ore, nome,  id_account_inserimento, timestamp_inserimento ) VALUES( ?, ?, ?, ?, ?, ?, ? )',
                 array( 
                     array( 's' =>  $data ),
                     array( 's' =>  $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ),
                     array( 's' =>  $id_tipologia ),
-                    array( 's' =>  str_replace( ",", ".", $v ) )
+                    array( 's' =>  str_replace( ",", ".", $v ) ),
+                    array( 's' => 'attività del '.$data),
+                    array( 's' => ( isset( $_SESSION['account']['id']) && is_numeric($_SESSION['account']['id']) ?  $_SESSION['account']['id'] : NULL ) ),
+                    array( 's' => time() )
                 )
             );
         }
