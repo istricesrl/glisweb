@@ -62,6 +62,10 @@
 					{{ frm.time( table, '', '', 'ora_fine', '', '', request) }} 
 				</div>
 				<div class="col-12 col-md">
+					<span class="label-top">ore</span>
+					{{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '','0.5' ) }}
+				</div>
+				<div class="col-12 col-md">
 					<span class="label-top">esecutore</span>
 					{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf ) }}
 				</div>

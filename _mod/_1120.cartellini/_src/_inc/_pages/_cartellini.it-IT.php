@@ -15,7 +15,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cartellini.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_cartellini.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'cartellini' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['attivita.view']['etc']['tabs'] ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'cartellini' ),
 									'priority'	=> '105' ) )
     );
