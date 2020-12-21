@@ -1,0 +1,128 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>dati generali <small>{{ legend }}</small></legend>
+
+		
+			<div class="form-group form-row">
+				<div class="col-6 col-md-auto">
+					<span class="label-top">data</span>
+					{% if not session.__latest__[ table ].data %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data %}{% endif %}
+					{{ frm.date( table, '', '', 'data', '', '', request, default ) }}
+				</div>
+				<div class="col-2 col-md-1">
+					<span class="label-top">ora inizio</span>
+					{{ frm.time( table, '', '', 'ora', '', '', request) }} 
+				</div>
+				<div class="col-2 col-md-1">
+					<span class="label-top">ora fine</span>
+					{{ frm.time( table, '', '', 'ora_fine', '', '', request) }} 
+				</div>
+<<<<<<< HEAD
+				<div class="col-2 col-md-1">
+=======
+				<div class="col-3 col-md-1">
+>>>>>>> c61ab9b32fcdd6cb3aac0351ec4b68826a1a62a9
+					<span class="label-top">ore</span>
+					{{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '','0.5' ) }}
+				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">esecutore</span>
+					{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-6 col-md-2">
+					<span class="label-top">tipologia</span>
+					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
+				</div>
+			<div class="col">
+				<span class="label-top">descrizione</span>
+				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+			</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-12">
+				<span class="label-top">note</span>
+				{{ frm.textarea( table, '', '', 'testo', 'note (ad uso interno)', 3, request ) }}
+				</div>
+			</div>
+	
+			</fieldset>
+	
+			<fieldset>
+			<legend>attribuzione</legend>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md-6">
+				<span class="label-top">cliente</span>
+					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf ) }}
+				</div>
+				<!--
+					<div class="col-12 col-md-4">
+					<span class="label-top">progetto</span>
+					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.form','','anagrafica', 'id_progetto', page, pages, ietf ) }}
+				</div>-->
+					<div class="col-12 col-md-6">
+					<span class="label-top">task</span>
+					{{ frm.selectBox( table, '', '', 'id_task', 'task', etc.select.id_task, request, '', '','','','','task.form','task.form','task', 'id_task', page, pages, ietf ) }}
+					</div>
+					</div>
+			</fieldset>
+	
+        
+	    {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}
