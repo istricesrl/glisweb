@@ -152,10 +152,10 @@ INSERT IGNORE INTO `categorie_anagrafica` (`id`, `id_genitore`, `nome`, `se_lead
 (5,    2, 'prospect',          		 NULL,      1,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
 (6, NULL, 'fornitori',          	NULL,   NULL,   NULL,      1,   NULL,   NULL,     1,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
 (7, NULL, 'concorrenti',        	NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
-(8, NULL, 'produttori',         	NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   NULL ),
+(8, 6, 'produttori',         	NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   NULL ),
 (9, 1, 'dipendenti',         		NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   1,   NULL,   NULL ),
 (10, 1, 'interinali',         		NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   1,   NULL ),
-(11, NULL, 'agenzie interinali',	NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   1 );
+(11, 6, 'agenzie interinali',	NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   1 );
 
 -- categorie_diritto
 -- tipologia: tabella assistita
