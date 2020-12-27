@@ -3,11 +3,11 @@
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
     {{ frm.subformLegend( subtable, legend ) }}
-    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length %}
     {% else %}{% set t = 0 %}{% endif %}
-    {% for i in 0..t %}
+	{% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
-    <div id="{{ subtable }}_{{ i }}" class="form-sub">
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{% if loop.last %} hidden show-on-duplicate{% endif %}">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
@@ -28,12 +28,22 @@
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione</span>{% endif %}
 		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
 	    </div>
-	    {% if r.id %}
+
+		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
 		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
 	    </div>
-	    {% endif %}
+	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
+		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
+		</div>
+		{% else %}
+	    <div class="col-auto text-right d-print-none">
+		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}
+		</div>
+		{% endif %}
 	</div>
     </div>
     {% endfor %}

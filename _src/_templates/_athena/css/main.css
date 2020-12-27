@@ -153,9 +153,19 @@ label.form-check-label {
 }
 
 .label-top {
-    font-size: .85em;
-    height: 1.75em;
+    font-size: .8em;
+/*    height: 1.75em; */
     color: #777777;
+
+    position: absolute;
+    top: -0.75em;
+    left: 1em;
+    background-color: white;
+    padding: 0em 0.5em;
+/*
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+*/
 }
 
 legend {

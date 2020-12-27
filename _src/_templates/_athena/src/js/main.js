@@ -42,6 +42,9 @@
 		    $( obj ).removeClass('hidden');
 		});
 
+		$( base ).show();
+		$( base ).removeClass('hidden');
+
 		$( base ).find( 'input, textarea, select' ).each( function( i, obj ) {
 		    if( typeof( obj.attributes['default'] ) !== 'undefined' ) {
 			empty = obj.attributes['default'].value;
