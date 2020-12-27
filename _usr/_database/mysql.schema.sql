@@ -1046,8 +1046,8 @@ CREATE TABLE `anagrafica_condizioni_pagamento` (
   UNIQUE KEY `unico` (`id_anagrafica`,`id_condizione`),
   KEY `id_anagrafica` (`id_anagrafica`),
   KEY `id_condizione` (`id_condizione`),
-  CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_2` FOREIGN KEY (`id_condizione`) REFERENCES `condizioni_pagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_2` FOREIGN KEY (`id_condizione`) REFERENCES `condizioni_pagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1085,9 +1085,9 @@ CREATE TABLE `anagrafica_indirizzi` (
   UNIQUE KEY `unico` (`id_anagrafica`,`id_indirizzo`,`id_tipologia`),
   KEY `id_indirizzo` (`id_indirizzo`),
   KEY `id_tipologia` (`id_tipologia`),
-  CONSTRAINT `anagrafica_indirizzi_ibfk_3` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `anagrafica_indirizzi_ibfk_1` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`),
-  CONSTRAINT `anagrafica_indirizzi_ibfk_2` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `anagrafica_indirizzi_ibfk_2` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `anagrafica_indirizzi_ibfk_3` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1127,8 +1127,8 @@ CREATE TABLE `anagrafica_modalita_pagamento` (
   UNIQUE KEY `unico` (`id_anagrafica`,`id_modalita`),
   KEY `id_anagrafica` (`id_anagrafica`),
   KEY `id_modalita` (`id_modalita`),
-  CONSTRAINT `anagrafica_modalita_pagamento_ibfk_2` FOREIGN KEY (`id_modalita`) REFERENCES `modalita_pagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `anagrafica_modalita_pagamento_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `anagrafica_modalita_pagamento_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `anagrafica_modalita_pagamento_ibfk_2` FOREIGN KEY (`id_modalita`) REFERENCES `modalita_pagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1986,8 +1986,8 @@ CREATE TABLE `audio` (
   KEY `id_lingua` (`id_lingua`),
   KEY `id_notizia` (`id_notizia`),
   KEY `id_categoria_notizie` (`id_categoria_notizie`),
-  CONSTRAINT `audio_ibfk_10` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `audio_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `audio_ibfk_10` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `audio_ibfk_10_nofollow` FOREIGN KEY (`id_tipologia_embed`) REFERENCES `tipologie_embed` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `audio_ibfk_11` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `audio_ibfk_12` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -3262,6 +3262,7 @@ CREATE TABLE `contratti` (
   `id_tipologia_qualifica` char(32) DEFAULT NULL,
   `id_tipologia_durata` char(32) DEFAULT NULL,
   `id_tipologia_orario` char(32) DEFAULT NULL,
+  `ore_settimanali` decimal(5,2) DEFAULT NULL,
   `note` text,
   `percentuale_part_time` decimal(5,2) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3275,12 +3276,12 @@ CREATE TABLE `contratti` (
   KEY `id_tipologia_durata` (`id_tipologia_durata`),
   KEY `id_tipologia_orario` (`id_tipologia_orario`),
   KEY `id_agenzia` (`id_agenzia`),
-  CONSTRAINT `contratti_ibfk_6` FOREIGN KEY (`id_agenzia`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `contratti_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_contratti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `contratti_ibfk_2` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `contratti_ibfk_3` FOREIGN KEY (`id_tipologia_qualifica`) REFERENCES `tipologie_qualifiche_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `contratti_ibfk_4` FOREIGN KEY (`id_tipologia_durata`) REFERENCES `tipologie_durate_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `contratti_ibfk_5` FOREIGN KEY (`id_tipologia_orario`) REFERENCES `tipologie_orari_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `contratti_ibfk_5` FOREIGN KEY (`id_tipologia_orario`) REFERENCES `tipologie_orari_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `contratti_ibfk_6` FOREIGN KEY (`id_agenzia`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3305,6 +3306,7 @@ SET character_set_client = utf8;
   `id_tipologia_qualifica` tinyint NOT NULL,
   `id_tipologia_durata` tinyint NOT NULL,
   `id_tipologia_orario` tinyint NOT NULL,
+  `ore_settimanali` tinyint NOT NULL,
   `note` tinyint NOT NULL,
   `percentuale_part_time` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
@@ -3338,6 +3340,7 @@ SET character_set_client = utf8;
   `id_tipologia_qualifica` tinyint NOT NULL,
   `id_tipologia_durata` tinyint NOT NULL,
   `id_tipologia_orario` tinyint NOT NULL,
+  `ore_settimanali` tinyint NOT NULL,
   `note` tinyint NOT NULL,
   `percentuale_part_time` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
@@ -4755,7 +4758,6 @@ CREATE TABLE `immagini` (
   KEY `id_documento` (`id_documento`),
   KEY `id_categoria_documenti` (`id_categoria_documenti`),
   KEY `id_lingua` (`id_lingua`),
-  CONSTRAINT `immagini_ibfk_18` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_10` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_11` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -4765,6 +4767,7 @@ CREATE TABLE `immagini` (
   CONSTRAINT `immagini_ibfk_15` FOREIGN KEY (`id_testata`) REFERENCES `testate` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_16` FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_17` FOREIGN KEY (`id_categoria_documenti`) REFERENCES `categorie_documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `immagini_ibfk_18` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_2` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -6542,13 +6545,13 @@ CREATE TABLE `metadati` (
   KEY `id_documento` (`id_documento`),
   KEY `id_categoria_documenti` (`id_categoria_documenti`),
   KEY `id_video` (`id_video`),
-  CONSTRAINT `metadati_ibfk_15` FOREIGN KEY (`id_video`) REFERENCES `video` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `metadati_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `metadati_ibfk_10` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `metadati_ibfk_11` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `metadati_ibfk_12` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `metadati_ibfk_13` FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `metadati_ibfk_14` FOREIGN KEY (`id_categoria_documenti`) REFERENCES `categorie_documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `metadati_ibfk_15` FOREIGN KEY (`id_video`) REFERENCES `video` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `metadati_ibfk_1_nofollow` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `metadati_ibfk_2` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `metadati_ibfk_3` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -8618,10 +8621,10 @@ CREATE TABLE `pubblicazione` (
   KEY `id_pagina` (`id_pagina`),
   KEY `id_genitore` (`id_genitore`),
   KEY `id_popup` (`id_popup`),
-  CONSTRAINT `pubblicazione_ibfk_3` FOREIGN KEY (`id_popup`) REFERENCES `popup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pubblicazione_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `pubblicazione_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `pubblicazione` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `pubblicazione_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `pubblicazione_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pubblicazione_ibfk_3` FOREIGN KEY (`id_popup`) REFERENCES `popup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9751,9 +9754,12 @@ DROP TABLE IF EXISTS `ruoli_anagrafica`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ruoli_anagrafica` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_genitore` int(11) DEFAULT NULL,
   `nome` char(128) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `nome` (`nome`)
+  UNIQUE KEY `nome` (`nome`),
+  KEY `id_genitore` (`id_genitore`),
+  CONSTRAINT `ruoli_anagrafica_ibfk_1` FOREIGN KEY (`id_genitore`) REFERENCES `anagrafica_ruoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9767,6 +9773,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `ruoli_anagrafica_view` (
   `id` tinyint NOT NULL,
+  `id_genitore` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
@@ -13019,13 +13026,13 @@ CREATE TABLE `video` (
   KEY `id_documento` (`id_documento`),
   KEY `id_categoria_documenti` (`id_categoria_documenti`),
   KEY `id_lingua` (`id_lingua`),
-  CONSTRAINT `video_ibfk_14` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_10` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_10_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_11` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_12` FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_13` FOREIGN KEY (`id_categoria_documenti`) REFERENCES `categorie_documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `video_ibfk_14` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_3` FOREIGN KEY (`id_file`) REFERENCES `file` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `video_ibfk_4` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -14627,6 +14634,106 @@ BEGIN
 				if( ser = 1, 0.00, 100.00 )
 			)
 		);
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `ruoli_anagrafica_path` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=CURRENT_USER() FUNCTION `ruoli_anagrafica_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
+    READS SQL DATA
+BEGIN
+
+	
+	
+
+	
+	
+
+	
+	
+
+	DECLARE path char( 255 ) DEFAULT '';
+	DECLARE step char( 255 ) DEFAULT '';
+	DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+	DECLARE righe int( 11 ) DEFAULT 0;
+
+	WHILE ( p1 IS NOT NULL ) DO
+
+	    SELECT
+		ruoli_anagrafica.id_genitore,
+		ruoli_anagrafica.nome,
+		count( ruoli_anagrafica.id )
+	    FROM ruoli_anagrafica
+	    WHERE ruoli_anagrafica.id = p1
+	    INTO p1, step, righe;
+
+	    IF( p1 IS NULL ) THEN
+		SET separatore = '';
+	    END IF;
+
+	    SET path = concat( separatore, step, path );
+
+	END WHILE;
+
+	RETURN path;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP FUNCTION IF EXISTS `ruoli_anagrafica_path_check` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=CURRENT_USER() FUNCTION `ruoli_anagrafica_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
+    READS SQL DATA
+BEGIN
+
+	
+	
+	
+
+	
+	
+
+	
+	
+
+	WHILE ( p1 IS NOT NULL ) DO
+
+	    IF( p1 = p2 ) THEN
+		RETURN 1;
+	    END IF;
+
+	    SELECT
+		ruoli_anagrafica.id_genitore
+	    FROM ruoli_anagrafica
+	    WHERE ruoli_anagrafica.id = p1
+	    INTO p1;
+
+	END WHILE;
+
+	RETURN 0;
 
 END ;;
 DELIMITER ;
@@ -16313,7 +16420,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `contratti_archiviati_view` AS select `contratti`.`id` AS `id`,`contratti`.`id_tipologia` AS `id_tipologia`,`contratti`.`id_anagrafica` AS `id_anagrafica`,`contratti`.`id_agenzia` AS `id_agenzia`,`contratti`.`data_inizio` AS `data_inizio`,`contratti`.`data_fine` AS `data_fine`,`contratti`.`data_inizio_rapporto` AS `data_inizio_rapporto`,`contratti`.`data_fine_rapporto` AS `data_fine_rapporto`,`contratti`.`livello` AS `livello`,`contratti`.`id_tipologia_qualifica` AS `id_tipologia_qualifica`,`contratti`.`id_tipologia_durata` AS `id_tipologia_durata`,`contratti`.`id_tipologia_orario` AS `id_tipologia_orario`,`contratti`.`note` AS `note`,`contratti`.`percentuale_part_time` AS `percentuale_part_time`,`contratti`.`id_account_inserimento` AS `id_account_inserimento`,`contratti`.`timestamp_inserimento` AS `timestamp_inserimento`,`contratti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`contratti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,coalesce(`agenzie`.`soprannome`,`agenzie`.`denominazione`,concat_ws(' ',coalesce(`agenzie`.`cognome`,''),coalesce(`agenzie`.`nome`,'')),'') AS `agenzia`,concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__` from (((`contratti` left join `anagrafica` on((`contratti`.`id_anagrafica` = `anagrafica`.`id`))) left join `anagrafica` `agenzie` on((`contratti`.`id_agenzia` = `agenzie`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) where ((`contratti`.`data_fine_rapporto` is not null) or ((`contratti`.`data_fine` is not null) and (`contratti`.`data_fine` < curdate()))) order by concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) */;
+/*!50001 VIEW `contratti_archiviati_view` AS select `contratti`.`id` AS `id`,`contratti`.`id_tipologia` AS `id_tipologia`,`contratti`.`id_anagrafica` AS `id_anagrafica`,`contratti`.`id_agenzia` AS `id_agenzia`,`contratti`.`data_inizio` AS `data_inizio`,`contratti`.`data_fine` AS `data_fine`,`contratti`.`data_inizio_rapporto` AS `data_inizio_rapporto`,`contratti`.`data_fine_rapporto` AS `data_fine_rapporto`,`contratti`.`livello` AS `livello`,`contratti`.`id_tipologia_qualifica` AS `id_tipologia_qualifica`,`contratti`.`id_tipologia_durata` AS `id_tipologia_durata`,`contratti`.`id_tipologia_orario` AS `id_tipologia_orario`,`contratti`.`ore_settimanali` AS `ore_settimanali`,`contratti`.`note` AS `note`,`contratti`.`percentuale_part_time` AS `percentuale_part_time`,`contratti`.`id_account_inserimento` AS `id_account_inserimento`,`contratti`.`timestamp_inserimento` AS `timestamp_inserimento`,`contratti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`contratti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,coalesce(`agenzie`.`soprannome`,`agenzie`.`denominazione`,concat_ws(' ',coalesce(`agenzie`.`cognome`,''),coalesce(`agenzie`.`nome`,'')),'') AS `agenzia`,concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__` from (((`contratti` left join `anagrafica` on((`contratti`.`id_anagrafica` = `anagrafica`.`id`))) left join `anagrafica` `agenzie` on((`contratti`.`id_agenzia` = `agenzie`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) where ((`contratti`.`data_fine_rapporto` is not null) or ((`contratti`.`data_fine` is not null) and (`contratti`.`data_fine` < curdate()))) order by concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -16332,7 +16439,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `contratti_view` AS select `contratti`.`id` AS `id`,`contratti`.`id_tipologia` AS `id_tipologia`,`contratti`.`id_anagrafica` AS `id_anagrafica`,`contratti`.`id_agenzia` AS `id_agenzia`,`contratti`.`data_inizio` AS `data_inizio`,`contratti`.`data_fine` AS `data_fine`,`contratti`.`data_inizio_rapporto` AS `data_inizio_rapporto`,`contratti`.`data_fine_rapporto` AS `data_fine_rapporto`,`contratti`.`livello` AS `livello`,`contratti`.`id_tipologia_qualifica` AS `id_tipologia_qualifica`,`contratti`.`id_tipologia_durata` AS `id_tipologia_durata`,`contratti`.`id_tipologia_orario` AS `id_tipologia_orario`,`contratti`.`note` AS `note`,`contratti`.`percentuale_part_time` AS `percentuale_part_time`,`contratti`.`id_account_inserimento` AS `id_account_inserimento`,`contratti`.`timestamp_inserimento` AS `timestamp_inserimento`,`contratti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`contratti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,coalesce(`agenzie`.`soprannome`,`agenzie`.`denominazione`,concat_ws(' ',coalesce(`agenzie`.`cognome`,''),coalesce(`agenzie`.`nome`,'')),'') AS `agenzia`,concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__` from (((`contratti` left join `anagrafica` on((`contratti`.`id_anagrafica` = `anagrafica`.`id`))) left join `anagrafica` `agenzie` on((`contratti`.`id_agenzia` = `agenzie`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) where (isnull(`contratti`.`data_fine_rapporto`) and (isnull(`contratti`.`data_fine`) or ((`contratti`.`data_fine` is not null) and (`contratti`.`data_fine` >= curdate())))) order by concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) */;
+/*!50001 VIEW `contratti_view` AS select `contratti`.`id` AS `id`,`contratti`.`id_tipologia` AS `id_tipologia`,`contratti`.`id_anagrafica` AS `id_anagrafica`,`contratti`.`id_agenzia` AS `id_agenzia`,`contratti`.`data_inizio` AS `data_inizio`,`contratti`.`data_fine` AS `data_fine`,`contratti`.`data_inizio_rapporto` AS `data_inizio_rapporto`,`contratti`.`data_fine_rapporto` AS `data_fine_rapporto`,`contratti`.`livello` AS `livello`,`contratti`.`id_tipologia_qualifica` AS `id_tipologia_qualifica`,`contratti`.`id_tipologia_durata` AS `id_tipologia_durata`,`contratti`.`id_tipologia_orario` AS `id_tipologia_orario`,`contratti`.`ore_settimanali` AS `ore_settimanali`,`contratti`.`note` AS `note`,`contratti`.`percentuale_part_time` AS `percentuale_part_time`,`contratti`.`id_account_inserimento` AS `id_account_inserimento`,`contratti`.`timestamp_inserimento` AS `timestamp_inserimento`,`contratti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`contratti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,coalesce(`agenzie`.`soprannome`,`agenzie`.`denominazione`,concat_ws(' ',coalesce(`agenzie`.`cognome`,''),coalesce(`agenzie`.`nome`,'')),'') AS `agenzia`,concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__` from (((`contratti` left join `anagrafica` on((`contratti`.`id_anagrafica` = `anagrafica`.`id`))) left join `anagrafica` `agenzie` on((`contratti`.`id_agenzia` = `agenzie`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) where (isnull(`contratti`.`data_fine_rapporto`) and (isnull(`contratti`.`data_fine`) or ((`contratti`.`data_fine` is not null) and (`contratti`.`data_fine` >= curdate())))) order by concat(`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -18531,12 +18638,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_anagrafica_view` AS select `ruoli_anagrafica`.`id` AS `id`,`ruoli_anagrafica`.`nome` AS `nome`,`ruoli_anagrafica`.`nome` AS `__label__` from `ruoli_anagrafica` order by `ruoli_anagrafica`.`nome` */;
+/*!50001 VIEW `ruoli_anagrafica_view` AS select `ruoli_anagrafica`.`id` AS `id`,`ruoli_anagrafica`.`id_genitore` AS `id_genitore`,`ruoli_anagrafica`.`nome` AS `nome`,`ruoli_anagrafica_path`(`ruoli_anagrafica`.`id`) AS `__label__` from `ruoli_anagrafica` order by `ruoli_anagrafica_path`(`ruoli_anagrafica`.`id`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -20051,4 +20158,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-20  5:09:59
+-- Dump completed on 2020-12-27  5:09:12
