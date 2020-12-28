@@ -239,7 +239,12 @@ fieldset.form-controls button {
     width: 31px;
 }
 
-@media (max-width: 991.98px) {
+.form-control:focus {
+    border-color: #cccccc;
+    box-shadow: inset 0 1px 1px rgba(64, 64, 64, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);
+    }
+
+    @media (max-width: 991.98px) {
     form.form-main,
     form.form-filtro {
         padding-bottom: 40px;
