@@ -12,35 +12,32 @@
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
 	    <div class="col-auto">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">notifiche</span>{% endif %}
+		{% if i == 0 %}<span class="label-top">notif.</span>{% endif %}
 		{{ frm.select( table, subtable, i, 'se_notifiche', '', etc.select.se_notifiche, request ) }}
 	    </div>
 	    <div class="col">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">indirizzo</span>{% endif %}
+		{% if i == 0 %}<span class="label-top">indirizzo</span>{% endif %}
 		{{ frm.input( table, subtable, i, 'indirizzo', 'indirizzo e-mail', '', request ) }}
 	    </div>
 	    <div class="col-auto">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">se pec</span>{% endif %}
+		{% if i == 0 %}<span class="label-top">pec</span>{% endif %}
 		{{ frm.select( table, subtable, i, 'se_pec', '', etc.select.se_pec, request ) }}
 		</div>
 		<div class="w-100 d-block d-md-none m-0"></div>
 	    <div class="col">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione</span>{% endif %}
+		{% if i == 0 %}<span class="label-top">descrizione</span>{% endif %}
 		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
 	    </div>
 
 		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
-		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
 		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
 	    </div>
 	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
-		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
 		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
 		</div>
 		{% else %}
 	    <div class="col-auto text-right d-print-none">
-		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
 		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}
 		</div>
 		{% endif %}
