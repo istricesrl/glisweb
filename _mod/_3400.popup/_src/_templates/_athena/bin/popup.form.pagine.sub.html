@@ -10,11 +10,11 @@
     {% set r = request[ table ][ subtable ][ i ] %}
     <div id="{{ subtable }}_{{ i }}" class= "form-sub">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	{{ frm.input( table, subtable, i, 'id_account', '', '', '', '__parent_id__', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_popup', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
 	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">pagina</span>{% endif %}
-		{{ frm.select( table, subtable, i, 'id_pagina', '', etc.select.popup_pagine, request ) }}
+		{{ frm.select( table, subtable, i, 'id_pagina', 'pagina', etc.select.pagine, request ) }}
         </div>
 		<div class="col-auto col-md-auto">
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">presente</span>{% endif %}

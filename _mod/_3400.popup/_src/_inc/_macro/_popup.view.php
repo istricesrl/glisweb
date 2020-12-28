@@ -20,12 +20,16 @@
 	    'id' => '#',
         '__label__' => 'nome',
         'tipologia' => 'tipologia',
-        'tipologia_pubblicazione' => 'pubblicazione'
+        'template' => 'template',
+	    'schema_html' => 'schema'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-        'nome' => 'text-left no-wrap'
+        '__label__' => 'text-left no-wrap',
+        'tipologia' => 'text-left',
+        'template' => 'text-left',
+	    'schema_html' => 'text-left'
     );
   
     // gestione default
