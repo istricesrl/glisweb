@@ -61,7 +61,7 @@
 			header('Content-Type: text/csv');
 			header('Content-Disposition: attachment; filename="esportazione contatti mail.csv"');
 
-			$csv[0] = array( 'contatto', 'tipologia', 'indirizzo', 'civico', 'cap', 'comune', 'provincia' );
+			$csv[0] = array( 'contatto', 'tipologia', 'indirizzo', 'civico', 'cap', 'comune', 'provincia', 'latitudine', 'longitudine' );
 
             foreach($ct['anagrafica'] as $anagrafica ) {
 
