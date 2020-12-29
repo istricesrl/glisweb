@@ -1,0 +1,1 @@
+DROP VIEW IF EXISTS tipologie_costi_contratti_view;
