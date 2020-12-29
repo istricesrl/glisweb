@@ -13,7 +13,7 @@
 	<div class="form-group form-row">
 	    <div class="col-12 col-md-3">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia</span>{% endif %}
-		{{ frm.select( table, subtable, i, 'id_tipologia', 'tipologia', etc.select.tipologie_costi_contratti, request ) }}
+		{{ frm.select( table, subtable, i, 'id_tipologia', 'tipologia', etc.select.tipologie_attivita_inps, request ) }}
         </div>
         <div class="col-12 col-md-2">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">costo/h</span>{% endif %}

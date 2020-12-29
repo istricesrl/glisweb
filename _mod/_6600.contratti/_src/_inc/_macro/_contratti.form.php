@@ -38,12 +38,12 @@
 	    'SELECT id, __label__ FROM tipologie_contratti_view'
     );
     
-    // tendina per le tipologie costi contratto
-    $ct['etc']['select']['tipologie_costi_contratti'] = mysqlCachedIndexedQuery(
+    // tendina per le tipologie di attività inps
+    $ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_costi_contratti_view'
+	    'SELECT id, __label__ FROM tipologie_attivita_inps_view'
     );
 
     // tendina per le tipologie di qualifiche inps
