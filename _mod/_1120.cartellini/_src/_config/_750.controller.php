@@ -4,7 +4,11 @@
 $ct['view']['table'] = 'attivita';
 
 // id della vista
-$ct['view']['id'] = md5( $ct['view']['table'] );
+if( ! isset( $ct['view']['id'] ) ) {
+    $ct['view']['id'] = md5(
+    $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
+    );
+}
     
 writeToFile('chiamata controller cartellini' . PHP_EOL, 'var/log/cartellini.log');
 
