@@ -81,16 +81,20 @@
         </div>
 
         <div class="form-group form-row">
-            <div class="col-12 col-md-2">
-                <span class="label-top">Livello</span>
+            <div class="col-12 col-md-1">
+                <span class="label-top">livello</span>
                 {{ frm.input( table, '', '', 'livello', 'livello', '', request ) }}
             </div>
+            <div class="col-12 col-md-1">
+                <span class="label-top">ore settimana</span>
+                {{ frm.input( table, '', '', 'ore_settimanali', 'ore sett.', '', request ) }}
+            </div>
             <div class="col-12 col-md-3">
-                <span class="label-top">Qualifica INPS</span>
+                <span class="label-top">qualifica INPS</span>
                 {{ frm.select( table, '', '', 'id_tipologia_qualifica', '', etc.select.tipologie_qualifiche_inps, request ) }}
             </div>
             <div class="col-12 col-md-3">
-                <span class="label-top">Orario INPS</span>
+                <span class="label-top">orario INPS</span>
                 {{ frm.select( table, '', '', 'id_tipologia_orario', '', etc.select.tipologie_orari_inps, request ) }}
             </div>
             <div class="col-12 col-md-1">
@@ -98,7 +102,7 @@
                 {{ frm.input( table, '', '', 'percentuale_part_time', '', '', request ) }}
             </div>
             <div class="col-12 col-md-3">
-                <span class="label-top">Durata INPS</span>
+                <span class="label-top">durata INPS</span>
                 {{ frm.select( table, '', '', 'id_tipologia_durata', '', etc.select.tipologie_durate_inps, request ) }}
             </div>
         </div>

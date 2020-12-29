@@ -5,6 +5,7 @@
     $seProspect = ( empty( $_REQUEST['anagrafica']['se_prospect'] ) )       ? false : true;
     $seFornitore = ( empty( $_REQUEST['anagrafica']['se_fornitore'] ) )     ? false : true;
     $seDipendente = ( empty( $_REQUEST['anagrafica']['se_dipendente'] ) )     ? false : true;
+    $seInterinale = ( empty( $_REQUEST['anagrafica']['se_interinale'] ) )     ? false : true;
     $seCollaboratore = ( empty( $_REQUEST['anagrafica']['se_collaboratore'] ) )     ? false : true;
 
     if( max( [ $seCliente, $seLead, $seProspect ] ) != true ) {
@@ -21,10 +22,11 @@
         );
     }
 
-    if( max( [ $seDipendente, $seCollaboratore ] ) != true ) {
+    if( max( [ $seDipendente, $seCollaboratore, $seInterinale ] ) != true ) {
         $ct['page']['etc']['tabs'] = array_diff(
             $ct['page']['etc']['tabs'],
-            ['anagrafica.form.contratti']
+            ['anagrafica.form.contratti'],
+            ['anagrafica.form.collaboratore']
         );
     }
 
@@ -35,16 +37,3 @@
         );
     }
 
-    if( max( [ $seCollaboratore ] ) != true ) {
-        $ct['page']['etc']['tabs'] = array_diff(
-            $ct['page']['etc']['tabs'],
-            ['anagrafica.form.collaboratore']
-        );
-    }
-
-    if( max( [ $seDipendente ] ) != true ) {
-        $ct['page']['etc']['tabs'] = array_diff(
-            $ct['page']['etc']['tabs'],
-            ['anagrafica.form.dipendente']
-        );
-    }

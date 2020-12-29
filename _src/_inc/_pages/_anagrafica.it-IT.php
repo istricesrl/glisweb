@@ -62,7 +62,6 @@
 									'anagrafica.form.contratti',
 									'anagrafica.form.fornitore',
 									'anagrafica.form.collaboratore',
-									'anagrafica.form.dipendente',
 //									'anagrafica.form.struttura',
 //									'anagrafica.form.attivita',
 //									'anagrafica.form.promemoria',
