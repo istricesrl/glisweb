@@ -25,7 +25,8 @@
     if( max( [ $seDipendente, $seCollaboratore, $seInterinale ] ) != true ) {
         $ct['page']['etc']['tabs'] = array_diff(
             $ct['page']['etc']['tabs'],
-            ['anagrafica.form.contratti']
+            ['anagrafica.form.contratti'],
+            ['anagrafica.form.collaboratore']
         );
     }
 
@@ -36,16 +37,3 @@
         );
     }
 
-    if( max( [ $seCollaboratore ] ) != true ) {
-        $ct['page']['etc']['tabs'] = array_diff(
-            $ct['page']['etc']['tabs'],
-            ['anagrafica.form.collaboratore']
-        );
-    }
-
-    if( max( [ $seDipendente ] ) != true ) {
-        $ct['page']['etc']['tabs'] = array_diff(
-            $ct['page']['etc']['tabs'],
-            ['anagrafica.form.dipendente']
-        );
-    }
