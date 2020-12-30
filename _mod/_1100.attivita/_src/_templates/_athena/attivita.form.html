@@ -76,10 +76,14 @@
 					<span class="label-top">tipologia</span>
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
 				</div>
-			<div class="col">
-				<span class="label-top">descrizione</span>
-				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-			</div>
+				<div class="col-6 col-md-2">
+					<span class="label-top">tipologia INPS</span>
+					{{ frm.select( table, '', '', 'id_tipologia_inps', '', etc.select.id_tipologia_inps, request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">descrizione</span>
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				</div>
 			</div>
 
 			<div class="form-group form-row">

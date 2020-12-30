@@ -47,7 +47,7 @@
                     <thead>
                         <tr>
                             <th>data</th>
-                            {% for t in etc.tipologie_attivita %}
+                            {% for t in etc.tipologie_attivita_inps %}
                             <th>{{ t.__label__ }}</th>
                             {% endfor %}
                         </tr>
@@ -56,11 +56,11 @@
                         {% for k,v in etc.ore %}
                         <tr>
                             <td>{{ v.data }}</td>
-                            {% for t in etc.tipologie_attivita %}
-                            {% if v.tipologie[ t.id ] %}
-                             <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}','_self');"> 
+                            {% for t in etc.tipologie_attivita_inps %}
+                            {% if v.tipologie_inps[ t.id ] %}
+                             <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ~'&__view__['~view.id~'][__filters__][id_tipologia_inps][EQ]='~t.id }}','_self');"> 
                         <!--    <td><a href="{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}">    -->
-                            <div>{{ v.tipologie[ t.id ] }}</div></a>
+                            <div>{{ v.tipologie_inps[ t.id ] }}</div></a>
                             {% else %}
                             <td><input type="number" class="form-control form-control-sm" step="0.5" name="__cartellini__[{{ k }}_{{ t.id }}]">
                             {% endif %}

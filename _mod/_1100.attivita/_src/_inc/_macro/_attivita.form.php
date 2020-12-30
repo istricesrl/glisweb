@@ -60,6 +60,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view' );
 
+    // tendina tipologia inps
+	$ct['etc']['select']['id_tipologia_inps'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_inps_view' );
+
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],

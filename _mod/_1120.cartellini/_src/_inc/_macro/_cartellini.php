@@ -17,6 +17,19 @@
      *
      */
 
+	 // tabella della vista
+	 $ct['view']['table'] = 'attivita';
+
+	 // id della vista
+	 if( ! isset( $ct['view']['id'] ) ) {
+		 /*
+		 $ct['view']['id'] = md5(
+		 $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
+		 );
+		 */
+		 $ct['view']['id'] = md5( $ct['view']['table'] );
+	 }
+
 		// tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
 	    $ct['etc']['select']['mesi'][ $mese ] =  int2month( $mese ) ;
@@ -37,13 +50,13 @@
 	$ct['etc']['select']['operatori'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_collaboratore = 1');
+        'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1');
 	
-	// elenco tipologie attività
-	$ct['etc']['tipologie_attivita'] = mysqlCachedQuery(
+	// elenco tipologie attività inps
+	$ct['etc']['tipologie_attivita_inps'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view ORDER BY id');
+        'SELECT id, __label__ FROM tipologie_attivita_inps_view ORDER BY id');
 
 	// costruzione della griglia
 	if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] ) && isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] ) && isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && !empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) ) 
@@ -69,7 +82,7 @@
 
 		// ricavo il riepilogo attività presenti
 		$attivita = mysqlQuery( $cf['mysql']['connection'], 
-		'SELECT giorno, id_tipologia, sum(ore) as tot_ore FROM attivita_view WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by data, id_tipologia',
+		'SELECT giorno, id_tipologia_inps, sum(ore) as tot_ore FROM attivita_view WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by data, id_tipologia_inps',
 		array(
 			array( 's' => $anno ),
 			array( 's' => $mese ),
@@ -79,7 +92,7 @@
 		
 		if( !empty( $attivita ) ){
 			foreach( $attivita as $a ){
-				$ct['etc']['ore'][ $a['giorno'] ]['tipologie'][ $a['id_tipologia'] ] = $a['tot_ore'];
+				$ct['etc']['ore'][ $a['giorno'] ]['tipologie_inps'][ $a['id_tipologia_inps'] ] = $a['tot_ore'];
 			}
 		}
 		
