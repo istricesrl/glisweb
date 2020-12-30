@@ -83,17 +83,19 @@
 
 {% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf ) %}
 {% if subtable %}
+    {% if key %}{% set bl = request[ table ][ subtable ][ counter ][ key ] %}{% endif %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
     {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
 {% else %}
+    {% if key %}{% set bl = request[ table ][ key ] %}{% endif %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {# NOTA if per retrocompatibilità con le chiamate che passano ancora le stringhe estese degli URL #}
 {% if key %}
-    {% set editor = pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ request[ table ][ key ] ~ '&__backurl__=' ~ page.backurl[ ietf ] %}
+    {% set editor = pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ bl ~ '&__backurl__=' ~ page.backurl[ ietf ] %}
     {% set adder = pages[ add ].path[ ietf ] ~ '?__backurl__=' ~ page.backurl[ ietf ] %}
 {% else %}
     {% set editor = edit %}
