@@ -71,7 +71,8 @@
 									'anagrafica.form.file',
 									'anagrafica.form.metadati',
 									'anagrafica.form.archiviazione',
-									'anagrafica.form.stampe' ) )
+									'anagrafica.form.stampe',
+									'anagrafica.form.tools' ) )
 	);
 
     // gestione anagrafica informazioni
@@ -193,6 +194,19 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+    // gestione tools anagrafica
+	$p['anagrafica.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni anagrafica' ),
+	    'h1'		=> array( $l		=> 'azioni anagrafica' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
