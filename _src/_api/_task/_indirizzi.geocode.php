@@ -31,7 +31,7 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE indirizzi SET token = ? WHERE id = ? AND token IS NULL',
+            'UPDATE indirizzi SET token = ? WHERE id = ?',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['id'] )
@@ -74,6 +74,7 @@
 
     // debug
     // echo 'indirizzo: ' . print_r( $geocode, true );
+    // die( print_r( $geocode ) );
 
     // se c'è almeno una geocode da inviare
     if( ! empty( $geocode ) ) {
@@ -88,6 +89,7 @@
             $geocode['civico'],
             $geocode['indirizzo'],
             $geocode['comune'],
+            $geocode['cap'],
             $geocode['stato']
         );
 
@@ -101,7 +103,7 @@
 
             // log
             appendToFile(
-                print_r( $geocode, true ) . PHP_EOL . print_r( $gc, true ),
+                '-- ' . date( 'Y-m-d H:i' ) . PHP_EOL . print_r( $geocode, true ) . PHP_EOL . print_r( $gc, true ),
                 'var/log/geocode/' . string2rewrite( implode( ' ', array(
                     $geocode['stato'],
                     $geocode['comune'],
@@ -124,6 +126,8 @@
                 array( 's' => $status['token'] )
                 )
             );
+
+            // die( print_r( $gc, true ) );
 
             // output
             $status['result'] = $gc;
