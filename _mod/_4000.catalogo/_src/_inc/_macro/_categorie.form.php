@@ -40,35 +40,35 @@
 	}
     
    // dati che dipendono dal sito
-	if( isset( $_REQUEST['pagine']['id_sito'] ) ) {
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_sito'] ) ) {
 
         // tendina genitori
-		$ct['etc']['select']['pagine'] = mysqlCachedIndexedQuery(
+		$ct['etc']['select'][ $ct['form']['table'] ] = mysqlCachedIndexedQuery(
             $cf['cache']['index'],
             $cf['memcache']['connection'],
                 $cf['mysql']['connection'],
             'SELECT id, __label__ FROM pagine_view WHERE id_sito = ? AND pagine_path_check( pagine_view.id, ? ) = 0',
             array(
-                array( 's' => $_REQUEST['pagine']['id_sito'] ),
-                array( 's' => $_REQUEST['pagine']['id'] ) )
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_sito'] ),
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
             );
 
     }
 
     // dati che dipendono dal template
-	if( isset( $_REQUEST['pagine']['template'] ) ) {
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['template'] ) ) {
 
 	    // controllo file
-		if( file_exists( DIR_BASE . $_REQUEST['pagine']['template'] . '/etc/template.conf' ) ) {
+		if( file_exists( DIR_BASE . $_REQUEST[ $ct['form']['table'] ]['template'] . '/etc/template.conf' ) ) {
 
 		    // tendina schemi
-			$schemi = glob( DIR_BASE . $_REQUEST['pagine']['template'] . '/*.html', GLOB_BRACE );
+			$schemi = glob( DIR_BASE . $_REQUEST[ $ct['form']['table'] ]['template'] . '/*.html', GLOB_BRACE );
 			foreach( $schemi as $t ) {
 			    $ct['etc']['select']['schemi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
 			}
 
 		    // tendina temi
-			$temi = glob( DIR_BASE . $_REQUEST['pagine']['template'] . '/css/*.css', GLOB_BRACE );
+			$temi = glob( DIR_BASE . $_REQUEST[ $ct['form']['table'] ]['template'] . '/css/*.css', GLOB_BRACE );
 			foreach( $temi as $t ) {
 			    $ct['etc']['select']['temi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
 			}
