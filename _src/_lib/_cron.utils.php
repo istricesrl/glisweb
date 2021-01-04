@@ -35,8 +35,8 @@
      * 
      *
      */
-    // funzione per la generazione di attivita
-    function pianificazioneAttivita( $c, $id_anagrafica, $id_cliente, $id_luogo, $data, $ora, $ore, $id_periodicita, $descrizione,$cadenza, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
+    // funzione per la generazione di task
+    function pianificazioneTask( $c, $id_anagrafica, $id_cliente, $id_luogo, $data, $ora, $ore, $id_periodicita, $descrizione,$cadenza, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
 
         // TODO controlli
             // la data inizio è successiva alla data fine
