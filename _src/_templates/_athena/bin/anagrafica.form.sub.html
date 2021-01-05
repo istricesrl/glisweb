@@ -3,32 +3,33 @@
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
     {{ frm.subformLegend( subtable, legend ) }}
-    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length %}
-    {% else %}{% set t = 0 %}{% endif %}
-	{% for i in 0..t %}
-    {% set r = request[ table ][ subtable ][ i ] %}
-    <div id="{{ subtable }}_{{ i }}" class="form-sub{% if loop.last %} hidden show-on-duplicate{% endif %}">
-	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = -1 %}{% endif %}
+	{% for i in -1..t %}
+	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
+	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
 	<div class="form-group form-row">
 	    <div class="col-auto">
-		{% if i == 0 %}<span class="label-top">notif.</span>{% endif %}
-		{{ frm.select( table, subtable, i, 'se_notifiche', '', etc.select.se_notifiche, request ) }}
+		<span class="label-top">notif.</span>
+		{{ frm.select( table, subtable, i, 'se_notifiche', '', etc.select.se_notifiche, request, '', '', '', '', '', disabled ) }}
 	    </div>
 	    <div class="col">
-		{% if i == 0 %}<span class="label-top">indirizzo</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'indirizzo', 'indirizzo e-mail', '', request ) }}
+		<span class="label-top">indirizzo</span>
+		{{ frm.inputRequired( table, subtable, i, 'indirizzo', 'indirizzo e-mail', '', request, '', '', '', disabled ) }}
 	    </div>
 	    <div class="col-auto">
-		{% if i == 0 %}<span class="label-top">pec</span>{% endif %}
-		{{ frm.select( table, subtable, i, 'se_pec', '', etc.select.se_pec, request ) }}
+		<span class="label-top">pec</span>
+		{{ frm.select( table, subtable, i, 'se_pec', '', etc.select.se_pec, request, '', '', '', '', '', disabled ) }}
 		</div>
 		<div class="w-100 d-block d-md-none m-0"></div>
 	    <div class="col">
-		{% if i == 0 %}<span class="label-top">descrizione</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
+		<span class="label-top">descrizione</span>
+		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request, '', '', '', '', disabled ) }}
 	    </div>
-
 		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
@@ -41,7 +42,6 @@
 		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}
 		</div>
 		{% endif %}
-
 	</div>
     </div>
     {% endfor %}
