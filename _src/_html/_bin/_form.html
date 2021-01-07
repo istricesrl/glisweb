@@ -254,7 +254,6 @@
 
 {% macro trashButton( table, subtable, page, pages, r, lang, request, back ) %}
 {% import _self as frm %}
-{% if not back %}{% set back = page.path[ lang ] %}{% endif %}
 {% if not subtable %}
     {% set submitOk = 'submitFormOkay = true;' %}
     {% set subtable = table %}
@@ -267,8 +266,10 @@
 {% else %}
     {% set id = request[ table ].id %}
 {% endif %}
+{% if not back %}{% set back = page.path[ lang ] ~ query ~ backurl %}{% endif %}
+{% if not rollback %}{% set rollback = page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ backurl %}{% endif %}
 {% if request.__backurl__ %}{% set backurl = '&__backurl__=' ~ request.__backurl__ %}{% endif %}
-{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back ~ query ~ backurl ~ '","_self")','elimina' ) }}
+{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back ~ '&__delete__[rollback]=' ~ rollback ~ '","_self")','elimina' ) }}
 {% endmacro %}
 
 {% macro subformLegend( subtable, legend, class, disabled ) %}
