@@ -260,8 +260,9 @@
 <button type="{% if type %}{{ type }}{% else %}submit{% endif %}" class="btn btn-sm {% if class %}{{ class }}{% else %}btn-secondary{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} >{{ text|raw }}</button>
 {% endmacro %}
 
-{% macro trashButton( table, subtable, page, pages, r, lang, request, back ) %}
+{% macro trashButton( table, subtable, page, pages, r, lang, request, back, rollback ) %}
 {% import _self as frm %}
+{% if request.__backurl__ %}{% set backurl = '&__backurl__=' ~ request.__backurl__ %}{% endif %}
 {% if not subtable %}
     {% set submitOk = 'submitFormOkay = true;' %}
     {% set subtable = table %}
@@ -276,7 +277,6 @@
 {% endif %}
 {% if not back %}{% set back = page.path[ lang ] ~ query ~ backurl %}{% endif %}
 {% if not rollback %}{% set rollback = page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ backurl %}{% endif %}
-{% if request.__backurl__ %}{% set backurl = '&__backurl__=' ~ request.__backurl__ %}{% endif %}
 {{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back ~ '&__delete__[rollback]=' ~ rollback ~ '","_self")','elimina' ) }}
 {% endmacro %}
 
