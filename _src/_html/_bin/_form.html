@@ -39,7 +39,8 @@
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
-    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
@@ -70,7 +71,8 @@
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
-    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
@@ -85,7 +87,8 @@
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
-    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
@@ -162,7 +165,8 @@
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
-    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
     {% set df = request[ table ][ subtable ][ counter ].id %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
@@ -181,7 +185,8 @@
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
-    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
@@ -205,7 +210,8 @@
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
-    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
@@ -219,7 +225,8 @@
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
-    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
@@ -233,7 +240,8 @@
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
-    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
@@ -281,7 +289,8 @@
     {% set pk = request[ table ][ subtable ][ counter ].id %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
-    {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
 {% else %}
     {% set pk = request[ table ].id %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
