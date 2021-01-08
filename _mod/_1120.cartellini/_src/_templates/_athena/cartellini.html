@@ -31,14 +31,20 @@
 
             <div class="col-12 col-md-auto">
                 <span class="label-top">operatore</span>
-                <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true; submit();" class="form-control form-control-sm">
-                    <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>&nbsp;</option>
-                {% for operatore  in etc.select.operatori %}
-                    <option value="{{ operatore.id }}" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
-                {% endfor %}
-                </select>
+                <div class="row m-0">
+                    <div class="col combobox-container p-0">
+                        <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true; submit();" class="selectbox form-control form-control-sm" id="operatore">
+                            <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>&nbsp;</option>
+                        {% for operatore  in etc.select.operatori %}
+                            <option value="{{ operatore.id }}" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto p-0 pl-1">
+                        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#operatore_inputbox').trigger('all');"><i class="fa fa-chevron-down"></i></button>
+                    </div>
+                </div>
             </div>
-
         </div>
 
         <div class="form-row">
