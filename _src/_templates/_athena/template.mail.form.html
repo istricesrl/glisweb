@@ -51,15 +51,15 @@
         <div class="form-group form-row">
             <div class="col-12 col-md-4">
                 <span class="label-top ">nome</span>
-                {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+                {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
             </div>
             <div class="col-12 col-md-4">
                 <span class="label-top ">ruolo</span>
-                {{ frm.input( table, '', '', 'ruolo', '', '', request ) }}
+                {{ frm.inputRequired( table, '', '', 'ruolo', '', '', request ) }}
             </div>
             <div class="col-12 col-md-4">
                 <span class="label-top ">tipo render del template</span>
-                {{ frm.select( table, '', '', 'type', '', etc.select.types, request ) }}  
+                {{ frm.selectRequired( table, '', '', 'type', '', etc.select.types, request ) }}  
             </div>
         </div>
 
