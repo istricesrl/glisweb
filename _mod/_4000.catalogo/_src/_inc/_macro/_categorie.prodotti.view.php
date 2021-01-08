@@ -21,7 +21,7 @@
 	$ct['view']['table'] = 'categorie_prodotti';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'categorie.form';
+	$ct['view']['open']['page'] = 'categorie.prodotti.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(
@@ -38,5 +38,3 @@
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
-
-?>

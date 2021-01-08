@@ -80,5 +80,3 @@
     if(  isset( $newCnId ) && is_int( $newCnId ) ){
         header('Location: ' . $cf['contents']['pages']['contratti.form']['path']['it-IT'] . '?contratti[id]=' . $newCnId);
     }
-    
-?>
