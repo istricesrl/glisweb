@@ -1280,7 +1280,7 @@ INSERT IGNORE INTO `tipologie_contratti` (`id`, `nome`) VALUES
 
 -- tipologie_attivta_inps
 -- tipologia: tabella di supporto
-INSERT IGNORE INTO `tipologie_attivta_inps` (`id`, `id_genitore`,`nome`) VALUES
+INSERT IGNORE INTO `tipologie_attivita_inps` (`id`, `id_genitore`,`nome`) VALUES
 (1, NULL, 'ordinario'),
 (2, NULL, 'straordinario'),
 (3, NULL, 'notturno');
