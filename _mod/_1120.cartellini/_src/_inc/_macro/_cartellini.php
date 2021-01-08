@@ -95,6 +95,37 @@
 				$ct['etc']['ore'][ $a['giorno'] ]['tipologie_inps'][ $a['id_tipologia_inps'] ] = $a['tot_ore'];
 			}
 		}
+
+/*		$ore_giorno = mysqlQuery( $cf['mysql']['connection'], 
+		'SELECT giorno, sum(ore) as tot_ore FROM attivita_view WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by data',
+		array(
+			array( 's' => $anno ),
+			array( 's' => $mese ),
+			array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] )
+		)			
+		);
+		
+		if( !empty( $ore_giorno ) ){
+			foreach( $ore_giorno as $og ){
+				$ct['etc']['ore'][ $og['giorno'] ]['ore_totali'] = $og['tot_ore'];
+			}
+		}
+*/
+
+		$ore_tipologia = mysqlQuery( $cf['mysql']['connection'], 
+		'SELECT id_tipologia_inps, sum(ore) as tot_ore FROM attivita_view WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by id_tipologia_inps',
+		array(
+			array( 's' => $anno ),
+			array( 's' => $mese ),
+			array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] )
+		)			
+		);
+		
+		if( !empty( $ore_tipologia ) ){
+			foreach( $ore_tipologia as $ot ){
+				$ct['etc']['tipologie'][ $ot['id_tipologia_inps'] ]['ore_totali'] = $ot['tot_ore'];
+			}
+		}
 		
 	}
    
