@@ -13,7 +13,7 @@
         <div class="form-row view-filters d-print-none">
             <div class="col-12 col-md-auto">
             <span class="label-top">mese</span>
-            <select name="__view__[{{ view.id }}][__filters__][mese][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true; submit();" class="form-control form-control-sm">
+            <select name="__view__[{{ view.id }}][__filters__][mese][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true;" class="form-control form-control-sm">
             {% for idmese, nomemese in etc.select.mesi %}
                 <option value="{{ idmese }}" {% if request.__view__[ view.id ].__filters__.mese.EQ == idmese %}selected{% endif %}>{{ nomemese }}</option>
             {% endfor %}
@@ -22,7 +22,7 @@
 
             <div class="col-12 col-md-auto">
                 <span class="label-top">anno</span>
-                <select name="__view__[{{ view.id }}][__filters__][anno][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true; submit();" class="form-control form-control-sm">
+                <select name="__view__[{{ view.id }}][__filters__][anno][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true;" class="form-control form-control-sm">
                 {% for idanno, nomeanno in etc.select.anni %}
                     <option value="{{ idanno }}" {% if request.__view__[ view.id ].__filters__.anno.EQ == idanno %}selected{% endif %}>{{ nomeanno }}</option>
                 {% endfor %}
@@ -33,7 +33,7 @@
                 <span class="label-top">operatore</span>
                 <div class="row m-0">
                     <div class="col combobox-container p-0">
-                        <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true; submit();" class="selectbox form-control form-control-sm" id="operatore">
+                        <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true;" class="selectbox form-control form-control-sm" id="operatore">
                             <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>&nbsp;</option>
                         {% for operatore  in etc.select.operatori %}
                             <option value="{{ operatore.id }}" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
@@ -42,6 +42,9 @@
                     </div>
                     <div class="col-auto p-0 pl-1">
                         <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#operatore_inputbox').trigger('all');"><i class="fa fa-chevron-down"></i></button>
+                    </div>
+                    <div class="col-auto p-0 pl-1 ml-3">
+                        <button type="button" style="height: 31px" class="btn btn-sm btn-secondary" onclick="submit();">APRI CARTELLINO</button>
                     </div>
                 </div>
             </div>
@@ -77,7 +80,7 @@
                         </tr>
                         {% endfor %}
                         <tr>
-                            <th>totale</th>
+                            <td>totale</td>
                             {% for t in etc.tipologie_attivita_inps %}
                             <td>{{ etc.tipologie[ t.id ].ore_totali }}</td>
                             {% endfor %}
