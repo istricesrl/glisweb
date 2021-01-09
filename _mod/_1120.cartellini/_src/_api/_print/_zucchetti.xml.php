@@ -12,16 +12,25 @@
         // risultato
         $ct['ore'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT attivita.* '.
+            'SELECT '.
+            'attivita.data, attivita.ore, '.
+            'anagrafica.codice AS codice_dipendente '.
             'FROM attivita '.
+            'INNER JOIN anagrafica ON anagrafica.id = attivita.id_anagrafica '.
+            'INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
             'WHERE data BETWEEN ( ? and ? ) '.
-            'ORDER BY attivita. ',
+            'ORDER BY attivita.id_anagrafica ASC, attivita.data ASC, tipologie_attivita.id ASC ',
             array(
                 array( 's' => $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ),
                 array( 's' => date( 'Y-m-t', strtotime( $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ) ) 
                 )
             )
         );
+
+        // passaggio ad albero
+        foreach( $ct['ore'] as $ora ) {
+            $attivita[ $ora['codice_dipendente'] ]['ore'][] = $ora;
+        }
 
         // debug
 //			 die( 'risultato: '.print_r( $ct['fatturati'], true ) );
@@ -31,6 +40,9 @@
 //			 die( 'fatturati: '.print_r( $ct['fatturati'], true ) );
 //            die( print_r($ct['ore'],1));
 		    // se sono presenti dati
+
+        // inizializzazioni
+        $dipendente = NULL;
 
         // headers
         $filename = 'ore.'.$_REQUEST['__anno__'].'.'.$_REQUEST['__mese__'].'.xml';
@@ -54,8 +66,59 @@
 		$xml->startElement( 'Fornitura' );
 
         // esportazione
-            // TODO
+        foreach( $attivita as $dipendente => $ore ) {
 
+            // inizio nuovo dipendente
+            $xml->startElement( 'Dipendente' );
+            $xml->writeAttribute( 'CodAziendaUfficiale', '???' );   // TODO
+            $xml->writeAttribute( 'CodDipendenteUfficiale', $dipendente );
+
+            // attività del dipendente
+            $xml->startElement( 'Movimenti' );
+            $xml->writeAttribute( 'GenerazioneAutomaticaDaTeorico', 'N' );
+
+            // elenco attività del dipendente
+            foreach( $ore['ore'] as $ora ) {
+
+                // spacchetto le ore in ore e minuti
+                // TODO
+
+                // inizio nodo attività
+                $xml->startElement( 'Movimento' );
+
+                // CodGiustificativoUfficiale
+                $xml->writeElement( 'CodGiustificativoUfficiale', '' ); // TODO
+
+                // Data
+                $xml->writeElement( 'Data', '' ); // TODO
+
+                // NumOre
+                $xml->writeElement( 'NumOre', '' ); // TODO
+
+                // NumMinuti
+                $xml->writeElement( 'NumMinuti', '' ); // TODO
+                
+                // GiornoDiRiposo
+                $xml->writeElement( 'GiornoDiRiposo', '' ); // TODO
+
+                // GiornoChiusuraStraordinari
+                $xml->writeElement( 'GiornoChiusuraStraordinari', '' ); // TODO
+
+                // fine nodo attività
+                $xml->endElement();
+
+            }
+
+            // fine attività del dipendente
+            $xml->endElement();
+
+            // fine del dipendente
+            if( $dipendente !== NULL ) {
+                $xml->endElement();
+            }
+
+        }
+        
 	    // fine del root element
 		$xml->endElement();
 
