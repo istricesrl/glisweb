@@ -53,10 +53,14 @@
         'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1');
 	
 	// elenco tipologie attività inps
-	$ct['etc']['tipologie_attivita_inps'] = mysqlCachedQuery(
+/*	$ct['etc']['tipologie_attivita_inps'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_inps_view ORDER BY id');
+		'SELECT id, __label__ FROM tipologie_attivita_inps_view ORDER BY id'
+	);
+
+	print_r( $ct['etc']['tipologie_attivita_inps'] );
+*/
 
 	// costruzione della griglia
 	if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] ) && isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] ) && isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && !empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) ) 
@@ -77,8 +81,52 @@
 
 		// elenco delle date per il mese e l'anno specificati
 		foreach( $giorni as $giorno ){
-			$ct['etc']['ore'][ $giorno ]['data'] = date( 'd/m/Y', strtotime("$anno-$mese-$giorno") );	
+			$ct['etc']['ore'][ $giorno ]['data'] = date( 'd/m/Y', strtotime("$anno-$mese-$giorno") );
+			$ct['etc']['ore'][ $giorno ]['numero'] = date( 'w', strtotime("$anno-$mese-$giorno") );
 		}
+
+		// costruisco l'array delle tipologie attivita inps da mostrare
+		// inizializzazioni
+		$to = $tf = array();
+
+		// tipologie standard da mostrare sempre
+		$tf = mysqlCachedQuery(
+			$cf['memcache']['connection'], 
+			$cf['mysql']['connection'], 
+			'SELECT id, nome FROM tipologie_attivita_inps WHERE id IN (1,2) ORDER BY id'
+		);
+
+		// tipologie relative alle attivita già fatte dall'operatore escluse le fisse
+		$to = mysqlCachedQuery(
+			$cf['memcache']['connection'], 
+			$cf['mysql']['connection'], 
+			'SELECT DISTINCT tipologie_attivita_inps.id, tipologie_attivita_inps.nome FROM tipologie_attivita_inps ' .
+			'INNER JOIN attivita_view ON tipologie_attivita_inps.id = attivita_view.id_tipologia_inps '.
+			'WHERE attivita_view.anno = ? AND attivita_view.mese = ? AND attivita_view.id_anagrafica = ? '.
+			'AND tipologie_attivita_inps.id NOT IN (1,2)',
+			array(
+				array( 's' => $anno ),
+				array( 's' => $mese ),
+				array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] )
+			)
+		);
+
+		// elenco finale delle tipologie da mostrare
+		$ct['etc']['tipologie_attivita_inps'] = array_merge( $to, $tf );
+
+		// tendina delle tipologie rimanenti
+		$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(
+			$cf['memcache']['connection'], 
+			$cf['mysql']['connection'], 
+			'SELECT DISTINCT id, nome FROM tipologie_attivita_inps ' .
+			'WHERE id NOT IN (1,2) AND id NOT IN (SELECT DISTINCT id_tipologia_inps FROM attivita_view '.
+			'WHERE attivita_view.anno = ? AND attivita_view.mese = ? AND attivita_view.id_anagrafica = ? )',
+			array(
+				array( 's' => $anno ),
+				array( 's' => $mese ),
+				array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] )
+			)
+		);
 
 		// ricavo il riepilogo attività presenti
 		$attivita = mysqlQuery( $cf['mysql']['connection'], 

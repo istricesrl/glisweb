@@ -823,7 +823,7 @@ ul.browsing-tree {
 
 /* stili per i cartellini */
 .cartellini {
-    width: 50% !important;
+    width: auto !important;
 }
 
 .cartellini td{
