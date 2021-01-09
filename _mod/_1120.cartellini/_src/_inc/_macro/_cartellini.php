@@ -96,6 +96,16 @@
 			'SELECT id, nome FROM tipologie_attivita_inps WHERE id IN (1,2) ORDER BY id'
 		);
 
+		// tipologia aggiuntiva eventualmente indicata dalla tendina
+		if( isset( $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) && !empty( isset( $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) ) ){
+			$ta = mysqlCachedQuery(
+				$cf['memcache']['connection'], 
+				$cf['mysql']['connection'], 
+				'SELECT id, nome FROM tipologie_attivita_inps WHERE id = ? ORDER BY id',
+				array( array( 's' => $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) )
+			);
+		}
+
 		// tipologie relative alle attivita già fatte dall'operatore escluse le fisse
 		$to = mysqlCachedQuery(
 			$cf['memcache']['connection'], 
@@ -113,6 +123,10 @@
 
 		// elenco finale delle tipologie da mostrare
 		$ct['etc']['tipologie_attivita_inps'] = array_merge( $to, $tf );
+
+		if( isset( $ta ) && !empty( $ta ) ){
+			$ct['etc']['tipologie_attivita_inps'] = array_merge( $ct['etc']['tipologie_attivita_inps'], $ta );
+		}
 
 		// tendina delle tipologie rimanenti
 		$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(

@@ -826,10 +826,14 @@ ul.browsing-tree {
     width: auto !important;
 }
 
-.cartellini td{
-    vertical-align: middle!important;
+.cartellini td, th {
+    vertical-align: middle !important;
 }
 
-.cartellini input{
+.cartellini tbody input{
     height: 25px;
+}
+
+.cartellini th li{
+    text-align: left !important;
 }

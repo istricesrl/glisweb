@@ -50,8 +50,9 @@
             </div>
         </div>
 
+        {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
         <div class="form-row">
-            <div class="col-md-12 text-center table-responsive">
+            <div class="col-md-12 table-responsive">
                 <table class="view-table cartellini">
                     <thead>
                         <tr>
@@ -59,6 +60,22 @@
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
                             <th>{{ t.nome }}</th>
                             {% endfor %}
+                            <th> 
+                                <div class="row m-0">
+                                    <div class="col combobox-container p-0">
+                                        <select name="__cartellini__[tipologia_aggiuntiva]" onchange="submit();" class="selectbox form-control form-control-sm" id="tipologia_aggiuntiva">
+                                            <option value="" >tipologia</option>
+                                            {% for t in etc.select.tipologie_attivita_inps %}
+                                                <option value="{{ t.id }}" >{{ t.nome }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-auto p-0 pl-1">
+                                        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#tipologia_aggiuntiva_inputbox').trigger('all');"><i class="fa fa-chevron-down"></i></button>
+                                    </div>
+                                </div>
+                           
+                            </th>
                             <th>totale</th>
                         </tr>
                     </thead>
@@ -66,11 +83,9 @@
                         {% for k,v in etc.ore %}
                         <tr>
                             <td>{{ v.data }}</td>
-                            {% for t in etc.tipologie_attivita_inps %}
+                            {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
                             {% if v.tipologie_inps[ t.id ] %}
-                             <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ~'&__view__['~view.id~'][__filters__][id_tipologia_inps][EQ]='~t.id }}','_self');"> 
-                        <!--    <td><a href="{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}">    -->
-                            <div>{{ v.tipologie_inps[ t.id ] }}</div></td>
+                            <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ~'&__view__['~view.id~'][__filters__][id_tipologia_inps][EQ]='~t.id }}','_self');"><div>{{ v.tipologie_inps[ t.id ] }}</div>
                             {% else %}
                             <td><input type="number" class="form-control form-control-sm" step="0.5" name="__cartellini__[{{ k }}_{{ t.id }}]">
                             {% endif %}
@@ -81,7 +96,7 @@
                         {% endfor %}
                         <tr>
                             <td>totale</td>
-                            {% for t in etc.tipologie_attivita_inps %}
+                            {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
                             <td>{{ etc.tipologie[ t.id ].ore_totali }}</td>
                             {% endfor %}
                         </tr>
@@ -91,7 +106,6 @@
         </div>
     
         {# BOTTONI E COMANDI DEL MODULO #}
-        {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
 	    <fieldset class="form-controls mt-auto">
             <div class="row no-gutters d-print-none">
                 <div class="col-auto col-md-5">
