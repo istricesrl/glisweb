@@ -34,6 +34,12 @@
         array( 'id' => '6', '__label__' => 'sabato' ),
         array( 'id' => '7', '__label__' => 'domenica' )
     );
+
+    // tendina turni
+	foreach( range( 1, 9 ) as $turno ) {
+	    $ct['etc']['select']['turni'][] =  array( 'id' => $turno, '__label__' => $turno );
+	}
+
     
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';

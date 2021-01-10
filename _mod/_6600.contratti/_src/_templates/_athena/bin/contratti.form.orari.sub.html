@@ -11,7 +11,11 @@
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
 	{{ frm.input( table, subtable, i, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
-	    <div class="col-md-3">
+        <div class="col-md-1">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">turno</span>{% endif %}
+		    {{ frm.select( table, subtable, i, 'turno', 'turno', etc.select.turni, request, '1' ) }}
+        </div>
+	    <div class="col-md-2">
 		    {% if i == 0 %}<span class="label-top remove-after-duplicate">giorno</span>{% endif %}
 		    {{ frm.select( table, subtable, i, 'id_giorno', 'giorno', etc.select.giorno, request ) }}
         </div>
