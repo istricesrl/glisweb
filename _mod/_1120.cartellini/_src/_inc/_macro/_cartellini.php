@@ -67,13 +67,22 @@
 	// costruzione della griglia
 	if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] ) && isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] ) && isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && !empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) ) 
 	{
-		// costruisco l'elenco giorni partendo da mese e anno
-		$giorni = array();
+
 		$mese = intval( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] );
 		$anno = intval( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] );
 
+		// costruisco l'elenco giorni partendo da mese e anno
+		$giorni = array();
+		for( $d=1; $d<=31; $d++ )
+		{
+			$time=mktime(12, 0, 0, $mese, $d, $anno);          
+			if (date('m', $time) == $mese){   
+				$giorni[] = intval( date('d', $time) );
+			}
+		}
+
 		// array delle festività
-		$festivi = Array(
+		$festivi = array(
 			'01/01', 	// Capodanno
 			'06/01',  	// Epifania
 			date("d/m", easter_date( $anno ) ),		// Pasqua calcolata per l'anno corrente
@@ -88,13 +97,11 @@
 			'26/12' 	// Santo Stefano
 		);
 		
-		for( $d=1; $d<=31; $d++ )
-		{
-			$time=mktime(12, 0, 0, $mese, $d, $anno);          
-			if (date('m', $time) == $mese){   
-				$giorni[] = intval( date('d', $time) );
-			}
-		}
+		// ore totali di quadratura di colonna complessivi
+		$ct['etc']['totali_quadratura'] = array(
+			'ordinarie_previste' => 0,
+			'ordinarie_fatte' => 0
+		 );
 
 		// elenco dei giorni per il mese e l'anno specificati
 		foreach( $giorni as $giorno ){
@@ -107,14 +114,15 @@
 			$ct['etc']['ore'][ $giorno ]['ordinarie_previste'] = 0;
 			$ct['etc']['ore'][ $giorno ]['ordinarie_fatte'] = 0;
 
-			// ore ordinarie previste da contratto per quel giorno
+			// ore ordinarie e di quadratura previste da contratto per quel giorno
 			$ct['etc']['ore'][ $giorno ]['ordinarie_previste'] = mysqlSelectCachedValue(
 				$cf['memcache']['connection'], 
 				$cf['mysql']['connection'], 
 				'SELECT sum( time_to_sec( timediff( ora_fine, ora_inizio ) ) / 3600 ) as tot_ore FROM orari_contratti ' .
 				'INNER JOIN costi_contratti ON orari_contratti.id_costo = costi_contratti.id ' .
 				'INNER JOIN contratti ON orari_contratti.id_contratto = contratti.id ' .
-				'WHERE costi_contratti.id_tipologia = 1 AND orari_contratti.se_lavoro = 1 ' .
+				'INNER JOIN tipologie_attivita_inps ON costi_contratti.id_tipologia = tipologie_attivita_inps.id ' .
+				'WHERE tipologie_attivita_inps.se_quadratura = 1 AND orari_contratti.se_lavoro = 1 ' .
 				'AND orari_contratti.id_giorno = ? AND contratti.id_anagrafica = ? ' . 
 				'AND ( ' .
 				'data_inizio <= ? AND ( data_fine_rapporto >= ? OR ( data_fine_rapporto IS NULL AND ( data_fine IS NULL or data_fine >= ? )  ) ) ' .
@@ -127,8 +135,12 @@
 					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) ),
 					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) )
 				)
-			);	
-			
+			);
+
+			if( !empty( $ct['etc']['ore'][ $giorno ]['ordinarie_previste'] ) ){
+				$ct['etc']['totali_quadratura']['ordinarie_previste'] += $ct['etc']['ore'][ $giorno ]['ordinarie_previste'];
+			}
+
 			// nome del giorno (lun, mar, mer, ...)
 			$ct['etc']['ore'][ $giorno ]['nome'] = $nomigiorni[ $ct['etc']['ore'][ $giorno ]['numero'] ];
 
@@ -148,7 +160,7 @@
 		$tf = mysqlCachedQuery(
 			$cf['memcache']['connection'], 
 			$cf['mysql']['connection'], 
-			'SELECT id, nome FROM tipologie_attivita_inps WHERE id IN (1,2) ORDER BY id'
+			'SELECT id, __label__ FROM tipologie_attivita_inps_view WHERE id IN (1,2) ORDER BY id'
 		);
 
 		// tipologia aggiuntiva eventualmente indicata dalla tendina
@@ -156,7 +168,7 @@
 			$ta = mysqlCachedQuery(
 				$cf['memcache']['connection'], 
 				$cf['mysql']['connection'], 
-				'SELECT id, nome FROM tipologie_attivita_inps WHERE id = ? ORDER BY id',
+				'SELECT id, __label__ FROM tipologie_attivita_inps_view WHERE id = ? ORDER BY id',
 				array( array( 's' => $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) )
 			);
 		}
@@ -165,10 +177,10 @@
 		$to = mysqlCachedQuery(
 			$cf['memcache']['connection'], 
 			$cf['mysql']['connection'], 
-			'SELECT DISTINCT tipologie_attivita_inps.id, tipologie_attivita_inps.nome FROM tipologie_attivita_inps ' .
-			'INNER JOIN attivita_view ON tipologie_attivita_inps.id = attivita_view.id_tipologia_inps '.
+			'SELECT DISTINCT tipologie_attivita_inps_view.id, tipologie_attivita_inps_view.__label__ FROM tipologie_attivita_inps_view ' .
+			'INNER JOIN attivita_view ON tipologie_attivita_inps_view.id = attivita_view.id_tipologia_inps '.
 			'WHERE attivita_view.anno = ? AND attivita_view.mese = ? AND attivita_view.id_anagrafica = ? '.
-			'AND tipologie_attivita_inps.id NOT IN (1,2)',
+			'AND tipologie_attivita_inps_view.id NOT IN (1,2)',
 			array(
 				array( 's' => $anno ),
 				array( 's' => $mese ),
@@ -190,7 +202,7 @@
 		$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(
 			$cf['memcache']['connection'], 
 			$cf['mysql']['connection'], 
-			'SELECT DISTINCT id, nome FROM tipologie_attivita_inps ' .
+			'SELECT DISTINCT id, __label__ FROM tipologie_attivita_inps_view ' .
 			'WHERE id NOT IN (1,2) '. 			// escludo le tipologie fisse
 			( ( isset( $ta ) && !empty( $ta ) ) ? 'AND id <> ' . $ta[0]['id'] : '' ) . ' ' . 	// escludo l'eventuale valore già selezionato con la tendina
 			'AND id NOT IN (SELECT DISTINCT id_tipologia_inps FROM attivita_view '.		// escludo le tipologie di attività fatte dall'operatore
@@ -205,7 +217,9 @@
 		// ricavo il riepilogo attività presenti
 		$attivita = mysqlQuery( 
 			$cf['mysql']['connection'], 
-			'SELECT giorno, id_tipologia_inps, sum(ore) as tot_ore FROM attivita_view WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by data, id_tipologia_inps',
+			'SELECT giorno, id_tipologia_inps, tipologie_attivita_inps.se_quadratura, sum(ore) as tot_ore FROM attivita_view ' .
+			'INNER JOIN tipologie_attivita_inps ON attivita_view.id_tipologia_inps = tipologie_attivita_inps.id ' .
+			'WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by data, id_tipologia_inps',
 			array(
 				array( 's' => $anno ),
 				array( 's' => $mese ),
@@ -217,23 +231,21 @@
 			foreach( $attivita as $a ){
 				$ct['etc']['ore'][ $a['giorno'] ]['tipologie_inps'][ $a['id_tipologia_inps'] ] = $a['tot_ore'];
 
-				// setto le ore ordinarie totali fatte
-				if( $a['id_tipologia_inps'] == 1 ){
-					$ct['etc']['ore'][ $a['giorno'] ]['ordinarie_fatte'] = $a['tot_ore'];
+				// setto le ore ordinarie e altre di quadratura totali fatte
+				if( $a['se_quadratura'] == 1 ){
+					$ct['etc']['ore'][ $a['giorno'] ]['ordinarie_fatte'] += $a['tot_ore'];
+					$ct['etc']['totali_quadratura']['ordinarie_fatte'] += $a['tot_ore'];
 				}
 			}
 		}
 
 		// confronto le ore ordinarie previste e fatte
 		foreach( $ct['etc']['ore'] as &$g ){
-			if( $g['ordinarie_fatte'] > $g['ordinarie_previste'] ){
+			if( $g['ordinarie_fatte'] != $g['ordinarie_previste'] ){
 				$g['extra'] = '1';
 			}
 			elseif( ($g['ordinarie_fatte'] == $g['ordinarie_previste']) && $g['ordinarie_fatte'] > 0 ){
 				$g['extra'] = '0';
-			}
-			elseif( $g['ordinarie_fatte'] < $g['ordinarie_previste']  ){
-				$g['extra'] = '-1';
 			}
 		}
 
@@ -252,6 +264,16 @@
 				$ct['etc']['tipologie'][ $ot['id_tipologia_inps'] ]['ore_totali'] = $ot['tot_ore'];
 			}
 		}
+
+		if( $ct['etc']['totali_quadratura']['ordinarie_fatte'] > 0 || $ct['etc']['totali_quadratura']['ordinarie_previste'] > 0 ) {
+			if( $ct['etc']['totali_quadratura']['ordinarie_fatte'] != $ct['etc']['totali_quadratura']['ordinarie_previste'] ){
+				$ct['etc']['totali_quadratura']['extra'] = '1';
+			}
+			else{
+				$ct['etc']['totali_quadratura']['extra'] = '0';
+			}
+		}
+
 	
 
 //	print_r($ct['etc']['ore']);

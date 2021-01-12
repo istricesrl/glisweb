@@ -59,7 +59,7 @@
                             <th>data</th>
                             <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
-                            <th>{{ t.nome }}</th>
+                            <th>{{ t.__label__ }}</th>
                             {% endfor %}
                             <th> 
                                 <div class="row m-0">
@@ -67,7 +67,7 @@
                                         <select name="__cartellini__[tipologia_aggiuntiva]" onchange="submitFormOkay=true; submit();" class=" form-control form-control-sm" id="tipologia_aggiuntiva">
                                             <option value="" >tipologia</option>
                                             {% for t in etc.select.tipologie_attivita_inps %}
-                                                <option value="{{ t.id }}" >{{ t.nome }}</option>
+                                                <option value="{{ t.id }}" >{{ t.__label__ }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -108,6 +108,19 @@
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
                             <td>{{ etc.tipologie[ t.id ].ore_totali }}</td>
                             {% endfor %}
+                            <td>&nbsp;</td>
+                            <td>
+                                {% if etc.totali_quadratura.ordinarie_fatte > 0 or etc.totali_quadratura.ordinarie_previste > 0 %}
+                                {{'%0.2f'|format( etc.totali_quadratura.ordinarie_fatte ) }} ore di {{ '%0.2f'|format( etc.totali_quadratura.ordinarie_previste ) }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if etc.totali_quadratura.extra == '1' %}
+                                <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% elseif etc.totali_quadratura.extra == '0' %}
+                                <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% endif %}
+                            </td>
                         </tr>
                     </tbody>
                 </table>

@@ -826,8 +826,10 @@ ul.browsing-tree {
     width: auto !important;
 }
 
+
 .cartellini td, th {
     vertical-align: middle !important;
+    max-width: 150px;
 }
 
 .cartellini tbody input{
