@@ -87,7 +87,7 @@
                             <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ~'&__view__['~view.id~'][__filters__][id_tipologia_inps][EQ]='~t.id }}','_self');">
                                 <div>{{ v.tipologie_inps[ t.id ] }}</div>
                             {% else %}
-                            <td><input type="number" class="form-control form-control-sm" step="0.5" name="__cartellini__[{{ k }}_{{ t.id }}]">
+                            <td><input type="number" class="form-control form-control-sm" step="0.5" name="__cartellini__[giorni][{{ k }}_{{ t.id }}]">
                             {% endif %}
                             </td>
                             {% endfor %}
