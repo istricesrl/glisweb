@@ -30,7 +30,7 @@
 		 $ct['view']['id'] = md5( $ct['view']['table'] );
 	 }
 
-		// tendina mesi
+	// tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
 	    $ct['etc']['select']['mesi'][ $mese ] =  int2month( $mese ) ;
 	}
@@ -128,9 +128,6 @@
 					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) )
 				)
 			);	
-
-//			echo "data: " . $datamysql . ", ore previste: " . $ct['etc']['ore'][ $giorno ]['ordinarie_previste'] . "<br>";
-//			echo $datamysql . PHP_EOL;
 			
 			// nome del giorno (lun, mar, mer, ...)
 			$ct['etc']['ore'][ $giorno ]['nome'] = $nomigiorni[ $ct['etc']['ore'][ $giorno ]['numero'] ];
@@ -179,9 +176,12 @@
 			)
 		);
 
+		
 		// elenco finale delle tipologie da mostrare
+		// merge tra quelle fisse e quelle dell'operatore
 		$ct['etc']['tipologie_attivita_inps'] = array_merge( $to, $tf );
 
+		// merge delle precedenti con quella eventualmente selezionata dalla tendina
 		if( isset( $ta ) && !empty( $ta ) ){
 			$ct['etc']['tipologie_attivita_inps'] = array_merge( $ct['etc']['tipologie_attivita_inps'], $ta );
 		}
@@ -191,7 +191,9 @@
 			$cf['memcache']['connection'], 
 			$cf['mysql']['connection'], 
 			'SELECT DISTINCT id, nome FROM tipologie_attivita_inps ' .
-			'WHERE id NOT IN (1,2) AND id NOT IN (SELECT DISTINCT id_tipologia_inps FROM attivita_view '.
+			'WHERE id NOT IN (1,2) '. 			// escludo le tipologie fisse
+			( ( isset( $ta ) && !empty( $ta ) ) ? 'AND id <> ' . $ta[0]['id'] : '' ) . ' ' . 	// escludo l'eventuale valore già selezionato con la tendina
+			'AND id NOT IN (SELECT DISTINCT id_tipologia_inps FROM attivita_view '.		// escludo le tipologie di attività fatte dall'operatore
 			'WHERE attivita_view.anno = ? AND attivita_view.mese = ? AND attivita_view.id_anagrafica = ? )',
 			array(
 				array( 's' => $anno ),

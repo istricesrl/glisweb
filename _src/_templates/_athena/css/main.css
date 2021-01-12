@@ -824,7 +824,6 @@ ul.browsing-tree {
 /* stili per i cartellini */
 .cartellini {
     width: auto !important;
-    max-width: 100%;
 }
 
 .cartellini td, th {

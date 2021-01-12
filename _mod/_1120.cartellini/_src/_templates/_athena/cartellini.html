@@ -64,17 +64,13 @@
                             <th> 
                                 <div class="row m-0">
                                     <div class="col combobox-container p-0">
-                                        <select name="__cartellini__[tipologia_aggiuntiva]" onchange="submit();" class=" form-control form-control-sm" id="tipologia_aggiuntiva">
+                                        <select name="__cartellini__[tipologia_aggiuntiva]" onchange="submitFormOkay=true; submit();" class=" form-control form-control-sm" id="tipologia_aggiuntiva">
                                             <option value="" >tipologia</option>
                                             {% for t in etc.select.tipologie_attivita_inps %}
                                                 <option value="{{ t.id }}" >{{ t.nome }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
-                                <!--    <div class="col-auto p-0 pl-1">
-                                        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#tipologia_aggiuntiva_inputbox').trigger('all');"><i class="fa fa-chevron-down"></i></button>
-                                    </div>
-                                -->
                                 </div>
                            
                             </th>
