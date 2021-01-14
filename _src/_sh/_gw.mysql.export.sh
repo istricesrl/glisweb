@@ -14,7 +14,7 @@ cd $RL
 echo "lavoro su: $(pwd)"
 
 ## cartella di destinazione
-DSTDIR="usr/database/"
+DSTDIR="usr/database/$(date '+%Y%m%d%H%M')/"
 mkdir -p $DSTDIR
 
 ## file di destinazione
@@ -25,7 +25,7 @@ FILE2=$DSTDIR"mysql.data.sql"
 FILEC=$FILE1".clean"
 
 ## se il file su cui lavorare è specificato
-if [ -f "$FILE1" -a -f "$FILE2" ]; then
+if [ -d "$DSTDIR" ]; then
 
     read -p "indirizzo del server: " SRVADDR
 
@@ -42,5 +42,9 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
 
     cat $FILE1 | sed -E 's/DEFINER=`[a-z]+`@`[a-z0-9\.%]+`/DEFINER=CURRENT_USER()/g' | sed 's/ AUTO_INCREMENT=[0-9]*\b//g' > $FILEC
 	mv $FILEC $FILE1
+
+else
+
+    echo "cartella non trovata"
 
 fi
