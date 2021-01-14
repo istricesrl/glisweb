@@ -35,6 +35,16 @@
         array( 'id' => '7', '__label__' => 'domenica' )
     );
     
+    // riordino l'array degli orari in base a id_giorno
+    if ( isset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] ) )
+    {     
+        foreach( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] as $key => $value ) {
+            $sort_data[ $key ] = $value['id_giorno'];
+        }
+        
+        array_multisort( $sort_data, $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] );
+    }
+
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
 
