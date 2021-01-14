@@ -9,11 +9,11 @@
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
 
-    <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill warning-if-changed" action="{{ page.path[ localization.language.ietf ] }}" method="post">
-        <div class="form-row view-filters d-print-none">
+    <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+        <div class="form-row view-filters d-print-none cks">
             <div class="col-12 col-md-auto">
             <span class="label-top">mese</span>
-            <select name="__view__[{{ view.id }}][__filters__][mese][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true;" class="form-control form-control-sm">
+            <select name="__view__[{{ view.id }}][__filters__][mese][EQ]" onchange="$('#pager').val('0');" class="form-control form-control-sm">
             {% for id, nome in etc.select.mesi %}
                 <option value="{{ id }}" {% if request.__view__[ view.id ].__filters__.mese.EQ == id %}selected{% endif %}>{{ nome }}</option>
             {% endfor %}
@@ -22,7 +22,7 @@
 
             <div class="col-12 col-md-auto">
                 <span class="label-top">anno</span>
-                <select name="__view__[{{ view.id }}][__filters__][anno][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true;" class="form-control form-control-sm">
+                <select name="__view__[{{ view.id }}][__filters__][anno][EQ]" onchange="$('#pager').val('0');" class="form-control form-control-sm">
                 {% for id, nome in etc.select.anni %}
                     <option value="{{ id }}" {% if request.__view__[ view.id ].__filters__.anno.EQ == id %}selected{% endif %}>{{ nome }}</option>
                 {% endfor %}
@@ -33,8 +33,8 @@
                 <span class="label-top">operatore</span>
                 <div class="row m-0">
                     <div class="col combobox-container p-0">
-                        <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true;" class="selectbox form-control form-control-sm" id="operatore">
-                            <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>&nbsp;</option>
+                        <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0');" class="selectbox form-control form-control-sm" id="operatore">
+                            <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}></option>
                         {% for operatore  in etc.select.operatori %}
                             <option value="{{ operatore.id }}" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
                         {% endfor %}
@@ -53,7 +53,7 @@
         {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
         <div class="form-row">
             <div class="col-md-12 table-responsive">
-                <table class="view-table cartellini">
+                <table class="view-table cartellini warning-if-changed-cst">
                     <thead>
                         <tr>
                             <th>data</th>
@@ -149,4 +149,18 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block javascript %}
+<script defer type="text/javascript">
+
+    window.addEventListener( 'DOMContentLoaded', function() {
+     $('.warning-if-changed-cst').on( 'keyup change', function() { 
+         $('.cks select').prop('disabled', true);
+         $('.cks input').prop('disabled', true);
+         $('.cks button').prop('disabled', true);
+        } );
+    });
+
+</script>
 {% endblock %}
