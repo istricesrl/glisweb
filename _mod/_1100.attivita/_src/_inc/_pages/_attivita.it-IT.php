@@ -44,3 +44,32 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
+
+
+
+	// vista turni
+	$p['turni.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'turni' ),
+	    'h1'			=> array( $l		=> 'turni' ),
+	    'parent'		=> array( 'id'		=> 'produzione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_turni.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'turni.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'turni' ),
+									'priority'	=> '110' ) )
+	);
+
+
+	// gestione turni
+	$p['turni.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'turni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_turni.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'turni.form' ) )
+	);
