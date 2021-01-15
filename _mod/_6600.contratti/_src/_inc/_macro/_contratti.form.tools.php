@@ -37,6 +37,9 @@
 	    'text' => 'crea un duplicato del contratto per inserire variazioni'
 	);
 
+	// macro di default per l'entità contratti
+	require '_contratti.form.default.php';
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 

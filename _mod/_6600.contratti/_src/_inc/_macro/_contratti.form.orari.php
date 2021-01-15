@@ -57,9 +57,6 @@
         }       
     }
 
-    // passo il numero turno corrente al template
-    $ct['etc']['turno'] = $ct['page']['turno'];
-
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
 
