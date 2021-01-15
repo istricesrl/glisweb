@@ -1,15 +1,16 @@
 <?php
 
+    // tabella gestita
+    $ct['form']['table'] = 'contratti';
+
     // leggo il turno massimo inserito
-    if( isset( $_REQUEST['contratti']['id'] ) ){
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
         $tm = mysqlSelectValue( 
             $cf['mysql']['connection'],        
             'SELECT max(turno) from orari_contratti WHERE id_contratto = ?',
             array( array( 's' => $_REQUEST['contratti']['id'] ) )
         );
     }
-
- #   echo "turno max: " . $tm;
 
     // se non sono presenti orari, quindi turni, rimuovo tutte le tab tranne la prima
     if( empty( $tm) ){

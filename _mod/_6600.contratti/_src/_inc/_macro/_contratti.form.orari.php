@@ -38,16 +38,17 @@
         array( 'id' => '7', '__label__' => 'domenica' )
     );
 
-    // rimuovo gli orari che non appartengono al turno corrente
-    foreach( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] as $k => $v ){
-        if( $v['turno'] != $ct['page']['turno'] ){
-            unset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'][$k] );
-        }
-    }
-
-    // riordino l'array degli orari in base a id_giorno
+    
     if ( isset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] ) )
-    {     
+    { 
+        // rimuovo gli orari che non appartengono al turno corrente
+        foreach( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] as $k => $v ){
+            if( $v['turno'] != $ct['page']['turno'] ){
+                unset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'][$k] );
+            }
+        }
+        
+        // riordino l'array degli orari in base a id_giorno
         foreach( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] as $key => $value ) {
             $sort_data[ $key ] = $value['id_giorno'];
         }

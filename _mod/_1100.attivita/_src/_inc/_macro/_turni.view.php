@@ -21,13 +21,16 @@
         'anagrafica' => 'anagrafica',
         'turno' => 'turno',
         'data_inizio' => 'data inizio',
-        'data_fine' => 'data fine',
-	    '__label__' => 'turno'
+        'data_fine' => 'data fine'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    '__label__' => 'text-left no-wrap'
+        'id' => 'text-left',
+        'anagrafica' => 'text-left',
+        'turno' => 'text-left',
+        'data_inizio' => 'text-left',
+        'data_fine' => 'text-left'
 	);
 
     // inclusione filtri speciali
