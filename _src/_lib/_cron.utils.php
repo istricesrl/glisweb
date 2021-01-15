@@ -193,7 +193,7 @@
 
 
     // funzione per la creazione di un'array di date pianificate in base a criteri specifici
-    function creazionePianificazione( $c, $data, $id_periodicita, $cadenza, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
+    function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
 
         // TODO controlli
                // la data inizio è successiva alla data fine
@@ -201,7 +201,7 @@
         $number = ['first', 'second', 'third', 'fourth','fifth','sixth'];
         $days = ['Monday', 'Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday' ];
         $months = ['January','February','March','April','May','June','July','August','September','October','November','December' ];
-        $attivita[] = array();
+        //$attivita[] = array();
             // in base al tipo di periodicità della pianificazione vengono generate le attività
         switch($id_periodicita){
     
@@ -252,18 +252,23 @@
                     if ( empty($data_fine) || $data_fine === NULL ){ 
                         $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * $numero_ripetizioni .' months ')); 
                         $data_fine = date(date('Y',strtotime($data_fine))."-".date('m',strtotime($data_fine))."-01");}
-                                        
+
                 if( $ripetizione_mese != 1 ){
                     $n_g = numOfDayInWeek($data, $days[ date('N', strtotime($data)) - 1 ]);
                     while ( $data < $data_fine ){
                         
                         $attivita[] = $data;
+                        //print_r("data: ".$data."<br>");
                         $data_temp = date("Y-m-d", strtotime("+ ".$cadenza." month", strtotime($data)));
+                        //print_r("mese dopo ".$data_temp."<br>");
                         $data_temp = date(date('Y',strtotime($data_temp))."-".date('m',strtotime($data_temp))."-01");
-                        $data_temp = date("Y-m-d", strtotime($number[ $n_g -1 ]." ".$days[ date('N', strtotime($data))-1 ], strtotime($data_temp." -1 day")));
-                        
+                        //print_r("primo del mese  ".$data_temp."<br>");
+                        //print_r($days[ date('N', strtotime($data)) ]."<br>");
+                        $data_temp = date("Y-m-d", strtotime($number[ $n_g -1 ]." ".$days[ date('N', strtotime($data)) -1 ], strtotime($data_temp." -1 day")));
+                        //print_r("data  ".$data_temp."<br>");
                         if( date('m', strtotime($data_temp)) != ((date('m',  strtotime($data)) + $cadenza) % 12 ) ){
                             $data_temp = date("Y-m-d", strtotime("last ".$days[ date('N', strtotime($data))-1 ], strtotime($data_temp)));   
+                            //print_r("data modificata ".$data_temp."<br>");
                         }
                         
                         $data = $data_temp;
@@ -275,7 +280,7 @@
                         // aggiorno la data con la successiva
                         $data = date('Y-m-d', strtotime($data. ' + '.$cadenza.' months'));
     
-                    } while ( $data <= $data_fine );
+                    } while ( $data < $data_fine );
                 }   
                 break;
     
