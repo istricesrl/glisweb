@@ -823,13 +823,24 @@ ul.browsing-tree {
 
 /* stili per i cartellini */
 .cartellini {
-    width: 50% !important;
+    width: auto !important;
 }
 
-.cartellini td{
-    vertical-align: middle!important;
+
+.cartellini td, th {
+    vertical-align: middle !important;
+    max-width: 150px;
 }
 
-.cartellini input{
+.cartellini tbody input{
     height: 25px;
+}
+
+.cartellini tbody tr:last-child{
+    border-bottom: none;
+    height: 40px;
+}
+
+.cartellini th li{
+    text-align: left !important;
 }
