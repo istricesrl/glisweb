@@ -13,11 +13,11 @@
 	<div class="form-group form-row">
         <div class="col-md-1">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">turno</span>{% endif %}
-            {{ frm.input( table, subtable, i, 'turno', '', '', request, page.turno ) }}
+            {{ frm.selectRequired( table, subtable, i, 'turno', 'turno', etc.select.turni, request, page.turno ) }}
         </div>
 	    <div class="col-md-2">
 		    {% if i == 0 %}<span class="label-top remove-after-duplicate">giorno</span>{% endif %}
-		    {{ frm.select( table, subtable, i, 'id_giorno', 'giorno', etc.select.giorno, request ) }}
+		    {{ frm.selectRequired( table, subtable, i, 'id_giorno', 'giorno', etc.select.giorno, request ) }}
         </div>
         <div class="col-md-2">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">ora inizio</span>{% endif %}
@@ -29,7 +29,7 @@
         </div>
         <div class="col-md-3">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">costo</span>{% endif %}
-            {{ frm.select( table, subtable, i, 'id_costo', 'costo', etc.select.costi_contratti, request ) }}
+            {{ frm.selectRequired( table, subtable, i, 'id_costo', 'costo', etc.select.costi_contratti, request ) }}
         </div>       
         <div class="col-md">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">lavoro</span>{% endif %}

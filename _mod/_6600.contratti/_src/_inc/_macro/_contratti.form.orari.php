@@ -38,6 +38,11 @@
         array( 'id' => '7', '__label__' => 'domenica' )
     );
 
+    // tendina turni
+	foreach( range( 1, 9 ) as $turno ) {
+	    $ct['etc']['select']['turni'][] =  array( 'id' => $turno, '__label__' => $turno );
+	}
+
     
     if ( isset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] ) )
     { 
