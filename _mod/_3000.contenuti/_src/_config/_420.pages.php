@@ -58,17 +58,17 @@
                 $cf['contents']['page']['description'][ $cf['localization']['language']['ietf'] ] = $cnt['description'];
             }
 
-            // prelevo e assegno le macro
-            $cf['contents']['page']['macro'] = mysqlSelectColumn(
-                'macro',
-                $cf['mysql']['connection'],
-                'SELECT macro FROM pagine_macro WHERE id_pagina = ?',
-                array(
-                    array( 's' => $cf['contents']['page']['id'] )
-                )
-            );
-
         }
+
+        // prelevo e assegno le macro
+        $cf['contents']['page']['macro'] = mysqlSelectColumn(
+            'macro',
+            $cf['mysql']['connection'],
+            'SELECT macro FROM pagine_macro WHERE id_pagina = ?',
+            array(
+                array( 's' => $cf['contents']['page']['id'] )
+            )
+        );
 
         // aggiungo le immagini
         aggiungiImmagini(
