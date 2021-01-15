@@ -129,7 +129,10 @@
 #	    'luoghi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-	    'mail' => array(
+		'macro' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
+		'mail' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
