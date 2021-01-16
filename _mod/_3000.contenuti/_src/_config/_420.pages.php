@@ -61,12 +61,15 @@
         }
 
         // prelevo e assegno le macro
-        $cf['contents']['page']['macro'] = mysqlSelectColumn(
-            'macro',
-            $cf['mysql']['connection'],
-            'SELECT macro FROM pagine_macro WHERE id_pagina = ?',
-            array(
-                array( 's' => $cf['contents']['page']['id'] )
+        arrayReplaceRecursive(
+            $cf['contents']['page']['macro'],
+            mysqlSelectColumn(
+                'macro',
+                $cf['mysql']['connection'],
+                'SELECT macro FROM pagine_macro WHERE id_pagina = ?',
+                array(
+                    array( 's' => $cf['contents']['page']['id'] )
+                )
             )
         );
 
