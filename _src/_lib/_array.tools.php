@@ -231,3 +231,19 @@
 	);
 
     }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function arrayReplaceRecursive( &$a1, $a2 ) {
+
+        $a1 = ( is_array( $a1 ) ) ? $a1 : array();
+        $a2 = ( is_array( $a2 ) ) ? $a2 : array();
+
+        $a1 = array_replace_recursive( $a1, $a2 );
+
+        return $a1;
+
+    }
