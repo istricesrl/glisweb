@@ -1,0 +1,304 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12  d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="javascript:;" onsubmit="genera()" method="">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>dati della pianificazione </legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12 col-md-6">
+                <span class="label-top">contratto</span>
+                {{ frm.selectRequired( '', '', '', '__id_contratto__', '', etc.select.contratti, request ) }}
+            </div>
+            <div class="col-12 col-md-2">
+            <span class="label-top">data inizio</span>
+                <input name="__data__" type="date" value="{{'now'|date('Y-m-d') }}" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__" required onchange="myDate()">
+            </div>
+            <div class="col-12 col-md-2">
+                <span class="label-top">turno</span>
+                {{ frm.selectRequired( '', '', '', '__turno__', '', etc.select.turni, request ) }}
+            </div>
+            <div class="col-12 col-md-2">
+                <span class="label-top">periodicità</span>
+                <select id="__id_periodicita__" name="__id_periodicita__" onclick="dettagli(); myDate()"  class="form-control form-control-sm" required>
+                    {% for p in etc.select.periodi %}
+                        <option value="{{p.id}}" id="{{p.id}}">{{p.__label__}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+		</div>
+
+        <div class="form-group form-row" id="ripetizione" style="display: none;">
+            <div class="col-auto d-flex align-items-center">Ripeti ogni </div>
+            <div class="col-auto">
+                 {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
+            </div>
+            <div class="col-auto d-flex align-items-center">
+            <span id="period"></span>
+        </div>    
+        </div>
+        <div class="form-group form-row" id="settimana" style="display: none;">
+            <span class="col-auto text-right"><b>ripeti ogni</b></span>
+            {# frm.select( '', '', '', '__id_giorno_settimana__', '', etc.select.giorni_settimana, request ) #}
+            {% for g in etc.select.giorni_settimana %}
+            <div class="col-auto">
+                <input class="messageCheckbox" type="checkbox" id="giorno_{{g.id}}" name="giorni" value="{{ g.id }}">
+                <label for="horns">{{g.__label__}}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="form-group form-row" id="mese" style="display: none;">
+            <select id="__rip_mese__" name="__rip_mese__" class="form-control form-control-sm">
+                <option id="1" value="1"></option>
+                <option id="2" value="2"></option>
+            </select>
+        </div>
+
+        <div class="form-group form-row" id="anno" style="display: none;">
+            <select id="__rip_anno__" name="__rip_anno__"  class="form-control form-control-sm">
+                <option id="1" value="1"></option>
+                <option id="2" value="2"></option>
+            </select>
+        </div>
+
+        <div class="form-group form-row" id="fine_p" style="display: none;">
+        <div><span class="label-top">fine pianificazione</span></div>    
+        <div class="col-12" >
+            <div class="form-row">
+                <div class="col-auto d-flex align-items-center">
+                    <input type="radio" id="data_f" name="fine" value="data_f" checked>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    fino al 
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    {{ frm.date( '', '', '', '__data_fine__', '', '', request ) }}<br>
+                </div>    
+            </div>
+            <div class="form-row mt-1">
+                <div class="col-auto d-flex align-items-center">
+                    <input type="radio" id="numero" name="fine" value="numero" >
+                </div> 
+                <div class="col-auto d-flex align-items-center">ripeti  </div>    
+                <div class="col-auto d-flex align-items-center">
+                    {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
+                </div>   
+                <div class="col-auto d-flex align-items-center">volte </div>  
+            </div>   
+        </div>
+    </div>
+    </fieldset>
+    
+    {# BOTTONI E COMANDI DEL MODULO #}
+
+    <fieldset class="form-controls mt-auto">
+        <div class="row no-gutters d-print-none">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary">GENERA TURNI</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+       
+</form>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+$(document).ready(function(){
+    $('input[type=radio]').click(function(){
+        console.log(this.value);
+        if(this.value == 'numero'){
+            $( "#___data_fine__" ).prop( "disabled", true );
+            $( "#___ripetizione_fine__" ).prop( "disabled", false );
+        } else {
+            $( "#___data_fine__" ).prop( "disabled", false );
+            $( "#___ripetizione_fine__" ).prop( "disabled", true );
+        }
+    });
+});
+
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        $( "#___ripetizione_fine__" ).prop( "disabled", true );
+
+        if(document.getElementById("__id_periodicita__").value != 0 ){
+            document.getElementById("ripetizione").style.display = "flex";
+            document.getElementById("fine_p").style.display = "flex";
+        } else {
+            document.getElementById("ripetizione").style.display = "none";
+            document.getElementById("fine_p").style.display = "none";}
+    
+        if(document.getElementById("__id_periodicita__").value == 2 ){
+            document.getElementById("settimana").style.display = "flex";
+        } else {
+            document.getElementById("settimana").style.display = "none";}
+
+        if(document.getElementById("__id_periodicita__").value == 3 ){
+            document.getElementById("mese").style.display = "flex";
+        } else {
+            document.getElementById("mese").style.display = "none";}
+
+        if(document.getElementById("__id_periodicita__").value == 4 ){
+            document.getElementById("anno").style.display = "flex";
+        } else {
+            document.getElementById("anno").style.display = "none";}    
+    });
+
+
+    function dettagli(){
+     if(document.getElementById("__id_periodicita__").value != 0 ){
+            document.getElementById("ripetizione").style.display = "flex";
+            document.getElementById("fine_p").style.display = "flex";
+        } else {
+            document.getElementById("ripetizione").style.display = "none";
+            document.getElementById("fine_p").style.display = "none";}
+
+        if(document.getElementById("__id_periodicita__").value == 2 ){
+            document.getElementById("settimana").style.display = "flex";
+        } else {
+            document.getElementById("settimana").style.display = "none";}
+
+        if(document.getElementById("__id_periodicita__").value == 3){
+            document.getElementById("mese").style.display = "flex";
+        } else {
+            document.getElementById("mese").style.display = "none";}
+            
+        if(document.getElementById("__id_periodicita__").value == 4 ){
+            document.getElementById("anno").style.display = "flex";
+        } else {
+            document.getElementById("anno").style.display = "none";} 
+            
+        $("#period").text( $("#__id_periodicita__ option:selected" ).text() );    
+    }
+
+   
+
+    Date.prototype.getWeekOfMonth = function() {
+        var firstWeekday = new Date(this.getFullYear(), this.getMonth(), 1).getDay();
+        var offsetDate = this.getDate() + firstWeekday - 1;
+        return Math.floor(offsetDate / 7);
+    }
+
+    function myDate() {
+
+       
+        // cerco il giorno della settimana corrispondente alla data
+        var d = $('#__data__').val();
+        d = d.split("T");
+        var a = d[0].split("-") ;
+        var date = new Date( a[0], (a[1] - 1), a[2] ) ;
+        var r = date.getDay() - 1;
+        var numeroSettimana = date.getWeekOfMonth() + 1;
+
+        $("input:checkbox").prop('checked', false);
+        $('#giorno_'+r).prop('checked', true);
+     
+        var weekdays = new Array(7);
+        weekdays[0] = "lunedì";
+        weekdays[1] = "martedì";
+        weekdays[2] = "mercoledì";
+        weekdays[3] = "giovedì";
+        weekdays[4] = "venerdì";
+        weekdays[5] = "sabato";
+        weekdays[6] = "domenica";
+
+        var mesi = new Array(12);
+        mesi[1]  = "gennaio";
+        mesi[2] = "febbraio";
+        mesi[3] = "marzo";
+        mesi[4] = "aprile";
+        mesi[5] = "maggio";
+        mesi[6] = "giugno";
+        mesi[7] = "luglio";
+        mesi[8] = "agosto";
+        mesi[9] = "settembre";
+        mesi[10] = "ottobre";
+        mesi[11] = "novembre";
+        mesi[12] = "dicembre";
+
+
+        document.getElementById("__rip_mese__").options[0].text = "Ogni giorno "+ a[2]+" del mese";
+        document.getElementById("__rip_mese__").options[1].text ="Ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";
+      
+        document.getElementById("__rip_anno__").options[0].text = "Il "+ a[2]+"/"+a[1]+" ogni anno";
+        document.getElementById("__rip_anno__").options[1].text ="Il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
+      
+    }
+
+    function genera(){
+        
+        var classe = $("#___id_classe__").val();
+        var desc = $("#___descrizione__").val();
+        var docente = $("#___id_docente__").val();
+        var luogo = $("#___id_luogo__").val();
+        var data_inizio = $("#__data__").val();
+        var ora_inizio = $("#___ora__").val();
+        var ore = $("#___ore__").val();
+        var period = $("#__id_periodicita__").val();
+        var cadenza = $("#___ripetizione__").val();
+        var rip_mese = $("#__rip_mese__").val();
+        var rip_anno = $("#__rip_anno__").val();
+        var data_fine = $("#___data_fine__").val();
+        var ripetizioni_fine = $("#___ripetizione_fine__").val();
+        var g_settimana = $('.messageCheckbox').val();
+ 
+        var giorni_s = [];
+        $.each($("input[name='giorni']:checked"), function(){ giorni_s.push($(this).val()); });
+
+        //console.log("____dati____");
+        //console.log( "classe: ", classe );
+        //console.log( "docente: ", docente );
+        //console.log( "luogo: ", luogo );
+        //console.log( "data inizio: ", data_inizio );
+        //console.log( "ora inizio: ", ora_inizio );
+        //console.log( "durata: ", ore );
+        //console.log( "periodicità: ", period );
+        //console.log( "cadenza: ",cadenza );
+        //console.log( "ripetizione mese: ",rip_mese );
+        //console.log( "ripetizione anno: ",rip_anno );
+        //console.log( "data fine: ",data_fine );
+        //console.log( "numero ripetizioni: ",ripetizioni_fine );
+        //console.log( "giorni della settimana: ",giorni_s );
+
+    //    getws('{{ site.url }}/_src/_api/_task/_task.generazione.php', '__data__='+data_inizio+'&__anagrafica__='+docente+'&__cliente__='+classe+'&__luogo__='+luogo+'&__ora__='+ora_inizio+'&__ore__='+ore+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s+'&__desc__='+desc, function(){ window.open('{{ pages.dashboard.path[ localization.language.ietf ] }}?__d__='+data_inizio, '_self');});
+    }
+</script>
+{% endblock %} 
