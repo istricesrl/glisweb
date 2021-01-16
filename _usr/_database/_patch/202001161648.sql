@@ -1,1 +1,0 @@
-UPDATE `__glisweb__`.`ruoli_audio` SET `se_anagrafica` = '1', `se_contenuti` = '1', `se_categorie_prodotti` = '1' WHERE `ruoli_audio`.`id` = 1; UPDATE `__glisweb__`.`ruoli_audio` SET `se_contenuti` = '1' WHERE `ruoli_audio`.`id` = 2;
