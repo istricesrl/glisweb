@@ -52,15 +52,16 @@
                 unset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'][$k] );
             }
         }
-        
-        // riordino l'array degli orari in base a id_giorno
+
+        // riordino l'array degli orari in base a id_giorno e ora_inizio
         foreach( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] as $key => $value ) {
-            $sort_data[ $key ] = $value['id_giorno'];
+            $sort_data[ $key ] = $value['id_giorno'] . ' ' . $value['ora_inizio'];
         }
-        
+
         if( isset( $sort_data ) ){
             array_multisort( $sort_data, $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] );
-        }       
+        }
+
     }
 
     // macro di default
