@@ -130,6 +130,8 @@
                         array( 4, 16, 29, 14 )
                     );
 
+                    // TODO fare aggiungiMetadati()
+
                     // array dei metadati
                     $meta = mysqlQuery(
                         $cf['mysql']['connection'],
@@ -148,6 +150,8 @@
                             $cf['contents']['pages'][ $pg['id'] ]['metadati'][ $mta['nome'] ][ $mta['ietf'] ] = $mta['testo'];
                         }
                     }
+
+                    // TODO fare aggiungiMenu()
 
                     // array dei menu
                     $mnu = mysqlQuery(
