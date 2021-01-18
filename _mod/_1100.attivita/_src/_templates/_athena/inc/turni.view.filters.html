@@ -18,6 +18,16 @@
         <input type="date" class="form-control form-control-sm" name="__view__[{{ view.id }}][__filters__][data_fine][LE]" value="{{ request.__view__[ view.id ].__filters__.data_fine.LE }}" onchange="$('#pager').val('0');" autofocus>
     </div>
 
+    <div class="col-6 col-md-auto">
+        <span class="label-top">turno</span>
+        <select name="__view__[{{ view.id }}][__filters__][turno][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+            <option value="" {% if request.__view__[ view.id ].__filters__.turno.EQ == "" %}selected{% endif %}>tutti</option>
+        {% for turno in etc.select.turni %}
+            <option value="{{ turno.id }}" {% if request.__view__[ view.id ].__filters__.turno.EQ == turno.id %}selected{% endif %}>{{ turno.__label__ }}</option>
+        {% endfor %}
+        </select>
+    </div>
+
 	<div class="col">
 		<div class="label-top">ricerca per parola chiave</div>
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>

@@ -41,6 +41,11 @@
         'SELECT id, __label__ FROM contratti_view'
     );
 
+    // tendina turni
+    foreach( range( 1, 9 ) as $turno ) {
+        $ct['etc']['select']['turni'][] =  array( 'id' => $turno, '__label__' => $turno );
+    }
+
     // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/turni.view.filters.html';
 

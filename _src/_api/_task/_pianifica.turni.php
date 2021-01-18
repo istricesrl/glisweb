@@ -15,7 +15,7 @@
     require '../../_config.php';
 
     /* funzione che ritrona il numero della settimana del mese di una data  */ 
-    function numOfDayInWeek($todt, $wd){
+    /*    function numOfDayInWeek($todt, $wd){
         $monthName = date("F", mktime(0, 0, 0, date('m', strtotime($todt))));
         $fromdt=date('Y-m-01 ',strtotime("First Day Of ".$monthName." ".date('Y', strtotime($todt)))) ;
         $num='';                
@@ -24,6 +24,8 @@
         }
         return $num;
     }
+
+
 
     // funzione per la creazione di un'array di date pianificate in base a criteri specifici
     function creazionePianificazione( $c, $data, $id_periodicita, $cadenza, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
@@ -133,7 +135,7 @@
     
     }
 
-
+*/
 
 
 
@@ -153,6 +155,10 @@
              
         $result = creazionePianificazione( $cf['mysql']['connection'], $_REQUEST['__data__'], $_REQUEST['__p__'],$_REQUEST['__cad__'], $_REQUEST['__datafine__'], $_REQUEST['__nr__'],$_REQUEST['__gs__'],$_REQUEST['__rm__'],$_REQUEST['__ra__']);
 
+        // numero di righe inserite, inizializzo a 0
+        $righe = 0;
+
+
         if( $result ){
             $status['__status__'] = 'creazione pianificazione completata';
             
@@ -163,7 +169,7 @@
                     // setto la data finale
                     $df = date('Y-m-d', strtotime( $di . "+" . $gg . " days"));
 
-                    echo "contratto: " . $_REQUEST['__id_contratto__'] . " - turno: " . $_REQUEST['__turno__'] . " - datainizio: " . $di . " - datafine: " . $df . PHP_EOL;
+                #    echo "contratto: " . $_REQUEST['__id_contratto__'] . " - turno: " . $_REQUEST['__turno__'] . " - datainizio: " . $di . " - datafine: " . $df . PHP_EOL;
 
                     // inserisco le righe di turno
                     $q = mysqlQuery(
@@ -176,9 +182,15 @@
                             array( 's' => $df )
                         )
                     );
+
+                    if( !empty( $q ) ){
+                        $righe++;
+                    }
                     
                 }
             }
+
+            $status['righe_inserite'] = $righe;
 
         } else {
             $result['__status__'] = 'creazione pianificazione NON completata: controllare i dati e la connessione';
