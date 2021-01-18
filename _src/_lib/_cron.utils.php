@@ -255,25 +255,20 @@
 
                 if( $ripetizione_mese != 1 ){
                     $n_g = numOfDayInWeek($data, $days[ date('N', strtotime($data)) - 1 ]);
-                    while ( $data < $data_fine ){
-                        
-                        $attivita[] = $data;
-                        //print_r("data: ".$data."<br>");
+                    $dow = date('N', strtotime($data)) - 1;
+                    do {
+                        $attivita[] = $data; 
                         $data_temp = date("Y-m-d", strtotime("+ ".$cadenza." month", strtotime($data)));
-                        //print_r("mese dopo ".$data_temp."<br>");
                         $data_temp = date(date('Y',strtotime($data_temp))."-".date('m',strtotime($data_temp))."-01");
-                        //print_r("primo del mese  ".$data_temp."<br>");
-                        //print_r($days[ date('N', strtotime($data)) ]."<br>");
-                        $data_temp = date("Y-m-d", strtotime($number[ $n_g -1 ]." ".$days[ date('N', strtotime($data)) -1 ], strtotime($data_temp." -1 day")));
-                        //print_r("data  ".$data_temp."<br>");
+                        $data_temp = date("Y-m-d", strtotime($number[ $n_g -1 ]." ".$days[ $dow ], strtotime($data_temp." -1 day")));
+                
                         if( date('m', strtotime($data_temp)) != ((date('m',  strtotime($data)) + $cadenza) % 12 ) ){
-                            $data_temp = date("Y-m-d", strtotime("last ".$days[ date('N', strtotime($data))-1 ], strtotime($data_temp)));   
-                            //print_r("data modificata ".$data_temp."<br>");
-                        }
+                            $data_temp = date("Y-m-d", strtotime("last ".$days[ $dow ], strtotime($data_temp)));   
+                         }
                         
                         $data = $data_temp;
     
-                    };
+                    } while ( $data < $data_fine );
                 } else {
                     do {
                         $attivita[] = $data;
