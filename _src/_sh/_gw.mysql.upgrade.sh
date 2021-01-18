@@ -47,7 +47,7 @@ if [ -f "$FILE0" ]; then
         PASSC="-p$SRVPASS"
     fi
 
-    mysqldump -h $SRVADDR -u $SRVUSER $PASSC --no-create-info --replace --opt --single-transaction $SRVDBNAME > $FILE2
+    mysqldump -h $SRVADDR -u $SRVUSER $PASSC --no-create-info --complete-insert --replace --opt --single-transaction $SRVDBNAME > $FILE2
     mysqldump -h $SRVADDR -u $SRVUSER $PASSC --no-data --opt --routines --single-transaction --events $SRVDBNAME > $FILE3
 
     cat $FILE3 | sed -E 's/DEFINER=`[a-z]+`@`[a-z0-9\.%]+`/DEFINER=CURRENT_USER()/g' | sed 's/ AUTO_INCREMENT=[0-9]*\b//g' > $FILEC
