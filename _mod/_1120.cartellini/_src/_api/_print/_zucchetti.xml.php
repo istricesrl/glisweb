@@ -14,10 +14,12 @@
             $cf['mysql']['connection'],
             'SELECT '.
             'attivita.data, attivita.ore, '.
-            'anagrafica.codice AS codice_dipendente '.
+            'anagrafica.codice AS codice_dipendente. '.
+            'tipologie_attivita_inps.codice AS codice_inps '.
             'FROM attivita '.
             'INNER JOIN anagrafica ON anagrafica.id = attivita.id_anagrafica '.
             'INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
+            'INNER JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = attivita.id_tipologia_inps '.
             'WHERE data BETWEEN ( ? and ? ) '.
             'ORDER BY attivita.id_anagrafica ASC, attivita.data ASC, tipologie_attivita.id ASC ',
             array(
@@ -29,7 +31,7 @@
 
         // passaggio ad albero
         foreach( $ct['ore'] as $ora ) {
-            $attivita[ $ora['codice_dipendente'] ]['ore'][] = $ora;
+            $attivita[ $ora['codice_dipendente'] ][ $ora['data'] ][ $ora['codice_inps'] ] += $ora['ore'];
         }
 
         // debug
@@ -66,7 +68,7 @@
 		$xml->startElement( 'Fornitura' );
 
         // esportazione
-        foreach( $attivita as $dipendente => $ore ) {
+        foreach( $attivita as $dipendente => $giornate ) {
 
             // inizio nuovo dipendente
             $xml->startElement( 'Dipendente' );
@@ -77,35 +79,42 @@
             $xml->startElement( 'Movimenti' );
             $xml->writeAttribute( 'GenerazioneAutomaticaDaTeorico', 'N' );
 
-            // elenco attività del dipendente
-            foreach( $ore['ore'] as $ora ) {
+            // elenco attività del dipendente per giornata
+            foreach( $giornate as $giornata => $codici ) {
 
-                // spacchetto le ore in ore e minuti
-                // TODO
+                // elenco attività del dipendente per codice
+                foreach( $codici as $codice => $lavoro ) {
 
-                // inizio nodo attività
-                $xml->startElement( 'Movimento' );
+                    // spacchetto le ore in ore e minuti
+                    $lavoro = explode( '.', $lavoro );
+                    $ore = $lavoro[0];
+                    $minuti = ( $lavoro[1] * 60 / 10 );
 
-                // CodGiustificativoUfficiale
-                $xml->writeElement( 'CodGiustificativoUfficiale', '' ); // TODO
+                    // inizio nodo attività
+                    $xml->startElement( 'Movimento' );
 
-                // Data
-                $xml->writeElement( 'Data', '' ); // TODO
+                    // CodGiustificativoUfficiale
+                    $xml->writeElement( 'CodGiustificativoUfficiale', $codice );
 
-                // NumOre
-                $xml->writeElement( 'NumOre', '' ); // TODO
+                    // Data
+                    $xml->writeElement( 'Data', $giornata );
 
-                // NumMinuti
-                $xml->writeElement( 'NumMinuti', '' ); // TODO
-                
-                // GiornoDiRiposo
-                $xml->writeElement( 'GiornoDiRiposo', '' ); // TODO
+                    // NumOre
+                    $xml->writeElement( 'NumOre', $ore );
 
-                // GiornoChiusuraStraordinari
-                $xml->writeElement( 'GiornoChiusuraStraordinari', '' ); // TODO
+                    // NumMinuti
+                    $xml->writeElement( 'NumMinuti', $minuti );
+                    
+                    // GiornoDiRiposo
+                    $xml->writeElement( 'GiornoDiRiposo', '' ); // TODO
 
-                // fine nodo attività
-                $xml->endElement();
+                    // GiornoChiusuraStraordinari
+                    $xml->writeElement( 'GiornoChiusuraStraordinari', '' ); // TODO
+
+                    // fine nodo attività
+                    $xml->endElement();
+
+                }
 
             }
 
