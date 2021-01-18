@@ -38,8 +38,8 @@
 //			 die( print_r($params,true) );
 //			 die( print_r($_REQUEST,true) );
 //			 die( 'fatturati: '.print_r( $ct['fatturati'], true ) );
-//            die( print_r($ct['ore'],1));
-		    // se sono presenti dati
+//           die( print_r( $ct['ore'], 1 ) );
+            die( print_r( $attivita, 1 ) );
 
         // inizializzazioni
         $dipendente = NULL;
