@@ -33,8 +33,8 @@
     // tendina sesso
 	$ct['etc']['select']['sesso'] = array( 
 	    array( 'id' => '-', '__label__' => '-' ),
-	    array( 'id' => 'M', '__label__' => 'M' ),
-	    array( 'id' => 'F', '__label__' => 'F' ),
+	    array( 'id' => 'M', '__label__' => 'uomo' ),
+	    array( 'id' => 'F', '__label__' => 'donna' ),
 	);
 
     // tendina notifiche
