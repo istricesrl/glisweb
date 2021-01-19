@@ -491,6 +491,8 @@
     // debug
 	// print_r( $cf );
 
+	// TODO qui inserire la formattazione con Tidy?
+
     // cache del buffer
 	echo PHP_EOL;
 	if( isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {

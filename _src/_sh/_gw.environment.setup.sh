@@ -52,6 +52,9 @@ apt-get install -y php-xml
 ## installazione libreria per yaml
 apt-get install -y php-yaml
 
+## installazione libreria Tidy
+apt-get install -y php-tidy
+
 ## installazione di memcache
 apt-get install -y memcached
 apt-get install -y php-memcache
@@ -69,6 +72,9 @@ apt-get install -y php-intl
 
 ## attivazione modulo mysqlnd
 phpenmod mysqlnd
+
+## attivazione modulo tidy
+phpenmod tidy
 
 ## installazione di Pear FTP
 pear install Net_FTP
