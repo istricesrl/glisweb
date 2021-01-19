@@ -33,7 +33,7 @@ if [ -d "$DSTDIR" ]; then
 
     read -p "nome utente: " SRVUSER
 
-    read -p "password: " SRVPASS
+    read -s -p "password: " SRVPASS && echo
 
     read -p "database: " SRVDBNAME
 
