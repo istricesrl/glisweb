@@ -14,7 +14,6 @@
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
 	<div class="form-group form-row">
 	    <div class="col-auto">
-		<span class="label-top">notif.</span>
 		{{ frm.select( table, subtable, i, 'se_notifiche', '', etc.select.se_notifiche, request, '', '', '', '', '', disabled ) }}
 	    </div>
 	    <div class="col">
@@ -62,7 +61,6 @@
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
 	    <div class="col-auto">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">notifiche</span>{% endif %}
 		{{ frm.select( table, subtable, i, 'se_notifiche', '', etc.select.se_notifiche, request ) }}
 	    </div>
 	    <div class="col">
@@ -70,7 +68,7 @@
 		{{ frm.input( table, subtable, i, 'numero', 'numero di telefono', '', request ) }}
 	    </div>
 	    <div class="col-auto">
-		{% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia</span>{% endif %}
+		{% if i == 0 %}<span class="label-top remove-after-duplicate">tipo</span>{% endif %}
 		{{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_telefoni, request, '', '', '', '', 'font-awesome' ) }}
 		</div>
 		<div class="w-100 d-block d-md-none m-0"></div>
