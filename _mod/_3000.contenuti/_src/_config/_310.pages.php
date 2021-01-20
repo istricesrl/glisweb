@@ -71,6 +71,13 @@
                         'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'] )
                     );
 
+                    // TODO fare aggiungiGruppi()
+                    aggiungiGruppi(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        NULL,
+                        $pg['id']
+                    );
+/*
                     // prelevo i gruppi
                     $groups = mysqlSelectColumn(
                         'nome',
@@ -87,7 +94,15 @@
                     if( ! empty( $groups ) ) {
                         $cf['contents']['pages'][ $pg['id'] ]['auth']['groups']	= $groups;
                     }
+*/
 
+                    // TODO fare aggiungiContenuti()
+                    aggiungiContenuti(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        'id_pagina',
+                        $pg['id']
+                    );
+/*
                     // array dei contenuti
                     $cnt = mysqlQuery(
                         $cf['mysql']['connection'],
@@ -121,6 +136,7 @@
                             )
                         );
                     }
+*/
 
                     // aggiungo le immagini
                     aggiungiImmagini(
@@ -131,7 +147,12 @@
                     );
 
                     // TODO fare aggiungiMetadati()
-
+                    aggiungiMetadati(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        'id_pagina',
+                        $pg['id']
+                    );
+/*
                     // array dei metadati
                     $meta = mysqlQuery(
                         $cf['mysql']['connection'],
@@ -150,9 +171,15 @@
                             $cf['contents']['pages'][ $pg['id'] ]['metadati'][ $mta['nome'] ][ $mta['ietf'] ] = $mta['testo'];
                         }
                     }
+*/
 
                     // TODO fare aggiungiMenu()
-
+                    aggiungiMenu(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        'id_pagina',
+                        $pg['id']
+                    );
+/*
                     // array dei menu
                     $mnu = mysqlQuery(
                         $cf['mysql']['connection'],
@@ -178,7 +205,7 @@
                             )
                         );
                     }
-
+*/
                     // debug
                     // echo( $pg['id'] . ' cached' . PHP_EOL );
 

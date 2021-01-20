@@ -1,0 +1,78 @@
+/*!
+
+    \page caching strategie di caching del framework
+
+    Descrizione delle strategie di caching del framework.
+
+    introduzione
+    ============
+    Glisweb utilizza estensivamente diversi meccanismi di caching per garantire velocità elevate nella navigazione a un costo ragionevole in termini di risorse.
+    Comprendere come questi sistemi funzionano e interagiscono fra loro è fondamentale per ottenere il massimo da essi e per gestire correttamente eventuali problemi
+    o anomalie. Iniziamo con una carrellata dei sistemi di caching utilizzati dal framework introducendo sinteticamente il loro utilizzo.
+
+    Per riassumere, si può dire che il framework tenda in maniera conservativa ad utilizzare i dati in cache finché non interviene un fattore che lo obbliga a fare altrimenti;
+    si prenda ad esempio il caso classico in cui una pagina viene modificata tramite CMS. Questo comporta (a runlevel 310) che venga invalidato l'albero delle pagine tramite
+    il salvataggio in $cf['contents']['updated'] della timestamp di modifica aggiornata che verrà poi alla successiva apertura di pagina confrontata con $cf['contents']['cached']
+    a livello 300; si tenga presente che $cf['contents']['updated'] viene salvato in Memcache con la chiave CONTENTS_PAGES_UPDATED a livello 330.
+
+    Sarebbe inefficiente tuttavia ricaricare anche i contenuti delle pagine che non sono state modificate; è per questo che, con granularità maggiore, opera il meccanismo di
+    controllo dell'età della chiave in _mod/_3000.contenuti/_src/_config/_310.pages.php, per cui vengono recuperati dal database solo i dati relativi alle pagine effettivamente
+    aggiornate anche in caso di rielaborazione dell'albero dei contenuti.
+
+    cache su disco
+    --------------
+
+
+    Memcache
+    --------
+    Glisweb fa largo uso di Memcache per stoccare informazioni relative ai contenuti che sarebbe inutile recuperare dal database e rielaborare ad ogni apertura di pagina.
+    Per comprendere appieno come il framework utilizza memcache bisogna prima di tutto mettere a fuoco due concetti, la gestione dell'età delle chiavi e l'invalidazione selettiva
+    delle cache da parte della controller.
+
+    Come si può rilevare esaminando il codice della libreria _src/_lib/_memcache.tools.php e soprattutto della funzione memcacheWrite(), il framework crea per ogni chiave stoccata
+    una seconda chiave con il suffisso _AGE che contiene la timestamp di stoccaggio della chiave principale. Questo consente alla funzione memcacheGetKeyAge() di restituire la
+    timestamp di stoccaggio di ogni chiave presente in Memcache, il che torna particolarmente utile quando si debba determinare se il dato cui punta quella chiave è ancora aggiornato
+    o meno (si veda ad esempio _mod/_3000.contenuti/_src/_config/_310.pages.php).
+
+    Nella libreria _src/_lib/_memcache.utils.php invece è possibile esaminare la funzione memcacheCleanFromIndex() che si occupa di eliminare da Memcache le chiavi relative a una data
+    entità; questo risulta particolarmente utile alla controller, e in particolare nel file _src/_inc/_controllers/_default.finally.php essa viene utilizzata per eliminare le chiavi
+    relative all'entità correntemente modificata. Questo fa sì che in Memcache non siano mai presenti chiavi relative a dati che sono stati aggiornati nel database successivamente al
+    loro stoccaggio in cache.
+
+    Redis
+    -----
+
+
+    viste statiche sul database
+    ---------------------------
+
+
+
+    logiche di caching dei contenuti
+    ================================
+    Una delle operazioni più onerose che il framework svolge ad ogni apertura di pagina è l'elaborazione dell'albero dei contenuti. Per evitare di doverlo fare ogni volta,
+    tutti i dati relativi all'albero vengono stoccati in Memcache; i file di configurazione coinvolti in questa operazione sono:
+
+    - _src/_config/_300.pages.php dove viene verificato se i dati sono presenti in cache
+    - _src/_config/_330.pages.php dove vengono eventualmente scritti in cache i dati elaborati ai livelli 310 e 320
+
+    Ci sono numerose costanti in gioco nel processo di valutazione della consistenza della cache; ognuna di esse rappresenta un tassello fondamentale per il funzionamento del
+    sito e quindi l'elaborazione generale viene innescata in mancanza di anche solo una di esse. Le costanti relative al caching dei contenuti sono:
+
+    costante                           | significato
+    -----------------------------------|----------------------------------------------------------------------------------------------------
+    CONTENTS_PAGES_CACHED              |
+	CONTENTS_PAGES_UPDATED             |
+	CONTENTS_PAGES_KEY                 |
+	CONTENTS_TREE_KEY                  |
+	CONTENTS_INDEX_KEY                 |
+	CONTENTS_SHORTCUTS_KEY             |
+
+    Se anche solo una di esse è vuota, oppure se CONTENTS_PAGES_CACHED è minore di CONTENTS_PAGES_UPDATED, viene valorizzata a false la chiave $cf['contents']['cached'] nel
+    file _src/_config/_300.pages.php, il che innesca l'elaborazione completa (con alcune eccezioni come vedremo) dell'albero dei contenuti nei successivi file _src/_config/_310.pages.php
+    e _src/_config/_320.pages.php (e le relative controparti nei moduli).
+
+    Se $cf['contents']['cached'] è valorizzato a false nel file _src/_config/_330.pages.php, il risultato dell'elaborazione viene scritto su Memcache e le relative chiavi vengono
+    valorizzate di conseguenza.
+
+*/
