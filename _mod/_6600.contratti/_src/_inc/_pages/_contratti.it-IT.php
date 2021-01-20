@@ -50,6 +50,7 @@
 		$p['contratti.form']['etc']['tabs'][] = 'contratti.form.orari.'.  $i ;
 	}
 
+	$p['contratti.form']['etc']['tabs'][] = 'contratti.form.disponibilita';
 	$p['contratti.form']['etc']['tabs'][] = 'contratti.form.tools';
 
 	// gestione contratti orari
@@ -79,6 +80,17 @@
 		);
 	}
 
+	// disponibilita
+	$p['contratti.form.disponibilita' ] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'disponibilita' ),
+		'h1'			=> array( $l		=> 'disponibilità' ),
+		'parent'		=> array( 'id'		=> 'contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.disponibilita.html' ),
+		'macro'			=> array(  $m . '_src/_inc/_macro/_contratti.form.disponibilita.php' ),
+		'etc'			=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) )
+	);
 
 	// gestione contratti tools
 	$p['contratti.form.tools'] = array(
