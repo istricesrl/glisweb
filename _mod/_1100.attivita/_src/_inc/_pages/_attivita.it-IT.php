@@ -77,7 +77,7 @@
 	// turni tools
 	$p['turni.tools'] = array(
 	    'sitemap'		=> false,
-		'title'			=> array( $l		=> 'strumenti' ),
+		'title'			=> array( $l		=> 'pianificazione turni' ),
 		'icon'			=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
 	    'h1'			=> array( $l		=> 'pianificazione' ),
 	    'parent'		=> array( 'id'		=> 'produzione' ),

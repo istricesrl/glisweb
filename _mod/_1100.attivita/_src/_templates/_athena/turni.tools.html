@@ -35,47 +35,115 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-	    <fieldset>
-		<legend>dati della pianificazione </legend>
+        {# MODULO PRINCIPALE #}
 
-		<div class="form-group form-row">
-		    <div class="col-12 col-md-5">
-                <span class="label-top">contratto</span>
-                {# frm.selectRequired( '', '', '', '__id_contratto__', '', etc.select.contratti, request ) #}
-                {{ frm.selectBox( table, '', '', '__id_contratto__', '', etc.select.contratti, request, '', '', 1, '', '', '', '', '', '', page, pages, ietf ) }}
+	    <fieldset>
+            <legend>pianificazione turni</legend>
+            <div class="form-group form-row">
+                <div class="col-12 col-md-7">
+                    <span class="label-top">contratto</span>
+                    {# frm.selectRequired( '', '', '', '__id_contratto__', '', etc.select.contratti, request ) #}
+                    {{ frm.selectBox( table, '', '', '__id_contratto__', '', etc.select.contratti, request, '', '', 1, '', '', '', '', '', '', page, pages, ietf ) }}
+                </div>
+                <div class="col-12 col-md-2">
+                    <span class="label-top">data inizio</span>
+                    <input name="__data__" type="date" value="" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__" required onchange="myDate()">
+                </div>
+                <div class="col-12 col-md-2">
+                    <span class="label-top">data fine</span>
+                    <input name="__dataf__" type="date" value="" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__dataf__" required>
+                </div>
+                <div class="col-12 col-md-1">
+                    <span class="label-top">turno</span>
+                    {{ frm.selectRequired( '', '', '', '__turno__', '', etc.select.turni, request ) }}
+                </div>
             </div>
-            <div class="col-12 col-md-2">
-                <span class="label-top">data inizio</span>
-                <input name="__data__" type="date" value="" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__" required onchange="myDate()">
+        </fieldset>
+
+
+        <fieldset>  
+            <legend>periodicità</legend>  
+
+            <input type="hidden" id="__id_periodicita__" value="2">
+
+            <div class="form-group form-row">
+                <div class="col-12">
+                <ul class="nav nav-tabs nav-tabs-secondary">
+                    <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-settimanale','cke-switch',this);$('#__id_periodicita__').val(2);dettagli(); myDate();">settimanale</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-mensile','cke-switch',this);$('#__id_periodicita__').val(3);dettagli(); myDate();">mensile</a></li>
+                </ul>
+                </div>
             </div>
-            <div class="col-12 col-md-2">
-                <span class="label-top">data fine</span>
-                <input name="__dataf__" type="date" value="" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__dataf__" required>
+    
+
+            <div class="form-group form-row flex-fill">
+                <div class="col cke-switch" id="cke-settimanale">
+
+                    <div class="form-group form-row" id="settimana">
+                        {% for g in etc.select.giorni_settimana %}
+                        <div class="col-4 col-md-1 col-form-label">
+                            <div class="form-check">
+                                <input class="messageCheckbox form-check-input" type="checkbox" id="giorno_{{g.id}}" name="giorni" value="{{ g.id }}">
+                                <label class="form-check-label text-left" for="horns">{{g.__label__}}</label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+                <div class="col cke-switch" id="cke-mensile" style="display: none;">
+                    <div class="form-group form-row" id="mese">
+                        <div class="col-12">
+                            <select id="__rip_mese__" name="__rip_mese__" class="form-control form-control-sm">
+                                <option id="1" value="1"></option>
+                                <option id="2" value="2"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-12 col-md-1">
-                <span class="label-top">turno</span>
-                {{ frm.selectRequired( '', '', '', '__turno__', '', etc.select.turni, request ) }}
+        </fieldset>
+
+        <fieldset>
+            <legend>ripetizioni</legend>
+            <div class="form-group form-row" id="ripetizione" style="display: none;">
+                <div class="col-auto">
+                    <span class="label-top">ogni n. settimane/mesi</span>
+                    {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
+                </div>
+                <div class="col-auto">
+                    <span class="label-top">fino al</span>
+                    {{ frm.date( '', '', '', '__data_fine__', '', '', request ) }}
+                </div>
+                <div class="col-auto">
+                    <span class="label-top">n. volte</span>
+                        {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
+                </div> 
             </div>
-            <div class="col-12 col-md-2">
-                <span class="label-top">periodicità</span>
-                <select id="__id_periodicita__" name="__id_periodicita__" onclick="dettagli(); myDate()"  class="form-control form-control-sm" required>
-                    {% for p in etc.select.periodi %}
-                        <option value="{{p.id}}" id="{{p.id}}">{{p.__label__}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-		</div>
+        </fieldset>
+  
+
+<!--
+        <div class="col-12 col-md-2">
+            <span class="label-top">periodicità</span>
+            <select id="__id_periodicita__" name="__id_periodicita__" onclick="dettagli(); myDate()"  class="form-control form-control-sm" required>
+                {% for p in etc.select.periodi %}
+                    <option value="{{p.id}}" id="{{p.id}}">{{p.__label__}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
 
         <div class="form-group form-row" id="ripetizione" style="display: none;">
-            <div class="col-auto d-flex align-items-center">Ripeti ogni </div>
-            <div class="col-auto">
-                 {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
-            </div>
-            <div class="col-auto d-flex align-items-center">
-            <span id="period"></span>
-        </div>    
+            <div class="col-auto d-flex align-items-center">Ripeti ogni</div>
+                <div class="col-auto">
+                    {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                <span id="period"></span>
+            </div>    
         </div>
+       
         <div class="form-group form-row" id="settimana" style="display: none;">
             <span class="col-auto text-right"><b>ripeti ogni</b></span>
             {# frm.select( '', '', '', '__id_giorno_settimana__', '', etc.select.giorni_settimana, request ) #}
@@ -86,7 +154,7 @@
             </div>
             {% endfor %}
         </div>
-        <div class="form-group form-row" id="mese" style="display: none;">
+         <div class="form-group form-row" id="mese" style="display: none;">
             <select id="__rip_mese__" name="__rip_mese__" class="form-control form-control-sm">
                 <option id="1" value="1"></option>
                 <option id="2" value="2"></option>
@@ -126,6 +194,7 @@
             </div>   
         </div>
     </div>
+    -->
     </fieldset>
     
     {# BOTTONI E COMANDI DEL MODULO #}
@@ -144,10 +213,13 @@
        
 </form>
 </section>
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script>
 
 $(document).ready(function(){
+ 
     $('input[type=radio]').click(function(){
         console.log(this.value);
         if(this.value == 'numero'){
@@ -158,11 +230,27 @@ $(document).ready(function(){
             $( "#___ripetizione_fine__" ).prop( "disabled", true );
         }
     });
+   
+
+    // SDF parte precedente sostituita da questa
+/*  $( "#___data_fine__" ).change( function(){
+        console.log('data fine');
+        $( "#___data_fine__" ).prop( "disabled", false );
+        $( "#___ripetizione_fine__" ).prop( "disabled", true );
+    });
+
+    $( "#___ripetizione_fine__" ).change( function(){
+        console.log('numero volte');
+        $( "#___data_fine__" ).prop( "disabled", true );
+        $( "#___ripetizione_fine__" ).prop( "disabled", false );
+    });
+ */ 
+
 });
 
     document.addEventListener("DOMContentLoaded", function() {
         
-        $( "#___ripetizione_fine__" ).prop( "disabled", true );
+     //   $( "#___ripetizione_fine__" ).prop( "disabled", true );   // SDF non più necessario
 
         if(document.getElementById("__id_periodicita__").value != 0 ){
             document.getElementById("ripetizione").style.display = "flex";
@@ -211,7 +299,7 @@ $(document).ready(function(){
         } else {
             document.getElementById("anno").style.display = "none";} 
             
-        $("#period").text( $("#__id_periodicita__ option:selected" ).text() );    
+    //    $("#period").text( $("#__id_periodicita__ option:selected" ).text() );    // SDF non più necessario
     }
 
    
@@ -285,7 +373,13 @@ $(document).ready(function(){
         var giorni_s = [];
         $.each($("input[name='giorni']:checked"), function(){ giorni_s.push($(this).val()); });
 
-        getws('{{ site.url }}/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s, function(){ /*window.open('{{ pages['turni.view'].path[ localization.language.ietf ] }}');*/});
+        getws('{{ site.url }}/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s, 
+            function( data ){ 
+                window.open('{{ pages['turni.tools'].path[ localization.language.ietf ] }}?esito=' + data['__status__'] + '&righe_inserite=' + data['righe_inserite'],'_self');
+            }
+        );
+       
     }
 </script>
+
 {% endblock %} 

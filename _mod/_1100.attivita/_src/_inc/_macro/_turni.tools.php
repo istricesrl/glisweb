@@ -27,11 +27,11 @@
 
     //tendina periodi
     $ct['etc']['select']['periodi'] = array(
-        array( 'id' => 0, '__label__' => 'non si ripete' ),
-        array( 'id' => 1, '__label__' => 'giorno' ),
+    //    array( 'id' => 0, '__label__' => 'non si ripete' ),
+    //    array( 'id' => 1, '__label__' => 'giorno' ),
         array( 'id' => 2, '__label__' => 'settimana' ),
         array( 'id' => 3, '__label__' => 'mese' ),
-        array( 'id' => 4, '__label__' => 'anno' )
+    //    array( 'id' => 4, '__label__' => 'anno' )
     );
 
   	//tendina giorni della settimana
@@ -44,6 +44,6 @@
 		array( 'id' => 5, '__label__' => 'sabato' ),
 		array( 'id' => 6, '__label__' => 'domenica' )
     );
-    
+     
     
 
