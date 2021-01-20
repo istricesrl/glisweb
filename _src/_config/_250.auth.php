@@ -142,6 +142,9 @@
 	    'metadati' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
+		'pianificazioni' => array(
+			CONTROL_FULL => array( 'roots' )
+		),
 	    'pubblicazione' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
