@@ -109,7 +109,7 @@
                     $xml->writeElement( 'GiornoDiRiposo', '' ); // TODO
 
                     // GiornoChiusuraStraordinari
-                    $xml->writeElement( 'GiornoChiusuraStraordinari', '' ); // TODO
+                    // $xml->writeElement( 'GiornoChiusuraStraordinari', '' ); // TODO
 
                     // fine nodo attività
                     $xml->endElement();
