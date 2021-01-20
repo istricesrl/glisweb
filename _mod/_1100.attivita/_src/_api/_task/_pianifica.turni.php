@@ -24,6 +24,25 @@
 
     if( isset($_REQUEST) && !empty($_REQUEST['__data__']) && !empty($_REQUEST['__dataf__']) && !empty( $_REQUEST['__id_contratto__'] ) && !empty( $_REQUEST['__turno__'] ) ){
 
+        // workspace della pianificazione
+        $wks = array();
+
+        $wks['campi'] = array( 'id_contratto', 'data_inizio', 'data_fine', 'turno' );
+        $wks['parametri'] = array(
+            '__data__',
+            '__dataf__', 
+            '__p__',
+            '__cad__',
+            '__datafine__',
+            '__nr__',
+            '__gs__',
+            '__rm__',
+            '__ra__'
+        );
+
+        $wks['ws'] = $cf['site']['url'] . '_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php';
+
+
         // ricavo i giorni che separano data iniziale e data finale
         $gg = ( strtotime($_REQUEST['__dataf__']) - strtotime($_REQUEST['__data__']) ) / (60*60*24);
              
@@ -39,27 +58,45 @@
             
             if( is_array( $result ) ){
 
-                foreach( $result as $di ){
+                // creo la pianificazione
+                $pId = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO pianificazioni (entita, nome, workspace) VALUES (?, ?, ?)',
+                    array(
+                        array( 's' => 'turni' ),
+                        array( 's' => 'prova' ),
+                        array( 's' => json_encode( $wks ) )
+                    )
+                );
 
-                    // setto la data finale
-                    $df = date('Y-m-d', strtotime( $di . "+" . $gg . " days"));
+                // se la riga di pianificazione è stata inserita correttamente creo i singoli turni
+                if( !empty( $pId ) ){
 
-                    // inserisco le righe di turno
-                    $q = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'INSERT INTO turni (id_contratto, turno, data_inizio, data_fine) VALUES( ?, ?, ?, ?)',
-                        array(
-                            array( 's' => $_REQUEST['__id_contratto__'] ),
-                            array( 's' => $_REQUEST['__turno__'] ),
-                            array( 's' => $di ),
-                            array( 's' => $df )
-                        )
-                    );
+                    $status['pianificazione'] = $pId;
 
-                    if( !empty( $q ) ){
-                        $righe++;
+                    foreach( $result as $di ){
+
+                        // setto la data finale
+                        $df = date('Y-m-d', strtotime( $di . "+" . $gg . " days"));
+
+                        // inserisco le righe di turno
+                        $q = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'INSERT INTO turni (id_contratto, turno, data_inizio, data_fine, id_pianificazione) VALUES( ?, ?, ?, ?, ?)',
+                            array(
+                                array( 's' => $_REQUEST['__id_contratto__'] ),
+                                array( 's' => $_REQUEST['__turno__'] ),
+                                array( 's' => $di ),
+                                array( 's' => $df ),
+                                array( 's' => $pId )
+                            )
+                        );
+
+                        if( !empty( $q ) ){
+                            $righe++;
+                        }
+                        
                     }
-                    
                 }
             }
 

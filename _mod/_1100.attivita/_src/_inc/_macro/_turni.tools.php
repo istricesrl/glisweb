@@ -11,6 +11,11 @@
      *
      */
 
+    // tabella gestita
+    $ct['view']['table'] = 'turni';
+
+    // id della vista, necessario per poter riaprire la vista dopo la creazione dei turni pianificati
+    $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // tendina contratti
         $ct['etc']['select']['contratti'] = mysqlCachedIndexedQuery(
