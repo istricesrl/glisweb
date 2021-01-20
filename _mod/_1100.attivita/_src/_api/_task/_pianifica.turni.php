@@ -13,7 +13,7 @@
 
     // inclusione del framework
     if( ! defined( 'CRON_RUNNING' ) ) {
-        require '../../_config.php';
+        require '../../../../../_src/_config.php';
     }
 
     // inizializzo l'array del risultato

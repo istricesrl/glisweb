@@ -230,21 +230,7 @@ $(document).ready(function(){
             $( "#___ripetizione_fine__" ).prop( "disabled", true );
         }
     });
-   
 
-    // SDF parte precedente sostituita da questa
-/*  $( "#___data_fine__" ).change( function(){
-        console.log('data fine');
-        $( "#___data_fine__" ).prop( "disabled", false );
-        $( "#___ripetizione_fine__" ).prop( "disabled", true );
-    });
-
-    $( "#___ripetizione_fine__" ).change( function(){
-        console.log('numero volte');
-        $( "#___data_fine__" ).prop( "disabled", true );
-        $( "#___ripetizione_fine__" ).prop( "disabled", false );
-    });
- */ 
 
 });
 
@@ -373,7 +359,7 @@ $(document).ready(function(){
         var giorni_s = [];
         $.each($("input[name='giorni']:checked"), function(){ giorni_s.push($(this).val()); });
 
-        getws('{{ site.url }}/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s, 
+        getws('{{ site.url }}/_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s, 
             function( data ){ 
                 window.open('{{ pages['turni.tools'].path[ localization.language.ietf ] }}?esito=' + data['__status__'] + '&righe_inserite=' + data['righe_inserite'],'_self');
             }
