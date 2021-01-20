@@ -106,7 +106,7 @@
                     $xml->writeElement( 'NumMinuti', $minuti );
                     
                     // GiornoDiRiposo
-                    $xml->writeElement( 'GiornoDiRiposo', '' ); // TODO
+                    // $xml->writeElement( 'GiornoDiRiposo', '' ); // TODO
 
                     // GiornoChiusuraStraordinari
                     // $xml->writeElement( 'GiornoChiusuraStraordinari', '' ); // TODO
