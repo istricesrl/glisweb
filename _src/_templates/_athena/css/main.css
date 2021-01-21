@@ -501,12 +501,12 @@ nav li.nav-item > a.nav-link:active {
 
 nav ul ul {
     background-color: #ffffff;
-    padding-left: 0.5em;
+    padding-left: 1em;
 }
 
 nav ul ul ul {
     background-color: #ffffff;
-    padding-left: 0.5em;
+    padding-left: 1em;
 }
 
 /* stili delle tab */
