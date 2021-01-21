@@ -62,7 +62,6 @@
 
 
         <fieldset>  
-            <legend>periodicità</legend>  
 
             <input type="hidden" id="__id_periodicita__" value="2">
 
@@ -112,13 +111,13 @@
                     {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
                 </div>
                 <div class="col-auto">
+                    <span class="label-top">n. volte</span>
+                    {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
+                </div> 
+                <div class="col-auto">
                     <span class="label-top">fino al</span>
                     {{ frm.date( '', '', '', '__data_fine__', '', '', request ) }}
                 </div>
-                <div class="col-auto">
-                    <span class="label-top">n. volte</span>
-                        {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
-                </div> 
             </div>
         </fieldset>
   
@@ -362,7 +361,8 @@ $(document).ready(function(){
         getws('{{ site.url }}/_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s, 
             function( data ){ 
             //    window.open('{{ pages['turni.view'].path[ localization.language.ietf ] }}?esito=' + data['__status__'] + '&righe_inserite=' + data['righe_inserite'],'_self');
-            window.open('{{ pages['turni.view'].path[ localization.language.ietf ] }}','_self');
+            //window.open('{{ pages['turni.view'].path[ localization.language.ietf ] }}','_self');
+            window.open('{{ pages['turni.view'].url[ localization.language.ietf ] }}?__view__[{{ view.id }}][__filters__][id_pianificazione][EQ]='+data['pianificazione'],'_self');
             }
         );
        

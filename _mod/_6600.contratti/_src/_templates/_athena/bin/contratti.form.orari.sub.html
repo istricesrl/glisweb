@@ -30,9 +30,11 @@
         <div class="col-md-4">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">costo</span>{% endif %}
             {{ frm.selectRequired( table, subtable, i, 'id_costo', 'costo', etc.select.costi_contratti, request ) }}
-        </div>       
-        <input type="hidden" name="{{ table }}[{{ subtable }}][{{ i }}][se_lavoro]" id="{{ table }}_{{ subtable }}_{{ i }}_se_lavoro" value="{{ r['se_lavoro'] }}" default="1">
-	    {% if r.id %}
+        </div>
+        
+        {{ frm.input( table, subtable, i, 'se_lavoro', 'se_lavoro', '', request, 1, 'hidden', '', 'default-value-on-duplicate' ) }}
+        
+        {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
 		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
@@ -43,51 +45,3 @@
     {% endfor %}
 </fieldset>
 {% endmacro %}
-
-
-{% macro disponibilita( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
-{% import '_bin/_form.html' as frm %}
-{% set counter = 0 %}
-<fieldset id="{{ subtable }}">
-    {{ frm.subformLegend( subtable, legend ) }}
-    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
-    {% else %}{% set t = 0 %}{% endif %}
-    {% for i in 0..t %}
-    {% set r = request[ table ][ subtable ][ i ] %}
-    <div id="{{ subtable }}_{{ i }}" class="form-sub">
-	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	{{ frm.input( table, subtable, i, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
-	<div class="form-group form-row">
-	    <div class="col-md-2">
-		    {% if i == 0 %}<span class="label-top remove-after-duplicate">giorno</span>{% endif %}
-		    {{ frm.selectRequired( table, subtable, i, 'id_giorno', 'giorno', etc.select.giorno, request ) }}
-        </div>
-        <div class="col-md-2">
-            {% if i == 0 %}<span class="label-top remove-after-duplicate">ora inizio</span>{% endif %}
-            {{ frm.time( table, subtable, i, 'ora_inizio', 'ora inizio', '', request ) }}
-        </div>
-        <div class="col-md-2">
-            {% if i == 0 %}<span class="label-top remove-after-duplicate">ora fine</span>{% endif %}
-            {{ frm.time( table, subtable, i, 'ora_fine', 'ora fine', '', request ) }}
-        </div>
-        <div class="col-md-5">
-            {% if i == 0 %}<span class="label-top remove-after-duplicate">costo</span>{% endif %}
-            {{ frm.selectRequired( table, subtable, i, 'id_costo', 'costo', etc.select.costi_contratti, request ) }}
-        </div>
-
-        <input type="hidden" name="{{ table }}[{{ subtable }}][{{ i }}][turno]" id="{{ table }}_{{ subtable }}_{{ i }}_turno" value="{{ r['turno'] }}" default="0">
-        <input type="hidden" name="{{ table }}[{{ subtable }}][{{ i }}][se_lavoro]" id="{{ table }}_{{ subtable }}_{{ i }}_se_lavoro" value="{{ r['se_lavoro'] }}" default="0">
-        <input type="hidden" name="{{ table }}[{{ subtable }}][{{ i }}][se_disponibile]" id="{{ table }}_{{ subtable }}_{{ i }}_se_disponibile" value="{{ r['se_disponibile'] }}" default="1">
-
-	    {% if r.id %}
-	    <div class="col-auto text-right remove-on-duplicate d-print-none">
-		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
-		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
-	    </div>
-	    {% endif %}
-	</div>
-    </div>
-    {% endfor %}
-</fieldset>
-{% endmacro %}
-
