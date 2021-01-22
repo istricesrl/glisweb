@@ -47,5 +47,3 @@
     // debug
 	// print_r( $_SESSION );
 	// echo DIRECTORY_CACHE . 'twig';
-
-?>

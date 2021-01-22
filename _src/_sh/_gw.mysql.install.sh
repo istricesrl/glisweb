@@ -26,7 +26,7 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
 
     read -p "nome utente AMMINISTRATORE: " SRVUSER
 
-    read -p "password utente AMMINISTRATORE: " SRVPASS
+    read -s -p "password utente AMMINISTRATORE: " SRVPASS && echo
 
     read -p "database: " SRVDBNAME
 
@@ -47,7 +47,7 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
         read -p "nome utente DATABASE: " SRVDBUSER
 
         if [ $SYN == "s" ]; then
-            read -p "password utente DATABASE: " SRVDBPASS
+            read -s -p "password utente DATABASE: " SRVDBPASS && echo
             mysql -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE USER \`$SRVDBUSER\`@\`%\` IDENTIFIED BY '$SRVDBPASS';"
         fi
 

@@ -366,7 +366,8 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.anagrafica.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'categorie.anagrafica.form',
-													'categorie.anagrafica.form.membri' ) ),
+													'categorie.anagrafica.form.membri',
+													'categorie.anagrafica.form.tools' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 	
@@ -380,6 +381,19 @@
 		'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.membri.php' ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.anagrafica.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// form categorie anagrafica azioni
+	$p['categorie.anagrafica.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni categoria anagrafica' ),
+	    'h1'		=> array( $l		=> 'azioni categoria anagrafica' ),
+	    'parent'		=> array( 'id'		=> 'categorie.anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.anagrafica.form']['etc']['tabs'] )
 	);
    
 	// vista indirizzi
@@ -432,7 +446,8 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ranking.anagrafica.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_ranking.anagrafica.form.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'ranking.anagrafica.form',
-													'ranking.anagrafica.form.membri' ) ),
+													'ranking.anagrafica.form.membri',
+													'ranking.anagrafica.form.tools' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 	
@@ -447,3 +462,17 @@
 		'etc'		=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
+
+	// form ranking anagrafica azioni
+	$p['ranking.anagrafica.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'azioni ranking anagrafica' ),
+		'h1'		=> array( $l		=> 'azioni ranking anagrafica' ),
+		'parent'		=> array( 'id'		=> 'ranking.anagrafica.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_ranking.anagrafica.form.tools.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] )
+	);
+	

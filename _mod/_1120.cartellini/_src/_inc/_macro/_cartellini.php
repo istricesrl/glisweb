@@ -97,7 +97,7 @@
 			'26/12' 	// Santo Stefano
 		);
 		
-		// ore totali di quadratura di colonna complessivi
+		// inizializzo le ore totali di quadratura mensili
 		$ct['etc']['totali_quadratura'] = array(
 			'ordinarie_previste' => 0,
 			'ordinarie_fatte' => 0
@@ -114,28 +114,57 @@
 			$ct['etc']['ore'][ $giorno ]['ordinarie_previste'] = 0;
 			$ct['etc']['ore'][ $giorno ]['ordinarie_fatte'] = 0;
 
-			// ore ordinarie e di quadratura previste da contratto per quel giorno
-			$ct['etc']['ore'][ $giorno ]['ordinarie_previste'] = mysqlSelectCachedValue(
-				$cf['memcache']['connection'], 
+			// ricavo il contratto attivo alla data corrente
+			$contratto = mysqlSelectValue(
 				$cf['mysql']['connection'], 
-				'SELECT sum( time_to_sec( timediff( ora_fine, ora_inizio ) ) / 3600 ) as tot_ore FROM orari_contratti ' .
-				'INNER JOIN costi_contratti ON orari_contratti.id_costo = costi_contratti.id ' .
-				'INNER JOIN contratti ON orari_contratti.id_contratto = contratti.id ' .
-				'INNER JOIN tipologie_attivita_inps ON costi_contratti.id_tipologia = tipologie_attivita_inps.id ' .
-				'WHERE tipologie_attivita_inps.se_quadratura = 1 AND orari_contratti.se_lavoro = 1 ' .
-				'AND orari_contratti.id_giorno = ? AND contratti.id_anagrafica = ? ' . 
-				'AND ( ' .
-				'data_inizio <= ? AND ( data_fine_rapporto >= ? OR ( data_fine_rapporto IS NULL AND ( data_fine IS NULL or data_fine >= ? )  ) ) ' .
-				' ) ' .	// contratto attivo per il giorno corrente
-				'GROUP BY orari_contratti.id_giorno',
+				'SELECT id FROM contratti WHERE id_anagrafica = ? AND data_inizio <= ? AND  ( '.
+				'data_fine_rapporto >= ? OR ( data_fine_rapporto IS NULL AND ( data_fine IS NULL or data_fine >= ? )  ) ' .
+				') ORDER BY id DESC LIMIT 1',
 				array(
-					array( 's' => $ct['etc']['ore'][ $giorno ]['numero'] ),
 					array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ),
 					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) ),
 					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) ),
 					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) )
 				)
 			);
+
+			if( !empty( $contratto ) ){
+
+				// verifico se la data corrente è nella tabella turni e ricavo il turno corrispondente
+				$turno = mysqlSelectValue(
+					$cf['mysql']['connection'], 
+					'SELECT turno FROM turni WHERE id_contratto = ? AND (data_inizio <= ? AND data_fine >= ?) ORDER BY id DESC LIMIT 1',
+					array( 
+						array( 's' => $contratto ),
+						array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) ),
+						array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) )
+					)
+				);
+			
+
+				// se ci sono turni devo considerare la tabella turni e vedere se la data corrente è in essi
+				if( empty( $turno ) ){
+					$turno = 1;
+				}
+
+				// ore ordinarie e di quadratura previste da contratto per quel giorno
+				$ct['etc']['ore'][ $giorno ]['ordinarie_previste'] = mysqlSelectValue(
+					$cf['mysql']['connection'], 
+					'SELECT sum( time_to_sec( timediff( ora_fine, ora_inizio ) ) / 3600 ) as tot_ore FROM orari_contratti ' .
+					'INNER JOIN costi_contratti ON orari_contratti.id_costo = costi_contratti.id ' .
+					'INNER JOIN tipologie_attivita_inps ON costi_contratti.id_tipologia = tipologie_attivita_inps.id ' .
+					'WHERE tipologie_attivita_inps.se_quadratura = 1 AND orari_contratti.se_lavoro = 1 ' .
+					'AND orari_contratti.id_giorno = ? ' . 
+					'AND orari_contratti.id_contratto = ? AND orari_contratti.turno = ? ' .
+					'GROUP BY orari_contratti.id_giorno',
+					array(
+						array( 's' => $ct['etc']['ore'][ $giorno ]['numero'] ),
+						array( 's' => $contratto ),
+						array( 's' => $turno )
+					)
+				);
+
+			}
 
 			if( !empty( $ct['etc']['ore'][ $giorno ]['ordinarie_previste'] ) ){
 				$ct['etc']['totali_quadratura']['ordinarie_previste'] += $ct['etc']['ore'][ $giorno ]['ordinarie_previste'];
@@ -165,8 +194,7 @@
 
 		// tipologia aggiuntiva eventualmente indicata dalla tendina
 		if( isset( $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) && !empty( isset( $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) ) ){
-			$ta = mysqlCachedQuery(
-				$cf['memcache']['connection'], 
+			$ta = mysqlQuery(
 				$cf['mysql']['connection'], 
 				'SELECT id, __label__ FROM tipologie_attivita_inps_view WHERE id = ? ORDER BY id',
 				array( array( 's' => $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) )
@@ -174,8 +202,7 @@
 		}
 
 		// tipologie relative alle attivita già fatte dall'operatore escluse quelle standard
-		$to = mysqlCachedQuery(
-			$cf['memcache']['connection'], 
+		$to = mysqlQuery(
 			$cf['mysql']['connection'], 
 			'SELECT DISTINCT tipologie_attivita_inps_view.id, tipologie_attivita_inps_view.__label__ FROM tipologie_attivita_inps_view ' .
 			'INNER JOIN attivita_view ON tipologie_attivita_inps_view.id = attivita_view.id_tipologia_inps '.
@@ -199,8 +226,7 @@
 		}
 
 		// tendina delle tipologie rimanenti
-		$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(
-			$cf['memcache']['connection'], 
+		$ct['etc']['select']['tipologie_attivita_inps'] = mysqlQuery(
 			$cf['mysql']['connection'], 
 			'SELECT DISTINCT id, __label__ FROM tipologie_attivita_inps_view ' .
 			'WHERE id NOT IN (1,2) '. 			// escludo le tipologie fisse
@@ -273,10 +299,6 @@
 				$ct['etc']['totali_quadratura']['extra'] = '0';
 			}
 		}
-
-	
-
-//	print_r($ct['etc']['ore']);
 		
 	}
    

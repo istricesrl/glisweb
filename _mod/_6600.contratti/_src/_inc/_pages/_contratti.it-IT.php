@@ -105,8 +105,6 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
-
-
 	// vista tipologie contratti
 	$p['tipologie.contratti.view'] = array(
 		'sitemap'		=> false,
@@ -117,10 +115,9 @@
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.contratti.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie contratti' ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie' ),
 									'priority'	=> '120' ) )
 	);
-
 
 	// gestione tipologie contratti
 	$p['tipologie.contratti.form'] = array(
