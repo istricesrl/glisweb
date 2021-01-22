@@ -47,7 +47,11 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 			<div class="form-group form-row">
-				<div class="col-12">
+				<div class="col-12 col-md-2">
+					<span class="label-top">entità</span>
+					{{ frm.select( table, '', '', 'entita', '', etc.select.entita, request ) }}
+				</div>
+				<div class="col-12 col-md-10">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>

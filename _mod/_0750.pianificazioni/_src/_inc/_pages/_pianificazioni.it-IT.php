@@ -11,13 +11,13 @@
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'pianificazioni' ),
 	    'h1'			=> array( $l		=> 'pianificazioni' ),
-	    'parent'		=> array( 'id'		=> NULL ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_pianificazioni.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'pianificazioni.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'pianificazioni' ),
-														'priority'	=> '940' ) )
+														'priority'	=> '150' ) )
 	);
 
 	// gestione pianificazioni
