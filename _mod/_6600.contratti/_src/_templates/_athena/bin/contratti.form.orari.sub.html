@@ -13,11 +13,11 @@
 	<div class="form-group form-row">
         <div class="col-md-1">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">turno</span>{% endif %}
-		    {{ frm.select( table, subtable, i, 'turno', 'turno', etc.select.turni, request, '1' ) }}
+            {{ frm.selectRequired( table, subtable, i, 'turno', 'turno', etc.select.turni, request, page.turno ) }}
         </div>
 	    <div class="col-md-2">
 		    {% if i == 0 %}<span class="label-top remove-after-duplicate">giorno</span>{% endif %}
-		    {{ frm.select( table, subtable, i, 'id_giorno', 'giorno', etc.select.giorno, request ) }}
+		    {{ frm.selectRequired( table, subtable, i, 'id_giorno', 'giorno', etc.select.giorno, request ) }}
         </div>
         <div class="col-md-2">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">ora inizio</span>{% endif %}
@@ -27,24 +27,14 @@
             {% if i == 0 %}<span class="label-top remove-after-duplicate">ora fine</span>{% endif %}
             {{ frm.time( table, subtable, i, 'ora_fine', 'ora fine', '', request ) }}
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">costo</span>{% endif %}
-            {{ frm.select( table, subtable, i, 'id_costo', 'costo', etc.select.costi_contratti, request ) }}
-        </div>       
-        <div class="col-md">
-            {% if i == 0 %}<span class="label-top remove-after-duplicate">lavoro</span>{% endif %}
-            <div class="form-check">
-                {{ frm.checkbox( table, subtable, i, 'se_lavoro', '', '', request, '1' ) }}
-            </div>
+            {{ frm.selectRequired( table, subtable, i, 'id_costo', 'costo', etc.select.costi_contratti, request ) }}
         </div>
-        <div class="col-md">
-            {% if i == 0 %}<span class="label-top remove-after-duplicate">disponibile</span>{% endif %}
-            <div class="form-check">
-                {{ frm.checkbox( table, subtable, i, 'se_disponibile', '', '', request ) }}
-            </div>
-        </div>
-
-	    {% if r.id %}
+        
+        {{ frm.input( table, subtable, i, 'se_lavoro', 'se_lavoro', '', request, 1, 'hidden', '', 'default-value-on-duplicate' ) }}
+        
+        {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
 		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}

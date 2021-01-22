@@ -11,8 +11,11 @@
 
 
 	// tabella gestita
-	$ct['form']['table'] = 'contratti';
-	
+    $ct['form']['table'] = 'contratti';
+    
+    // macro di default per l'entità contratti
+    require '_contratti.form.default.php';
+
     // tendina per i costi contratto
     if( isset( $_REQUEST['contratti']['id'] ) ) {
         $ct['etc']['select']['costi_contratti'] = mysqlCachedIndexedQuery(
@@ -41,5 +44,25 @@
 	}
 
     
+    if ( isset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] ) )
+    { 
+        // rimuovo gli orari che non appartengono al turno corrente
+        foreach( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] as $k => $v ){
+            if( $v['turno'] != $ct['page']['turno'] ){
+                unset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'][$k] );
+            }
+        }
+
+        // riordino l'array degli orari in base a id_giorno e ora_inizio
+        foreach( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] as $key => $value ) {
+            $sort_data[ $key ] = $value['id_giorno'] . ' ' . $value['ora_inizio'];
+        }
+
+        if( isset( $sort_data ) ){
+            array_multisort( $sort_data, $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] );
+        }
+
+    }
+
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';

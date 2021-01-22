@@ -70,5 +70,8 @@
 	    'SELECT id, __label__ FROM tipologie_orari_inps_view'
     );
 
+    // macro di default per l'entità contratti
+	require '_contratti.form.default.php';
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
