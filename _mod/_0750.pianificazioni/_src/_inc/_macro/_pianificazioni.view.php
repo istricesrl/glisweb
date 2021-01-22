@@ -30,13 +30,12 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'entita' => 'entità',
-        'nome' => 'dettagli',
-        '__label__' => 'pianificazione'
+        'nome' => 'pianficazione'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-       
+        'nome' => 'text-left'
     );
 
     // tendina delle entita che è possibile gestire

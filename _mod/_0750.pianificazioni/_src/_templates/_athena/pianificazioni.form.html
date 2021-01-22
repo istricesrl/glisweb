@@ -47,13 +47,16 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 			<div class="form-group form-row">
-				<div class="col-6 col-md-3">
-					<span class="label-top">entità</span>
-					{{ frm.select( table, '', '', 'entita', '', etc.select.entita, request ) }}
-				</div>
-				<div class="col-6 col-md-9">
+				<div class="col-12">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-12">
+				<span class="label-top">note</span>
+				{{ frm.textarea( table, '', '', 'note', 'note', 3, request ) }}
 				</div>
 			</div>
 	

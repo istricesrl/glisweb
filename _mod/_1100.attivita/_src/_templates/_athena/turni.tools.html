@@ -350,15 +350,21 @@ $(document).ready(function(){
         var period = $("#__id_periodicita__").val();
         var cadenza = $("#___ripetizione__").val();
         var rip_mese = $("#__rip_mese__").val();
+        var rip_mese_desc = $("#__rip_mese__ option:selected").text();  // SDF descrizione ripetizione
+
         var rip_anno = $("#__rip_anno__").val();
         var data_fine = $("#___data_fine__").val();
         var ripetizioni_fine = $("#___ripetizione_fine__").val();
         var g_settimana = $('.messageCheckbox').val();
  
         var giorni_s = [];
-        $.each($("input[name='giorni']:checked"), function(){ giorni_s.push($(this).val()); });
+        var giorni_s_desc = [];   // SDF
+        $.each($("input[name='giorni']:checked"), function(){ 
+            giorni_s.push( $(this).val() ); 
+            giorni_s_desc.push( $(this).siblings().text() );    // SDF descrizione giorni
+        });
 
-        getws('{{ site.url }}/_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s, 
+        getws('{{ site.url }}/_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s+'&__rip_mese_desc__='+rip_mese_desc+'&__giorni_s_desc__='+giorni_s_desc, 
             function( data ){ 
             //    window.open('{{ pages['turni.view'].path[ localization.language.ietf ] }}?esito=' + data['__status__'] + '&righe_inserite=' + data['righe_inserite'],'_self');
             //window.open('{{ pages['turni.view'].path[ localization.language.ietf ] }}','_self');

@@ -17,7 +17,7 @@
 		'etc'			=> array( 'tabs'	=> array(	'pianificazioni.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'pianificazioni' ),
-														'priority'	=> '250' ) )
+														'priority'	=> '940' ) )
 	);
 
 	// gestione pianificazioni

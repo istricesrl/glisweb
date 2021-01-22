@@ -27,6 +27,8 @@
         // workspace della pianificazione
         $wks = array();
 
+        $nome = '';     // nome della pianificazione con i dettagli
+
         $wks['campi'] = array( 'id_contratto', 'data_inizio', 'data_fine', 'turno' );
         $wks['parametri'] = array(
             '__data__',
@@ -42,6 +44,21 @@
 
         $wks['ws'] = $cf['site']['url'] . '_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php';
 
+
+        // periodicità settimanale
+        if( $_REQUEST['__p__'] == 2  ){
+            $nome .= 'periodicità settimanale, ';
+            $nome .= ( isset( $_REQUEST['__giorni_s_desc__'] ) ) ? $_REQUEST['__giorni_s_desc__'] . ', ' : '';
+            $nome .= 'ripetizione ogni ' . $_REQUEST['__cad__'] . ' settimane, ' ; 
+        }
+        elseif( $_REQUEST['__p__'] == 3 ){
+            $nome .= 'periodicità mensile, ';
+            $nome .= ( !empty( $_REQUEST['__rip_mese_desc__'] ) ) ? ( $_REQUEST['__rip_mese_desc__'] . ', ' ) : '';
+            $nome .= 'ripetizione ogni ' . $_REQUEST['__cad__'] . ' mesi, ' ; 
+        }
+              
+        $nome .= ( !empty( $_REQUEST['__datafine__'] ) ) ? ('fino al ' . $_REQUEST['__datafine__'] . ', ')  : '';
+        $nome .= ( !empty( $_REQUEST['__nr__'] ) ) ? ( 'per ' . $_REQUEST['__nr__'] . ' volte')  : '';
 
         // ricavo i giorni che separano data iniziale e data finale
         $gg = ( strtotime($_REQUEST['__dataf__']) - strtotime($_REQUEST['__data__']) ) / (60*60*24);
@@ -64,7 +81,7 @@
                     'INSERT INTO pianificazioni (entita, nome, workspace) VALUES (?, ?, ?)',
                     array(
                         array( 's' => 'turni' ),
-                        array( 's' => 'prova' ),
+                        array( 's' => $nome ),
                         array( 's' => json_encode( $wks ) )
                     )
                 );
