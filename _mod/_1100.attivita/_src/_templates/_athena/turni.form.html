@@ -78,3 +78,22 @@
 </section>
 
 {% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+window.addEventListener( 'DOMContentLoaded', function() {
+
+    $('#turni_data_fine').change( function(){
+        console.log('controllo data fine');
+        var di = new Date($('#turni_data_inizio').val());
+        var df = new Date($('#turni_data_fine').val());
+
+        if( df < di ){
+            alert('Attenzione: la data finale è minore della data iniziale');
+            $("#turni_data_fine").val("");
+        }
+    });
+   
+});
+</script>
+{% endblock %}

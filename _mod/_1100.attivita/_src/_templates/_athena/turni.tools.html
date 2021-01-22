@@ -121,79 +121,6 @@
             </div>
         </fieldset>
   
-
-<!--
-        <div class="col-12 col-md-2">
-            <span class="label-top">periodicità</span>
-            <select id="__id_periodicita__" name="__id_periodicita__" onclick="dettagli(); myDate()"  class="form-control form-control-sm" required>
-                {% for p in etc.select.periodi %}
-                    <option value="{{p.id}}" id="{{p.id}}">{{p.__label__}}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-
-        <div class="form-group form-row" id="ripetizione" style="display: none;">
-            <div class="col-auto d-flex align-items-center">Ripeti ogni</div>
-                <div class="col-auto">
-                    {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
-                </div>
-                <div class="col-auto d-flex align-items-center">
-                <span id="period"></span>
-            </div>    
-        </div>
-       
-        <div class="form-group form-row" id="settimana" style="display: none;">
-            <span class="col-auto text-right"><b>ripeti ogni</b></span>
-            {# frm.select( '', '', '', '__id_giorno_settimana__', '', etc.select.giorni_settimana, request ) #}
-            {% for g in etc.select.giorni_settimana %}
-            <div class="col-auto">
-                <input class="messageCheckbox" type="checkbox" id="giorno_{{g.id}}" name="giorni" value="{{ g.id }}">
-                <label for="horns">{{g.__label__}}</label>
-            </div>
-            {% endfor %}
-        </div>
-         <div class="form-group form-row" id="mese" style="display: none;">
-            <select id="__rip_mese__" name="__rip_mese__" class="form-control form-control-sm">
-                <option id="1" value="1"></option>
-                <option id="2" value="2"></option>
-            </select>
-        </div>
-
-        <div class="form-group form-row" id="anno" style="display: none;">
-            <select id="__rip_anno__" name="__rip_anno__"  class="form-control form-control-sm">
-                <option id="1" value="1"></option>
-                <option id="2" value="2"></option>
-            </select>
-        </div>
-
-        <div class="form-group form-row" id="fine_p" style="display: none;">
-        <div><span class="label-top">fine pianificazione</span></div>    
-        <div class="col-12" >
-            <div class="form-row">
-                <div class="col-auto d-flex align-items-center">
-                    <input type="radio" id="data_f" name="fine" value="data_f" checked>
-                </div>
-                <div class="col-auto d-flex align-items-center">
-                    fino al 
-                </div>
-                <div class="col-auto d-flex align-items-center">
-                    {{ frm.date( '', '', '', '__data_fine__', '', '', request ) }}<br>
-                </div>    
-            </div>
-            <div class="form-row mt-1">
-                <div class="col-auto d-flex align-items-center">
-                    <input type="radio" id="numero" name="fine" value="numero" >
-                </div> 
-                <div class="col-auto d-flex align-items-center">ripeti  </div>    
-                <div class="col-auto d-flex align-items-center">
-                    {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
-                </div>   
-                <div class="col-auto d-flex align-items-center">volte </div>  
-            </div>   
-        </div>
-    </div>
-    -->
     </fieldset>
     
     {# BOTTONI E COMANDI DEL MODULO #}
@@ -220,7 +147,7 @@
 $(document).ready(function(){
  
     $('input[type=radio]').click(function(){
-        console.log(this.value);
+    //    console.log(this.value);
         if(this.value == 'numero'){
             $( "#___data_fine__" ).prop( "disabled", true );
             $( "#___ripetizione_fine__" ).prop( "disabled", false );
@@ -230,6 +157,15 @@ $(document).ready(function(){
         }
     });
 
+    $('#__dataf__').change( function(){
+        var di = new Date($('#__data__').val());
+        var df = new Date($('#__dataf__').val());
+
+        if( df < di ){
+            alert('Attenzione: la data finale è minore della data iniziale');
+            $("#__dataf__").val("");
+        }
+    });
 
 });
 
@@ -365,12 +301,10 @@ $(document).ready(function(){
         });
 
         getws('{{ site.url }}/_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s+'&__rip_mese_desc__='+rip_mese_desc+'&__giorni_s_desc__='+giorni_s_desc, 
-            function( data ){ 
-            //    window.open('{{ pages['turni.view'].path[ localization.language.ietf ] }}?esito=' + data['__status__'] + '&righe_inserite=' + data['righe_inserite'],'_self');
-            //window.open('{{ pages['turni.view'].path[ localization.language.ietf ] }}','_self');
-            window.open('{{ pages['turni.view'].url[ localization.language.ietf ] }}?__view__[{{ view.id }}][__filters__][id_pianificazione][EQ]='+data['pianificazione'],'_self');
-            }
-        );
+                function( data ){ 
+                    window.open('{{ pages['turni.view'].url[ localization.language.ietf ] }}?__view__[{{ view.id }}][__filters__][id_pianificazione][EQ]='+data['pianificazione'],'_self');
+                }
+            );
        
     }
 </script>
