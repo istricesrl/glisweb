@@ -9,76 +9,131 @@
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
 
-    <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill warning-if-changed" action="{{ page.path[ localization.language.ietf ] }}" method="post">
-        <div class="form-row view-filters d-print-none">
+    <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+        <div class="form-row view-filters d-print-none cks">
             <div class="col-12 col-md-auto">
             <span class="label-top">mese</span>
-            <select name="__view__[{{ view.id }}][__filters__][mese][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true; submit();" class="form-control form-control-sm">
-            {% for idmese, nomemese in etc.select.mesi %}
-                <option value="{{ idmese }}" {% if request.__view__[ view.id ].__filters__.mese.EQ == idmese %}selected{% endif %}>{{ nomemese }}</option>
+            <select name="__view__[{{ view.id }}][__filters__][mese][EQ]" onchange="$('#pager').val('0');" class="form-control form-control-sm">
+            {% for id, nome in etc.select.mesi %}
+                <option value="{{ id }}" {% if request.__view__[ view.id ].__filters__.mese.EQ == id %}selected{% endif %}>{{ nome }}</option>
             {% endfor %}
             </select>
             </div>
 
             <div class="col-12 col-md-auto">
                 <span class="label-top">anno</span>
-                <select name="__view__[{{ view.id }}][__filters__][anno][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true; submit();" class="form-control form-control-sm">
-                {% for idanno, nomeanno in etc.select.anni %}
-                    <option value="{{ idanno }}" {% if request.__view__[ view.id ].__filters__.anno.EQ == idanno %}selected{% endif %}>{{ nomeanno }}</option>
+                <select name="__view__[{{ view.id }}][__filters__][anno][EQ]" onchange="$('#pager').val('0');" class="form-control form-control-sm">
+                {% for id, nome in etc.select.anni %}
+                    <option value="{{ id }}" {% if request.__view__[ view.id ].__filters__.anno.EQ == id %}selected{% endif %}>{{ nome }}</option>
                 {% endfor %}
                 </select>
             </div>
 
             <div class="col-12 col-md-auto">
                 <span class="label-top">operatore</span>
-                <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); formChanged=false; submitFormOkay=true; submit();" class="form-control form-control-sm">
-                    <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>&nbsp;</option>
-                {% for operatore  in etc.select.operatori %}
-                    <option value="{{ operatore.id }}" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
-                {% endfor %}
-                </select>
+                <div class="row m-0">
+                    <div class="col combobox-container p-0">
+                        <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0');" class="selectbox form-control form-control-sm" id="operatore">
+                            <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}></option>
+                        {% for operatore  in etc.select.operatori %}
+                            <option value="{{ operatore.id }}" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto p-0 pl-1">
+                        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#operatore_inputbox').trigger('all');"><i class="fa fa-chevron-down"></i></button>
+                    </div>
+                </div>
             </div>
 
+            <div class="col-auto">
+                <span class="label-top">&nbsp;</span>
+                <button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="submit();">APRI CARTELLINO</button>
+            </div>
         </div>
 
+        {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
         <div class="form-row">
-            <div class="col-md-12 text-center table-responsive">
-                <table class="view-table cartellini">
+            <div class="col-md-12 table-responsive">
+                <table class="view-table cartellini warning-if-changed-cst">
                     <thead>
                         <tr>
                             <th>data</th>
-                            {% for t in etc.tipologie_attivita_inps %}
+                            <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
+                            {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
                             <th>{{ t.__label__ }}</th>
                             {% endfor %}
+                            <th> 
+                                <div class="row m-0">
+                                    <div class="col combobox-container p-0">
+                                        <select name="__cartellini__[tipologia_aggiuntiva]" onchange="submitFormOkay=true; submit();" class=" form-control form-control-sm" id="tipologia_aggiuntiva">
+                                            <option value="" >tipologia</option>
+                                            {% for t in etc.select.tipologie_attivita_inps %}
+                                                <option value="{{ t.id }}" >{{ t.__label__ }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                           
+                            </th>
+                            <th colspan="2">totale ordinario</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for k,v in etc.ore %}
                         <tr>
-                            <td>{{ v.data }}</td>
-                            {% for t in etc.tipologie_attivita_inps %}
+                            <td style="text-align: right; {% if v.festivo == 1 %} color: red;{% endif %}">{{ v.nome }} {{ v.data }}</td>
+                            <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
+                            {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
                             {% if v.tipologie_inps[ t.id ] %}
-                             <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ~'&__view__['~view.id~'][__filters__][id_tipologia_inps][EQ]='~t.id }}','_self');"> 
-                        <!--    <td><a href="{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}">    -->
-                            <div>{{ v.tipologie_inps[ t.id ] }}</div></a>
+                            <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ~'&__view__['~view.id~'][__filters__][id_tipologia_inps][EQ]='~t.id }}','_self');">
+                                <div>{{ v.tipologie_inps[ t.id ] }}</div>
                             {% else %}
-                            <td><input type="number" class="form-control form-control-sm" step="0.5" name="__cartellini__[{{ k }}_{{ t.id }}]">
+                            <td><input type="number" class="form-control form-control-sm" step="0.5" name="__cartellini__[giorni][{{ k }}_{{ t.id }}]">
                             {% endif %}
                             </td>
                             {% endfor %}
+                            <td>&nbsp;</td>
+                            <td>{% if v.ordinarie_previste > 0 or v.ordinarie_fatte > 0 %}{{'%0.2f'|format( v.ordinarie_fatte ) }} ore di {{ '%0.2f'|format(v.ordinarie_previste) }}{% endif %}</td>
+                            <td>
+                                {% if v.extra == '1' %}
+                                <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% elseif v.extra == '0' %}
+                                <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
+                        <tr style="font-weight: bold">
+                            <td>totale</td>
+                            <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
+                            {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
+                            <td>{{ etc.tipologie[ t.id ].ore_totali }}</td>
+                            {% endfor %}
+                            <td>&nbsp;</td>
+                            <td>
+                                {% if etc.totali_quadratura.ordinarie_fatte > 0 or etc.totali_quadratura.ordinarie_previste > 0 %}
+                                {{'%0.2f'|format( etc.totali_quadratura.ordinarie_fatte ) }} ore di {{ '%0.2f'|format( etc.totali_quadratura.ordinarie_previste ) }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if etc.totali_quadratura.extra == '1' %}
+                                <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% elseif etc.totali_quadratura.extra == '0' %}
+                                <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     
         {# BOTTONI E COMANDI DEL MODULO #}
-        {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
 	    <fieldset class="form-controls mt-auto">
             <div class="row no-gutters d-print-none">
                 <div class="col-auto col-md-5">
-	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open(&quot;&quot;,&quot;_self&quot;)" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
+	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('/produzione/attivita.it-IT.html','_self');" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
                 </div>
                 <div class="col col-md-2 text-center"></div>
                 <div class="col-auto col-md-5 text-right">
@@ -96,4 +151,18 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block javascript %}
+<script defer type="text/javascript">
+
+    window.addEventListener( 'DOMContentLoaded', function() {
+     $('.warning-if-changed-cst').on( 'keyup change', function() { 
+         $('.cks select').prop('disabled', true);
+         $('.cks input').prop('disabled', true);
+         $('.cks button').prop('disabled', true);
+        } );
+    });
+
+</script>
 {% endblock %}
