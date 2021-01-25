@@ -35,8 +35,8 @@
      * 
      *
      */
-    // funzione per la generazione di task
-    function pianificazioneTask( $c, $id_anagrafica, $id_cliente, $id_luogo, $data, $ora, $ore, $id_periodicita, $descrizione,$cadenza, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
+    // funzione per la generazione di todo
+    function pianificazioneTodo( $c, $id_anagrafica, $id_cliente, $id_luogo, $data, $ora, $ore, $id_periodicita, $descrizione,$cadenza, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
 
         // TODO controlli
             // la data inizio è successiva alla data fine
@@ -53,7 +53,7 @@
             // l'attività non si ripete
             case 0:
                 $attivita = mysqlQuery( $c,
-                    'INSERT INTO task ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES ( ?, ?, ?, ?, ?, ? )',
+                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES ( ?, ?, ?, ?, ?, ? )',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
@@ -70,7 +70,7 @@
                 if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * ($numero_ripetizioni - 1).' days')); }
                 do {
                     $attivita = mysqlQuery( $c,
-                    'INSERT INTO task ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome )  VALUES (  ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome )  VALUES (  ?, ?, ?, ?, ?, ?)',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
@@ -100,7 +100,7 @@
                     do {
                     if($d >= $data){
                         $attivita = mysqlQuery( $c,
-                        'INSERT INTO task ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES (  ?, ?, ?, ?, ?, ?)',
+                        'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES (  ?, ?, ?, ?, ?, ?)',
                         array(  array( 's' => $id_anagrafica), 
                                 array( 's' => $id_cliente), 
                                 array( 's' => $id_luogo), 
@@ -134,7 +134,7 @@
                         $data_temp = date("Y-m-d", strtotime("last ".$days[ date('N', strtotime($data))-1 ], strtotime($data_temp)));   
                     }
                     $attivita = mysqlQuery( $c,
-                    'INSERT INTO task ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES (  ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES (  ?, ?, ?, ?, ?, ?)',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
@@ -148,7 +148,7 @@
             } else {
                 do {
                     $attivita = mysqlQuery( $c,
-                    'INSERT INTO task ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES (  ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome ) VALUES (  ?, ?, ?, ?, ?, ?)',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
@@ -169,7 +169,7 @@
                 if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * ($numero_ripetizioni - 1).' years')); }
                 do {
                     $attivita = mysqlQuery( $c,
-                    'INSERT INTO task ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome )  VALUES (  ?, ?, ?, ?, ?, ?)',
+                    'INSERT INTO todo ( id_responsabile, id_cliente, id_luogo, timestamp_pianificazione, ore_previste, nome )  VALUES (  ?, ?, ?, ?, ?, ?)',
                     array(  array( 's' => $id_anagrafica), 
                             array( 's' => $id_cliente), 
                             array( 's' => $id_luogo), 
@@ -298,3 +298,6 @@
             return $attivita;
     
         }
+
+
+        

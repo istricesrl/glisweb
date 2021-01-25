@@ -20,7 +20,7 @@
 	$status = array();
 
     // log
-	logWrite( 'richiesta generazione task', 'task', LOG_ERR );
+	logWrite( 'richiesta generazione todo', 'todo', LOG_ERR );
 
     if( isset($_REQUEST) && !empty($_REQUEST['__data__']) && !empty($_REQUEST['__anagrafica__']) && !empty($_REQUEST['__cliente__']) && !empty($_REQUEST['__luogo__']) ){
 
@@ -62,7 +62,7 @@ echo($data_temp."<br>");
   die(); 
  */
       
-        $restult = pianificazioneTask( $cf['mysql']['connection'], $_REQUEST['__anagrafica__'], $_REQUEST['__cliente__'], $_REQUEST['__luogo__'], $_REQUEST['__data__'], $_REQUEST['__ora__'], $_REQUEST['__ore__'], $_REQUEST['__p__'],$_REQUEST['__desc__'],$_REQUEST['__cad__'], $_REQUEST['__datafine__'], $_REQUEST['__nr__'],$_REQUEST['__gs__'],$_REQUEST['__rm__'],$_REQUEST['__ra__']);
+        $restult = pianificazioneTodo( $cf['mysql']['connection'], $_REQUEST['__anagrafica__'], $_REQUEST['__cliente__'], $_REQUEST['__luogo__'], $_REQUEST['__data__'], $_REQUEST['__ora__'], $_REQUEST['__ore__'], $_REQUEST['__p__'],$_REQUEST['__desc__'],$_REQUEST['__cad__'], $_REQUEST['__datafine__'], $_REQUEST['__nr__'],$_REQUEST['__gs__'],$_REQUEST['__rm__'],$_REQUEST['__ra__']);
     
         if( $restult ){
             $status['__status__'] = 'Pianificazione completata';
