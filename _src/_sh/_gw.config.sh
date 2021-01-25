@@ -36,9 +36,9 @@ if [ -f "$FILE" ]; then
 
     while [ -n "$PLACEHOLDER" ]; do
 
-		if [ "$PLACEHOLDER" = "%moduli%" ]; then
+		VALUE=""
 
-			VALUE=""
+		if [ "$PLACEHOLDER" = "%moduli%" ]; then
 
 			for mod in $( ls _mod ); do
 
