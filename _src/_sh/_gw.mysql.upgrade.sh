@@ -37,7 +37,7 @@ if [ -f "$FILE0" ]; then
 
     read -p "nome utente AMMINISTRATORE: " SRVUSER
 
-    read -p "password utente AMMINISTRATORE: " SRVPASS
+    read -s -p "password utente AMMINISTRATORE: " SRVPASS && echo
 
     read -p "database: " SRVDBNAME
 

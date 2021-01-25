@@ -90,7 +90,7 @@ apt-get install -y adminer
 a2enconf adminer
 
 ## password di root
-read -p "inserisci la password per MySQL root (vuoto per saltare): " SRVPASS
+read -s -p "inserisci la password per MySQL root (vuoto per saltare): " SRVPASS && echo
 if [ -n "$SRVPASS" ]; then
     sudo /etc/init.d/mysql stop
     sudo mysqld --skip-grant-tables &
