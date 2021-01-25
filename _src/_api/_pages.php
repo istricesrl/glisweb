@@ -200,7 +200,7 @@
 	}
 
     // costruzione delle briciole di pane
-	$ct['page']['template']['breadcrumb'] = buildBreadcrumb( $ct['page'], $ct['page']['id'] );
+	$ct['page']['template']['breadcrumbs'] = buildBreadcrumbs( $ct['page'], $ct['page']['id'] );
 
     // costruzione del selettore lingua
 	$ct['page']['template']['flags'] = buildFlags( $ct['page'], $cf['localization']['language']['ietf'] );

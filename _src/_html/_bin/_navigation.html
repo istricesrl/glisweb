@@ -62,7 +62,7 @@
 {% endif %}
 {% endmacro %}
 
-{% macro breadcrumb( links, lang, site, query ) %}
+{% macro breadcrumbs( links, lang, site, query ) %}
 {% for link in links %}<li class="breadcrumb-item{% if link.active %} active{% endif %}"><a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a></li>{% endfor %}
 {% endmacro %}
 

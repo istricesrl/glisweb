@@ -10,7 +10,7 @@
  * - stili del nav
  * - stili delle tab
  * - stili della sidebar
- * - stili delle breadcrumb
+ * - stili delle breadcrumbs
  * - stili del main
  * - stili del footer
  * - stili delle timeline
@@ -542,9 +542,9 @@ select.select-tabs {
     top: 0px;
 }
 
-/* stili delle breadcrumb */
+/* stili delle breadcrumbs */
 
-.breadcrumb {
+.breadcrumbs {
     background-color: transparent;
     display: block !important;
     margin: 0px;
@@ -554,7 +554,7 @@ select.select-tabs {
     white-space: nowrap;
 }
 
-.breadcrumb .breadcrumb-item {
+.breadcrumbs .breadcrumb-item {
     display: inline;
 }
 
