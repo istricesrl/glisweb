@@ -19,6 +19,8 @@
     controllo dell'età della chiave in _mod/_3000.contenuti/_src/_config/_310.pages.php, per cui vengono recuperati dal database solo i dati relativi alle pagine effettivamente
     aggiornate anche in caso di rielaborazione dell'albero dei contenuti.
 
+    Si noti che può essere necessario ricaricare la pagina due volte, oppure fare un aggiornamento forzato (CTRL+F5) prima che le modifiche siano visibili.
+
     cache su disco
     --------------
 
