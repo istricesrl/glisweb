@@ -1,3 +1,17 @@
 body {
     font-family: monospace;
+    margin: 0px;
+}
+
+header, nav, main, footer {
+    padding: 0.5em;
+}
+
+h1, h2, h3 {
+    margin: 0px;
+    margin-bottom: 0.5em;
+}
+
+.img-fluid {
+    width: 100%;
 }

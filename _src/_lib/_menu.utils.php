@@ -160,7 +160,7 @@
      * @todo documentare
      *
      */
-    function buildBreadcrumb( $page, $active ) {
+    function buildBreadcrumbs( $page, $active ) {
 
 	// array del menu
 	    $nav = array();
