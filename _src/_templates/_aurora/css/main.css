@@ -1,3 +1,12 @@
 body {
     font-family: monospace;
+    margin: 0px;
+}
+
+nav, main, footer {
+    padding: 0.5em;
+}
+
+h1, h2, h3 {
+    margin: 0px;
 }

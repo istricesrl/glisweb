@@ -306,7 +306,19 @@
     // renderizzo il template
 	if( isset( $ct['page']['template']['type'] ) ) {
 
-    	echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_2EOL;
+		echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_EOL;
+		
+		if( ! empty( $ct['page']['template']['path'] ) ) {
+			echo PHP_EOL . '<!-- template: ' . $ct['page']['template']['path'] . ' -->' . PHP_EOL;
+		}
+
+		if( ! empty( $ct['page']['template']['schema'] ) ) {
+			echo PHP_EOL . '<!-- schema: ' . $ct['page']['template']['schema'] . ' -->' . PHP_EOL;
+		}
+
+		if( ! empty( $ct['page']['template']['theme'] ) ) {
+			echo PHP_EOL . '<!-- teema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
+		}
 
 		switch( $ct['page']['template']['type'] ) {
 
