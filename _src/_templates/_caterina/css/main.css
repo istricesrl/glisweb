@@ -1,0 +1,40 @@
+body {
+    background-color: #000000;
+    font-family: monospace;
+    margin: 0px;
+}
+
+header, nav, main, footer {
+    padding: 0.5em;
+}
+
+h1, h2, h3 {
+    margin: 0px;
+    margin-bottom: 0.5em;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+.wrapper {
+    background-color: #ffffff;
+    margin-top: 2em;
+}
+
+.img-fluid {
+    width: 100%;
+}
+
+.nav-link {
+    display: inline;
+    padding: 0em;
+}
