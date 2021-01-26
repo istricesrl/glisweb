@@ -83,7 +83,7 @@ pear install Net_FTP
 apt-get install -y ncftp
 
 ## installazione di mysql
-apt-get install -y mysql-server
+apt-get install -y default-mysql-server
 
 ## installazione di adminer
 apt-get install -y adminer

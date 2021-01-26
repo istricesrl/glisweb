@@ -370,6 +370,11 @@
 	define( 'MIME_TEXT_PLAIN'		, 'text/plain' );
 	define( 'MIME_TEXT_HTML'		, 'text/html' );
 
+    // controllo scrittura
+    if( ! is_writeable( DIR_BASE ) ) {
+        die( 'la cartella di installazione non è scrivibile, lanciare _gw.permissions.reset.sh' );
+    }
+
     // costanti per l'encoding
 	define( 'ENCODING_UTF8'			, 'utf-8' );
 

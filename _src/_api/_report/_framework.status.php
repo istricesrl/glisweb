@@ -233,8 +233,12 @@
 	    echo '[ -- ] backend memcache attivato' . PHP_EOL;
 	    if( ! empty( $cf['memcache']['connection'] ) ) {
 		echo '[ OK ] connessione memcache su ' . $cf['memcache']['server']['address'] . ':' . $cf['memcache']['server']['port'] . ' presente' . PHP_EOL;
-		echo '[ -- ] utilizzati ' . $cf['memcache']['stat']['usage'] . ' (' . $cf['memcache']['stat']['percent'] . ')' . PHP_EOL;
-		echo '[ -- ] ' . $cf['memcache']['stat']['hits'] . ' (hit rate ' . $cf['memcache']['stat']['hitrate'] . ' ' . ( ( floatval( $cf['memcache']['stat']['hitrate'] ) > 90.0 ) ? 'OK' : 'NO' ) . ')' . PHP_EOL;
+		if( ! empty( $cf['memcache']['stat']['hits'] ) ) {
+			echo '[ -- ] utilizzati ' . $cf['memcache']['stat']['usage'] . ' (' . $cf['memcache']['stat']['percent'] . ')' . PHP_EOL;
+			echo '[ -- ] ' . $cf['memcache']['stat']['hits'] . ' (hit rate ' . $cf['memcache']['stat']['hitrate'] . ' ' . ( ( floatval( $cf['memcache']['stat']['hitrate'] ) > 90.0 ) ? 'OK' : 'NO' ) . ')' . PHP_EOL;
+		} else {
+			die( '[FAIL] statistiche di memcache non ancora raccolte' . PHP_EOL );
+		}
 	    } else {
 		die( '[FAIL] connessione memcache su ' . $cf['memcache']['server']['address'] . ':' . $cf['memcache']['server']['port'] . ' assente' . PHP_EOL );
 	    }
