@@ -40,10 +40,12 @@
     
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'contratti.form';
-    
+    $ct['view']['insert']['page'] = 'contratti.form';
+
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_anagrafica';
-	$ct['view']['open']['preset']['subform'] = 'contratti';
+//    $ct['view']['open']['preset']['subform'] = 'contratti';
+    
 
     // preset filtro custom
     $ct['view']['__restrict__']['id_anagrafica']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];

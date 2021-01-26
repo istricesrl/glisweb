@@ -27,7 +27,7 @@
             {% if i == 0 %}<span class="label-top remove-after-duplicate">ora fine</span>{% endif %}
             {{ frm.time( table, subtable, i, 'ora_fine', 'ora fine', '', request ) }}
         </div>
-        <div class="col-md-4">
+        <div class="col-md">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">costo</span>{% endif %}
             {{ frm.selectRequired( table, subtable, i, 'id_costo', 'costo', etc.select.costi_contratti, request ) }}
         </div>
