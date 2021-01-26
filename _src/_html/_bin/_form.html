@@ -83,17 +83,19 @@
 
 {% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf ) %}
 {% if subtable %}
+    {% if key %}{% set bl = request[ table ][ subtable ][ counter ][ key ] %}{% endif %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
     {% set vl = request[ table ][ subtable ][ counter ][ field ] %}
 {% else %}
+    {% if key %}{% set bl = request[ table ][ key ] %}{% endif %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {# NOTA if per retrocompatibilità con le chiamate che passano ancora le stringhe estese degli URL #}
 {% if key %}
-    {% set editor = pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ request[ table ][ key ] ~ '&__backurl__=' ~ page.backurl[ ietf ] %}
+    {% set editor = pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ bl ~ '&__backurl__=' ~ page.backurl[ ietf ] %}
     {% set adder = pages[ add ].path[ ietf ] ~ '?__backurl__=' ~ page.backurl[ ietf ] %}
 {% else %}
     {% set editor = edit %}
@@ -144,7 +146,7 @@
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {% if vl is empty %}{% set vl = default %}{% endif %}
-<input type="{% if type %}{{ type }}{% else %}text{% endif %}" {% if step %}step={{ step }}  {% endif %} {% if disabled %}readonly{% endif %} name="{{ nm }}" id="{{ id }}" class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ vl }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %} {% if type == 'password' %}autocomplete="new-password" {% endif %}>
+<input type="{% if type %}{{ type }}{% else %}text{% endif %}" {% if default %} default="{{ default }}"{% endif %} {% if step %}step={{ step }}  {% endif %} {% if disabled %}readonly{% endif %} name="{{ nm }}" id="{{ id }}" class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ vl }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %} {% if type == 'password' %}autocomplete="new-password" {% endif %}>
 {% endmacro %}
 
 {% macro inputRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class, disabled, step ) %}
@@ -251,10 +253,11 @@
 <button type="{% if type %}{{ type }}{% else %}submit{% endif %}" class="btn btn-sm {% if class %}{{ class }}{% else %}btn-secondary{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} >{{ text|raw }}</button>
 {% endmacro %}
 
-{% macro trashButton( table, subtable, page, pages, r, lang, request, back ) %}
+{% macro trashButton( table, subtable, page, pages, r, lang, request, back, rollback ) %}
 {% import _self as frm %}
-{% if not back %}{% set back = page.path[ lang ] %}{% endif %}
+{% if request.__backurl__ %}{% set backurl = '&__backurl__=' ~ request.__backurl__ %}{% endif %}
 {% if not subtable %}
+    {% set submitOk = 'submitFormOkay = true;' %}
     {% set subtable = table %}
     {% set class = ' remove-on-duplicate' %}
 {% else %}
@@ -265,8 +268,9 @@
 {% else %}
     {% set id = request[ table ].id %}
 {% endif %}
-{% if request.__backurl__ %}{% set backurl = '&__backurl__=' ~ request.__backurl__ %}{% endif %}
-{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, 'submitFormOkay = true; window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back ~ query ~ backurl ~ '","_self")','elimina' ) }}
+{% if not back %}{% set back = page.path[ lang ] ~ query ~ backurl %}{% endif %}
+{% if not rollback %}{% set rollback = page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ backurl %}{% endif %}
+{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back ~ '&__delete__[rollback]=' ~ rollback ~ '","_self")','elimina' ) }}
 {% endmacro %}
 
 {% macro subformLegend( subtable, legend, class, disabled ) %}

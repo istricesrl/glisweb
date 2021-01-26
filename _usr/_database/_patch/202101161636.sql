@@ -1,0 +1,1 @@
+UPDATE `ruoli_audio` SET `se_anagrafica` = '1', `se_contenuti` = '1', `se_categorie_prodotti` = '1' WHERE `ruoli_audio`.`id` = 1;

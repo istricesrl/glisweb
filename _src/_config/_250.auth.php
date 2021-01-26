@@ -60,8 +60,16 @@
 #	    'anagrafica_clienti' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'anagrafica_condizioni_pagamento' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+		),
 		'anagrafica_indirizzi' => array(
 		CONTROL_FULL => array( 'roots' )
+		),
+		'anagrafica_modalita_pagamento' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
 		),
 #	    'anagrafica_ruoli' => array(
 #		CONTROL_FULL => array( 'roots' )
@@ -69,10 +77,10 @@
 	    'anagrafica_settori' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
-#	    'attivita' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'attivita' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 	    'audio' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
@@ -86,18 +94,12 @@
 	    'contenuti' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
-		'costi_contratti' => array(
-		CONTROL_FULL => array( 'roots' )
-		),
 #	    'cron' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
 #	    'date' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-		'contratti' => array(
-		CONTROL_FULL => array( 'roots' )
-		),
 	    'file' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
@@ -127,7 +129,10 @@
 #	    'luoghi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-	    'mail' => array(
+		'macro' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
+		'mail' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
@@ -140,10 +145,10 @@
 	    'metadati' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
-		'orari_contratti' => array(
+		'pianificazioni' => array(
 			CONTROL_FULL => array( 'roots' )
-	  	),
-	  'pubblicazione' => array(
+		),
+	    'pubblicazione' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 #	    'prezzi' => array(
@@ -180,18 +185,15 @@
 #	    'tipologie_attivita' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-		'tipologie_contratti' => array(
-		CONTROL_FULL => array( 'roots' )
-		),
-		'tipologie_costi_contratti' => array(
-		CONTROL_FULL => array( 'roots' )
-		),
 #	    'tipologie_crm' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
 	    'tipologie_crm' => array(
 		CONTROL_FULL => array( 'roots' )
-	    ),
+		),
+		'turni' => array(
+			CONTROL_FULL => array( 'roots' )
+		),
 	    'video' => array(
 			CONTROL_FULL => array( 'roots' )
 		)

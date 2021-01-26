@@ -20,5 +20,3 @@
 	    return md5( microtime( true ) * random_int( 0, 10000 ) );
 
     }
-
-?>

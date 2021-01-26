@@ -74,7 +74,7 @@
 			    } else if( $( obj ).hasClass( 'current-datetime-on-duplicate' ) ) {
 				$( obj ).val( moment().format('YYYY-MM-DD[T]HH:mm') );
 			    } else if( $( obj ).hasClass( 'default-value-on-duplicate' ) ) {
-				$( obj ).val( obj.attributes["default"] );
+				$( obj ).val( obj.attributes["default"].value );
 			    } else {
 				$( obj ).val( empty );
 			    }

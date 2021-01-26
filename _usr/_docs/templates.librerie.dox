@@ -1,0 +1,52 @@
+/*!
+
+    \page templates.librerie librerie dei templates del framework
+
+    Descrizione tecnica delle librerie dei template del framework.
+
+    la libreria di default (_src/_html/_bin/_default.html)
+    ======================================================
+
+    la macro audio()
+    ----------------
+
+    la macro cardRack()
+    -------------------
+
+    la macro cardSlider()
+    ---------------------
+
+    la macro carousel()
+    -------------------
+
+    la macro gallery2colorbox()
+    ---------------------------
+
+    la macro image()
+    ----------------
+
+    la macro jumbotron()
+    --------------------
+
+    la macro picture()
+    ------------------
+
+    la macro slickSlider()
+    ----------------------
+
+    la macro sliderGallery2colorbox()
+    ---------------------------------
+
+    la macro subpageCardSlider()
+    ----------------------------
+
+    la macro video()
+    ----------------
+
+    la libreria per i form (_src/_html/_bin/_form.html)
+    ===================================================
+
+    la libreria per gli elementi di navigazione (_src/_html/_bin/_navigation.html)
+    ==============================================================================
+
+*/

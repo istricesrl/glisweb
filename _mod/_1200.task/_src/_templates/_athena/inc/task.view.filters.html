@@ -1,0 +1,49 @@
+<div class="form-row view-filters d-print-none">
+    <!--div class="col-4 col-md-auto">
+    <span class="label-top">stato</span>
+	<select name="__view__[{{ view.id }}][__filters__][completato][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="0" {% if request.__view__[ view.id ].__filters__.completato.EQ == "0" %}selected{% endif %}>task aperti</option>
+	    <option value="1" {% if request.__view__[ view.id ].__filters__.completato.EQ == "1" %}selected{% endif %}>task in revisione</option>
+	    <option value="2" {% if request.__view__[ view.id ].__filters__.completato.EQ == "2" %}selected{% endif %}>task chiusi</option>
+	    <option value="" {% if request.__view__[ view.id ].__filters__.completato.EQ is empty %}selected{% endif %}>tutti i task</option>
+	</select>
+    </div-->
+    <div class="col-4 col-md-auto">
+    <span class="label-top">assegnato a</span>
+	<select name="__view__[{{ view.id }}][__extra__][assegnato]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="__me__" {% if request.__view__[ view.id ].__extra__.assegnato == "__me__" %}selected{% endif %}>assegnati a me</option>
+	    <option value="__tutti__" {% if request.__view__[ view.id ].__extra__.assegnato == "__tutti__" %}selected{% endif %}>assegnati a chiunque</option>
+	    <option value="__nessuno__" {% if request.__view__[ view.id ].__extra__.assegnato == "__nessuno__" %}selected{% endif %}>non assegnati</option>
+	</select>
+    </div>
+    <div class="col-4 col-md-auto">
+    <span class="label-top">cliente</span>
+	<select name="__view__[{{ view.id }}][__filters__][id_cliente][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="" {% if request.__view__[ view.id ].__filters__.id_cliente.EQ == "" %}selected{% endif %}>tutti</option>
+	    {% for a in etc.select.id_cliente %}
+	    <option value="{{ a.id }}" {% if request.__view__[ view.id ].__filters__.id_cliente.EQ == a.id %}selected{% endif %}>{{ a.__label__ }}</option>
+	    {% endfor %}
+	</select>
+    </div>
+    <!--div class="col-4 col-md-auto">
+    <span class="label-top">priorità</span>
+	<select name="__view__[{{ view.id }}][__filters__][id_priorita][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="1" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ == "1" %}selected{% endif %}>non urgente né importante</option>
+	    <option value="2" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ == "2" %}selected{% endif %}>non urgente importante</option>
+	    <option value="3" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ == "3" %}selected{% endif %}>urgente non importante</option>
+	    <option value="4" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ == "4" %}selected{% endif %}>urgente importante</option>
+	    <option value="" {% if request.__view__[ view.id ].__filters__.id_priorita.EQ is empty %}selected{% endif %}>tutte</option>
+	</select>
+    </div-->
+    <div class="col">
+		<div class="label-top">ricerca per parola chiave</div>
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+		</div>
+		<div class="col-auto">
+		<div class="label-top">&nbsp;</div>
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		{% if view.insert.path %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		{% endif %}
+	</div>
+</div>

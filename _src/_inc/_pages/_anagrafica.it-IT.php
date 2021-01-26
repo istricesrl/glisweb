@@ -61,6 +61,7 @@
 									'anagrafica.form.cliente',
 									'anagrafica.form.contratti',
 									'anagrafica.form.fornitore',
+									'anagrafica.form.collaboratore',
 //									'anagrafica.form.struttura',
 //									'anagrafica.form.attivita',
 //									'anagrafica.form.promemoria',
@@ -70,7 +71,8 @@
 									'anagrafica.form.file',
 									'anagrafica.form.metadati',
 									'anagrafica.form.archiviazione',
-									'anagrafica.form.stampe' ) )
+									'anagrafica.form.stampe',
+									'anagrafica.form.tools' ) )
 	);
 
     // gestione anagrafica informazioni
@@ -133,6 +135,30 @@
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 
+	// gestione anagrafica collaboratore
+	$p['anagrafica.form.collaboratore'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'collaboratore' ),
+	    'h1'		=> array( $l		=> 'collaboratore' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.collaboratore.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.collaboratore.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica dipendente
+	$p['anagrafica.form.dipendente'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'dipendente' ),
+	    'h1'		=> array( $l		=> 'dipendente' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.dipendente.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.dipendente.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
 	// gestione anagrafica metadati
 	$p['anagrafica.form.metadati'] = array(
 	    'sitemap'		=> false,
@@ -168,6 +194,19 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+    // gestione tools anagrafica
+	$p['anagrafica.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni anagrafica' ),
+	    'h1'		=> array( $l		=> 'azioni anagrafica' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
@@ -327,7 +366,8 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.anagrafica.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'categorie.anagrafica.form',
-													'categorie.anagrafica.form.membri' ) ),
+													'categorie.anagrafica.form.membri',
+													'categorie.anagrafica.form.tools' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 	
@@ -343,114 +383,18 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
-	// vista contratti
-	$p['contratti.view'] = array(
+	// form categorie anagrafica azioni
+	$p['categorie.anagrafica.form.tools'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'contratti' ),
-	    'h1'		=> array( $l		=> 'contratti' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_contratti.view.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'contratti.view' ) ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contratti' ),
-									'priority'	=> '010' ) )
-	);
-
-    // gestione contratti
-	$p['contratti.form'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'contratti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'contratti.form', 'contratti.form.orari', 'contratti.form.tools' ) ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
-	);
-
-	// gestione contratti orari
-	$p['contratti.form.orari'] = array(
-	    'sitemap'		=> false,
-		'title'		=> array( $l		=> 'orari contratti' ),
-	    'h1'		=> array( $l		=> 'orari' ),
-	    'parent'		=> array( 'id'		=> 'contratti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.orari.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.orari.php' ),
-	    'etc'		=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
-	);
-
-	// gestione contratti tools
-	$p['contratti.form.tools'] = array(
-	    'sitemap'		=> false,
-		'title'		=> array( $l		=> 'strumenti contratti' ),
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-	    'h1'		=> array( $l		=> 'strumenti' ),
-	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'title'		=> array( $l		=> 'azioni categoria anagrafica' ),
+	    'h1'		=> array( $l		=> 'azioni categoria anagrafica' ),
+	    'parent'		=> array( 'id'		=> 'categorie.anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_contratti.form.tools.php' ),
-	    'etc'		=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	    'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.anagrafica.form']['etc']['tabs'] )
 	);
-
-
-
-// vista tipologie contratti
-$p['tipologie.contratti.view'] = array(
-	'sitemap'		=> false,
-	'title'		=> array( $l		=> 'tipologie contratti' ),
-	'h1'		=> array( $l		=> 'tipologie contratti' ),
-	'parent'		=> array( 'id'		=> 'contratti.view' ),
-	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	'macro'		=> array( '_src/_inc/_macro/_tipologie.contratti.view.php' ),
-	'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.view' ) ),
-	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie contratti' ),
-								'priority'	=> '120' ) )
-);
-
-
-// gestione tipologie contratti
-	$p['tipologie.contratti.form'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'tipologie.contratti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.contratti.form.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_tipologie.contratti.form.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.form' ) ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
-	);
-
-
-	// vista tipologie costi contratti
-	$p['tipologie.costi.contratti.view'] = array(
-	'sitemap'		=> false,
-	'title'		=> array( $l		=> 'tipologie costi' ),
-	'h1'		=> array( $l		=> 'tipologie costi' ),
-	'parent'		=> array( 'id'		=> 'contratti.view' ),
-	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	'macro'		=> array( '_src/_inc/_macro/_tipologie.costi.contratti.view.php' ),
-	'etc'		=> array( 'tabs'	=> array( 'tipologie.costi.contratti.view' ) ),
-	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie costi' ),
-								'priority'	=> '130' ) )
-	);
-
-
-// gestione tipologie costi contratti
-	$p['tipologie.costi.contratti.form'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'tipologie.costi.contratti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.costi.contratti.form.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_tipologie.costi.contratti.form.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'tipologie.costi.contratti.form' ) ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
-	);
-
    
 	// vista indirizzi
 	$p['indirizzi.view'] = array(
@@ -502,7 +446,8 @@ $p['tipologie.contratti.view'] = array(
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ranking.anagrafica.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_ranking.anagrafica.form.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'ranking.anagrafica.form',
-													'ranking.anagrafica.form.membri' ) ),
+													'ranking.anagrafica.form.membri',
+													'ranking.anagrafica.form.tools' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 	
@@ -517,3 +462,17 @@ $p['tipologie.contratti.view'] = array(
 		'etc'		=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
+
+	// form ranking anagrafica azioni
+	$p['ranking.anagrafica.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'azioni ranking anagrafica' ),
+		'h1'		=> array( $l		=> 'azioni ranking anagrafica' ),
+		'parent'		=> array( 'id'		=> 'ranking.anagrafica.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_ranking.anagrafica.form.tools.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] )
+	);
+	

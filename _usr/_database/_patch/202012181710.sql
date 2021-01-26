@@ -1,0 +1,1 @@
+ALTER TABLE `anagrafica_view_static` ADD `se_agenzia` INT NULL DEFAULT NULL AFTER `se_allievo`;

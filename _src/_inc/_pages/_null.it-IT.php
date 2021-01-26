@@ -17,6 +17,7 @@
     // pagina di default
 	$p[ NULL ] = array(
 	    'sitemap'		=> false,
+	    'cacheable'		=> ( ( SITE_STATUS == PRODUCTION ) ? true : false ),
 	    'headers'		=> array( 'Cache-Control: no-cache, must-revalidate' ),
 	    'title'		=> array( $l		=> 'pagina generata automaticamente' ),
 	    'h1'		=> array( $l		=> 'pagina generata automaticamente' ),

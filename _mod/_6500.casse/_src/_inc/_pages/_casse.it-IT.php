@@ -6,53 +6,53 @@
     // modulo di questo file
 	$m = DIR_MOD . '_6500.casse/';
 
-    // dashboard della cassa
-	$p['cassa'] = array(
+    // dashboard del modulo
+	$p['casse'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'cassa' ),
-	    'h1'		=> array( $l		=> 'cassa' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cassa.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_cassa.php' ),
+	    'title'		=> array( $l		=> 'casse' ),
+	    'h1'		=> array( $l		=> 'casse' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'casse.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'cassa', 'cassa.documenti.view', 'cassa.tools' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'cassa' ),
+	    'etc'		=> array( 'tabs'	=> array(	'casse', 'casse.documenti.view', 'casse.tools' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'casse' ),
 									'priority'	=> '650' ) )
 	);
 
     // view scontrini
-	$p['cassa.documenti.view'] = array(
+	$p['casse.documenti.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'documenti' ),
 	    'h1'		=> array( $l		=> 'documenti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_cassa.documenti.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.documenti.view.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['cassa']['etc']['tabs'] )
+	    'etc'		=> array( 'tabs'	=> $p['casse']['etc']['tabs'] )
 	);
 
-    // strumenti cassa
-	$p['cassa.tools'] = array(
+    // strumenti casse
+	$p['casse.tools'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'strumenti cassa' ),
-	    'h1'		=> array( $l		=> 'strumenti cassa' ),
+	    'title'		=> array( $l		=> 'strumenti casse' ),
+	    'h1'		=> array( $l		=> 'strumenti casse' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_cassa.tools.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.tools.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['cassa']['etc']['tabs'] )
+	    'etc'		=> array( 'tabs'	=> $p['casse']['etc']['tabs'] )
 	);
 
-    // terminale della cassa
+    // terminale della casse
 	$p['terminale'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'terminale' ),
 	    'h1'		=> array( $l		=> 'terminale' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'terminale.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_terminale.php' ),
-	    'parent'		=> array( 'id'		=> 'cassa' ),
+	    'parent'		=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'terminale' ),
 									'priority'	=> 100 ) )

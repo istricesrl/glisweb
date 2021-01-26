@@ -49,9 +49,6 @@
 	    }
 	}
 
-    // output
-	echo PHP_EOL;
-
     // file di configurazione JSON
 	if( ! file_exists( DIR_BASE . 'src/config/external/config.json' ) ) {
 	    echo '[ -- ] file /src/config/external/config.json non trovato' . PHP_EOL;
@@ -74,6 +71,9 @@
 		die( '[FAIL] file /src/config/external/config.json corrotto o malformato' . PHP_EOL );
 	    }
 	}
+
+    // output
+	echo PHP_EOL;
 
     // password di root
 	if( ! isset( $cf['auth']['accounts']['root']['password'] ) ) {
@@ -293,7 +293,7 @@
 		if( file_exists( $reportMod ) ) {
 			require $reportMod;
 		} else {
-			echo '[INFO] report per il modulo ' . $reportMod . ' non trovato' . PHP_EOL;
+			echo '[INFO] report per il modulo ' . $mod . ' non trovato' . PHP_EOL;
 		}
 
 	    // output

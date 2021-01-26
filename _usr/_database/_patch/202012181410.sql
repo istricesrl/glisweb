@@ -1,0 +1,1 @@
+ALTER TABLE `contratti` ADD `id_agenzia` INT NULL DEFAULT NULL AFTER `id_anagrafica`, ADD INDEX (`id_agenzia`) ;

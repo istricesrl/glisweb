@@ -200,7 +200,7 @@
 	}
 
     // costruzione delle briciole di pane
-	$ct['page']['template']['breadcrumb'] = buildBreadcrumb( $ct['page'], $ct['page']['id'] );
+	$ct['page']['template']['breadcrumbs'] = buildBreadcrumbs( $ct['page'], $ct['page']['id'] );
 
     // costruzione del selettore lingua
 	$ct['page']['template']['flags'] = buildFlags( $ct['page'], $cf['localization']['language']['ietf'] );
@@ -306,7 +306,19 @@
     // renderizzo il template
 	if( isset( $ct['page']['template']['type'] ) ) {
 
-    	echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_2EOL;
+		echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_EOL;
+		
+		if( ! empty( $ct['page']['template']['path'] ) ) {
+			echo PHP_EOL . '<!-- template: ' . $ct['page']['template']['path'] . ' -->' . PHP_EOL;
+		}
+
+		if( ! empty( $ct['page']['template']['schema'] ) ) {
+			echo PHP_EOL . '<!-- schema: ' . $ct['page']['template']['schema'] . ' -->' . PHP_EOL;
+		}
+
+		if( ! empty( $ct['page']['template']['theme'] ) ) {
+			echo PHP_EOL . '<!-- teema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
+		}
 
 		switch( $ct['page']['template']['type'] ) {
 
@@ -337,7 +349,8 @@
 			$ct['page']['template']['paths'] = array_replace_recursive(
 			    ( isset( $ct['page']['template']['paths'] ) ) ? $ct['page']['template']['paths'] : array(),
 #			    array_unique( glob( DIRECTORY_BASE . '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/' . str_replace( '_', '{,_}', $ct['page']['template']['path'] ), GLOB_BRACE ) )
-			    array_unique( glob( DIR_MOD_ATTIVI . glob2custom( $ct['page']['template']['path'] ), GLOB_BRACE ) )
+#			    array_unique( glob( DIR_MOD_ATTIVI . glob2custom( $ct['page']['template']['path'] ), GLOB_BRACE ) )
+				array_unique( glob( glob2custom( DIR_MOD_ATTIVI . $ct['page']['template']['path'] ), GLOB_BRACE ) )
 			);
 
 		    // aggiungo la versione locale del template
@@ -489,6 +502,8 @@
 
     // debug
 	// print_r( $cf );
+
+	// TODO qui inserire la formattazione con Tidy?
 
     // cache del buffer
 	echo PHP_EOL;

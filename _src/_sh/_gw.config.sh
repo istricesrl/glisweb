@@ -36,9 +36,9 @@ if [ -f "$FILE" ]; then
 
     while [ -n "$PLACEHOLDER" ]; do
 
-		if [ "$PLACEHOLDER" = "%moduli%" ]; then
+		VALUE=""
 
-			VALUE=""
+		if [ "$PLACEHOLDER" = "%moduli%" ]; then
 
 			for mod in $( ls _mod ); do
 
@@ -79,7 +79,11 @@ if [ -f "$FILE" ]; then
 			if [ "$PLACEHOLDER" = "%stage del sito%" -a -n "$STAGE" ]; then
 				VALUE=$STAGE
 			else
-				read -p "${PLACEHOLDER//\%}: " VALUE
+				if [[ $PLACEHOLDER =~ "password" ]]; then
+					read -s -p "${PLACEHOLDER//\%}: " VALUE && echo
+				else
+					read -p "${PLACEHOLDER//\%}: " VALUE
+				fi
 			fi
 
 			if [ "$PLACEHOLDER" = "%password di root%" ]; then

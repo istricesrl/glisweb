@@ -29,7 +29,7 @@ if [ -n "$1" -a -n "$2" ]; then
     read -p "indirizzo del server: " SRVADDR
     read -p "porta del server: " SRVPORT
     read -p "nome utente: " SRVUSER
-    read -p "password: " SRVPASS
+    read -s -p "password: " SRVPASS && echo
     read -p "database: " SRVDBNAME
 
     if [ -z "$SRVADDR" ]; then SRVADDR="127.0.0.1"; fi
