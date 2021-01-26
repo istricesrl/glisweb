@@ -14,7 +14,8 @@
 	$ct['form']['table'] = 'contratti';
 	
     // percorsi
-	$base = '/task/';
+//	$base = '/task/';
+	$base = $ct['site']['url'] . '/_mod/_6600.contratti/_src/_api/_task/';
 
     // NOTA la variabile $base causa problemi nel multi sito fatta in questo modo, per cui ho commentato tutto
 
@@ -30,7 +31,7 @@
 
     // duplica contratto
 	$ct['page']['contents']['metro']['variazione'][] = array(
-	    'url' => $base . 'duplica.contratto?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+	    'url' =>  $base . '_duplica.contratto.php?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
 	    'icon' => NULL,
 	    'fa' => 'fa-files-o',
 	    'title' => 'variazione contratto',

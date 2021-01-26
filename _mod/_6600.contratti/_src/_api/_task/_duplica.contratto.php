@@ -13,8 +13,10 @@
      *
      */
 
-      // inclusione del framework
-    require '../../_config.php';
+
+     if( ! defined( 'CRON_RUNNING' ) ) {
+        require '../../../../../_src/_config.php';
+    }
 
     // inizializzo l'array del risultato
     $status = array();
@@ -24,7 +26,7 @@
 
     
     if( isset( $_REQUEST['id'] ) ){
-        
+      
         // id del contratto corrente
         $oldCnId = $_REQUEST['id'];
 
@@ -80,3 +82,8 @@
     if(  isset( $newCnId ) && is_int( $newCnId ) ){
         header('Location: ' . $cf['contents']['pages']['contratti.form']['path']['it-IT'] . '?contratti[id]=' . $newCnId);
     }
+
+        // output
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    buildJson( $status );
+	}
