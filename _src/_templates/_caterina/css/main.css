@@ -50,7 +50,6 @@ a:active, a:hover {
 .wrapper {
     background-color: #ffffff;
     color: #000000;
-    margin-top: 3em;
     position: relative;
 }
 
@@ -63,7 +62,7 @@ a:active, a:hover {
     padding: 0em;
 }
 
-.foglio1, .foglio2 {
+.foglio1, .foglio2, .foglio3 {
     background-color: #ffffff;
     position: absolute;
     height: 100vh;
@@ -84,6 +83,14 @@ a:active, a:hover {
     margin-left: -4em;
     transform: rotate(-3deg);
     z-index: -10;
+}
+
+.foglio3 {
+    background-color: #eeeeee;
+    margin-top: 5em;
+    margin-left: 2em;
+    transform: rotate(-1deg);
+    z-index: -30;
 }
 
 .shadow {
