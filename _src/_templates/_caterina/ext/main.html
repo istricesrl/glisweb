@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.html' %}
+
+    </head>
+
+    <body>
+
+        {% include '_inc/_page.open.html' %}
+
+        <header>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        {% block header %}
+                        {% include 'inc/header.html' %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container wrapper shadow d-flex flex-fill flex-column">
+
+            <nav class="row">
+                <div class="col">
+                    {% block nav %}
+                    {% include 'inc/navbar.html' %}
+                    {% endblock %}
+                </div>
+            </nav>
+    
+            <main class="row">
+                <div class="col">
+                    {% block main %}{% endblock %}
+                </div>
+            </main>
+    
+            <div class="row foglio1 shadow d-flex flex-fill flex-column">
+            </div>
+
+            <div class="row foglio2 shadow d-flex flex-fill flex-column">
+                <footer>
+                    <div class="col">
+                        {% block footer %}
+                        {% include 'inc/footer.html' %}
+                        {% endblock %}
+                    </div>
+                </footer>
+            </div>
+    
+        </div>
+
+        {% include '_inc/_page.close.html' %}
+
+        {% block javascript %}{% endblock %}
+
+    </body>
+</html>
