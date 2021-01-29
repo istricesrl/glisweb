@@ -35,7 +35,8 @@ h3 {
 }
 
 nav {
-    margin-top: 1em;
+    margin-top: 1.5em;
+    padding: 0em 0.5em;
 }
 
 a, a:visited {
@@ -43,8 +44,17 @@ a, a:visited {
 }
 
 a:active, a:hover {
-    color: #9933ff;
-    text-decoration: none;
+    color: #6600cc;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #d580ff;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #d580ff;
+    text-decoration: underline;
 }
 
 .wrapper {
