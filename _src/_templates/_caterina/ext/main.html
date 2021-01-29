@@ -23,7 +23,7 @@
             </div>
         </header>
 
-        <div class="container wrapper flex-fill d-flex flex-column">
+        <div class="container wrapper shadow d-flex flex-fill flex-column">
 
             <nav class="row">
                 <div class="col">
@@ -39,13 +39,18 @@
                 </div>
             </main>
     
-            <footer class="row">
-                <div class="col">
-                    {% block footer %}
-                    {% include 'inc/footer.html' %}
-                    {% endblock %}
-                </div>
-            </footer>
+            <div class="row foglio1 shadow d-flex flex-fill flex-column">
+            </div>
+
+            <div class="row foglio2 shadow d-flex flex-fill flex-column">
+                <footer>
+                    <div class="col">
+                        {% block footer %}
+                        {% include 'inc/footer.html' %}
+                        {% endblock %}
+                    </div>
+                </footer>
+            </div>
     
         </div>
 
