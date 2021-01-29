@@ -19,19 +19,19 @@ header, nav, main, footer {
 
 h1, h2, h3 {
     margin: 0px;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.25em;
 }
 
 h1 {
-    font-size: 2.5em;
-}
-
-h2 {
     font-size: 2em;
 }
 
-h3 {
+h2 {
     font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
 }
 
 nav {
@@ -71,7 +71,7 @@ a:active, a:hover {
 
 .foglio1 {
     background-color: #fdfdfd;
-    margin-top: 0em;
+    margin-top: -1em;
     margin-left: 2em;
     transform: rotate(3deg);
     z-index: -20;
@@ -79,7 +79,7 @@ a:active, a:hover {
 
 .foglio2 {
     background-color: #fefefe;
-    margin-top: 3em;
+    margin-top: 4em;
     margin-left: -4em;
     transform: rotate(-3deg);
     z-index: -10;
@@ -87,7 +87,7 @@ a:active, a:hover {
 
 .foglio3 {
     background-color: #eeeeee;
-    margin-top: 5em;
+    margin-top: 6em;
     margin-left: 2em;
     transform: rotate(-1deg);
     z-index: -30;
@@ -96,4 +96,8 @@ a:active, a:hover {
 .shadow {
     border: 1px solid #dddddd;
     box-shadow: 1em 1em 1em #000000;
+}
+
+.breadcrumb-link, .nav-link {
+    white-space: nowrap;
 }
