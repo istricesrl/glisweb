@@ -1,0 +1,69 @@
+body {
+    background: linear-gradient(0deg, #ffffff 50%, #666666 50%);
+    font-family: sans-serif;
+    margin: 0px;
+}
+
+header, nav, main, footer {
+    padding: 0em;
+}
+
+header {
+    min-height: 6em;
+    padding: 0em;
+}
+
+main > .container > .row {
+    margin-top: 0.5em;
+}
+
+main p {
+    margin: 0.5em 0em;
+}
+
+h1, h2, h3 {
+    margin: 0px;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+}
+
+.logo img {
+    height: 5em;
+    padding: 0.5em;
+}
+
+a.nav-link, a.nav-link:visited {
+    color: #ffffff;
+}
+
+a.nav-link:active, a.nav-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+main > div.container {
+    background-color: #ffffff;
+}
+
+nav {
+    padding: 0em;
+}
+
+.nav-link {
+    display: inline;
+    padding: 0em;
+}
+
+footer {
+    font-size: 0.8em;
+}
