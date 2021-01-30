@@ -37,8 +37,9 @@ h3 {
     font-size: 1.25em;
 }
 
-.img-fluid {
-    width: 100%;
+.logo img {
+    height: 5em;
+    padding: 0.5em;
 }
 
 a.nav-link, a.nav-link:visited {
