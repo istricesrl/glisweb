@@ -1,0 +1,18 @@
+body {
+    background: linear-gradient(0deg, #ffffff 50%, #4b80db 50%);
+    font-family: monospace;
+    margin: 0px;
+}
+
+header, nav, main, footer {
+    padding: 0.5em;
+}
+
+h1, h2, h3 {
+    margin: 0px;
+    margin-bottom: 0.5em;
+}
+
+.img-fluid {
+    width: 100%;
+}
