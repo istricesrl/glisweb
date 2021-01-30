@@ -14,11 +14,9 @@
         <header>
             <div class="container">
                 <div class="row">
-                    <div class="col">
-                        {% block header %}
-                        {% include 'inc/header.html' %}
-                        {% endblock %}
-                    </div>
+                    {% block header %}
+                    {% include 'inc/header.html' %}
+                    {% endblock %}
                 </div>
             </div>
         </header>
@@ -26,11 +24,9 @@
         <div class="container wrapper shadow mt-3 mt-md-5 d-flex flex-fill flex-column">
 
             <nav class="row">
-                <div class="col">
-                    {% block nav %}
-                    {% include 'inc/navbar.html' %}
-                    {% endblock %}
-                </div>
+                {% block nav %}
+                {% include 'inc/navbar.html' %}
+                {% endblock %}
             </nav>
     
             <main class="row">
@@ -51,11 +47,9 @@
 
             <div class="row foglio2 shadow d-flex flex-fill flex-column">
                 <footer class="mx-3 mx-md-0">
-                    <div class="col">
-                        {% block footer %}
-                        {% include 'inc/footer.html' %}
-                        {% endblock %}
-                    </div>
+                    {% block footer %}
+                    {% include 'inc/footer.html' %}
+                    {% endblock %}
                 </footer>
             </div>
     
