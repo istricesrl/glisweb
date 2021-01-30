@@ -5,7 +5,7 @@ body {
 }
 
 header, nav, main, footer {
-    padding: 0.5em;
+    padding: 0em;
 }
 
 header {
@@ -14,7 +14,11 @@ header {
 }
 
 main > .container > .row {
-    margin: 2em 0em;
+    margin-top: 0.5em;
+}
+
+main p {
+    margin: 0.5em 0em;
 }
 
 h1, h2, h3 {
