@@ -7,32 +7,33 @@
 
     </head>
 
-    <body>
+    <body class="d-flex flex-column">
 
         {% include '_inc/_page.open.html' %}
 
-        <header>
+        <header class="d-flex flex-colum align-items-end">
             <div class="container">
                 <div class="row">
-                    {% block header %}
-                    {% include 'inc/header.html' %}
-                    {% endblock %}
+                    {% block header %}{% include 'inc/header.html' %}{% endblock %}
+                    {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
                 </div>
             </div>
         </header>
 
-        <nav>
+        <main class="d-flex flex-fill">
             <div class="container">
                 <div class="row">
-                    {% block nav %}
-                    {% include 'inc/navbar.html' %}
-                    {% endblock %}
+                    <div class="col">
+                        <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+                        {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% block main %}{% endblock %}
+                    </div>
                 </div>
             </div>
-        </nav>
-
-        <main>
-            {% block main %}{% endblock %}
         </main>
 
         <footer>
