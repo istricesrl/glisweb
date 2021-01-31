@@ -738,6 +738,7 @@ DROP TABLE IF EXISTS `anagrafica`;
 CREATE TABLE `anagrafica` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `codice` char(32) DEFAULT NULL,
+  `riferimento` char(32) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `cognome` char(255) DEFAULT NULL,
@@ -791,6 +792,7 @@ CREATE TABLE `anagrafica` (
   KEY `comune_nascita` (`comune_nascita`),
   KEY `id_diritto` (`id_diritto`),
   KEY `id_stato_nascita` (`id_stato_nascita`),
+  KEY `riferimento` (`riferimento`),
   CONSTRAINT `anagrafica_ibfk_1` FOREIGN KEY (`id_orientamento_sessuale`) REFERENCES `orientamenti_sessuali` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_2` FOREIGN KEY (`id_stato_nascita`) REFERENCES `stati` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -1379,6 +1381,7 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `anagrafica_view` (
   `id` tinyint NOT NULL,
   `codice` tinyint NOT NULL,
+  `riferimento` tinyint NOT NULL,
   `id_tipologia` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `cognome` tinyint NOT NULL,
@@ -1543,6 +1546,7 @@ DROP TABLE IF EXISTS `anagrafica_view_static`;
 CREATE TABLE `anagrafica_view_static` (
   `id` int(11) NOT NULL,
   `codice` char(32) DEFAULT NULL,
+  `riferimento` char(32) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `cognome` char(255) DEFAULT NULL,
@@ -1801,6 +1805,7 @@ CREATE TABLE `attivita` (
   `id_progetto` char(32) DEFAULT NULL,
   `id_campagna` int(11) DEFAULT NULL,
   `id_task` int(11) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
   `id_tipologia_interesse` int(11) DEFAULT NULL,
   `id_tipologia_soddisfazione` int(11) DEFAULT NULL,
   `note_feedback` text,
@@ -1842,7 +1847,8 @@ CREATE TABLE `attivita` (
   KEY `id_account_editor` (`id_account_editor`),
   KEY `id_luogo` (`id_luogo`),
   KEY `id_tipologia_inps` (`id_tipologia_inps`),
-  CONSTRAINT `attivita_ibfk_6_nofollow` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  KEY `id_todo` (`id_todo`),
+  CONSTRAINT `attivita_ibfk_17_nofollow` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_10_nofollow` FOREIGN KEY (`id_incarico`) REFERENCES `incarichi_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_11_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_12_nofollow` FOREIGN KEY (`id_task`) REFERENCES `task` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -1859,6 +1865,7 @@ CREATE TABLE `attivita` (
   CONSTRAINT `attivita_ibfk_5` FOREIGN KEY (`id_tipologia_soddisfazione`) REFERENCES `tipologie_soddisfazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_5_nofollow` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_6` FOREIGN KEY (`id_incrocio_immobile`) REFERENCES `incroci_immobili` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `attivita_ibfk_6_nofollow` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_7` FOREIGN KEY (`id_account_editor`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_7_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_8_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -1900,19 +1907,24 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `attivita_archiviate_view` (
   `id` tinyint NOT NULL,
   `id_tipologia` tinyint NOT NULL,
+  `id_tipologia_inps` tinyint NOT NULL,
   `id_anagrafica` tinyint NOT NULL,
   `id_mandante` tinyint NOT NULL,
   `id_cliente` tinyint NOT NULL,
+  `id_luogo` tinyint NOT NULL,
   `referente` tinyint NOT NULL,
   `id_categoria_prodotti` tinyint NOT NULL,
   `data` tinyint NOT NULL,
   `ora` tinyint NOT NULL,
+  `ora_fine` tinyint NOT NULL,
   `id_pratica` tinyint NOT NULL,
   `id_progetto` tinyint NOT NULL,
   `id_campagna` tinyint NOT NULL,
   `id_task` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
   `id_tipologia_interesse` tinyint NOT NULL,
   `id_tipologia_soddisfazione` tinyint NOT NULL,
+  `note_feedback` tinyint NOT NULL,
   `id_immobile` tinyint NOT NULL,
   `id_incarico` tinyint NOT NULL,
   `id_richiesta` tinyint NOT NULL,
@@ -1932,6 +1944,8 @@ SET character_set_client = utf8;
   `progetto` tinyint NOT NULL,
   `task` tinyint NOT NULL,
   `ore_previste_task` tinyint NOT NULL,
+  `todo` tinyint NOT NULL,
+  `ore_previste_todo` tinyint NOT NULL,
   `tipologia` tinyint NOT NULL,
   `icona_html` tinyint NOT NULL,
   `icona_fa` tinyint NOT NULL,
@@ -1967,6 +1981,7 @@ SET character_set_client = utf8;
   `id_progetto` tinyint NOT NULL,
   `id_campagna` tinyint NOT NULL,
   `id_task` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
   `id_tipologia_interesse` tinyint NOT NULL,
   `id_tipologia_soddisfazione` tinyint NOT NULL,
   `note_feedback` tinyint NOT NULL,
@@ -1992,6 +2007,8 @@ SET character_set_client = utf8;
   `progetto` tinyint NOT NULL,
   `task` tinyint NOT NULL,
   `ore_previste_task` tinyint NOT NULL,
+  `todo` tinyint NOT NULL,
+  `ore_previste_todo` tinyint NOT NULL,
   `tipologia` tinyint NOT NULL,
   `tipologia_inps` tinyint NOT NULL,
   `icona_html` tinyint NOT NULL,
@@ -4507,6 +4524,7 @@ CREATE TABLE `file` (
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_task` int(11) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
   `id_rassegna_stampa` int(11) DEFAULT NULL,
   `id_evento` int(11) DEFAULT NULL,
   `id_categoria_eventi` int(11) DEFAULT NULL,
@@ -4558,6 +4576,8 @@ CREATE TABLE `file` (
   KEY `id_pratica` (`id_pratica`),
   KEY `id_documento` (`id_documento`),
   KEY `id_categoria_documenti` (`id_categoria_documenti`),
+  KEY `id_todo` (`id_todo`),
+  CONSTRAINT `file_ibfk_17` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_10` FOREIGN KEY (`id_template_mail`) REFERENCES `template_mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_11` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -4595,6 +4615,7 @@ SET character_set_client = utf8;
   `id_categoria_prodotti` tinyint NOT NULL,
   `id_pagina` tinyint NOT NULL,
   `id_task` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
   `id_rassegna_stampa` tinyint NOT NULL,
   `id_evento` tinyint NOT NULL,
   `id_categoria_eventi` tinyint NOT NULL,
@@ -6191,6 +6212,7 @@ CREATE TABLE `mail_out` (
   `id_email` int(11) DEFAULT NULL,
   `tentativi` int(11) DEFAULT '0',
   `token` char(128) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -6238,6 +6260,7 @@ SET character_set_client = utf8;
   `id_email` tinyint NOT NULL,
   `tentativi` tinyint NOT NULL,
   `token` tinyint NOT NULL,
+  `ordine` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -6275,6 +6298,7 @@ CREATE TABLE `mail_sent` (
   `id_email` int(11) DEFAULT NULL,
   `tentativi` int(11) DEFAULT '0',
   `token` char(128) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -6322,6 +6346,7 @@ SET character_set_client = utf8;
   `id_email` tinyint NOT NULL,
   `tentativi` tinyint NOT NULL,
   `token` tinyint NOT NULL,
+  `ordine` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -8508,6 +8533,7 @@ CREATE TABLE `progetti` (
   `id_indirizzo` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `testo` text,
+  `ranking` char(32) DEFAULT NULL,
   `id_account_accettazione` int(11) DEFAULT NULL,
   `timestamp_accettazione` int(11) DEFAULT NULL,
   `fatturato_accettazione` decimal(16,2) DEFAULT NULL,
@@ -8531,6 +8557,7 @@ CREATE TABLE `progetti` (
   KEY `id_account_chiusura` (`id_account_chiusura`),
   KEY `id_account_accettazione` (`id_account_accettazione`),
   KEY `id_indirizzo` (`id_indirizzo`),
+  KEY `ranking` (`ranking`),
   CONSTRAINT `progetti_ibfk_1` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `progetti_ibfk_1_nofollow` FOREIGN KEY (`id_cliente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `progetti_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -8540,6 +8567,45 @@ CREATE TABLE `progetti` (
   CONSTRAINT `progetti_ibfk_6_nofollow` FOREIGN KEY (`id_account_accettazione`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `progetti_anagrafica`
+--
+
+DROP TABLE IF EXISTS `progetti_anagrafica`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `progetti_anagrafica` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `id_ruolo` (`id_ruolo`),
+  CONSTRAINT `progetti_anagrafica_ibfk_1` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `progetti_anagrafica_ibfk_1_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `progetti_anagrafica_ibfk_2` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `progetti_anagrafica_view`
+--
+
+DROP TABLE IF EXISTS `progetti_anagrafica_view`;
+/*!50001 DROP VIEW IF EXISTS `progetti_anagrafica_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `progetti_anagrafica_view` (
+  `id` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `id_anagrafica` tinyint NOT NULL,
+  `id_ruolo` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Temporary table structure for view `progetti_commerciale_view`
@@ -8641,6 +8707,7 @@ SET character_set_client = utf8;
   `id_indirizzo` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
+  `ranking` tinyint NOT NULL,
   `id_account_accettazione` tinyint NOT NULL,
   `timestamp_accettazione` tinyint NOT NULL,
   `fatturato_accettazione` tinyint NOT NULL,
@@ -9626,6 +9693,7 @@ CREATE TABLE `righe_documenti_amministrativi` (
   `id_progetto` char(32) DEFAULT NULL,
   `id_pratica` int(11) DEFAULT NULL,
   `id_task` int(11) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
   `id_attivita` int(11) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
   `id_udm` int(11) DEFAULT NULL,
@@ -9665,6 +9733,8 @@ CREATE TABLE `righe_documenti_amministrativi` (
   KEY `id_genitore` (`id_genitore`),
   KEY `id_tipologia` (`id_tipologia`),
   KEY `id_pratica` (`id_pratica`),
+  KEY `id_todo` (`id_todo`),
+  CONSTRAINT `righe_documenti_amministrativi_ibfk_17` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `righe_documenti_amministrativi_ibfk_1` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `righe_documenti_amministrativi_ibfk_11` FOREIGN KEY (`id_genitore`) REFERENCES `righe_documenti_amministrativi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `righe_documenti_amministrativi_ibfk_12_nofollow` FOREIGN KEY (`id_cliente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -9704,6 +9774,7 @@ SET character_set_client = utf8;
   `id_progetto` tinyint NOT NULL,
   `id_pratica` tinyint NOT NULL,
   `id_task` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
   `id_attivita` tinyint NOT NULL,
   `id_articolo` tinyint NOT NULL,
   `id_udm` tinyint NOT NULL,
@@ -10366,6 +10437,7 @@ CREATE TABLE `sms_out` (
   `id_newsletter` int(11) DEFAULT NULL,
   `id_telefono` int(11) DEFAULT NULL,
   `token` char(254) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -10406,6 +10478,8 @@ SET character_set_client = utf8;
   `password` tinyint NOT NULL,
   `id_newsletter` tinyint NOT NULL,
   `id_telefono` tinyint NOT NULL,
+  `token` tinyint NOT NULL,
+  `ordine` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -10437,6 +10511,7 @@ CREATE TABLE `sms_sent` (
   `id_newsletter` int(11) DEFAULT NULL,
   `id_telefono` int(11) DEFAULT NULL,
   `token` char(254) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -10477,6 +10552,8 @@ SET character_set_client = utf8;
   `password` tinyint NOT NULL,
   `id_newsletter` tinyint NOT NULL,
   `id_telefono` tinyint NOT NULL,
+  `token` tinyint NOT NULL,
+  `ordine` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -12656,13 +12733,50 @@ DROP TABLE IF EXISTS `todo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `todo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_task` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
-  `se_fatta` tinyint(1) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_priorita` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_luogo` int(11) DEFAULT NULL,
+  `testo` text,
+  `ore_previste` decimal(3,1) DEFAULT NULL,
+  `testo_ore_previste` text,
+  `anno_previsto` year(4) DEFAULT NULL,
+  `settimana_prevista` int(11) DEFAULT NULL,
+  `testo_pianificazione` text,
+  `id_responsabile` int(11) DEFAULT NULL,
+  `timestamp_apertura` int(11) DEFAULT NULL,
+  `timestamp_pianificazione` int(11) DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `timestamp_revisione` int(11) DEFAULT NULL,
+  `note_revisione` text,
+  `timestamp_completamento` int(11) DEFAULT NULL,
+  `testo_completamento` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) NOT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `id_task` (`id_task`),
-  KEY `id` (`id`,`id_task`,`nome`,`se_fatta`),
-  CONSTRAINT `todo_ibfk_1` FOREIGN KEY (`id_task`) REFERENCES `task` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `id_cliente` (`id_cliente`),
+  KEY `id_priorita` (`id_priorita`),
+  KEY `id_tipologia` (`id_tipologia`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `id_responsabile` (`id_responsabile`),
+  KEY `id_luogo` (`id_luogo`),
+  CONSTRAINT `todo_ibfk_1` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `todo_ibfk_1_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `todo_ibfk_2_nofollow` FOREIGN KEY (`id_priorita`) REFERENCES `priorita` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `todo_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_task` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `todo_ibfk_4_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `todo_ibfk_5_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `todo_ibfk_6_nofollow` FOREIGN KEY (`id_responsabile`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `todo_ibfk_7_nofollow` FOREIGN KEY (`id_cliente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `todo_ibfk_8_nofollow` FOREIGN KEY (`id_luogo`) REFERENCES `luoghi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -12676,9 +12790,35 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `todo_view` (
   `id` tinyint NOT NULL,
-  `id_task` tinyint NOT NULL,
+  `data_ora_apertura` tinyint NOT NULL,
+  `data_ora_pianificazione` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `id_cliente` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
+  `crm` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `priorita` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
-  `se_fatta` tinyint NOT NULL,
+  `id_luogo` tinyint NOT NULL,
+  `id_priorita` tinyint NOT NULL,
+  `ore_previste` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `anno_previsto` tinyint NOT NULL,
+  `settimana_prevista` tinyint NOT NULL,
+  `timestamp_pianificazione` tinyint NOT NULL,
+  `pianificazione` tinyint NOT NULL,
+  `ore_lavorate` tinyint NOT NULL,
+  `ore_residue` tinyint NOT NULL,
+  `id_responsabile` tinyint NOT NULL,
+  `responsabile` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `avanzamento` tinyint NOT NULL,
+  `progresso` tinyint NOT NULL,
+  `timestamp_completamento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `timestamp_revisione` tinyint NOT NULL,
+  `data_ora_completamento` tinyint NOT NULL,
+  `completato` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -12747,9 +12887,9 @@ CREATE TABLE `turni` (
   KEY `id_anagrafica` (`id_anagrafica`),
   KEY `id_contratto` (`id_contratto`),
   KEY `id_pianificazione` (`id_pianificazione`),
-  CONSTRAINT `turni_ibfk_3` FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `turni_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `turni_ibfk_2` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `turni_ibfk_2` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `turni_ibfk_3` FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -16173,7 +16313,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_view` AS select `anagrafica`.`id` AS `id`,`anagrafica`.`codice` AS `codice`,`anagrafica`.`id_tipologia` AS `id_tipologia`,`anagrafica`.`nome` AS `nome`,`anagrafica`.`cognome` AS `cognome`,`anagrafica`.`denominazione` AS `denominazione`,`anagrafica`.`soprannome` AS `soprannome`,`anagrafica`.`sesso` AS `sesso`,`anagrafica`.`stato_civile` AS `stato_civile`,`anagrafica`.`id_orientamento_sessuale` AS `id_orientamento_sessuale`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,`anagrafica`.`partita_iva` AS `partita_iva`,`anagrafica`.`codice_sdi` AS `codice_sdi`,`anagrafica`.`id_pec_sdi` AS `id_pec_sdi`,`anagrafica`.`id_regime_fiscale` AS `id_regime_fiscale`,`anagrafica`.`note_amministrative` AS `note_amministrative`,`anagrafica`.`luogo_nascita` AS `luogo_nascita`,`anagrafica`.`stato_nascita` AS `stato_nascita`,`anagrafica`.`id_stato_nascita` AS `id_stato_nascita`,`anagrafica`.`comune_nascita` AS `comune_nascita`,`anagrafica`.`giorno_nascita` AS `giorno_nascita`,`anagrafica`.`mese_nascita` AS `mese_nascita`,`anagrafica`.`anno_nascita` AS `anno_nascita`,`anagrafica`.`id_diritto` AS `id_diritto`,`anagrafica`.`id_tipologia_crm` AS `id_tipologia_crm`,`anagrafica`.`id_agente` AS `id_agente`,`anagrafica`.`note_commerciali` AS `note_commerciali`,`anagrafica`.`condizioni_vendita` AS `condizioni_vendita`,`anagrafica`.`condizioni_acquisto` AS `condizioni_acquisto`,`anagrafica`.`note` AS `note`,`anagrafica`.`data_cessazione` AS `data_cessazione`,`anagrafica`.`note_cessazione` AS `note_cessazione`,`anagrafica`.`recapiti` AS `recapiti`,`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica`.`se_importata` AS `se_importata`,`anagrafica`.`se_stampa_privacy` AS `se_stampa_privacy`,`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,group_concat(distinct `pec`.`indirizzo` separator ',') AS `pec_sdi`,group_concat(distinct `indirizzi_view`.`sigla_stato` separator ',') AS `sigla_stato`,group_concat(distinct `stati`.`nome` separator ' | ') AS `cittadinanze`,max(`categorie_anagrafica`.`se_collaboratore`) AS `se_collaboratore`,max(`categorie_anagrafica`.`se_dipendente`) AS `se_dipendente`,max(`categorie_anagrafica`.`se_interinale`) AS `se_interinale`,max(`categorie_anagrafica`.`se_cliente`) AS `se_cliente`,max(`categorie_anagrafica`.`se_lead`) AS `se_lead`,max(`categorie_anagrafica`.`se_prospect`) AS `se_prospect`,max(`categorie_anagrafica`.`se_mandante`) AS `se_mandante`,max(`categorie_anagrafica`.`se_fornitore`) AS `se_fornitore`,max(`categorie_anagrafica`.`se_produttore`) AS `se_produttore`,max(`categorie_anagrafica`.`se_agente`) AS `se_agente`,max(`categorie_anagrafica`.`se_interno`) AS `se_interno`,max(`categorie_anagrafica`.`se_esterno`) AS `se_esterno`,max(`categorie_anagrafica`.`se_amministrazione`) AS `se_amministrazione`,max(`categorie_anagrafica`.`se_azienda_gestita`) AS `se_azienda_gestita`,max(`categorie_anagrafica`.`se_concorrente`) AS `se_concorrente`,max(`categorie_anagrafica`.`se_tutor`) AS `se_tutor`,max(`categorie_anagrafica`.`se_classe`) AS `se_classe`,max(`categorie_anagrafica`.`se_docente`) AS `se_docente`,max(`categorie_anagrafica`.`se_allievo`) AS `se_allievo`,max(`categorie_anagrafica`.`se_agenzia_interinale`) AS `se_agenzia_interinale`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `__label__`,coalesce(`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `denominazione_fiscale`,`d`.`nome` AS `diritto`,coalesce(`aAgente`.`soprannome`,`aAgente`.`denominazione`,concat(`aAgente`.`cognome`,' ',`aAgente`.`nome`),'') AS `agente`,group_concat(distinct `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) separator ' | ') AS `categorie`,group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,group_concat(distinct `categorie_diritto`.`nome` separator ' | ') AS `specialita`,group_concat(distinct `provincie`.`sigla` separator ' | ') AS `provincia`,group_concat(distinct `regimi_fiscali`.`codice` separator ',') AS `codice_regime_fiscale` from ((((((((((((((`anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) left join `telefoni` on((`telefoni`.`id_anagrafica` = `anagrafica`.`id`))) left join `mail` on((`mail`.`id_anagrafica` = `anagrafica`.`id`))) left join `regimi_fiscali` on((`regimi_fiscali`.`id` = `anagrafica`.`id_regime_fiscale`))) left join `mail` `pec` on(((`pec`.`id` = `anagrafica`.`id_pec_sdi`) and (`mail`.`se_pec` = 1)))) left join `anagrafica` `aAgente` on((`aAgente`.`id` = `anagrafica`.`id_agente`))) left join `indirizzi_view` on(((`indirizzi_view`.`id_anagrafica` = `anagrafica`.`id`) and (`indirizzi_view`.`se_sede` = 1)))) left join `provincie` on((`provincie`.`id` = `indirizzi_view`.`id_provincia`))) left join `anagrafica_categorie_diritto` on((`anagrafica_categorie_diritto`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_diritto` on((`categorie_diritto`.`id` = `anagrafica_categorie_diritto`.`id_diritto`))) left join `categorie_diritto` `d` on((`d`.`id` = `anagrafica`.`id_diritto`))) left join `anagrafica_cittadinanze` on((`anagrafica_cittadinanze`.`id_anagrafica` = `anagrafica`.`id`))) left join `stati` on((`stati`.`id` = `anagrafica_cittadinanze`.`id_stato`))) where isnull(`anagrafica`.`data_cessazione`) group by `anagrafica`.`id` order by coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') */;
+/*!50001 VIEW `anagrafica_view` AS select `anagrafica`.`id` AS `id`,`anagrafica`.`codice` AS `codice`,`anagrafica`.`riferimento` AS `riferimento`,`anagrafica`.`id_tipologia` AS `id_tipologia`,`anagrafica`.`nome` AS `nome`,`anagrafica`.`cognome` AS `cognome`,`anagrafica`.`denominazione` AS `denominazione`,`anagrafica`.`soprannome` AS `soprannome`,`anagrafica`.`sesso` AS `sesso`,`anagrafica`.`stato_civile` AS `stato_civile`,`anagrafica`.`id_orientamento_sessuale` AS `id_orientamento_sessuale`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,`anagrafica`.`partita_iva` AS `partita_iva`,`anagrafica`.`codice_sdi` AS `codice_sdi`,`anagrafica`.`id_pec_sdi` AS `id_pec_sdi`,`anagrafica`.`id_regime_fiscale` AS `id_regime_fiscale`,`anagrafica`.`note_amministrative` AS `note_amministrative`,`anagrafica`.`luogo_nascita` AS `luogo_nascita`,`anagrafica`.`stato_nascita` AS `stato_nascita`,`anagrafica`.`id_stato_nascita` AS `id_stato_nascita`,`anagrafica`.`comune_nascita` AS `comune_nascita`,`anagrafica`.`giorno_nascita` AS `giorno_nascita`,`anagrafica`.`mese_nascita` AS `mese_nascita`,`anagrafica`.`anno_nascita` AS `anno_nascita`,`anagrafica`.`id_diritto` AS `id_diritto`,`anagrafica`.`id_tipologia_crm` AS `id_tipologia_crm`,`anagrafica`.`id_agente` AS `id_agente`,`anagrafica`.`note_commerciali` AS `note_commerciali`,`anagrafica`.`condizioni_vendita` AS `condizioni_vendita`,`anagrafica`.`condizioni_acquisto` AS `condizioni_acquisto`,`anagrafica`.`note` AS `note`,`anagrafica`.`data_cessazione` AS `data_cessazione`,`anagrafica`.`note_cessazione` AS `note_cessazione`,`anagrafica`.`recapiti` AS `recapiti`,`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica`.`se_importata` AS `se_importata`,`anagrafica`.`se_stampa_privacy` AS `se_stampa_privacy`,`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,group_concat(distinct `pec`.`indirizzo` separator ',') AS `pec_sdi`,group_concat(distinct `indirizzi_view`.`sigla_stato` separator ',') AS `sigla_stato`,group_concat(distinct `stati`.`nome` separator ' | ') AS `cittadinanze`,max(`categorie_anagrafica`.`se_collaboratore`) AS `se_collaboratore`,max(`categorie_anagrafica`.`se_dipendente`) AS `se_dipendente`,max(`categorie_anagrafica`.`se_interinale`) AS `se_interinale`,max(`categorie_anagrafica`.`se_cliente`) AS `se_cliente`,max(`categorie_anagrafica`.`se_lead`) AS `se_lead`,max(`categorie_anagrafica`.`se_prospect`) AS `se_prospect`,max(`categorie_anagrafica`.`se_mandante`) AS `se_mandante`,max(`categorie_anagrafica`.`se_fornitore`) AS `se_fornitore`,max(`categorie_anagrafica`.`se_produttore`) AS `se_produttore`,max(`categorie_anagrafica`.`se_agente`) AS `se_agente`,max(`categorie_anagrafica`.`se_interno`) AS `se_interno`,max(`categorie_anagrafica`.`se_esterno`) AS `se_esterno`,max(`categorie_anagrafica`.`se_amministrazione`) AS `se_amministrazione`,max(`categorie_anagrafica`.`se_azienda_gestita`) AS `se_azienda_gestita`,max(`categorie_anagrafica`.`se_concorrente`) AS `se_concorrente`,max(`categorie_anagrafica`.`se_tutor`) AS `se_tutor`,max(`categorie_anagrafica`.`se_classe`) AS `se_classe`,max(`categorie_anagrafica`.`se_docente`) AS `se_docente`,max(`categorie_anagrafica`.`se_allievo`) AS `se_allievo`,max(`categorie_anagrafica`.`se_agenzia_interinale`) AS `se_agenzia_interinale`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `__label__`,coalesce(`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `denominazione_fiscale`,`d`.`nome` AS `diritto`,coalesce(`aAgente`.`soprannome`,`aAgente`.`denominazione`,concat(`aAgente`.`cognome`,' ',`aAgente`.`nome`),'') AS `agente`,group_concat(distinct `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) separator ' | ') AS `categorie`,group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,group_concat(distinct `categorie_diritto`.`nome` separator ' | ') AS `specialita`,group_concat(distinct `provincie`.`sigla` separator ' | ') AS `provincia`,group_concat(distinct `regimi_fiscali`.`codice` separator ',') AS `codice_regime_fiscale` from ((((((((((((((`anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) left join `telefoni` on((`telefoni`.`id_anagrafica` = `anagrafica`.`id`))) left join `mail` on((`mail`.`id_anagrafica` = `anagrafica`.`id`))) left join `regimi_fiscali` on((`regimi_fiscali`.`id` = `anagrafica`.`id_regime_fiscale`))) left join `mail` `pec` on(((`pec`.`id` = `anagrafica`.`id_pec_sdi`) and (`mail`.`se_pec` = 1)))) left join `anagrafica` `aAgente` on((`aAgente`.`id` = `anagrafica`.`id_agente`))) left join `indirizzi_view` on(((`indirizzi_view`.`id_anagrafica` = `anagrafica`.`id`) and (`indirizzi_view`.`se_sede` = 1)))) left join `provincie` on((`provincie`.`id` = `indirizzi_view`.`id_provincia`))) left join `anagrafica_categorie_diritto` on((`anagrafica_categorie_diritto`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_diritto` on((`categorie_diritto`.`id` = `anagrafica_categorie_diritto`.`id_diritto`))) left join `categorie_diritto` `d` on((`d`.`id` = `anagrafica`.`id_diritto`))) left join `anagrafica_cittadinanze` on((`anagrafica_cittadinanze`.`id_anagrafica` = `anagrafica`.`id`))) left join `stati` on((`stati`.`id` = `anagrafica_cittadinanze`.`id_stato`))) where isnull(`anagrafica`.`data_cessazione`) group by `anagrafica`.`id` order by coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -16225,12 +16365,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `attivita_archiviate_view` AS select `attivita`.`id` AS `id`,`attivita`.`id_tipologia` AS `id_tipologia`,`attivita`.`id_anagrafica` AS `id_anagrafica`,`attivita`.`id_mandante` AS `id_mandante`,`attivita`.`id_cliente` AS `id_cliente`,`attivita`.`referente` AS `referente`,`attivita`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`attivita`.`data` AS `data`,`attivita`.`ora` AS `ora`,`attivita`.`id_pratica` AS `id_pratica`,`attivita`.`id_progetto` AS `id_progetto`,`attivita`.`id_campagna` AS `id_campagna`,`attivita`.`id_task` AS `id_task`,`attivita`.`id_tipologia_interesse` AS `id_tipologia_interesse`,`attivita`.`id_tipologia_soddisfazione` AS `id_tipologia_soddisfazione`,`attivita`.`id_immobile` AS `id_immobile`,`attivita`.`id_incarico` AS `id_incarico`,`attivita`.`id_richiesta` AS `id_richiesta`,`attivita`.`id_incrocio_immobile` AS `id_incrocio_immobile`,`attivita`.`nome` AS `nome`,`attivita`.`testo` AS `testo`,`attivita`.`timestamp_scadenza` AS `timestamp_scadenza`,`attivita`.`note_scadenza` AS `note_scadenza`,`attivita`.`id_attivita_completamento` AS `id_attivita_completamento`,`attivita`.`ore` AS `ore`,`attivita`.`id_esito` AS `id_esito`,`attivita`.`id_account_editor` AS `id_account_editor`,`attivita`.`id_account_inserimento` AS `id_account_inserimento`,`attivita`.`timestamp_inserimento` AS `timestamp_inserimento`,`attivita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`attivita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`progetti`.`nome` AS `progetto`,`task`.`nome` AS `task`,`task`.`ore_previste` AS `ore_previste_task`,`tipologie_attivita`.`nome` AS `tipologia`,`tipologie_attivita`.`html` AS `icona_html`,`tipologie_attivita`.`font_awesome` AS `icona_fa`,concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `anagrafica`,concat_ws(' ',`cliente`.`nome`,`cliente`.`cognome`,coalesce(`cliente`.`soprannome`,`cliente`.`denominazione`)) AS `cliente`,concat_ws(' ',`mandante`.`nome`,`mandante`.`cognome`,coalesce(`mandante`.`soprannome`,`mandante`.`denominazione`)) AS `mandante`,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) AS `__label__` from ((((((`attivita` left join `tipologie_attivita` on((`tipologie_attivita`.`id` = `attivita`.`id_tipologia`))) left join `anagrafica` on((`anagrafica`.`id` = `attivita`.`id_anagrafica`))) left join `task` on((`task`.`id` = `attivita`.`id_task`))) left join `progetti` on((`progetti`.`id` = `attivita`.`id_progetto`))) left join `anagrafica` `cliente` on((`cliente`.`id` = coalesce(`progetti`.`id_cliente`,`task`.`id_cliente`)))) left join `anagrafica` `mandante` on((`mandante`.`id` = `attivita`.`id_mandante`))) where ((`attivita`.`data` is not null) and (`attivita`.`timestamp_scadenza` is not null)) order by `attivita`.`data` desc,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) */;
+/*!50001 VIEW `attivita_archiviate_view` AS select `attivita`.`id` AS `id`,`attivita`.`id_tipologia` AS `id_tipologia`,`attivita`.`id_tipologia_inps` AS `id_tipologia_inps`,`attivita`.`id_anagrafica` AS `id_anagrafica`,`attivita`.`id_mandante` AS `id_mandante`,`attivita`.`id_cliente` AS `id_cliente`,`attivita`.`id_luogo` AS `id_luogo`,`attivita`.`referente` AS `referente`,`attivita`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`attivita`.`data` AS `data`,`attivita`.`ora` AS `ora`,`attivita`.`ora_fine` AS `ora_fine`,`attivita`.`id_pratica` AS `id_pratica`,`attivita`.`id_progetto` AS `id_progetto`,`attivita`.`id_campagna` AS `id_campagna`,`attivita`.`id_task` AS `id_task`,`attivita`.`id_todo` AS `id_todo`,`attivita`.`id_tipologia_interesse` AS `id_tipologia_interesse`,`attivita`.`id_tipologia_soddisfazione` AS `id_tipologia_soddisfazione`,`attivita`.`note_feedback` AS `note_feedback`,`attivita`.`id_immobile` AS `id_immobile`,`attivita`.`id_incarico` AS `id_incarico`,`attivita`.`id_richiesta` AS `id_richiesta`,`attivita`.`id_incrocio_immobile` AS `id_incrocio_immobile`,`attivita`.`nome` AS `nome`,`attivita`.`testo` AS `testo`,`attivita`.`timestamp_scadenza` AS `timestamp_scadenza`,`attivita`.`note_scadenza` AS `note_scadenza`,`attivita`.`id_attivita_completamento` AS `id_attivita_completamento`,`attivita`.`ore` AS `ore`,`attivita`.`id_esito` AS `id_esito`,`attivita`.`id_account_editor` AS `id_account_editor`,`attivita`.`id_account_inserimento` AS `id_account_inserimento`,`attivita`.`timestamp_inserimento` AS `timestamp_inserimento`,`attivita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`attivita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`progetti`.`nome` AS `progetto`,`task`.`nome` AS `task`,`task`.`ore_previste` AS `ore_previste_task`,`todo`.`nome` AS `todo`,`todo`.`ore_previste` AS `ore_previste_todo`,`tipologie_attivita`.`nome` AS `tipologia`,`tipologie_attivita`.`html` AS `icona_html`,`tipologie_attivita`.`font_awesome` AS `icona_fa`,concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `anagrafica`,concat_ws(' ',`cliente`.`nome`,`cliente`.`cognome`,coalesce(`cliente`.`soprannome`,`cliente`.`denominazione`)) AS `cliente`,concat_ws(' ',`mandante`.`nome`,`mandante`.`cognome`,coalesce(`mandante`.`soprannome`,`mandante`.`denominazione`)) AS `mandante`,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) AS `__label__` from (((((((`attivita` left join `tipologie_attivita` on((`tipologie_attivita`.`id` = `attivita`.`id_tipologia`))) left join `anagrafica` on((`anagrafica`.`id` = `attivita`.`id_anagrafica`))) left join `task` on((`task`.`id` = `attivita`.`id_task`))) left join `todo` on((`todo`.`id` = `attivita`.`id_todo`))) left join `progetti` on((`progetti`.`id` = `attivita`.`id_progetto`))) left join `anagrafica` `cliente` on((`cliente`.`id` = coalesce(`progetti`.`id_cliente`,`task`.`id_cliente`,`todo`.`id_cliente`)))) left join `anagrafica` `mandante` on((`mandante`.`id` = `attivita`.`id_mandante`))) where ((`attivita`.`data` is not null) and (`attivita`.`timestamp_scadenza` is not null)) order by `attivita`.`data` desc,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -16249,7 +16389,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `attivita_view` AS select `attivita`.`id` AS `id`,`attivita`.`id_tipologia` AS `id_tipologia`,`attivita`.`id_tipologia_inps` AS `id_tipologia_inps`,`attivita`.`id_anagrafica` AS `id_anagrafica`,`attivita`.`id_mandante` AS `id_mandante`,`attivita`.`id_cliente` AS `id_cliente`,`attivita`.`id_luogo` AS `id_luogo`,`attivita`.`referente` AS `referente`,`attivita`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`attivita`.`data` AS `data`,`attivita`.`ora` AS `ora`,`attivita`.`ora_fine` AS `ora_fine`,`attivita`.`id_pratica` AS `id_pratica`,`attivita`.`id_progetto` AS `id_progetto`,`attivita`.`id_campagna` AS `id_campagna`,`attivita`.`id_task` AS `id_task`,`attivita`.`id_tipologia_interesse` AS `id_tipologia_interesse`,`attivita`.`id_tipologia_soddisfazione` AS `id_tipologia_soddisfazione`,`attivita`.`note_feedback` AS `note_feedback`,`attivita`.`id_immobile` AS `id_immobile`,`attivita`.`id_incarico` AS `id_incarico`,`attivita`.`id_richiesta` AS `id_richiesta`,`attivita`.`id_incrocio_immobile` AS `id_incrocio_immobile`,`attivita`.`nome` AS `nome`,`attivita`.`testo` AS `testo`,`attivita`.`timestamp_scadenza` AS `timestamp_scadenza`,`attivita`.`note_scadenza` AS `note_scadenza`,`attivita`.`id_attivita_completamento` AS `id_attivita_completamento`,`attivita`.`ore` AS `ore`,`attivita`.`id_esito` AS `id_esito`,`attivita`.`id_account_editor` AS `id_account_editor`,`attivita`.`id_account_inserimento` AS `id_account_inserimento`,`attivita`.`timestamp_inserimento` AS `timestamp_inserimento`,`attivita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`attivita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,dayofmonth(`attivita`.`data`) AS `giorno`,month(`attivita`.`data`) AS `mese`,year(`attivita`.`data`) AS `anno`,`progetti`.`nome` AS `progetto`,`task`.`nome` AS `task`,`task`.`ore_previste` AS `ore_previste_task`,`tipologie_attivita`.`nome` AS `tipologia`,`tipologie_attivita_inps`.`nome` AS `tipologia_inps`,`tipologie_attivita`.`html` AS `icona_html`,`tipologie_attivita`.`font_awesome` AS `icona_fa`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `pratica`,concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `anagrafica`,coalesce(`cliente`.`soprannome`,`cliente`.`denominazione`,concat_ws(' ',coalesce(`cliente`.`cognome`,''),coalesce(`cliente`.`nome`,'')),'') AS `cliente`,(case when (isnull(`attivita`.`id_incarico`) and isnull(`attivita`.`id_richiesta`) and (`attivita`.`id_immobile` is not null)) then 'censimento' when (isnull(`attivita`.`id_incarico`) and (`attivita`.`id_richiesta` is not null)) then 'richiesta' when ((`attivita`.`id_incarico` is not null) and (`attivita`.`data` > `incarichi_immobili`.`data_inizio`)) then 'incarico' when ((`attivita`.`id_incarico` is not null) and (isnull(`incarichi_immobili`.`data_inizio`) or (`attivita`.`data` < `incarichi_immobili`.`data_inizio`)) and (`attivita`.`data` > `incarichi_immobili`.`data_valutazione`)) then 'valutazione' when ((`attivita`.`id_incarico` is not null) and (isnull(`incarichi_immobili`.`data_inizio`) or (`attivita`.`data` < `incarichi_immobili`.`data_inizio`)) and (isnull(`incarichi_immobili`.`data_valutazione`) or (`attivita`.`data` < `incarichi_immobili`.`data_valutazione`)) and (`attivita`.`data` > `incarichi_immobili`.`data_notizia`)) then 'notizia' when ((`attivita`.`id_incarico` is not null) and (isnull(`incarichi_immobili`.`data_inizio`) or (`attivita`.`data` < `incarichi_immobili`.`data_inizio`)) and (isnull(`incarichi_immobili`.`data_valutazione`) or (`attivita`.`data` < `incarichi_immobili`.`data_valutazione`)) and (isnull(`incarichi_immobili`.`data_notizia`) or (`attivita`.`data` < `incarichi_immobili`.`data_notizia`)) and (`attivita`.`data` > `incarichi_immobili`.`data_sviluppo`)) then 'sviluppo' else NULL end) AS `tipologia_attivita_immobiliare`,concat_ws(' ',`mandante`.`nome`,`mandante`.`cognome`,coalesce(`mandante`.`soprannome`,`mandante`.`denominazione`)) AS `mandante`,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) AS `__label__` from ((((((((((`attivita` left join `tipologie_attivita` on((`tipologie_attivita`.`id` = `attivita`.`id_tipologia`))) left join `tipologie_attivita_inps` on((`tipologie_attivita_inps`.`id` = `attivita`.`id_tipologia_inps`))) left join `incarichi_immobili` on((`incarichi_immobili`.`id` = `attivita`.`id_incarico`))) left join `anagrafica` on((`anagrafica`.`id` = `attivita`.`id_anagrafica`))) left join `task` on((`task`.`id` = `attivita`.`id_task`))) left join `progetti` on((`progetti`.`id` = `attivita`.`id_progetto`))) left join `anagrafica` `cliente` on((`cliente`.`id` = coalesce(`attivita`.`id_cliente`,`progetti`.`id_cliente`,`task`.`id_cliente`)))) left join `anagrafica` `mandante` on((`mandante`.`id` = `attivita`.`id_mandante`))) left join `pratiche` on((`pratiche`.`id` = `attivita`.`id_pratica`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) order by `attivita`.`data` desc,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) */;
+/*!50001 VIEW `attivita_view` AS select `attivita`.`id` AS `id`,`attivita`.`id_tipologia` AS `id_tipologia`,`attivita`.`id_tipologia_inps` AS `id_tipologia_inps`,`attivita`.`id_anagrafica` AS `id_anagrafica`,`attivita`.`id_mandante` AS `id_mandante`,`attivita`.`id_cliente` AS `id_cliente`,`attivita`.`id_luogo` AS `id_luogo`,`attivita`.`referente` AS `referente`,`attivita`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`attivita`.`data` AS `data`,`attivita`.`ora` AS `ora`,`attivita`.`ora_fine` AS `ora_fine`,`attivita`.`id_pratica` AS `id_pratica`,`attivita`.`id_progetto` AS `id_progetto`,`attivita`.`id_campagna` AS `id_campagna`,`attivita`.`id_task` AS `id_task`,`attivita`.`id_todo` AS `id_todo`,`attivita`.`id_tipologia_interesse` AS `id_tipologia_interesse`,`attivita`.`id_tipologia_soddisfazione` AS `id_tipologia_soddisfazione`,`attivita`.`note_feedback` AS `note_feedback`,`attivita`.`id_immobile` AS `id_immobile`,`attivita`.`id_incarico` AS `id_incarico`,`attivita`.`id_richiesta` AS `id_richiesta`,`attivita`.`id_incrocio_immobile` AS `id_incrocio_immobile`,`attivita`.`nome` AS `nome`,`attivita`.`testo` AS `testo`,`attivita`.`timestamp_scadenza` AS `timestamp_scadenza`,`attivita`.`note_scadenza` AS `note_scadenza`,`attivita`.`id_attivita_completamento` AS `id_attivita_completamento`,`attivita`.`ore` AS `ore`,`attivita`.`id_esito` AS `id_esito`,`attivita`.`id_account_editor` AS `id_account_editor`,`attivita`.`id_account_inserimento` AS `id_account_inserimento`,`attivita`.`timestamp_inserimento` AS `timestamp_inserimento`,`attivita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`attivita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,dayofmonth(`attivita`.`data`) AS `giorno`,month(`attivita`.`data`) AS `mese`,year(`attivita`.`data`) AS `anno`,`progetti`.`nome` AS `progetto`,`task`.`nome` AS `task`,`task`.`ore_previste` AS `ore_previste_task`,`todo`.`nome` AS `todo`,`todo`.`ore_previste` AS `ore_previste_todo`,`tipologie_attivita`.`nome` AS `tipologia`,`tipologie_attivita_inps`.`nome` AS `tipologia_inps`,`tipologie_attivita`.`html` AS `icona_html`,`tipologie_attivita`.`font_awesome` AS `icona_fa`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `pratica`,concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `anagrafica`,coalesce(`cliente`.`soprannome`,`cliente`.`denominazione`,concat_ws(' ',coalesce(`cliente`.`cognome`,''),coalesce(`cliente`.`nome`,'')),'') AS `cliente`,(case when (isnull(`attivita`.`id_incarico`) and isnull(`attivita`.`id_richiesta`) and (`attivita`.`id_immobile` is not null)) then 'censimento' when (isnull(`attivita`.`id_incarico`) and (`attivita`.`id_richiesta` is not null)) then 'richiesta' when ((`attivita`.`id_incarico` is not null) and (`attivita`.`data` > `incarichi_immobili`.`data_inizio`)) then 'incarico' when ((`attivita`.`id_incarico` is not null) and (isnull(`incarichi_immobili`.`data_inizio`) or (`attivita`.`data` < `incarichi_immobili`.`data_inizio`)) and (`attivita`.`data` > `incarichi_immobili`.`data_valutazione`)) then 'valutazione' when ((`attivita`.`id_incarico` is not null) and (isnull(`incarichi_immobili`.`data_inizio`) or (`attivita`.`data` < `incarichi_immobili`.`data_inizio`)) and (isnull(`incarichi_immobili`.`data_valutazione`) or (`attivita`.`data` < `incarichi_immobili`.`data_valutazione`)) and (`attivita`.`data` > `incarichi_immobili`.`data_notizia`)) then 'notizia' when ((`attivita`.`id_incarico` is not null) and (isnull(`incarichi_immobili`.`data_inizio`) or (`attivita`.`data` < `incarichi_immobili`.`data_inizio`)) and (isnull(`incarichi_immobili`.`data_valutazione`) or (`attivita`.`data` < `incarichi_immobili`.`data_valutazione`)) and (isnull(`incarichi_immobili`.`data_notizia`) or (`attivita`.`data` < `incarichi_immobili`.`data_notizia`)) and (`attivita`.`data` > `incarichi_immobili`.`data_sviluppo`)) then 'sviluppo' else NULL end) AS `tipologia_attivita_immobiliare`,concat_ws(' ',`mandante`.`nome`,`mandante`.`cognome`,coalesce(`mandante`.`soprannome`,`mandante`.`denominazione`)) AS `mandante`,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) AS `__label__` from (((((((((((`attivita` left join `tipologie_attivita` on((`tipologie_attivita`.`id` = `attivita`.`id_tipologia`))) left join `tipologie_attivita_inps` on((`tipologie_attivita_inps`.`id` = `attivita`.`id_tipologia_inps`))) left join `incarichi_immobili` on((`incarichi_immobili`.`id` = `attivita`.`id_incarico`))) left join `anagrafica` on((`anagrafica`.`id` = `attivita`.`id_anagrafica`))) left join `task` on((`task`.`id` = `attivita`.`id_task`))) left join `todo` on((`todo`.`id` = `attivita`.`id_todo`))) left join `progetti` on((`progetti`.`id` = `attivita`.`id_progetto`))) left join `anagrafica` `cliente` on((`cliente`.`id` = coalesce(`attivita`.`id_cliente`,`progetti`.`id_cliente`,`task`.`id_cliente`,`todo`.`id_cliente`)))) left join `anagrafica` `mandante` on((`mandante`.`id` = `attivita`.`id_mandante`))) left join `pratiche` on((`pratiche`.`id` = `attivita`.`id_pratica`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) order by `attivita`.`data` desc,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -17123,7 +17263,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `file_view` AS select `file`.`id` AS `id`,`file`.`id_anagrafica` AS `id_anagrafica`,`file`.`id_prodotto` AS `id_prodotto`,`file`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`file`.`id_pagina` AS `id_pagina`,`file`.`id_task` AS `id_task`,`file`.`id_rassegna_stampa` AS `id_rassegna_stampa`,`file`.`id_evento` AS `id_evento`,`file`.`id_categoria_eventi` AS `id_categoria_eventi`,`file`.`id_template_mail` AS `id_template_mail`,`file`.`id_mailing` AS `id_mailing`,`file`.`id_notizia` AS `id_notizia`,`file`.`id_categoria_notizie` AS `id_categoria_notizie`,`file`.`id_pratica` AS `id_pratica`,`file`.`id_documento` AS `id_documento`,`file`.`id_categoria_documenti` AS `id_categoria_documenti`,`file`.`id_lingua` AS `id_lingua`,`file`.`path` AS `path`,`file`.`url` AS `url`,`file`.`nome` AS `nome`,`file`.`id_ruolo` AS `id_ruolo`,`file`.`ordine` AS `ordine`,`file`.`id_account_inserimento` AS `id_account_inserimento`,`file`.`timestamp_inserimento` AS `timestamp_inserimento`,`file`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`file`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`file`.`path` AS `__label__` from `file` order by `file`.`path` */;
+/*!50001 VIEW `file_view` AS select `file`.`id` AS `id`,`file`.`id_anagrafica` AS `id_anagrafica`,`file`.`id_prodotto` AS `id_prodotto`,`file`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`file`.`id_pagina` AS `id_pagina`,`file`.`id_task` AS `id_task`,`file`.`id_todo` AS `id_todo`,`file`.`id_rassegna_stampa` AS `id_rassegna_stampa`,`file`.`id_evento` AS `id_evento`,`file`.`id_categoria_eventi` AS `id_categoria_eventi`,`file`.`id_template_mail` AS `id_template_mail`,`file`.`id_mailing` AS `id_mailing`,`file`.`id_notizia` AS `id_notizia`,`file`.`id_categoria_notizie` AS `id_categoria_notizie`,`file`.`id_pratica` AS `id_pratica`,`file`.`id_documento` AS `id_documento`,`file`.`id_categoria_documenti` AS `id_categoria_documenti`,`file`.`id_lingua` AS `id_lingua`,`file`.`path` AS `path`,`file`.`url` AS `url`,`file`.`nome` AS `nome`,`file`.`id_ruolo` AS `id_ruolo`,`file`.`ordine` AS `ordine`,`file`.`id_account_inserimento` AS `id_account_inserimento`,`file`.`timestamp_inserimento` AS `timestamp_inserimento`,`file`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`file`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`file`.`path` AS `__label__` from `file` order by `file`.`path` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -17598,7 +17738,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mail_out_view` AS select `mail_out`.`id` AS `id`,`mail_out`.`timestamp_composizione` AS `timestamp_composizione`,`mail_out`.`timestamp_invio` AS `timestamp_invio`,`mail_out`.`server` AS `server`,`mail_out`.`mittente` AS `mittente`,`mail_out`.`destinatari` AS `destinatari`,`mail_out`.`destinatari_cc` AS `destinatari_cc`,`mail_out`.`destinatari_bcc` AS `destinatari_bcc`,`mail_out`.`oggetto` AS `oggetto`,`mail_out`.`corpo` AS `corpo`,`mail_out`.`allegati` AS `allegati`,`mail_out`.`headers` AS `headers`,`mail_out`.`host` AS `host`,`mail_out`.`port` AS `port`,`mail_out`.`user` AS `user`,`mail_out`.`password` AS `password`,`mail_out`.`id_newsletter` AS `id_newsletter`,`mail_out`.`id_email` AS `id_email`,`mail_out`.`tentativi` AS `tentativi`,`mail_out`.`token` AS `token`,`mail_out`.`id_account_inserimento` AS `id_account_inserimento`,`mail_out`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_out`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_out`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_out`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_out`.`oggetto` AS `__label__` from `mail_out` order by `mail_out`.`timestamp_invio` */;
+/*!50001 VIEW `mail_out_view` AS select `mail_out`.`id` AS `id`,`mail_out`.`timestamp_composizione` AS `timestamp_composizione`,`mail_out`.`timestamp_invio` AS `timestamp_invio`,`mail_out`.`server` AS `server`,`mail_out`.`mittente` AS `mittente`,`mail_out`.`destinatari` AS `destinatari`,`mail_out`.`destinatari_cc` AS `destinatari_cc`,`mail_out`.`destinatari_bcc` AS `destinatari_bcc`,`mail_out`.`oggetto` AS `oggetto`,`mail_out`.`corpo` AS `corpo`,`mail_out`.`allegati` AS `allegati`,`mail_out`.`headers` AS `headers`,`mail_out`.`host` AS `host`,`mail_out`.`port` AS `port`,`mail_out`.`user` AS `user`,`mail_out`.`password` AS `password`,`mail_out`.`id_newsletter` AS `id_newsletter`,`mail_out`.`id_email` AS `id_email`,`mail_out`.`tentativi` AS `tentativi`,`mail_out`.`token` AS `token`,`mail_out`.`ordine` AS `ordine`,`mail_out`.`id_account_inserimento` AS `id_account_inserimento`,`mail_out`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_out`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_out`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_out`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_out`.`oggetto` AS `__label__` from `mail_out` order by `mail_out`.`timestamp_invio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -17617,7 +17757,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mail_sent_view` AS select `mail_sent`.`id` AS `id`,`mail_sent`.`timestamp_composizione` AS `timestamp_composizione`,`mail_sent`.`timestamp_invio` AS `timestamp_invio`,`mail_sent`.`server` AS `server`,`mail_sent`.`mittente` AS `mittente`,`mail_sent`.`destinatari` AS `destinatari`,`mail_sent`.`destinatari_cc` AS `destinatari_cc`,`mail_sent`.`destinatari_bcc` AS `destinatari_bcc`,`mail_sent`.`oggetto` AS `oggetto`,`mail_sent`.`corpo` AS `corpo`,`mail_sent`.`allegati` AS `allegati`,`mail_sent`.`headers` AS `headers`,`mail_sent`.`host` AS `host`,`mail_sent`.`port` AS `port`,`mail_sent`.`user` AS `user`,`mail_sent`.`password` AS `password`,`mail_sent`.`id_newsletter` AS `id_newsletter`,`mail_sent`.`id_email` AS `id_email`,`mail_sent`.`tentativi` AS `tentativi`,`mail_sent`.`token` AS `token`,`mail_sent`.`id_account_inserimento` AS `id_account_inserimento`,`mail_sent`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_sent`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_sent`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_sent`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_sent`.`oggetto` AS `__label__` from `mail_sent` order by `mail_sent`.`timestamp_invio` desc */;
+/*!50001 VIEW `mail_sent_view` AS select `mail_sent`.`id` AS `id`,`mail_sent`.`timestamp_composizione` AS `timestamp_composizione`,`mail_sent`.`timestamp_invio` AS `timestamp_invio`,`mail_sent`.`server` AS `server`,`mail_sent`.`mittente` AS `mittente`,`mail_sent`.`destinatari` AS `destinatari`,`mail_sent`.`destinatari_cc` AS `destinatari_cc`,`mail_sent`.`destinatari_bcc` AS `destinatari_bcc`,`mail_sent`.`oggetto` AS `oggetto`,`mail_sent`.`corpo` AS `corpo`,`mail_sent`.`allegati` AS `allegati`,`mail_sent`.`headers` AS `headers`,`mail_sent`.`host` AS `host`,`mail_sent`.`port` AS `port`,`mail_sent`.`user` AS `user`,`mail_sent`.`password` AS `password`,`mail_sent`.`id_newsletter` AS `id_newsletter`,`mail_sent`.`id_email` AS `id_email`,`mail_sent`.`tentativi` AS `tentativi`,`mail_sent`.`token` AS `token`,`mail_sent`.`ordine` AS `ordine`,`mail_sent`.`id_account_inserimento` AS `id_account_inserimento`,`mail_sent`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_sent`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_sent`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_sent`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_sent`.`oggetto` AS `__label__` from `mail_sent` order by `mail_sent`.`timestamp_invio` desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -18421,6 +18561,25 @@ DELIMITER ;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `progetti_anagrafica_view`
+--
+
+/*!50001 DROP TABLE IF EXISTS `progetti_anagrafica_view`*/;
+/*!50001 DROP VIEW IF EXISTS `progetti_anagrafica_view`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
+/*!50001 VIEW `progetti_anagrafica_view` AS select `progetti_anagrafica`.`id` AS `id`,`progetti_anagrafica`.`id_progetto` AS `id_progetto`,`progetti_anagrafica`.`id_anagrafica` AS `id_anagrafica`,`progetti_anagrafica`.`id_ruolo` AS `id_ruolo`,concat_ws(' ',`progetti`.`nome`,`anagrafica`.`nome`,`ruoli_anagrafica`.`nome`) AS `__label__` from (((`progetti_anagrafica` left join `ruoli_anagrafica` on((`ruoli_anagrafica`.`id` = `progetti_anagrafica`.`id_ruolo`))) left join `progetti` on((`progetti`.`id` = `progetti_anagrafica`.`id_progetto`))) left join `anagrafica` on((`anagrafica`.`id` = `progetti_anagrafica`.`id_anagrafica`))) order by concat_ws(' ',`progetti`.`nome`,`anagrafica`.`nome`,`ruoli_anagrafica`.`nome`) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `progetti_commerciale_view`
 --
 
@@ -18472,7 +18631,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `progetti_view` AS select `progetti`.`id` AS `id`,`progetti`.`id_tipologia` AS `id_tipologia`,`progetti`.`id_cliente` AS `id_cliente`,`progetti`.`id_indirizzo` AS `id_indirizzo`,`progetti`.`nome` AS `nome`,`progetti`.`testo` AS `testo`,`progetti`.`id_account_accettazione` AS `id_account_accettazione`,`progetti`.`timestamp_accettazione` AS `timestamp_accettazione`,`progetti`.`fatturato_accettazione` AS `fatturato_accettazione`,`progetti`.`testo_accettazione` AS `testo_accettazione`,`progetti`.`fatturato_previsto` AS `fatturato_previsto`,`progetti`.`ore_previste` AS `ore_previste`,`progetti`.`costi_previsti` AS `costi_previsti`,`progetti`.`testo_previsioni` AS `testo_previsioni`,`progetti`.`id_account_chiusura` AS `id_account_chiusura`,`progetti`.`timestamp_chiusura` AS `timestamp_chiusura`,`progetti`.`testo_chiusura` AS `testo_chiusura`,`progetti`.`id_account_inserimento` AS `id_account_inserimento`,`progetti`.`timestamp_inserimento` AS `timestamp_inserimento`,`progetti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`progetti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_progetti`.`nome` AS `tipologia`,`tipologie_progetti`.`se_scalare` AS `se_scalare`,`tipologie_progetti`.`se_commessa` AS `se_commessa`,if((`progetti`.`timestamp_chiusura` is not null),1,0) AS `chiuso`,if(sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)),1,0) AS `attivo`,sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)) AS `task_aperti`,sum(if(((`task`.`id` is not null) and (`task`.`timestamp_completamento` is not null)),1,0)) AS `task_chiusi`,if(((select sum(`attivita`.`ore`) from (`attivita` left join `task` `t` on((`t`.`id` = `attivita`.`id_task`))) where ((`attivita`.`id_progetto` = `progetti`.`id`) or (`t`.`id_progetto` = `progetti`.`id`))) > `progetti`.`ore_previste`),1,0) AS `se_ore_esubero`,coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat(`anagrafica_cliente`.`cognome`,' ',`anagrafica_cliente`.`nome`),'') AS `cliente`,concat(if((not((`indirizzi`.`descrizione` like ''))),concat(`indirizzi`.`descrizione`,' - '),''),`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`cap` like ''))),concat(', ',`indirizzi`.`cap`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' ',`comuni`.`nome`,' (',`provincie`.`sigla`,')'),'')) AS `indirizzo`,`progetti`.`nome` AS `__label__` from ((((((`progetti` left join `task` on((`task`.`id_progetto` = `progetti`.`id`))) left join `anagrafica` `anagrafica_cliente` on((`anagrafica_cliente`.`id` = `progetti`.`id_cliente`))) left join `tipologie_progetti` on((`tipologie_progetti`.`id` = `progetti`.`id_tipologia`))) left join `indirizzi` on((`indirizzi`.`id` = `progetti`.`id_indirizzo`))) left join `comuni` on((`comuni`.`id` = `indirizzi`.`id_comune`))) left join `provincie` on((`provincie`.`id` = `comuni`.`id_provincia`))) group by `progetti`.`id` order by `progetti`.`nome` */;
+/*!50001 VIEW `progetti_view` AS select `progetti`.`id` AS `id`,`progetti`.`id_tipologia` AS `id_tipologia`,`progetti`.`id_cliente` AS `id_cliente`,`progetti`.`id_indirizzo` AS `id_indirizzo`,`progetti`.`nome` AS `nome`,`progetti`.`testo` AS `testo`,`progetti`.`ranking` AS `ranking`,`progetti`.`id_account_accettazione` AS `id_account_accettazione`,`progetti`.`timestamp_accettazione` AS `timestamp_accettazione`,`progetti`.`fatturato_accettazione` AS `fatturato_accettazione`,`progetti`.`testo_accettazione` AS `testo_accettazione`,`progetti`.`fatturato_previsto` AS `fatturato_previsto`,`progetti`.`ore_previste` AS `ore_previste`,`progetti`.`costi_previsti` AS `costi_previsti`,`progetti`.`testo_previsioni` AS `testo_previsioni`,`progetti`.`id_account_chiusura` AS `id_account_chiusura`,`progetti`.`timestamp_chiusura` AS `timestamp_chiusura`,`progetti`.`testo_chiusura` AS `testo_chiusura`,`progetti`.`id_account_inserimento` AS `id_account_inserimento`,`progetti`.`timestamp_inserimento` AS `timestamp_inserimento`,`progetti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`progetti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_progetti`.`nome` AS `tipologia`,`tipologie_progetti`.`se_scalare` AS `se_scalare`,`tipologie_progetti`.`se_commessa` AS `se_commessa`,if((`progetti`.`timestamp_chiusura` is not null),1,0) AS `chiuso`,if(sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)),1,0) AS `attivo`,sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)) AS `task_aperti`,sum(if(((`task`.`id` is not null) and (`task`.`timestamp_completamento` is not null)),1,0)) AS `task_chiusi`,if(((select sum(`attivita`.`ore`) from (`attivita` left join `task` `t` on((`t`.`id` = `attivita`.`id_task`))) where ((`attivita`.`id_progetto` = `progetti`.`id`) or (`t`.`id_progetto` = `progetti`.`id`))) > `progetti`.`ore_previste`),1,0) AS `se_ore_esubero`,coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat(`anagrafica_cliente`.`cognome`,' ',`anagrafica_cliente`.`nome`),'') AS `cliente`,concat(if((not((`indirizzi`.`descrizione` like ''))),concat(`indirizzi`.`descrizione`,' - '),''),`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`cap` like ''))),concat(', ',`indirizzi`.`cap`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' ',`comuni`.`nome`,' (',`provincie`.`sigla`,')'),'')) AS `indirizzo`,`progetti`.`nome` AS `__label__` from ((((((`progetti` left join `task` on((`task`.`id_progetto` = `progetti`.`id`))) left join `anagrafica` `anagrafica_cliente` on((`anagrafica_cliente`.`id` = `progetti`.`id_cliente`))) left join `tipologie_progetti` on((`tipologie_progetti`.`id` = `progetti`.`id_tipologia`))) left join `indirizzi` on((`indirizzi`.`id` = `progetti`.`id_indirizzo`))) left join `comuni` on((`comuni`.`id` = `indirizzi`.`id_comune`))) left join `provincie` on((`provincie`.`id` = `comuni`.`id_provincia`))) group by `progetti`.`id` order by `progetti`.`nome` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -18833,7 +18992,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `righe_documenti_amministrativi_view` AS select `righe_documenti_amministrativi`.`id` AS `id`,`righe_documenti_amministrativi`.`id_tipologia` AS `id_tipologia`,`righe_documenti_amministrativi`.`id_documento` AS `id_documento`,`righe_documenti_amministrativi`.`id_cliente` AS `id_cliente`,`righe_documenti_amministrativi`.`id_emittente` AS `id_emittente`,`righe_documenti_amministrativi`.`id_genitore` AS `id_genitore`,`righe_documenti_amministrativi`.`id_riferimento` AS `id_riferimento`,`righe_documenti_amministrativi`.`id_progetto` AS `id_progetto`,`righe_documenti_amministrativi`.`id_pratica` AS `id_pratica`,`righe_documenti_amministrativi`.`id_task` AS `id_task`,`righe_documenti_amministrativi`.`id_attivita` AS `id_attivita`,`righe_documenti_amministrativi`.`id_articolo` AS `id_articolo`,`righe_documenti_amministrativi`.`id_udm` AS `id_udm`,`righe_documenti_amministrativi`.`ordine` AS `ordine`,`righe_documenti_amministrativi`.`quantita` AS `quantita`,`righe_documenti_amministrativi`.`data_lavorazione` AS `data_lavorazione`,`righe_documenti_amministrativi`.`data_fatturabile` AS `data_fatturabile`,`righe_documenti_amministrativi`.`data_scadenza` AS `data_scadenza`,`righe_documenti_amministrativi`.`id_listino` AS `id_listino`,`righe_documenti_amministrativi`.`id_valuta` AS `id_valuta`,`righe_documenti_amministrativi`.`importo_netto_totale` AS `importo_netto_totale`,`righe_documenti_amministrativi`.`importo_netto_totale_non_scontato` AS `importo_netto_totale_non_scontato`,`righe_documenti_amministrativi`.`id_iva` AS `id_iva`,`righe_documenti_amministrativi`.`nome` AS `nome`,`righe_documenti_amministrativi`.`testo` AS `testo`,`righe_documenti_amministrativi`.`path` AS `path`,`righe_documenti_amministrativi`.`se_rimborso` AS `se_rimborso`,`righe_documenti_amministrativi`.`id_account_inserimento` AS `id_account_inserimento`,`righe_documenti_amministrativi`.`timestamp_inserimento` AS `timestamp_inserimento`,`righe_documenti_amministrativi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`righe_documenti_amministrativi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`righe_documenti_amministrativi`.`nome` AS `__label__`,count(`figlie`.`id`) AS `numero_aggregate` from (`righe_documenti_amministrativi` left join `righe_documenti_amministrativi` `figlie` on((`figlie`.`id_genitore` = `righe_documenti_amministrativi`.`id`))) group by `righe_documenti_amministrativi`.`id` order by `righe_documenti_amministrativi`.`nome` */;
+/*!50001 VIEW `righe_documenti_amministrativi_view` AS select `righe_documenti_amministrativi`.`id` AS `id`,`righe_documenti_amministrativi`.`id_tipologia` AS `id_tipologia`,`righe_documenti_amministrativi`.`id_documento` AS `id_documento`,`righe_documenti_amministrativi`.`id_cliente` AS `id_cliente`,`righe_documenti_amministrativi`.`id_emittente` AS `id_emittente`,`righe_documenti_amministrativi`.`id_genitore` AS `id_genitore`,`righe_documenti_amministrativi`.`id_riferimento` AS `id_riferimento`,`righe_documenti_amministrativi`.`id_progetto` AS `id_progetto`,`righe_documenti_amministrativi`.`id_pratica` AS `id_pratica`,`righe_documenti_amministrativi`.`id_task` AS `id_task`,`righe_documenti_amministrativi`.`id_todo` AS `id_todo`,`righe_documenti_amministrativi`.`id_attivita` AS `id_attivita`,`righe_documenti_amministrativi`.`id_articolo` AS `id_articolo`,`righe_documenti_amministrativi`.`id_udm` AS `id_udm`,`righe_documenti_amministrativi`.`ordine` AS `ordine`,`righe_documenti_amministrativi`.`quantita` AS `quantita`,`righe_documenti_amministrativi`.`data_lavorazione` AS `data_lavorazione`,`righe_documenti_amministrativi`.`data_fatturabile` AS `data_fatturabile`,`righe_documenti_amministrativi`.`data_scadenza` AS `data_scadenza`,`righe_documenti_amministrativi`.`id_listino` AS `id_listino`,`righe_documenti_amministrativi`.`id_valuta` AS `id_valuta`,`righe_documenti_amministrativi`.`importo_netto_totale` AS `importo_netto_totale`,`righe_documenti_amministrativi`.`importo_netto_totale_non_scontato` AS `importo_netto_totale_non_scontato`,`righe_documenti_amministrativi`.`id_iva` AS `id_iva`,`righe_documenti_amministrativi`.`nome` AS `nome`,`righe_documenti_amministrativi`.`testo` AS `testo`,`righe_documenti_amministrativi`.`path` AS `path`,`righe_documenti_amministrativi`.`se_rimborso` AS `se_rimborso`,`righe_documenti_amministrativi`.`id_account_inserimento` AS `id_account_inserimento`,`righe_documenti_amministrativi`.`timestamp_inserimento` AS `timestamp_inserimento`,`righe_documenti_amministrativi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`righe_documenti_amministrativi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`righe_documenti_amministrativi`.`nome` AS `__label__`,count(`figlie`.`id`) AS `numero_aggregate` from (`righe_documenti_amministrativi` left join `righe_documenti_amministrativi` `figlie` on((`figlie`.`id_genitore` = `righe_documenti_amministrativi`.`id`))) group by `righe_documenti_amministrativi`.`id` order by `righe_documenti_amministrativi`.`nome` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -19151,12 +19310,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `sms_out_view` AS select `sms_out`.`id` AS `id`,`sms_out`.`timestamp_composizione` AS `timestamp_composizione`,`sms_out`.`timestamp_invio` AS `timestamp_invio`,`sms_out`.`server` AS `server`,`sms_out`.`mittente` AS `mittente`,`sms_out`.`destinatari` AS `destinatari`,`sms_out`.`corpo` AS `corpo`,`sms_out`.`host` AS `host`,`sms_out`.`port` AS `port`,`sms_out`.`user` AS `user`,`sms_out`.`password` AS `password`,`sms_out`.`id_newsletter` AS `id_newsletter`,`sms_out`.`id_telefono` AS `id_telefono`,`sms_out`.`id_account_inserimento` AS `id_account_inserimento`,`sms_out`.`timestamp_inserimento` AS `timestamp_inserimento`,`sms_out`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`sms_out`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`sms_out`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`sms_out`.`corpo` AS `__label__` from `sms_out` order by `sms_out`.`timestamp_invio` */;
+/*!50001 VIEW `sms_out_view` AS select `sms_out`.`id` AS `id`,`sms_out`.`timestamp_composizione` AS `timestamp_composizione`,`sms_out`.`timestamp_invio` AS `timestamp_invio`,`sms_out`.`server` AS `server`,`sms_out`.`mittente` AS `mittente`,`sms_out`.`destinatari` AS `destinatari`,`sms_out`.`corpo` AS `corpo`,`sms_out`.`host` AS `host`,`sms_out`.`port` AS `port`,`sms_out`.`user` AS `user`,`sms_out`.`password` AS `password`,`sms_out`.`id_newsletter` AS `id_newsletter`,`sms_out`.`id_telefono` AS `id_telefono`,`sms_out`.`token` AS `token`,`sms_out`.`ordine` AS `ordine`,`sms_out`.`id_account_inserimento` AS `id_account_inserimento`,`sms_out`.`timestamp_inserimento` AS `timestamp_inserimento`,`sms_out`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`sms_out`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`sms_out`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`sms_out`.`corpo` AS `__label__` from `sms_out` order by `sms_out`.`timestamp_invio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -19170,12 +19329,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `sms_sent_view` AS select `sms_sent`.`id` AS `id`,`sms_sent`.`timestamp_composizione` AS `timestamp_composizione`,`sms_sent`.`timestamp_invio` AS `timestamp_invio`,`sms_sent`.`server` AS `server`,`sms_sent`.`mittente` AS `mittente`,`sms_sent`.`destinatari` AS `destinatari`,`sms_sent`.`corpo` AS `corpo`,`sms_sent`.`host` AS `host`,`sms_sent`.`port` AS `port`,`sms_sent`.`user` AS `user`,`sms_sent`.`password` AS `password`,`sms_sent`.`id_newsletter` AS `id_newsletter`,`sms_sent`.`id_telefono` AS `id_telefono`,`sms_sent`.`id_account_inserimento` AS `id_account_inserimento`,`sms_sent`.`timestamp_inserimento` AS `timestamp_inserimento`,`sms_sent`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`sms_sent`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`sms_sent`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`sms_sent`.`corpo` AS `__label__` from `sms_sent` order by `sms_sent`.`timestamp_invio` desc */;
+/*!50001 VIEW `sms_sent_view` AS select `sms_sent`.`id` AS `id`,`sms_sent`.`timestamp_composizione` AS `timestamp_composizione`,`sms_sent`.`timestamp_invio` AS `timestamp_invio`,`sms_sent`.`server` AS `server`,`sms_sent`.`mittente` AS `mittente`,`sms_sent`.`destinatari` AS `destinatari`,`sms_sent`.`corpo` AS `corpo`,`sms_sent`.`host` AS `host`,`sms_sent`.`port` AS `port`,`sms_sent`.`user` AS `user`,`sms_sent`.`password` AS `password`,`sms_sent`.`id_newsletter` AS `id_newsletter`,`sms_sent`.`id_telefono` AS `id_telefono`,`sms_sent`.`token` AS `token`,`sms_sent`.`ordine` AS `ordine`,`sms_sent`.`id_account_inserimento` AS `id_account_inserimento`,`sms_sent`.`timestamp_inserimento` AS `timestamp_inserimento`,`sms_sent`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`sms_sent`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`sms_sent`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`sms_sent`.`corpo` AS `__label__` from `sms_sent` order by `sms_sent`.`timestamp_invio` desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -20177,12 +20336,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `todo_view` AS select `todo`.`id` AS `id`,`todo`.`id_task` AS `id_task`,`todo`.`nome` AS `nome`,`todo`.`se_fatta` AS `se_fatta`,`todo`.`nome` AS `__label__` from `todo` order by `todo`.`nome` */;
+/*!50001 VIEW `todo_view` AS select `todo`.`id` AS `id`,date_format(from_unixtime(`todo`.`timestamp_apertura`),'%Y-%m-%d %H:%i') AS `data_ora_apertura`,date_format(from_unixtime(`todo`.`timestamp_pianificazione`),'%Y-%m-%d %H:%i') AS `data_ora_pianificazione`,coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat_ws(' ',coalesce(`anagrafica_cliente`.`cognome`,''),coalesce(`anagrafica_cliente`.`nome`,'')),'') AS `cliente`,coalesce(`todo`.`id_cliente`,`progetti`.`id_cliente`) AS `id_cliente`,`progetti`.`nome` AS `progetto`,`tipologie_crm`.`nome` AS `crm`,`tipologie_task`.`nome` AS `tipologia`,`priorita`.`nome` AS `priorita`,`todo`.`nome` AS `nome`,`todo`.`id_luogo` AS `id_luogo`,`todo`.`id_priorita` AS `id_priorita`,`todo`.`ore_previste` AS `ore_previste`,`todo`.`id_progetto` AS `id_progetto`,`todo`.`anno_previsto` AS `anno_previsto`,`todo`.`settimana_prevista` AS `settimana_prevista`,`todo`.`timestamp_pianificazione` AS `timestamp_pianificazione`,concat(`todo`.`anno_previsto`,'/',lpad(`todo`.`settimana_prevista`,2,'0')) AS `pianificazione`,coalesce(sum(`attivita`.`ore`),0) AS `ore_lavorate`,greatest((`todo`.`ore_previste` - coalesce(sum(`attivita`.`ore`),0)),0) AS `ore_residue`,`todo`.`id_responsabile` AS `id_responsabile`,coalesce(`anagrafica_responsabile`.`denominazione`,concat(`anagrafica_responsabile`.`cognome`,' ',`anagrafica_responsabile`.`nome`),'') AS `responsabile`,`todo`.`id_account_inserimento` AS `id_account_inserimento`,((coalesce(sum(`attivita`.`ore`),0) / `todo`.`ore_previste`) * 100) AS `avanzamento`,concat(coalesce(sum(`attivita`.`ore`),0),' di ',`todo`.`ore_previste`) AS `progresso`,`todo`.`timestamp_completamento` AS `timestamp_completamento`,`todo`.`timestamp_inserimento` AS `timestamp_inserimento`,`todo`.`timestamp_revisione` AS `timestamp_revisione`,date_format(from_unixtime(`todo`.`timestamp_completamento`),'%Y-%m-%d %H:%i') AS `data_ora_completamento`,if((`todo`.`timestamp_completamento` is not null),2,if((`todo`.`timestamp_revisione` is not null),1,0)) AS `completato`,concat_ws(' | ',coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat(`anagrafica_cliente`.`cognome`,' ',`anagrafica_cliente`.`nome`),''),`todo`.`id_progetto`,`todo`.`nome`) AS `__label__` from ((((((((`todo` left join `anagrafica` on((`anagrafica`.`id` = `todo`.`id_anagrafica`))) left join `anagrafica` `anagrafica_cliente` on((`anagrafica_cliente`.`id` = `todo`.`id_cliente`))) left join `anagrafica` `anagrafica_responsabile` on((`anagrafica_responsabile`.`id` = `todo`.`id_responsabile`))) left join `attivita` on((`attivita`.`id_todo` = `todo`.`id`))) left join `progetti` on((`progetti`.`id` = `todo`.`id_progetto`))) left join `priorita` on((`priorita`.`id` = `todo`.`id_priorita`))) left join `tipologie_task` on((`tipologie_task`.`id` = `todo`.`id_tipologia`))) left join `tipologie_crm` on((`tipologie_crm`.`id` = `anagrafica_cliente`.`id_tipologia_crm`))) group by `todo`.`id` order by concat(`todo`.`anno_previsto`,'/',lpad(`todo`.`settimana_prevista`,2,'0')),`priorita`.`ordine` desc,`tipologie_crm`.`ordine`,`todo`.`timestamp_apertura` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -20462,4 +20621,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-24  5:07:13
+-- Dump completed on 2021-01-31  5:05:23
