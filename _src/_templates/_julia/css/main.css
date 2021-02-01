@@ -9,12 +9,20 @@ header, nav, main {
 
 footer {
     background-color: #666666;
+    color: #ffffff;
     font-size: 0.8em;
 }
 
 footer > .container {
-    background-color: #ffffff;
     margin-bottom: 3em;
+}
+
+footer > .container > .row > .col {
+    min-height: 3em;
+}
+
+footer p {
+    margin: 0em;
 }
 
 h1, h2, h3 {
@@ -75,8 +83,13 @@ button.navbar-toggler > span.navbar-toggler-icon {
     
     header {
         background: linear-gradient(180deg, #ffffff 50%,#666666 50%) top / 100% 50%,
-            linear-gradient(0deg, #ffffff 50%,#666666 50%) bottom / 100% 50%;
+            linear-gradient(0deg, transparent 50%,#666666 50%) bottom / 100% 50%;
         background-repeat: no-repeat;
+    }
+    
+    footer > .container {
+        background-color: #ffffff;
+        color: #000000;
     }
     
 }

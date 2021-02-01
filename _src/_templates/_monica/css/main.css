@@ -8,11 +8,6 @@ header, nav, main, footer {
     padding: 0em;
 }
 
-header {
-    min-height: 6em;
-    padding: 0em;
-}
-
 main > .container > .row {
     margin-top: 0.5em;
 }
@@ -61,9 +56,42 @@ nav {
 
 .nav-link {
     display: inline;
-    padding: 0em;
 }
 
 footer {
     font-size: 0.8em;
+}
+
+footer p {
+    margin: 0em;
+}
+
+footer > .container {
+    background-color: #666666;
+    color: #ffffff;
+}
+
+footer > .container > .row > .col {
+    min-height: 3em;
+}
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+    footer > .container {
+        background-color: #ffffff;
+        color: #666666;
+    }
+    
+}
+
+@media (min-width: 1200px) {
+    
 }
