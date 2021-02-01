@@ -53,7 +53,7 @@
 	    );
 	} else {
 	    logWrite( 'il file ' . $ct['page']['template']['ini'] . ' non esiste', 'template', LOG_CRIT );
-	    die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') dannaeggiato o mancante, oppure template custom privo del file di configurazione' );
+	    die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') dannaeggiato o mancante' );
 	}
 
     // log
