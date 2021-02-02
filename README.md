@@ -49,22 +49,22 @@ a far funzionare GlisWeb.
 
 Un esempio di sequenza di comandi per l'installazione potrebbe essere la seguente:
 
-\code{.bash}
-cd /var/www/html
-wget https://github.com/istricesrl/glisweb/archive/develop.zip
-unzip develop.zip
-mv -f ./glisweb-develop/{.,}* ./
-rmdir glisweb-develop
-rm -rf .github
-rm -f .gitignore
-rm -f develop.zip
-_src/_sh/_gw.permissions.reset.sh
-_src/_sh/_gw.mysql.install.sh
-_src/_sh/_gw.config.sh base
-composer update
-\endcode
+    cd /var/www/html
+    wget https://github.com/istricesrl/glisweb/archive/develop.zip
+    unzip develop.zip
+    mv -f ./glisweb-develop/{.,}* ./
+    rmdir glisweb-develop
+    rm -rf .github
+    rm -f .gitignore
+    rm -f develop.zip
+    _src/_sh/_gw.permissions.reset.sh
+    _src/_sh/_gw.mysql.install.sh
+    _src/_sh/_gw.config.sh base
+    composer update
 
-Un video sull'installazione di GlisWeb è anche disponibile a questo indirizzo https://youtu.be/xzERaj20HJA
+Un video sull'installazione di GlisWeb è anche disponibile a questo indirizzo https://youtu.be/xzERaj20HJA:
+
+[![Watch the video](https://img.youtube.com/vi/xzERaj20HJA/maxresdefault.jpg)](https://youtu.be/xzERaj20HJA)
 
 ## configurazione
 Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
