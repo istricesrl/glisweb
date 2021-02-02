@@ -47,6 +47,25 @@ Se avete appena installato (o non avete ancora installato) i server web e databa
 setup dell'ambiente (_src/_sh/_gw.environment.setup.sh) che vi aiuterà a installare e configurare i servizi necessari
 a far funzionare GlisWeb.
 
+Un esempio di sequenza di comandi per l'installazione potrebbe essere la seguente:
+
+\code{.bash}
+cd /var/www/html
+wget https://github.com/istricesrl/glisweb/archive/develop.zip
+unzip develop.zip
+mv -f ./glisweb-develop/{.,}* ./
+rmdir glisweb-develop
+rm -rf .github
+rm -f .gitignore
+rm -f develop.zip
+_src/_sh/_gw.permissions.reset.sh
+_src/_sh/_gw.mysql.install.sh
+_src/_sh/_gw.config.sh base
+composer update
+\endcode
+
+Un video sull'installazione di GlisWeb è anche disponibile a questo indirizzo https://youtu.be/xzERaj20HJA
+
 ## configurazione
 Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
 che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
