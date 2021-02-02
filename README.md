@@ -47,7 +47,8 @@ Se avete appena installato (o non avete ancora installato) i server web e databa
 setup dell'ambiente (_src/_sh/_gw.environment.setup.sh) che vi aiuterà a installare e configurare i servizi necessari
 a far funzionare GlisWeb.
 
-Un esempio di sequenza di comandi per l'installazione potrebbe essere la seguente:
+Un esempio di sequenza di comandi per l'installazione potrebbe essere la seguente, come più ampiamente illustrato nella
+documentazione ufficiale per gli sviluppatori all'indirizzo https://glisweb.istricesrl.it/docs/:
 
     cd /var/www/html
     wget https://github.com/istricesrl/glisweb/archive/develop.zip
