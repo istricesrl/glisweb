@@ -65,6 +65,9 @@ Options -Indexes
     RewriteCond %{DOCUMENT_ROOT}/src/img/hotlink.png -f
     RewriteRule .*\.(gif|jpg|jpeg|png|pdf|webp)$ src/img/hotlink.png [NC]
 
+    # gestione della documentazione
+    RewriteRule ^docs/([a-zA-Z0-9_\-\/\.]*)$ _usr/_docs/_build/html/$1 [L,QSA]
+
     # gestione delle API speciali
     RewriteCond %{DOCUMENT_ROOT}/_src/_api/_$1.php -f
     RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_$1.php [L,QSA]
