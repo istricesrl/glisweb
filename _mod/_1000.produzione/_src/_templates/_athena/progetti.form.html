@@ -69,7 +69,7 @@
 				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">indirizzo</span>
-					{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, '', '','1','','','indirizzi.form','indirizzi.form','indirizzi', 'id_indirizzo' , page, pages, ietf ) }}
+					{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_indirizzo' , page, pages, ietf ) }}
 				</div>
             </div>
             
@@ -86,7 +86,7 @@
 			<div class="form-group form-row">
 				<div class="col col-md-2">
 					<span class="label-top">data accettazione</span>
-					{{ frm.datetime( table, '', '', 'timestamp_accettazione', '', '', request ) }}
+					{{ frm.datetime( table, '', '', 'timestamp_accettazione', '', '', request, 'now'|date('Y-m-d\\TH:i') ) }}
 				</div>
 				<div class="col-12 col-md-10">
 					<span class="label-top">note di accettazione</span>
