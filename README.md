@@ -78,3 +78,9 @@ da poterli visualizzare via web, aggiungendo all'URL del vostro deploy il path _
 Ricordate inoltre che trovate numerosi esempi e file utili nella cartella _usr/_examples/, che è un'ottima base di
 partenza per iniziare a capire come funziona GlisWeb. Alcuni degli strumenti che troverete in questa cartella vi saranno
 molto utili anche quando sarete divenuti più esperti!
+
+## utilizzo
+Utilizzare GlisWeb è semplice e intuitivo! Una guida per gli utenti è in fase di sviluppo ed è disponibile a questo
+indirizzo http://s-url.it/gliswebdocs inoltre stiamo pubblicando una serie di video tutorial su questa playlist di YouTube
+http://s-url.it/gliswebvideos.
+
