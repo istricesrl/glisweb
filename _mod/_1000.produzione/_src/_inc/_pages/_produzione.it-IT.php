@@ -15,7 +15,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'produzione.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_produzione.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'produzione', 'progetti.view' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'produzione' ) ),
 	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'produzione' ),
 														'priority'	=> '200' ) )
 	);
@@ -28,8 +28,10 @@
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.view.php' ),
-		'etc'			=> array( 'tabs'	=> $p['produzione']['etc']['tabs'] ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+		'etc'			=> array( 'tabs'	=> array( 'progetti.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'progetti' ),
+								'priority'	=> '080' ) )
 	);
 
 	// gestione progetti

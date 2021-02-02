@@ -19,8 +19,11 @@
 
 
     // tabella della vista
-    $ct['view']['table'] = 'progetti';
-    
+	$ct['view']['table'] = 'progetti_produzione';
+
+    // tabella per la gestione degli oggetti esistenti
+	$ct['view']['open']['table'] = 'progetti';
+
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'progetti.form';
 
