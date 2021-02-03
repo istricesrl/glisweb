@@ -42,7 +42,7 @@
 		    $( obj ).removeClass('hidden');
 		});
 
-		$( base ).find( 'input, textarea, select' ).each( function( i, obj ) {
+		$( base ).find( 'input, textarea, select, button' ).each( function( i, obj ) {
 		    if( typeof( obj.attributes['default'] ) !== 'undefined' ) {
 			empty = obj.attributes['default'].value;
 		    } else {
@@ -54,7 +54,10 @@
 		    if( typeof( obj.attributes['uploader-field'] ) !== 'undefined' ) {
 			obj.attributes['uploader-field'].value = obj.attributes['uploader-field'].value.replace( /_[0-9]+_/i, '_' + counter + '_' );
 		    }
-		    if( typeof( obj.attributes['name'] ) !== 'undefined' ) {
+		    if( typeof( obj.attributes['selectbox-field'] ) !== 'undefined' ) {
+			obj.attributes['selectbox-field'].value = obj.attributes['selectbox-field'].value.replace( /_[0-9]+_/i, '_' + counter + '_' );
+			}
+			if( typeof( obj.attributes['name'] ) !== 'undefined' ) {
 			obj.attributes['name'].value = obj.attributes['name'].value.replace( /\[[0-9]+\]/i, '[' + counter + ']' );
 			obj.attributes['name'].value = obj.attributes['name'].value.replace( /_[0-9]+_/i, '_' + counter + '_' );
 		    }
