@@ -29,12 +29,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_cliente = 1' );
 
-    // tendina anagrafica per referenti e operatori (da completare, inserire criterio)
-	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
-	    $cf['memcache']['connection'],
+    // tendina anagrafica per referenti e operatori (TODO vedere se filtrare sui referenti del cliente)
+    $ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
+        $cf['cache']['index'],
+        $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view' );
+        'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 OR se_referente = 1' );
+
 
     // tendina indirizzi
 	$ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
@@ -59,10 +60,10 @@
 	    'SELECT id, __label__ FROM ruoli_progetti_view'
     );
     
-     // tendina se_sostituto
-	$ct['etc']['select']['se_sostituto'] = array(
-	    array( 'id' => NULL, '__label__' => '&#xf00d;' ),
-	    array( 'id' => 1, '__label__' => '&#xf00c;' )
+     // tendina funzioni
+	$ct['etc']['select']['funzioni'] = array(
+	    array( 'id' => NULL, '__label__' => 'titolare' ),
+	    array( 'id' => 1, '__label__' => 'sostituto' )
 	);
 
 	// macro di default

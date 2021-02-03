@@ -12,8 +12,8 @@
 	{{ frm.input( table, subtable, i, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
 	<div class="form-group form-row">
         <div class="col-auto">
-            {% if i == 0 %}<span class="label-top remove-after-duplicate">sostituto</span>{% endif %}
-            {{ frm.select( table, subtable, i, 'se_sostituto', '', etc.select.se_sostituto, request ) }}
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">funzione</span>{% endif %}
+            {{ frm.select( table, subtable, i, 'se_sostituto', '', etc.select.funzioni, request ) }}
         </div>
         <div class="col-12 col-md-3">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia</span>{% endif %}
