@@ -42,7 +42,12 @@
 		var currvalue = $( select ).val();
 
 	    // imposto il valore corrente
-	    box.val( current );
+	    // aggiungo l'attributo required
+	    if( $( select ).attr( 'placeholder-api' ) ) {
+			$( box ).val( $( select ).attr( 'placeholder-api' ) );
+		} else {
+			box.val( current );
+		}
 
 	    // TODO creo la <ul> con le opzioni
 	    var lista = $('<ul class="combobox-dropdown remove-on-duplicate" id="' + base_id + '_list"> </ul>');
@@ -121,8 +126,25 @@
 								}
 			
 								var li = '<li value="' + el.id + '"' + classe + '>' + el.__label__ + '</li>';
+
+				
 								lista.append( li );
-			
+
+								
+								lista.find('li').each( function( idxl, li ) {
+									var opzione = $( li ).html();
+									var valore = $( li ).attr( 'value' );
+									$( li ).bind( 'click', function() {
+										$( select ).val( valore );
+										$( box ).val( opzione );
+										$( box ).addClass( 'combobox-base-background' );
+										$( box ).removeClass( 'combobox-active-background' );
+										// $( box ).css( 'background-color', '#ffffff' );
+										$( lista ).hide();
+										// console.log( 'valore della select al click -> ' + $( select ).val() );
+									});
+								});
+	
 
 							});
 
