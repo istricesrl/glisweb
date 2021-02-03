@@ -51,12 +51,18 @@
 	    'SELECT id, __label__ FROM tipologie_progetti_view'
     );
     
-    // tendina ruoli anagrafica
-	$ct['etc']['select']['ruoli_anagrafica'] = mysqlCachedIndexedQuery(
+    // tendina ruoli progetti
+	$ct['etc']['select']['ruoli_progetti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_anagrafica_view'
+	    'SELECT id, __label__ FROM ruoli_progetti_view'
+    );
+    
+     // tendina se_sostituto
+	$ct['etc']['select']['se_sostituto'] = array(
+	    array( 'id' => NULL, '__label__' => '&#xf00d;' ),
+	    array( 'id' => 1, '__label__' => '&#xf00c;' )
 	);
 
 	// macro di default
