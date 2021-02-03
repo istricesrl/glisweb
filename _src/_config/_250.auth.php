@@ -148,6 +148,12 @@
 		'pianificazioni' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
+		'progetti' => array(
+			CONTROL_FULL => array( 'roots' )
+		),
+		'progetti_anagrafica' => array(
+			CONTROL_FULL => array( 'roots' )
+		),
 	    'pubblicazione' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
