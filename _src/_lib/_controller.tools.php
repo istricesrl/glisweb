@@ -127,16 +127,23 @@
 
 			// ricerca nella vista
 			    if( isset( $i['__fields__'] ) && isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
-				foreach( explode( ' ', $i['__search__'] ) as $tks ) {
-				    $like = "%${tks}%";
-				    $cond = array();
-				    foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
-					$cond[] = $field . ' LIKE ?';
-					$vs[] = array( 's' => $like );
-				    }
-				    $whr[] = '(' . implode( ' OR ', $cond ) . ')';
+					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
+						$like = "%${tks}%";
+						$cond = array();
+						foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
+						$cond[] = $field . ' LIKE ?';
+						$vs[] = array( 's' => $like );
+						}
+						$whr[] = '(' . implode( ' OR ', $cond ) . ')';
+					}
+			    } elseif( isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
+					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
+						$like = "%${tks}%";
+						$vs[] = array( 's' => $like );
+						$cond[] = ' __label__ LIKE ? ';
+					}
+					$whr[] = '(' . implode( ' OR ', $cond ) . ')';
 				}
-			    }
 
 			// filtri per i campi
 			    foreach( $ks as $fk ) {
@@ -144,7 +151,8 @@
 			    }
 
 			// debug
-			    // print_r( $i['__filters__'] );
+				// print_r( $i['__filters__'] );
+				// print_r( $whr );
 
 			/*
 			 * @todo IMPORTANTE
