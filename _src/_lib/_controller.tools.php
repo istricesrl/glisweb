@@ -128,21 +128,27 @@
 			// ricerca nella vista
 			    if( isset( $i['__fields__'] ) && isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
 					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
-						$like = "%${tks}%";
-						$cond = array();
-						foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
-						$cond[] = $field . ' LIKE ?';
-						$vs[] = array( 's' => $like );
+						if( ! empty( $tks ) ) {
+							$like = "%${tks}%";
+							$cond = array();
+							foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
+							$cond[] = $field . ' LIKE ?';
+							$vs[] = array( 's' => $like );
+							}
+# PERCHÉ OR?							$whr[] = '(' . implode( ' OR ', $cond ) . ')';
+							$whr[] = '(' . implode( ' AND ', $cond ) . ')';
 						}
-						$whr[] = '(' . implode( ' OR ', $cond ) . ')';
 					}
 			    } elseif( isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
 					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
-						$like = "%${tks}%";
-						$vs[] = array( 's' => $like );
-						$cond[] = ' __label__ LIKE ? ';
+						if( ! empty( $tks ) && strlen( $tks ) >= 3 ) {
+							$like = "%${tks}%";
+							$vs[] = array( 's' => $like );
+							$cond[] = ' __label__ LIKE ? ';
+						}
 					}
-					$whr[] = '(' . implode( ' OR ', $cond ) . ')';
+# PERCHÉ OR?					$whr[] = '(' . implode( ' OR ', $cond ) . ')';
+					$whr[] = '(' . implode( ' AND ', $cond ) . ')';
 				}
 
 			// filtri per i campi
@@ -251,7 +257,7 @@
 
 			// debug
 			    // print_r( $i );
-			    //  echo $q . PHP_EOL;
+			     // echo $q . PHP_EOL;
 
 			// eseguo la query
 			    $d = mysqlQuery( $c, $q, $vs, $e['__codes__'] );

@@ -14,6 +14,8 @@
 
 	    var base_id = $(this).attr( 'id' );
 
+		var wscall = null;
+
 	    // log
 	    // console.log( select );
 	     console.log( base_id );
@@ -30,7 +32,7 @@
 
 	    // creo il campo input
 	    // var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '">');
-		var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="off">');
+		var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="off"><div class="spinner-border" role="status"></div>');
 
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'data-required' ) == 'true' ) {
@@ -92,6 +94,8 @@
 		// se è stato inserito un filtro di lunghezza minima
 		if( filtro.length > min || force == true ) {
 
+			$( box ).closest( '.spinner-border' ).show();
+
 		    // resetto la select
 		    // $( select ).val([]);
 
@@ -100,6 +104,12 @@
 
 			// tendina dinamica o statica
 			if( $( select ).attr( 'populate-api' ) != '' ) {
+
+				if( wscall != null ) {
+					clearTimeout( wscall );
+				}
+
+				wscall = setTimeout( function() {
 
 				var call = '/api/' + $( select ).attr( 'populate-api' ) + '?__info__[' + $( select ).attr( 'populate-api' ) + '][__search__]=' + filtro;
 
@@ -149,9 +159,12 @@
 							});
 
 							$( lista ).show();
+							$( box ).closest( '.spinner-border' ).hide();
 
 					}
 				);
+
+				}, 1000 );
 
 			} else {
 
