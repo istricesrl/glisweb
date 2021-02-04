@@ -2,9 +2,10 @@
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
+	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
     {{ frm.subformLegend( subtable, legend ) }}
     {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
-    {% else %}{% set t = -1 %}{% endif %}
+    {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
 	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
 	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
