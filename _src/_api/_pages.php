@@ -505,10 +505,35 @@
 
 	// TODO qui inserire la formattazione con Tidy?
 
+    // fine del buffer
+	$html = ob_get_clean();
+
+	// specifiche di formattazione
+	$config = array(
+			   'indent'         	=> true,
+			   'output-html'    	=> true,
+			   'wrap'           	=> 0
+			);
+	
+	// Tidy
+	// https://api.html-tidy.org/tidy/quickref_5.6.0.html
+	$tidy = new tidy;
+	$tidy->parseString( $html, $config, 'utf8' );
+	$tidy->cleanRepair();
+	
+	// correzioni forzate
+	// $tidy = str_replace( '><!--', '>'.PHP_EOL.'<!--', $tidy );
+
+	// Output
+	echo $tidy . PHP_EOL;
+
     // cache del buffer
-	echo PHP_EOL;
 	if( isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
-	    writeToFile( ob_get_contents(), DIR_VAR_CACHE_PAGES . basename( FILE_CACHE_PAGE ) );
+	    writeToFile( $html, DIR_VAR_CACHE_PAGES . basename( FILE_CACHE_PAGE ) );
+	}
+
+    // cache del buffer
+	if( isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
 	    echo '<!-- pagina con autorizzazione al caching -->'				. PHP_EOL;
 	    if( FILE_CACHE_PAGE_TIME === NULL ) {
 		echo '<!-- page cached for the first time -->'					. PHP_EOL;
@@ -518,29 +543,10 @@
 	    echo '<!-- expire: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_LIMIT ) . ' -->'	. PHP_EOL;
 	    echo '<!-- file: ' . basename( FILE_CACHE_PAGE ) . ' -->'				. PHP_EOL;
 	} else {
-	    echo PHP_EOL . '<!-- pagina senza autorizzazione al caching -->' . PHP_EOL;
+	    echo '<!-- pagina senza autorizzazione al caching -->' . PHP_EOL;
 	}
-	echo PHP_EOL;
 
-    // fine del buffer
-	$html = ob_get_clean();
-
-	// specifiche di formattazione
-	$config = array(
-			   'indent'         => true,
-			   'output-html'    => true,
-			   'wrap'           => 0
-			);
-	
-	// Tidy
-	$tidy = new tidy;
-	$tidy->parseString( $html, $config, 'utf8' );
-	$tidy->cleanRepair();
-	
-	// Output
-	echo $tidy;
-
-    // timer
+	// timer
 	timerCheck( $cf['speed'], 'fine esecuzione framework' );
 
 	// log
@@ -562,3 +568,6 @@
 		DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
 	    );
 	}
+
+	// performances
+	echo '<!-- tempo di esecuzione: ' . sprintf( '%0.2f', timerDiff() ) . ' secondi -->' . PHP_EOL;

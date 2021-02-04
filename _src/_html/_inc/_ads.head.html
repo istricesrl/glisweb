@@ -1,8 +1,8 @@
 
 {# FILE PER LA GENERAZIONE DEL TAG <script> DI GOOGLE ADS ALL'INTERNO DEL TAG <head> #}
 
-{% if google.ads.profile.id %}
 <script>
+{% if google.ads.profile.id %}
     gtag('config', '{{ google.ads.profile.id }}');
     {% if google.ads.profile.conversion %}
     function gtag_report_conversion(url) {
@@ -18,7 +18,7 @@
 	return false;
     }
     {% endif %}
-</script>
 {% else %}
-<!-- profilo Ads non settato -->
+/* profilo Ads non settato */
 {% endif %}
+</script>
