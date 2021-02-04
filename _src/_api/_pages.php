@@ -514,10 +514,11 @@
 
 	// specifiche di formattazione
 	$config = array(
-			   'indent'         	=> true,
-			   'output-html'    	=> true,
-			   'wrap'           	=> 0
-			);
+		'indent'         		=> true,
+		'drop-empty-elements'	=> false,
+		'output-html'			=> true,
+		'wrap'					=> 0
+	);
 	
 	// Tidy
 	// https://api.html-tidy.org/tidy/quickref_5.6.0.html
