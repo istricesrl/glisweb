@@ -523,7 +523,22 @@
 	echo PHP_EOL;
 
     // fine del buffer
-	ob_end_flush();
+	$html = ob_get_clean();
+
+	// specifiche di formattazione
+	$config = array(
+			   'indent'         => true,
+			   'output-html'    => true,
+			   'wrap'           => 0
+			);
+	
+	// Tidy
+	$tidy = new tidy;
+	$tidy->parseString( $html, $config, 'utf8' );
+	$tidy->cleanRepair();
+	
+	// Output
+	echo $tidy;
 
     // timer
 	timerCheck( $cf['speed'], 'fine esecuzione framework' );
