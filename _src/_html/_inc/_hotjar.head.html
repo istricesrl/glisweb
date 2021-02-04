@@ -1,8 +1,8 @@
 
 {# FILE PER LA GENERAZIONE DEL TAG <script> DI HOTJAR ALL'INTERNO DEL TAG <head> #}
 
-{% if hotjar.profile.id %}
 <script>
+{% if hotjar.profile.id %}
     (function(h,o,t,j,a,r){
 	h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
 	h._hjSettings={hjid:{{ hotjar.profile.id }},hjsv:6};
@@ -11,7 +11,7 @@
 	r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
 	a.appendChild(r);
     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
 {% else %}
-<!-- Hotjar non settato -->
+/* Hotjar non settato */
 {% endif %}
+</script>

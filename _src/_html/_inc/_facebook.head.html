@@ -1,8 +1,8 @@
 
 {# FILE PER LA GENERAZIONE DEL TAG <script> PER IL PIXEL DI FACEBOOK ALL'INTERNO DEL TAG <head> #}
 
-{% if facebook.pixel.id %}
 <script>
+{% if facebook.pixel.id %}
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -13,7 +13,7 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '{{ facebook.pixel.id }}');
     fbq('track', 'PageView');
-</script>
 {% else %}
-<!-- pixel di Facebook non settato -->
+/* pixel di Facebook non settato */
 {% endif %}
+</script>
