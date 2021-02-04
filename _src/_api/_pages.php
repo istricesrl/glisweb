@@ -498,6 +498,10 @@
 		}
 	    }
 	    echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
+
+		// timer
+		timerCheck( $cf['speed'], 'fine output di debug' );
+
 	}
 
     // debug
@@ -523,6 +527,9 @@
 	
 	// correzioni forzate
 	// $tidy = str_replace( '><!--', '>'.PHP_EOL.'<!--', $tidy );
+
+	// timer
+	timerCheck( $cf['speed'], 'fine esecuzione Tidy' );
 
 	// Output
 	echo $tidy . PHP_EOL;
