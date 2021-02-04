@@ -32,7 +32,7 @@
 
 	    // creo il campo input
 	    // var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '">');
-		var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="off"><div class="spinner-border" role="status"></div>');
+		var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 30 * 100 * 1000 ) ) + '-' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '-' + ( Math.floor(Math.random() * 50 * 100 * 1000 ) ) + '"><div class="spinner-border" role="status"></div>');
 
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'data-required' ) == 'true' ) {
@@ -94,16 +94,17 @@
 		// se è stato inserito un filtro di lunghezza minima
 		if( filtro.length > min || force == true ) {
 
-			$( box ).closest( '.spinner-border' ).show();
-
 		    // resetto la select
 		    // $( select ).val([]);
 
 		    // log
-		     console.log( 'filtro -> ' + filtro );
+			 console.log( 'filtro: ' + filtro );
+			 console.log( 'api: ' + $( select ).attr( 'populate-api' ) );
 
 			// tendina dinamica o statica
 			if( $( select ).attr( 'populate-api' ) != '' ) {
+
+				$( box ).closest( '.spinner-border' ).show();
 
 				if( wscall != null ) {
 					clearTimeout( wscall );

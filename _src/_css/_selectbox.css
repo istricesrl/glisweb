@@ -70,7 +70,7 @@ ul.combobox-dropdown {
 ul.combobox-dropdown li {
     padding: 10px 20px;
     cursor: pointer;
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 ul.combobox-dropdown li.selected {
