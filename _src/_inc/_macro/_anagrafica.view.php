@@ -54,6 +54,12 @@
 	    'categorie' => 'text-left'
 	);
 
+    // click della vista
+	$ct['view']['onclick'] = array(
+	    'telefoni' => 'event.stopPropagation();',
+	    'mail' => 'event.stopPropagation();'
+	);
+
     // colonne variabili
 	if( isset( $_SESSION['account']['se_agente'] ) && ! empty( $_SESSION['account']['se_agente'] ) ) {
 	    arrayInsertAssoc( '__label__', $ct['view']['cols'], array( 'provincia' => 'provincia' ) );
