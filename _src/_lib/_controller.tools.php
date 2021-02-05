@@ -135,8 +135,8 @@
 							$cond[] = $field . ' LIKE ?';
 							$vs[] = array( 's' => $like );
 							}
-# PERCHÉ OR?							$whr[] = '(' . implode( ' OR ', $cond ) . ')';
-							$whr[] = '(' . implode( ' AND ', $cond ) . ')';
+# PERCHÉ OR?							$whr[] = '(' . implode( ' AND ', $cond ) . ')';
+							$whr[] = '(' . implode( ' OR ', $cond ) . ')';
 						}
 					}
 			    } elseif( isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
