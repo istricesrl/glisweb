@@ -23,7 +23,12 @@
 
     cache su disco
     --------------
+    La cache su disco viene utilizzata principalmente per le pagine HTML, che vengono salvate in formato testo e riproposte all'utente saltando l'esecuzione del framework qualora
+    siano ancora valide; questo meccanismo consente risparmi importanti di risorse senza penalizzare l'aggiornamento dei contenuti.
 
+    La cache statica delle pagine è gestita in _src/_api/_pages.php e i file di testo vengono salvati in DIR_VAR_CACHE_PAGES. Il salvataggio e l'utilizzo di questa cache è automatico
+    posto che sia stata attivata tramite la valorizzazione della chiave $ct['page']['cacheable']; il caching statico è quindi una prerogativa delle singole pagine e non dell'intero
+    sito.
 
     Memcache
     --------
@@ -41,14 +46,20 @@
     relative all'entità correntemente modificata. Questo fa sì che in Memcache non siano mai presenti chiavi relative a dati che sono stati aggiornati nel database successivamente al
     loro stoccaggio in cache.
 
+    La connessione a Memcache viene stabilita in _src/_config/_045.cache.php.
+
     Redis
     -----
+    Redis viene utilizzato principalmente per il salvataggio delle sessioni; questo è molto importante specialmente in scenari orchestrati, e il supporto per le sessioni su cache Redis
+    fa parte del più generale supporto del framework per Kubernetes.
 
+    Il salvataggio delle sessioni in Redis avviene in _src/_config/_050.redis.php se la connessione a Redis è presente; questa viene stabilita poco prima in _src/_config/_045.cache.php.
 
     viste statiche sul database
     ---------------------------
-
-
+    La necessità di ridurre l'impatto dell'esecuzione del framework sul database ha richiesto la creazione di un meccanismo di materializzazione delle viste tramite trigger; queste viste
+    prendono il nome di viste statiche e il loro processo di aggiornamento viene chiamato staticizzazione. Tutte le principali entità del framework dispongono di una vista statica in
+    aggiunta alla normale vista dinamica.
 
     logiche di caching dei contenuti
     ================================
