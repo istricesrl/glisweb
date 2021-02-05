@@ -1,0 +1,7 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+<div>{{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}</div>
+{% endblock %}
