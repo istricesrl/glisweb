@@ -29,20 +29,22 @@
 
         $nome = '';     // nome della pianificazione con i dettagli
 
-        $wks['campi'] = array( 'id_contratto', 'data_inizio', 'data_fine', 'turno' );
-        $wks['parametri'] = array(
-            '__data__',
-            '__dataf__', 
-            '__p__',
-            '__cad__',
-            '__datafine__',
-            '__nr__',
-            '__gs__',
-            '__rm__',
-            '__ra__'
+        $wks['metadati']= array();
+    //    $wks['campi'] = array( 'id_contratto', 'data_inizio', 'data_fine', 'turno' );
+
+        $wks['pianificazione'] = array(
+            'data' => $_REQUEST['__data__'],
+            'dataf' => $_REQUEST['__dataf__'], 
+            'p' => $_REQUEST['__p__'],
+            'cad' => $_REQUEST['__cad__'],
+            'datafine' => $_REQUEST['__datafine__'],
+            'nr' => $_REQUEST['__nr__'],
+            'gs' => $_REQUEST['__gs__'],
+            'rm' => $_REQUEST['__rm__'],
+            'ra' => $_REQUEST['__ra__']
         );
 
-        $wks['ws'] = $cf['site']['url'] . '_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php';
+    //    $wks['ws'] = $cf['site']['url'] . '_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php';
 
 
         // periodicità settimanale
@@ -90,6 +92,16 @@
                 if( !empty( $pId ) ){
 
                     $status['pianificazione'] = $pId;
+
+                    $wks['template'] = array( 
+                        'turni' => array(  
+                            'id_contratto' => $_REQUEST['__id_contratto__'],
+                            'turno' => $_REQUEST['__turno__'],
+                            'data_inizio' => '%data%',
+                            'data_fine' => '%data+' . $gg . '%',
+                            'id_pianificazione' => $pId
+                        )
+                    );
 
                     foreach( $result as $di ){
 

@@ -47,7 +47,7 @@
                 </div>
                 <div class="col-12 col-md-2">
                     <span class="label-top">data inizio</span>
-                    <input name="__data__" type="date" value="" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__" required onchange="myDate()">
+                    <input name="__data__" type="date" value="{{'now'|date('Y-m-d' ) }}" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__" required onchange="myDate()">
                 </div>
                 <div class="col-12 col-md-2">
                     <span class="label-top">data fine</span>
@@ -63,21 +63,29 @@
 
         <fieldset>  
 
-            <input type="hidden" id="__id_periodicita__" value="2">
+            <input type="hidden" id="__id_periodicita__" value="1">
 
             <div class="form-group form-row">
                 <div class="col-12">
                 <ul class="nav nav-tabs nav-tabs-secondary">
-                    <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-settimanale','cke-switch',this);$('#__id_periodicita__').val(2);dettagli(); myDate();">settimanale</a></li>
-                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-mensile','cke-switch',this);$('#__id_periodicita__').val(3);dettagli(); myDate();">mensile</a></li>
+                    <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-giornaliera','cke-switch',this);setPeriodicita(1); myDate();">giornaliera</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-settimanale','cke-switch',this);setPeriodicita(2); myDate();">settimanale</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-mensile','cke-switch',this);setPeriodicita(3); myDate();">mensile</a></li>
                 </ul>
                 </div>
             </div>
     
 
             <div class="form-group form-row flex-fill">
-                <div class="col cke-switch" id="cke-settimanale">
+                <div class="col cke-switch" id="cke-giornaliera">
+                    <div class="form-group form-row" id="giorno">
+                        <div class="col-12 col-form-label">
+                            <span>specificare il numero di giorni di ripetizione</span>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col cke-switch" id="cke-settimanale" style="display: none;">
                     <div class="form-group form-row" id="settimana">
                         {% for g in etc.select.giorni_settimana %}
                         <div class="col-4 col-md-1 col-form-label">
@@ -88,7 +96,6 @@
                         </div>
                         {% endfor %}
                     </div>
-
                 </div>
                 <div class="col cke-switch" id="cke-mensile" style="display: none;">
                     <div class="form-group form-row" id="mese">
@@ -105,9 +112,9 @@
 
         <fieldset>
             <legend>ripetizioni</legend>
-            <div class="form-group form-row" id="ripetizione" style="display: none;">
+            <div class="form-group form-row" id="ripetizione">
                 <div class="col-auto">
-                    <span class="label-top">ogni n. settimane/mesi</span>
+                    <span class="label-top lbl-rip">ogni n. giorni</span>
                     {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
                 </div>
                 <div class="col-auto">
@@ -146,16 +153,15 @@
 
 $(document).ready(function(){
  
-    $('input[type=radio]').click(function(){
-    //    console.log(this.value);
-        if(this.value == 'numero'){
-            $( "#___data_fine__" ).prop( "disabled", true );
-            $( "#___ripetizione_fine__" ).prop( "disabled", false );
-        } else {
-            $( "#___data_fine__" ).prop( "disabled", false );
-            $( "#___ripetizione_fine__" ).prop( "disabled", true );
-        }
+    $('#___ripetizione_fine__').click( function(){
+        $( "#___data_fine__" ).val('');
     });
+
+    $('#___data_fine__').change( function(){
+        $( "#___ripetizione_fine__" ).val('');
+    });
+
+        
 
     $('#__dataf__').change( function(){
         var di = new Date($('#__data__').val());
@@ -169,60 +175,24 @@ $(document).ready(function(){
 
 });
 
-    document.addEventListener("DOMContentLoaded", function() {
-        
-     //   $( "#___ripetizione_fine__" ).prop( "disabled", true );   // SDF non più necessario
 
-        if(document.getElementById("__id_periodicita__").value != 0 ){
-            document.getElementById("ripetizione").style.display = "flex";
-            document.getElementById("fine_p").style.display = "flex";
-        } else {
-            document.getElementById("ripetizione").style.display = "none";
-            document.getElementById("fine_p").style.display = "none";}
-    
-        if(document.getElementById("__id_periodicita__").value == 2 ){
-            document.getElementById("settimana").style.display = "flex";
-        } else {
-            document.getElementById("settimana").style.display = "none";}
-
-        if(document.getElementById("__id_periodicita__").value == 3 ){
-            document.getElementById("mese").style.display = "flex";
-        } else {
-            document.getElementById("mese").style.display = "none";}
-
-        if(document.getElementById("__id_periodicita__").value == 4 ){
-            document.getElementById("anno").style.display = "flex";
-        } else {
-            document.getElementById("anno").style.display = "none";}    
-    });
-
-
-    function dettagli(){
-     if(document.getElementById("__id_periodicita__").value != 0 ){
-            document.getElementById("ripetizione").style.display = "flex";
-            document.getElementById("fine_p").style.display = "flex";
-        } else {
-            document.getElementById("ripetizione").style.display = "none";
-            document.getElementById("fine_p").style.display = "none";}
-
-        if(document.getElementById("__id_periodicita__").value == 2 ){
-            document.getElementById("settimana").style.display = "flex";
-        } else {
-            document.getElementById("settimana").style.display = "none";}
-
-        if(document.getElementById("__id_periodicita__").value == 3){
-            document.getElementById("mese").style.display = "flex";
-        } else {
-            document.getElementById("mese").style.display = "none";}
-            
-        if(document.getElementById("__id_periodicita__").value == 4 ){
-            document.getElementById("anno").style.display = "flex";
-        } else {
-            document.getElementById("anno").style.display = "none";} 
-            
-    //    $("#period").text( $("#__id_periodicita__ option:selected" ).text() );    // SDF non più necessario
+    function setPeriodicita(valore){
+        $('#__id_periodicita__').val(valore);
+        switch(valore) {
+            case 1:
+                $('.lbl-rip').text('ogni n. giorni');
+                break;
+            case 2:
+                $('.lbl-rip').text('ogni n. settimane');
+                break;
+            case 3:
+                $('.lbl-rip').text('ogni n. mesi');
+                break;
+            default:
+                $('.lbl-rip').text('ogni n. giorni');
+            }
     }
-
+   
    
 
     Date.prototype.getWeekOfMonth = function() {
@@ -232,8 +202,7 @@ $(document).ready(function(){
     }
 
     function myDate() {
-
-       
+      
         // cerco il giorno della settimana corrispondente alla data
         var d = $('#__data__').val();
         d = d.split("T");
