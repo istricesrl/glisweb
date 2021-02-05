@@ -30,7 +30,6 @@
         $nome = '';     // nome della pianificazione con i dettagli
 
         $wks['metadati']= array();
-    //    $wks['campi'] = array( 'id_contratto', 'data_inizio', 'data_fine', 'turno' );
 
         $wks['pianificazione'] = array(
             'data' => $_REQUEST['__data__'],
@@ -47,16 +46,21 @@
     //    $wks['ws'] = $cf['site']['url'] . '_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php';
 
 
-        // periodicità settimanale
-        if( $_REQUEST['__p__'] == 2  ){
-            $nome .= 'periodicità settimanale, ';
-            $nome .= ( isset( $_REQUEST['__giorni_s_desc__'] ) ) ? $_REQUEST['__giorni_s_desc__'] . ', ' : '';
-            $nome .= 'ripetizione ogni ' . $_REQUEST['__cad__'] . ' settimane, ' ; 
-        }
-        elseif( $_REQUEST['__p__'] == 3 ){
-            $nome .= 'periodicità mensile, ';
-            $nome .= ( !empty( $_REQUEST['__rip_mese_desc__'] ) ) ? ( $_REQUEST['__rip_mese_desc__'] . ', ' ) : '';
-            $nome .= 'ripetizione ogni ' . $_REQUEST['__cad__'] . ' mesi, ' ; 
+        switch( $_REQUEST['__p__'] ){
+            case 1:
+                $nome .= 'periodicità giornaliera, ';
+                $nome .= 'ripetizione ogni ' . $_REQUEST['__cad__'] . ' giorni, ' ; 
+                break;
+            case 2:
+                $nome .= 'periodicità settimanale, ';
+                $nome .= ( isset( $_REQUEST['__giorni_s_desc__'] ) ) ? $_REQUEST['__giorni_s_desc__'] . ', ' : '';
+                $nome .= 'ripetizione ogni ' . $_REQUEST['__cad__'] . ' settimane, ' ; 
+                break;
+            case 3:
+                $nome .= 'periodicità mensile, ';
+                $nome .= ( !empty( $_REQUEST['__rip_mese_desc__'] ) ) ? ( $_REQUEST['__rip_mese_desc__'] . ', ' ) : '';
+                $nome .= 'ripetizione ogni ' . $_REQUEST['__cad__'] . ' mesi, ' ;
+                break;
         }
               
         $nome .= ( !empty( $_REQUEST['__datafine__'] ) ) ? ('fino al ' . $_REQUEST['__datafine__'] . ', ')  : '';
@@ -80,10 +84,11 @@
                 // creo la pianificazione
                 $pId = mysqlQuery(
                     $cf['mysql']['connection'],
-                    'INSERT INTO pianificazioni (entita, nome, workspace) VALUES (?, ?, ?)',
+                    'INSERT INTO pianificazioni (entita, nome, id_contratto, workspace) VALUES (?, ?, ?, ?)',
                     array(
                         array( 's' => 'turni' ),
                         array( 's' => $nome ),
+                        array( 's' => $_REQUEST['__id_contratto__'] ),
                         array( 's' => json_encode( $wks ) )
                     )
                 );

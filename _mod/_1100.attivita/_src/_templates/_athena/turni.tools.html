@@ -122,7 +122,7 @@
                     {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
                 </div> 
                 <div class="col-auto">
-                    <span class="label-top">fino al</span>
+                    <span class="label-top">ultima data inizio</span>
                     {{ frm.date( '', '', '', '__data_fine__', '', '', request ) }}
                 </div>
             </div>
@@ -238,11 +238,11 @@ $(document).ready(function(){
         mesi[12] = "dicembre";
 
 
-        document.getElementById("__rip_mese__").options[0].text = "Ogni giorno "+ a[2]+" del mese";
-        document.getElementById("__rip_mese__").options[1].text ="Ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";
+        document.getElementById("__rip_mese__").options[0].text = "ogni giorno "+ a[2]+" del mese";
+        document.getElementById("__rip_mese__").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";
       
-        document.getElementById("__rip_anno__").options[0].text = "Il "+ a[2]+"/"+a[1]+" ogni anno";
-        document.getElementById("__rip_anno__").options[1].text ="Il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
+        document.getElementById("__rip_anno__").options[0].text = "il "+ a[2]+"/"+a[1]+" ogni anno";
+        document.getElementById("__rip_anno__").options[1].text ="il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
       
     }
 
