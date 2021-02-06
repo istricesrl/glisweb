@@ -274,8 +274,38 @@
 
 	}
 
+/*
     // TODO questo file non innesca il meccanismo di refresh della cache dei contenuti,
     // vedi _mod/_3000.contenuti/_src/_config/_310.pages.php
+
+    DOVREBBE ESSERE TIPO COSÌ:
+
+    } else {
+
+	    // variabili di lavoro
+		$lingue					= '{' . LINGUE_ATTIVE . '}';
+		$folder					= '{,_}src/{,_}inc/{,_}pages/{,_}*';
+		$mods					= '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/';
+
+	    // ricerca dei files delle pagine
+		$arrayPagineBase			= glob( DIR_BASE . $folder . '.' . $lingue . '.php', GLOB_BRACE );
+		$arrayPagineModuli			= glob( DIR_BASE . $mods . $folder . '.' . $lingue . '.php', GLOB_BRACE );
+
+	    // semplificazione
+		$arrayPagine				= array_unique( array_merge( $arrayPagineBase , $arrayPagineModuli ) );
+
+	    // inclusione dei files delle pagine
+		foreach( $arrayPagine as $pagina ) {
+		    $ts = filemtime( $pagina );
+		    if( $ts > $cf['contents']['updated'] ) {
+			$cf['contents']['updated'] = $ts;
+		    }
+		}
+
+    }
+
+*/
+
 
     // debug
 	// echo '300 STANDARD' . PHP_EOL;
