@@ -32,11 +32,11 @@
 
         <main>
             <div class="container">
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col">
+                        <h3>{% block breadcrumbs %}{% include 'inc/breadcrumbs.html' %}{% endblock %}</h3>
                         <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
                         {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
-                        <h3>{% block breadcrumbs %}{% include 'inc/breadcrumbs.html' %}{% endblock %}</h3>
                     </div>
                 </div>
                 <div class="row">
