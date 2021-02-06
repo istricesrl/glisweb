@@ -480,28 +480,32 @@
 	appendToFile( 'fine invio headers HTTP' . PHP_EOL, FILE_LATEST_RUN );
 
     // TODO documentare i parametri a una sola lettera (sono nei Google Docs?)
+	// i parametri di una lettera sono riservati a DEV e TEST
+	if( SITE_STATUS != PRODUCTION ) {
 
-    // rivelazione dei dati
-	if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
-/*	    array_walk_recursive(
-		$ct,
-		function( &$v, $k ) {
-		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
-			$v = '***';
-		    }
+		// rivelazione dei dati
+		if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
+	/*	    array_walk_recursive(
+			$ct,
+			function( &$v, $k ) {
+				if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
+				$v = '***';
+				}
+			}
+			);
+	*/	    $tpu = $ct;
+			foreach( $_REQUEST['u'] as $tu ) {
+			if( isset( $tpu[ $tu ] ) ) {
+				$tpu = $tpu[ $tu ];
+			}
+			}
+			echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
 		}
-	    );
-*/	    $tpu = $ct;
-	    foreach( $_REQUEST['u'] as $tu ) {
-		if( isset( $tpu[ $tu ] ) ) {
-		    $tpu = $tpu[ $tu ];
-		}
-	    }
-	    echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
+
+		// debug
+		// print_r( $cf );
+
 	}
-
-    // debug
-	// print_r( $cf );
 
 	// TODO qui inserire la formattazione con Tidy?
 

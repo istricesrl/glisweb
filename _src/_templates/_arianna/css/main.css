@@ -7,17 +7,27 @@ main {
     padding: 0.5em;
 }
 
-nav.navbar {
+nav {
+    background-color: #cccccc;
     padding: 0em;
 }
 
-footer > .container > .row > .col {
-    min-height: 5em;
+footer {
+    margin: 0em;
 }
 
-footer > .container > .row > .col:first-of-type {
-    background-color: #666666;
-    color: #ffffff;
+footer > .container > .row > .col {
+    min-height: 3em;
+}
+
+footer:first-of-type {
+    background-color: #cccccc;
+    color: #000000;
+}
+
+footer:last-of-type {
+    background-color: #aaaaaa;
+    color: #000000;
 }
 
 footer p {
@@ -41,30 +51,21 @@ h3 {
     font-size: 1.25em;
 }
 
-header > .container > .row > .col {
-    min-height: 5em;
-}
-
-header > .container > .row > .col:last-of-type {
-    background: #666666;
+header {
+    background: #aaaaaa;
     color: #ffffff;
 }
 
-header .logo img {
-    height: 5em;
+header > .container > .row {
+    min-height: 3em;
+}
+
+nav .logo img {
+    height: 3em;
 }
 
 main > .container > .row {
     margin-top: 0.5em;
-}
-
-a.nav-link, a.nav-link:visited {
-    color: #ffffff;
-}
-
-a.nav-link:active, a.nav-link:hover {
-    color: #ffffff;
-    text-decoration: underline;
 }
 
 a, a:visited {
@@ -77,11 +78,20 @@ a:active, a:hover {
 }
 
 a.breadcrumb-link, a.breadcrumb-link:visited {
-    color: #dddddd;
+    color: #ffffff;
 }
 
 a.breadcrumb-link:active, a.breadcrumb-link:hover {
-    color: #dddddd;
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+a.nav-link, a.nav-link:visited {
+    color: #ffffff;
+}
+
+a.nav-link:active, a.nav-link:hover {
+    color: #ffffff;
     text-decoration: underline;
 }
 

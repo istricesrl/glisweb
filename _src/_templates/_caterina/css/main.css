@@ -39,20 +39,20 @@ nav {
 }
 
 a, a:visited {
-    color: #6600cc;
+    color: #666666;
 }
 
 a:active, a:hover {
-    color: #6600cc;
+    color: #666666;
     text-decoration: underline !important;
 }
 
 a.breadcrumb-link, a.breadcrumb-link:visited {
-    color: #d580ff;
+    color: #dddddd;
 }
 
 a.breadcrumb-link:active, a.breadcrumb-link:hover {
-    color: #d580ff;
+    color: #dddddd;
     text-decoration: underline;
 }
 
@@ -109,4 +109,20 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
 
 .breadcrumb-link, .nav-link {
     white-space: nowrap;
+}
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+}
+
+@media (min-width: 1200px) {
+    
 }
