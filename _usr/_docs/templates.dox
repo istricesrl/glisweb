@@ -43,6 +43,7 @@
     --------------------------|---------------------------------------------------------------------------------------
     bin/                      | contiene le macro Twig del template (quelle che vengono importate)
     css/                      | contiene i fogli di stile CSS del template
+    css/themes/               | contiene i fogli di stile CSS dei temi del template
     etc/                      | contiene i file di configurazione del template
     ext/                      | contiene i file Twig di base del template, che vengono poi estesi dagli schemi
     img/                      | contiene gli elementi grafici del template
@@ -314,5 +315,7 @@
       }
     }
     \endcode
+
+    I temi sono essenzialmente dei file CSS salvati nella sottocartella css/themes/ del template.
 
 */

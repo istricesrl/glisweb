@@ -1,0 +1,17 @@
+a, a:visited {
+    color: #6600cc;
+}
+
+a:active, a:hover {
+    color: #6600cc;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #d580ff;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #d580ff;
+    text-decoration: underline;
+}

@@ -67,6 +67,24 @@ a.nav-link:active, a.nav-link:hover {
     text-decoration: underline;
 }
 
+a, a:visited {
+    color: #666666;
+}
+
+a:active, a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #dddddd;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #dddddd;
+    text-decoration: underline;
+}
+
 ul.navbar-nav {
     list-style-type: none;
 }
