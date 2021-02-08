@@ -46,7 +46,7 @@
 		    <tr{% if view.open.path %} onClick="window.open('{{ view.open.path }}?{% if row[ view.open.field ] %}{{ view.open.table }}[id]={{ row[ view.open.field ] }}{% endif %}{% if view.master.table %}&{{ view.master.table }}[id]={{ row[ view.master.field ] }}{% endif %}{% for tbl,flds in view.open.extra %}{% for fld in flds %}&{{tbl}}[{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% for tbl,flds in view.open.preset %}{% for fld in flds %}&__preset__[{{tbl}}][{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"{% endif %}>
 			{# for key,col in view.cols #}
 			{% for key in view.fields %}
-			<td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
+			<td class="{{ view.class[key] }}"{% if view.onclick[key] %} onclick="{{ view.onclick[key] }}"{% endif %}>{{ row[key]|raw }}</td>
 			{% endfor %}
 		    </tr>
 		    {% endfor %}
