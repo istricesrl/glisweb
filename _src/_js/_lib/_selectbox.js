@@ -37,7 +37,7 @@
 	    }
 
 	    // prelevo il valore corrente
-	    var current = $( select ).find( 'option:selected' ).text();
+	    var current = $( select ).find( 'option:selected' ).text().trim();
 		var currvalue = $( select ).val();
 
 	    // imposto il valore corrente
@@ -97,7 +97,7 @@
 
 		    // TODO appendo alla lista un <li> per ogni <option> della select
 		    select.find('option').each( function( idx, el ) {
-			var opzione = $( el ).html();
+			var opzione = $( el ).html().trim();
 			var valore = $( el ).attr( 'value' );
 			// $( el ).prop( 'selected', false );
 			// console.log( opzione + ' -> ' + valore );
@@ -116,7 +116,8 @@
 
 		    // TODO bind dell'evento click sulle opzioni per il cambio del valore della select
 		    lista.find('li').each( function( idxl, li ) {
-			var opzione = $( li ).html();
+			var opzione = $( li ).html().trim();
+			console.log(opzione);
 			var valore = $( li ).attr( 'value' );
 			$( li ).bind( 'click', function() {
 			    $( select ).val( valore );
