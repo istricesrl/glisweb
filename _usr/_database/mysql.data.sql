@@ -1443,7 +1443,8 @@ INSERT IGNORE INTO `tipologie_progetti` (`id`, `nome`, `se_scalare`, `se_commess
 (1, 'commessa', NULL, 1),
 (2, 'pacchetto', 1, NULL),
 (3, 'contratto', NULL, NULL),
-(4, 'on demand', NULL, NULL);
+(4, 'on demand', NULL, NULL),
+(5, 'consuntivo', NULL, NULL);
 
 -- tipologie_pubblicazione
 -- tipologia: tabella di supporto
