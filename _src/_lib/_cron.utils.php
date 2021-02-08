@@ -283,12 +283,17 @@
                 // TODO gestione seconda tipologia di duplicazione data
                 case 4:
                     if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * ($numero_ripetizioni - 1).' years')); }
+                    if( $ripetizione_anno == 1 ){
                     do {
                         $attivita[] = $data;
                         // aggiorno la data con la successiva
                         $data = date('Y-m-d', strtotime($data. ' + '.$cadenza.' years'));
     
                     } while ( $data < $data_fine );
+                    } else {
+                        // TODO: programmazione annuale complessa (ogni terzo mercoledì di marzo di ogni anno)
+
+                    }
     
                 break;
     
