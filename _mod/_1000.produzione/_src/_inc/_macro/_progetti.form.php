@@ -66,5 +66,19 @@
 	    array( 'id' => 1, '__label__' => 'sostituto' )
 	);
 
+    if ( isset( $_REQUEST[ $ct['form']['table'] ]['progetti_anagrafica'] ) )
+    { 
+
+        // riordino l'array dei ruoli mettendo prima i titolari
+        foreach( $_REQUEST[ $ct['form']['table'] ]['progetti_anagrafica'] as $key => $value ) {
+            $sort_data[ $key ] = $value['id_ruolo'] . ' ' . $value['se_sostituto'];
+        }
+
+        if( isset( $sort_data ) ){
+            array_multisort( $sort_data, $_REQUEST[ $ct['form']['table'] ]['progetti_anagrafica'] );
+        }
+
+    }
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
