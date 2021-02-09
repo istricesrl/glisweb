@@ -1,0 +1,40 @@
+{% import '_bin/_form.html' as frm %}
+
+<div class="modal" tabindex="-1" role="dialog" id="orari_turno">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">elenco orari del turno selezionato</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+                <div class="col-md-12 table-responsive">
+                    <table class="view-table">
+                        <thead>
+                            <tr>
+                                <th>turno</th>
+                                <th>giorno</th>
+                                <th>ora inizio</th>
+                                <th>ora fine</th>  
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for o in etc.orari %}
+                            <tr class="turni turno-{{ o.turno }}" style="display: none;">
+                                <td>{{ o.turno }}</td>
+                                <td>{{ o.id_giorno }}</td>
+                                <td>{{ o.ora_inizio }}</td>
+                                <td>{{ o.ora_fine }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+		</div>
+	    </div>
+	    </div>
+	</div>
+    </div>
+</div>

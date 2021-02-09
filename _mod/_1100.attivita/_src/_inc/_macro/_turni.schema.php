@@ -91,31 +91,7 @@ if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contrat
                 $ct['etc']['giorni'][ $giorno ]['festivo'] = 1;
         }
 
-        // leggo il turno corrispondente
-/*        $ct['etc']['giorni'][ $giorno ]['turno'] = mysqlSelectValue( 
-            $cf['mysql']['connection'],
-            'SELECT turno FROM turni WHERE id_contratto = ? AND data_inizio >= ? AND data_fine <= ?',
-            array(
-                array( 's' => $_REQUEST['__turni__']['id_contratto'] ),
-                array( 's' => $ct['etc']['giorni'][ $giorno ]['data'] ),
-                array( 's' => $ct['etc']['giorni'][ $giorno ]['data'] )
-            )
-        );
-*/
-/*        foreach( range( 1, 9 ) as $turno ) {
-            $ct['etc']['turni'][ $turno ][ $giorno ] = mysqlSelectValue( 
-                $cf['mysql']['connection'],
-                'SELECT turno FROM turni WHERE id_contratto = ? AND data_inizio >= ? AND data_fine <= ? AND turno = ?',
-                array(
-                    array( 's' => $_REQUEST['__turni__']['id_contratto'] ),
-                    array( 's' => $ct['etc']['giorni'][ $giorno ]['data'] ),
-                    array( 's' => $ct['etc']['giorni'][ $giorno ]['data'] ),
-                    array( 's' => $turno )
-                )
-            );
-        }
-*/
-
+        // leggo l'elenco dei turni inseriti per la data corrente (questo include eventuali errori)
         $elenco_turni = mysqlQuery( 
             $cf['mysql']['connection'],
             'SELECT turno FROM turni WHERE id_contratto = ? AND data_inizio <= ? AND data_fine >= ?',
@@ -126,8 +102,6 @@ if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contrat
             )
         );
 
-#        print_r( $elenco_turni );
-
         if( !empty( $elenco_turni ) ){
             foreach ( $elenco_turni as $t ){
                 $ct['etc']['giorni'][ $giorno ]['turni'][ $t['turno'] ] = $t['turno'];
@@ -137,7 +111,42 @@ if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contrat
             $ct['etc']['giorni'][ $giorno ]['turni'][ 1 ] = 1;
         }
 
-
     }
 
 }
+
+#print_r( $ct['etc']['giorni'] );
+
+// dati per il modal che mostra gli orari del turno selezionato
+
+// leggo l'elenco degli orari previsti per i vari turni e costruisco l'array dei turni
+$orari_contratti = mysqlQuery(
+    $cf['mysql']['connection'],
+    'SELECT * FROM orari_contratti WHERE id_contratto = ? AND se_lavoro = 1 ORDER BY turno, id_giorno',
+    array( array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contratto']['EQ'] ) )
+);
+
+foreach( $orari_contratti as $o ){
+    $ct['etc']['turni'][ $o['turno'] ][] = array( 
+        'giorno' => $nomigiorni[ $o['id_giorno'] ],
+        'ora_inizio' => $o['ora_inizio'],
+        'ora_fine' => $o['ora_fine']
+    );
+}
+
+$ct['etc']['orari'] = mysqlQuery(
+    $cf['mysql']['connection'],
+    'SELECT * FROM orari_contratti WHERE id_contratto = ? AND se_lavoro = 1 ORDER BY turno, id_giorno',
+    array( array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contratto']['EQ'] ) )
+);
+
+
+
+
+// modal orari turno
+$ct['page']['contents']['metro']['orari'][] = array(
+    'modal' => array( 'id' => 'orari_turno', 'include' => 'inc/turni.schema.modal.orari.html' )
+);
+
+// gestione default
+require DIR_SRC_INC_MACRO . '_default.tools.php';
