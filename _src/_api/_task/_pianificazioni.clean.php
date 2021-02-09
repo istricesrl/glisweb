@@ -48,7 +48,7 @@
       
         $result = mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM ?  WHERE '.$where, $params );
 
-        if( $result && isset( $_REQUEST['__da__'] ) && isset( $_REQUEST['__a__'] ) && !empty( $_REQUEST['__a__'] ) && !empty( $_REQUEST['__da__'] )){
+        if( $result && !empty( $_REQUEST['__delete__'] )){
             $result = $result && mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM pianificazioni WHERE id = ?', array( array( 's' => $_REQUEST['__id__'] ) ) );
         }
 
