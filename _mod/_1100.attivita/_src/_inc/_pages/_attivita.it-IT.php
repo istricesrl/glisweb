@@ -55,7 +55,7 @@
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_turni.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'turni.view', 'turni.tools' ) ),
+		'etc'			=> array( 'tabs'	=> array( 'turni.view', 'turni.tools', 'turni.schema' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'turni' ),
 									'priority'	=> '110' ) )
@@ -86,3 +86,17 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['turni.view']['etc']['tabs'] )
 	);
+
+
+	// pagina schema
+	$p['turni.schema'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'schema' ),
+		'h1'			=> array( $l		=> 'schema' ),
+		'parent'		=> array( 'id'		=> 'produzione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.schema.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_turni.schema.php' ),
+		'etc'			=> array( 'tabs'	=> $p['turni.view']['etc']['tabs'] ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
