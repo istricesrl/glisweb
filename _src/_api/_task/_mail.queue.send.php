@@ -170,7 +170,7 @@
 			// aggiorno la timestamp di invio
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'UPDATE mail_out SET timestamp_invio = ?, tentativi = ? token = NULL WHERE token = ?',
+				'UPDATE mail_out SET timestamp_invio = ?, tentativi = ?, token = NULL WHERE token = ?',
 				array(
 					array( 's' => $tsInvio ),
 					array( 's' => $tnInvio ),
