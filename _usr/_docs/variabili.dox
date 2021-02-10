@@ -123,6 +123,13 @@
     L'ultima versione pubblicata del framework viene ricavata tramite una chiamata REST sul sito di sviluppo di GlisWeb
     (https://glisweb.videoarts.it/current.conf).
 
+    La chiave common.lorem è particolarmente utile per i test dei template. Si può inserire il testo anche tramite il CMS o direttamente negli schemi
+    richiamando la chiave tramite Twig:
+
+    \code{.html}
+    {{ common.lorem.std }}
+    \endcode
+
     L'array $cf['common'] viene integrato da $cx['common'] ed è linkato a $ct['common'], per ulteriori dettagli vedi
     _src/_config/_030.common.php.
 
