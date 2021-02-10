@@ -60,14 +60,22 @@
 	appendToFile( 'fine caricamento file INI del template' . PHP_EOL, FILE_LATEST_RUN );
 
 	// aggiunta del tema ai CSS da caricare
+	// TODO testare cosa fa con i vari css/main.css (standard e custom) css/minchia.css (standard e custom) css/themes/sticazzi.css (standard e custom)
 	if( isset( $ct['page']['template']['theme'] ) ) {
-		$ct['page']['css']['template'][] = $ct['page']['template']['theme'];
-		$customTheme = path2custom( $ct['page']['template']['path'] . $ct['page']['template']['theme'] );
+		$customCss = path2custom( $ct['page']['template']['path'] . 'css/' . $ct['page']['template']['theme'] );
+		if( file_exists( DIR_BASE . $customCss ) ) {
+			$ct['page']['css']['custom'][] = $customCss;
+		} elseif( file_exists( DIR_BASE . $ct['page']['template']['theme'] ) ) {
+			$ct['page']['css']['template'][] = $ct['page']['template']['theme'];
+		}
+		$customTheme = path2custom( $ct['page']['template']['path'] . 'css/themes/' . $ct['page']['template']['theme'] );
 		if( file_exists( DIR_BASE . $customTheme ) ) {
 			$ct['page']['css']['custom'][] = $customTheme;
+		} elseif( file_exists( DIR_BASE . $ct['page']['template']['theme'] ) ) {
+			$ct['page']['css']['template'][] = $ct['page']['template']['theme'];
 		}
 	}
-	
+
     // log
 	appendToFile( 'inizio controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
 
