@@ -48,9 +48,15 @@
     // includo il file di configurazione del template
 	if( file_exists( $ct['page']['template']['ini'] ) ) {
 	    $ct['page'] = array_merge_recursive(
-		$ct['page'],
-		parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
+			$ct['page'],
+			parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
 	    );
+		foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
+			$ct['page'] = array_merge_recursive(
+				$ct['page'],
+				parse_ini_file( $addCnf, true, INI_SCANNER_RAW )
+			);
+		}
 	} else {
 	    logWrite( 'il file ' . $ct['page']['template']['ini'] . ' non esiste', 'template', LOG_CRIT );
 	    die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') dannaeggiato o mancante' );
