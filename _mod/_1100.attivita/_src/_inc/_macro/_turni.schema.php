@@ -113,32 +113,31 @@ if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contrat
 
     }
 
-}
 
-#print_r( $ct['etc']['giorni'] );
-
-// dati per il modal che mostra gli orari del turno selezionato
-
-// leggo l'elenco degli orari previsti per i vari turni e costruisco l'array dei turni
-$orari_contratti = mysqlQuery(
-    $cf['mysql']['connection'],
-    'SELECT * FROM orari_contratti WHERE id_contratto = ? AND se_lavoro = 1 ORDER BY turno, id_giorno',
-    array( array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contratto']['EQ'] ) )
-);
-
-foreach( $orari_contratti as $o ){
-    $ct['etc']['turni'][ $o['turno'] ][] = array( 
-        'giorno' => $nomigiorni[ $o['id_giorno'] ],
-        'ora_inizio' => $o['ora_inizio'],
-        'ora_fine' => $o['ora_fine']
+    // leggo l'elenco degli orari previsti per i vari turni e costruisco l'array dei turni
+    $orari_contratti = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT * FROM orari_contratti WHERE id_contratto = ? AND se_lavoro = 1 ORDER BY turno, id_giorno',
+        array( array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contratto']['EQ'] ) )
     );
+
+    foreach( $orari_contratti as $o ){
+        $ct['etc']['turni'][ $o['turno'] ][] = array( 
+            'giorno' => $nomigiorni[ $o['id_giorno'] ],
+            'ora_inizio' => $o['ora_inizio'],
+            'ora_fine' => $o['ora_fine']
+        );
+    }
+
+    $ct['etc']['orari'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT * FROM orari_contratti WHERE id_contratto = ? AND se_lavoro = 1 ORDER BY turno, id_giorno',
+        array( array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contratto']['EQ'] ) )
+    );
+
 }
 
-$ct['etc']['orari'] = mysqlQuery(
-    $cf['mysql']['connection'],
-    'SELECT * FROM orari_contratti WHERE id_contratto = ? AND se_lavoro = 1 ORDER BY turno, id_giorno',
-    array( array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contratto']['EQ'] ) )
-);
+
 
 
 
