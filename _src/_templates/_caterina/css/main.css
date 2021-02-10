@@ -62,10 +62,6 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     position: relative;
 }
 
-.img-fluid {
-    width: 100%;
-}
-
 .nav-link {
     display: inline;
     padding: 0em;
