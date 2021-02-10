@@ -18,6 +18,28 @@
 
     la macro carousel()
     -------------------
+    Questa macro consente di realizzare un carousel Bootstrap a partire dalle immagini associate alla pagina con il ruolo carousel.
+
+    \code{.html}
+    {% import '_bin/_default.html' as cms %}
+    {{ cms.carousel( page, localization.language.ietf, site, 'carouselId', 3500, image, 'carousel' ) }}
+    \endcode
+
+    I parametri da passare alla macro carousel sono:
+
+    parametro             | descrizione
+    ----------------------|-------------------------------------------------------------------------------------------------
+    1                     | passare la variabile page
+    2                     | passare la variabile localization.language.ietf
+    3                     | passare la variabile site
+    4                     | l’ID del carousel (utile per assegnare gli stili CSS)
+    5                     | il tempo in millisecondi di permanenza delle slide
+    6                     | passare la variabile image
+    7                     | il ruolo da utilizzare per le immagini (default carousel)
+
+    Si noti che molti template prevedono l'inserimento automatico del carousel per le pagine che hanno immagini associate con ruolo carousel;
+    si faccia riferimento alla documentazione dei singoli template per i dettagli. Il codice visto sopra è utile per il posizionamento
+    di carousel nel corpo principale della pagina dove sia necessario.
 
     la macro gallery2colorbox()
     ---------------------------

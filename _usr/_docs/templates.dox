@@ -318,4 +318,13 @@
 
     I temi sono essenzialmente dei file CSS salvati nella sottocartella css/themes/ del template.
 
+    link interni
+    ------------
+    Dal momento che i template hanno visibilità sull'array di configurazione, è facile creare link interni in maniera dinamica, così da non doverli aggiornare
+    all'eventuale cambiamento del percorso di destinazione; per farlo è sufficiente utilizzare l'url memorizzato nell'array $ct, ad esempio:
+
+    \code{.html}
+    <p><a href="{{ pages.4.url[ localization.language.ietf ] }}">esempio di link interno</a></p>
+    \endcode
+
 */

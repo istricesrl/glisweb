@@ -231,19 +231,20 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% endif %}
 {% endmacro %}
 
-{% macro carousel( page, lang, site, name, interval, set ) %}
+{% macro carousel( page, lang, site, name, interval, set, role ) %}
 {% import _self as cms %}
 <div id="{{ name }}" class="carousel slide {{ name }}" data-ride="carousel" data-interval="{{ interval }}">
-    {% if page.contents.images.carousel|length > 1 %}
+	{% if not role %}{% set role = 'carousel' %}{% endif %}
+    {% if page.contents.images[ role ]|length > 1 %}
     <ol class="carousel-indicators">
-	{% for i in 0..( page.contents.images.carousel|length - 1 ) %}
+	{% for i in 0..( page.contents.images[ role ]|length - 1 ) %}
 	<li data-target="#{{ name }}" data-slide-to="{{ i }}" class="{% if i == 0 %}active{% endif %}"></li>
 	{% endfor %}
     </ol>
     {% endif %}
     {% set i = 0 %}
     <div class="carousel-inner">
-	{% for img in page.contents.images.carousel %}
+	{% for img in page.contents.images[ role ] %}
 	<div class="carousel-item{% if i == 0 %} active{% endif %}">
 	    {% if img.metadati.link %}<a href="{{ img.metadati.link[ lang ] }}"{% if img.metadati.target %} target="{{ img.metadati.target }}"{% endif %}>{% endif %}
 	    {{ cms.picture( img, lang, site, set ) }}
@@ -259,7 +260,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	{% set i = i + 1 %}
 	{% endfor %}
     </div>
-    {% if page.contents.images.carousel|length > 1 %}
+    {% if page.contents.images[ role ]|length > 1 %}
     <a class="carousel-control-prev" href="#{{ name }}" role="button" data-slide="prev">
 	<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 	<span class="sr-only">Previous</span>
