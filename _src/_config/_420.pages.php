@@ -89,7 +89,7 @@
 
         // forzatura del tema corrente per one-char parameter string
         if( isset( $_REQUEST['c'] ) ) {
-            $ct['page']['template']['theme']	= 'css/themes/' . $_REQUEST['c'] . '.css';
+            $ct['page']['template']['theme']	= $_REQUEST['c'] . '.css';
         }
 
         // forzatura dei contenuti correnti per one-char parameter debug
