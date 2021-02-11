@@ -63,13 +63,13 @@
 
         <fieldset>  
 
-            <input type="hidden" id="__id_periodicita__" value="1">
+            <input type="hidden" id="__id_periodicita__" value="2">
 
             <div class="form-group form-row">
                 <div class="col-12">
                 <ul class="nav nav-tabs nav-tabs-secondary">
-                    <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-giornaliera','cke-switch',this);setPeriodicita(1); myDate();">giornaliera</a></li>
-                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-settimanale','cke-switch',this);setPeriodicita(2); myDate();">settimanale</a></li>
+                <!--<li class="nav-item"><a class="nav-link" onclick="crossShow('cke-giornaliera','cke-switch',this);setPeriodicita(1); myDate();">giornaliera</a></li>-->
+                    <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-settimanale','cke-switch',this);setPeriodicita(2); myDate();">settimanale</a></li>
                     <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-mensile','cke-switch',this);setPeriodicita(3); myDate();">mensile</a></li>
                 </ul>
                 </div>
@@ -77,6 +77,7 @@
     
 
             <div class="form-group form-row flex-fill">
+<!--                
                 <div class="col cke-switch" id="cke-giornaliera">
                     <div class="form-group form-row" id="giorno">
                         <div class="col-12 col-form-label">
@@ -84,8 +85,8 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col cke-switch" id="cke-settimanale" style="display: none;">
+-->
+                <div class="col cke-switch" id="cke-settimanale">
                     <div class="form-group form-row" id="settimana">
                         {% for g in etc.select.giorni_settimana %}
                         <div class="col-4 col-md-1 col-form-label">
@@ -114,7 +115,7 @@
             <legend>ripetizioni</legend>
             <div class="form-group form-row" id="ripetizione">
                 <div class="col-auto">
-                    <span class="label-top lbl-rip">ogni n. giorni</span>
+                    <span class="label-top lbl-rip">ogni n. settimane</span>
                     {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
                 </div>
                 <div class="col-auto">
@@ -173,25 +174,28 @@ $(document).ready(function(){
         }
     });
 
+    myDate();
+
 });
 
 
-    function setPeriodicita(valore){
-        $('#__id_periodicita__').val(valore);
-        switch(valore) {
-            case 1:
-                $('.lbl-rip').text('ogni n. giorni');
-                break;
-            case 2:
-                $('.lbl-rip').text('ogni n. settimane');
-                break;
-            case 3:
-                $('.lbl-rip').text('ogni n. mesi');
-                break;
-            default:
-                $('.lbl-rip').text('ogni n. giorni');
-            }
-    }
+function setPeriodicita(valore){
+    $('#__id_periodicita__').val(valore);
+    switch(valore) {
+    /*    case 1:
+            $('.lbl-rip').text('ogni n. giorni');
+            break;
+    */
+        case 2:
+            $('.lbl-rip').text('ogni n. settimane');
+            break;
+        case 3:
+            $('.lbl-rip').text('ogni n. mesi');
+            break;
+        default:
+            $('.lbl-rip').text('ogni n. settimane');
+        }
+}
    
    
 
@@ -243,12 +247,15 @@ $(document).ready(function(){
         mesi[11] = "novembre";
         mesi[12] = "dicembre";
 
-
-        document.getElementById("__rip_mese__").options[0].text = "ogni giorno "+ a[2]+" del mese";
-        document.getElementById("__rip_mese__").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";
+        // inserisco nell'if di controllo per non avere errore
+        if( $('#__id_periodicita__').val() == 2 ){
+            document.getElementById("__rip_mese__").options[0].text = "ogni giorno "+ a[2]+" del mese";
+            document.getElementById("__rip_mese__").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";
+        }
+        
       
-        document.getElementById("__rip_anno__").options[0].text = "il "+ a[2]+"/"+a[1]+" ogni anno";
-        document.getElementById("__rip_anno__").options[1].text ="il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
+    //    document.getElementById("__rip_anno__").options[0].text = "il "+ a[2]+"/"+a[1]+" ogni anno";
+    //    document.getElementById("__rip_anno__").options[1].text ="il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
       
     }
 

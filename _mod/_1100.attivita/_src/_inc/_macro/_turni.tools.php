@@ -34,7 +34,7 @@
     //tendina periodi
     $ct['etc']['select']['periodi'] = array(
     //    array( 'id' => 0, '__label__' => 'non si ripete' ),
-        array( 'id' => 1, '__label__' => 'giorni' ),
+    //    array( 'id' => 1, '__label__' => 'giorni' ),
         array( 'id' => 2, '__label__' => 'settimane' ),
         array( 'id' => 3, '__label__' => 'mesi' ),
     //    array( 'id' => 4, '__label__' => 'anno' )

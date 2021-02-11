@@ -48,10 +48,11 @@
 //    print_r($wks['pianificazione']);
 
         switch( $_REQUEST['__p__'] ){
-            case 1:
+        /*    case 1:
                 $nome .= 'periodicità giornaliera, ';
                 $nome .= 'ripetizione ogni ' . $_REQUEST['__cad__'] . ' giorni, ' ; 
                 break;
+        */
             case 2:
                 $nome .= 'periodicità settimanale, ';
                 $nome .= ( isset( $_REQUEST['__giorni_s_desc__'] ) ) ? $_REQUEST['__giorni_s_desc__'] . ', ' : '';
@@ -64,7 +65,7 @@
                 break;
         }
               
-        $nome .= ( !empty( $_REQUEST['__datafine__'] ) ) ? ('fino al ' . $_REQUEST['__datafine__'] . ', ')  : '';
+        $nome .= ( !empty( $_REQUEST['__datafine__'] ) ) ? ('ultima data inizio ' . $_REQUEST['__datafine__'] . ', ')  : '';
         $nome .= ( !empty( $_REQUEST['__nr__'] ) ) ? ( 'per ' . $_REQUEST['__nr__'] . ' volte')  : '';
 
         // ricavo i giorni che separano data iniziale e data finale
