@@ -24,13 +24,13 @@ $ct['etc']['select']['contratti'] = mysqlQuery(
 
 
 $nomigiorni = array(
-    '1' => 'L',
-    '2' => 'M',
-    '3' => 'M',
-    '4' => 'G',
-    '5' => 'V',
-    '6' => 'S',
-    '7' => 'D'
+    '1' => array( 'breve' => 'L', 'esteso' => 'lunedì'),
+    '2' => array( 'breve' => 'M', 'esteso' => 'martedì'),
+    '3' => array( 'breve' => 'M', 'esteso' => 'mercoledì'),
+    '4' => array( 'breve' => 'G', 'esteso' => 'giovedì'),
+    '5' => array( 'breve' => 'V', 'esteso' => 'venerdì'),
+    '6' => array( 'breve' => 'S', 'esteso' => 'sabato'),
+    '7' => array( 'breve' => 'D', 'esteso' => 'domenica')
 );
 
 // preset filtri custom per mese e anno
@@ -71,7 +71,7 @@ for( $d=1; $d<=31; $d++ )
     }
 }
 
-// se ho un contratto in request leggo i turni corrispondenti
+// se ho un contratto in request leggo i turni corrispondenti per ogni giorno
 if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contratto']['EQ'] ) ){
 
     foreach( $giorni as $giorno ){
@@ -84,7 +84,7 @@ if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contrat
         $ct['etc']['giorni'][ $giorno ]['numero'] = ( date( 'w', strtotime("$anno-$mese-$giorno") ) == 0 ) ? '7' : date( 'w', strtotime("$anno-$mese-$giorno") );
     
         // nome del giorno (lun, mar, mer, ...)
-        $ct['etc']['giorni'][ $giorno ]['nome'] = $nomigiorni[ $ct['etc']['giorni'][ $giorno ]['numero'] ];
+        $ct['etc']['giorni'][ $giorno ]['nome'] = $nomigiorni[ $ct['etc']['giorni'][ $giorno ]['numero'] ]['breve'];
     
         // controllo se è festivo
         if(  $ct['etc']['giorni'][ $giorno ]['numero'] == 7 || in_array( date( 'd/m', strtotime("$anno-$mese-$giorno") ), $festivi ) ){
@@ -102,11 +102,13 @@ if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contrat
             )
         );
 
+        // se ci sono dei turni li inserisco in un array, questo permette di individuare eventuali turni doppi su una stessa data
         if( !empty( $elenco_turni ) ){
             foreach ( $elenco_turni as $t ){
                 $ct['etc']['giorni'][ $giorno ]['turni'][ $t['turno'] ] = $t['turno'];
             }
         }
+        // se non ci sono turni impostati, di base vale il turno 1
         else{
             $ct['etc']['giorni'][ $giorno ]['turni'][ 1 ] = 1;
         }
@@ -114,32 +116,19 @@ if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contrat
     }
 
 
-    // leggo l'elenco degli orari previsti per i vari turni e costruisco l'array dei turni
-    $orari_contratti = mysqlQuery(
-        $cf['mysql']['connection'],
-        'SELECT * FROM orari_contratti WHERE id_contratto = ? AND se_lavoro = 1 ORDER BY turno, id_giorno',
-        array( array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contratto']['EQ'] ) )
-    );
-
-    foreach( $orari_contratti as $o ){
-        $ct['etc']['turni'][ $o['turno'] ][] = array( 
-            'giorno' => $nomigiorni[ $o['id_giorno'] ],
-            'ora_inizio' => $o['ora_inizio'],
-            'ora_fine' => $o['ora_fine']
-        );
-    }
-
+    // leggo l'elenco degli orari di quel contratto (per tutti i turni), necessario per il modal
     $ct['etc']['orari'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT * FROM orari_contratti WHERE id_contratto = ? AND se_lavoro = 1 ORDER BY turno, id_giorno',
         array( array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_contratto']['EQ'] ) )
     );
 
+    foreach( $ct['etc']['orari'] as &$o ){
+        $o['giorno'] = $nomigiorni[ $o['id_giorno'] ]['esteso'];
+    }
+
+
 }
-
-
-
-
 
 
 // modal orari turno
