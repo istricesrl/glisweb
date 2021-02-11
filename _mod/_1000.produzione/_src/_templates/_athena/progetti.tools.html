@@ -144,7 +144,7 @@
                     {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
                 </div> 
                 <div class="col-auto">
-                    <span class="label-top">ultima data inizio</span>
+                    <span class="label-top">fino al</span>
                     {{ frm.date( '', '', '', '__data_fine__', '', '', request ) }}
                 </div>
             </div>
@@ -231,6 +231,12 @@ $(document).ready(function(){
         var a = d[0].split("-") ;
         var date = new Date( a[0], (a[1] - 1), a[2] ) ;
         var r = date.getDay() - 1;
+
+        // per la domenica setto a 6
+        if( r == -1 ){
+            r = 6;
+        }
+
         var numeroSettimana = date.getWeekOfMonth() + 1;
 
         $("input:checkbox").prop('checked', false);
@@ -260,11 +266,14 @@ $(document).ready(function(){
         mesi[12] = "dicembre";
 
 
-        document.getElementById("__rip_mese__").options[0].text = "ogni giorno "+ a[2]+" del mese";
-        document.getElementById("__rip_mese__").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";
+        // inserisco nell'if di controllo per non avere errore
+        if( $('#__id_periodicita__').val() == 2 ){
+            document.getElementById("__rip_mese__").options[0].text = "ogni giorno "+ a[2]+" del mese";
+            document.getElementById("__rip_mese__").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";        
+        }
       
-        document.getElementById("__rip_anno__").options[0].text = "il "+ a[2]+"/"+a[1]+" ogni anno";
-        document.getElementById("__rip_anno__").options[1].text ="il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
+    //    document.getElementById("__rip_anno__").options[0].text = "il "+ a[2]+"/"+a[1]+" ogni anno";
+    //    document.getElementById("__rip_anno__").options[1].text ="il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
       
     }
 
