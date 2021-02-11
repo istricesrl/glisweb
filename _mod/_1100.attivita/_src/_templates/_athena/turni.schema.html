@@ -71,7 +71,7 @@
                                 <tr>
                                     <td>{{ t }}</td>
                                     {% for g in etc.giorni %}
-                                    <td style="cursor: pointer">{% if g.turni[t] %}<i class="fa fa-check" aria-hidden="true" data-toggle="modal" data-target="#orari_turno" onclick="$('.orari').css('display','none');$('.turno-{{ t }}').css('display','');"></i>{% endif %}</td>
+                                    <td {% if g.turni[t] %} style="cursor: pointer"{% endif %}>{% if g.turni[t] %}<i class="fa fa-check" aria-hidden="true" data-toggle="modal" data-target="#orari_turno" onclick="$('.orari').css('display','none');$('.turno-{{ t }}').css('display','');"></i>{% endif %}</td>
                                     {% endfor %}
                                 </tr>
                                 {% endfor %}
