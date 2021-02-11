@@ -45,6 +45,7 @@
 
     //    $wks['ws'] = $cf['site']['url'] . '_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php';
 
+//    print_r($wks['pianificazione']);
 
         switch( $_REQUEST['__p__'] ){
             case 1:
