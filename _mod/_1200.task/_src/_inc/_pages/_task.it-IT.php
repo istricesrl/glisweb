@@ -30,7 +30,8 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_task.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'task.form', 
-														'task.form.attivita' ) )
+														'task.form.attivita',
+														'task.form.pianificazioni' ) )
 	);
 
 	$p['task.form.attivita'] = array(
@@ -41,5 +42,18 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'task.form.attivita.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_task.form.attivita.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['task.form']['etc']['tabs'] )
+	);
+
+	// gestione task pianificazioni
+	$p['task.form.pianificazioni'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'pianificazione' ),
+		'icon'			=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
+		'h1'			=> array( $l		=> 'pianificazione' ),
+		'parent'		=> array( 'id'		=> 'task.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'task.form.pianificazioni.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_task.form.pianificazioni.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['task.form']['etc']['tabs'] )
 	);
