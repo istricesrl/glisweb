@@ -46,16 +46,5 @@
 		'etc'			=> array( 'tabs'	=> array(	'progetti.form' ) )
 	);
 
-	// progetti tools
-	$p['progetti.tools'] = array(
-		'sitemap'		=> false,
-		'title'			=> array( $l		=> 'pianificazione progetti' ),
-		'icon'			=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
-		'h1'			=> array( $l		=> 'pianificazione' ),
-		'parent'		=> array( 'id'		=> 'produzione' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.tools.html' ),
-		'macro'			=> array( $m.'_src/_inc/_macro/_progetti.tools.php' ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> $p['progetti.view']['etc']['tabs'] )
-	);
+	
 
