@@ -20,6 +20,19 @@
             </div>
         </header>
 
+        {% if page.contents.images.jumbotron|length > 0 or page.contents.images.carousel|length > 0 %}
+        <div class="banner my-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+                        {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <main>
             <div class="container">
                 <div class="row">

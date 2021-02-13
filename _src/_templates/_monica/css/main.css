@@ -37,6 +37,10 @@ h3 {
     padding: 0.5em;
 }
 
+div.jumbotron {
+    min-height: 16em;
+}
+
 a.nav-link, a.nav-link:visited {
     color: #ffffff;
 }

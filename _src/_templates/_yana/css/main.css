@@ -24,8 +24,7 @@ footer p {
 }
 
 h1, h2, h3 {
-    margin: 0px;
-    margin-bottom: 0.5em;
+    margin: 0.5em 0em;
 }
 
 h1 {
@@ -42,6 +41,15 @@ h3 {
 
 nav.navbar {
     padding: 0em;
+}
+
+main p {
+    margin: 1em 0em;
+}
+
+
+div.jumbotron {
+    min-height: 16em;
 }
 
 a.nav-link {

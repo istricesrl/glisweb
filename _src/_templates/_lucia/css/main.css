@@ -7,7 +7,6 @@ main {
     background-color: #ffffff;
     border-top:  1px solid #aaaaaa;
     border-bottom:  1px solid #aaaaaa;
-    padding: 1em;
 }
 
 body {
@@ -31,8 +30,7 @@ footer p {
 }
 
 h1, h2, h3 {
-    margin: 0px;
-    margin-bottom: 0.5em;
+    margin: 0.5em 0em;
 }
 
 h1 {
@@ -45,6 +43,10 @@ h2 {
 
 h3 {
     font-size: 1.25em;
+}
+
+p {
+    margin: 1em 0em;
 }
 
 nav.navbar {

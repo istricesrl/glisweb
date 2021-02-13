@@ -24,13 +24,15 @@
 
                 <main class="col-12 col-md-8">
                     <div class="row">
-                        <div class="col">
-                            <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
-                            {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
+                        <div class="col p-0">
+                            {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+                            {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
+                            <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+                            {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
                             {% block main %}{% endblock %}
                         </div>
                     </div>

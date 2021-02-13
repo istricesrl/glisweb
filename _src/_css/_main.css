@@ -3,6 +3,7 @@
  * - stili di base
  * - stili dei bottoni
  * - stili del footer
+ * - stili per i jumbotron
  * - stili per il banner cookie
  * - stili per font awesome
  * - utility tipografiche
@@ -26,6 +27,13 @@ html, body {
 
 footer {
     margin-top: auto;
+}
+
+/* stili per i jumbotron */
+
+.jumbotron {
+    border-radius: 0px;
+    margin: 0em;
 }
 
 /* stili per FontAwesome */

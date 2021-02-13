@@ -73,6 +73,10 @@ main > .container > .row {
     margin-top: 0.5em;
 }
 
+div.jumbotron {
+    min-height: 24em;
+}
+
 a, a:visited {
     color: #666666;
 }

@@ -65,7 +65,11 @@ nav .logo img {
 }
 
 main > .container > .row {
-    margin-top: 0.5em;
+    margin: 1.5em 0em;
+}
+
+div.jumbotron {
+    min-height: 24em;
 }
 
 a, a:visited {

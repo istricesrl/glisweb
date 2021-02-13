@@ -23,6 +23,7 @@
         {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
 
         <main class="container d-flex flex-column flex-fill">
+
             <div class="row">
                 <div class="col">
                     <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>

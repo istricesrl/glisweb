@@ -20,6 +20,11 @@
             </div>
         </header>
 
+        <div class="container p-0">
+            {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+            {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+        </div>
+
         <main class="d-flex flex-fill">
             <div class="container">
                 <div class="row">

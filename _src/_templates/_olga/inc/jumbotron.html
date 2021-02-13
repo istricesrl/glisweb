@@ -1,4 +1,7 @@
 {% import '_bin/_default.html' as cms %}
 
 {% if page.contents.images.jumbotron|length > 0 %}
+<div class="container p-0">
+    {{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotronId' ) }}
+</div>
 {% endif %}

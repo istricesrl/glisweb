@@ -14,7 +14,7 @@ footer p {
 }
 
 header, nav, main, footer {
-    padding: 0.5em;
+/*    padding: 0.5em; */
 }
 
 h1, h2, h3 {
@@ -34,8 +34,14 @@ h3 {
 }
 
 nav {
-    margin-top: 1.5em;
-    padding: 0em 0.5em;
+}
+
+div.wrapper > .row {
+    margin: 1.5em 0em;
+}
+
+div.jumbotron {
+    min-height: 16em;
 }
 
 a, a:visited {

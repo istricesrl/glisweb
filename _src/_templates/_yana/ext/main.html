@@ -38,6 +38,10 @@
                                     {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
                                 </div>
                             </div>
+
+                            {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+                            {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+                
                             <div class="row">
                                 <div class="col">
                                     {% block main %}{% endblock %}

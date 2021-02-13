@@ -170,15 +170,15 @@ window.addEventListener( 'DOMContentLoaded', function() {
 
 {% macro jumbotron( page, lang, site, name, class, img ) %}
 {% import _self as cms %}
-<div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); background-size: cover;">
+<div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); background-size: cover; background-position: center;">
     <div class="container">
 	<div class="row">
 	    <div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">
-		{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] }}</h3>{% elseif page.h3[ lang ] %}<h3>{{ page.h3[ lang ]|raw }}</h3>{% endif %}
+		{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] }}</h3>{% endif %}
 		{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-		{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] }}</h1>{% elseif page.h1[ lang ] %}<h1>{{ page.h1[ lang ]|raw }}</h1>{% endif %}
+		{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] }}</h1>{% endif %}
 		{% if page.metadati.jt_h1_href %}</a>{% endif %}
-		{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] }}</h2>{% elseif page.h2[ lang ] %}<h2>{{ page.h2[ lang ]|raw }}</h2>{% endif %}
+		{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] }}</h2>{% endif %}
 		{% if page.metadati.jt_content[ lang ] %}
 		<div class="contents">
 		    {{ page.metadati.jt_content[ lang ]|raw }}
@@ -208,9 +208,9 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	    <div class="row">
 		<div class="col">
 		    {% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-		    {% if page.metadati.jt_h1 %}<h2>{{ page.metadati.jt_h1 }}</h1>{% elseif page.h1 %}<h1>{{ page.h1[ lang ]|raw }}</h1>{% endif %}
+		    {% if page.metadati.jt_h1 %}<h2>{{ page.metadati.jt_h1 }}</h1>{% endif %}
 		    {% if page.metadati.jt_h1_href %}</a>{% endif %}
-		    {% if page.metadati.jt_h2 %}<h1>{{ page.metadati.jt_h2 }}</h2>{% elseif page.h2 %}<h2>{{ page.h2[ lang ]|raw }}</h2>{% endif %}
+		    {% if page.metadati.jt_h2 %}<h1>{{ page.metadati.jt_h2 }}</h2>{% endif %}
 		</div>
 	    </div>
 	    {% if page.metadati.jt_content[ lang ] %}

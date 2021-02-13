@@ -45,7 +45,7 @@ footer p {
 }
 
 h1, h2, h3 {
-    margin: 0px;
+    margin: 0.5em 0em;
 }
 
 h1 {
@@ -57,7 +57,7 @@ h2 {
 }
 
 h3 {
-    font-size: 1.25em;
+    font-size: 1em;
 }
 
 header {
@@ -82,6 +82,10 @@ main > .container > .row {
     margin-top: 0.5em;
 }
 
+div.jumbotron {
+    min-height: 24em;
+}
+
 a, a:visited {
     color: #666666;
 }
@@ -92,21 +96,21 @@ a:active, a:hover {
 }
 
 a.breadcrumb-link, a.breadcrumb-link:visited {
-    color: #ffffff;
+    color: #aaaaaa;
 }
 
 a.breadcrumb-link:active, a.breadcrumb-link:hover {
-    color: #ffffff;
+    color: #aaaaaa;
     text-decoration: underline;
 }
 
 a.nav-link, a.nav-link:visited {
-    color: #ffffff;
+    color: #aaaaaa;
     padding-right: 0em !important;
 }
 
 a.nav-link:active, a.nav-link:hover {
-    color: #ffffff;
+    color: #aaaaaa;
     text-decoration: underline;
 }
 

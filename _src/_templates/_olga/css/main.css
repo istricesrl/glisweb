@@ -64,6 +64,11 @@ main.container > div.row > div.col > div {
     padding: 1em;
 }
 
+div.jumbotron {
+    min-height: 16em;
+    padding: 3em 2em;
+}
+
 a, a:visited {
     color: #666666;
 }
