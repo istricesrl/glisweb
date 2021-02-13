@@ -41,7 +41,7 @@ footer p {
 }
 
 h1, h2, h3 {
-    margin: 0px;
+    margin: 0.5em 0em;
 }
 
 h1 {
@@ -75,6 +75,10 @@ main > .container > .row {
 
 div.jumbotron {
     min-height: 24em;
+}
+
+p {
+    margin: 1em 0em;
 }
 
 a, a:visited {
