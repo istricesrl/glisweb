@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form task
+     * macro form todo
      *
      *
      *
@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'task';
+	$ct['form']['table'] = 'todo';
 
     // tendina priorita
 	$ct['etc']['select']['id_priorita'] = mysqlCachedIndexedQuery(

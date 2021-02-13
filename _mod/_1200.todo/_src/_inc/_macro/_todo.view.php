@@ -21,13 +21,13 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-    $ct['view']['table'] = 'task';
+    $ct['view']['table'] = 'todo';
     
     // id della vista
     $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'task.form';
+	$ct['view']['open']['page'] = 'todo.form';
 
      // campi della vista
 	$ct['view']['cols'] = array(
@@ -56,7 +56,7 @@
 	);
 
     // inclusione filtri speciali
-	$ct['etc']['include']['filters'] = 'inc/task.view.filters.html';
+	$ct['etc']['include']['filters'] = 'inc/todo.view.filters.html';
 
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedQuery(
@@ -64,7 +64,7 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_cliente = 1');
 
-    // preset filtro custom task completati
+    // preset filtro custom todo completati
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] = 0;
     }

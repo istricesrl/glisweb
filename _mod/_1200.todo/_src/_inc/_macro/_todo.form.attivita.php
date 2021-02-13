@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'task';
+    $ct['form']['table'] = 'todo';
     
     // tabella della vista
 	$ct['view']['table'] = 'attivita';
@@ -42,11 +42,11 @@
 	$ct['view']['insert']['page'] = 'attivita.form';
 
     // campo per il preset di apertura
-	$ct['view']['open']['preset']['field'] = 'id_task';
+	$ct['view']['open']['preset']['field'] = 'id_todo';
 
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
         // preset filtro custom progetti aperti
-	    $ct['view']['__restrict__']['id_task']['LK'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+	    $ct['view']['__restrict__']['id_todo']['LK'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

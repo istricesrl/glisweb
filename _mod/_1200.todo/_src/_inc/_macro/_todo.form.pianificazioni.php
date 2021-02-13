@@ -39,7 +39,7 @@
     );
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['timestamp_pianificazione'] ) ){
-        $ct['etc']['data'] = date('Y-m-d', $_REQUEST[ $ct['form']['table'] ]['timestamp_pianificazione'] );
+    //    $ct['etc']['data'] = date('Y-m-d', $_REQUEST[ $ct['form']['table'] ]['timestamp_pianificazione'] );
     }
      
     
