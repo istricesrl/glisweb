@@ -7,6 +7,7 @@
 
 {# DEFINIZIONI #}
 {% set table = form.table %}
+{% set subtable = 'pianificazioni' %}
 {% set ietf = localization.language.ietf %}
 
 {# ACCOUNT #}
@@ -26,55 +27,52 @@
     {% set activity = 'inserimento' %}
     {% set legend = 'inserimento nuovo oggetto' %}
 {% endif %}
+
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
-    <div class="col-md-12  d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="javascript:;" onsubmit="genera()" method="">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{# page.path[ ietf ] #}" method="post" autocomplete="off" onsubmit="giorniSettimana();">
 
 	    {# CAMPI HIDDEN DI BASE #}
+        <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
         {# MODULO PRINCIPALE #}
 
-	    <fieldset>
-            <legend>pianificazione</legend>
-            <div class="form-group form-row">
-                <div class="col-12 col-md-2">
-                    <span class="label-top">data inizio</span>
-                    <input name="__data__" type="date" value="{{'now'|date('Y-m-d' ) }}" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__" required onchange="myDate()">
-                </div>
-                <div class="col-12 col-md">
-                    <span class="label-top">ora inizio</span>
-                    <input name="__ora_inizio__" type="time" value="" class="form-control form-control-sm " id="__ora_inizio__" required>
-                </div>
-                <div class="col-12 col-md">
-                    <span class="label-top">ore previste</span>
-                    <input name="__ore__" type="number" step="0.25" value="" class="form-control form-control-sm " id="__ore__" required>
-                </div>
-            </div>
-        </fieldset>
+        <fieldset>
+            <legend>periodicità</legend>
+            <input name="__data__" type="date" style="display: none" value="{{ etc.data }}" disabled class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
+            {{ frm.input( table, subtable, '0', 'id_todo', '', '', '', '__parent_id__', 'hidden' ) }}
+            {{ frm.input( table, subtable, '0', 'entita', '', '', request, 'todo', 'hidden' ) }}
 
-       
-
-
-        <fieldset> 
-
-            <input type="hidden" id="__id_periodicita__" value="1">
+            {{ frm.input( table, subtable, '0', 'id', '', '', request, '', 'hidden' ) }}
+            {{ frm.input( table, subtable, '0', 'periodicita', '', '', request, '1', 'hidden' ) }}
 
             <div class="form-group form-row">
                 <div class="col-12">
                 <ul class="nav nav-tabs nav-tabs-secondary">
-                    <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-giornaliera','cke-switch',this);setPeriodicita(1); myDate();">giornaliera</a></li>
-                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-settimanale','cke-switch',this);setPeriodicita(2); myDate();">settimanale</a></li>
-                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-mensile','cke-switch',this);setPeriodicita(3); myDate();">mensile</a></li>
+                   
+                    {% for p in etc.periodicita %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == p.id or (request[ table ][ subtable ]['0'].periodicita is empty and p.id == 1 )%}active{% endif %}" onclick="crossShow('cke-{{p.id}}','cke-switch',this);setPeriodicita({{p.id}}); myDate();">{{ p.__label__ }}</a></li>
+                    {% endfor %}
+                <!-- 
+                    <li class="nav-item"><a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == 1 or request[ table ][ subtable ]['0'].periodicita is empty %}active{% endif %}" onclick="crossShow('cke-giornaliera','cke-switch',this);setPeriodicita(1); myDate();">giornaliera</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == 2 %}active{% endif %}" onclick="crossShow('cke-settimanale','cke-switch',this);setPeriodicita(2); myDate();">settimanale</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == 3 %}active{% endif %}" onclick="crossShow('cke-mensile','cke-switch',this);setPeriodicita(3); myDate();">mensile</a></li>
+                -->
                 </ul>
                 </div>
             </div>
     
 
             <div class="form-group form-row flex-fill">
-                <div class="col cke-switch" id="cke-giornaliera">
+                <div class="col cke-switch" id="cke-1">
                     <div class="form-group form-row" id="giorno">
                         <div class="col-12 col-form-label">
                             <span>specificare il numero di giorni di ripetizione</span>
@@ -82,25 +80,29 @@
                     </div>
                 </div>
 
-                <div class="col cke-switch" id="cke-settimanale" style="display: none;">
+                <div class="col cke-switch" id="cke-2" style="display: none;">
+                    {{ frm.input( table, subtable, '0', 'giorni_settimana', '', '', request, '1', 'hidden' ) }}
                     <div class="form-group form-row" id="settimana">
                         {% for g in etc.giorni_settimana %}
                         <div class="col-4 col-md-1 col-form-label">
                             <div class="form-check">
-                                <input class="messageCheckbox form-check-input" type="checkbox" id="giorno_{{g.id}}" name="giorni" value="{{ g.id }}">
+                                <input class="messageCheckbox form-check-input" type="checkbox" {{ g.checked }} {% if g.checked == 1 %} checked {% endif %} id="giorno_{{g.id}}" name="giorni" value="{{ g.id }}" onchange="giorniSettimana();">
                                 <label class="form-check-label text-left" for="horns">{{g.__label__}}</label>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
-                <div class="col cke-switch" id="cke-mensile" style="display: none;">
+                <div class="col cke-switch" id="cke-3" style="display: none;">
                     <div class="form-group form-row" id="mese">
                         <div class="col-12">
-                            <select id="__rip_mese__" name="__rip_mese__" class="form-control form-control-sm">
+                            {{ frm.select( table, subtable, '0', 'ripetizione_mese', '', etc.select.ripetizioni_mese, request, 1, '', '', 1 ) }}
+                         <!--   
+                            <select id="todo_pianificazioni_0_ripetizione_mese" name="todo[pianificazioni][0][ripetizione_mese]" class="form-control form-control-sm">
                                 <option id="1" value="1"></option>
                                 <option id="2" value="2"></option>
                             </select>
+                        -->    
                         </div>
                     </div>
                 </div>
@@ -109,38 +111,29 @@
 
         <fieldset>
             <legend>ripetizioni</legend>
-            <div class="form-group form-row" id="ripetizione">
+            <div class="form-group form-row">
                 <div class="col-auto">
-                    <span class="label-top lbl-rip">ogni n. giorni</span>
-                    {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
+                    <span class="label-top lbl-cad">ogni n. giorni</span>
+                    {{ frm.input( table, subtable, '0', 'cadenza', '', '', request, '1', 'number', '', '', '','1' ) }}
                 </div>
-                <div class="col-auto">
+            <!--    <div class="col-auto">
                     <span class="label-top">n. volte</span>
                     {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
                 </div> 
+            -->
                 <div class="col-auto">
                     <span class="label-top">fino al</span>
-                    {{ frm.date( '', '', '', '__data_fine__', '', '', request ) }}
+                    {{ frm.date( table, subtable, '0', 'data_fine', '', '', request ) }}
                 </div>
             </div>
         </fieldset>
-  
-    </fieldset>
+
     
     {# BOTTONI E COMANDI DEL MODULO #}
-
     <fieldset class="form-controls mt-auto">
-        <div class="row no-gutters d-print-none">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col">
-                        <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary">GENERA TURNI</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{ def.controls( page, pages, ietf, session, table, request ) }}
     </fieldset>
-       
+
 </form>
 </section>
 
@@ -149,44 +142,47 @@
 <script>
 
 $(document).ready(function(){
- 
-    $('#___ripetizione_fine__').click( function(){
-        $( "#___data_fine__" ).val('');
+ /*
+    $('#___ripetizione_fine__').change( function(){
     });
 
-    $('#___data_fine__').change( function(){
+    $('#todo_pianificazioni_0_data_fine').change( function(){
         $( "#___ripetizione_fine__" ).val('');
     });
+*/
 
-        
+    // chiamo la funzione myDate che legge la data della pianificazione e costruisce le prime logiche
+    myDate();
 
-    $('#__dataf__').change( function(){
-        var di = new Date($('#__data__').val());
-        var df = new Date($('#__dataf__').val());
-
-        if( df < di ){
-            alert('Attenzione: la data finale è minore della data iniziale');
-            $("#__dataf__").val("");
-        }
-    });
-
+    // leggo il valore della periodicità e setto la tab da mostrare e la label della cadenza
+    periodicita = $('#todo_pianificazioni_0_periodicita').val();
+    crossShow('cke-'+periodicita,'cke-switch');
+    setPeriodicita(periodicita);
 });
 
 
+// funzione che setta il valore della periodicità
     function setPeriodicita(valore){
-        $('#__id_periodicita__').val(valore);
+        valore = parseInt(valore);
+        $('#todo_pianificazioni_0_periodicita').val(valore);
+        setLabelCadenza(valore);
+    }
+ 
+// funzione che setta la label della cadenza
+    function setLabelCadenza(valore){
+        valore = parseInt(valore);
         switch(valore) {
             case 1:
-                $('.lbl-rip').text('ogni n. giorni');
+                $('.lbl-cad').text('ogni n. giorni');
                 break;
             case 2:
-                $('.lbl-rip').text('ogni n. settimane');
+                $('.lbl-cad').text('ogni n. settimane');
                 break;
             case 3:
-                $('.lbl-rip').text('ogni n. mesi');
+                $('.lbl-cad').text('ogni n. mesi');
                 break;
             default:
-                $('.lbl-rip').text('ogni n. giorni');
+                $('.lbl-cad').text('ogni n. giorni');
             }
     }
    
@@ -198,7 +194,9 @@ $(document).ready(function(){
         return Math.floor(offsetDate / 7);
     }
 
+
     function myDate() {
+        console.log('chiamata funzione myDate');
       
         // cerco il giorno della settimana corrispondente alla data
         var d = $('#__data__').val();
@@ -214,8 +212,13 @@ $(document).ready(function(){
 
         var numeroSettimana = date.getWeekOfMonth() + 1;
 
-        $("input:checkbox").prop('checked', false);
-        $('#giorno_'+r).prop('checked', true);
+        // solo se non ho una pianificazione settimanale già esistente setto la checkbox del giorno corrente
+        if( !$('#todo_pianificazioni_0_id').val() || ( $('#todo_pianificazioni_0_id').val() && $('#todo_pianificazioni_0_periodicita').val() != 2 ) ){
+        //    console.log('myDate, setto le checkbox dei giorni settimana in base alla data');
+            $("input:checkbox").prop('checked', false);
+            $('#giorno_'+r).prop('checked', true);
+        }
+        
      
         var weekdays = new Array(7);
         weekdays[0] = "lunedì";
@@ -242,9 +245,9 @@ $(document).ready(function(){
 
 
         // inserisco nell'if di controllo per non avere errore
-        if( $('#__id_periodicita__').val() == 2 ){
-            document.getElementById("__rip_mese__").options[0].text = "ogni giorno "+ a[2]+" del mese";
-            document.getElementById("__rip_mese__").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";        
+        if( $('#todo_pianificazioni_0_periodicita').val() == 3 ){
+            document.getElementById("todo_pianificazioni_0_ripetizione_mese").options[0].text = "ogni giorno "+ a[2]+" del mese";
+            document.getElementById("todo_pianificazioni_0_ripetizione_mese").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";        
         }
       
     //    document.getElementById("__rip_anno__").options[0].text = "il "+ a[2]+"/"+a[1]+" ogni anno";
@@ -252,13 +255,22 @@ $(document).ready(function(){
       
     }
 
+    function giorniSettimana(){
+        console.log('chiamata giorniSettimana');
+        giorni_s = [];
+        giorni_s_desc = [];
+        $.each($("input[name='giorni']:checked"), function(){ 
+            giorni_s.push( $(this).val() ); 
+            giorni_s_desc.push( $(this).siblings().text() );    // SDF descrizione giorni
+        });
+
+        $('#todo_pianificazioni_0_giorni_settimana').val( giorni_s.toString() );
+    }
+
     function genera(){
-        
-        var contratto = $("#___id_progetto__").val();
+    /*    
         var data = $("#__data__").val();
-        var ora_inizio = $("#__ora_inizio__").val();
-        var ore = $("#___ore__").val();
-        var period = $("#__id_periodicita__").val();
+        var period = $("#todo_pianificazioni_0_periodicita").val();
         var cadenza = $("#___ripetizione__").val();
         var rip_mese = $("#__rip_mese__").val();
         var rip_mese_desc = $("#__rip_mese__ option:selected").text();  // SDF descrizione ripetizione
@@ -274,12 +286,8 @@ $(document).ready(function(){
             giorni_s.push( $(this).val() ); 
             giorni_s_desc.push( $(this).siblings().text() );    // SDF descrizione giorni
         });
-
-        getws('{{ site.url }}/_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__ora_inizio__='+ora_inizio+'&__id_progetto__='+contratto+'&__ore__='+ore+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s+'&__rip_mese_desc__='+rip_mese_desc+'&__giorni_s_desc__='+giorni_s_desc, 
-                function( data ){ 
-                    window.open('{{ pages['turni.view'].url[ localization.language.ietf ] }}?__view__[{{ view.id }}][__filters__][id_pianificazione][EQ]='+data['pianificazione'],'_self');
-                }
-            );
+*/
+        console.log(giorni_s);
        
     }
 </script>

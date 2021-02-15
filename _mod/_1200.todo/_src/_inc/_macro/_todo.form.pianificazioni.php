@@ -13,10 +13,6 @@
 
     // tabella gestita
     $ct['form']['table'] = 'todo';
-
-    // sotto tabella gestita
-	$ct['form']['subtable'] = 'pianificazioni';
-
    
     //tendina periodi
     $ct['etc']['select']['periodi'] = array(
@@ -27,7 +23,20 @@
     //    array( 'id' => 4, '__label__' => 'anno' )
     );
 
-  	// giorni della settimana
+    //elenco periodicità
+    $ct['etc']['periodicita'] = array(
+        array( 'id' => 1, '__label__' => 'giornaliera' ),
+        array( 'id' => 2, '__label__' => 'settimanale' ),
+        array( 'id' => 3, '__label__' => 'mensile' )
+    );
+
+     //tendina ripetizioni mensili
+     $ct['etc']['select']['ripetizioni_mese'] = array(
+        array( 'id' => 1, '__label__' => '1' ),
+        array( 'id' => 2, '__label__' => '2' )
+    );
+
+  	// elenco giorni della settimana
   	$ct['etc']['giorni_settimana'] = array(
 		array( 'id' => 0, '__label__' => 'lunedì' ),
 		array( 'id' => 1, '__label__' => 'martedì' ),
@@ -38,8 +47,37 @@
 		array( 'id' => 6, '__label__' => 'domenica' )
     );
 
-    if( isset( $_REQUEST[ $ct['form']['table'] ]['timestamp_pianificazione'] ) ){
-    //    $ct['etc']['data'] = date('Y-m-d', $_REQUEST[ $ct['form']['table'] ]['timestamp_pianificazione'] );
+
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+        $ct['etc']['data'] = mysqlSelectValue( 
+            $cf['mysql']['connection'], 
+            "SELECT from_unixtime(timestamp_pianificazione, '%Y-%m-%d') FROM todo WHERE id = ?",
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
+        );
+
+        // cerco la pianificazione figlia di questa todo, se esiste
+        $pianificazione = mysqlSelectRow( 
+            $cf['mysql']['connection'], 
+            'SELECT * FROM pianificazioni WHERE id_todo = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
+        );
+
+        if( !empty( $pianificazione ) && $pianificazione['giorni_settimana'] != '' ){
+            $giorni_settimana = explode(',', $pianificazione['giorni_settimana']);
+            
+            if( !empty($giorni_settimana) ){
+                foreach( $giorni_settimana as $v ){
+                    $ct['etc']['giorni_settimana'][$v]['checked'] = 1;
+                }
+            }
+        }
+
+    #    print_r($giorni_settimana);
+    #    print_r($ct['etc']['giorni_settimana']);
+        
     }
+
+	// macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';
+
      
-    
