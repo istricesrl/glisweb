@@ -172,10 +172,22 @@
             </fieldset>
 
         
-        {# BOTTONI E COMANDI DEL MODULO #}
-        <fieldset class="form-controls mt-auto">
-            {{ def.controls( page, pages, ietf, session, table, request ) }}
-        </fieldset>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                <div class="row no-gutters d-print-none">
+                    <div class="col-auto col-md-5">
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('/produzione/todo.it-IT.html','_self');" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
+                    </div>
+                    <div class="col col-md-2 text-center"></div>
+                    <div class="col-auto col-md-5 text-right">
+                        <div class="row">
+                            <div class="col">
+                                <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">SALVA PIANIFICAZIONE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
 
     </form>
     </section>
