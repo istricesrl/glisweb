@@ -31,7 +31,7 @@
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{# page.path[ ietf ] #}" method="post" autocomplete="off" onsubmit="giorniSettimana();">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{# page.path[ ietf ] #}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
         <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -81,8 +81,45 @@
                 </div>
 
                 <div class="col cke-switch" id="cke-2" style="display: none;">
-                    {{ frm.input( table, subtable, '0', 'giorni_settimana', '', '', request, '1', 'hidden' ) }}
+                    {# frm.input( table, subtable, '0', 'giorni_settimana', '', '', request, '1', 'hidden' ) #}
                     <div class="form-group form-row" id="settimana">
+                        <div class="col-4 col-md-1 col-form-label">
+                            <div class="form-check">
+                                {{ frm.checkbox( table, subtable, '0', 'se_lunedi', 'lunedì', '', request ) }}
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-1 col-form-label">
+                            <div class="form-check">
+                                {{ frm.checkbox( table, subtable, '0', 'se_martedi', 'martedì', '', request ) }}
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-1 col-form-label">
+                            <div class="form-check">
+                                {{ frm.checkbox( table, subtable, '0', 'se_mercoledi', 'mercoledì', '', request ) }}
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-1 col-form-label">
+                            <div class="form-check">
+                                {{ frm.checkbox( table, subtable, '0', 'se_giovedi', 'giovedì', '', request ) }}
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-1 col-form-label">
+                            <div class="form-check">
+                                {{ frm.checkbox( table, subtable, '0', 'se_venerdi', 'venerdì', '', request ) }}
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-1 col-form-label">
+                            <div class="form-check">
+                                {{ frm.checkbox( table, subtable, '0', 'se_sabato', 'sabato', '', request ) }}
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-1 col-form-label">
+                            <div class="form-check">
+                                {{ frm.checkbox( table, subtable, '0', 'se_domenica', 'domenica', '', request ) }}
+                            </div>
+                        </div>
+
+                        <!--
                         {% for g in etc.giorni_settimana %}
                         <div class="col-4 col-md-1 col-form-label">
                             <div class="form-check">
@@ -91,6 +128,7 @@
                             </div>
                         </div>
                         {% endfor %}
+                        -->
                     </div>
                 </div>
                 <div class="col cke-switch" id="cke-3" style="display: none;">
@@ -203,6 +241,7 @@ $(document).ready(function(){
         d = d.split("T");
         var a = d[0].split("-") ;
         var date = new Date( a[0], (a[1] - 1), a[2] ) ;
+
         var r = date.getDay() - 1;
 
         // per la domenica setto a 6
@@ -212,11 +251,12 @@ $(document).ready(function(){
 
         var numeroSettimana = date.getWeekOfMonth() + 1;
 
+        
         // solo se non ho una pianificazione settimanale già esistente setto la checkbox del giorno corrente
         if( !$('#todo_pianificazioni_0_id').val() || ( $('#todo_pianificazioni_0_id').val() && $('#todo_pianificazioni_0_periodicita').val() != 2 ) ){
         //    console.log('myDate, setto le checkbox dei giorni settimana in base alla data');
             $("input:checkbox").prop('checked', false);
-            $('#giorno_'+r).prop('checked', true);
+            $('.giorno-'+r).prop('checked', true);
         }
         
      
@@ -255,6 +295,7 @@ $(document).ready(function(){
       
     }
 
+    /*
     function giorniSettimana(){
         console.log('chiamata giorniSettimana');
         giorni_s = [];
@@ -266,6 +307,7 @@ $(document).ready(function(){
 
         $('#todo_pianificazioni_0_giorni_settimana').val( giorni_s.toString() );
     }
+    */
 
     function genera(){
     /*    
@@ -287,7 +329,7 @@ $(document).ready(function(){
             giorni_s_desc.push( $(this).siblings().text() );    // SDF descrizione giorni
         });
 */
-        console.log(giorni_s);
+    //    console.log(giorni_s);
        
     }
 </script>

@@ -62,6 +62,7 @@
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
         );
 
+    /*
         if( !empty( $pianificazione ) && $pianificazione['giorni_settimana'] != '' ){
             $giorni_settimana = explode(',', $pianificazione['giorni_settimana']);
             
@@ -71,13 +72,14 @@
                 }
             }
         }
-
+*/
     #    print_r($giorni_settimana);
     #    print_r($ct['etc']['giorni_settimana']);
         
     }
 
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
-     
+    
