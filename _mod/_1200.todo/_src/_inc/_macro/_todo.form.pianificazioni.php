@@ -78,8 +78,33 @@
         
     }
 
+    $ct['page']['contents']['metros'] = array(
+	    'pianificazione' => array(
+		'label' => 'pianificazione'
+	    )
+	);
+
+    // modal per scollegare la todo dalla pianificazione
+	$ct['page']['contents']['metro']['pianificazione'][] = array(
+	    'modal' => array('id' => 'scollega', 'include' => 'inc/todo.form.pianificazioni.modal.scollega.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-unlock-alt',
+	    'title' => 'scollega dalla pianificazione',
+	    'text' => 'scollega la todo corrente dalla pianificazione'
+	);
+
+    // modal per modificare la pianificazione originaria
+    $ct['page']['contents']['metro']['pianificazione'][] = array(
+	    'modal' => array('id' => 'modifica', 'include' => 'inc/todo.form.pianificazioni.modal.modifica.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-calendar',
+	    'title' => 'modifica pianificazione',
+	    'text' => 'modifica la pianificazione'
+	);
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
-    
+    require DIR_SRC_INC_MACRO . '_default.tools.php';
+
+     

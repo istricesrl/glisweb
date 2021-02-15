@@ -28,152 +28,159 @@
     {% set legend = 'inserimento nuovo oggetto' %}
 {% endif %}
 
-{# FORM DI GESTIONE #}
-<section class="row flex-fill">
-    <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{# page.path[ ietf ] #}" method="post" autocomplete="off">
+{% if request[ table ].id_pianificazione %}
+    {% include 'inc/metro.html' %}
 
-	    {# CAMPI HIDDEN DI BASE #}
-        <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
-	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+{% else %}
 
-        {# MODULO PRINCIPALE #}
+    {# FORM DI GESTIONE #}
+    <section class="row flex-fill">
+        <div class="col-md-12 d-flex flex-column">
+        <form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{# page.path[ ietf ] #}" method="post" autocomplete="off">
 
-        <fieldset>
-            <legend>periodicità</legend>
-            <input name="__data__" type="date" style="display: none" value="{{ etc.data }}" disabled class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
-            {{ frm.input( table, subtable, '0', 'id_todo', '', '', '', '__parent_id__', 'hidden' ) }}
-            {{ frm.input( table, subtable, '0', 'entita', '', '', request, 'todo', 'hidden' ) }}
+            {# CAMPI HIDDEN DI BASE #}
+            <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+            <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+            <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+            <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+            <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+            {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+            <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-            {{ frm.input( table, subtable, '0', 'id', '', '', request, '', 'hidden' ) }}
-            {{ frm.input( table, subtable, '0', 'periodicita', '', '', request, '1', 'hidden' ) }}
+            {# MODULO PRINCIPALE #}
 
-            <div class="form-group form-row">
-                <div class="col-12">
-                <ul class="nav nav-tabs nav-tabs-secondary">
-                   
-                    {% for p in etc.periodicita %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == p.id or (request[ table ][ subtable ]['0'].periodicita is empty and p.id == 1 )%}active{% endif %}" onclick="crossShow('cke-{{p.id}}','cke-switch',this);setPeriodicita({{p.id}}); myDate();">{{ p.__label__ }}</a></li>
-                    {% endfor %}
-                <!-- 
-                    <li class="nav-item"><a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == 1 or request[ table ][ subtable ]['0'].periodicita is empty %}active{% endif %}" onclick="crossShow('cke-giornaliera','cke-switch',this);setPeriodicita(1); myDate();">giornaliera</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == 2 %}active{% endif %}" onclick="crossShow('cke-settimanale','cke-switch',this);setPeriodicita(2); myDate();">settimanale</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == 3 %}active{% endif %}" onclick="crossShow('cke-mensile','cke-switch',this);setPeriodicita(3); myDate();">mensile</a></li>
-                -->
-                </ul>
-                </div>
-            </div>
-    
+            <fieldset>
+                <legend>periodicità</legend>
+                <input name="__data__" type="date" style="display: none" value="{{ etc.data }}" disabled class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
+                {{ frm.input( table, subtable, '0', 'id_todo', '', '', '', '__parent_id__', 'hidden' ) }}
+                {{ frm.input( table, subtable, '0', 'entita', '', '', request, 'todo', 'hidden' ) }}
 
-            <div class="form-group form-row flex-fill">
-                <div class="col cke-switch" id="cke-1">
-                    <div class="form-group form-row" id="giorno">
-                        <div class="col-12 col-form-label">
-                            <span>specificare il numero di giorni di ripetizione</span>
-                        </div>
-                    </div>
-                </div>
+                {{ frm.input( table, subtable, '0', 'id', '', '', request, '', 'hidden' ) }}
+                {{ frm.input( table, subtable, '0', 'periodicita', '', '', request, '1', 'hidden' ) }}
 
-                <div class="col cke-switch" id="cke-2" style="display: none;">
-                    {# frm.input( table, subtable, '0', 'giorni_settimana', '', '', request, '1', 'hidden' ) #}
-                    <div class="form-group form-row" id="settimana">
-                        <div class="col-4 col-md-1 col-form-label">
-                            <div class="form-check">
-                                {{ frm.checkbox( table, subtable, '0', 'se_lunedi', 'lunedì', '', request ) }}
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-1 col-form-label">
-                            <div class="form-check">
-                                {{ frm.checkbox( table, subtable, '0', 'se_martedi', 'martedì', '', request ) }}
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-1 col-form-label">
-                            <div class="form-check">
-                                {{ frm.checkbox( table, subtable, '0', 'se_mercoledi', 'mercoledì', '', request ) }}
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-1 col-form-label">
-                            <div class="form-check">
-                                {{ frm.checkbox( table, subtable, '0', 'se_giovedi', 'giovedì', '', request ) }}
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-1 col-form-label">
-                            <div class="form-check">
-                                {{ frm.checkbox( table, subtable, '0', 'se_venerdi', 'venerdì', '', request ) }}
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-1 col-form-label">
-                            <div class="form-check">
-                                {{ frm.checkbox( table, subtable, '0', 'se_sabato', 'sabato', '', request ) }}
-                            </div>
-                        </div>
-                        <div class="col-4 col-md-1 col-form-label">
-                            <div class="form-check">
-                                {{ frm.checkbox( table, subtable, '0', 'se_domenica', 'domenica', '', request ) }}
-                            </div>
-                        </div>
-
-                        <!--
-                        {% for g in etc.giorni_settimana %}
-                        <div class="col-4 col-md-1 col-form-label">
-                            <div class="form-check">
-                                <input class="messageCheckbox form-check-input" type="checkbox" {{ g.checked }} {% if g.checked == 1 %} checked {% endif %} id="giorno_{{g.id}}" name="giorni" value="{{ g.id }}" onchange="giorniSettimana();">
-                                <label class="form-check-label text-left" for="horns">{{g.__label__}}</label>
-                            </div>
-                        </div>
+                <div class="form-group form-row">
+                    <div class="col-12">
+                    <ul class="nav nav-tabs nav-tabs-secondary">
+                    
+                        {% for p in etc.periodicita %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == p.id or (request[ table ][ subtable ]['0'].periodicita is empty and p.id == 1 )%}active{% endif %}" onclick="crossShow('cke-{{p.id}}','cke-switch',this);setPeriodicita({{p.id}}); myDate();">{{ p.__label__ }}</a></li>
                         {% endfor %}
-                        -->
+                    <!-- 
+                        <li class="nav-item"><a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == 1 or request[ table ][ subtable ]['0'].periodicita is empty %}active{% endif %}" onclick="crossShow('cke-giornaliera','cke-switch',this);setPeriodicita(1); myDate();">giornaliera</a></li>
+                        <li class="nav-item"><a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == 2 %}active{% endif %}" onclick="crossShow('cke-settimanale','cke-switch',this);setPeriodicita(2); myDate();">settimanale</a></li>
+                        <li class="nav-item"><a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == 3 %}active{% endif %}" onclick="crossShow('cke-mensile','cke-switch',this);setPeriodicita(3); myDate();">mensile</a></li>
+                    -->
+                    </ul>
                     </div>
                 </div>
-                <div class="col cke-switch" id="cke-3" style="display: none;">
-                    <div class="form-group form-row" id="mese">
-                        <div class="col-12">
-                            {{ frm.select( table, subtable, '0', 'ripetizione_mese', '', etc.select.ripetizioni_mese, request, 1, '', '', 1 ) }}
-                         <!--   
-                            <select id="todo_pianificazioni_0_ripetizione_mese" name="todo[pianificazioni][0][ripetizione_mese]" class="form-control form-control-sm">
-                                <option id="1" value="1"></option>
-                                <option id="2" value="2"></option>
-                            </select>
-                        -->    
+        
+
+                <div class="form-group form-row flex-fill">
+                    <div class="col cke-switch" id="cke-1">
+                        <div class="form-group form-row" id="giorno">
+                            <div class="col-12 col-form-label">
+                                <span>specificare il numero di giorni di ripetizione</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col cke-switch" id="cke-2" style="display: none;">
+                        {# frm.input( table, subtable, '0', 'giorni_settimana', '', '', request, '1', 'hidden' ) #}
+                        <div class="form-group form-row" id="settimana">
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_lunedi', 'lunedì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_martedi', 'martedì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_mercoledi', 'mercoledì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_giovedi', 'giovedì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_venerdi', 'venerdì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_sabato', 'sabato', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_domenica', 'domenica', '', request ) }}
+                                </div>
+                            </div>
+
+                            <!--
+                            {% for g in etc.giorni_settimana %}
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    <input class="messageCheckbox form-check-input" type="checkbox" {{ g.checked }} {% if g.checked == 1 %} checked {% endif %} id="giorno_{{g.id}}" name="giorni" value="{{ g.id }}" onchange="giorniSettimana();">
+                                    <label class="form-check-label text-left" for="horns">{{g.__label__}}</label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            -->
+                        </div>
+                    </div>
+                    <div class="col cke-switch" id="cke-3" style="display: none;">
+                        <div class="form-group form-row" id="mese">
+                            <div class="col-12">
+                                {{ frm.select( table, subtable, '0', 'ripetizione_mese', '', etc.select.ripetizioni_mese, request, 1, '', '', 1 ) }}
+                            <!--   
+                                <select id="todo_pianificazioni_0_ripetizione_mese" name="todo[pianificazioni][0][ripetizione_mese]" class="form-control form-control-sm">
+                                    <option id="1" value="1"></option>
+                                    <option id="2" value="2"></option>
+                                </select>
+                            -->    
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>ripetizioni</legend>
+                <div class="form-group form-row">
+                    <div class="col-auto">
+                        <span class="label-top lbl-cad">ogni n. giorni</span>
+                        {{ frm.input( table, subtable, '0', 'cadenza', '', '', request, '1', 'number', '', '', '','1' ) }}
+                    </div>
+                <!--    <div class="col-auto">
+                        <span class="label-top">n. volte</span>
+                        {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
+                    </div> 
+                -->
+                    <div class="col-auto">
+                        <span class="label-top">fino al</span>
+                        {{ frm.date( table, subtable, '0', 'data_fine', '', '', request ) }}
+                    </div>
+                </div>
+            </fieldset>
+
+        
+        {# BOTTONI E COMANDI DEL MODULO #}
+        <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
         </fieldset>
 
-        <fieldset>
-            <legend>ripetizioni</legend>
-            <div class="form-group form-row">
-                <div class="col-auto">
-                    <span class="label-top lbl-cad">ogni n. giorni</span>
-                    {{ frm.input( table, subtable, '0', 'cadenza', '', '', request, '1', 'number', '', '', '','1' ) }}
-                </div>
-            <!--    <div class="col-auto">
-                    <span class="label-top">n. volte</span>
-                    {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
-                </div> 
-            -->
-                <div class="col-auto">
-                    <span class="label-top">fino al</span>
-                    {{ frm.date( table, subtable, '0', 'data_fine', '', '', request ) }}
-                </div>
-            </div>
-        </fieldset>
+    </form>
+    </section>
 
-    
-    {# BOTTONI E COMANDI DEL MODULO #}
-    <fieldset class="form-controls mt-auto">
-        {{ def.controls( page, pages, ietf, session, table, request ) }}
-    </fieldset>
-
-</form>
-</section>
+{% endif %}
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
