@@ -62,19 +62,18 @@
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
         );
 
-    /*
-        if( !empty( $pianificazione ) && $pianificazione['giorni_settimana'] != '' ){
-            $giorni_settimana = explode(',', $pianificazione['giorni_settimana']);
-            
-            if( !empty($giorni_settimana) ){
-                foreach( $giorni_settimana as $v ){
-                    $ct['etc']['giorni_settimana'][$v]['checked'] = 1;
-                }
-            }
-        }
-*/
-    #    print_r($giorni_settimana);
-    #    print_r($ct['etc']['giorni_settimana']);
+
+        // array per il workspace della pianificazione
+        $wks = array(
+            'todo' => array(
+                'timestamp_pianificazione' => '%data%'
+            ),
+            'attivita' => array(
+                'data' => '%data%'
+            )
+        );
+
+        $ct['etc']['wks'] = json_encode( $wks );
         
     }
 
