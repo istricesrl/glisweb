@@ -1,0 +1,36 @@
+{% import '_bin/_form.html' as frm %}
+
+<div class="modal" tabindex="-1" role="dialog" id="pulisci">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">rimuovi eventi non conformi</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				<div class="col">
+                    la pianificazione è stata modificata<br>
+					questa operazione rimuoverà eventi già esistenti non più conformi relativamente al periodo sotto indicato.
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-6 col-md-auto">
+					<span class="label-top">data inizio</span>
+					{{ frm.date( table, '', '', 'data_inizio', '', '', request, default ) }}
+				</div>
+				<div class="col-6 col-md-auto">
+					<span class="label-top">data fine</span>
+					{{ frm.date( table, '', '', 'data_fine', '', '', request, default ) }}
+				</div>
+			</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" onclick="pulisciPianificazione();">scollega</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

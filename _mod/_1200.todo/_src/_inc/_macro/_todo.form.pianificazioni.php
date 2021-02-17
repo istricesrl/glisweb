@@ -101,6 +101,11 @@
 	    'text' => 'modifica la pianificazione'
 	);
 
+    // modal per pulire gli oggetti futuri non più conformi
+    $ct['page']['contents']['metro']['pianificazione'][] = array(
+	    'modal' => array('id' => 'pulisci', 'include' => 'inc/todo.form.pianificazioni.modal.pulisci.html' )
+	);
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
