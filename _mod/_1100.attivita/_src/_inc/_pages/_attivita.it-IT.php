@@ -55,7 +55,7 @@
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_turni.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'turni.view', 'turni.tools', 'turni.schema' ) ),
+		'etc'			=> array( 'tabs'	=> array( 'turni.view', 'turni.schema' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'turni' ),
 									'priority'	=> '110' ) )
@@ -63,7 +63,7 @@
 
 
 	// turni tools
-	$p['turni.tools'] = array(
+	/*$p['turni.tools'] = array(
 	    'sitemap'		=> false,
 		'title'			=> array( $l		=> 'pianificazione turni' ),
 		'icon'			=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
@@ -74,6 +74,7 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['turni.view']['etc']['tabs'] )
 	);
+	*/
 
 
 	// pagina schema
