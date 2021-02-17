@@ -62,18 +62,6 @@
 	);
 
 
-	// gestione turni
-	$p['turni.form'] = array(
-	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'turni.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.form.html' ),
-	    'macro'			=> array( $m.'_src/_inc/_macro/_turni.form.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'turni.form' ) )
-	);
-
 	// turni tools
 	$p['turni.tools'] = array(
 	    'sitemap'		=> false,
@@ -98,5 +86,30 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_turni.schema.php' ),
 		'etc'			=> array( 'tabs'	=> $p['turni.view']['etc']['tabs'] ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
+	// gestione turni
+	$p['turni.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'turni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_turni.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'turni.form', 'turni.form.pianificazioni' ) )
+	);
+	
+	// gestione turni pianificazioni
+	$p['turni.form.pianificazioni'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'pianificazione' ),
+		'icon'			=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
+		'h1'			=> array( $l		=> 'pianificazione' ),
+		'parent'		=> array( 'id'		=> 'turni.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.form.pianificazioni.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_turni.form.pianificazioni.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['turni.form']['etc']['tabs'] )
 	);
 

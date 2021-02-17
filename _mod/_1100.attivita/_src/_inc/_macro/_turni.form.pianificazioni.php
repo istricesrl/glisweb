@@ -12,12 +12,12 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'todo';
+    $ct['form']['table'] = 'turni';
    
     //tendina periodi
     $ct['etc']['select']['periodi'] = array(
     //    array( 'id' => 0, '__label__' => 'non si ripete' ),
-        array( 'id' => 1, '__label__' => 'giorni' ),
+    //    array( 'id' => 1, '__label__' => 'giorni' ),
         array( 'id' => 2, '__label__' => 'settimane' ),
         array( 'id' => 3, '__label__' => 'mesi' ),
     //    array( 'id' => 4, '__label__' => 'anno' )
@@ -25,7 +25,7 @@
 
     //elenco periodicità
     $ct['etc']['periodicita'] = array(
-        array( 'id' => 1, '__label__' => 'giornaliera' ),
+    //    array( 'id' => 1, '__label__' => 'giornaliera' ),
         array( 'id' => 2, '__label__' => 'settimanale' ),
         array( 'id' => 3, '__label__' => 'mensile' )
     );
@@ -49,27 +49,27 @@
 
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-        $ct['etc']['data'] = mysqlSelectValue( 
+
+        // cerco la pianificazione figlia di questo turno, se esiste
+        $pianificazione = mysqlSelectRow( 
             $cf['mysql']['connection'], 
-            "SELECT from_unixtime(timestamp_pianificazione, '%Y-%m-%d') FROM todo WHERE id = ?",
+            'SELECT * FROM pianificazioni WHERE id_turno = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
         );
 
-        // cerco la pianificazione figlia di questa todo, se esiste
-        $pianificazione = mysqlSelectRow( 
+        // leggo il numero di giorni tra la data inizio e fine turno
+        $giorni = mysqlSelectValue( 
             $cf['mysql']['connection'], 
-            'SELECT * FROM pianificazioni WHERE id_todo = ?',
+            'SELECT DATEDIFF( data_fine, data_inizio) FROM turni WHERE id = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
         );
 
 
         // array per il workspace della pianificazione
         $wks = array(
-            'todo' => array(
-                'timestamp_pianificazione' => '%data%'
-            ),
-            'attivita' => array(
-                'data' => '%data%'
+            'turni' => array(
+                'data_inizio' => '%data%',
+                'data_fine' => '%data+' . $giorni . '%',
             )
         );
 
@@ -83,27 +83,28 @@
 	    )
 	);
 
-    // modal per scollegare la todo dalla pianificazione
+    
+    // modal per scollegare il turno dalla pianificazione
 	$ct['page']['contents']['metro']['pianificazione'][] = array(
-	    'modal' => array('id' => 'scollega', 'include' => 'inc/todo.form.pianificazioni.modal.scollega.html' ),
+	    'modal' => array('id' => 'scollega', 'include' => 'inc/turni.form.pianificazioni.modal.scollega.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-unlock-alt',
 	    'title' => 'scollega dalla pianificazione',
-	    'text' => 'scollega la todo corrente dalla pianificazione'
+	    'text' => 'scollega il turno corrente dalla pianificazione'
 	);
 
     // modal per modificare la pianificazione originaria
     $ct['page']['contents']['metro']['pianificazione'][] = array(
-	    'modal' => array('id' => 'modifica', 'include' => 'inc/todo.form.pianificazioni.modal.modifica.html' ),
+	    'modal' => array('id' => 'modifica', 'include' => 'inc/turni.form.pianificazioni.modal.modifica.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-calendar',
 	    'title' => 'modifica pianificazione',
 	    'text' => 'modifica la pianificazione'
 	);
-
+    
     // modal per pulire gli oggetti futuri non più conformi
     $ct['page']['contents']['metro']['pianificazione'][] = array(
-	    'modal' => array('id' => 'pulisci', 'include' => 'inc/todo.form.pianificazioni.modal.pulisci.html' ),
+	    'modal' => array('id' => 'pulisci', 'include' => 'inc/turni.form.pianificazioni.modal.pulisci.html' ),
         'icon' => NULL,
 	    'fa' => 'fa-eraser',
 	    'title' => 'rimuovi oggetti non conformi',
