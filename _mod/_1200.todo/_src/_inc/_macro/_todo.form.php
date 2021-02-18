@@ -42,6 +42,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_lead = 1 OR se_cliente = 1 OR se_prospect = 1' );
 
+    // tendina progetti
+	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM progetti_produzione_view' );
+
      // tendina anni
 	foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
 	    $ct['etc']['select']['anni'][] = array( 'id' => $y, '__label__' => $y );
