@@ -44,11 +44,21 @@
     la macro gallery2colorbox()
     ---------------------------
 
+    \code{.html}
+    {% import '_bin/_default.html' as cms %}
+    {{ cms.gallery2colorbox( page, localization.language.ietf, site, 'galleryId', image, ['gallery'] ) }}
+    \endcode
+
     la macro image()
     ----------------
 
     la macro jumbotron()
     --------------------
+
+    \code{.html}
+    {% import '_bin/_default.html' as cms %}
+    {{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotronId' ) }}
+    \endcode
 
     la macro picture()
     ------------------

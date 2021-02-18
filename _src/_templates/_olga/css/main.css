@@ -64,6 +64,10 @@ main.container > div.row > div.col > div {
     padding: 1em;
 }
 
+main p:last-of-type {
+    margin-bottom: 0em;
+}
+
 div.jumbotron {
     min-height: 16em;
     padding: 3em 2em;

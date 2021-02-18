@@ -309,14 +309,15 @@ window.addEventListener( 'DOMContentLoaded', function() {
 </script>
 {% endmacro %}
 
-{% macro gallery2colorbox( page, lang, site, name, set ) %}
+{% macro gallery2colorbox( page, lang, site, name, set, image, trans ) %}
+{% import _self as cms %}
+{% if not trans %}{% set trans = 'elastic' %}{% endif %}
 {% set alert = '' %}
-<div id="{{ name }}" class="row g2cb" style="display: none;">
+<div id="{{ name }}" class="row g2cb d-flex justify-content-center" style="display: none;">
     {% for k in set %}
     {% for img in page.contents.images[ k ] %}
-    <div class="col col-md-3"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
-	<img src="{{ site.root }}{{ img.path }}" class="img-fluid mb-3">
-	{# TODO provare a usare la macro standard picture #}
+    <div class="col-6 col-md-3"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
+		{{ cms.picture( img, lang, site, image, '', '', 'img-fluid mb-4' ) }}
     </a></div>
     {% else %}
     {% set alert = alert ~ '<p><strong>ATTENZIONE!</strong> immagini mancanti per ' ~ k ~ '</p>' %}
@@ -327,9 +328,14 @@ window.addEventListener( 'DOMContentLoaded', function() {
 <script defer>
     window.addEventListener( 'DOMContentLoaded', function() {
 
-	$('.g2cb-gallery').colorbox({ width: "90%", height: "90%", rel: "g2cb-gallery", transition: "none" });
+		$('.g2cb-gallery').colorbox({
+			width: "90%",
+			height: "90%",
+			rel: "g2cb-gallery",
+			transition: "{{ trans }}"
+		});
 
-	$('.g2cb').fadeIn();
+		$('.g2cb').fadeIn();
 
     });
 </script>
