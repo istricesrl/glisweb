@@ -32,6 +32,7 @@
                     
                     <main class="mt-3 mt-auto mb-md-auto">
                         <div class="container">
+
                             <div class="row">
                                 <div class="col">
                                     <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
@@ -47,6 +48,9 @@
                                     {% block main %}{% endblock %}
                                 </div>
                             </div>
+
+                            {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
+
                         </div>
                     </main>
 
