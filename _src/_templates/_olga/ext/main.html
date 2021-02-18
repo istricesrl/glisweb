@@ -14,9 +14,14 @@
         <header class="container d-flex flex-column">
             <div class="row d-flex flex-row flex-fill">
                 {% block header %}{% include 'inc/header.html' %}{% endblock %}
-                {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
             </div>
         </header>
+
+        <div class="container nav d-flex flex-column">
+            <div class="row d-flex flex-row flex-fill">
+                {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
+            </div>
+        </div>
 
         {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
 

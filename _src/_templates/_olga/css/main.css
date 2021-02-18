@@ -42,9 +42,12 @@ h3 {
 }
 
 header {
+    min-height: 5em;
+}
+
+header, div.nav {
     background: #aaaaaa;
     color: #000000;
-    min-height: 5em;
 }
 
 .logo img {
