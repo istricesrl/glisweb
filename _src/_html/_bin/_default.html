@@ -309,14 +309,17 @@ window.addEventListener( 'DOMContentLoaded', function() {
 </script>
 {% endmacro %}
 
-{% macro gallery2colorbox( page, lang, site, name, set, image, trans ) %}
+{% macro gallery2colorbox( page, lang, site, name, set, image, class, cols, trans ) %}
 {% import _self as cms %}
 {% if not trans %}{% set trans = 'elastic' %}{% endif %}
+{% if not cols %}{% set md = 3 %}{% else %}{% set md = ( 12 / cols )|round %}{% endif %}
+{% if md > 2 %}{% set col = 6 %}{% else %}{% set col = 12 %}{% endif %}
+{% if not class %}{% set class = ' d-flex justify-content-center' %}{% endif %}
 {% set alert = '' %}
-<div id="{{ name }}" class="row g2cb d-flex justify-content-center" style="display: none;">
+<div id="{{ name }}" class="row g2cb {{ class }}" style="display: none;">
     {% for k in set %}
     {% for img in page.contents.images[ k ] %}
-    <div class="col-6 col-md-3"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
+    <div class="col-{{ col }} col-md-{{ md }}"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
 		{{ cms.picture( img, lang, site, image, '', '', 'img-fluid mb-4' ) }}
     </a></div>
     {% else %}

@@ -33,12 +33,12 @@
             <div class="row">
                 <div class="col">
                     <div class="main">{% block main %}{% endblock %}</div>
+                    {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
                 </div>
                 <aside class="col-12 col-md-4">
                     {% block aside %}{% endblock %}
                 </aside>
             </div>
-            {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
         </main>
 
         <footer class="mt-auto container">
