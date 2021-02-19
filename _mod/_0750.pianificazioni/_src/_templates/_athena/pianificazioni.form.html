@@ -47,7 +47,7 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 			<div class="form-group form-row">
-				<div class="col-12 col-md-2">
+				<div class="col-12 col-md-1">
 					<span class="label-top">entità</span>
 					{# frm.select( table, '', '', 'entita', '', etc.select.entita, request, '', '', '', '', '', 1 ) #}
 
@@ -60,11 +60,16 @@
 				</div>
 				<div class="col-12 col-md-1">
 					<span class="label-top">id entità</span>
-					<input type="text" disabled value="{{ etc.id_oggetto }}" disabled class="form-control form-control-sm ">
+					<input type="text" disabled value="{{ etc.id_oggetto }}" class="form-control form-control-sm ">
 				</div>
 				<div class="col-12 col-md-2">
 					<span class="label-top">data di partenza</span>
-					<input name="__data__" type="date" disabled value="{{ etc.data }}" disabled class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
+					<input name="__data__" type="date" disabled value="{{ etc.data }}" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
+				</div>
+
+				<div class="col-12 col-md-1">
+					<span class="label-top">rinnovo</span>
+					<input type="text" name="{{ table[giorni_rinnovo] }}" disabled value="{{ request[ table ].giorni_rinnovo }}" class="form-control form-control-sm ">
 				</div>
 				
 				<div class="col-12 col-md">
