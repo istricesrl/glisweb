@@ -102,12 +102,8 @@
 	);
 
     // modal per pulire gli oggetti futuri non più conformi
-    $ct['page']['contents']['metro']['pianificazione'][] = array(
-	    'modal' => array('id' => 'pulisci', 'include' => 'inc/todo.form.pianificazioni.modal.pulisci.html' ),
-        'icon' => NULL,
-	    'fa' => 'fa-eraser',
-	    'title' => 'rimuovi oggetti non conformi',
-	    'text' => 'rimuove gli oggetti già esistenti non più conformi'
+    $ct['page']['contents']['metro'][NULL][] = array(
+	    'modal' => array('id' => 'pulisci', 'include' => 'inc/todo.form.pianificazioni.modal.pulisci.html' )
 	);
 
 	// macro di default
