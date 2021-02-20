@@ -4,6 +4,76 @@
      * l'allungatore che gira ad es. una volta a settimana e deve allungare la pianificazione. Questo prende tutte le pianificazioni tali
      * per cui (giorni_rinnovo > 0 AND data_fine < oggi + giorni_rinnovo) che quindi sono da allungare e aggiorna
      * data_fine = oggi + giorni_rinnovo > nome del task: _pianificazioni.extend.php
+     *
+     *
+     *
+     * @todo commentare
+     * @todo usare le funzioni di ACL per verificare se l'azione è autorizzata
+     * @file
+     *
      */
 
-    // NOTA usare le funzioni di ACL per verificare se l'azione è autorizzata
+    // inclusione del framework
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    require '../../../../../_src/_config.php';
+	}
+
+    // TODO usare le funzioni di ACL per verificare se l'azione è autorizzata
+
+    // inizializzo l'array del risultato
+	$status = array();
+
+    // chiave di lock
+	$status['token'] = getToken();
+
+    // se è specificato un ID, forzo la richiesta
+    if( isset( $_REQUEST['id'] ) ) {
+
+        // token della riga
+        $status['id'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE pianificazioni SET token = ? WHERE id = ?',
+            array(
+                array( 's' => $status['token'] ),
+                array( 's' => $_REQUEST['id'] )
+            )
+        );
+        
+    } else {
+
+        // token della riga
+        $status['id'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE pianificazioni SET token = ? WHERE giorni_rinnovo > 0 '.
+            'AND token IS NULL '.
+            'ORDER BY timestamp_estensione ASC LIMIT 1',
+            array(
+                array( 's' => $status['token'] )
+            )
+        );
+
+    }
+
+    // prelevo una riga dalla coda
+    $status['current'] = mysqlSelectRow(
+        $cf['mysql']['connection'],
+        'SELECT pianificazioni.* '.
+        'FROM pianificazioni '.
+        'WHERE token = ? ',
+        array( array( 's' => $status['token'] ) )
+    );
+
+    // calcolo la nuova data di fine
+    $status['fine'] = strtotime( '+' . $status['current']['giorni_rinnovo'] . ' days' );
+
+    // se la nuova data di fine è successiva all'attuale data di fine
+    if( $status['fine'] > $status['current']['data_fine'] ) {
+
+        // query
+        $q = 'UPDATE pianificazioni SET data_fine = ? WHERE id = ?';
+
+        // esecuzione della query
+        $status['prolungamento'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['fine'] ), array( 's' => $status['id'] ) ) );
+
+
+    }

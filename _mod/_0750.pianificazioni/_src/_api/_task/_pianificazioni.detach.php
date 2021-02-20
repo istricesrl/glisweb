@@ -18,7 +18,7 @@
 
     // TODO usare le funzioni di ACL per verificare se l'azione è autorizzata
 
-        // inizializzo l'array del risultato
+    // inizializzo l'array del risultato
 	$status = array();
 
     // verifico se è arrivata una data
