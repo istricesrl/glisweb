@@ -544,6 +544,17 @@
     /**
      *
      * @todo documentare
+     *
+     */
+    function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, $x = array() ) {
+
+		
+
+	}
+
+    /**
+     *
+     * @todo documentare
      * $c	connessione
      * $t	nome tabella
      * $o	id del record da duplicare

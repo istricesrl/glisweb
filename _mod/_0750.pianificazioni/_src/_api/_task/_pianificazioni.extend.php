@@ -45,9 +45,11 @@
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE pianificazioni SET token = ? WHERE giorni_rinnovo > 0 '.
+            'AND timestamp_estensione < ? '.
             'AND token IS NULL '.
             'ORDER BY timestamp_estensione ASC LIMIT 1',
             array(
+                array( 's' => strtotime( '-1 day' ) ),
                 array( 's' => $status['token'] )
             )
         );
@@ -55,7 +57,7 @@
     }
 
     // prelevo una riga dalla coda
-    $status['current'] = mysqlSelectRow(
+    $current = mysqlSelectRow(
         $cf['mysql']['connection'],
         'SELECT pianificazioni.* '.
         'FROM pianificazioni '.
@@ -63,17 +65,46 @@
         array( array( 's' => $status['token'] ) )
     );
 
-    // calcolo la nuova data di fine
-    $status['fine'] = strtotime( '+' . $status['current']['giorni_rinnovo'] . ' days' );
+    // se c'è almeno una riga da inviare
+    if( ! empty( $current ) ) {
 
-    // se la nuova data di fine è successiva all'attuale data di fine
-    if( $status['fine'] > $status['current']['data_fine'] ) {
+        // calcolo la nuova data di fine
+        $status['fine'] = date( 'Y-m-d', strtotime( '+' . $current['giorni_rinnovo'] . ' days' ) );
 
-        // query
-        $q = 'UPDATE pianificazioni SET data_fine = ? WHERE id = ?';
+        // se la nuova data di fine è successiva all'attuale data di fine
+        if( $status['fine'] > $current['data_fine'] ) {
 
-        // esecuzione della query
-        $status['prolungamento'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['fine'] ), array( 's' => $status['id'] ) ) );
+            // query
+            $q = 'UPDATE pianificazioni SET data_fine = ?, timestamp_estensione = ?, token = NULL WHERE id = ?';
 
+            // esecuzione della query
+            $status['prolungamento'] = mysqlQuery( $cf['mysql']['connection'], $q, array(
+                array( 's' => $status['fine'] ),
+                array( 's' => time() ),
+                array( 's' => $status['id'] ) )
+            );
+
+        } else {
+
+            // query
+            $q = 'UPDATE pianificazioni SET timestamp_estensione = ?, token = NULL WHERE id = ?';
+
+            // esecuzione della query
+            $status['sblocco'] = mysqlQuery( $cf['mysql']['connection'], $q, array(
+                array( 's' => $status['fine'] ),
+                array( 's' => $status['id'] ) )
+            );
+
+        }
+
+    } else {
+
+        // status
+        $status['info'][] = 'nessuna pianificazione da estendere';
 
     }
+
+    // output
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    buildJson( $status );
+	}
