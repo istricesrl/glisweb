@@ -172,60 +172,59 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% import _self as cms %}
 <div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); background-size: cover; background-position: center;">
     <div class="container">
-	<div class="row">
-	    <div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">
-		{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] }}</h3>{% endif %}
-		{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-		{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] }}</h1>{% endif %}
-		{% if page.metadati.jt_h1_href %}</a>{% endif %}
-		{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] }}</h2>{% endif %}
-		{% if page.metadati.jt_content[ lang ] %}
-		<div class="contents">
-		    {{ page.metadati.jt_content[ lang ]|raw }}
-		    {% if page.metadati.jt_action[ lang ] %}
-		    <p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
-		    {% endif %}
+		<div class="row">
+			<div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">
+				{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% endif %}
+				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1_href %}</a>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+				{% if page.metadati.jt_content[ lang ] %}
+				<div class="contents">
+					{{ page.metadati.jt_content[ lang ]|raw }}
+					{% if page.metadati.jt_action[ lang ] %}
+					<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
+					{% endif %}
+				</div>
+				{% endif %}
+			</div>
 		</div>
-		{% endif %}
-	    </div>
-	</div>
     </div>
 </div>
 {% if img %}
 <div class="d-block d-lg-none">
-    <div class="jumbotron">
-	<div class="container">
-	    <div class="row">
-		<div class="col">
-		    {% if page.metadati.jt_h3 %}<h3>{{ page.metadati.jt_h3 }}</h3>{% elseif page.h3 %}<h3>{{ page.h3[ lang ]|raw }}</h3>{% endif %}
-		</div>
+    <div class="jumbotron-responsive">
+		<div class="container">
+		    <div class="row">
+			<div class="col">
+		    	{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% endif %}
+			</div>
 	    </div>
 	</div>
-    </div>
-    {{ cms.image( page, lang, site, 'jumbotron', 10, img ) }}
-    <div class="jumbotron">
+</div>
+{{ cms.picture( page.contents.images.jumbotron|first(), lang, site, img ) }}
+<div class="jumbotron-responsive">
 	<div class="container">
 	    <div class="row">
-		<div class="col">
-		    {% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-		    {% if page.metadati.jt_h1 %}<h2>{{ page.metadati.jt_h1 }}</h1>{% endif %}
-		    {% if page.metadati.jt_h1_href %}</a>{% endif %}
-		    {% if page.metadati.jt_h2 %}<h1>{{ page.metadati.jt_h2 }}</h2>{% endif %}
-		</div>
+			<div class="col">
+				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h2>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1_href %}</a>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h1>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+			</div>
 	    </div>
 	    {% if page.metadati.jt_content[ lang ] %}
 	    <div class="row">
-		<div class="col">
-		    <div class="contents">
-			{{ page.metadati.jt_content[ lang ]|raw }}
-			{% if page.metadati.jt_action[ lang ] %}
-			<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
-			{% endif %}
-		    </div>
-		</div>
+			<div class="col">
+				<div class="contents">
+					{{ page.metadati.jt_content[ lang ]|raw }}
+					{% if page.metadati.jt_action[ lang ] %}
+					<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
+					{% endif %}
+				</div>
+			</div>
 	    </div>
 	    {% endif %}
-	</div>
     </div>
 </div>
 {% endif %}
@@ -342,4 +341,11 @@ window.addEventListener( 'DOMContentLoaded', function() {
 
     });
 </script>
+{% endmacro %}
+
+{% macro numeroverde( num ) %}
+<div class="numero-verde">
+	<div class="telefono"><i class="fa fa-phone" aria-hidden="true"></i></div>
+	<p class="etichetta">numero verde</p><a href="tel:{{ num }}">{{ num }}</a>
+</div>
 {% endmacro %}

@@ -173,7 +173,8 @@
         
         $meta = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT metadati.* FROM metadati '.
+            'SELECT metadati.*, lingue.ietf FROM metadati '.
+            'LEFT JOIN lingue ON lingue.id = metadati.id_lingua '.
             'WHERE ' . $f . ' = ?',
             array(
                 array( 's' => $id )

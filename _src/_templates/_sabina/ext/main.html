@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.html' %}
+
+    </head>
+
+    <body>
+
+        {% include '_inc/_page.open.html' %}
+
+        <header class="d-flex sticky-top">
+            <div class="container d-flex flex-column">
+                <div class="row d-flex flex-row flex-fill">
+                    {% block headersx %}{% include 'inc/header.1.html' %}{% endblock %}
+                    {% block headercn %}{% include 'inc/header.2.html' %}{% endblock %}
+                    {% block headerdx %}{% include 'inc/header.3.html' %}{% endblock %}
+                </div>
+                {% if page.template.menu.landing %}
+                <div class="row d-flex flex-row flex-fill">
+                    {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
+                </div>
+                {% endif %}
+            </div>
+        </header>
+
+        {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+
+        {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+
+        {% block vantaggi %}{% include 'inc/vantaggi.html' %}{% endblock %}
+
+        {% block video %}{% include 'inc/video.html' %}{% endblock %}
+
+        <main class="container d-flex flex-column flex-fill">
+            <div class="row">
+                <div class="col">
+                    <div class="main">{% block main %}{% endblock %}</div>
+                    {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
+                </div>
+            </div>
+        </main>
+
+        {% block garanzia %}{% include 'inc/garanzia.html' %}{% endblock %}
+
+        <footer class="mt-auto">
+            <div class="container">
+                <div class="row">
+                    {% block footersx %}{% include 'inc/footer.1.html' %}{% endblock %}
+                    {% block footercn %}{% include 'inc/footer.2.html' %}{% endblock %}
+                    {% block footerdx %}{% include 'inc/footer.3.html' %}{% endblock %}
+                </div>
+            </div>
+        </footer>
+
+        {% include '_inc/_page.close.html' %}
+
+        {% block javascript %}{% endblock %}
+
+    </body>
+</html>
