@@ -1,0 +1,1 @@
+ALTER TABLE `pianificazioni` DROP `giorni_settimana`;
