@@ -1850,6 +1850,7 @@ CREATE TABLE `attivita` (
   KEY `id_luogo` (`id_luogo`),
   KEY `id_tipologia_inps` (`id_tipologia_inps`),
   KEY `id_todo` (`id_todo`),
+  CONSTRAINT `attivita_ibfk_17_nofollow` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `attivita_ibfk_10_nofollow` FOREIGN KEY (`id_incarico`) REFERENCES `incarichi_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_11_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_12_nofollow` FOREIGN KEY (`id_task`) REFERENCES `task` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -1857,7 +1858,6 @@ CREATE TABLE `attivita` (
   CONSTRAINT `attivita_ibfk_14_nofollow` FOREIGN KEY (`id_campagna`) REFERENCES `campagne` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_15_nofollow` FOREIGN KEY (`id_luogo`) REFERENCES `luoghi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_16_nofollow` FOREIGN KEY (`id_tipologia_inps`) REFERENCES `tipologie_attivita_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `attivita_ibfk_17_nofollow` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_attivita` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_2_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_3` FOREIGN KEY (`id_esito`) REFERENCES `esiti_attivita` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -7635,6 +7635,7 @@ CREATE TABLE `patrocini_pratiche` (
   `id_pratica` int(11) NOT NULL,
   `numero` char(32) NOT NULL,
   `se_liquidato` int(1) DEFAULT NULL,
+  `data_liquidazione` date DEFAULT NULL,
   `se_fatturato` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_pratica` (`id_pratica`),
@@ -7655,7 +7656,9 @@ SET character_set_client = utf8;
   `id_pratica` tinyint NOT NULL,
   `numero` tinyint NOT NULL,
   `se_liquidato` tinyint NOT NULL,
+  `data_liquidazione` tinyint NOT NULL,
   `se_fatturato` tinyint NOT NULL,
+  `pratica` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -7671,13 +7674,17 @@ CREATE TABLE `pianificazioni` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entita` char(255) NOT NULL,
   `nome` char(255) DEFAULT NULL,
-  `id_contratto` int(11) DEFAULT NULL,
-  `id_progetto` char(32) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_turno` int(11) DEFAULT NULL,
   `periodicita` int(11) NOT NULL,
   `cadenza` int(11) DEFAULT NULL,
-  `giorni_settimana` char(32) DEFAULT NULL,
+  `se_lunedi` int(1) DEFAULT NULL,
+  `se_martedi` int(1) DEFAULT NULL,
+  `se_mercoledi` int(1) DEFAULT NULL,
+  `se_giovedi` int(1) DEFAULT NULL,
+  `se_venerdi` int(1) DEFAULT NULL,
+  `se_sabato` int(1) DEFAULT NULL,
+  `se_domenica` int(1) DEFAULT NULL,
   `ripetizione_mese` int(11) DEFAULT NULL,
   `ripetizione_anno` int(11) DEFAULT NULL,
   `data_fine` date DEFAULT NULL,
@@ -7685,20 +7692,20 @@ CREATE TABLE `pianificazioni` (
   `giorni_rinnovo` int(11) DEFAULT NULL,
   `note` text,
   `workspace` text,
+  `token` char(128) DEFAULT NULL,
+  `timestamp_estensione` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`),
-  KEY `id_contratto` (`id_contratto`),
-  KEY `id_progetto` (`id_progetto`),
   KEY `id_todo` (`id_todo`),
   KEY `id_turno` (`id_turno`),
-  CONSTRAINT `pianificazioni_ibfk_4` FOREIGN KEY (`id_turno`) REFERENCES `turni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `pianificazioni_ibfk_1` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `pianificazioni_ibfk_2` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `pianificazioni_ibfk_3` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `token` (`token`),
+  KEY `timestamp_estensione` (`timestamp_estensione`),
+  CONSTRAINT `pianificazioni_ibfk_3` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `pianificazioni_ibfk_4` FOREIGN KEY (`id_turno`) REFERENCES `turni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7714,13 +7721,17 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `entita` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
-  `id_contratto` tinyint NOT NULL,
-  `id_progetto` tinyint NOT NULL,
   `id_todo` tinyint NOT NULL,
   `id_turno` tinyint NOT NULL,
   `periodicita` tinyint NOT NULL,
   `cadenza` tinyint NOT NULL,
-  `giorni_settimana` tinyint NOT NULL,
+  `se_lunedi` tinyint NOT NULL,
+  `se_martedi` tinyint NOT NULL,
+  `se_mercoledi` tinyint NOT NULL,
+  `se_giovedi` tinyint NOT NULL,
+  `se_venerdi` tinyint NOT NULL,
+  `se_sabato` tinyint NOT NULL,
+  `se_domenica` tinyint NOT NULL,
   `ripetizione_mese` tinyint NOT NULL,
   `ripetizione_anno` tinyint NOT NULL,
   `data_fine` tinyint NOT NULL,
@@ -7728,6 +7739,7 @@ SET character_set_client = utf8;
   `giorni_rinnovo` tinyint NOT NULL,
   `note` tinyint NOT NULL,
   `workspace` tinyint NOT NULL,
+  `token` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -7945,6 +7957,7 @@ SET character_set_client = utf8;
   `__short_label__` tinyint NOT NULL,
   `diritto` tinyint NOT NULL,
   `tipologia` tinyint NOT NULL,
+  `esito` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -18343,12 +18356,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `patrocini_pratiche_view` AS select `patrocini_pratiche`.`id` AS `id`,`patrocini_pratiche`.`id_pratica` AS `id_pratica`,`patrocini_pratiche`.`numero` AS `numero`,`patrocini_pratiche`.`se_liquidato` AS `se_liquidato`,`patrocini_pratiche`.`se_fatturato` AS `se_fatturato`,`patrocini_pratiche`.`numero` AS `__label__` from `patrocini_pratiche` order by `patrocini_pratiche`.`numero` */;
+/*!50001 VIEW `patrocini_pratiche_view` AS select `patrocini_pratiche`.`id` AS `id`,`patrocini_pratiche`.`id_pratica` AS `id_pratica`,`patrocini_pratiche`.`numero` AS `numero`,`patrocini_pratiche`.`se_liquidato` AS `se_liquidato`,`patrocini_pratiche`.`data_liquidazione` AS `data_liquidazione`,`patrocini_pratiche`.`se_fatturato` AS `se_fatturato`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `pratica`,concat('patrocinio della pratica ',concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)),' ',`patrocini_pratiche`.`numero`,' | ',if(`patrocini_pratiche`.`se_liquidato`,if(`patrocini_pratiche`.`data_liquidazione`,concat(' liquidato in data ',`patrocini_pratiche`.`data_liquidazione`),'liquidato'),' non liquidato'),' | ',if(`patrocini_pratiche`.`se_fatturato`,'fatturato','non fatturato')) AS `__label__` from ((`patrocini_pratiche` left join `pratiche` on((`patrocini_pratiche`.`id_pratica` = `pratiche`.`id`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) order by concat('patrocinio della pratica ',concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)),' ',`patrocini_pratiche`.`numero`,' | ',if(`patrocini_pratiche`.`se_liquidato`,if(`patrocini_pratiche`.`data_liquidazione`,concat(' liquidato in data ',`patrocini_pratiche`.`data_liquidazione`),'liquidato'),' non liquidato'),' | ',if(`patrocini_pratiche`.`se_fatturato`,'fatturato','non fatturato')) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -18367,7 +18380,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pianificazioni_view` AS select `pianificazioni`.`id` AS `id`,`pianificazioni`.`entita` AS `entita`,`pianificazioni`.`nome` AS `nome`,`pianificazioni`.`id_contratto` AS `id_contratto`,`pianificazioni`.`id_progetto` AS `id_progetto`,`pianificazioni`.`id_todo` AS `id_todo`,`pianificazioni`.`id_turno` AS `id_turno`,`pianificazioni`.`periodicita` AS `periodicita`,`pianificazioni`.`cadenza` AS `cadenza`,`pianificazioni`.`giorni_settimana` AS `giorni_settimana`,`pianificazioni`.`ripetizione_mese` AS `ripetizione_mese`,`pianificazioni`.`ripetizione_anno` AS `ripetizione_anno`,`pianificazioni`.`data_fine` AS `data_fine`,`pianificazioni`.`data_ultimo_oggetto` AS `data_ultimo_oggetto`,`pianificazioni`.`giorni_rinnovo` AS `giorni_rinnovo`,`pianificazioni`.`note` AS `note`,`pianificazioni`.`workspace` AS `workspace`,`pianificazioni`.`id_account_inserimento` AS `id_account_inserimento`,`pianificazioni`.`timestamp_inserimento` AS `timestamp_inserimento`,`pianificazioni`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pianificazioni`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`pianificazioni`.`id`,' ',`pianificazioni`.`entita`,' ',`pianificazioni`.`nome`) AS `__label__` from ((`pianificazioni` left join `contratti_view` on((`pianificazioni`.`id_contratto` = `contratti_view`.`id`))) left join `progetti_view` on((`pianificazioni`.`id_progetto` = `progetti_view`.`id`))) order by concat(`pianificazioni`.`id`,' ',`pianificazioni`.`entita`,' ',`pianificazioni`.`nome`) */;
+/*!50001 VIEW `pianificazioni_view` AS select `pianificazioni`.`id` AS `id`,`pianificazioni`.`entita` AS `entita`,`pianificazioni`.`nome` AS `nome`,`pianificazioni`.`id_todo` AS `id_todo`,`pianificazioni`.`id_turno` AS `id_turno`,`pianificazioni`.`periodicita` AS `periodicita`,`pianificazioni`.`cadenza` AS `cadenza`,`pianificazioni`.`se_lunedi` AS `se_lunedi`,`pianificazioni`.`se_martedi` AS `se_martedi`,`pianificazioni`.`se_mercoledi` AS `se_mercoledi`,`pianificazioni`.`se_giovedi` AS `se_giovedi`,`pianificazioni`.`se_venerdi` AS `se_venerdi`,`pianificazioni`.`se_sabato` AS `se_sabato`,`pianificazioni`.`se_domenica` AS `se_domenica`,`pianificazioni`.`ripetizione_mese` AS `ripetizione_mese`,`pianificazioni`.`ripetizione_anno` AS `ripetizione_anno`,`pianificazioni`.`data_fine` AS `data_fine`,`pianificazioni`.`data_ultimo_oggetto` AS `data_ultimo_oggetto`,`pianificazioni`.`giorni_rinnovo` AS `giorni_rinnovo`,`pianificazioni`.`note` AS `note`,`pianificazioni`.`workspace` AS `workspace`,`pianificazioni`.`token` AS `token`,`pianificazioni`.`id_account_inserimento` AS `id_account_inserimento`,`pianificazioni`.`timestamp_inserimento` AS `timestamp_inserimento`,`pianificazioni`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pianificazioni`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`pianificazioni`.`id`,' ',`pianificazioni`.`entita`,' ',`pianificazioni`.`nome`) AS `__label__` from `pianificazioni` order by concat(`pianificazioni`.`id`,' ',`pianificazioni`.`entita`,' ',`pianificazioni`.`nome`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -18424,7 +18437,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pratiche_all_view` AS select `pratiche`.`id` AS `id`,`pratiche`.`numero` AS `numero`,`pratiche`.`numero_ruolo` AS `numero_ruolo`,`pratiche`.`data_apertura` AS `data_apertura`,`pratiche`.`data_chiusura` AS `data_chiusura`,`pratiche`.`id_sede_apertura` AS `id_sede_apertura`,`pratiche`.`id_tipologia` AS `id_tipologia`,`pratiche`.`id_categoria_diritto` AS `id_categoria_diritto`,`pratiche`.`id_provenienza` AS `id_provenienza`,`pratiche`.`note_segnalazione` AS `note_segnalazione`,`pratiche`.`descrizione` AS `descrizione`,`pratiche`.`controparte` AS `controparte`,`pratiche`.`se_patrocinio` AS `se_patrocinio`,`pratiche`.`se_accompagnamento` AS `se_accompagnamento`,`pratiche`.`note_chiusura` AS `note_chiusura`,`pratiche`.`ore_stimate` AS `ore_stimate`,`pratiche`.`id_esito` AS `id_esito`,`pratiche`.`se_richiesta_liquidazione` AS `se_richiesta_liquidazione`,`pratiche`.`se_richiesto_rimborso` AS `se_richiesto_rimborso`,`pratiche`.`id_account_editor` AS `id_account_editor`,`pratiche`.`timestamp_inserimento` AS `timestamp_inserimento`,`pratiche`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pratiche`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pratiche`.`id_account_inserimento` AS `id_account_inserimento`,`pratiche`.`se_importata` AS `se_importata`,`pratiche`.`id_account_chiusura` AS `id_account_chiusura`,`pratiche`.`timestamp_chiusura` AS `timestamp_chiusura`,if((`pratiche`.`se_importata` = 1),1,0) AS `importata`,if(`pratiche`.`data_chiusura`,1,0) AS `se_chiusa`,`pratiche_avvocati`.`id_anagrafica` AS `id_responsabile`,`avvocati`.`id_anagrafica` AS `id_volontario`,group_concat(distinct coalesce(`volontari`.`soprannome`,`volontari`.`denominazione`,concat_ws(' ',coalesce(`volontari`.`cognome`,''),coalesce(`volontari`.`nome`,'')),'') separator ' | ') AS `lista_volontari`,group_concat(distinct coalesce(`assistiti`.`soprannome`,`assistiti`.`denominazione`,concat_ws(' ',coalesce(`assistiti`.`cognome`,''),coalesce(`assistiti`.`nome`,'')),'') separator ' | ') AS `lista_assistiti`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `responsabile`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `__short_label__`,`categorie_diritto_view`.`__label__` AS `diritto`,`tipologie_pratiche_view`.`__label__` AS `tipologia`,concat('pratica n° ',`pratiche`.`numero`,' aperta in sede ',coalesce(`sede`.`denominazione`,concat_ws(' ',coalesce(`sede`.`cognome`,''),coalesce(`sede`.`nome`,'')),'')) AS `__label__` from (((((((((`pratiche` left join `pratiche_avvocati` on(((`pratiche_avvocati`.`id_pratica` = `pratiche`.`id`) and (`pratiche_avvocati`.`se_responsabile` = 1)))) left join `pratiche_assistiti` on((`pratiche_assistiti`.`id_pratica` = `pratiche`.`id`))) left join `pratiche_avvocati` `avvocati` on((`avvocati`.`id_pratica` = `pratiche`.`id`))) left join `anagrafica` on((`anagrafica`.`id` = `pratiche_avvocati`.`id_anagrafica`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) left join `anagrafica` `assistiti` on((`assistiti`.`id` = `pratiche_assistiti`.`id_anagrafica`))) left join `anagrafica` `volontari` on((`volontari`.`id` = `avvocati`.`id_anagrafica`))) left join `categorie_diritto_view` on((`categorie_diritto_view`.`id` = `pratiche`.`id_categoria_diritto`))) left join `tipologie_pratiche_view` on((`tipologie_pratiche_view`.`id` = `pratiche`.`id_tipologia`))) group by `pratiche`.`id` order by year(`pratiche`.`data_apertura`) desc,length(`pratiche`.`numero`),`pratiche`.`numero` */;
+/*!50001 VIEW `pratiche_all_view` AS select `pratiche`.`id` AS `id`,`pratiche`.`numero` AS `numero`,`pratiche`.`numero_ruolo` AS `numero_ruolo`,`pratiche`.`data_apertura` AS `data_apertura`,`pratiche`.`data_chiusura` AS `data_chiusura`,`pratiche`.`id_sede_apertura` AS `id_sede_apertura`,`pratiche`.`id_tipologia` AS `id_tipologia`,`pratiche`.`id_categoria_diritto` AS `id_categoria_diritto`,`pratiche`.`id_provenienza` AS `id_provenienza`,`pratiche`.`note_segnalazione` AS `note_segnalazione`,`pratiche`.`descrizione` AS `descrizione`,`pratiche`.`controparte` AS `controparte`,`pratiche`.`se_patrocinio` AS `se_patrocinio`,`pratiche`.`se_accompagnamento` AS `se_accompagnamento`,`pratiche`.`note_chiusura` AS `note_chiusura`,`pratiche`.`ore_stimate` AS `ore_stimate`,`pratiche`.`id_esito` AS `id_esito`,`pratiche`.`se_richiesta_liquidazione` AS `se_richiesta_liquidazione`,`pratiche`.`se_richiesto_rimborso` AS `se_richiesto_rimborso`,`pratiche`.`id_account_editor` AS `id_account_editor`,`pratiche`.`timestamp_inserimento` AS `timestamp_inserimento`,`pratiche`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pratiche`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pratiche`.`id_account_inserimento` AS `id_account_inserimento`,`pratiche`.`se_importata` AS `se_importata`,`pratiche`.`id_account_chiusura` AS `id_account_chiusura`,`pratiche`.`timestamp_chiusura` AS `timestamp_chiusura`,if((`pratiche`.`se_importata` = 1),1,0) AS `importata`,if(`pratiche`.`data_chiusura`,1,0) AS `se_chiusa`,`pratiche_avvocati`.`id_anagrafica` AS `id_responsabile`,`avvocati`.`id_anagrafica` AS `id_volontario`,group_concat(distinct coalesce(`volontari`.`soprannome`,`volontari`.`denominazione`,concat_ws(' ',coalesce(`volontari`.`cognome`,''),coalesce(`volontari`.`nome`,'')),'') separator ' | ') AS `lista_volontari`,group_concat(distinct coalesce(`assistiti`.`soprannome`,`assistiti`.`denominazione`,concat_ws(' ',coalesce(`assistiti`.`cognome`,''),coalesce(`assistiti`.`nome`,'')),'') separator ' | ') AS `lista_assistiti`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `responsabile`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `__short_label__`,`categorie_diritto_view`.`__label__` AS `diritto`,`tipologie_pratiche_view`.`__label__` AS `tipologia`,`esiti_pratiche`.`nome` AS `esito`,concat('pratica n° ',`pratiche`.`numero`,' aperta in sede ',coalesce(`sede`.`denominazione`,concat_ws(' ',coalesce(`sede`.`cognome`,''),coalesce(`sede`.`nome`,'')),'')) AS `__label__` from ((((((((((`pratiche` left join `pratiche_avvocati` on(((`pratiche_avvocati`.`id_pratica` = `pratiche`.`id`) and (`pratiche_avvocati`.`se_responsabile` = 1)))) left join `pratiche_assistiti` on((`pratiche_assistiti`.`id_pratica` = `pratiche`.`id`))) left join `pratiche_avvocati` `avvocati` on((`avvocati`.`id_pratica` = `pratiche`.`id`))) left join `anagrafica` on((`anagrafica`.`id` = `pratiche_avvocati`.`id_anagrafica`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) left join `anagrafica` `assistiti` on((`assistiti`.`id` = `pratiche_assistiti`.`id_anagrafica`))) left join `anagrafica` `volontari` on((`volontari`.`id` = `avvocati`.`id_anagrafica`))) left join `categorie_diritto_view` on((`categorie_diritto_view`.`id` = `pratiche`.`id_categoria_diritto`))) left join `tipologie_pratiche_view` on((`tipologie_pratiche_view`.`id` = `pratiche`.`id_tipologia`))) left join `esiti_pratiche` on((`esiti_pratiche`.`id` = `pratiche`.`id_esito`))) group by `pratiche`.`id` order by year(`pratiche`.`data_apertura`) desc,length(`pratiche`.`numero`),`pratiche`.`numero` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -20737,4 +20750,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-14  5:03:40
+-- Dump completed on 2021-02-21  5:00:39
