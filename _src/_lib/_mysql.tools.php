@@ -577,7 +577,7 @@
 			'WHERE referenced_table_name = ? '.
 #			'AND ( constraint_name NOT LIKE "%_nofollow" OR '.
 #			'table_name IN ( ' . implode( ',', $pholders ) . ' ) ) '.
-			( ( count( $pholders > 0 ) ) ? 'AND table_name IN ( ' . implode( ',', $pholders ) . ' ) ' : NULL ).
+			( ( is_array( $pholders ) && count( $pholders ) > 0 ) ? 'AND table_name IN ( ' . implode( ',', $pholders ) . ' ) ' : NULL ).
 			'AND table_name != ? '.
 			'AND table_schema = database() ',
 			$values
