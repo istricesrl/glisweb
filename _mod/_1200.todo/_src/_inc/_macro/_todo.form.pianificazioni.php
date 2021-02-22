@@ -49,11 +49,12 @@
 
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-        $ct['etc']['data'] = mysqlSelectValue( 
+    /*    $ct['etc']['data'] = mysqlSelectValue( 
             $cf['mysql']['connection'], 
             "SELECT from_unixtime(timestamp_pianificazione, '%Y-%m-%d') FROM todo WHERE id = ?",
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
         );
+    */
 
         // cerco la pianificazione figlia di questa todo, se esiste
         $pianificazione = mysqlSelectRow( 
@@ -66,7 +67,7 @@
         // array per il workspace della pianificazione
         $wks = array(
             'todo' => array(
-                'timestamp_pianificazione' => '%data%'
+                'data_pianificazione' => '%data%'
             ),
             'attivita' => array(
                 'data' => '%data%'

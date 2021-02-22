@@ -105,8 +105,12 @@
 
 			<div class="form-group form-row">
 				<div class="col-auto">
-					<span class="label-top">data e ora pianificazione</span>
-					{{ frm.datetime( table, '', '', 'timestamp_pianificazione', '', '', request, 'now'|date('Y-m-d\\TH:i') ) }}
+					<span class="label-top">data pianificazione</span>
+					{{ frm.date( table, '', '', 'data_pianificazione', '', '', request, 'now'|date('Y-m-d') ) }}
+				</div>
+				<div class="col-auto">
+					<span class="label-top">ora pianificazione</span>
+					{{ frm.time( table, '', '', 'ora_pianificazione', '', '', request) }} 
 				</div>
 				<div class="col-4 col-md-1">
 					<span class="label-top">ore pianificate</span>
