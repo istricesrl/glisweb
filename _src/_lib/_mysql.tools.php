@@ -551,6 +551,11 @@
 		// debug
 		// print_r( $x[ $t ] );
 
+		// se non ho un ID di partenza
+		if( empty( $o ) ) {
+			die( 'ID da duplicare non passato' );
+		}
+
 		// duplico la riga
 		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x[ $t ] );
 

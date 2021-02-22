@@ -28,10 +28,28 @@
 
             $flds = array_flip( $a[ $e ] );
     
-            return $flds['§data§'];
+            if( isset( $flds['§data§'] ) ) {
+                return $flds['§data§'];
+            } else {
+                die('§data§ non presente nel JSON');
+            }
 
         }
 
         return null;
         
+    }
+
+    function pianificazioniGetLatestObjectDate( $id, $e ) {
+
+        $field = pianificazioniGetMatchFieldName( $id, $e );
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT max(' . $field . ') FROM ' . $e . ' WHERE id_pianificazione = ?',
+            array( array( 's' => $id ) )
+        );
+
     }

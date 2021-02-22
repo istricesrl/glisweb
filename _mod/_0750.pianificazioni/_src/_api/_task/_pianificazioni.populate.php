@@ -26,6 +26,9 @@
     // chiave di lock
 	$status['token'] = getToken();
 
+    // debug
+	$status['token'] = 'TEST';
+
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
 
@@ -44,13 +47,13 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE pianificazioni SET token = ? WHERE giorni_rinnovo > 0 '.
-            'AND timestamp_estensione < ? '.
+            'UPDATE pianificazioni SET token = ? '.
+            'WHERE ( timestamp_popolazione < ? OR timestamp_popolazione IS NULL ) '.
             'AND token IS NULL '.
             'ORDER BY timestamp_popolazione ASC LIMIT 1',
             array(
-                array( 's' => strtotime( '-1 day' ) ),
-                array( 's' => $status['token'] )
+                array( 's' => $status['token'] ),
+                array( 's' => strtotime( '-1 day' ) )
             )
         );
 
@@ -68,8 +71,75 @@
     // se c'è almeno una riga da inviare
     if( ! empty( $current ) ) {
 
+        // prelevo la data dell'oggetto master
+        $current['data_ultimo_oggetto'] = max(
+            pianificazioniGetLatestObjectDate(
+                $current['id'],
+                $current['entita']
+            ),
+            $current['data_ultimo_oggetto'],
+            date( 'Y-m-d' )
+        );
+
         // status
         $status['info'][] = 'popolo la pianificazione ' . $current['id'];
+
+        // array dei giorni della settimana
+        $giorni = array();
+        if( $current['se_lunedi']       == 1 ) { $giorni[] = 1; }
+        if( $current['se_martedi']      == 1 ) { $giorni[] = 2; }
+        if( $current['se_mercoledi']    == 1 ) { $giorni[] = 3; }
+        if( $current['se_giovedi']      == 1 ) { $giorni[] = 4; }
+        if( $current['se_venerdi']      == 1 ) { $giorni[] = 5; }
+        if( $current['se_sabato']       == 1 ) { $giorni[] = 6; }
+        if( $current['se_domenica']     == 1 ) { $giorni[] = 7; }
+
+        // chiamo la funzione creazionePianificazione() 
+        $date = creazionePianificazione(
+            $cf['mysql']['connection'],
+            $current['data_ultimo_oggetto'],            // data da cui iniziare a pianificare (?)
+            $current['periodicita'],                    // TODO perché questa colonna non si chiama id_periodicita e non esiste tipologie_periodicita
+            $current['cadenza'],
+            $current['data_fine'],
+            1,                                          // perché non esiste questa colonna nella tabella pianificazioni?
+            implode( ',', $giorni ),
+            $current['ripetizione_mese'],
+            $current['ripetizione_anno']
+        );
+
+        // debug
+        print_r( $date );
+
+        // per ogni data...
+        foreach( $date as $data ) {
+
+            // status
+            $status['info'][ $data ][] = 'inizio duplicazione';
+
+            // decodifico il workspace
+            $wksp = json_decode( $current['workspace'], true );
+
+            // faccio le sostituzioni nel workspace
+            foreach( $wksp as $ent => &$wks ) {
+                foreach( $wks as $field => &$value ) {
+                    if( $value == '%data%' || $value == '§data§' ) {
+                        $value = $data;
+                    } elseif( preg_match_all( '/%data\+([0-9]+)%/', $matches ) ) {
+                        $value = date( 'Y-m-d', strtotime( '+' . $matches[1] . ' days', strtotime($date) ) );
+                    }
+                }
+            }
+
+            // chiamo la funzione mysqlDuplicateRowRecursive()
+            mysqlDuplicateRowRecursive(
+                $cf['mysql']['connection'],
+                $current['entita'],
+                $current['id'],
+                NULL,
+                $wksp
+            );
+
+        }
 
     } else {
 
