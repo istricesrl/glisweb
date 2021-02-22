@@ -10,13 +10,13 @@
 	$p['todo.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'todo' ),
-	    'h1'			=> array( $l		=> 'todo' ),
+	    'h1'			=> array( $l		=> 'to-do' ),
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_todo.view.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'todo.view' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'todo' ),
+	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'to-do' ),
 														'priority'	=> '090' ) )
 	);
 
