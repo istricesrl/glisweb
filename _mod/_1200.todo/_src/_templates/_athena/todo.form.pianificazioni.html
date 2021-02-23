@@ -58,7 +58,6 @@
 
                 {{ frm.input( table, subtable, '0', 'id', '', '', request, '', 'hidden' ) }}
                 {{ frm.input( table, subtable, '0', 'periodicita', '', '', request, '1', 'hidden' ) }}
-                {{ frm.input( table, subtable, '0', 'giorni_rinnovo', '', '', request, '30', 'hidden' ) }}
 
                 <div class="form-group form-row">
                     <div class="col-12">
@@ -170,6 +169,12 @@
                         <span class="label-top">fino al</span>
                         {{ frm.date( table, subtable, '0', 'data_fine', '', '', request ) }}
                     </div>
+
+                    <div class="col-auto">
+                        <span class="label-top">giorni rinnovo</span>
+                        {{ frm.inputRequired( table, subtable, '0', 'giorni_rinnovo', '', '', request ) }}
+                    </div>
+                    
                 </div>
             </fieldset>
 
@@ -180,10 +185,10 @@
                     <div class="col-auto col-md-5">
                         <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ page.parent.path[ ietf ] }}','_self');" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
                     </div>
-                    <div class="col col-md-2 text-center"></div>
-                    <div class="col-auto col-md-5 text-right">
+                    <div class="col-auto col-md-7 text-right">
                         {% if request[table][subtable][0].id %}
-                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="rimuovi eventi futuri errati" data-toggle="modal" data-target="#pulisci" data-placement="bottom" data-delay="1000" title="" data-original-title="rimuovi eventi futuri errati">RIMUOVI EVENTI FUTURI</button>
+                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="ferma la pianificazione" data-toggle="modal" data-target="#ferma" data-placement="bottom" data-delay="1000" title="" data-original-title="ferma pianificazione">FERMA PIANIFICAZIONE</button>
+                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="rimuovi eventi futuri errati" data-toggle="modal" data-target="#pulisci" data-placement="bottom" data-delay="1000" title="" data-original-title="rimuovi eventi futuri">RIMUOVI EVENTI FUTURI</button>
                         {% endif %}
                         <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">SALVA PIANIFICAZIONE</button>
                     </div>

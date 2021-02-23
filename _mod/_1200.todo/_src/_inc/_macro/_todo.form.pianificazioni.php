@@ -67,14 +67,15 @@
         // array per il workspace della pianificazione
         $wks = array(
             'todo' => array(
-                'data_pianificazione' => '%data%'
+                'data_pianificazione' => '§data§'
             ),
             'attivita' => array(
-                'data' => '%data%'
+                'data' => '§data§',
+                'data_scadenza' => '%data%'
             )
         );
 
-        $ct['etc']['wks'] = json_encode( $wks );
+        $ct['etc']['wks'] = json_encode( $wks, JSON_UNESCAPED_UNICODE );
         
     }
 
@@ -101,6 +102,15 @@
 	    'title' => 'modifica pianificazione',
 	    'text' => 'modifica la pianificazione'
 	);
+
+    // modal per fermare la pianificazione originaria
+    $ct['page']['contents']['metro']['pianificazione'][] = array(
+        'modal' => array('id' => 'ferma', 'include' => 'inc/todo.form.pianificazioni.modal.ferma.html' ),
+        'icon' => NULL,
+        'fa' => 'fa-archive',
+        'title' => 'ferma pianificazione',
+        'text' => 'interrompe la pianificazione'
+    );
 
     // modal per pulire gli oggetti futuri non più conformi
     $ct['page']['contents']['metro'][NULL][] = array(

@@ -86,13 +86,13 @@
 
         // array dei giorni della settimana
         $giorni = array();
-        if( $current['se_lunedi']       == 1 ) { $giorni[] = 1; }
-        if( $current['se_martedi']      == 1 ) { $giorni[] = 2; }
-        if( $current['se_mercoledi']    == 1 ) { $giorni[] = 3; }
-        if( $current['se_giovedi']      == 1 ) { $giorni[] = 4; }
-        if( $current['se_venerdi']      == 1 ) { $giorni[] = 5; }
-        if( $current['se_sabato']       == 1 ) { $giorni[] = 6; }
-        if( $current['se_domenica']     == 1 ) { $giorni[] = 7; }
+        if( $current['se_lunedi']       == 1 ) { $giorni[] = 0; }
+        if( $current['se_martedi']      == 1 ) { $giorni[] = 1; }
+        if( $current['se_mercoledi']    == 1 ) { $giorni[] = 2; }
+        if( $current['se_giovedi']      == 1 ) { $giorni[] = 3; }
+        if( $current['se_venerdi']      == 1 ) { $giorni[] = 4; }
+        if( $current['se_sabato']       == 1 ) { $giorni[] = 5; }
+        if( $current['se_domenica']     == 1 ) { $giorni[] = 6; }
 
         // chiamo la funzione creazionePianificazione() 
         $date = creazionePianificazione(

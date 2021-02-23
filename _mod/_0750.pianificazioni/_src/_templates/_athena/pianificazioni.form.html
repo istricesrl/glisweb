@@ -68,8 +68,8 @@
 				</div>
 
 				<div class="col-12 col-md-1">
-					<span class="label-top">rinnovo</span>
-					<input type="text" name="{{ table[giorni_rinnovo] }}" disabled value="{{ request[ table ].giorni_rinnovo }}" class="form-control form-control-sm ">
+					<span class="label-top">giorni rinnovo</span>
+					{{ frm.input( table, '', '', 'giorni_rinnovo', '', '', request ) }}
 				</div>
 				
 				<div class="col-12 col-md">
