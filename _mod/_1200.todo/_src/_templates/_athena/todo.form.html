@@ -68,29 +68,29 @@
 			</fieldset>
 	
 			<fieldset>
-			<legend>attribuzione</legend>
-	
-			<div class="form-group form-row">
-				<div class="col-12">
-					<span class="label-top">progetto</span>
-					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.form','','progetti', 'id_progetto' , page, pages, ietf ) }}
+				<legend>attribuzione</legend>
+		
+				<div class="form-group form-row">
+					<div class="col-12">
+						<span class="label-top">progetto</span>
+						{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.form','','progetti', 'id_progetto' , page, pages, ietf ) }}
+					</div>
 				</div>
-			</div>
 
-			<div class="form-group form-row">
-				<div class="col col-md-4">
-					<span class="label-top">cliente</span>
-					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','','anagrafica', 'id_cliente' , page, pages, ietf ) }}
+				<div class="form-group form-row">
+					<div class="col col-md-4">
+						<span class="label-top">cliente</span>
+						{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','','anagrafica', 'id_cliente' , page, pages, ietf ) }}
+					</div>
+					<div class="col-12 col-md-4">
+						<span class="label-top">responsabile</span>
+						{{ frm.selectBox( table, '', '', 'id_responsabile', '', etc.select.id_anagrafica_collaboratori, request, '', '','','','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf ) }}
+					</div>
+					<div class="col-12 col-md-4">
+						<span class="label-top">luogo</span>
+						{{ frm.selectBox( table, '', '', 'id_luogo', '', etc.select.id_luoghi, request, '', '','','','','anagrafica.form','','anagrafica', 'id_luogo' , page, pages, ietf ) }}
+					</div>
 				</div>
-				<div class="col-12 col-md-4">
-					<span class="label-top">responsabile</span>
-					{{ frm.selectBox( table, '', '', 'id_responsabile', '', etc.select.id_anagrafica_collaboratori, request, '', '','','','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf ) }}
-				</div>
-				<div class="col-12 col-md-4">
-					<span class="label-top">luogo</span>
-					{{ frm.selectBox( table, '', '', 'id_luogo', '', etc.select.id_luoghi, request, '', '','','','','anagrafica.form','','anagrafica', 'id_luogo' , page, pages, ietf ) }}
-				</div>
-			</div>
 	
 				<div class="form-group form-row">
 					<div class="col-12 col-md">
@@ -101,28 +101,31 @@
 			</fieldset>
 	
 			<fieldset>
-			<legend>pianificazione</legend>	
+				<legend>pianificazione</legend>	
 
-			<div class="form-group form-row">
-				<div class="col-auto">
-					<span class="label-top">data pianificazione</span>
-					{{ frm.date( table, '', '', 'data_pianificazione', '', '', request, 'now'|date('Y-m-d') ) }}
+				<div class="form-group form-row">
+					<div class="col-auto">
+						<span class="label-top">data</span>
+						{{ frm.date( table, '', '', 'data_pianificazione', '', '', request, 'now'|date('Y-m-d') ) }}
+					</div>
+					<div class="col-auto">
+						<span class="label-top">ora inizio</span>
+						{{ frm.time( table, '', '', 'ora_inizio_pianificazione', '', '', request) }} 
+					</div>
+					<div class="col-auto">
+						<span class="label-top">ora fine</span>
+						{{ frm.time( table, '', '', 'ora_fine_pianificazione', '', '', request) }} 
+					</div>
+					<div class="col-4 col-md-1">
+						<span class="label-top">ore previste</span>
+						{{ frm.inputRequired( table, '', '', 'ore_previste', 'ore', '', request, '', 'number', '', '', '0.25' ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">note</span>
+						{{ frm.input( table, '', '', 'testo_ore_previste', 'note di analisi', '', request ) }}
+					</div>
 				</div>
-				<div class="col-auto">
-					<span class="label-top">ora pianificazione</span>
-					{{ frm.time( table, '', '', 'ora_pianificazione', '', '', request) }} 
-				</div>
-				<div class="col-4 col-md-1">
-					<span class="label-top">ore pianificate</span>
-					{{ frm.inputRequired( table, '', '', 'ore_previste', 'ore', '', request, '', 'number', '', '', '0.25' ) }}
-				</div>
-				<div class="col-12 col-md">
-					<span class="label-top">note pianificazione</span>
-					{{ frm.input( table, '', '', 'testo_ore_previste', 'note di analisi', '', request ) }}
-				</div>
-			</div>
-	
-			
+
 			</fieldset>
 	
 		   
