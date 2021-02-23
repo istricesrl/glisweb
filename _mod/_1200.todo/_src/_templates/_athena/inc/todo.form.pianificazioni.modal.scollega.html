@@ -1,3 +1,15 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function scollegaOggetto( ) {
+	    window.open( '{{ site.url }}task/0750.pianificazioni/pianificazioni.detach?id={{ request[table].id}}&entita=todo', '_self');	
+	}
+</script>
+
 <div class="modal" tabindex="-1" role="dialog" id="scollega">
     <div class="modal-dialog" role="document">
 	<div class="modal-content">
@@ -15,7 +27,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="scollegaOggetto();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" onclick="scollegaOggetto();">scollega</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>
