@@ -125,6 +125,9 @@
             // decodifico il workspace
             $wksp = json_decode( $current['workspace'], true );
 
+            // array di match
+            $matches = array();
+
             // faccio le sostituzioni nel workspace
             foreach( $wksp as $ent => &$wks ) {
                 foreach( $wks as $field => &$value ) {
@@ -142,10 +145,13 @@
             mysqlDuplicateRowRecursive(
                 $cf['mysql']['connection'],
                 $current['entita'],
-                $current['id'],
+                $_REQUEST['id'],
                 NULL,
                 $wksp
             );
+
+            // status
+            $status['info'][ $data ][] = 'chiamata duplicazione ricorsiva per '.$current['entita'].'/'.$_REQUEST['id'];
 
             // aggiorno la data dell'ultimo oggetto
             mysqlQuery(
