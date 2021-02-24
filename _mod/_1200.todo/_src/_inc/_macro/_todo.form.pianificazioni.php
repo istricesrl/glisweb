@@ -67,11 +67,13 @@
         // array per il workspace della pianificazione
         $wks = array(
             'todo' => array(
-                'data_pianificazione' => '§data§'
+                'data_pianificazione' => '§data§',
+                'id_pianificazione' => '§id_pianificazione§'
             ),
             'attivita' => array(
-                'data' => '§data§',
-                'data_scadenza' => '%data%'
+                'data' => '§data§'
+                /*,
+                'data_scadenza' => '%data%'*/
             )
         );
 

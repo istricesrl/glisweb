@@ -70,6 +70,7 @@
             'turni' => array(
                 'data_inizio' => '§data§',
                 'data_fine' => '%data+' . $giorni . '%',
+                'id_pianificazione' => '§id_pianificazione§'
             )
         );
 

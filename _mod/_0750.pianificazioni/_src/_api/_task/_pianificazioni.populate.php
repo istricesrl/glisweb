@@ -74,7 +74,7 @@
         // prelevo la data dell'oggetto master
         $current['data_ultimo_oggetto'] = date(
             'Y-m-d',
-            strtotime( '+1 day',
+            strtotime( '+1 day', strtotime(
                 max(
                     pianificazioniGetLatestObjectDate(
                         $current['id'],
@@ -82,6 +82,7 @@
                     ),
                     $current['data_ultimo_oggetto'],
                     date( 'Y-m-d' )
+                )
                 )
             )
         );
