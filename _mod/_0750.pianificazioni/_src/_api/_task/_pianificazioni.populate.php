@@ -62,7 +62,8 @@
     // prelevo una riga dalla coda
     $current = mysqlSelectRow(
         $cf['mysql']['connection'],
-        'SELECT pianificazioni.* '.
+        'SELECT pianificazioni.*, '.
+        'coalesce( id_todo, id_turno ) AS ref_id '
         'FROM pianificazioni '.
         'WHERE token = ? ',
         array( array( 's' => $status['token'] ) )
@@ -145,21 +146,21 @@
             mysqlDuplicateRowRecursive(
                 $cf['mysql']['connection'],
                 $current['entita'],
-                $status['id'],
+                $current['ref_id'],
                 NULL,
                 $wksp
             );
 
             // status
-            $status['info'][ $data ][] = 'chiamata duplicazione ricorsiva per '.$current['entita'].'/'.$status['id'];
+            $status['info'][ $data ][] = 'chiamata duplicazione ricorsiva per '.$current['entita'].'/'.$current['ref_id'];
 
             // aggiorno la data dell'ultimo oggetto
             mysqlQuery(
                 $cf['mysql']['connection'],
-                'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE id = ?',
+                'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE token = ?',
                 array(
                     array( 's' => $data ),
-                    array( 's' => $current['id'] )
+                    array( 's' => $current['token'] )
                 )
             );
 
