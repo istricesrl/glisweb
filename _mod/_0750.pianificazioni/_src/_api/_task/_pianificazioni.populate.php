@@ -63,7 +63,7 @@
     $current = mysqlSelectRow(
         $cf['mysql']['connection'],
         'SELECT pianificazioni.*, '.
-        'coalesce( id_todo, id_turno ) AS ref_id '
+        'coalesce( id_todo, id_turno ) AS ref_id '.
         'FROM pianificazioni '.
         'WHERE token = ? ',
         array( array( 's' => $status['token'] ) )
