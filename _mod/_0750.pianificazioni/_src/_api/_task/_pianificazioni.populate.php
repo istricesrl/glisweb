@@ -152,7 +152,7 @@
             );
 
             // status
-            $status['info'][ $data ][] = 'chiamata duplicazione ricorsiva per '.$current['entita'].'/'.$current['ref_id'];
+            $status['info'][ $data ][] = 'chiamata duplicazione ricorsiva per '.$current['entita'].' #'.$current['ref_id'];
 
             // aggiorno la data dell'ultimo oggetto
             mysqlQuery(
