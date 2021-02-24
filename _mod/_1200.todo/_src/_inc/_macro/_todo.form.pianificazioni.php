@@ -72,8 +72,6 @@
             ),
             'attivita' => array(
                 'data' => '§data§'
-                /*,
-                'data_scadenza' => '%data%'*/
             )
         );
 

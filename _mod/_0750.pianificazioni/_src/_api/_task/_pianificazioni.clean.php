@@ -52,6 +52,10 @@
                     // query
                     $q = 'DELETE FROM ' . $status['entita'] . ' WHERE id_pianificazione = ? AND ' . $status['campo'] . ' > ?';
 
+                #    var_dump( $q );
+                #    var_dump( $status['id'] );
+                #    var_dump( $status['inizio'] );
+                
                     // esecuzione della query
                     $del = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['id'] ), array( 's' => $status['inizio'] ) ) );
 
@@ -70,6 +74,13 @@
                         // esecuzione della query
                         $status['hard'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['inizio'] ), array( 's' => $status['id'] ) ) );
 
+                    }
+                    else{
+                         // query
+                         $q = 'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE id = ?';
+
+                         // esecuzione della query
+                         $status['hard'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['inizio'] ), array( 's' => $status['id'] ) ) );
                     }
 
                 } else {

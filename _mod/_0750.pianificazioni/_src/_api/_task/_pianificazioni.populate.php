@@ -73,20 +73,19 @@
     if( ! empty( $current ) ) {
 
         // prelevo la data dell'oggetto master
-        $current['data_ultimo_oggetto'] = date(
-            'Y-m-d',
-            strtotime( '+1 day', strtotime(
+        $current['data_ultimo_oggetto'] = 
                 max(
                     pianificazioniGetLatestObjectDate(
                         $current['id'],
-                        $current['entita']
+                        $current['entita'],
+                        $current['ref_id']
                     ),
-                    $current['data_ultimo_oggetto'],
-                    date( 'Y-m-d' )
-                )
-                )
-            )
-        );
+                    $current['data_ultimo_oggetto']
+                );
+
+        if(  empty( $current['data_ultimo_oggetto'] ) ){
+            $current['data_ultimo_oggetto'] = date( 'Y-m-d' );
+        }
 
         // status
         $status['info'][] = 'popolo la pianificazione ' . $current['id'];
@@ -101,6 +100,8 @@
         if( $current['se_sabato']       == 1 ) { $giorni[] = 5; }
         if( $current['se_domenica']     == 1 ) { $giorni[] = 6; }
 
+    #    var_dump( $current['data_ultimo_oggetto'] );
+
         // chiamo la funzione creazionePianificazione() 
         $date = creazionePianificazione(
             $cf['mysql']['connection'],
@@ -114,8 +115,13 @@
             $current['ripetizione_anno']
         );
 
+    #    print_r( $date );
+    
+        $date = array_diff( $date, array( $current['data_ultimo_oggetto'] ) );
+
+    #    print_r( $date );
         // debug
-        // print_r( $date );
+         
 
         // per ogni data...
         foreach( $date as $data ) {
@@ -169,8 +175,9 @@
         // rilascio il token
         mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE pianificazioni SET token = NULL WHERE token = ?',
+            'UPDATE pianificazioni SET token = NULL, timestamp_popolazione = ? WHERE token = ?',
             array(
+                array( 's' => time() ),
                 array( 's' => $status['token'] )
             )
         );

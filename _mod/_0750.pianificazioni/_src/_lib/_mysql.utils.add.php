@@ -40,16 +40,26 @@
         
     }
 
-    function pianificazioniGetLatestObjectDate( $id, $e ) {
+    function pianificazioniGetLatestObjectDate( $id, $e, $r=NULL ) {
 
         $field = pianificazioniGetMatchFieldName( $id, $e );
 
         global $cf;
 
-        return mysqlSelectValue(
+        $d = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT max(' . $field . ') FROM ' . $e . ' WHERE id_pianificazione = ?',
             array( array( 's' => $id ) )
         );
+
+        if( empty( $d ) && !empty( $r ) ){
+            $d = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT ' . $field . ' FROM ' . $e . ' WHERE id = ?',
+                array( array( 's' => $r ) )
+            );
+        }
+
+        return $d;
 
     }
