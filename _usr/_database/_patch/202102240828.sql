@@ -1,0 +1,1 @@
+ALTER TABLE pianificazioni DROP INDEX id_todo;
