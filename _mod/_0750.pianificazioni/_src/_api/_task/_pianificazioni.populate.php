@@ -145,13 +145,13 @@
             mysqlDuplicateRowRecursive(
                 $cf['mysql']['connection'],
                 $current['entita'],
-                $_REQUEST['id'],
+                $status['id'],
                 NULL,
                 $wksp
             );
 
             // status
-            $status['info'][ $data ][] = 'chiamata duplicazione ricorsiva per '.$current['entita'].'/'.$_REQUEST['id'];
+            $status['info'][ $data ][] = 'chiamata duplicazione ricorsiva per '.$current['entita'].'/'.$status['id'];
 
             // aggiorno la data dell'ultimo oggetto
             mysqlQuery(
