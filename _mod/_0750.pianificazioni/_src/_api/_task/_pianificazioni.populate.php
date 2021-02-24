@@ -27,7 +27,7 @@
 	$status['token'] = getToken();
 
     // debug
-	$status['token'] = 'TEST';
+	// $status['token'] = 'TEST';
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
@@ -72,13 +72,18 @@
     if( ! empty( $current ) ) {
 
         // prelevo la data dell'oggetto master
-        $current['data_ultimo_oggetto'] = max(
-            pianificazioniGetLatestObjectDate(
-                $current['id'],
-                $current['entita']
-            ),
-            $current['data_ultimo_oggetto'],
-            date( 'Y-m-d' )
+        $current['data_ultimo_oggetto'] = date(
+            'Y-m-d',
+            strtotime( '+1 day',
+                max(
+                    pianificazioniGetLatestObjectDate(
+                        $current['id'],
+                        $current['entita']
+                    ),
+                    $current['data_ultimo_oggetto'],
+                    date( 'Y-m-d' )
+                )
+            )
         );
 
         // status
@@ -108,7 +113,7 @@
         );
 
         // debug
-        print_r( $date );
+        // print_r( $date );
 
         // per ogni data...
         foreach( $date as $data ) {
@@ -139,7 +144,26 @@
                 $wksp
             );
 
+            // aggiorno la data dell'ultimo oggetto
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE id = ?',
+                array(
+                    array( 's' => $data ),
+                    array( 's' => $current['id'] )
+                )
+            );
+
         }
+
+        // rilascio il token
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE pianificazioni SET token = NULL WHERE token = ?',
+            array(
+                array( 's' => $status['token'] )
+            )
+        );
 
     } else {
 

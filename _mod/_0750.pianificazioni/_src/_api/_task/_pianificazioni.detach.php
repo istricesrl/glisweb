@@ -34,10 +34,10 @@
             $status['entita'] = $_REQUEST['entita'];
 
             // query
-            $q = 'UPDATE ' . $entita . ' SET id_pianificazione = NULL WHERE id = ?';
+            $q = 'UPDATE ' . $status['entita'] . ' SET id_pianificazione = NULL WHERE id = ?';
 
             // esecuzione della query
-            $status['esito'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['id'] ), array( 's' => $status['inizio'] ) ) );
+            $status['esito'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['id'] ) ) );
 
         } else {
 
