@@ -134,7 +134,7 @@
                 foreach( $wks as $field => &$value ) {
                     if( $value == '%data%' || $value == '§data§' ) {
                         $value = $data;
-                    } elseif( $value == '%id_pianificazione%' || $value == '§id_pianificazione' ) {
+                    } elseif( $value == '%id_pianificazione%' || $value == '§id_pianificazione§' ) {
                         $value = $current['id'];
                     } elseif( preg_match_all( '/%data\+([0-9]+)%/', $value, $matches ) ) {
                         $value = date( 'Y-m-d', strtotime( '+' . $matches[1] . ' days', strtotime($date) ) );
