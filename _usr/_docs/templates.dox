@@ -203,7 +203,7 @@
 
     libreria                          | codice per l'inclusione                      | descrizione
     ----------------------------------|----------------------------------------------|------------------------------------------------------
-    _src/_html/_bin/_default.html     | {% import '_bin/_default.html' as cms %}    | contiene macro per renderizzare i contenuti delle pagine web
+    _src/_html/_bin/_default.html     | {% import '_bin/_default.html' as cms %}     | contiene macro per renderizzare i contenuti delle pagine web
     _src/_html/_bin/_form.html        | {% import '_bin/_form.html' as frm %}        | contiene macro per creare gli elementi dei form
     _src/_html/_bin/_navigation.html  | {% import '_bin/_navigation.html' as frm %}  | contiene macro per creare gli elementi di navigazione delle pagine
 
@@ -298,7 +298,7 @@
     }
     \endcode
 
-    Oppure a livello di pagina:
+    Oppure a livello di pagina sia nel PHP che nel JSON come in questo esempio:
 
     \code{.json}
     "contents": {
