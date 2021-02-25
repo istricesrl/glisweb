@@ -203,7 +203,7 @@
 
     libreria                          | codice per l'inclusione                      | descrizione
     ----------------------------------|----------------------------------------------|------------------------------------------------------
-    _src/_html/_bin/_default.html     | {% import '_bin/_default.html' as cms %}    | contiene macro per renderizzare i contenuti delle pagine web
+    _src/_html/_bin/_default.html     | {% import '_bin/_default.html' as cms %}     | contiene macro per renderizzare i contenuti delle pagine web
     _src/_html/_bin/_form.html        | {% import '_bin/_form.html' as frm %}        | contiene macro per creare gli elementi dei form
     _src/_html/_bin/_navigation.html  | {% import '_bin/_navigation.html' as frm %}  | contiene macro per creare gli elementi di navigazione delle pagine
 
@@ -273,7 +273,7 @@
           "it-IT": "sito di esempio"
         },
         "metadata":{
-            "theme": "css/themes/green.css"
+            "theme": "themes/green.css"
         },
         "protocols": {
           "TEST": "http",
@@ -298,7 +298,7 @@
     }
     \endcode
 
-    Oppure a livello di pagina:
+    Oppure a livello di pagina sia nel PHP che nel JSON come in questo esempio:
 
     \code{.json}
     "contents": {
@@ -308,7 +308,7 @@
           "title": { "it-IT": "test da Json" },
           "h1": { "it-IT": "pagina di test da configurazione Json" },
           "parent": { "id": null },
-          "template": { "path": "_src/_templates/_athena/", "theme": "css/themes/green.css" },
+          "template": { "path": "_src/_templates/_athena/", "theme": "themes/green.css" },
           "menu": {
             "main": {
               "label": { "it-IT": "test Json" },
