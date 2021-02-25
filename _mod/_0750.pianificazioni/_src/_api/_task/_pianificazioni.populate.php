@@ -143,7 +143,7 @@
                     } elseif( $value == '%id_pianificazione%' || $value == '§id_pianificazione§' ) {
                         $value = $current['id'];
                     } elseif( preg_match_all( '/%data\+([0-9]+)%/', $value, $matches ) ) {
-                        $value = date( 'Y-m-d', strtotime( '+' . $matches[1] . ' days', strtotime($date) ) );
+                        $value = date( 'Y-m-d', strtotime( '+' . $matches[1][0] . ' days', strtotime( $date ) ) );
                     }
                 }
             }
