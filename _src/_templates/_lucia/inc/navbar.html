@@ -1,0 +1,14 @@
+{% import '_bin/_navigation.html' as nav %}
+
+<div class="col d-flex flex-row">
+    <nav class="navbar navbar-expand-md navbar-light mt-auto ml-auto">
+        <button class="navbar-toggler ml-auto mb-3 mt-3" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav flex-column flex-md-row">
+                {{ nav.menu( page.template.menu.main, localization.language.ietf ) }}
+            </ul>
+        </div>
+    </nav>
+</div>

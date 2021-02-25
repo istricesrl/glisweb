@@ -17,7 +17,7 @@
 
                 <div class="col-12 col-md-4 d-flex flex-column">
 
-                    <header class="mt-auto mb-auto">
+                    <header class="mt-md-auto mb-md-auto">
 
                         <div class="row">
                             {% block header %}{% include 'inc/header.html' %}{% endblock %}
@@ -32,17 +32,25 @@
                     
                     <main class="mt-3 mt-auto mb-md-auto">
                         <div class="container">
+
                             <div class="row">
                                 <div class="col">
                                     <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
                                     {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
                                 </div>
                             </div>
+
+                            {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+                            {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+                
                             <div class="row">
                                 <div class="col">
                                     {% block main %}{% endblock %}
                                 </div>
                             </div>
+
+                            {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
+
                         </div>
                     </main>
 

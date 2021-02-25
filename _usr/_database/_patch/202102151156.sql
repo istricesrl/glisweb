@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `patrocini_pratiche_view`;

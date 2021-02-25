@@ -24,8 +24,7 @@ footer p {
 }
 
 h1, h2, h3 {
-    margin: 0px;
-    margin-bottom: 0.5em;
+    margin: 0.5em 0em;
 }
 
 h1 {
@@ -44,6 +43,15 @@ nav.navbar {
     padding: 0em;
 }
 
+main p {
+    margin: 1em 0em;
+}
+
+
+div.jumbotron {
+    min-height: 16em;
+}
+
 a.nav-link {
     text-align: right;
 }
@@ -55,6 +63,24 @@ a.nav-link, a.nav-link:visited {
 
 a.nav-link:active, a.nav-link:hover {
     color: #333333;
+    text-decoration: underline;
+}
+
+a, a:visited {
+    color: #666666;
+}
+
+a:active, a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #dddddd;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #dddddd;
     text-decoration: underline;
 }
 

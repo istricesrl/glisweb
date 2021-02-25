@@ -48,9 +48,15 @@
     // includo il file di configurazione del template
 	if( file_exists( $ct['page']['template']['ini'] ) ) {
 	    $ct['page'] = array_merge_recursive(
-		$ct['page'],
-		parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
+			$ct['page'],
+			parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
 	    );
+		foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
+			$ct['page'] = array_merge_recursive(
+				$ct['page'],
+				parse_ini_file( $addCnf, true, INI_SCANNER_RAW )
+			);
+		}
 	} else {
 	    logWrite( 'il file ' . $ct['page']['template']['ini'] . ' non esiste', 'template', LOG_CRIT );
 	    die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') dannaeggiato o mancante' );
@@ -60,14 +66,20 @@
 	appendToFile( 'fine caricamento file INI del template' . PHP_EOL, FILE_LATEST_RUN );
 
 	// aggiunta del tema ai CSS da caricare
+	// TODO testare cosa fa con i vari css/main.css (standard e custom) css/minchia.css (standard e custom) css/themes/sticazzi.css (standard e custom)
 	if( isset( $ct['page']['template']['theme'] ) ) {
-		$ct['page']['css']['template'][] = $ct['page']['template']['theme'];
-		$customTheme = path2custom( $ct['page']['template']['path'] . $ct['page']['template']['theme'] );
-		if( file_exists( DIR_BASE . $customTheme ) ) {
-			$ct['page']['css']['custom'][] = $customTheme;
+		foreach( array( 'css/', 'css/themes/' ) as $tDir ) {
+			$tFile = $ct['page']['template']['path'] . $tDir . $ct['page']['template']['theme'];
+			$tcFile = path2custom( $tFile );
+			if( file_exists( DIR_BASE . $tFile ) ) {
+				$ct['page']['css']['template'][] = $tDir . $ct['page']['template']['theme'];
+			}
+			if( file_exists( DIR_BASE . $tcFile ) ) {
+				$ct['page']['css']['custom'][] = $tcFile;
+			}
 		}
 	}
-	
+
     // log
 	appendToFile( 'inizio controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
 
@@ -317,7 +329,7 @@
 		}
 
 		if( ! empty( $ct['page']['template']['theme'] ) ) {
-			echo PHP_EOL . '<!-- teema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
+			echo PHP_EOL . '<!-- tema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
 		}
 
 		switch( $ct['page']['template']['type'] ) {
@@ -480,28 +492,32 @@
 	appendToFile( 'fine invio headers HTTP' . PHP_EOL, FILE_LATEST_RUN );
 
     // TODO documentare i parametri a una sola lettera (sono nei Google Docs?)
+	// i parametri di una lettera sono riservati a DEV e TEST
+	if( SITE_STATUS != PRODUCTION ) {
 
-    // rivelazione dei dati
-	if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
-/*	    array_walk_recursive(
-		$ct,
-		function( &$v, $k ) {
-		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
-			$v = '***';
-		    }
+		// rivelazione dei dati
+		if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
+	/*	    array_walk_recursive(
+			$ct,
+			function( &$v, $k ) {
+				if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
+				$v = '***';
+				}
+			}
+			);
+	*/	    $tpu = $ct;
+			foreach( $_REQUEST['u'] as $tu ) {
+			if( isset( $tpu[ $tu ] ) ) {
+				$tpu = $tpu[ $tu ];
+			}
+			}
+			echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
 		}
-	    );
-*/	    $tpu = $ct;
-	    foreach( $_REQUEST['u'] as $tu ) {
-		if( isset( $tpu[ $tu ] ) ) {
-		    $tpu = $tpu[ $tu ];
-		}
-	    }
-	    echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
+
+		// debug
+		// print_r( $cf );
+
 	}
-
-    // debug
-	// print_r( $cf );
 
 	// TODO qui inserire la formattazione con Tidy?
 

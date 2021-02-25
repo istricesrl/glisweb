@@ -28,13 +28,17 @@
                 {% include 'inc/navbar.html' %}
                 {% endblock %}
             </nav>
-    
-            <main class="row">
+
+            {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+
+            <div class="row">
                 <div class="col">
                     <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
                     {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
                 </div>
-            </main>
+            </div>
+
+            {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
 
             <main class="row">
                 <div class="col">
@@ -42,6 +46,8 @@
                 </div>
             </main>
     
+            {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
+
             <div class="row foglio1 shadow d-none d-md-flex flex-fill flex-column">
             </div>
 

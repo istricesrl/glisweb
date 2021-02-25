@@ -11,7 +11,6 @@
 
         {% include '_inc/_page.open.html' %}
 
-
         <header class="sticky-top">
             <div class="container">
                 <div class="row">
@@ -21,7 +20,21 @@
             </div>
         </header>
 
+        {% if page.contents.images.jumbotron|length > 0 or page.contents.images.carousel|length > 0 %}
+        <div class="mb-auto">
+            <div class="container">
+                <div class="row">
+                    <div class="col p-0 my-3">
+                        {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+                        {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <main class="mt-auto mb-auto">
+
             <div class="container">
                 <div class="row">
                     <div class="col">
@@ -34,6 +47,7 @@
                         {% block main %}{% endblock %}
                     </div>
                 </div>
+                {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
             </div>
         </main>
 

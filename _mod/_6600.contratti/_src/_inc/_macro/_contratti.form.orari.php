@@ -46,9 +46,9 @@
     
     if ( isset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] ) )
     { 
-        // rimuovo gli orari che non appartengono al turno corrente
+        // rimuovo gli orari che non appartengono al turno corrente o che sono relativi alla disponibilità
         foreach( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] as $k => $v ){
-            if( $v['turno'] != $ct['page']['turno'] ){
+            if( $v['turno'] != $ct['page']['turno'] || $v['se_disponibile'] == 1 ){
                 unset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'][$k] );
             }
         }

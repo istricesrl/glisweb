@@ -1,0 +1,210 @@
+body {
+    font-family: monospace;
+    margin: 0px;
+}
+
+main {
+    padding: 0em;
+}
+
+section.testo div.col-12 {
+    margin-bottom: 2em;
+}
+
+nav {
+    background-color: transparent;
+    padding: 0em;
+}
+
+footer {
+    background-color: #aaaaaa;
+    border-top: 2px solid #666666;
+    color: #000000;
+    margin: 0em;
+    min-height: 5em;
+    padding: 1em;
+}
+
+footer p {
+    margin: 0em;
+    font-size: 0.8em;
+}
+
+h1, h2, h3 {
+    margin: 0px;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+}
+
+.jumbotron h1 {
+    font-size: 3em;
+}
+
+.jumbotron h2 {
+    font-size: 2em;
+}
+
+.jumbotron h3 {
+    font-size: 1.75em;
+}
+
+header {
+    background: #aaaaaa;
+    border-bottom: 2px solid #666666;
+    color: #000000;
+    min-height: 5em;
+}
+
+.logo img {
+    height: 3em;
+}
+
+body > section {
+    margin-bottom: 2em;
+}
+
+main p:last-of-type {
+    margin-bottom: 0em;
+}
+
+div.jumbotron {
+    min-height: 32em;
+    padding: 3em 2em;
+}
+
+div.jumbotron-responsive {
+    margin: 2em 0em;
+}
+
+section.jumbotron-garanzia div.jumbotron {
+    background-position: top !important;
+}
+
+section.video {
+    background-color: #cccccc;
+}
+
+a, a:visited {
+    color: #666666;
+}
+
+a:active, a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #ffffff;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+a.nav-link, a.nav-link:visited {
+    color: #ffffff;
+}
+
+a.nav-link:active, a.nav-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+ul.navbar-nav {
+    list-style-type: none;
+}
+
+ul.benefici > li.media {
+    margin: 1.5em 0em;
+}
+
+ul.benefici > li.media > div.media-left > i.fa {
+    font-size: 3em;
+    margin-right: .25em;
+}
+
+ul.benefici > li.media > p.media-media-text {
+    font-style: italic;
+}
+
+div.numero-verde {
+    border: 3px solid #aaaaaa;
+    color: #aaaaaa;
+    font-size: 3em;
+    font-weight: bold;
+    margin: .5em;
+    padding: 0em .2em;
+}
+
+header div.numero-verde {
+    border: 3px solid #ffffff;
+    border-left: 0px;
+    color: #ffffff;
+    font-size: 1.65em;
+    margin: 0em;
+}
+
+div.numero-verde p.etichetta {
+    font-size: .5em;
+    background-color: #ffffff;
+    top: -0.9em;
+    left: 0.75em;
+    padding: 0em .3em;
+    padding-left: .5em;
+}
+
+header div.numero-verde p.etichetta {
+    background-color: #aaaaaa;
+}
+
+div.numero-verde div.telefono {
+    font-size: 1.75em;
+    left: -0.5em;
+    top: -0.25em;
+    -webkit-text-stroke: 5px #ffffff;
+}
+
+header div.numero-verde div.telefono {
+    -webkit-text-stroke: .05em #aaaaaa;
+}
+
+div.numero-verde a {
+    margin-left: .25em;
+}
+
+div.numero-verde a,
+div.numero-verde a:hover {
+    color: #aaaaaa;
+}
+
+header div.numero-verde a,
+header div.numero-verde a:hover {
+    color: #ffffff;
+}
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+}
+
+@media (min-width: 1200px) {
+    
+}

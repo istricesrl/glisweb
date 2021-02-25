@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `pratiche_all_view`;
