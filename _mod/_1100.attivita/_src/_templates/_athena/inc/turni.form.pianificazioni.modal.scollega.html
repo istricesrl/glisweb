@@ -6,8 +6,15 @@
 
 <script>
     function scollegaOggetto( ) {
-	    window.open( '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.detach.php?id={{ request[table].id }}&entita={{ table }}', '_self');	
+	 //   window.open( '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.detach.php?id={{ request[table].id }}&entita={{ table }}', '_self');	
+	
+		var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.detach.php?id={{ request[table].id }}&entita={{ table }}';
+
+		getws(call,'', function() {
+			location.reload();
+		});
 	}
+	
 </script>
 
 <div class="modal" tabindex="-1" role="dialog" id="scollega">
