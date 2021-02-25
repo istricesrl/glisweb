@@ -273,7 +273,7 @@
           "it-IT": "sito di esempio"
         },
         "metadata":{
-            "theme": "css/themes/green.css"
+            "theme": "themes/green.css"
         },
         "protocols": {
           "TEST": "http",
@@ -308,7 +308,7 @@
           "title": { "it-IT": "test da Json" },
           "h1": { "it-IT": "pagina di test da configurazione Json" },
           "parent": { "id": null },
-          "template": { "path": "_src/_templates/_athena/", "theme": "css/themes/green.css" },
+          "template": { "path": "_src/_templates/_athena/", "theme": "themes/green.css" },
           "menu": {
             "main": {
               "label": { "it-IT": "test Json" },
