@@ -32,7 +32,7 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data' => 'data',
+        'data_attivita' => 'data',
         'anagrafica' => 'persona',
         'id_anagrafica' => 'id_anagrafica',
         'cliente' => 'cliente',
@@ -48,7 +48,7 @@
         'id_anagrafica' => 'd-none',
         'anagrafica' => 'no-wrap',
         'cliente' => 'text-left d-none d-md-table-cell',
-        'data' => 'no-wrap',
+        'data_attivita' => 'no-wrap',
         'ore' => 'text-right no-wrap',
         'nome' => 'text-left',
         '__label__' => 'text-left',

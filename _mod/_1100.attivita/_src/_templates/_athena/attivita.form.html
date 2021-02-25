@@ -50,8 +50,8 @@
 			<div class="form-group form-row">
 				<div class="col-6 col-md-auto">
 					<span class="label-top">data</span>
-					{% if not session.__latest__[ table ].data %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data %}{% endif %}
-					{{ frm.date( table, '', '', 'data', '', '', request, default ) }}
+					{% if not session.__latest__[ table ].data_attivita %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data_attivita %}{% endif %}
+					{{ frm.date( table, '', '', 'data_attivita', '', '', request, default ) }}
 				</div>
 				<div class="col-2 col-md-1">
 					<span class="label-top">ora inizio</span>
