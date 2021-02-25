@@ -71,7 +71,7 @@
                 'id_pianificazione' => '§id_pianificazione§'
             ),
             'attivita' => array(
-                'data' => '§data§'
+                'data_attivita' => '§data§'
             )
         );
 
