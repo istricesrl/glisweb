@@ -544,6 +544,82 @@
     /**
      *
      * @todo documentare
+     *
+     */
+    function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array() ) {
+
+		// debug
+		// print_r( $x[ $t ] );
+
+		// se non ho un ID di partenza
+		if( empty( $o ) ) {
+			die( 'ID da duplicare non passato' );
+		}
+
+		// duplico la riga
+		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x[ $t ] );
+
+		// debug
+		// echo 'ID riga duplicata = ' . $id . PHP_EOL;
+
+		// creo i placeholder per le tabelle richieste
+		$pholders = array();
+		$values = array( array( 's' => $t ) );
+		foreach( array_keys( $x ) as $rt ) {
+			$pholders[] = '?';
+			$values[] = array( 's' => $rt );
+		}
+		$values[] = array( 's' => $t );
+
+		// cerco le tabelle collegate
+		$ks = mysqlQuery( $c,
+			'SELECT * FROM information_schema.key_column_usage '.
+			'WHERE referenced_table_name = ? '.
+#			'AND ( constraint_name NOT LIKE "%_nofollow" OR '.
+#			'table_name IN ( ' . implode( ',', $pholders ) . ' ) ) '.
+			( ( is_array( $pholders ) && count( $pholders ) > 0 ) ? 'AND table_name IN ( ' . implode( ',', $pholders ) . ' ) ' : NULL ).
+			'AND table_name != ? '.
+			'AND table_schema = database() ',
+			$values
+		);
+
+		// debug
+		// print_r( $ks );
+
+		// per ogni relazione
+		foreach( $ks as $ksr ) {
+
+			// aggiungo il campo di relazione alle sostituzioni
+			$x[ $ksr['TABLE_NAME'] ][ $ksr['COLUMN_NAME'] ] = $id;
+
+			// compongo la query di ricerca relazioni
+			$q = 'SELECT * FROM ' . $ksr['TABLE_NAME'] . ' WHERE ' . $ksr['COLUMN_NAME'] . ' = "' . $o . '"';
+
+			// trovo le righe collegate
+			$rls = mysqlQuery( $c, $q );
+
+			// debug
+			// var_dump( $q );
+			// print_r( $rls );
+
+			// per ogni riga della relazione
+			foreach( $rls as $rl ) {
+
+				// debug
+				// print_r( $rl );
+
+				// chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
+				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x );
+
+			}
+
+		}
+
+	}
+
+    /**
+     *
+     * @todo documentare
      * $c	connessione
      * $t	nome tabella
      * $o	id del record da duplicare
@@ -556,6 +632,9 @@
 	// campi da modificare
 	    $x = array_merge( array( 'id' => $n ), $x );
 
+	// debug
+		// print_r( $x );
+
 	// campi della tabella
 	    $fields = mysqlSelectColumn( 'COLUMN_NAME', $c, 'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?', array( array( 's' => $t ) ) );
 	    $fieldsChanged = array_keys( $x );
@@ -565,20 +644,24 @@
 	// valori da sostituire
 	    $values = array();
 	    foreach( $x as $xv ) {
-		$values[] = array( 's' => $xv );
+			$values[] = array( 's' => $xv );
 	    }
 	    $values[] = array( 's' => $o );
 
 	// composizione della query
-	    $n = mysqlQuery( $c, 'INSERT INTO ' . $t . ' (' . implode( ',', $fieldsInsert ) . ') SELECT ' . str_repeat( '?,', count( $fieldsChanged ) ) . implode( ',', $fieldsCopied ) . ' FROM ' . $t . ' WHERE id = ?', $values );
+	    $q = 'INSERT INTO ' . $t . ' (' . implode( ',', $fieldsInsert ) . ') SELECT ' . str_repeat( '?,', count( $fieldsChanged ) ) . implode( ',', $fieldsCopied ) . ' FROM ' . $t . ' WHERE id = ?';
+
+	// esecuzione della query
+		$n = mysqlQuery( $c, $q, $values );
+
+	// debug
+		// echo $q . PHP_EOL;
+		// print_r( $values );
+		// var_dump( $n );
+	    // print_r( $fields );
 
 	// ritorno l'id nel nuovo record inserito
 	    return $n;
-
-
-	// debug
-	    // var_dump( $n );
-	    // print_r( $fields );
 
     }
 

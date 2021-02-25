@@ -21,28 +21,56 @@
 	);
 
 	// vista progetti
-	$p['progetti.view'] = array(
+	$p['progetti.produzione.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'progetti' ),
 	    'h1'			=> array( $l		=> 'progetti' ),
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'progetti.view' ) ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'progetti.produzione.view', 'progetti.produzione.tools' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'progetti' ),
 								'priority'	=> '080' ) )
 	);
 
 	// gestione progetti
-	$p['progetti.form'] = array(
+	$p['progetti.produzione.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
 	    'h1'			=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'progetti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.html' ),
-	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.form.php' ),
+	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'progetti.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form', 
+														'progetti.produzione.form.todo' ) )
 	);
+
+	// gestione todo progetti
+	$p['progetti.produzione.form.todo'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'todo' ),
+	    'h1'			=> array( $l		=> 'to-do' ),
+	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.todo.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.todo.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+	);
+
+	// gestione attività progetti
+/*	$p['progetti.produzione.form.attivita'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'attivita' ),
+	    'h1'			=> array( $l		=> 'attività' ),
+	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.attivita.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.attivita.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form' ) )
+	);
+*/
+
+	
 

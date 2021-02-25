@@ -29,6 +29,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pianificazioni.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_pianificazioni.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'pianificazioni.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'pianificazioni.form', 'pianificazioni.form.tools' ) )
+	);
+
+	// gestione tools pianificazioni
+	$p['pianificazioni.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'			=> array( $l		=> 'azioni pianificazioni' ),
+	    'h1'			=> array( $l		=> 'azioni pianificazioni' ),
+	    'parent'		=> array( 'id'		=> 'pianificazioni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_pianificazioni.form.tools.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['pianificazioni.form']['etc']['tabs'] )
 	);
 

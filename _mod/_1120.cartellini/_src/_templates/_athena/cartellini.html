@@ -89,7 +89,7 @@
                             <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ~'&__view__['~view.id~'][__filters__][id_tipologia_inps][EQ]='~t.id }}','_self');">
                                 <div>{{ v.tipologie_inps[ t.id ] }}</div>
                             {% else %}
-                            <td><input type="number" class="form-control form-control-sm" step="0.5" name="__cartellini__[giorni][{{ k }}_{{ t.id }}]">
+                            <td><input type="number" class="form-control form-control-sm" step="0.25" name="__cartellini__[giorni][{{ k }}_{{ t.id }}]">
                             {% endif %}
                             </td>
                             {% endfor %}
@@ -133,7 +133,7 @@
 	    <fieldset class="form-controls mt-auto">
             <div class="row no-gutters d-print-none">
                 <div class="col-auto col-md-5">
-	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('/produzione/attivita.it-IT.html','_self');" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
+	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages['attivita.view'].path[ localization.language.ietf ] }}','_self');" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
                 </div>
                 <div class="col col-md-2 text-center"></div>
                 <div class="col-auto col-md-5 text-right">

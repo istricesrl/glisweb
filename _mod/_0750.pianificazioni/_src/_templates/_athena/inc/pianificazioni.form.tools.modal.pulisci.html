@@ -1,0 +1,50 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function pulisciPianificazione( t ) {
+        var form = $( t ).closest('.modal');
+		var id = form.find('#pianificazioni_id').val();
+        var data = form.find('#pianificazioni_data_inizio_pulizia').val();
+	//    window.open( '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php?id='+id+'&data_inizio_pulizia='+data, '_self');	
+	
+		var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php?id='+id+'&data_inizio_pulizia='+data;
+		getws( call,'', function() {
+			location.reload();
+		});
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="pulisci">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">rimuovi oggetti futuri</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				<div class="col">
+                    questa operazione rimuoverà gli oggetti già esistenti a partire dalla data sotto indicata
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-6 col-md-auto">
+					<span class="label-top">data inizio pulizia</span>
+					{{ frm.date( table, '', '', 'data_inizio_pulizia', '', '', request, default, '', 1 ) }}
+				</div>
+				{{ frm.input( table, '', '', 'id', '', '', request, '', 'hidden' ) }}
+			</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" onclick="pulisciPianificazione(this);">rimuovi</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
