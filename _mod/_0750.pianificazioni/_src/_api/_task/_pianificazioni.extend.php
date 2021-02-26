@@ -45,7 +45,7 @@
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE pianificazioni SET token = ? WHERE giorni_rinnovo > 0 '.
-            'AND ( timestamp_estensione < ? OR timestamp_popolazione IS NULL ) '.
+            'AND ( timestamp_estensione < ? OR timestamp_estensione IS NULL ) '.
             'AND token IS NULL '.
             'ORDER BY timestamp_estensione ASC LIMIT 1',
             array(
