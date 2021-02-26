@@ -24,7 +24,7 @@
 	$status = array();
 
     // chiave di lock
-	$status['token'] = getToken();
+	$status['token'] = getToken( __FILE__ );
 
     // debug
 	// $status['token'] = 'TEST';
@@ -166,7 +166,7 @@
                 'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE token = ?',
                 array(
                     array( 's' => $data ),
-                    array( 's' => $current['token'] )
+                    array( 's' => $status['token'] )
                 )
             );
 

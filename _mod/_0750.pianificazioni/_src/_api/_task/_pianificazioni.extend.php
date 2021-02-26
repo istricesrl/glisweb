@@ -24,7 +24,7 @@
 	$status = array();
 
     // chiave di lock
-	$status['token'] = getToken();
+	$status['token'] = getToken( __FILE__ );
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {

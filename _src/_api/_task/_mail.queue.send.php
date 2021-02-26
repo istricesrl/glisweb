@@ -26,7 +26,7 @@
 	logWrite( 'richiesta di elaborazione della coda delle mail in uscita', 'mail' );
 
     // chiave di lock
-	$status['token'] = getToken();
+	$status['token'] = getToken( __FILE__ );
 
     // inizializzo la variabile per l'invio
 	// $mail = NULL;

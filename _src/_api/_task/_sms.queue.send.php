@@ -23,7 +23,7 @@
 	logWrite( 'richiesta di elaborazione della coda degli SMS in uscita', 'sms', LOG_DEBUG );
 
     // chiave di lock
-	$status['token'] = getToken();
+	$status['token'] = getToken( __FILE__ );
 
 	// modalità di evasione (specifica sms, evasione forzata, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {
