@@ -75,24 +75,24 @@
         if( $status['fine'] > $current['data_fine'] ) {
 
             // query
-            $q = 'UPDATE pianificazioni SET data_fine = ?, timestamp_estensione = ?, token = NULL WHERE id = ?';
+            $q = 'UPDATE pianificazioni SET data_fine = ?, timestamp_estensione = ?, token = NULL WHERE token = ?';
 
             // esecuzione della query
             $status['prolungamento'] = mysqlQuery( $cf['mysql']['connection'], $q, array(
                 array( 's' => $status['fine'] ),
                 array( 's' => time() ),
-                array( 's' => $status['id'] ) )
+                array( 's' => $status['token'] ) )
             );
 
         } else {
 
             // query
-            $q = 'UPDATE pianificazioni SET timestamp_estensione = ?, token = NULL WHERE id = ?';
+            $q = 'UPDATE pianificazioni SET timestamp_estensione = ?, token = NULL WHERE token = ?';
 
             // esecuzione della query
             $status['sblocco'] = mysqlQuery( $cf['mysql']['connection'], $q, array(
                 array( 's' => time() ),
-                array( 's' => $status['id'] ) )
+                array( 's' => $status['token'] ) )
             );
 
         }
