@@ -1,0 +1,1 @@
+ALTER TABLE `pianificazioni` ADD CONSTRAINT `pianificazioni_ibfk_4` FOREIGN KEY (`id_turno`) REFERENCES `turni`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
