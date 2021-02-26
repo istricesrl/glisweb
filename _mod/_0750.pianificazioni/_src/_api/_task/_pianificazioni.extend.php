@@ -49,8 +49,8 @@
             'AND token IS NULL '.
             'ORDER BY timestamp_estensione ASC LIMIT 1',
             array(
-                array( 's' => strtotime( '-1 day' ) ),
-                array( 's' => $status['token'] )
+                array( 's' => $status['token'] ),
+                array( 's' => strtotime( '-1 day' ) )
             )
         );
 
@@ -91,7 +91,7 @@
 
             // esecuzione della query
             $status['sblocco'] = mysqlQuery( $cf['mysql']['connection'], $q, array(
-                array( 's' => $status['fine'] ),
+                array( 's' => time() ),
                 array( 's' => $status['id'] ) )
             );
 
