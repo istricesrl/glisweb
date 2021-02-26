@@ -143,3 +143,32 @@
             return $attivita;
     
         }
+
+    function clearToken( $e = 'cron', $f = 'timestamp_esecuzione', $r = NULL ) {
+
+        global $cf;
+
+        if( empty( $r ) ) {
+            $r = strtotime( '-10 min' );
+        }
+
+        $olds = mysqlQuery(
+            $cf['mysql']['connection'],
+            "SELECT * FROM ${e} WHERE token IS NOT NULL AND ${f} < ${r}"
+        );
+
+        print_r( $olds );
+
+        foreach( $olds as $old ) {
+
+            $olds = mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE ${e} SET token = NULL WHERE id = ?',
+                array( array( 's' => $old['id'] ) )
+            );
+
+            echo 'pulito token su ' . $e . ' ' . $old['id'];
+
+        }
+
+    }
