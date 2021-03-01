@@ -38,7 +38,7 @@
 
 	// inclusione dei controller
 	    $cb					= DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
-	    $cm					= DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS;
+	    $cm					= DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
 
 	// inizializzazione array dati
 	    if( empty( $d ) ) { $d		= array(); }
