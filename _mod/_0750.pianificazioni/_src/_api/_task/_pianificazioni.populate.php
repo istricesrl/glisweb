@@ -49,11 +49,13 @@
             $cf['mysql']['connection'],
             'UPDATE pianificazioni SET token = ? '.
             'WHERE ( timestamp_popolazione < ? OR timestamp_popolazione IS NULL ) '.
+            'AND data_fine > ? '.
             'AND token IS NULL '.
             'ORDER BY timestamp_popolazione ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] ),
-                array( 's' => strtotime( '-1 day' ) )
+                array( 's' => strtotime( '-1 day' ) ),
+                array( 's' => date( 'Y-m-d' ) )
             )
         );
 

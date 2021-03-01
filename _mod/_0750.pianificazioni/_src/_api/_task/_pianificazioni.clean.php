@@ -74,13 +74,14 @@
                         // esecuzione della query
                         $status['hard'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['inizio'] ), array( 's' => $status['id'] ) ) );
 
-                    }
-                    else{
-                         // query
-                         $q = 'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE id = ?';
+                    } else {
+
+                        // query
+                         $q = 'UPDATE pianificazioni SET data_ultimo_oggetto = ?, timestamp_popolazione = NULL WHERE id = ?';
 
                          // esecuzione della query
                          $status['hard'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['inizio'] ), array( 's' => $status['id'] ) ) );
+
                     }
 
                 } else {
