@@ -187,6 +187,7 @@
                     </div>
                     <div class="col-auto col-md-7 text-right">
                         {% if request[table][subtable][0].id %}
+                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="popolaPianificazione();" placeholder="crea eventi" data-placement="bottom" data-delay="1000" title="" data-original-title="crea eventi">CREA EVENTI</button>
                         <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="ferma la pianificazione" data-toggle="modal" data-target="#ferma" data-placement="bottom" data-delay="1000" title="" data-original-title="ferma pianificazione">FERMA PIANIFICAZIONE</button>
                         <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="rimuovi eventi futuri errati" data-toggle="modal" data-target="#pulisci" data-placement="bottom" data-delay="1000" title="" data-original-title="rimuovi eventi futuri">RIMUOVI EVENTI FUTURI</button>
                         {% endif %}
@@ -357,6 +358,27 @@ $(document).ready(function(){
     //    console.log(giorni_s);
        
     }
+
+
+    function popolaPianificazione() {
+		if( $('#todo_pianificazioni_0_id').val() ){
+			var id = $('#todo_pianificazioni_0_id').val();
+		}
+		else if( $('#todo_id_pianificazione').val() ){
+			var id = $('#todo_id_pianificazione').val();
+		}
+		
+        if( id ){
+            var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php?id='+id;
+		
+		    getws( call,'', function() {
+			    location.reload();
+		    });
+        }
+		
+	
+	}
+
 </script>
 
 {% endblock %} 
