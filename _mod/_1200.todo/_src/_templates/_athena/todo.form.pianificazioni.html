@@ -364,9 +364,6 @@ $(document).ready(function(){
 		if( $('#todo_pianificazioni_0_id').val() ){
 			var id = $('#todo_pianificazioni_0_id').val();
 		}
-		else if( $('#todo_id_pianificazione').val() ){
-			var id = $('#todo_id_pianificazione').val();
-		}
 		
         if( id ){
             var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php?id='+id;
