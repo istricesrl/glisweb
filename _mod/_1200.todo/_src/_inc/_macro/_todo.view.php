@@ -32,7 +32,7 @@
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'pianificazione' => 'pianificato',
+	    'data_programmazione' => 'pianificato',
 	    'priorita' => 'priorità',
 	    'nome' => 'attività',
 	    'cliente' => 'da fare per',
@@ -46,7 +46,6 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    'id_priorita' => 'd-none',
-	    'pianificazione' => 'text-left no-wrap',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
 	    'priorita' => 'text-left',

@@ -51,7 +51,7 @@
 
             <fieldset>
                 <legend>periodicità</legend>
-                <input name="__data__" type="date" style="display: none" value="{{ request[ table ].data_pianificazione }}" disabled class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
+                <input name="__data__" type="date" style="display: none" value="{{ request[ table ].data_programmazione }}" disabled class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
                 {{ frm.input( table, subtable, '0', 'id_todo', '', '', '', '__parent_id__', 'hidden' ) }}
                 {{ frm.input( table, subtable, '0', 'entita', '', '', request, 'todo', 'hidden' ) }}
                 {{ frm.input( table, subtable, '0', 'workspace', '', '', request, etc.wks, 'hidden' ) }}
