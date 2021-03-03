@@ -18,6 +18,10 @@ header .logo img {
     height: 5em;
 }
 
+footer {
+    padding: 1em 0em;
+}
+
 footer p {
     margin: 0em;
     font-size: 0.8em;
