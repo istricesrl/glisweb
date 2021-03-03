@@ -23,8 +23,19 @@
      *
      */
 
-    // verifico la cartella temporanea
-	checkFolder( DIR_TMP );
+    // directory da controllare
+	$cf['debug']['fs']['folders'] = array( DIR_VAR, DIR_VAR_LOG, DIR_TMP );
+    $cf['debug']['fs']['files'] = array( path2custom( FILE_MYSQL_PATCH ) );
+
+    // verifico le cartelle
+    foreach( $cf['debug']['fs']['folders'] as $folder ) {
+	    checkFolder( $folder ) or die( 'cartella ' . $folder . ' non scrivibile' );
+    }
+
+    // verifico i file
+    foreach( $cf['debug']['fs']['files'] as $file ) {
+	    checkFile( $file ) or die( 'file ' . $file . ' non scrivibile' );
+    }
 
     // debug
 	// error_reporting( E_ALL );

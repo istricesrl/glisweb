@@ -139,6 +139,7 @@
 
 		    $m  = 'impossibile creare ' . $f;
 		    error_log( $m );
+            return false;
 
 		}
 
@@ -207,8 +208,18 @@
 
 	fullPath( $f );
 	$d = dirname( $f );
-	checkFolder( $d );
-	closeFile( openFile( $f ) );
+
+    if( checkFolder( $d ) ) {
+
+        if( closeFile( openFile( $f ) ) ) {
+
+            return true;
+
+        }
+
+    }
+
+    return false;
 
     }
 

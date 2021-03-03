@@ -308,6 +308,9 @@
     debug.<s>.<f>.target         | configurazioni per la destinazione dei log della factory <f> per lo status <s>
     debug.<s>.<f>.target.<l>     | configurazioni per la destinazione dei log di gravità <l> della factory <f> per lo status <s>
     debug.<s>.<f>.target.<l>.<t> | configurazione del target dei log di gravità <l> della factory <f> per lo status <s>
+    debug.fs                     | configurazioni relative al debug del filesystem
+    debug.fs.files               | configurazioni relative al debug dei file
+    debug.fs.folders             | configurazioni relative al debug delle cartelle
     debug.mem                    | configurazioni relative al debug della memoria
 
     Per i target di log, si vedano le costanti definite in _000.debug.php; in alcuni casi è sufficiente indicare true
