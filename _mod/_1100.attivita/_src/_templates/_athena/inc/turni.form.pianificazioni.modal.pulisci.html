@@ -12,7 +12,7 @@
 	
 		var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php?id='+id+'&data_inizio_pulizia='+data;
 		getws( call,'', function() {
-			location.reload();
+			$('#pulisci').modal('toggle');
 		});
 	}
 </script>

@@ -11,7 +11,7 @@
 		var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.detach.php?id={{ request[table].id }}&entita={{ table }}';
 
 		getws(call,'', function() {
-			location.reload();
+			window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
 		});
 	}
 	
