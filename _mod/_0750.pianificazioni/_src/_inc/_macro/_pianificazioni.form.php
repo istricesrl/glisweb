@@ -67,7 +67,7 @@
         if( $_REQUEST[ $ct['form']['table'] ]['entita'] == 'todo' && !empty( $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ){
             $ct['etc']['data'] = mysqlSelectValue( 
                     $cf['mysql']['connection'], 
-                    "SELECT data_pianificazione FROM todo WHERE id = ?",
+                    "SELECT data_programmazione FROM todo WHERE id = ?",
                     array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) )
                 );  
             
