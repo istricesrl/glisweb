@@ -1,3 +1,7 @@
 {% import '_bin/_navigation.html' as nav %}
 
-<div>{{ nav.lineMenu( page.template.menu.main, localization.language.ietf ) }}</div>
+{% if page.template.menu.main %}
+<nav>
+    <div>{{ nav.lineMenu( page.template.menu.main, localization.language.ietf ) }}</div>
+</nav>
+{% endif %}
