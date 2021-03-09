@@ -67,6 +67,17 @@ Un video sull'installazione di GlisWeb è anche disponibile a questo indirizzo h
 
 [![Watch the video](https://img.youtube.com/vi/xzERaj20HJA/maxresdefault.jpg)](https://youtu.be/xzERaj20HJA)
 
+Se sul server che state utilizzando è installato il progetto Calabash () potete installare GlisWeb semplicemente
+lanciando dalla document root del progetto il comando:
+
+    va.glisweb.install.sh .
+
+Se desiderate la versione di sviluppo utilizzate:
+
+    va.glisweb.install.sh . develop
+
+L'aggiornamento delle librerie con Composer sarà già stato effettuato dallo script.
+
 ## configurazione
 Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
 che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
