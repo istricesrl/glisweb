@@ -26,11 +26,11 @@ a:active, a:hover {
 }
 
 a.breadcrumb-link, a.breadcrumb-link:visited {
-    color: #dddddd;
+    color: #999999;
 }
 
 a.breadcrumb-link:active, a.breadcrumb-link:hover {
-    color: #dddddd;
+    color: #999999;
     text-decoration: underline;
 }
 
