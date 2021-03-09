@@ -11,7 +11,7 @@ nav.sticky-top {
     background-color: #eeeeee;
     border-bottom: 1px solid #dddddd;
     border-top: 1px solid #dddddd;
-    box-shadow: 0em 0em 0.5em #cccccc;
+    box-shadow: 0em 0em 0.5em #bbbbbb;
     padding: 0em;
 }
 
@@ -24,8 +24,8 @@ footer > .container > .row > .col {
 }
 
 footer:first-of-type {
-    background-color: #cccccc;
-    box-shadow: 0em 0em 0.5em #aaaaaa;
+    background-color: #eeeeee;
+    box-shadow: 0em 0em 0.5em #bbbbbb;
     color: #000000;
 }
 
