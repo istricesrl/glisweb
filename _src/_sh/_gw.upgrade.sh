@@ -51,7 +51,7 @@ else
     rm -rf ./_*
 
     # installo la nuova versione
-    rsync -a ./glisweb-$BRANCHDIR/* ./
+    mv -f ./glisweb-$BRANCHDIR/{.,}* ./$1
 
     # elimino la vecchia cartella
     rm -rf ./glisweb-$BRANCHDIR
