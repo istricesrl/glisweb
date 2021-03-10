@@ -45,14 +45,41 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'categorie.prodotti.form',
 													'categorie.prodotti.form.caratteristiche',
-												'categorie.prodotti.form.immagini',
-												'categorie.prodotti.form.video',
-												'categorie.prodotti.form.audio',
-												'categorie.prodotti.form.file',
-												'categorie.prodotti.form.metadati',
-												'categorie.prodotti.form.gruppi'
+													'categorie.prodotti.form.sem',
+													'categorie.prodotti.form.testo',
+													'categorie.prodotti.form.immagini',
+													'categorie.prodotti.form.video',
+													'categorie.prodotti.form.audio',
+													'categorie.prodotti.form.file',
+													'categorie.prodotti.form.metadati',
+													'categorie.prodotti.form.gruppi'
 												) )
 	);
+
+	// form pagine SEM/SMM
+	$p['categorie.prodotti.form.sem'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'SEM/SMM' ),
+	    'h1'		=> array( $l		=> 'SEM/SMM' ),
+	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.sem.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.sem.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
+	);
+
+	// form pagine testo
+	$p['categorie.prodotti.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.testo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
+	);
+
 
 	// gestione categorie prodotti caratteristiche
 	$p['categorie.prodotti.form.caratteristiche'] = array(
