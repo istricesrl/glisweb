@@ -1,0 +1,1 @@
+ALTER TABLE documenti_anagrafica RENAME TO risorse_anagrafica;
