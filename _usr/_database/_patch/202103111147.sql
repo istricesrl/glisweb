@@ -1,0 +1,1 @@
+ALTER TABLE `immagini` ADD INDEX(`id_risorsa`);
