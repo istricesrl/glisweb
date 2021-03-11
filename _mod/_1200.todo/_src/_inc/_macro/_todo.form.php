@@ -59,5 +59,26 @@
 	    $ct['etc']['select']['settimane'][] = array( 'id' => $w, '__label__' => $w . ' / ' . substr( int2month( ceil( $w / 4.348125 ) ), 0, 3 ) );
 	}
 
+    $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM indirizzi_view' );
+
+    // settaggio di cliente e indirizzo letti dal progetto
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ){
+        $ct['etc']['id_cliente'] = mysqlSelectValue(
+                 $cf['mysql']['connection'],
+                'SELECT id_cliente FROM progetti WHERE id = ?',
+                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) )
+            );
+
+        $ct['etc']['id_indirizzo'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id_indirizzo FROM progetti WHERE id = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) )
+        );
+    }
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
