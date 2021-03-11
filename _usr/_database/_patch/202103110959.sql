@@ -1,0 +1,1 @@
+ALTER TABLE `risorse_categorie` ADD CONSTRAINT `risorse_categorie_ibfk_2` FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
