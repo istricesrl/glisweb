@@ -1,0 +1,1 @@
+ALTER TABLE video DROP INDEX id_documento;

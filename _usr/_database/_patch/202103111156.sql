@@ -1,0 +1,1 @@
+ALTER TABLE `video` ADD CONSTRAINT `video_ibfk_12` FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;

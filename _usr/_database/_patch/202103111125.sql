@@ -1,0 +1,1 @@
+ALTER TABLE `metadati` ADD INDEX(`id_categoria_risorse`);

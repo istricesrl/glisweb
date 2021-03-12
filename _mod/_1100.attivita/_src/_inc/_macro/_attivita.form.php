@@ -125,13 +125,27 @@
             'SELECT id, __label__ FROM todo_view' );
 	}
 
+    // tendina indirizzi
+    $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM indirizzi_view' );
+
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
 	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
         
-        if( ! empty($todo['id_cliente']) && ! empty($todo['id_progetto']) ){
-	    $_REQUEST['__preset__']['attivita']['id_cliente'] = $todo['id_cliente'];
-        $_REQUEST['__preset__']['attivita']['id_progetto'] = $todo['id_progetto'];
+        if( ! empty($todo['id_cliente']) ){
+            $_REQUEST['__preset__']['attivita']['id_cliente'] = $todo['id_cliente'];
+        }
+        
+        if( ! empty($todo['id_progetto']) ){
+	        $_REQUEST['__preset__']['attivita']['id_progetto'] = $todo['id_progetto'];
+        }
+
+        if( ! empty($todo['id_indirizzo']) ){
+	        $_REQUEST['__preset__']['attivita']['id_indirizzo'] = $todo['id_indirizzo'];
         }
 	}
 
