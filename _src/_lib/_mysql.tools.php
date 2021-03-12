@@ -189,6 +189,9 @@
 		// log
 		    if( $tElapsed > 0.5 ) { logWrite( $q . ' -> TEMPO ' . $tElapsed . ' secondi', 'speed', LOG_ERR ); }
 
+		// debug
+			// var_dump( mysqli_errno( $c ) );
+
 		// gestione errore
 		    if( mysqli_errno( $c ) ) {
 
@@ -200,6 +203,10 @@
 
 				case 1062:
 				    $e['1062'][] = 'errore MySQL 1062, dati dupilcati';
+				break;
+
+				case 1054:
+				    $e['1054'][] = 'errore MySQL 1054, nome colonna errato';
 				break;
 
 				default:
@@ -310,6 +317,9 @@
 				appendToFile( $tElapsed . ' secondi -> ' . $q . PHP_EOL, '/var/log/slow/mysql/' . date( 'YmdH' ) . '.log' );
 			    }
 
+			// debug
+				// var_dump( mysqli_errno( $c ) );
+
 			// gestione errore
 			    if( mysqli_errno( $c ) ) {
 
@@ -363,11 +373,35 @@
 
 		    } else {
 
-			// log
-			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+				// log
+					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
 
-			// restituisco false
-			    return false;
+				// debug
+					// var_dump( mysqli_errno( $c ) );
+
+				// gestione errore
+				if( mysqli_errno( $c ) ) {
+
+					// log
+						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+
+					// gestione specifici errori
+						switch( mysqli_errno( $c ) ) {
+
+						case 1054:
+							$e['1054'][] = 'errore MySQL 1054, nome colonna errato';
+						break;
+		
+						default:
+							$e[ mysqli_errno( $c ) ][] = mysqli_error( $c );
+						break;
+
+						}
+
+					}
+
+				// restituisco false
+					return false;
 
 		    }
 

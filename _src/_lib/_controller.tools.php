@@ -444,10 +444,19 @@
 			// gestione degli errori
 			    // @todo gestire gli errori
 			    // print_r( $e['__codes__'] );
-			    if( isset( $e['__codes__'] ) && array_key_exists( '1062', $e['__codes__'] ) ) {
-				$i['__status__'] = 409;
-				$i['__err__'] = $e['__codes__']['1062'][0];
-			    }
+			    if( isset( $e['__codes__'] ) && is_array( $e['__codes__'] ) ) {
+
+					if( array_key_exists( '1062', $e['__codes__'] ) ) {
+						$i['__status__'] = 409;
+						$i['__err__'] = $e['__codes__']['1062'][0];
+			    	}
+
+					if( array_key_exists( '1054', $e['__codes__'] ) ) {
+						$i['__status__'] = 400;
+						$i['__err__'] = $e['__codes__']['1054'][0];
+			    	}
+
+				}
 
 			// variabile per confronto prima/dopo
 			    $after = NULL;

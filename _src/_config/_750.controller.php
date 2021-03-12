@@ -300,3 +300,9 @@
     // collegamenti speciali
 	$ct['get']				= &$_GET;
 	$ct['post']				= &$_POST;
+
+    // debug
+    // print_r( $_SESSION );
+    // print_r( $_REQUEST );
+    // print_r( $_REQUEST['__err__'] );
+    // print_r( $_REQUEST['__info__'] );
