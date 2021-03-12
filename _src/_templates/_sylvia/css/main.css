@@ -26,7 +26,7 @@ footer p {
     font-size: 0.8em;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
     margin: 0px;
 }
 
@@ -40,6 +40,10 @@ h2 {
 
 h3 {
     font-size: 1.25em;
+}
+
+h4, h5 {
+    font-size: 1em;
 }
 
 header > .container > .row > .col {
@@ -73,6 +77,15 @@ a, a:visited {
 
 a:active, a:hover {
     color: #eeeeee;
+    text-decoration: underline !important;
+}
+
+footer a, a:visited {
+    color: #666666;
+}
+
+footer a:active, a:hover {
+    color: #666666;
     text-decoration: underline !important;
 }
 

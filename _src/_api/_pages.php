@@ -141,6 +141,9 @@
 	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = readStringFromFile( $ctFile );
 	}
 
+	// debug
+	// var_dump( $ctFile );
+
     // timer
 	timerCheck( $cf['speed'], 'fine inclusione contenuti statici' );
 

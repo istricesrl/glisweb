@@ -133,6 +133,41 @@
     L'array $cf['common'] viene integrato da $cx['common'] ed è linkato a $ct['common'], per ulteriori dettagli vedi
     _src/_config/_030.common.php.
 
+    $cf['contatti']
+    ---------------
+    Questa chiave contiene le configurazioni del modulo contatti (vedi anche \ref moduli.0300 "la documentazione del modulo contatti").
+
+    chiave                                                 | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    contatti.<m>                                           | configurazioni relative al modulo <m>
+    contatti.<m>.analytics                                 | configurazione di Google Analytics per il modulo <m>
+    contatti.<m>.backend                                   | configurazioni relative alle operazioni di backend da attivare per il modulo <m>
+    contatti.<m>.backend.<x>                               | configurazioni relative all'operazione di backend <x> da attivare per il modulo <m>
+    contatti.<m>.backend.<x>.type                          | tipo dell'operazione di backend <x> da attivare per il modulo <m>
+    contatti.<m>.backend.<x>.table                         | tabella su cui scrivere se type è settato a DB_MYSQL
+    contatti.<m>.controller                                | controller custom da attivare per il modulo <m>
+    contatti.<m>.mail                                      | configurazioni relative alle mail da inviare per il modulo <m>
+    contatti.<m>.mail.<n>                                  | configurazioni relative alla mail <n> da inviare per il modulo <m>
+    contatti.<m>.mail.<n>.destinatari                      | arrai dei destinatari a cui inviare la mail <n> per il modulo <m> in formato nome => indirizzo
+    contatti.<m>.mail.<n>.exclude                          | arrai dei campi da escludere nella mail <n> per il modulo <m>
+    contatti.<m>.mail.<n>.language                         | la lingua della mail <n>
+    contatti.<m>.mail.<n>.template                         | il ruolo del template da utilizzare per la mail <n> oppure una definizione di template valida
+    contatti.<m>.privacy                                   | configurazioni relative alla privacy per il modulo <m>
+    contatti.<m>.privacy.titolo                            | titolo per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.titolo.<l>                        | titolo per la malleveria privacy del modulo <m> nella lingua <l>
+    contatti.<m>.privacy.descrizione                       | descrizione per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.descrizione.<l>                   | descrizione per la malleveria privacy del modulo <m> nella lingua <l>
+    contatti.<m>.privacy.finalita                          | array delle finalità di raccolta dei dati per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.finalita.<f>                      | descrizione della finalità <f> di raccolta dei dati per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.finalita.<f>.informativa          | testo di descrizione della finalità <f> di raccolta dei dati per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.finalita.<f>.informativa.<l>      | testo di descrizione della finalità <f> di raccolta dei dati per la malleveria privacy del modulo <m> nella lingua <l>
+    contatti.<m>.privacy.finalita.<f>.modulo               | label della finalità <f> di raccolta dei dati per le checkbox del modulo <m>
+    contatti.<m>.privacy.finalita.<f>.modulo.<l>           | label della finalità <f> di raccolta dei dati per le checkbox del modulo <m> nella lingua <l>
+    contatti.<m>.privacy.finalita.<f>.required             | valore booleano che indica se l'accettazione della finalità <f> di raccolta dei dati è obbligatoria per la gestione del modulo <m>
+
+    L'array $cf['contatti'] è definito in _mod/_0300.contatti/_src/_config/_030.common.php e integrato con $cx['contatti'] in
+    _mod/_0300.contatti/_src/_config/_035.common.php. Per la definizione di template mail valida, si veda la documentazione relativa a $cf['mail']['tpl'].
+
     $cf['contents']
     ---------------
     Questa chiave contiene la struttura delle pagine e i contenuti; si tratta di una chiave molto estesa, la cui elaborazione
@@ -349,6 +384,10 @@
     \endcode
 
     L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'], per ulteriori dettagli vedi _src/_config/_000.debug.php.
+
+    $cf['google']
+    -------------
+    Questa chiave contiene le configurazioni relative ai prodotti Google.
 
     $cf['image']
     ------------
