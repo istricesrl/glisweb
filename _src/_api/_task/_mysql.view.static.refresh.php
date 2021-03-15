@@ -46,11 +46,11 @@
 
         if( getAclPermission( str_replace( '_view_static', NULL, $refresh ), METHOD_DELETE ) ) {
 
-            $truncate = mysqlQuery( $cf['mysql']['connection'], 'TRUNCATE ?', array( array( 's' => $refresh ) ) );
+            $truncate = mysqlQuery( $cf['mysql']['connection'], 'TRUNCATE '.$refresh );
             $insert = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO ' . $refresh . ' SELECT * FROM ' . str_replace( '_static', NULL, $refresh ) );
 
-            if( ! ( $truncate && $insert ) ) { $status['__status__'] = 'NO'; }
-            $status[ str_replace( '_view_static', NULL, $refresh ) ]['__status__'] = ( $truncate && $insert ) ? 'OK' : 'NO';
+            if( $truncate === false || $insert === false ) { $status['__status__'] = 'NO'; }
+            $status[ str_replace( '_view_static', NULL, $refresh ) ]['__status__'] = !( $truncate === false || $insert === false ) ? 'OK' : 'NO';
 
         }
 
