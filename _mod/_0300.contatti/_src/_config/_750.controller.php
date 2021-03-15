@@ -74,12 +74,12 @@
 
                 // registrazione della hit
                     if( isset( $cf['google']['analytics']['profile']['ua'] ) ) {
-                    analyticsEventHit(
-                        $cf['google']['analytics']['profile']['ua'],
-                        $cnf['analytics']['categoria'],
-                        $cnf['analytics']['azione'],
-                        $cnf['analytics']['label']
-                    );
+                        analyticsEventHit(
+                            $cf['google']['analytics']['profile']['ua'],
+                            $cnf['analytics']['categoria'],
+                            $cnf['analytics']['azione'],
+                            $cnf['analytics']['label']
+                        );
                     }
 
                 }
