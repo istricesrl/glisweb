@@ -83,9 +83,18 @@
 		// se è stata effettuata una GET senza ID, passo alla modalità view
 		    if( $a === METHOD_GET && ( ! array_key_exists( 'id', $d ) || $vm === true ) ) {
 
-			// TODO verifico se esiste la view statica
-				// ...
-				// ... $rm = '_view_static';
+			// verifico se esiste la view statica
+				$stv = mysqlSelectValue(
+					$c,
+					'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+					array( array('s' => $t . $rm . '_static' ) )
+				);
+
+			// se esiste la vista statica...
+				if( $stv ) {
+					$rm = '_view_static';
+					logWrite( "trovata view static per ${t}, $stv", 'controller' );
+				}
 
 			// log
 			    logWrite( "permessi sufficienti per ${t}/${a}", 'controller', LOG_DEBUG );
