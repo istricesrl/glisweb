@@ -174,7 +174,7 @@
 
         <!-- se Slack è collegato -->
         <if>
-            <equals arg1="${slck.sa}" arg2="" />
+            <not><isset property="slck.sa" /></not>
             <then>
 
                 <!-- messaggi -->
@@ -204,7 +204,7 @@
 
         <!-- se il destinatario è configurato -->
         <if>
-            <equals arg1="${eml.adr}" arg2="" />
+            <not><isset property="eml.adr" /></not>
             <then>
 
                 <!-- messaggi -->
@@ -469,7 +469,7 @@
 
         <!-- se la destinazione è locale oppure remota -->
         <if>
-            <equals arg1="${dst.hst}" arg2="" />
+            <not><isset property="dst.hst" /></not>
             <then>
 
                 <!-- messaggi -->
@@ -480,7 +480,7 @@
 
             </then>
             <elseif>
-                <not><equals arg1="${ftp.usr}" arg2="" /></not>
+                <not><isset property="ftp.usr" /></not>
                 <then>
 
                     <!-- messaggi -->
@@ -516,7 +516,7 @@
 
         <!-- se è settato un URL del progetto di destinazione -->
         <if>
-            <equals arg1="${dst.url}" arg2="" />
+            <not><isset property="dst.url" /></not>
             <then>
 
                 <!-- messaggi -->
