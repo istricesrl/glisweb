@@ -596,7 +596,7 @@
     dettagli vedi _src/_config.php.
 
     $cf['mysql']
-    ---------------
+    ------------
     Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Mysql.
 
     chiave                            | descrizione
@@ -792,6 +792,17 @@
 
     L'array $cf['redis'] viene integrato da $cx['redis'] ed è linkato a $ct['redis'], per ulteriori dettagli vedi
     _src/_config/_040.cache.php.
+
+    $cf['registrazione']
+    --------------------
+    Questa chiave contiene le configurazioni relative alla registrazione automatica degli utenti.
+
+    chiave                                | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    registrazione.default                 | configurazioni di default per le nuove anagrafiche e i nuovi account
+    registrazione.default.categorie       | l'array delle categorie a cui iscrivere automaticamente la nuova anagrafica
+    registrazione.default.gruppi          | l'array dei gruppi a cui iscrivere automaticamente il nuovo account
+    registrazione.default.attivo          | valore booleano che indica se il nuovo account dev'essere creato come attivo o no
 
     $cf['request']
     --------------
