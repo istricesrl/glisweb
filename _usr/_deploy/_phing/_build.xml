@@ -113,7 +113,7 @@
 
                         <!-- se il repository non è quello di sviluppo principale -->
                         <if>
-                            <equals arg1="${prj.git}" arg2="framework" />
+                            <equals arg1="${prj.git}" arg2="" />
                             <then>
 
                                 <!-- messaggi -->
@@ -124,7 +124,7 @@
 
                                 <!-- passo al ramo master -->
                                 <echo msg="git checkout..." />
-                                <exec command="cd ${src.dir}/ &amp;&amp; git checkout master" />
+                                <exec command="cd ${src.dir}/ &amp;&amp; git checkout ${prj.git}" />
 
                                 <!-- effettuo il commit delle eventuali modifiche in sospeso -->
                                 <echo msg="git commit..." />
@@ -480,7 +480,7 @@
 
             </then>
             <elseif>
-                <not><equals arg1="${ftp.hst}" arg2="" /></not>
+                <not><equals arg1="${ftp.usr}" arg2="" /></not>
                 <then>
 
                     <!-- messaggi -->
