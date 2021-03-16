@@ -245,7 +245,7 @@
 			$cf['mysql']['connection'], 
 			'SELECT giorno, id_tipologia_inps, tipologie_attivita_inps.se_quadratura, sum(ore) as tot_ore FROM attivita_view ' .
 			'INNER JOIN tipologie_attivita_inps ON attivita_view.id_tipologia_inps = tipologie_attivita_inps.id ' .
-			'WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by data, id_tipologia_inps',
+			'WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by data_attivita, id_tipologia_inps',
 			array(
 				array( 's' => $anno ),
 				array( 's' => $mese ),
