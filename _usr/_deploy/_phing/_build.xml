@@ -480,7 +480,7 @@
 
             </then>
             <elseif>
-                <not><isset property="ftp.usr" /></not>
+                <isset property="ftp.usr" />
                 <then>
 
                     <!-- messaggi -->
