@@ -62,6 +62,17 @@ div.jumbotron {
     min-height: 24em;
 }
 
+a, a:visited {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+a:active, a:hover {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: underline !important;
+}
+
 a.nav-link, a.nav-link:visited {
     color: #666666;
 }
@@ -71,20 +82,12 @@ a.nav-link:active, a.nav-link:hover {
     text-decoration: underline;
 }
 
-a, a:visited {
-    color: #eeeeee;
-}
 
-a:active, a:hover {
-    color: #eeeeee;
-    text-decoration: underline !important;
-}
-
-footer a, a:visited {
+footer a, footer a:visited {
     color: #666666;
 }
 
-footer a:active, a:hover {
+footer footer a:active, footer a:hover {
     color: #666666;
     text-decoration: underline !important;
 }
