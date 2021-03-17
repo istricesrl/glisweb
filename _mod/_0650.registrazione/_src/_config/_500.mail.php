@@ -26,3 +26,11 @@
 	    )
 	);
 
+	$cf['mail']['tpl']['DEFAULT_AGGIORNAMENTO_DATI'] = array(
+	    'type' => 'twig',
+	    'it-IT' => array(
+            'from' => array( '{{ ct.site.name[ ct.localization.language.ietf ] }}' => 'noreply@{{ ct.site.fqdn }}' ),
+            'oggetto' => 'modifica dati account per {{ dati.nome }}',
+            'testo' => '<p>Gentile utente, utilizzi questo link per confermare le modifiche al suo account:<br>{{ ct.pages.profilo.url[ ct.localization.language.ietf ] }}?tk={{ dati.tk }}</p>'
+	    )
+	);

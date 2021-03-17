@@ -126,7 +126,7 @@
 					    if( isset( $cf['auth']['groups'][ $gr ]['privilegi'] ) ) {
 						foreach( $cf['auth']['groups'][ $gr ]['privilegi'] as $pr ) {
 						    if( ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
-							$_SESSION['account']['privilegi'][] = $pr;
+								$_SESSION['account']['privilegi'][] = $pr;
 						    }
 						}
 					    }
@@ -187,8 +187,8 @@
 					    $cf['mysql']['connection'],
 					    'SELECT * FROM account_view WHERE username = ? AND password = ?',
 					    array(
-						array( 's' => $_REQUEST['__login__']['user'] ),
-						array( 's' => $_REQUEST['__login__']['pasw'] )
+							array( 's' => $_REQUEST['__login__']['user'] ),
+							array( 's' => $_REQUEST['__login__']['pasw'] )
 					    )
 					);
 
@@ -207,8 +207,8 @@
 						    $cf['mysql']['connection'],
 						    'UPDATE account SET timestamp_login = ? WHERE id = ? ',
 						    array(
-							array( 's' => time() ),
-							array( 's' => $r['id'] )
+								array( 's' => time() ),
+								array( 's' => $r['id'] )
 						    )
 						);
 
@@ -227,18 +227,18 @@
 					    // valorizzo i dati dei gruppi
 						foreach( $_SESSION['account']['id_gruppi'] as $g ) {
 						    $r = mysqlSelectCachedRow(
-							$cf['memcache']['connection'],
-							$cf['mysql']['connection'],
-							'SELECT * FROM gruppi_view WHERE id = ?',
-							array( array( 's' => $g ) )
+								$cf['memcache']['connection'],
+								$cf['mysql']['connection'],
+								'SELECT * FROM gruppi_view WHERE id = ?',
+								array( array( 's' => $g ) )
 						    );
 						    if( count( $r ) > 0 ) {
-							if( isset( $cf['auth']['groups'][ $r['nome'] ] ) ) {
-							    $cf['auth']['groups'][ $r['nome'] ] = array_replace_recursive( $r, $cf['auth']['groups'][ $r['nome'] ] );
-							} else {
-							    $cf['auth']['groups'][ $r['nome'] ] = $r;
-							}
-							$_SESSION['groups'][ $r['nome'] ] = &$cf['auth']['groups'][ $r['nome'] ];
+								if( isset( $cf['auth']['groups'][ $r['nome'] ] ) ) {
+									$cf['auth']['groups'][ $r['nome'] ] = array_replace_recursive( $r, $cf['auth']['groups'][ $r['nome'] ] );
+								} else {
+									$cf['auth']['groups'][ $r['nome'] ] = $r;
+								}
+								$_SESSION['groups'][ $r['nome'] ] = &$cf['auth']['groups'][ $r['nome'] ];
 						    }
 						}
 
@@ -246,9 +246,9 @@
 						$_SESSION['account'] = array_replace_recursive(
 						    $_SESSION['account'],
 						    mysqlSelectRow(
-							$cf['mysql']['connection'],
-							'SELECT se_collaboratore, se_cliente, se_fornitore, se_agente, se_amministrazione FROM anagrafica_view WHERE id = ?',
-							array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+								$cf['mysql']['connection'],
+								'SELECT se_collaboratore, se_cliente, se_fornitore, se_agente, se_amministrazione FROM anagrafica_view WHERE id = ?',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 						    )
 						);
 
@@ -257,19 +257,21 @@
 						    foreach( $_SESSION['groups'] as $gr ) {
 							if( isset( $gr['nome'] ) ) {
 							    if( isset( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] ) ) {
-								foreach( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] as $pr ) {
-								    if( ! isset( $_SESSION['account']['privilegi'] ) || ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
-									$_SESSION['account']['privilegi'][] = $pr;
-								    }
-								}
+									foreach( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] as $pr ) {
+										if( ! isset( $_SESSION['account']['privilegi'] ) || ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
+											$_SESSION['account']['privilegi'][] = $pr;
+										}
+									}
 							    }
 							}
 						    }
 						}
 
 					    // attribuzione dei privilegi utente
-						foreach( $_SESSION['account']['privilegi'] as $pr ) {
-						    $_SESSION['privilegi'][ $pr ] = &$cf['auth']['privileges'][ $pr ];
+						if( isset( $_SESSION['account']['privilegi'] ) ) {
+							foreach( $_SESSION['account']['privilegi'] as $pr ) {
+								$_SESSION['privilegi'][ $pr ] = &$cf['auth']['privileges'][ $pr ];
+							}
 						}
 
 					    // gruppi di attribuzione automatica dell'utente

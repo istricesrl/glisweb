@@ -54,11 +54,9 @@ h4, h5 {
 
 /* stili dei link */
 
-a,
-a:visited,
-a:hover,
-a:active {
-    color: #777777;
+a, a:visited, a:hover, a:active,
+a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
+        color: #777777;
 }
 
 /* stili delle view */
