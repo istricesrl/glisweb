@@ -42,7 +42,7 @@ if( isset( $_REQUEST['__cartellini__'] ) ){
 
                     appendToFile('data: ' . $data . ', id_tipologia_inps: ' . $id_tipologia_inps . ', ore: ' . $v . PHP_EOL, 'var/log/cartellini.log');
             
-                    mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (data, id_anagrafica, id_tipologia_inps, ore, nome,  id_account_inserimento, timestamp_inserimento ) VALUES( ?, ?, ?, ?, ?, ?, ? )',
+                    mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (data_attivita, id_anagrafica, id_tipologia_inps, ore, nome,  id_account_inserimento, timestamp_inserimento ) VALUES( ?, ?, ?, ?, ?, ?, ? )',
                         array( 
                             array( 's' =>  $data ),
                             array( 's' =>  $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ),
