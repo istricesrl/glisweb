@@ -92,12 +92,46 @@
 
     // stato del login
 	$cf['auth']['status'] = NULL;
+	$cf['auth']['jwt']['pass'] = NULL;
+	$cf['auth']['jwt']['token'] = NULL;
 
     // intercetto eventuali richieste di autenticazione HTTP
 	if( ! empty( $_SERVER['PHP_AUTH_USER'] ) && ! empty( $_SERVER['PHP_AUTH_PW'] ) ) {
 	    $_REQUEST['__login__']['user'] = $_SERVER['PHP_AUTH_USER'];
 	    $_REQUEST['__login__']['pasw'] = $_SERVER['PHP_AUTH_PW'];
 	}
+
+	// header della richiesta HTTP
+	$headers = apache_request_headers();
+
+	// debug
+	// die( substr( $headers['Authorization'], 0, 7 ) );
+
+	// intercetto l'header bearer autentication
+	if( array_key_exists( 'Authorization', $headers ) ) {
+		if( substr( $headers['Authorization'], 0, 6 ) == 'Bearer' ) {
+			$_REQUEST['jwt'] = substr( $headers['Authorization'], 7 );
+		}
+	}
+
+	// intercetto eventuali richieste di autenticazione tramite token JWT
+	if( ! empty( $_REQUEST['jwt'] ) ) {
+		if( isset( $cf['auth']['jwt']['secret'] ) ) {
+			$jwt = jwt2array( $_REQUEST['jwt'], $cf['auth']['jwt']['secret'] );
+			$_REQUEST['__login__']['user'] = $jwt['data']['user'];
+			$cf['auth']['jwt']['pass'] = mysqlSelectValue(
+				$cf['mysql']['connection'],
+				'SELECT password FROM account WHERE username = ? AND id = ?',
+				array(
+					array( 's' => $jwt['data']['user'] ),
+					array( 's' => $jwt['data']['id'] )
+				)
+			);
+		}
+	}
+
+	// NOTA per login via JWT, mandare { "id": "<idAccount>", "user": "<username>" }
+	// vedi _usr/_examples/_jwt/_jwt.write.01.php
 
     // intercetto eventuali tentativi di login in corso
 	if( isset( $_REQUEST['__login__'] ) && is_array( $_REQUEST['__login__'] ) ) {
@@ -106,10 +140,14 @@
 		logWrite( 'tentativo di login in corso per ' . $_REQUEST['__login__']['user'], 'auth', LOG_INFO );
 
 	    // verifico che sia stato inviato un modulo di login compilato
-		if( isset( $_REQUEST['__login__']['user'] ) && isset( $_REQUEST['__login__']['pasw'] ) ) {
+		if( isset( $_REQUEST['__login__']['user'] ) ) {
 
 		    // ricalcolo la password
-			$_REQUEST['__login__']['pasw'] = md5( $_REQUEST['__login__']['pasw'] );
+			if( isset( $_REQUEST['__login__']['pasw'] ) ) {
+				$_REQUEST['__login__']['pasw'] = md5( $_REQUEST['__login__']['pasw'] );
+			} elseif( isset( $cf['auth']['jwt']['pass'] ) ) {
+				$_REQUEST['__login__']['pasw'] = $cf['auth']['jwt']['pass'];
+			}
 
 		    // login con gli utenti del framework
 			if( in_array( $_REQUEST['__login__']['user'], array_keys( $cf['auth']['accounts'] ) ) ) {
@@ -124,11 +162,11 @@
 					foreach( $_SESSION['account']['gruppi'] as $gr ) {
 					    $_SESSION['groups'][ $gr ] = &$cf['auth']['groups'][ $gr ];
 					    if( isset( $cf['auth']['groups'][ $gr ]['privilegi'] ) ) {
-						foreach( $cf['auth']['groups'][ $gr ]['privilegi'] as $pr ) {
-						    if( ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
-							$_SESSION['account']['privilegi'][] = $pr;
-						    }
-						}
+							foreach( $cf['auth']['groups'][ $gr ]['privilegi'] as $pr ) {
+								if( ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
+									$_SESSION['account']['privilegi'][] = $pr;
+								}
+							}
 					    }
 					}
 
@@ -142,6 +180,15 @@
 
 				    // status
 					$cf['auth']['status'] = LOGIN_SUCCESS;
+
+					// JWT per il login corrente
+					$cf['auth']['jwt']['token'] = getJwt(
+						array(
+							'id' => $_SESSION['account']['id'],
+							'user' => $_SESSION['account']['username']
+						),
+						$cf['auth']['jwt']['secret']
+					);
 
 				    // log
 					logWrite( 'login effettuato correttamente per ' . $_REQUEST['__login__']['user'], 'auth' );
@@ -187,8 +234,8 @@
 					    $cf['mysql']['connection'],
 					    'SELECT * FROM account_view WHERE username = ? AND password = ?',
 					    array(
-						array( 's' => $_REQUEST['__login__']['user'] ),
-						array( 's' => $_REQUEST['__login__']['pasw'] )
+							array( 's' => $_REQUEST['__login__']['user'] ),
+							array( 's' => $_REQUEST['__login__']['pasw'] )
 					    )
 					);
 
@@ -207,8 +254,8 @@
 						    $cf['mysql']['connection'],
 						    'UPDATE account SET timestamp_login = ? WHERE id = ? ',
 						    array(
-							array( 's' => time() ),
-							array( 's' => $r['id'] )
+								array( 's' => time() ),
+								array( 's' => $r['id'] )
 						    )
 						);
 
@@ -227,18 +274,18 @@
 					    // valorizzo i dati dei gruppi
 						foreach( $_SESSION['account']['id_gruppi'] as $g ) {
 						    $r = mysqlSelectCachedRow(
-							$cf['memcache']['connection'],
-							$cf['mysql']['connection'],
-							'SELECT * FROM gruppi_view WHERE id = ?',
-							array( array( 's' => $g ) )
+								$cf['memcache']['connection'],
+								$cf['mysql']['connection'],
+								'SELECT * FROM gruppi_view WHERE id = ?',
+								array( array( 's' => $g ) )
 						    );
 						    if( count( $r ) > 0 ) {
-							if( isset( $cf['auth']['groups'][ $r['nome'] ] ) ) {
-							    $cf['auth']['groups'][ $r['nome'] ] = array_replace_recursive( $r, $cf['auth']['groups'][ $r['nome'] ] );
-							} else {
-							    $cf['auth']['groups'][ $r['nome'] ] = $r;
-							}
-							$_SESSION['groups'][ $r['nome'] ] = &$cf['auth']['groups'][ $r['nome'] ];
+								if( isset( $cf['auth']['groups'][ $r['nome'] ] ) ) {
+									$cf['auth']['groups'][ $r['nome'] ] = array_replace_recursive( $r, $cf['auth']['groups'][ $r['nome'] ] );
+								} else {
+									$cf['auth']['groups'][ $r['nome'] ] = $r;
+								}
+								$_SESSION['groups'][ $r['nome'] ] = &$cf['auth']['groups'][ $r['nome'] ];
 						    }
 						}
 
@@ -246,24 +293,24 @@
 						$_SESSION['account'] = array_replace_recursive(
 						    $_SESSION['account'],
 						    mysqlSelectRow(
-							$cf['mysql']['connection'],
-							'SELECT se_collaboratore, se_cliente, se_fornitore, se_agente, se_amministrazione FROM anagrafica_view WHERE id = ?',
-							array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+								$cf['mysql']['connection'],
+								'SELECT se_collaboratore, se_cliente, se_fornitore, se_agente, se_amministrazione FROM anagrafica_view WHERE id = ?',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 						    )
 						);
 
 					    // attribuzione dei gruppi e dei privilegi di gruppo
 						if( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) {
 						    foreach( $_SESSION['groups'] as $gr ) {
-							if( isset( $gr['nome'] ) ) {
-							    if( isset( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] ) ) {
-								foreach( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] as $pr ) {
-								    if( ! isset( $_SESSION['account']['privilegi'] ) || ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
-									$_SESSION['account']['privilegi'][] = $pr;
-								    }
+								if( isset( $gr['nome'] ) ) {
+									if( isset( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] ) ) {
+										foreach( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] as $pr ) {
+											if( ! isset( $_SESSION['account']['privilegi'] ) || ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
+												$_SESSION['account']['privilegi'][] = $pr;
+											}
+										}
+									}
 								}
-							    }
-							}
 						    }
 						}
 
@@ -277,8 +324,8 @@
 						    $aGroups = explode( '|', $_SESSION['account']['id_gruppi_attribuzione'] );
 						    $_SESSION['account']['id_gruppi_attribuzione'] = array();
 						    foreach( $aGroups as $aGroup ) {
-							$aGrData = explode( '#', $aGroup );
-							$_SESSION['account']['id_gruppi_attribuzione'][ $aGrData[0] ][] = $aGrData[1];
+								$aGrData = explode( '#', $aGroup );
+								$_SESSION['account']['id_gruppi_attribuzione'][ $aGrData[0] ][] = $aGrData[1];
 						    }
 						}
 
@@ -287,6 +334,15 @@
 
 					    // status
 						$cf['auth']['status'] = LOGIN_SUCCESS;
+
+						// JWT per il login corrente
+						$cf['auth']['jwt']['token'] = getJwt(
+							array(
+								'id' => $_SESSION['account']['id'],
+								'user' => $_SESSION['account']['username']
+							),
+							$cf['auth']['jwt']['secret']
+						);
 
 					    // log
 						logWrite( 'login effettuato correttamente via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_DEBUG );
@@ -339,3 +395,4 @@
     // debug
 	// print_r( $cf['localization']['language'] );
 	// print_r( $_SESSION );
+	// print_r( $cf['auth']['jwt'] );
