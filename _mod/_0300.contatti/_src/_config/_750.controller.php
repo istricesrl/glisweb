@@ -44,13 +44,13 @@
             // verifico se la configurazione prevede l'inclusione di una o più macro
                 if( isset( $cnf['controller'] ) ) {
 
-                // log
-                    logWrite( 'controller trovate per il blocco ' . $k . ': ' . implode(', ', $cnf['controller'] ), 'contatti' );
+                    // log
+                        logWrite( 'controller trovate per il blocco ' . $k . ': ' . implode(', ', $cnf['controller'] ), 'contatti' );
 
-                // includo le controller
-                    foreach( $cnf['controller'] as $macro ) {
-                        require DIR_BASE . $macro;
-                    }
+                    // includo le controller
+                        foreach( $cnf['controller'] as $macro ) {
+                            require DIR_BASE . $macro;
+                        }
 
                 }
 
