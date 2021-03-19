@@ -12,6 +12,10 @@ body > .container-fluid > .row > .col-12:first-child {
     background-image: url('/_src/_img/_bkg/_03/_00.jpg');
     background-repeat: no-repeat;
     border-right: 2px solid #aaaaaa;
+    max-height: 100vh;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
 }
 
 header .logo img {
