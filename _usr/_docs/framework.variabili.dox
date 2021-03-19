@@ -973,6 +973,7 @@
     site.hosts.<s>               | host del sito <n> per lo status <s>
     site.id                      | id del sito <n> (vedi _src/_config/_015.site.php)
     site.metadata                | array dei metadati del sito <n>
+    site.metadata.theme          | tema di default del sito <n>
     site.name                    | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     site.name.<l>                | nome del sito <n> per la lingua <l>
     site.pages                   | configurazioni aggiuntive per le pagine, da sovrapporre a $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
