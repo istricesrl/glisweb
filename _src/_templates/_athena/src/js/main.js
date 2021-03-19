@@ -124,15 +124,6 @@
     // operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
 
-	    // collego il campo hidden per le checkbox
-		$('input[type=checkbox]').click( function() {
-		    if( this.checked ) {
-			$(this).prev().val('1');
-		    } else {
-			$(this).prev().val('0');
-		    }
-		});
-
 	    // attivo le verifiche per le modifiche ai form
 		window.addEventListener("beforeunload", function(e) {
 		    if( formChanged == true && ! submitFormOkay ) {

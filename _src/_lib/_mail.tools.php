@@ -160,9 +160,17 @@
 //print_r( $t );
 //print_r( $d['ct'] );
 
+/*
+$loader = new \Twig\Loader\ArrayLoader([
+    'index.html' => 'Hello {{ name }}!',
+]);
+$twig = new \Twig\Environment($loader);
+
+echo $twig->render('index.html', ['name' => 'Fabien']);
+*/
 		    // avvio di Twig
-			$twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( $t[ $l ] ) ) );
-			$from = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) ) );
+			$twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $t[ $l ] ) );
+			$from = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) );
 #			$to = new Twig_Environment( new Twig_Loader_Array( array( 'nome' => array_key_first( $t[ $l ]['to'] ), 'mail' => reset( $t[ $l ]['to'] ) ) ) );
 
 		    // variabili da passare a queueMail()

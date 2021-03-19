@@ -1,0 +1,226 @@
+{% if privacy.titolare %}
+<h2>informativa resa ai sensi degli artt. 13 e 14 del GDPR 2016/679</h2>
+
+<p>In questa pagina vengono descritte le modalità e le finalità di gestione dei dati personali di coloro
+che consultano questo sito, accessibile all'indirizzo <a href="{{ site.url }}">{{ site.fqdn }}</a>; questa informativa è resa ai sensi
+dell'<a href="http://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/1311248#articolo13" target="_blank">art. 13 del D.Lg. n. 196/2003</a>
+(codice in materia di protezione dei dati personali) e
+dell'<a href="http://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/6264597" target="_blank">art. 13 del Regolamento UE n. 2016/679</a> (GDPR 2016/679).</p>
+
+<h3>titolare del trattamento dei dati</h3>
+
+<p>La consultazione di questo sito e l'utilizzo degli eventuali servizi da esso erogati può comportare, come meglio sotto dettagliato,
+il trattamento dei dati personali forniti dagli utenti da parte del titolare del trattamento, <strong>{{ privacy.titolare.denominazione }}</strong>,
+avente sede in <strong>{{ privacy.titolare.citta }} ({{ privacy.titolare.provincia }})</strong>, <strong>{{ privacy.titolare.indirizzo }}</strong>,
+partita IVA <strong>{{ privacy.titolare.piva }}</strong>, codice fiscale <strong>{{ privacy.titolare.cf }}</strong>. Il titolare può essere contattato telefonicamente
+al numero <strong><a href="tel:{{ privacy.titolare.telefono }}">{{ privacy.titolare.telefono }}</a></strong> oppure via mail
+all'indirizzo <strong><a href="mailto:{{ privacy.titolare.mail }}">{{ privacy.titolare.mail }}</a></strong>.</p>
+
+{% if privacy.dpo %}
+<h3>data protection officer</h3>
+<p>Il Data Protection Officer (DPO), sig. <strong>{{ privacy.dpo.denominazione }}</strong>, può essere contattato via posta presso la sua sede in <strong>{{ privacy.dpo.citta }} ({{ privacy.dpo.provincia }})</strong>,
+<strong>{{ privacy.dpo.indirizzo }}</strong> oppure telefonicamente al numero <strong><a href="tel:{{ privacy.dpo.telefono }}">{{ privacy.dpo.telefono }}</a></strong>
+oppure via mail all'indirizzo <strong><a href="mailto:{{ privacy.dpo.mail }}">{{ privacy.dpo.mail }}</a></strong>.</p>
+{% endif %}
+
+{% if privacy.responsabili %}
+<h3>responsabili del trattamento dei dati</h3>
+
+<p>Il titolare, ai sensi dell'art. 29 comma 1 del D.Lg. 196/2003, ha designato i seguenti soggetti responsabili del trattamento dei dati:</p>
+<ul>
+    {% for responsabile in privacy.responsabili %}
+    <li>
+	<strong>{{ responsabile.denominazione }}</strong> in quanto <strong>{{ responsabile.motivazione[ localization.language.ietf ] }}</strong>;<br />
+	{{ responsabile.denominazione }} è reperibile telefonicamente al numero
+	<strong><a href="tel:{{ responsabile.telefono }}">{{ responsabile.telefono }}</a></strong> oppure via mail
+	all'indirizzo <strong><a href="mailto:{{ responsabile.mail }}">{{ responsabile.mail }}</a></strong>
+    </li>
+    {% endfor %}
+</ul>
+<p>Un elenco dettagliato degli incaricati del trattamento dei dati può essere richiesto via mail all'indirizzo <strong><a href="mailto:{{ privacy.titolare.mail }}">{{ privacy.titolare.mail }}</a></strong>.</p>
+{% endif %}
+
+<h3>base giuridica del trattamento</h3>
+
+<p>I dati personali indicati in questa pagina sono trattati in base al consenso espresso dagli interessati, nell'ambito dell'erogazione dei servizi richiesti.
+
+<h3>tipologie di dati trattati e finalità del trattamento</h3>
+<p>Di seguito vengono illsutrate le tipologie di dati trattati in questo sito e le relative modalità e finalità del trattamento.</p>
+
+<h4>dati di navigazione</h4>
+<p>I sistemi informatici preposti al funzionamento del sito acquisiscono nel corso del loro normale esercizio alcuni dati personali
+la cui trasmissione è implicita nell'utilizzo dei protocolli di comunicazione di Internet. Tali dati non vengono raccolti per essere associati a
+specifici interessati ma per la loro stessa natura potrebbero attraverso elaborazioni ed associazioni con dati detenuti da terzi condurre
+all'identificazione degli utenti.</p>
+<p>Questi dati (indirizzi IP o nomi a dominio dei computer utilizzati per connettersi al sito, gli indirizzi
+URI delle risorse richieste, la data e l'ora delle richieste, il contenuto e l'esito delle risposte date dal sito, e simili) vengono utilizzati
+al solo fine di ricavarne informazioni statistiche e vengono eliminati periodicamente nel corso delle normali attività di manutenzione.</p>
+<p>Questi dati potrebbero essere utilizzati per l'accertamento di responsabilità in caso di reati informatici ai danni del sito; in questo caso
+potrebbero essere conservati per un periodo più lungo e comunicati alle autorità competenti.</p>
+
+<h4>dati forniti volontariamente dall'utente</h4>
+<p>L'invio facoltativo, esplicito e volontario di posta elettronica agli indirizzi presenti sul sito comporta l'acquisizione dell'indirizzo del
+mittente, necessario per rispondere alle richieste, nonché degli eventuali altri dati personali inseriti nel messaggio.</p>
+<p>Specifiche informative sono predisposte nelle pagine del sito che richiedono la trasmissione di dati da parte dell'utente per l'erogazione
+di servizi e per l'invio di informazioni.</p>
+
+{% for form in contatti %}
+{% set dati = form.privacy %}
+<h4>{{ dati.titolo[ localization.language.ietf ] }}</h4>
+<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} Nel caso di utilizzo del form, i dati trasmessi vengono trattati per le seguenti finalità per ognuna delle quali il consenso può
+essere prestato separatamente:</p>
+<ul>{% for finalita in dati.finalita %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}obbligatorio{% else %}facoltativo{% endif %})</li>{% endfor %}</ul>
+{% endfor %}
+
+{% for form in registrazione %}
+{% set dati = form.privacy %}
+<h4>{{ dati.titolo[ localization.language.ietf ] }}</h4>
+<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} Nel caso di utilizzo del form, i dati trasmessi vengono trattati per le seguenti finalità per ognuna delle quali il consenso può
+essere prestato separatamente:</p>
+<ul>{% for finalita in dati.finalita %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}obbligatorio{% else %}facoltativo{% endif %})</li>{% endfor %}</ul>
+{% endfor %}
+
+<h3>modalità di conferimento dei dati</h3>
+
+<p>A parte quanto specificato per i dati di navigazione, l'utente è libero di fornire i propri dati personali compilando i moduli presenti sul sito
+per richiedere l'invio di newsletter, di materiale informativo o di altre comunicazioni; l'utente è avvisato e consapevole che il mancato
+conferimento di tali dati può comportare l'impossibilità di ottenere quanto richiesto.</p>
+
+<h3>modalità del trattamento dei dati</h3>
+
+<p>I dati trattati vengono elaborati manualmente e tramite strumenti automatici, su supporto digitale e cartaceo, per il solo tempo
+necessario a perseguire le finalità dichiarate nalla presente informativa e comunque non superiore a quanto previsto dalla normativa vigente.</p>
+<p>Specifiche misure di sicurezza sono messe in opera al fine di prevenire la perdita, la manomissione, la sottrazione o comunque l'uso illecito
+dei dati trattati.</p>
+
+<h3>finalità del trattamento dei dati</h3>
+
+<p>Tutte le attività di raccolta e successivo trattamento dei dati sono finalizzate, se non diversamente specificato, al perseguimento dei seguenti scopi:</p>
+<ul>
+{% for scopo in privacy.finalita %}
+    <li>{{ scopo.descrizione[ localization.language.ietf ] }}</li>
+{% else %}
+	<li>risposta alle richieste degli utenti</li>
+{% endfor %}
+</ul>
+<p>In nessun caso il titolare del trattamento utilizza i dati forniti per finalità diverse da quelle elencate. Informative dettagliate
+vengono fornite contestualmente alla richiesta del consenso nei moduli del sito eventualmente predisposti per la raccolta di dati
+degli interessati.</p>
+
+<h3>diritti degli interessati</h3>
+
+<p>I soggetti cui si riferiscono i dati personali trattati dal sito, o in generale gli utenti del sito, hanno in qualunque momento il diritto di:</p>
+<ul>
+    <li>ottenere la conferma dell'esistenza o meno di dati che li riguardino</li>
+    <li>conoscerne il contenuto e l'origine</li>
+    <li>verificarne l'esattezza e la completezza</li>
+    <li>chiederne l'integrazione, l'aggiornamento o la rettificazione</li>
+    <li>chiederne la cancellazione, la trasformazione in forma anonima, il blocco dei dati trattati in violazione di legge</li>
+    <li>opporsi in ogni caso, per motivi legittimi, al loro trattamento</li>
+</ul>
+<p>Le richieste di esercizio dei diritti sopra indicati vanno rivolte senza particolari formalità, ai seguenti recapiti:</p>
+<ul>
+    <li>via mail, all'indirizzo <strong><a href="mailto:{{ privacy.titolare.mail }}">{{ privacy.titolare.mail }}</a></strong></li>
+    <li>telefonicamente al numero <strong><a href="tel:{{ privacy.titolare.telefono }}">{{ privacy.titolare.telefono }}</a></strong></li>
+    <li>tramite posta ordinaria scrivendo a <strong>{{ privacy.titolare.denominazione }}, {{ privacy.titolare.indirizzo }}, {{ privacy.titolare.cap }} {{ privacy.titolare.citta }} ({{ privacy.titolare.provincia }})</strong></li>
+</ul>
+
+<h2>cookie e altri sistemi di tracciamento</h2>
+
+<p>I cookie sono piccoli file di testo che vengono salvati dal browser dell'utente su richiesta dei siti che esso visita. Esistono diversi utilizzi
+possibili dei cookie in base ai quali si distinguono altrettante categorie di cookie, identici tecnicamente ma differenti sul piano funzionale.</p>
+
+{% if privacy.cookie.propri.tecnici %}
+<h3>cookie tecnici di sessione</h3>
+<p>Questo sito fa uso di cookie tecnici per gestire le sessioni di navigazione degli utenti e renderle più confortevoli e sicure; questi cookie
+sono temporanei e vengono eliminati alla chiusura del browser. L'uso di questi cookie è limitato alla trasmissione di identificativi di sessione
+generati casualmente e non implica la trasmissione di dati personali dell'utente. In nessun caso i cookie di sessione utilizzati da questo sito
+comportano l'acquisizione di dati personali identificativi dell'utente, né pregiudicano la riservatezza della sua navigazione. L'utilizzo di
+cookie tecnici di sessione non richiede il consenso esplicito dell'utente secondo la normativa vigente.</p>
+{% endif %}
+
+{% if privacy.cookie.terzi.tecnici %}
+<h3>cookie tecnici di terze parti</h3>
+<p>Questo sito integra servizi di terze parti che fanno uso di cookie tecnici per i quali non è richiesto un esplicito consenso in quanto non contengono
+informazioni che possono condurre all'identificazione dell'utente né raccolgono dati o altre informazioni personali su di esso; in particolare il sito
+utilizza i seguenti servizi:</p>
+<ul>
+    {% for cookie, dettagli in privacy.cookie.terzi.tecnici %}
+    <li>
+	<strong>{{ dettagli.nome }}</strong> utilizzato per <strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>,
+	link all'informativa <a href="{{ dettagli.policy }}" target="_blank">{{ dettagli.policy }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if privacy.cookie.terzi.analitici %}
+<h3>cookie analitici di terze parti</h3>
+<p>Questo sito fa uso di cookie di terze parti per analizzare il traffico e migliorare l'esperienza degli utenti; i dati acquisiti in tale
+maniera non vengono utilizzati per finalità diverse da quelle dichiarate.</p>
+{% if privacy.cookie.terzi.analitici.anonimi %}
+<p>I cookie elencati di seguito non contengono informazioni identificative; poiché tali cookie non possono condurre all'identificazione
+dell'utente, in quanto sono state adottate le necessarie misure tecniche di anonimizzazione dei dati, la normativa vigente non richiede
+l'esplicito consenso dell'utente per il loro utilizzo. Poiché questi cookie sono gestiti direttamente dai soggetti terzi, si rimanda alle loro
+rispettive informative riportate nel seguente elenco:</p>
+<ul>
+    {% for cookie, dettagli in privacy.cookie.terzi.analitici.anonimi %}
+    <li>
+	<strong>{{ dettagli.nome }}</strong> utilizzato per <strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>,
+	link all'informativa <a href="{{ dettagli.policy }}" target="_blank">{{ dettagli.policy }}</a>,
+	conservazione dei dati per <strong>{{ dettagli.conservazione[ localization.language.ietf ] }}</strong>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% if privacy.cookie.terzi.analitici.identificativi %}
+<p>I cookie elencati di seguito possono contenere informazioni in grado di condurre all'identificazione
+dell'utente, e dunque la normativa vigente richiede l'esplicito consenso dell'utente per il loro utilizzo. Poiché questi cookie sono gestiti
+direttamente dai soggetti terzi, si rimanda alle loro rispettive informative riportate nel seguente elenco:</p>
+<table class="table">
+    <tr class="nowrap">
+	<th>provenienza</th>
+	<th>finalità</th>
+	<th>informativa</th>
+	<th>conservazione dati</th>
+	<th>consenso</th>
+    </tr>
+    {% for cookie, dettagli in privacy.cookie.terzi.analitici.identificativi %}
+    <tr>
+	<td class="nowrap"><strong>{{ dettagli.nome }}</strong></td>
+	<td>{{ dettagli.motivazione[ localization.language.ietf ] }}</td>
+	<td><a href="{{ dettagli.policy }}" target="_blank">{{ dettagli.policy }}</a></td>
+	<td>{{ dettagli.conservazione[ localization.language.ietf ] }}</td>
+	{% if privacy.cookie.terzi.analitici.identificativi[ cookie ].consenso == 1 %}
+	<td><form action="" method="post">
+	<input type="hidden" name="__cookie__[owner]" value="terzi">
+	<input type="hidden" name="__cookie__[type]" value="analitici">
+	<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
+	<input type="hidden" name="__cookie__[value]" value="">
+	<input type="submit" class="btn btn-default btn-dark btn-sm" value="prestato, fai click qui per revocarlo">
+	</form></td>
+	{# elseif privacy.cookie.terzi.analitici.identificativi[ cookie ].consenso == 'no' #}
+	{% else %}
+	<td><form action="" method="post">
+	<input type="hidden" name="__cookie__[owner]" value="terzi">
+	<input type="hidden" name="__cookie__[type]" value="analitici">
+	<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
+	<input type="hidden" name="__cookie__[value]" value="1">
+	<input type="submit" class="btn btn-default btn-dark btn-sm" value="negato, fai click qui per prestarlo">
+	</form></td>
+	{% endif %}
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endif %}
+
+<h3>cookie di profilazione e sistemi di tracciamento</h3>
+
+{% if not privacy.cookie.propri.profilazione and not privacy.cookie.terzi.profilazione %}
+<p>Questo sito non fa uso di cookie per la profilazione degli utenti, né impiega altri metodi di tracciamento.</p>
+{% endif %}
+
+{% else %}
+<p>Privacy e cookie policy in fase di aggiornamento.</p>
+{% endif %}

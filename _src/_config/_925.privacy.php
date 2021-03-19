@@ -23,15 +23,6 @@
     // debug
 	// print_r( $cf['google'] );
 
-/*
- * @todo questa cosa non dovrebbe avvenire con la configurazione delle pagine per sito?
- *
-    // aggiusto il template e lo schema della pagina privacy
-	if( isset( $cf['privacy']['page']['template'] ) ) {
-	    $cf['contents']['pages']['privacy']['template'] = $cf['privacy']['page']['template'];
-	}
-*/
-
     // aggiustamenti automatici ai cookie per Google Tag Manager
 	if( isset( $cf['google']['gtm']['profile'] ) ) {
 	    $k = ( ( $cf['google']['gtm']['profile']['anonymous'] == true ) ? 'anonimi' : 'identificativi' );
@@ -76,11 +67,6 @@
 		// @todo implementare il log dei consensi
 
 	}
-
-/*
-    // collegamento con l'array $ct
-	$ct['privacy'] = &$cf['privacy'];
-*/
 
     // debug
 	// print_r( $cf['privacy']['cookie'] );
