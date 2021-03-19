@@ -45,7 +45,7 @@ else
     BRANCHDIR=${BRANCH////-}
 
     # scompatto Glisweb
-    unzip ./$BRANCHZIP.zip
+    unzip -qq ./$BRANCHZIP.zip
 
     # elimino il vecchio framework
     rm -rf ./_*
