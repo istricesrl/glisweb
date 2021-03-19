@@ -6,6 +6,8 @@
 
     introduzione
     ============
+    Questo modulo consente la gestione di blocchi dati sotto la gerarchia __contatti__ specificando per ognuno varie strategie di elaborazione. Il modulo opera
+    a livello di controller perché i moduli contatti possono trovarsi in molte pagine del sito e possono essercene anche più di uno per sito o addirittura per pagina.
 
     moduli di contatto
     ==================
