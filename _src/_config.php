@@ -318,6 +318,11 @@
     define( 'DIR_VAR_LOG_MYSQL_PATCH'   , DIR_VAR_LOG_MYSQL . 'patch/' );
 	define( 'DIR_VAR_LOG_LATEST'		, DIR_BASE . 'var/log/latest/' );
 	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
+    define( 'DIR_VAR_SPOOL'			, DIR_BASE . 'var/spool/' );
+    define( 'DIR_VAR_SPOOL_CART'			, DIR_BASE . 'var/spool/cart/' );
+    define( 'DIR_VAR_SPOOL_MAIL'			, DIR_BASE . 'var/spool/mail/' );
+    define( 'DIR_VAR_SPOOL_PAYMENT'			, DIR_BASE . 'var/spool/payment/' );
+    define( 'DIR_VAR_SPOOL_PRINT'			, DIR_BASE . 'var/spool/print/' );
 
     // file
     define( 'FILE_AUTOLOAD'         ,  DIR_SRC_LIB_EXT . 'autoload.php' );
