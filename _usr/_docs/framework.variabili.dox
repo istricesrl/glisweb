@@ -391,6 +391,49 @@
     -------------
     Questa chiave contiene le configurazioni relative ai prodotti Google.
 
+    $cf['hotjar']
+    -------------
+    Questa chiave contiene informazioni sulla configurazione dell'integrazione con Hotjar.
+
+    chiave                                     | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    hotjar.profile                             | il profilo di Hotjar corrente (è una scorciatoia per hotjar.profiles.<site.status>)
+    hotjar.profiles                            | i profili di Hotjar disponibili
+    hotjar.profiles.<s>                        | dettagli del profilo di Hotjar per lo status <s>
+    hotjar.profiles.<s>.id                     | ID del profilo di Hotjar per lo status <s>
+
+    Vediamo un esempio di configurazione per l'intero deploy:
+
+    \code{.json}
+    "hotjar": {
+      "profiles": {
+        "DEV": {
+          "id": "idHotjar"
+        }
+      }
+    }
+    \endcode
+
+    Hotjar può essere configurato anche per specifico sito:
+
+    \code{.json}
+    "sites": {
+      "1": {
+        "id": 1,
+        "hotjar": {
+          "profiles": {
+            "DEV": {
+              "id": "idHotjar"
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['hotjar'] viene integrato da $cx['hotjar'] e da $cf['site']['hotjar'] ed è linkato a $ct['hotjar'], per ulteriori dettagli vedi
+    _src/_config/_680.hotjar.php.
+
     $cf['image']
     ------------
     Questa chiave contiene informazioni sui formati di immagine gestiti dal framework.
@@ -473,7 +516,7 @@
     }
     \endcode
 
-    L'array $cf['mail'] è linkato a $ct['mail'], per ulteriori dettagli vedi _src/_config/_500.mail.php.
+    L'array $cf['mail'] viene integrato da $cx['mail'] e da $cf['site']['mail'] ed è linkato a $ct['mail'], per ulteriori dettagli vedi _src/_config/_500.mail.php.
 
     $cf['mapquest']
     ---------------
@@ -666,48 +709,48 @@
     --------------
     Questa chiave contiene tutte le informazioni necessarie a comporre automaticamente l'informativa per la privacy del sito.
 
-    chiave                           | descrizione
-    ---------------------------------|---------------------------------------------------------------------------------------
-    cookie                           | array di informazioni sui cookie
-    dpo                              | dettagli sul DPO
-    dpo.cap                          | CAP della sede del DPO
-    dpo.cf                           | codice fiscale del DPO
-    dpo.citta                        | città della sede del DPO
-    dpo.denominazione                | denominazione del DPO
-    dpo.indirizzo                    | indirizzo della sede del DPO
-    dpo.mail                         | mail del DPO
-    dpo.piva                         | partita IVA del DPO
-    dpo.provincia                    | provincia della sede del DPO
-    dpo.telefono                     | telefono della sede del DPO
-    finalita                         | array di informazioni sulle finalità
-    finalita.<f>                     | informazioni sulla finalità <f>
-    finalita.<f>.descrizione         | descrizioni della finalità <f>
-    finalita.<f>.descrizione.<l>     | descrizione della finalità <f> nella lingua <l>
-    responsabili                     | array dei dettagli dei responsabili del trattamento
-    responsabili.<r>                 | dettagli del responsabile <r> del trattamento
-    responsabili.<r>.cap             | CAP della sede del responsabile <r> del trattamento
-    responsabili.<r>.cf              | codice fiscale del responsabile <r> del trattamento
-    responsabili.<r>.citta           | città della sede del responsabile <r> del trattamento
-    responsabili.<r>.denominazione   | denominazione del responsabile <r> del trattamento
-    responsabili.<r>.finalita        | finalità della nomina del responsabile <r> del trattamento
-    responsabili.<r>.finalita.<l>    | finalità della nomina del responsabile <r> del trattamento nella lingua <l>
-    responsabili.<r>.indirizzo       | indirizzo della sede del responsabile <r> del trattamento
-    responsabili.<r>.mail            | mail del responsabile <r> del trattamento
-    responsabili.<r>.motivazione     | motivazioni della nomina del responsabile <r> del trattamento
-    responsabili.<r>.motivazione.<l> | motivazione della nomina del responsabile <r> del trattamento nella lingua <l>
-    responsabili.<r>.piva            | partita IVA del responsabile <r> del trattamento
-    responsabili.<r>.provincia       | provincia della sede del responsabile <r> del trattamento
-    responsabili.<r>.telefono        | telefono della sede del responsabile <r> del trattamento
-    titolare                         | dettagli sul titolare del trattamento
-    titolare.cap                     | CAP della sede del titolare del trattamento
-    titolare.cf                      | codice fiscale del titolare del trattamento
-    titolare.citta                   | città della sede del titolare del trattamento
-    titolare.denominazione           | denominazione del titolare del trattamento
-    titolare.indirizzo               | indirizzo della sede del titolare del trattamento
-    titolare.mail                    | mail del titolare del trattamento
-    titolare.piva                    | partita IVA del titolare del trattamento
-    titolare.provincia               | provincia della sede del titolare del trattamento
-    titolare.telefono                | telefono della sede del titolare del trattamento
+    chiave                                   | descrizione
+    -----------------------------------------|---------------------------------------------------------------------------------------
+    privacy.cookie                           | array di informazioni sui cookie
+    privacy.dpo                              | dettagli sul DPO
+    privacy.dpo.cap                          | CAP della sede del DPO
+    privacy.dpo.cf                           | codice fiscale del DPO
+    privacy.dpo.citta                        | città della sede del DPO
+    privacy.dpo.denominazione                | denominazione del DPO
+    privacy.dpo.indirizzo                    | indirizzo della sede del DPO
+    privacy.dpo.mail                         | mail del DPO
+    privacy.dpo.piva                         | partita IVA del DPO
+    privacy.dpo.provincia                    | provincia della sede del DPO
+    privacy.dpo.telefono                     | telefono della sede del DPO
+    privacy.finalita                         | array di informazioni sulle finalità
+    privacy.finalita.<f>                     | informazioni sulla finalità <f>
+    privacy.finalita.<f>.descrizione         | descrizioni della finalità <f>
+    privacy.finalita.<f>.descrizione.<l>     | descrizione della finalità <f> nella lingua <l>
+    privacy.responsabili                     | array dei dettagli dei responsabili del trattamento
+    privacy.responsabili.<r>                 | dettagli del responsabile <r> del trattamento
+    privacy.responsabili.<r>.cap             | CAP della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.cf              | codice fiscale del responsabile <r> del trattamento
+    privacy.responsabili.<r>.citta           | città della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.denominazione   | denominazione del responsabile <r> del trattamento
+    privacy.responsabili.<r>.finalita        | finalità della nomina del responsabile <r> del trattamento
+    privacy.responsabili.<r>.finalita.<l>    | finalità della nomina del responsabile <r> del trattamento nella lingua <l>
+    privacy.responsabili.<r>.indirizzo       | indirizzo della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.mail            | mail del responsabile <r> del trattamento
+    privacy.responsabili.<r>.motivazione     | motivazioni della nomina del responsabile <r> del trattamento
+    privacy.responsabili.<r>.motivazione.<l> | motivazione della nomina del responsabile <r> del trattamento nella lingua <l>
+    privacy.responsabili.<r>.piva            | partita IVA del responsabile <r> del trattamento
+    privacy.responsabili.<r>.provincia       | provincia della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.telefono        | telefono della sede del responsabile <r> del trattamento
+    privacy.titolare                         | dettagli sul titolare del trattamento
+    privacy.titolare.cap                     | CAP della sede del titolare del trattamento
+    privacy.titolare.cf                      | codice fiscale del titolare del trattamento
+    privacy.titolare.citta                   | città della sede del titolare del trattamento
+    privacy.titolare.denominazione           | denominazione del titolare del trattamento
+    privacy.titolare.indirizzo               | indirizzo della sede del titolare del trattamento
+    privacy.titolare.mail                    | mail del titolare del trattamento
+    privacy.titolare.piva                    | partita IVA del titolare del trattamento
+    privacy.titolare.provincia               | provincia della sede del titolare del trattamento
+    privacy.titolare.telefono                | telefono della sede del titolare del trattamento
 
     La compilazione automatica della malleveria della privacy è effettuata tramite il file _src/_inc/_contents/_privacy.<l>.html
     nelle varie lingue. Vedi \ref cartelle "la documentazione relativa alle cartelle del framework" per ulteriori dettagli
