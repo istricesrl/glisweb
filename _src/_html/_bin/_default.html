@@ -349,3 +349,12 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	<p class="etichetta">numero verde</p><a href="tel:{{ num }}">{{ num }}</a>
 </div>
 {% endmacro %}
+
+{% macro shareBtn( social, url, img, txt, class ) %}
+{% if social == 'facebook' %}
+{% elseif social == 'twitter' %}
+{% elseif social == 'pinterest' %}
+{% elseif social == 'linkedin' %}
+{% elseif social == 'tumblr' %}
+{% endif %}
+{% endmacro %}
