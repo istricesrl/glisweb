@@ -120,8 +120,8 @@ degli interessati.</p>
 </ul>
 <p>Le richieste di esercizio dei diritti sopra indicati vanno rivolte senza particolari formalità, ai seguenti recapiti:</p>
 <ul>
-    <li>via mail, all'indirizzo <strong><a href="mailto:{{ privacy.titolare.mail }}">{{ privacy.titolare.mail }}</a></strong></li>
-    <li>telefonicamente al numero <strong><a href="tel:{{ privacy.titolare.telefono }}">{{ privacy.titolare.telefono }}</a></strong></li>
+    {% if privacy.titolare.mail %}<li>via mail, all'indirizzo <strong><a href="mailto:{{ privacy.titolare.mail }}">{{ privacy.titolare.mail }}</a></strong></li>{% endif %}
+    {% if privacy.titolare.telefono %}<li>telefonicamente al numero <strong><a href="tel:{{ privacy.titolare.telefono }}">{{ privacy.titolare.telefono }}</a></strong></li>{% endif %}
     <li>tramite posta ordinaria scrivendo a <strong>{{ privacy.titolare.denominazione }}, {{ privacy.titolare.indirizzo }}, {{ privacy.titolare.cap }} {{ privacy.titolare.citta }} ({{ privacy.titolare.provincia }})</strong></li>
 </ul>
 
