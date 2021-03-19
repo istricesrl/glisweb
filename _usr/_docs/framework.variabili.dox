@@ -168,6 +168,8 @@
     L'array $cf['contatti'] è definito in _mod/_0300.contatti/_src/_config/_030.common.php e integrato con $cx['contatti'] in
     _mod/_0300.contatti/_src/_config/_035.common.php. Per la definizione di template mail valida, si veda la documentazione relativa a $cf['mail']['tpl'].
 
+    Per approfondimenti sul funzionamento del modulo contatti, si veda /ref "moduli.0300" "la documentazione relativa al modulo contatti".
+
     $cf['contents']
     ---------------
     Questa chiave contiene la struttura delle pagine e i contenuti; si tratta di una chiave molto estesa, la cui elaborazione
@@ -803,6 +805,11 @@
     registrazione.default.categorie       | l'array delle categorie a cui iscrivere automaticamente la nuova anagrafica
     registrazione.default.gruppi          | l'array dei gruppi a cui iscrivere automaticamente il nuovo account
     registrazione.default.attivo          | valore booleano che indica se il nuovo account dev'essere creato come attivo o no
+
+    L'array $cf['registrazione'] viene integrato da $cx['registrazione'] e da $cf['site']['registrazione'], per ulteriori dettagli vedi
+    _mod/_0650.registrazione/_src/_config/_030.common.php.
+
+    Per approfondimenti sul funzionamento del modulo registrazione, si veda /ref "moduli.0650" "la documentazione relativa al modulo registrazione".
 
     $cf['request']
     --------------
