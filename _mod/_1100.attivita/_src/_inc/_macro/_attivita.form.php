@@ -60,6 +60,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view' );
 
+    // tendina tipologia inps
+	$ct['etc']['select']['id_tipologia_inps'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_inps_view' );
+
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
@@ -103,28 +110,42 @@
             'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE timestamp_chiusura IS NULL ORDER BY __label__' );
 	}
 
-    // tendina task
+    // tendina todo
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) {
-	    $ct['etc']['select']['id_task'] = mysqlCachedIndexedQuery(
+	    $ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
             $cf['cache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM task_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', array( array( 's' => $_REQUEST[ $ct['etc']['table'] ]['id_progetto'] ), array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_task'] ) ) );
+            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', array( array( 's' => $_REQUEST[ $ct['etc']['table'] ]['id_progetto'] ), array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) );
 	} else {
-	    $ct['etc']['select']['id_task'] = mysqlCachedIndexedQuery(
+	    $ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
             $cf['cache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM task_view' );
+            'SELECT id, __label__ FROM todo_view' );
 	}
 
-	if( isset( $_REQUEST['__preset__']['attivita']['id_task']  ) ){
-	    $task = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM task_view WHERE id = ?', 
-        array( array( 's' => $_REQUEST['__preset__']['attivita']['id_task'] ) ) );
+    // tendina indirizzi
+    $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM indirizzi_view' );
+
+	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
+	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 
+        array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
         
-        if( ! empty($task['id_cliente']) && ! empty($task['id_progetto']) ){
-	    $_REQUEST['__preset__']['attivita']['id_cliente'] = $task['id_cliente'];
-        $_REQUEST['__preset__']['attivita']['id_progetto'] = $task['id_progetto'];
+        if( ! empty($todo['id_cliente']) ){
+            $_REQUEST['__preset__']['attivita']['id_cliente'] = $todo['id_cliente'];
+        }
+        
+        if( ! empty($todo['id_progetto']) ){
+	        $_REQUEST['__preset__']['attivita']['id_progetto'] = $todo['id_progetto'];
+        }
+
+        if( ! empty($todo['id_indirizzo']) ){
+	        $_REQUEST['__preset__']['attivita']['id_indirizzo'] = $todo['id_indirizzo'];
         }
 	}
 

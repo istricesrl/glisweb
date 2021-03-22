@@ -83,20 +83,22 @@
 <input type="text" class="{% if disabled %}disabled{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ val }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %}>
 {% endmacro %}
 
-{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf ) %}
+{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf, api ) %}
 {% if subtable %}
+    {% if key %}{% set bl = request[ table ][ subtable ][ counter ][ key ] %}{% endif %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
     {% set ks = request[ table ][ subtable ]|keys %}
     {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
 {% else %}
+    {% if key %}{% set bl = request[ table ][ key ] %}{% endif %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {# NOTA if per retrocompatibilità con le chiamate che passano ancora le stringhe estese degli URL #}
 {% if key %}
-    {% set editor = pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ request[ table ][ key ] ~ '&__backurl__=' ~ page.backurl[ ietf ] %}
+    {% set editor = pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ bl ~ '&__backurl__=' ~ page.backurl[ ietf ] %}
     {% set adder = pages[ add ].path[ ietf ] ~ '?__backurl__=' ~ page.backurl[ ietf ] %}
 {% else %}
     {% set editor = edit %}
@@ -108,15 +110,19 @@
 {% if not vl %}{% set vl = default %}{% endif %}
 {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
 {% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
+{% if vl %}{% set pl = null %}{% for option in etc %}{% if option.id == vl %}{% set pl = option.__label__ %}{% endif %}{% endfor %}{% endif %}
 {% if disabled %}
-{% for option in etc %}{% if option.id == vl %}
 <input type="hidden" name="{{ nm }}" value="{{ option.id }}"  >
-<div class="form-control-plaintext {{ class }}">{{ option.__label__ }}</div>
-{% endif %}{% endfor %}
+<div class="form-control-plaintext {{ class }}">{{ pl }}</div>
 {% else %}
 <div class="row m-0">
+    {% if api %}
     <div class="col combobox-container p-0">
-	<select name="{{ nm }}" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" class="selectbox form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true">
+	<input type="hidden" value="{{ vl }}" placeholder-api="{{ pl }}" name="{{ nm }}" class="selectbox" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" {% if change %} onchange="{{ change }}"{% endif %} {% if default %} default="{{ default }}"{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
+    </div>
+    {% else %}
+    <div class="col combobox-container p-0">
+	<select name="{{ nm }}" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" class="selectbox form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
 	    {% if not noempty %}<option value="">{# placeholder #}</option>{% endif %}
 	    {% for option in etc %}
 	    <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
@@ -124,8 +130,9 @@
 	</select>
     </div>
     <div class="col-auto p-0 pl-1">
-        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#{{ id }}_inputbox').trigger('all');"><i class="fa fa-chevron-down"></i></button>
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" selectbox-field="{{ id }}_inputbox" onclick="$('#'+$(this).attr('selectbox-field')).trigger('all');"><i class="fa fa-chevron-down"></i></button>
     </div>
+    {% endif %}
     {% if edit and vl %}<div class="col-auto p-0 pl-1">
 	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
     </div>{% endif %}
@@ -148,7 +155,7 @@
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {% if vl is empty %}{% set vl = default %}{% endif %}
-<input type="{% if type %}{{ type }}{% else %}text{% endif %}" {% if step %}step={{ step }}  {% endif %} {% if disabled %}disabled{% endif %} name="{{ nm }}" id="{{ id }}" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" value="{{ vl }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %} {% if type == 'password' %}autocomplete="new-password" {% endif %}>
+<input type="{% if type %}{{ type }}{% else %}text{% endif %}" {% if default %} default="{{ default }}"{% endif %} {% if step %}step={{ step }} {% endif %} {% if disabled %}readonly{% endif %} name="{{ nm }}" id="{{ id }}" class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ vl }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %} {% if type == 'password' %}autocomplete="new-password" {% endif %}>
 {% endmacro %}
 
 {% macro inputRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class, disabled, step ) %}
@@ -330,51 +337,6 @@
 
 {% macro shortUploader( table, subtable, counter, field, placeholder, etc, request, folder, site, edit, pages, lang, required, class, disabled ) %}
 {{ frm.uploader( table, subtable, counter, field, placeholder, etc, request, folder, site, edit, pages, lang, required, class, '1', disabled ) }}
-{% endmacro %}
-
-{% macro checkPrivacy( form, contatti, pages, tr, lang, class, rclass, modulo ) %}
-{% if not class %}{% set class = 'col-12 col-md-10 offset-md-2' %}{% endif %}
-{% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
-{% if not modulo %}{% set modulo = '__contatti__[' ~ form ~ ']' %}{% endif %}
-<div class="{{ rclass }} row-privacy">
-    <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="privacy_policy" name="{{ modulo }}[privacy][policy]" value="0">
-	    <input class="form-check-input" type="checkbox" required>
-	    <label class="form-check-label text-left" for="privacy_policy">
-		{{ tr.accetto_privacy[ lang ] | raw }}
-		<a href="{{ pages.privacy.path[ lang ] }}" target="_blank">{{ tr.privacy_policy_sito[ lang ] | raw }}</a> ({{ tr.obbligatorio[ lang ] | raw }})
-	    </label>
-	</div>
-    </div>
-</div>
-{% for label,check in contatti[ form ].privacy[ lang ].finalita %}
-<div class="{{ rclass }} row-privacy">
-    <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="privacy_{{ label }}" name="{{ modulo }}[privacy][{{ label }}]" value="0">
-	    <input class="form-check-input" type="checkbox" {% if check.required %}required{% endif %}>
-	    <label class="form-check-label text-left" for="privacy_{{ label }}">
-		{{ check.label | raw }} ({% if check.required %}{{ tr.obbligatorio[ lang ] | raw }}{% else %}{{ tr.facoltativo[ lang ] | raw }}{% endif %})
-	    </label>
-	</div>
-    </div>
-</div>
-{% endfor %}
-{% for label,check in contatti[ form ].condizioni[ lang ] %}
-<div class="{{ rclass }} row-privacy">
-    <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="condizioni_{{ label }}" name="{{ modulo }}[condizioni][{{ label }}]" value="0">
-	    <input class="form-check-input" type="checkbox" {% if check.required %}required{% endif %}>
-	    <label class="form-check-label text-left" for="condizioni_{{ label }}">
-		{{ tr.accetto_privacy[ lang ] | raw }}
-		<a href="{{ pages[ check.page ].path[ lang ] }}" target="_blank">{{ check.label | raw }}</a> ({% if check.required %}{{ tr.obbligatorio[ lang ] | raw }}{% else %}{{ tr.facoltativo[ lang ] | raw }}{% endif %})
-	    </label>
-	</div>
-    </div>
-</div>
-{% endfor %}
 {% endmacro %}
 
 {% macro selectModalitaPagamento( carrello, etc ) %}

@@ -91,7 +91,16 @@
 		    $(this).attr('img-hover', src );
 		});
 
-	    // ???
+	    // collego il campo hidden per le checkbox
+		$('input[type=checkbox]').click( function() {
+		    if( this.checked ) {
+			$(this).prev().val('1');
+		    } else {
+			$(this).prev().val('0');
+		    }
+		});
+
+		// ???
 		$( window ).scroll( function() {
 		    $('.hide-on-scroll').hide();
 		    if( $(this).scrollTop() > 50 ) {

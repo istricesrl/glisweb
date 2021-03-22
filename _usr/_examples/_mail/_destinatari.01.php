@@ -31,5 +31,3 @@
 
     // output
 	build( $tx );
-
-?>

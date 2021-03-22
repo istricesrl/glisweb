@@ -1,3 +1,51 @@
 body {
     font-family: monospace;
+    margin: 0px;
+}
+
+header, nav, main, footer {
+    padding: 0.5em;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0px;
+    margin-bottom: 0.5em;
+}
+
+.img-fluid {
+    width: 100%;
+}
+
+a, a:visited {
+    color: #666666;
+}
+
+a:active, a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #999999;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #999999;
+    text-decoration: underline;
+}
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+}
+
+@media (min-width: 1200px) {
+    
 }

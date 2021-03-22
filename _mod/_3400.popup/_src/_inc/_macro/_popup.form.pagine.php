@@ -14,12 +14,12 @@
     // tabella gestita
 	$ct['form']['table'] = 'popup';
 
-    // tendina anagrafica
-	$ct['etc']['select']['popup_pagine'] = mysqlCachedIndexedQuery(
+    // tendina pagine
+	$ct['etc']['select']['pagine'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM popup_pagine_view'
+	    'SELECT id, __label__ FROM pagine_view'
     );
 
     // tendina pollice per presenza del popup sulla pagina o meno

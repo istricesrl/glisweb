@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col d-none d-md-block elliptic">
-            <h1><ol class="breadcrumb">{{ nav.breadcrumb( page.template.breadcrumb, localization.language.ietf ) }}</ol></h1>
+            <h1><ol class="breadcrumbs">{{ nav.breadcrumbs( page.template.breadcrumbs, localization.language.ietf ) }}</ol></h1>
         </div>
         <div class="col-12 col-md-auto d-print-none">
             <div class="row">
@@ -47,10 +47,12 @@
                 </div>
                 {% endif %}
 
+                {% if session.account.username %}
                 <form class="col-auto p-0" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">
                     <input type="hidden" name="__logout__" value="1">
                     <button type="submit" class="btn btn-secondary btn-sqr btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="logout"><i class="fa fa-sign-out"></i></button>
                 </form>
+                {% endif %}
 
             </div>
         </div>

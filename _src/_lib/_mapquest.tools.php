@@ -20,28 +20,43 @@
      * @todo documentare
      *
      */
-    function mapquestGetCoords( $key, $civico, $indirizzo, $citta, $stato, $url = 'http://www.mapquestapi.com/geocoding/v1/address' ) {
+    function mapquestGetCoords( $key, $civico, $indirizzo, $citta, $cap = NULL, $stato = 'Italia', $url = 'http://www.mapquestapi.com/geocoding/v1/address' ) {
+
+		// die( print_r( array( $key, $civico, $indirizzo, $citta, $cap, $stato, $url ), true ) );
 
 	    if( ! empty( $key ) ) {
 
 		    $result = restCall(
-			$url . '?key=' . $key,
-			METHOD_POST,
-			array(
-			    'location' => $civico . ', ' . $indirizzo . ', ' . $citta . ', ' . $stato
-			)
+				$url . '?key=' . $key,
+				METHOD_POST,
+				array(
+				    'location' => $indirizzo . ' ' . $civico . ', ' . $cap . ' ' . $citta . ', ' . $stato
+				)
 		    );
 
-		    // print_r( $result );
+		    // die( print_r( $result, true ) );
 
 		    // writeToFile( $key . PHP_EOL . print_r( $result, true ), 'var/log/mapquest/' . string2urlRewrite( $civico . ', ' . $indirizzo . ', ' . $citta . ', ' . $stato ) . '.log' );
+
+            // log
+            appendToFile(
+                '-- ' . date( 'Y-m-d H:i' ) . PHP_EOL . print_r( $result, true ) . PHP_EOL,
+                'var/log/geocode/' . string2rewrite( implode( ' ', array(
+                    $stato,
+                    $citta,
+                    $indirizzo,
+                    $civico
+                ) ) ) . '.log'
+            );
 
 		    // TODO qui loggare in caso di problemi
 
 		    foreach( $result['results'][0]['locations'] as $location ) {
 			if( $location['geocodeQuality'] == 'POINT' || $location['geocodeQuality'] == 'ADDRESS' || $location['geocodeQuality'] == 'STREET' ) {
 #			if( $location['geocodeQuality'] == 'POINT' || $location['geocodeQuality'] == 'ADDRESS' ) {
-			    $qResults[ substr( $location['geocodeQualityCode'], 2, 3 ) ] = $location;
+				$qString = substr( $location['geocodeQualityCode'], 2, 3 );
+				$qArray = str_split( $qString );
+			    $qResults[ $qArray[1] . $qArray[0] . $qArray[2] ] = $location;
 			}
 		    }
 
@@ -49,9 +64,11 @@
 
 			ksort( $qResults );
 
-			// print_r( $qResults );
+			// die( print_r( $qResults, true ) );
 
 			$bResult = array_shift( $qResults );
+
+			// die( print_r( $bResult, true ) );
 
 			// return $result['results'][0]['locations'][0]['latLng'];
 			return array_merge( $bResult['latLng'], array( 'cap' => $bResult['postalCode'] ) );
@@ -80,18 +97,18 @@
      * @todo documentare
      *
      */
-    function mapquestGetCachedCoords( $m, $key, $civico, $indirizzo, $citta, $stato, $t = MEMCACHE_DEFAULT_TTL, $url = 'http://www.mapquestapi.com/geocoding/v1/address' ) {
+    function mapquestGetCachedCoords( $m, $key, $civico, $indirizzo, $citta, $cap = NULL, $stato = 'Italia', $t = MEMCACHE_DEFAULT_TTL, $url = 'http://www.mapquestapi.com/geocoding/v1/address' ) {
 
 	// calcolo la chiave della query
-	    $k = 'MAPQUEST_' . md5( $civico . $indirizzo . $citta . $stato );
+	    $k = 'MAPQUEST_' . md5( $civico . $indirizzo . $citta . $cap . $stato );
 
 	// cerco il valore in cache
 	    $r = memcacheRead( $m, $k );
 
 	// se il valore non è stato trovato
 	    if( empty( $r ) || $t === false ) {
-		$r = mapquestGetCoords( $key, $civico, $indirizzo, $citta, $stato, $url );
-		memcacheWrite( $m, $k, $r, $t );
+		$r = mapquestGetCoords( $key, $civico, $indirizzo, $citta, $cap, $stato, $url );
+			memcacheWrite( $m, $k, $r, $t );
 	    }
 
 	// restituisco il risultato

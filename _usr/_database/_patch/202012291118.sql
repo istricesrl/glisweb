@@ -1,0 +1,1 @@
+ALTER TABLE `contratti` CHANGE `percentuale_part_time` `percentuale_part_time` DECIMAL(6,3) NULL DEFAULT NULL;

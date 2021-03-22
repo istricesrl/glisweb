@@ -1,0 +1,9 @@
+{% import '_bin/_default.html' as cms %}
+
+{% if page.contents.images.jumbotron|length > 0 %}
+<section class="jumbotron-head">
+    <div class="container-fluid p-0">
+        {{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotronId' ) }}
+    </div>
+</section>
+{% endif %}

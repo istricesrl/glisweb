@@ -1,0 +1,130 @@
+body {
+    font-family: monospace;
+    margin: 0px;
+}
+
+header, nav, main {
+    padding: 0.5em;
+}
+
+footer {
+    background-color: #666666;
+    color: #ffffff;
+    font-size: 0.8em;
+}
+
+footer > .container {
+    margin-bottom: 3em;
+    padding: 1em 0em;
+}
+
+footer > .container > .row > .col {
+    min-height: 3em;
+}
+
+footer p {
+    margin: 0em;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0px;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+}
+
+h4, h5 {
+    font-size: 1em;
+}
+
+header {
+    background: #666666;
+    background-repeat: no-repeat;
+}
+
+header .logo img {
+    height: 5em;
+}
+
+main > .container > .row {
+    margin-top: 0.5em;
+}
+
+div.banner {
+    background-color: #dddddd;
+}
+
+div.jumbotron {
+    min-height: 16em;
+}
+
+a.nav-link, a.nav-link:visited {
+    color: #ffffff;
+}
+
+a.nav-link:active, a.nav-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+a, a:visited {
+    color: #666666;
+}
+
+a:active, a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #dddddd;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #dddddd;
+    text-decoration: underline;
+}
+
+ul.navbar-nav {
+    list-style-type: none;
+}
+
+button.navbar-toggler > span.navbar-toggler-icon {
+    color: #ffffff;
+}
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+    header {
+        background: linear-gradient(180deg, #ffffff 50%,#666666 50%) top / 100% 50%,
+            linear-gradient(0deg, transparent 50%,#666666 50%) bottom / 100% 50%;
+        background-repeat: no-repeat;
+    }
+    
+    footer > .container {
+        background-color: #ffffff;
+        color: #000000;
+    }
+    
+}
+
+@media (min-width: 1200px) {
+    
+}

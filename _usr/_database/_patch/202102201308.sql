@@ -1,0 +1,1 @@
+ALTER TABLE `attivita` DROP FOREIGN KEY `attivita_ibfk_17_nofollow`;

@@ -32,14 +32,14 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data' => 'data',
+        'data_attivita' => 'data',
         'anagrafica' => 'persona',
         'id_anagrafica' => 'id_anagrafica',
         'cliente' => 'cliente',
         'nome' => 'attivita',
         'ore' => 'ore',
-        '__label__' => 'tipologia',
-        'testo' => 'dettagli'
+        'tipologia_inps' => 'tipologia INPS',
+        '__label__' => 'tipologia'
 	);
 
     // stili della vista
@@ -48,7 +48,7 @@
         'id_anagrafica' => 'd-none',
         'anagrafica' => 'no-wrap',
         'cliente' => 'text-left d-none d-md-table-cell',
-        'data' => 'no-wrap',
+        'data_attivita' => 'no-wrap',
         'ore' => 'text-right no-wrap',
         'nome' => 'text-left',
         '__label__' => 'text-left',
@@ -80,12 +80,18 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_cliente = 1');
 
+    // tendina tipologie attività inps
+	$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(
+        $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_inps_view ORDER BY id');
+
     // preset filtri custom
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno']['EQ'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] = date('m');
-	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] = date('yy');
+	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] = date('Y');
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno']['EQ'] = date('d');
-	}
+    }
 
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;

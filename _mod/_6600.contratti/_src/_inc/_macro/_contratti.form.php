@@ -38,12 +38,12 @@
 	    'SELECT id, __label__ FROM tipologie_contratti_view'
     );
     
-    // tendina per le tipologie costi contratto
-    $ct['etc']['select']['tipologie_costi_contratti'] = mysqlCachedIndexedQuery(
+    // tendina per le tipologie di attività inps
+    $ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_costi_contratti_view'
+	    'SELECT id, __label__ FROM tipologie_attivita_inps_view'
     );
 
     // tendina per le tipologie di qualifiche inps
@@ -69,6 +69,9 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_orari_inps_view'
     );
+
+    // macro di default per l'entità contratti
+	require '_contratti.form.default.php';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

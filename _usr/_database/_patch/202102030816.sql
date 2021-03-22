@@ -1,0 +1,1 @@
+ALTER TABLE `anagrafica_indirizzi` CHANGE `id_anagrafica` `id_anagrafica` INT(11) NOT NULL;

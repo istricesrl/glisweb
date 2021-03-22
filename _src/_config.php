@@ -318,6 +318,11 @@
     define( 'DIR_VAR_LOG_MYSQL_PATCH'   , DIR_VAR_LOG_MYSQL . 'patch/' );
 	define( 'DIR_VAR_LOG_LATEST'		, DIR_BASE . 'var/log/latest/' );
 	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
+    define( 'DIR_VAR_SPOOL'			, DIR_BASE . 'var/spool/' );
+    define( 'DIR_VAR_SPOOL_CART'			, DIR_BASE . 'var/spool/cart/' );
+    define( 'DIR_VAR_SPOOL_MAIL'			, DIR_BASE . 'var/spool/mail/' );
+    define( 'DIR_VAR_SPOOL_PAYMENT'			, DIR_BASE . 'var/spool/payment/' );
+    define( 'DIR_VAR_SPOOL_PRINT'			, DIR_BASE . 'var/spool/print/' );
 
     // file
     define( 'FILE_AUTOLOAD'         ,  DIR_SRC_LIB_EXT . 'autoload.php' );
@@ -369,6 +374,11 @@
 	define( 'MIME_MULTIPART_FORM_DATA'	, 'multipart/form-data' );
 	define( 'MIME_TEXT_PLAIN'		, 'text/plain' );
 	define( 'MIME_TEXT_HTML'		, 'text/html' );
+
+    // controllo scrittura
+    if( ! is_writeable( DIR_BASE ) ) {
+        die( 'la cartella di installazione non è scrivibile, lanciare _gw.permissions.reset.sh' );
+    }
 
     // costanti per l'encoding
 	define( 'ENCODING_UTF8'			, 'utf-8' );
@@ -455,8 +465,9 @@
     // moduli attivi
 	define( 'MODULI_ATTIVI'				, $cf['mods']['active']['string'] );
 	define( 'DIR_MOD_ATTIVI'			, DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
-	define( 'DIR_MOD_ATTIVI_SRC_LIB'		, DIR_MOD_ATTIVI . '_src/_lib/' );
 	define( 'DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS'	, DIR_MOD_ATTIVI . '_src/_inc/_controllers/' );
+	define( 'DIR_MOD_ATTIVI_SRC_INC_MACRO'	, DIR_MOD_ATTIVI . '_src/_inc/_macro/' );
+	define( 'DIR_MOD_ATTIVI_SRC_LIB'		, DIR_MOD_ATTIVI . '_src/_lib/' );
 	define( 'DIR_MOD_ATTIVI_ETC_LOC'		, DIR_MOD_ATTIVI . '_etc/_loc/' );
 
     // collego $ct

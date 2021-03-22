@@ -17,8 +17,8 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'popup.view',
 									'popup.tools' ) ),
-									'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'popup' ),
-									'priority'	=> '300' ) )
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'popup' ),
+		'priority'	=> '080' ) )
 	    );
 
     // gestione popup

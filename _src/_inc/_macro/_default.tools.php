@@ -10,7 +10,7 @@
      */
 
     // se ...
-    if( is_array( $ct['page']['contents']['metro'] ) ) {
+    if( isset( $ct['page']['contents']['metro'] ) && is_array( $ct['page']['contents']['metro'] ) ) {
 
 	// per ogni ...
 	    foreach( $ct['page']['contents']['metro'] as $sezione => $metros ) {

@@ -1,0 +1,1 @@
+ALTER TABLE `stati` ADD `data_cessazione` DATE NULL DEFAULT NULL ;

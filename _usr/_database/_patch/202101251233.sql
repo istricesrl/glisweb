@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `attivita_archiviate_view`;

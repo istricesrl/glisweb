@@ -26,7 +26,7 @@
 	logWrite( 'richiesta di elaborazione della coda delle mail in uscita', 'mail' );
 
     // chiave di lock
-	$status['token'] = getToken();
+	$status['token'] = getToken( __FILE__ );
 
     // inizializzo la variabile per l'invio
 	// $mail = NULL;
@@ -50,7 +50,7 @@
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE mail_out SET token = ? WHERE token IS NULL '.
-            'ORDER BY timestamp_invio ASC LIMIT 1',
+            'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] )
             )
@@ -63,7 +63,7 @@
             $cf['mysql']['connection'],
             'UPDATE mail_out SET token = ? WHERE timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL '.
             'AND token IS NULL '.
-            'ORDER BY timestamp_invio ASC LIMIT 1',
+            'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] )
             )
@@ -170,7 +170,7 @@
 			// aggiorno la timestamp di invio
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'UPDATE mail_out SET timestamp_invio = ?, tentativi = ? token = NULL WHERE token = ?',
+				'UPDATE mail_out SET timestamp_invio = ?, tentativi = ?, token = NULL WHERE token = ?',
 				array(
 					array( 's' => $tsInvio ),
 					array( 's' => $tnInvio ),

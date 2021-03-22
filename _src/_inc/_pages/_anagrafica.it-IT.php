@@ -62,7 +62,6 @@
 									'anagrafica.form.contratti',
 									'anagrafica.form.fornitore',
 									'anagrafica.form.collaboratore',
-									'anagrafica.form.dipendente',
 //									'anagrafica.form.struttura',
 //									'anagrafica.form.attivita',
 //									'anagrafica.form.promemoria',
@@ -72,7 +71,8 @@
 									'anagrafica.form.file',
 									'anagrafica.form.metadati',
 									'anagrafica.form.archiviazione',
-									'anagrafica.form.stampe' ) )
+									'anagrafica.form.stampe',
+									'anagrafica.form.tools' ) )
 	);
 
     // gestione anagrafica informazioni
@@ -194,6 +194,19 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+    // gestione tools anagrafica
+	$p['anagrafica.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni anagrafica' ),
+	    'h1'		=> array( $l		=> 'azioni anagrafica' ),
+	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_anagrafica.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
@@ -353,7 +366,8 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.anagrafica.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'categorie.anagrafica.form',
-													'categorie.anagrafica.form.membri' ) ),
+													'categorie.anagrafica.form.membri',
+													'categorie.anagrafica.form.tools' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 	
@@ -367,6 +381,19 @@
 		'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.membri.php' ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.anagrafica.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// form categorie anagrafica azioni
+	$p['categorie.anagrafica.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni categoria anagrafica' ),
+	    'h1'		=> array( $l		=> 'azioni categoria anagrafica' ),
+	    'parent'		=> array( 'id'		=> 'categorie.anagrafica.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_categorie.anagrafica.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.anagrafica.form']['etc']['tabs'] )
 	);
    
 	// vista indirizzi
@@ -419,7 +446,8 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ranking.anagrafica.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_ranking.anagrafica.form.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'ranking.anagrafica.form',
-													'ranking.anagrafica.form.membri' ) ),
+													'ranking.anagrafica.form.membri',
+													'ranking.anagrafica.form.tools' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 	
@@ -434,3 +462,17 @@
 		'etc'		=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
+
+	// form ranking anagrafica azioni
+	$p['ranking.anagrafica.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'azioni ranking anagrafica' ),
+		'h1'		=> array( $l		=> 'azioni ranking anagrafica' ),
+		'parent'		=> array( 'id'		=> 'ranking.anagrafica.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_ranking.anagrafica.form.tools.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] )
+	);
+	

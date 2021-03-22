@@ -3,8 +3,10 @@
  * - stili di base
  * - stili dei bottoni
  * - stili del footer
+ * - stili per i jumbotron
  * - stili per il banner cookie
  * - stili per font awesome
+ * - stili per il numero verde
  * - utility tipografiche
  */
 
@@ -28,6 +30,13 @@ footer {
     margin-top: auto;
 }
 
+/* stili per i jumbotron */
+
+.jumbotron {
+    border-radius: 0px;
+    margin: 0em;
+}
+
 /* stili per FontAwesome */
 
 .font-awesome {
@@ -40,6 +49,28 @@ footer {
     bottom: 0px;
     min-height: 50vh;
     position: fixed;
+}
+
+/* stili per il numero verde */
+
+div.numero-verde {
+    border-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-left: 0px;
+    display: inline-block;
+    position: relative;
+}
+
+div.numero-verde p.etichetta {
+    position: absolute;
+    z-index: 50;
+}
+
+div.numero-verde div.telefono {
+    display: inline-block;
+    position: absolute;
+    transform: rotate(45deg);
+    z-index: 100;
 }
 
 /* utility tipografiche */

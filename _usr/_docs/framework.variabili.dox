@@ -1,0 +1,1249 @@
+/*!
+
+    \page variabili variabili del framework
+
+    Descrizione delle strutture dati portanti del framework.
+
+    l'array $cf
+    ===========
+    L'array $cf contiene tutti i valori di lavoro e di funzionamento e i parametri di configurazione
+    e di controllo del framework.
+
+    $cf['auth']
+    -----------
+    Questo array contiene le informazioni relative ai meccanismi di autenticazione e di autorizzazione del framework.
+
+    chiave                          | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    auth.accounts                   | array degli account disponibili
+    auth.accounts.<n>               | dettagli dell'account <n>
+    auth.accounts.<n>.gruppi        | nomi dei gruppi di cui fa parte l'account <n>
+    auth.accounts.<n>.id            | ID sul database dell'account <n>
+    auth.accounts.<n>.password      | password cifrata in MD5 dell'account <n>
+    auth.accounts.<n>.permissions   | array dei permessi dell'account <n>
+    auth.accounts.<n>.privilegi     | array dei privilegi dell'account <n>
+    auth.accounts.<n>.username      | username dell'account <n>
+    auth.groups                     | array dei gruppi disponibili
+    auth.groups.<g>                 | dettagli del gruppo <g>
+    auth.groups.<g>.id              | ID sul database del gruppo <g>
+    auth.groups.<g>.nome            | nome del gruppo <g>
+    auth.groups.<g>.privilegi       | array dei privilegi del gruppo <g>
+    auth.permissions                | array dei permessi disponibili
+    auth.permissions.<e>            | array dei permessi disponibili per l'entità <e>
+    auth.permissions.<e>.<l>        | array degli account con accesso <l> all'entità <e>
+    auth.privileges                 | array dei privilegi disponibili
+    auth.privileges.<k>             | dettagli del privilegio <k>
+    auth.privileges.<k>.id          | ID del privilegio <k>
+    auth.privileges.<k>.nome        | nome del privilegio <k>
+    auth.status                     | stato dell'eventuale processo di login in corso
+
+    Per i livelli di permesso si faccia riferimento alla seguente tabella:
+
+    costante          | valore           | descrizione
+    ------------------|------------------|--------------------------------------------------------------------------------
+    CONTROL_FILTERED  | FILTERED         | accesso filtrato per riga agli oggetti membri dell'entità; occorre una tabella di ACL sul database (vedi \ref database "la documentazione relativa al database")
+    CONTROL_FULL      | FULL             | accesso completo a tutti gli oggetti membri dell'entità
+
+    Una delle prime operazioni da svolgere quando si configura il framework è solitamente la creazione di una password per l'utente root.
+    Questo può essere fatto con Json, specificando come valore per l'attributo "password" l'hash MD5 della password che si desidera assegnare all'utente:
+
+    \code{.json}
+    "auth": {
+      "accounts": {
+        "root": {
+          "password": "<hash>"
+        }
+      }
+    }
+    \endcode
+
+    Per generare l'hash di una password si può utilizzare lo script _src/_sh/_gw.password.hash.sh.
+
+    L'array $cf['auth'] viene integrato da $cx['auth'], per ulteriori dettagli vedi _src/_config/_200.auth.php.
+
+    $cf['casse']
+    ------------
+    Questa chiave contiene le configurazioni del modulo casse.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    casse.printer             | informazioni sulla stampante fiscale
+    casse.printer.address     | l'indirizzo IP della stampante fiscale collegata alla postazione corrente
+    casse.printer.port        | la porta della stampante fiscale collegata alla postazione corrente
+
+    Vediamo un esempio di configurazione della stampante fiscale tramite Json:
+
+    \code{.json}
+    "casse": {
+      "printer": {
+        "address": "192.168.1.137",
+        "port": "9100"
+      }
+    }
+    \endcode
+
+    L'array $cf['casse'] viene integrato da $cx['casse'], per ulteriori dettagli
+    vedi _mod/_6500.casse/_src/_config/_030.common.php.
+
+    $cf['config']
+    -------------
+    Questa chiave contiene informazioni generali sulla configurazione del framework. La seguente tabella riassume le
+    sue sotto chiavi.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    config.file               | il nome del file di configurazione Json/Yaml utilizzato per popolare $cx
+    config.files              | l'array dei file di configurazione Json/Yaml disponibili
+
+    $cf['common']
+    -------------
+    Questa chiave contiene informazioni generali di comune utilità per l'esecuzione del framework.
+
+    chiave                          | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    common.docs                     | informazioni sulla documentazione
+    common.docs.tech                | informazioni sulla documentazione tecnica
+    common.docs.tech.html           | informazioni sulla documentazione tecnica in formato HTML
+    common.docs.tech.html.url       | URL della documentazione tecnica in formato HTML
+    common.docs.tech.pdf            | informazioni sulla documentazione tecnica in formato PDF
+    common.docs.tech.pdf.url        | URL della documentazione tecnica in formato PDF
+    common.docs.user                | informazioni sulla documentazione utente
+    common.docs.user.html           | informazioni sulla documentazione utente in formato HTML
+    common.docs.user.html.url       | URL della documentazione utente in formato HTML
+    common.http                     | informazioni sul protocollo HTTP
+    common.http.codes               | array dei codici di stato HTTP
+    common.license                  | informazioni sulla licenza del deploy corrente
+    common.license.id               | chiave di licenza del deploy corrente
+    common.lorem                    | testi per prove tipografiche (vedi https://it.lipsum.com/)
+    common.lorem.std                | testo standard per prove tipografiche
+    common.version                  | informazioni sulla versione del framework
+    common.version.current          | numero di versione del deploy corrente del framework
+    common.version.latest           | numero dell'ultima versione pubblicata del framework
+
+    L'ultima versione pubblicata del framework viene ricavata tramite una chiamata REST sul sito di sviluppo di GlisWeb
+    (https://glisweb.videoarts.it/current.conf).
+
+    La chiave common.lorem è particolarmente utile per i test dei template. Si può inserire il testo anche tramite il CMS o direttamente negli schemi
+    richiamando la chiave tramite Twig:
+
+    \code{.html}
+    {{ common.lorem.std }}
+    \endcode
+
+    L'array $cf['common'] viene integrato da $cx['common'] ed è linkato a $ct['common'], per ulteriori dettagli vedi
+    _src/_config/_030.common.php.
+
+    $cf['contatti']
+    ---------------
+    Questa chiave contiene le configurazioni del modulo contatti (vedi anche \ref moduli.0300 "la documentazione del modulo contatti").
+
+    chiave                                                 | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    contatti.<m>                                           | configurazioni relative al modulo <m>
+    contatti.<m>.analytics                                 | configurazione di Google Analytics per il modulo <m>
+    contatti.<m>.backend                                   | configurazioni relative alle operazioni di backend da attivare per il modulo <m>
+    contatti.<m>.backend.<x>                               | configurazioni relative all'operazione di backend <x> da attivare per il modulo <m>
+    contatti.<m>.backend.<x>.type                          | tipo dell'operazione di backend <x> da attivare per il modulo <m>
+    contatti.<m>.backend.<x>.table                         | tabella su cui scrivere se type è settato a DB_MYSQL
+    contatti.<m>.controller                                | controller custom da attivare per il modulo <m>
+    contatti.<m>.mail                                      | configurazioni relative alle mail da inviare per il modulo <m>
+    contatti.<m>.mail.<n>                                  | configurazioni relative alla mail <n> da inviare per il modulo <m>
+    contatti.<m>.mail.<n>.destinatari                      | arrai dei destinatari a cui inviare la mail <n> per il modulo <m> in formato nome => indirizzo
+    contatti.<m>.mail.<n>.exclude                          | arrai dei campi da escludere nella mail <n> per il modulo <m>
+    contatti.<m>.mail.<n>.language                         | la lingua della mail <n>
+    contatti.<m>.mail.<n>.template                         | il ruolo del template da utilizzare per la mail <n> oppure una definizione di template valida
+    contatti.<m>.privacy                                   | configurazioni relative alla privacy per il modulo <m>
+    contatti.<m>.privacy.titolo                            | titolo per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.titolo.<l>                        | titolo per la malleveria privacy del modulo <m> nella lingua <l>
+    contatti.<m>.privacy.descrizione                       | descrizione per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.descrizione.<l>                   | descrizione per la malleveria privacy del modulo <m> nella lingua <l>
+    contatti.<m>.privacy.finalita                          | array delle finalità di raccolta dei dati per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.finalita.<f>                      | descrizione della finalità <f> di raccolta dei dati per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.finalita.<f>.informativa          | testo di descrizione della finalità <f> di raccolta dei dati per la malleveria privacy del modulo <m>
+    contatti.<m>.privacy.finalita.<f>.informativa.<l>      | testo di descrizione della finalità <f> di raccolta dei dati per la malleveria privacy del modulo <m> nella lingua <l>
+    contatti.<m>.privacy.finalita.<f>.modulo               | label della finalità <f> di raccolta dei dati per le checkbox del modulo <m>
+    contatti.<m>.privacy.finalita.<f>.modulo.<l>           | label della finalità <f> di raccolta dei dati per le checkbox del modulo <m> nella lingua <l>
+    contatti.<m>.privacy.finalita.<f>.required             | valore booleano che indica se l'accettazione della finalità <f> di raccolta dei dati è obbligatoria per la gestione del modulo <m>
+
+    L'array $cf['contatti'] è definito in _mod/_0300.contatti/_src/_config/_030.common.php e integrato con $cx['contatti'] in
+    _mod/_0300.contatti/_src/_config/_035.common.php. Per la definizione di template mail valida, si veda la documentazione relativa a $cf['mail']['tpl'].
+
+    Per approfondimenti sul funzionamento del modulo contatti, si veda /ref "moduli.0300" "la documentazione relativa al modulo contatti".
+
+    $cf['contents']
+    ---------------
+    Questa chiave contiene la struttura delle pagine e i contenuti; si tratta di una chiave molto estesa, la cui elaborazione
+    può essere molto onerosa in termini di tempo, e quindi viene solitamente scritta e letta dalla cache.
+
+    chiave                                       | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    contents.cached                              | vale true se i contenuti sono presenti in cache
+    contents.index                               | indice per la decodifica degli URL
+    contents.index.<l>                           | indice per la decodifica degli URL nella lingua <l>
+    contents.index.<l>.<k>                       | ID delle pagine candidate per la decodifica della stringa <k> degli URL nella lingua <l> (vedi _src/_config/_400.rewrite.php)
+    contents.page                                | scorciatoia per contents.pages, vedi sotto; per ulteriori dettagli vedi anche _src/_config/_420.pages.php
+    contents.pages                               | array contenente tutte le pagine presenti nel deploy corrente
+    contents.pages.<x>                           | dettagli della pagina <x>
+    contents.pages.<x>.auth                      | dettagli sulle autorizzazioni della pagina <x>
+    contents.pages.<x>.auth.groups               | gruppi autorizzati ad accedere alla pagina <x>
+    contents.pages.<x>.etc                       | ulteriori dettagli sulla pagina <x>
+    contents.pages.<x>.etc.tabs                  | dettagli sulla navigazione a schede della pagina <x> (vedi \ref templates "la documentazione relativa ai template")
+    contents.pages.<x>.cacheable                 | indica se la pagina <x> può essere salvata o meno nella cache statica (vedi _src/_config/_060.cache.php)
+    contents.pages.<x>.content                   | contenuti della pagina <x> (vedi _src/_config/_420.pages.php)
+    contents.pages.<x>.content.<l>               | contenuto della pagina <x> nella lingua <l> (vedi _src/_config/_420.pages.php)
+    contents.pages.<x>.h1                        | i tag H1 della pagina <x>
+    contents.pages.<x>.h1.<l>                    | il tag H1 della pagina <x> nella lingua <l>
+    contents.pages.<x>.id_sito                   | l'ID del sito di appartenenza della pagina <x> (vedi 
+    contents.pages.<x>.macro                     | array degli script PHP da eseguire prima del rendering della pagina <x>
+    contents.pages.<x>.metadata                  | array dei metadati della pagina <x>
+    contents.pages.<x>.menu                      | dettagli sui menu in cui è presente la pagina <x>
+    contents.pages.<x>.menu.<m>                  | dettagli della voce di menu della pagina <x> nel menu <m>
+    contents.pages.<x>.menu.<m>.label            | etichette della voce di menu della pagina <x> nel menu <m>
+    contents.pages.<x>.menu.<m>.label.<l>        | etichetta della voce di menu della pagina <x> nel menu <m> nella lingua <l>
+    contents.pages.<x>.menu.<m>.priority         | posizione della pagina <x> nel menu <m>
+    contents.pages.<x>.parent                    | dettagli del genitore della pagina <x>
+    contents.pages.<x>.parent.h1                 | i tag H1 del genitore della pagina <x>
+    contents.pages.<x>.parent.h1.<l>             | il tag H1 del genitore della pagina <x> nella lingua <l>
+    contents.pages.<x>.parent.id                 | ID del genitore della pagina <x>
+    contents.pages.<x>.parent.path               | i path (URL relativi) del genitore della pagina <x>
+    contents.pages.<x>.parent.path.<l>           | il path (URL relativo) del genitore della pagina <x> nella lingua <l>
+    contents.pages.<x>.parent.rewrited           | le chiavi di decodifica nell'URL del genitore della pagina <x>
+    contents.pages.<x>.parent.rewrited.<l>       | la chiave di decodifica nell'URL del genitore della pagina <x> nella lingua <l>
+    contents.pages.<x>.parent.title              | i tag title del genitore della pagina <x>
+    contents.pages.<x>.parent.title.<l>          | il tag title del genitore della pagina <x> nella lingua <l>
+    contents.pages.<x>.parents                   | dettagli dei genitori della pagina <x>
+    contents.pages.<x>.parents.h1                | tag H1 dei genitori della pagina <x>
+    contents.pages.<x>.parents.h1.<y>            | tag H1 del genitore <y> della pagina <x>
+    contents.pages.<x>.parents.h1.<y>.<l>        | tag H1 del genitore <y> della pagina <x> nella lingua <l>
+    contents.pages.<x>.parents.id                | array degli ID dei genitori della pagina <x>
+    contents.pages.<x>.parents.path              | path (URL relativi) dei genitori della pagina <x>
+    contents.pages.<x>.parents.path.<y>          | path (URL relativi) del genitore <y> della pagina <x>
+    contents.pages.<x>.parents.path.<y>.<l>      | path (URL relativo) del genitore <y> della pagina <x> nella lingua <l>
+    contents.pages.<x>.parents.rewrited          | chiavi di decodifica nell'URL dei genitori della pagina <x>
+    contents.pages.<x>.parents.rewrited.<y>      | chiavi di decodifica nell'URL del genitore <y> della pagina <x>
+    contents.pages.<x>.parents.rewrited.<y>.<l>  | chiave di decodifica nell'URL del genitore <y> della pagina <x> nella lingua <l>
+    contents.pages.<x>.parents.title             | tag title dei genitori della pagina <x>
+    contents.pages.<x>.parents.title.<y>         | tag title del genitore <y> della pagina <x>
+    contents.pages.<x>.parents.title.<y>.<l>     | tag title del genitore <y> della pagina <x> nella lingua <l>
+    contents.pages.<x>.path                      | i path (URL relativi) della pagina <x>
+    contents.pages.<x>.path.<l>                  | il path (URL relativo) della pagina <x> nella lingua <l>
+    contents.pages.<x>.rewrited                  | le chiavi di decodifica nell'URL della pagina <x>
+    contents.pages.<x>.rewrited.<l>              | la chiave di decodifica nell'URL della pagina <x> nella lingua <l>
+    contents.pages.<x>.sitemap                   | se uguale a true indica che la pagina <x> deve comparire nella sitemap
+    contents.pages.<x>.template                  | dettagli sul template della pagina <x>
+    contents.pages.<x>.template.path             | percorso del template della pagina <x>
+    contents.pages.<x>.template.schema           | schema della pagina <x>
+    contents.pages.<x>.template.theme            | tema della pagina <x>
+    contents.pages.<x>.title                     | i tag title della pagina <x>
+    contents.pages.<x>.title.<l>                 | il tag title della pagina <x> nella lingua <l>
+    contents.pages.<x>.tree                      | array ad albero del percorso dalla radice alla pagina <x>
+    contents.pages.<x>.url                       | gli URL della pagina <x>
+    contents.pages.<x>.url.<l>                   | l'URL della pagina <x> nella lingua <l>
+    contents.shortcuts                           | -
+    contents.tree                                | array ad albero delle pagine presenti nel deploy corrente
+    contents.updated                             | timestamp dell'ultimo aggiornamento dei contenuti
+
+    La chiave contents.page, per il ruolo speciale che svolge nella rappresentazione dei contenuti della pagina corrente,
+    riceve alcune chiavi aggiuntive:
+
+    chiave                                       | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    contents.page.breadcrumbs                    | dettagli sulla navigazione a briciole di pane
+    contents.page.css                            | dettagli sui fogli di stile
+    contents.page.css.head                       | array delle regole di stile da inserire in un tag style all'interno del tag head
+    contents.page.css.head.<s>                   | array delle regole di stile da applicare al selettore <s> nel tag style all'interno del tag head
+    contents.page.css.template                   | array dei fogli di stile da prelevare dal template corrente
+    contents.page.canonical                      | contiene l'ID della pagina canonica se l'URL corrente non è fra gli URL canonici (vedi _src/_config/_420.pages.php)
+    contents.page.favicons                       | dettagli sulle favicons del template
+    contents.page.flags                          | dettagli sulla navigazione multilingua (selettore a bandiere)
+    contents.page.template.ini                   | il percorso del file di configurazione del template
+
+    \todo contents.page va approfondito, ci sono molte sotto chiavi da documentare, vedi output di ?u[]=page
+
+    Inoltre la chiave contents.page.content.<l> può essere valorizzata anche creando un file nella cartella _src/_inc/_contents/
+    o nella sua controparte custom; il file deve avere il nome composto dall'ID della pagina e dalla lingua del contenuto, ad
+    esempio _src/_inc/_contents/_<contents.page.id>.<l>.html (o la sua controparte custom).
+
+    Si tenga presente inoltre che $ct['page'] (e di conseguenza $cf['contents']['page']) viene integrato dalla configurazione
+    ricavata dal file .ini del template; per ulteriori dettagli si veda \ref template "la documentazione relativa ai template del framework"
+    e il codice di _src/_api/_pages.php.
+
+    Vediamo prima di tutto un semplice esempio di creazione di una nuova pagina tramite il file di configurazione Json:
+
+    \code{.json}
+    "contents": {
+      "pages": {
+        "testjson": {
+          "sitemap": true,
+          "title": { "it-IT": "test da Json" },
+          "h1": { "it-IT": "pagina di test da configurazione Json" },
+          "parent": { "id": null },
+          "template": { "path": "_src/_templates/_athena/" },
+          "menu": {
+            "main": {
+              "label": { "it-IT": "test Json" },
+              "priority": 10
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    La stessa cosa può essere ottenuta con il seguente codice PHP inserito nel file custom src/config/310.pages.php oppure
+    in un file di inclusione (ad esempio src/inc/pages/test.it-IT.php):
+
+    \code{.php}
+    <?php
+
+        // lingua di questo file
+            $l = 'it-IT';
+            $m = NULL;
+
+        // vista pagine
+            $p['testphp'] = array(
+                'sitemap'	=> false,
+                'title'		=> array( $l		=> 'test da PHP' ),
+                'h1'		=> array( $l		=> 'pagina di test da configurazione PHP' ),
+                'parent'	=> array( 'id'		=> NULL ),
+                'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.html' ),
+                'menu'		=> array( 'main'	=> array(	'label'		=> array( $l => 'test PHP' ),
+                                                                        'priority'	=> 100 ) )
+        );
+
+    \endcode
+
+    Ovviamente l'alternativa più comoda per l'utente per la creazione di pagine è l'utilizzo del CMS messo a disposizione
+    dal modulo 3000.contenuti, ma per piccoli progetti o per la realizzazione di web application la creazione di pagine
+    da file di configurazione può essere accettabile o addirittura raccomandabile.
+
+    L'array $cf['contents'] viene integrato da $cx['contents']; in deroga al generale principio di simmetria fra $cf e $ct,
+    per ragioni di comodità e brevità di scrittura le chiavi salienti di $cf['contents'] sono linkate direttamente su $ct.
+    Per ulteriori dettagli vedi _src/_config/_300.pages.php, _src/_config/_310.pages.php, _src/_config/_320.pages.php,
+    _src/_config/_330.pages.php e _src/_config/_420.pages.php. La mappatura è la seguente:
+
+    chiave in $cf                       | chiave in $ct
+    ------------------------------------|---------------------------------------------------------------------------------------
+    contents.page                       | page
+    contents.pages                      | pages
+
+    $cf['debug']
+    ------------
+    Questa chiave contiene le configurazioni relative al debug e al sistema di log del framework. Contiene dei sotto
+    blocchi per i vari status di funzionamento (DEV, PROD, TEST) che hanno la stessa struttura di base e vengono applicati
+    quando il framework si trova nel relativo stato.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    debug.<s>                    | configurazioni relative allo status <s>
+    debug.<s>.<f>                | configurazioni che si applicano alla factory <f> dello status <s> (usare '*' per 'tutte')
+    debug.<s>.<f>.log            | configurazioni relative al log della factory <f> per lo status <s>
+    debug.<s>.<f>.log.lvl        | livello di log della factory <f> per lo status <s>
+    debug.<s>.<f>.log.rotation   | stringa per date() per la rotazione dei log della factory <f> per lo status <s>
+    debug.<s>.<f>.report         | configurazioni per gli eventi da mostrare a video per la factory <f> per lo status <s>
+    debug.<s>.<f>.report.lvl     | livello di gravità degli eventi da mostrare a video per la factory <f> per lo status <s>
+    debug.<s>.<f>.target         | configurazioni per la destinazione dei log della factory <f> per lo status <s>
+    debug.<s>.<f>.target.<l>     | configurazioni per la destinazione dei log di gravità <l> della factory <f> per lo status <s>
+    debug.<s>.<f>.target.<l>.<t> | configurazione del target dei log di gravità <l> della factory <f> per lo status <s>
+    debug.fs                     | configurazioni relative al debug del filesystem
+    debug.fs.files               | configurazioni relative al debug dei file
+    debug.fs.folders             | configurazioni relative al debug delle cartelle
+    debug.mem                    | configurazioni relative al debug della memoria
+
+    Per i target di log, si vedano le costanti definite in _000.debug.php; in alcuni casi è sufficiente indicare true
+    per attivare il target, in altri casi (ad esempio il log via mail) è necessario specificare alcuni dati aggiuntivi.
+
+    costante          | valore           | descrizione
+    ------------------|------------------|--------------------------------------------------------------------------------
+    LOG_TO_FILE       | LOG2FILE         | l'evento viene scritto sul log del framework; si attiva impostando true
+    LOG_TO_GOOGLE     | LOG2GCE          | l'evento viene scritto sul log del GCE; si attiva fornendo un array di configurazione
+
+    Per quanto riguarda il log tramite GCE, è particolarmente utile in scenari orchestrati (Kubernetes) e richiede un
+    array di attivazione contenente la chiave 'pid' valorizzata con l'id del progetto da utilizzare per il log:
+
+    chiave                               | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    debug.<s>.<f>.target.<l>.LOG2GCE.pid | l'id del progetto GCE su cui loggare gli eventi di livello <l> per la factory <f> allo status <s>
+
+    Vediamo un esempio molto semplice di settaggio dei livelli di log alla massima verbosità per l'ambiente di TEST e a una
+    verbosità ridotta per l'ambiente di produzione:
+
+    \code{.json}
+    "debug": {
+      "TEST": {
+        "*" : {
+          "log": { "lvl": 7 },
+          "report": { "lvl": 32767 }
+        }
+      },
+      "PROD": {
+        "*" : {
+          "log": { "lvl": 3 },
+          "report": { "lvl": 2 }
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['debug'] viene integrato da $cx['debug'] ed è linkato a $ct['debug'], per ulteriori dettagli vedi _src/_config/_000.debug.php.
+
+    $cf['google']
+    -------------
+    Questa chiave contiene le configurazioni relative ai prodotti Google.
+
+    $cf['hotjar']
+    -------------
+    Questa chiave contiene informazioni sulla configurazione dell'integrazione con Hotjar.
+
+    chiave                                     | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    hotjar.profile                             | il profilo di Hotjar corrente (è una scorciatoia per hotjar.profiles.<site.status>)
+    hotjar.profiles                            | i profili di Hotjar disponibili
+    hotjar.profiles.<s>                        | dettagli del profilo di Hotjar per lo status <s>
+    hotjar.profiles.<s>.id                     | ID del profilo di Hotjar per lo status <s>
+
+    Vediamo un esempio di configurazione per l'intero deploy:
+
+    \code{.json}
+    "hotjar": {
+      "profiles": {
+        "DEV": {
+          "id": "idHotjar"
+        }
+      }
+    }
+    \endcode
+
+    Hotjar può essere configurato anche per specifico sito:
+
+    \code{.json}
+    "sites": {
+      "1": {
+        "id": 1,
+        "hotjar": {
+          "profiles": {
+            "DEV": {
+              "id": "idHotjar"
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['hotjar'] viene integrato da $cx['hotjar'] e da $cf['site']['hotjar'] ed è linkato a $ct['hotjar'], per ulteriori dettagli vedi
+    _src/_config/_680.hotjar.php.
+
+    $cf['image']
+    ------------
+    Questa chiave contiene informazioni sui formati di immagine gestiti dal framework.
+
+    $cf['localization']
+    -------------------
+    Questa chiave contiene informazioni sulle lingue attive nel framework e sulla sua localizzazione.
+
+    chiave                                     | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    localization.charset                       | il charset corrente
+    localization.currency                      | informazioni sulle valute
+    localization.currency.iso4217              | il codice ISO4217 della valuta corrente
+    localization.index                         | array di trascodifica da ID della lingua sul database a codice IETF
+    localization.language                      | informazioni sulla lingua corrente (è una scorciatoia per localization.languages, vedi _src/_config/_070.localization.php)
+    localization.language.ietf                 | il codice IETF della lingua corrente
+    localization.languages                     | informazioni sulle lingue
+    localization.languages.<l>                 | informazioni sulla lingua <l>
+    localization.languages.<l>.__label__       | l'etichetta della lingua <l> (prelevata dal database, vedi _src/_config/_195.localization.php)
+    localization.languages.<l>.id              | l'ID della lingua <l> sul database (prelevato dal database, vedi _src/_config/_195.localization.php)
+    localization.languages.<l>.ietf            | il codice IETF della lingua <l>
+    localization.languages.<l>.iso6391alpha2   | il codice iso6391-alpha2 della lingua <l> (prelevato dal database, vedi _src/_config/_195.localization.php)
+    localization.languages.<l>.iso6391alpha3   | il codice iso6391-alpha3 della lingua <l> (prelevato dal database, vedi _src/_config/_195.localization.php)
+    localization.languages.<l>.nome            | il nome della lingua <l> (prelevato dal database, vedi _src/_config/_195.localization.php)
+    localization.languages.<l>.note            | note sulla lingua <l> (prelevate dal database, vedi _src/_config/_195.localization.php)
+    localization.languages.<l>.stati           | stati in cui si parla la lingua <l> (prelevati dal database, vedi _src/_config/_195.localization.php)
+    localization.timezone                      | informazioni sulla timezone corrente
+    localization.timezone.name                 | il nome della timezone corrente
+
+    L'array $cf['localization'] è linkato a $ct['localization'], per ulteriori dettagli vedi _src/_config/_070.localization.php.
+
+    $cf['lvls']
+    -----------
+    Questa chiave contiene informazioni sui livelli di esecuzione del framework.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    lvls.skip                 | i numeri dei runlevel da saltare
+
+    $cf['mail']
+    -----------
+    Questa chiave contiene informazioni sulla configurazione della posta elettronica.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    mail.postmaster           | dati dell'indirizzo di posta di Postmaster in forma di array associativo array( "nome" => "mail" )
+    mail.tpl                  | template disponibili per i messaggi di posta elettronica
+    mail.tpl.<t>              | dettagli del template <t>
+    mail.tpl.<t>.<l>          | dettagli del template <t> nella lingua <l>
+    mail.tpl.<t>.<l>.attach   | array degli allegati del template <t> nella lingua <l> in forma di array associativo array( "titolo del file" => "path del file" )
+    mail.tpl.<t>.<l>.from     | dettagli del mittente del template <t> nella lingua <l> in forma di array associativo array( "nome" => "mail" )
+    mail.tpl.<t>.<l>.oggetto  | oggetto del template <t> nella lingua <l>
+    mail.tpl.<t>.<l>.testo    | testo del template <t> nella lingua <l>
+    mail.tpl.<t>.type         | tipo del template <t>, per ora è supportato solo il valore "twig"
+
+    Si noti che i template delle mail vengono renderizzati tramite Twig, quindi è possibile utilizzare al loro interno
+    qualsiasi sintassi Twig valida. Per convenzione i template vengono costruiti aspettandosi di disporre della chiave
+    'ct' contenente $ct e della chiave 'dt' contenente l'array arbitrario dei dati della singola mail da spedire. Per
+    ulteriori informazioni si veda la libreria _src/_lib/_mail.tools.php e in particolare il codice della funzione
+    queueMailFromTemplate().
+
+    Vediamo la creazione di un semplice template per la posta elettronica tramite file di configurazione Json:
+
+    \code{.json}
+    "mail": {
+      "postmaster": { "<nomePostmaster>": "mailPostmaster" },
+      "tpl": {
+        "<NOME_DEL_TEMPLATE>": {
+          "type": "twig",
+          "it-IT": {
+            "from": { "<nomeDelMittente>": "<mailDelMittente>" },
+            "oggetto": "<oggettoDellaMail>",
+            "testo": "<testoDellaMail>",
+            "attach": {
+              "<nomeAllegato>": "<path/file/allegato>"
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['mail'] viene integrato da $cx['mail'] e da $cf['site']['mail'] ed è linkato a $ct['mail'], per ulteriori dettagli vedi _src/_config/_500.mail.php.
+
+    $cf['mapquest']
+    ---------------
+    Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Mapquest.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    mapquest.profile                  | il profilo Mapquest corrente (scorciatoia per mapquest.profiles.<site.status>)
+    mapquest.profiles                 | l'array dei profili mapquest disponibili
+    mapquest.profiles.<s>             | il profilo mapquest per lo status <s>
+    mapquest.profiles.<s>.servers     | array dei nomi dei server mapquest disponibli per lo status <s>
+    mapquest.server                   | il server mapquest corrente (scorciatoia per mapquest.servers, vedi _src/_config/_525.mapquest.php)
+    mapquest.servers                  | array dei dettagli dei server mapquest disponibili
+    mapquest.servers.<n>              | dettagli del server <n>
+    mapquest.servers.<n>.key          | indirizzo IP del server <n>
+
+    Vediamo un esempio di configurazione di Mapquest per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
+    stessa macchina del sito:
+
+    \code{.json}
+    "mapquest": {
+      "servers": {
+        "default": {
+          "key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "default"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "default"
+          ]
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['mapquest'] viene integrato da $cx['mapquest'] ed è linkato a $ct['mapquest'], per ulteriori dettagli vedi
+    _src/_config/_520.mapquest.php.
+
+    $cf['memcache']
+    ---------------
+    Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Memcache.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    memcache.connection               | la connessione corrente a Memcache (scorciatoia per memcache.connections, vedi _src/_config/_045.cache.php)
+    memcache.connections              | l'array delle connessioni a Memcache attive
+    memcache.index                    | l'indice delle chiavi di memcache organizzate per entità
+    memcache.profile                  | il profilo Memcache corrente (scorciatoia per memcache.profiles.<site.status>)
+    memcache.profiles                 | l'array dei profili memcache disponibili
+    memcache.profiles.<s>             | il profilo memcache per lo status <s>
+    memcache.profiles.<s>.servers     | array dei nomi dei server memcache disponibli per lo status <s>
+    memcache.server                   | il server memcache corrente (scorciatoia per memcache.servers, vedi _src/_config/_045.cache.php)
+    memcache.servers                  | array dei dettagli dei server memcache disponibili
+    memcache.servers.<n>              | dettagli del server <n>
+    memcache.servers.<n>.address      | indirizzo IP del server <n>
+    memcache.servers.<n>.port         | porta TCP del server <n>
+    memcache.servers.<n>.ttl          | TTL di default del server <n>
+    memcache.stat                     | statistiche di Memcache per il server corrente (scorciatoia per memcache.stats, vedi _src/_config/_045.cache.php)
+    memcache.stats                    | statistiche di Memcache
+    memcache.stats.<n>                | statistiche di Memcache per il server <n> (vedi https://www.php.net/manual/en/memcache.getstats.php)
+
+    Vediamo un esempio di configurazione di memcache per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
+    stessa macchina del sito:
+
+    \code{.json}
+    "memcache": {
+      "servers": {
+        "localhost": {
+          "address": "127.0.0.1",
+          "port": "6379",
+          "ttl": "0"
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "localhost"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "localhost"
+          ]
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['memcache'] viene integrato da $cx['memcache'] ed è linkato a $ct['memcache'], per ulteriori dettagli vedi
+    _src/_config/_040.cache.php.
+
+    $cf['mods']
+    -----------
+    Questa chiave contiene informazioni sui moduli del framework.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    mods.active               | i moduli attivi
+    mods.active.array         | l'array dei moduli attivi
+    mods.active.string        | l'elenco dei moduli attivi separati da virgola
+
+    Vediamo un esempio di attivazione dei moduli 3000.contenuti e 3100.notizie tramite file di configurazione Json:
+
+    \code{.json}
+    "mods": {
+      "active": {
+        "array": [
+          "3000.contenuti",
+          "3100.notizie"
+        ]
+      }
+    }
+    \endcode
+
+    L'array $cf['mods']['active']['array'] viene sovrascritto da $cx['mods']['active']['array'] se presente; per ulteriori
+    dettagli vedi _src/_config.php.
+
+    $cf['mysql']
+    ------------
+    Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Mysql.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    mysql.connection                  | la connessione corrente a mysql (scorciatoia per mysql.connections, vedi _src/_config/_125.mysql.php)
+    mysql.connections                 | l'array delle connessioni a mysql attive
+    mysql.profile                     | il profilo mysql corrente (scorciatoia per mysql.profiles.<site.status>)
+    mysql.profile.patch               | informazioni sul livello di patch del database corrente
+    mysql.profile.patch.level         | il livello di patch del database corrente
+    mysql.profile.patch.list          | l'elenco delle patch disponibili
+    mysql.profiles                    | l'array dei profili mysql disponibili
+    mysql.profiles.<s>                | il profilo mysql per lo status <s>
+    mysql.profiles.<s>.servers        | array dei nomi dei server mysql disponibli per lo status <s>
+    mysql.server                      | il server mysql corrente (scorciatoia per mysql.servers, vedi _src/_config/_125.mysql.php)
+    mysql.servers                     | array dei dettagli dei server mysql disponibili
+    mysql.servers.<n>                 | dettagli del server <n>
+    mysql.servers.<n>.address         | indirizzo IP del server <n>
+    mysql.servers.<n>.db              | database di default per il server <n>
+    mysql.servers.<n>.password        | password per la connessione al server <n>
+    mysql.servers.<n>.port            | porta TCP del server <n>
+    mysql.servers.<n>.username        | nome utente per la connessione al server <n>
+    mysql.servers.<n>.VERSION         | versione del server <n> (aggiunta automaticamente in _src/_config/_125.mysql.php)
+
+    Vediamo un esempio di configurazione di Mysql per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
+    stessa macchina del sito:
+
+    \code{.json}
+    "mysql": {
+      "servers": {
+        "localhost": {
+          "address": "127.0.0.1",
+          "port": "3306",
+          "username": "<user>",
+          "password": "<pass>",
+          "db": "<database>"
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "localhost"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "localhost"
+          ]
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['mysql'] viene integrato da $cx['mysql'] ed è linkato a $ct['mysql'], per ulteriori dettagli vedi
+    _src/_config/_120.mysql.php.
+
+    $cf['ob']
+    ---------
+    Questa chiave contiene informazioni sull'output buffering; per ulteriori informazioni si veda https://www.php.net/manual/en/book.outcontrol.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    ob.status                 | lo stato dell'output buffering
+
+    $cf['privacy']
+    --------------
+    Questa chiave contiene tutte le informazioni necessarie a comporre automaticamente l'informativa per la privacy del sito.
+
+    chiave                                   | descrizione
+    -----------------------------------------|---------------------------------------------------------------------------------------
+    privacy.cookie                           | array di informazioni sui cookie
+    privacy.dpo                              | dettagli sul DPO
+    privacy.dpo.cap                          | CAP della sede del DPO
+    privacy.dpo.cf                           | codice fiscale del DPO
+    privacy.dpo.citta                        | città della sede del DPO
+    privacy.dpo.denominazione                | denominazione del DPO
+    privacy.dpo.indirizzo                    | indirizzo della sede del DPO
+    privacy.dpo.mail                         | mail del DPO
+    privacy.dpo.piva                         | partita IVA del DPO
+    privacy.dpo.provincia                    | provincia della sede del DPO
+    privacy.dpo.telefono                     | telefono della sede del DPO
+    privacy.finalita                         | array di informazioni sulle finalità
+    privacy.finalita.<f>                     | informazioni sulla finalità <f>
+    privacy.finalita.<f>.descrizione         | descrizioni della finalità <f>
+    privacy.finalita.<f>.descrizione.<l>     | descrizione della finalità <f> nella lingua <l>
+    privacy.responsabili                     | array dei dettagli dei responsabili del trattamento
+    privacy.responsabili.<r>                 | dettagli del responsabile <r> del trattamento
+    privacy.responsabili.<r>.cap             | CAP della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.cf              | codice fiscale del responsabile <r> del trattamento
+    privacy.responsabili.<r>.citta           | città della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.denominazione   | denominazione del responsabile <r> del trattamento
+    privacy.responsabili.<r>.finalita        | finalità della nomina del responsabile <r> del trattamento
+    privacy.responsabili.<r>.finalita.<l>    | finalità della nomina del responsabile <r> del trattamento nella lingua <l>
+    privacy.responsabili.<r>.indirizzo       | indirizzo della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.mail            | mail del responsabile <r> del trattamento
+    privacy.responsabili.<r>.motivazione     | motivazioni della nomina del responsabile <r> del trattamento
+    privacy.responsabili.<r>.motivazione.<l> | motivazione della nomina del responsabile <r> del trattamento nella lingua <l>
+    privacy.responsabili.<r>.piva            | partita IVA del responsabile <r> del trattamento
+    privacy.responsabili.<r>.provincia       | provincia della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.telefono        | telefono della sede del responsabile <r> del trattamento
+    privacy.titolare                         | dettagli sul titolare del trattamento
+    privacy.titolare.cap                     | CAP della sede del titolare del trattamento
+    privacy.titolare.cf                      | codice fiscale del titolare del trattamento
+    privacy.titolare.citta                   | città della sede del titolare del trattamento
+    privacy.titolare.denominazione           | denominazione del titolare del trattamento
+    privacy.titolare.indirizzo               | indirizzo della sede del titolare del trattamento
+    privacy.titolare.mail                    | mail del titolare del trattamento
+    privacy.titolare.piva                    | partita IVA del titolare del trattamento
+    privacy.titolare.provincia               | provincia della sede del titolare del trattamento
+    privacy.titolare.telefono                | telefono della sede del titolare del trattamento
+
+    La compilazione automatica della malleveria della privacy è effettuata tramite il file _src/_inc/_contents/_privacy.<l>.html
+    nelle varie lingue. Vedi \ref cartelle "la documentazione relativa alle cartelle del framework" per ulteriori dettagli
+    sull'utilizzo dei file di inclusione dei contenuti.
+
+    L'array $cf['privacy'] viene integrato da $cx['privacy'] e da $cf['site']['privacy'] (che a sua volta è integrato da
+    $cx in quanto $cx['site'] integra $cf['site']), ed è linkato a $ct['privacy'], per ulteriori dettagli vedi
+    _src/_config/_920.privacy.php.
+
+    $cf['redirect']
+    ---------------
+    Questa chiave contiene informazioni sui redirect.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    redirect                          | array dei redirect attivi
+    redirect.<r>                      | dettagli del redirect con URL di innesco <r>
+    redirect.<r>.codice               | il codice HTTP del redirect con URL di innesco <r>
+    redirect.<r>.destinazione         | l'URL di destinazione del redirect con URL di innesco <r>
+    redirect.<r>.sorgente             | l'URL che innesca il redirect con URL di innesco <r>
+
+    Vediamo un esempio di impostazione di redirect dal file Json:
+
+    \code{.json}
+    "redirect": [
+      {
+        "codice": "<codice>",
+        "destinazione": "<target>",
+        "sorgente": "<source>"
+      }
+    ]
+    \endcode
+
+    L'array $cf['redirect'] viene integrato da $cx['redirect']; per ulteriori dettagli vedi _src/_config/_340.redirect.php.
+
+    Si noti che la struttura del Json non richiede che venga specificata in chiave la destinazione del link, perché questa
+    operazione di indicizzazione viene svolta automaticamente in _src/_config/_345.redirect.php.
+
+    $cf['redis']
+    ------------
+    Questa chiave contiene informazioni sulla configurazione e sulle connessioni a Redis.
+
+    chiave                            | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    redis.connection                  | la connessione corrente a redis (scorciatoia per redis.connections, vedi _src/_config/_045.cache.php)
+    redis.connections                 | l'array delle connessioni a redis attive
+    redis.profile                     | il profilo redis corrente (scorciatoia per redis.profiles.<site.status>)
+    redis.profiles                    | l'array dei profili redis disponibili
+    redis.profiles.<s>                | il profilo redis per lo status <s>
+    redis.profiles.<s>.servers        | array dei nomi dei server redis disponibli per lo status <s>
+    redis.server                      | il server redis corrente (scorciatoia per redis.servers, vedi _src/_config/_045.cache.php)
+    redis.servers                     | array dei dettagli dei server redis disponibili
+    redis.servers.<n>                 | dettagli del server <n>
+    redis.servers.<n>.address         | indirizzo IP del server <n>
+    redis.servers.<n>.port            | porta TCP del server <n>
+    redis.servers.<n>.ttl             | TTL di default del server <n>
+
+    Vediamo un esempio di configurazione di Redis per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
+    stessa macchina del sito:
+
+    \code{.json}
+    "redis": {
+      "servers": {
+        "localhost": {
+          "address": "127.0.0.1",
+          "port": "6379",
+          "ttl": "0"
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "localhost"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "localhost"
+          ]
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['redis'] viene integrato da $cx['redis'] ed è linkato a $ct['redis'], per ulteriori dettagli vedi
+    _src/_config/_040.cache.php.
+
+    $cf['registrazione']
+    --------------------
+    Questa chiave contiene le configurazioni relative alla registrazione automatica degli utenti.
+
+    chiave                                | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    registrazione.default                 | configurazioni di default per le nuove anagrafiche e i nuovi account
+    registrazione.default.categorie       | l'array delle categorie a cui iscrivere automaticamente la nuova anagrafica
+    registrazione.default.gruppi          | l'array dei gruppi a cui iscrivere automaticamente il nuovo account
+    registrazione.default.attivo          | valore booleano che indica se il nuovo account dev'essere creato come attivo o no
+
+    L'array $cf['registrazione'] viene integrato da $cx['registrazione'] e da $cf['site']['registrazione'], per ulteriori dettagli vedi
+    _mod/_0650.registrazione/_src/_config/_030.common.php.
+
+    Per approfondimenti sul funzionamento del modulo registrazione, si veda /ref "moduli.0650" "la documentazione relativa al modulo registrazione".
+
+    $cf['request']
+    --------------
+    Questa chiave è linkata a $_REQUEST e a sua volta è linkata da $ct['request'].
+
+    chiave                                    | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    request.__err__                           | dettagli sugli errori nell'esecuzione corrente
+    request.__err__.<e>                       | dettagli sugli errori nell'esecuzione corrente per l'entità <e>
+    request.__err__.<e>.__codes__             | codici degli errori (per lo più MySQL) nell'esecuzione corrente per l'entità <e>
+    request.__info__                          | ulteriori dettagli sull'esecuzione corrente
+    request.__info__.<e>                      | ulteriori dettagli sull'esecuzione corrente per l'entità <e>
+    request.__info__.<e>.__auth__             | informazioni sui permessi nell'esecuzione corrente per l'entità <e>
+    request.__info__.<e>.__status__           | codice di stato HTTP risultante dall'esecuzione corrente per l'entità <e>
+    request.__view__                          | dettagli sulla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
+    request.__view__.__ietf__                 | il codice IETF del linguaggio collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
+    request.__view__.__lang__                 | l'ID del linguaggio collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
+    request.__view__.__site__                 | l'ID del sito collegato alla visualizzazione corrente (è un link alla corrispondente chiave di session, vedi sotto)
+    request.__view__.<e>                      | configurazione della view con ID <e>
+    request.__view__.<e>.__fields__           | colonne della view con ID <e>
+    request.__view__.<e>.__filters__          | colonne di filtro della view con ID <e>
+    request.__view__.<e>.__filters__.<c>      | strategie di filtro della colonna <c> della view con ID <e> (vedi sotto)
+    request.__view__.<e>.__pager__            | informazioni sulla paginazione della view con ID <e>
+    request.__view__.<e>.__pager__.page       | la pagina corrente della view con ID <e> (la numerazione inizia da zero)
+    request.__view__.<e>.__pager__.rows       | il numero di righe per pagina della view con ID <e>
+    request.__view__.<e>.__search__           | ricerca genericha della view con ID <e>
+    request.__view__.<e>.__status__           | codice di stato HTTP per l'esecuzione della view con ID <e>
+
+    Per capire la relazione fra $cf['request'], $ct['request'], $_REQUEST, $cf['session'], $ct['session'], $_SESSION, occorre
+    fare riferimento al codice e in particolare a _src/_config/_055.session.php e _src/_config/_750.controller.php.
+
+    Le strategie di filtro sono criteri con cui la funzione controller() effettua il confronto fra i valori dati come filtro
+    e quelli presenti in colonna. Sono collegate alle possibilità di filtro di MySQL e sono:
+
+    codice      | strategia                       | descrizione
+    ------------|---------------------------------|-------------------------------------------------------------------------
+    EQ          | <f> = <v>                       | filtra il campo <f> per i valori uguali a <v>
+    GE          | <f> >= <v>                      | filtra il campo <f> per i valori maggiori o uguali a <v>
+    GT          | <f> > <v>                       | filtra il campo <f> per i valori maggiori di <v>
+    LE          | <f> <= <v>                      | filtra il campo <f> per i valori minori o uguali a <v>
+    LT          | <f> < <v>                       | filtra il campo <f> per i valori minori di <v>
+    LK          | <f> LIKE %<v>%                  | filtra il campo <f> per i valori che contengono <v>
+    NL          | <f> IS NULL                     | filtra il campo <f> per i valori uguali a NULL
+    NN          | <f> IS NOT NULL                 | filtra il campo <f> per i valori diversi da NULL
+
+    $cf['session']
+    --------------
+    Questa chiave è un collegamento a $_SESSION.
+
+    chiave                                    | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    session.__view__                          | dettagli sulla visualizzazione corrente
+    session.__view__.__ietf__                 | il codice IETF del linguaggio collegato alla visualizzazione corrente
+    session.__view__.__lang__                 | l'ID del linguaggio collegato alla visualizzazione corrente
+    session.__view__.__site__                 | l'ID del sito collegato alla visualizzazione corrente
+    session.account                           | dettagli sull'account collegato alla sessione corrente (appare dopo il login, vedi _src/_config/_210.auth.php)
+    session.account.__label__                 | etichetta dell'account collegato alla sessione corrente
+    session.account.attivo                    | indica se l'account collegato alla sessione corrente è attivo
+    session.account.categorie                 | array dei nomi delle categorie collegate all'account collegato alla sessione corrente
+    session.account.gruppi                    | array dei nomi dei gruppi collegati all'account collegato alla sessione corrente
+    session.account.gruppo_sede               | -
+    session.account.id                        | l'ID dell'account collegato alla sessione corrente
+    session.account.id_anagrafica             | l'ID dell'anagrafica collegata all'account collegato alla sessione corrente
+    session.account.id_anagrafica_struttura   | -
+    session.account.id_categorie              | array degli ID delle categorie collegate all'account collegato alla sessione corrente
+    session.account.id_gruppi                 | array degli ID dei gruppi collegati all'account collegato alla sessione corrente
+    session.account.id_gruppi_attribuzione    | -
+    session.account.id_mail                   | l'ID della mail collegata all'account collegato alla sessione corrente
+    session.account.last_access               | -
+    session.account.password                  | la password dell'account collegato alla sessione corrente cifrata con MD5
+    session.account.permissions               | array dei permessi per l'account collegato alla sessione corrente
+    session.account.privilegi                 | array dei privilegi per l'account collegato alla sessione corrente
+    session.account.se_attivo                 | indica se l'account collegato alla sessione corrente è attivo
+    session.account.timestamp_login           | timestamp dell'ultimo accesso all'account collegato alla sessione corrente
+    session.account.token                     | token usato per la conferma dell'account creato tramite il modulo di registrazione automatica
+    session.account.username                  | il nome utente dell'account collegato alla sessione corrente
+    session.account.utente                    | -
+    session.groups                            | gruppi collegati alla sessione corrente (appare dopo il login)
+    session.id                                | l'ID della sessione corrente
+    session.privilegi                         | dettagli dei privilegi collegati alla sessione corrente (appare dopo il login)
+    session.privilegi.<x>                     | dettagli del privilegio <x> collegato alla sessione corrente
+    session.used                              | la timestamp dell'ultimo utilizzo della sessione
+
+    \todo approfondire gli aspetti legati a session.__view__
+    \todo sembra che ci sia un po' di ridondanza fra session.privilegi e session.account.privilegi e lo stesso per groups e gruppi, considerare di eliminare session.groups e session.privilegi se non vengono usati
+    \deprecated le chiavi session.groups e session.privilegi potrebbero essere eliminate in futuro
+
+    Si noti che la chiave $_SESSION['__view__'] viene linkata a $_REQUEST['__view__'] (vedi _src/_config/_715.session.php) in modo
+    da essere disponibile alla funzione controller() invocata nel successivo _src/_config/_750.controller.php.
+
+    L'array $cf['session'] è linkato a $ct['session'], per ulteriori dettagli vedi _src/_config/_055.session.php.
+
+    $cf['site']
+    -----------
+    Questa chiave contiene la definizione del sito corrente, è la mappatura su $cf['site'] di $cf['sites'][ SITE_CURRENT ],
+    per ulteriori informazioni si veda _src/_config/_015.site.php.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    site                         | configurazioni relative al sito <n>
+    site.__label__               | etichetta del sito <n> per la tendina dei siti nel CMS
+    site.alias                   | alias del sito <n>
+    site.alias.domains           | alias di dominio del sito <n>
+    site.alias.domains.<s>       | array degli alias di dominio del sito <n> per lo status <s>
+    site.alias.hosts             | alias di host del sito <n>
+    site.alias.hosts.<s>         | array degli alias di host del sito <n> per lo status <s>
+    site.domain                  | scorciatoia per site.domains<site.status>
+    site.domains                 | domini del sito <n>
+    site.domains.<s>             | dominio del sito <n> per lo status <s>
+    site.folders                 | cartelle del sito <n> (nel caso il framework sia installato in una sottocartella)
+    site.folders.<s>             | cartelle del sito <n> per lo status <s>
+    site.fqdn                    | FQDN del sito
+    site.home                    | scorciatoia per site.homes<site.status>
+    site.homes                   | pagine home del sito <n> (pagina utilizzata in caso non sia specificata una pagina)
+    site.homes.<s>               | id della pagina home del sito <n> per lo status <s>
+    site.host                    | scorciatoia per site.hosts<site.status>
+    site.hosts                   | hosts del sito <n> (ad es. www)
+    site.hosts.<s>               | host del sito <n> per lo status <s>
+    site.id                      | id del sito <n> (vedi _src/_config/_015.site.php)
+    site.metadata                | array dei metadati del sito <n>
+    site.metadata.theme          | tema di default del sito <n>
+    site.name                    | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
+    site.name.<l>                | nome del sito <n> per la lingua <l>
+    site.pages                   | configurazioni aggiuntive per le pagine, da sovrapporre a $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
+    site.protocols               | protocolli del sito <n> (ad es. https)
+    site.protocols.<s>           | protocollo del sito <n> per lo status <s>
+    site.root                    | path base del sito
+    site.status                  | status attribuito dal framework al sito <n>
+    site.url                     | scorciatoia per site.urls.<site.status>
+    site.urls                    | array degli URL del sito
+    site.urls.<s>                | URL del sito per lo status <s>
+
+    L'array $cf['site'] viene integrato da $cx['site'] ed è linkato a $ct['site'], per ulteriori dettagli vedi
+    _src/_config/_025.site.php. Si noti che le chiavi generate per $cf['site'] saranno visibili anche in
+    $cf['sites'][ $cf['site']['status'] ] in quanto il primo array è un collegamento simbolico al secondo; per questo
+    motivo non vengono ripetute nella documentazione di $cf['sites'], ovvero perché appartengono solo al sito corrente
+    e non ad ogni sito dell'array.
+
+    $cf['sitemap']
+    --------------
+    Questa chiave contiene le informazioni relative alla sitemap del sito; per ulteriori informazioni
+    vedi _src/_config/_980.sitemap.php.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    sitemap.updated              | la timestamp di ultimo aggiornamento della sitemap
+
+    La sitemap viene sovrascritta se $cf['sitemap']['updated'] è minore di $cf['contents']['updated'] oppure in caso di
+    refresh della cache.
+
+    $cf['sites']
+    ------------
+    Questa chiave contiene la definizione dei siti gestiti dall'attuale installazione del framework.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    sites.<n>                    | configurazioni relative al sito <n>
+    sites.<n>.__label__          | etichetta del sito <n> per la tendina dei siti nel CMS
+    sites.<n>.alias              | alias del sito <n>
+    sites.<n>.alias.domains      | alias di dominio del sito <n>
+    sites.<n>.alias.domains.<s>  | array degli alias di dominio del sito <n> per lo status <s>
+    sites.<n>.alias.hosts        | alias di host del sito <n>
+    sites.<n>.alias.hosts.<s>    | array degli alias di host del sito <n> per lo status <s>
+    sites.<n>.domains            | domini del sito <n>
+    sites.<n>.domains.<s>        | dominio del sito <n> per lo status <s>
+    sites.<n>.folders            | cartelle del sito <n> (nel caso il framework sia installato in una sottocartella)
+    sites.<n>.folders.<s>        | cartelle del sito <n> per lo status <s>
+    sites.<n>.homes              | pagine home del sito <n> (pagina utilizzata in caso non sia specificata una pagina)
+    sites.<n>.homes.<s>          | id della pagina home del sito <n> per lo status <s>
+    sites.<n>.hosts              | hosts del sito <n> (ad es. www)
+    sites.<n>.hosts.<s>          | host del sito <n> per lo status <s>
+    sites.<n>.id                 | id del sito <n> (dev'essere uguale a <n>)
+    sites.<n>.metadata           | array dei metadati del sito
+    sites.<n>.name               | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
+    sites.<n>.name.<l>           | nome del sito <n> per la lingua <l>
+    sites.<n>.pages              | configurazioni aggiuntive per le pagine (integra $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
+    sites.<n>.protocols          | protocolli del sito <n> (ad es. https)
+    sites.<n>.protocols.<s>      | protocollo del sito <n> per lo status <s>
+    sites.<n>.status             | status attribuito dal framework al sito <n>
+
+    Vediamo un esempio abbastanza classico, ecco la configurazione JSON per un ipotetico sito www.domain.bho con alias
+    di dominio do-main.bho e gestione delle versioni con e senza www, e versione di test su test.domain.bho:
+
+    \code{.json}
+    "sites": {
+      "1": {
+        "__label__": "sito di esempio",
+        "homes": {
+          "TEST": "dashboard",
+          "PROD": "dashboard"
+        },
+        "name": {
+          "it-IT": "sito di esempio"
+        },
+        "protocols": {
+          "TEST": "http",
+          "PROD": "https"
+        },
+        "hosts": {
+          "TEST": "test",
+          "PROD": "www"
+        },
+        "alias": {
+          "domains": {
+            "PROD": [
+              "do-main.bho"
+            ]
+          }
+        },
+        "domains": {
+          "TEST": "domain.bho",
+          "PROD": "domain.bho"
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['sites'] viene integrato da $cx['sites'] ed è linkato a $ct['sites'], per ulteriori dettagli vedi
+    _src/_config/_010.site.php.
+
+    $cf['slack']
+    -----------
+    Questo array contiene la configurazione per l'integrazione con Slack.
+
+    chiave                                | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    slack.profile                         | il profilo di Slack corrente (è una scorciatoia per slack.profiles.<site.status>)
+    slack.profiles                        | i profili di Slack disponibili
+    slack.profiles.<s>                    | dettagli del profilo di Slack per lo status <s>
+    slack.profiles.<s>.webhooks           | webhook di Slack per lo status <s>
+    slack.profiles.<s>.webhooks.<w>       | dettagli del webhook <w> per il profilo dello status <s>
+    slack.profiles.<s>.webhooks.<w>.sa    | chiave A per il webhook <w> per il profilo dello status <s>
+    slack.profiles.<s>.webhooks.<w>.sb    | chiave B per il webhook <w> per il profilo dello status <s>
+    slack.profiles.<s>.webhooks.<w>.sc    | chiave C per il webhook <w> per il profilo dello status <s>
+
+    Vediamo un esempio di configurazione per l'intero deploy:
+
+    \code{.json}
+    "slack": {
+      "profiles": {
+        "DEV": {
+          "webhooks": {
+            "default": {
+              "sa": "",
+              "sb": "",
+              "sc": ""
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    Slack può essere configurato anche per specifico sito:
+
+    \code{.json}
+    "sites": {
+      "1": {
+        "id": 1,
+        "slack": {
+          "profiles": {
+            "DEV": {
+              "default-sito": {
+                "": {
+                  "sa": "",
+                  "sb": "",
+                  "sc": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['slack'] viene integrato da $cx['slack'] e da $cf['site']['slack'] ed è linkato a $ct['slack'], per ulteriori dettagli vedi
+    _src/_config/_550.slack.php.
+
+    $cf['smtp']
+    -----------
+    Questa chiave contiene informazioni sui server per la posta in uscita.
+
+    chiave                    | descrizione
+    --------------------------|---------------------------------------------------------------------------------------
+    smtp.profile              | il profilo SMTP corrente (scorciatoia per smtp.profiles.<site.status>)
+    smtp.profiles             | array dei profili SMTP disponibili
+    smtp.profiles.<s>         | dettagli del profilo SMTP <s>
+    smtp.profiles.<s>.servers | array dei nomi dei server SMTP disponibili per il profilo SMTP <s>
+    smtp.server               | il server SMTP corrente (scorciatoia per smtp.servers, vedi _src/_config/_515.smtp.php)
+    smtp.servers              | array dei server SMTP disponibili
+    smtp.servers.<k>          | dettagli del server SMTP <k>
+    smtp.servers.<k>.address  | indirizzo del server SMTP <k>
+    smtp.servers.<k>.password | password del server SMTP <k>
+    smtp.servers.<k>.port     | porta del server SMTP <k>
+    smtp.servers.<k>.username | username del server SMTP <k>
+
+    Vediamo ora una semplice configurazione SMTP tramite file di configurazione Json:
+
+    \code{.json}
+    "smtp": {
+      "servers": {
+        "<idServer>": {
+          "address": "<serverAddress>",
+          "port": "<smtpPort>",
+          "username": "<smtpUser>",
+          "password": "<smtpPassword>"
+        }
+      },
+      "profiles": {
+        "TEST": {
+          "servers": [
+            "<idServer>"
+          ]
+        },
+        "PROD": {
+          "servers": [
+            "<idServer>"
+          ]
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['smtp'] viene integrato da $cx['smtp'], per ulteriori dettagli vedi _src/_config/_510.site.php.
+
+    $cf['speed']
+    ------------
+    Questa chiave contiene il dettaglio della cronologia di esecuzione del framework.
+
+    $cf['tr']
+    ---------
+    Questo array contiene le tavole di traduzione per i microcontenuti.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    tr.<x>                       | tavola di traduzione per l'ambito <x>
+    tr.<x>.<k>                   | tavola di traduzione per l'espressione <k> nell'ambito <x>
+    tr.<x>.<k>.<l>               | traduzione nella lingua <l> per l'espressione <k> nell'ambito <x>
+
+    L'array $cf['tr'] è linkato a $ct['tr'], per ulteriori dettagli vedi _src/_config/_080.translation.php.
+
+    $cf['twig']
+    -----------
+    Questo array contiene la configurazione del template renderer Twig.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    twig.profile                 | il profilo di Twig corrente (è una scorciatoia per twig.profiles.<site.status>)
+    twig.profiles                | i profili di Twig disponibili
+    twig.profiles.<s>            | dettagli del profilo di Twig per lo status <s>
+    twig.profiles.<s>.cache      | percorso della cartella per la cache; se valorizzato indica che il caching è attivo per il profilo di Twig per lo status <s>
+    twig.profiles.<s>.debug      | se vale 1 indica che il debug è attivo per il profilo di Twig per lo status <s>
+
+    Vediamo un esempio di configurazione di Twig tramite Json:
+
+    \code{.json}
+    "twig": {
+      "profiles": {
+        "DEV": {
+          "debug": true,
+        },
+        "TEST": {
+          "debug": false,
+          "cache": "var/cache/twig/"
+        },
+        "PROD": {
+          "debug": false,
+          "cache": "var/cache/twig/"
+        }
+      }
+    }
+    \endcode
+
+    L'array $cf['twig'] è linkato a $ct['twig'], per ulteriori dettagli vedi _src/_config/_380.twig.php.
+
+    $cf['ws']
+    ---------
+    Questo array viene valorizzato e utilizzato in _src/_api/_rest.php. L'API REST standard del framework viene innescata
+    dalla presenza della chiave $_REQUEST['__ws__'], ricavata dall'URL tramite il file .htaccess.
+
+    chiave                       | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    ws.accept                    | il tipo di dati accettati dal chiamante, è impostato uguale a $_SERVER['HTTP_ACCEPT']
+    ws.id                        | l'ID dell'entità su cui lavorare; è impostato uguale a $_REQUEST['__id__'] per URL del tipo /src/api/<entità>/<id>
+    ws.incoming                  | il tipo di dati in arrivo, è impostato uguale a $_SERVER['CONTENT_TYPE']
+    ws.input                     | i dati in arrivo, ricavati da file_get_contents('php://input')
+    ws.charset                   | il charset rilevato con mb_detect_encoding() per ws.input
+    ws.from                      | l'indirizzo del chiamante, è impostato uguale a $_SERVER['REMOTE_ADDR']
+    ws.table                     | l'entità su cui lavorare; è impostato uguale a $_REQUEST['__ws__'] per URL del tipo /src/api/<entità>
+
+    Per maggiori dettagli sul funzionamento delle API REST standard si faccia riferimento al codice di _src/_api/_rest.php.
+
+*/
