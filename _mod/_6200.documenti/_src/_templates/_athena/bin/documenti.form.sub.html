@@ -1,0 +1,65 @@
+{% macro righe( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable }}">
+    {{ frm.subformLegend( subtable, legend ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = 0 %}{% endif %}
+    {% for i in 0..t %}
+    {% set r = request[ table ][ subtable ][ i ] %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_documento', '', '', '', '__parent_id__', 'hidden' ) }}
+	<div class="form-group form-row">
+        <div class="col-md-auto col-auto">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">data</span>{% endif %}
+            {{ frm.date( table, subtable, i, 'data_lavorazione', '', '', request ) }}
+        </div>
+	    <div class="col-3">
+		    {% if i == 0 %}<span class="label-top remove-after-duplicate">articolo</span>{% endif %}
+            {{ frm.selectBox( table, subtable, i, 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+	    </div>
+        <div class="col">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">importo</span>{% endif %}
+            {{ frm.input( table, subtable, i, 'importo_netto_totale', 'importo', '', request ) }}
+            </div>
+	    <div class="col-1">
+		    {% if i == 0 %}<span class="label-top remove-after-duplicate">quantità</span>{% endif %}
+		    {{ frm.input( table, subtable, i, 'quantita', 'quantità', '', request ) }}
+	    </div>
+	    <div class="col-auto">
+		    {% if i == 0 %}<span class="label-top remove-after-duplicate">udm</span>{% endif %}
+		    {{ frm.select( table, subtable, i, 'id_udm', '', etc.select.id_udm, request ) }}
+		</div>
+        <div class="col-auto">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">iva</span>{% endif %}
+            {{ frm.select( table, subtable, i, 'id_iva', '', etc.select.id_iva, request ) }}
+        </div>
+        <div class="col-auto">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">listino</span>{% endif %}
+            {{ frm.select( table, subtable, i, 'id_listino', '', etc.select.id_listini, request ) }}
+        </div>
+        <div class="col-md-4 col">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">progetto</span>{% endif %}
+            {{ frm.selectBox( table, subtable, i, 'id_progetto', '', etc.select.id_progetti, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+         </div>
+        <div class="col-md-4 col">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">mastro provenienza</span>{% endif %}
+            {{ frm.selectBox( table, subtable, i, 'id_mastro_provenienza', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+	    </div>
+        <div class="col-md col">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">mastro destinazione</span>{% endif %}
+            {{ frm.selectBox( table, subtable, i, 'id_mastro_destinazione', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+         </div>
+		<div class="w-100 d-block d-md-none m-0"></div>
+	    {% if r.id %}
+	    <div class="col-auto text-right remove-on-duplicate d-print-none">
+		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
+		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+	    </div>
+	    {% endif %}
+	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}

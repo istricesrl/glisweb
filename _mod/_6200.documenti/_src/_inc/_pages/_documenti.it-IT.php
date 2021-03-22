@@ -27,7 +27,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 'documenti.form.tools' ) )
+		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 'documenti.form.righe', 'documenti.form.tools' ) )
+	);
+
+	// gestione tools documenti
+	$p['documenti.form.righe'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'righe' ),
+	    'h1'			=> array( $l		=> 'righe' ),
+	    'parent'		=> array( 'id'		=> 'documenti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.righe.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.righe.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
 
 	// gestione tools documenti
