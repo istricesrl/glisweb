@@ -847,3 +847,14 @@ ul.browsing-tree {
 .cartellini th li{
     text-align: left !important;
 }
+
+/* stile per il loader del campo */
+
+div.combobox-container > .spinner-border {
+    position: absolute;
+    right: 0.5em;
+    height: 1.5em;
+    width: 1.5em;
+    top: 0.5em;
+    display: none;
+}
