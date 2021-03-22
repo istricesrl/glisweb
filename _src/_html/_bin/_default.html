@@ -360,7 +360,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% elseif social == 'linkedin' %}
 {% set a = 'http://www.linkedin.com/shareArticle?mini=true&url=' ~ url ~ '&title=' ~ txt %}
 {% elseif social == 'tumblr' %}
-{% set a = 'http://www.tumblr.com/share?v=3&u=url&t=txt %}
+{% set a = 'http://www.tumblr.com/share?v=3&u=' ~ url ~ '&t=' ~ txt %}
 {% endif %}
 <a class="btn {{ class }}" target="_blank" href="{{ a }}"></a>
 {% endmacro %}
