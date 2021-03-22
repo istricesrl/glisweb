@@ -3,6 +3,7 @@
 {% extends 'ext/blank.html' %}
 
 {% block header %}
+<header class="fixed-top">
 <div class="row widget no-gutters">
     <div class="col text-left p-2">
         <h1>{{ browse.base }}</h1>
@@ -14,6 +15,7 @@
         <button class="btn btn-secondary btn-sm btn-sqr" type="button" data-toggle="modal" data-target="#creaCartella"><i class="fa fa-folder-open"></i></button>
     </div>
 </div>
+</header>
 {% endblock %}
 
 {% block main %}
