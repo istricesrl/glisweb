@@ -23,7 +23,9 @@ header .logo img {
 }
 
 footer {
+    margin-top: 0em !important;
     padding: 1em 0em;
+    padding-top: 3em;
 }
 
 footer p {
