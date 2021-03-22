@@ -29,12 +29,17 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
+        'numero' => 'numero',
+        'data' => 'data',
         '__label__' => 'nome'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-        'nome' => 'text-left'
+        'nome' => 'text-left',
+        'numero' => 'text-left',
+        'data' => 'text-left',
+        '__label__' => 'text-left',
     );
 
     // macro di default

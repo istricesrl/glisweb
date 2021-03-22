@@ -67,15 +67,15 @@
 		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form', 'documenti.form.tools' ) )
 	);
 
-		// gestione tools documenti_articoli
-		$p['documenti.form.tools'] = array(
-			'sitemap'		=> false,
-			'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-			'title'			=> array( $l		=> 'azioni righe' ),
-			'h1'			=> array( $l		=> 'azioni righe' ),
-			'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.tools.php' ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
-		);
+	// gestione tools documenti_articoli
+	$p['documenti.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni righe' ),
+		'h1'			=> array( $l		=> 'azioni righe' ),
+		'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.tools.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
+	);
