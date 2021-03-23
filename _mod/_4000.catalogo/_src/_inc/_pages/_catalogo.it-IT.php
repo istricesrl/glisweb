@@ -48,6 +48,8 @@
 													'categorie.prodotti.form.sem',
 													'categorie.prodotti.form.testo',
 													'categorie.prodotti.form.prodotti',
+													'categorie.prodotti.form.menu',
+													'categorie.prodotti.form.macro',
 													'categorie.prodotti.form.immagini',
 													'categorie.prodotti.form.video',
 													'categorie.prodotti.form.audio',
@@ -106,6 +108,29 @@
 	    'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 
+	// gestione categorie menu
+	$p['categorie.prodotti.form.menu'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'menu' ),
+	    'h1'		=> array( $l		=> 'menu' ),
+	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.menu.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.menu.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
+	);
+
+	// gestione categorie macro
+	$p['categorie.prodotti.form.macro'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'macro' ),
+	    'h1'		=> array( $l		=> 'macro' ),
+	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.macro.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.macro.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
+	);
 
 	// gestione categorie immagini
 	$p['categorie.prodotti.form.immagini'] = array(

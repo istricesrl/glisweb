@@ -24,9 +24,9 @@
 		),
 		'categorie_prodotti_caratteristiche' => array(
 		    CONTROL_FULL => array( 'roots' )
-#		),
-#		'marchi' => array(
-#		    CONTROL_FULL => array( 'roots' )
+		),
+		'prodotti_categorie' => array(
+		    CONTROL_FULL => array( 'roots' )
 #		),
 #		'coupon' => array(
 #		    CONTROL_FULL => array( 'roots' )
