@@ -1,7 +1,1 @@
-CREATE OR REPLACE VIEW `macro_view` AS
-    SELECT
-    macro.*,
-    macro.macro AS __label__
-    FROM macro
-    ORDER BY __label__
-;
+ALTER TABLE `menu` ADD `id_categoria_prodotti` INT NULL DEFAULT NULL AFTER `id_pagina`, ADD INDEX (`id_categoria_prodotti`) ;
