@@ -41,8 +41,8 @@
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{% if i == 0 %}<div class="label-top remove-after-duplicate">&nbsp;</div>{% endif %}
-		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
         {{ frm.editButton( table, subtable, 'documenti.articoli.form', page, pages, r, lang, request ) }}
+        {{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
 	    </div>
 	    {% endif %}
 	</div>
