@@ -39,8 +39,7 @@
 													'prodotti.form.video',
 													'prodotti.form.audio',
 													'prodotti.form.file',
-													'prodotti.form.metadati',
-													'prodotti.form.gruppi'
+													'prodotti.form.metadati'
 												) )
 	);
 
@@ -170,16 +169,5 @@
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 	
-	// gestione prodotti gruppi
-	$p['prodotti.form.gruppi'] = array(
-		'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-users" aria-hidden="true"></i>',
-		'title'		=> array( $l		=> 'gruppi' ),
-		'h1'		=> array( $l		=> 'gruppi' ),
-		'parent'		=> array( 'id'		=> 'prodotti.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.gruppi.html' ),
-		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.gruppi.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
-	);
+	
 
