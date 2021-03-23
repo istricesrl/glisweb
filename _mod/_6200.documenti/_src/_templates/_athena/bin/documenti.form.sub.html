@@ -12,11 +12,20 @@
 	{{ frm.input( table, subtable, i, 'id_documento', '', '', '', '__parent_id__', 'hidden' ) }}
     {{ frm.input( table, subtable, i, 'id_udm', '', '', request, '1', 'hidden' ) }}
     {{ frm.input( table, subtable, i, 'id_listino', '', '', request, '1', 'hidden' ) }}
+    {% if request[ table ][ 'data' ] %}
+    {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, request[ table ][ 'data' ], 'hidden' ) }}
+    {% else %}
+    {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, 'now'|date('Y-m-d'), 'hidden' ) }}
+    {% endif %}
 	<div class="form-group form-row">
-	    <div class="col-3">
+	    <div class="col-auto">
 		    {% if i == 0 %}<span class="label-top remove-after-duplicate">articolo</span>{% endif %}
             {{ frm.selectBox( table, subtable, i, 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
 	    </div>
+        <div class="col">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione</span>{% endif %}
+            {{ frm.input( table, subtable, i, 'nome', 'descrizione', '', request ) }}
+        </div>
         <div class="col-1">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">importo</span>{% endif %}
             {{ frm.input( table, subtable, i, 'importo_netto_totale', 'importo', '', request ) }}
@@ -25,7 +34,7 @@
 		    {% if i == 0 %}<span class="label-top remove-after-duplicate">quantità</span>{% endif %}
 		    {{ frm.input( table, subtable, i, 'quantita', 'quantità', '', request ) }}
 	    </div>
-        <div class="col-md-2 col">
+        <div class="col-md col">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">progetto</span>{% endif %}
             {{ frm.selectBox( table, subtable, i, 'id_progetto', '', etc.select.id_progetti, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
          </div>
@@ -33,7 +42,7 @@
             {% if i == 0 %}<span class="label-top remove-after-duplicate">carico</span>{% endif %}
             {{ frm.selectBox( table, subtable, i, 'id_mastro_provenienza', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
 	    </div>
-        <div class="col-md col">
+        <div class="col-md-2 col">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">scarico</span>{% endif %}
             {{ frm.selectBox( table, subtable, i, 'id_mastro_destinazione', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
          </div>
