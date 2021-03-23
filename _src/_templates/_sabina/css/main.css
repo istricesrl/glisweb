@@ -90,12 +90,42 @@ div.jumbotron-responsive {
     margin: 2em 0em;
 }
 
-section.jumbotron-garanzia div.jumbotron {
+section.garanzia div.jumbotron {
     background-position: top !important;
 }
 
 section.video {
     background-color: #cccccc;
+}
+
+section.leads {
+    background-color: #666666;
+}
+
+section.vantaggi {
+    margin: 0em;
+}
+
+section.vantaggi .card-title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+section.leads {
+    color: #ffffff;
+    padding: 1em 0em;
+}
+
+section.garanzia {
+    margin: 0em;
+}
+
+section.default {
+    margin: 2em 0em;
+}
+
+section.default h1 {
+    margin-bottom: 0.5em;
 }
 
 a, a:visited {
@@ -125,10 +155,16 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     text-decoration: underline;
 }
 
+section.leads a, section.leads a:visited {
+    text-decoration: underline;
+}
+
+section.leads a, section.leads a:visited,
 a.nav-link, a.nav-link:visited {
     color: #ffffff;
 }
 
+section.leads a:active, section.leads a:hover,
 a.nav-link:active, a.nav-link:hover {
     color: #ffffff;
     text-decoration: underline;
@@ -149,6 +185,20 @@ ul.benefici > li.media > div.media-left > i.fa {
 
 ul.benefici > li.media > p.media-media-text {
     font-style: italic;
+}
+
+hr.jumbotron-hr-right {
+    margin-left: auto !important;
+}
+
+hr.jumbotron-hr-left {
+    margin-right: auto !important;
+}
+
+hr.jumbotron-hr {
+    margin: 0;
+    border-top: 2px solid #666;
+    width: 65%;
 }
 
 div.numero-verde {

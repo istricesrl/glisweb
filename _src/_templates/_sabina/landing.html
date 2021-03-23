@@ -3,11 +3,14 @@
 {% extends "ext/main.html" %}
 
 {% block main %}
-<section class="default">
+<section class="testo">
     <div class="container">
         <div class="row">
             <div class="col-12 col-md">
                 {{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
+            </div>
+            <div class="col-12 col-md">
+                {{ include( template_from_string( page.abstract[ localization.language.ietf ] ) | raw ) }}
             </div>
         </div>
     </div>
