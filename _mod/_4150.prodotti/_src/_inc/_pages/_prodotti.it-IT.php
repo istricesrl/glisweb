@@ -182,5 +182,41 @@
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 	
-	
+	// vista articoli
+	$p['articoli.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'articoli' ),
+	    'h1'			=> array( $l		=> 'articoli' ),
+	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_articoli.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'articoli.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'articoli' ),
+								'priority'	=> '020' ) )
+	);
+
+	// gestione articoli
+	$p['articoli.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'articoli.form'/*,
+                                                    'prodotti.form.categorie',
+													'prodotti.form.caratteristiche',
+													'prodotti.form.sem',
+													'prodotti.form.testo',
+													'prodotti.form.articoli',
+													'prodotti.form.prezzi',
+													'prodotti.form.immagini',
+													'prodotti.form.video',
+													'prodotti.form.audio',
+													'prodotti.form.file',
+													'prodotti.form.metadati'*/
+												) )
+	);
 
