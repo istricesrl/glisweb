@@ -12,11 +12,15 @@
 	{{ frm.input( table, subtable, i, 'id_documento', '', '', '', '__parent_id__', 'hidden' ) }}
     {{ frm.input( table, subtable, i, 'id_udm', '', '', request, '1', 'hidden' ) }}
     {{ frm.input( table, subtable, i, 'id_listino', '', '', request, '1', 'hidden' ) }}
+    {{ frm.input( table, subtable, i, 'id_valuta', '', '', request, '1', 'hidden' ) }}
+    {{ frm.input( table, subtable, i, 'id_emittente', '', '', request, request[ table ][ 'id_emittente' ], 'hidden' ) }}
+    {{ frm.input( table, subtable, i, 'id_destinatario', '', '', request, request[ table ][ 'id_destinatario' ], 'hidden' ) }}
     {% if request[ table ][ 'data' ] %}
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, request[ table ][ 'data' ], 'hidden' ) }}
     {% else %}
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, 'now'|date('Y-m-d'), 'hidden' ) }}
     {% endif %}
+
 	<div class="form-group form-row">
 	    <div class="col-auto">
 		    {% if i == 0 %}<span class="label-top remove-after-duplicate">articolo</span>{% endif %}

@@ -66,7 +66,7 @@
 
 	// tendina indirizzi destinatari
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) ){
-	    $ct['etc']['select']['id_sedi_id_destinatario'] = mysqlCachedIndexedQuery(
+	    $ct['etc']['select']['id_sedi_destinatario'] = mysqlCachedIndexedQuery(
 	        $cf['memcache']['index'],
 	        $cf['memcache']['connection'],
 	        $cf['mysql']['connection'],
