@@ -35,6 +35,7 @@
 													'prodotti.form.sem',
 													'prodotti.form.testo',
 													'prodotti.form.articoli',
+													'prodotti.form.prezzi',
 													'prodotti.form.immagini',
 													'prodotti.form.video',
 													'prodotti.form.audio',
@@ -99,6 +100,18 @@
 	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.articoli.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.articoli.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
+	);
+
+	// gestione prodotti prezzi
+	$p['prodotti.form.prezzi'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'prezzi' ),
+	    'h1'		=> array( $l		=> 'prezzi' ),
+	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.prezzi.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.prezzi.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
