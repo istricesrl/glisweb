@@ -30,7 +30,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'variazioni.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_variazioni.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'variazioni.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'variazioni.form', 'variazioni.form.approvazione' ) )
+	);
+
+    // gestione approvazione variazioni
+	$p['variazioni.form.approvazione'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'approvazione' ),
+	    'h1'			=> array( $l		=> 'approvazione' ),
+	    'parent'		=> array( 'id'		=> 'variazioni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'variazioni.form.approvazione.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_variazioni.form.approvazione.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['variazioni.form']['etc']['tabs'] )
 	);
     
 

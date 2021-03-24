@@ -13,19 +13,19 @@
 	<div class="form-group form-row">
 		<div class="col-2 col-md">
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">data inizio</span>{% endif %}
-			{{ frm.date( table, subtable, i, 'data_inizio', '', '', request, default, '', 1 ) }}
+			{{ frm.date( table, subtable, i, 'data_inizio', '', '', request, default ) }}
 		</div>
 		<div class="col-2 col-md">
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">ora inizio</span>{% endif %}
-			{{ frm.time( table, subtable, i, 'ora_inizio', '', '', request, default, '', 1) }} 
+			{{ frm.time( table, subtable, i, 'ora_inizio', '', '', request, default) }} 
 	    </div>
         <div class="col-2 col-md">
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">data fine</span>{% endif %}
-			{{ frm.date( table, subtable, i, 'data_fine', '', '', request, default, '', 1 ) }}
+			{{ frm.date( table, subtable, i, 'data_fine', '', '', request, default ) }}
 		</div>
 		<div class="col-2 col-md">
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">ora fine</span>{% endif %}
-			{{ frm.time( table, subtable, i, 'ora_fine', '', '', request, default, '', 1) }} 
+			{{ frm.time( table, subtable, i, 'ora_fine', '', '', request, default) }} 
 	    </div>
 		
 		{% if r.id %}

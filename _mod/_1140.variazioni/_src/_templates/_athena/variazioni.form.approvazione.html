@@ -1,0 +1,29 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# FORM DI GESTIONE #}
+
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+        <form class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                <div class="row no-gutters d-print-none">
+                    <div class="col col-md-7 text-center"></div>
+                    <div class="col-auto col-md-5 text-right">
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="" placeholder="approva variazione" data-placement="bottom" data-delay="1000" title="" data-original-title="approva variazione">APPROVA VARIAZIONE</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</section>
+{% endblock %}

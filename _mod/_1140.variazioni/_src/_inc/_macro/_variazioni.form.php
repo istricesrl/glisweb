@@ -43,5 +43,12 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_inps_view' );
 
+    
+    if( !isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
+        $ct['page']['etc']['tabs'] = array_diff(
+            $ct['page']['etc']['tabs'],
+            ['variazioni.form.approvazione']
+        );
+    }
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
