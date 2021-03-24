@@ -74,7 +74,6 @@
                     // TODO fare aggiungiGruppi()
                     aggiungiGruppi(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        NULL,
                         $pg['id']
                     );
 /*
@@ -99,8 +98,8 @@
                     // TODO fare aggiungiContenuti()
                     aggiungiContenuti(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        'id_pagina',
-                        $pg['id']
+                        $pg['id'],
+                        'id_pagina'
                     );
 /*
                     // array dei contenuti
@@ -141,16 +140,16 @@
                     // aggiungo le immagini
                     aggiungiImmagini(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        'id_pagina',
                         $pg['id'],
+                        'id_pagina',
                         array( 4, 16, 29, 14 )
                     );
 
                     // TODO fare aggiungiMetadati()
                     aggiungiMetadati(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        'id_pagina',
-                        $pg['id']
+                        $pg['id'],
+                        'id_pagina'
                     );
 /*
                     // array dei metadati
@@ -176,8 +175,8 @@
                     // TODO fare aggiungiMenu()
                     aggiungiMenu(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        'id_pagina',
-                        $pg['id']
+                        $pg['id'],
+                        'id_pagina'
                     );
 /*
                     // array dei menu

@@ -76,8 +76,8 @@
         // aggiungo le immagini
         aggiungiImmagini(
             $cf['contents']['page'],
-            'id_pagina',
-            $cf['contents']['page']['id']
+            $cf['contents']['page']['id'],
+            'id_pagina'
         );
 
         // timer
@@ -86,8 +86,8 @@
         // aggiungo i video
         aggiungiVideo(
             $cf['contents']['page'],
-            'id_pagina',
-            $cf['contents']['page']['id']
+            $cf['contents']['page']['id'],
+            'id_pagina'
         );
 
         // timer
@@ -96,8 +96,8 @@
         // aggiungo i file
         aggiungiFile(
             $cf['contents']['page'],
-            'id_pagina',
-            $cf['contents']['page']['id']
+            $cf['contents']['page']['id'],
+            'id_pagina'
         );
 
         // timer
