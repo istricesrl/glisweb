@@ -1,0 +1,15 @@
+  "redis": {
+    "servers": {
+      "default": {
+        "address": "%indirizzo del server redis%",
+        "port": "%porta del server redis%"
+      }
+    },
+    "profiles": {
+      "%stage del sito%": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  }

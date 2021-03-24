@@ -18,6 +18,9 @@ cd $RL
 ## informazioni
 echo "lavoro su: $(pwd)"
 
+## intestazione
+echo "configurazione del framework"
+
 ## file di lavoro
 if [ -z "$2" ]; then
 	FILE="./src/config.json"
