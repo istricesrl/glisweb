@@ -1542,6 +1542,14 @@ ON DUPLICATE KEY UPDATE
 ;
 -- NOTA a cosa serve il flag se_commerciale?
 
+-- tipologie_variazioni_attivita
+-- tipologia: tabella di supporto
+INSERT INTO `tipologie_variazioni_attivita` (`id`, `nome`) VALUES
+(1, 'malattia'),
+(2, 'ferie'),
+(3, 'permessi')
+ON DUPLICATE KEY UPDATE nome = VALUES( nome );
+
 -- todo
 -- tipologia: tabella gestita
 -- NOTE
