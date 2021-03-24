@@ -44,6 +44,32 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['variazioni.form']['etc']['tabs'] )
 	);
+
+	// dashboard sostituzioni progetti
+	$p['sostituzioni.progetti'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'progetti' ),
+	    'h1'			=> array( $l		=> 'progetti' ),
+	    'parent'		=> array( 'id'		=> 'variazioni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sostituzioni.progetti.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_sostituzioni.progetti.php' ),
+		'etc'			=> array( 'tabs'	=> array(	'sostituzioni.progetti', 'sostituzioni.attivita' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'sostituzioni' ),
+														'priority'	=> '120' ) )
+	);
+
+	// dashboard sostituzioni attivita
+	$p['sostituzioni.attivita'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'attivita' ),
+	    'h1'			=> array( $l		=> 'attivita' ),
+	    'parent'		=> array( 'id'		=> 'variazioni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sostituzioni.attivita.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_sostituzioni.attivita.php' ),
+		'etc'			=> array( 'tabs'	=> $p['sostituzioni.progetti']['etc']['tabs'] ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
     
 
 	
