@@ -118,6 +118,8 @@ if [ -f "$FILE" ]; then
 		echo "ATTENZIONE installare il crontab manualmente"
     fi
 
+    ./_src/_sh/_gw.permissions.reset.sh
+
 elif [ -n "$1" ]; then
 
     mkdir -p ./src/
