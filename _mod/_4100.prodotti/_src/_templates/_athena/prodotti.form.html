@@ -45,6 +45,7 @@
         {% if request.__preset__[ table ] %}
             {% set subtable = request.__preset__[ table ]|keys|first %}
             {{ frm.input( table, subtable, '0', 'id', '', '', request, '', 'hidden' ) }}
+            {{ frm.input( table, subtable, '0', 'ordine', '', '', '', '10', 'hidden' ) }}
             {{ frm.input( table, subtable, '0', 'id_prodotto', '', '', '', '__parent_id__', 'hidden' ) }}
             {{ frm.input( table, subtable, '0', 'id_categoria', '', '', '', request.__preset__[ table ]|first[0]['id_categoria'], 'hidden' ) }}
         {% endif %}
