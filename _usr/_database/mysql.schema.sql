@@ -6222,17 +6222,17 @@ CREATE TABLE `macro` (
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
-  `macro` char(64) NOT NULL,
+  `macro` char(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_pagina` (`id_pagina`,`macro`),
   KEY `id_gruppo` (`macro`),
   KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
   KEY `id_prodotto` (`id_prodotto`),
   KEY `id_articolo` (`id_articolo`),
-  CONSTRAINT `macro_ibfk_4` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `macro_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `macro_ibfk_2` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `macro_ibfk_3` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `macro_ibfk_3` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `macro_ibfk_4` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -21457,4 +21457,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-25 11:44:22
+-- Dump completed on 2021-03-25 11:48:34
