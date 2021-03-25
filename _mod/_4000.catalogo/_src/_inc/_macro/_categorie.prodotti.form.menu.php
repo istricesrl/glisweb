@@ -57,14 +57,5 @@
     // tendina lingue
     $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
 
-    // tendina pagine
-	$ct['etc']['select']['pagine'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM pagine_view '
-	);
-
-
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

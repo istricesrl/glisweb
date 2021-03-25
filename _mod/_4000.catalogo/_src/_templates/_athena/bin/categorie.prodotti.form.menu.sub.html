@@ -23,10 +23,6 @@
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">lingua</span>{% endif %}
 			{{ frm.select( table, subtable, i, 'id_lingua', '', etc.select.lingue, request ) }}
 		</div>  
-		<div class="col-auto">
-			{% if i == 0 %}<span class="label-top remove-after-duplicate">pagina</span>{% endif %}
-			{{ frm.select( table, subtable, i, 'id_pagina', '', etc.select.pagine, request ) }}
-		</div>  
 		<div class="col">
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">voce</span>{% endif %}
 			{{ frm.input( table, subtable, i, 'nome', '', '', request ) }}
