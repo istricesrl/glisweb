@@ -4,7 +4,7 @@
 	$l = 'it-IT';
 
     // modulo di questo file
-	$m = DIR_MOD . '_4150.prodotti/';
+	$m = DIR_MOD . '_4100.prodotti/';
 
 	 // vista prodotti
 	 $p['prodotti.view'] = array(
