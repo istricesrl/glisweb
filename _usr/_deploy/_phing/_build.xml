@@ -2,7 +2,8 @@
 <project name="DEPLOY" default="dist.interactive">
     
     <!-- inclusione file proprietà -->
-    <property file="../../../usr/deploy/phing/build.properties" />
+    <!-- chiamare phing -propertyfile ./usr/deploy/phing/build.properties dalla cartella radice -->
+    <!-- <property file="../../../usr/deploy/phing/build.properties" /> -->
 
     <!-- proprietà derivate -->
     <property name="dst.dir" value="${dst.fld}/${dst.stg}" />
@@ -270,46 +271,61 @@
     <!-- avanzamento di versione -->
     <target name="version.increment">
 
-        <!-- se è dichiarato il tipo di deploy o no -->
+        <!-- se è settata la cartella di provenienza -->
         <if>
-            <equals arg1="${prj.inc}" arg2="" />
+            <isset property="src.fld" />
             <then>
 
-                <!-- messaggi -->
-                <echo msg="deploy senza incremento di versione" />
-
-            </then>
-            <else>
-
-                <!-- se non esiste il file di versione all'interno del progetto -->
+                <!-- se è dichiarato il tipo di deploy o no -->
                 <if>
-                    <not>
-                        <available file="${src.dir}/etc/version.conf"/>
-                    </not>
+                    <equals arg1="${prj.inc}" arg2="" />
                     <then>
 
                         <!-- messaggi -->
-                        <echo msg="creo e inizializzo il file: ${src.dir}/etc/version.conf" />
-
-                        <!-- creo la cartella e il file di versione -->
-                        <mkdir dir="${src.dir}/etc" />
-                        <touch file="${src.dir}/etc/version.conf"/>
-                        <echo msg="0.0.0" file="${src.dir}/etc/version.conf" />
+                        <echo msg="deploy senza incremento di versione" />
 
                     </then>
                     <else>
 
-                        <!-- messaggi -->
-                        <echo msg="trovato file: ${src.dir}/etc/version.conf" />
+                        <!-- se non esiste il file di versione all'interno del progetto -->
+                        <if>
+                            <not>
+                                <available file="${src.dir}/etc/version.conf"/>
+                            </not>
+                            <then>
+
+                                <!-- messaggi -->
+                                <echo msg="creo e inizializzo il file: ${src.dir}/etc/version.conf" />
+
+                                <!-- creo la cartella e il file di versione -->
+                                <mkdir dir="${src.dir}/etc" />
+                                <touch file="${src.dir}/etc/version.conf"/>
+                                <echo msg="0.0.0" file="${src.dir}/etc/version.conf" />
+
+                            </then>
+                            <else>
+
+                                <!-- messaggi -->
+                                <echo msg="trovato file: ${src.dir}/etc/version.conf" />
+
+                            </else>
+                        </if>
+
+                        <!-- incremento la versione in base al tipo di deploy -->
+                        <version releasetype="${prj.inc}" file="${src.dir}/etc/version.conf" property="rev.num"/>
 
                     </else>
                 </if>
 
-                <!-- incremento la versione in base al tipo di deploy -->
-                <version releasetype="${prj.inc}" file="${src.dir}/etc/version.conf" property="rev.num"/>
+            </then>
+            <else>
+
+                <!-- messaggi -->
+                <echo msg="non è stata impostata una cartella sorgente del progetto!" />
 
             </else>
         </if>
+
     </target>
 
     <!-- distribuzione via FTP -->
@@ -485,76 +501,92 @@
     <!-- esecuzione del deploy -->
     <target name="dist.exec" depends="version.increment,git.push">
 
-        <!-- messaggi -->
-        <echo msg="progetto: ${prj.nme}" />
-        <echo msg="distribuzione da ${src.stg} a ${dst.stg}..." />
-        <echo msg="licenza: ${prj.key}" />
-        <echo msg="tipo di release: ${prj.inc}" />
-        <echo msg="versione: ${rev.num}" />
-
-        <!-- se la destinazione è locale oppure remota -->
+        <!-- se è stato incluso un file properties -->
         <if>
-            <not><isset property="dst.hst" /></not>
+            <isset property="prj.nme" />
             <then>
 
                 <!-- messaggi -->
-                <echo msg="deploy locale su: ${dst.dir}" />
+                <echo msg="progetto: ${prj.nme}" />
+                <echo msg="distribuzione da ${src.stg} a ${dst.stg}..." />
+                <echo msg="licenza: ${prj.key}" />
+                <echo msg="tipo di release: ${prj.inc}" />
+                <echo msg="versione: ${rev.num}" />
 
-                <!-- esecuzione del deploy tramite rsync -->
-                <phingcall target="dist.rsync.local" />
+                <!-- se la destinazione è locale oppure remota -->
+                <if>
+                    <not><isset property="dst.hst" /></not>
+                    <then>
+
+                        <!-- messaggi -->
+                        <echo msg="deploy locale su: ${dst.dir}" />
+
+                        <!-- esecuzione del deploy tramite rsync -->
+                        <phingcall target="dist.rsync.local" />
+
+                    </then>
+                    <elseif>
+                        <isset property="ftp.usr" />
+                        <then>
+
+                            <!-- messaggi -->
+                            <echo msg="deploy remoto via FTP" />
+
+                            <!-- esecuzione del deploy tramite FTP -->
+                            <phingcall target="dist.ftp" />
+
+                        </then>
+                    </elseif>
+                    <elseif>
+                        <equals arg1="${dst.cmd}" arg2="scp" />
+                        <then>
+
+                            <!-- messaggi -->
+                            <echo msg="deploy remoto via scp" />
+
+                        <!-- esecuzione del deploy tramite scp -->
+                        <phingcall target="dist.scp" />
+
+                        </then>
+                    </elseif>
+                    <else>
+
+                        <!-- messaggi -->
+                        <echo msg="deploy remoto via rsync" />
+
+                        <!-- esecuzione del deploy tramite rsync -->
+                        <phingcall target="dist.rsync.remote" />
+
+                    </else>
+                </if>
+
+                <!-- se è settato un URL del progetto di destinazione -->
+                <if>
+                    <not><isset property="dst.url" /></not>
+                    <then>
+
+                        <!-- messaggi -->
+                        <echo msg="URL del progetto di destinazione non settato!" />
+
+                    </then>
+                    <else>
+
+                        <!-- notifica su Slack -->
+                        <phingcall target="notify.slack" />
+
+                        <!-- notifica via mail -->
+                        <phingcall target="notify.email" />
+
+                    </else>
+                </if>
 
             </then>
-            <elseif>
-                <isset property="ftp.usr" />
-                <then>
-
-                    <!-- messaggi -->
-                    <echo msg="deploy remoto via FTP" />
-
-                    <!-- esecuzione del deploy tramite FTP -->
-                    <phingcall target="dist.ftp" />
-
-                </then>
-            </elseif>
-            <elseif>
-                <equals arg1="${dst.cmd}" arg2="scp" />
-                <then>
-
-                    <!-- messaggi -->
-                    <echo msg="deploy remoto via scp" />
-
-                <!-- esecuzione del deploy tramite scp -->
-                <phingcall target="dist.scp" />
-
-                </then>
-            </elseif>
             <else>
 
                 <!-- messaggi -->
-                <echo msg="deploy remoto via rsync" />
-
-                <!-- esecuzione del deploy tramite rsync -->
-                <phingcall target="dist.rsync.remote" />
-
-            </else>
-        </if>
-
-        <!-- se è settato un URL del progetto di destinazione -->
-        <if>
-            <not><isset property="dst.url" /></not>
-            <then>
-
-                <!-- messaggi -->
-                <echo msg="URL del progetto di destinazione non settato!" />
-
-            </then>
-            <else>
-
-                <!-- notifica su Slack -->
-                <phingcall target="notify.slack" />
-
-                <!-- notifica via mail -->
-                <phingcall target="notify.email" />
+                <echo msg="percorso del file properties non settato!" />
+                <echo msg="la sintassi corretta è:" />
+                <echo msg="phing -f ./_usr/_deploy/_phing/_build.xml -propertyfile ./path/to/file.properties" />
 
             </else>
         </if>
