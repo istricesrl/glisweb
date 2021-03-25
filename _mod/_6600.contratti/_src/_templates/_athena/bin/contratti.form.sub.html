@@ -17,11 +17,11 @@
         </div>
         <div class="col-12 col-md-2">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">costo/h</span>{% endif %}
-            {{ frm.input( table, subtable, i, 'costo_orario', 'costo/h', '', request, '', '', '', 'text-right' ) }}
+            {{ frm.input( table, subtable, i, 'costo_orario', '', '', request, '', '', '', 'text-right' ) }}
         </div>
         <div class="col-12 col-md">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">note</span>{% endif %}
-            {{ frm.input( table, subtable, i, 'note', 'note', '', request ) }}
+            {{ frm.input( table, subtable, i, 'note', '', '', request ) }}
         </div>
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">

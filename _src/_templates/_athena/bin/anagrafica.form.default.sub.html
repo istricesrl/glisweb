@@ -18,13 +18,16 @@
 	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden' ) }}
 	<div class="form-group form-row">
 	    <div class="col">
-			{{ frm.input( table, subtable, i, 'iban', 'IBAN', '', request ) }}
+			{% if i == 0 %}<span class="label-top remove-after-duplicate">iban</span>{% endif %}
+			{{ frm.input( table, subtable, i, 'iban', '', '', request ) }}
 		</div>
 		<div class="col">
-			{{ frm.input( table, subtable, i, 'intestazione', 'intestazione', '', request ) }}
+			{% if i == 0 %}<span class="label-top remove-after-duplicate">intestazione</span>{% endif %}
+			{{ frm.input( table, subtable, i, 'intestazione', '', '', request ) }}
 		</div>
 		<div class="col">
-			{{ frm.input( table, subtable, i, 'note', 'note', '', request ) }}
+			{% if i == 0 %}<span class="label-top remove-after-duplicate">note</span>{% endif %}
+			{{ frm.input( table, subtable, i, 'note', '', '', request ) }}
 	    </div>
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">

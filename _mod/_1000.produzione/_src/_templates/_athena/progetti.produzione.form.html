@@ -49,7 +49,7 @@
             <div class="form-group form-row">
                 <div class="col-12 col-md-2">
                     <span class="label-top">codice</span>
-                    {{ frm.inputRequired( table, '', '', 'id', 'codice del progetto', '', request ) }}
+                    {{ frm.inputRequired( table, '', '', 'id', '', '', request ) }}
                 </div>
                 <div class="col-12 col-md-2">
                     <span class="label-top">tipologia</span>
@@ -58,11 +58,11 @@
 
 				<div class="col-12 col-md-7">
 					<span class="label-top">nome</span>
-					{{ frm.inputRequired( table, '', '', 'nome', 'nome del progetto', '', request ) }}
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">ranking</span>
-					{{ frm.input( table, '', '', 'ranking', 'ranking', '', request ) }}
+					{{ frm.input( table, '', '', 'ranking', '', '', request ) }}
                 </div>
             </div>
             
@@ -94,7 +94,7 @@
 				</div>
 				<div class="col-12 col-md-10">
 					<span class="label-top">note di accettazione</span>
-					{{ frm.input( table, '', '', 'testo_accettazione', 'note di accettazione del progetto', '', request ) }}
+					{{ frm.input( table, '', '', 'testo_accettazione', '', '', request ) }}
 				</div>
             </div>
 		</fieldset>

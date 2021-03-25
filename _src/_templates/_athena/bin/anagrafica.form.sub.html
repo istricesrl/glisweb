@@ -17,7 +17,7 @@
 	    </div>
 	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">indirizzo</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'indirizzo', 'indirizzo e-mail', '', request ) }}
+		{{ frm.input( table, subtable, i, 'indirizzo', '', '', request ) }}
 	    </div>
 	    <div class="col-auto">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">se pec</span>{% endif %}
@@ -26,7 +26,7 @@
 		<div class="w-100 d-block d-md-none m-0"></div>
 	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
+		{{ frm.input( table, subtable, i, 'descrizione', '', '', request ) }}
 	    </div>
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
@@ -59,7 +59,7 @@
 	    </div>
 	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">numero</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'numero', 'numero di telefono', '', request ) }}
+		{{ frm.input( table, subtable, i, 'numero', '', '', request ) }}
 	    </div>
 	    <div class="col-auto">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">tipologia</span>{% endif %}
@@ -68,7 +68,7 @@
 		<div class="w-100 d-block d-md-none m-0"></div>
 	    <div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
+		{{ frm.input( table, subtable, i, 'descrizione', '', '', request ) }}
 	    </div>
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
@@ -106,11 +106,11 @@
 		<div class="w-100 d-block d-md-none m-0"></div>
 	    <div class="col-2 col-md-1">
 			{% if i == 0 %}<span class="label-top remove-after-duplicate">interno</span>{% endif %}
-			{{ frm.input( table, subtable, i, 'interno', 'interno', '', request ) }}
+			{{ frm.input( table, subtable, i, 'interno', '', '', request ) }}
 			</div>
 			<div class="col">
 		{% if i == 0 %}<span class="label-top remove-after-duplicate">descrizione e note</span>{% endif %}
-		{{ frm.input( table, subtable, i, 'descrizione', 'descrizione e note', '', request ) }}
+		{{ frm.input( table, subtable, i, 'descrizione', '', '', request ) }}
 	    </div>
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
