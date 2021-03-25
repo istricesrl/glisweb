@@ -42,6 +42,13 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
+        {% if request.__preset__[ table ] %}
+            {% set subtable = request.__preset__[ table ]|keys|first %}
+            {{ frm.input( table, subtable, '0', 'id', '', '', request, '', 'hidden' ) }}
+            {{ frm.input( table, subtable, '0', 'id_prodotto', '', '', '', '__parent_id__', 'hidden' ) }}
+            {{ frm.input( table, subtable, '0', 'id_categoria', '', '', '', request.__preset__[ table ]|first[0]['id_categoria'], 'hidden' ) }}
+        {% endif %}
+
         {# MODULO PRINCIPALE #}
 	    <fieldset>
             <legend>dati generali <small>{{ legend }}</small></legend>
