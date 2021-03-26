@@ -74,6 +74,10 @@
             <legend>dati tecnici</legend>
             <div class="form-group form-row">
                 <div class="col-12 col-md">
+                    <span class="label-top">udm</span>
+                    {{ frm.select( table, '', '', 'id_udm', '', etc.select.udm, request ) }}
+                </div>
+                <div class="col-12 col-md">
                     <span class="label-top">codice produttore</span>
                     {{ frm.input( table, '', '', 'codice_produttore', 'codice produttore', '', request ) }}
                 </div>

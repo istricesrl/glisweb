@@ -50,5 +50,12 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM udm_view' );
 
+    if( isset( $_REQUEST['__preset__']['articoli']['id_prodotto']  ) ){
+        $ct['etc']['value']['udm'] = mysqlSelectValue(
+            $cf['mysql']['connection'], 
+            'SELECT id_udm FROM prodotti WHERE id = ?',
+            array( array( 's' => $_REQUEST['__preset__']['articoli']['id_prodotto'] ) ) );
+    }
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

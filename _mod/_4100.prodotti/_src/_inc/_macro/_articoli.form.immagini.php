@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form prodotti file
+     * macro form prodotti immagini
      *
      *
      *
@@ -20,21 +20,18 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'prodotti';
+	$ct['form']['table'] = 'articoli';
 
     // sotto tabella gestita
-	$ct['form']['subtable'] = 'file';
+	$ct['form']['subtable'] = 'immagini';
 
     // tendina ruolo immagini
-	$ct['etc']['select']['ruoli_file'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['ruoli_immagini'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_file_view WHERE se_prodotti = 1'
+	    'SELECT id, __label__ FROM ruoli_immagini_view WHERE se_articoli = 1'
 	);
 
-    // tendina lingue
-    $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
-
-    // macro di default
+	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'prodotti';
+	$ct['form']['table'] = 'articoli';
 
     // sotto tabella gestita
 	$ct['form']['subtable'] = 'audio';
@@ -30,7 +30,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_audio_view WHERE se_prodotti = 1'
+	    'SELECT id, __label__ FROM ruoli_audio_view WHERE se_articoli = 1'
     );
     
     // tendina tipologia embed

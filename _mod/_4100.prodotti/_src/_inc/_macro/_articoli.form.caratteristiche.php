@@ -20,14 +20,14 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'prodotti';
+	$ct['form']['table'] = 'articoli';
 
     // tendina caratteristiche
 	$ct['etc']['select']['caratteristiche'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM caratteristiche_prodotti_view'
+        'SELECT id, __label__ FROM caratteristiche_articoli_view'
     );
     
 	// tendina icona per caratteristica/opzione presente o meno
@@ -41,6 +41,7 @@
 	    array( 'id' => 1, '__label__' => 'sì' ),
 	    array( 'id' => NULL, '__label__' => 'no' )
 	);
+
     
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

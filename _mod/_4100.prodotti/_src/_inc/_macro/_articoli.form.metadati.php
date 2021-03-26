@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form prodotti file
+     * macro form prodotti metadati
      *
      *
      *
@@ -18,21 +18,12 @@
      * @file
      *
      */
-
     // tabella gestita
-	$ct['form']['table'] = 'prodotti';
+	$ct['form']['table'] = 'articoli';
 
     // sotto tabella gestita
-	$ct['form']['subtable'] = 'file';
-
-    // tendina ruolo immagini
-	$ct['etc']['select']['ruoli_file'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_file_view WHERE se_prodotti = 1'
-	);
-
+    $ct['form']['subtable'] = 'metadati';
+    
     // tendina lingue
     $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
 

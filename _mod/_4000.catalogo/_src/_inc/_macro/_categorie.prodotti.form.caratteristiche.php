@@ -29,17 +29,17 @@
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM categorie_prodotti_caratteristiche_view'
     );
-    
-	// tendina icona per caratteristica/opzione presente o meno
+ 
+	// tendina icona per caratteristica/opzione presente o meno   
 	$ct['etc']['select']['se_non_presente'] = array(
-	    array( 'id' => NULL, '__label__' => '&#xf00c;' ),
-	    array( 'id' => 1, '__label__' => '&#xf00d;' )
+	    array( 'id' => NULL, '__label__' => 'sì' ),
+	    array( 'id' => 1, '__label__' => 'no' )
 	);
 
 	// tendina icona per caratteristica/opzione visibile in menù o meno
 	$ct['etc']['select']['se_visibile'] = array(
-	    array( 'id' => 1, '__label__' => '&#xf00c;' ),
-	    array( 'id' => NULL, '__label__' => '&#xf00d;' )
+	    array( 'id' => 1, '__label__' => 'sì' ),
+	    array( 'id' => NULL, '__label__' => 'no' )
 	);
 
     

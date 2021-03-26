@@ -57,5 +57,12 @@
 	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
 	);
 
+    // tendina unità di misura
+	$ct['etc']['select']['udm'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM udm_view' );
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

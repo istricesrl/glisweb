@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form prodotti audio
+     * macro form prodotti video
      *
      *
      *
@@ -20,17 +20,17 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'prodotti';
+	$ct['form']['table'] = 'articoli';
 
     // sotto tabella gestita
-	$ct['form']['subtable'] = 'audio';
+	$ct['form']['subtable'] = 'video';
 
     // tendina ruolo video
-	$ct['etc']['select']['ruoli_audio'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['ruoli_video'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_audio_view WHERE se_prodotti = 1'
+        'SELECT id, __label__ FROM ruoli_video_view WHERE se_articoli = 1'
     );
     
     // tendina tipologia embed
@@ -38,8 +38,8 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_embed_view  WHERE se_audio = 1'
-	); 
+	    'SELECT id, __label__ FROM tipologie_embed_view  WHERE se_video = 1'
+	);
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

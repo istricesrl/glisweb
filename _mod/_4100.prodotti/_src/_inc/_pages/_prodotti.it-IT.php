@@ -205,18 +205,143 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'articoli.form'/*,
-                                                    'prodotti.form.categorie',
-													'prodotti.form.caratteristiche',
-													'prodotti.form.sem',
-													'prodotti.form.testo',
-													'prodotti.form.articoli',
-													'prodotti.form.prezzi',
-													'prodotti.form.immagini',
-													'prodotti.form.video',
-													'prodotti.form.audio',
-													'prodotti.form.file',
-													'prodotti.form.metadati'*/
+	    'etc'		=> array( 'tabs'	=> array(	'articoli.form',
+     //                                               'articoli.form.pubblicazione',
+													'articoli.form.caratteristiche',
+													'articoli.form.sem',
+													'articoli.form.testo',
+													'articoli.form.prezzi',
+													'articoli.form.immagini',
+													'articoli.form.video',
+													'articoli.form.audio',
+													'articoli.form.file',
+													'articoli.form.metadati'
 												) )
 	);
+/*
+	// gestione articoli pubblicazione
+	$p['articoli.form.pubblicazione'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'pubblicazione' ),
+		'h1'		=> array( $l		=> 'pubblicazione' ),
+		'parent'		=> array( 'id'		=> 'articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.pubblicazione.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.pubblicazione.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+*/
+	// gestione articoli caratteristiche
+	$p['articoli.form.caratteristiche'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'caratteristiche' ),
+		'h1'		=> array( $l		=> 'caratteristiche' ),
+		'parent'		=> array( 'id'		=> 'articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.caratteristiche.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.caratteristiche.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
 
+	// gestione articoli SEM/SMM
+	$p['articoli.form.sem'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'SEM/SMM' ),
+	    'h1'		=> array( $l		=> 'SEM/SMM' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.sem.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.sem.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+	// gestione articoli testo
+	$p['articoli.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.testo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+	// gestione articoli prezzi
+	$p['articoli.form.prezzi'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'prezzi' ),
+	    'h1'		=> array( $l		=> 'prezzi' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.prezzi.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.prezzi.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+
+	// gestione articoli immagini
+	$p['articoli.form.immagini'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'immagini' ),
+		'h1'		=> array( $l		=> 'immagini' ),
+		'parent'		=> array( 'id'		=> 'articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.immagini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.immagini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+	// gestione articoli video
+	$p['articoli.form.video'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'video' ),
+		'h1'		=> array( $l		=> 'video' ),
+		'parent'		=> array( 'id'		=> 'articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.video.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.video.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+	
+	// gestione articoli file
+	$p['articoli.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.file.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+	// gestione articoli audio
+	$p['articoli.form.audio'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'audio' ),
+		'h1'		=> array( $l		=> 'audio' ),
+		'parent'		=> array( 'id'		=> 'articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.audio.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.audio.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+	// gestione articoli metadati
+	$p['articoli.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+	
