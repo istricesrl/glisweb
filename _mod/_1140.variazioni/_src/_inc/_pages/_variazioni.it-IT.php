@@ -45,29 +45,41 @@
 		'etc'			=> array( 'tabs'	=> $p['variazioni.form']['etc']['tabs'] )
 	);
 
-	// dashboard sostituzioni progetti
-	$p['sostituzioni.progetti'] = array(
+	// dashboard progetti scoperti per sostituzioni
+	$p['progetti.scoperti.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'progetti' ),
 	    'h1'			=> array( $l		=> 'progetti' ),
 	    'parent'		=> array( 'id'		=> 'variazioni.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sostituzioni.progetti.html' ),
-		'macro'			=> array( $m . '_src/_inc/_macro/_sostituzioni.progetti.php' ),
-		'etc'			=> array( 'tabs'	=> array(	'sostituzioni.progetti', 'sostituzioni.attivita' ) ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.scoperti.view.php' ),
+		'etc'			=> array( 'tabs'	=> array(	'progetti.scoperti.view', 'attivita.scoperte.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'sostituzioni' ),
 														'priority'	=> '120' ) )
 	);
 
-	// dashboard sostituzioni attivita
-	$p['sostituzioni.attivita'] = array(
+	// dashboard attivita scoperte per sostituzioni 
+	$p['attivita.scoperte.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'attivita' ),
 	    'h1'			=> array( $l		=> 'attivita' ),
 	    'parent'		=> array( 'id'		=> 'variazioni.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sostituzioni.attivita.html' ),
-		'macro'			=> array( $m . '_src/_inc/_macro/_sostituzioni.attivita.php' ),
-		'etc'			=> array( 'tabs'	=> $p['sostituzioni.progetti']['etc']['tabs'] ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.scoperte.view.php' ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.scoperti.view']['etc']['tabs'] ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
+	// form attivita scoperte per sostituzioni 
+	$p['attivita.scoperte.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'attivita.scoperte.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.scoperte.form.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.scoperte.form.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'attivita.scoperte.form' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
     
