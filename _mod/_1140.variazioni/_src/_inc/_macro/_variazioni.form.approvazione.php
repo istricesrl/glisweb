@@ -48,10 +48,9 @@
             $attivita = mysqlQuery( 
                 $cf['mysql']['connection'],
                 "SELECT id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
-                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, id_progetto, progetto, TIMESTAMP( data_programmazione, ora_inizio) as timestamp_inizio, "
-                ."TIMESTAMP( data_programmazione, ora_fine) as timestamp_fine FROM attivita_view "
+                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, id_progetto, progetto FROM attivita_view "
                 ."WHERE id_anagrafica = ? "
-                ."AND ( ( TIMESTAMP( data_programmazione, ora_inizio) between ? and ? ) OR ( TIMESTAMP( data_programmazione, ora_fine) between ? and ? ) ) "
+                ."AND ( ( TIMESTAMP( data_programmazione, ora_inizio_programmazione ) between ? and ? ) OR ( TIMESTAMP( data_programmazione, ora_fine_programmazione ) between ? and ? ) ) "
                 ."ORDER by data_programmazione, id_progetto, ora_inizio_programmazione"
               ,
                 array(
@@ -80,5 +79,13 @@
 
  //  print_r( $ct['etc']['attivita'] );
 
+    // modal per la conferma di approvazione
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'conferma', 'include' => 'inc/variazioni.form.approvazione.modal.conferma.html' )
+    );
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    require DIR_SRC_INC_MACRO . '_default.tools.php';
+    
