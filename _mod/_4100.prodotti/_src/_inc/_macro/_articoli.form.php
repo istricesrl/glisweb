@@ -51,10 +51,26 @@
         'SELECT id, __label__ FROM udm_view' );
 
     if( isset( $_REQUEST['__preset__']['articoli']['id_prodotto']  ) ){
+        // unità di misura di default
         $ct['etc']['value']['udm'] = mysqlSelectValue(
             $cf['mysql']['connection'], 
             'SELECT id_udm FROM prodotti WHERE id = ?',
-            array( array( 's' => $_REQUEST['__preset__']['articoli']['id_prodotto'] ) ) );
+            array( array( 's' => $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_prodotto'] ) ) );
+    
+        // dettagli tipologia
+        $ct['etc']['value']['tipologia'] = mysqlSelectRow(
+            $cf['mysql']['connection'], 
+            'SELECT tipologie_prodotti.* FROM tipologie_prodotti LEFT JOIN prodotti ON prodotti.id_tipologia = tipologie_prodotti.id WHERE prodotti.id = ?',
+            array( array( 's' => $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_prodotto'] ) ));
+    }
+
+    
+    if( isset( $_REQUEST['articoli']['id_prodotto']  ) ){
+        // dettagli tipologia
+        $ct['etc']['value']['tipologia'] = mysqlSelectRow(
+            $cf['mysql']['connection'], 
+            'SELECT tipologie_prodotti.* FROM tipologie_prodotti LEFT JOIN prodotti ON prodotti.id_tipologia = tipologie_prodotti.id WHERE prodotti.id = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] ) ));
     }
 
 	// macro di default

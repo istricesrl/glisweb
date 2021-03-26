@@ -73,23 +73,37 @@
             </div>    
         </fieldset>
 
+        {% if etc.value.tipologia.se_colori or etc.value.tipologia.se_taglie or etc.value.tipologia.se_dimensioni or etc.value.tipologia.se_imballo or etc.value.tipologia.se_stagioni or se_stagioni %}
         <fieldset>
             <legend>dettagli</legend>
             <div class="form-group form-row">
+                {% if etc.value.tipologia.se_colori %}
                 <div class="col-12 col-md">
                     <span class="label-top">colore</span>
                     {{ frm.select( table, '', '', 'id_colore', '', etc.select.colori, request ) }}
                 </div>
+                {% endif %}
+                {% if etc.value.tipologia.se_taglie %}
                 <div class="col-12 col-md">
                     <span class="label-top">taglia</span>
                     {{ frm.select( table, '', '', 'id_taglia', '', etc.select.taglie, request ) }}
                 </div>
+                {% endif %}
 
+                {% if etc.value.tipologia.se_stagioni %}
+                {% endif %}
+
+                {% if etc.value.tipologia.se_dimensioni %}
+                {% endif %}
+
+                {% if etc.value.tipologia.se_imballo %}
+                {% endif %}
             </div>
 
 		</fieldset>
+        {% endif %}
 
-		{# SUBFORM PUBBLICAZIONE #}
+        {# SUBFORM PUBBLICAZIONE #}
         {{ sub.pubblicazione( table, 'pubblicazione', 'pubblicazione', site, page, pages, localization.language.ietf, etc, request, session, 'id_articolo' ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
