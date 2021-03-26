@@ -9,6 +9,43 @@
 
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
+
+        <div class="form-row mt-2">
+            <div class="col-md-12 table-responsive">
+                <table class="view-table">
+                    <thead>
+                        <tr>
+                            <th>data pianificazione</th>
+                            <th>progetto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for k,v in etc.attivita %}
+                        <tr>
+                            <td>{{ k }}</td>
+                            <td class="text-left">
+                                <ul> 
+                                {% for p in v %}
+                                     <li>
+                                         {{ p.progetto }} - ORARI:                     
+                                         {% for a in p.attivita %}
+                                         [{{ a.ora_inizio_programmazione }} - {{ a.ora_fine_programmazione }}]
+                                         {% if loop.index < loop.length %} | {% endif %}
+                                         {% endfor %}
+
+                                     </li>
+                                {% endfor %}
+                                </ul>
+                            </td>                          
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <form class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">

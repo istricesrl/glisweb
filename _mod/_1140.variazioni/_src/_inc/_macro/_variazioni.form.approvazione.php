@@ -47,12 +47,12 @@
 
             $attivita = mysqlQuery( 
                 $cf['mysql']['connection'],
-                "SELECT id, id_anagrafica, data_programmazione, ora_inizio_programmazione, "
-                ."ora_fine_programmazione, id_progetto, progetto, TIMESTAMP( data_programmazione, ora_inizio) as timestamp_inizio, "
+                "SELECT id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
+                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, id_progetto, progetto, TIMESTAMP( data_programmazione, ora_inizio) as timestamp_inizio, "
                 ."TIMESTAMP( data_programmazione, ora_fine) as timestamp_fine FROM attivita_view "
                 ."WHERE id_anagrafica = ? "
                 ."AND ( ( TIMESTAMP( data_programmazione, ora_inizio) between ? and ? ) OR ( TIMESTAMP( data_programmazione, ora_fine) between ? and ? ) ) "
-                ."ORDER by data_programmazione, id"
+                ."ORDER by data_programmazione, id_progetto, ora_inizio_programmazione"
               ,
                 array(
                     array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ),
@@ -64,7 +64,8 @@
             );
 
            foreach( $attivita as $a ){
-               $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ] = $a;
+               $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['attivita'][ $a['id'] ] = $a;
+               $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['progetto'] = $a['progetto'];
            }
 
         // successivo per la creazione delle attività 
@@ -75,12 +76,9 @@
             // 5- vedo se ci sono attività già pianificate per quella fascia di data e ora e setto id_anagrafica NULL
         }
 
-
-
-
     }
 
- //   print_r( $ct['etc']['attivita'] );
+ //  print_r( $ct['etc']['attivita'] );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
