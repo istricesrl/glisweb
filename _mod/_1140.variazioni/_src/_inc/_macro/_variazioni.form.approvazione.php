@@ -67,12 +67,6 @@
                $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['progetto'] = $a['progetto'];
            }
 
-        // successivo per la creazione delle attività 
-            // 1- prendo la data
-            // 2- vado a vedere se c'è un turno attivo per quella data e quell'anagrafica
-            // 3- vado nel contratto attivo per l'anagrafica corrente e vedo per quel turno che orari sono previsti
-            // 4- creo una riga di attività con la tipologia inps indicata per ogni fascia di orari_contratti trovata
-            // 5- vedo se ci sono attività già pianificate per quella fascia di data e ora e setto id_anagrafica NULL
         }
 
     }
@@ -88,4 +82,4 @@
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
     require DIR_SRC_INC_MACRO . '_default.tools.php';
-    
+

@@ -58,7 +58,6 @@
             $data_ora_inizio = $p['data_inizio'] . " " . $p['ora_inizio'];
             $data_ora_fine = $p['data_fine'] . " " . $p['ora_fine'];
 
-            $u = 0;
             // aggiorno le attività coinvolte settando id_anagrafica NULL
             $u = mysqlQuery( 
                 $cf['mysql']['connection'],
@@ -79,7 +78,31 @@
             // status
             $status['info'][] = 'aggiornate ' . $u . ' righe dalla tabella attivita per il periodo ' . $p['data_inizio'] . ' ' . $p['ora_inizio'] . ' - ' . $p['data_fine'] . ' ' . $p['ora_fine'];
         }
+
+        // setto la data di approvazione della variazione alla data corrente
+        $approva = mysqlQuery(
+            $cf['mysql']['connection'],
+            "UPDATE variazioni_attivita SET data_approvazione = ? WHERE id = ?",
+            array(
+                array( 's' => date('Y-m-d') ),
+                array( 's' => $_REQUEST['id'])
+            )
+        );
+
+        $status['info'][] = 'variazione ' . $_REQUEST['id'] . ' approvata con data ' . date('Y-m-d');
+
+
+         // passo successivo: per ogni giorno di ogni riga periodi
+            // 1- prendo la data
+            // 2- vado a vedere se c'è un turno attivo per quella data e quell'anagrafica
+            // 3- vado nel contratto attivo per l'anagrafica corrente e vedo per quel turno che orari sono previsti
+            // 4- creo una riga di attività con la tipologia inps indicata per ogni fascia di orari_contratti trovata
+            // 5- vedo se ci sono attività già pianificate per quella fascia di data e ora e setto id_anagrafica NULL
         
+        // funzione utile:
+        /*
+            - funzione che partendo da data_inizio e data_fine restituisce l'elenco delle date comprese       
+        */
 
 
     } else {
