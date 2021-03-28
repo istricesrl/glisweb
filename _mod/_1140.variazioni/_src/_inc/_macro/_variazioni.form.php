@@ -44,7 +44,7 @@
         'SELECT id, __label__ FROM tipologie_attivita_inps_view' );
 
     
-    if( !isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
+    if( !isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) || isset( $_REQUEST[ $ct['form']['table'] ]['data_approvazione'] ) ) {
         $ct['page']['etc']['tabs'] = array_diff(
             $ct['page']['etc']['tabs'],
             ['variazioni.form.approvazione']
