@@ -22,16 +22,17 @@
 	$ct['view']['table'] = 'progetti_scoperti';
 
     // tabella per la gestione degli oggetti esistenti
-#	$ct['view']['open']['table'] = '';
+	$ct['view']['open']['table'] = 'progetti';
 
     // pagina per la gestione degli oggetti esistenti
-#	$ct['view']['open']['page'] = 'progetti.scoperte.form';
+	$ct['view']['open']['page'] = 'progetti.scoperti.form';
 
-$ct['view']['cols'] = array(
-    'id' => '#',
-    'cliente' => 'cliente',
-    '__label__' => 'nome'
-);
+    $ct['view']['cols'] = array(
+        'id' => '#',
+        'cliente' => 'cliente',
+        '__label__' => 'nome',
+        'data_scopertura' => 'scoperto dal'
+    );
 
 // stili della vista
 $ct['view']['class'] = array(

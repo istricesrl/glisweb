@@ -45,7 +45,7 @@
 		'etc'			=> array( 'tabs'	=> $p['variazioni.form']['etc']['tabs'] )
 	);
 
-	// dashboard progetti scoperti per sostituzioni
+	// view progetti scoperti per sostituzioni
 	$p['progetti.scoperti.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'progetti' ),
@@ -59,7 +59,18 @@
 														'priority'	=> '120' ) )
 	);
 
-	// dashboard attivita scoperte per sostituzioni 
+	$p['progetti.scoperti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'progetti.scoperti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.scoperti.form.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.scoperti.form.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'progetti.scoperti.form' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
+	// view attivita scoperte per sostituzioni 
 	$p['attivita.scoperte.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'attivita' ),
