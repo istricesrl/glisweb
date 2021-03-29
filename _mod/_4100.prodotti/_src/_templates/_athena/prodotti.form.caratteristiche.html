@@ -45,6 +45,11 @@
 		{# SUBFORM CARATTERISTICHE DEL PRODOTTO #}
         {{ sub.caratteristiche( table, 'prodotti_caratteristiche', 'caratteristiche del prodotto', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
 
+		{% if etc.value.tipologia.se_stagioni %}
+		{# SUBFORM STAGIONI DEL PRODOTTO #}
+        {{ sub.stagioni( table, 'prodotti_stagioni', 'stagioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
+		{% endif %}
+
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}

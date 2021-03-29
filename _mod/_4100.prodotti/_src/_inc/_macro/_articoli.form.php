@@ -65,7 +65,7 @@
     }
 
     
-    if( isset( $_REQUEST['articoli']['id_prodotto']  ) ){
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_prodotto']  ) ){
         // dettagli tipologia
         $ct['etc']['value']['tipologia'] = mysqlSelectRow(
             $cf['mysql']['connection'], 

@@ -22,12 +22,28 @@
     // tabella gestita
 	$ct['form']['table'] = 'prodotti';
 
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id']  ) ){
+        // dettagli tipologia
+        $ct['etc']['value']['tipologia'] = mysqlSelectRow(
+            $cf['mysql']['connection'], 
+            'SELECT tipologie_prodotti.* FROM tipologie_prodotti LEFT JOIN prodotti ON prodotti.id_tipologia = tipologie_prodotti.id WHERE prodotti.id = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ));
+    }
+
     // tendina caratteristiche
 	$ct['etc']['select']['caratteristiche'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM caratteristiche_prodotti_view'
+    );
+
+    // tendina stagioni
+	$ct['etc']['select']['stagioni'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM stagioni_prodotti_view'
     );
     
 	// tendina icona per caratteristica/opzione presente o meno
