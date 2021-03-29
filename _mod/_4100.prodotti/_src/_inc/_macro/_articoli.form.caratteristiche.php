@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form pagine
+     * macro form prodotti caratteristiche
      *
      *
      *
@@ -20,17 +20,17 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'categorie_prodotti';
+	$ct['form']['table'] = 'articoli';
 
-    // tendina id caratteristiche
-	$ct['etc']['select']['id_caratteristiche'] = mysqlCachedIndexedQuery(
+    // tendina caratteristiche
+	$ct['etc']['select']['caratteristiche'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM caratteristiche_prodotti_view'
     );
- 
-	// tendina icona per caratteristica/opzione presente o meno   
+    
+	// tendina icona per caratteristica/opzione presente o meno
 	$ct['etc']['select']['se_non_presente'] = array(
 	    array( 'id' => NULL, '__label__' => 'sì' ),
 	    array( 'id' => 1, '__label__' => 'no' )

@@ -344,7 +344,7 @@
 					// compongo la query
 					    $q = "INSERT INTO $t (" . implode( ',' , $ks ) . ") VALUES (" . implode( ',' , array_fill( 0 , count( $ks ) , '?' ) ) . ") ";
 					    foreach( $ks as $k ) { $vks[] = "$k=VALUES($k)"; }
-					    $q .= "ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id)," . implode( ',' , $vks );
+					    $q .= "ON DUPLICATE KEY UPDATE " . ( ( ! in_array( 'id', $ks ) ) ? "id=LAST_INSERT_ID(id)," : NULL ) . implode( ',' , $vks );
 
 				    break;
 
