@@ -1,15 +1,12 @@
 <?php
 
-    // funzione che restituisce il monte ore previsto da contratto per l'anagrafica corrente in una certa data e fascia oraria
-    // NOTA: le ore considerate sono quelle di quadratura
-    function oreGiornaliereContratto( $id_anagrafica, $data, $ora_inizio = '00:00:01', $ora_fine = '23:59:59' ){
-
+    // funzione che riceve in ingresso un id_anagrafica e una data e restituisce l'id del contratto attivo corrispondente
+    function contrattoAttivo( $id_anagrafica, $data ){
+        
         global $cf;
 
-        $result = array();
-
         // ricavo l'id del contratto attivo alla data indicata
-        $cId = mysqlSelectValue(
+        $c = mysqlSelectValue(
             $cf['mysql']['connection'], 
             'SELECT id FROM contratti WHERE id_anagrafica = ? AND data_inizio <= ? AND  ( '.
             'data_fine_rapporto >= ? OR ( data_fine_rapporto IS NULL AND ( data_fine IS NULL or data_fine >= ? )  ) ' .
@@ -21,6 +18,21 @@
                 array( 's' => $data )
             )
         );
+
+        return $c;
+
+    }
+
+    // funzione che restituisce il monte ore previsto da contratto per l'anagrafica corrente in una certa data e fascia oraria
+    // NOTA: le ore considerate sono quelle di quadratura
+    function oreGiornaliereContratto( $id_anagrafica, $data, $ora_inizio = '00:00:01', $ora_fine = '23:59:59' ){
+
+        global $cf;
+
+        $result = array();
+
+        // ricavo l'id del contratto attivo alla data indicata
+        $cId = contrattoAttivo( $id_anagrafica, $data );
 
         // se ho un contratto attivo
         if( !empty( $cId ) ){
