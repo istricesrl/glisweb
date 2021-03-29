@@ -102,15 +102,23 @@
 				</div>
 				{% endif %}
 			</fieldset>
-	
+			
 			{% if request[table].id %}
 			<fieldset>
 				<legend>pianificazione</legend>	
 
 				<div class="form-group form-row">
 					<div class="col-auto">
+						<span class="label-top">anno</span>
+						{{ frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, request ) }}
+					</div>
+					<div class="col-auto">
+						<span class="label-top">settimana</span>
+						{{ frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, request ) }}
+					</div>
+					<div class="col-auto">
 						<span class="label-top">data</span>
-						{{ frm.date( table, '', '', 'data_programmazione', '', '', request, 'now'|date('Y-m-d') ) }}
+						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
 					</div>
 					<div class="col-auto">
 						<span class="label-top">ora inizio</span>
