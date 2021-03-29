@@ -36,7 +36,7 @@
 	{
         $ct['etc']['sostituzioni'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT * FROM sostituzioni_attivita_view WHERE id_anagrafica = ?',
+            'SELECT * FROM sostituzioni_attivita_view WHERE id_anagrafica = ? AND data_accettazione IS NULL AND data_rifiuto IS NULL',
             array(
                 array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] )
             )

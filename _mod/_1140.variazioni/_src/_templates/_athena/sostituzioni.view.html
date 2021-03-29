@@ -5,6 +5,9 @@
 
 {% block main %}
 
+{# DEFINIZIONI #}
+{% set ietf = localization.language.ietf %}
+
 {# FORM DI GESTIONE #}
 
 <section class="row flex-fill">
@@ -46,6 +49,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>attività</th>
+                                <th>pianificazione</th>
                                 <th>progetto</th>
                                 <th>data richiesta</th>
                                 <th>&nbsp;</th>
@@ -57,10 +61,12 @@
                             <tr>
                                 <td class="text-left">{{ s.id }}</td>
                                 <td class="text-left">{{ s.attivita }}</td>
+                                <td class="text-left">{{ s.data_programmazione }} | {{ s.ora_inizio_programmazione }} - {{ s.ora_fine_programmazione }}</td>
                                 <td class="text-left">{{ s.progetto }}</td>
                                 <td class="text-left">{{ s.data_richiesta }}</td>
                                 <td>
-                                    <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="confermaSostituzione({{ s.id }});" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="conferma sostituzione">conferma sostituzione</button>
+                                    <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="confermaSostituzione({{ s.id }});" placeholder="accetta sostituzione"  data-placement="bottom" data-delay="1000" title="" data-original-title="accetta sostituzione">accetta</button>
+                                    <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="rifiutaSostituzione({{ s.id }});" placeholder="rifiuta sostituzione"  data-placement="bottom" data-delay="1000" title="" data-original-title="rifiuta sostituzione">rifiuta</button>
                                 </td>         
                             </tr>
                             {% endfor %}
@@ -77,11 +83,19 @@
 
 <script>
 
-    function confermaSostituzione( o ){
-        var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.request.php?id_attivita={{ request[table].id }}&id_anagrafica='+o;
+    function confermaSostituzione( s ){
+        var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.confirm.php?id='+s;
 
         getws( call,'', function() {
-           window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
+           window.open('{{ page.url[ietf] }}', '_self');
+        });
+    }
+
+    function rifiutaSostituzione( s ){
+        var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.decline.php?id='+s;
+
+        getws( call,'', function() {
+           window.open('{{ page.url[ietf] }}', '_self');
         });
     }
 
