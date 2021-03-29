@@ -25,6 +25,23 @@
     // tendina siti
     $ct['etc']['select']['siti'] = $cf['sites'];
  
+    /*
+    if( !isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ '__preset__' ] ) ) {
+
+	    $ct['etc']['caratteristiche_categoria'] = mySqlQuery( $cf['mysql']['connection'], 'SELECT * FROM categorie_prodotti_caratteristiche_view WHERE id_categoria = ?', array( array('s' => $_REQUEST[ '__preset__' ]['prodotti']['prodotti_categorie'][0]['id_categoria'] )) );
+
+	    foreach ( $ct['etc']['caratteristiche_categoria'] as $caratteristiche){
+	        $_REQUEST[ $ct['form']['table'] ]['prodotti_caratteristiche'][] = array(
+											'id_caratteristica' => $caratteristiche['id_caratteristica'],
+											'id_prodotto' => '__parent_id__',
+											'ordine' => $caratteristiche['ordine'],
+                                            'testo' => $caratteristiche['testo'],
+                                            'se_non_presente' => $caratteristiche['se_non_presente'],
+		);
+	    }
+
+	}
+*/
     // tendina produttori
 	$ct['etc']['select']['produttori'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],

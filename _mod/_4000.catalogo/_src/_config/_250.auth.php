@@ -36,6 +36,9 @@
 #		),
 #		'coupon_categorie_prodotti' => array(
 #		    CONTROL_FULL => array( 'roots' )
+        ),
+        'listini_gruppi' => array(
+            CONTROL_FULL => array( 'roots' )
         )
 	    )
 	);

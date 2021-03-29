@@ -29,7 +29,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'categorie.prodotti.view', 'caratteristiche.prodotti.view') ),
+	    'etc'		=> array( 'tabs'	=> array(	'categorie.prodotti.view') ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
 									'priority'	=> '010' ) )
 	);
