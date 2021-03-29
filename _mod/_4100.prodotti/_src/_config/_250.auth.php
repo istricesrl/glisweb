@@ -42,6 +42,9 @@
             ),
             'udm' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'listini' => array(
+                CONTROL_FULL => array( 'roots' )
             )
             )
 	);

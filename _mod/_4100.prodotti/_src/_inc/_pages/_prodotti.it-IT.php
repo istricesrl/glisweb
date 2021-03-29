@@ -345,3 +345,28 @@
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 	
+	// vista listini
+	$p['listini.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'listini' ),
+	    'h1'			=> array( $l		=> 'listini' ),
+	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_listini.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'listini.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'listini' ),
+								'priority'	=> '025' ) )
+	);
+
+	// gestione listini
+	$p['listini.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'listini.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'listini.form'		) )
+	);
