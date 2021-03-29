@@ -1,0 +1,2 @@
+ALTER TABLE `articoli_caratteristiche`
+ADD CONSTRAINT `articoli_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
