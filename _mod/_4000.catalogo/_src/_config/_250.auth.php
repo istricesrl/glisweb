@@ -27,9 +27,9 @@
 		),
 		'prodotti_categorie' => array(
 		    CONTROL_FULL => array( 'roots' )
-#		),
-#		'coupon' => array(
-#		    CONTROL_FULL => array( 'roots' )
+		),
+		'caratteristiche_prodotti' => array(
+		    CONTROL_FULL => array( 'roots' )
 #		),
 #		'coupon_prodotti' => array(
 #		    CONTROL_FULL => array( 'roots' )

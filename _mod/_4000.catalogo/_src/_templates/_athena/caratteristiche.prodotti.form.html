@@ -37,8 +37,8 @@
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    <!--input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}"-->
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
@@ -47,51 +47,13 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
-			<div class="col-12 col-md-auto">
-				<span class="label-top">sito</span>
-				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
-			</div>  
-			<div class="col-12 col-md-auto">
-				<span class="label-top">genitore</span>
-				{{ frm.select( table, '', '', 'id_genitore', '', etc.select.id_genitore, request ) }}
-			</div>  
 			<div class="col-12 col-md">
 				<span class="label-top">nome</span>
 				{{ frm.input( table, '', '', 'nome', 'nome', '', request ) }}
 		    </div>
 		</div>
 
-		<div class="form-group form-row">
-		    <div class="col-12">
-			<span class="label-top">note</span>
-			{{ frm.textarea( table, '', '', 'note', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
-		    </div>
-		</div>
-
 		</fieldset>
-
-	    <fieldset>
-		<legend>sito</legend>
-
-		<div class="form-group form-row">
-			<div class="col-12 col-md">
-				<span class="label-top">template</span>
-				{{ frm.select( table, '', '', 'template', '', etc.select.templates, request ) }}
-			</div>  
-			<div class="col-12 col-md">
-				<span class="label-top">schema</span>
-				{{ frm.select( table, '', '', 'schema_html', '', etc.select.schemi, request ) }}
-			</div>
-			<div class="col-12 col-md">
-				<span class="label-top">tema</span>
-				{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
-			</div>  
-		</div>  
-
-		</fieldset>
-
-		{# SUBFORM PUBBLICAZIONE #}
-        {{ sub.pubblicazione( table, 'pubblicazione', 'pubblicazione', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_prodotti' ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

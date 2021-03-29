@@ -368,5 +368,18 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'listini.form'		) )
+	    'etc'		=> array( 'tabs'	=> array(	'listini.form'	, 'listini.form.gruppi'	) )
+	);
+
+	// gestione listini gruppi
+	$p['listini.form.gruppi'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-users" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'gruppi' ),
+		'h1'		=> array( $l		=> 'gruppi' ),
+		'parent'		=> array( 'id'		=> 'listini.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.gruppi.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.gruppi.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['listini.form']['etc']['tabs'] )
 	);

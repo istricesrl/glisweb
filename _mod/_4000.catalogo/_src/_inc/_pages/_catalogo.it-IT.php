@@ -29,7 +29,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'categorie.prodotti.view') ),
+	    'etc'		=> array( 'tabs'	=> array(	'categorie.prodotti.view', 'caratteristiche.prodotti.view') ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
 									'priority'	=> '010' ) )
 	);
@@ -210,5 +210,31 @@
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 
+	 // vista caratteristiche prodotti
+	 $p['caratteristiche.prodotti.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'caratteristiche' ),
+	    'h1'		=> array( $l		=> 'caratteristiche' ),
+	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_caratteristiche.prodotti.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'caratteristiche.prodotti.view') ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'caratteristiche' ),
+									'priority'	=> '022' ) )
+	);
+
+	 // gestione catecaratteristichegorie prodotti
+	 $p['caratteristiche.prodotti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'caratteristiche.prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'caratteristiche.prodotti.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_caratteristiche.prodotti.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'caratteristiche.prodotti.form' ) )
+	 );
+	
     // debug
 	// die( print_r( $p ) );
