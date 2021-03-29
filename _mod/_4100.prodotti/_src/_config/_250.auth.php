@@ -45,6 +45,9 @@
             ),
             'listini' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'listini_gruppi' => array(
+                CONTROL_FULL => array( 'roots' )
             )
             )
 	);

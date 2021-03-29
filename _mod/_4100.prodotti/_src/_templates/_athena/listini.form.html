@@ -37,6 +37,8 @@
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+        <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
