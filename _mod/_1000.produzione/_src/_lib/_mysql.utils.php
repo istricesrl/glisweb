@@ -112,7 +112,7 @@
         // verifico se ci sono attività passate legate a questo operatore per questo progetto, estraendo la data di ultima attività eventualmente svolta
         $a = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT max(data_attivita) FROM attivita_view WHERE id_anagrafica = ? AND id_progetto = ? AND data_attivita < ?',
+            'SELECT max(data_programmazione) FROM attivita_view WHERE id_anagrafica = ? AND id_progetto = ? AND data_programmazione < ?',
             array(
                 array( 's' => $id_anagrafica ),
                 array( 's' => $id_progetto ),
@@ -135,8 +135,7 @@
 
             // sottraggo 1 punto per ogni settimana passata tra l'ultima attività e quella da effettuare
             $punti -= ($cw - $lw);
-
-           
+  
        }
         
     //   $result['punti'] = $punti;
@@ -189,6 +188,13 @@
 
         //return $result;
         return $punti;
-    
+
+    }
+
+    function puntiDistanzaAttivita( $id_anagrafica, $id_attivita ){
+
+    }
+
+    function puntiDistanzaProgetto( $id_anagrafica, $id_progetto ){
 
     }
