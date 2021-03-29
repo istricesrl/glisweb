@@ -38,7 +38,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_embed_view  WHERE se_audio = 1'
+	    'SELECT id, __label__ FROM tipologie_embed_view'
 	); 
 
     // macro di default
