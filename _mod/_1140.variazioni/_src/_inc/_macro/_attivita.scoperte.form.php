@@ -22,10 +22,11 @@
    
     // escludere le anagrafiche per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
     
+    // estraggo tutte le info che mi servono per l'attività corrente
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
         $a = mysqlSelectRow(
             $cf['mysql']['connection'],
-            "SELECT id_progetto, data_programmazione, TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
+            "SELECT id_progetto, data_programmazione, ora_inizio_programmazione, ora_fine_programmazione, TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
             ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita_view "
             ."WHERE id = ?",
             array(
@@ -58,16 +59,19 @@
         $ct['etc']['operatori'] = array();
 
         foreach( $operatori as $o ){
-        #    $ct['etc']['operatori'][ $o['id'] ] = $o;
-  
-            // calcolo punteggi vari con le funzioni
-            $o['punteggio'] = puntiConoscenzaProgetto( $o['id'], $a['id_progetto'], $a['data_programmazione']);   // funzione da creare per Fabio
-    #        $o['punteggio'] += puntiDisponibilitaOperatore();  // funzione da creare per me > solo per l'attività
+           
+        
+        // calcolo punteggi vari con le funzioni
+            $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id'], $a['id_progetto'], $a['data_programmazione']);
+            $o['punti_disponibilita'] = puntiDisponibilitaOperatore( $o['id'], $a['data_programmazione'], $a['ora_inizio_programmazione'], $a['ora_fine_programmazione'] );
+            
+            $o['punteggio'] = $o['punti_progetto'];
+            $o['punteggio'] += $o['punti_disponibilita'];
     #        $o['punteggio'] -= puntiDistanzaProgetto();  // funzione da creare per Fabio
             
-            // TODO: prevedere parte per audit qualità
+            // TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
 
-            echo "operatore: " . $o['id'] . "-" . $o['__label__'] . " punteggio: " . $o['punteggio'] . "<br>";
+//            echo "operatore: " . $o['id'] . "-" . $o['__label__'] . " punteggio: " . $o['punteggio'] . "<br>";
 
 /*          while( !array_key_exists( $o['punteggio'], $ct['etc']['operatori'] ) ){
                 $o['punteggio']++;
@@ -83,14 +87,16 @@
             $o['punteggio'] -= puntiDistanzaProgetto();  // funzione da creare per Fabio
     */
 
+            $ct['etc']['operatori'][ $o['id'] ] = $o;
 
         }
 
-        ksort( $ct['etc']['operatori'], SORT_DESC|SORT_NUMERIC );
+    //    ksort( $ct['etc']['operatori'], SORT_DESC|SORT_NUMERIC );
 
-    //   print_r( $ct['etc']['operatori'] );
-    // print_r(  $operatori );
+
     }
+
+//    print_r(  $ct['etc']['operatori'] );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
