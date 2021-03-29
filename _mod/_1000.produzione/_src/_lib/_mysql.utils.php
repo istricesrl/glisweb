@@ -83,8 +83,35 @@
 
         $result['ore'] = round( $ore, 2);
        
-    //    return $result;
-        
+    //    return $result;       
         return round( $ore, 2);
        
     }
+
+
+    // funzione che verifica se un operatore ha già lavorato ad un dato progetto prima di una certa data e restituisce un punteggio
+    function puntiConoscenzaProgetto( $id_anagrafica, $id_progetto, $data ){
+        // 100 punti se conosce già il progetto, 0 altrimenti
+
+        global $cf;
+        
+        $punti = 0;
+
+        // verifico se ci sono attività passate legate a questo operatore
+        $a = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT count(*) AS attivita_precedenti FROM attivita WHERE id_anagrafica = ? AND id_progetto = ? AND data_attivita < ?',
+            array(
+                array( 's' => $id_anagrafica ),
+                array( 's' => $id_progetto ),
+                array( 's' => $data )
+            )
+        );
+
+        if( $a > 0 ){
+            $punti = 100;
+        }
+
+        return $punti;
+    }
+

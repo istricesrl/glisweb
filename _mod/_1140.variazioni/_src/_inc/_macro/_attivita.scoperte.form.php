@@ -25,7 +25,7 @@
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
         $a = mysqlSelectRow(
             $cf['mysql']['connection'],
-            "SELECT TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
+            "SELECT id_progetto, data_programmazione, TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
             ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita_view "
             ."WHERE id = ?",
             array(
@@ -58,34 +58,35 @@
         $ct['etc']['operatori'] = array();
 
         foreach( $operatori as $o ){
-            $ct['etc']['operatori'][ $o['id'] ] = $o;
-
-    /*
+        #    $ct['etc']['operatori'][ $o['id'] ] = $o;
+  
             // calcolo punteggi vari con le funzioni
-            $o['punteggio'] = punticonosceCantiere();   // funzione da creare per Fabio
-            $o['punteggio'] += puntiDisponibilita();  // funzione da creare per me > solo per l'attività
-            $o['punteggio'] -= puntiDistanzaCantiere();  // funzione da creare per Fabio
+            $o['punteggio'] = puntiConoscenzaProgetto( $o['id'], $a['id_progetto'], $a['data_programmazione']);   // funzione da creare per Fabio
+    #        $o['punteggio'] += puntiDisponibilitaOperatore();  // funzione da creare per me > solo per l'attività
+    #        $o['punteggio'] -= puntiDistanzaProgetto();  // funzione da creare per Fabio
             
             // TODO: prevedere parte per audit qualità
 
-            // idem per altre funzioni
-            while( !array_key_exists( $o['punteggio'], $ct['etc']['operatori'] ) ){
+            echo "operatore: " . $o['id'] . "-" . $o['__label__'] . " punteggio: " . $o['punteggio'] . "<br>";
+
+/*          while( !array_key_exists( $o['punteggio'], $ct['etc']['operatori'] ) ){
                 $o['punteggio']++;
             }
+    
             $ct['etc']['operatori'][ $o['punteggio'] ] = $o;
-
+*/
 
             // per cantiere la funzione che calcola la disponibilità deve restituire la percentuale 
             // rapporto tra numero di attività che può coprire e numero attività totali
-            $o['punteggio'] = punticonosceCantiere();   // funzione da creare per Fabio
-            $o['punteggio'] += puntiCopertura();  // funzione da creare per me > solo per il cantiere
-            $o['punteggio'] -= puntiDistanzaCantiere();  // funzione da creare per Fabio
+    /*        $o['punteggio'] = puntiConoscenzaProgetto();   // funzione da creare per Fabio
+            $o['punteggio'] += puntiCoperturaProgetto();  // funzione da creare per me > solo per il cantiere: numero attività che può coprire
+            $o['punteggio'] -= puntiDistanzaProgetto();  // funzione da creare per Fabio
     */
 
 
         }
 
-    //    ksort( $ct['etc']['operatori'], SORT_DESC|SORT_NUMERIC );
+        ksort( $ct['etc']['operatori'], SORT_DESC|SORT_NUMERIC );
 
     //   print_r( $ct['etc']['operatori'] );
     // print_r(  $operatori );
