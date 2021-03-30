@@ -28,9 +28,9 @@
                     <thead>
                         <tr>
                             <th>operatore</th>
-                            <th>conoscenza cantiere</th>
+                            <th>progetto</th>
                             <th>disponibilità</th>
-                            <th>distanza km</th>
+                            <th>distanza</th>
                             <!--
                                 <th>blocchi (es. il cliente non vuole quell'operatore)</th>
                             -->
@@ -42,8 +42,8 @@
                         {% for o in etc.operatori %}
                         <tr>
                             <td class="text-left">{{ o.__label__ }}</td>
-                            <td><i class="fa fa-check" aria-hidden="true"></i></td>
-                            <td><i class="fa fa-check" aria-hidden="true"></i></td>
+                            <td>{{ o.punti_progetto }}</td>
+                            <td>{{ o.punti_disponibilita }}</td>
                             <td>8.5</td>
                             <td>
                                 <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="nomina({{ o.id }});" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>

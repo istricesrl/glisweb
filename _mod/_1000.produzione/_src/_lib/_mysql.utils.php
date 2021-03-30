@@ -1,15 +1,12 @@
 <?php
 
-    // funzione che restituisce il monte ore previsto da contratto per l'anagrafica corrente in una certa data e fascia oraria
-    // NOTA: le ore considerate sono quelle di quadratura
-    function oreGiornaliereContratto( $id_anagrafica, $data, $ora_inizio = '00:00:01', $ora_fine = '23:59:59' ){
-
+    // funzione che riceve in ingresso un id_anagrafica e una data e restituisce l'id del contratto attivo corrispondente
+    function contrattoAttivo( $id_anagrafica, $data ){
+        
         global $cf;
 
-        $result = array();
-
         // ricavo l'id del contratto attivo alla data indicata
-        $cId = mysqlSelectValue(
+        $c = mysqlSelectValue(
             $cf['mysql']['connection'], 
             'SELECT id FROM contratti WHERE id_anagrafica = ? AND data_inizio <= ? AND  ( '.
             'data_fine_rapporto >= ? OR ( data_fine_rapporto IS NULL AND ( data_fine IS NULL or data_fine >= ? )  ) ' .
@@ -21,6 +18,21 @@
                 array( 's' => $data )
             )
         );
+
+        return $c;
+
+    }
+
+    // funzione che restituisce il monte ore previsto da contratto per l'anagrafica corrente in una certa data e fascia oraria
+    // NOTA: le ore considerate sono quelle di quadratura
+    function oreGiornaliereContratto( $id_anagrafica, $data, $ora_inizio = '00:00:01', $ora_fine = '23:59:59' ){
+
+        global $cf;
+
+        $result = array();
+
+        // ricavo l'id del contratto attivo alla data indicata
+        $cId = contrattoAttivo( $id_anagrafica, $data );
 
         // se ho un contratto attivo
         if( !empty( $cId ) ){
@@ -83,8 +95,106 @@
 
         $result['ore'] = round( $ore, 2);
        
-    //    return $result;
-        
+    //    return $result;       
         return round( $ore, 2);
        
+    }
+
+
+    // funzione che verifica se un operatore ha già lavorato ad un dato progetto prima di una certa data e restituisce un punteggio
+
+    function puntiConoscenzaProgetto( $id_anagrafica, $id_progetto, $data ){
+
+        global $cf;
+        
+        $punti = 0;
+
+        // verifico se ci sono attività passate legate a questo operatore per questo progetto, estraendo la data di ultima attività eventualmente svolta
+        $a = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT max(data_programmazione) FROM attivita_view WHERE id_anagrafica = ? AND id_progetto = ? AND data_programmazione < ?',
+            array(
+                array( 's' => $id_anagrafica ),
+                array( 's' => $id_progetto ),
+                array( 's' => $data )
+            )
+        );
+
+        $result['ultima_attivita'] = $a;
+
+        if( !empty( $a ) ){
+            // inizializzo il punteggio a 100
+            $punti = 100;
+
+            // calcolo il numero di settimane passate tra la data di ultima attività e la data dell'attività da svolgere
+            $lw = date('W', strtotime( $a ) );
+            $cw = date('W', strtotime( $data ) );
+
+            $result['settimana_ultima_attivita'] = $lw;
+            $result['settimana_attivita_corrente'] = $cw;
+
+            // sottraggo 1 punto per ogni settimana passata tra l'ultima attività e quella da effettuare
+            $punti -= ($cw - $lw);
+  
+       }
+        
+    //   $result['punti'] = $punti;
+    //  return $result;
+    
+        return $punti;
+    }
+
+
+    /* funzione che verifica se un operatore da contratto è disponibile in una certa data/fascia oraria e restituisce:
+        - 50 punti se sì
+        - 0 punti se no
+    */
+    function puntiDisponibilitaOperatore( $id_anagrafica, $data, $ora_inizio = '00:00:01', $ora_fine = '23:59:59' ){
+
+        $punti = 0;
+        
+        global $cf;
+
+        // calcolo l'id del contratto attivo in quella data
+        $cId = contrattoAttivo(  $id_anagrafica, $data );
+
+        $result['contratto'] = $cId;
+
+        // numero del giorno da confrontare con gli orari contratti (1: lunedi -> 7: domenica)
+        $giorno = ( date( 'w', strtotime( $data ) ) == 0 ) ? '7' : date( 'w', strtotime( $data ) );
+
+        $result['giorno'] = $giorno;
+
+        $disponibile = mysqlSelectValue(
+            $cf['mysql']['connection'], 
+            'SELECT count(*) FROM orari_contratti '
+            .'WHERE orari_contratti.se_disponibile = 1 '
+            .'AND orari_contratti.id_contratto = ? '
+            .'AND orari_contratti.id_giorno = ? '
+            .'AND orari_contratti.ora_inizio <= ? AND orari_contratti.ora_fine >= ? ',
+            array(
+                array( 's' => $cId ),
+                array( 's' => $giorno ),
+                array( 's' => $ora_inizio ),
+                array( 's' => $ora_fine )
+            )
+        );
+
+        $result['disponibile'] = $disponibile;
+
+        if( $disponibile > 0 ){
+            $punti = 50;
+        }
+
+        //return $result;
+        return $punti;
+
+    }
+
+    function puntiDistanzaAttivita( $id_anagrafica, $id_attivita ){
+
+    }
+
+    function puntiDistanzaProgetto( $id_anagrafica, $id_progetto ){
+
     }
