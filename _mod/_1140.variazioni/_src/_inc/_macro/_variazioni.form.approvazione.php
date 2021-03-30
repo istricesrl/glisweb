@@ -28,12 +28,19 @@
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['periodi_variazioni_attivita'] ) ) {
         
         // per ogni riga di periodo devo vedere se ci sono attività che hanno data e ora programmazione in quel range, completamente o parzialmente
-        // se sì aggiungo il cantiere e la data all'array dei risultati da mostrare in dashboard
-        // nota: come gestiamo le date? la dashboard deve mostrarmi solo le date interessate? se sono troppe (es. uno va in aspettativa o in maternità 3 mesi) e non ci stanno?
+        // se sì aggiungo il progetto e la data all'array dei risultati da mostrare in dashboard
         
+        // elenco dei progetti per cui sono presenti attività coinvolte
+        $prog = array();
+
         foreach( $_REQUEST[ $ct['form']['table'] ]['periodi_variazioni_attivita'] as $p ){
-            // se l'ora inizio non è settata parto dalla mezzanotte, idem per l'ora fine
             
+            // la data_fine maggiore nell'elenco periodi
+            if( !isset( $ct['etc']['datamax'] ) || $ct['etc']['datamax'] < $p['data_fine'] ){
+                $ct['etc']['datamax'] = $p['data_fine'];
+            }
+
+            // se l'ora inizio non è settata parto dalla mezzanotte, idem per l'ora fine
             if( empty( $p['ora_inizio'] ) ){
                 $p['ora_inizio'] = '00:00:01';
             }
@@ -44,11 +51,14 @@
             $data_ora_inizio = $p['data_inizio'] . " " . $p['ora_inizio'];
             $data_ora_fine = $p['data_fine'] . " " . $p['ora_fine'];
 
-
+            // elenco delle righe di attività già pianificate coinvolte nella sostituzione
             $attivita = mysqlQuery( 
                 $cf['mysql']['connection'],
-                "SELECT id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
-                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, id_progetto, progetto FROM attivita_view "
+                "SELECT attivita_view.id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
+                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, id_progetto, progetto, "
+                ."coalesce( p1.id, p2.id) AS id_pianificazione, coalesce( p1.data_ultimo_oggetto, p2.data_ultimo_oggetto) as data_ultimo_oggetto FROM attivita_view "
+                ."LEFT JOIN pianificazioni as p1 ON attivita_view.id_pianificazione = p1.id "
+                ."LEFT JOIN pianificazioni as p2 ON attivita_view.id_todo = p2.id_todo "
                 ."WHERE id_anagrafica = ? "
                 ."AND ( ( TIMESTAMP( data_programmazione, ora_inizio_programmazione ) between ? and ? ) OR ( TIMESTAMP( data_programmazione, ora_fine_programmazione ) between ? and ? ) ) "
                 ."ORDER by data_programmazione, id_progetto, ora_inizio_programmazione"
@@ -62,20 +72,59 @@
                 )
             );
 
+            
            foreach( $attivita as $a ){
-               $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['attivita'][ $a['id'] ] = $a;
-               $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['progetto'] = $a['progetto'];
-           }
+        /*       $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['attivita'][ $a['id'] ] = $a;
+               $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['progetto'] = $a['progetto']; */ 
+           
+                $ct['etc']['attivita'][ $a['id'] ] = $a;
+            }          
+        }
 
+        // se ho un valore di data_fine massima settato
+        if( isset( $ct['etc']['datamax']) ){
+
+            // per ogni riga di attività individuata
+            foreach( $ct['etc']['attivita'] as &$a ){
+                if( !empty( $a['data_ultimo_oggetto'] ) && $a['data_ultimo_oggetto'] < $ct['etc']['datamax'] ){
+                    $a['estendi'] = 1;     // bisogna allungare la pianificazione
+                }
+
+                // aggiungo il progetto all'elenco di quelli verificati
+                $prog[] = $a['id_progetto'];
+            }
+
+            // cerco l'elenco dei progetti in cui è coinvolto quell'operatore per capire l'ultima data di programmazione
+           $progetti = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT DISTINCT attivita_view.id_progetto, attivita_view.progetto, attivita_view.id_pianificazione, pianificazioni.data_ultimo_oggetto '
+                .'FROM attivita_view INNER JOIN pianificazioni ON attivita_view.id_pianificazione = pianificazioni.id '
+                .'WHERE pianificazioni.giorni_rinnovo > 0 AND pianificazioni.data_ultimo_oggetto < ? '
+                .'AND attivita_view.id_anagrafica = ?',
+                array(
+                    array( 's' => $ct['etc']['datamax'] ),
+                    array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] )
+                )
+            );
+
+            foreach( $progetti as $p ){
+                // se il progetto non è tra quelli già individuati in precedenza, lo aggiungo all'elenco di quelli da verificare
+                if( !in_array( $p['id_progetto'], $prog ) ){
+                    $ct['etc']['progetti'][ $p['id_progetto'] ] = $p;
+                }
+            }     
         }
 
     }
 
- //  print_r( $ct['etc']['attivita'] );
-
     // modal per la conferma di approvazione
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'conferma', 'include' => 'inc/variazioni.form.approvazione.modal.conferma.html' )
+    );
+
+    // modal per la conferma di allungamento pianificazione
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'estendi', 'include' => 'inc/variazioni.form.approvazione.modal.estendi.html' )
     );
 
 	// macro di default
