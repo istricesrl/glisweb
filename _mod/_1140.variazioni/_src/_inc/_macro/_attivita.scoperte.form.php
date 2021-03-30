@@ -20,9 +20,7 @@
     // tabella gestita
 	$ct['form']['table'] =  'attivita';
    
-    // escludere le anagrafiche per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
-    
-    // estraggo tutte le info che mi servono per l'attività corrente
+    // se ho un'attività, cerco i sostituti
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
         // richiamo la funzione che ritorna l'array degli operatori coi punteggi

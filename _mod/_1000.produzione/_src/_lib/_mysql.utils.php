@@ -215,6 +215,8 @@
             )
         );
 
+        // escludere le anagrafiche per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
+
         // TODO silvia: questa parte che calcola operatori e punteggio metterla in una funzione e richiamarla per ogni attività del progetto nella macro _progetti.scoperti.form.php
         $operatori = mysqlQuery(
             $cf['mysql']['connection'],
