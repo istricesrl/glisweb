@@ -56,7 +56,8 @@
                 $cf['mysql']['connection'],
                 "SELECT attivita_view.id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
                 ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, id_progetto, progetto, "
-                ."coalesce( p1.id, p2.id) AS id_pianificazione, coalesce( p1.data_fine, p2.data_fine) as ultima_data FROM attivita_view "
+                ."coalesce( p1.id, p2.id) AS id_pianificazione, coalesce( p1.data_fine, p2.data_fine) as data_fine, "
+                ."coalesce( p1.giorni_rinnovo, p2.giorni_rinnovo) as giorni_rinnovo FROM attivita_view "
                 ."LEFT JOIN pianificazioni as p1 ON attivita_view.id_pianificazione = p1.id "
                 ."LEFT JOIN pianificazioni as p2 ON attivita_view.id_todo = p2.id_todo "
                 ."WHERE id_anagrafica = ? "
@@ -86,7 +87,7 @@
 
             // per ogni riga di attività individuata
             foreach( $ct['etc']['attivita'] as &$a ){
-                if( !empty( $a['ultima_data'] ) && $a['ultima_data'] < $ct['etc']['datamax'] ){
+                if( !empty( $a['data_fine'] ) && $a['data_fine'] < $ct['etc']['datamax'] && $a['giorni_rinnovo'] > 0 ){
                     $a['estendi'] = 1;     // bisogna allungare la pianificazione
                 }
 
@@ -109,7 +110,7 @@
 */
             $progetti = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SELECT a.id_progetto, a.progetto, min( p.data_fine ) as ultima_data FROM pianificazioni as p '
+                'SELECT a.id_progetto, a.progetto, min( p.data_fine ) as data_fine FROM pianificazioni as p '
                 .'INNER JOIN attivita_view as a ON ( p.id_todo = a.id_todo AND a.id_anagrafica = ? ) '
                 .'WHERE p.data_fine < ? AND p.giorni_rinnovo > 0 '
                 .'GROUP BY a.id_progetto',
