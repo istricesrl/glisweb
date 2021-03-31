@@ -56,7 +56,7 @@
                 $cf['mysql']['connection'],
                 "SELECT attivita_view.id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
                 ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, id_progetto, progetto, "
-                ."coalesce( p1.id, p2.id) AS id_pianificazione, coalesce( p1.data_ultimo_oggetto, p2.data_ultimo_oggetto) as data_ultimo_oggetto FROM attivita_view "
+                ."coalesce( p1.id, p2.id) AS id_pianificazione, coalesce( p1.data_fine, p2.data_fine) as ultima_data FROM attivita_view "
                 ."LEFT JOIN pianificazioni as p1 ON attivita_view.id_pianificazione = p1.id "
                 ."LEFT JOIN pianificazioni as p2 ON attivita_view.id_todo = p2.id_todo "
                 ."WHERE id_anagrafica = ? "
@@ -86,7 +86,7 @@
 
             // per ogni riga di attività individuata
             foreach( $ct['etc']['attivita'] as &$a ){
-                if( !empty( $a['data_ultimo_oggetto'] ) && $a['data_ultimo_oggetto'] < $ct['etc']['datamax'] ){
+                if( !empty( $a['ultima_data'] ) && $a['ultima_data'] < $ct['etc']['datamax'] ){
                     $a['estendi'] = 1;     // bisogna allungare la pianificazione
                 }
 
@@ -95,7 +95,7 @@
             }
 
             // cerco l'elenco dei progetti in cui è coinvolto quell'operatore per capire l'ultima data di programmazione
-           $progetti = mysqlQuery(
+        /*   $progetti = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT DISTINCT attivita_view.id_progetto, attivita_view.progetto, attivita_view.id_pianificazione, pianificazioni.data_ultimo_oggetto '
                 .'FROM attivita_view INNER JOIN pianificazioni ON attivita_view.id_pianificazione = pianificazioni.id '
@@ -106,12 +106,24 @@
                     array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] )
                 )
             );
+*/
+            $progetti = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT a.id_progetto, a.progetto, min( p.data_fine ) as ultima_data FROM pianificazioni as p '
+                .'INNER JOIN attivita_view as a ON ( p.id_todo = a.id_todo AND a.id_anagrafica = ? ) '
+                .'WHERE p.data_fine < ? AND p.giorni_rinnovo > 0 '
+                .'GROUP BY a.id_progetto',
+                array(
+                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ),
+                    array( 's' => $ct['etc']['datamax'] )
+                )
+            );
 
             foreach( $progetti as $p ){
                 // se il progetto non è tra quelli già individuati in precedenza, lo aggiungo all'elenco di quelli da verificare
-                if( !in_array( $p['id_progetto'], $prog ) ){
+            #    if( !in_array( $p['id_progetto'], $prog ) ){
                     $ct['etc']['progetti'][ $p['id_progetto'] ] = $p;
-                }
+            #    }
             }     
         }
 

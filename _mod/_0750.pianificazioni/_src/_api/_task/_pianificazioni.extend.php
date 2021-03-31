@@ -68,6 +68,7 @@
     // se c'è almeno una riga da inviare
     if( ! empty( $current ) ) {
 
+        // questa parte sostituisce quella dopo per il calcolo della nuova data di fine: se mi arriva in request uso quella
         if( !empty( $_REQUEST['data_fine'] ) ){
             $status['fine'] = $_REQUEST['data_fine'];
         }
