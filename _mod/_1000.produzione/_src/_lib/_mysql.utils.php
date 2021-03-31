@@ -191,10 +191,118 @@
 
     }
 
-    function puntiDistanzaAttivita( $id_anagrafica, $id_attivita ){
+    function puntiDistanzaAttivita( $id_anagrafica, $id_attivita ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // seleziono le coordinate di eventuali attività nell'ora precedente
+        $cBase = mysqlSelectRow(
+            $cf['mysql']['connection'], 
+            'SELECT t1.latitudine, t1.longitudine, a1.data_programmazione, a1.ora_inizio_programmazione, a1.ora_fine_programmazione '.
+            'FROM indirizzi AS t1 '.
+            'INNER JOIN attivita_view AS a1 ON a1.id_indirizzo = t1.id '.
+            'WHERE a1.id = ?',
+            array(
+                array( 's' => $id_attivita )
+            )
+        );
+
+        // se non è possibile trovare le coordinate dell'attività base
+        if( empty( $cBase ) ) {
+
+            return 0;
+
+        } else {
+
+            $cCasa = mysqlSelectRow(
+                $cf['mysql']['connection'], 
+                'SELECT t1.latitudine, t1.longitudine '.
+                'FROM indirizzi AS t1 '.
+                'INNER JOIN anagrafica_indirizzi AS a1 ON a1.id_indirizzo = t1.id '.
+                'INNER JOIN tipologie_indirizzi AS ti ON ti.id = a1.id_tipologia '.
+                'WHERE a1.id_anagrafica = ? AND ti.se_abitazione = 1 '.
+                'LIMIT 1',
+                array(
+                    array( 's' => $id_anagrafica )
+                )
+            );
+
+            $cPrima = mysqlSelectRow(
+                $cf['mysql']['connection'], 
+                'SELECT t1.latitudine, t1.longitudine '.
+                'FROM indirizzi AS t1 '.
+                'INNER JOIN attivita_view AS a1 ON a1.id_indirizzo = t1.id '.
+                'WHERE a1.id_anagrafica = ? '.
+                'AND a1.data_programmazione = ? '.
+                'AND a1.ora_fine_programmazione < ? '.
+                'ORDER BY a1.ora_fine_programmazione DESC '.
+                'LIMIT 1',
+                array(
+                    array( 's' => $id_anagrafica ),
+                    array( 's' => $cBase['data_programmazione'] ),
+                    array( 's' => $cBase['ora_inizio_programmazione'] )
+                )
+            );
+
+            if( empty( $cPrima ) ) { $cPrima = $cCasa; }
+
+            $cDopo = mysqlSelectRow(
+                $cf['mysql']['connection'], 
+                'SELECT t1.latitudine, t1.longitudine '.
+                'FROM indirizzi AS t1 '.
+                'INNER JOIN attivita_view AS a1 ON a1.id_indirizzo = t1.id '.
+                'WHERE a1.id_anagrafica = ? '.
+                'AND a1.data_programmazione = ? '.
+                'AND a1.ora_inizio_programmazione > ? '.
+                'ORDER BY a1.ora_inizio_programmazione ASC '.
+                'LIMIT 1',
+                array(
+                    array( 's' => $id_anagrafica ),
+                    array( 's' => $cBase['data_programmazione'] ),
+                    array( 's' => $cBase['ora_fine_programmazione'] )
+                )
+            );
+
+            if( empty( $cDopo ) ) { $cDopo = $cCasa; }
+
+            if( empty( $cPrima ) || empty( $cDopo ) ) {
+
+                return 0;
+
+            } else {
+
+                // calcolo le distanze
+                $dPrima = getCoordsDistance(
+                    $cBase['latitudine'], $cBase['longitudine'],
+                    $cPrima['latitudine'], $cPrima['longitudine']
+                );
+
+                $dDopo = getCoordsDistance(
+                    $cBase['latitudine'], $cBase['longitudine'],
+                    $cDopo['latitudine'], $cDopo['longitudine']
+                );
+
+                // calcolo il punteggio
+                $punti = 100 - ( $dPrima + $dDopo );
+            
+                // return
+                return ( $punti > 0 ) ? $punti : 0;
+
+            }
+
+        }
 
     }
 
-    function puntiDistanzaProgetto( $id_anagrafica, $id_progetto ){
+    function puntiDistanzaProgetto( $id_anagrafica, $id_progetto ) {
+
+        // seleziono le coordinate del domicilio
+
+        // seleziono le coordinate del progetto
+
+        // calcolo la distanza
+
+        // calcolo il punteggio
 
     }
