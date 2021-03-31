@@ -84,6 +84,13 @@
                 array( 's' => $status['token'] ) )
             );
 
+            // se mi arriva un parametro hard chiamo la populate che crea gli eventi per la pianificazione appena estesa
+            if( ! empty( $_REQUEST['hard'] ) ) {
+                restcall(
+                    $cf['site']['url'] . '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php?id=' . $current['id']
+                );
+            }
+
         } else {
 
             // query
