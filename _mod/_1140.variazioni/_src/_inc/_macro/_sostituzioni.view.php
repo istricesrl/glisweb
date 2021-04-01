@@ -29,7 +29,7 @@
 	$ct['etc']['select']['operatori'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id_anagrafica as id, anagrafica as __label__ FROM sostituzioni_attivita_view'
+        'SELECT DISTINCT id_anagrafica as id, anagrafica as __label__ FROM sostituzioni_attivita_view'
     );
 
     if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && !empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) ) 
