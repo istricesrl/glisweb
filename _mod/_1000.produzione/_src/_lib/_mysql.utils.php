@@ -139,8 +139,7 @@
        }
         
     //   $result['punti'] = $punti;
-    //  return $result;
-    
+   
         return $punti;
     }
 
@@ -307,8 +306,53 @@
 
     }
 
+
+     // funzione che verifica se un operatore può essere chiamato a coprire un'attività
+     function coperturaAttivita( $id_anagrafica, $id_attivita ){
+
+        global $cf;
+
+        $copertura = 0;
+
+        // estraggo i dati che mi occorrono per l'attività
+        $a = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            "SELECT TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
+            ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita_view "
+            ."WHERE id = ?",
+            array(
+                array( 's' => $id_attivita )
+            )
+        );
+
+        // conteggio delle eventuali attività in collisione
+        $collisioni = mysqlSelectValue(
+            $cf['mysql']['connection'],
+                "SELECT count(*) FROM attivita_view WHERE id_anagrafica = ? "
+                ."AND ( "
+                    ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
+                    ."OR "
+                    ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
+                .") ",
+            array(
+                array( 's' => $id_anagrafica ),
+                array( 's' => $a['data_ora_inizio'] ),
+                array( 's' => $a['data_ora_fine'] ),
+                array( 's' => $a['data_ora_inizio'] ),
+                array( 's' => $a['data_ora_fine'] )
+            )
+        );
+
+        if( empty( $collisioni ) || $collisioni = 0 ){
+            $copertura = 1;
+        }
+
+        return $copertura;
+        
+    }
+
     // funzione che data un'attività, ritorna l'elenco degli operatori che possono coprirla per una sostituzione con relativo punteggio
-    function elencoSostituti( $id_attivita ){
+    function elencoSostitutiAttivita( $id_attivita ){
 
         global $cf;
 
@@ -358,7 +402,7 @@
             
             $o['punteggio'] = $o['punti_progetto'];
             $o['punteggio'] += $o['punti_disponibilita'];
-            $o['punteggio'] -= $o['punti_distanza'];
+            $o['punteggio'] += $o['punti_distanza'];
             
             // TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
 
@@ -368,19 +412,106 @@
     
             $candidati[ $o['punteggio'] ] = $o;
 
+        }
 
-            // per cantiere la funzione che calcola la disponibilità deve restituire la percentuale 
+          krsort( $candidati );
+
+          return $candidati;
+
+    }
+
+
+    // funzione che dato un progetto, ritorna l'elenco degli operatori che possono coprirne le attività scoperte con relativo punteggio
+    function elencoSostitutiProgetto( $id_progetto ){
+
+        global $cf;
+
+        $candidati = array();   // inizializzo l'array del risultato
+
+        // data di pianificazione della prima attività scoperta
+        $dataPrima = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT min(data_programmazione) FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
+            array(
+                array( 's' => $id_progetto )
+            )
+        );
+
+        // elenco degli operatori che hanno attivita pianificate per questo progetto prima di questa data (quindi che lo conoscono)
+        $operatori = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT DISTINCT id_anagrafica, anagrafica FROM attivita_view '
+            .'WHERE id_progetto = ? AND data_programmazione < ? AND id_anagrafica IS NOT NULL',
+            array(
+                array( 's' => $id_progetto ),
+                array( 's' => $dataPrima )
+            )
+        );
+
+        // elenco delle attività scoperte per il progetto corrente
+        $attivita = mysqlQuery( 
+            $cf['mysql']['connection'],
+            'SELECT * FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
+            array(
+                array( 's' => $id_progetto )
+            )
+        );
+
+        // per ciascun operatore
+        foreach( $operatori as $o ){
+            // scorro le attività e vedo se può coprirle
+
+            $o['punteggio'] = 0;
+            $o['punti_attivita'] = 0;
+            $o['punti_distanza_attivita'] = 0;
+
+            foreach( $attivita as $a ){
+                
+                $copertura = coperturaAttivita( $o['id'], $a['id'] );
+
+                // se può coprire l'attività calcolo i punti distanza
+                if(  $copertura == 1 ){
+                    $o['punti_attivita'] ++;
+                    $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id'], $a['id'] );
+                }
+            }
+
+            if( $o['punti_attivita'] > 0 && $o['punti_distanza_attivita'] > 0 ){
+                $o['punti_copertura'] = round( $o['punti_distanza_attivita'] / $o['punti_attivita'], 0);
+                $o['punteggio'] +=  $o['punti_copertura'];
+            }
+
+            // punti distanza dal progetto
+            $o['punti_distanza'] = puntiDistanzaProgetto( $o['id'], $id_progetto );
+            $o['punteggio'] += $o['punti_distanza'];
+
+            // punti conoscenza del progetto
+            $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id'], $id_progetto, $dataPrima );
+            $o['punteggio'] += $o['punti_progetto'];
+
+        
+            while( array_key_exists( $o['punteggio'], $candidati ) ){
+                $o['punteggio']++;
+            }
+    
+            $candidati[ $o['punteggio'] ] = $o;        
+        
+        }
+
+         // per cantiere la funzione che calcola la disponibilità deve restituire la percentuale 
             // rapporto tra numero di attività che può coprire e numero attività totali
     /*        $o['punteggio'] = puntiConoscenzaProgetto();   stessa delle attività ma passando la data della prima attivita scoperta
             $o['punteggio'] += puntiCoperturaProgetto();  // funzione da creare per me > solo per il cantiere: numero attività che può coprire
             $o['punteggio'] -= puntiDistanzaProgetto( anagrafica, progetto );  // passare 
     */
 
-        }
+        // TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
 
-    //    ksort( $ct['etc']['operatori'], SORT_ASC|SORT_NUMERIC );
-          krsort( $candidati );
 
-          return $candidati;
+
+        krsort( $candidati );
+
+        return $candidati;
 
     }
+

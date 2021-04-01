@@ -24,9 +24,11 @@
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
         // richiamo la funzione che ritorna l'array degli operatori coi punteggi
-        $ct['etc']['operatori'] = elencoSostituti( $_REQUEST[ $ct['form']['table'] ]['id'] );
+        $ct['etc']['operatori'] = elencoSostitutiAttivita( $_REQUEST[ $ct['form']['table'] ]['id'] );
 
     }
+
+//    print_r($ct['etc']['operatori'] );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
