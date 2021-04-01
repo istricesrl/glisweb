@@ -36,7 +36,16 @@
 			<option value="{{ cliente.id }}" {% if request.__view__[ view.id ].__filters__.id_cliente.EQ == cliente.id %}selected{% endif %} >{{ cliente.__label__ }}</option>
 			{% endfor %}
 		</select>
-	</div>	
+	</div>
+	<div class="col">
+		<span class="label-top">progetto</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_progetto][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm selectpicker" data-live-search="true" >
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_progetto == "" %}selected{% endif %}>tutti</option>
+			{% for progetto in etc.select.progetti %}
+			<option value="{{ progetto.id }}" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ == progetto.id %}selected{% endif %} >{{ progetto.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>		
 	<div class="col">
 		<div class="label-top">ricerca per parola chiave</div>
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
