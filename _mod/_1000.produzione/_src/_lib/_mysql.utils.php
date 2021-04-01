@@ -459,10 +459,25 @@
                 
                 $copertura = coperturaAttivita( $o['id_anagrafica'], $a['id'] );
 
-                // se può coprire l'attività calcolo i punti distanza
+                // se può coprire l'attività verifico se c'è già una richiesta di sostituzione rifiutata per essa
+                // in tal caso escludo l'attività, altrimenti procedo con il calcolo dei punti distanza
                 if(  $copertura == 1 ){
-                    $o['punti_attivita']++;
-                    $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] );
+
+                    $rifiuto = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT count(*) FROM sostituzioni_attivita WHERE id_attivita = ? '
+                        .'AND id_anagrafica = ? and data_rifiuto IS NOT NULL ',
+                        array(
+                            array( 's' => $a['id'] ),
+                            array( 's' => $o['id_anagrafica'] )
+                        )
+                    );
+
+                    if( empty( $rifiuto ) ){
+                        $o['punti_attivita']++;
+                        $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] );
+                    }
+                    
                 }
             }
 
