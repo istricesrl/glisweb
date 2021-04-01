@@ -20,6 +20,7 @@
                             <th>data coinvolta</th>
                             <th>orario</th>
                             <th>pianificato fino al</th>
+                            <th>pianificazione</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -31,9 +32,10 @@
                             <td class="text-left">{{ p.progetto }}</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
-                            <td>{{ p.data_fine }} {{ p.id_pianificazione }}</td>
+                            <td>{{ p.data_fine }}</td>
+                            <td>&nbsp;</td>
                             <td>
-                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="" placeholder="estendi la pianificazione corrente" data-toggle="modal" data-target="#estendi" data-placement="bottom" data-delay="1000" title="" data-original-title="estendi pianificazione">estendi</button>
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="" placeholder="estendi le pianificazioni del progetto corrente" data-toggle="modal" data-target="#estendiprogetto" data-placement="bottom" data-delay="1000" title="" data-original-title="estendi le pianificazioni del progetto">estendi</button>
                             </td>
                         </tr>
                         {% endfor %}
@@ -44,7 +46,8 @@
                             <td class="text-left">{{ a.progetto }}</td>
                             <td>{{ a.data_programmazione }}</td>
                             <td>{{ a.ora_inizio_programmazione }} - {{ a.ora_fine_programmazione }}</td>
-                            <td>{{ a.data_fine }} {{a.id_pianificazione}}</td>
+                            <td>{{ a.data_fine }}</td>
+                            <td>{{a.id_pianificazione}}</td>
                             <td>
                                 {% if a.estendi == 1 %}
                                 <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="" placeholder="estendi la pianificazione corrente"  data-toggle="modal" data-target="#estendi" data-placement="bottom" data-delay="1000" title="" data-original-title="estendi pianificazione">estendi</button>
@@ -91,6 +94,7 @@
             </div>
         </div>
 
+        {% if etc.estendere == 0 %}
         <form class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
@@ -106,6 +110,7 @@
                 </div>
             </fieldset>
         </form>
+        {% endif %}
     </div>
 </section>
 

@@ -85,17 +85,20 @@
         // se ho un valore di data_fine massima settato
         if( isset( $ct['etc']['datamax']) ){
 
+            $ct['etc']['estendere'] = 0;      // parametro per il pulsante di approvazione
+
             // per ogni riga di attività individuata
             foreach( $ct['etc']['attivita'] as &$a ){
                 if( !empty( $a['data_fine'] ) && $a['data_fine'] < $ct['etc']['datamax'] && $a['giorni_rinnovo'] > 0 ){
                     $a['estendi'] = 1;     // bisogna allungare la pianificazione
+                    $ct['etc']['estendere']++;
                 }
 
                 // aggiungo il progetto all'elenco di quelli verificati
                 $prog[] = $a['id_progetto'];
             }
 
-            // cerco l'elenco dei progetti in cui è coinvolto quell'operatore per capire l'ultima data di programmazione
+            
         /*   $progetti = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT DISTINCT attivita_view.id_progetto, attivita_view.progetto, attivita_view.id_pianificazione, pianificazioni.data_ultimo_oggetto '
@@ -108,6 +111,8 @@
                 )
             );
 */
+            
+            // cerco l'elenco dei progetti in cui è coinvolto quell'operatore che hanno pianificazioni attive con data fine minore di datamax
             $progetti = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT a.id_progetto, a.progetto, min( p.data_fine ) as data_fine FROM pianificazioni as p '
@@ -120,12 +125,19 @@
                 )
             );
 
-            foreach( $progetti as $p ){
-                // se il progetto non è tra quelli già individuati in precedenza, lo aggiungo all'elenco di quelli da verificare
-            #    if( !in_array( $p['id_progetto'], $prog ) ){
+            if( !empty($progetti ) ){
+                $ct['etc']['estendere']++;
+
+                foreach( $progetti as $p ){
                     $ct['etc']['progetti'][ $p['id_progetto'] ] = $p;
-            #    }
-            }     
+
+                // se il progetto non è tra quelli già individuati in precedenza, lo aggiungo all'elenco di quelli da verificare
+            /*    if( !in_array( $p['id_progetto'], $prog ) ){
+                    $ct['etc']['progetti'][ $p['id_progetto'] ] = $p;
+                }*/
+                }     
+            }
+            
         }
 
     }
@@ -135,9 +147,14 @@
         'modal' => array('id' => 'conferma', 'include' => 'inc/variazioni.form.approvazione.modal.conferma.html' )
     );
 
-    // modal per la conferma di allungamento pianificazione
+    // modal per la conferma di allungamento pianificazione singola
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'estendi', 'include' => 'inc/variazioni.form.approvazione.modal.estendi.html' )
+    );
+
+    // modal per la conferma di allungamento delle pianificazioni del progetto
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'estendiprogetto', 'include' => 'inc/variazioni.form.approvazione.modal.estendi.progetto.html' )
     );
 
 	// macro di default
