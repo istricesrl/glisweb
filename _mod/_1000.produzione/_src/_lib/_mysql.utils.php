@@ -190,6 +190,7 @@
 
     }
 
+
     function puntiDistanzaAttivita( $id_anagrafica, $id_attivita ) {
 
         // globalizzazione di $cf
@@ -291,18 +292,6 @@
             }
 
         }
-
-    }
-
-    function puntiDistanzaProgetto( $id_anagrafica, $id_progetto ) {
-
-        // seleziono le coordinate del domicilio
-
-        // seleziono le coordinate del progetto
-
-        // calcolo la distanza
-
-        // calcolo il punteggio
 
     }
 
@@ -462,6 +451,7 @@
             // scorro le attività e vedo se può coprirle
 
             $o['punteggio'] = 0;
+            $o['punti_distanza'] = 0;
             $o['punti_attivita'] = 0;
             $o['punti_distanza_attivita'] = 0;
 
@@ -471,19 +461,20 @@
 
                 // se può coprire l'attività calcolo i punti distanza
                 if(  $copertura == 1 ){
-                    $o['punti_attivita'] ++;
+                    $o['punti_attivita']++;
                     $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] );
                 }
             }
 
+            // punti copertura: numero attività copribili /numero attività da coprire
+            $o['punti_copertura'] = intval( $o['punti_attivita'] / count( $attivita ) * 100 );
+            $o['punteggio'] +=  $o['punti_copertura'];
+            
+            // punti distanza
             if( $o['punti_attivita'] > 0 && $o['punti_distanza_attivita'] > 0 ){
-                $o['punti_copertura'] = round( $o['punti_distanza_attivita'] / $o['punti_attivita'], 0);
-                $o['punteggio'] +=  $o['punti_copertura'];
-            }
-
-            // punti distanza dal progetto
-            $o['punti_distanza'] = puntiDistanzaProgetto( $o['id_anagrafica'], $id_progetto );
-            $o['punteggio'] += $o['punti_distanza'];
+                $o['punti_distanza'] = intval( $o['punti_distanza_attivita'] / $o['punti_attivita'] );
+                $o['punteggio'] += $o['punti_distanza'];
+            }         
 
             // punti conoscenza del progetto
             $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $id_progetto, $dataPrima );
