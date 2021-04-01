@@ -467,12 +467,12 @@
 
             foreach( $attivita as $a ){
                 
-                $copertura = coperturaAttivita( $o['id'], $a['id'] );
+                $copertura = coperturaAttivita( $o['id_anagrafica'], $a['id'] );
 
                 // se può coprire l'attività calcolo i punti distanza
                 if(  $copertura == 1 ){
                     $o['punti_attivita'] ++;
-                    $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id'], $a['id'] );
+                    $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] );
                 }
             }
 
@@ -482,11 +482,11 @@
             }
 
             // punti distanza dal progetto
-            $o['punti_distanza'] = puntiDistanzaProgetto( $o['id'], $id_progetto );
+            $o['punti_distanza'] = puntiDistanzaProgetto( $o['id_anagrafica'], $id_progetto );
             $o['punteggio'] += $o['punti_distanza'];
 
             // punti conoscenza del progetto
-            $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id'], $id_progetto, $dataPrima );
+            $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $id_progetto, $dataPrima );
             $o['punteggio'] += $o['punti_progetto'];
 
         
