@@ -387,7 +387,7 @@
         // calcolo punteggi vari con le funzioni
             $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id'], $a['id_progetto'], $a['data_programmazione']);
             $o['punti_disponibilita'] = puntiDisponibilitaOperatore( $o['id'], $a['data_programmazione'], $a['ora_inizio_programmazione'], $a['ora_fine_programmazione'] );
-            $o['punti_distanza'] = puntiDistanzaAttivita( $o['id'], $a['id'] );
+            $o['punti_distanza'] = intval( puntiDistanzaAttivita( $o['id'], $a['id'] ) );
             
             $o['punteggio'] = $o['punti_progetto'];
             $o['punteggio'] += $o['punti_disponibilita'];
