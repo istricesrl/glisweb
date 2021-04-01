@@ -27,6 +27,8 @@
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'progetti.scoperti.form';
 
+    $ct['view']['insert']['page'] = '';     // non deve essere possibile inserire nuovi oggetti ma solo gestire quelli esistenti
+
     $ct['view']['cols'] = array(
         'id' => '#',
         'cliente' => 'cliente',

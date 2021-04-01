@@ -30,6 +30,8 @@
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'attivita.scoperte.form';
 
+    $ct['view']['insert']['page'] = ''; // non deve essere possibile inserire nuovi oggetti ma solo gestire quelli esistenti
+
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
