@@ -27,9 +27,15 @@
         $ct['etc']['operatori'] = elencoSostitutiProgetto( $_REQUEST[ $ct['form']['table'] ]['id'] );
 
     }
+
+     // modal per la conferma di invio richiesta sostituzione
+     $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'richiesta', 'include' => 'inc/progetti.scoperti.form.modal.richiesta.html' )
+    );
     
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
+    require DIR_SRC_INC_MACRO . '_default.tools.php';
 
    
