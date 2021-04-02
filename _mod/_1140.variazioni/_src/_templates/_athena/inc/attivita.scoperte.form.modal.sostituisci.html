@@ -11,7 +11,7 @@
 		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.create.php?id_attivita={{ request[table].id }}&id_anagrafica='+idoperatore;
 
 		getws( call,'', function() {
-		//    window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
+		    window.open('{{ pages['attivita.scoperte.view'].path[ localization.language.ietf ] }}', '_self');
 		});
 		
 	}
