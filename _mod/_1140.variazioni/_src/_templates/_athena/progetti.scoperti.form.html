@@ -1,0 +1,71 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+
+{# FORM DI GESTIONE #}
+
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+    
+        <div class="form-row mt-2">
+            <div class="col-md-12 table-responsive">
+                <table class="view-table">
+                    <thead>
+                        <tr>
+                            <th>operatore</th>
+                            <th>progetto</th>
+                            <th>copertura</th>
+                            <th>distanza</th>
+                            <!--
+                                <th>blocchi (es. il cliente non vuole quell'operatore)</th>
+                            -->
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for o in etc.operatori %}
+                        <tr>
+                            <td class="text-left">{{ o.anagrafica }}</td>
+                            <td>{{ o.punti_progetto }}</td>
+                            <td>{{ o.punti_copertura }}</td>
+                            <td>{{ o.punti_distanza }}</td>
+                            <td>
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"data-toggle="modal" data-target="#richiesta" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreid').text('{{ o.id_anagrafica }}');$('#modaloperatorenome').text('{{ o.anagrafica }}');" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>
+                            </td>         
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+            <div class="row no-gutters d-print-none">
+                <div class="col-auto col-md-12">
+	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages['progetti.scoperti.view'].path[ localization.language.ietf ] }}','_self');" placeholder="torna indietro" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro"><i class="fa fa-undo"></i></button>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</section>
+
+{% endblock %}
