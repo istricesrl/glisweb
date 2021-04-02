@@ -39,7 +39,7 @@
                     </thead>
                     <tbody>
 
-                        {% for o in etc.operatori %}
+                        {% for o in etc.operatori|reverse %}
                         <tr>
                             <td class="text-left">{{ o.__label__ }}</td>
                             <td>{{ o.punti_progetto }}</td>
