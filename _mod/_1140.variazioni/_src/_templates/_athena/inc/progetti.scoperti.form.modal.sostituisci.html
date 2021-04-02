@@ -8,10 +8,12 @@
      function sostituisci() {
 		idoperatore = $('#modaloperatoreSid').text();
 
-		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.request.php?id_attivita={{ request[table].id }}&id_anagrafica='+idoperatore+'&hard=1';
+		console.log(idoperatore);
+
+		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.progetto.request.php?id_progetto={{ request[table].id }}&id_anagrafica='+idoperatore+'&hard=1';
 
 		getws( call,'', function() {
-		    window.open('{{ pages['attivita.scoperte.view'].path[ localization.language.ietf ] }}', '_self');
+			window.open('{{ pages['progetti.scoperti.view'].path[ localization.language.ietf ] }}','_self');
 		});
 		
 	}
@@ -29,8 +31,9 @@
 		<div class="container-fluid">
 		    <div class="form-row">
 			<div class="col">
-				si desidera effettuare direttamente la sostituzione assegnando l'attività {{ request[table].id }} all'operatore 
-                <span id="modaloperatoreSid"></span> - <span id="modaloperatoreSnome"></span> senza inviare una richiesta?
+				si desidera effettuare direttamente la sostituzione assegnando 
+				all'operatore <span id="modaloperatoreSid"></span> - <span id="modaloperatoreSnome"></span>
+				le attività del progetto {{ request[table].id }} che può coprire senza inviare una richiesta?
 			</div>
 		</div>
 	    </div>

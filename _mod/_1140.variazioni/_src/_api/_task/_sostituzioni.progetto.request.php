@@ -65,6 +65,11 @@
                     if( empty( $richieste ) ){
                         $url = $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.request.php?id_attivita=' . $a['id'] . '&id_anagrafica=' . $status['id_anagrafica'];
                         
+                        // se la richiesta arriva in modalità hard aggiungo il parametro per creare le attività
+                        if( !empty( $_REQUEST['hard'] ) ){
+                            $status['hard'] = $_REQUEST['hard'];
+                            $url .= '&hard=1';
+                        }
                         $status['attivita'][$a['id']]['creazione_richiesta'] = restcall(
                             $url
                         );
