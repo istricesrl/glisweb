@@ -469,52 +469,61 @@
             $o['punti_attivita'] = 0;
             $o['punti_distanza_attivita'] = 0;
 
+            $attivita_coperte = 0;
+            $richieste_inviate = 0;
+
             foreach( $attivita as $a ){
                 
                 $copertura = coperturaAttivita( $o['id_anagrafica'], $a['id'] );
 
-                // se può coprire l'attività verifico se c'è già una richiesta di sostituzione rifiutata per essa
+                // se può coprire l'attività verifico se c'è già una richiesta di sostituzione per essa
                 // in tal caso escludo l'attività, altrimenti procedo con il calcolo dei punti distanza
                 if(  $copertura == 1 ){
 
-                    $rifiuto = mysqlSelectValue(
+                    $o['punti_attivita']++;
+                    $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] );
+
+                    $richieste = mysqlSelectValue(
                         $cf['mysql']['connection'],
                         'SELECT count(*) FROM sostituzioni_attivita WHERE id_attivita = ? '
-                        .'AND id_anagrafica = ? and data_rifiuto IS NOT NULL ',
+                        .'AND id_anagrafica = ?',
                         array(
                             array( 's' => $a['id'] ),
                             array( 's' => $o['id_anagrafica'] )
                         )
                     );
 
-                    if( empty( $rifiuto ) ){
-                        $o['punti_attivita']++;
-                        $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] );
+                    if( !empty( $richieste ) ){
+                       $richieste_inviate++;
                     }
                     
                 }
             }
 
-            // punti copertura: numero attività copribili /numero attività da coprire
-            $o['punti_copertura'] = intval( $o['punti_attivita'] / count( $attivita ) * 100 );
-            $o['punteggio'] +=  $o['punti_copertura'];
+            // solo se il numero di attività che può coprire è maggiore delle richieste già inviate procedo
+            if( $o['punti_attivita'] > $richieste_inviate ){
+
+                // punti copertura: numero attività copribili /numero attività da coprire
+                $o['punti_copertura'] = intval( $o['punti_attivita'] / count( $attivita ) * 100 );
+                $o['punteggio'] +=  $o['punti_copertura'];
+                
+                // punti distanza
+                if( $o['punti_attivita'] > 0 && $o['punti_distanza_attivita'] > 0 ){
+                    $o['punti_distanza'] = intval( $o['punti_distanza_attivita'] / $o['punti_attivita'] );
+                    $o['punteggio'] += $o['punti_distanza'];
+                }         
+
+                // punti conoscenza del progetto
+                $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $id_progetto, $dataPrima );
+                $o['punteggio'] += $o['punti_progetto'];
+
             
-            // punti distanza
-            if( $o['punti_attivita'] > 0 && $o['punti_distanza_attivita'] > 0 ){
-                $o['punti_distanza'] = intval( $o['punti_distanza_attivita'] / $o['punti_attivita'] );
-                $o['punteggio'] += $o['punti_distanza'];
-            }         
-
-            // punti conoscenza del progetto
-            $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $id_progetto, $dataPrima );
-            $o['punteggio'] += $o['punti_progetto'];
-
+                while( array_key_exists( $o['punteggio'], $candidati ) ){
+                    $o['punteggio']++;
+                }
         
-            while( array_key_exists( $o['punteggio'], $candidati ) ){
-                $o['punteggio']++;
-            }
-    
-            $candidati[ $o['punteggio'] ] = $o;        
+                $candidati[ $o['punteggio'] ] = $o; 
+            }     
         
         }
 
