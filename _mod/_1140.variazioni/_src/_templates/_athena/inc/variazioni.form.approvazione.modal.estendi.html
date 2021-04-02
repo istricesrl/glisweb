@@ -5,13 +5,16 @@
 {% set ietf = localization.language.ietf %}
 
 <script>
-     function estendi( p ) {
-	/* 	var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.extend.php?id='+id+'&data_fine={{ etc.datamax }}&hard=1';
+     function estendi() {
+		idpianificazione = $('#modalpianificazione').text();
+		
+	 	var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.extend.php?id='+idpianificazione+'&data_fine={{ etc.datamax }}&hard=1';
 
 		getws( call,'', function() {
-			window.open('{{ pages['variazioni.form'].path[ ietf ] }}?variazioni_attivita[id]={{ request[table].id }}','_self');
+			window.open('{{ pages['variazioni.form.approvazione'].path[ ietf ] }}?variazioni_attivita[id]={{ request[table].id }}','_self');
 		});
-*/
+		
+
 	}
 </script>
 
@@ -26,13 +29,13 @@
 		<div class="container-fluid">
 		    <div class="form-row">
 			<div class="col">
-				si desidera estendere la pianificazione (id) fino al {{ etc.datamax }}?
+				si desidera estendere la pianificazione <span id="modalpianificazione"></span> e creare gli eventi corrispondenti fino al {{ etc.datamax }}?
 			</div>
 		</div>
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="estendi(p);">estendi</button>
+		<button type="button" class="btn btn-secondary btn-sm" onclick="estendi();">estendi</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

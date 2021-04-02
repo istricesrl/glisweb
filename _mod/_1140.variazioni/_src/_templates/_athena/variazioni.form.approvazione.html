@@ -50,7 +50,7 @@
                             <td>{{a.id_pianificazione}}</td>
                             <td>
                                 {% if a.estendi == 1 %}
-                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="" placeholder="estendi la pianificazione corrente"  data-toggle="modal" data-target="#estendi" data-placement="bottom" data-delay="1000" title="" data-original-title="estendi pianificazione">estendi</button>
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="$('#modalpianificazione').text({{ a.id_pianificazione }});" placeholder="estendi la pianificazione corrente"  data-toggle="modal" data-target="#estendi" data-placement="bottom" data-delay="1000" title="" data-original-title="estendi pianificazione">estendi</button>
                                 {% endif %}
                             </td>
                         </tr>
