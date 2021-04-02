@@ -35,7 +35,7 @@
                             <td>{{ p.data_fine }}</td>
                             <td>&nbsp;</td>
                             <td>
-                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="" placeholder="estendi le pianificazioni del progetto corrente" data-toggle="modal" data-target="#estendiprogetto" data-placement="bottom" data-delay="1000" title="" data-original-title="estendi le pianificazioni del progetto">estendi</button>
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="$('#modalprogetto').text('{{p.id_progetto}}');" placeholder="estendi le pianificazioni del progetto corrente" data-toggle="modal" data-target="#estendiprogetto" data-placement="bottom" data-delay="1000" title="" data-original-title="estendi le pianificazioni del progetto">estendi</button>
                             </td>
                         </tr>
                         {% endfor %}
