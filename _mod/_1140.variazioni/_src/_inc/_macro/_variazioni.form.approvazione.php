@@ -32,6 +32,7 @@
         
         // elenco dei progetti per cui sono presenti attività coinvolte
         $prog = array();
+        $ct['etc']['attivita'] = array();
 
         foreach( $_REQUEST[ $ct['form']['table'] ]['periodi_variazioni_attivita'] as $p ){
             
@@ -98,19 +99,6 @@
                 $prog[] = $a['id_progetto'];
             }
 
-            
-        /*   $progetti = mysqlQuery(
-                $cf['mysql']['connection'],
-                'SELECT DISTINCT attivita_view.id_progetto, attivita_view.progetto, attivita_view.id_pianificazione, pianificazioni.data_ultimo_oggetto '
-                .'FROM attivita_view INNER JOIN pianificazioni ON attivita_view.id_pianificazione = pianificazioni.id '
-                .'WHERE pianificazioni.giorni_rinnovo > 0 AND pianificazioni.data_ultimo_oggetto < ? '
-                .'AND attivita_view.id_anagrafica = ?',
-                array(
-                    array( 's' => $ct['etc']['datamax'] ),
-                    array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] )
-                )
-            );
-*/
             
             // cerco l'elenco dei progetti in cui è coinvolto quell'operatore che hanno pianificazioni attive con data fine minore di datamax
             $progetti = mysqlQuery(
