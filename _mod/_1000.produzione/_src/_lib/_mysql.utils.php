@@ -358,13 +358,26 @@
 
         // escludere le anagrafiche per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
 
-        // TODO silvia: questa parte che calcola operatori e punteggio metterla in una funzione e richiamarla per ogni attività del progetto nella macro _progetti.scoperti.form.php
+        // select che estrae i dati dall'anagrafica_view, sostituita con quella che estrae da contratti_view
+    /*    "SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 "
+        ."AND id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) "
+        ."AND ( "
+            ."SELECT count(*) FROM attivita_view WHERE id_anagrafica = anagrafica_view.id "
+            ."AND ( "
+                ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
+                ."OR "
+                ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
+            .") "
+        .") = 0 ",
+    */
+
+        
         $operatori = mysqlQuery(
             $cf['mysql']['connection'],
-            "SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 "
-            ."AND id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) "
+            "SELECT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view WHERE "
+            ."id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) "
             ."AND ( "
-                ."SELECT count(*) FROM attivita_view WHERE id_anagrafica = anagrafica_view.id "
+                ."SELECT count(*) FROM attivita_view WHERE id_anagrafica = contratti_view.id_anagrafica "
                 ."AND ( "
                     ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
                     ."OR "
@@ -427,6 +440,7 @@
         );
 
         // elenco degli operatori che hanno attivita pianificate per questo progetto prima di questa data (quindi che lo conoscono)
+        // qui per ora non faccio il check sul contratto, dato che stiamo leggendo dalle attivtà
         $operatori = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT DISTINCT id_anagrafica, anagrafica FROM attivita_view '
