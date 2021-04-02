@@ -46,7 +46,7 @@
                             <td>{{ o.punti_disponibilita }}</td>
                             <td>{{ o.punti_distanza }}</td>
                             <td>
-                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="nomina({{ o.id }});" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"data-toggle="modal" data-target="#richiesta" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreid').text('{{ o.id }}');$('#modaloperatorenome').text('{{ o.__label__ }}');" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>
                             </td>         
                         </tr>
                         {% endfor %}
@@ -67,18 +67,5 @@
 
     </div>
 </section>
-
-
-<script>
-
-    function nomina( o ){
-        var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.request.php?id_attivita={{ request[table].id }}&id_anagrafica='+o;
-
-        getws( call,'', function() {
-           window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
-        });
-    }
-
-</script>
 
 {% endblock %}
