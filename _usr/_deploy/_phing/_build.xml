@@ -526,7 +526,10 @@
 
                     </then>
                     <elseif>
-                        <isset property="ftp.usr" />
+                        <and>
+                            <isset property="ftp.usr" />
+                            <not><equals arg1="${ftp.usr}" arg2="" /></not>
+                        </and>
                         <then>
 
                             <!-- messaggi -->
