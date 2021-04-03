@@ -6,6 +6,7 @@
 
 <script>
      function estendi() {
+		$('#btnestendi').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 		idpianificazione = $('#modalpianificazione').text();
 		
 	 	var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.extend.php?id='+idpianificazione+'&data_fine={{ etc.datamax }}&hard=1';
@@ -34,7 +35,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="estendi();">estendi</button>
+		<button type="button" id="btnestendi" class="btn btn-secondary btn-sm" onclick="estendi();">estendi</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>
