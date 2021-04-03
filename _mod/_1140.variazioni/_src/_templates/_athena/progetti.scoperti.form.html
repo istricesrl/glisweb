@@ -39,7 +39,7 @@
                     </thead>
                     <tbody>
 
-                        {% for o in etc.operatori %}
+                        {% for o in etc.operatori|reverse %}
                         <tr>
                             <td class="text-left">{{ o.anagrafica }}</td>
                             <td>{{ o.punti_progetto }}</td>
@@ -47,6 +47,7 @@
                             <td>{{ o.punti_distanza }}</td>
                             <td>
                                 <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"data-toggle="modal" data-target="#richiesta" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreid').text('{{ o.id_anagrafica }}');$('#modaloperatorenome').text('{{ o.anagrafica }}');" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"data-toggle="modal" data-target="#sostituisci" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreSid').text('{{ o.id_anagrafica }}');$('#modaloperatoreSnome').text('{{ o.anagrafica }}');" placeholder="imposta sostituzione"  data-placement="bottom" data-delay="1000" title="" data-original-title="imposta sostituzione">sostituisci</button>
                             </td>         
                         </tr>
                         {% endfor %}
