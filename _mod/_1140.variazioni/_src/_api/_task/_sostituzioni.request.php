@@ -44,6 +44,15 @@
 
         $status['info'][] = 'inserita riga di sostituzione di id ' . $q . ' e con data ' . date('Y-m-d');
 
+        // se la riga di sostituzione è stata inserita e sono in modalità hard procedo con la conferma e l'aggiornamento dell'attività
+        if( !empty( $q ) && !empty( $_REQUEST['hard'] ) ){
+            $status['sostituzione'] = $q;
+            $status['hard'] = $_REQUEST['hard'];
+            $status['attivita'] = restcall(
+                $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.confirm.php?id=' . $q
+            );
+        }
+
 
     } else {
 

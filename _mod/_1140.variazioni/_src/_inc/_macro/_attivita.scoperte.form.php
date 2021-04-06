@@ -35,6 +35,11 @@
         'modal' => array('id' => 'richiesta', 'include' => 'inc/attivita.scoperte.form.modal.richiesta.html' )
     );
 
+    // modal per la conferma di sostituzione diretta
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'sostituisci', 'include' => 'inc/attivita.scoperte.form.modal.sostituisci.html' )
+    );
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
