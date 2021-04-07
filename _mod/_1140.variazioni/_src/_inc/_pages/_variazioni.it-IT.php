@@ -53,7 +53,11 @@
 	    'parent'		=> array( 'id'		=> 'variazioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.scoperti.view.php' ),
-		'etc'			=> array( 'tabs'	=> array(	'progetti.scoperti.view', 'attivita.scoperte.view', 'conferme.view' ) ),
+		'etc'			=> array( 'tabs'	=> array(	
+													'progetti.scoperti.view', 
+													'attivita.scoperte.view', 
+													'conferme.view',
+													'sostituzioni.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'sostituzioni' ),
 														'priority'	=> '120' ) )
@@ -102,6 +106,18 @@
 	    'parent'		=> array( 'id'		=> 'variazioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'conferme.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_conferme.view.php' ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.scoperti.view']['etc']['tabs'] ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
+	// view per richieste sostituzioni
+	$p['sostituzioni.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'richieste' ),
+	    'h1'			=> array( $l		=> 'richieste' ),
+	    'parent'		=> array( 'id'		=> 'variazioni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_sostituzioni.view.php' ),
 		'etc'			=> array( 'tabs'	=> $p['progetti.scoperti.view']['etc']['tabs'] ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);

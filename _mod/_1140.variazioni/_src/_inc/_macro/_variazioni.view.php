@@ -47,8 +47,8 @@
 	$ct['etc']['include']['filters'] = 'inc/variazioni.view.filters.html';
 
      // preset filtro custom variazioni da approvare
-	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['approvata']['EQ'] ) ) {
-	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['approvata']['EQ'] = 0;
+	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['stato']['EQ'] ) ) {
+	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['stato']['EQ'] = 0;
     }
 
     // tendina operatori
