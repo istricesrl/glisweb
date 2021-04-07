@@ -319,9 +319,9 @@
             $cf['mysql']['connection'],
                 "SELECT count(*) FROM attivita_view WHERE id_anagrafica = ? "
                 ."AND ( "
-                    ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
+                    ."( TIMESTAMP( data_programmazione, ora_inizio_programmazione) > ? and TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? ) "
                     ."OR "
-                    ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
+                    ."( TIMESTAMP( data_programmazione, ora_fine_programmazione) > ? and TIMESTAMP( data_programmazione, ora_fine_programmazione) < ? ) "
                 .") ",
             array(
                 array( 's' => $id_anagrafica ),
@@ -379,9 +379,9 @@
             ."AND ( "
                 ."SELECT count(*) FROM attivita_view WHERE id_anagrafica = contratti_view.id_anagrafica "
                 ."AND ( "
-                    ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
+                    ."( TIMESTAMP( data_programmazione, ora_inizio_programmazione) > ? and TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? ) "
                     ."OR "
-                    ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
+                    ."( TIMESTAMP( data_programmazione, ora_fine_programmazione) > ? and TIMESTAMP( data_programmazione, ora_fine_programmazione) < ? ) "
                 .") "
             .") = 0 ",
             array(
