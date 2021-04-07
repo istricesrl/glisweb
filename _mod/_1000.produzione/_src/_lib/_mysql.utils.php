@@ -443,8 +443,10 @@
         // qui per ora non faccio il check sul contratto, dato che stiamo leggendo dalle attivtà
         $operatori = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT DISTINCT id_anagrafica, anagrafica FROM attivita_view '
-            .'WHERE id_progetto = ? AND data_programmazione < ? AND id_anagrafica IS NOT NULL',
+            'SELECT id_anagrafica, anagrafica, count(*) as volte FROM attivita_view '
+            .'WHERE id_progetto = ? AND data_programmazione < ? AND id_anagrafica IS NOT NULL GROUP BY id_anagrafica '
+        #    .'ORDER BY volte DESC LIMIT 10'
+            ,
             array(
                 array( 's' => $id_progetto ),
                 array( 's' => $dataPrima )
@@ -472,13 +474,30 @@
             $attivita_coperte = 0;
             $richieste_inviate = 0;
 
+            $svr = array();     //
+
             foreach( $attivita as $a ){
-                
+                //14:00-15:45 2021-04-07 > ragionare a intervalli di 15 minuti, no ora inizio
+            //    $a['range'] = array( '202104071430', '202104071500', '202104071530', '202104071600');
+
+                $inizio = strtotime( $a['ora_inizio_programmazione'] );
+                $fine = strtotime( $a['ora_fine_programmazione'] );
+                $a['range'] = array();
+                $step = $inizio;
+            
+                while( $step >= $inizio && $step <= $fine ){
+                $step = strtotime("+15 minutes", $step);
+                $a['range'][] = str_replace('-', '', $a['data_programmazione'] ) . str_replace(':', '', date('H:i', $step) );
+                }
+
                 $copertura = coperturaAttivita( $o['id_anagrafica'], $a['id'] );
 
-                // se può coprire l'attività verifico se c'è già una richiesta di sostituzione per essa
+                // se può coprire l'attività e non ci sono sovrapposizioni con altre fasce orarie
+                // verifico se c'è già una richiesta di sostituzione per essa
                 // in tal caso escludo l'attività, altrimenti procedo con il calcolo dei punti distanza
-                if(  $copertura == 1 ){
+                if(  $copertura == 1 && count( array_intersect( $svr, $a['range'] ) ) == 0 ){
+
+                    $svr = array_merge( $a['range'], $svr );
 
                     $o['punti_attivita']++;
                     $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] );
