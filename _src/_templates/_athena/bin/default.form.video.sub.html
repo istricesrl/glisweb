@@ -24,7 +24,7 @@
             </div>
             <div class="col">
                 <span class="label-top">etichetta</span>
-                {{ frm.input( table, subtable, i, 'nome', 'etichetta', '', request, '', '', '', '', disabled ) }}
+                {{ frm.input( table, subtable, i, 'nome', '', '', request, '', '', '', '', disabled ) }}
             </div>
 			<div class="w-100 d-block d-md-none m-0"></div>
             <div class="col col-md-auto">
@@ -32,7 +32,7 @@
                 {{ frm.selectRequired( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_video, request, '', '', '', disabled ) }}
             </div>
             <div class="col col-md-1">
-                <span class="label-top">tipologia embed</span>
+                <span class="label-top">tipologia</span>
                 {{ frm.selectRequired( table, subtable, i, 'id_tipologia_embed', '', etc.select.tipologie_embed, request, '', '', '', disabled ) }}
             </div>
 			<div class="w-100 d-block d-md-none m-0"></div>
@@ -41,7 +41,7 @@
                 {{ frm.input( table, subtable, i, 'codice_embed', 'codice embed', '', request, '', '', '', '', disabled ) }}
             </div>
             <div class="col-auto col-md-auto">
-                {{ frm.uploader( table, subtable, i, 'path', 'file', '', request, 'var/contenuti/', site, 'anagrafica.form.video', pages, lang, '', '', 1 ) }}
+                {{ frm.uploader( table, subtable, i, 'path', 'file', '', request, 'var/contenuti/', site, 'anagrafica.form.video', pages, lang, '', '', '', '', 1 ) }}
             </div>
             {% if r.id %}
             <div class="col-auto text-right remove-on-duplicate d-print-none">
