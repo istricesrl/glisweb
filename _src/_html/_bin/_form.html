@@ -111,18 +111,14 @@
 {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
 {% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
 {% if vl %}{% set pl = null %}{% for option in etc %}{% if option.id == vl %}{% set pl = option.__label__ %}{% endif %}{% endfor %}{% endif %}
-{% if disabled %}
-<input type="hidden" name="{{ nm }}" value="{{ option.id }}"  >
-<div class="form-control-plaintext {{ class }}">{{ pl }}</div>
-{% else %}
 <div class="row m-0">
     {% if api %}
     <div class="col combobox-container p-0">
-	<input type="hidden" value="{{ vl }}" placeholder-api="{{ pl }}" name="{{ nm }}" class="selectbox" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" {% if change %} onchange="{{ change }}"{% endif %} {% if default %} default="{{ default }}"{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
+	<input type="hidden" value="{{ vl }}" placeholder-api="{{ pl }}" name="{{ nm }}" {% if disabled %}disabled{% endif %} class="selectbox" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" {% if change %} onchange="{{ change }}"{% endif %} {% if default %} default="{{ default }}"{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
     </div>
     {% else %}
     <div class="col combobox-container p-0">
-	<select name="{{ nm }}" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" class="selectbox form-control form-control-sm {% if class %}{{ class }}{% endif %}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
+	<select name="{{ nm }}" {% if disabled %}disabled{% endif %} id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" class="selectbox form-control form-control-sm {% if class %}{{ class }}{% endif %}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
 	    {% if not noempty %}<option value="">{# placeholder #}</option>{% endif %}
 	    {% for option in etc %}
 	    <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
@@ -140,7 +136,6 @@
 	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
     </div>{% endif %}
 </div>
-{% endif %}
 {% endmacro %}
 
 {% macro input( table, subtable, counter, field, placeholder, etc, request, default, type, required, class, disabled, step ) %}
