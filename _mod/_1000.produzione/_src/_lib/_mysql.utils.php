@@ -394,6 +394,7 @@
         );
 
         $candidati = array();
+        $op = array();      // array provvisorio
 
         foreach( $operatori as $o ){
                    
@@ -408,17 +409,32 @@
             
             // TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
 
-            while( array_key_exists( $o['punteggio'], $candidati ) ){
-                $o['punteggio']++;
-            }
-    
-            $candidati[ $o['punteggio'] ] = $o;
+            $op[ $o['id'] ] = $o;
 
         }
 
-          krsort( $candidati );
 
-          return $candidati;
+        // riordino l'array degli operatori in base al punteggio
+        $sort_data = array();
+        foreach( $op as $key => $value ) {
+            $sort_data[ $key ] = $value['punteggio'];
+        }
+
+        if( isset( $sort_data ) ){
+            array_multisort( $sort_data, $op );
+        }
+
+        foreach( $op as $o ){
+            while( array_key_exists( $o['punteggio'], $candidati ) ){
+                $o['punteggio']++;
+            }
+
+            $candidati[ $o['punteggio'] ] = $o;
+        }
+
+        krsort( $candidati );
+
+        return $candidati;
 
     }
 
@@ -429,6 +445,7 @@
         global $cf;
 
         $candidati = array();   // inizializzo l'array del risultato
+        $op = array();      // array provvisorio
 
         // data di pianificazione della prima attività scoperta
         $dataPrima = mysqlSelectValue(
@@ -537,23 +554,28 @@
                 $o['punteggio'] += $o['punti_progetto'];
 
             
-                while( array_key_exists( $o['punteggio'], $candidati ) ){
-                    $o['punteggio']++;
-                }
-        
-                $candidati[ $o['punteggio'] ] = $o; 
+                $op[ $o['id_anagrafica'] ] = $o;
             }     
         
         }
 
-         // per cantiere la funzione che calcola la disponibilità deve restituire la percentuale 
-            // rapporto tra numero di attività che può coprire e numero attività totali
-    /*        $o['punteggio'] = puntiConoscenzaProgetto();   stessa delle attività ma passando la data della prima attivita scoperta
-            $o['punteggio'] += puntiCoperturaProgetto();  // funzione da creare per me > solo per il cantiere: numero attività che può coprire
-            $o['punteggio'] -= puntiDistanzaProgetto( anagrafica, progetto );  // passare 
-    */
+        // riordino l'array degli operatori in base al punteggio
+        $sort_data = array();
+        foreach( $op as $key => $value ) {
+            $sort_data[ $key ] = $value['punteggio'];
+        }
 
-        // TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
+        if( isset( $sort_data ) ){
+            array_multisort( $sort_data, $op );
+        }
+
+        foreach( $op as $o ){
+            while( array_key_exists( $o['punteggio'], $candidati ) ){
+                $o['punteggio']++;
+            }
+
+            $candidati[ $o['punteggio'] ] = $o;
+        }
 
 
 
