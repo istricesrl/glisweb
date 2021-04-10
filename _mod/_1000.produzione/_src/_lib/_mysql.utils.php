@@ -376,21 +376,44 @@
             )
         );
 
-        // escludere le anagrafiche per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente        
-        $operatori = mysqlQuery(
+        // operatori che di base sono assegnati alle sostituzioni
+        // sono esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
+        $sostituti = mysqlQuery(
             $cf['mysql']['connection'],
-            "SELECT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view WHERE "
-            ."id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) "
-            ."AND ( "
-                ."SELECT count(*) FROM attivita_view WHERE id_anagrafica = contratti_view.id_anagrafica "
-                ."AND ( "
-                    ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
-                    ."OR "
-                    ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
-                .") "
-            .") = 0 ",
+            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view WHERE se_sostituto = 1 '
+            .'AND id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? )',
+            array(
+                array( 's' => $id_attivita )
+            )
+        );
+
+        if( !empty( $sostituti ) ){
+            foreach( $sostituti as $s ){
+                $operatori[ $s['id_anagrafica'] ] = $s;
+            } 
+        }
+
+        // elenco operatori che hanno svolto attività in passato sul progetto corrente
+        // sono esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente        
+        $assegnati = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto FROM attivita_view AS a '
+            .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
+            .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
+            .'WHERE a.id_anagrafica IS NOT NULL AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) '
+            .'AND a.id_progetto = ? '
+            .'AND ( '
+                .'SELECT count(*) FROM attivita_view WHERE id_anagrafica = a.id_anagrafica '
+                .'AND ( '
+                    .'(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) '
+                    .'OR '
+                    .'(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) '
+                .') '
+            .') = 0 '
+            .'GROUP BY a.id_anagrafica',
             array(
                 array( 's' => $id_attivita ),
+                array( 's' => $a['id_progetto'] ),
                 array( 's' => $a['data_ora_inizio'] ),
                 array( 's' => $a['data_ora_fine'] ),
                 array( 's' => $a['data_ora_inizio'] ),
@@ -398,23 +421,40 @@
             )
         );
 
+        if( !empty( $assegnati ) ){
+            foreach( $assegnati as $as ){
+                $operatori[ $as['id_anagrafica'] ] = $as;
+            }
+        }
+
         $candidati = array();
         $op = array();      // array provvisorio
 
         foreach( $operatori as $o ){
+
+            $o['punteggio'] = 0;
+
+            if( $o['se_sostituto'] == 1 ){
+                $o['punti_sostituto'] = 100;
+            }
+            else{
+                $o['punti_sostituto'] = 0;
+            }
+
+            $o['punteggio'] += $o['punti_sostituto'];
                    
         // calcolo punteggi vari con le funzioni
-            $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id'], $a['id_progetto'], $a['data_programmazione']);
-            $o['punti_disponibilita'] = puntiDisponibilitaOperatore( $o['id'], $a['data_programmazione'], $a['ora_inizio_programmazione'], $a['ora_fine_programmazione'] );
-            $o['punti_distanza'] = intval( puntiDistanzaAttivita( $o['id'], $a['id'] ) );
+            $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $a['id_progetto'], $a['data_programmazione']);
+            $o['punti_disponibilita'] = puntiDisponibilitaOperatore( $o['id_anagrafica'], $a['data_programmazione'], $a['ora_inizio_programmazione'], $a['ora_fine_programmazione'] );
+            $o['punti_distanza'] = intval( puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] ) );
             
-            $o['punteggio'] = $o['punti_progetto'];
+            $o['punteggio'] += $o['punti_progetto'];
             $o['punteggio'] += $o['punti_disponibilita'];
             $o['punteggio'] += $o['punti_distanza'];
             
             // TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
 
-            $op[ $o['id'] ] = $o;
+            $op[ $o['id_anagrafica'] ] = $o;
 
         }
 
@@ -447,7 +487,13 @@
     // funzione che dato un progetto, ritorna l'elenco degli operatori che possono coprirne le attività scoperte con relativo punteggio
     function elencoSostitutiProgetto( $id_progetto ){
 
+        $logdir = 'var/log/sostitutiProgetto.log';
+
+        $timing = array();
+        timerCheck( $timing, 'inizio ricerca elenco sostituti per progetto ' . $id_progetto );
+
         global $cf;
+
 
         $candidati = array();   // inizializzo l'array del risultato
         $op = array();      // array provvisorio per l'ordinamento
@@ -473,11 +519,10 @@
             } 
         }
        
-
         // elenco degli operatori che hanno attivita assegnate pianificate per questo progetto prima di questa data (quindi che lo conoscono)
         $assegnati = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT a.id_anagrafica, a.anagrafica, ca.se_sostituto FROM attivita_view AS a '
+            'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto FROM attivita_view AS a '
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'WHERE id_progetto = ? AND data_programmazione < ? AND a.id_anagrafica IS NOT NULL GROUP BY a.id_anagrafica ',
@@ -492,7 +537,6 @@
                 $operatori[ $a['id_anagrafica'] ] = $a;
             }
         }
-
 
         // elenco delle attività scoperte per il progetto corrente
         $attivita = mysqlQuery( 
@@ -615,6 +659,10 @@
             
             krsort( $candidati );
         }
+
+        timerCheck( $timing, 'fine ricerca elenco sostituti per progetto ' . $id_progetto );
+
+        writeToFile( print_r($timing, true), $logdir);
 
         return $candidati;
 
