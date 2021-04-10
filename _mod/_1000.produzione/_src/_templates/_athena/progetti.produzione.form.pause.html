@@ -43,12 +43,22 @@
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
 		{# SUBFORM FILE #}
-        {{ sub.pause( table, 'pause_progetti', 'pause pianificazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_progetto' ) }}
+        {{ sub.pause( table, 'pause_progetti', 'sospensioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_progetto' ) }}
         
         {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-            {{ def.controls( page, pages, ietf, session, table, request ) }}
-        </fieldset>
+            <fieldset class="form-controls mt-auto">
+                <div class="row no-gutters d-print-none">
+                    <div class="col-auto col-md-5">
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ page.parent.path[ ietf ] }}','_self');" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
+                    </div>
+                    <div class="col-auto col-md-7 text-right">
+                        <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
+                        {% if request[table]['pause_progetti'] %}
+                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="pulisci eventi" data-toggle="modal" data-target="#pulisci" data-placement="bottom" data-delay="1000" title="" data-original-title="pulisci eventi">PULISCI EVENTI</button>
+                        {% endif %}                        
+                    </div>
+                </div>
+            </fieldset>
         
     </form>
 </div>

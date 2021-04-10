@@ -1,0 +1,40 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function pulisciEventi( t ) {
+
+		var call = '{{ site.url }}_mod/_1000.produzione/_src/_api/_task/_eventi.delete.php?id={{ request[table].id }}';
+		
+		getws( call,'', function() {
+			$('#pulisci').modal('toggle');
+		});
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="pulisci">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">rimuovi eventi</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				<div class="col">
+                    questa operazione rimuoverà le to-do e le attività pianificate per il progetto {{ request[table].id }} nei periodi di sospensione
+				</div>
+			</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" onclick="pulisciEventi();">rimuovi</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

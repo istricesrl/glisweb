@@ -64,7 +64,7 @@
 	$p['progetti.produzione.form.pause'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'pause' ),
-	    'h1'			=> array( $l		=> 'pause' ),
+	    'h1'			=> array( $l		=> 'sospensioni' ),
 	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.pause.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.pause.php' ),
