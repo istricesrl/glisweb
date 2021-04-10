@@ -109,10 +109,32 @@
         
         $punti = 0;
 
-        // verifico se ci sono attività passate legate a questo operatore per questo progetto, estraendo la data di ultima attività eventualmente svolta
+        $frequenza = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT count(*) FROM attivita_view WHERE id_progetto = ? AND id_anagrafica = ? '
+            .'AND (data_programmazione between ? AND ?)',
+            array(
+                array( 's' => $id_progetto ),
+                array( 's' => $id_anagrafica ),
+                array( 's' => date('Y-m-d', strtotime( $data . '-3 months' ) ) ),
+                array( 's' => $data )
+            )
+        );
+
+        if( !empty( $frequenza ) ){
+            if( $frequenza >= 100 ){
+                $punti = 100;
+            }
+            else{
+                $punti = $frequenza;
+            }
+        }
+
+/*
+        // verifico quante attività passate ci sono legate a questo operatore per questo progetto
         $a = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT max(data_programmazione) FROM attivita_view WHERE id_anagrafica = ? AND id_progetto = ? AND data_programmazione < ?',
+            'SELECT count(*) as frequenza FROM attivita_view WHERE id_anagrafica = ? AND id_progetto = ? AND data_programmazione < ?',
             array(
                 array( 's' => $id_anagrafica ),
                 array( 's' => $id_progetto ),
@@ -120,7 +142,6 @@
             )
         );
 
-        $result['ultima_attivita'] = $a;
 
         if( !empty( $a ) ){
             // inizializzo il punteggio a 100
@@ -137,9 +158,8 @@
             $punti -= ($cw - $lw);
   
        }
-        
-    //   $result['punti'] = $punti;
-   
+*/
+
         return $punti;
     }
 
@@ -356,22 +376,7 @@
             )
         );
 
-        // escludere le anagrafiche per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
-
-        // select che estrae i dati dall'anagrafica_view, sostituita con quella che estrae da contratti_view
-    /*    "SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 "
-        ."AND id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) "
-        ."AND ( "
-            ."SELECT count(*) FROM attivita_view WHERE id_anagrafica = anagrafica_view.id "
-            ."AND ( "
-                ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
-                ."OR "
-                ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
-            .") "
-        .") = 0 ",
-    */
-
-        
+        // escludere le anagrafiche per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente        
         $operatori = mysqlQuery(
             $cf['mysql']['connection'],
             "SELECT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view WHERE "
