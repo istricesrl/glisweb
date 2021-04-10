@@ -44,7 +44,8 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form', 
-														'progetti.produzione.form.todo' ) )
+														'progetti.produzione.form.todo',
+														'progetti.produzione.form.pause' ) )
 	);
 
 	// gestione todo progetti
@@ -55,6 +56,18 @@
 	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.todo.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.todo.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+	);
+
+	// gestione pause pianificazioni progetti
+	$p['progetti.produzione.form.pause'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'pause' ),
+	    'h1'			=> array( $l		=> 'pause' ),
+	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.pause.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.pause.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 	);
