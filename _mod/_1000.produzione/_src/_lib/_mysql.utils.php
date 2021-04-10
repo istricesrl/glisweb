@@ -483,6 +483,9 @@
         foreach( $operatori as $o ){
             // scorro le attività e vedo se può coprirle
 
+            // TODO fare select che conta quante volte è stato nel progetto nei 3 mesi precedenti
+            // più di 100 volte punteggio 100, altrimenti punteggio = n. volte
+
             $o['punteggio'] = 0;
             $o['punti_distanza'] = 0;
             $o['punti_attivita'] = 0;
