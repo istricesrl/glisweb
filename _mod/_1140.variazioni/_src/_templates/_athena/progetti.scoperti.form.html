@@ -53,6 +53,7 @@
                     <thead>
                         <tr>
                             <th>operatore</th>
+                            <th>sostituto</th>
                             <th>progetto</th>
                             <th>copertura</th>
                             <th>distanza</th>
@@ -67,6 +68,7 @@
                         {% for o in etc.operatori|reverse %}
                         <tr>
                             <td class="text-left">{{ o.anagrafica }}</td>
+                            <td>{{ o.punti_sostituto }}</td>
                             <td>{{ o.punti_progetto }}</td>
                             <td>{{ o.punti_copertura }}</td>
                             <td>{{ o.punti_distanza }}</td>

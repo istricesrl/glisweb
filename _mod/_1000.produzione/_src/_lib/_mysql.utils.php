@@ -445,9 +445,9 @@
         global $cf;
 
         $candidati = array();   // inizializzo l'array del risultato
-        $op = array();      // array provvisorio
+        $op = array();      // array provvisorio per l'ordinamento
 
-        // data di pianificazione della prima attività scoperta
+        // data di pianificazione della prima attività scoperta per il progetto corrente
         $dataPrima = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT min(data_programmazione) FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
@@ -456,19 +456,38 @@
             )
         );
 
-        // elenco degli operatori che hanno attivita pianificate per questo progetto prima di questa data (quindi che lo conoscono)
-        // qui per ora non faccio il check sul contratto, dato che stiamo leggendo dalle attivtà
-        $operatori = mysqlQuery(
+        // operatori che di base sono assegnati alle sostituzioni
+        $sostituti = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT id_anagrafica, anagrafica, count(*) as volte FROM attivita_view '
-            .'WHERE id_progetto = ? AND data_programmazione < ? AND id_anagrafica IS NOT NULL GROUP BY id_anagrafica '
-        #    .'ORDER BY volte DESC LIMIT 10'
-            ,
+            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view WHERE se_sostituto = 1'
+        );
+
+        if( !empty( $sostituti ) ){
+            foreach( $sostituti as $s ){
+                $operatori[ $s['id_anagrafica'] ] = $s;
+            } 
+        }
+       
+
+        // elenco degli operatori che hanno attivita assegnate pianificate per questo progetto prima di questa data (quindi che lo conoscono)
+        $assegnati = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT a.id_anagrafica, a.anagrafica, ca.se_sostituto FROM attivita_view AS a '
+            .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
+            .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
+            .'WHERE id_progetto = ? AND data_programmazione < ? AND a.id_anagrafica IS NOT NULL GROUP BY a.id_anagrafica ',
             array(
                 array( 's' => $id_progetto ),
                 array( 's' => $dataPrima )
             )
         );
+
+        if( !empty( $assegnati ) ){
+            foreach( $assegnati as $a ){
+                $operatori[ $a['id_anagrafica'] ] = $a;
+            }
+        }
+
 
         // elenco delle attività scoperte per il progetto corrente
         $attivita = mysqlQuery( 
@@ -479,110 +498,118 @@
             )
         );
 
-        // per ciascun operatore
-        foreach( $operatori as $o ){
-            // scorro le attività e vedo se può coprirle
+        // se ci sono operatori candidati calcolo i punteggi
+        if( !empty( $operatori ) ){
 
-            // TODO fare select che conta quante volte è stato nel progetto nei 3 mesi precedenti
-            // più di 100 volte punteggio 100, altrimenti punteggio = n. volte
+            // per ciascun operatore
+            foreach( $operatori as $o ){
+                // scorro le attività e vedo se può coprirle
 
-            $o['punteggio'] = 0;
-            $o['punti_distanza'] = 0;
-            $o['punti_attivita'] = 0;
-            $o['punti_distanza_attivita'] = 0;
+                $o['punteggio'] = 0;
+                $o['punti_distanza'] = 0;
+                $o['punti_attivita'] = 0;
+                $o['punti_distanza_attivita'] = 0;
 
-            $attivita_coperte = 0;
-            $richieste_inviate = 0;
-
-            $svr = array();     //
-
-            foreach( $attivita as $a ){
-                //14:00-15:45 2021-04-07 > ragionare a intervalli di 15 minuti, no ora inizio
-            //    $a['range'] = array( '202104071430', '202104071500', '202104071530', '202104071600');
-
-                $inizio = strtotime( $a['ora_inizio_programmazione'] );
-                $fine = strtotime( $a['ora_fine_programmazione'] );
-                $a['range'] = array();
-                $step = $inizio;
-            
-                while( $step >= $inizio && $step <= $fine ){
-                $step = strtotime("+15 minutes", $step);
-                $a['range'][] = str_replace('-', '', $a['data_programmazione'] ) . str_replace(':', '', date('H:i', $step) );
+                if( $o['se_sostituto'] == 1 ){
+                    $o['punti_sostituto'] = 100;
+                }
+                else{
+                    $o['punti_sostituto'] = 0;
                 }
 
-                $copertura = coperturaAttivita( $o['id_anagrafica'], $a['id'] );
+                $o['punteggio'] += $o['punti_sostituto'];
 
-                // se può coprire l'attività e non ci sono sovrapposizioni con altre fasce orarie
-                // verifico se c'è già una richiesta di sostituzione per essa
-                // in tal caso escludo l'attività, altrimenti procedo con il calcolo dei punti distanza
-                if(  $copertura == 1 && count( array_intersect( $svr, $a['range'] ) ) == 0 ){
+                $attivita_coperte = 0;
+                $richieste_inviate = 0;
 
-                    $svr = array_merge( $a['range'], $svr );
+                $svr = array();     //
 
-                    $o['punti_attivita']++;
-                    $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] );
+                foreach( $attivita as $a ){
+                    //14:00-15:45 2021-04-07 > ragionare a intervalli di 15 minuti, no ora inizio
+                //    $a['range'] = array( '202104071430', '202104071500', '202104071530', '202104071600');
 
-                    $richieste = mysqlSelectValue(
-                        $cf['mysql']['connection'],
-                        'SELECT count(*) FROM sostituzioni_attivita WHERE id_attivita = ? '
-                        .'AND id_anagrafica = ?',
-                        array(
-                            array( 's' => $a['id'] ),
-                            array( 's' => $o['id_anagrafica'] )
-                        )
-                    );
-
-                    if( !empty( $richieste ) ){
-                       $richieste_inviate++;
-                    }
-                    
-                }
-            }
-
-            // solo se il numero di attività che può coprire è maggiore delle richieste già inviate procedo
-            if( $o['punti_attivita'] > $richieste_inviate ){
-
-                // punti copertura: numero attività copribili /numero attività da coprire
-                $o['punti_copertura'] = intval( $o['punti_attivita'] / count( $attivita ) * 100 );
-                $o['punteggio'] +=  $o['punti_copertura'];
+                    $inizio = strtotime( $a['ora_inizio_programmazione'] );
+                    $fine = strtotime( $a['ora_fine_programmazione'] );
+                    $a['range'] = array();
+                    $step = $inizio;
                 
-                // punti distanza
-                if( $o['punti_attivita'] > 0 && $o['punti_distanza_attivita'] > 0 ){
-                    $o['punti_distanza'] = intval( $o['punti_distanza_attivita'] / $o['punti_attivita'] );
-                    $o['punteggio'] += $o['punti_distanza'];
-                }         
+                    while( $step >= $inizio && $step <= $fine ){
+                    $step = strtotime("+15 minutes", $step);
+                    $a['range'][] = str_replace('-', '', $a['data_programmazione'] ) . str_replace(':', '', date('H:i', $step) );
+                    }
 
-                // punti conoscenza del progetto
-                $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $id_progetto, $dataPrima );
-                $o['punteggio'] += $o['punti_progetto'];
+                    $copertura = coperturaAttivita( $o['id_anagrafica'], $a['id'] );
 
+                    // se può coprire l'attività e non ci sono sovrapposizioni con altre fasce orarie
+                    // verifico se c'è già una richiesta di sostituzione per essa
+                    // in tal caso escludo l'attività, altrimenti procedo con il calcolo dei punti distanza
+                    if(  $copertura == 1 && count( array_intersect( $svr, $a['range'] ) ) == 0 ){
+
+                        $svr = array_merge( $a['range'], $svr );
+
+                        $o['punti_attivita']++;
+                        $o['punti_distanza_attivita'] += puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] );
+
+                        $richieste = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT count(*) FROM sostituzioni_attivita WHERE id_attivita = ? '
+                            .'AND id_anagrafica = ?',
+                            array(
+                                array( 's' => $a['id'] ),
+                                array( 's' => $o['id_anagrafica'] )
+                            )
+                        );
+
+                        if( !empty( $richieste ) ){
+                        $richieste_inviate++;
+                        }
+                        
+                    }
+                }
+
+                // solo se il numero di attività che può coprire è maggiore delle richieste già inviate procedo
+                if( $o['punti_attivita'] > $richieste_inviate ){
+
+                    // punti copertura: numero attività copribili /numero attività da coprire
+                    $o['punti_copertura'] = intval( $o['punti_attivita'] / count( $attivita ) * 100 );
+                    $o['punteggio'] +=  $o['punti_copertura'];
+                    
+                    // punti distanza
+                    if( $o['punti_attivita'] > 0 && $o['punti_distanza_attivita'] > 0 ){
+                        $o['punti_distanza'] = intval( $o['punti_distanza_attivita'] / $o['punti_attivita'] );
+                        $o['punteggio'] += $o['punti_distanza'];
+                    }         
+
+                    // punti conoscenza del progetto
+                    $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $id_progetto, $dataPrima );
+                    $o['punteggio'] += $o['punti_progetto'];
+
+                
+                    $op[ $o['id_anagrafica'] ] = $o;
+                }     
             
-                $op[ $o['id_anagrafica'] ] = $o;
-            }     
-        
-        }
-
-        // riordino l'array degli operatori in base al punteggio
-        $sort_data = array();
-        foreach( $op as $key => $value ) {
-            $sort_data[ $key ] = $value['punteggio'];
-        }
-
-        if( isset( $sort_data ) ){
-            array_multisort( $sort_data, $op );
-        }
-
-        foreach( $op as $o ){
-            while( array_key_exists( $o['punteggio'], $candidati ) ){
-                $o['punteggio']++;
             }
 
-            $candidati[ $o['punteggio'] ] = $o;
+            // riordino l'array degli operatori in base al punteggio
+            $sort_data = array();
+            foreach( $op as $key => $value ) {
+                $sort_data[ $key ] = $value['punteggio'];
+            }
+
+            if( isset( $sort_data ) ){
+                array_multisort( $sort_data, $op );
+            }
+
+            foreach( $op as $o ){
+                while( array_key_exists( $o['punteggio'], $candidati ) ){
+                    $o['punteggio']++;
+                }
+
+                $candidati[ $o['punteggio'] ] = $o;
+            }
+            
+            krsort( $candidati );
         }
-
-
-
-        krsort( $candidati );
 
         return $candidati;
 
