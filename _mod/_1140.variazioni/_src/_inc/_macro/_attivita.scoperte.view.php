@@ -38,10 +38,9 @@
         'data_programmazione' => 'data pianificazione',
         'ora_inizio_programmazione' => 'ora inizio',
         'ora_fine_programmazione' => 'ora fine',
-        'anagrafica' => 'persona',
+        'assente' => 'da sostituire',
         'cliente' => 'cliente',
-        'progetto' => 'progetto',
-        '__label__' => 'tipologia'
+        'progetto' => 'progetto'
 	);
 
     // stili della vista
@@ -49,7 +48,7 @@
         'id' => 'd-none d-md-table-cell',
         'cliente' => 'text-left d-none d-md-table-cell',
         'progetto' => 'text-left',
-        '__label__' => 'text-left'
+        'assente' => 'text-left'
     );
 
      // inclusione filtri
