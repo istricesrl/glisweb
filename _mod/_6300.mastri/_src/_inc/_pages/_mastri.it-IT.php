@@ -32,8 +32,8 @@
 	// gestione tools mastri
 	$p['mastri.form.movimenti'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'righe' ),
-	    'h1'			=> array( $l		=> 'righe' ),
+	    'title'			=> array( $l		=> 'movimenti' ),
+	    'h1'			=> array( $l		=> 'movimenti' ),
 	    'parent'		=> array( 'id'		=> 'mastri.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mastri.form.movimenti.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_mastri.form.movimenti.php' ),

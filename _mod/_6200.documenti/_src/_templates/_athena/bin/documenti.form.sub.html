@@ -7,9 +7,15 @@
     {% else %}{% set t = 0 %}{% endif %}
     {% for i in 0..t %}
     {% set r = request[ table ][ subtable ][ i ] %}
-    <div id="{{ subtable }}_{{ i }}" class="form-sub">
-	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	{{ frm.input( table, subtable, i, 'id_documento', '', '', '', '__parent_id__', 'hidden' ) }}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
+    <div id="{{ subtable }}_{{ i }}">
+    {{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+    {{ frm.input( table, subtable, i, 'id_documento', '', '', '', '__parent_id__', 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'id_account_' ~ action, '', '', '', account, 'hidden' ) }}
+	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden' ) }}
     {{ frm.input( table, subtable, i, 'id_udm', '', '', request, '1', 'hidden' ) }}
     {{ frm.input( table, subtable, i, 'id_listino', '', '', request, '1', 'hidden' ) }}
     {{ frm.input( table, subtable, i, 'id_valuta', '', '', request, '1', 'hidden' ) }}
@@ -19,9 +25,15 @@
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, request[ table ][ 'data' ], 'hidden' ) }}
     {% else %}
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, 'now'|date('Y-m-d'), 'hidden' ) }}
+    {% endif %}    
+    {% if request[ table ][ 'id_tipologia' ] %}
+        {{ frm.input( table, subtable, i, 'id_tipologia', '', '', request, request[ table ][ 'id_tipologia' ], 'hidden' ) }}
     {% endif %}
-
 	<div class="form-group form-row">
+        <div class="col">
+            {% if i == 0 %}<span class="label-top remove-after-duplicate">ordine</span>{% endif %}
+            {{ frm.input( table, subtable, i, 'ordine', '#', '', request ) }}
+        </div>
 	    <div class="col-auto">
 		    {% if i == 0 %}<span class="label-top remove-after-duplicate">articolo</span>{% endif %}
             {{ frm.selectBox( table, subtable, i, 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
@@ -38,7 +50,7 @@
 		    {% if i == 0 %}<span class="label-top remove-after-duplicate">quantità</span>{% endif %}
 		    {{ frm.input( table, subtable, i, 'quantita', 'quantità', '', request ) }}
 	    </div>
-        <div class="col-md col">
+        <div class="col-md-2 col">
             {% if i == 0 %}<span class="label-top remove-after-duplicate">progetto</span>{% endif %}
             {{ frm.selectBox( table, subtable, i, 'id_progetto', '', etc.select.id_progetti, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
          </div>
