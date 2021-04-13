@@ -101,18 +101,24 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view WHERE se_cliente = 1'
 	);
-
+/*
     if( isset( $_REQUEST[ $ct['form']['table'][ 'id_emittente' ] ] ) && ! empty( $_REQUEST[ $ct['form']['table'][ 'id_emittente' ] ] ) ){
-        $ct['etc']['select']['id_documentii'] = mysqlCachedIndexedQuery(
+        $ct['etc']['select']['id_documenti'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM documenti_view'
+            'SELECT id, __label__ FROM documenti_view WHERE id_emittente = ?',
+			array( array( 's' => $_REQUEST[ $ct['form']['table'][ 'id_emittente' ] ] ) )
         );
     } else {
-
+		$ct['etc']['select']['id_documenti'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM documenti_view '
+        );
     }
-
+*/
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
