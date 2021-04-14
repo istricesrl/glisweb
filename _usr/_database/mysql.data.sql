@@ -1376,15 +1376,18 @@ ON DUPLICATE KEY UPDATE
 
 -- tipologie_indirizzi
 -- tipologia: tabella di supporto
-INSERT INTO `tipologie_indirizzi` (`id`, `nome`, `se_sede`, `se_operativa`, `se_abitazione`, `html`) VALUES
-(1, 'sede legale', 1, NULL, NULL, '&#xf1ad;'),
-(2, 'sede operativa', NULL, 1, NULL, '&#xf275;'),
-(3, 'casa', NULL, NULL, 1, '&#xf015;')
+INSERT INTO `tipologie_indirizzi` (`id`, `nome`, `se_sede`, `se_operativa`, `se_abitazione`, `se_domicilio`, `html`) VALUES
+(1, 'sede legale', 1, NULL, NULL, NULL, '&#xf1ad;'),
+(2, 'sede operativa', NULL, 1, NULL, NULL, '&#xf275;'),
+(3, 'casa', NULL, NULL, 1, NULL, '&#xf015;'),
+(4, 'residenza', NULL, NULL, 1, NULL, '&#xf015;'),
+(5, 'domicilio', NULL, NULL, 1, 1, '&#xf015;')
 ON DUPLICATE KEY UPDATE
 	nome = VALUES( nome ),
 	se_sede = VALUES( se_sede ),
 	se_operativa = VALUES( se_operativa ),
 	se_abitazione = VALUES( se_abitazione ),
+	se_domicilio = VALUES( se_domicilio ),
 	html = VALUES( html );
 
 	-- tipologie_interesse
