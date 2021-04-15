@@ -1445,12 +1445,12 @@ ON DUPLICATE KEY UPDATE nome = VALUES( nome ), se_colori = VALUES( se_colori ), 
 
 -- tipologie_progetti
 -- tipologia: tabella assistita
-INSERT IGNORE INTO `tipologie_progetti` (`id`, `nome`, `se_scalare`, `se_commessa`) VALUES
-(1, 'commessa', NULL, 1),
-(2, 'pacchetto', 1, NULL),
-(3, 'contratto', NULL, NULL),
-(4, 'on demand', NULL, NULL),
-(5, 'consuntivo', NULL, NULL);
+INSERT IGNORE INTO `tipologie_progetti` (`id`, `nome`, `se_scalare`, `se_commessa`, `se_chiamata`) VALUES
+(1, 'commessa', NULL, 1, NULL),
+(2, 'pacchetto', 1, NULL, NULL),
+(3, 'contratto', NULL, NULL, NULL),
+(4, 'on demand', NULL, NULL, NULL),
+(5, 'consuntivo', NULL, NULL, 1);
 
 -- tipologie_pubblicazione
 -- tipologia: tabella di supporto
