@@ -31,8 +31,25 @@
 
         $result = array();
 
+        $result['parametri_ricevuti'] = array(
+            'anagrafica' => $id_anagrafica,
+            'data' => $data,
+            'ora_inizio' => $ora_inizio,
+            'ora_fine' => $ora_fine
+        );
+
+        if( empty( $ora_inizio ) ){
+            $ora_inizio = '00:00:01';
+        }
+
+        if( empty( $ora_fine ) ){
+            $ora_fine = '23:59:59';
+        }
+
         // ricavo l'id del contratto attivo alla data indicata
         $cId = contrattoAttivo( $id_anagrafica, $data );
+
+        $result['contratto'] = $cId;
 
         // se ho un contratto attivo
         if( !empty( $cId ) ){
