@@ -27,7 +27,11 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 'documenti.form.righe', 'documenti.form.tools' ) )
+		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 
+														'documenti.form.righe', 
+														'documenti.form.xml',
+														'documenti.form.stampe',
+														'documenti.form.tools' ) )
 	);
 
 	// gestione tools documenti
@@ -38,6 +42,18 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.righe.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.righe.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
+	);
+
+	// gestione xml documenti
+	$p['documenti.form.xml'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'xml' ),
+	    'h1'			=> array( $l		=> 'xml' ),
+	    'parent'		=> array( 'id'		=> 'documenti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.xml.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.xml.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
@@ -53,6 +69,19 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.tools.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica stampe
+	$p['documenti.form.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'documenti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m.'_src/_inc/_macro/_documenti.form.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
 
 	// vista documenti_articoli (righe)
@@ -76,11 +105,11 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form', 'documenti.form.tools' ) )
+		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form', 'documenti.articoli.form.tools' ) )
 	);
 
 	// gestione tools documenti_articoli
-	$p['documenti.form.tools'] = array(
+	$p['documenti.articoli.form.tools'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
 		'title'			=> array( $l		=> 'azioni righe' ),
