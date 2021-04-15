@@ -31,7 +31,7 @@
 
     // duplica contratto
 	$ct['page']['contents']['metro']['variazione'][] = array(
-	    'url' =>  $base . '_duplica.contratto.php?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+	    'url' =>  $base . '_contratti.duplicate.php?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
 	    'icon' => NULL,
 	    'fa' => 'fa-files-o',
 	    'title' => 'variazione contratto',
