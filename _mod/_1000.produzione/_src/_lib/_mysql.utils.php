@@ -394,11 +394,11 @@
         );
 
         // operatori che di base sono assegnati alle sostituzioni
-        // sono esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
+        // sono esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente      
         $sostituti = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view WHERE se_sostituto = 1 '
-            .'AND id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? )',
+            .'AND id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) ',
             array(
                 array( 's' => $id_attivita )
             )
@@ -411,13 +411,15 @@
         }
 
         // elenco operatori che hanno svolto attività in passato sul progetto corrente
-        // sono esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente        
+        // sono esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
+        // e l'operatore che ha lasciato l'attività scoperta
         $assegnati = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto FROM attivita_view AS a '
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) '
+            .'AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM __report_attivita_assenze__ WHERE id_attivita = ? ) '
             .'AND a.id_progetto = ? '
             .'AND ( '
                 .'SELECT count(*) FROM attivita_view WHERE id_anagrafica = a.id_anagrafica '
@@ -429,6 +431,7 @@
             .') = 0 '
             .'GROUP BY a.id_anagrafica',
             array(
+                array( 's' => $id_attivita ),
                 array( 's' => $id_attivita ),
                 array( 's' => $a['id_progetto'] ),
                 array( 's' => $a['data_ora_inizio'] ),
