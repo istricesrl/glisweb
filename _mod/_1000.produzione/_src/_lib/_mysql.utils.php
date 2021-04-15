@@ -369,8 +369,30 @@
             )
         );
 
-        if( empty( $collisioni ) || $collisioni = 0 ){
-            $copertura = 1;
+        if( empty( $collisioni ) || $collisioni == 0 ){
+
+            // verifico se l'operatore non ha preso permessi o ferie in questa data/ora
+            $permessi = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT count(*) FROM periodi_variazioni_attivita AS pv LEFT JOIN variazioni_attivita AS v '
+                .'ON pv.id_variazione = v.id WHERE v.id_anagrafica = ? AND v.data_approvazione IS NOT NULL '
+                .'AND ( '
+                .'( TIMESTAMP( pv.data_inizio, coalesce( pv.ora_inizio, "00:00:01" ) ) <= ? AND TIMESTAMP( pv.data_fine, coalesce( pv.ora_fine, "23:59:59" ) ) >= ? ) '
+                .'OR '
+                .'( TIMESTAMP( pv.data_inizio, coalesce( pv.ora_inizio, "00:00:01" ) ) <= ? AND TIMESTAMP( pv.data_fine, coalesce( pv.ora_fine, "23:59:59" ) ) >= ? ) '
+                .')',
+                array(
+                    array( 's' => $id_anagrafica ),
+                    array( 's' => $a['data_ora_inizio'] ),
+                    array( 's' => $a['data_ora_inizio'] ),
+                    array( 's' => $a['data_ora_fine'] ),                   
+                    array( 's' => $a['data_ora_fine'] )
+                )
+            );
+
+            if( empty( $permessi ) || $permessi == 0 ){
+                $copertura = 1;
+            }
         }
 
         return $copertura;
@@ -419,25 +441,23 @@
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) '
-            .'AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM __report_attivita_assenze__ WHERE id_attivita = ? ) '
             .'AND a.id_progetto = ? '
-            .'AND ( '
+        /*    .'AND ( '
                 .'SELECT count(*) FROM attivita_view WHERE id_anagrafica = a.id_anagrafica '
                 .'AND ( '
                     .'(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) '
                     .'OR '
                     .'(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) '
                 .') '
-            .') = 0 '
+            .') = 0 '*/
             .'GROUP BY a.id_anagrafica',
             array(
                 array( 's' => $id_attivita ),
-                array( 's' => $id_attivita ),
-                array( 's' => $a['id_progetto'] ),
+                array( 's' => $a['id_progetto'] )/*,
                 array( 's' => $a['data_ora_inizio'] ),
                 array( 's' => $a['data_ora_fine'] ),
                 array( 's' => $a['data_ora_inizio'] ),
-                array( 's' => $a['data_ora_fine'] )
+                array( 's' => $a['data_ora_fine'] )*/
             )
         );
 
@@ -450,31 +470,41 @@
         $candidati = array();
         $op = array();      // array provvisorio
 
-        foreach( $operatori as $o ){
+        foreach( $operatori as $k => $o ){
+			
+			// calcolo se può coprire l'attività
+			$copertura = coperturaAttivita( $o['id_anagrafica'], $id_attivita );
+			
+			// se non può coprirla rimuovo l'operatore dall'array
+			if( $copertura == 0 ){
+				unset( $operatori[$k] );
+			}
+			else{
 
-            $o['punteggio'] = 0;
+				$o['punteggio'] = 0;
 
-            if( $o['se_sostituto'] == 1 ){
-                $o['punti_sostituto'] = 100;
-            }
-            else{
-                $o['punti_sostituto'] = 0;
-            }
+				if( $o['se_sostituto'] == 1 ){
+					$o['punti_sostituto'] = 100;
+				}
+				else{
+					$o['punti_sostituto'] = 0;
+				}
 
-            $o['punteggio'] += $o['punti_sostituto'];
-                   
-        // calcolo punteggi vari con le funzioni
-            $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $a['id_progetto'], $a['data_programmazione']);
-            $o['punti_disponibilita'] = puntiDisponibilitaOperatore( $o['id_anagrafica'], $a['data_programmazione'], $a['ora_inizio_programmazione'], $a['ora_fine_programmazione'] );
-            $o['punti_distanza'] = intval( puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] ) );
-            
-            $o['punteggio'] += $o['punti_progetto'];
-            $o['punteggio'] += $o['punti_disponibilita'];
-            $o['punteggio'] += $o['punti_distanza'];
-            
-            // TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
+				$o['punteggio'] += $o['punti_sostituto'];
+					   
+			// calcolo punteggi vari con le funzioni
+				$o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $a['id_progetto'], $a['data_programmazione']);
+				$o['punti_disponibilita'] = puntiDisponibilitaOperatore( $o['id_anagrafica'], $a['data_programmazione'], $a['ora_inizio_programmazione'], $a['ora_fine_programmazione'] );
+				$o['punti_distanza'] = intval( puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] ) );
+				
+				$o['punteggio'] += $o['punti_progetto'];
+				$o['punteggio'] += $o['punti_disponibilita'];
+				$o['punteggio'] += $o['punti_distanza'];
+				
+				// TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
 
-            $op[ $o['id_anagrafica'] ] = $o;
+				$op[ $o['id_anagrafica'] ] = $o;
+			}
 
         }
 
