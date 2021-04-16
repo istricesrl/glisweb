@@ -3,8 +3,8 @@
 /**
      *
      *
-     *
-     *
+     * il task riceve in ingresso l'id di un contratto e ne effettua la duplicazione
+     * se la procedura va a buon fine, ritorna l'id del nuovo contratto
      *
      *
      * @todo documentare

@@ -14,10 +14,23 @@
 	$ct['form']['table'] = 'contratti';
 	
     // percorsi
-//	$base = '/task/';
 	$base = $ct['site']['url'] . '/_mod/_6600.contratti/_src/_api/_task/';
 
-    // NOTA la variabile $base causa problemi nel multi sito fatta in questo modo, per cui ho commentato tutto
+	// tendina giorni
+    $ct['etc']['select']['giorni'] = array( 
+        array( 'id' => '1', '__label__' => 'lunedi' ),
+        array( 'id' => '2', '__label__' => 'martedi' ),
+        array( 'id' => '3', '__label__' => 'mercoledi' ),
+        array( 'id' => '4', '__label__' => 'giovedi' ),
+        array( 'id' => '5', '__label__' => 'venerdi' ),
+        array( 'id' => '6', '__label__' => 'sabato' ),
+        array( 'id' => '7', '__label__' => 'domenica' )
+    );
+
+    // tendina turni
+	foreach( range( 1, 9 ) as $turno ) {
+	    $ct['etc']['select']['turni'][] =  array( 'id' => $turno, '__label__' => $turno );
+	}
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
@@ -37,6 +50,15 @@
 	    'fa' => 'fa-files-o',
 	    'title' => 'variazione contratto',
 	    'text' => 'crea un duplicato del contratto per inserire variazioni'
+	);
+
+	// duplica orari giorno
+	$ct['page']['contents']['metro']['variazione'][] = array(
+		'modal' => array('id' => 'duplica-giorno', 'include' => 'inc/contratti.form.tools.modal.duplica.giorno.html' ),
+		'icon' => NULL,
+		'fa' => 'fa-files-o',
+		'title' => 'duplicazione giorno',
+		'text' => 'duplica gli orari di un determinato giorno e turno di lavoro'
 	);
 
 	// macro di default per l'entità contratti
