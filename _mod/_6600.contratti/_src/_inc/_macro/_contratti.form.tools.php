@@ -61,6 +61,15 @@
 		'text' => 'duplica gli orari di un determinato giorno e turno di lavoro'
 	);
 
+	// duplica orari turno
+	$ct['page']['contents']['metro']['variazione'][] = array(
+		'modal' => array('id' => 'duplica-turno', 'include' => 'inc/contratti.form.tools.modal.duplica.turno.html' ),
+		'icon' => NULL,
+		'fa' => 'fa-files-o',
+		'title' => 'duplicazione turno',
+		'text' => 'duplica gli orari di un determinato turno di lavoro in un nuovo turno'
+	);
+
 	// macro di default per l'entità contratti
 	require '_contratti.form.default.php';
 
