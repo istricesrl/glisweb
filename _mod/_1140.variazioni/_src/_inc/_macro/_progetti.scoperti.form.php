@@ -31,7 +31,7 @@
             $cf['cache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view' );
+            'SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view' );
     }
 
      // modal per la conferma di invio richiesta sostituzione
