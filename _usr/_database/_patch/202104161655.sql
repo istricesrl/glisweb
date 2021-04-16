@@ -1,0 +1,1 @@
+DROP VIEW obiettivi_tipologie_progetti_view;
