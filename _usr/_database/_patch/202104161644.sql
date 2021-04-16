@@ -1,0 +1,1 @@
+DROP TABLE obiettivi_categorie_prodotti;
