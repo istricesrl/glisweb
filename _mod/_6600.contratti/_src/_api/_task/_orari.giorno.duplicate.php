@@ -11,6 +11,7 @@
      * - gb: numero del giorno da duplicare ( 1=lunedi -> 7=domenica)
      * - gn: numero del giorno da creare ( 1=lunedi -> 7=domenica)
      * 
+     * NOTA: attualmente il task duplica solo gli orari di lavoro (non le disponibilità)
      *
      * @todo documentare
      *
@@ -32,7 +33,7 @@
         // estraggo le righe di orari_contratti relativi al giorno da duplicare
         $orari = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT * FROM orari_contratti WHERE id_contratto = ? AND turno = ? AND id_giorno = ?',
+            'SELECT * FROM orari_contratti WHERE id_contratto = ? AND turno = ? AND id_giorno = ? AND se_lavoro = 1',
             array(
                 array( 's' => $_REQUEST['id'] ),
                 array( 's' => $_REQUEST['t'] ),
