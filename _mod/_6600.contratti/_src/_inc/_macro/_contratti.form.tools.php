@@ -31,7 +31,8 @@
 
     // duplica contratto
 	$ct['page']['contents']['metro']['variazione'][] = array(
-	    'url' =>  $base . '_contratti.duplicate.php?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+	#   'url' =>  $base . '_contratti.duplicate.php?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+		'modal' => array('id' => 'duplica-contratto', 'include' => 'inc/contratti.form.tools.modal.duplica.contratto.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-files-o',
 	    'title' => 'variazione contratto',
@@ -43,3 +44,5 @@
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+	require DIR_SRC_INC_MACRO . '_default.tools.php';
