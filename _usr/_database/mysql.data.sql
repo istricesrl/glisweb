@@ -159,7 +159,7 @@ INSERT IGNORE INTO `categorie_anagrafica` (`id`, `id_genitore`, `nome`, `se_lead
 (10, 1, 'interinali',         		NULL,   NULL,   NULL,   NULL,      1,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,      1,   NULL,   NULL,   NULL ),
 (11, 6, 'agenzie interinali',		NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   	  1,   NULL,   NULL ),
 (12, NULL, 'referenti',				NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   	  1,   NULL ),
-(13, 9, 'sostituti',				NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   1 );
+(13, 9, 'sostituti',				NULL,   NULL,   NULL,   NULL,      1,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   NULL,      1 );
 
 -- categorie_diritto
 -- tipologia: tabella assistita
