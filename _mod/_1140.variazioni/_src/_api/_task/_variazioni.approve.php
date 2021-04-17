@@ -58,6 +58,56 @@
             $data_ora_inizio = $p['data_inizio'] . " " . $p['ora_inizio'];
             $data_ora_fine = $p['data_fine'] . " " . $p['ora_fine'];
 
+            // estraggo gli id delle attivita e dei progetti che rimangono scoperti
+            $scoperture = mysqlQuery(
+                $cf['mysql']['connection'],
+                "SELECT id, id_progetto, data_programmazione FROM attivita_view "
+                ."WHERE id_anagrafica = ? "
+                ."AND ( ( TIMESTAMP( data_programmazione, ora_inizio_programmazione ) between ? and ? ) "
+                ."OR ( TIMESTAMP( data_programmazione, ora_fine_programmazione ) between ? and ? ) )",
+                array(
+                    array( 's' =>  $v['id_anagrafica'] ),
+                    array( 's' =>  $data_ora_inizio ),
+                    array( 's' =>  $data_ora_fine ),
+                    array( 's' =>  $data_ora_inizio ),
+                    array( 's' =>  $data_ora_fine )
+                )
+            );
+
+
+            if( !empty( $scoperture) ){
+                
+                foreach( $scoperture as $s ){
+                    
+                    // creo una riga nella tabella __report_attivita_assenze__
+                    $raa = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        "INSERT IGNORE INTO __report_attivita_assenze__ ( id_attivita, id_anagrafica, data_assenza ) VALUES ( ?, ?, ? )",
+                        array(
+                            array( 's' => $s['id'] ),
+                            array( 's' => $v['id_anagrafica'] ),
+                            array( 's' => $s['data_programmazione'] )
+                        )
+                    );
+
+                    $status['info'][] = 'inserite ' . $raa . ' righe dalla tabella __report_attivita_assenze__';
+
+                    // creo una riga nella tabella __report_progetti_assenze__
+                /*    $rpa = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        "INSERT IGNORE INTO __report_progetti_assenze__ ( id_progetto, id_anagrafica, data_assenza ) VALUES ( ?, ?, ? )",
+                        array(
+                            array( 's' => $s['id_progetto'] ),
+                            array( 's' => $v['id_anagrafica'] ),
+                            array( 's' => $s['data_programmazione'] )
+                        )
+                    );
+
+                    $status['info'][] = 'inserite ' . $raa . ' righe dalla tabella __report_progetti_assenze__';
+                */
+                }
+            }
+           
             // aggiorno le attività coinvolte settando id_anagrafica NULL
             $u = mysqlQuery( 
                 $cf['mysql']['connection'],
@@ -76,7 +126,7 @@
             );
     
             // status
-            $status['info'][] = 'aggiornate ' . $u . ' righe dalla tabella attivita per il periodo ' . $p['data_inizio'] . ' ' . $p['ora_inizio'] . ' - ' . $p['data_fine'] . ' ' . $p['ora_fine'];
+            $status['info'][] = 'aggiornate ' . $u . ' righe dalla tabella attivita per il periodo ' . $p['data_inizio'] . ' ' . $p['ora_inizio'] . ' - ' . $p['data_fine'] . ' ' . $p['ora_fine'];          
         }
 
         // setto la data di approvazione della variazione alla data corrente

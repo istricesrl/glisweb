@@ -26,6 +26,17 @@
         // richiamo la funzione che ritorna l'array degli operatori coi punteggi
         $ct['etc']['operatori'] = elencoSostitutiAttivita( $_REQUEST[ $ct['form']['table'] ]['id'] );
 
+        // tendina operatori per settaggio manuale
+	    $ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
+            $cf['cache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            "SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view WHERE "
+            ."id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) ORDER BY anagrafica",
+            array(
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
+            )
+        );
     }
 
 //    print_r($ct['etc']['operatori'] );

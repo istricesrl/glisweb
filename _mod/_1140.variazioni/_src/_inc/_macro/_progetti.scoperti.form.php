@@ -26,6 +26,12 @@
         // richiamo la funzione che ritorna l'array degli operatori coi punteggi
         $ct['etc']['operatori'] = elencoSostitutiProgetto( $_REQUEST[ $ct['form']['table'] ]['id'] );
 
+        // tendina operatori per settaggio manuale
+	    $ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
+            $cf['cache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view ORDER BY anagrafica' );
     }
 
      // modal per la conferma di invio richiesta sostituzione

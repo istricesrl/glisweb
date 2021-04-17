@@ -33,13 +33,15 @@
         'id' => '#',
         'cliente' => 'cliente',
         '__label__' => 'nome',
-        'data_scopertura' => 'scoperto dal'
+        'data_scopertura' => 'scoperto dal',
+        'assenti' => 'da sostituire'
     );
 
 // stili della vista
 $ct['view']['class'] = array(
     'id' => 'd-none d-md-table-cell',
     'cliente' => 'text-left d-none d-md-table-cell',
+    'assenti' => 'text-left',
     '__label__' => 'text-left'
 );
  

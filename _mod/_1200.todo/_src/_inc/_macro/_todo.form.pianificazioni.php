@@ -66,12 +66,20 @@
 
         // array per il workspace della pianificazione
         $wks = array(
-            'todo' => array(
-                'data_programmazione' => '§data§',
-                'id_pianificazione' => '§id_pianificazione§'
+            'metadati' => array(
+                'pause' => array(
+                    'tabella' => 'pause_progetti',
+                    'campo' => 'id_progetto'
+                )
             ),
-            'attivita' => array(
-                'data_attivita' => '§data§'
+            'sostituzioni' => array(
+                'todo' => array(
+                    'data_programmazione' => '§data§',
+                    'id_pianificazione' => '§id_pianificazione§'
+                ),
+                'attivita' => array(
+                    'data_attivita' => '§data§'
+                )
             )
         );
 
