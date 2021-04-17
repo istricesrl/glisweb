@@ -1,0 +1,1 @@
+ALTER TABLE `tipologie_obiettivi` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `nome` (`nome`);
