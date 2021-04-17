@@ -162,11 +162,11 @@
 					foreach( $_SESSION['account']['gruppi'] as $gr ) {
 					    $_SESSION['groups'][ $gr ] = &$cf['auth']['groups'][ $gr ];
 					    if( isset( $cf['auth']['groups'][ $gr ]['privilegi'] ) ) {
-							foreach( $cf['auth']['groups'][ $gr ]['privilegi'] as $pr ) {
-								if( ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
-									$_SESSION['account']['privilegi'][] = $pr;
-								}
-							}
+	  						foreach( $cf['auth']['groups'][ $gr ]['privilegi'] as $pr ) {
+  								if( ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
+									  $_SESSION['account']['privilegi'][] = $pr;
+								  }
+							  }
 					    }
 					}
 
@@ -302,21 +302,23 @@
 					    // attribuzione dei gruppi e dei privilegi di gruppo
 						if( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) {
 						    foreach( $_SESSION['groups'] as $gr ) {
-								if( isset( $gr['nome'] ) ) {
-									if( isset( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] ) ) {
-										foreach( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] as $pr ) {
-											if( ! isset( $_SESSION['account']['privilegi'] ) || ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
-												$_SESSION['account']['privilegi'][] = $pr;
-											}
-										}
-									}
-								}
+								  if( isset( $gr['nome'] ) ) {
+							  		if( isset( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] ) ) {
+						  				foreach( $cf['auth']['groups'][ $gr['nome'] ]['privilegi'] as $pr ) {
+					  						if( ! isset( $_SESSION['account']['privilegi'] ) || ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
+				  								$_SESSION['account']['privilegi'][] = $pr;
+			  								}
+		  								}
+	  								}
+  								}
 						    }
 						}
 
 					    // attribuzione dei privilegi utente
-						foreach( $_SESSION['account']['privilegi'] as $pr ) {
-						    $_SESSION['privilegi'][ $pr ] = &$cf['auth']['privileges'][ $pr ];
+						if( isset( $_SESSION['account']['privilegi'] ) ) {
+							foreach( $_SESSION['account']['privilegi'] as $pr ) {
+								$_SESSION['privilegi'][ $pr ] = &$cf['auth']['privileges'][ $pr ];
+							}
 						}
 
 					    // gruppi di attribuzione automatica dell'utente

@@ -23,6 +23,7 @@
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
+        'data_attivita' => 'data',
 	    '__label__' => 'attività',
 	    'anagrafica' => 'svolta da',
 	    'ore' => 'ore'

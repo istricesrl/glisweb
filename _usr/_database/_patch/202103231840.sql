@@ -1,0 +1,1 @@
+ALTER TABLE `macro` ADD CONSTRAINT `macro_ibfk_2` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

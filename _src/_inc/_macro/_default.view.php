@@ -44,6 +44,18 @@
 	    );
 	}
 
+	// filtri aggiuntivi
+	if( isset( $_REQUEST['__filters__'] )  ) {
+		if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] ) ) {
+			$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] = array_replace_recursive(
+				$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'],
+				$_REQUEST['__filters__']
+			);
+		} else {
+			$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] = $_REQUEST['__filters__'];
+		}
+	}
+
 	// filtri presettati
 	if( isset( $ct['view']['__restrict__'] ) ) {
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__restrict__'] = $ct['view']['__restrict__'];

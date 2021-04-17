@@ -1,0 +1,40 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function duplicaContratto( ) {
+	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_contratti.duplicate.php?id={{ request[table].id }}';
+		getws( call,'', function(data) {
+			window.open('{{ pages['contratti.form'].path[ ietf ] }}?contratti[id]='+data['id_nuovo'],'_self');
+		});
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="duplica-contratto">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">variazione contratto</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+				questa procedura creerà un duplicato del contratto corrente. al termine si verrà portati direttamente al nuovo contratto
+				così da poter apportare le modifiche necessarie.<br>
+				si desidera procedere con la duplicazione?				
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" onclick="duplicaContratto();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

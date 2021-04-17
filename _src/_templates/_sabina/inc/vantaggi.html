@@ -8,7 +8,7 @@
 {% endif %}
 {% endfor %}
 {% if vantaggi %}
-<div class="vantaggi">
+<section class="vantaggi">
     <div class="container">
         <div class="row d-flex justify-content-around align-items-stretch">
             {% for k,v in vantaggi|sort( ( a,b ) => a.metadati.lp_ordine <=> b.metadati.lp_ordine ) %}
@@ -26,6 +26,6 @@
             {% endfor %}
         </div>
     </div>
-</div>
+</section>
 {% endif %}
 {% endblock %}

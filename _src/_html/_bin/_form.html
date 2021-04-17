@@ -308,6 +308,7 @@
 	{% endif %}
 	<input type="file" style="display: none;" class="form-control-file-sm form-control-sm ajax-uploader" name="__{{ id }}_uploader__" id="{{ id }}_uploader" placeholder="{{ label }}" uploader-folder="{{ folder }}" uploader-field="{{ id }}" small>
 	<button title="seleziona il file"  class="btn btn-secondary btn-sm btn-sqr show-on-duplicate" type="button" onclick="$(this).prev('input').trigger('click');"><i class="fa fa-folder-open"></i></button>
+    <button class="btn btn-sm btn-secondary btn-sqr btn-spin hide-on-duplicate" style="display:none;" disabled=""><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></button>
 	{% endif %}
     </div>
     {% if vl %}
@@ -322,51 +323,6 @@
 
 {% macro shortUploader( table, subtable, counter, field, placeholder, etc, request, folder, site, edit, pages, lang, required, class, disabled ) %}
 {{ frm.uploader( table, subtable, counter, field, placeholder, etc, request, folder, site, edit, pages, lang, required, class, '1', disabled ) }}
-{% endmacro %}
-
-{% macro checkPrivacy( form, contatti, pages, tr, lang, class, rclass, modulo ) %}
-{% if not class %}{% set class = 'col-12 col-md-10 offset-md-2' %}{% endif %}
-{% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
-{% if not modulo %}{% set modulo = '__contatti__[' ~ form ~ ']' %}{% endif %}
-<div class="{{ rclass }} row-privacy">
-    <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="privacy_policy" name="{{ modulo }}[privacy][policy]" value="0">
-	    <input class="form-check-input" type="checkbox" required>
-	    <label class="form-check-label text-left" for="privacy_policy">
-		{{ tr.accetto_privacy[ lang ] | raw }}
-		<a href="{{ pages.privacy.path[ lang ] }}" target="_blank">{{ tr.privacy_policy_sito[ lang ] | raw }}</a> ({{ tr.obbligatorio[ lang ] | raw }})
-	    </label>
-	</div>
-    </div>
-</div>
-{% for label,check in contatti[ form ].privacy[ lang ].finalita %}
-<div class="{{ rclass }} row-privacy">
-    <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="privacy_{{ label }}" name="{{ modulo }}[privacy][{{ label }}]" value="0">
-	    <input class="form-check-input" type="checkbox" {% if check.required %}required{% endif %}>
-	    <label class="form-check-label text-left" for="privacy_{{ label }}">
-		{{ check.label | raw }} ({% if check.required %}{{ tr.obbligatorio[ lang ] | raw }}{% else %}{{ tr.facoltativo[ lang ] | raw }}{% endif %})
-	    </label>
-	</div>
-    </div>
-</div>
-{% endfor %}
-{% for label,check in contatti[ form ].condizioni[ lang ] %}
-<div class="{{ rclass }} row-privacy">
-    <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="condizioni_{{ label }}" name="{{ modulo }}[condizioni][{{ label }}]" value="0">
-	    <input class="form-check-input" type="checkbox" {% if check.required %}required{% endif %}>
-	    <label class="form-check-label text-left" for="condizioni_{{ label }}">
-		{{ tr.accetto_privacy[ lang ] | raw }}
-		<a href="{{ pages[ check.page ].path[ lang ] }}" target="_blank">{{ check.label | raw }}</a> ({% if check.required %}{{ tr.obbligatorio[ lang ] | raw }}{% else %}{{ tr.facoltativo[ lang ] | raw }}{% endif %})
-	    </label>
-	</div>
-    </div>
-</div>
-{% endfor %}
 {% endmacro %}
 
 {% macro selectModalitaPagamento( carrello, etc ) %}
