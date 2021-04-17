@@ -182,13 +182,16 @@
 					$cf['auth']['status'] = LOGIN_SUCCESS;
 
 					// JWT per il login corrente
-					$cf['auth']['jwt']['token'] = getJwt(
-						array(
-							'id' => $_SESSION['account']['id'],
-							'user' => $_SESSION['account']['username']
-						),
-						$cf['auth']['jwt']['secret']
-					);
+					// NOTA a cosa serve questo? quando viene usato $cf['auth']['jwt']['token']?
+					if( ! empty( $cf['auth']['jwt']['secret'] ) ) {
+						$cf['auth']['jwt']['token'] = getJwt(
+							array(
+								'id' => $_SESSION['account']['id'],
+								'user' => $_SESSION['account']['username']
+							),
+							$cf['auth']['jwt']['secret']
+						);
+					}
 
 				    // log
 					logWrite( 'login effettuato correttamente per ' . $_REQUEST['__login__']['user'], 'auth' );
