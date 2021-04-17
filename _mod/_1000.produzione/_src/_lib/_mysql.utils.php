@@ -432,8 +432,8 @@
             } 
         }
 
-        // elenco operatori che hanno svolto attività in passato sul progetto corrente
-        // sono esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
+        // elenco di 30 operatori che hanno svolto attività in passato
+        // esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
         // e l'operatore che ha lasciato l'attività scoperta
         $assegnati = mysqlQuery(
             $cf['mysql']['connection'],
@@ -441,23 +441,12 @@
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) '
-            .'AND a.id_progetto = ? '
-        /*    .'AND ( '
-                .'SELECT count(*) FROM attivita_view WHERE id_anagrafica = a.id_anagrafica '
-                .'AND ( '
-                    .'(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) '
-                    .'OR '
-                    .'(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) '
-                .') '
-            .') = 0 '*/
-            .'GROUP BY a.id_anagrafica',
+        #    .'AND a.id_progetto = ? '
+            .'GROUP BY a.id_anagrafica LIMIT 30',
             array(
-                array( 's' => $id_attivita ),
-                array( 's' => $a['id_progetto'] )/*,
-                array( 's' => $a['data_ora_inizio'] ),
-                array( 's' => $a['data_ora_fine'] ),
-                array( 's' => $a['data_ora_inizio'] ),
-                array( 's' => $a['data_ora_fine'] )*/
+                array( 's' => $id_attivita )
+               # ,
+               # array( 's' => $a['id_progetto'] )
             )
         );
 
@@ -470,44 +459,51 @@
         $candidati = array();
         $op = array();      // array provvisorio
 
-        foreach( $operatori as $k => $o ){
-			
-			// calcolo se può coprire l'attività
-			$copertura = coperturaAttivita( $o['id_anagrafica'], $id_attivita );
-			
-			// se non può coprirla rimuovo l'operatore dall'array
-			if( $copertura == 0 ){
-				unset( $operatori[$k] );
-			}
-			else{
+        if( !empty( $operatori ) ){
+            foreach( $operatori as $k => $o ){
+                
+                // calcolo se può coprire l'attività
+                $copertura = coperturaAttivita( $o['id_anagrafica'], $id_attivita );
+                
+                // se non può coprirla rimuovo l'operatore dall'array e inserisco una riga di sostituzioni_attivita come scarto
+                // in modo che al prossimo giro non considererà più questo operatore
+                if( $copertura == 0 ){
 
-				$o['punteggio'] = 0;
+                    // chiamo il task che inserisce la riga di scarto
+                    restcall(
+                        $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_operatori.descard.php?id_anagrafica=' . $o['id_anagrafica'] . '&id_attivita=' . $id_attivita
+                    );
+                    unset( $operatori[$k] );
+                }
+                else{
 
-				if( $o['se_sostituto'] == 1 ){
-					$o['punti_sostituto'] = 100;
-				}
-				else{
-					$o['punti_sostituto'] = 0;
-				}
+                    $o['punteggio'] = 0;
 
-				$o['punteggio'] += $o['punti_sostituto'];
-					   
-			// calcolo punteggi vari con le funzioni
-				$o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $a['id_progetto'], $a['data_programmazione']);
-				$o['punti_disponibilita'] = puntiDisponibilitaOperatore( $o['id_anagrafica'], $a['data_programmazione'], $a['ora_inizio_programmazione'], $a['ora_fine_programmazione'] );
-				$o['punti_distanza'] = intval( puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] ) );
-				
-				$o['punteggio'] += $o['punti_progetto'];
-				$o['punteggio'] += $o['punti_disponibilita'];
-				$o['punteggio'] += $o['punti_distanza'];
-				
-				// TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
+                    if( $o['se_sostituto'] == 1 ){
+                        $o['punti_sostituto'] = 100;
+                    }
+                    else{
+                        $o['punti_sostituto'] = 0;
+                    }
 
-				$op[ $o['id_anagrafica'] ] = $o;
-			}
+                    $o['punteggio'] += $o['punti_sostituto'];
+                        
+                // calcolo punteggi vari con le funzioni
+                    $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $a['id_progetto'], $a['data_programmazione']);
+                    $o['punti_disponibilita'] = puntiDisponibilitaOperatore( $o['id_anagrafica'], $a['data_programmazione'], $a['ora_inizio_programmazione'], $a['ora_fine_programmazione'] );
+                    $o['punti_distanza'] = intval( puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] ) );
+                    
+                    $o['punteggio'] += $o['punti_progetto'];
+                    $o['punteggio'] += $o['punti_disponibilita'];
+                    $o['punteggio'] += $o['punti_distanza'];
+                    
+                    // TODO: prevedere parte per audit qualità e blocchi (es. il cliente non vuole quell'operatore, ecc.)
 
+                    $op[ $o['id_anagrafica'] ] = $o;
+                }
+
+            }
         }
-
 
         // riordino l'array degli operatori in base al punteggio
         $sort_data = array();
@@ -537,13 +533,7 @@
     // funzione che dato un progetto, ritorna l'elenco degli operatori che possono coprirne le attività scoperte con relativo punteggio
     function elencoSostitutiProgetto( $id_progetto ){
 
-        $logdir = 'var/log/sostitutiProgetto.log';
-
-        $timing = array();
-        timerCheck( $timing, 'inizio ricerca elenco sostituti per progetto ' . $id_progetto );
-
         global $cf;
-
 
         $candidati = array();   // inizializzo l'array del risultato
         $op = array();      // array provvisorio per l'ordinamento
@@ -682,8 +672,7 @@
                     // punti conoscenza del progetto
                     $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $id_progetto, $dataPrima );
                     $o['punteggio'] += $o['punti_progetto'];
-
-                
+               
                     $op[ $o['id_anagrafica'] ] = $o;
                 }     
             
@@ -709,10 +698,6 @@
             
             krsort( $candidati );
         }
-
-        timerCheck( $timing, 'fine ricerca elenco sostituti per progetto ' . $id_progetto );
-
-        writeToFile( print_r($timing, true), $logdir);
 
         return $candidati;
 

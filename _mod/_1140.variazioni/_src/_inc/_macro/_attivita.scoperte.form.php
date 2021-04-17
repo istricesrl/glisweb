@@ -39,8 +39,6 @@
         );
     }
 
-//    print_r($ct['etc']['operatori'] );
-
     // modal per la conferma di invio richiesta sostituzione
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'richiesta', 'include' => 'inc/attivita.scoperte.form.modal.richiesta.html' )
@@ -49,6 +47,11 @@
     // modal per la conferma di sostituzione diretta
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'sostituisci', 'include' => 'inc/attivita.scoperte.form.modal.sostituisci.html' )
+    );
+
+    // modal per la conferma di scarto operatore
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'scarta', 'include' => 'inc/attivita.scoperte.form.modal.scarta.html' )
     );
 
 	// macro di default
