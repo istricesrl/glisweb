@@ -43,7 +43,7 @@
 	$cf['contents']['shortcuts']	    = memcacheRead( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY );
 
     // timer
-	timerCheck( $cf['speed'], ' -> fine lettura cache pagine' );
+	timerCheck( $cf['speed'], '-> fine lettura cache pagine' );
 
     // elegibilità della cache
 	if( $cf['contents']['updated']		=== false

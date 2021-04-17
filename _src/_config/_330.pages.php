@@ -36,7 +36,7 @@
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_CACHED, time() );
 
 		    // timer
-			timerCheck( $cf['speed'], ' -> fine scrittura cache pagine' );
+			timerCheck( $cf['speed'], '-> fine scrittura cache pagine' );
 
 #11	} else {
 
@@ -48,7 +48,7 @@
 			logWrite( 'struttura delle pagine scritta in cache', 'speed', LOG_ERR );
 
 	    // timer
-#11		timerCheck( $cf['speed'], ' -> fine lettura cache pagine' );
+#11		timerCheck( $cf['speed'], '-> fine lettura cache pagine' );
 
 		} else {
 

@@ -244,7 +244,7 @@
 	// print_r( $_GET );
 
     // timer
-	timerCheck( $cf['speed'], ' -> inizio lavoro controller' );
+	timerCheck( $cf['speed'], '-> inizio lavoro controller' );
 
     // esamino la coda
 	foreach( $_REQUEST as $k => &$v ) {
@@ -280,7 +280,7 @@
 				// if( $k == 'prodotti' ) { print_r( $v ); }
 
 			    // timer
-				timerCheck( $cf['speed'], ' -> fine elaborazione blocco ' . $k );
+				timerCheck( $cf['speed'], '-> fine elaborazione blocco ' . $k );
 
 			}
 

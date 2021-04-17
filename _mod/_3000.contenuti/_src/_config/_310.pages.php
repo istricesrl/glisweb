@@ -43,7 +43,7 @@
         );
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine recupero pagine dal database' );
+		timerCheck( $cf['speed'], '-> fine recupero pagine dal database' );
 
 	    // se ci sono pagine trovate le inserisco nell'array principale
 		if( is_array( $pgs ) ) {
@@ -223,7 +223,7 @@
         }
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine elaborazione pagine prelevate dal database' );
+		timerCheck( $cf['speed'], '-> fine elaborazione pagine prelevate dal database' );
 
     } else {
         

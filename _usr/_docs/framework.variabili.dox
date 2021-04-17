@@ -911,6 +911,7 @@
 
     chiave                                    | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
+    session.__latest__                        | ???
     session.__view__                          | dettagli sulla visualizzazione corrente
     session.__view__.__ietf__                 | il codice IETF del linguaggio collegato alla visualizzazione corrente
     session.__view__.__lang__                 | l'ID del linguaggio collegato alla visualizzazione corrente

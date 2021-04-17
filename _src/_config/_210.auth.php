@@ -218,7 +218,7 @@
 			}
 
 		    // speed
-			timerCheck( $cf['speed'], ' -> fine login via framework' );
+			timerCheck( $cf['speed'], '-> fine login via framework' );
 
 		    // debug
 			// echo 'status: ' . $cf['auth']['status'] . '/' . LOGIN_SUCCESS . PHP_EOL;
@@ -383,7 +383,7 @@
 			}
 
 		    // speed
-			timerCheck( $cf['speed'], ' -> fine login via database' );
+			timerCheck( $cf['speed'], '-> fine login via database' );
 
 		} else {
 

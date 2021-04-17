@@ -22,7 +22,7 @@
 	if( isset( $cf['contents']['page']['id'] ) && isset( $cf['localization']['language']['id'] ) ) {
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> inizio preparazione contenuti specifici per pagina' );
+		timerCheck( $cf['speed'], '-> inizio preparazione contenuti specifici per pagina' );
 
         // prelevo i contenuti della pagina corrente dal database
         $cnt = mysqlSelectRow(
@@ -81,7 +81,7 @@
         );
 
         // timer
-        timerCheck( $cf['speed'], ' -> fine inserimento immagini' );
+        timerCheck( $cf['speed'], '-> fine inserimento immagini' );
 
         // aggiungo i video
         aggiungiVideo(
@@ -91,7 +91,7 @@
         );
 
         // timer
-        timerCheck( $cf['speed'], ' -> fine inserimento video' );
+        timerCheck( $cf['speed'], '-> fine inserimento video' );
 
         // aggiungo i file
         aggiungiFile(
@@ -101,7 +101,7 @@
         );
 
         // timer
-        timerCheck( $cf['speed'], ' -> fine inserimento file' );
+        timerCheck( $cf['speed'], '-> fine inserimento file' );
 
 /* TODO
 
@@ -113,7 +113,7 @@
         );
 
         // timer
-        timerCheck( $cf['speed'], ' -> fine inserimento recensioni' );
+        timerCheck( $cf['speed'], '-> fine inserimento recensioni' );
 */
 
         // prelevo i contenuti principali delle sotto pagine dal database
