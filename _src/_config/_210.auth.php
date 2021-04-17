@@ -341,13 +341,15 @@
 						$cf['auth']['status'] = LOGIN_SUCCESS;
 
 						// JWT per il login corrente
-						$cf['auth']['jwt']['token'] = getJwt(
-							array(
-								'id' => $_SESSION['account']['id'],
-								'user' => $_SESSION['account']['username']
-							),
-							$cf['auth']['jwt']['secret']
-						);
+						if( ! empty( $cf['auth']['jwt']['secret'] ) ) {
+							$cf['auth']['jwt']['token'] = getJwt(
+								array(
+									'id' => $_SESSION['account']['id'],
+									'user' => $_SESSION['account']['username']
+								),
+								$cf['auth']['jwt']['secret']
+							);
+						}
 
 					    // log
 						logWrite( 'login effettuato correttamente via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_DEBUG );
