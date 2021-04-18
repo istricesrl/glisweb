@@ -184,10 +184,13 @@
 		    }
 
 		// cronometro
-		    $tElapsed = timerDiff( $tStart );
+		    $tElapsed = sprintf( '%0.11f', timerDiff( $tStart ) );
 
 		// log
-		    if( $tElapsed > 0.5 ) { logWrite( $q . ' -> TEMPO ' . $tElapsed . ' secondi', 'speed', LOG_ERR ); }
+		    if( $tElapsed > 0.5 ) {
+			logWrite( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR ); 
+			appendToFile( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, '/var/log/slow/mysql/' . date( 'YmdH' ) . '.log' );
+		    }
 
 		// debug
 			// var_dump( mysqli_errno( $c ) );
@@ -309,12 +312,12 @@
 			    $xStatement = mysqli_stmt_execute( $pq );
 
 			// cronometro
-			    $tElapsed = timerDiff( $tStart );
+			    $tElapsed = sprintf( '%0.11f', timerDiff( $tStart ) );
 
 			// log
 			    if( $tElapsed > 0.5 ) {
-				logWrite( $q . ' -> TEMPO ' . $tElapsed . ' secondi', 'speed', LOG_ERR );
-				appendToFile( $tElapsed . ' secondi -> ' . $q . PHP_EOL, '/var/log/slow/mysql/' . date( 'YmdH' ) . '.log' );
+				logWrite( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR );
+				appendToFile( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, '/var/log/slow/mysql/' . date( 'YmdH' ) . '.log' );
 			    }
 
 			// debug

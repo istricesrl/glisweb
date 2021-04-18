@@ -22,7 +22,7 @@
      * @todo documentare
      *
      */
-    function controller( $c, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array() ) {
+    function controller( $c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array() ) {
 
 	// log
 	    logWrite( "${t}/${a}", 'controller' );
@@ -510,7 +510,7 @@
 				    foreach( $d as $k => $v ) {
 					if( is_array( $v ) ) {
 					    foreach( $v as $x => $y ) {
-						controller( $c, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__'] );
+						controller( $c, $mc, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__'], $pi, $ci );
 					    }
 					}
 				    }
@@ -518,7 +518,7 @@
 				case METHOD_GET:
 #				default:
 				    if( in_array( 'id', $ks ) ) {
-					$x = mysqlQuery( $c, 'SELECT * FROM information_schema.key_column_usage WHERE referenced_table_name = ? AND constraint_name NOT LIKE "%_nofollow" AND table_schema = database()', array( array( 's' => $t ) ) );
+					$x = mysqlCachedQuery( $mc, $c, 'SELECT * FROM information_schema.key_column_usage WHERE referenced_table_name = ? AND constraint_name NOT LIKE "%_nofollow" AND table_schema = database()', array( array( 's' => $t ) ) );
 #echo "cerco le referenze a $t" . PHP_EOL;
 #print_r( $x );
 					foreach( $x as $ref ) {
@@ -547,7 +547,7 @@
 						    $e[ $ref['TABLE_NAME'] ][ $ix ] = array();
 						    $i[ $ref['TABLE_NAME'] ][ $ix ] = array();
 //						    controller( $c, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $r, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ] );
-						    controller( $c, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ], $i['__auth__'] );
+						    controller( $c, $mc, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ], $i['__auth__'], $pi, $ci );
 						    $ix++;
 						}
 					    }
