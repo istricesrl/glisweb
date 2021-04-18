@@ -6,6 +6,7 @@
 
 <script>
      function inviaRichiesta() {
+		$('#btnrichiedi').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 		idoperatore = $('#modaloperatoreid').text();
 
 		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.progetto.request.php?id_progetto={{ request[table].id }}&id_anagrafica='+idoperatore;
@@ -36,7 +37,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="inviaRichiesta();">conferma</button>
+		<button id="btnrichiedi" type="button" class="btn btn-secondary btn-sm" onclick="inviaRichiesta();">conferma</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

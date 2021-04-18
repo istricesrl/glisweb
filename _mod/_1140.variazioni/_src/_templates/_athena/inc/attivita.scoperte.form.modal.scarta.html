@@ -6,6 +6,7 @@
 
 <script>
      function scarta() {
+		$('#btnscarta').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 		idoperatore = $('#modaloperatoreDid').text();
 
 		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_operatori.descard.php?id_attivita={{ request[table].id }}&id_anagrafica='+idoperatore;
@@ -36,7 +37,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="scarta();">conferma</button>
+		<button id="btnscarta" type="button" class="btn btn-secondary btn-sm" onclick="scarta();">conferma</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

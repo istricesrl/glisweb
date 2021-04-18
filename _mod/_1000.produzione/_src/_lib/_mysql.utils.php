@@ -436,7 +436,7 @@
         // esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
         $assegnati = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT a.id_anagrafica, a.anagrafica, max(IF(id_progetto=?, 1, 0)) as ordina, max(ca.se_sostituto) as se_sostituto FROM attivita_view AS a '
+            'SELECT a.id_anagrafica, a.anagrafica, max(IF(a.id_progetto=?, 1, 0)) as ordina, max(ca.se_sostituto) as se_sostituto FROM attivita_view AS a '
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.data_programmazione < ? AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) '
