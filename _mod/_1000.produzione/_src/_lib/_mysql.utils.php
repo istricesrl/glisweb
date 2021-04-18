@@ -432,21 +432,19 @@
             } 
         }
 
-        // elenco di 30 operatori che hanno svolto attività in passato
+        // elenco di 30 operatori che hanno svolto attività in passato con priorità per quelli che hanno già lavorato al progetto
         // esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
-        // e l'operatore che ha lasciato l'attività scoperta
         $assegnati = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto FROM attivita_view AS a '
+            'SELECT a.id_anagrafica, a.anagrafica, max(IF(id_progetto=?, 1, 0)) as ordina, max(ca.se_sostituto) as se_sostituto FROM attivita_view AS a '
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
-            .'WHERE a.id_anagrafica IS NOT NULL AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) '
-        #    .'AND a.id_progetto = ? '
-            .'GROUP BY a.id_anagrafica LIMIT 30',
+            .'WHERE a.id_anagrafica IS NOT NULL AND a.data_programmazione < ? AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) '
+            .'GROUP BY a.id_anagrafica ORDER BY ordina DESC LIMIT 30',
             array(
+                array( 's' => $a['id_progetto'] ),
+                array( 's' => $a['data_programmazione'] ),
                 array( 's' => $id_attivita )
-               # ,
-               # array( 's' => $a['id_progetto'] )
             )
         );
 
