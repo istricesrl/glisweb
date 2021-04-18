@@ -1,1 +1,0 @@
-UPDATE `ruoli_audio` SET `se_contenuti` = '1' WHERE `ruoli_audio`.`id` = 2;

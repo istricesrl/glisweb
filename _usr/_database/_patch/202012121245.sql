@@ -1,1 +1,0 @@
-ALTER TABLE `immagini` ADD `token` CHAR(128) NULL DEFAULT NULL AFTER `taglio`;

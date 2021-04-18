@@ -1,1 +1,0 @@
-ALTER TABLE `anagrafica_servizi_contatto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

@@ -98,6 +98,8 @@
 			    $cf['mysql']['server'] = &$cf['mysql']['servers'][ $key ];
 			}
 
+			/*
+
 			// controllo livello di patch database
 			$cf['mysql']['profile']['patch']['current'] = readStringFromFile( FILE_MYSQL_PATCH );
 			if( file_exists( path2custom( FILE_MYSQL_PATCH ) ) ) {
@@ -140,6 +142,94 @@
 
 			// debug
 			// echo print_r( $cf['mysql']['profile']['patch']['list'], true );
+
+			*/
+
+			$patchLevel = mysqlSelectValue(
+				$cf['mysql']['connection'],
+				'SELECT id FROM mysql_patch ORDER BY id DESC LIMIT 1'
+			);
+
+			if( empty( $patchLevel ) ) {
+
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'CREATE TABLE IF NOT EXISTS `mysql_patch` ('.
+					'	`id` char(12) NOT NULL,'.
+					'	`patch` text COLLATE utf8_unicode_ci,'.
+					'	`timestamp_esecuzione` int(11) DEFAULT NULL'.
+					'  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'
+				);
+
+				$patchLevel = '000000000000';
+
+			}
+
+			$pFiles = glob( DIR_USR_DATABASE_PATCH . '_*.patch.sql' );
+			sort( $pFiles );
+
+			foreach( $pFiles as $pFile ) {
+
+				$pFilePatchLevel = substr( basename( $pFile ), 1, 12 );
+
+				echo 'patch level del file ' . $pFilePatchLevel . HTML_EOL;
+				echo 'patch level del database ' . $patchLevel . HTML_EOL;
+
+				if( $pFilePatchLevel > $patchLevel ) {
+
+					echo 'prelevo le patch dal file ' . $pFilePatchLevel . HTML_EOL;
+
+					$rows = readFromFile( $pFile );
+
+					$pId = null;
+					$pQuery = null;
+		
+					foreach( $rows as $row ) {
+	
+						if( substr( $row, 0, 3 ) == '--|' ) {
+	
+							if( ! empty( trim( $pQuery ) ) ) {
+	
+								echo 'eseguo la patch ' . $pId . HTML_EOL;
+
+								$pEx = mysqlQuery(
+									$cf['mysql']['connection'],
+									$pQuery
+								);
+
+								echo 'scrivo la patch ' . $pId . HTML_EOL;
+
+								mysqlInsertRow(
+									$cf['mysql']['connection'],
+									array(
+										'id' => $pId,
+										'patch' => trim( $pQuery ),
+										'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() )
+									),
+									'mysql_patch',
+									false
+								);
+	
+							}
+	
+							$pId = substr( $row, 4, 12 );
+							$pQuery = null;
+
+							echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
+							
+						} else {
+	
+							$pQuery .= $row;
+
+						}
+
+					}
+	
+				}
+
+			}
+
+			die();
 
 		} else {
 

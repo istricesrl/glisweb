@@ -1,1 +1,0 @@
-ALTER TABLE `costi_contratti` CHANGE `nome` `note` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;

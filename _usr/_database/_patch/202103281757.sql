@@ -1,1 +1,0 @@
-ALTER TABLE `periodi_variazioni_attivita` ADD `timestamp_elaborazione` INT NULL DEFAULT NULL AFTER `ora_fine`;

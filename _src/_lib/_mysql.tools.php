@@ -710,7 +710,7 @@
     function mysqlInsertRow( $c, $r, $t, $d = true ) {
 
 	return mysqlQuery( $c,
-	    'INSERT INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
+	    'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
 	    .'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
 	    .( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
 	    array2mysqlStatementParameters( $r )

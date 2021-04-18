@@ -1,1 +1,0 @@
-ALTER TABLE `costi_contratti` ADD FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_costi_contratti`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

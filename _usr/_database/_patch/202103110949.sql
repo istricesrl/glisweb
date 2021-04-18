@@ -1,1 +1,0 @@
-ALTER TABLE tipologie_documenti RENAME TO tipologie_risorse;

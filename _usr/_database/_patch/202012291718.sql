@@ -1,1 +1,0 @@
-ALTER TABLE `costi_contratti` CHANGE `costo_orario` `costo_orario` DECIMAL(16,5) NULL DEFAULT NULL;

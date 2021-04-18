@@ -1,1 +1,0 @@
-DROP TABLE obiettivi_tipologie_progetti;

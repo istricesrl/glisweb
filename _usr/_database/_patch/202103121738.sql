@@ -1,1 +1,0 @@
-ALTER TABLE `anagrafica_view_static` ADD `matricola` CHAR(64) NULL AFTER `riferimento`;

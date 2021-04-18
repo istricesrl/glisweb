@@ -1,1 +1,0 @@
-ALTER TABLE categorie_anagrafica ADD INDEX se_dipendente (se_dipendente);

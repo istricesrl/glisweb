@@ -1,1 +1,0 @@
-ALTER TABLE `metadati` ADD INDEX(`id_risorsa`);

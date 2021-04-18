@@ -1,1 +1,0 @@
-ALTER TABLE categorie_documenti  RENAME TO categorie_risorse;
