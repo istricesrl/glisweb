@@ -6,9 +6,8 @@
 
 <script>
      function sostituisci() {
+		$('#btnsostituisci').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 		idoperatore = $('#modaloperatoreSid').text();
-
-		console.log(idoperatore);
 
 		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.progetto.request.php?id_progetto={{ request[table].id }}&id_anagrafica='+idoperatore+'&hard=1';
 
@@ -39,7 +38,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="sostituisci();">conferma</button>
+		<button id="btnsostituisci" type="button" class="btn btn-secondary btn-sm" onclick="sostituisci();">conferma</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

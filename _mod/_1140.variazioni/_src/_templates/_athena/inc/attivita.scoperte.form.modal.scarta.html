@@ -1,0 +1,45 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+     function scarta() {
+		$('#btnscarta').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+		idoperatore = $('#modaloperatoreDid').text();
+
+		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_operatori.descard.php?id_attivita={{ request[table].id }}&id_anagrafica='+idoperatore;
+
+		getws( call,'', function() {
+		    window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
+		});
+		
+	}
+
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="scarta">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">scarta operatore</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+				si desidera scartare l'operatore <span id="modaloperatoreDid"></span> - <span id="modaloperatoreDnome"></span> 
+                in modo che non venga più proposto per la sostituzione dell'attività {{ request[table].id }} 
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="btnscarta" type="button" class="btn btn-secondary btn-sm" onclick="scarta();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

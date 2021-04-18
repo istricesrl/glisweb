@@ -32,6 +32,7 @@
         'data_accettazione' => 'accettazione',
         'data_rifiuto' => 'rifiuto',
         'id_attivita' => 'id attività',
+        'data_programmazione' => 'data attività',
         'anagrafica' => 'operatore',
         'progetto' => 'progetto'
 	);

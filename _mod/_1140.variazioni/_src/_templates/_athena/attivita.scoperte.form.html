@@ -41,8 +41,12 @@
             </div>
 
             <div class="col-auto">
-                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary btn-sqr" data-toggle="modal" data-target="#richiesta" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreid').text( $('#sceglioperatore option:selected').val() );$('#modaloperatorenome').text( $('#sceglioperatore option:selected').text() );" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>
-                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary btn-sqr" data-toggle="modal" data-target="#sostituisci" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreSid').text( $('#sceglioperatore option:selected').val() );$('#modaloperatoreSnome').text( $('#sceglioperatore option:selected').text() );" placeholder="imposta sostituzione"  data-placement="bottom" data-delay="1000" title="" data-original-title="imposta sostituzione">sostituisci</button>
+                <span class="label-top">&nbsp;</span>
+                <button type="button" class="form-control form-control-sm btn btn-sm btn-secondary" data-toggle="modal" data-target="#richiesta" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreid').text( $('#sceglioperatore option:selected').val() );$('#modaloperatorenome').text( $('#sceglioperatore option:selected').text() );" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>
+            </div>
+            <div class="col-auto">
+                <span class="label-top">&nbsp;</span>
+                <button type="button" class="form-control form-control-sm btn btn-sm btn-secondary" data-toggle="modal" data-target="#sostituisci" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreSid').text( $('#sceglioperatore option:selected').val() );$('#modaloperatoreSnome').text( $('#sceglioperatore option:selected').text() );" placeholder="imposta sostituzione"  data-placement="bottom" data-delay="1000" title="" data-original-title="imposta sostituzione">sostituisci</button>
             </div>
 
         </div>
@@ -74,6 +78,7 @@
                             <td>{{ o.punti_disponibilita }}</td>
                             <td>{{ o.punti_distanza }}</td>
                             <td class="text-right">
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"data-toggle="modal" data-target="#scarta" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreDid').text('{{ o.id_anagrafica }}');$('#modaloperatoreDnome').text('{{ o.anagrafica }}');" placeholder="scarta"  data-placement="bottom" data-delay="1000" title="" data-original-title="scarta">scarta</button>
                                 <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"data-toggle="modal" data-target="#richiesta" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreid').text('{{ o.id_anagrafica }}');$('#modaloperatorenome').text('{{ o.anagrafica }}');" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>
                                 <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"data-toggle="modal" data-target="#sostituisci" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreSid').text('{{ o.id_anagrafica }}');$('#modaloperatoreSnome').text('{{ o.anagrafica }}');" placeholder="imposta sostituzione"  data-placement="bottom" data-delay="1000" title="" data-original-title="imposta sostituzione">sostituisci</button>
                             </td>         
