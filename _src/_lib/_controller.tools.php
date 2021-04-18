@@ -585,8 +585,8 @@
 				    case METHOD_REPLACE:
 				    case METHOD_UPDATE:
 					$w = mysqlSelectRow( $c, "SELECT * FROM ${t}$rm WHERE id = ?", array( array( 's' => $d['id'] ) ) );
-					if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $d, $w ); }
-// ATTENZIONE		if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $w, $d ); }
+// ATTENZIONE		if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $d, $w ); }
+					if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $w, $d ); }
 				    break;
 				}
 			    }
