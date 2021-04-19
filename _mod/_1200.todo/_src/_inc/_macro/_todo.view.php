@@ -63,6 +63,12 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_cliente = 1');
 
+	// tendina tipologie
+	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
+
     // preset filtro custom todo completati
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] = 0;
