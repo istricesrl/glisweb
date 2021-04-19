@@ -31,7 +31,8 @@
             $cf['cache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            "SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view WHERE "
+            "SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM attivita_view WHERE "
+            ."id_anagrafica IS NOT NULL AND "
             ."id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) ORDER BY anagrafica",
             array(
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
