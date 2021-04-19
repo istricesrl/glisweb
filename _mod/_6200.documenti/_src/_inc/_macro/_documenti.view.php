@@ -29,9 +29,12 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
+        'tipologia' => 'tipologia',
         'numero' => 'numero',
         'data' => 'data',
-        '__label__' => 'nome'
+        '__label__' => 'nome',
+        'cliente' => 'cliente',
+        'emittente' => 'emittente' 
 	);
 
     // stili della vista
@@ -40,6 +43,9 @@
         'numero' => 'text-left',
         'data' => 'text-left',
         '__label__' => 'text-left',
+        'cliente' => 'text-left',
+        'emittente' => 'text-left',
+        'tipologia' => 'text-left'
     );
 
     // macro di default

@@ -13,24 +13,21 @@
 
     // tabella gestita
     $ct['form']['table'] = 'mastri';
-    
+
+
     // tabella della vista
-	$ct['view']['table'] = '__report_mastri_giacenze__';
+	$ct['view']['table'] = '__report_giacenza_mastri__';
     $ct['view']['data']['__report_mode__'] = 1;
 
-    // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'documenti.articoli.form';
-    $ct['view']['open']['table'] = 'documenti_articoli';
-    $ct['view']['open']['field'] = 'id_riga';
+    // id della vista
+    $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-        'data_lavorazione' => 'data',
-	    'descrizione' => 'riga',
-        'quantita' => 'quantità',
-        'importo' => 'importo',
-        'id_riga' => 'id_riga'
+        'id_articolo' => 'articolo',
+        'quantita_totale' => 'quantità',
+        'importo_totale' => 'importo'
 	);
 
     // stili della vista

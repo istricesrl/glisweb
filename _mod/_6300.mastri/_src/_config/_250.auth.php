@@ -22,6 +22,10 @@
         '__report_mastri__' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
+        ),
+        '__report_giacenza_mastri__' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         )
         )
 	);

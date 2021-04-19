@@ -29,12 +29,26 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        '__label__' => 'nome'
+        'tipologia' => 'tipologia',
+        'data_lavorazione' => 'data',
+        'nome' => 'nome',
+        'importo_netto_totale' => 'importo',
+        'quantita' => 'quantità',
+        'documento' => 'documento',
+        'cliente' => 'cliente',
+        'emittente' => 'emittente', 
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-        'nome' => 'text-left'
+        'nome' => 'text-left',
+        'importo_netto_totale' => 'text-left',
+        'quantita' => 'text-left',
+        'documento' => 'text-left',
+        'cliente' => 'text-left',
+        'emittente' => 'text-left', 
+        'data_lavorazione' => 'text-left', 
+        'tipologia' => 'text-left'
     );
 
     // macro di default

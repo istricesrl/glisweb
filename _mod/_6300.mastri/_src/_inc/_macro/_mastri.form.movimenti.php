@@ -14,9 +14,14 @@
     // tabella gestita
     $ct['form']['table'] = 'mastri';
     
+    
     // tabella della vista
 	$ct['view']['table'] = '__report_mastri__';
     $ct['view']['data']['__report_mode__'] = 1;
+
+    // id della vista
+    $ct['view']['id'] = md5( $ct['view']['table'] );
+
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.articoli.form';
@@ -28,6 +33,7 @@
 	    'id' => '#',
         'data_lavorazione' => 'data',
 	    'descrizione' => 'riga',
+        'id_articolo' => 'articolo',
         'quantita' => 'quantità',
         'importo' => 'importo',
         'id_riga' => 'id_riga'
@@ -35,9 +41,10 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'id' => 'd-none d-md-table-cell',
+	    'id' => 'd-none',
         'id_riga' => 'd-none',
 	    'descrizione' => 'text-left',
+        'id_articolo' => 'text-left',
         'importo' => 'text-right'
 	);
 
