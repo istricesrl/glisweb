@@ -22,6 +22,60 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
+
+    // tabella della vista
+	$ct['view']['table'] = 'documenti_articoli';
+
+    // id della vista
+    $ct['view']['id'] = md5( $ct['view']['table'] );
+
+        // pagina per la gestione degli oggetti esistenti
+	$ct['view']['open']['page'] = 'documenti.articoli.form';
+    $ct['view']['open']['table'] = 'documenti_articoli';
+    $ct['view']['open']['field'] = 'id';
+
+	// pagina per l'inserimento di un nuovo oggetto
+	$ct['view']['insert']['page'] = 'documenti.articoli.form';
+
+    // campo per il preset di apertura
+	$ct['view']['open']['preset']['field'] = 'id_documento';
+
+	$ct['view']['cols'] = array(
+        'id' => '#',
+        'tipologia' => 'tipologia',
+        'data_lavorazione' => 'data',
+        'nome' => 'nome',
+        'importo_netto_totale' => 'importo',
+        'quantita' => 'quantità',
+		'id_documento' => 'id_documento'
+	);
+
+    // stili della vista
+	$ct['view']['class'] = array(
+        'nome' => 'text-left',
+        'importo_netto_totale' => 'text-left',
+        'quantita' => 'text-left',
+        'id_documento' => 'd-none',
+        'cliente' => 'text-left',
+        'emittente' => 'text-left', 
+        'data_lavorazione' => 'text-left', 
+        'tipologia' => 'text-left'
+    );
+
+    // preset filtro custom progetti aperti
+	$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+  
+    // gestione default
+	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    // trasformazione icona attivo/inattivo
+	///foreach( $ct['view']['data'] as &$row ) {
+	//}
+
+    // macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+/*
     // tendina articoli
 	$ct['etc']['select']['id_articoli'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -69,6 +123,4 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM progetti_view '
 	);
-
-	// macro di default
-	require DIR_SRC_INC_MACRO . '_default.form.php';
+*/

@@ -55,14 +55,7 @@
 	        'SELECT indirizzi_view.id, __label__ FROM indirizzi_view LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id WHERE anagrafica_indirizzi.id_anagrafica = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) )
 	    );
-    } else {
-		$ct['etc']['select']['id_sedi_mittente'] = mysqlCachedIndexedQuery(
-			$cf['memcache']['index'],
-			$cf['memcache']['connection'],
-			$cf['mysql']['connection'],
-			'SELECT id, __label__ FROM indirizzi_view'
-		);
-	}
+    } 
 
 	// tendina indirizzi destinatari
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) ){
@@ -73,14 +66,7 @@
 	        'SELECT indirizzi_view.id, __label__ FROM indirizzi_view LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id  WHERE anagrafica_indirizzi.id_anagrafica = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) )
 	    );
-	   } else {	
-		$ct['etc']['select']['id_sedi_destinatario'] = mysqlCachedIndexedQuery(
-	    	$cf['memcache']['index'],
-	    	$cf['memcache']['connection'],
-	    	$cf['mysql']['connection'],
-	    	'SELECT id, __label__ FROM indirizzi_view'
-		);
-	}
+	   } 
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

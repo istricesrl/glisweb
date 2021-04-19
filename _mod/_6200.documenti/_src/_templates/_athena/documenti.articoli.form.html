@@ -39,12 +39,21 @@
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+		
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
 		<legend>dati generali <small>{{ legend }}</small></legend>
+
+
+		{% if  request.__preset__[ table ].id_documento %}
+			<input type="hidden" id="id_documento" name="{{ table }}[id_documento]" value="{{request.__preset__[ table ].id_documento}}">
+		{% endif %}
+		{% if  session.__latest__[ table ].id_documento %}
+			<input type="hidden" id="id_documento" name="{{ table }}[id_documento]" value="{{session.__latest__[ table ].id_documento}}">
+		{% endif %}
 
 		<div class="form-group form-row">
 			<div class="col-auto">
@@ -60,6 +69,14 @@
 
 		<legend>dettaglio</legend>
 		<div class="form-group form-row">
+			<div class="col-1">
+				<span class="label-top remove-after-duplicate">quantità</span>
+				{{ frm.input( table, '', '', 'quantita', 'quantità', '', request ) }}
+			</div>
+			<div class="col-auto">
+				<span class="label-top remove-after-duplicate">unità di misura</span>
+				{{ frm.select( table, '', '', 'id_udm', '', etc.select.id_udm, request ) }}
+			</div>
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">articolo</span>
 				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
@@ -68,21 +85,17 @@
 				<span class="label-top remove-after-duplicate">importo</span>
 				{{ frm.input( table, '', '', 'importo_netto_totale', 'importo', '', request ) }}
 			</div>
-			<div class="col-1">
-				<span class="label-top remove-after-duplicate">quantità</span>
-				{{ frm.input( table, '', '', 'quantita', 'quantità', '', request ) }}
-			</div>
-			<div class="col-auto">
-				<span class="label-top remove-after-duplicate">articolo</span>
-				{{ frm.select( table, '', '', 'id_udm', '', etc.select.id_udm, request ) }}
-			</div>
-			<div class="col-auto">
+			<!--div class="col-auto">
 				<span class="label-top remove-after-duplicate">valuta</span>
 				{{ frm.select( table, '', '', 'id_valuta', '', etc.select.id_valute, request ) }}
-			</div>
+			</div-->
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">listino</span>
 				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request ) }}
+			</div>
+			<div class="col-auto">
+				<span class="label-top remove-after-duplicate">iva</span>
+				{{ frm.select( table, '', '', 'id_iva', '', etc.select.id_iva, request ) }}
 			</div>
 		</div>	
 		<div class="form-group form-row">

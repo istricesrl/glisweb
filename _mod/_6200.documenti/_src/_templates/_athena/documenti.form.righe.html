@@ -31,7 +31,7 @@
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -42,13 +42,8 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-		{# SUBFORM DOCUMENTI_ARTICOLI #}
-        {{ sub.righe( table, 'documenti_articoli', 'righe del documento', site, page, pages, localization.language.ietf, etc, request, session ) }}
-
-        {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-            {{ def.controls( page, pages, ietf, session, table, request ) }}
-        </fieldset>
+		{# VIEW PRINCIPALE #}
+		{% include 'inc/view.html' %}
         
     </form>
 </div>
