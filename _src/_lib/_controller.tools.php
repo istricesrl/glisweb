@@ -571,6 +571,7 @@
 			    foreach( $ct as $f ) { require $f; }
 
 			// svuotamento o integrazione del blocco dati
+			// NOTA $_SESSION['__latest__'] serve per "bloccare" i campi dei form
 			    if( $r ) {
 				$_SESSION['__latest__'][ $t ] = $d;
 				$d = array();
