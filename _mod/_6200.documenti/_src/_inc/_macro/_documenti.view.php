@@ -48,6 +48,32 @@
         'tipologia' => 'text-left'
     );
 
+    // inclusione filtri speciali
+	$ct['etc']['include']['filters'] = 'inc/documenti.view.filters.html';
+
+    // tendina categoria
+	$ct['etc']['select']['tipologie_documenti'] = mysqlCachedQuery(
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_documenti_view'
+	);
+
+     // tendina mittenti
+	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_view WHERE se_azienda_gestita = 1'
+	);
+
+    // tendina destinatari
+	$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_view WHERE se_cliente = 1'
+	);
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 

@@ -17,10 +17,15 @@
 
     // tabella della vista
 	$ct['view']['table'] = '__report_giacenza_mastri__';
-   $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['data']['__report_mode__'] = 1;
 
     // id della vista
     $ct['view']['id'] = md5( $ct['view']['table'] );
+
+        // pagina per la gestione degli oggetti esistenti
+	$ct['view']['open']['page'] = 'articoli.form';
+    $ct['view']['open']['table'] = 'articoli';
+    $ct['view']['open']['field'] = 'id_articolo';
 
     // campi della vista
 	$ct['view']['cols'] = array(

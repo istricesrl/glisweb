@@ -34,6 +34,7 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
+        'id' => 'text-left d-md-table-cell',
         '__label__' => 'text-left',
     );
 
