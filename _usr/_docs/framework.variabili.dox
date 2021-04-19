@@ -911,7 +911,8 @@
 
     chiave                                    | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
-    session.__latest__                        | ???
+    session.__latest__                        | dettagli degli ultimi moduli inviati
+    session.__latest__.<e>                    | dettagli dell'ultimo modulo inviato per l'entità <e>
     session.__view__                          | dettagli sulla visualizzazione corrente
     session.__view__.__ietf__                 | il codice IETF del linguaggio collegato alla visualizzazione corrente
     session.__view__.__lang__                 | l'ID del linguaggio collegato alla visualizzazione corrente
@@ -950,6 +951,15 @@
 
     Si noti che la chiave $_SESSION['__view__'] viene linkata a $_REQUEST['__view__'] (vedi _src/_config/_715.session.php) in modo
     da essere disponibile alla funzione controller() invocata nel successivo _src/_config/_750.controller.php.
+
+    L'utilizzo principale di $_SESSION['__latest__'] è quello di bloccare il valore di un campo di form quando si effettua il salvataggio per l'inserimento di una nuova riga. Questo
+    è possibile sfruttando l'accessibilità di $_SESSION['__latest__'] da parte di Twig tramite session.__latest__ e utilizzando i dati recuperati per fornire un default ai campi, qui
+    vediamo un esempio con doppio default per un campo data:
+
+    \code{.html}
+		{% if not session.__latest__[ table ].data %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data %}{% endif %}
+		{{ frm.date( table, '', '', 'data', '', '', request, default ) }}
+    \endcode
 
     L'array $cf['session'] è linkato a $ct['session'], per ulteriori dettagli vedi _src/_config/_055.session.php.
 
