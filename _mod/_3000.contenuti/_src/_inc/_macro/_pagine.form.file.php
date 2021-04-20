@@ -25,13 +25,16 @@
     // sotto tabella gestita
 	$ct['form']['subtable'] = 'file';
 
-    // tendina ruolo immagini
+    // tendina ruolo file
 	$ct['etc']['select']['ruoli_file'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM ruoli_file_view WHERE se_contenuti = 1 '
 	);
+
+    // tendina lingue
+    $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

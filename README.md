@@ -47,6 +47,37 @@ Se avete appena installato (o non avete ancora installato) i server web e databa
 setup dell'ambiente (_src/_sh/_gw.environment.setup.sh) che vi aiuterà a installare e configurare i servizi necessari
 a far funzionare GlisWeb.
 
+Un esempio di sequenza di comandi per l'installazione potrebbe essere la seguente, come più ampiamente illustrato nella
+documentazione ufficiale per gli sviluppatori all'indirizzo https://glisweb.istricesrl.it/docs/:
+
+    cd /var/www/html
+    wget https://github.com/istricesrl/glisweb/archive/develop.zip
+    unzip develop.zip
+    mv -f ./glisweb-develop/{.,}* ./
+    rmdir glisweb-develop
+    rm -rf .github
+    rm -f .gitignore
+    rm -f develop.zip
+    _src/_sh/_gw.permissions.reset.sh
+    _src/_sh/_gw.mysql.install.sh
+    _src/_sh/_gw.config.sh base
+    composer update
+
+Un video sull'installazione di GlisWeb è anche disponibile a questo indirizzo https://youtu.be/xzERaj20HJA:
+
+[![Watch the video](https://img.youtube.com/vi/xzERaj20HJA/maxresdefault.jpg)](https://youtu.be/xzERaj20HJA)
+
+Se sul server che state utilizzando è installato il progetto Calabash () potete installare GlisWeb semplicemente
+lanciando dalla document root del progetto il comando:
+
+    va.glisweb.install.sh .
+
+Se desiderate la versione di sviluppo utilizzate:
+
+    va.glisweb.install.sh . develop
+
+L'aggiornamento delle librerie con Composer sarà già stato effettuato dallo script.
+
 ## configurazione
 Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
 che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
@@ -58,3 +89,9 @@ da poterli visualizzare via web, aggiungendo all'URL del vostro deploy il path _
 Ricordate inoltre che trovate numerosi esempi e file utili nella cartella _usr/_examples/, che è un'ottima base di
 partenza per iniziare a capire come funziona GlisWeb. Alcuni degli strumenti che troverete in questa cartella vi saranno
 molto utili anche quando sarete divenuti più esperti!
+
+## utilizzo
+Utilizzare GlisWeb è semplice e intuitivo! Una guida per gli utenti è in fase di sviluppo ed è disponibile a questo
+indirizzo http://s-url.it/gliswebdocs inoltre stiamo pubblicando una serie di video tutorial su questa playlist di YouTube
+http://s-url.it/gliswebvideos.
+

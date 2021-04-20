@@ -1,0 +1,31 @@
+{% import '_bin/_default.html' as cms %}
+
+{% block vantaggi %}
+{% set vantaggi = [] %}
+{% for v in page.children.id %}
+{% if pages[ v ].metadati.lp_ruolo == 'vantaggi' %}
+{% set vantaggi = vantaggi|merge( { ( v ) : pages[ v ] } ) %}
+{% endif %}
+{% endfor %}
+{% if vantaggi %}
+<section class="vantaggi">
+    <div class="container">
+        <div class="row d-flex justify-content-around align-items-stretch">
+            {% for k,v in vantaggi|sort( ( a,b ) => a.metadati.lp_ordine <=> b.metadati.lp_ordine ) %}
+            <div class="col-12 col-md-3 mb-4">
+                <div class="card h-100">
+                    {% if v.metadati.card_clickable %}<a href="{{ v.url[ localization.language.ietf ] }}" class="index-card d-flex h-100" data-card-index="{{ i }}">{% endif %}
+                    {% if v.contents.images.card %}{{ cms.picture( v.contents.images.card|first.path, lang, site, set ) }}{% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ v.h1[ localization.language.ietf ] }}</h5>
+                        <div class="card-text">{{ include( template_from_string( v.cappello[ localization.language.ietf ] ) | raw ) }}</div>
+                    </div>
+                    {% if v.metadati.card_clickable %}</a>{% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

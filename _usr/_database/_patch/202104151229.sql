@@ -1,0 +1,1 @@
+ALTER TABLE `obiettivi` ADD PRIMARY KEY (`id`), ADD KEY `id_genitore` (`id_genitore`), ADD KEY `id_fase_strategia` (`id_fase_strategia`), ADD KEY `id_tipologia` (`id_tipologia`), ADD KEY `nome` (`nome`);

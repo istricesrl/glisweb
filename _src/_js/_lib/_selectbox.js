@@ -14,6 +14,8 @@
 
 	    var base_id = $(this).attr( 'id' );
 
+		var wscall = null;
+
 	    // log
 	    // console.log( select );
 	     console.log( base_id );
@@ -29,7 +31,8 @@
 	    $( select ).hide();
 
 	    // creo il campo input
-	    var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '">');
+	    // var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '">');
+		var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 30 * 100 * 1000 ) ) + '-' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '-' + ( Math.floor(Math.random() * 50 * 100 * 1000 ) ) + '"><div class="spinner-border" role="status"></div>');
 
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'data-required' ) == 'true' ) {
@@ -37,11 +40,17 @@
 	    }
 
 	    // prelevo il valore corrente
-	    var current = $( select ).find( 'option:selected' ).text();
+		// NOTA perché .text() e non .html()?
+	    var current = $( select ).find( 'option:selected' ).text().trim();
 		var currvalue = $( select ).val();
 
 	    // imposto il valore corrente
-	    box.val( current );
+	    // aggiungo l'attributo required
+	    if( $( select ).attr( 'placeholder-api' ) ) {
+			$( box ).val( $( select ).attr( 'placeholder-api' ) );
+		} else {
+			box.val( current );
+		}
 
 	    // TODO creo la <ul> con le opzioni
 	    var lista = $('<ul class="combobox-dropdown remove-on-duplicate" id="' + base_id + '_list"> </ul>');
@@ -86,62 +95,134 @@
 		// se è stato inserito un filtro di lunghezza minima
 		if( filtro.length > min || force == true ) {
 
-		    // svuoto la lista
-		    $( lista ).empty();
-
 		    // resetto la select
 		    // $( select ).val([]);
 
 		    // log
-		     console.log( 'filtro -> ' + filtro );
+			 console.log( 'filtro: ' + filtro );
+			 console.log( 'api: ' + $( select ).attr( 'populate-api' ) );
 
-		    // TODO appendo alla lista un <li> per ogni <option> della select
-		    select.find('option').each( function( idx, el ) {
-			var opzione = $( el ).html();
-			var valore = $( el ).attr( 'value' );
-			// $( el ).prop( 'selected', false );
-			// console.log( opzione + ' -> ' + valore );
-			// TODO filtro le opzioni in base al opzione del campo input
-			if( opzione.toLowerCase().indexOf( filtro.toLowerCase() ) >= 0 ) {
-				// console.log( opzione + ' -> ' + filtro );
-				if( valore == currvalue ) {
-					var classe = ' class="selected"';
-				} else {
-					var classe = '';
+			// tendina dinamica o statica
+			if( $( select ).attr( 'populate-api' ) != '' ) {
+
+				$( box ).closest( '.spinner-border' ).show();
+
+				if( wscall != null ) {
+					clearTimeout( wscall );
 				}
-			    var li = '<li value="' + valore + '"' + classe + '>' + opzione + '</li>';
-			    lista.append( li );
+
+				wscall = setTimeout( function() {
+
+				var call = '/api/' + $( select ).attr( 'populate-api' ) + '?__info__[' + $( select ).attr( 'populate-api' ) + '][__search__]=' + filtro;
+
+				console.log( 'chiamata API ' + call );
+
+				getws(
+					call,
+					null,
+					function( data ) {
+
+		    // svuoto la lista
+		    $( lista ).empty();
+
+						console.log( data );
+
+						data.forEach( function( el ) {
+
+								console.log( el.id + '/' + el.__label__ );
+
+								if( el.id == currvalue ) {
+									var classe = ' class="selected"';
+								} else {
+									var classe = '';
+								}
+			
+								var li = '<li value="' + el.id + '"' + classe + '>' + el.__label__ + '</li>';
+
+				
+								lista.append( li );
+
+								
+								lista.find('li').each( function( idxl, li ) {
+									var opzione = $( li ).html();
+									var valore = $( li ).attr( 'value' );
+									$( li ).bind( 'click', function() {
+										$( select ).val( valore );
+										$( box ).val( opzione );
+										$( box ).addClass( 'combobox-base-background' );
+										$( box ).removeClass( 'combobox-active-background' );
+										// $( box ).css( 'background-color', '#ffffff' );
+										$( lista ).hide();
+										// console.log( 'valore della select al click -> ' + $( select ).val() );
+									});
+								});
+	
+
+							});
+
+							$( lista ).show();
+							$( box ).closest( '.spinner-border' ).hide();
+
+					}
+				);
+
+				}, 1000 );
+
+			} else {
+
+		    // svuoto la lista
+		    $( lista ).empty();
+
+				// TODO appendo alla lista un <li> per ogni <option> della select
+				select.find('option').each( function( idx, el ) {
+				var opzione = $( el ).html().trim();
+				var valore = $( el ).attr( 'value' );
+				// $( el ).prop( 'selected', false );
+				// console.log( opzione + ' -> ' + valore );
+				// TODO filtro le opzioni in base al opzione del campo input
+				if( opzione.toLowerCase().indexOf( filtro.toLowerCase() ) >= 0 ) {
+					// console.log( opzione + ' -> ' + filtro );
+					if( valore == currvalue ) {
+						var classe = ' class="selected"';
+					} else {
+						var classe = '';
+					}
+					var li = '<li value="' + valore + '"' + classe + '>' + opzione + '</li>';
+					lista.append( li );
+				}
+				});
+
+				// TODO bind dell'evento click sulle opzioni per il cambio del valore della select
+				lista.find('li').each( function( idxl, li ) {
+				var opzione = $( li ).html();
+				var valore = $( li ).attr( 'value' );
+				$( li ).bind( 'click', function() {
+					$( select ).val( valore );
+					$( box ).val( opzione );
+					$( box ).addClass( 'combobox-base-background' );
+					$( box ).removeClass( 'combobox-active-background' );
+					// $( box ).css( 'background-color', '#ffffff' );
+					$( lista ).hide();
+					// console.log( 'valore della select al click -> ' + $( select ).val() );
+				});
+				// console.log( 'bind a ' + valore + ' di ' + opzione );
+				});
+
+	/*
+			// segnalazione visiva trovato o non trovato
+			if( found == false ) {
+				$( box ).css( 'background-color', '#eeeeee' );
+			} else {
+				$( box ).css( 'background-color', '#ffffff' );
 			}
-		    });
+	*/
 
-		    // TODO bind dell'evento click sulle opzioni per il cambio del valore della select
-		    lista.find('li').each( function( idxl, li ) {
-			var opzione = $( li ).html();
-			var valore = $( li ).attr( 'value' );
-			$( li ).bind( 'click', function() {
-			    $( select ).val( valore );
-			    $( box ).val( opzione );
-				$( box ).addClass( 'combobox-base-background' );
-				$( box ).removeClass( 'combobox-active-background' );
-			    // $( box ).css( 'background-color', '#ffffff' );
-			    $( lista ).hide();
-			    // console.log( 'valore della select al click -> ' + $( select ).val() );
-			});
-			// console.log( 'bind a ' + valore + ' di ' + opzione );
-		    });
+				// mostro la lista
+				// select.parent().append( lista );
+				$( lista ).show();
 
-/*
-		// segnalazione visiva trovato o non trovato
-		if( found == false ) {
-		    $( box ).css( 'background-color', '#eeeeee' );
-		} else {
-		    $( box ).css( 'background-color', '#ffffff' );
-		}
-*/
+			}
 
-		    // mostro la lista
-		    // select.parent().append( lista );
-		    $( lista ).show();
 
 		} else {
 

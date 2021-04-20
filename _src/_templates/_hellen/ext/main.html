@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.html' %}
+
+    </head>
+
+    <body>
+
+        {% include '_inc/_page.open.html' %}
+
+        <header class="sticky-top">
+            <div class="container">
+                <div class="row">
+                    {% block header %}{% include 'inc/header.html' %}{% endblock %}
+                    {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
+                </div>
+            </div>
+        </header>
+
+        {% if page.contents.images.jumbotron|length > 0 or page.contents.images.carousel|length > 0 %}
+        <div class="mb-auto">
+            <div class="container">
+                <div class="row">
+                    <div class="col p-0 my-3">
+                        {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+                        {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <main class="mt-auto mb-auto">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+                        {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% block main %}{% endblock %}
+                    </div>
+                </div>
+                {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
+            </div>
+        </main>
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    {% block footersx %}{% include 'inc/footer.sx.html' %}{% endblock %}
+                    {% block footerdx %}{% include 'inc/footer.dx.html' %}{% endblock %}
+                </div>
+            </div>
+        </footer>
+
+        {% include '_inc/_page.close.html' %}
+
+        {% block javascript %}{% endblock %}
+
+    </body>
+</html>

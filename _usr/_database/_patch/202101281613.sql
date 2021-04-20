@@ -1,0 +1,1 @@
+ALTER TABLE `progetti` ADD `ranking` CHAR(32) NULL DEFAULT NULL AFTER `testo`, ADD INDEX (`ranking`) ;

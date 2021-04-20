@@ -9,7 +9,8 @@
 	    formChanged = true;
 
 	    var parent = $( '#' + f );
-	    var counter = parent.children().length - 1;
+		// var counter = parent.children().length - 2;
+		var counter = Date.now();
 	    var old = parent.children('div').first();
 	    var base = old.clone().get(0);
 	    var empty = null;
@@ -20,9 +21,10 @@
 
 	    if( typeof( max ) == 'undefined' || counter < max ) {
 
-		base.attributes['id'].value = base.attributes['id'].value.replace( /_[0-9]+/i, '_' + counter );
+		base.attributes['id'].value = base.attributes['id'].value.replace( /_[\-0-9]+/i, '_' + counter );
 		
 		var focus = $( base ).find('.focus').first().get(0);
+
 		if( typeof( focus ) !== 'undefined' ) {
 		    focus.focus();
 		    // console.log( $( base ).find('.focus').first().get(0) );
@@ -37,26 +39,36 @@
 		    obj.remove();
 		});
 
+		$( base ).find(':disabled').each( function( i, obj ) {
+		    $( obj ).removeAttr('disabled');
+		});
+
 		$( base ).find('.show-on-duplicate').each( function( i, obj ) {
 		    $( obj ).show();
 		    $( obj ).removeClass('hidden');
 		});
 
-		$( base ).find( 'input, textarea, select' ).each( function( i, obj ) {
+		$( base ).show();
+		$( base ).removeClass('hidden');
+
+		$( base ).find( 'input, textarea, select, button' ).each( function( i, obj ) {
 		    if( typeof( obj.attributes['default'] ) !== 'undefined' ) {
 			empty = obj.attributes['default'].value;
 		    } else {
 			empty = null;
 		    }
 		    if( typeof( obj.attributes['id'] ) !== 'undefined' ) {
-			obj.attributes['id'].value = obj.attributes['id'].value.replace( /_[0-9]+_/i, '_' + counter + '_' );
+			obj.attributes['id'].value = obj.attributes['id'].value.replace( /_[\-0-9]+_/i, '_' + counter + '_' );
 		    }
 		    if( typeof( obj.attributes['uploader-field'] ) !== 'undefined' ) {
-			obj.attributes['uploader-field'].value = obj.attributes['uploader-field'].value.replace( /_[0-9]+_/i, '_' + counter + '_' );
+			obj.attributes['uploader-field'].value = obj.attributes['uploader-field'].value.replace( /_[\-0-9]+_/i, '_' + counter + '_' );
 		    }
-		    if( typeof( obj.attributes['name'] ) !== 'undefined' ) {
-			obj.attributes['name'].value = obj.attributes['name'].value.replace( /\[[0-9]+\]/i, '[' + counter + ']' );
-			obj.attributes['name'].value = obj.attributes['name'].value.replace( /_[0-9]+_/i, '_' + counter + '_' );
+      if( typeof( obj.attributes['selectbox-field'] ) !== 'undefined' ) {
+          obj.attributes['selectbox-field'].value = obj.attributes['selectbox-field'].value.replace( /_[\-0-9]+_/i, '_' + counter + '_' );
+      }
+      if( typeof( obj.attributes['name'] ) !== 'undefined' ) {
+          obj.attributes['name'].value = obj.attributes['name'].value.replace( /\[[\-0-9]+\]/i, '[' + counter + ']' );
+          obj.attributes['name'].value = obj.attributes['name'].value.replace( /_[\-0-9]+_/i, '_' + counter + '_' );
 		    }
 		    if( typeof( obj.attributes['type'] ) !== 'undefined' ) {
 			if( obj.attributes['type'].value == 'checkbox' ) {
@@ -74,7 +86,7 @@
 			    } else if( $( obj ).hasClass( 'current-datetime-on-duplicate' ) ) {
 				$( obj ).val( moment().format('YYYY-MM-DD[T]HH:mm') );
 			    } else if( $( obj ).hasClass( 'default-value-on-duplicate' ) ) {
-				$( obj ).val( obj.attributes["default"] );
+				$( obj ).val( obj.attributes["default"].value );
 			    } else {
 				$( obj ).val( empty );
 			    }
@@ -88,7 +100,10 @@
 		    $(this).uploader();
 		});
 
-		$( base ).find('.selectbox').selectBox();
+	//	$( base ).find('.selectbox').selectBox();
+		$( base ).find('.selectbox').each( function() {
+			$(this).selectBox();
+		});
 
 // SDF questa è la parte aggiunta ma c'è ancora qualco sa che non funziona
 // creando una nuova riga di orario al check non applica correttamente i value...
@@ -120,15 +135,6 @@
 
     // operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
-
-	    // collego il campo hidden per le checkbox
-		$('input[type=checkbox]').click( function() {
-		    if( this.checked ) {
-			$(this).prev().val('1');
-		    } else {
-			$(this).prev().val('0');
-		    }
-		});
 
 	    // attivo le verifiche per le modifiche ai form
 		window.addEventListener("beforeunload", function(e) {

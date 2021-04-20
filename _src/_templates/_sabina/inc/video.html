@@ -1,0 +1,15 @@
+{% import '_bin/_default.html' as cms %}
+
+{% block video %}
+{% if page.contents.video.principale %}
+<section class="video">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {{ cms.video( page, localization.language.ietf, site, 'principale', 10 ) }}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

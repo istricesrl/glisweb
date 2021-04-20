@@ -27,26 +27,11 @@
   "mysql": {
     "servers": {
       "default": {
-        "address": "%indirizzo IP del serve MySQL%",
+        "address": "%indirizzo IP del server MySQL%",
         "port": "%porta del server MySQL%",
         "username": "%nome utente del server MySQL%",
         "password": "%password del server MySQL%",
-        "db": "%indirizzo del server MySQL%"
-      }
-    },
-    "profiles": {
-      "%stage del sito%": {
-        "servers": [
-          "default"
-        ]
-      }
-    }
-  },
-  "memcache": {
-    "servers": {
-      "default": {
-        "address": "%indirizzo del server memcache%",
-        "port": "%porta del server memcache%"
+        "db": "%nome del database MySQL%"
       }
     },
     "profiles": {

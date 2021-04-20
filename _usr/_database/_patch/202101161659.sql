@@ -1,0 +1,1 @@
+UPDATE `tipologie_embed` SET `se_video` = '1' WHERE `tipologie_embed`.`id` = 2;

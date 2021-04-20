@@ -32,7 +32,10 @@
 		    filebrowserBrowseUrl: siteRoot + 'file-browser?type=Files'
 		});
 		ckEditors.push( editor );
-		CKEDITOR.config.protectedSource.push( /\{\%[\s\S]*?%\}/g );
+		// CKEDITOR.config.protectedSource.push( /\{\%[\s\S]*?%\}/g );
+        CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_DIV;
+        CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
+        // CKEDITOR.config.autoParagraph = false;
 		CKEDITOR.dtd.$removeEmpty["i"] = false;
 		CKEDITOR.dtd.$removeEmpty["span"] = false;
 		CKEDITOR.plugins.basePath = siteRoot + '_src/_js/_lib/_external/ckeditor/plugins/';

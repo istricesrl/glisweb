@@ -18,37 +18,37 @@
 
     }
 
-    function aggiungiImmagini( &$p, $f, $id, $r = null ) {
+    function aggiungiImmagini( &$p, $id, $f, $r = null ) {
 
-        aggiungiDati( $p, $f, $id, 'immagini', $r );
-
-    }
-
-    function aggiungiVideo( &$p, $f, $id, $r = null ) {
-
-        aggiungiDati( $p, $f, $id, 'video', $r );
+        aggiungiDati( $p, $id, $f, 'immagini', $r );
 
     }
 
-    function aggiungiAudio( &$p, $f, $id, $r = null ) {
+    function aggiungiVideo( &$p, $id, $f, $r = null ) {
 
-        aggiungiDati( $p, $f, $id, 'audio', $r );
-
-    }
-
-    function aggiungiFile( &$p, $f, $id, $r = null ) {
-
-        aggiungiDati( $p, $f, $id, 'file', $r );
+        aggiungiDati( $p, $id, $f, 'video', $r );
 
     }
 
-    function aggiungiRecensioni( &$p, $f, $id, $r = null ) {
+    function aggiungiAudio( &$p, $id, $f, $r = null ) {
 
-        aggiungiDati( $p, $f, $id, 'recensioni', $r );
+        aggiungiDati( $p, $id, $f, 'audio', $r );
 
     }
 
-    function aggiungiDati( &$p, $f, $id, $t, $r = null ) {
+    function aggiungiFile( &$p, $id, $f, $r = null ) {
+
+        aggiungiDati( $p, $id, $f, 'file', $r );
+
+    }
+
+    function aggiungiRecensioni( &$p, $id, $f, $r = null ) {
+
+        aggiungiDati( $p, $id, $f, 'recensioni', $r );
+
+    }
+
+    function aggiungiDati( &$p, $id, $f, $t, $r = null ) {
 
         global $cf;
 
@@ -134,6 +134,119 @@
             } else {
                 $p['contents'][ $tk ][ $cn['ruolo'] ][ $cn['ordine'] ] = $im;
             }
+        }
+
+    }
+
+    function aggiungiMenu(  &$p, $id, $f  ) {
+
+        global $cf;
+        
+        $mnu = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT menu.*, lingue.ietf FROM menu '.
+            'INNER JOIN lingue ON lingue.id = menu.id_lingua '.
+            'WHERE ' . $f . ' = ?',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        foreach( $mnu as $mn ) {
+            $p = array_replace_recursive( $p,
+                array(
+                    'menu'	=> array( $mn['menu']	=> array(
+                        'label'		=> array( $mn['ietf'] => $mn['nome'] ),
+                        'subpages'	=> $mn['sottopagine'],
+                        'target'	=> ( isset( $mn['target'] ) ) ? $mn['target'] : NULL,
+                        'priority'	=> $mn['ordine'] )
+                    )
+                )
+            );
+        }
+
+    }
+
+    function aggiungiMetadati( &$p, $id, $f ) {
+
+        global $cf;
+        
+        $meta = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT metadati.*, lingue.ietf FROM metadati '.
+            'LEFT JOIN lingue ON lingue.id = metadati.id_lingua '.
+            'WHERE ' . $f . ' = ?',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        foreach( $meta as $mta ) {
+            if( empty( $mta['ietf'] ) ) {
+                $p['metadati'][ $mta['nome'] ] = $mta['testo'];
+            } else {
+                $p['metadati'][ $mta['nome'] ][ $mta['ietf'] ] = $mta['testo'];
+            }
+        }
+
+    }
+
+    function aggiungiGruppi( &$p, $id, $f = 'id_pagina', $t = 'pagine_gruppi' ) {
+
+        // TODO l'assetto dei gruppi cambierà, probabilmente per usare le ACL
+
+        global $cf;
+
+        $groups = mysqlSelectColumn(
+            'nome',
+            $cf['mysql']['connection'],
+            'SELECT gruppi.nome FROM gruppi '.
+            'INNER JOIN pagine_gruppi ON gruppi.id = pagine_gruppi.id_gruppo '.
+            'WHERE pagine_gruppi.id_pagina = ?',
+            array(
+                array( 's' => $id )
+            )
+        );				
+
+        if( ! empty( $groups ) ) {
+            $p['auth']['groups']	= $groups;
+        }
+
+    }
+
+    function aggiungiContenuti( &$p, $id, $f ) {
+
+        global $cf;
+
+        $cnt = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT contenuti.*, lingue.ietf FROM contenuti '.
+            'INNER JOIN lingue ON lingue.id = contenuti.id_lingua '.
+            'WHERE ' . $f . ' = ?',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        foreach( $cnt as $cn ) {
+            $p = array_replace_recursive( $p,
+                array(
+                    'short'             => array( $cn['ietf']	=> $cn['path_custom'] ),
+                    'forced'	        => array( $cn['ietf']	=> $cn['url_custom'] ),
+                    'custom'	        => array( $cn['ietf']	=> $cn['rewrite_custom'] ),
+                    'title'	            => array( $cn['ietf']	=> $cn['title'] ),
+                    'h1'	            => array( $cn['ietf']	=> $cn['h1'] ),
+                    'h2'	            => array( $cn['ietf']	=> $cn['h2'] ),
+                    'h3'	            => array( $cn['ietf']	=> $cn['h3'] ),
+                    'og_type'	        => array( $cn['ietf']	=> $cn['og_type'] ),
+                    'og_title'	        => array( $cn['ietf']	=> $cn['og_title'] ),
+                    'og_image'	        => array( $cn['ietf']	=> $cn['og_image'] ),
+                    'og_audio'	        => array( $cn['ietf']	=> $cn['og_audio'] ),
+                    'og_video'	        => array( $cn['ietf']	=> $cn['og_video'] ),
+                    'og_description'	=> array( $cn['ietf']	=> $cn['og_description'] ),
+                    'og_determiner'     => array( $cn['ietf']	=> $cn['og_determiner'] )
+                )
+            );
         }
 
     }

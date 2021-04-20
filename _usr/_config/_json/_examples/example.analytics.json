@@ -1,0 +1,12 @@
+{
+  "google": {
+    "profiles": {
+      "PROD": {
+        "analytics": {
+          "ua": "",
+          "anonymous": true
+        }
+      }
+    }
+  }
+}

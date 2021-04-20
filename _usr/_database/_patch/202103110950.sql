@@ -1,0 +1,1 @@
+ALTER TABLE `contenuti` DROP FOREIGN KEY `contenuti_ibfk_25`;

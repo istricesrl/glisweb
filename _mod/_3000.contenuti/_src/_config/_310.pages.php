@@ -43,7 +43,7 @@
         );
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine recupero pagine dal database' );
+		timerCheck( $cf['speed'], '-> fine recupero pagine dal database' );
 
 	    // se ci sono pagine trovate le inserisco nell'array principale
 		if( is_array( $pgs ) ) {
@@ -68,9 +68,15 @@
                         'sitemap'		=> ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
                         'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                         'parent'		=> array( 'id'		=> $pg['id_genitore'] ),
-                        'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'] )
+                        'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] )
                     );
 
+                    // TODO fare aggiungiGruppi()
+                    aggiungiGruppi(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        $pg['id']
+                    );
+/*
                     // prelevo i gruppi
                     $groups = mysqlSelectColumn(
                         'nome',
@@ -87,7 +93,15 @@
                     if( ! empty( $groups ) ) {
                         $cf['contents']['pages'][ $pg['id'] ]['auth']['groups']	= $groups;
                     }
+*/
 
+                    // TODO fare aggiungiContenuti()
+                    aggiungiContenuti(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        $pg['id'],
+                        'id_pagina'
+                    );
+/*
                     // array dei contenuti
                     $cnt = mysqlQuery(
                         $cf['mysql']['connection'],
@@ -121,15 +135,23 @@
                             )
                         );
                     }
+*/
 
                     // aggiungo le immagini
                     aggiungiImmagini(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        'id_pagina',
                         $pg['id'],
+                        'id_pagina',
                         array( 4, 16, 29, 14 )
                     );
 
+                    // TODO fare aggiungiMetadati()
+                    aggiungiMetadati(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        $pg['id'],
+                        'id_pagina'
+                    );
+/*
                     // array dei metadati
                     $meta = mysqlQuery(
                         $cf['mysql']['connection'],
@@ -148,7 +170,15 @@
                             $cf['contents']['pages'][ $pg['id'] ]['metadati'][ $mta['nome'] ][ $mta['ietf'] ] = $mta['testo'];
                         }
                     }
+*/
 
+                    // TODO fare aggiungiMenu()
+                    aggiungiMenu(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        $pg['id'],
+                        'id_pagina'
+                    );
+/*
                     // array dei menu
                     $mnu = mysqlQuery(
                         $cf['mysql']['connection'],
@@ -174,7 +204,7 @@
                             )
                         );
                     }
-
+*/
                     // debug
                     // echo( $pg['id'] . ' cached' . PHP_EOL );
 
@@ -192,7 +222,7 @@
         }
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine elaborazione pagine prelevate dal database' );
+		timerCheck( $cf['speed'], '-> fine elaborazione pagine prelevate dal database' );
 
     } else {
         

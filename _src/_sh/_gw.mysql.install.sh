@@ -17,6 +17,9 @@ echo "lavoro su: $(pwd)"
 FILE1="_usr/_database/mysql.schema.sql"
 FILE2="_usr/_database/mysql.data.sql"
 
+## intestazione
+echo "installazione del database"
+
 ## se il file su cui lavorare è specificato
 if [ -f "$FILE1" -a -f "$FILE2" ]; then
 
@@ -26,7 +29,7 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
 
     read -p "nome utente AMMINISTRATORE: " SRVUSER
 
-    read -p "password utente AMMINISTRATORE: " SRVPASS
+    read -s -p "password utente AMMINISTRATORE: " SRVPASS && echo
 
     read -p "database: " SRVDBNAME
 
@@ -38,7 +41,7 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
     mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE1
     mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE2
 
-    read -p "vuoi assegnare il database a un utente specifico (s/n)? " SYN
+    read -p "vuoi assegnare il database a un utente specifico (s/n)? " YN
 
     if [ $YN == "s" ]; then
 
@@ -46,8 +49,8 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
 
         read -p "nome utente DATABASE: " SRVDBUSER
 
-        if [ $YN == "s" ]; then
-            read -p "password utente DATABASE: " SRVDBPASS
+        if [ $SYN == "s" ]; then
+            read -s -p "password utente DATABASE: " SRVDBPASS && echo
             mysql -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE USER \`$SRVDBUSER\`@\`%\` IDENTIFIED BY '$SRVDBPASS';"
         fi
 

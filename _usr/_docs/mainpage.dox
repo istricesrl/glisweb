@@ -4,11 +4,12 @@
 
     Questo è il framework GlisWeb, sviluppato a partire da una base di codice originariamente scritto da Fabio Mosti
     <fabio.mosti@gmail.com> e Emiliano Volta alla fine degli anni '90, riordinato in un unico framework da Fabio Mosti
-    nei primi anni 2000 e costantemente aggiornato fino alla versione attuale mantenuta in collaborazione con il team
-    di Istrice srl.
+    e Emiliano Volta nei primi anni 2000 e costantemente aggiornato fino alla versione attuale mantenuta da Fabio Mosti
+    in collaborazione con il team di Istrice srl.
 
     GlisWeb è un framework leggero, ampiamente personalizzabile, pensato per realizzare siti e web application
-    nativamente rispettose degli standard e delle migliori pratiche vigenti nel mondo del web.
+    nativamente rispettose degli standard e delle migliori pratiche vigenti nel mondo del web. Nasce per dare a tutti
+    la possibilità di realizzare siti e soprattutto web applications a partire da codice gratuito e aperto.
 
     introduzione veloce
     ===================
@@ -32,15 +33,18 @@
     per scaricarle. Se scegliete l'installazione via FTP, dovete effettuare questa operazione sulla vostra
     macchina prima di procedere all'upload del framework sul server.
 
+    Lo scenario raccomandato è quello in cui avete l'accesso SSH al server (ad esempio, un server virtuale
+    dedicato) dal momento che GlisWeb comprende numerosi script Bash pensati per semplificarvi il lavoro.
+
     ### accesso FTP ###
 
     Nel caso abbiate solo un accesso FTP, dovrete scaricare il framework sulla vostra macchina, scompattarlo,
-    e caricarlo con il vostro client FTP preferito; questo scenario è tipicamente quello in cui vi troverete
-    se usate un qualche tipo di hosting condiviso.
+    e caricarlo con il vostro client FTP preferito (ad esempio FileZilla); questo scenario è tipicamente quello
+    in cui vi troverete se usate un qualche tipo di hosting condiviso.
 
     Una volta caricati i file nella document root del vostro sito web, dovrete installare il database
     lanciando gli script SQL allegati al framework (cartella _usr/_database/) tramite l'interfaccia fornita
-    dal vostro provider.
+    dal vostro provider (di solito phpMyAdmin o Adminer).
 
     ### accesso SSH ###
 
@@ -49,6 +53,29 @@
     root del sito, oppure scaricare il file https://github.com/istricesrl/glisweb/archive/master.zip con
     wget e scompattarlo nella document root. Per il caricamento del database potete procedere come sopra
     manualmente oppure utilizzare lo script apposito che si trova nella cartella _src/_sh/.
+
+    Se avete già configurato il DNS per puntare allo spazio web dove volete installare il framework e se
+    avete già creato il database MySQL che intendete utilizzare (eventualmente con il suo utente dedicato),
+    una sequenza di comandi ipotetica potrebbe essere ad esempio la seguente, immaginando che il framework
+    vada installato in /var/www/html:
+
+    \code{.bash}
+    cd /var/www/html
+    wget https://github.com/istricesrl/glisweb/archive/develop.zip
+    unzip develop.zip
+    mv -f ./glisweb-develop/{.,}* ./
+    rmdir glisweb-develop
+    rm -rf .github
+    rm -f .gitignore
+    rm -f develop.zip
+    _src/_sh/_gw.permissions.reset.sh
+    _src/_sh/_gw.mysql.install.sh
+    _src/_sh/_gw.config.sh base
+    composer update
+    \endcode
+
+    Se tutto è andato a buon fine, dovreste essere ora in grado di accedere al report sullo status della nuova installazione
+    e fare il login nel CMS utilizzando la password di root che avete inserito in fase di configurazione.
 
     utilizzo veloce del framework
     -----------------------------
@@ -63,8 +90,8 @@
     Questo vi consentirà di utilizzare la maggior parte delle caratteristiche del framework, tuttavia
     per poter costruire un progetto complesso avrete bisogno di studiare accuratamente questa documentazione.
 
-    pubblicazione rapida di contenuti
-    ---------------------------------
+    ### pubblicazione rapida di contenuti ###
+
     Se dovete utilizzare il framework per piccolissimi progetti, potete semplicemente posizionare
     i file html e php nella radice del sito (o in sottocartelle) come siete già abituati a fare, e includere
     il framework solo negli script che necessitano di utilizzarne le funzionalità. Non è un approccio
@@ -85,7 +112,7 @@
 
     La licenza di questo framework concede una grande libertà agli utilizzatori, ma impone anche alcuni
     obblighi importanti. Prima di utilizzare il framework leggere attentamente il testo della licenza
-    presente in /_etc/_license.it-IT.conf e assicurarsi di averne compreso correttamente il contenuto.
+    presente in LICENSE.md e assicurarsi di averne compreso correttamente il contenuto.
 
     ringraziamenti
     ==============
@@ -94,7 +121,7 @@
     e il cui lavoro ha reso possibile tutto questo.
 
     librerie esterne
-    ================
+    ----------------
     Il framework GlisWeb si avvale di numerose librerie esterne per offrire funzionalità avanzate a utenti
     e sviluppatori; di seguito le riportiamo tutte in ordine alfabetico, ringraziando di cuore gli autori
     di ognuna di esse. Se per errore o dimenticanza abbiamo omesso o mal riportato un riferimento, saremo

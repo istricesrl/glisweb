@@ -65,7 +65,7 @@
 													'pagine.form.video',
 													'pagine.form.audio',
 													'pagine.form.file',
-//													'pagine.form.macro',
+													'pagine.form.macro',
 													'pagine.form.metadati',
 													'pagine.form.gruppi',
 													'pagine.form.tools'
@@ -182,6 +182,17 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php', $m . '_src/_inc/_macro/_pagine.form.contenuti.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+	);
+
+	$p['pagine.form.macro'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'macro' ),
+		'h1'		=> array( $l		=> 'macro' ),
+		'parent'		=> array( 'id'		=> 'pagine.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.macro.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.macro.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 
 	$p['pagine.form.immagini'] = array(

@@ -52,6 +52,9 @@ apt-get install -y php-xml
 ## installazione libreria per yaml
 apt-get install -y php-yaml
 
+## installazione libreria Tidy
+apt-get install -y php-tidy
+
 ## installazione di memcache
 apt-get install -y memcached
 apt-get install -y php-memcache
@@ -70,6 +73,9 @@ apt-get install -y php-intl
 ## attivazione modulo mysqlnd
 phpenmod mysqlnd
 
+## attivazione modulo tidy
+phpenmod tidy
+
 ## installazione di Pear FTP
 pear install Net_FTP
 
@@ -77,14 +83,14 @@ pear install Net_FTP
 apt-get install -y ncftp
 
 ## installazione di mysql
-apt-get install -y mysql-server
+apt-get install -y default-mysql-server
 
 ## installazione di adminer
 apt-get install -y adminer
 a2enconf adminer
 
 ## password di root
-read -p "inserisci la password per MySQL root (vuoto per saltare): " SRVPASS
+read -s -p "inserisci la password per MySQL root (vuoto per saltare): " SRVPASS && echo
 if [ -n "$SRVPASS" ]; then
     sudo /etc/init.d/mysql stop
     sudo mysqld --skip-grant-tables &

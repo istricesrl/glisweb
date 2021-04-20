@@ -23,7 +23,7 @@
 	$status['info'][] = 'inizio operazioni di geocode';
 
     // chiave di lock
-	$status['token'] = getToken();
+	$status['token'] = getToken( __FILE__ );
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
@@ -139,7 +139,7 @@
                 $idZona = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_zona FROM zone_cap WHERE cap = ?', array( array( 's' => $gc['cap'] ) ) );
 
                 if( ! empty( $idZona ) ) {
-                mysqlQuery( $cf['mysql']['connection'], 'UPDATE indirizzi SET id_zona = ? WHERE id = ?', array( array( 's' => $idZona ), array( 's' => $geocode['id'] ) ) );
+                mysqlQuery( $cf['mysql']['connection'], 'UPDATE indirizzi SET id_zona = ? WHERE token = ?', array( array( 's' => $idZona ), array( 's' => $status['token'] ) ) );
                 }
 
             }

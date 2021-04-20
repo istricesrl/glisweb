@@ -22,7 +22,7 @@
      * @todo documentare
      *
      */
-    function controller( $c, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array() ) {
+    function controller( $c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array() ) {
 
 	// log
 	    logWrite( "${t}/${a}", 'controller' );
@@ -38,7 +38,7 @@
 
 	// inclusione dei controller
 	    $cb					= DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
-	    $cm					= DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS;
+	    $cm					= DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
 
 	// inizializzazione array dati
 	    if( empty( $d ) ) { $d		= array(); }
@@ -127,16 +127,29 @@
 
 			// ricerca nella vista
 			    if( isset( $i['__fields__'] ) && isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
-				foreach( explode( ' ', $i['__search__'] ) as $tks ) {
-				    $like = "%${tks}%";
-				    $cond = array();
-				    foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
-					$cond[] = $field . ' LIKE ?';
-					$vs[] = array( 's' => $like );
-				    }
-				    $whr[] = '(' . implode( ' OR ', $cond ) . ')';
+					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
+						if( ! empty( $tks ) ) {
+							$like = "%${tks}%";
+							$cond = array();
+							foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
+							$cond[] = $field . ' LIKE ?';
+							$vs[] = array( 's' => $like );
+							}
+# PERCHÉ OR?							$whr[] = '(' . implode( ' AND ', $cond ) . ')';
+							$whr[] = '(' . implode( ' OR ', $cond ) . ')';
+						}
+					}
+			    } elseif( isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
+					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
+						if( ! empty( $tks ) && strlen( $tks ) >= 3 ) {
+							$like = "%${tks}%";
+							$vs[] = array( 's' => $like );
+							$cond[] = ' __label__ LIKE ? ';
+						}
+					}
+# PERCHÉ OR?					$whr[] = '(' . implode( ' OR ', $cond ) . ')';
+					$whr[] = '(' . implode( ' AND ', $cond ) . ')';
 				}
-			    }
 
 			// filtri per i campi
 			    foreach( $ks as $fk ) {
@@ -144,7 +157,8 @@
 			    }
 
 			// debug
-			    // print_r( $i['__filters__'] );
+				// print_r( $i['__filters__'] );
+				// print_r( $whr );
 
 			/*
 			 * @todo IMPORTANTE
@@ -243,7 +257,7 @@
 
 			// debug
 			    // print_r( $i );
-			    //  echo $q . PHP_EOL;
+			     // echo $q . PHP_EOL;
 
 			// eseguo la query
 			    $d = mysqlQuery( $c, $q, $vs, $e['__codes__'] );
@@ -344,7 +358,7 @@
 					// compongo la query
 					    $q = "INSERT INTO $t (" . implode( ',' , $ks ) . ") VALUES (" . implode( ',' , array_fill( 0 , count( $ks ) , '?' ) ) . ") ";
 					    foreach( $ks as $k ) { $vks[] = "$k=VALUES($k)"; }
-					    $q .= "ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id)," . implode( ',' , $vks );
+					    $q .= "ON DUPLICATE KEY UPDATE " . ( ( ! in_array( 'id', $ks ) ) ? "id=LAST_INSERT_ID(id)," : NULL ) . implode( ',' , $vks );
 
 				    break;
 
@@ -444,10 +458,19 @@
 			// gestione degli errori
 			    // @todo gestire gli errori
 			    // print_r( $e['__codes__'] );
-			    if( isset( $e['__codes__'] ) && array_key_exists( '1062', $e['__codes__'] ) ) {
-				$i['__status__'] = 409;
-				$i['__err__'] = $e['__codes__']['1062'][0];
-			    }
+			    if( isset( $e['__codes__'] ) && is_array( $e['__codes__'] ) ) {
+
+					if( array_key_exists( '1062', $e['__codes__'] ) ) {
+						$i['__status__'] = 409;
+						$i['__err__'] = $e['__codes__']['1062'][0];
+			    	}
+
+					if( array_key_exists( '1054', $e['__codes__'] ) ) {
+						$i['__status__'] = 400;
+						$i['__err__'] = $e['__codes__']['1054'][0];
+			    	}
+
+				}
 
 			// variabile per confronto prima/dopo
 			    $after = NULL;
@@ -501,7 +524,7 @@
 				    foreach( $d as $k => $v ) {
 					if( is_array( $v ) ) {
 					    foreach( $v as $x => $y ) {
-						controller( $c, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__'] );
+						controller( $c, $mc, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__'] );
 					    }
 					}
 				    }
@@ -509,7 +532,8 @@
 				case METHOD_GET:
 #				default:
 				    if( in_array( 'id', $ks ) ) {
-					$x = mysqlQuery( $c, 'SELECT * FROM information_schema.key_column_usage WHERE referenced_table_name = ? AND constraint_name NOT LIKE "%_nofollow" AND table_schema = database()', array( array( 's' => $t ) ) );
+					$x = mysqlCachedQuery( $mc, $c, 'SELECT * FROM information_schema.key_column_usage WHERE referenced_table_name = ? AND constraint_name NOT LIKE "%_nofollow" AND table_schema = database()', array( array( 's' => $t ) ) );
+#C					$x = mysqlQuery( $c, 'SELECT * FROM information_schema.key_column_usage WHERE referenced_table_name = ? AND constraint_name NOT LIKE "%_nofollow" AND table_schema = database()', array( array( 's' => $t ) ) );
 #echo "cerco le referenze a $t" . PHP_EOL;
 #print_r( $x );
 					foreach( $x as $ref ) {
@@ -538,7 +562,7 @@
 						    $e[ $ref['TABLE_NAME'] ][ $ix ] = array();
 						    $i[ $ref['TABLE_NAME'] ][ $ix ] = array();
 //						    controller( $c, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $r, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ] );
-						    controller( $c, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ], $i['__auth__'] );
+						    controller( $c, $mc, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ], $i['__auth__'] );
 						    $ix++;
 						}
 					    }
@@ -562,6 +586,8 @@
 			    foreach( $ct as $f ) { require $f; }
 
 			// svuotamento o integrazione del blocco dati
+			// NOTA a cosa serve questa cosa???
+			// TODO selezionare dalla vista può essere inefficente, è possibile selezionare dalla tabella?
 			    if( $r ) {
 				$_SESSION['__latest__'][ $t ] = $d;
 				$d = array();
@@ -573,6 +599,7 @@
 				    case METHOD_REPLACE:
 				    case METHOD_UPDATE:
 					$w = mysqlSelectRow( $c, "SELECT * FROM ${t}$rm WHERE id = ?", array( array( 's' => $d['id'] ) ) );
+// ATTENZIONE		if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $d, $w ); }
 					if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $w, $d ); }
 				    break;
 				}
