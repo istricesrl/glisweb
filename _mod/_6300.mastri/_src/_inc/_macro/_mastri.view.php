@@ -29,7 +29,9 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        '__label__' => 'nome'
+        '__label__' => 'nome',
+        'tipologia' => 'tipologia',
+        'note' => 'note'
 	);
 
     // stili della vista
