@@ -26,7 +26,7 @@
 
             $a = json_decode( $wsp, true );
 
-            $flds = array_flip( $a[ $e ] );
+            $flds = array_flip( $a['sostituzioni'][ $e ] );
     
             if( isset( $flds['§data§'] ) ) {
                 return $flds['§data§'];
@@ -62,4 +62,33 @@
 
         return $d;
 
+    }
+
+    // funzione che verifica se una data è attiva (non compresa in un periodo di pausa)
+    // $d = data
+    // $t = tabella di pausa in cui cercare
+    // $fn = nome del campo su cui filtrare
+    // $fv = valore del filtro
+    // NOTA: la funzione presume che i campi di confronto si chiamino sempre data_inizio e data_fine
+    function seDataAttiva( $d, $t, $fn, $fv ){
+
+        global $cf;
+
+        $attiva = 1;
+
+        $pause = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT count(*) FROM ' . $t . ' WHERE data_inizio <= ? AND data_fine >= ? AND ' . $fn . '= ?',
+            array(
+                array( 's' => $d ),
+                array( 's' => $d ),
+                array( 's' => $fv )
+            )
+        );
+
+        if( $pause > 0 ){
+           $attiva = 0;
+        }
+
+        return $attiva;
     }

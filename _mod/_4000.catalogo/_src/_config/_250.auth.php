@@ -24,18 +24,21 @@
 		),
 		'categorie_prodotti_caratteristiche' => array(
 		    CONTROL_FULL => array( 'roots' )
-#		),
-#		'marchi' => array(
-#		    CONTROL_FULL => array( 'roots' )
-#		),
-#		'coupon' => array(
-#		    CONTROL_FULL => array( 'roots' )
+		),
+		'prodotti_categorie' => array(
+		    CONTROL_FULL => array( 'roots' )
+		),
+		'caratteristiche_prodotti' => array(
+		    CONTROL_FULL => array( 'roots' )
 #		),
 #		'coupon_prodotti' => array(
 #		    CONTROL_FULL => array( 'roots' )
 #		),
 #		'coupon_categorie_prodotti' => array(
 #		    CONTROL_FULL => array( 'roots' )
+        ),
+        'listini_gruppi' => array(
+            CONTROL_FULL => array( 'roots' )
         )
 	    )
 	);

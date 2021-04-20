@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `__report_mastri__`;

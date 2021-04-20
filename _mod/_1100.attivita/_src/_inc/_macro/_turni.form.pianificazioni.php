@@ -67,10 +67,15 @@
 
         // array per il workspace della pianificazione
         $wks = array(
-            'turni' => array(
-                'data_inizio' => '§data§',
-                'data_fine' => '%data+' . $giorni . '%',
-                'id_pianificazione' => '§id_pianificazione§'
+            'metadati' => array(
+                'pause' => array()
+            ),
+            'sostituzioni' => array(
+                'turni' => array(
+                    'data_inizio' => '§data§',
+                    'data_fine' => '%data+' . $giorni . '%',
+                    'id_pianificazione' => '§id_pianificazione§'
+                )
             )
         );
 

@@ -1,0 +1,1 @@
+ALTER table `tipologie_progetti` DROP INDEX indice;

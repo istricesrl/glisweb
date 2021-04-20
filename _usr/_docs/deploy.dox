@@ -7,10 +7,25 @@
     introduzione
     ============
 
+    deploy manuale
+    --------------
+
     Phing
     -----
 
     Kubernetes
+    ----------
+
+    il deploy a tre step
+    ====================
+
+    developement
+    ------------
+
+    testing
+    -------
+
+    production
     ----------
 
 */
