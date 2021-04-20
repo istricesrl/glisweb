@@ -558,11 +558,11 @@
     // log
 	if( $flt > 0.75 || memory_get_usage( true ) > ( 1024 * 1024 * 15 ) ) {
 	    writeToFile(
-		$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
-		'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
-		print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
-		'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
-		' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
-		DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
+			$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
+			'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
+			print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
+			'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
+			' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
+			DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
 	    );
 	}

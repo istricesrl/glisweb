@@ -3,6 +3,7 @@
 {% extends 'ext/blank.html' %}
 
 {% block header %}
+<header class="fixed-top">
 <div class="row widget no-gutters">
     <div class="col text-left">
         {% set target = pages.casse.url[ localization.language.ietf ] %}
@@ -10,6 +11,7 @@
     </div>
     <div class="col text-right">
     </div>
+</header>
 {% endblock %}
 
 {% block main %}
