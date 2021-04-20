@@ -35,6 +35,15 @@
 			{% endfor %}
 		</select>
 	</div>
+	<div class="col-12 col-md-auto">
+		<span class="label-top">listino</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_listino][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_listino.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for listino in etc.select.id_listini %}
+			<option value="{{ listino.id }}" {% if request.__view__[ view.id ].__filters__.id_listino.EQ == listino.id %}selected{% endif %}>{{ listino.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
     <div class="col">
 		<span class="label-top">cerca</span>
 	<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>

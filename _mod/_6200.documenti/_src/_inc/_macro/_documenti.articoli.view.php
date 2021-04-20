@@ -85,6 +85,14 @@
 	    'SELECT id, __label__ FROM articoli_view'
 	);
 
+    // tendina listini
+	$ct['etc']['select']['id_listini'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM listini_view'
+	);
+
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

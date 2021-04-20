@@ -36,6 +36,8 @@
         'id_articolo' => 'articolo',
         'quantita' => 'quantità',
         'importo' => 'importo',
+        'listino' => 'listino',
+        'id_listino' => 'id_listino',
         'id_riga' => 'id_riga',
         'cliente' => 'cliente',
         'emittente' => 'emittente',
@@ -46,6 +48,7 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none',
         'id_riga' => 'd-none',
+        'id_listino' => 'd-none',
         'id_tipologia' => 'd-none',
         'data_lavorazione' => 'text-left',
 	    'descrizione' => 'text-left',
@@ -86,6 +89,14 @@
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM articoli_view'
+	);
+
+    // tendina listini
+	$ct['etc']['select']['id_listini'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM listini_view'
 	);
 
     // preset filtro custom progetti aperti

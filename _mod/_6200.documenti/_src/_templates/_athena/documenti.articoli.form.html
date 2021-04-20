@@ -81,6 +81,10 @@
 				<span class="label-top remove-after-duplicate">articolo</span>
 				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
 			</div>
+			<div class="col">
+				<span class="label-top remove-after-duplicate">specifiche</span>
+				{{ frm.input( table, '', '', 'specifiche', 'specifiche', '', request ) }}
+			</div>
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">importo</span>
 				{{ frm.input( table, '', '', 'importo_netto_totale', 'importo', '', request ) }}
