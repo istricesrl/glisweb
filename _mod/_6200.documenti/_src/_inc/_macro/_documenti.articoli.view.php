@@ -32,6 +32,7 @@
         'tipologia' => 'tipologia',
         'data_lavorazione' => 'data',
         'nome' => 'nome',
+        'specifiche' => 'specifiche',
         'importo_netto_totale' => 'importo',
         'quantita' => 'quantità',
         'documento' => 'documento',
@@ -48,7 +49,8 @@
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data_lavorazione' => 'text-left', 
-        'tipologia' => 'text-left'
+        'tipologia' => 'text-left',
+        'specifiche' => 'text-left'
     );
 
       // inclusione filtri speciali

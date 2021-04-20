@@ -30,6 +30,14 @@
 	    'SELECT id, __label__ FROM articoli_view'
 	);
 
+    // tendina tipologie anagrafica
+	$ct['etc']['select']['tipologie_documenti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_documenti_view'
+	);
+
     // tendina udm
 	$ct['etc']['select']['id_udm'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -101,24 +109,51 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view WHERE se_cliente = 1'
 	);
-/*
-    if( isset( $_REQUEST[ $ct['form']['table'][ 'id_emittente' ] ] ) && ! empty( $_REQUEST[ $ct['form']['table'][ 'id_emittente' ] ] ) ){
-        $ct['etc']['select']['id_documenti'] = mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM documenti_view WHERE id_emittente = ?',
-			array( array( 's' => $_REQUEST[ $ct['form']['table'][ 'id_emittente' ] ] ) )
-        );
-    } else {
-		$ct['etc']['select']['id_documenti'] = mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM documenti_view '
-        );
-    }
-*/
+
+	$ct['etc']['select']['id_documenti'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM documenti_view '
+    );
+    
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_documento'] )  && !empty( $_REQUEST[ $ct['form']['table'] ]['id_documento'] ) ){
+		$documento = $_REQUEST[ $ct['form']['table'] ]['id_documento'];
+	} elseif( isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_documento'] ) ) {
+		$documento = $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_documento'];
+	} elseif( isset( $_SESSION['__latest__'][ $ct['form']['table'] ]['id_documento'] ) ) {
+		$documento = $_SESSION['__latest__'][ $ct['form']['table'] ]['id_documento'];
+	} else {
+		$documento = 'ALL';
+	}
+
+	$ct['etc']['select']['id_righe_genitori'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM documenti_articoli_view WHERE id_documento = ? AND id_genitore IS NULL',
+		array( array( 's' => $documento ) )
+    );
+
+	if( $documento != 'ALL'){
+	$ct['etc']['id_emittente'] = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT id_emittente FROM documenti WHERE id = ? ',
+		array( array( 's' => $documento ) )
+    );
+
+	$ct['etc']['id_destinatario'] = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT id_destinatario FROM documenti WHERE id = ? ',
+		array( array( 's' => $documento ) )
+    );
+
+	$ct['etc']['id_tipologia'] = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT id_tipologia FROM documenti WHERE id = ? ',
+		array( array( 's' => $documento ) )
+    );
+	}
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
