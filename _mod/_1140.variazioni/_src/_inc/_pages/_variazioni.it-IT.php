@@ -122,4 +122,29 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
-	
+	// vista tipologie variazioni
+	$p['tipologie.variazioni.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'variazioni.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.variazioni.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.variazioni.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie' ),
+									'priority'	=> '115' ) )
+	);
+
+	// gestione tipologie variazioni
+	$p['tipologie.variazioni.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'tipologie.variazioni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.variazioni.form.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.variazioni.form.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.variazioni.form' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
+	);
+
