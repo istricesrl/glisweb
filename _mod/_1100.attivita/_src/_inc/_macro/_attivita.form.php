@@ -116,7 +116,11 @@
             $cf['cache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', array( array( 's' => $_REQUEST[ $ct['etc']['table'] ]['id_progetto'] ), array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) );
+            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
+            array( 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ), 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) 
+            );
 	} else {
 	    $ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
             $cf['cache']['index'],

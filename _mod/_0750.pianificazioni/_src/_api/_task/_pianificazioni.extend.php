@@ -68,8 +68,18 @@
     // se c'è almeno una riga da inviare
     if( ! empty( $current ) ) {
 
+        // questa parte sostituisce quella dopo per il calcolo della nuova data di fine: se mi arriva in request uso quella
+        if( !empty( $_REQUEST['data_fine'] ) ){
+            $status['fine'] = $_REQUEST['data_fine'];
+        }
+        else{
+            // calcolo la nuova data di fine
+            $status['fine'] = date( 'Y-m-d', strtotime( '+' . $current['giorni_rinnovo'] . ' days' ) );
+        }
+
         // calcolo la nuova data di fine
-        $status['fine'] = date( 'Y-m-d', strtotime( '+' . $current['giorni_rinnovo'] . ' days' ) );
+#        $status['fine'] = date( 'Y-m-d', strtotime( '+' . $current['giorni_rinnovo'] . ' days' ) );
+        
 
         // se la nuova data di fine è successiva all'attuale data di fine
         if( $status['fine'] > $current['data_fine'] ) {
@@ -83,6 +93,14 @@
                 array( 's' => time() ),
                 array( 's' => $status['token'] ) )
             );
+
+            // se mi arriva un parametro hard chiamo la populate che crea gli eventi per la pianificazione appena estesa
+           if( ! empty( $_REQUEST['hard'] ) ) {
+                $status['hard'] = $_REQUEST['hard'];
+                $status['populate'] = restcall(
+                    $cf['site']['url'] . '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php?id=' . $current['id']
+                );
+            }
 
         } else {
 

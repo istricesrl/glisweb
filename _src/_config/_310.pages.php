@@ -259,11 +259,11 @@
 #		$cf['contents']['cacheable']['pages'] = true;
 		// TODO? $cf['cache']['todo'][ CONTENTS_PAGES_KEY ] = true;
 
-	    // configurazione extra
-		if( isset( $cf['site']['pages'] ) ) {
-		    $cf['contents']['pages'] = array_replace_recursive(
-                $cf['contents']['pages'],
-                $cf['site']['pages'] );
+	    // configurazione extra per sito
+		if( isset( $cf['site']['contents'] ) ) {
+		    $cf['contents'] = array_replace_recursive(
+                $cf['contents'],
+                $cf['site']['contents'] );
 		}
 
 #11	} else {

@@ -333,3 +333,14 @@
         return false;
 
     }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function m2km( $m ) {
+
+        return $m / 1000;
+
+    }

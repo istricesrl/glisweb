@@ -144,19 +144,22 @@ ON DUPLICATE KEY UPDATE
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
-INSERT IGNORE INTO `categorie_anagrafica` (`id`, `id_genitore`, `nome`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_concorrente`, `se_rassegna_stampa`, `se_azienda_gestita`, `se_produttore`, `se_dipendente`, `se_interinale`, `se_agenzia_interinale`, `se_referente` ) VALUES 
-(1, NULL, 'collaboratori',      	NULL,   NULL,   NULL,   NULL,      1,      1,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
-(2, NULL, 'contatti',           	NULL,   NULL,      1,   NULL,   NULL,   NULL,     1,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
-(3,    2, 'clienti',            	NULL,   NULL,      1,   NULL,   NULL,   NULL,     1,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
-(4,    2, 'lead',                  	   1,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
-(5,    2, 'prospect',          		NULL,      1,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
-(6, NULL, 'fornitori',          	NULL,   NULL,   NULL,      1,   NULL,   NULL,     1,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
-(7, NULL, 'concorrenti',        	NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
-(8, 6, 'produttori',         		NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   NULL,   NULL ),
-(9, 1, 'dipendenti',         		NULL,   NULL,   NULL,   NULL,      1,   NULL,  NULL,   NULL,   NULL,   NULL,      1,      1,   NULL,   NULL,   NULL ),
-(10, 1, 'interinali',         		NULL,   NULL,   NULL,   NULL,      1,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,      1,   NULL,   NULL ),
-(11, 6, 'agenzie interinali',		NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   	  1,   NULL ),
-(12, NULL, 'referenti',				NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   	  1 );
+-- categorie_anagrafica
+-- tipologia: tabella assistita
+INSERT IGNORE INTO `categorie_anagrafica` (`id`, `id_genitore`, `nome`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_concorrente`, `se_rassegna_stampa`, `se_azienda_gestita`, `se_produttore`, `se_dipendente`, `se_interinale`, `se_agenzia_interinale`, `se_referente`, `se_sostituto` ) VALUES 
+(1, NULL, 'collaboratori',      	NULL,   NULL,   NULL,   NULL,      1,      1,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
+(2, NULL, 'contatti',           	NULL,   NULL,      1,   NULL,   NULL,   NULL,     1,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
+(3,    2, 'clienti',            	NULL,   NULL,      1,   NULL,   NULL,   NULL,     1,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
+(4,    2, 'lead',                  	   1,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
+(5,    2, 'prospect',          		NULL,      1,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
+(6, NULL, 'fornitori',          	NULL,   NULL,   NULL,      1,   NULL,   NULL,     1,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
+(7, NULL, 'concorrenti',        	NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL ),
+(8, 6, 'produttori',         		NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   NULL,   NULL,   NULL ),
+(9, 1, 'dipendenti',         		NULL,   NULL,   NULL,   NULL,      1,   NULL,  NULL,   NULL,   NULL,   NULL,      1,      1,   NULL,   NULL,   NULL,   NULL ),
+(10, 1, 'interinali',         		NULL,   NULL,   NULL,   NULL,      1,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,      1,   NULL,   NULL,   NULL ),
+(11, 6, 'agenzie interinali',		NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   	  1,   NULL,   NULL ),
+(12, NULL, 'referenti',				NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   	  1,   NULL ),
+(13, 9, 'sostituti',				NULL,   NULL,   NULL,   NULL,      1,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,      1,   NULL,   NULL,   NULL,      1 );
 
 -- categorie_diritto
 -- tipologia: tabella assistita
@@ -1373,15 +1376,18 @@ ON DUPLICATE KEY UPDATE
 
 -- tipologie_indirizzi
 -- tipologia: tabella di supporto
-INSERT INTO `tipologie_indirizzi` (`id`, `nome`, `se_sede`, `se_operativa`, `se_abitazione`, `html`) VALUES
-(1, 'sede legale', 1, NULL, NULL, '&#xf1ad;'),
-(2, 'sede operativa', NULL, 1, NULL, '&#xf275;'),
-(3, 'casa', NULL, NULL, 1, '&#xf015;')
+INSERT INTO `tipologie_indirizzi` (`id`, `nome`, `se_sede`, `se_operativa`, `se_abitazione`, `se_domicilio`, `html`) VALUES
+(1, 'sede legale', 1, NULL, NULL, NULL, '&#xf1ad;'),
+(2, 'sede operativa', NULL, 1, NULL, NULL, '&#xf275;'),
+(3, 'casa', NULL, NULL, 1, NULL, '&#xf015;'),
+(4, 'residenza', NULL, NULL, 1, NULL, '&#xf015;'),
+(5, 'domicilio', NULL, NULL, 1, 1, '&#xf015;')
 ON DUPLICATE KEY UPDATE
 	nome = VALUES( nome ),
 	se_sede = VALUES( se_sede ),
 	se_operativa = VALUES( se_operativa ),
 	se_abitazione = VALUES( se_abitazione ),
+	se_domicilio = VALUES( se_domicilio ),
 	html = VALUES( html );
 
 	-- tipologie_interesse
@@ -1439,12 +1445,12 @@ ON DUPLICATE KEY UPDATE nome = VALUES( nome ), se_colori = VALUES( se_colori ), 
 
 -- tipologie_progetti
 -- tipologia: tabella assistita
-INSERT IGNORE INTO `tipologie_progetti` (`id`, `nome`, `se_scalare`, `se_commessa`) VALUES
-(1, 'commessa', NULL, 1),
-(2, 'pacchetto', 1, NULL),
-(3, 'contratto', NULL, NULL),
-(4, 'on demand', NULL, NULL),
-(5, 'consuntivo', NULL, NULL);
+INSERT IGNORE INTO `tipologie_progetti` (`id`, `nome`, `se_scalare`, `se_commessa`, `se_chiamata`) VALUES
+(1, 'commessa', NULL, 1, NULL),
+(2, 'pacchetto', 1, NULL, NULL),
+(3, 'contratto', NULL, NULL, NULL),
+(4, 'on demand', NULL, NULL, NULL),
+(5, 'consuntivo', NULL, NULL, 1);
 
 -- tipologie_pubblicazione
 -- tipologia: tabella di supporto
@@ -1541,6 +1547,14 @@ ON DUPLICATE KEY UPDATE
 	percentuale_commerciale = VALUES( percentuale_commerciale )
 ;
 -- NOTA a cosa serve il flag se_commerciale?
+
+-- tipologie_variazioni_attivita
+-- tipologia: tabella di supporto
+INSERT INTO `tipologie_variazioni_attivita` (`id`, `nome`) VALUES
+(1, 'malattia'),
+(2, 'ferie'),
+(3, 'permessi')
+ON DUPLICATE KEY UPDATE nome = VALUES( nome );
 
 -- todo
 -- tipologia: tabella gestita

@@ -1,0 +1,1 @@
+ALTER TABLE `tipologie_indirizzi` ADD `se_domicilio` INT(1) NULL DEFAULT NULL AFTER `se_abitazione`;

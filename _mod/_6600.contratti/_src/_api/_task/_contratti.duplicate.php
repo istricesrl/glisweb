@@ -3,8 +3,8 @@
 /**
      *
      *
-     *
-     *
+     * il task riceve in ingresso l'id di un contratto e ne effettua la duplicazione
+     * se la procedura va a buon fine, ritorna l'id del nuovo contratto
      *
      *
      * @todo documentare
@@ -39,7 +39,7 @@
 
 
         // duplico la riga di contratto e ottengo l'id della nuova riga creata
-        $newCnId = mysqlDuplicateRow( $cf['mysql']['connection'], 'contratti', $oldCnId, NULL );
+        $newCnId = mysqlDuplicateRow( $cf['mysql']['connection'], 'contratti', $oldCnId, NULL, array( 'data_inizio' => NULL, 'data_fine' => NULL, 'data_fine_rapporto' => NULL ) );
 
         // se la duplicazione ha avuto successo... 
         if ( is_int( $newCnId ) ) {
@@ -72,15 +72,18 @@
                 }
 			}
         }
+        
     }
     else{
         $status['error'] = true;
 	    $status['message'] = 'manca id_contratto';
     }
+    
 
     // header location sul nuovo id
     if(  isset( $newCnId ) && is_int( $newCnId ) ){
-        header('Location: ' . $cf['contents']['pages']['contratti.form']['path']['it-IT'] . '?contratti[id]=' . $newCnId);
+        $status['id_nuovo'] = $newCnId;
+     //   header('Location: ' . $cf['contents']['pages']['contratti.form']['path']['it-IT'] . '?contratti[id]=' . $newCnId);
     }
 
         // output

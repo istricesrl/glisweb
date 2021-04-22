@@ -1,0 +1,105 @@
+/*!
+
+    \page moduli.0300 modulo contatti
+
+    Panoramica dei modulo contatti.
+
+    introduzione
+    ============
+    Questo modulo consente la gestione di blocchi dati sotto la gerarchia __contatti__ specificando per ognuno varie strategie di elaborazione. Il modulo opera
+    a livello di controller perché i moduli contatti possono trovarsi in molte pagine del sito e possono essercene anche più di uno per sito o addirittura per pagina.
+
+    logica di funzionamento
+    -----------------------
+    Il modulo gestisce, a livello di controller, pacchetti dati etichettati opportunamente. Il modulo supporta nativamente alcuni comportamenti di base (salvataggio
+    sul database, invio via mail) ed è estensibile con controller custom che possono aggiungere ulteriori comportamenti. Il modulo non è legato a una specifica pagina
+    in quanto su un sito, e persino su una singola pagina, possono esserci più form di contatti.
+
+    moduli di contatto
+    ==================
+    Il moduolo contatti serve sostanzialmente a gestire pacchetti dati inviati da form presenti sul sito, identificati da una chiave specifica. In altre parole,
+    il modulo gestisce i dati inviati da form simili a questo:
+
+    \code{.html}
+    <form method="post" action="">
+        <input type="text" name="__contatti__[esempio][mail]">
+        <input type="submit">
+    </form>
+    \endcode
+
+    La presenza nella $_REQUEST della chiave riservata __contatti__ fa saltare al pacchetto dati la controller di default, e innesca il lavoro del modulo contatti
+    che si svolge essenzialmente nel file _mod/_0300.contatti/_src/_config/_750.controller.php.
+
+    gestione dei dati in arrivo
+    ===========================
+
+    invio di mail
+    -------------
+    Nella composizione del template, si tenga presente che i dati inviati tramite il modulo sono accessibili tramite la chiave dati, quindi ad esempio per il modulo
+    visto nel paragrafo precedente il valore inserito dall'utente nel campo __contatti__[esempio][mail] sarà disponibile nel template come:
+
+    \code{.html}
+    {{ dati.mail }}
+    \endcode
+
+    Ovviamente, la gerarchia di $ct è disponibile sotto la chiave ct, ad esempio il nome del sito corrente è disponibile in:
+
+    \code{.html}
+    {{ ct.site.name[ ct.localization.language.ietf ] }}
+    \endcode
+
+    definizione del template delle mail
+    -----------------------------------
+
+    \code{php}
+	$cf['contatti']['default'] = array(
+	    'mail' => array(
+            array(
+                'destinatari' => array( 'webmaster' => 'info@' . $cf['site']['domain'] ),
+                'language' => 'it-IT',
+                'exclude' => array( '__status__' ),
+    		    'template' => array(
+                    'type' => 'twig',
+                    'it-IT' => array(
+                        'from' => array( 'GlisWeb' => 'noreply@glisweb.videoarts.eu' ),
+                        'oggetto' => 'invio modulo: {{ dati.modulo }}',
+                        'testo' => '<ul>{% for k,v in dati %}<li><b>{{ k }}:</b> {{ v }}</li>{% endfor %}</ul>'
+                    )
+    		    )
+            )
+	    )
+    );
+    \endcode
+
+    \code{php}
+	$cf['contatti']['default'] = array(
+	    'mail' => array(
+            array(
+                'destinatari' => array( 'webmaster' => 'info@' . $cf['site']['domain'] ),
+                'language' => 'it-IT',
+                'exclude' => array( '__status__' ),
+                'template' => 'DEFAULT_CONTATTI'
+            )
+	    )
+    );
+    \endcode
+
+    salvataggio sul database
+    ------------------------
+
+    privacy dei moduli
+    ==================
+    Dal momento che il modulo contatti riceve dati dall'utente potenzialmente suscettibili di rientrare nel regolamento sulla protezione dei dati personali,
+    il framework prevede alcuni strumenti per semplificare le operazioni di raccolta e gestione del consenso. In particolare, è disponibile una macro che genera
+    le spunte da aggiungere ai moduli di contatto a partire dalla configurazione:
+
+    \code{.html}
+    {% import '_bin/_privacy.html' as prv %}
+    <form method="post" action="">
+        <input type="text" name="__contatti__[esempio][mail]">
+		{{ prv.checkPrivacy( 'esempio', contatti, pages, tr, localization.language.ietf ) }}
+        <input type="submit">
+    </form>
+    \endcode
+
+*/

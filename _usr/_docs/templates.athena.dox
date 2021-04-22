@@ -71,6 +71,7 @@
     browser            | NULL                   | browser.html                   | _src/_inc/_macro/_browser.php
     dashboard          | NULL                   | dashboard.html                 | _src/_inc/_macro/_dashboard.php
     delete             | NULL                   | delete.html                    | _src/_inc/_macro/_delete.php
+    password.reset     | NULL                   | password.reset.html            | _src/_inc/_macro/_password.reset.php
     strumenti          | NULL                   | strumenti.html                 | _src/_inc/_macro/_strumenti.php
 
     Alcuni esempi di pagine view:

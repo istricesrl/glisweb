@@ -80,6 +80,12 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_cliente = 1');
 
+    // tendina tipologie attività
+	$ct['etc']['select']['tipologie_attivita'] = mysqlCachedQuery(
+        $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_view ORDER BY id');
+
     // tendina tipologie attività inps
 	$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
