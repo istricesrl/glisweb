@@ -52,6 +52,10 @@
 					<span class="label-top">data apertura</span>
 					{{ frm.datetime( table, '', '', 'timestamp_apertura', '', '', request, 'now'|date('Y-m-d\\TH:i') ) }}
 				</div>-->
+				<div class="col-auto">
+					<span class="label-top">tipologia</span>
+					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', 'nome della todo', '', request ) }}

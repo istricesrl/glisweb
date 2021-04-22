@@ -234,7 +234,8 @@
         global $cf;
 
         // seleziono le coordinate di eventuali attività nell'ora precedente
-        $cBase = mysqlSelectRow(
+        $cBase = mysqlSelectCachedRow(
+            $cf['memcache']['connection'], 
             $cf['mysql']['connection'], 
             'SELECT t1.latitudine, t1.longitudine, a1.data_programmazione, a1.ora_inizio_programmazione, a1.ora_fine_programmazione '.
             'FROM indirizzi AS t1 '.
@@ -252,7 +253,8 @@
 
         } else {
 
-            $cCasa = mysqlSelectRow(
+            $cCasa =  mysqlSelectCachedRow(
+                $cf['memcache']['connection'], 
                 $cf['mysql']['connection'], 
                 'SELECT t1.latitudine, t1.longitudine '.
                 'FROM indirizzi AS t1 '.
@@ -265,7 +267,8 @@
                 )
             );
 
-            $cPrima = mysqlSelectRow(
+            $cPrima =  mysqlSelectCachedRow(
+                $cf['memcache']['connection'], 
                 $cf['mysql']['connection'], 
                 'SELECT t1.latitudine, t1.longitudine '.
                 'FROM indirizzi AS t1 '.
@@ -284,7 +287,8 @@
 
             if( empty( $cPrima ) ) { $cPrima = $cCasa; }
 
-            $cDopo = mysqlSelectRow(
+            $cDopo =  mysqlSelectCachedRow(
+                $cf['memcache']['connection'], 
                 $cf['mysql']['connection'], 
                 'SELECT t1.latitudine, t1.longitudine '.
                 'FROM indirizzi AS t1 '.
@@ -356,9 +360,14 @@
             $cf['mysql']['connection'],
                 "SELECT count(*) FROM attivita_view WHERE id_anagrafica = ? "
                 ."AND ( "
-                    ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
-                    ."OR "
-                    ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
+                ."( TIMESTAMP( data_programmazione, ora_inizio_programmazione) > ? and TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? ) "
+                ."OR "
+                ."( TIMESTAMP( data_programmazione, ora_fine_programmazione) > ? and TIMESTAMP( data_programmazione, ora_fine_programmazione) < ? ) "
+                /*    
+                ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
+                ."OR "
+                ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
+                */
                 .") ",
             array(
                 array( 's' => $id_anagrafica ),
@@ -436,11 +445,12 @@
         // esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
         $assegnati = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT a.id_anagrafica, a.anagrafica, max(IF(a.id_progetto=?, 1, 0)) as ordina, max(ca.se_sostituto) as se_sostituto FROM attivita_view AS a '
+            'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto, progetti.id as esperienza FROM attivita_view AS a '
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
+            .'LEFT JOIN progetti ON a.id_progetto = progetti.id AND progetti.id = ? '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.data_programmazione < ? AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) '
-            .'GROUP BY a.id_anagrafica ORDER BY ordina DESC LIMIT 30',
+            .'GROUP BY a.id_anagrafica ORDER BY esperienza DESC LIMIT 15',
             array(
                 array( 's' => $a['id_progetto'] ),
                 array( 's' => $a['data_programmazione'] ),
@@ -566,16 +576,18 @@
             } 
         }
 
+        timerCheck( $cf['speed'], 'inizio ricerca assegnati');
 
         // elenco degli operatori che hanno attivita assegnate prima della prima scopertura e non sono già stati scartati, con priorità per quelli che conoscono già il progetto
         $assegnati = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT a.id_anagrafica, a.anagrafica, max(IF(id_progetto=?, 1, 0)) as ordina, max(ca.se_sostituto) as se_sostituto FROM attivita_view AS a '
+            'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto, progetti.id as esperienza FROM attivita_view AS a '
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
+            .'LEFT JOIN progetti ON a.id_progetto = progetti.id AND progetti.id = ? '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.data_programmazione < ? '
             .'AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_progetti WHERE id_progetto = ? AND data_scopertura = ? ) '
-            .'GROUP BY a.id_anagrafica ORDER BY ordina DESC, a.data_programmazione DESC LIMIT 30',
+            .'GROUP BY a.id_anagrafica ORDER BY esperienza DESC, a.data_programmazione DESC LIMIT 15',
             array(
                 array( 's' => $id_progetto ),
                 array( 's' => $dataPrima ),
@@ -583,12 +595,16 @@
                 array( 's' => $dataUltima )
             )
         );
+
+        timerCheck( $cf['speed'], 'fine ricerca assegnati');
     
         if( !empty( $assegnati ) ){
             foreach( $assegnati as $a ){
                 $operatori[ $a['id_anagrafica'] ] = $a;
             }
         }
+
+        timerCheck( $cf['speed'], 'inizio ricerca attivita scoperte');
 
         // elenco delle attività scoperte per il progetto corrente
         $attivita = mysqlQuery( 
@@ -598,6 +614,10 @@
                 array( 's' => $id_progetto )
             )
         );
+
+        timerCheck( $cf['speed'], 'fine ricerca attivita scoperte');
+
+        timerCheck( $cf['speed'], 'inizio calcolo punteggi');
 
         // se ci sono operatori candidati calcolo i punteggi
         if( !empty( $operatori ) ){
@@ -735,6 +755,8 @@
             
             krsort( $candidati );
         }
+
+        timerCheck( $cf['speed'], 'fine calcolo punteggi');
 
         return $candidati;
 

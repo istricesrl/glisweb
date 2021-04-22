@@ -30,9 +30,12 @@
 	    $ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
             $cf['cache']['index'],
             $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            "SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view WHERE "
-            ."id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) ORDER BY anagrafica",
+            $cf['mysql']['connection'],
+            "SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 AND "
+            ."id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? )",
+        /*    "SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM attivita_view WHERE "
+            ."id_anagrafica IS NOT NULL AND "
+            ."id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) ORDER BY anagrafica",*/
             array(
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
             )
