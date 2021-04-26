@@ -15,11 +15,24 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'prodotti.view') ),
+	    'etc'		=> array( 'tabs'	=> array(	'prodotti.view', 'prodotti.tools'  ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'prodotti' ),
 									'priority'	=> '015' ) )
 	);
 	
+	// form prodotti azioni
+	$p['prodotti.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni prodotti' ),
+	    'h1'		=> array( $l		=> 'azioni prodotti' ),
+	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['prodotti.view']['etc']['tabs'] )
+	);
+
     // gestione prodotti
 	$p['prodotti.form'] = array(
 	    'sitemap'		=> false,
@@ -190,10 +203,23 @@
 	    'parent'		=> array( 'id'		=> 'catalogo' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_articoli.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'articoli.view' ) ),
+		'etc'			=> array( 'tabs'	=> array( 'articoli.view', 'articoli.tools' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'articoli' ),
 								'priority'	=> '020' ) )
+	);
+
+	// form prodotti azioni
+	$p['articoli.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni articoli' ),
+	    'h1'		=> array( $l		=> 'azioni articoli' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['articoli.view']['etc']['tabs'] )
 	);
 
 	// gestione articoli
