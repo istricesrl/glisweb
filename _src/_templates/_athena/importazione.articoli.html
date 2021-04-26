@@ -1,0 +1,281 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+
+<section class="row">
+    <div class="col-md-12">
+	<form id="form-{{ table }}" class="" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+
+	    {# CAMPI HIDDEN DI BASE #}
+
+	    <input type="hidden" id="table" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="1">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{% if session.account.id %}{{ session.account.id }}{% else %}__null__{% endif %}">
+	    <input type="hidden" id="job" name="{{ table }}[job]" value="{{ etc.jobfile }}">
+
+	    {# NOTE DI IMPORTAZIONE #}
+
+	    <fieldset class="import-schema">
+		<legend>note di importazione</legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12">
+			<p>Il file di importazione dev'essere in formato Excel 2007/2010 (Excel Workbook) con estensione .xlsx e deve
+			rispettare lo schema sotto riportato. La prima riga deve contenere i nomi dei campi, il cui ordine non è vincolante
+			in quanto il sottoprogramma di importazione assegna i dati ai campi in base all'intestazione di colonna e non
+			all'ordine delle colonne stesse; è imperativo che i nomi delle colonne siano gli stessi dei campi, ma non sono case sensitive.
+			Se non diversamente specificato, anche i valori inseriti non sono case sensitive. Un file XLSX di esempio è disponibile per il download a
+			<a href="{{ site.root }}_usr/_examples/_import/importazione.anagrafica.xlsx">questo indirizzo</a>.
+		    </div>
+		</div>
+
+		<div class="form-group form-row">
+		    <div class="col-12 table-responsive">
+
+			<table class="table">
+			    <thead>
+				<tr>
+				    <th class="text-center">campo</th>
+				    <th class="text-center">tipo di dato</th>
+				    <th class="text-center">valori ammessi</th>
+				    <th class="text-center">opzionale</th>
+				    <th class="text-left">note</th>
+				</tr>
+			    </thead>
+			    <tbody>
+				<tr>
+				    <th class="text-right">codice</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">no</td>
+				    <td class="text-left">il codice identificativo dell'articolo</td>
+				</tr>
+				<tr>
+				    <th class="text-right">nome</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">no</td>
+				    <td class="text-left">il nome dell'articolo</td>
+				</tr>
+				<tr>
+				    <th class="text-right">prezzo</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">no</td>
+				    <td class="text-left">il prezzo dell'articolo</td>
+				</tr>
+				<tr>
+				    <th class="text-right">udm</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">pezzi, metro, quintale, ettaro, ora</td>
+				    <td class="text-center">no</td>
+				    <td class="text-left">la denominazione per le persone giuridiche</td>
+				</tr>
+				<tr>
+				    <th class="text-right">listino</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">no</td>
+				    <td class="text-left">codice del listino in cui inserire l'articolo</td>
+				</tr>
+				<tr>
+				    <th class="text-right">iva</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">1, 2, 3, 4, 5, 6</td>
+				    <td class="text-center">no</td>
+				    <td class="text-left">codice iva: 1 = 22%, 2 = 10%, 3 = 4%, 4 = escluso, 5 = non soggetto, 6 = non imponibile </td>
+				</tr>
+				<tr>
+				    <th class="text-right">valuta</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">no</td>
+				    <td class="text-left">valua: 1 = €</td>
+				</tr>
+				<tr>
+				    <th class="text-right">prodotto</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">no</td>
+				    <td class="text-left">codice del prodotto a cui l'articolo appartiene</td>
+				</tr>
+<!--
+				<tr>
+				    <th class="text-right">indirizzo</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">sì</td>
+				    <td class="text-left">l'indirizzo (senza indicazione del numero civico) del contatto</td>
+				</tr>
+				<tr>
+				    <th class="text-right">civico</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">sì</td>
+				    <td class="text-left">numero civico(ed opzionalmente scala e/o interno) del contatto</td>
+				</tr>
+				<tr>
+				    <th class="text-right">cap</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">sì</td>
+				    <td class="text-left">il cap del contatto</td>
+				</tr>
+				<tr>
+				    <th class="text-right">comune</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">sì</td>
+				    <td class="text-left">il comune del contatto, necessario se si vuole inserire l'indirizzo del contatto</td>
+				</tr>
+				<tr>
+				    <th class="text-right">località</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">sì</td>
+				    <td class="text-left">la località del contatto, necessaria se si vuole inserire l'indirizzo del contatto</td>
+				</tr>
+				<tr>
+				    <th class="text-right">provincia</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center"></td>
+				    <td class="text-center">sì</td>
+				    <td class="text-left">la sigla della provincia del contatto, necessario se si vuole inserire l'indirizzo del contatto</td>
+				</tr>
+				<tr>
+				    <th class="text-right">tipologia indirizzo</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">sede legale, sede operativa, casa</td>
+				    <td class="text-center">sì</td>
+				    <td class="text-left">tipologia dell'indirizzo del contatto, necessaria se si vuole inserire l'indirizzo del contatto </td>
+				</tr>
+				<tr>
+				    <th class="text-right">telefono</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">qualsiasi</td>
+				    <td class="text-center">sì</td>
+				    <td class="text-left">il telefono del contatto</td>
+				</tr>
+				<tr>
+				    <th class="text-right">tipologia telefono</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">telefono, mobile, fax, telefono/fax</td>
+				    <td class="text-center">sì (default "telefono")</td>
+				    <td class="text-left">tipologia di contatto telefonico del contatto</td>
+				</tr>
+
+-->
+<!--				<tr>
+				    <th class="text-right">titolo</th>
+				    <td class="text-center">stringa</td>
+				    <td class="text-center">vedi documentazione</td>
+				    <td class="text-left">inserire i titoli separati da virgola</td>
+				</tr>
+-->			    </tbody>
+		        </table>
+		    </div>
+		</div>
+
+	    </fieldset>
+
+
+	    {# JOB IN CORSO #}
+
+	    {% if etc.jobs %}
+	    <fieldset>
+		<legend>job in corso</legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12 table-responsive">
+
+			<table class="view-table">
+			    <thead>
+				<tr>
+				    <th class="text-center">inizio</th>
+				    <th class="text-center">elaborazione</th>
+				    <th class="text-center">avanzamento</th>
+				    <th class="text-left">nome</th>
+				    <th class="text-left">status</th>
+				</tr>
+			    </thead>
+			    <tbody>
+				{% for job in etc.jobs %}
+				<tr>
+				    <td class="text-center">{{ job.timestamp_apertura|date('Y-m-d H:i') }}</td>
+				    <td class="text-center">{{ job.timestamp_esecuzione|date('Y-m-d H:i') }}</td>
+				    <td class="text-center">{% if job.corrente %}{{ job.corrente }} di {{ job.totale }}{% else %}non iniziato{% endif %}</td>
+				    <td class="text-left">{{ job.nome }}</td>
+				    <td class="text-left">{{ job.workspace.status }}</td>
+				</tr>
+				{% endfor %}
+			    </tbody>
+			</table>
+
+		    </div>
+		</div>
+
+	    </fieldset>
+	    {% endif %}
+
+	    {# MODULO PRINCIPALE #}
+
+	    <fieldset>
+		<legend>avvio del job di importazione</legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12 col-md-auto">
+			{{ frm.datetimeRequired( table, '', '', 'timestamp_apertura', 'data e ora di inizio', '', request, 'now'|date('Y-m-d\\TH:i') ) }}
+		    </div>
+		    <div class="col-10 col-md">
+			{{ frm.inputRequired( table, '', '', 'nome', 'nome del job', '', request ) }}
+		    </div>
+		    <div class="col-2 col-md-1">
+			{{ frm.inputRequired( table, '', '', 'iterazioni', 'passo', '1', request ) }}
+		    </div>
+		    <div class="col-12 col-md">
+			{{ frm.uploader( '__' ~ table ~ '__', '', '', 'document', '', '', request, '', site ) }}
+		    </div>
+		</div>
+
+	    </fieldset>
+
+	    {# BOTTONI E COMANDI DEL MODULO #}
+
+	    <fieldset class="form-controls">
+		{{ std.controls( page, pages, localization.language.ietf, '', table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

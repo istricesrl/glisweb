@@ -164,7 +164,65 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
+
+	// importazioni
+	$p['importazioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazioni' ),
+	    'h1'		=> array( $l		=> 'importazioni' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'importazioni' ),
+									'priority'	=> '970' ) )
+	);
+
+	// esportazioni
+	$p['esportazioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'esportazioni' ),
+	    'h1'		=> array( $l		=> 'esportazioni' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'esportazioni.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_esportazioni.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'esportazioni' ),
+									'priority'	=> '980' ) )
+	);
  
+	// importazione articoli
+	$p['importazione_articoli'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazione articoli' ),
+	    'h1'		=> array( $l		=> 'importazione articoli' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazione.articoli.html' ),
+	    'parent'		=> array( 'id'		=> 'importazioni' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazione.articoli.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	);
+
+    // importazione prodotti
+	$p['importazione_prodotti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazione prodotti' ),
+	    'h1'		=> array( $l		=> 'importazione prodotti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazione.prodotti.html' ),
+	    'parent'		=> array( 'id'		=> 'importazioni' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazione.prodotti.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	);
+
+    // importazione prodotti
+	$p['importazione_prodotti_caratteristiche'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazione caratteristiche prodotti' ),
+	    'h1'		=> array( $l		=> 'importazione caratteristiche prodotti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazione.prodotti.caratteristiche.html' ),
+	    'parent'		=> array( 'id'		=> 'importazioni' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazione.prodotti.caratteristiche.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	);
 /*
     // pagina gestione cron
 	$p['cron'] = array(
