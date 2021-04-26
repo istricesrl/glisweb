@@ -282,6 +282,23 @@
 {{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back|url_encode ~ '&__delete__[rollback]=' ~ rollback|url_encode ~ '","_self")','elimina' ) }}
 {% endmacro %}
 
+{% macro editButton( table, subtable, edit, page, pages, r, lang, request, back, rollback ) %}
+{% import _self as frm %}
+{% if page.backurl[ lang ] %}{% set backurl = '&__backurl__=' ~ page.backurl[ lang ] %}{% endif %}
+{% if not subtable %}
+    {% set subtable = table %}
+    {% set class = ' remove-on-duplicate' %}
+{% else %}
+    {% set query = '?' ~ table ~ '[id]=' ~ request[ table ].id %}
+{% endif %}
+{% if r %}
+    {% set id = r.id %}
+{% else %}
+    {% set id = request[ table ].id %}
+{% endif %}
+{{ frm.button( '<i class="fa fa-pencil"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~  pages[ edit ].path[ lang ] ~ '?' ~ subtable ~ '[id]=' ~ id ~ backurl ~'","_self")','modifica' ) }}
+{% endmacro %}
+
 {% macro subformLegend( subtable, legend, class, disabled ) %}
 <legend>{% if not disabled %}<button class="btn btn-sm btn-secondary d-print-none" type="button" onclick="duplicate('{{ subtable }}');"><i class="fa fa-plus"></i></button> {% endif %}{{ legend }}</legend>
 {% endmacro %}

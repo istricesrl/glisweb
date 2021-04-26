@@ -588,6 +588,7 @@
 			// svuotamento o integrazione del blocco dati
 			// NOTA a cosa serve questa cosa???
 			// TODO selezionare dalla vista può essere inefficente, è possibile selezionare dalla tabella?
+
 			    if( $r ) {
 				$_SESSION['__latest__'][ $t ] = $d;
 				$d = array();

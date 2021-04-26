@@ -100,10 +100,12 @@
 		    $(this).uploader();
 		});
 
+        
 	//	$( base ).find('.selectbox').selectBox();
 		$( base ).find('.selectbox').each( function() {
 			$(this).selectBox();
 		});
+
 
 // SDF questa è la parte aggiunta ma c'è ancora qualco sa che non funziona
 // creando una nuova riga di orario al check non applica correttamente i value...
