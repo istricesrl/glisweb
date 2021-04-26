@@ -34,7 +34,7 @@
 	    $ks					= array();									// 
 	    $vs					= array();									// 
 	    $vm					= false;									// 
-		$rm					= getStaticViewExtension( null, $c, $t );	// 
+		$rm					= getStaticViewExtension( $mc, $c, $t );	// 
 
 	// inclusione dei controller
 	    $cb					= DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
@@ -52,18 +52,18 @@
 	// genero l'array delle chiavi, dei valori e dei sottomoduli
 	    foreach( $d as $k => $v ) {
 		if( is_array( $v ) && substr( $k, 0, 2 ) !== '__' ) {		// nel caso il valore sia un subform, viene
-		    $s[ $k ] = $v;						// passato così com'è per la ricorsione
-		} elseif( strtolower( $k )	== '__method__' ) {		//
-		    $a = strtoupper( $v );					// impostazione esplicita del method del form
-		} elseif( strtolower( $k )	== '__table__' ) {		//
-		    $t = $v;							// impostazione esplicita della tabella del form
-		} elseif( strtolower( $k )	== '__reset__' ) {		//
-		    $r = string2boolean( $v );					// richiesta esplicita di svuotare $_REQUEST[ $t ]
-		} elseif( strtolower( $k )	== '__view_mode__' ) {		//
-		    $vm = true;							//
-		} elseif( strtolower( $k )	== '__report_mode__' ) {	//
-		    $rm = NULL;							//
-		} elseif( substr( $k, 0, 2 )	!== '__' ) {			//
+		    $s[ $k ] = $v;											// passato così com'è per la ricorsione
+		} elseif( strtolower( $k )	== '__method__' ) {				//
+		    $a = strtoupper( $v );									// impostazione esplicita del method del form
+		} elseif( strtolower( $k )	== '__table__' ) {				//
+		    $t = $v;												// impostazione esplicita della tabella del form
+		} elseif( strtolower( $k )	== '__reset__' ) {				//
+		    $r = string2boolean( $v );								// richiesta esplicita di svuotare $_REQUEST[ $t ]
+		} elseif( strtolower( $k )	== '__view_mode__' ) {			//
+		    $vm = true;												//
+		} elseif( strtolower( $k )	== '__report_mode__' ) {		//
+		    $rm = NULL;												//
+		} elseif( substr( $k, 0, 2 )	!== '__' ) {				//
 
 		    if( strtolower( $v )	== '__null__' )		{ $v = NULL; }
 		    if( strtolower( $v )	== '__parent_id__' )	{ $v = $p; }
@@ -71,8 +71,8 @@
 		    if( strtolower( $v )	== '__timestamp__' )	{ $v = time(); }
 		    if( strtolower( $v )	== '__date__' )		{ $v = date( 'Y-m-d' ); }
 
-		    $vs[ $k ]			= array( 's' => $v );		// array dei valori per il bind dei parametri
-		    $ks[]			= $k;				// array delle chiavi per la costruzione della query
+		    $vs[ $k ]		= array( 's' => $v );					// array dei valori per il bind dei parametri
+		    $ks[]			= $k;									// array delle chiavi per la costruzione della query
 
 		}
 	    }
