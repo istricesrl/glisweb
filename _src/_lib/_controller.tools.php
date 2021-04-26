@@ -28,13 +28,13 @@
 	    logWrite( "${t}/${a}", 'controller' );
 
 	// inizializzazioni
-	    $q					= NULL;				// la query MySQL che verrà eseguita
-	    $s					= array();			// 
-	    $r					= false;			// 
-	    $ks					= array();			// 
-	    $vs					= array();			// 
-	    $vm					= false;			// 
-		$rm					= '_view';			// 
+	    $q					= NULL;										// la query MySQL che verrà eseguita
+	    $s					= array();									// 
+	    $r					= false;									// 
+	    $ks					= array();									// 
+	    $vs					= array();									// 
+	    $vm					= false;									// 
+		$rm					= getStaticViewExtension( null, $c, $t );	// 
 
 	// inclusione dei controller
 	    $cb					= DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
@@ -82,11 +82,20 @@
 
 		// se è stata effettuata una GET senza ID, passo alla modalità view
 		    if( $a === METHOD_GET && ( ! array_key_exists( 'id', $d ) || $vm === true ) ) {
+/*
+			// verifico se esiste la view statica
+				$stv = mysqlSelectValue(
+					$c,
+					'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+					array( array('s' => $t . $rm . '_static' ) )
+				);
 
-			// TODO verifico se esiste la view statica
-				// ...
-				// ... $rm = '_view_static';
-
+			// se esiste la vista statica...
+				if( $stv ) {
+					$rm = '_view_static';
+					logWrite( "trovata view static per ${t}, $stv", 'controller' );
+				}
+*/
 			// log
 			    logWrite( "permessi sufficienti per ${t}/${a}", 'controller', LOG_DEBUG );
 
