@@ -1,0 +1,1 @@
+ALTER TABLE `todo` CHANGE `ora_inizio_pianificazione` `ora_inizio_programmazione` TIME NULL DEFAULT NULL;

@@ -180,7 +180,7 @@
 		// print_r( $cf['contents']['pages'][ NULL ] );
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine preparazione pagine' );
+		timerCheck( $cf['speed'], '-> fine preparazione pagine' );
 
 	    // creo l'albero
 		foreach( $cf['contents']['pages'] as $k => &$v ) {
@@ -247,7 +247,7 @@
 		// print_r( $cf['contents']['pages'][ NULL ] );
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine costruzione albero' );
+		timerCheck( $cf['speed'], '-> fine costruzione albero' );
 
 	    // creo i path
 		foreach( $cf['contents']['pages'] as $k => &$v ) {
@@ -325,7 +325,7 @@
 #11		logWrite( 'contents (pages, tree e index) letti dalla cache', 'memcache', LOG_INFO );
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine generazione dei path dei parent' );
+		timerCheck( $cf['speed'], '-> fine generazione dei path dei parent' );
 
 	}
 

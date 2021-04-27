@@ -1,0 +1,1 @@
+UPDATE `ruoli_video` SET `se_contenuti` = '1', `se_categorie_prodotti` = '1' WHERE `ruoli_video`.`id` = 13;

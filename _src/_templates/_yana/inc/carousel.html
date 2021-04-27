@@ -1,0 +1,9 @@
+{% import '_bin/_default.html' as cms %}
+
+{% if page.contents.images.carousel|length > 0 %}
+<div class="row">
+    <div class="col">
+        {{ cms.carousel( page, localization.language.ietf, site, 'carousel-main', 3500, image, 'carousel' ) }}
+    </div>
+</div>
+{% endif %}

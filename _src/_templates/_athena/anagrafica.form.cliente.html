@@ -1,6 +1,7 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
 {% import 'bin/anagrafica.form.cliente.sub.html' as sub %}
+{% import 'bin/anagrafica.form.default.sub.html' as dfs %}
 
 {% extends "ext/main.html" %}
 
@@ -61,7 +62,7 @@
 		<div class="form-group form-row">
 			<div class="col">
 				<span class="label-top">note commerciali</span>
-				{{ frm.textarea( table, '', '', 'note_commerciali', 'informazioni commerciali aggiuntive (ad uso interno)', 3, request ) }}
+				{{ frm.textarea( table, '', '', 'note_commerciali', '', 3, request ) }}
 		    </div>
         </div>
 		
@@ -79,6 +80,9 @@
 
 		{# SUBFORM SETTORI E ATTIVITA #}
 		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
+
+		{# SUBFORM IBAN #}
+		{{ dfs.iban( table, 'iban', 'dati bancari', site, page, pages, localization.language.ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

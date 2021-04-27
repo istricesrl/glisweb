@@ -1,0 +1,1 @@
+DROP VIEW obiettivi_anagrafica_view;

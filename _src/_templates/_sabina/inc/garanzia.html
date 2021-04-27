@@ -1,0 +1,12 @@
+{% import '_bin/_default.html' as cms %}
+
+{% for v in page.children.id %}
+{% if pages[ v ].metadati.lp_ruolo == 'garanzia' %}
+{% set garanzia = pages[ v ] %}
+<section class="garanzia">
+    <div class="container-fluid p-0">
+        {{ cms.jumbotron( garanzia, localization.language.ietf, site, 'jumbotron-garanzia', '', image ) }}
+    </div>
+</section>
+{% endif %}
+{% endfor %}

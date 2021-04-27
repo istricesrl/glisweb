@@ -23,7 +23,7 @@
 	$status['info'][] = 'inizio operazioni di geocode';
 
     // chiave di lock
-	$status['token'] = getToken();
+	$status['token'] = getToken( __FILE__ );
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
@@ -31,7 +31,7 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE indirizzi SET token = ? WHERE id = ? AND token IS NULL',
+            'UPDATE indirizzi SET token = ? WHERE id = ?',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['id'] )
@@ -44,12 +44,11 @@
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE indirizzi SET token = ? WHERE ( latitudine IS NULL OR longitudine IS NULL OR cap IS NULL ) '.
-            'AND ( timestamp_geocode IS NULL OR timestamp_geocode < ? OR timestamp_aggiornamento > timestamp_geocode ) '.
+            'AND ( timestamp_geocode IS NULL OR timestamp_aggiornamento IS NULL OR timestamp_aggiornamento > timestamp_geocode ) '.
             'AND token IS NULL '.
             'ORDER BY timestamp_geocode ASC LIMIT 1',
             array(
-                array( 's' => $status['token'] ),
-                array( 's' => strtotime( '-3 months' ) )
+                array( 's' => $status['token'] )
             )
         );
 
@@ -75,6 +74,7 @@
 
     // debug
     // echo 'indirizzo: ' . print_r( $geocode, true );
+    // die( print_r( $geocode ) );
 
     // se c'è almeno una geocode da inviare
     if( ! empty( $geocode ) ) {
@@ -89,6 +89,7 @@
             $geocode['civico'],
             $geocode['indirizzo'],
             $geocode['comune'],
+            $geocode['cap'],
             $geocode['stato']
         );
 
@@ -102,7 +103,7 @@
 
             // log
             appendToFile(
-                print_r( $geocode, true ) . PHP_EOL . print_r( $gc, true ),
+                '-- ' . date( 'Y-m-d H:i' ) . PHP_EOL . print_r( $geocode, true ) . PHP_EOL . print_r( $gc, true ),
                 'var/log/geocode/' . string2rewrite( implode( ' ', array(
                     $geocode['stato'],
                     $geocode['comune'],
@@ -115,7 +116,8 @@
             mysqlQuery(
                 $cf['mysql']['connection'],
                 'UPDATE indirizzi '.
-                'SET latitudine = ?, longitudine = ?, cap = ?, timestamp_geocode = unix_timestamp() token = NULL '.
+                'SET latitudine = ?, longitudine = ?, cap = ?, timestamp_geocode = unix_timestamp(), '.
+                'timestamp_aggiornamento = unix_timestamp(), token = NULL '.
                 'WHERE token = ?',
                 array(
                 array( 'd' => $gc['lat'] ),
@@ -124,6 +126,8 @@
                 array( 's' => $status['token'] )
                 )
             );
+
+            // die( print_r( $gc, true ) );
 
             // output
             $status['result'] = $gc;
@@ -135,7 +139,7 @@
                 $idZona = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_zona FROM zone_cap WHERE cap = ?', array( array( 's' => $gc['cap'] ) ) );
 
                 if( ! empty( $idZona ) ) {
-                mysqlQuery( $cf['mysql']['connection'], 'UPDATE indirizzi SET id_zona = ? WHERE id = ?', array( array( 's' => $idZona ), array( 's' => $geocode['id'] ) ) );
+                mysqlQuery( $cf['mysql']['connection'], 'UPDATE indirizzi SET id_zona = ? WHERE token = ?', array( array( 's' => $idZona ), array( 's' => $status['token'] ) ) );
                 }
 
             }

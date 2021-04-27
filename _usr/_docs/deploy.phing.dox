@@ -1,0 +1,46 @@
+/*!
+
+    \page deploy_phing strategie di deploy del framework tramite Phing
+
+    Descrizione delle strategie di deploy del framework tramite Phing.
+
+    introduzione
+    ============
+
+    _usr/_deploy/_phing/_build.xml
+    ------------------------------
+
+    usr/deploy/phing/build.properties
+    ---------------------------------
+
+    strategie di versioning
+    -----------------------
+
+    strategie di deploy
+    ===================
+
+    deploy via FTP
+    --------------
+
+    deploy via scp
+    --------------
+
+    deploy via rsync locale
+    -----------------------
+
+    deploy via rsync remoto
+    -----------------------
+
+    integrazione con Git
+    ====================
+
+    notifiche
+    =========
+
+    notifiche via Slack
+    -------------------
+
+    notifiche via mail
+    ------------------
+
+*/

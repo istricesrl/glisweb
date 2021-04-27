@@ -1,0 +1,1 @@
+ALTER TABLE `tipologie_qualifiche_inps` ADD PRIMARY KEY(`id`);

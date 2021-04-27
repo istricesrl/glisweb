@@ -53,12 +53,12 @@
 			</div>
 			<div class="col">
 			<span class="label-top">nome</span>
-			{{ frm.input( table, '', '', 'nome', 'nome (persone fisiche)', '', request ) }}
+			{{ frm.input( table, '', '', 'nome', '', '', request ) }}
 			</div>
 			<div class="w-100 d-block d-md-none m-0"></div>
 		    <div class="col">
 			<span class="label-top">cognome</span>
-			{{ frm.input( table, '', '', 'cognome', 'cognome (persone fisiche)', '', request ) }}
+			{{ frm.input( table, '', '', 'cognome', '', '', request ) }}
 		    </div>
 		    <div class="col-auto">
 			<span class="label-top">sesso</span>
@@ -67,33 +67,37 @@
 		</div>
 
 		<div class="form-group form-row">
-		    <div class="col-12 col-md-8">
+		    <div class="col-12 col-md-5">
 			<span class="label-top">denominazione</span>
-			{{ frm.input( table, '', '', 'denominazione', 'denominazione (persone giuridiche)', '', request ) }}
+			{{ frm.input( table, '', '', 'denominazione', '', '', request ) }}
 		    </div>
 		    <div class="col-12 col-md-4">
 			<span class="label-top">soprannome</span>
-			{{ frm.input( table, '', '', 'soprannome', 'soprannome o nome convenzionale', '', request ) }}
-		    </div>
+			{{ frm.input( table, '', '', 'soprannome', '', '', request ) }}
+			</div>
+			<div class="col-12 col-md-3">
+				<span class="label-top">codice</span>
+				{{ frm.input( table, '', '', 'codice', '', '', request ) }}
+			</div>
 		</div>
 
 		<div class="form-group form-row">
 		    <div class="col-12">
 			<span class="label-top">note</span>
-			{{ frm.textarea( table, '', '', 'note', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
+			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
 		    </div>
 		</div>
 
 	    </fieldset>
 
 	    {# SUBFORM INDIRIZZI E-MAIL #}
-	    {{ sub.mail( table, 'mail', 'indirizzi e-mail', site, page, pages, ietf, etc, request, session ) }}
+	    {{ sub.mail( table, 'mail', 'e-mail', site, page, pages, ietf, etc, request, session ) }}
 
 	    {# SUBFORM NUMERI DI TELEFONO #}
-	    {{ sub.telefoni( table, 'telefoni', 'numeri di telefono', site, page, pages, ietf, etc, request, session ) }}
+	    {{ sub.telefoni( table, 'telefoni', 'telefoni', site, page, pages, ietf, etc, request, session ) }}
 
 	    {# SUBFORM INDIRIZZI #}
-	    {{ sub.indirizzi( table, 'anagrafica_indirizzi', 'sedi e indirizzi', site, page, pages, ietf, etc, request, session ) }}
+	    {{ sub.indirizzi( table, 'anagrafica_indirizzi', 'indirizzi', site, page, pages, ietf, etc, request, session ) }}
 
 	    {# SUBFORM CATEGORIE #}
 	    {{ sub.categorie( table, 'anagrafica_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}

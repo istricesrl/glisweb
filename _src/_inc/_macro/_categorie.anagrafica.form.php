@@ -16,7 +16,7 @@
 
     // tendina categorie
 	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'

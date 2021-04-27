@@ -1,0 +1,1 @@
+ALTER TABLE `telefoni` DROP INDEX indice;

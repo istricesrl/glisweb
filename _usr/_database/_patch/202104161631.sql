@@ -1,0 +1,1 @@
+ALTER TABLE `obiettivi` ADD CONSTRAINT `obiettivi_ibfk_3_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;

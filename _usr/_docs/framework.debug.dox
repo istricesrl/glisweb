@@ -1,0 +1,29 @@
+/*!
+
+    \page debug meccanismi di debug del framework
+
+    Descrizione dei meccanismi di test e debug del framework.
+
+    introduzione
+    ============
+
+    comandi di una lettera
+    ======================
+
+    il comando ?u
+    -------------
+
+    il comando ?t
+    -------------
+
+    il sistema di log
+    =================
+
+    API di report
+    =============
+
+    il report /status
+    -----------------
+    
+
+*/

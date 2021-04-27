@@ -1,0 +1,294 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12  d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="javascript:;" onsubmit="genera()" method="">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+        {# MODULO PRINCIPALE #}
+
+	    <fieldset>
+            <legend>pianificazione turni</legend>
+            <div class="form-group form-row">
+                <div class="col-12 col-md-7">
+                    <span class="label-top">contratto</span>
+                    {# frm.selectRequired( '', '', '', '__id_contratto__', '', etc.select.contratti, request ) #}
+                    {{ frm.selectBox( table, '', '', '__id_contratto__', '', etc.select.contratti, request, '', '', 1, '', '', '', '', '', '', page, pages, ietf ) }}
+                </div>
+                <div class="col-12 col-md-2">
+                    <span class="label-top">data inizio</span>
+                    <input name="__data__" type="date" value="{{'now'|date('Y-m-d' ) }}" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__" required onchange="myDate()">
+                </div>
+                <div class="col-12 col-md-2">
+                    <span class="label-top">data fine</span>
+                    <input name="__dataf__" type="date" value="" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__dataf__" required>
+                </div>
+                <div class="col-12 col-md-1">
+                    <span class="label-top">turno</span>
+                    {{ frm.selectRequired( '', '', '', '__turno__', '', etc.select.turni, request ) }}
+                </div>
+            </div>
+        </fieldset>
+
+
+        <fieldset>  
+
+            <input type="hidden" id="__id_periodicita__" value="2">
+
+            <div class="form-group form-row">
+                <div class="col-12">
+                <ul class="nav nav-tabs nav-tabs-secondary">
+                <!--<li class="nav-item"><a class="nav-link" onclick="crossShow('cke-giornaliera','cke-switch',this);setPeriodicita(1); myDate();">giornaliera</a></li>-->
+                    <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-settimanale','cke-switch',this);setPeriodicita(2); myDate();">settimanale</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-mensile','cke-switch',this);setPeriodicita(3); myDate();">mensile</a></li>
+                </ul>
+                </div>
+            </div>
+    
+
+            <div class="form-group form-row flex-fill">
+<!--                
+                <div class="col cke-switch" id="cke-giornaliera">
+                    <div class="form-group form-row" id="giorno">
+                        <div class="col-12 col-form-label">
+                            <span>specificare il numero di giorni di ripetizione</span>
+                        </div>
+                    </div>
+                </div>
+-->
+                <div class="col cke-switch" id="cke-settimanale">
+                    <div class="form-group form-row" id="settimana">
+                        {% for g in etc.select.giorni_settimana %}
+                        <div class="col-4 col-md-1 col-form-label">
+                            <div class="form-check">
+                                <input class="messageCheckbox form-check-input" type="checkbox" id="giorno_{{g.id}}" name="giorni" value="{{ g.id }}">
+                                <label class="form-check-label text-left" for="horns">{{g.__label__}}</label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col cke-switch" id="cke-mensile" style="display: none;">
+                    <div class="form-group form-row" id="mese">
+                        <div class="col-12">
+                            <select id="__rip_mese__" name="__rip_mese__" class="form-control form-control-sm">
+                                <option id="1" value="1"></option>
+                                <option id="2" value="2"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>ripetizioni</legend>
+            <div class="form-group form-row" id="ripetizione">
+                <div class="col-auto">
+                    <span class="label-top lbl-rip">ogni n. settimane</span>
+                    {{ frm.input( '', '', '', '__ripetizione__', '', '', request, '1', 'number', '', '', '','1' ) }}
+                </div>
+                <div class="col-auto">
+                    <span class="label-top">n. volte</span>
+                    {{ frm.input( '', '', '', '__ripetizione_fine__', '', '', request, '1', 'number', '', '', '','1' ) }}
+                </div> 
+                <div class="col-auto">
+                    <span class="label-top">ultima data inizio</span>
+                    {{ frm.date( '', '', '', '__data_fine__', '', '', request ) }}
+                </div>
+            </div>
+        </fieldset>
+  
+    </fieldset>
+    
+    {# BOTTONI E COMANDI DEL MODULO #}
+
+    <fieldset class="form-controls mt-auto">
+        <div class="row no-gutters d-print-none">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary">GENERA TURNI</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+       
+</form>
+</section>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+$(document).ready(function(){
+ 
+    $('#___ripetizione_fine__').click( function(){
+        $( "#___data_fine__" ).val('');
+    });
+
+    $('#___data_fine__').change( function(){
+        $( "#___ripetizione_fine__" ).val('');
+    });
+
+        
+
+    $('#__dataf__').change( function(){
+        var di = new Date($('#__data__').val());
+        var df = new Date($('#__dataf__').val());
+
+        if( df < di ){
+            alert('Attenzione: la data finale è minore della data iniziale');
+            $("#__dataf__").val("");
+        }
+    });
+
+    myDate();
+
+});
+
+
+function setPeriodicita(valore){
+    $('#__id_periodicita__').val(valore);
+    switch(valore) {
+    /*    case 1:
+            $('.lbl-rip').text('ogni n. giorni');
+            break;
+    */
+        case 2:
+            $('.lbl-rip').text('ogni n. settimane');
+            break;
+        case 3:
+            $('.lbl-rip').text('ogni n. mesi');
+            break;
+        default:
+            $('.lbl-rip').text('ogni n. settimane');
+        }
+}
+   
+   
+
+    Date.prototype.getWeekOfMonth = function() {
+        var firstWeekday = new Date(this.getFullYear(), this.getMonth(), 1).getDay();
+        var offsetDate = this.getDate() + firstWeekday - 1;
+        return Math.floor(offsetDate / 7);
+    }
+
+    function myDate() {
+      
+        // cerco il giorno della settimana corrispondente alla data
+        var d = $('#__data__').val();
+        d = d.split("T");
+        var a = d[0].split("-") ;
+        var date = new Date( a[0], (a[1] - 1), a[2] ) ;
+        var r = date.getDay() - 1;
+        
+        // per la domenica setto a 6
+        if( r == -1 ){
+            r = 6;
+        }
+
+        var numeroSettimana = date.getWeekOfMonth() + 1;
+
+        $("input:checkbox").prop('checked', false);
+        $('#giorno_'+r).prop('checked', true);
+     
+        var weekdays = new Array(7);
+        weekdays[0] = "lunedì";
+        weekdays[1] = "martedì";
+        weekdays[2] = "mercoledì";
+        weekdays[3] = "giovedì";
+        weekdays[4] = "venerdì";
+        weekdays[5] = "sabato";
+        weekdays[6] = "domenica";
+
+        var mesi = new Array(12);
+        mesi[1]  = "gennaio";
+        mesi[2] = "febbraio";
+        mesi[3] = "marzo";
+        mesi[4] = "aprile";
+        mesi[5] = "maggio";
+        mesi[6] = "giugno";
+        mesi[7] = "luglio";
+        mesi[8] = "agosto";
+        mesi[9] = "settembre";
+        mesi[10] = "ottobre";
+        mesi[11] = "novembre";
+        mesi[12] = "dicembre";
+
+        // inserisco nell'if di controllo per non avere errore
+        if( $('#__id_periodicita__').val() == 2 ){
+            document.getElementById("__rip_mese__").options[0].text = "ogni giorno "+ a[2]+" del mese";
+            document.getElementById("__rip_mese__").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";        
+        }
+        
+      
+    //    document.getElementById("__rip_anno__").options[0].text = "il "+ a[2]+"/"+a[1]+" ogni anno";
+    //    document.getElementById("__rip_anno__").options[1].text ="il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
+      
+    }
+
+    function genera(){
+        
+        var contratto = $("#___id_contratto__").val();
+        var data = $("#__data__").val();
+        var dataf = $("#__dataf__").val();
+        var turno = $("#___turno__").val();
+        var period = $("#__id_periodicita__").val();
+        var cadenza = $("#___ripetizione__").val();
+        var rip_mese = $("#__rip_mese__").val();
+        var rip_mese_desc = $("#__rip_mese__ option:selected").text();  // SDF descrizione ripetizione
+
+        var rip_anno = $("#__rip_anno__").val();
+        var data_fine = $("#___data_fine__").val();
+        var ripetizioni_fine = $("#___ripetizione_fine__").val();
+        var g_settimana = $('.messageCheckbox').val();
+ 
+        var giorni_s = [];
+        var giorni_s_desc = [];   // SDF
+        $.each($("input[name='giorni']:checked"), function(){ 
+            giorni_s.push( $(this).val() ); 
+            giorni_s_desc.push( $(this).siblings().text() );    // SDF descrizione giorni
+        });
+
+        getws('{{ site.url }}/_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s+'&__rip_mese_desc__='+rip_mese_desc+'&__giorni_s_desc__='+giorni_s_desc, 
+                function( data ){ 
+                    window.open('{{ pages['turni.view'].url[ localization.language.ietf ] }}?__view__[{{ view.id }}][__filters__][id_pianificazione][EQ]='+data['pianificazione']+'&__view__[{{ view.id }}][__filters__][id_contratto][EQ]='+contratto,'_self');
+                }
+            );
+       
+    }
+</script>
+
+{% endblock %} 

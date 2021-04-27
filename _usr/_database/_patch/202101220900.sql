@@ -1,0 +1,1 @@
+ALTER TABLE `pianificazioni` ADD `note` TEXT NULL AFTER `nome`;

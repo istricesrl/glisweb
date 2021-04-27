@@ -14,17 +14,9 @@
     // tabella gestita
 	$ct['form']['table'] = 'account';
 
-    // tendina anagrafica
-	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view'
-	);
-
     // tendina account
 	$ct['etc']['select']['gruppi'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM gruppi_view'
@@ -39,9 +31,18 @@
     // tendine variabili
 	if( isset( $_REQUEST['account']['id_anagrafica'] ) && ! empty( $_REQUEST['account']['id_anagrafica'] ) ) {
 
+		// tendina anagrafica
+		$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
+			$cf['memcache']['index'],
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+			'SELECT id, __label__ FROM anagrafica_view WHERE id = ?',
+		    array( array( 's' => $_REQUEST['account']['id_anagrafica'] ) )
+		);
+
 	    // tendina mail
 		$ct['etc']['select']['mail'] = mysqlCachedIndexedQuery(
-		    $cf['cache']['index'],
+		    $cf['memcache']['index'],
 		    $cf['memcache']['connection'],
 		    $cf['mysql']['connection'],
 		    'SELECT id, __label__ FROM mail_view WHERE id_anagrafica = ?',

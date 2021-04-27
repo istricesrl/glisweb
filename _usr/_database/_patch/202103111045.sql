@@ -1,0 +1,1 @@
+ALTER TABLE `attivita` ADD `latitudine_ora_inizio` DECIMAL(11,7) NULL DEFAULT NULL AFTER `id_indirizzo`;

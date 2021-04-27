@@ -1,0 +1,113 @@
+body, header, footer {
+    font-family: monospace;
+    margin: 0px;
+}
+
+body, header, footer {
+    background-color: #dddddd;
+    color: #666666;
+}
+
+main {
+    background-color: #666666;
+    color: #eeeeee;
+}
+
+nav.navbar {
+    padding: 0em;
+}
+
+footer > .container > .row > .col {
+    min-height: 5em;
+}
+
+footer p {
+    margin: 0em;
+    font-size: 0.8em;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0px;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+}
+
+h4, h5 {
+    font-size: 1em;
+}
+
+header > .container > .row > .col {
+    min-height: 5em;
+}
+
+header .logo img {
+    height: 5em;
+}
+
+main > .container > .row {
+    margin-top: 0.5em;
+}
+
+div.jumbotron {
+    min-height: 24em;
+}
+
+a, a:visited {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+a:active, a:hover {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: underline !important;
+}
+
+a.nav-link, a.nav-link:visited {
+    color: #666666;
+}
+
+a.nav-link:active, a.nav-link:hover {
+    color: #666666;
+    text-decoration: underline;
+}
+
+
+footer a, footer a:visited {
+    color: #666666;
+}
+
+footer footer a:active, footer a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+ul.navbar-nav {
+    list-style-type: none;
+}
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+}
+
+@media (min-width: 1200px) {
+    
+}

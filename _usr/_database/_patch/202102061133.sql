@@ -1,0 +1,1 @@
+ALTER TABLE `attivita` CHANGE `ore` `ore` DECIMAL(5,2) NULL DEFAULT NULL;

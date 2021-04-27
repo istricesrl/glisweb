@@ -2,11 +2,11 @@
 
     /* tool per l'analisi del funzionamento del framework */
 
-    // header
-	header( 'Content-type: text/plain' );
-
     // inclusione del framework
 	require '../../_config.php';
+
+    // header
+	header( 'Content-type: text/plain' );
 
     // output
 	echo 'STATUS DEL FRAMEWORK' . PHP_EOL . PHP_EOL;
@@ -37,43 +37,49 @@
 	    echo '[ -- ] directory base: ' . DIR_BASE . PHP_EOL;
 	}
 
-    // directory da controllare
-	$dirs = array( 'var/', 'var/log/', 'tmp/' );
+    // permessi di scrittura
+	foreach( $cf['debug']['fs']['folders'] as $dir ) {
+	    if( is_dir( $dir ) && is_writeable( $dir ) ) {
+		echo '[ OK ] posso scrivere su ' . shortPath( $dir ) . PHP_EOL;
+	    } else {
+		die( '[FAIL] non posso scrivere su ' . shortPath( $dir ) . PHP_EOL );
+	    }
+	}
 
     // permessi di scrittura
-	foreach( $dirs as $dir ) {
-	    if( is_dir( DIR_BASE . $dir ) && is_writeable( DIR_BASE . $dir ) ) {
-		echo '[ OK ] posso scrivere su ' . $dir . PHP_EOL;
+	foreach( $cf['debug']['fs']['files'] as $file ) {
+	    if( is_writeable( $file ) ) {
+		echo '[ OK ] posso scrivere su ' . shortPath( $file ) . PHP_EOL;
 	    } else {
-		die( '[FAIL] non posso scrivere su ' . $dir . PHP_EOL );
+		die( '[FAIL] non posso scrivere su ' . shortPath( $file ) . PHP_EOL );
+	    }
+	}
+
+	// file di configurazione JSON
+	if( ! file_exists( DIR_BASE . 'src/config/external/config.json' ) ) {
+	    echo '[ -- ] file src/config/external/config.json non trovato' . PHP_EOL;
+	    if( ! file_exists( DIR_BASE . 'src/config.json' ) ) {
+		echo '[ -- ] file src/config.json non trovato' . PHP_EOL;
+	    } else {
+		echo '[ -- ] file src/config.json trovato' . PHP_EOL;
+		if( jsonCheck( readFromFile( 'src/config.json', FILE_READ_AS_STRING ) ) ) {
+		    echo '[ OK ] file src/config.json sintatticamente corretto' . PHP_EOL;
+		} else {
+		    die( '[FAIL] file src/config.json corrotto o malformato' . PHP_EOL );
+		}
+	    }
+	} else {
+	    echo '[ -- ] file src/config.json ignorato' . PHP_EOL;
+	    echo '[ -- ] file src/config/external/config.json trovato' . PHP_EOL;
+	    if( jsonCheck( readFromFile( 'src/config/external/config.json', FILE_READ_AS_STRING ) ) ) {
+		echo '[ OK ] file src/config/external/config.json sintatticamente corretto' . PHP_EOL;
+	    } else {
+		die( '[FAIL] file src/config/external/config.json corrotto o malformato' . PHP_EOL );
 	    }
 	}
 
     // output
 	echo PHP_EOL;
-
-    // file di configurazione JSON
-	if( ! file_exists( DIR_BASE . 'src/config/external/config.json' ) ) {
-	    echo '[ -- ] file /src/config/external/config.json non trovato' . PHP_EOL;
-	    if( ! file_exists( DIR_BASE . 'src/config.json' ) ) {
-		echo '[ -- ] file /src/config.json non trovato' . PHP_EOL;
-	    } else {
-		echo '[ -- ] file /src/config.json trovato' . PHP_EOL;
-		if( jsonCheck( readFromFile( 'src/config.json', FILE_READ_AS_STRING ) ) ) {
-		    echo '[ OK ] file /src/config.json sintatticamente corretto' . PHP_EOL;
-		} else {
-		    die( '[FAIL] file /src/config.json corrotto o malformato' . PHP_EOL );
-		}
-	    }
-	} else {
-	    echo '[ -- ] file /src/config.json ignorato' . PHP_EOL;
-	    echo '[ -- ] file /src/config/external/config.json trovato' . PHP_EOL;
-	    if( jsonCheck( readFromFile( 'src/config/external/config.json', FILE_READ_AS_STRING ) ) ) {
-		echo '[ OK ] file /src/config/external/config.json sintatticamente corretto' . PHP_EOL;
-	    } else {
-		die( '[FAIL] file /src/config/external/config.json corrotto o malformato' . PHP_EOL );
-	    }
-	}
 
     // password di root
 	if( ! isset( $cf['auth']['accounts']['root']['password'] ) ) {
@@ -233,8 +239,12 @@
 	    echo '[ -- ] backend memcache attivato' . PHP_EOL;
 	    if( ! empty( $cf['memcache']['connection'] ) ) {
 		echo '[ OK ] connessione memcache su ' . $cf['memcache']['server']['address'] . ':' . $cf['memcache']['server']['port'] . ' presente' . PHP_EOL;
-		echo '[ -- ] utilizzati ' . $cf['memcache']['stat']['usage'] . ' (' . $cf['memcache']['stat']['percent'] . ')' . PHP_EOL;
-		echo '[ -- ] ' . $cf['memcache']['stat']['hits'] . ' (hit rate ' . $cf['memcache']['stat']['hitrate'] . ' ' . ( ( floatval( $cf['memcache']['stat']['hitrate'] ) > 90.0 ) ? 'OK' : 'NO' ) . ')' . PHP_EOL;
+		if( ! empty( $cf['memcache']['stat']['hits'] ) ) {
+			echo '[ -- ] utilizzati ' . $cf['memcache']['stat']['usage'] . ' (' . $cf['memcache']['stat']['percent'] . ')' . PHP_EOL;
+			echo '[ -- ] ' . $cf['memcache']['stat']['hits'] . ' (hit rate ' . $cf['memcache']['stat']['hitrate'] . ' ' . ( ( floatval( $cf['memcache']['stat']['hitrate'] ) > 90.0 ) ? 'OK' : 'NO' ) . ')' . PHP_EOL;
+		} else {
+			die( '[FAIL] statistiche di memcache non ancora raccolte' . PHP_EOL );
+		}
 	    } else {
 		die( '[FAIL] connessione memcache su ' . $cf['memcache']['server']['address'] . ':' . $cf['memcache']['server']['port'] . ' assente' . PHP_EOL );
 	    }
@@ -293,7 +303,7 @@
 		if( file_exists( $reportMod ) ) {
 			require $reportMod;
 		} else {
-			echo '[INFO] report per il modulo ' . $reportMod . ' non trovato' . PHP_EOL;
+			echo '[INFO] report per il modulo ' . $mod . ' non trovato' . PHP_EOL;
 		}
 
 	    // output

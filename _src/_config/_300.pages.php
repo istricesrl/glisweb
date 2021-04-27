@@ -29,25 +29,29 @@
     // log
 	logWrite( 'la costante MEMCACHE_REFRESH ' . ( ( defined( 'MEMCACHE_REFRESH' ) ) ? NULL : 'NON ' ) . 'È definita', 'speed' );
 
+    /*
     // elegibilità della cache
-	$cf['contents']['cached'] = ( ( defined( 'MEMCACHE_REFRESH' ) ) ? false : true );
+    $cf['contents']['cached'] = ( ( defined( 'MEMCACHE_REFRESH' ) ) ? false : true );
+    */
 
     // tento di leggere i valori dalla cache
-	$cf['contents']['updated']		= memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED );
-	$cf['contents']['pages']		= memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_KEY );
-	$cf['contents']['tree']			= memcacheRead( $cf['memcache']['connection'], CONTENTS_TREE_KEY );
-	$cf['contents']['index']		= memcacheRead( $cf['memcache']['connection'], CONTENTS_INDEX_KEY );
-	$cf['contents']['shortcuts']		= memcacheRead( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY );
+	$cf['contents']['cached']		    = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_CACHED );
+	$cf['contents']['updated']		    = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED );
+	$cf['contents']['pages']		    = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_KEY );
+	$cf['contents']['tree']		    	= memcacheRead( $cf['memcache']['connection'], CONTENTS_TREE_KEY );
+	$cf['contents']['index']		    = memcacheRead( $cf['memcache']['connection'], CONTENTS_INDEX_KEY );
+	$cf['contents']['shortcuts']	    = memcacheRead( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY );
 
     // timer
-	timerCheck( $cf['speed'], ' -> fine lettura cache pagine' );
+	timerCheck( $cf['speed'], '-> fine lettura cache pagine' );
 
     // elegibilità della cache
 	if( $cf['contents']['updated']		=== false
 	    || $cf['contents']['pages']		=== false
 	    || $cf['contents']['tree']		=== false
 	    || $cf['contents']['index']		=== false
-	    || $cf['contents']['shortcuts']	=== false
+        || $cf['contents']['shortcuts']	=== false
+        || $cf['contents']['cached']    <= $cf['contents']['updated']
 	) {
 	    $cf['contents']['cached'] = false;
 	    logWrite( 'struttura delle pagine non presente in cache', 'speed', LOG_NOTICE );
@@ -57,4 +61,5 @@
 
     // debug
 	// var_dump( $cf['contents']['cached'] );
+	// var_dump( $cf['contents']['updated'] );
 	// print_r( $cx['contents'] );

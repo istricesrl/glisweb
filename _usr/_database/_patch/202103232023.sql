@@ -1,0 +1,1 @@
+ALTER TABLE `prezzi` CHANGE `id_udm` `id_udm` INT(11) NULL DEFAULT NULL;

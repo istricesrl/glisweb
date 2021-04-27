@@ -16,7 +16,7 @@
     
     // tendina genitore 
     $ct['etc']['select']['id_genitore'] = mysqlCachedIndexedQuery(
-    $cf['cache']['index'],
+    $cf['memcache']['index'],
     $cf['memcache']['connection'],
     $cf['mysql']['connection'],
     'SELECT id, __label__ FROM gruppi_view'
@@ -24,7 +24,7 @@
 
     // tendina genitore 
     $ct['etc']['select']['id_struttura'] = mysqlCachedIndexedQuery(
-    $cf['cache']['index'],
+    $cf['memcache']['index'],
     $cf['memcache']['connection'],
     $cf['mysql']['connection'],
     'SELECT id, __label__ FROM anagrafica_ruoli_view'

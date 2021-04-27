@@ -29,7 +29,7 @@
 	$cf['cron']['results'] = array();
 
     // chiave di lock
-	$cf['cron']['results']['token'] = getToken();
+	$cf['cron']['results']['token'] = getToken( __FILE__ );
 
     // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
 	$tasks = mysqlQuery(

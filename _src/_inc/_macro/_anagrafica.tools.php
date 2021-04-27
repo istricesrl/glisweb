@@ -25,6 +25,15 @@
 	    'text' => 'esporta i contatti anagrafici in formato CSV'
 	);
 
+    // esportazione indirizzi anagrafica
+	$ct['page']['contents']['metro']['esportazioni'][] = array(
+	    'modal' => array( 'id' => 'esporta_indirizzi', 'include' => 'inc/anagrafica.tools.modal.indirizzi.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-file-excel-o',
+	    'title' => 'esportazione indirizzario',
+	    'text' => 'esporta gli indirizzi in formato CSV'
+	);
+
     // categorie anagrafica
 	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedQuery(
 	    $cf['memcache']['connection'],
@@ -32,5 +41,8 @@
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
 
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';
+
+

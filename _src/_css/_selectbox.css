@@ -41,6 +41,14 @@
     border-bottom-right-radius: .2rem;
 }
 
+.combobox-base-background {
+    background-color: #ffffff !important;
+}
+
+.combobox-active-background {
+    background-color: #eeeeee !important;
+}
+
 div.combobox-container {
     position: relative;
 }
@@ -54,7 +62,7 @@ ul.combobox-dropdown {
     position: absolute;
     width: 100%;
     padding: 0px;
-    z-index: 999;
+    z-index: 4000;
     overflow-y: auto;
     max-height: 24em;
 }
@@ -62,7 +70,7 @@ ul.combobox-dropdown {
 ul.combobox-dropdown li {
     padding: 10px 20px;
     cursor: pointer;
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 ul.combobox-dropdown li.selected {

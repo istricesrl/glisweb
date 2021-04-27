@@ -1,0 +1,3 @@
+ALTER TABLE `turni`
+ADD CONSTRAINT `turni_ibfk_2` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `turni_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

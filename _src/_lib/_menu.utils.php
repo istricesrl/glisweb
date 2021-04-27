@@ -45,23 +45,6 @@
 			    // echo 'page -> ' . $k . PHP_EOL;
 			    // echo print_r( $pages[ $k ], true );
 
-			// verifico se la pagina ha i requisiti per comparire nel menu
-/*
-			    if(
-				isset( $pages[ $k ]['menu'][ $menu ] )
-				&&
-				( ! empty( $pages[ $k ]['menu'][ $menu ]['label'] )
-				    ||
-				( count( $v ) > 0 && in_array( $k, $pages[ $active ]['parents']['id'] ) ) )
-				&&
-				( ! isset( $pages[ $k ]['auth']['groups'] )
-				    || ( isset( $_SESSION['account']['gruppi'] )
-					&& count( array_intersect( $pages[ $k ]['auth']['groups'], $_SESSION['account']['gruppi'] ) ) > 0
-				    )
-				)
-			    ) {
-*/
-
 			// se la pagina compare nel menu...
 			    if( isset( $pages[ $k ]['menu'][ $menu ] ) ) {
 
@@ -177,7 +160,7 @@
      * @todo documentare
      *
      */
-    function buildBreadcrumb( $page, $active ) {
+    function buildBreadcrumbs( $page, $active ) {
 
 	// array del menu
 	    $nav = array();

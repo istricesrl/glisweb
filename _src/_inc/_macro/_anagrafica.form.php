@@ -24,7 +24,7 @@
 
     // tendina tipologie anagrafica
 	$ct['etc']['select']['tipologie_anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY nome ASC'
@@ -33,25 +33,25 @@
     // tendina sesso
 	$ct['etc']['select']['sesso'] = array( 
 	    array( 'id' => '-', '__label__' => '-' ),
-	    array( 'id' => 'M', '__label__' => 'M' ),
-	    array( 'id' => 'F', '__label__' => 'F' ),
+	    array( 'id' => 'M', '__label__' => 'uomo' ),
+	    array( 'id' => 'F', '__label__' => 'donna' ),
 	);
 
     // tendina notifiche
 	$ct['etc']['select']['se_notifiche'] = array(
-	    array( 'id' => NULL, '__label__' => '&#xf1f6;' ),
-	    array( 'id' => 1, '__label__' => '&#xf0f3;' )
+	    array( 'id' => NULL, '__label__' => 'no' ),
+	    array( 'id' => 1, '__label__' => 'si' )
 	);
 
     // tendina PEC
 	$ct['etc']['select']['se_pec'] = array(
-	    array( 'id' => NULL, '__label__' => '&#xf003;' ),
-	    array( 'id' => 1, '__label__' => '&#xf0a3;' )
+	    array( 'id' => NULL, '__label__' => 'mail' ),
+	    array( 'id' => 1, '__label__' => 'pec' )
 	);
 
     // tendina categorie anagrafica
 	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
@@ -59,24 +59,25 @@
 
     // tendina tipologie telefoni
 	$ct['etc']['select']['tipologie_telefoni'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, html AS __label__ FROM tipologie_telefoni_view'
 	);
 
-/*
+
     // tendina tipologie indirizzi
 	$ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_indirizzi_view'
 	);
-
+	
+/*
     // tendina comuni
 	$ct['etc']['select']['comuni'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM comuni_view'
@@ -85,7 +86,7 @@
 
     // tendina indirizzi
 	$ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM indirizzi_view'

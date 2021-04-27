@@ -1,0 +1,5 @@
+{% import '_bin/_default.html' as cms %}
+
+{% if page.contents.images.carousel|length > 0 %}
+{{ cms.carousel( page, localization.language.ietf, site, 'carousel-main', 3500, image, 'carousel' ) }}
+{% endif %}

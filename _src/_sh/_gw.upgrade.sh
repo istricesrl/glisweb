@@ -45,13 +45,13 @@ else
     BRANCHDIR=${BRANCH////-}
 
     # scompatto Glisweb
-    unzip ./$BRANCHZIP.zip
+    unzip -qq ./$BRANCHZIP.zip
 
     # elimino il vecchio framework
     rm -rf ./_*
 
     # installo la nuova versione
-    rsync -a ./glisweb-$BRANCHDIR/* ./
+    cp -rf ./glisweb-$BRANCHDIR/{.[!.],}* ./
 
     # elimino la vecchia cartella
     rm -rf ./glisweb-$BRANCHDIR
@@ -59,10 +59,13 @@ else
 
     # installo il .gitignore se è presente un repository .git
     if [ -f ./_usr/_deploy/_git/.gitignore -a -d ./.git ]; then
-        cp ./_usr/_deploy/_git/.gitignore ./.gitignore
+        cp -f ./_usr/_deploy/_git/.gitignore ./.gitignore
     fi
 
     # aggiorno composer
     composer update
+
+    ## permessi
+    ./_src/_sh/_gw.permissions.reset.sh
 
 fi

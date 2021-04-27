@@ -1,0 +1,1 @@
+ALTER TABLE `righe_documenti_amministrativi` ADD `id_modalita_pagamento` INT NULL DEFAULT NULL AFTER `id_valuta`, ADD INDEX (`id_modalita_pagamento`) ;
