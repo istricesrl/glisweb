@@ -196,9 +196,9 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'importazione articoli' ),
 	    'h1'		=> array( $l		=> 'importazione articoli' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazione.articoli.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.articoli.html' ),
 	    'parent'		=> array( 'id'		=> 'importazioni' ),
-	    'macro'		=> array( '_src/_inc/_macro/_importazione.articoli.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.articoli.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	);
 
@@ -207,9 +207,9 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'importazione prodotti' ),
 	    'h1'		=> array( $l		=> 'importazione prodotti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazione.prodotti.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.prodotti.html' ),
 	    'parent'		=> array( 'id'		=> 'importazioni' ),
-	    'macro'		=> array( '_src/_inc/_macro/_importazione.prodotti.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.prodotti.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	);
 
@@ -218,9 +218,9 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'importazione caratteristiche prodotti' ),
 	    'h1'		=> array( $l		=> 'importazione caratteristiche prodotti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazione.prodotti.caratteristiche.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.prodotti.caratteristiche.html' ),
 	    'parent'		=> array( 'id'		=> 'importazioni' ),
-	    'macro'		=> array( '_src/_inc/_macro/_importazione.prodotti.caratteristiche.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.prodotti.caratteristiche.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	);
 /*

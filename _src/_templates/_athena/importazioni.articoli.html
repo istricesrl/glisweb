@@ -41,6 +41,7 @@
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{% if session.account.id %}{{ session.account.id }}{% else %}__null__{% endif %}">
 	    <input type="hidden" id="job" name="{{ table }}[job]" value="{{ etc.jobfile }}">
+		<input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
 	    {# NOTE DI IMPORTAZIONE #}
 
@@ -270,9 +271,10 @@
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 
-	    <fieldset class="form-controls">
-		{{ std.controls( page, pages, localization.language.ietf, '', table, request ) }}
-	    </fieldset>
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+		</fieldset>
+	
 
 	</form>
     </div>
