@@ -43,5 +43,17 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'progetti.commerciale.form', 'progetti.commerciale.form.todo' ) )
+	);
+
+	// gestione todo progetti
+	$p['progetti.commerciale.form.todo'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'todo' ),
+	    'h1'			=> array( $l		=> 'to-do' ),
+	    'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.todo.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.todo.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
 	);
