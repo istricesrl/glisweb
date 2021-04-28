@@ -20,28 +20,28 @@
 									'priority'	=> '310' ) )
     );
     
-    // vista progetti
-	$p['progetti.view'] = array(
+   // vista progetti
+	$p['progetti.commerciale.view'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'progetti' ),
-	    'h1'		=> array( $l		=> 'progetti' ),
+	    'title'			=> array( $l		=> 'progetti' ),
+	    'h1'			=> array( $l		=> 'progetti' ),
 	    'parent'		=> array( 'id'		=> 'commerciale' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_progetti.view.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'progetti.view' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'progetti' ),
-									'priority'	=> '010' ) )
-    );
+		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.commerciale.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'progetti.commerciale.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'progetti' ),
+								'priority'	=> '080' ) )
+	);
 
-    // form progetti
-	$p['progetti.form'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'parent'		=> array( 'id'		=> 'progetti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'progetti.form'	) )
+	// gestione progetti
+	$p['progetti.commerciale.form'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'gestione' ),
+		'h1'			=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form' ) )
 	);
