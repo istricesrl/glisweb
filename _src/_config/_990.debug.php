@@ -32,6 +32,7 @@
 	// print_r( $cf['speed'] );
 	// print_r( $cf['privacy'] );
 	// print_r( $ct['contatti'] );
+	// print_r( $cf['auth']['permissions']);
 
     // NOTA a questo punto non hanno ancora girato le macro, quindi le stampe migliori
     // si fanno non da qui ma da /_src/_api/_pages.php

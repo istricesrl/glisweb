@@ -1,0 +1,96 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function liberaOperatore( t ) {
+        var form = $( t ).closest('.modal');		
+        var progetto = form.find('#_id_progetto').val();
+        var anagrafica = form.find('#_id_anagrafica').val();
+        var data_inizio = form.find('#_data_inizio').val();
+        var data_fine = form.find('#_data_fine').val();
+        var ora_inizio = form.find('#_ora_inizio').val();
+        var ora_fine = form.find('#_ora_fine').val();
+
+     /*   console.log('progetto: ' + progetto);
+        console.log('anagrafica: ' + anagrafica);
+        console.log('data_inizio: ' + data_inizio);
+        console.log('data_fine: ' + data_fine);
+        console.log('ora_inizio: ' + ora_inizio);
+        console.log('ora_fine: ' + ora_fine);
+*/
+	 	var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_operatori.unlock.php?id_progetto='+progetto+'&id_anagrafica='+anagrafica+'&data_inizio='+data_inizio+'&data_fine='+data_fine;
+        if( ora_inizio && ora_fine ){
+            call = call.concat('&ora_inizio='+ora_inizio+'&ora_fine='+ora_fine);
+        }
+
+    //    console.log('call: ' + call);
+
+        getws( call,'', function() {
+			$('#libera-operatore').modal('toggle');
+		});
+       
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="libera-operatore">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+            <h5 class="modal-title">libera operatore</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+            <div class="container-fluid">
+                <div class="form-row">
+                    <div class="col">
+                        questa procedura permette di rimuovere un operatore dalle attività di un progetto pianificate in un dato periodo e relative ad una fascia oraria
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <span class="label-top">progetto</span>
+                        {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request ) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <span class="label-top">anagrafica</span>
+                        {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request ) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <span class="label-top">data inizio</span>
+                        {{ frm.date( table, '', '', 'data_inizio', '', '', request, default ) }}
+                    </div>
+                    <div class="col">
+                        <span class="label-top">data fine</span>
+                        {{ frm.date( table, '', '', 'data_fine', '', '', request, default ) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        la fascia oraria è facoltativa, se non specificata verranno liberate tutte le attività nel periodo indicato</h5>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+						<span class="label-top">ora inizio</span>
+						{{ frm.time( table, '', '', 'ora_inizio', '', '', request) }} 
+					</div>
+                    <div class="col">
+						<span class="label-top">ora fine</span>
+						{{ frm.time( table, '', '', 'ora_fine', '', '', request) }} 
+					</div>
+                </div>
+            </div>
+	    </div>
+	    <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="liberaOperatore(this);">conferma</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
