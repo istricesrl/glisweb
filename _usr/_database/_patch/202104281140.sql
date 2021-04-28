@@ -1,0 +1,1 @@
+ALTER TABLE `progetti` ADD `data_accettazione` DATE NULL DEFAULT NULL AFTER `id_account_accettazione`, ADD KEY `data_accettazione` (`data_accettazione`) ;
