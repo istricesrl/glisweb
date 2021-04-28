@@ -53,7 +53,7 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM progetti_produzione_view' );
+        'SELECT id, __label__ FROM progetti_view' );
 
      // tendina anni
 	foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
