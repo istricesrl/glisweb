@@ -1,0 +1,295 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set subtable = 'pianificazioni' %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{% if request[ table ].id_pianificazione %}
+    {% include 'inc/metro.html' %}
+
+{% else %}
+
+    {# FORM DI GESTIONE #}
+    <section class="row flex-fill">
+        <div class="col-md-12 d-flex flex-column">
+        <form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{# page.path[ ietf ] #}" method="post" autocomplete="off">
+
+            {# CAMPI HIDDEN DI BASE #}
+            <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+            <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+            <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+            <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+            <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+            {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+            <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+            {# MODULO PRINCIPALE #}
+
+            <fieldset>
+                <legend>periodicità</legend>
+                <input name="__data__" type="date" style="display: none" value="{{ request[ table ].data_programmazione }}" disabled class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
+                {{ frm.input( table, subtable, '0', 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+                {{ frm.input( table, subtable, '0', 'entita', '', '', request, 'progetti', 'hidden' ) }}
+                {{ frm.input( table, subtable, '0', 'workspace', '', '', request, etc.wks, 'hidden' ) }}
+
+                {{ frm.input( table, subtable, '0', 'id', '', '', request, '', 'hidden' ) }}
+                {{ frm.input( table, subtable, '0', 'periodicita', '', '', request, '1', 'hidden' ) }}
+
+                <div class="form-group form-row">
+                    <div class="col-12">
+                    <ul class="nav nav-tabs nav-tabs-secondary">
+                    
+                        {% for p in etc.periodicita %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request[ table ][ subtable ]['0'].periodicita == p.id or (request[ table ][ subtable ]['0'].periodicita is empty and p.id == 1 )%}active{% endif %}" onclick="crossShow('cke-{{p.id}}','cke-switch',this);setPeriodicita({{p.id}}); myDate();">{{ p.__label__ }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    </div>
+                </div>
+        
+
+                <div class="form-group form-row flex-fill">
+                    <div class="col cke-switch" id="cke-1">
+                        <div class="form-group form-row" id="giorno">
+                            <div class="col-12 col-form-label">
+                                <span>specificare il numero di giorni di ripetizione</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col cke-switch" id="cke-2" style="display: none;">
+                        {# frm.input( table, subtable, '0', 'giorni_settimana', '', '', request, '1', 'hidden' ) #}
+                        <div class="form-group form-row" id="settimana">
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_lunedi', 'lunedì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_martedi', 'martedì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_mercoledi', 'mercoledì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_giovedi', 'giovedì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_venerdi', 'venerdì', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_sabato', 'sabato', '', request ) }}
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-1 col-form-label">
+                                <div class="form-check">
+                                    {{ frm.checkbox( table, subtable, '0', 'se_domenica', 'domenica', '', request ) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col cke-switch" id="cke-3" style="display: none;">
+                        <div class="form-group form-row" id="mese">
+                            <div class="col-12">
+                                {{ frm.select( table, subtable, '0', 'ripetizione_mese', '', etc.select.ripetizioni_mese, request, 1, '', '', 1 ) }}   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>ripetizioni</legend>
+                <div class="form-group form-row">
+                    <div class="col-auto">
+                        <span class="label-top lbl-cad">ogni n. giorni</span>
+                        {{ frm.input( table, subtable, '0', 'cadenza', '', '', request, '1', 'number', '', '', '','1' ) }}
+                    </div>
+                    <div class="col-auto">
+                        <span class="label-top">fino al</span>
+                        {{ frm.date( table, subtable, '0', 'data_fine', '', '', request ) }}
+                    </div>
+
+                    <div class="col-auto">
+                        <span class="label-top">giorni rinnovo</span>
+                        {{ frm.input( table, subtable, '0', 'giorni_rinnovo', '', '', request ) }}
+                    </div>
+                    
+                </div>
+            </fieldset>
+
+        
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                <div class="row no-gutters d-print-none">
+                    <div class="col-auto col-md-5">
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ page.parent.path[ ietf ] }}','_self');" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
+                    </div>
+                    <div class="col-auto col-md-7 text-right">
+                        {% if request[table][subtable][0].id %}
+                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="popolaPianificazione();" placeholder="crea progetti" data-placement="bottom" data-delay="1000" title="" data-original-title="crea eventi">CREA PROGETTI</button>
+                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="ferma la pianificazione" data-toggle="modal" data-target="#ferma" data-placement="bottom" data-delay="1000" title="" data-original-title="ferma pianificazione">FERMA PIANIFICAZIONE</button>
+                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="rimuovi progetti futuri errati" data-toggle="modal" data-target="#pulisci" data-placement="bottom" data-delay="1000" title="" data-original-title="rimuovi progetti futuri">RIMUOVI PROGETTI FUTURI</button>
+                        {% endif %}
+                        <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">SALVA PIANIFICAZIONE</button>
+                    </div>
+                </div>
+            </fieldset>
+
+    </form>
+    </section>
+
+{% endif %}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+$(document).ready(function(){
+ 
+    // chiamo la funzione myDate che legge la data della pianificazione e costruisce le prime logiche
+    myDate();
+
+    // leggo il valore della periodicità e setto la tab da mostrare e la label della cadenza
+    periodicita = $('#progetti_pianificazioni_0_periodicita').val();
+    crossShow('cke-'+periodicita,'cke-switch');
+    setPeriodicita(periodicita);
+});
+
+
+// funzione che setta il valore della periodicità
+    function setPeriodicita(valore){
+        valore = parseInt(valore);
+        $('#progetti_pianificazioni_0_periodicita').val(valore);
+        setLabelCadenza(valore);
+    }
+ 
+// funzione che setta la label della cadenza
+    function setLabelCadenza(valore){
+        valore = parseInt(valore);
+        switch(valore) {
+            case 1:
+                $('.lbl-cad').text('ogni n. giorni');
+                break;
+            case 2:
+                $('.lbl-cad').text('ogni n. settimane');
+                break;
+            case 3:
+                $('.lbl-cad').text('ogni n. mesi');
+                break;
+            default:
+                $('.lbl-cad').text('ogni n. giorni');
+            }
+    }
+   
+   
+
+    Date.prototype.getWeekOfMonth = function() {
+        var firstWeekday = new Date(this.getFullYear(), this.getMonth(), 1).getDay();
+        var offsetDate = this.getDate() + firstWeekday - 1;
+        return Math.floor(offsetDate / 7);
+    }
+
+
+    function myDate() {
+        console.log('chiamata funzione myDate');
+      
+        // cerco il giorno della settimana corrispondente alla data
+        var d = $('#__data__').val();
+        d = d.split("T");
+        var a = d[0].split("-") ;
+        var date = new Date( a[0], (a[1] - 1), a[2] ) ;
+
+        var r = date.getDay() - 1;
+
+        // per la domenica setto a 6
+        if( r == -1 ){
+            r = 6;
+        }
+
+        var numeroSettimana = date.getWeekOfMonth() + 1;
+     
+        var weekdays = new Array(7);
+        weekdays[0] = "lunedì";
+        weekdays[1] = "martedì";
+        weekdays[2] = "mercoledì";
+        weekdays[3] = "giovedì";
+        weekdays[4] = "venerdì";
+        weekdays[5] = "sabato";
+        weekdays[6] = "domenica";
+
+        var mesi = new Array(12);
+        mesi[1]  = "gennaio";
+        mesi[2] = "febbraio";
+        mesi[3] = "marzo";
+        mesi[4] = "aprile";
+        mesi[5] = "maggio";
+        mesi[6] = "giugno";
+        mesi[7] = "luglio";
+        mesi[8] = "agosto";
+        mesi[9] = "settembre";
+        mesi[10] = "ottobre";
+        mesi[11] = "novembre";
+        mesi[12] = "dicembre";
+
+
+        // inserisco nell'if di controllo per non avere errore
+        if( $('#progetti_pianificazioni_0_periodicita').val() == 3 ){
+            document.getElementById("progetti_pianificazioni_0_ripetizione_mese").options[0].text = "ogni giorno "+ a[2]+" del mese";
+            document.getElementById("progetti_pianificazioni_0_ripetizione_mese").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";        
+        }
+      
+    }
+
+    function popolaPianificazione() {
+		if( $('#progetti_pianificazioni_0_id').val() ){
+			var id = $('#progetti_pianificazioni_0_id').val();
+		}
+		
+        if( id ){
+            var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php?id='+id;
+		
+		    getws( call,'', function() {
+                alert('creazione degli eventi completata');
+		    });
+        }
+		
+	
+	}
+
+</script>
+
+{% endblock %} 

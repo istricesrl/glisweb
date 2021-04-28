@@ -45,7 +45,8 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form', 
 														'progetti.produzione.form.todo',
-														'progetti.produzione.form.pause' ) )
+														'progetti.produzione.form.pause',
+														'progetti.produzione.form.pianificazioni' ) )
 	);
 
 	// gestione todo progetti
@@ -84,6 +85,19 @@
 		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form' ) )
 	);
 */
+
+// gestione progetti pianificazioni
+$p['progetti.produzione.form.pianificazioni'] = array(
+	'sitemap'		=> false,
+	'title'			=> array( $l		=> 'pianificazione' ),
+	'icon'			=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
+	'h1'			=> array( $l		=> 'pianificazione' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.pianificazioni.html' ),
+	'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.pianificazioni.php' ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+);
 
 	
 
