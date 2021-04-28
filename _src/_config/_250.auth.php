@@ -197,6 +197,10 @@
 	    'tipologie_crm' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
+		'todo' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
 		'turni' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
