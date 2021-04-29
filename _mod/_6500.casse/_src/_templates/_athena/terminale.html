@@ -15,8 +15,53 @@
 {% endblock %}
 
 {% block main %}
+{% set cassa = pages.terminale.url[ localization.language.ietf ] %}
     <div class="container-fluid pannello-cassa">
         <div class="row">
+            <div class="col-5 align-items-center">
+                <h2 style="font-size:medium;background: #1a639a;color: #ffffff;padding: 5px;border-radius: 5px;">SCONTRINO</h2>
+                    <div class="row">
+                        {% if not request.__continue__ %}
+                        <div class="col-12 mt-3">
+                            <button type="button" class="btn btn-success btn-sqr btn-block" onclick="window.open( '{{ cassa }}?__continue__=1', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">APRI</button>
+                        </div>
+                        {% else %}
+                        <div class="col mt-3">
+                            <button type="button" class="btn btn-danger btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">ANNULLA</button>
+                        </div>
+                        <div class="col mt-3">
+                            <button type="button" class="btn btn-dark btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">CHIUDI</button>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">CONVERTI IN FATTURA</button>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <button type="button" class="btn btn-info btn-sqr btn-block" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">SCONTRINO</button>
+                        </div>
+                        {% endif %}
+                </div>  
+            </div>
+            <div class="col-5 align-items-center">
+                <h2 style="font-size:medium;background: #1a639a;color: #ffffff;padding: 5px;border-radius: 5px;">COMANDO</h2>
+                    <div class="row"> 
+                        <div class="col-12 mt-3">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                  <span class="input-group-text" id="basic-addon2" style="background: #1a639a;color: #ffffff;"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+                                </div>
+                              </div>
+                        
+                        </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12"><h2 style="font-size:medium;background: #1a639a;color: #ffffff;padding: 5px;border-radius: 5px;">MANUALE</h2></div>
+                    </div>
+            </div>
+            <div class="col-2 align-items-center">
+                <h2 style="font-size:medium;background: #1a639a;color: #ffffff;padding: 5px;border-radius: 5px;">PRODOTTI FREQUENTI</h2>
+                </div>
             <!--
             <div id="chiudi" class="col-auto p-0">
                 {% set target = pages.cassa.url[ localization.language.ietf ] %}

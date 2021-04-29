@@ -1,0 +1,12 @@
+.pannello-cassa h2:first-child{
+
+} 
+.pannello-cassa h2:nth-child(2){
+background:red;
+} 
+.pannello-cassa button {
+    font-size: 30px;
+}
+.pannello-cassa .btn-secondary {
+    border-radius: 5px !important;
+}
