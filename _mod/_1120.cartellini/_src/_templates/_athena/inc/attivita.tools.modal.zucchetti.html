@@ -1,0 +1,41 @@
+{% import '_bin/_form.html' as frm %}
+
+<!-- NOTA mi raccomando evitare conflitti fra modal per funzione JS e ID campi -->
+
+<script>
+    function esportaZucchetti( t ) {
+        var form = $( t ).closest('.modal');
+        var mese = form.find('.mese').first().val();
+        var anno = form.find('.anno').first().val();
+	    window.open( '/print/1120.cartellini/zucchetti.xml?__mese__='+mese+'&__anno__='+anno, '_self');
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="esporta_zucchetti">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">esporta XML ore per software Zucchetti</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+				<span class="label-top">mese</span>
+			    {{ frm.selectRequired( table, '', '', '', '', etc.select.mesi, request, '', '','mese' ) }}
+			</div>
+			<div class="col">
+				<span class="label-top">anno</span>
+			    {{ frm.inputRequired( table, '', '', '', '', '', request, '', '','anno' ) }}
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="esportaZucchetti(this);">esporta</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

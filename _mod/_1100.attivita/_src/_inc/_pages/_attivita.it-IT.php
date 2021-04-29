@@ -14,10 +14,23 @@
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.view.php' ),
-		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'cartellini' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'cartellini', 'attivita.tools' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'attività' ),
 														'priority'	=> '100' ) )
+	);
+
+    // tools attività
+	$p['attivita.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni' ),
+	    'h1'		=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'attivita.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_attivita.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['attivita.view']['etc']['tabs'] )
 	);
 
 	// gestione attivita
