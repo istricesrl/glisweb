@@ -217,7 +217,7 @@
 
 							echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
 							
-						} else {
+						} elseif( substr( $row, 0, 3 ) !== '-- ' ) {
 	
 							$pQuery .= $row;
 

@@ -61,8 +61,10 @@
      *
      */
     function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
-	return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
-    }
+
+		return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
+
+	}
 
     /**
      *
