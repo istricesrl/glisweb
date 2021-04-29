@@ -90,7 +90,7 @@
 			<div class="form-group form-row">
 				<div class="col col-md-2">
 					<span class="label-top">data accettazione</span>
-					{{ frm.datetime( table, '', '', 'timestamp_accettazione', '', '', request, 'now'|date('Y-m-d\\TH:i') ) }}
+					{{ frm.date( table, '', '', 'data_accettazione', '', '', request ) }}
 				</div>
 				<div class="col-12 col-md-10">
 					<span class="label-top">note di accettazione</span>
