@@ -13,25 +13,32 @@
         $ct['ore'] = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT '.
-            'attivita.data, attivita.ore, '.
-            'anagrafica.codice AS codice_dipendente. '.
+            'attivita.data_attivita, attivita.ore, '.
+            'anagrafica.codice AS codice_dipendente, '.
             'tipologie_attivita_inps.codice AS codice_inps '.
             'FROM attivita '.
             'INNER JOIN anagrafica ON anagrafica.id = attivita.id_anagrafica '.
             'INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
             'INNER JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = attivita.id_tipologia_inps '.
-            'WHERE data BETWEEN ( ? and ? ) '.
-            'ORDER BY attivita.id_anagrafica ASC, attivita.data ASC, tipologie_attivita.id ASC ',
+            'WHERE attivita.data_attivita BETWEEN ? AND ? '.
+            'ORDER BY attivita.id_anagrafica ASC, attivita.data_attivita ASC, tipologie_attivita.id ASC ',
             array(
-                array( 's' => $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ),
-                array( 's' => date( 'Y-m-t', strtotime( $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ) ) 
+                    array( 's' => $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ),
+                    array( 's' => date( 'Y-m-t', strtotime( $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ) ) 
                 )
             )
         );
 
+        // inizializzazione
+        $attivita = array();
+
         // passaggio ad albero
         foreach( $ct['ore'] as $ora ) {
-            $attivita[ $ora['codice_dipendente'] ][ $ora['data'] ][ $ora['codice_inps'] ] += $ora['ore'];
+            if( isset( $attivita[ $ora['codice_dipendente'] ][ $ora['data_attivita'] ][ $ora['codice_inps'] ] ) ) {
+                $attivita[ $ora['codice_dipendente'] ][ $ora['data_attivita'] ][ $ora['codice_inps'] ] += $ora['ore'];
+            } else {
+                $attivita[ $ora['codice_dipendente'] ][ $ora['data_attivita'] ][ $ora['codice_inps'] ] = $ora['ore'];
+            }
         }
 
         // debug
@@ -86,9 +93,9 @@
                 foreach( $codici as $codice => $lavoro ) {
 
                     // spacchetto le ore in ore e minuti
-                    $lavoro = explode( '.', $lavoro );
-                    $ore = $lavoro[0];
-                    $minuti = ( $lavoro[1] * 60 / 10 );
+                    $aLavoro = explode( '.', trim( str_replace( ',', '.', $lavoro ), ' 0' ) );
+                    $ore = $aLavoro[0];
+                    $minuti = ( isset( $aLavoro[1] ) ) ? ( $aLavoro[1] * 60 / 10 ) : 0;
 
                     // inizio nodo attività
                     $xml->startElement( 'Movimento' );
