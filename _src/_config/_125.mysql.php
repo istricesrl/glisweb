@@ -155,7 +155,7 @@
 				mysqlQuery(
 					$cf['mysql']['connection'],
 					'CREATE TABLE IF NOT EXISTS `mysql_patch` ('.
-					'	`id` char(12) NOT NULL,'.
+					'	`id` char(12) NOT NULL PRIMARY KEY,'.
 					'	`patch` text COLLATE utf8_unicode_ci,'.
 					'	`timestamp_esecuzione` int(11) DEFAULT NULL'.
 					'  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'

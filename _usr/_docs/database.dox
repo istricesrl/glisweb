@@ -99,10 +99,10 @@
     account.id                      | l'ID dell'account
     account.id_anagrafica           | l'ID dell'anagrafica collegata all'account (referenzia la tabella anagrafica)
     account.id_mail                 | l'ID della mail collegata all'account (referenzia la tabella mail)
-    account.username                | il nome utente dell'account
+    account.username                | il nome utente dell'account (usato per il login)
     account.password                | la password dell'account cifrata in MD5
     account.se_attivo               | se valorizzato a 1 indica che l'account è attivo, qualsiasi altro valore indica un account inattivo
-    account.token                   | token utilizzato per l'attivazione degli account creati tramite il modulo di registrazione automatica
+    account.token                   | token utilizzato per l'attivazione degli account creati tramite il modulo di registrazione automatica o per il recupero password
     account.timestamp_login         | timestamp dell'ultimo login effettuato dall'account (vedi _src/_config/_210.auth.php)
 
     Per inserire rapidamente un account si può utilizzare il seguente codice SQL sostituendo <username> e <password>
@@ -152,7 +152,7 @@
     account_gruppi.id                    | l'ID dell'associazione fra account e gruppo
     account_gruppi.id_account            | l'ID dell'account associato (referenzia la tabella account)
     account_gruppi.id_gruppo             | l'ID del gruppo associato (referenzia la tabella gruppi)
-    account_gruppi.se_amministratore     | indica se l'account è amministratore del gruppo
+    account_gruppi.se_amministratore     | indica se l'account è amministratore del gruppo (può aggiungere altri membri al gruppo)
 
     Per inserire rapidamente un'associazione fra account e gruppo si può utilizzare il seguente codice SQL sostituendo
     <idAccount> e <idGruppo> con i valori desiderati:
