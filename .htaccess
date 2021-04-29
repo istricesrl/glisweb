@@ -105,11 +105,11 @@ Options -Indexes
     RewriteRule ^print/([a-zA-Z0-9_\-\.]+)$ _src/_api/_print/_$1.php [L,QSA]
 
     # gestione delle stampe custom moduli
-    RewriteCond %{DOCUMENT_ROOT}mod/$1/src/api/print/$2.php -f
+    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/print/$2.php -f
     RewriteRule ^print/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/print/$2.php [L,QSA]
 
     # gestione delle stampe standard moduli
-    RewriteCond %{DOCUMENT_ROOT}_mod/_$1/_src/_api/_print/_$2.php -f
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_print/_$2.php -f
     RewriteRule ^print/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_print/_$2.php [L,QSA]
 
     # gestione dei report speciali
