@@ -161,8 +161,6 @@
                     <div class="col-auto col-md-7 text-right">
                         {% if request[table][subtable][0].id %}
                         <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="popolaPianificazione();" placeholder="crea progetti" data-placement="bottom" data-delay="1000" title="" data-original-title="crea eventi">CREA PROGETTI</button>
-                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="ferma la pianificazione" data-toggle="modal" data-target="#ferma" data-placement="bottom" data-delay="1000" title="" data-original-title="ferma pianificazione">FERMA PIANIFICAZIONE</button>
-                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="rimuovi progetti futuri errati" data-toggle="modal" data-target="#pulisci" data-placement="bottom" data-delay="1000" title="" data-original-title="rimuovi progetti futuri">RIMUOVI PROGETTI FUTURI</button>
                         {% endif %}
                         <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">SALVA PIANIFICAZIONE</button>
                     </div>
@@ -283,7 +281,7 @@ $(document).ready(function(){
             var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php?id='+id;
 		
 		    getws( call,'', function() {
-                alert('creazione degli eventi completata');
+                alert('creazione dei progetti completata');
 		    });
         }
 		

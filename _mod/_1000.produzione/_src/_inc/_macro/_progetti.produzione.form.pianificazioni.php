@@ -85,7 +85,7 @@
 		'label' => 'pianificazione'
 	    )
 	);
-/*
+
     // modal per scollegare la todo dalla pianificazione
 	$ct['page']['contents']['metro']['pianificazione'][] = array(
 	    'modal' => array('id' => 'scollega', 'include' => 'inc/progetti.produzione.form.pianificazioni.modal.scollega.html' ),
@@ -104,6 +104,7 @@
 	    'text' => 'modifica la pianificazione'
 	);
 
+/*
     // modal per fermare la pianificazione originaria
     $ct['page']['contents']['metro']['pianificazione'][] = array(
         'modal' => array('id' => 'ferma', 'include' => 'inc/progetti.produzione.form.pianificazioni.modal.ferma.html' ),
