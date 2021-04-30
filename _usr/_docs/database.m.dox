@@ -1,0 +1,19 @@
+/*!
+
+    \page database_m database del framework, tabelle con la lettera M
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera M.
+
+    le tabelle del database di supporto MA - MZ
+    ===========================================
+
+    mail
+    ----
+
+    mail_out
+    --------
+
+    mail_sent
+    ---------
+
+*/

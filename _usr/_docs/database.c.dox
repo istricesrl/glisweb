@@ -1,0 +1,31 @@
+/*!
+
+    \page database_c database del framework, tabelle con la lettera C
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera C.
+
+    le tabelle del database di supporto CA - CZ
+    ===========================================
+
+    campagne
+    --------
+
+    caratteristiche_prodotti
+    ------------------------
+
+    carrelli
+    --------
+
+    carrelli_articoli
+    -----------------
+
+    categorie_anagrafica
+    --------------------
+
+    categorie_attivita
+    ------------------
+
+    comuni
+    ------
+
+*/

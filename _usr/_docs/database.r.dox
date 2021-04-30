@@ -1,0 +1,35 @@
+/*!
+
+    \page database_r database del framework, tabelle con la lettera R
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera R.
+
+    le tabelle del database di supporto RA - RZ
+    ===========================================
+
+    redirect
+    --------
+    Questa tabella *gestita* contiene i redirect presenti nel deploy corrente.
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    redirect.id                          | l'ID del redirect
+    redirect.codice                      | il codice HTTP da lanciare con il redirect
+    redirect.sorgente                    | l'URL che innesca il redirect
+    redirect.destinazione                | l'URL di destinazione del redirect
+
+    \code{.sql}
+    INSERT INTO `redirect` (`id`, `codice`, `sorgente`, `destinazione`) VALUES (NULL, '<code>', '<source>', '<target>');
+    \endcode
+
+    La vista redirect_view relativa alla tabella redirect presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    redirect.id                          | vedi campo corrispondente sulla tabella relativa
+    redirect.codice                      | vedi campo corrispondente sulla tabella relativa
+    redirect.sorgente                    | vedi campo corrispondente sulla tabella relativa
+    redirect.destinazione                | vedi campo corrispondente sulla tabella relativa
+    redirect.__label__                   | -
+
+*/
