@@ -666,6 +666,9 @@
      */
     function mysqlDuplicateRow( $c, $t, $o, $n = NULL, $x = array() ) {
 
+		// salvo l'id
+		$id = isset( $x['id'] ) ? $x['id'] : null;
+
 	// campi da modificare
 	    $x = array_merge( array( 'id' => $n ), $x );
 
@@ -690,6 +693,10 @@
 
 	// esecuzione della query
 		$n = mysqlQuery( $c, $q, $values );
+
+		if( empty( $n ) ){
+			$n = $id;
+		}
 
 	// debug
 		// echo $q . PHP_EOL;
