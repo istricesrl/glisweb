@@ -355,6 +355,26 @@
 
     anagrafica_categorie
     --------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale anagrafica con la secondaria categorie_anagrafica.
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_categorie.id                         | l'ID dell'associazione fra anagrafica e categorie
+    anagrafica_categorie.id_anagrafica              | l'ID dell'anagrafica
+    anagrafica_categorie.id_categoria               | l'ID della categoria
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista anagrafica_categorie_view relativa alla tabella anagrafica_categorie presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_categorie_view.id                           | l'ID dell'associazione fra anagrafica e categorie
+    anagrafica_categorie_view.id_anagrafica                | l'ID dell'anagrafica
+    anagrafica_categorie_view.id_categoria                 | l'ID della categoria
 
     anagrafica_cittadinanze
     -----------------------
