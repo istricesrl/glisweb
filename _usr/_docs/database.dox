@@ -118,9 +118,9 @@
     chiave                        | campo                        | tabella e campo collegati
     ------------------------------|------------------------------|-----------------------------------------------------
     account_ibfk_1_nofollow       | id_anagrafica                | anagrafica.id
-    account_ibfk_4_nofollow       | id_mail                      | mail.id
     account_ibfk_2_nofollow       | id_account_inserimento       | account.id
     account_ibfk_3_nofollow       | id_account_aggiornamento     | account.id
+    account_ibfk_4_nofollow       | id_mail                      | mail.id
 
     La vista account_view relativa alla tabella account presenta le seguenti colonne:
 
@@ -213,54 +213,145 @@
     account_gruppi_attribuzione_view.entita                | vedi campo corrispondente sulla tabella relativa
     account_gruppi_attribuzione_view.__label__             | -
 
+    Questa tabella è la base del meccanismo di attribuzione automatica delle entità ai gruppi che consente di dare visibilità agli oggetti a gruppi specifici
+    in scenari dove è presente una tabella di ACL.
+
     anagrafica
     ----------
     Questa tabella *gestita* contiene i dati anagrafici.
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    id                                   |
-    codice                               |
-    id_tipologia                         |
-    nome                                 |
-    cognome                              |
-    denominazione                        |
-    soprannome                           |
-    sesso                                |
-    id_orientamento_sessuale             |
-    codice_fiscale                       |
-    partita_iva                          |
-    codice_sdi                           |
-    id_pec_sdi                           |
-    id_regime_fiscale                    |
-    note_amministrative                  |
-    luogo_nascita                        |
-    stato_nascita                        |
-    id_stato_nascita                     |
-    comune_nascita                       |
-    giorno_nascita                       |
-    mese_nascita                         |
-    anno_nascita                         |
-    id_diritto                           |
-    id_tipologia_crm                     |
-    id_agente                            |
-    note_commerciali                     |
-    condizioni_vendita                   |
-    condizioni_acquisto                  |
-    note                                 |
-    data_cessazione                      |
-    note_cessazione                      |
-    recapiti                             |
-    id_account_inserimento               |
-    se_importata                         |
-    se_stampa_privacy                    |
-    timestamp_inserimento                |
-    id_account_aggiornamento             |
-    timestamp_aggiornamento              |
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica.id                                   | l'ID dell'anagrafica
+    anagrafica.codice                               | il codice parlante dell'anagrafica (codice cliente, codice fornitore, matricola dipendente, eccetera)
+    anagrafica.riferimento                          | -
+    anagrafica.id_tipologia                         | l'ID della tipologia associata all'anagrafica
+    anagrafica.nome                                 | il nome per le persone fisiche
+    anagrafica.cognome                              | il cognome per le persone fisiche
+    anagrafica.denominazione                        | la denominazione per le persone giuridiche
+    anagrafica.soprannome                           | il soprannome o nome convenzionale, usato ad es. nelle tendine eccetera
+    anagrafica.sesso                                | il sesso dell'anagrafica (M, F o trattino)
+    anagrafica.stato_civile                         | lo stato civile dell'anagrafica
+    anagrafica.id_orientamento_sessuale             | l'ID dell'orientamento sessuale dell'anagrafica
+    anagrafica.codice_fiscale                       | il codice fiscale dell'anagrafica
+    anagrafica.partita_iva                          | la partita IVA dell'anagrafica
+    anagrafica.codice_sdi                           | il codice SDI per la fatturazione elettronica dell'anagrafica
+    anagrafica.id_pec_sdi                           | l'ID della casella PEC per la fatturazione elettronica dell'anagrafica
+    anagrafica.id_regime_fiscale                    | l'ID del regime fiscale dell'anagrafica
+    anagrafica.note_amministrative                  | le note amministrative relative all'anagrafica
+    anagrafica.luogo_nascita                        | il luogo di nascita dell'anagrafica
+    anagrafica.stato_nascita                        | lo stato di nascita dell'anagrafica
+    anagrafica.id_stato_nascita                     | l'ID dello stato di nascita dell'anagrafica
+    anagrafica.comune_nascita                       | il comune di nascita dell'anagrafica
+    anagrafica.giorno_nascita                       | il giorno di nascita dell'anagrafica
+    anagrafica.mese_nascita                         | il mese di nascita dell'anagrafica
+    anagrafica.anno_nascita                         | l'anno di nascita dell'anagrafica
+    anagrafica.id_tipologia_crm                     | l'ID della tipologia CRM dell'anagrafica
+    anagrafica.id_agente                            | l'ID dell'agente associato all'anagrafica
+    anagrafica.note_commerciali                     | le note commerciali relative all'anagrafica
+    anagrafica.condizioni_vendita                   | le condizioni di vendita relative all'anagrafica
+    anagrafica.condizioni_acquisto                  | le condizioni di acquisto relative all'anagrafica
+    anagrafica.note                                 | le note relative all'anagrafica
+    anagrafica.data_cessazione                      | la data di cessazione dell'anagrafica
+    anagrafica.note_cessazione                      | le note relative alla cessazione dell'anagrafica
+    anagrafica.recapiti                             | recapiti dell'anagrafica
+    anagrafica.se_importata                         | flag che indica se l'anagrafica è stata importata
+    anagrafica.se_stampa_privacy                    | flag che indica se è stata stampata l'informativa privacy per l'anagrafica
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    anagrafica_ibfk_1_nofollow                    | id_orientamento_sessuale     | orientamenti_sessuali.id
+    anagrafica_ibfk_2_nofollow                    | id_account_inserimento       | account.id
+    anagrafica_ibfk_3_nofollow                    | id_stato_nascita             | stati.id
+    anagrafica_ibfk_4_nofollow                    | id_account_aggiornamento     | account.id
+    anagrafica_ibfk_5_nofollow                    | id_tipologia_crm             | tipologie_crm.id
+    anagrafica_ibfk_6_nofollow                    | id_pec_sdi                   | mail.id
+    anagrafica_ibfk_7_nofollow                    | id_tipologia                 | tipologie_anagrafica.id
+    anagrafica_ibfk_8_nofollow                    | id_agente                    | anagrafica.id
+    anagrafica_ibfk_9_nofollow                    | id_regime_fiscale            | regimi_fiscali.id
+    anagrafica_ibfk_10_nofollow                   | comune_nascita               | comuni.id
+
+    La vista anagrafica_view relativa alla tabella anagrafica presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_view.id                                     | l'ID dell'anagrafica
+    anagrafica_view.codice                                 | il codice parlante dell'anagrafica (codice cliente, codice fornitore, matricola dipendente, eccetera)
+    anagrafica_view.riferimento                            | -
+    anagrafica_view.id_tipologia                           | l'ID della tipologia associata all'anagrafica
+    anagrafica_view.nome                                   | il nome per le persone fisiche
+    anagrafica_view.cognome                                | il cognome per le persone fisiche
+    anagrafica_view.denominazione                          | la denominazione per le persone giuridiche
+    anagrafica_view.soprannome                             | il soprannome o nome convenzionale, usato ad es. nelle tendine eccetera
+    anagrafica_view.sesso                                  | il sesso dell'anagrafica (M, F o trattino)
+    anagrafica_view.stato_civile                           | lo stato civile dell'anagrafica
+    anagrafica_view.id_orientamento_sessuale               | l'ID dell'orientamento sessuale dell'anagrafica
+    anagrafica_view.codice_fiscale                         | il codice fiscale dell'anagrafica
+    anagrafica_view.partita_iva                            | la partita IVA dell'anagrafica
+    anagrafica_view.codice_sdi                             | il codice SDI per la fatturazione elettronica dell'anagrafica
+    anagrafica_view.id_pec_sdi                             | l'ID della casella PEC per la fatturazione elettronica dell'anagrafica
+    anagrafica_view.id_regime_fiscale                      | l'ID del regime fiscale dell'anagrafica
+    anagrafica_view.note_amministrative                    | le note amministrative relative all'anagrafica
+    anagrafica_view.luogo_nascita                          | il luogo di nascita dell'anagrafica
+    anagrafica_view.stato_nascita                          | lo stato di nascita dell'anagrafica
+    anagrafica_view.id_stato_nascita                       | l'ID dello stato di nascita dell'anagrafica
+    anagrafica_view.comune_nascita                         | il comune di nascita dell'anagrafica
+    anagrafica_view.giorno_nascita                         | il giorno di nascita dell'anagrafica
+    anagrafica_view.mese_nascita                           | il mese di nascita dell'anagrafica
+    anagrafica_view.anno_nascita                           | l'anno di nascita dell'anagrafica
+    anagrafica_view.id_tipologia_crm                       | l'ID della tipologia CRM dell'anagrafica
+    anagrafica_view.id_agente                              | l'ID dell'agente associato all'anagrafica
+    anagrafica_view.note_commerciali                       | le note commerciali relative all'anagrafica
+    anagrafica_view.condizioni_vendita                     | le condizioni di vendita relative all'anagrafica
+    anagrafica_view.condizioni_acquisto                    | le condizioni di acquisto relative all'anagrafica
+    anagrafica_view.note                                   | le note relative all'anagrafica
+    anagrafica_view.data_cessazione                        | la data di cessazione dell'anagrafica
+    anagrafica_view.note_cessazione                        | le note relative alla cessazione dell'anagrafica
+    anagrafica_view.recapiti                               | recapiti dell'anagrafica
+    anagrafica_view.se_importata                           | flag che indica se l'anagrafica è stata importata
+    anagrafica_view.se_stampa_privacy                      | flag che indica se è stata stampata l'informativa privacy per l'anagrafica
+	anagrafica_view.pec_sdi                                | l'indirizzo PEC per la fatturazione elettronica
+	anagrafica_view.sigla_stato                            | -
+	anagrafica_view.cittadinanze                           | -
+	anagrafica_view.se_collaboratore                       | -
+	anagrafica_view.se_dipendente                          | -
+	anagrafica_view.se_interinale                          | -
+	anagrafica_view.se_cliente                             | -
+	anagrafica_view.se_lead                                | -
+	anagrafica_view.se_prospect                            | -
+	anagrafica_view.se_mandante                            | -
+	anagrafica_view.se_fornitore                           | -
+	anagrafica_view.se_produttore                          | -
+	anagrafica_view.se_agente                              | -
+	anagrafica_view.se_interno                             | -
+	anagrafica_view.se_esterno                             | -
+	anagrafica_view.se_amministrazione                     | -
+	anagrafica_view.se_azienda_gestita                     | -
+	anagrafica_view.se_concorrente                         | -
+	anagrafica_view.se_tutor                               | -
+	anagrafica_view.se_classe                              | -
+	anagrafica_view.se_docente                             | -
+	anagrafica_view.se_allievo                             | -
+	anagrafica_view.se_agenzia_interinale                  | -
+	anagrafica_view.se_referente                           | -
+	anagrafica_view.se_sostituto                           | -
+	anagrafica_view.se_squadra                             | -
+	anagrafica_view.denominazione_fiscale                  | -
+	anagrafica_view.categorie                              | -
+	anagrafica_view.telefoni                               | -
+	anagrafica_view.mail                                   | -
+	anagrafica_view.specialita                             | -
+	anagrafica_view.provincia                              | -
+	anagrafica_view.codice_regime_fiscale                  | -
+	anagrafica_view.gruppo                                 | -
+	anagrafica_view.agente                                 | -
+	anagrafica_view.__label__                              | -
 
     anagrafica_archiviati
     ---------------------
-    Questa tabella *virtuale* contiene le anagrafiche cessate.
+    Questa tabella *virtuale* contiene le anagrafiche cessate, individuate in base al fatto che il campo data_cessazione non è NULL. Ha gli stessi campi dell'anagrafica_view.
 
     anagrafica_categorie
     --------------------
