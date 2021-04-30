@@ -74,13 +74,15 @@
                 )
             );
 
+            if( !empty( $attivita )){
+                foreach( $attivita as $a ){
+            /*       $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['attivita'][ $a['id'] ] = $a;
+                $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['progetto'] = $a['progetto']; */ 
             
-           foreach( $attivita as $a ){
-        /*       $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['attivita'][ $a['id'] ] = $a;
-               $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['progetto'] = $a['progetto']; */ 
-           
-                $ct['etc']['attivita'][ $a['id'] ] = $a;
-            }          
+                    $ct['etc']['attivita'][ $a['id'] ] = $a;
+                }         
+            }
+            
         }
 
         // se ho un valore di data_fine massima settato
@@ -133,6 +135,11 @@
     // modal per la conferma di approvazione
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'conferma', 'include' => 'inc/variazioni.form.approvazione.modal.conferma.html' )
+    );
+	
+	// modal per la conferma di rifiuto
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'rifiuta', 'include' => 'inc/variazioni.form.rifiuto.modal.conferma.html' )
     );
 
     // modal per la conferma di allungamento pianificazione singola
