@@ -46,6 +46,7 @@
 		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form', 
 														'progetti.produzione.form.todo',
 														'progetti.produzione.form.pause',
+														'progetti.produzione.form.chiusura',
 														'progetti.produzione.form.pianificazioni' ) )
 	);
 
@@ -95,6 +96,18 @@ $p['progetti.produzione.form.pianificazioni'] = array(
 	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
 	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.pianificazioni.html' ),
 	'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.pianificazioni.php' ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+);
+
+// gestione progetti chiusura
+$p['progetti.produzione.form.chiusura'] = array(
+	'sitemap'		=> false,
+	'title'			=> array( $l		=> 'chiusura' ),
+	'h1'			=> array( $l		=> 'chiusura' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.chiusura.html' ),
+	'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.chiusura.php' ),
 	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 );
