@@ -55,6 +55,14 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM progetti_view' );
 
+    // tendina categorie attivita
+	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_attivita_view'
+	);
+
      // tendina anni
 	foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
 	    $ct['etc']['select']['anni'][] = array( 'id' => $y, '__label__' => $y );
