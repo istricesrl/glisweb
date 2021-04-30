@@ -51,10 +51,10 @@
 
             <fieldset>
                 <legend>periodicità</legend>
-                <input name="__data__" type="date" style="display: none" value="{{ request[ table ].data_programmazione }}" disabled class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
+                <input name="__data__" type="date" style="display: none" value="{{ request[ table ].data_accettazione }}" disabled class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
                 {{ frm.input( table, subtable, '0', 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
                 {{ frm.input( table, subtable, '0', 'entita', '', '', request, 'progetti', 'hidden' ) }}
-                {{ frm.input( table, subtable, '0', 'workspace', '', '', request, etc.wks, 'hidden' ) }}
+                {{ frm.input( table, subtable, '0', 'workspace', '', '', '', etc.wks, 'hidden' ) }}
 
                 {{ frm.input( table, subtable, '0', 'id', '', '', request, '', 'hidden' ) }}
                 {{ frm.input( table, subtable, '0', 'periodicita', '', '', request, '1', 'hidden' ) }}

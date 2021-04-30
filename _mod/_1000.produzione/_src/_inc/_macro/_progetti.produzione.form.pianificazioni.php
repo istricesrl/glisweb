@@ -65,16 +65,11 @@
             ),
             'sostituzioni' => array(
                 'progetti' => array(
+                    'id' => '§ref_id+data§',
                     'data_accettazione' => '§data§',
                     'id_pianificazione' => '§id_pianificazione§'
                 ),
-                'todo' => array(
-                    'data_programmazione' => '§data§',
-                    'id_pianificazione' => '§id_pianificazione§'
-                ),
-                'attivita' => array(
-                    'data_attivita' => '§data§'
-                )
+                'todo' => array()
             )
         );
 
