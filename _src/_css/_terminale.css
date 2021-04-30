@@ -4,9 +4,72 @@
 .pannello-cassa h2:nth-child(2){
 background:red;
 } 
-.pannello-cassa button {
+.pannello-cassa .cassa button {
     font-size: 30px;
 }
 .pannello-cassa .btn-secondary {
     border-radius: 5px !important;
+}
+
+.pannello-cassa select#documenti_id_tipologia {
+    height: calc(2.875rem + 2px);
+}
+.select-terminale {
+padding: .5rem 1rem;
+    font-size: 1.25rem !important;
+    line-height: 1.5;
+    border-radius: .3rem;
+}
+
+.pannello-cassa  input#documenti_id_destinatario_inputbox {
+    height: calc(2.875rem + 2px);
+}
+
+.box {
+  height: 150px;
+  overflow: auto;
+}
+
+/* width */
+.pannello-cassa ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  .pannello-cassa ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 8px;
+  }
+   
+  /* Handle */
+  .pannello-cassa ::-webkit-scrollbar-thumb {
+    background: gray; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  .pannello-cassa ::-webkit-scrollbar-thumb:hover {
+    background: black 
+  }
+  .pannello-cassa td {
+      text-align:left;
+  }
+
+  .pannello-cassa .media {
+      border:1px solid #dddddd;
+      border-radius:5px;
+      margin-top:5px;
+  }
+
+  .pannello-cassa .media-body {
+    background-color: #777777;
+    color: #fff;
+    border-radius: 5px;
+  }
+  .pannello-cassa .media-body p {
+    color: #fff;
+    }
+
+  .pannello-cassa input.form-control {
+    height: calc(2.875rem + 2px);
 }
