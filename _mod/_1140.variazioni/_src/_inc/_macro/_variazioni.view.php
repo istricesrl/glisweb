@@ -32,6 +32,7 @@
         'id' => '#',
         'data_richiesta' => 'richiesta',
         'data_approvazione' => 'approvazione',
+        'data_rifiuto' => 'rifiuto',
         'anagrafica' => 'operatore',
         'tipologia' => 'tipologia',
         'tipologia_inps' => 'tipologia INPS'
