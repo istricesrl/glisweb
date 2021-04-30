@@ -69,7 +69,10 @@
                     'data_accettazione' => '§data§',
                     'id_pianificazione' => '§id_pianificazione§'
                 ),
-                'todo' => array()
+                'todo' => array(),
+                'todo_categorie' => array(),
+                'attivita' => array(),
+                'attivita_categorie' => array()
             )
         );
 
