@@ -34,6 +34,7 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'cliente' => 'cliente',
+        'tipologia' => 'tipologia',
         '__label__' => 'nome'
 	);
 
@@ -41,14 +42,16 @@
 	$ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
         'cliente' => 'text-left d-none d-md-table-cell',
+        'tipologia' => 'text-left',
         '__label__' => 'text-left'
     );
 
     // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/progetti.produzione.view.filters.html';
 
-    // tendina clienti
-	$ct['etc']['select']['id_cliente'] = mysqlCachedQuery(
+     // tendina clienti
+     $ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_cliente = 1');
