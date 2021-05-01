@@ -22,11 +22,11 @@
     // tabella gestita
 	$ct['form']['table'] =  'variazioni_attivita';
 
-   
+  
 
     // se ho un operatore e dei range devo andare a vedere tutte le attività che entrano nei range
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['periodi_variazioni_attivita'] ) ) {
-        
+
         // per ogni riga di periodo devo vedere se ci sono attività che hanno data e ora programmazione in quel range, completamente o parzialmente
         // se sì aggiungo il progetto e la data all'array dei risultati da mostrare in dashboard
         
@@ -56,7 +56,7 @@
             $attivita = mysqlQuery( 
                 $cf['mysql']['connection'],
                 "SELECT attivita_view.id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
-                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, id_progetto, progetto, "
+                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, attivita_view.id_progetto, progetto, "
                 ."coalesce( p1.id, p2.id) AS id_pianificazione, coalesce( p1.data_fine, p2.data_fine) as data_fine, "
                 ."coalesce( p1.giorni_rinnovo, p2.giorni_rinnovo) as giorni_rinnovo FROM attivita_view "
                 ."LEFT JOIN pianificazioni as p1 ON attivita_view.id_pianificazione = p1.id "
