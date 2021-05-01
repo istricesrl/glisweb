@@ -69,14 +69,25 @@
                     'data_accettazione' => '§data§',
                     'id_pianificazione' => '§id_pianificazione§'
                 ),
-                'todo' => array(),
-                'todo_categorie' => array(),
-                'attivita' => array(),
-                'attivita_categorie' => array()
+                'todo' => array(
+                    'data_programmazione' => '%null%',
+                    'ora_inizio_programmazione' => '%null%',
+                    'ora_fine_programmazione' => '%null%'
+                ),
+                'todo_categorie' => array()
+                /*,
+                'attivita' => array(
+                    'data_programmazione' => '%null%',
+                    'ora_inizio_programmazione' => '%null%',
+                    'ora_fine_programmazione' => '%null%'
+                ),
+                'attivita_categorie' => array()*/
             )
         );
 
         $ct['etc']['wks'] = json_encode( $wks, JSON_UNESCAPED_UNICODE );
+
+        echo $ct['etc']['wks'];
         
     }
 

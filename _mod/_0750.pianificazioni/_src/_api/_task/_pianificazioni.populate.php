@@ -171,6 +171,8 @@
                             $value = date( 'Y-m-d', strtotime( '+' . $matches[1][0] . ' days', strtotime( $data ) ) );
                         } elseif( $value == '§ref_id+data§'){
                             $value = $current['ref_id'] . '-' . date( 'Ymd', strtotime( $data ) );
+                        } elseif( $value == '%null%'){
+                            $value = NULL;
                         }
                     }
                 }
