@@ -140,3 +140,4 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'categorie.attivita.form' ) )
 	);
+	
