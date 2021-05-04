@@ -55,8 +55,8 @@
 
         // headers
         $filename = 'ore.'.$_REQUEST['__anno__'].'.'.$_REQUEST['__mese__'].'.xml';
-        header("Content-Type: text/html/force-download");
-        header("Content-Disposition: attachment; filename=".$filename.".xml");
+        header('Content-Type: text/html/force-download');
+        header('Content-Disposition: attachment; filename='.$filename);
 
         // inizializzo l'oggetto XML
 		$xml = new XMLWriter();
@@ -93,9 +93,9 @@
                 foreach( $codici as $codice => $lavoro ) {
 
                     // spacchetto le ore in ore e minuti
-                    $aLavoro = explode( '.', trim( str_replace( ',', '.', $lavoro ), ' 0' ) );
+                    $aLavoro = explode( ',', sprintf( '%0.2f', trim( str_replace( ',', '.', $lavoro ) ), ' ' ) );
                     $ore = $aLavoro[0];
-                    $minuti = ( isset( $aLavoro[1] ) ) ? ( $aLavoro[1] * 60 / 10 ) : 0;
+                    $minuti = ( isset( $aLavoro[1] ) ) ? ( $aLavoro[1] * 60 / 100 ) : 0;
 
                     // inizio nodo attività
                     $xml->startElement( 'Movimento' );
