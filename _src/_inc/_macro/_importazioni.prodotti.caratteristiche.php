@@ -12,7 +12,7 @@
     
     // tabella gestita
 	$ct['form']['table'] = 'job';
-	$ct['etc']['jobfile'] = '_mod/_4150.prodotti/_src/_api/_job/_prodotti.caratteristiche.importazione.php';
+	$ct['etc']['jobfile'] = '_mod/_4100.prodotti/_src/_api/_job/_prodotti.caratteristiche.importazione.php';
 
     // svuoto il campo custom __job__ per evitare che venga riproposto il file appena caricato
 	if( isset( $_REQUEST['__job__'] ) ) {

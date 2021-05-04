@@ -28,13 +28,14 @@
 
     // lettura del workspace
 	if( ! empty( $job['workspace'] ) ) {
-	    $wksp = unserialize( $job['workspace'] );
+	    $wksp = $job['workspace'] ;
 	}
+	logWrite( 'workspace ' . $job['workspace']['document'] . ' ', 'job' );
 
     // se è presente almeno un documento
 		if( isset( $wksp['document'] ) ) {
-
-		    // apro il documento per leggere il numero di righe
+			
+			// apro il documento per leggere il numero di righe
 			$xls = \PhpOffice\PhpSpreadsheet\IOFactory::load( DIR_BASE . $wksp['document'] );
 
 		    // converto il foglio attivo in un array
@@ -69,7 +70,7 @@
 				    // cerco l'id della tipologia
 					$idTipologia = mysqlSelectValue(
 					    $cf['mysql']['connection'],
-					    'SELECT id FROM tipologie_prodotti WHERE nome = ?',
+					    'SELECT id FROM tipologie_prodotti WHERE id = ?',
 					    array(
 						array( 's' => $row['tipologia'] )
 					    )
@@ -86,10 +87,13 @@
 					    );
 					}
 
+					logWrite( 'trovata tipologia id  ' . $idTipologia . ' righe per importazione prodotti #' . $job['id'], 'job' );
+
+					if( isset( $row['categoria'] ) && ! empty( $row['categoria'] ) ){
 				    // cerco l'id della categoria
 					$idCategoria = mysqlSelectValue(
 					    $cf['mysql']['connection'],
-					    'SELECT id FROM categorie_prodotti WHERE nome = ?',
+					    'SELECT id FROM categorie_prodotti WHERE id = ?',
 					    array(
 						array( 's' => $row['categoria'] )
 					    )
@@ -97,13 +101,12 @@
 
 				    // se la categoria non esiste, la creo
 					if( empty( $idCategoria ) && ! empty( $row['categoria'] ) ) {
-					    $idCategoria = mysqlQuery(
-						$cf['mysql']['connection'],
-						'INSERT INTO categorie_prodotti ( nome, id_tipologia_pubblicazione ) VALUES ( ?, 2 )',
-						array(
-						    array( 's' => $row['categoria'] )
-						)
-					    );
+						$idCategoria = NULL;
+					}
+
+					logWrite( 'trovata categoria id  ' . $idCategoria . ' righe per importazione prodotti #' . $job['id'], 'job' );
+					} else {
+						$idCategoria = NULL;
 					}
 
 				    // cerco l'id dell'unità di misura
@@ -114,6 +117,8 @@
 						array( 's' => $row['udm'] )
 					    )
 					);
+
+					logWrite( 'trovata udm id  ' . $idUdm . ' per udm '.$row['udm'].' righe per importazione prodotti #' . $job['id'], 'job' );
 
 				    if( !empty( $idTipologia ) && !empty( $idUdm )  ){
 
@@ -146,7 +151,7 @@
 				    }
 				    else{
 					// log
-					    logWrite( 'impossibile inserire prodotto ' . $row['nome'] . ' (id ' . $row['id'] . ', riga #' . ( $i + 1 ) . ' su totali ' . $totale . ' limite ciclo da ' . $corrente . ' minore di ' . $limite . ')', 'job' );
+					    logWrite( 'impossibile inserire prodotto ' . $row['nome'] . ' (id ' . $row['codice'] . ', riga #' . ( $i + 1 ) . ' su totali ' . $totale . ' limite ciclo da ' . $corrente . ' minore di ' . $limite . ')', 'job' );
 				    }
 				    // aggiorno il valore corrente
 					mysqlQuery( $cf['mysql']['connection'], 'UPDATE job SET corrente = ?, timestamp_esecuzione = ? WHERE id = ?', array( array( 's' => ( $i + 1 ) ), array( 's' => time() ), array( 's' => $job['id'] ) ) );
