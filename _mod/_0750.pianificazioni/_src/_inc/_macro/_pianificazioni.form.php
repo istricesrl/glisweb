@@ -24,6 +24,7 @@
 
     // tendina delle entita che è possibile gestire
     $ct['etc']['select']['entita'] = array(
+        array( 'id' => 'todo', '__label__' => 'progetti' ),
         array( 'id' => 'todo', '__label__' => 'todo' ),
         array( 'id' => 'turni', '__label__' => 'turni' )
     );
@@ -82,6 +83,16 @@
                 ); 
             
                 $ct['etc']['id_oggetto'] = $_REQUEST[ $ct['form']['table'] ]['id_turno']; 
+        }
+        // se la pianificazione è legata a un progetto
+        elseif( $_REQUEST[ $ct['form']['table'] ]['entita'] == 'progetti' && !empty( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ){
+            $ct['etc']['data'] = mysqlSelectValue( 
+                    $cf['mysql']['connection'], 
+                    "SELECT data_accettazione FROM progetti WHERE id = ?",
+                    array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) )
+                );  
+            
+            $ct['etc']['id_oggetto'] = $_REQUEST[ $ct['form']['table'] ]['id_progetto'];
         }
 
 

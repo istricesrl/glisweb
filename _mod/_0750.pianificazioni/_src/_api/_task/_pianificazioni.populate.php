@@ -65,7 +65,7 @@
     $current = mysqlSelectRow(
         $cf['mysql']['connection'],
         'SELECT pianificazioni.*, '.
-        'coalesce( id_todo, id_turno ) AS ref_id '.
+        'coalesce( id_todo, id_turno, id_progetto ) AS ref_id '.
         'FROM pianificazioni '.
         'WHERE token = ? ',
         array( array( 's' => $status['token'] ) )
@@ -169,9 +169,15 @@
                             $value = $current['id'];
                         } elseif( preg_match_all( '/%data\+([0-9]+)%/', $value, $matches ) ) {
                             $value = date( 'Y-m-d', strtotime( '+' . $matches[1][0] . ' days', strtotime( $data ) ) );
+                        } elseif( $value == '§ref_id+data§'){
+                            $value = $current['ref_id'] . '-' . date( 'Ymd', strtotime( $data ) );
+                        } elseif( $value == '%null%'){
+                            $value = NULL;
                         }
                     }
                 }
+
+                $status['info']['sostituzioni'] = $wksp['sostituzioni'];
 
 
                 // chiamo la funzione mysqlDuplicateRowRecursive()

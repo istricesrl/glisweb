@@ -1261,10 +1261,7 @@ INSERT INTO `tipologie_anagrafica` (`id`, `id_genitore`, `nome`) VALUES
 (1, NULL, 'sig.'),
 (2, NULL, 'sig.ra');
 
--- tipologie_attivita
--- tipologia: tabella gestita
--- NOTE
--- questa tabella non ha dati standard
+
 
 -- tipologie_crm
 -- tipologia: tabella gestita
@@ -1282,8 +1279,18 @@ INSERT IGNORE INTO `tipologie_contratti` (`id`, `nome`) VALUES
 (1, 'dipendente'),
 (2, 'collaboratore');
 
+-- tipologie_attivita
+-- tipologia: tabella assistita
+INSERT IGNORE INTO `tipologie_attivita` (`id`, `nome`, `se_scalare`, `se_commessa`, `se_chiamata`, `se_contratto`, `se_forfait`) VALUES
+(1, 'commessa', NULL, 1, NULL, NULL, NULL),
+(2, 'pacchetto', 1, NULL, NULL, NULL, NULL),
+(3, 'contratto', NULL, NULL, NULL, 1, NULL),
+(4, 'on demand', NULL, NULL, 1, NULL, NULL),
+(5, 'consuntivo', NULL, NULL, 1, NULL, NULL),
+(6, 'forfait', NULL, NULL, NULL, NULL, 1);
+
 -- tipologie_attivta_inps
--- tipologia: tabella di supporto
+-- tipologia: tabella assistita
 INSERT IGNORE INTO `tipologie_attivita_inps` (`id`, `id_genitore`,`nome`) VALUES
 (1, NULL, 'ordinario'),
 (2, NULL, 'straordinario'),
@@ -1445,12 +1452,13 @@ ON DUPLICATE KEY UPDATE nome = VALUES( nome ), se_colori = VALUES( se_colori ), 
 
 -- tipologie_progetti
 -- tipologia: tabella assistita
-INSERT IGNORE INTO `tipologie_progetti` (`id`, `nome`, `se_scalare`, `se_commessa`, `se_chiamata`) VALUES
-(1, 'commessa', NULL, 1, NULL),
-(2, 'pacchetto', 1, NULL, NULL),
-(3, 'contratto', NULL, NULL, NULL),
-(4, 'on demand', NULL, NULL, NULL),
-(5, 'consuntivo', NULL, NULL, 1);
+INSERT IGNORE INTO `tipologie_progetti` (`id`, `nome`, `se_scalare`, `se_commessa`, `se_chiamata`, `se_contratto`, `se_forfait`) VALUES
+(1, 'commessa', NULL, 1, NULL, NULL, NULL),
+(2, 'pacchetto', 1, NULL, NULL, NULL, NULL),
+(3, 'contratto', NULL, NULL, NULL, 1, NULL),
+(4, 'on demand', NULL, NULL, 1, NULL, NULL),
+(5, 'consuntivo', NULL, NULL, 1, NULL, NULL),
+(6, 'forfait', NULL, NULL, NULL, NULL, 1);
 
 -- tipologie_pubblicazione
 -- tipologia: tabella di supporto
@@ -1507,6 +1515,16 @@ INSERT INTO `tipologie_telefoni` (`id`, `nome`, `html`) VALUES
 (3, 'fax', '&#xf02f;'),
 (4, 'telefono/fax', '&#xf1ac;')
 ON DUPLICATE KEY UPDATE nome = VALUES( nome ), html = VALUES( html );
+
+-- tipologie_todo
+-- tipologia: tabella assistita
+INSERT IGNORE INTO `tipologie_todo` (`id`, `nome`, `se_scalare`, `se_commessa`, `se_chiamata`, `se_contratto`, `se_forfait`) VALUES
+(1, 'commessa', NULL, 1, NULL, NULL, NULL),
+(2, 'pacchetto', 1, NULL, NULL, NULL, NULL),
+(3, 'contratto', NULL, NULL, NULL, 1, NULL),
+(4, 'on demand', NULL, 1, NULL, NULL, NULL),
+(5, 'consuntivo', NULL, NULL, 1, NULL, NULL),
+(6, 'forfait', NULL, NULL, NULL, NULL, 1);
 
 -- tipologie_udm
 -- tipologia: tabella di supporto

@@ -449,10 +449,13 @@
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'LEFT JOIN progetti ON a.id_progetto = progetti.id AND progetti.id = ? '
+            #.'INNER JOIN contratti as c ON (a.id_anagrafica = c.id_anagrafica AND (c.data_fine IS NULL OR c.data_fine > ?) ) '
+			.'INNER JOIN contratti as c ON (a.id_anagrafica = c.id_anagrafica AND (c.data_fine_rapporto IS NULL AND ( c.data_fine IS NULL OR c.data_fine >= ? ) ) ) '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.data_programmazione < ? AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) '
             .'GROUP BY a.id_anagrafica ORDER BY esperienza DESC LIMIT 15',
             array(
                 array( 's' => $a['id_progetto'] ),
+                array( 's' => $a['data_programmazione'] ),
                 array( 's' => $a['data_programmazione'] ),
                 array( 's' => $id_attivita )
             )
@@ -585,11 +588,14 @@
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'LEFT JOIN progetti ON a.id_progetto = progetti.id AND progetti.id = ? '
+            #.'INNER JOIN contratti as c ON (a.id_anagrafica = c.id_anagrafica AND (c.data_fine IS NULL OR c.data_fine > ?) ) '
+			.'INNER JOIN contratti as c ON (a.id_anagrafica = c.id_anagrafica AND (c.data_fine_rapporto IS NULL AND ( c.data_fine IS NULL OR c.data_fine >= ? ) ) ) '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.data_programmazione < ? '
             .'AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_progetti WHERE id_progetto = ? AND data_scopertura = ? ) '
             .'GROUP BY a.id_anagrafica ORDER BY esperienza DESC, a.data_programmazione DESC LIMIT 15',
             array(
                 array( 's' => $id_progetto ),
+                array( 's' => $dataPrima ),
                 array( 's' => $dataPrima ),
                 array( 's' => $id_progetto ),
                 array( 's' => $dataUltima )
@@ -762,3 +768,4 @@
 
     }
 
+	

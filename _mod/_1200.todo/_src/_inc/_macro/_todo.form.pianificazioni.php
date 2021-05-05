@@ -77,9 +77,11 @@
                     'data_programmazione' => '§data§',
                     'id_pianificazione' => '§id_pianificazione§'
                 ),
+                'todo_categorie' => array(),
                 'attivita' => array(
                     'data_attivita' => '§data§'
-                )
+                ),
+                'attivita_categorie' => array()
             )
         );
 
