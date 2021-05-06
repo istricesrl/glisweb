@@ -70,7 +70,7 @@
 				    // cerco l'id della tipologia
 					$idTipologia = mysqlSelectValue(
 					    $cf['mysql']['connection'],
-					    'SELECT id FROM tipologie_prodotti WHERE id = ?',
+					    'SELECT id FROM tipologie_prodotti WHERE nome = ?',
 					    array(
 						array( 's' => $row['tipologia'] )
 					    )
@@ -112,7 +112,7 @@
 				    // cerco l'id dell'unità di misura
 					$idUdm = mysqlSelectValue(
 					    $cf['mysql']['connection'],
-					    'SELECT id FROM udm WHERE nome = ?',
+					    'SELECT id FROM udm WHERE id = ?',
 					    array(
 						array( 's' => $row['udm'] )
 					    )
@@ -122,9 +122,7 @@
 
 				    if( !empty( $idTipologia ) && !empty( $idUdm )  ){
 
-				    // log
-					logWrite( 'inserisco in prodotti ' . $row['nome'] . ' (id ' . $id . ', riga #' . ( $i + 1 ) . ' su totali ' . $totale . ' limite ciclo da ' . $corrente . ' minore di ' . $limite . ')', 'job' );
-
+				   
 				    // inserisco il prodotto di questa riga
 					$id = mysqlQuery(
 					    $cf['mysql']['connection'],
@@ -140,6 +138,10 @@
 						array( 's' => '2' )
 					    )
 					);
+
+					 // log
+					 logWrite( 'inserisco in prodotti ' . $row['nome'] . ' (id ' . $id . ', riga #' . ( $i + 1 ) . ' su totali ' . $totale . ' limite ciclo da ' . $corrente . ' minore di ' . $limite . ')', 'job' );
+
 					// log
 					    logWrite( 'prodotto ' . $id .' categoria  '.$idCategoria . ' riga#' . ( $i + 1 ) . ')', 'job' );
 

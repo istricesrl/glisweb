@@ -21,4 +21,5 @@
 
     // prelevare dal database tutti i job che hanno questo job file
 	$ct['etc']['jobs'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM job_view WHERE job = ? AND timestamp_completamento IS NULL', array( array( 's' => $ct['etc']['jobfile'] ) ) );
-	foreach( $ct['etc']['jobs'] as &$jb ) { $jb['workspace'] = unserialize( $jb['workspace'] ); }
+	
+    foreach( $ct['etc']['jobs'] as &$jb ) { $jb['workspace'] = json_decode( $jb['workspace'] ); }

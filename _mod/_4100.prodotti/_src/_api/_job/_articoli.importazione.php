@@ -28,7 +28,7 @@
 
     // lettura del workspace
 	if( ! empty( $job['workspace'] ) ) {
-	    $wksp = unserialize( $job['workspace'] );
+	    $wksp = $job['workspace'] ;
 	}
 
  	    // se è presente almeno un documento
@@ -65,8 +65,13 @@
 				    // assegno le etichette alla riga
 					$row = array_combine( $heads, $data[ $i ] );
 
+					$idProdotto = mysqlSelectValue(
+						$cf['mysql']['connection'], 'SELECT id FROM prodotti WHERE id = ? ',
+						array( array( 's' => $row['prodotto'] ) )
+					);
 
 
+					if( $idProdotto ){
 				    // inserisco l'articolo di questa riga
 					$id = mysqlQuery(
 					    $cf['mysql']['connection'],
@@ -79,10 +84,25 @@
 						array( 's' => $row['prodotto'] )
 					    )
 					);
-				    // log
-					logWrite( 'inserisco in articoli ' . $row['articolo'] . ' (id ' . $id . ', riga #' . ( $i + 1 ) . ' su totali ' . $totale . ' limite ciclo da ' . $corrente . ' minore di ' . $limite . ')', 'job' );
+					
+					// log
+					logWrite( 'inserisco in articoli ' . $row['codice'] . ' (id ' . $id . ', riga #' . ( $i + 1 ) . ' su totali ' . $totale . ' limite ciclo da ' . $corrente . ' minore di ' . $limite . ')', 'job' );
 
-				    
+					$testo = mysqlQuery(
+								$cf['mysql']['connection'],
+								'INSERT INTO contenuti ( id_articolo, testo, id_lingua ) VALUES ( ?, ?, 1  ) '.
+								'ON DUPLICATE KEY UPDATE id_articolo = VALUES( id_articolo ), '.
+								'testo = VALUES( testo ), id_lingua = VALUES( id_lingua ) ',
+								array(
+								array( 's' => $row['codice'] ),
+								array( 's' => $row['descrizione'] ) )
+							);
+
+
+					} else {
+						logWrite( 'impossibile inserire in articoli ' . $row['codice'] . ': prodotto di riferimento assente (id ' . $id . ', riga #' . ( $i + 1 ) . ' su totali ' . $totale . ' limite ciclo da ' . $corrente . ' minore di ' . $limite . ')', 'job' );
+					}
+				    /*
 
 				    // cerco l'id dell'unità di misura
 					$idUdm = mysqlSelectValue(
@@ -109,9 +129,10 @@
 								    );
 					// log
 					logWrite( 'inserisco in prezzi ' . $row['nome'] .' (id ' . $row['codice'] . ', riga #' . ( $i + 1 ), 'job' );
-				    }
+					}			
 				else{logWrite( 'impossibile inserire prezzo ' . $row['nome'] .' (id ' . $row['codice'] . 'udm mancante , riga #' . ( $i + 1 ), 'job' );}
-				    // aggiorno il valore corrente
+				    */
+					// aggiorno il valore corrente
 					mysqlQuery( $cf['mysql']['connection'], 'UPDATE job SET corrente = ?, timestamp_esecuzione = ? WHERE id = ?', array( array( 's' => ( $i + 1 ) ), array( 's' => time() ), array( 's' => $job['id'] ) ) );
 				    }
 
