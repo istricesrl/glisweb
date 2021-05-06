@@ -87,7 +87,7 @@
 
         $ct['etc']['wks'] = json_encode( $wks, JSON_UNESCAPED_UNICODE );
 
-        echo $ct['etc']['wks'];
+        // echo $ct['etc']['wks'];
         
     }
 
