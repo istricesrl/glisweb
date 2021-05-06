@@ -80,7 +80,7 @@
             // inizio nuovo dipendente
             $xml->startElement( 'Dipendente' );
             $xml->writeAttribute( 'CodAziendaUfficiale', $cf['zucchetti']['profile']['azienda'] );
-            $xml->writeAttribute( 'CodDipendenteUfficiale', $dipendente );
+            $xml->writeAttribute( 'CodDipendenteUfficiale', sprintf( '%07d', $dipendente ) );
 
             // attività del dipendente
             $xml->startElement( 'Movimenti' );
