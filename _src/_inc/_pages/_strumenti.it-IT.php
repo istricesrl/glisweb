@@ -192,7 +192,7 @@
 	);
  
 	// importazione articoli
-	$p['importazione_articoli'] = array(
+	$p['importazione.articoli'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'importazione articoli' ),
 	    'h1'		=> array( $l		=> 'importazione articoli' ),
@@ -202,8 +202,19 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	);
 
+	// importazione articoli
+	$p['importazione.prezzi.articoli'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazione prezzi articoli' ),
+	    'h1'		=> array( $l		=> 'importazione prezzi articoli' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.prezzi.articoli.html' ),
+	    'parent'		=> array( 'id'		=> 'importazioni' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.prezzi.articoli.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	);
+
     // importazione prodotti
-	$p['importazione_prodotti'] = array(
+	$p['importazione.prodotti'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'importazione prodotti' ),
 	    'h1'		=> array( $l		=> 'importazione prodotti' ),
@@ -214,7 +225,7 @@
 	);
 
     // importazione prodotti
-	$p['importazione_prodotti_caratteristiche'] = array(
+	$p['importazione.prodotti.caratteristiche'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'importazione caratteristiche prodotti' ),
 	    'h1'		=> array( $l		=> 'importazione caratteristiche prodotti' ),
