@@ -313,7 +313,7 @@
     ------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica_categorie_diritto.id                 | l'ID dell'associazione fra anagrafica e diritto
     anagrafica_categorie_diritto.id_anagrafica      | l'ID dell'anagrafica
-    anagrafica_categorie_diritto.id_diritto         | l'ID diritto
+    anagrafica_categorie_diritto.id_diritto         | l'ID della categoria del diritto
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -327,7 +327,9 @@
 
     anagrafica_cittadinanze
     -----------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* e l'entità *stati* per descrivere le cittadinanze dei contatti;
+    una cittadinanza può essere semplicemente assegnata (con data_inizio e data_fine impostati a NULL) oppure essere acquisita (con data_inizio NOT NULL) o persa
+    (con data_fine NOT NULL).
 
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
@@ -349,13 +351,14 @@
 
     anagrafica_condizioni_pagamento
     -------------------------------
-     Questa tabella *gestita* ...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità *condizioni_pagamento*, per specificare quali
+    condizioni sono valide per ogni contatto.
 
     colonna                                            | descrizione
     ---------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_condizioni_pagamento.id                 | l'ID dell'associazione fra anagrafica e condizione
+    anagrafica_condizioni_pagamento.id                 | l'ID dell'associazione fra anagrafica e condizione di pagamento
     anagrafica_condizioni_pagamento.id_anagrafica      | l'ID dell'anagrafica
-    anagrafica_condizioni_pagamento.id_condizione      | l'ID della condizione
+    anagrafica_condizioni_pagamento.id_condizione      | l'ID della condizione di pagamento
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -369,16 +372,16 @@
 
     anagrafica_indirizzi
     --------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità *indirizzi*.
 
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_indirizzi.id                	    | l'ID dell'associazione fra indirizio, anagrafica e tipologia
-    anagrafica_indirizzi.id_indirizzo               | l'ID dell'indirizio
+    anagrafica_indirizzi.id                	        | l'ID dell'associazione fra indirizio e anagrafica
+    anagrafica_indirizzi.id_indirizzo               | l'ID dell'indirizzo
     anagrafica_indirizzi.id_anagrafica              | l'ID dell'anagrafica
-    anagrafica_indirizzi.id_tipologia               | l'ID della tipologia
-    anagrafica_indirizzi.interno                    | 
-    anagrafica_indirizzi.descrizione                |	
+    anagrafica_indirizzi.id_tipologia               | l'ID della tipologia di associazione fra indirizzo e anagrafica
+    anagrafica_indirizzi.interno                    | l'interno occupato dall'anagrafica all'indirizzo
+    anagrafica_indirizzi.descrizione                | la descrizione dell'indirizzo relativamente all'anagrafica
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -390,17 +393,15 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
-
     anagrafica_modalita_pagamento
     -----------------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità *modalità_pagamento*.
 
     colonna                                               | descrizione
     ------------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_modalita_pagamento.id              	  | l'ID dell'associazione fra anagrafica e modalita di pagamento
-    anagrafica_modalita_pagamento.id_anagrafica    	  | l'ID dell'anagrafica	
-    anagrafica_modalita_pagamento.id_modalita_pagamento   | l'ID della modalita di pagamento
-
+    anagrafica_modalita_pagamento.id                      | l'ID dell'associazione fra anagrafica e modalità di pagamento
+    anagrafica_modalita_pagamento.id_anagrafica           | l'ID dell'anagrafica	
+    anagrafica_modalita_pagamento.id_modalita_pagamento   | l'ID della modalità di pagamento
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -412,18 +413,18 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
-
     anagrafica_provenienze
     ----------------------
     Questa tabella *gestita* ...
 
     colonna                                               | descrizione
     ------------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_provenienze.id              		  | l'ID dell'associazione fra anagrafica e la provenienza
-    anagrafica_provenienze.id_anagrafica    		  | l'ID dell'anagrafica	
-    anagrafica_provenienze.id_provenienza     		  | l'ID della provenienza
-    anagrafica_provenienze.testo              	          | 
-
+    anagrafica_provenienze.id                             | l'ID dell'associazione fra anagrafica e la provenienza
+    anagrafica_provenienze.id_anagrafica                  | l'ID dell'anagrafica
+    anagrafica_provenienze.id_tipologia                   | 
+    anagrafica_provenienze.id_campagna                    | 
+    anagrafica_provenienze.id_tipologia                   | 
+    anagrafica_provenienze.testo                          | 
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -434,7 +435,6 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-
 
     anagrafica_ruoli
     ----------------

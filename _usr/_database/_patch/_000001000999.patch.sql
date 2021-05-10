@@ -130,10 +130,10 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie_diritto` (
 
 --| 000001000007
 
--- anagrafica_categorie_cittadinanze
+-- anagrafica_cittadinanze
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `id_stato` int(11) NOT NULL,
   `data_inizio` date DEFAULT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
 -- anagrafica_condizioni_pagamento
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `anagrafica_condizioni_pagamento` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `id_condizione` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_condizioni_pagamento` (
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_indirizzo` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
 -- anagrafica_modalita_pagamento
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `anagrafica_modalita_pagamento` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `id_modalita_pagamento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -178,9 +178,11 @@ CREATE TABLE IF NOT EXISTS `anagrafica_modalita_pagamento` (
 -- anagrafica_provenienze
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `anagrafica_provenienze` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
-  `id_provenienza` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `id_inviante` int(11) DEFAULT NULL,
+  `id_campagna` int(11) DEFAULT NULL,
   `testo` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
