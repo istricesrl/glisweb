@@ -95,7 +95,7 @@
                     // spacchetto le ore in ore e minuti
                     $aLavoro = explode( ',', sprintf( '%0.2f', trim( str_replace( ',', '.', $lavoro ) ), ' ' ) );
                     $ore = $aLavoro[0];
-                    $minuti = ( isset( $aLavoro[1] ) ) ? ( $aLavoro[1] * 60 / 100 ) : 0;
+                    $minuti = sprintf( '%0d', ( isset( $aLavoro[1] ) ) ? ( $aLavoro[1] * 60 / 100 ) : 0 );
 
                     // inizio nodo attività
                     $xml->startElement( 'Movimento' );
