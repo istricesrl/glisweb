@@ -327,6 +327,25 @@
 
     anagrafica_cittadinanze
     -----------------------
+        Questa tabella *gestita* ...
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_cittadinanze.id                 | 
+    anagrafica_cittadinanze.id_anagrafica      | 
+    anagrafica_cittadinanze.id_stato           |
+    anagrafica_cittadinanze.data_inizio	       |
+    anagrafica_cittadinanze.data_fine	       |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista anagrafica_cittadinanze relativa alla tabella anagrafica_cittadinanze presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     anagrafica_condizioni_pagamento
     -------------------------------
