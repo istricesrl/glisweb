@@ -39,6 +39,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM iva_view' );
 
+    // tendina udm
+	$ct['etc']['select']['udm'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM udm_view' );
+
 
 
     // macro di default
