@@ -1,6 +1,7 @@
 --
 -- TABELLE
--- questo file contiene le query per la creazione delle tabelle
+-- questo file contiene le query per la creazione delle tabelle; si noti che non devono essere inseriti qui i valori
+-- di auto increment, mentre vanno specificati per tabella il CHARSET ma non il COLLATE.
 --
 -- INDICE DEGLI SCRIPT
 -- 000001 -> tabelle
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `account_gruppi` (
   `id_account` int(11) NOT NULL,
   `id_gruppo` int(11) NOT NULL,
   `se_amministratore` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000003
 

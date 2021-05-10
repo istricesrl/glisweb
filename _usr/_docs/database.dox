@@ -18,6 +18,9 @@
     - tabelle assistite
     - tabelle di lavoro
 
+    tipologie di tabelle
+    ====================
+
     le tabelle di supporto
     ----------------------
     Il database di supporto contiene dati strutturali come lingue, geografia, fusi orari, unità di misura,
@@ -44,7 +47,7 @@
     --------------------
 
     tabelle e view
-    --------------
+    ==============
     Normalmente il framework prevede che le tabelle abbiano una vista corrispondente, identificata dallo stesso
     nome della tabella al quale si aggiunge il suffisso '_view'. Queste view hanno la funzione principale di
     semplificare l'accesso ai dati, e vanno costruite in base agli indici delle tabelle per massimizzare le
@@ -56,23 +59,24 @@
 
 
 
+    view statiche
+    -------------
+
+
+
     tabelle di report
     -----------------
 
 
 
-    tabelle di ACL
-    --------------
+    campi
+    =====
 
 
 
-    chiavi esterne
-    --------------
+    nomenclatura dei campi
+    ----------------------
 
-
-
-    procedure e funzioni
-    --------------------
 
 
 
@@ -81,8 +85,42 @@
 
 
 
+    diritti, permessi e privilegi
+    =============================
+
+
+
+    tabelle di ACL
+    --------------
+
+
+
+    chiavi e indici
+    ===============
+
+
+
+
+    indici
+    ------
+
+
+
+
+    chiavi esterne
+    --------------
+
+
+
+
     auto follow delle chiavi esterne
     --------------------------------
+
+
+
+
+    procedure e funzioni
+    ====================
 
 
 
