@@ -54,7 +54,7 @@
 				$limite = min( array( $corrente + $job['iterazioni'], $totale ) );
 
 			    // log
-				logWrite( 'trovate ' . $totale . ' righe per importazione articoli #' . $job['id'], 'job' );
+				logWrite( 'trovate ' . $totale . ' righe per importazione prezzi articoli #' . $job['id'], 'job' );
 
 			    // scrivo il totale delle righe da elaborare
 				mysqlQuery( $cf['mysql']['connection'], 'UPDATE job SET totale = ? WHERE id = ?', array( array( 's' => $totale ), array( 's' => $job['id'] ) ) );
