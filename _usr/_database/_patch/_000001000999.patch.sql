@@ -117,4 +117,14 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000006
+
+-- anagrafica_categorie_diritto
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `anagrafica_categorie_diritto` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_diritto` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| FINE FILE

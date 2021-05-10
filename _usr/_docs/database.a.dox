@@ -307,6 +307,23 @@
 
     anagrafica_categorie_diritto
     ----------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_categorie_diritto.id                 | 
+    anagrafica_categorie_diritto.id_anagrafica      | 
+    anagrafica_categorie_diritto.id_diritto         | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista anagrafica_categorie_diritto_view relativa alla tabella anagrafica_categorie_diritto presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     anagrafica_cittadinanze
     -----------------------
