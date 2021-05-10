@@ -62,7 +62,7 @@
 
     account_gruppi
     --------------
-    Questa tabella *gestita* mette in relazione molti a molti l'entità principale account con la secondaria gruppi.
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *account* con la secondaria *gruppi*.
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@
     account_gruppi_ibfk_1            | id_account                   | account.id
     account_gruppi_ibfk_2_nofollow   | id_gruppo                    | gruppi.id
 
-    La vista account_gruppi_view relativa alla tabella account_gruppi presenta le seguenti colonne:
+    La vista *account_gruppi_view* relativa alla tabella *account_gruppi* presenta le seguenti colonne:
 
     colonna                                   | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
@@ -120,7 +120,7 @@
     account_gruppi_attribuzione_ibfk_1            | id_account                   | account.id
     account_gruppi_attribuzione_ibfk_2_nofollow   | id_gruppo                    | gruppi.id
 
-    La vista account_gruppi_attribuzione_view relativa alla tabella account_gruppi_attribuzione presenta le seguenti colonne:
+    La vista *account_gruppi_attribuzione_view* relativa alla tabella *account_gruppi_attribuzione* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
@@ -190,7 +190,7 @@
     anagrafica_ibfk_9_nofollow                    | id_regime_fiscale            | regimi_fiscali.id
     anagrafica_ibfk_10_nofollow                   | comune_nascita               | comuni.id
 
-    La vista anagrafica_view relativa alla tabella anagrafica presenta le seguenti colonne:
+    La vista *anagrafica_view* relativa alla tabella *anagrafica* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
@@ -266,7 +266,7 @@
 	anagrafica_view.agente                                 | -
 	anagrafica_view.__label__                              | -
 
-    La vista anagrafica_view è presente anche in forma *statica* come anagrafica_view_static; la view statica è alimentata dai seguenti trigger tramite
+    La vista *anagrafica_view* è presente anche in forma *statica* come *anagrafica_view_static*; la view statica è alimentata dai seguenti trigger tramite
     la procedura anagrafica_view_static():
     
     tabella                        | trigger                                | azione
@@ -280,11 +280,11 @@
 
     anagrafica_archiviati
     ---------------------
-    Questa tabella *virtuale* contiene le anagrafiche cessate, individuate in base al fatto che il campo data_cessazione non è NULL. Ha gli stessi campi dell'anagrafica_view.
+    Questa tabella *virtuale* contiene le anagrafiche cessate, individuate in base al fatto che il campo data_cessazione non è NULL. Ha gli stessi campi dell'*anagrafica_view*.
 
     anagrafica_categorie
     --------------------
-    Questa tabella *gestita* mette in relazione molti a molti l'entità principale anagrafica con la secondaria categorie_anagrafica.
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con la secondaria *categorie_anagrafica*.
 
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
@@ -297,7 +297,7 @@
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
-    La vista anagrafica_categorie_view relativa alla tabella anagrafica_categorie presenta le seguenti colonne:
+    La vista *anagrafica_categorie_view* relativa alla tabella *anagrafica_categorie* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
@@ -307,7 +307,7 @@
 
     anagrafica_categorie_diritto
     ----------------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con la secondaria *categorie_diritto*.
 
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
@@ -320,7 +320,7 @@
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
-    La vista anagrafica_categorie_diritto_view relativa alla tabella anagrafica_categorie_diritto presenta le seguenti colonne:
+    La vista *anagrafica_categorie_diritto_view* relativa alla tabella *anagrafica_categorie_diritto* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------

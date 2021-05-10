@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
 -- anagrafica_categorie_diritto
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `anagrafica_categorie_diritto` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `id_diritto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
