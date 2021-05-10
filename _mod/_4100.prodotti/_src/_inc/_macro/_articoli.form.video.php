@@ -27,7 +27,7 @@
 
     // tendina ruolo video
 	$ct['etc']['select']['ruoli_video'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM ruoli_video_view WHERE se_articoli = 1'
@@ -35,7 +35,7 @@
     
     // tendina tipologia embed
 	$ct['etc']['select']['tipologie_embed'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_embed_view'

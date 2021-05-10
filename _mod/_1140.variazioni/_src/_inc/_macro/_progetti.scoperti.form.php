@@ -28,7 +28,7 @@
 
         // tendina operatori per settaggio manuale
 	    $ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
-            $cf['cache']['index'],
+            $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
             'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1' );
