@@ -707,11 +707,96 @@
 
     attivita_anagrafica
     -------------------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita_anagrafica.id              		 | l'ID dell'associazione fra attività, anagrafica, account inserimento e account aggiornamento
+    attivita_anagrafica.id_attivita 			 | l'ID dell'attività
+    attivita_anagrafica.id_anagrafica         		 | l'ID dell'anagrafica
+    attivita_anagrafica.id_account_inserimento 		 | l'ID dell'account d'inserimento
+    attivita_anagrafica.timestamp_inserimento 		 |  
+    attivita_anagrafica.id_account_aggiornamento         | l'ID del'account aggiornamento 
+    attivita_anagrafica.timestamp_aggiornamento          | 
+ 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *attivita_anagrafica_view* relativa alla tabella *attivita_anagrafica* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     attivita_categorie
     ------------------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita_categorie.id              			 | l'ID dell'associazione fra attività, cattegoria, account inserimento e account aggiornamento
+    attivita_categorie.id_attivita 			 | l'ID dell'attività
+    attivita_categorie.id_categoria         		 | l'ID della categoria
+    attivita_categorie.id_account_inserimento 		 | l'ID dell'account d'inserimento
+    attivita_categorie.timestamp_inserimento 		 |  
+    attivita_categorie.id_account_aggiornamento          | l'ID del'account aggiornamento 
+    attivita_categorie.timestamp_aggiornamento           | 
+ 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *attivita_categorie_view* relativa alla tabella *attivita_categorie* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     audio
     -----
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    audio.id              				 | l'ID dell'audio
+    audio.id_anagrafica 				 | l'ID dell'anagrafica
+    audio.id_pagina      		   	 	 | l'ID della pagina
+    audio.id_file 				 	 | l'ID del file
+    audio.id_risorsa 				 	 | l'ID della risorsa
+    audio.id_prodotto           			 | l'ID del prodotto
+    audio.id_categoria_prodotti           		 | l'ID della categoria del prodotto
+    audio.id_notizia            		         | l'ID della notizia
+    audio.id_categoria_notizie              		 | l'ID della categoria delle notizie
+    audio.id_evento 	 				 | l'ID dell'evento
+    audio.id_categoria_eventi         			 | l'ID della categoria degli eventi
+    audio.id_lingua 					 | l'ID della lingua
+    audio.path 				 		 |  
+    audio.codice_embed           			 | 
+    audio.id_tipologia_embed     		         | l'ID della tipologia embed
+    audio.nome                   			 | 
+    audio.id_ruolo              			 | l'ID del ruolo
+    audio.ordine 				 	 | 
+    audio.target         			 	 | 
+    audio.timestamp_scalamento				 | 
+    audio.id_account_inserimento 			 | l'ID dell'account inserimento
+    audio.timestamp_inserimento    			 | 
+    audio.id_account_aggiornamento 			 | l'ID dell'account aggiornamento
+    audio.timestamp_aggiornamento    			 | 
+   
+   La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *audio_view* relativa alla tabella *audio* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
 */
