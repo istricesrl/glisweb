@@ -334,8 +334,8 @@
     anagrafica_cittadinanze.id               	    | l'ID dell'associazione fra anagrafica e stato
     anagrafica_cittadinanze.id_anagrafica           | l'ID dell'anagrafica
     anagrafica_cittadinanze.id_stato                | l'ID dello stato di cittadinanza
-    anagrafica_cittadinanze.data_inizio	            | 
-    anagrafica_cittadinanze.data_fine	            |
+    anagrafica_cittadinanze.data_inizio	            | eventuale data di inizio di cittadinanza
+    anagrafica_cittadinanze.data_fine	            | eventuale data di fine di cittadinanza
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -506,7 +506,7 @@
 
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
-    articoli.id               	  		 | l'ID dell'associazione fra prodotto, taglia, colore, udm, account d'inserimento e aggiornamento account 
+    articoli.id               	  		 | l'ID dell'associazione fra prodotto, taglia, colore, unità di misura, account inserimento e account aggiornamento
     articoli.id_prodotto          		 | l'ID del prodotto
     articoli.nome                		 |
     articoli.ordine	        	         | l'ID della taglia
@@ -515,9 +515,9 @@
     articoli.id_udm      	 	         | 
     articoli.se_disponibile              	 |
     articoli.quantita_disponibile	         | 
-    articoli.id_account_inserimento	         | l'ID dell'account di inserimento
+    articoli.id_account_inserimento	         | l'ID dell'account inserimento
     articoli.timestamp_inserimento	         |
-    articoli.id_account_aggiornamento            | l'ID dell'account di aggiornamento
+    articoli.id_account_aggiornamento            | l'ID dell'account aggiornamento
     articoli.timestamp_aggiornamento             | 
 
     La tabella ha le seguenti chiavi esterne:
@@ -552,9 +552,158 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
+    assicurazioni_montaggio
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    assicurazioni_montaggio.id               	 | l'ID dell'assicurazione montaggio
+    assicurazioni_montaggio.nome        	 |
+    assicurazioni_montaggio.suggerimento   	 | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *assicurazioni_montaggio_view* relativa alla tabella *assicurazioni_montaggio* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    assicurazioni_montaggio_prezzi
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    assicurazioni_montaggio_prezzi.id              	 |  l'ID dell'associazione fra assicurazione, zona, categoria dei prodotti, listino prezzo, tipo di valuta e iva
+    assicurazioni_montaggio_prezzi.id_assicurazione 	 |  l'ID dell'assicurazione
+    assicurazioni_montaggio_prezzi.id_zona            	 |  l'ID della zona
+    assicurazioni_montaggio_prezzi.id_categoria_prodotti |  l'ID della categoria dei prodotti
+    assicurazioni_montaggio_prezzi.prezzo        	 |
+    assicurazioni_montaggio_prezzi.id_listino   	 |  l'ID del listino prezzo
+    assicurazioni_montaggio_prezzi.id_valuta        	 |  l'ID della valuta
+    assicurazioni_montaggio_prezzi.id_iva          	 |  l'ID dell'iva
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *assicurazioni_montaggio_prezzi_view* relativa alla tabella *assicurazioni_montaggio_prezzi* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    assicurazioni_trasporto
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    assicurazioni_trasporto.id              	 | l'ID dell'assicurazione trasporto
+    assicurazioni_trasporto.nome 		 |  
+    assicurazioni_trasporto.suggerimento         |  
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *assicurazioni_trasporto_view* relativa alla tabella *assicurazioni_trasporto* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    assicurazioni_trasporto_prezzi
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    assicurazioni_trasporto_prezzi.id              	 | l'ID dell'associazione fra assicurazione, zona, categoria dei prodotti, listino prezzo, tipo di valuta e iva
+    assicurazioni_trasporto_prezzi.id_assicurazione 	 | l'ID dell'assicurazione
+    assicurazioni_trasporto_prezzi.id_zona         	 | l'ID della zona
+    assicurazioni_trasporto_prezzi.id_categoria_prodotti | l'ID della categoria dei prodotti
+    assicurazioni_trasporto_prezzi.prezzo 		 |  
+    assicurazioni_trasporto_prezzi.id_listino            | l'ID del listino prezzo  
+    assicurazioni_trasporto_prezzi.id_valuta             | l'ID della valuta 
+    assicurazioni_trasporto_prezzi.id_iva                | l'ID dell'iva 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *assicurazioni_trasporto_prezzi_view* relativa alla tabella *assicurazioni_trasporto_prezzi* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     attivita
     --------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita.id              				 | l'ID dell'attività
+    attivita.id_tipologia 				 | l'ID della tipologia
+    attivita.id_tipologia_inps      		   	 | l'ID della tipologia INPS
+    attivita.id_anagrafica 				 | l'ID dell'anagrafica
+    attivita.id_mandante 				 | l'ID del mandante
+    attivita.id_cliente           			 | l'ID del cliente
+    attivita.id_luogo           		         | l'ID del luogo
+    attivita.referente            		         | 
+    attivita.id_categoria_prodotti              	 | l'ID della categoria dei prodotti
+    attivita.data 	 				 | 
+    attivita.data_attivita         			 | 
+    attivita.ora 					 | 
+    attivita.ora_inizio 				 |  
+    attivita.ora_fine           			 | 
+    attivita.data_programmazione     		         | 
+    attivita.ora_inizio_programmazione                   | 
+    attivita.ora_fine_programmazione              	 | 
+    attivita.id_pratica 				 | l'ID della pratica
+    attivita.id_progetto         			 | l'ID del progetto
+    attivita.id_campagna				 | l'ID della campagna
+    attivita.id_task 					 | 
+    attivita.id_todo    			         | 
+    attivita.id_tipologia_interesse         	         | l'ID della tipologia di interesse
+    attivita.id_tipologia_soddisfazione                  | l'ID della tipologia di soddisfazione
+    attivita.note_feedback              		 | 
+    attivita.id_immobile 				 | l'ID dell'immobile
+    attivita.id_incarico        		 	 | l'ID dell'incarico
+    attivita.id_richiesta 				 | l'ID della richiesta
+    attivita.id_incrocio_immobile 		 	 |  
+    attivita.nome         				 | 
+    attivita.testo            				 | 
+    attivita.timestamp_scadenza            	         | 
+    attivita.data_scadenza 				 |  
+    attivita.ora_scadenza         		         | 
+    attivita.note_scadenza       		         |  
+    attivita.id_attivita_completamento              	 | l'ID dell'attività di completamento
+    attivita.ore 					 |
+    attivita.id_esito         	 			 | l'ID dell'esito
+    attivita.id_account_editor 				 | l'ID dell'account editor
+    attivita.id_account_inserimento 	  		 | l'ID dell'account inserimento
+    attivita.timestamp_inserimento       	         |
+    attivita.id_account_aggiornamento             	 | l'ID dell'account aggiornamento
+    attivita.timestamp_aggiornamento               	 | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *attivita_view* relativa alla tabella *attivita* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     attivita_anagrafica
     -------------------
