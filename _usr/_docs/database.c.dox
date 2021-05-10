@@ -9,13 +9,177 @@
 
     campagne
     --------
+    Questa tabella *gestita* ...
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    campagne.id              			         | l'ID dell'associazione fra aacount di chiusura, account inserimento e account aggiornamento
+    campagne.nome 			                     | 
+    campagne.testo         		                 | 
+    campagne.id_account_chiusura 		         | l'ID dell'account di chiusura
+    campagne.timestamp_chiusura 		         |  
+    campagne.testo_chiusura                      |  
+    campagne.id_account_inserimento              | l'ID dell'account d'inserimento
+    campagne.timestamp_inserimento 		         |  
+    campagne.id_account_aggiornamento            | l'ID del'account aggiornamento 
+    campagne.timestamp_aggiornamento             | 
+ 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *campagne_view* relativa alla tabella *campagne* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+
+    caratteristiche_articoli
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    caratteristiche_articoli.id              	 | l'ID delle caratteristiche articoli
+    caratteristiche_articoli.nome 			     | 
+ 
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *caratteristiche_articoli_view* relativa alla tabella *caratteristiche_articoli* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+
+    caratteristiche_immobili
+    --------
+    Questa tabella *gestita* ...
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    caratteristiche_immobili.id              	 | l'ID delle caratteristiche immobili
+    caratteristiche_immobili.nome 			     | 
+    caratteristiche_immobili.font_awesome        | 
+    caratteristiche_immobili.html 			     | 
+    caratteristiche_immobili.se_immobile 		 | 
+    caratteristiche_immobili.se_indirizzo 		 | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *caratteristiche_immobili_view* relativa alla tabella *caratteristiche_immobili* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     caratteristiche_prodotti
     ------------------------
+    Questa tabella *gestita* ...
 
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    caratteristiche_prodotti.id              	 | l'ID delle caratteristiche prodotti
+    caratteristiche_prodotti.nome 			     | 
+ 
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *caratteristiche_prodotti_view* relativa alla tabella *caratteristiche_prodotti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+   
     carrelli
     --------
+    Questa tabella *gestita* ...
 
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    carrelli.id              	                        | l'ID dei carelli
+    carrelli.session 			                        | 
+    carrelli.se_indirizzo_spedizione                    | 
+    carrelli.spedizione_nome 			                | 
+    carrelli.spedizione_cognome 		                | 
+    carrelli.spedizione_denominazione 		            | 
+    carrelli.spedizione_indirizzo              	        | 
+    carrelli.spedizione_cap 			                | 
+    carrelli.spedizione_citta                           | 
+    carrelli.spedizione_id_provincia 			        | 
+    carrelli.spedizione_id_stato 		                | 
+    carrelli.spedizione_telefono 		                | 
+    carrelli.spedizione_mail              	            | 
+    carrelli.intestazione_nome 			                | 
+    carrelli.intestazione_cognome                       | 
+    carrelli.intestazione_denominazione 			    | 
+    carrelli.intestazione_id_anagrafica 		        | 
+    carrelli.intestazione_indirizzo 		            | 
+    carrelli.intestazione_cap              	            | 
+    carrelli.intestazione_citta 			            | 
+    carrelli.intestazione_id_provincia                  | 
+    carrelli.intestazione_id_stato 			            | 
+    carrelli.intestazione_telefono 	        	        | 
+    carrelli.intestazione_mail 		                    | 
+    carrelli.intestazione_codice_fiscale                | 
+    carrelli.intestazione_partita_iva 			        | 
+    carrelli.intestazione_sdi                           | 
+    carrelli.intestazione_pec 		            	    | 
+    carrelli.id_listino 		                        | 
+    carrelli.id_zona 		                            | 
+    carrelli.id_modalita_spedizione              	    | 
+    carrelli.prezzo_lordo_spedizione 			        | 
+    carrelli.prezzo_lordo_spedizione                    | 
+    carrelli.prezzo_lordo_consegna 			            | 
+    carrelli.id_assicurazione_trasporto 		        | 
+    carrelli.prezzo_lordo_assicurazione_trasporto 		| 
+    carrelli.id_assicurazione_montaggio 			    | 
+    carrelli.prezzo_lordo_assicurazione_montaggio       | 
+    carrelli.id_garanzia 		            	        | 
+    carrelli.prezzo_lordo_garanzia 		                | 
+    carrelli.id_modalita_pagamento 		                | 
+    carrelli.prezzo_lordo_modalita_pagamento            | 
+    carrelli.prezzo_lordo_acquisti 			            | 
+    carrelli.prezzo_lordo_complessivo                   | 
+    carrelli.importo_iva_complessivo 			        | 
+    carrelli.coupon 		                            | 
+    carrelli.importo_lordo_sconto 		                | 
+    carrelli.note_cliente 		                        | 
+    carrelli.se_accettazione_privacy 		            | 
+     carrelli.se_anonimo 			                    | 
+    carrelli.se_accettazione_evasione                   | 
+    carrelli.se_accettazione_marketing 		            | 
+    carrelli.se_accettazione_condizioni_vendita 		| 
+    carrelli.timestamp_checkout 		                | 
+    carrelli.session_checkout              	            | 
+    carrelli.provider_pagamento 			            | 
+    carrelli.codice_pagamento                           | 
+    carrelli.importo_pagamento 			                | 
+    carrelli.session_pagamento 		                    | 
+    carrelli.esito_pagamento 		                    | 
+    carrelli.id_account_inserimento                     | 
+    carrelli.timestamp_inserimento 			            | 
+    carrelli.id_account_aggiornamento 		            | 
+    carrelli.timestamp_aggiornamento 	                | 
+   
+   La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *carrelli_view* relativa alla tabella *carrelli* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    
     carrelli_articoli
     -----------------
 
