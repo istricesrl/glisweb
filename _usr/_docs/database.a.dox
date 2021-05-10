@@ -311,9 +311,9 @@
 
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_categorie_diritto.id                 | 
-    anagrafica_categorie_diritto.id_anagrafica      | 
-    anagrafica_categorie_diritto.id_diritto         | 
+    anagrafica_categorie_diritto.id                 | l'ID dell'associazione fra anagrafica e diritto
+    anagrafica_categorie_diritto.id_anagrafica      | l'ID dell'anagrafica
+    anagrafica_categorie_diritto.id_diritto         | l'ID diritto
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -327,60 +327,476 @@
 
     anagrafica_cittadinanze
     -----------------------
-        Questa tabella *gestita* ...
+    Questa tabella *gestita* ...
 
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_cittadinanze.id                 | 
-    anagrafica_cittadinanze.id_anagrafica      | 
-    anagrafica_cittadinanze.id_stato           |
-    anagrafica_cittadinanze.data_inizio	       |
-    anagrafica_cittadinanze.data_fine	       |
+    anagrafica_cittadinanze.id               	    | l'ID dell'associazione fra anagrafica e stato
+    anagrafica_cittadinanze.id_anagrafica           | l'ID dell'anagrafica
+    anagrafica_cittadinanze.id_stato                | l'ID dello stato di cittadinanza
+    anagrafica_cittadinanze.data_inizio	            | eventuale data di inizio di cittadinanza
+    anagrafica_cittadinanze.data_fine	            | eventuale data di fine di cittadinanza
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
-    La vista anagrafica_cittadinanze relativa alla tabella anagrafica_cittadinanze presenta le seguenti colonne:
+    La vista *anagrafica_cittadinanze_view* relativa alla tabella *anagrafica_cittadinanze* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     anagrafica_condizioni_pagamento
     -------------------------------
+     Questa tabella *gestita* ...
+
+    colonna                                            | descrizione
+    ---------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_condizioni_pagamento.id                 | l'ID dell'associazione fra anagrafica e condizione
+    anagrafica_condizioni_pagamento.id_anagrafica      | l'ID dell'anagrafica
+    anagrafica_condizioni_pagamento.id_condizione      | l'ID della condizione
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *anagrafica_condizioni_pagamento_view* relativa alla tabella *anagrafica_condizioni_pagamento* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     anagrafica_indirizzi
     --------------------
+    Questa tabella *gestita* ...
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_indirizzi.id                	    | l'ID dell'associazione fra indirizio, anagrafica e tipologia
+    anagrafica_indirizzi.id_indirizzo               | l'ID dell'indirizio
+    anagrafica_indirizzi.id_anagrafica              | l'ID dell'anagrafica
+    anagrafica_indirizzi.id_tipologia               | l'ID della tipologia
+    anagrafica_indirizzi.interno                    | 
+    anagrafica_indirizzi.descrizione                |	
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *anagrafica_indirizzi_view* relativa alla tabella *anagrafica_indirizzi* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     anagrafica_modalita_pagamento
     -----------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                               | descrizione
+    ------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_modalita_pagamento.id              	  | l'ID dell'associazione fra anagrafica e modalita di pagamento
+    anagrafica_modalita_pagamento.id_anagrafica    	  | l'ID dell'anagrafica	
+    anagrafica_modalita_pagamento.id_modalita_pagamento   | l'ID della modalita di pagamento
+
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *anagrafica_modalita_pagamento_view* relativa alla tabella *anagrafica_modalita_pagamento* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     anagrafica_provenienze
     ----------------------
+    Questa tabella *gestita* ...
+
+    colonna                                               | descrizione
+    ------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_provenienze.id              		  | l'ID dell'associazione fra anagrafica e la provenienza
+    anagrafica_provenienze.id_anagrafica    		  | l'ID dell'anagrafica	
+    anagrafica_provenienze.id_provenienza     		  | l'ID della provenienza
+    anagrafica_provenienze.testo              	          | 
+
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *anagrafica_provenienze_view* relativa alla tabella *anagrafica_provenienze* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     anagrafica_ruoli
     ----------------
+    Questa tabella *gestita* ...
+
+    colonna                                               | descrizione
+    ------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_ruoli.id              			  | l'ID dell'associazione fra genitore, anagrafica e ruolo
+    anagrafica_ruoli.id_genitore    			  | l'ID parente	
+    anagrafica_ruoli.ordine     		  	  | 
+    anagrafica_ruoli.id_ruolo              	          | l'ID del ruolo
+    anagrafica_ruoli.specifica_ruolo     		  | 
+    anagrafica_ruoli.id_anagrafica              	  | l'ID dell'anagrafica
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *anagrafica_ruoli_view* relativa alla tabella *anagrafica_ruoli* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    anagrafica_servizi_contatto
+    ---------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                               | descrizione
+    ------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_servizi_contatto.id              	  | l'ID dell'associazione fra anagrafica e servizio contatto
+    anagrafica_servizi_contatto.id_anagrafica    	  | l'ID dell'anagrafica	
+    anagrafica_servizi_contatto.id_servizio_contatto      | l'ID del servizio contatto
+    anagrafica_servizi_contatto.testo              	  | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *anagrafica_servizi_contatto_view* relativa alla tabella *anagrafica_servizi_contatto* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     anagrafica_settori
     ------------------
+    Questa tabella *gestita* ...
+
+    colonna                                               | descrizione
+    ------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_settori.id              			  |  l'ID dell'associazione fra anagrafica e settori
+    anagrafica_settori.id_anagrafica    	  	  |  l'ID dell'anagrafica		
+    anagrafica_settori.id_settori     		  	  |  l'ID dei settori	
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *anagrafica_settori_view* relativa alla tabella *anagrafica_settori* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     articoli
     --------
+    Questa tabella *gestita* ...
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    articoli.id               	  		 | l'ID dell'associazione fra prodotto, taglia, colore, unità di misura, account inserimento e account aggiornamento
+    articoli.id_prodotto          		 | l'ID del prodotto
+    articoli.nome                		 |
+    articoli.ordine	        	         | l'ID della taglia
+    articoli.id_taglia	         	         | l'ID del colore
+    articoli.id_colore              	         | l'ID dell'unità di misura
+    articoli.id_udm      	 	         | 
+    articoli.se_disponibile              	 |
+    articoli.quantita_disponibile	         | 
+    articoli.id_account_inserimento	         | l'ID dell'account inserimento
+    articoli.timestamp_inserimento	         |
+    articoli.id_account_aggiornamento            | l'ID dell'account aggiornamento
+    articoli.timestamp_aggiornamento             | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *articoli_view* relativa alla tabella *articoli* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     articoli_caratteristiche
     ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    articoli_caratteristiche.id               	 | l'ID dell'associazione fra articolo e caratteristica
+    articoli_caratteristiche.id_articolo         | l'ID dell'articolo
+    articoli_caratteristiche.id_caratteristica   | l'ID della caratteristica
+    articoli_caratteristiche.ordine	         |
+    articoli_caratteristiche.testo	         |
+    articoli_caratteristiche.se_non_presente     | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *articoli_caratteristiche_view* relativa alla tabella *articoli_caratteristiche* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
+    assicurazioni_montaggio
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    assicurazioni_montaggio.id               	 | l'ID dell'assicurazione montaggio
+    assicurazioni_montaggio.nome        	 |
+    assicurazioni_montaggio.suggerimento   	 | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *assicurazioni_montaggio_view* relativa alla tabella *assicurazioni_montaggio* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    assicurazioni_montaggio_prezzi
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    assicurazioni_montaggio_prezzi.id              	 |  l'ID dell'associazione fra assicurazione, zona, categoria dei prodotti, listino prezzo, tipo di valuta e iva
+    assicurazioni_montaggio_prezzi.id_assicurazione 	 |  l'ID dell'assicurazione
+    assicurazioni_montaggio_prezzi.id_zona            	 |  l'ID della zona
+    assicurazioni_montaggio_prezzi.id_categoria_prodotti |  l'ID della categoria dei prodotti
+    assicurazioni_montaggio_prezzi.prezzo        	 |
+    assicurazioni_montaggio_prezzi.id_listino   	 |  l'ID del listino prezzo
+    assicurazioni_montaggio_prezzi.id_valuta        	 |  l'ID della valuta
+    assicurazioni_montaggio_prezzi.id_iva          	 |  l'ID dell'iva
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *assicurazioni_montaggio_prezzi_view* relativa alla tabella *assicurazioni_montaggio_prezzi* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    assicurazioni_trasporto
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    assicurazioni_trasporto.id              	 | l'ID dell'assicurazione trasporto
+    assicurazioni_trasporto.nome 		 |  
+    assicurazioni_trasporto.suggerimento         |  
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *assicurazioni_trasporto_view* relativa alla tabella *assicurazioni_trasporto* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    assicurazioni_trasporto_prezzi
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    assicurazioni_trasporto_prezzi.id              	 | l'ID dell'associazione fra assicurazione, zona, categoria dei prodotti, listino prezzo, tipo di valuta e iva
+    assicurazioni_trasporto_prezzi.id_assicurazione 	 | l'ID dell'assicurazione
+    assicurazioni_trasporto_prezzi.id_zona         	 | l'ID della zona
+    assicurazioni_trasporto_prezzi.id_categoria_prodotti | l'ID della categoria dei prodotti
+    assicurazioni_trasporto_prezzi.prezzo 		 |  
+    assicurazioni_trasporto_prezzi.id_listino            | l'ID del listino prezzo  
+    assicurazioni_trasporto_prezzi.id_valuta             | l'ID della valuta 
+    assicurazioni_trasporto_prezzi.id_iva                | l'ID dell'iva 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *assicurazioni_trasporto_prezzi_view* relativa alla tabella *assicurazioni_trasporto_prezzi* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     attivita
     --------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita.id              				 | l'ID dell'attività
+    attivita.id_tipologia 				 | l'ID della tipologia
+    attivita.id_tipologia_inps      		   	 | l'ID della tipologia INPS
+    attivita.id_anagrafica 				 | l'ID dell'anagrafica
+    attivita.id_mandante 				 | l'ID del mandante
+    attivita.id_cliente           			 | l'ID del cliente
+    attivita.id_luogo           		         | l'ID del luogo
+    attivita.referente            		         | 
+    attivita.id_categoria_prodotti              	 | l'ID della categoria dei prodotti
+    attivita.data 	 				 | 
+    attivita.data_attivita         			 | 
+    attivita.ora 					 | 
+    attivita.ora_inizio 				 |  
+    attivita.ora_fine           			 | 
+    attivita.data_programmazione     		         | 
+    attivita.ora_inizio_programmazione                   | 
+    attivita.ora_fine_programmazione              	 | 
+    attivita.id_pratica 				 | l'ID della pratica
+    attivita.id_progetto         			 | l'ID del progetto
+    attivita.id_campagna				 | l'ID della campagna
+    attivita.id_task 					 | 
+    attivita.id_todo    			         | 
+    attivita.id_tipologia_interesse         	         | l'ID della tipologia di interesse
+    attivita.id_tipologia_soddisfazione                  | l'ID della tipologia di soddisfazione
+    attivita.note_feedback              		 | 
+    attivita.id_immobile 				 | l'ID dell'immobile
+    attivita.id_incarico        		 	 | l'ID dell'incarico
+    attivita.id_richiesta 				 | l'ID della richiesta
+    attivita.id_incrocio_immobile 		 	 |  
+    attivita.nome         				 | 
+    attivita.testo            				 | 
+    attivita.timestamp_scadenza            	         | 
+    attivita.data_scadenza 				 |  
+    attivita.ora_scadenza         		         | 
+    attivita.note_scadenza       		         |  
+    attivita.id_attivita_completamento              	 | l'ID dell'attività di completamento
+    attivita.ore 					 |
+    attivita.id_esito         	 			 | l'ID dell'esito
+    attivita.id_account_editor 				 | l'ID dell'account editor
+    attivita.id_account_inserimento 	  		 | l'ID dell'account inserimento
+    attivita.timestamp_inserimento       	         |
+    attivita.id_account_aggiornamento             	 | l'ID dell'account aggiornamento
+    attivita.timestamp_aggiornamento               	 | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *attivita_view* relativa alla tabella *attivita* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     attivita_anagrafica
     -------------------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita_anagrafica.id              		 | l'ID dell'associazione fra attività, anagrafica, account inserimento e account aggiornamento
+    attivita_anagrafica.id_attivita 			 | l'ID dell'attività
+    attivita_anagrafica.id_anagrafica         		 | l'ID dell'anagrafica
+    attivita_anagrafica.id_account_inserimento 		 | l'ID dell'account d'inserimento
+    attivita_anagrafica.timestamp_inserimento 		 |  
+    attivita_anagrafica.id_account_aggiornamento         | l'ID del'account aggiornamento 
+    attivita_anagrafica.timestamp_aggiornamento          | 
+ 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *attivita_anagrafica_view* relativa alla tabella *attivita_anagrafica* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     attivita_categorie
     ------------------
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita_categorie.id              			 | l'ID dell'associazione fra attività, cattegoria, account inserimento e account aggiornamento
+    attivita_categorie.id_attivita 			 | l'ID dell'attività
+    attivita_categorie.id_categoria         		 | l'ID della categoria
+    attivita_categorie.id_account_inserimento 		 | l'ID dell'account d'inserimento
+    attivita_categorie.timestamp_inserimento 		 |  
+    attivita_categorie.id_account_aggiornamento          | l'ID del'account aggiornamento 
+    attivita_categorie.timestamp_aggiornamento           | 
+ 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *attivita_categorie_view* relativa alla tabella *attivita_categorie* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
     audio
     -----
+    Questa tabella *gestita* ...
+
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    audio.id              				 | l'ID dell'audio
+    audio.id_anagrafica 				 | l'ID dell'anagrafica
+    audio.id_pagina      		   	 	 | l'ID della pagina
+    audio.id_file 				 	 | l'ID del file
+    audio.id_risorsa 				 	 | l'ID della risorsa
+    audio.id_prodotto           			 | l'ID del prodotto
+    audio.id_categoria_prodotti           		 | l'ID della categoria del prodotto
+    audio.id_notizia            		         | l'ID della notizia
+    audio.id_categoria_notizie              		 | l'ID della categoria delle notizie
+    audio.id_evento 	 				 | l'ID dell'evento
+    audio.id_categoria_eventi         			 | l'ID della categoria degli eventi
+    audio.id_lingua 					 | l'ID della lingua
+    audio.path 				 		 |  
+    audio.codice_embed           			 | 
+    audio.id_tipologia_embed     		         | l'ID della tipologia embed
+    audio.nome                   			 | 
+    audio.id_ruolo              			 | l'ID del ruolo
+    audio.ordine 				 	 | 
+    audio.target         			 	 | 
+    audio.timestamp_scalamento				 | 
+    audio.id_account_inserimento 			 | l'ID dell'account inserimento
+    audio.timestamp_inserimento    			 | 
+    audio.id_account_aggiornamento 			 | l'ID dell'account aggiornamento
+    audio.timestamp_aggiornamento    			 | 
+   
+   La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *audio_view* relativa alla tabella *audio* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 
 */
