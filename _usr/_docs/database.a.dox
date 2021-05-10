@@ -420,7 +420,7 @@
     colonna                                               | descrizione
     ------------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica_provenienze.id                             | l'ID dell'associazione fra anagrafica e la provenienza
-    anagrafica_provenienze.id_anagrafica                  | l'ID dell'anagrafica
+    anagrafica_provenienze.id_anagrafica                  | l'ID dell'anagrafica a cui assegnare la provenienza
     anagrafica_provenienze.id_tipologia                   | 
     anagrafica_provenienze.id_campagna                    | 
     anagrafica_provenienze.id_tipologia                   | 
