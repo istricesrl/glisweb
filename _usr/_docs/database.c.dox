@@ -263,7 +263,50 @@
 
     categorie_attivita
     ------------------
+    Questa tabella *gestita* ...
 
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_attivita.id              	              | l'ID della categoria attività
+    categorie_attivita.id_genitore 			          | 
+    categorie_attivita.nome              	          | 
+    categorie_attivita.id_account_inserimento 		  | l'ID dell'account inserimento
+    categorie_attivita.timestamp_inserimento          | 
+    categorie_attivita.id_account_aggiornamento 	  | l'ID dell'account aggiornamento
+    categorie_attivita.timestamp_aggiornamento        | 
+
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *categorie_attivita_view* relativa alla tabella *categorie_attivita* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
+    categorie_diritto
+    ------------------
+    Questa tabella *assistita* ...
+
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_diritto.id              	              | l'ID della categoria attività
+    categorie_diritto.nome              	          | 
+    categorie_diritto.id_genitore 			          | 
+
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *categorie_diritto_view* relativa alla tabella *categorie_diritto* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
     comuni
     ------
 
