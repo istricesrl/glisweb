@@ -620,5 +620,139 @@ CREATE TABLE IF NOT EXISTS `categorie_diritto` (
   `id_genitore` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000034
+
+-- categorie_documenti
+-- tipologia: tabella assistita
+
+--| 000001000035
+
+-- categorie_eventi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `categorie_eventi` (
+`id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `id_tipologia_pubblicazione` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000036
+
+-- categorie_notizie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `categorie_notizie` (
+`id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `menu` char(64) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `id_tipologia_pubblicazione` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000037
+
+-- categorie_prodotti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
+`id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `menu` char(64) DEFAULT NULL,
+  `id_tipologia_pubblicazione` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000038
+
+-- categorie_prodotti_caratteristiche
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `categorie_prodotti_caratteristiche` (
+`id` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
+  `se_non_presente` int(1) DEFAULT NULL,
+  `se_visibile` int(1) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `testo` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000039
+
+-- categorie_risorse
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `categorie_risorse` (
+`id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `menu` char(64) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000040
+
+-- classi_energetiche_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `classi_energetiche_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(8) NOT NULL,
+  `ep_min` int(11) DEFAULT NULL,
+  `ep_max` int(11) DEFAULT NULL,
+  `rgb` char(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000041
+
+-- colori
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `colori` (
+`id` int(11) NOT NULL,
+  `nome` char(16) NOT NULL,
+  `hex` char(8) DEFAULT NULL,
+  `r` int(3) DEFAULT NULL,
+  `g` int(3) DEFAULT NULL,
+  `b` int(3) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000042
+
+-- comuni
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `comuni` (
+`id` int(11) NOT NULL,
+  `id_provincia` int(11) NOT NULL,
+  `nome` varchar(254) NOT NULL,
+  `codice_istat` char(12) DEFAULT NULL,
+  `codice_catasto` char(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000043
+
+-- condizioni_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `condizioni_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 --| FINE FILE
