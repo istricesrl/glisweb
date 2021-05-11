@@ -874,4 +874,139 @@ CREATE TABLE IF NOT EXISTS `contratti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000048
+
+-- costi_contratti`
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `costi_contratti` (
+`id` int(11) NOT NULL,
+  `id_contratto` int(11) NOT NULL,
+  `id_tipologia` INT NOT NULL,
+  `note` text,
+  `costo_orario` decimal(16,5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000049
+
+-- coupon
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `coupon` (
+  `id` char(32) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text,
+  `timestamp_inizio` int(11) DEFAULT NULL,
+  `timestamp_fine` int(11) DEFAULT NULL,
+  `sconto_percentuale` decimal(5,2) DEFAULT NULL,
+  `sconto_fisso` decimal(15,2) DEFAULT NULL,
+  `se_multiuso` int(1) NULL DEFAULT '1',
+  `se_globale` int(1) NULL DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000050
+
+-- coupon_categorie_prodotti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `coupon_categorie_prodotti` (
+`id` int(11) NOT NULL,
+  `id_coupon` char(32) NOT NULL,
+  `id_categoria_prodotti` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000051
+
+-- coupon_listini
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `coupon_listini` (
+`id` int(11) NOT NULL,
+  `id_coupon` char(32) NOT NULL,
+  `id_listino` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000052
+
+-- coupon_marchi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `coupon_marchi` (
+`id` int(11) NOT NULL,
+  `id_coupon` char(32) NOT NULL,
+  `id_marchio` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000053
+
+-- coupon_prodotti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
+`id` int(11) NOT NULL,
+  `id_coupon` char(32) NOT NULL,
+  `id_prodotto` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000054
+
+-- coupon_stagioni
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `coupon_stagioni` (
+`id` int(11) NOT NULL,
+  `id_coupon` char(32) NOT NULL,
+  `id_stagione` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000055
+
+-- cron
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `cron` (
+`id` int(11) NOT NULL,
+  `minuto` int(11) DEFAULT NULL,
+  `ora` int(11) DEFAULT NULL,
+  `giorno_del_mese` int(11) DEFAULT NULL,
+  `mese` int(11) DEFAULT NULL,
+  `giorno_della_settimana` int(11) DEFAULT NULL,
+  `settimana` int(11) DEFAULT NULL,
+  `task` char(255) NOT NULL,
+  `iterazioni` int(11) DEFAULT NULL,
+  `delay` int(11) DEFAULT NULL,
+  `timestamp_esecuzione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000056
+
+-- cron_log
+-- tipologia: tabella gestita
+CREATE TABLE `cron_log` (
+  `id` int(11) NOT NULL,
+  `id_cron` int(11) NOT NULL,
+  `testo` text,
+  `timestamp_esecuzione` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000057
+
+-- date
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `date` (
+`id` int(11) NOT NULL,
+  `id_evento` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `id_luogo` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_tipologia_pubblicazione` int(11) DEFAULT NULL,
+  `timestamp_inizio` int(11) DEFAULT NULL,
+  `timestamp_fine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| FINE FILE
