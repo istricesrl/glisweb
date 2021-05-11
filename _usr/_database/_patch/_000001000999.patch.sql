@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_provenienze` (
 -- anagrafica_ruoli
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `anagrafica_ruoli` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
@@ -199,23 +199,12 @@ CREATE TABLE IF NOT EXISTS `anagrafica_ruoli` (
   `id_anagrafica` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000013
-
--- anagrafica_servizi_contatto
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `anagrafica_servizi_contatto` (
-`id` int(11) NOT NULL,
-  `id_anagrafica` int(11) NOT NULL,
-  `id_servizio_contatto` int(11) NOT NULL,
-  `testo` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 --| 000001000014
 
 -- anagrafica_settori
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `id_settore` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -245,62 +234,12 @@ CREATE TABLE IF NOT EXISTS `articoli` (
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_articolo` char(32) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `testo` text,
-  `se_non_presente` int(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000017
-
--- assicurazioni_montaggio
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `assicurazioni_montaggio` (
-`id` int(11) NOT NULL,
-  `nome` char(255) NOT NULL,
-  `suggerimento` char(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000018
-
--- assicurazioni_montaggio_prezzi
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `assicurazioni_montaggio_prezzi` (
-`id` int(11) NOT NULL,
-  `id_assicurazione` int(11) NOT NULL,
-  `id_zona` int(11) DEFAULT NULL,
-  `id_categoria_prodotti` int(11) DEFAULT NULL,
-  `prezzo` decimal(16,5) NOT NULL,
-  `id_listino` int(11) NOT NULL,
-  `id_valuta` int(11) NOT NULL,
-  `id_iva` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000019
-
--- assicurazioni_trasporto
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `assicurazioni_trasporto` (
-`id` int(11) NOT NULL,
-  `nome` char(255) NOT NULL,
-  `suggerimento` char(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000020
-
--- assicurazioni_trasporto_prezzi
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `assicurazioni_trasporto_prezzi` (
-`id` int(11) NOT NULL,
-  `id_assicurazione` int(11) NOT NULL,
-  `id_zona` int(11) DEFAULT NULL,
-  `id_categoria_prodotti` int(11) DEFAULT NULL,
-  `prezzo` decimal(16,5) NOT NULL,
-  `id_listino` int(11) NOT NULL,
-  `id_valuta` int(11) NOT NULL,
-  `id_iva` int(11) NOT NULL
+  `se_assente` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000021
@@ -308,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `assicurazioni_trasporto_prezzi` (
 -- attivita
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `attivita` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_tipologia_inps` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
@@ -325,7 +264,6 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `data_programmazione` date DEFAULT NULL,
   `ora_inizio_programmazione` time DEFAULT NULL,
   `ora_fine_programmazione` time DEFAULT NULL,
-  `id_pratica` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_campagna` int(11) DEFAULT NULL,
   `id_task` int(11) DEFAULT NULL,
@@ -336,7 +274,6 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_immobile` int(11) DEFAULT NULL,
   `id_incarico` int(11) DEFAULT NULL,
   `id_richiesta` int(11) DEFAULT NULL,
-  `id_incrocio_immobile` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `testo` text,
   `timestamp_scadenza` int(11) DEFAULT NULL,
@@ -346,21 +283,6 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_attivita_completamento` int(11) DEFAULT NULL,
   `ore` decimal(5,2) DEFAULT NULL,
   `id_esito` int(11) DEFAULT NULL,
-  `id_account_editor` int(11) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000022
-
--- attivita_anagrafica
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `attivita_anagrafica` (
-`id` int(11) NOT NULL,
-  `id_attivita` int(11) NOT NULL,
-  `id_anagrafica` int(11) NOT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -372,7 +294,7 @@ CREATE TABLE IF NOT EXISTS `attivita_anagrafica` (
 -- attivita_categorie
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `attivita_categorie` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_attivita` int(11) NOT NULL,
   `id_categoria` int(11) NOT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -405,7 +327,6 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `id_ruolo` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `target` char(255) DEFAULT NULL,
-  `timestamp_scalamento` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
