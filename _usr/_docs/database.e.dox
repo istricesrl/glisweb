@@ -6,3 +6,214 @@
 
     le tabelle del database di supporto EA - EZ
     ===========================================
+    
+    esigibilita_iva
+    ---------------
+    Questa tabella di *supporto* ...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    esigibilita_iva.id              | 
+    esigibilita_iva.nome            | 
+    esigibilita_iva.codice          | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *esigibilita_iva_view* relativa alla tabella *esigibilita_iva* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    esiti_attivita
+    ---------------
+    Questa tabella di *supporto* ...
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    esiti_attivita.nome                    | nome dell'esito dell'attività
+    esiti_attivita.se_positivo             | 
+    esiti_attivita.se_richiede_azione      | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *esiti_attivita_view* relativa alla tabella *esiti_attivita* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    esiti_incarichi_immobili
+    ------------------------
+    Questa tabella di *supporto* ...
+
+    colonna                                  | descrizione
+    -----------------------------------------|------------------------------------------------------------------------------------
+    esiti_incarichi_immobili.id              | l'ID dell'esito incarico immobile
+    esiti_incarichi_immobili.nome            | nome dell'esito incarico immobile
+    esiti_incarichi_immobili.se_positivo     | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *esiti_incarichi_immobili_view* relativa alla tabella *esiti_incarichi_immobili* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    esiti_incroci_immobili
+    ------------------------
+    Questa tabella di *supporto* ...
+
+    colonna                                | descrizione
+    ---------------------------------------|------------------------------------------------------------------------------------
+    esiti_incroci_immobili.id              | l'ID dell'esito incrocio immobile
+    esiti_incroci_immobili.nome            | nome dell'esito incrocio immobile
+    esiti_incroci_immobili.se_positivo     | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *esiti_incroci_immobili_view* relativa alla tabella *esiti_incroci_immobili* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    esiti_notizie_immobili
+    ------------------------
+    Questa tabella di *supporto* ...
+
+    colonna                                | descrizione
+    ---------------------------------------|------------------------------------------------------------------------------------
+    esiti_notizie_immobili.id              | l'ID dell'esito notizia immobile
+    esiti_notizie_immobili.nome            | nome dell'esito notizia immobile
+    esiti_notizie_immobili.se_positivo     | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *esiti_notizie_immobili_view* relativa alla tabella *esiti_notizie_immobili* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    esiti_pratiche
+    --------------
+    Questa tabella di *supporto* ...
+
+    colonna                        | descrizione
+    -------------------------------|------------------------------------------------------------------------------------
+    esiti_pratiche.id              | l'ID dell'esito pratica
+    esiti_pratiche.nome            | nome dell'esito pratica
+    esiti_pratiche.se_positivo     | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *esiti_pratiche_view* relativa alla tabella *esiti_pratiche* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
+    esiti_richieste_immobili
+    ------------------------
+    Questa tabella di *supporto* ...
+
+    colonna                                  | descrizione
+    -----------------------------------------|------------------------------------------------------------------------------------
+    esiti_richieste_immobili.id              | l'ID dell'esito richiesta immobile
+    esiti_richieste_immobili.nome            | nome dell'esito richiesta immobile
+    esiti_richieste_immobili.se_positivo     | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *esiti_richieste_immobili_view* relativa alla tabella *esiti_richieste_immobili* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    eventi
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                           | descrizione
+    ----------------------------------|------------------------------------------------------------------------------------
+    eventi.id                         | l'ID dell'evento
+    eventi.id_tipologia               | l'ID della tipologia di evento
+    eventi.nome                       | nome dell'evento
+    eventi.se_repertorio              | 
+    eventi.id_account_inserimento     | l'ID dell'account di inserimento
+    eventi.timestamp_inserimento      | 
+    eventi.id_account_aggiornamento   | l'ID dell'account di aggiornamento
+    eventi.timestamp_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *eventi_view* relativa alla tabella *eventi* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    eventi_anagrafica
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                           | descrizione
+    ----------------------------------|------------------------------------------------------------------------------------
+    eventi_anagrafica.id              | l'ID dell'associazione fra evento, anagrafica e ruolo
+    eventi_anagrafica.id_evento       | l'ID dell'evento
+    eventi_anagrafica.id_anagrafica   | l'ID dell'anagrafica dell'evento
+    eventi_anagrafica.id_ruolo        | l'ID del ruolo
+    eventi_anagrafica.nome            | nome dell'evento anagrafica
+    eventi_anagrafica.ordine          | ordine degli eventi
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *eventi_anagrafica_view* relativa alla tabella *eventi_anagrafica* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    eventi_categoria
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                       | descrizione
+    ----------------------------------------------|------------------------------------------------------------------------------------
+    eventi_categoria.id                           | l'ID dell'associazione fra evento, categoria e tipologia di pubblicazione
+    eventi_categoria.id_evento                    | l'ID dell'evento
+    eventi_categoria.id_categoria                 | l'ID della categoria dell'evento
+    eventi_categoria.id_tipologia_pubblicazione   | l'ID della tipologia di pubblicazione
+    eventi_categoria.ordine                       | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *eventi_categoria_view* relativa alla tabella *eventi_categoria* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
