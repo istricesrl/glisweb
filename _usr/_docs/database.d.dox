@@ -1,4 +1,13 @@
 
+    /*!
+
+    \page database_a database del framework, tabelle con la lettera D
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera D.
+
+    le tabelle del database di supporto DA - DZ
+    ===========================================
+    
     date
     ----
     Questa tabella *gestita* ...
