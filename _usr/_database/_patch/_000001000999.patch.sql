@@ -596,7 +596,29 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `se_squadra` int(1) DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
+--| 000001000032
 
+-- categorie_attivita
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `categorie_attivita` (
+`id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000033
+
+-- categorie_diritto
+-- tipologia: tabella assistita
+CREATE TABLE IF NOT EXISTS `categorie_diritto` (
+`id` int(11) NOT NULL,
+  `nome` varchar(128) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 --| FINE FILE
