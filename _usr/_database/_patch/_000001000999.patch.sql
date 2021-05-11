@@ -1149,4 +1149,65 @@ CREATE TABLE IF NOT EXISTS `eventi_categorie` (
   `ordine` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+--| 000001000072
+
+-- fatturati
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `fatturati` (
+`id` int(11) NOT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `id_emittente` int(11) NOT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_agente` int(11) DEFAULT NULL,
+  `id_mandante` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `mese` int(11) NOT NULL,
+  `anno` year(4) NOT NULL,
+  `importo` decimal(21,2) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--| 000001000073
+
+-- file
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `file` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_task` int(11) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
+  `id_rassegna_stampa` int(11) DEFAULT NULL,
+  `id_evento` int(11) DEFAULT NULL,
+  `id_categoria_eventi` int(11) DEFAULT NULL,
+  `id_template_mail` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_pratica` int(11) DEFAULT NULL,
+  `id_risorsa` int(11) DEFAULT NULL,
+  `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `path` char(255) NOT NULL,
+  `url` text,
+  `nome` char(255) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
 --| FINE FILE
