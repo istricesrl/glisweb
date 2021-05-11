@@ -848,5 +848,30 @@ CREATE TABLE IF NOT EXISTS `continenti` (
   `nome` char(32) COLLATE utf8_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000047
+
+-- contratti`
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `contratti` (
+`id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_agenzia` int(11) NOT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `data_inizio_rapporto` date DEFAULT NULL,
+  `data_fine_rapporto` date DEFAULT NULL,
+  `livello` char(64) DEFAULT NULL,
+  `id_tipologia_qualifica` char(32) DEFAULT NULL,
+  `id_tipologia_durata` char(32) DEFAULT NULL,
+  `id_tipologia_orario` char(32) DEFAULT NULL,
+  `ore_settimanali` DECIMAL(5,2) DEFAULT NULL,
+  `note` text,
+  `percentuale_part_time` decimal(6,3) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| FINE FILE
