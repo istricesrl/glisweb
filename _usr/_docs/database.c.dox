@@ -530,5 +530,152 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
  
+    condizioni_pagamento
+    ------------------
+    Questa tabella *gestita* ...
 
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    condizioni_pagamento.id              	          | l'ID delle condizioni di pagamento
+    condizioni_pagamento.nome 			              | 
+    condizioni_pagamento.descrizione              	  |
+    condizioni_pagamento.id_account_inserimento       | l'ID dell'account inserimento
+    condizioni_pagamento.timestamp_inserimento        | 
+    condizioni_pagamento.id_account_aggiornamento     | l'ID dell'account aggiornamento
+    condizioni_pagamento.timestamp_aggiornamento      |  
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *condizioni_pagamento_view* relativa alla tabella *condizioni_pagamento* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    contatti
+    --------
+    Questa tabella *gestita* ...
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    contatti.id              	           | 
+    contatti.nome 			               | 
+    contatti.json              	           |
+    contatti.id_tipologia                  | l'ID della tipologia di contatto
+    contatti.id_anagrafica                 | l'ID dell'anagrafica di contatto
+    contatti.id_segnalatore                | 
+    contatti.timestamp_aggiornamento       |  
+    contatti.id_account_aggiornamento      | l'ID dell'account aggiornamento 
+    contatti.timestamp_inserimento         |  
+    contatti.id_account_inserimento        | l'ID dell'account inserimento
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *contatti_view* relativa alla tabella *contatti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+  
+    contenuti
+    --------
+    Questa tabella *gestita* ...
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    contenuti.id              	           | 
+    contenuti.id_anagrafica 			   | 
+    contenuti.id_prodotto              	   |
+    contenuti.id_articolo                  | 
+    contenuti.id_categoria_prodotti        | 
+    contenuti.id_caratteristica_prodotti   | 
+    contenuti.id_marchio                   |  
+    contenuti.id_immagine                  | 
+    contenuti.id_file                      |  
+    contenuti.id_risorsa                   | 
+    contenuti.id_categoria_risorse         | 
+    contenuti.id_pagina 			       | 
+    contenuti.id_popup                     |
+    contenuti.id_immobile                  | 
+    contenuti.id_incarico                  | 
+    contenuti.id_indirizzo                 | 
+    contenuti.id_zona                      |  
+    contenuti.id_rassegna_stamp            | 
+    contenuti.id_evento                    |  
+    contenuti.id_categoria_eventi          | 
+    contenuti.id_video              	   | 
+    contenuti.id_audio 			           | 
+    contenuti.id_data              	       |
+    contenuti.id_template_mail             | 
+    contenuti.id_mailing                   | 
+    contenuti.id_notizia                   | 
+    contenuti.id_categoria_notizie         |  
+    contenuti.id_lingua                    | 
+    contenuti.id_colore                    |  
+    contenuti.path_custom                  | 
+    contenuti.url_custom              	   | 
+    contenuti.rewrite_custom 			   | 
+    contenuti.title              	       |
+    contenuti.keywords                     | 
+    contenuti.description                  | 
+    contenuti.alt                          | 
+    contenuti.og_title                     |  
+    contenuti.og_type                      | 
+    contenuti.og_image                     |  
+    contenuti.og_audio                     |
+    contenuti.og_video                     | 
+    contenuti.og_determiner                | 
+    contenuti.og_description 			   | 
+    contenuti.cappello              	   |
+    contenuti.h1                           | 
+    contenuti.h2                           | 
+    contenuti.h3                           | 
+    contenuti.label_menu                   |  
+    contenuti.abstract                     | 
+    contenuti.testo                        |  
+    contenuti.applicazioni                 | 
+    contenuti.specifiche                   | 
+    contenuti.mittente_nome	               | 
+    contenuti.mittente_mail                |
+    contenuti.destinatario_nome            | 
+    contenuti.destinatario_mail            | 
+    contenuti.destinatario_cc_nome         | 
+    contenuti.destinatario_cc_mail         |  
+    contenuti.destinatario_ccn_nome        | 
+    contenuti.destinatario_ccn_mail        |  
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *contenuti_view* relativa alla tabella *contenuti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    continenti
+    ----------
+    Questa tabella di *supporto* ...
+
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    continenti.id              	          | l'ID del continente
+    continenti.codice                     | 
+    continenti.nome              	      | nome del continente, in italiano
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *continenti_view* relativa alla tabella *continenti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+   
 */
