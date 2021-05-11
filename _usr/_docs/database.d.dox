@@ -1,0 +1,186 @@
+
+    /*!
+
+    \page database_a database del framework, tabelle con la lettera D
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera D.
+
+    le tabelle del database di supporto DA - DZ
+    ===========================================
+    
+    date
+    ----
+    Questa tabella *gestita* ...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    date.id                         | 
+    date.id_evento                  | l'ID dell'evento
+    date.id_notizia                 | l'ID della notizia
+    date.nome                       | 
+    date.id_luogo                   | l'ID del luogo
+    date.id_tipologia               | l'ID della tipologia
+    date.id_tipologia_pubblicazione | l'ID della tipologia di pubblicazione
+    date.timestamp_inizio           | 
+    date.timestamp_fine             | 
+    date.id_account_inserimento     | l'ID dell'account inserimento
+    date.timestamp_inserimento      | 
+    date.id_account_aggiornamento   | l'ID dell'account aggiornamento
+    date.timestamp_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *date_view* relativa alla tabella *date* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    disponibilita_immobili
+    ----------------------
+    Questa tabella di *supporto* ...
+
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    disponibilita_immobili.id                 | l'ID della disponibilità immobile
+    disponibilita_immobili.nome               | 
+    disponibilita_immobili.se_disponibile     | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *disponibilita_immobili_view* relativa alla tabella *disponibilita_immobili* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    documenti
+    ---------
+    Questa tabella *gestita* ...
+
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    documenti.id                              | l'ID del documento
+    documenti.numero                          | 
+    documenti.id_tipologia                    | l'ID della tipologia di documento
+    documenti.data                            | 
+    documenti.nome                            | 
+    documenti.id_destinatario                 | l'ID del destinatario
+    documenti.id_sede_destinatario            | l'ID della sede del destinatario
+    documenti.id_sede_emittente               | l'ID della sede dell'emittente
+    documenti.note_interne                    | 
+    documenti.id_account_inserimento          | l'ID dell'account inserimento
+    documenti.timestamp_inserimento           | 
+    documenti.id_account_aggiornamento        | l'ID dell'account aggiornamento
+    documenti.timestamp_aggiornamento         | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *documenti_view* relativa alla tabella *documenti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+  
+    documenti_amministrativi
+    ------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    documenti_amministrativi.id                            | l'ID del documento amministrativo
+    documenti_amministrativi.id_tipologia                  | l'ID della tipologia del documento
+    documenti_amministrativi.numero                        | 
+    documenti_amministrativi.revisione                     | 
+    documenti_amministrativi.sezione                       | 
+    documenti_amministrativi.data                          | 
+    documenti_amministrativi.progessivo_invio              | 
+    documenti_amministrativi.id_emittente                  | l'ID dell'emittente
+    documenti_amministrativi.id_sede_emittente             | l'ID della sede dell'emittente
+    documenti_amministrativi.id_referente_emittente        | l'ID del referente emittente
+    documenti_amministrativi.id_agente_emittente           | l'ID dell'agente emittente
+    documenti_amministrativi.id_cliente                    | l'ID del cliente
+    documenti_amministrativi.id_esigibilita                | 
+    documenti_amministrativi.id_sede_cliente               | l'ID della sede cliente
+    documenti_amministrativi.id_referente_cliente          | l'ID del referente cliente
+    documenti_amministrativi.id_fornitore                  | l'ID del fornitore
+    documenti_amministrativi.nome                          | 
+    documenti_amministrativi.causale                       | 
+    documenti_amministrativi.note_cliente                  | 
+    documenti_amministrativi.note_interne                  | 
+    documenti_amministrativi.note_pagamento                | 
+    documenti_amministrativi.note_reso                     | 
+    documenti_amministrativi.note_consegna                 | 
+    documenti_amministrativi.note_imballo                  | 
+    documenti_amministrativi.data_fine_validita            | 
+    documenti_amministrativi.id_account_inserimento        | l'ID dell'account inserimento
+    documenti_amministrativi.timestamp_inserimento         | 
+    documenti_amministrativi.id_account_aggiornamento      | l'ID dell'account aggiornamento
+    documenti_amministrativi.timestamp_aggiornamento       | 
+ 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *documenti_amministrativi_view* relativa alla tabella *documenti_amministrativi* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+   
+    documenti_articoli
+    ------------------
+    Questa tabella *gestita* ...
+
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    documenti_articoli.id                                   | l'ID del documento articolo
+    documenti_articoli.id_tipologia                         | l'ID della tipologia del documento
+    documenti_articoli.id_destinatario                      | l'ID del destinatario
+    documenti_articoli.id_emittente                         | l'ID dell'emittente
+    documenti_articoli.id_genitore                          | l'ID parent
+    documenti_articoli.id_progetto                          | l'ID del progetto
+    documenti_articoli.id_todo                              | l'ID del todo
+    documenti_articoli.id_attivita                          | l'ID dell'attività
+    documenti_articoli.id_articolo                          | l'ID dell'articolo
+    documenti_articoli.id_mastro_provenienza                | 
+    documenti_articoli.id_mastro_destinazione               | 
+    documenti_articoli.id_udm                               | l'ID dell'unità di misura
+    documenti_articoli.ordine                               | 
+    documenti_articoli.quantita                             | 
+    documenti_articoli.data_lavorazione                     | 
+    documenti_articoli.data_fatturabile                     | 
+    documenti_articoli.data_scadenza                        | 
+    documenti_articoli.id_listino                           | l'ID del listino
+    documenti_articoli.id_valuta                            | l'ID della valuta
+    documenti_articoli.id_modalita_pagamento                | l'ID della modalità di pagamento
+    documenti_articoli.importo_netto_totale                 | l'importo netto totale dell'articolo
+    documenti_articoli.importo_netto_totale_non_scontato    | l'importo netto totale dell'articolo, non scontato
+    documenti_articoli.id_iva                               | l'ID dell'iva del prezzo dell'articolo
+    documenti_articoli.nome                                 | 
+    documenti_articoli.specifiche                           | 
+    documenti_articoli.testo                                | 
+    documenti_articoli.path                                 | 
+    documenti_articoli.se_rimborso                          | 
+    documenti_articoli.id_account_inserimento               | l'ID dell'account inserimento
+    documenti_articoli.timestamp_inserimento                | 
+    documenti_articoli.id_account_aggiornamento             | l'ID dell'account aggiornamento
+    documenti_articoli.timestamp_aggiornamento              | 
+ 
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *documenti_articoli_view* relativa alla tabella *documenti_articoli* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    

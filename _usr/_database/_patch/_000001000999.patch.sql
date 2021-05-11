@@ -930,4 +930,223 @@ CREATE TABLE IF NOT EXISTS `date` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000058
+
+-- disponibilita_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `disponibilita_immobili` (
+	`id` int(11) NOT NULL,
+ 	`nome` char(32) NOT NULL,
+ 	`se_disponibile` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000059
+
+-- documenti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `documenti` (
+`id` int(11) NOT NULL,
+  `numero` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `data` date NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `id_destinatario` int(11) NOT NULL,
+  `id_sede_destinatario` int(11) DEFAULT NULL,
+  `id_emittente` int(11) NOT NULL,
+  `id_sede_emittente` int(11) DEFAULT NULL,
+  `note_interne` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000060
+
+-- documenti_amministrativi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `documenti_amministrativi` (
+`id` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `numero` int(11) NOT NULL,
+  `revisione` char(8) DEFAULT NULL,
+  `sezione` char(16) DEFAULT NULL,
+  `data` date NOT NULL,
+  `progressivo_invio` char(8) DEFAULT NULL,
+  `id_emittente` int(11) NOT NULL,
+  `id_sede_emittente` int(11) DEFAULT NULL,
+  `id_referente_emittente` int(11) DEFAULT NULL,
+  `id_agente_emittente` int(11) DEFAULT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `id_esigibilita` int(11) DEFAULT NULL,
+  `id_sede_cliente` int(11) DEFAULT NULL,
+  `id_referente_cliente` int(11) DEFAULT NULL,
+  `id_fornitore` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `causale` char(255) DEFAULT NULL,
+  `note_cliente` text,
+  `note_interne` text,
+  `note_pagamento` text,
+  `note_reso` text,
+  `note_consegna` text,
+  `note_imballo` text,
+  `data_fine_validita` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000061
+
+-- documenti_articoli
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `documenti_articoli` (
+`id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_destinatario` int(11) DEFAULT NULL,
+  `id_emittente` int(11) DEFAULT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
+  `id_attivita` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `id_udm` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `quantita` decimal(9,2) DEFAULT NULL,
+  `data_lavorazione` date NOT NULL,
+  `data_fatturabile` date DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `id_valuta` int(11) DEFAULT NULL,
+  `id_modalita_pagamento` int(11) DEFAULT NULL,
+  `importo_netto_totale` decimal(9,2) NOT NULL,
+  `importo_netto_totale_non_scontato` decimal(9,2) DEFAULT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `nome` text,
+  `specifiche` char(255) DEFAULT NULL,
+  `testo` text,
+  `path` char(255) DEFAULT NULL,
+  `se_rimborso` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000062
+
+-- esigibilita_iva
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `esigibilita_iva` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `codice` char(8) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000063
+
+-- esiti_attivita
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `esiti_attivita` (
+	`id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_positivo` int(1) DEFAULT NULL,
+  `se_richiede_azione` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000064
+
+-- esiti_incarichi_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `esiti_incarichi_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_positivo` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000065
+
+-- esiti_incroci_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `esiti_incroci_immobili` (
+	`id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_positivo` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000066
+
+-- esiti_notizie_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `esiti_notizie_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_positivo` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000067
+
+-- esiti_pratiche
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `esiti_pratiche` (
+`id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_positivo` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000068
+
+-- esiti_richieste_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `esiti_richieste_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_positivo` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000069
+
+-- eventi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `eventi` (
+`id` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `nome` char(255) COLLATE utf8_general_ci NOT NULL,
+  `testo` text COLLATE utf8_general_ci,
+  `se_repertorio` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000070
+
+-- eventi_anagrafica
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `eventi_anagrafica` (
+`id` int(11) NOT NULL,
+  `id_evento` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_ruolo` int(11) NOT NULL,
+  `nome` char(255) COLLATE utf8_general_ci DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000071
+
+-- eventi_categorie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `eventi_categorie` (
+`id` int(11) NOT NULL,
+  `id_evento` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
+  `id_tipologia_pubblicazione` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| FINE FILE
