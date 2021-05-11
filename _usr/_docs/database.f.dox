@@ -1,0 +1,86 @@
+/*!
+
+    \page database_a database del framework, tabelle con la lettera E
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera E.
+
+    le tabelle del database di supporto FA - FZ
+    ===========================================
+    
+    fatturati
+    ---------------
+    Questa tabella *gestita* ...
+
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    fatturati.id                      | l'ID del fatturato
+    fatturati.nome                    | nome fattura
+    fatturati.id_emittente            | l'ID dell'emittente fattura
+    fatturati.id_cliente              | l'ID del cliente della fattura
+    fatturati.id_agente               | l'ID dell'agente della fattura
+    fatturati.id_mandante             | l'ID del mandante della fattura
+    fatturati.id_categoria_prodotti   | l'ID della categoria di prodotto fatturata
+    fatturati.id_tipologia            | l'ID della tipologia fatturata
+    fatturati.mese                    | mese della fattura
+    fatturati.anno                    | l'anno della fattura
+    fatturati.importo                 | importo fatturato
+    fatturati.id_account_inserimento  |
+    fatturati.timestamp_inserimento   |
+    fatturati.id_account_aggiornamento|
+    fatturati.timestamp_aggiornamento |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *fatturati_view* relativa alla tabella *fatturati* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    
+    file
+    -----
+    Questa tabella *gestita* ...
+
+    colonna                      | descrizione
+    -----------------------------|---------------------------------------------------------------------------------------
+    file.id                      | l'ID del file
+    file.id_anagrafica           | l'ID dell'anagrafica collegata al file
+    file.id_prodotto             | l'ID del prodotto collegato al file
+    file.id_categoria_prodotti   | l'ID della categoria prodotto di cui il fil si riferisce
+    file.id_pagina               | l'ID del file della pagina
+    file.id_task                 | 
+    file.id_todo                 | 
+    file.id_rassegna_stampa      | l'ID del filedelle principale notizie 
+    file.id_evento               | l'ID del file dell'evento 
+    file.id_categoria_eventi     | l'ID del file della categoria dell'evento 
+    file.id_template_mail        | l'ID del file template mail
+    file.id_mailing              | l'ID del file mailing
+    file.id_notizia              | l'ID del file della notizia
+    file.id_categoria_notizie    | l'ID del file della categoria della notizia
+    file.id_pratica              | l'ID del file riferito alla pratica 
+    file.id_risorsa              | l'ID del file riferito alla risorsa
+    file.id_categoria_risorse    | l'ID del file riferito alla categoria della risorsa
+    file.id_lingua               | l'ID del file della lingua utilizzata
+    file.path                    | 
+    file.url                     | 
+    file.nome                    | nome file
+    file.id_ruolo                | l'ID del file del ruolo
+    file.ordine                  | l'ID del file dell'ordine
+    file.id_account_inserimento  |
+    file.timestamp_inserimento   |
+    file.id_account_aggiornamento|
+    file.timestamp_aggiornamento |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *file_view* relativa alla tabella *file* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
