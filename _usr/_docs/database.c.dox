@@ -153,7 +153,7 @@
     carrelli.importo_lordo_sconto 		                | 
     carrelli.note_cliente 		                        | 
     carrelli.se_accettazione_privacy 		            | 
-     carrelli.se_anonimo 			                    | 
+    carrelli.se_anonimo 			                    | 
     carrelli.se_accettazione_evasione                   | 
     carrelli.se_accettazione_marketing 		            | 
     carrelli.se_accettazione_condizioni_vendita 		| 
@@ -169,7 +169,7 @@
     carrelli.id_account_aggiornamento 		            | l'ID dell'account aggiornamento
     carrelli.timestamp_aggiornamento 	                | 
    
-   La tabella ha le seguenti chiavi esterne:
+    La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
@@ -213,7 +213,6 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
  
-
     categorie_anagrafica
     --------------------
     Questa tabella *assistita* ...
@@ -252,15 +251,13 @@
     categorie_anagrafica.se_sostituto                      | 
     categorie_anagrafica.se_squadra 			           | 
     
-    
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
     La vista *carrelli_articoli_view* relativa alla tabella *carrelli_articoli* presenta le seguenti colonne:
-
-
+    
     categorie_attivita
     ------------------
     Questa tabella *gestita* ...
@@ -275,7 +272,6 @@
     categorie_attivita.id_account_aggiornamento 	  | l'ID dell'account aggiornamento
     categorie_attivita.timestamp_aggiornamento        | 
 
-    
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
@@ -296,7 +292,6 @@
     categorie_diritto.nome              	          | 
     categorie_diritto.id_genitore 			          | 
 
-    
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
@@ -587,16 +582,16 @@
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
-    contenuti.id              	           | 
-    contenuti.id_anagrafica 			   | 
-    contenuti.id_prodotto              	   |
-    contenuti.id_articolo                  | 
-    contenuti.id_categoria_prodotti        | 
-    contenuti.id_caratteristica_prodotti   | 
-    contenuti.id_marchio                   |  
-    contenuti.id_immagine                  | 
-    contenuti.id_file                      |  
-    contenuti.id_risorsa                   | 
+    contenuti.id              	           | l'ID del contenuto
+    contenuti.id_anagrafica 			   | l'ID dell'anagrafica del contenuto
+    contenuti.id_prodotto              	   | l'ID del prodotto del contenuto
+    contenuti.id_articolo                  | l'ID dell'articolo del contenuto
+    contenuti.id_categoria_prodotti        | l'ID della categoria prodotto del contenuto
+    contenuti.id_caratteristica_prodotti   | l'ID della caratteristica prodotto del contenuto
+    contenuti.id_marchio                   | l'ID del marchio
+    contenuti.id_immagine                  | l'ID dell'immagine
+    contenuti.id_file                      | l'ID del file
+    contenuti.id_risorsa                   | l'ID della risorsa del contenuto
     contenuti.id_categoria_risorse         | 
     contenuti.id_pagina 			       | 
     contenuti.id_popup                     |
@@ -677,5 +672,40 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-   
+    
+    contratti
+    ----------
+    Questa tabella *gestita* ...
+
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    contratti.id              	          | l'ID del contratto
+    contratti.id_tipologia                | l'ID della tipologia del contratto
+    contratti.id_anagrafica               | l'ID dell'anagrafica
+    contratti.id_agenzia              	  | l'ID dell'agenzia
+    contratti.data_inizio                 | 
+    contratti.data_fine                   | 
+    contratti.data_inizio_rapporto        | 
+    contratti.data_fine_rapporto          | 
+    contratti.id_tipologia_qualifica      | 
+    contratti.id_tipologia_durata         | 
+    contratti.id_tipologia_orario         | 
+    contratti.ore_settimanali             | 
+    contratti.note              	      | 
+    contratti.percentuale_part_time       | 
+    contratti.id_account_inserimento      | l'ID dell'account inserimento
+    contratti.timestamp_inserimento       | 
+    contratti.id_account_aggiornamento    | l'ID dell'account aggiornamento 
+    contratti.timestamp_aggiornamento     |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *contratti_view* relativa alla tabella *contratti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+  
 */
