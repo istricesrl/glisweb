@@ -915,35 +915,5 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     
-    date
-    ----
-    Questa tabella *gestita* ...
-
-    colonna                         | descrizione
-    --------------------------------|---------------------------------------------------------------------------------------
-    date.id                         | 
-    date.id_evento                  | l'ID dell'evento
-    date.id_notizia                 | l'ID della notizia
-    date.nome                       | 
-    date.id_luogo                   | l'ID del luogo
-    date.id_tipologia               | l'ID della tipologia
-    date.id_tipologia_pubblicazione | l'ID della tipologia di pubblicazione
-    date.timestamp_inizio           | 
-    date.timestamp_fine             | 
-    date.id_account_inserimento     | l'ID dell'account inserimento
-    date.timestamp_inserimento      | 
-    date.id_account_aggiornamento   | l'ID dell'account aggiornamento
-    date.timestamp_aggiornamento    | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *date_view* relativa alla tabella *date* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
 
 */
