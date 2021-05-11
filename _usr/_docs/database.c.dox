@@ -110,22 +110,22 @@
     carrelli.spedizione_nome 			                | 
     carrelli.spedizione_cognome 		                | 
     carrelli.spedizione_denominazione 		            | 
-    carrelli.spedizione_indirizzo              	        | 
+    carrelli.spedizione_indirizzo              	        | l'indirizzo di consegna
     carrelli.spedizione_cap 			                | 
     carrelli.spedizione_citta                           | 
-    carrelli.spedizione_id_provincia 			        | 
-    carrelli.spedizione_id_stato 		                | 
+    carrelli.spedizione_id_provincia 			        | l'ID della provincia di spedizione
+    carrelli.spedizione_id_stato 		                | l'ID dello stato di spedizione
     carrelli.spedizione_telefono 		                | 
     carrelli.spedizione_mail              	            | 
     carrelli.intestazione_nome 			                | 
     carrelli.intestazione_cognome                       | 
     carrelli.intestazione_denominazione 			    | 
-    carrelli.intestazione_id_anagrafica 		        | 
-    carrelli.intestazione_indirizzo 		            | 
+    carrelli.intestazione_id_anagrafica 		        | l'ID dell'anagrafica dell'intestazione 
+    carrelli.intestazione_indirizzo 		            | l'indirizzo di intestazione
     carrelli.intestazione_cap              	            | 
     carrelli.intestazione_citta 			            | 
-    carrelli.intestazione_id_provincia                  | 
-    carrelli.intestazione_id_stato 			            | 
+    carrelli.intestazione_id_provincia                  | l'ID della provincia di intestazione
+    carrelli.intestazione_id_stato 			            | l'ID dello stato di intestazione
     carrelli.intestazione_telefono 	        	        | 
     carrelli.intestazione_mail 		                    | 
     carrelli.intestazione_codice_fiscale                | 
@@ -134,17 +134,17 @@
     carrelli.intestazione_pec 		            	    | 
     carrelli.id_listino 		                        | 
     carrelli.id_zona 		                            | 
-    carrelli.id_modalita_spedizione              	    | 
+    carrelli.id_modalita_spedizione              	    | l'ID della modalità di spedizione
     carrelli.prezzo_lordo_spedizione 			        | 
     carrelli.prezzo_lordo_spedizione                    | 
     carrelli.prezzo_lordo_consegna 			            | 
-    carrelli.id_assicurazione_trasporto 		        | 
+    carrelli.id_assicurazione_trasporto 		        | l'ID dell'assicurazione trasporto
     carrelli.prezzo_lordo_assicurazione_trasporto 		| 
-    carrelli.id_assicurazione_montaggio 			    | 
+    carrelli.id_assicurazione_montaggio 			    | l'ID dell'assicurazione montaggio
     carrelli.prezzo_lordo_assicurazione_montaggio       | 
-    carrelli.id_garanzia 		            	        | 
+    carrelli.id_garanzia 		            	        | l'ID della garanzia
     carrelli.prezzo_lordo_garanzia 		                | 
-    carrelli.id_modalita_pagamento 		                | 
+    carrelli.id_modalita_pagamento 		                | l'ID della modalita di pagamento
     carrelli.prezzo_lordo_modalita_pagamento            | 
     carrelli.prezzo_lordo_acquisti 			            | 
     carrelli.prezzo_lordo_complessivo                   | 
@@ -164,9 +164,9 @@
     carrelli.importo_pagamento 			                | 
     carrelli.session_pagamento 		                    | 
     carrelli.esito_pagamento 		                    | 
-    carrelli.id_account_inserimento                     | 
+    carrelli.id_account_inserimento                     | l'ID dell'account d'inserimento
     carrelli.timestamp_inserimento 			            | 
-    carrelli.id_account_aggiornamento 		            | 
+    carrelli.id_account_aggiornamento 		            | l'ID dell'account aggiornamento
     carrelli.timestamp_aggiornamento 	                | 
    
    La tabella ha le seguenti chiavi esterne:
@@ -179,12 +179,87 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
-    
     carrelli_articoli
     -----------------
+    Questa tabella *gestita* ...
+
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    carrelli_articoli.id              	              | l'ID degli articoli
+    carrelli_articoli.id_carrello 			          | 
+    carrelli_articoli.id_articolo              	      | l'ID del carrello
+    carrelli_articoli.id_ingombro 			          | l'ID dell'ingombro
+    carrelli_articoli.ingombro_proporzionale          | 
+    carrelli_articoli.id_categoria 			          | l'ID della categoria
+    carrelli_articoli.id_modalita_spedizione          | l'ID della modilità di spedizione
+    carrelli_articoli.prezzo_lordo_modalita_spedizione| 
+    carrelli_articoli.prezzo_lordo_spedizione         |
+    carrelli_articoli.id_iva 			              | l'id dell'iva
+    carrelli_articoli.prezzo_netto 			          | 
+    carrelli_articoli.prezzo_lordo              	  | 
+    carrelli_articoli.quantita 			              | 
+    carrelli_articoli.prezzo_netto_totale             | 
+    carrelli_articoli.prezzo_lordo_totale 			  | 
+    carrelli_articoli.prezzo_lordo_complessivo        | 
+    carrelli_articoli.importo_lordo_sconto 			  | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *carrelli_articoli_view* relativa alla tabella *carrelli_articoli* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
 
     categorie_anagrafica
     --------------------
+    Questa tabella *assistita* ...
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_anagrafica.id              	               | l'ID della categorie anagrafica
+    categorie_anagrafica.id_genitore 			           | 
+    categorie_anagrafica.se_prospect              	       | 
+    categorie_anagrafica.se_lead 			               |
+    categorie_anagrafica.se_cliente                        | 
+    categorie_anagrafica.se_mandante 			           | 
+    categorie_anagrafica.se_fornitore                      | 
+    categorie_anagrafica.se_produttore                     | 
+    categorie_anagrafica.se_collaboratore                  |
+    categorie_anagrafica.se_dipendente 			           | 
+    categorie_anagrafica.se_interinale  			       | 
+    categorie_anagrafica.se_interno                    	   | 
+    categorie_anagrafica.se_esterno 		               | 
+    categorie_anagrafica.se_agente                         | 
+    categorie_anagrafica.se_concorrente        			   | 
+    categorie_anagrafica.se_rassegna_stampa                | 
+    categorie_anagrafica.importo_lordo_sconto 	   		   | 
+    categorie_anagrafica.se_azienda_gestita                | 
+    categorie_anagrafica.se_amministrazione                | 
+    categorie_anagrafica.se_notizie                        |
+    categorie_anagrafica.id_account_inserimento            | l'ID dell'account di inserimento
+    categorie_anagrafica.timestamp_inserimento 			   | 
+    categorie_anagrafica.id_account_aggiornamento          | l'ID dell'account dell'aggiornamento
+    categorie_anagrafica.se_docente 			           | 
+    categorie_anagrafica.se_tutor                          | 
+    categorie_anagrafica.se_classe           			   | 
+    categorie_anagrafica.se_allievo                        | 
+    categorie_anagrafica.se_agenzia_interinale 			   | 
+    categorie_anagrafica.se_referente           		   | 
+    categorie_anagrafica.se_sostituto                      | 
+    categorie_anagrafica.se_squadra 			           | 
+    
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *carrelli_articoli_view* relativa alla tabella *carrelli_articoli* presenta le seguenti colonne:
+
 
     categorie_attivita
     ------------------
