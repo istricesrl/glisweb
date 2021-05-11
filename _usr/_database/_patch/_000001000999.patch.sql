@@ -754,5 +754,99 @@ CREATE TABLE IF NOT EXISTS `condizioni_immobili` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+--| 000001000044
+
+-- contatti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `contatti` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `json` text NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_segnalatore` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000045
+
+-- contenuti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `contenuti` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_caratteristica_prodotti` int(11) DEFAULT NULL,
+  `id_marchio` int(11) DEFAULT NULL,
+  `id_immagine` int(11) DEFAULT NULL,
+  `id_file` int(11) DEFAULT NULL,
+  `id_risorsa` int(11) DEFAULT NULL,
+  `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_popup` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_incarico` int(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `id_rassegna_stampa` int(11) DEFAULT NULL,
+  `id_evento` int(11) DEFAULT NULL,
+  `id_categoria_eventi` int(11) DEFAULT NULL,
+  `id_video` int(11) DEFAULT NULL,
+  `id_audio` int(11) DEFAULT NULL,
+  `id_data` int(11) DEFAULT NULL,
+  `id_template_mail` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_lingua` int(11) NOT NULL,
+  `id_colore` int(11) DEFAULT NULL,
+  `path_custom` char(255) DEFAULT NULL,
+  `url_custom` char(255) DEFAULT NULL,
+  `rewrite_custom` char(255) DEFAULT NULL,
+  `title` char(255) DEFAULT NULL,
+  `keywords` text,
+  `description` text,
+  `alt` char(255) DEFAULT NULL,
+  `og_title` char(255) DEFAULT NULL,
+  `og_type` char(255) DEFAULT NULL,
+  `og_image` char(255) DEFAULT NULL,
+  `og_audio` char(255) DEFAULT NULL,
+  `og_video` char(255) DEFAULT NULL,
+  `og_determiner` char(255) DEFAULT NULL,
+  `og_description` char(255) DEFAULT NULL,
+  `cappello` text,
+  `h1` char(255) DEFAULT NULL,
+  `h2` char(255) DEFAULT NULL,
+  `h3` char(255) DEFAULT NULL,
+  `label_menu` char(255) DEFAULT NULL,
+  `abstract` text,
+  `testo` text,
+  `applicazioni` text,
+  `specifiche` text,
+  `mittente_nome` char(128) DEFAULT NULL,
+  `mittente_mail` char(128) DEFAULT NULL,
+  `destinatario_nome` char(128) DEFAULT NULL,
+  `destinatario_mail` char(128) DEFAULT NULL,
+  `destinatario_cc_nome` char(128) DEFAULT NULL,
+  `destinatario_cc_mail` char(128) DEFAULT NULL,
+  `destinatario_ccn_nome` char(128) DEFAULT NULL,
+  `destinatario_ccn_mail` char(128) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000046
+
+-- continenti
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `continenti` (
+`id` int(11) NOT NULL,
+  `codice` char(2) COLLATE utf8_general_ci DEFAULT NULL,
+  `nome` char(32) COLLATE utf8_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 --| FINE FILE
