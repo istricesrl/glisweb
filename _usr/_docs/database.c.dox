@@ -687,6 +687,7 @@
     contratti.data_fine                   | 
     contratti.data_inizio_rapporto        | 
     contratti.data_fine_rapporto          | 
+    contratti.livello                     | 
     contratti.id_tipologia_qualifica      | 
     contratti.id_tipologia_durata         | 
     contratti.id_tipologia_orario         | 
@@ -708,4 +709,241 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
   
+      
+    costi_contratti
+    ---------------
+    Questa tabella *gestita* ...
+
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    costi_contratti.id              	  | l'ID dell'associazione fra l'ID contratto e l'ID tipologia
+    costi_contratti.id_contratto          | l'ID del contratto
+    costi_contratti.id_tipologia          | l'ID della tipologia
+    costi_contratti.note              	  | 
+    costi_contratti.costo_orario          | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *costi_contratti_view* relativa alla tabella *costi_contratti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    coupon
+    ------
+    Questa tabella *gestita* ...
+
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    coupon.id              	              | l'ID del coupon
+    coupon.nome                           | 
+    coupon.note                           | 
+    coupon.timestamp_inizio               | 
+    coupon.timestamp_fine                 | 
+    coupon.sconto_percentuale             | 
+    coupon.sconto_fisso                   | 
+    coupon.se_multiuso                    | 
+    coupon.se_globale              	      | 
+    coupon.id_account_inserimento         | l'ID dell'account inserimento
+    coupon.timestamp_inserimento          | 
+    coupon.id_account_aggiornamento       | l'ID dell'account aggiornamento
+    coupon.timestamp_aggiornamento        | 
+        
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *coupon_view* relativa alla tabella *coupon* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    coupon_categorie_prodotti
+    -------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_categorie_prodotti.id                        | l'ID dell'associazione fra l'ID coupon e l'ID categoria prodotti
+    coupon_categorie_prodotti.id_coupon                 | l'ID del coupon
+    coupon_categorie_prodotti.id_categoria_prodotti     | l'ID della categoria prodotti
+        
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *coupon_categorie_prodotti_view* relativa alla tabella *coupon_categorie_prodotti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    coupon_listini
+    -------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                  | descrizione
+    -----------------------------------------|---------------------------------------------------------------------------------------
+    coupon_listini.id                        | l'ID dell'associazione fra l'ID coupon e l'ID listino
+    coupon_listini.id_coupon                 | l'ID del coupon
+    coupon_listini.id_listino                | l'ID del listino
+        
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *coupon_listini_view* relativa alla tabella *coupon_listini* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+  
+    coupon_marchi
+    -------------
+    Questa tabella *gestita* ...
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    coupon_marchi.id                        | l'ID dell'associazione fra l'ID coupon e l'ID marchio
+    coupon_marchi.id_coupon                 | l'ID del coupon
+    coupon_marchi.id_marchio                | l'ID del marchio
+        
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *coupon_marchi_view* relativa alla tabella *coupon_marchi* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+  
+    coupon_prodotti
+    -------------
+    Questa tabella *gestita* ...
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    coupon_prodotti.id                        | l'ID dell'associazione fra l'ID coupon e l'ID prodotto
+    coupon_prodotti.id_coupon                 | l'ID del coupon
+    coupon_prodotti.id_prodotto               | l'ID del prodotto
+        
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *coupon_prodotti_view* relativa alla tabella *coupon_prodotti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+  
+    coupon_stagioni
+    ---------------
+    Questa tabella *gestita* ...
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    coupon_stagioni.id                      | l'ID dell'associazione fra l'ID coupon e l'ID stagione
+    coupon_stagioni.id_coupon               | l'ID del coupon
+    coupon_stagioni.id_stagione             | l'ID della stagione
+        
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *coupon_stagioni_view* relativa alla tabella *coupon_stagioni* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    cron
+    ----
+    Questa tabella *gestita* ...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    cron.id                         | l'ID del cron
+    cron.minuto                     | 
+    cron.ora                        | 
+    cron.giorno_del_mese            | 
+    cron.mese                       | 
+    cron.giorno_della_settimana     | 
+    cron.settimana                  | 
+    cron.task                       | 
+    cron.iterazioni                 | 
+    cron.delay                      | 
+    cron.timestamp_esecuzione       | 
+    cron.id_account_inserimento     | l'ID dell'account inserimento
+    cron.timestamp_inserimento      | 
+    cron.id_account_aggiornamento   | l'ID dell'account aggiornamento
+    cron.timestamp_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *cron_view* relativa alla tabella *cron* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    cron_log
+    ----
+    Questa tabella *gestita* ...
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    cron_log.id                         | l'ID del cron log
+    cron_log.id_cron                    | l'ID del cron
+    cron_log.testo                      | 
+    cron_log.timestamp_esecuzione       | 
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *cron_log_view* relativa alla tabella *cron_log* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    date
+    ----
+    Questa tabella *gestita* ...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    date.id                         | 
+    date.id_evento                  | l'ID dell'evento
+    date.id_notizia                 | l'ID della notizia
+    date.nome                       | 
+    date.id_luogo                   | l'ID del luogo
+    date.id_tipologia               | l'ID della tipologia
+    date.id_tipologia_pubblicazione | l'ID della tipologia di pubblicazione
+    date.timestamp_inizio           | 
+    date.timestamp_fine             | 
+    date.id_account_inserimento     | l'ID dell'account inserimento
+    date.timestamp_inserimento      | 
+    date.id_account_aggiornamento   | l'ID dell'account aggiornamento
+    date.timestamp_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *date_view* relativa alla tabella *date* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+
 */
