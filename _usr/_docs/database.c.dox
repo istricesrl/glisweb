@@ -9,22 +9,17 @@
 
     campagne
     --------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* descrive l'entità principale delle campagne di marketing.
 
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
-    campagne.id              			         | l'ID dell'associazione fra aacount di chiusura, account inserimento e account aggiornamento
-    campagne.nome 			                     | 
-    campagne.testo         		                 | 
-    campagne.id_account_chiusura 		         | l'ID dell'account di chiusura
-    campagne.timestamp_chiusura 		         |  
+    campagne.id                                  | l'ID dell'associazione fra aacount di chiusura, account inserimento e account aggiornamento
+    campagne.nome                                | 
+    campagne.testo                               | 
+    campagne.id_account_chiusura                 | l'ID dell'account di chiusura
+    campagne.timestamp_chiusura                  |  
     campagne.testo_chiusura                      |  
-    campagne.id_account_inserimento              | l'ID dell'account d'inserimento
-    campagne.timestamp_inserimento 		         |  
-    campagne.id_account_aggiornamento            | l'ID del'account aggiornamento 
-    campagne.timestamp_aggiornamento             | 
- 
-    
+
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
@@ -35,39 +30,19 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
-
-    caratteristiche_articoli
-    ------------------------
-    Questa tabella *gestita* ...
-
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    caratteristiche_articoli.id              	 | l'ID delle caratteristiche articoli
-    caratteristiche_articoli.nome 			     | 
- 
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *caratteristiche_articoli_view* relativa alla tabella *caratteristiche_articoli* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-
-
     caratteristiche_immobili
-    --------
-    Questa tabella *gestita* ...
+    ------------------------
+    Questa tabella *gestita* descrive le caratteristiche relative agli immobili e agli indirizzi; è messa in relazione molti a molti con l'entità principale
+    *immobili* dalla tabella di relazione *immobili_caratteristiche* e all'entità principale *indirizzi* dalla tabella di relazione *indirizzi_caratteristiche*.
 
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
-    caratteristiche_immobili.id              	 | l'ID delle caratteristiche immobili
-    caratteristiche_immobili.nome 			     | 
+    caratteristiche_immobili.id                  | l'ID della caratteristica
+    caratteristiche_immobili.nome                | 
     caratteristiche_immobili.font_awesome        | 
-    caratteristiche_immobili.html 			     | 
-    caratteristiche_immobili.se_immobile 		 | 
-    caratteristiche_immobili.se_indirizzo 		 | 
+    caratteristiche_immobili.html                | 
+    caratteristiche_immobili.se_immobile         | 
+    caratteristiche_immobili.se_indirizzo        | 
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -81,12 +56,17 @@
 
     caratteristiche_prodotti
     ------------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* descrive le caratteristiche relative ai prodotti, agli articoli e alle categorie di prodotti; è messa in relazione molti a molti
+    con l'entità principale *articoli* dalla tabella di associazione *articoli_caratteristiche*, all'entità principale *prodotti* tramite la tabella di
+    associazione *prodotti_caratteristiche*, e all'entità principale *categorie_prodotti* dalla tabella di associazione *categorie_prodotti_caratteristiche*.
 
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
-    caratteristiche_prodotti.id              	 | l'ID delle caratteristiche prodotti
-    caratteristiche_prodotti.nome 			     | 
+    caratteristiche_prodotti.id                  | l'ID delle caratteristiche prodotti
+    caratteristiche_prodotti.nome                | 
+    caratteristiche_prodotti.se_categoria        | 
+    caratteristiche_prodotti.se_prodotto         | 
+    caratteristiche_prodotti.se_articolo         | 
  
     La tabella ha le seguenti chiavi esterne:
 
@@ -98,158 +78,43 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
    
-    carrelli
-    --------
-    Questa tabella *gestita* ...
-
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
-    carrelli.id              	                        | l'ID dei carelli
-    carrelli.session 			                        | 
-    carrelli.se_indirizzo_spedizione                    | 
-    carrelli.spedizione_nome 			                | 
-    carrelli.spedizione_cognome 		                | 
-    carrelli.spedizione_denominazione 		            | 
-    carrelli.spedizione_indirizzo              	        | l'indirizzo di consegna
-    carrelli.spedizione_cap 			                | 
-    carrelli.spedizione_citta                           | 
-    carrelli.spedizione_id_provincia 			        | l'ID della provincia di spedizione
-    carrelli.spedizione_id_stato 		                | l'ID dello stato di spedizione
-    carrelli.spedizione_telefono 		                | 
-    carrelli.spedizione_mail              	            | 
-    carrelli.intestazione_nome 			                | 
-    carrelli.intestazione_cognome                       | 
-    carrelli.intestazione_denominazione 			    | 
-    carrelli.intestazione_id_anagrafica 		        | l'ID dell'anagrafica dell'intestazione 
-    carrelli.intestazione_indirizzo 		            | l'indirizzo di intestazione
-    carrelli.intestazione_cap              	            | 
-    carrelli.intestazione_citta 			            | 
-    carrelli.intestazione_id_provincia                  | l'ID della provincia di intestazione
-    carrelli.intestazione_id_stato 			            | l'ID dello stato di intestazione
-    carrelli.intestazione_telefono 	        	        | 
-    carrelli.intestazione_mail 		                    | 
-    carrelli.intestazione_codice_fiscale                | 
-    carrelli.intestazione_partita_iva 			        | 
-    carrelli.intestazione_sdi                           | 
-    carrelli.intestazione_pec 		            	    | 
-    carrelli.id_listino 		                        | 
-    carrelli.id_zona 		                            | 
-    carrelli.id_modalita_spedizione              	    | l'ID della modalità di spedizione
-    carrelli.prezzo_lordo_spedizione 			        | 
-    carrelli.prezzo_lordo_spedizione                    | 
-    carrelli.prezzo_lordo_consegna 			            | 
-    carrelli.id_assicurazione_trasporto 		        | l'ID dell'assicurazione trasporto
-    carrelli.prezzo_lordo_assicurazione_trasporto 		| 
-    carrelli.id_assicurazione_montaggio 			    | l'ID dell'assicurazione montaggio
-    carrelli.prezzo_lordo_assicurazione_montaggio       | 
-    carrelli.id_garanzia 		            	        | l'ID della garanzia
-    carrelli.prezzo_lordo_garanzia 		                | 
-    carrelli.id_modalita_pagamento 		                | l'ID della modalita di pagamento
-    carrelli.prezzo_lordo_modalita_pagamento            | 
-    carrelli.prezzo_lordo_acquisti 			            | 
-    carrelli.prezzo_lordo_complessivo                   | 
-    carrelli.importo_iva_complessivo 			        | 
-    carrelli.coupon 		                            | 
-    carrelli.importo_lordo_sconto 		                | 
-    carrelli.note_cliente 		                        | 
-    carrelli.se_accettazione_privacy 		            | 
-    carrelli.se_anonimo 			                    | 
-    carrelli.se_accettazione_evasione                   | 
-    carrelli.se_accettazione_marketing 		            | 
-    carrelli.se_accettazione_condizioni_vendita 		| 
-    carrelli.timestamp_checkout 		                | 
-    carrelli.session_checkout              	            | 
-    carrelli.provider_pagamento 			            | 
-    carrelli.codice_pagamento                           | 
-    carrelli.importo_pagamento 			                | 
-    carrelli.session_pagamento 		                    | 
-    carrelli.esito_pagamento 		                    | 
-    carrelli.id_account_inserimento                     | l'ID dell'account d'inserimento
-    carrelli.timestamp_inserimento 			            | 
-    carrelli.id_account_aggiornamento 		            | l'ID dell'account aggiornamento
-    carrelli.timestamp_aggiornamento 	                | 
-   
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *carrelli_view* relativa alla tabella *carrelli* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-
-    carrelli_articoli
-    -----------------
-    Questa tabella *gestita* ...
-
-    colonna                                           | descrizione
-    --------------------------------------------------|---------------------------------------------------------------------------------------
-    carrelli_articoli.id              	              | l'ID degli articoli
-    carrelli_articoli.id_carrello 			          | 
-    carrelli_articoli.id_articolo              	      | l'ID del carrello
-    carrelli_articoli.id_ingombro 			          | l'ID dell'ingombro
-    carrelli_articoli.ingombro_proporzionale          | 
-    carrelli_articoli.id_categoria 			          | l'ID della categoria
-    carrelli_articoli.id_modalita_spedizione          | l'ID della modilità di spedizione
-    carrelli_articoli.prezzo_lordo_modalita_spedizione| 
-    carrelli_articoli.prezzo_lordo_spedizione         |
-    carrelli_articoli.id_iva 			              | l'id dell'iva
-    carrelli_articoli.prezzo_netto 			          | 
-    carrelli_articoli.prezzo_lordo              	  | 
-    carrelli_articoli.quantita 			              | 
-    carrelli_articoli.prezzo_netto_totale             | 
-    carrelli_articoli.prezzo_lordo_totale 			  | 
-    carrelli_articoli.prezzo_lordo_complessivo        | 
-    carrelli_articoli.importo_lordo_sconto 			  | 
-    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *carrelli_articoli_view* relativa alla tabella *carrelli_articoli* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
- 
     categorie_anagrafica
     --------------------
     Questa tabella *assistita* ...
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_anagrafica.id              	               | l'ID della categorie anagrafica
-    categorie_anagrafica.id_genitore 			           | 
-    categorie_anagrafica.se_prospect              	       | 
-    categorie_anagrafica.se_lead 			               |
+    categorie_anagrafica.id                                 | l'ID della categorie anagrafica
+    categorie_anagrafica.id_genitore                        | 
+    categorie_anagrafica.se_prospect                         | 
+    categorie_anagrafica.se_lead                            |
     categorie_anagrafica.se_cliente                        | 
-    categorie_anagrafica.se_mandante 			           | 
+    categorie_anagrafica.se_mandante                        | 
     categorie_anagrafica.se_fornitore                      | 
     categorie_anagrafica.se_produttore                     | 
     categorie_anagrafica.se_collaboratore                  |
-    categorie_anagrafica.se_dipendente 			           | 
-    categorie_anagrafica.se_interinale  			       | 
-    categorie_anagrafica.se_interno                    	   | 
-    categorie_anagrafica.se_esterno 		               | 
+    categorie_anagrafica.se_dipendente                        | 
+    categorie_anagrafica.se_interinale                     | 
+    categorie_anagrafica.se_interno                           | 
+    categorie_anagrafica.se_esterno                        | 
     categorie_anagrafica.se_agente                         | 
-    categorie_anagrafica.se_concorrente        			   | 
+    categorie_anagrafica.se_concorrente                       | 
     categorie_anagrafica.se_rassegna_stampa                | 
-    categorie_anagrafica.importo_lordo_sconto 	   		   | 
+    categorie_anagrafica.importo_lordo_sconto                   | 
     categorie_anagrafica.se_azienda_gestita                | 
     categorie_anagrafica.se_amministrazione                | 
     categorie_anagrafica.se_notizie                        |
     categorie_anagrafica.id_account_inserimento            | l'ID dell'account di inserimento
-    categorie_anagrafica.timestamp_inserimento 			   | 
+    categorie_anagrafica.timestamp_inserimento                | 
     categorie_anagrafica.id_account_aggiornamento          | l'ID dell'account dell'aggiornamento
-    categorie_anagrafica.se_docente 			           | 
+    categorie_anagrafica.se_docente                        | 
     categorie_anagrafica.se_tutor                          | 
-    categorie_anagrafica.se_classe           			   | 
+    categorie_anagrafica.se_classe                          | 
     categorie_anagrafica.se_allievo                        | 
-    categorie_anagrafica.se_agenzia_interinale 			   | 
-    categorie_anagrafica.se_referente           		   | 
+    categorie_anagrafica.se_agenzia_interinale                | 
+    categorie_anagrafica.se_referente                      | 
     categorie_anagrafica.se_sostituto                      | 
-    categorie_anagrafica.se_squadra 			           | 
+    categorie_anagrafica.se_squadra                        | 
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -264,12 +129,12 @@
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_attivita.id              	              | l'ID della categoria attività
-    categorie_attivita.id_genitore 			          | 
-    categorie_attivita.nome              	          | 
-    categorie_attivita.id_account_inserimento 		  | l'ID dell'account inserimento
+    categorie_attivita.id                                | l'ID della categoria attività
+    categorie_attivita.id_genitore                       | 
+    categorie_attivita.nome                            | 
+    categorie_attivita.id_account_inserimento           | l'ID dell'account inserimento
     categorie_attivita.timestamp_inserimento          | 
-    categorie_attivita.id_account_aggiornamento 	  | l'ID dell'account aggiornamento
+    categorie_attivita.id_account_aggiornamento       | l'ID dell'account aggiornamento
     categorie_attivita.timestamp_aggiornamento        | 
 
     La tabella ha le seguenti chiavi esterne:
@@ -288,9 +153,9 @@
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_diritto.id              	              | l'ID della categoria attività
-    categorie_diritto.nome              	          | 
-    categorie_diritto.id_genitore 			          | 
+    categorie_diritto.id                                | l'ID della categoria attività
+    categorie_diritto.nome                            | 
+    categorie_diritto.id_genitore                       | 
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -312,13 +177,13 @@
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_eventi.id              	              | l'ID della categoria di eventi
-    categorie_eventi.id_genitore 			          | 
-    categorie_eventi.id_pagina              	      | l'ID della pagine della categoria eventi
-    categorie_eventi.ordine              	          | 
-    categorie_eventi.nome              	              | 
+    categorie_eventi.id                                | l'ID della categoria di eventi
+    categorie_eventi.id_genitore                       | 
+    categorie_eventi.id_pagina                        | l'ID della pagine della categoria eventi
+    categorie_eventi.ordine                            | 
+    categorie_eventi.nome                                | 
     categorie_eventi.id_tipologia_pubblicazione       | l'ID della tipologia di pubblicazione
-    categorie_eventi.id_account_inserimento 	      | l'ID dell'account inserimento
+    categorie_eventi.id_account_inserimento           | l'ID dell'account inserimento
     categorie_eventi.timestamp_inserimento            | 
     categorie_eventi.id_account_aggiornamento         | l'ID dell'account aggiornamento
     categorie_eventi.timestamp_aggiornamento          |  
@@ -339,14 +204,14 @@
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_notizie.id              	              | l'ID della categoria di notizie
-    categorie_notizie.id_genitore 			          | 
-    categorie_notizie.id_pagina              	      | l'ID della pagine della categoria di notizie
-    categorie_notizie.menu              	          | 
-    categorie_notizie.ordine              	          | 
-    categorie_notizie.nome              	          | 
+    categorie_notizie.id                                | l'ID della categoria di notizie
+    categorie_notizie.id_genitore                       | 
+    categorie_notizie.id_pagina                        | l'ID della pagine della categoria di notizie
+    categorie_notizie.menu                            | 
+    categorie_notizie.ordine                            | 
+    categorie_notizie.nome                            | 
     categorie_notizie.id_tipologia_pubblicazione      | l'ID della tipologia di pubblicazione
-    categorie_notizie.id_account_inserimento 	      | l'ID dell'account inserimento
+    categorie_notizie.id_account_inserimento           | l'ID dell'account inserimento
     categorie_notizie.timestamp_inserimento           | 
     categorie_notizie.id_account_aggiornamento        | l'ID dell'account aggiornamento
     categorie_notizie.timestamp_aggiornamento         |  
@@ -367,14 +232,14 @@
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_prodotti.id              	              | l'ID della categoria di notizie
-    categorie_prodotti.id_genitore 			          | 
-    categorie_prodotti.id_pagina              	      | l'ID della pagine della categoria di notizie
-    categorie_prodotti.ordine              	          | 
-    categorie_prodotti.nome              	          | 
+    categorie_prodotti.id                                | l'ID della categoria di notizie
+    categorie_prodotti.id_genitore                       | 
+    categorie_prodotti.id_pagina                        | l'ID della pagine della categoria di notizie
+    categorie_prodotti.ordine                            | 
+    categorie_prodotti.nome                            | 
     categorie_prodotti.template                       | 
-    categorie_prodotti.schema_html 	                  |
-    categorie_prodotti.menu              	          | 
+    categorie_prodotti.schema_html                       |
+    categorie_prodotti.menu                            | 
     categorie_prodotti.id_tipologia_pubblicazione     | l'ID della tipologia di pubblicazione
     categorie_prodotti.timestamp_inserimento          | 
     categorie_prodotti.id_account_aggiornamento       | l'ID dell'account aggiornamento
@@ -396,13 +261,13 @@
 
     colonna                                                 | descrizione
     --------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_prodotti_caratteristiche.id              	    | l'ID dell'associazione fra la cattegoria e la caratteristica dei prodotti
-    categorie_prodotti_caratteristiche.id_categoria 		| l'ID della categoria di prodotti
+    categorie_prodotti_caratteristiche.id                      | l'ID dell'associazione fra la cattegoria e la caratteristica dei prodotti
+    categorie_prodotti_caratteristiche.id_categoria         | l'ID della categoria di prodotti
     categorie_prodotti_caratteristiche.id_caratteristica    | l'ID della caratteristica di prodotti
     categorie_prodotti_caratteristiche.se_non_presente      | 
     categorie_prodotti_caratteristiche.se_visibile          | 
     categorie_prodotti_caratteristiche.ordine               | 
-    categorie_prodotti_caratteristiche.ordine 	            |
+    categorie_prodotti_caratteristiche.ordine                 |
     
     
     La tabella ha le seguenti chiavi esterne:
@@ -421,8 +286,8 @@
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    categorie_risorse.id              	    | l'ID della categoria risorse
-    categorie_risorse.id_genitore		    |
+    categorie_risorse.id                      | l'ID della categoria risorse
+    categorie_risorse.id_genitore            |
     categorie_risorse.id_pagina             | l'ID della pagina 
     categorie_risorse.nome                  | 
     categorie_risorse.menu                  | 
@@ -447,7 +312,7 @@
     ----------------------------------------|---------------------------------------------------------------------------------------
     classi_energetiche_immobili.id          | l'ID della classe energetica immobile
     classi_energetiche_immobili.nome        | 
-    classi_energetiche_immobili.ep_min  	|
+    classi_energetiche_immobili.ep_min      |
     classi_energetiche_immobili.ep_max      | 
     classi_energetiche_immobili.rgb         | 
     
@@ -468,7 +333,7 @@
     colonna               | descrizione
     ----------------------|----------------------------------------------------------------------------------------------------------------------
     colori.id             | l'ID del colore
-    colori.nome		      |
+    colori.nome              |
     colori.hex            | 
     colori.r              | colore rosse
     colori.g              | colore giallo
@@ -490,11 +355,11 @@
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    comuni.id              	              | l'ID del comune
-    comuni.id_provincia              	  | l'ID della provincia del comune
-    comuni.nome 			              | 
-    comuni.codice_istat             	  | 
-    comuni.codice_catasto   	          |
+    comuni.id                                | l'ID del comune
+    comuni.id_provincia                    | l'ID della provincia del comune
+    comuni.nome                           | 
+    comuni.codice_istat                   | 
+    comuni.codice_catasto                 |
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -512,8 +377,8 @@
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    condizioni_immobili.id              	          | l'ID delle condizione dell'immobile
-    condizioni_immobili.nome              	          | 
+    condizioni_immobili.id                            | l'ID delle condizione dell'immobile
+    condizioni_immobili.nome                            | 
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -531,9 +396,9 @@
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    condizioni_pagamento.id              	          | l'ID delle condizioni di pagamento
-    condizioni_pagamento.nome 			              | 
-    condizioni_pagamento.descrizione              	  |
+    condizioni_pagamento.id                            | l'ID delle condizioni di pagamento
+    condizioni_pagamento.nome                           | 
+    condizioni_pagamento.descrizione                    |
     condizioni_pagamento.id_account_inserimento       | l'ID dell'account inserimento
     condizioni_pagamento.timestamp_inserimento        | 
     condizioni_pagamento.id_account_aggiornamento     | l'ID dell'account aggiornamento
@@ -555,9 +420,9 @@
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
-    contatti.id              	           | 
-    contatti.nome 			               | 
-    contatti.json              	           |
+    contatti.id                             | 
+    contatti.nome                            | 
+    contatti.json                             |
     contatti.id_tipologia                  | l'ID della tipologia di contatto
     contatti.id_anagrafica                 | l'ID dell'anagrafica di contatto
     contatti.id_segnalatore                | 
@@ -582,9 +447,9 @@
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
-    contenuti.id              	           | l'ID del contenuto
-    contenuti.id_anagrafica 			   | l'ID dell'anagrafica del contenuto
-    contenuti.id_prodotto              	   | l'ID del prodotto del contenuto
+    contenuti.id                             | l'ID del contenuto
+    contenuti.id_anagrafica                | l'ID dell'anagrafica del contenuto
+    contenuti.id_prodotto                     | l'ID del prodotto del contenuto
     contenuti.id_articolo                  | l'ID dell'articolo del contenuto
     contenuti.id_categoria_prodotti        | l'ID della categoria prodotto del contenuto
     contenuti.id_caratteristica_prodotti   | l'ID della caratteristica prodotto del contenuto
@@ -593,7 +458,7 @@
     contenuti.id_file                      | l'ID del file
     contenuti.id_risorsa                   | l'ID della risorsa del contenuto
     contenuti.id_categoria_risorse         | 
-    contenuti.id_pagina 			       | 
+    contenuti.id_pagina                    | 
     contenuti.id_popup                     |
     contenuti.id_immobile                  | 
     contenuti.id_incarico                  | 
@@ -602,9 +467,9 @@
     contenuti.id_rassegna_stamp            | 
     contenuti.id_evento                    |  
     contenuti.id_categoria_eventi          | 
-    contenuti.id_video              	   | 
-    contenuti.id_audio 			           | 
-    contenuti.id_data              	       |
+    contenuti.id_video                     | 
+    contenuti.id_audio                        | 
+    contenuti.id_data                         |
     contenuti.id_template_mail             | 
     contenuti.id_mailing                   | 
     contenuti.id_notizia                   | 
@@ -612,9 +477,9 @@
     contenuti.id_lingua                    | 
     contenuti.id_colore                    |  
     contenuti.path_custom                  | 
-    contenuti.url_custom              	   | 
-    contenuti.rewrite_custom 			   | 
-    contenuti.title              	       |
+    contenuti.url_custom                     | 
+    contenuti.rewrite_custom                | 
+    contenuti.title                         |
     contenuti.keywords                     | 
     contenuti.description                  | 
     contenuti.alt                          | 
@@ -624,8 +489,8 @@
     contenuti.og_audio                     |
     contenuti.og_video                     | 
     contenuti.og_determiner                | 
-    contenuti.og_description 			   | 
-    contenuti.cappello              	   |
+    contenuti.og_description                | 
+    contenuti.cappello                     |
     contenuti.h1                           | 
     contenuti.h2                           | 
     contenuti.h3                           | 
@@ -634,7 +499,7 @@
     contenuti.testo                        |  
     contenuti.applicazioni                 | 
     contenuti.specifiche                   | 
-    contenuti.mittente_nome	               | 
+    contenuti.mittente_nome                   | 
     contenuti.mittente_mail                |
     contenuti.destinatario_nome            | 
     contenuti.destinatario_mail            | 
@@ -659,9 +524,9 @@
 
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
-    continenti.id              	          | l'ID del continente
+    continenti.id                            | l'ID del continente
     continenti.codice                     | 
-    continenti.nome              	      | nome del continente, in italiano
+    continenti.nome                        | nome del continente, in italiano
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -679,10 +544,10 @@
 
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
-    contratti.id              	          | l'ID del contratto
+    contratti.id                            | l'ID del contratto
     contratti.id_tipologia                | l'ID della tipologia del contratto
     contratti.id_anagrafica               | l'ID dell'anagrafica
-    contratti.id_agenzia              	  | l'ID dell'agenzia
+    contratti.id_agenzia                    | l'ID dell'agenzia
     contratti.data_inizio                 | 
     contratti.data_fine                   | 
     contratti.data_inizio_rapporto        | 
@@ -692,7 +557,7 @@
     contratti.id_tipologia_durata         | 
     contratti.id_tipologia_orario         | 
     contratti.ore_settimanali             | 
-    contratti.note              	      | 
+    contratti.note                        | 
     contratti.percentuale_part_time       | 
     contratti.id_account_inserimento      | l'ID dell'account inserimento
     contratti.timestamp_inserimento       | 
@@ -716,10 +581,10 @@
 
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
-    costi_contratti.id              	  | l'ID dell'associazione fra l'ID contratto e l'ID tipologia
+    costi_contratti.id                    | l'ID dell'associazione fra l'ID contratto e l'ID tipologia
     costi_contratti.id_contratto          | l'ID del contratto
     costi_contratti.id_tipologia          | l'ID della tipologia
-    costi_contratti.note              	  | 
+    costi_contratti.note                    | 
     costi_contratti.costo_orario          | 
     
     La tabella ha le seguenti chiavi esterne:
@@ -738,7 +603,7 @@
 
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
-    coupon.id              	              | l'ID del coupon
+    coupon.id                                | l'ID del coupon
     coupon.nome                           | 
     coupon.note                           | 
     coupon.timestamp_inizio               | 
@@ -746,7 +611,7 @@
     coupon.sconto_percentuale             | 
     coupon.sconto_fisso                   | 
     coupon.se_multiuso                    | 
-    coupon.se_globale              	      | 
+    coupon.se_globale                        | 
     coupon.id_account_inserimento         | l'ID dell'account inserimento
     coupon.timestamp_inserimento          | 
     coupon.id_account_aggiornamento       | l'ID dell'account aggiornamento

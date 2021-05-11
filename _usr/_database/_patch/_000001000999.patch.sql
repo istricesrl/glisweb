@@ -350,21 +350,12 @@ CREATE TABLE IF NOT EXISTS `campagne` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
---| 000001000026
-
--- caratteristiche_articoli
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `caratteristiche_articoli` (
-`id` int(11) NOT NULL,
-  `nome` char(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 --| 000001000027
 
 -- caratteristiche_immobili
 -- tipologia: tabella di supporto
 CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `nome` char(128) NOT NULL,
   `font_awesome` char(24) DEFAULT NULL,
   `html` char(8) DEFAULT NULL,
@@ -377,105 +368,11 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
 -- caratteristiche_prodotti
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
-`id` int(11) NOT NULL,
-  `nome` char(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000029
-
--- carrelli
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `carrelli` (
-`id` int(11) NOT NULL,
-  `session` char(255) DEFAULT NULL,
-  `se_indirizzo_spedizione` int(1) DEFAULT NULL,
-  `spedizione_nome` char(255) DEFAULT NULL,
-  `spedizione_cognome` char(255) DEFAULT NULL,
-  `spedizione_denominazione` char(255) DEFAULT NULL,
-  `spedizione_indirizzo` char(255) DEFAULT NULL,
-  `spedizione_cap` char(16) DEFAULT NULL,
-  `spedizione_citta` char(255) DEFAULT NULL,
-  `spedizione_id_provincia` int(11) DEFAULT NULL,
-  `spedizione_id_stato` int(11) DEFAULT NULL,
-  `spedizione_telefono` char(255) DEFAULT NULL,
-  `spedizione_mail` char(255) DEFAULT NULL,
-  `intestazione_nome` char(255) DEFAULT NULL,
-  `intestazione_cognome` char(255) DEFAULT NULL,
-  `intestazione_denominazione` char(255) DEFAULT NULL,
-  `intestazione_id_anagrafica` int(11) DEFAULT NULL,
-  `intestazione_indirizzo` char(255) DEFAULT NULL,
-  `intestazione_cap` char(16) DEFAULT NULL,
-  `intestazione_citta` char(255) DEFAULT NULL,
-  `intestazione_id_provincia` int(11) DEFAULT NULL,
-  `intestazione_id_stato` int(11) DEFAULT NULL,
-  `intestazione_telefono` char(255) DEFAULT NULL,
-  `intestazione_mail` char(255) DEFAULT NULL,
-  `intestazione_codice_fiscale` char(255) DEFAULT NULL,
-  `intestazione_partita_iva` char(255) DEFAULT NULL,
-  `intestazione_sdi` char(32) DEFAULT NULL,
-  `intestazione_pec` char(255) DEFAULT NULL,
-  `id_listino` int(11) DEFAULT NULL,
-  `id_zona` int(11) DEFAULT NULL,
-  `id_modalita_spedizione` int(11) DEFAULT NULL,
-  `prezzo_lordo_spedizione` decimal(16,5) DEFAULT NULL,
-  `id_tipologia_consegna` int(11) DEFAULT NULL,
-  `prezzo_lordo_consegna` decimal(16,5) DEFAULT NULL,
-  `id_assicurazione_trasporto` int(11) DEFAULT NULL,
-  `prezzo_lordo_assicurazione_trasporto` decimal(16,5) DEFAULT NULL,
-  `id_assicurazione_montaggio` int(11) DEFAULT NULL,
-  `prezzo_lordo_assicurazione_montaggio` decimal(16,5) DEFAULT NULL,
-  `id_garanzia` int(11) DEFAULT NULL,
-  `prezzo_lordo_garanzia` decimal(16,5) DEFAULT NULL,
-  `id_modalita_pagamento` int(11) DEFAULT NULL,
-  `id_tipologia_documento_carrello` int(11) DEFAULT NULL,
-  `prezzo_lordo_modalita_pagamento` decimal(16,5) DEFAULT NULL,
-  `prezzo_lordo_acquisti` decimal(16,5) DEFAULT NULL,
-  `prezzo_lordo_complessivo` decimal(16,5) DEFAULT NULL,
-  `importo_iva_complessivo` decimal(16,5) DEFAULT NULL,
-  `coupon` char(32) DEFAULT NULL,
-  `importo_lordo_sconto` decimal(16,5) DEFAULT NULL,
-  `note_cliente` text,
-  `se_accettazione_privacy` int(1) DEFAULT NULL,
-  `se_anonimo` int(1) DEFAULT NULL,
-  `se_accettazione_evasione` int(1) DEFAULT NULL,
-  `se_accettazione_marketing` int(1) DEFAULT NULL,
-  `se_accettazione_condizioni_vendita` int(1) DEFAULT NULL,
-  `timestamp_checkout` int(11) DEFAULT NULL,
-  `session_checkout` char(255) DEFAULT NULL,
-  `provider_pagamento` char(64) DEFAULT NULL,
-  `timestamp_pagamento` int(11) DEFAULT NULL,
-  `codice_pagamento` char(255) DEFAULT NULL,
-  `importo_pagamento` decimal(16,5) DEFAULT NULL,
-  `session_pagamento` char(255) DEFAULT NULL,
-  `esito_pagamento` char(100) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000030
-
--- carrelli_articoli
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `carrelli_articoli` (
-`id` int(11) NOT NULL,
-  `id_carrello` int(11) NOT NULL,
-  `id_articolo` char(32) NOT NULL,
-  `id_ingombro` int(11) DEFAULT NULL,
-  `ingombro_proporzionale` decimal(16,5) DEFAULT NULL,
-  `id_categoria` int(11) DEFAULT NULL,
-  `id_modalita_spedizione` int(11) DEFAULT NULL,
-  `prezzo_lordo_modalita_spedizione` decimal(16,5) DEFAULT NULL,
-  `prezzo_lordo_spedizione` decimal(16,5) DEFAULT NULL,
-  `id_iva` int(11) NOT NULL,
-  `prezzo_netto` decimal(16,5) DEFAULT NULL,
-  `prezzo_lordo` decimal(16,5) DEFAULT NULL,
-  `quantita` decimal(9,3) NOT NULL,
-  `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
-  `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
-  `prezzo_lordo_complessivo` decimal(16,5) DEFAULT NULL,
-  `importo_lordo_sconto` decimal(16,5) DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_categoria` int(1) DEFAULT NULL,
+  `se_prodotto` int(1) DEFAULT NULL,
+  `se_articolo` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000031
