@@ -306,8 +306,229 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    categorie_documento
+    ------------------
+    Questa tabella *assistita* ...
+    
+    categorie_eventi
+    ------------------
+    Questa tabella *gestita* ...
+
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_eventi.id              	              | l'ID della categoria di eventi
+    categorie_eventi.id_genitore 			          | 
+    categorie_eventi.id_pagina              	      | l'ID della pagine della categoria eventi
+    categorie_eventi.ordine              	          | 
+    categorie_eventi.nome              	              | 
+    categorie_eventi.id_tipologia_pubblicazione       | l'ID della tipologia di pubblicazione
+    categorie_eventi.id_account_inserimento 	      | l'ID dell'account inserimento
+    categorie_eventi.timestamp_inserimento            | 
+    categorie_eventi.id_account_aggiornamento         | l'ID dell'account aggiornamento
+    categorie_eventi.timestamp_aggiornamento          |  
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *categorie_eventi_view* relativa alla tabella *categorie_eventi* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
+    categorie_notizie
+    ------------------
+    Questa tabella *gestita* ...
+
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_notizie.id              	              | l'ID della categoria di notizie
+    categorie_notizie.id_genitore 			          | 
+    categorie_notizie.id_pagina              	      | l'ID della pagine della categoria di notizie
+    categorie_notizie.menu              	          | 
+    categorie_notizie.ordine              	          | 
+    categorie_notizie.nome              	          | 
+    categorie_notizie.id_tipologia_pubblicazione      | l'ID della tipologia di pubblicazione
+    categorie_notizie.id_account_inserimento 	      | l'ID dell'account inserimento
+    categorie_notizie.timestamp_inserimento           | 
+    categorie_notizie.id_account_aggiornamento        | l'ID dell'account aggiornamento
+    categorie_notizie.timestamp_aggiornamento         |  
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *categorie_notizie_view* relativa alla tabella *categorie_notizie* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    categorie_prodotti
+    ------------------
+    Questa tabella *gestita* ...
+
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_prodotti.id              	              | l'ID della categoria di notizie
+    categorie_prodotti.id_genitore 			          | 
+    categorie_prodotti.id_pagina              	      | l'ID della pagine della categoria di notizie
+    categorie_prodotti.ordine              	          | 
+    categorie_prodotti.nome              	          | 
+    categorie_prodotti.template                       | 
+    categorie_prodotti.schema_html 	                  |
+    categorie_prodotti.menu              	          | 
+    categorie_prodotti.id_tipologia_pubblicazione     | l'ID della tipologia di pubblicazione
+    categorie_prodotti.timestamp_inserimento          | 
+    categorie_prodotti.id_account_aggiornamento       | l'ID dell'account aggiornamento
+    categorie_prodotti.timestamp_aggiornamento        |  
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *categorie_prodotti_view* relativa alla tabella *categorie_prodotti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    categorie_prodotti_caratteristiche
+    ----------------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_prodotti_caratteristiche.id              	    | l'ID dell'associazione fra la cattegoria e la caratteristica dei prodotti
+    categorie_prodotti_caratteristiche.id_categoria 		| l'ID della categoria di prodotti
+    categorie_prodotti_caratteristiche.id_caratteristica    | l'ID della caratteristica di prodotti
+    categorie_prodotti_caratteristiche.se_non_presente      | 
+    categorie_prodotti_caratteristiche.se_visibile          | 
+    categorie_prodotti_caratteristiche.ordine               | 
+    categorie_prodotti_caratteristiche.ordine 	            |
+    
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *categorie_prodotti_caratteristiche_view* relativa alla tabella *categorie_prodotti_caratteristiche* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
+    categorie_risorse
+    -----------------
+    Questa tabella *gestita* ...
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    categorie_risorse.id              	    | l'ID della categoria risorse
+    categorie_risorse.id_genitore		    |
+    categorie_risorse.id_pagina             | l'ID della pagina 
+    categorie_risorse.nome                  | 
+    categorie_risorse.menu                  | 
+    categorie_risorse.ordine                | 
+    
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *categorie_risorse_view* relativa alla tabella *categorie_risorse* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
+    classi_energetiche_immobili
+    ---------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    classi_energetiche_immobili.id          | l'ID della classe energetica immobile
+    classi_energetiche_immobili.nome        | 
+    classi_energetiche_immobili.ep_min  	|
+    classi_energetiche_immobili.ep_max      | 
+    classi_energetiche_immobili.rgb         | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *classi_energetiche_immobili_view* relativa alla tabella *classi_energetiche_immobili* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    colori
+    -----------------
+    Questa tabella di *supporto* ...
+
+    colonna               | descrizione
+    ----------------------|----------------------------------------------------------------------------------------------------------------------
+    colori.id             | l'ID del colore
+    colori.nome		      |
+    colori.hex            | 
+    colori.r              | colore rosse
+    colori.g              | colore giallo
+    colori.b              | colore blu
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *colori_view* relativa alla tabella *colori* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
  
     comuni
     ------
+    Questa tabella di *supporto* ...
+
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    comuni.id              	              | l'ID del comune
+    comuni.id_provincia              	  | l'ID della provincia del comune
+    comuni.nome 			              | 
+    comuni.codice_istat             	  | 
+    comuni.codice_catasto   	          |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *comuni_view* relativa alla tabella *comuni* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
+    condizioni_immobili
+    -------------------
+    Questa tabella di *supporto* ...
+
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    condizioni_immobili.id              	          | l'ID delle condizione dell'immobile
+    condizioni_immobili.nome              	          | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *condizioni_immobili_view* relativa alla tabella *condizioni_immobili* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+ 
 
 */
