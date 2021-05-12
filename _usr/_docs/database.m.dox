@@ -60,7 +60,7 @@
 
     colonna                          | descrizione
     ---------------------------------|---------------------------------------------------------------------------------------
-    mail_liste_mailing.id            | l'ID che fa l'associazione fra l'ID della mail et l'ID della lista
+    mail_liste_mailing.id            | l'ID che fa l'associazione fra l'ID della mail e l'ID della lista
     mail_liste_mailing.id_mail       | l'ID della mail
     mail_liste_mailing.id_lista      | l'ID della lista
 
@@ -157,5 +157,73 @@
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-   
+    
+    mailing
+    ------------------
+    Questa tabella *gestita*...
+
+    colonna                          | descrizione
+    ---------------------------------|---------------------------------------------------------------------------------------
+    mailing.id                       | 
+    mailing.nome                     | 
+    mailing.timestamp_invio          | 
+    mailing.note                     | 
+    mailing.id_job                   | 
+    mailing.id_account_inserimento   |
+    mailing.timestamp_inserimento    |
+    mailing.id_account_aggiornamento |
+    mailing.timestamp_aggiornamento  |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista mailing_view relativa alla tabella mailing presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    mailing_liste
+    -------------
+    Questa tabella *gestita*...
+
+    colonna                     | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+    mailing_liste.id            | l'ID che fa l'associazione fra l'ID mailing e l'ID della lista
+    mailing_liste.id_mailing    | l'ID mailing
+    mailing_liste.id_lista      | l'ID della lista
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista mailing_liste_view relativa alla tabella mailing_liste presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    mailing_mail
+    ------------
+    Questa tabella *gestita*...
+
+    colonna                     | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+    mailing_mail.id             | l'ID che fa l'associazione fra l'ID mail, l'ID mailing e l'ID della coda
+    mailing_mail.id_mail        | l'ID mail
+    mailing_mail.id_mailing     | l'ID mailing
+    mailing_mail.id_coda        | l'ID coda
+
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista mailing_mail_view relativa alla tabella mailing_mail presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
 */
