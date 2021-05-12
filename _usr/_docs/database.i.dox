@@ -102,29 +102,6 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     
-    immagini_ruoli
-    --------------
-    Questa tabella *gestita*...
-
-    colonna                                   | descrizione
-    ------------------------------------------|---------------------------------------------------------------------------------------
-    immagini_ruoli.id                         | 
-    immagini_ruoli.id_immagine                | 
-    immagini_ruoli.id_prodotto                | 
-    immagini_ruoli.id_categoria_prodotti      | 
-    immagini_ruoli.id_ruolo                   | 
-    immagini_ruoli.ordine                     | 
-    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista immagini_ruoli_view relativa alla tabella immagini_ruoli presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
     immobili
     --------
     Questa tabella *gestita*...
