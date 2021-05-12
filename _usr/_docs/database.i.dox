@@ -338,7 +338,6 @@
 
     colonna                                             | descrizione
     ----------------------------------------------------|---------------------------------------------------------------------------------------
-    indirizzi_caratteristiche.indirizzi_caratteristiche |
     indirizzi_caratteristiche.id                        |
     indirizzi_caratteristiche.id_indirizzo              |
     indirizzi_caratteristiche.id_caratteristica         | 
