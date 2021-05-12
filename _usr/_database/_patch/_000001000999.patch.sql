@@ -1483,4 +1483,31 @@ CREATE TABLE IF NOT EXISTS `luoghi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000095
+
+-- macro
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `macro` (
+`id` int(11) NOT NULL,
+  `id_pagina` int(11) NOT NULL,
+  `macro` char(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000096
+
+-- mail
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `mail` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `se_notifiche` tinyint(1) DEFAULT NULL,
+  `se_pec` tinyint(1) DEFAULT NULL,
+  `indirizzo` char(128) NOT NULL,
+  `descrizione` char(128) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| FINE FILE
