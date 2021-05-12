@@ -58,6 +58,7 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form', 
 														'progetti.produzione.form.todo',
+														'progetti.produzione.form.attivita',
 														'progetti.produzione.form.pause',
 														'progetti.produzione.form.chiusura',
 														'progetti.produzione.form.pianificazioni',
@@ -89,7 +90,7 @@
 	);
 
 	// gestione attività progetti
-/*	$p['progetti.produzione.form.attivita'] = array(
+	$p['progetti.produzione.form.attivita'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'attivita' ),
 	    'h1'			=> array( $l		=> 'attività' ),
@@ -97,9 +98,9 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.attivita.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.attivita.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form' ) )
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 	);
-*/
+
 
 // gestione progetti pianificazioni
 $p['progetti.produzione.form.pianificazioni'] = array(
