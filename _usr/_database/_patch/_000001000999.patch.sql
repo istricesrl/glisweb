@@ -1621,6 +1621,203 @@ CREATE TABLE IF NOT EXISTS `mailing_mail` (
   `id_mail_coda` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000103
+
+-- mastri
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `mastri` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `note` text,
+  `se_commerciale` int(1) DEFAULT NULL,
+  `se_produzione` int(1) DEFAULT NULL,
+  `se_amministrazione` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000104
+
+-- marchi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `marchi` (
+`id` int(11) NOT NULL,
+  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000105
+
+-- matricole
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `matricole` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `testo` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000106
+
+-- menu
+CREATE TABLE IF NOT EXISTS `menu` (
+`id` int(11) NOT NULL,
+  `id_pagina` int(11) NOT NULL,
+  `id_lingua` int(11) NOT NULL,
+  `menu` char(32) NOT NULL,
+  `nome` char(128) NOT NULL,
+  `target` char(16) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `sottopagine` char(32) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000107
+
+-- metadati
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `metadati` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_risorsa` int(11) DEFAULT NULL,
+  `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_immagine` int(11) DEFAULT NULL,
+  `id_video` int(11) DEFAULT NULL,
+  `id_file` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_evento` int(11) DEFAULT NULL,
+  `id_categoria_eventi` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `testo` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000108
+
+-- modalita_consegna
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `modalita_consegna` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `suggerimento` char(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000109
+
+-- modalita_consegna_prezzi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `modalita_consegna_prezzi` (
+`id` int(11) NOT NULL,
+  `id_modalita` int(11) NOT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `prezzo` decimal(16,5) NOT NULL,
+  `id_listino` int(11) NOT NULL,
+  `id_valuta` int(11) NOT NULL,
+  `id_iva` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000110
+
+-- modalita_pagamento
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `suggerimento` char(255) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `importo_min` decimal(16,5) DEFAULT NULL,
+  `importo_max` decimal(16,5) DEFAULT NULL,
+  `percentuale_acconto` DECIMAL(5,2) NULL DEFAULT NULL,
+  `se_contanti` int(1) DEFAULT NULL,
+  `provider` char(64) DEFAULT NULL,
+  `codice` char(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000111
+
+-- modalita_pagamento_prezzi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `modalita_pagamento_prezzi` (
+`id` int(11) NOT NULL,
+  `id_modalita` int(11) NOT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `prezzo` decimal(16,5) NOT NULL,
+  `prezzo_relativo` decimal(16,5) NOT NULL,
+  `id_listino` int(11) NOT NULL,
+  `id_valuta` int(11) NOT NULL,
+  `id_iva` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000112
+
+-- modalita_spedizione
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `modalita_spedizione` (
+`id` int(11) NOT NULL,
+  `nome` char(255) COLLATE utf8_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000113
+
+-- modalita_spedizione_prezzi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `modalita_spedizione_prezzi` (
+`id` int(11) NOT NULL,
+  `id_modalita` int(11) NOT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `prezzo` decimal(16,5) NOT NULL,
+  `id_listino` int(11) NOT NULL,
+  `id_valuta` int(11) NOT NULL,
+  `id_iva` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000114
+
+-- motivazioni_tari_anagrafica
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `motivazioni_tari_anagrafica` (
+`id` int(11) NOT NULL,
+  `id_tari_anagrafica` int(11) NOT NULL,
+  `id_motivazione` int(11) NOT NULL,
+  `riga_provenienza` text,
+  `dettagli_provenienza` text NOT NULL,
+  `path` text NOT NULL,
+  `riga` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000115
+
+-- notizie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `notizie` (
+`id` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 --| FINE FILE
