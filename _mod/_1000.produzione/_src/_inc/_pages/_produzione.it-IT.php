@@ -34,13 +34,13 @@
 								'priority'	=> '080' ) )
 	);
 
-	// tools per progetti.produzione
+	// progetti tools
 	$p['progetti.produzione.tools'] = array(
 	    'sitemap'		=> false,
 	    'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
 		'title'			=> array( $l		=> 'azioni' ),
 	    'h1'			=> array( $l		=> 'azioni' ),
-	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.tools.php' ),
 		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.view']['etc']['tabs'] ),
@@ -60,7 +60,8 @@
 														'progetti.produzione.form.todo',
 														'progetti.produzione.form.pause',
 														'progetti.produzione.form.chiusura',
-														'progetti.produzione.form.pianificazioni' ) )
+														'progetti.produzione.form.pianificazioni',
+														'progetti.produzione.form.tools' ) )
 	);
 
 	// gestione todo progetti
@@ -123,6 +124,19 @@ $p['progetti.produzione.form.chiusura'] = array(
 	'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.chiusura.php' ),
 	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+);
+
+// gestione progetti tools
+$p['progetti.produzione.form.tools'] = array(
+	'sitemap'		=> false,
+	'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	'title'			=> array( $l		=> 'azioni' ),
+	'h1'			=> array( $l		=> 'azioni' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.form.tools.php' ),
+	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 );
 
 	
