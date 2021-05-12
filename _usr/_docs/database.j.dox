@@ -7,28 +7,33 @@
     le tabelle del database di supporto JA - JZ
     ===========================================
     
-    iban
+    job
     ----
     Questa tabella *gestita*...
 
-    colonna                         | descrizione
-    --------------------------------|---------------------------------------------------------------------------------------
-    iban.id                         | l'ID dell'iban
-    iban.id_anagrafica              | l'ID dell'anagrafica
-    iban.intestazione               | l'ID dell'intestazione dell'iban
-    iban.iban                       | 
-    iban.note                       | 
-    iban.id_account_inserimento     | 
-    iban.timestamp_inserimento      | 
-    iban.id_account_aggiornamento   |
-    iban.timestamp_aggiornamento    | 
+    colonna                        | descrizione
+    -------------------------------|---------------------------------------------------------------------------------------
+    job.id                         | l'ID del job
+    job.nome                       | 
+    job.timestamp_apertura         | 
+    job.totale                     | 
+    job.corrente                   | 
+    job.iterazioni                 | 
+    job.delay                      | 
+    job.workspace                  | 
+    job.timestamp_esecuzione       | 
+    job.timestamp_completamento    | 
+    job.id_account_inserimento     | 
+    job.timestamp_inserimento      | 
+    job.id_account_aggiornamento   |
+    job.timestamp_aggiornamento    | 
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
-    La vista iban_view relativa alla tabella iban presenta le seguenti colonne:
+    La vista job_view relativa alla tabella job presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
