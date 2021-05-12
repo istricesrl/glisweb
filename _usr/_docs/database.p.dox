@@ -228,5 +228,48 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     
+    pratiche
+    --------
+    Questa tabella *gestita*...
+    colonna                            | descrizione
+    -----------------------------------|---------------------------------------------------------------------------------------
+    pratiche.id                        |
+    pratiche.numero                    | 
+    pratiche.numero_ruolo              | 
+    pratiche.data_apertura             |  
+    pratiche.data_chiusura             |
+    pratiche.id_sede_apertura          | 
+    pratiche.id_categoria_diritto      | 
+    pratiche.id_provenienza            |   
+    pratiche.note_segnalazione         |
+    pratiche.descrizione               | 
+    pratiche.controparte               | 
+    pratiche.se_patrocinio             |   
+    pratiche.se_accompagnamento        | 
+    pratiche.note_chiusura             | 
+    pratiche.ore_stimate               |   
+    pratiche.id_esito                  |
+    pratiche.se_richiesta_liquidazione | 
+    pratiche.se_richiesto_rimborso     | 
+    pratiche.id_account_editor         |   
+    pratiche.timestamp_inserimento     | 
+    pratiche.id_account_inserimento    | 
+    pratiche.timestamp_aggiornamento   | 
+    pratiche.id_account_aggiornamento  | 
+    pratiche.se_importata              | 
+    pratiche.id_account_chiusura       | 
+    pratiche.timestamp_chiusura        | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista pratiche_view relativa alla tabella pratiche presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    
     
     */
