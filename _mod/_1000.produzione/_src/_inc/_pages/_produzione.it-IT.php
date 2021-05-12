@@ -34,6 +34,19 @@
 								'priority'	=> '080' ) )
 	);
 
+	// tools per progetti.produzione
+	$p['progetti.produzione.tools'] = array(
+	    'sitemap'		=> false,
+	    'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni' ),
+	    'h1'			=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.tools.php' ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.view']['etc']['tabs'] ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
 	// gestione progetti
 	$p['progetti.produzione.form'] = array(
 	    'sitemap'		=> false,
