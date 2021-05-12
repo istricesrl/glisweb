@@ -1,0 +1,35 @@
+/*!
+
+    \page database_i database del framework, tabelle con la lettera I
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera I.
+
+    le tabelle del database di supporto JA - JZ
+    ===========================================
+    
+    iban
+    ----
+    Questa tabella *gestita*...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    iban.id                         | l'ID dell'iban
+    iban.id_anagrafica              | l'ID dell'anagrafica
+    iban.intestazione               | l'ID dell'intestazione dell'iban
+    iban.iban                       | 
+    iban.note                       | 
+    iban.id_account_inserimento     | 
+    iban.timestamp_inserimento      | 
+    iban.id_account_aggiornamento   |
+    iban.timestamp_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista iban_view relativa alla tabella iban presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
