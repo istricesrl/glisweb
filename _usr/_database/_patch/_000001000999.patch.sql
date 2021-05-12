@@ -1819,5 +1819,56 @@ CREATE TABLE IF NOT EXISTS `notizie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000116
+
+-- notizie_categorie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `notizie_categorie` (
+`id` int(11) NOT NULL,
+  `id_notizia` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000117
+
+-- notizie_categorie_prodotti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `notizie_categorie_prodotti` (
+`id` int(11) NOT NULL,
+  `id_notizia` int(11) NOT NULL,
+  `id_categoria_prodotti` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000118
+
+-- notizie_immobili
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `notizie_immobili` (
+`id` int(11) NOT NULL,
+  `id_immobile` int(11) NOT NULL,
+  `id_agenzia` int(11) DEFAULT NULL,
+  `id_agente` int(11) NOT NULL,
+  `data_notizia` date DEFAULT NULL,
+  `data_alert` date DEFAULT NULL,
+  `testo` text NOT NULL,
+  `id_esito` int(11) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
+  `note_archiviazione` text NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000119
+
+-- notizie_prodotti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `notizie_prodotti` (
+`id` int(11) NOT NULL,
+  `id_notizia` int(11) NOT NULL,
+  `id_prodotto` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| FINE FILE
