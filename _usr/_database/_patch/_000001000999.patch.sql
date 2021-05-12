@@ -1105,6 +1105,48 @@ CREATE TABLE IF NOT EXISTS `file` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+--| 000001000074
 
+-- garanzie_carrelli
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `garanzie_carrelli` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `suggerimento` char(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000075
+
+-- garanzie_carrelli_prezzi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `garanzie_carrelli_prezzi` (
+`id` int(11) NOT NULL,
+  `id_garanzia` int(11) NOT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `prezzo` decimal(16,5) NOT NULL,
+  `prezzo_relativo` decimal(16,5) NOT NULL,
+  `id_listino` int(11) NOT NULL,
+  `id_valuta` int(11) NOT NULL,
+  `id_iva` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--| 000001000076
+
+-- gruppi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `gruppi` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_struttura` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- NOTE
+-- questa tabella contiene i gruppi aggiuntivi del framework
 
 --| FINE FILE
