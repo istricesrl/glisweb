@@ -1871,4 +1871,62 @@ CREATE TABLE IF NOT EXISTS `notizie_prodotti` (
   `id_prodotto` char(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000120
+
+-- orari_contratti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `orari_contratti` (
+`id` int(11) NOT NULL,
+  `id_contratto` int(11) NOT NULL,
+  `turno` INT NULL DEFAULT '1',
+  `id_giorno` int(11) NOT NULL,
+  `ora_inizio` time DEFAULT NULL,
+  `ora_fine` time DEFAULT NULL,
+  `id_costo` int(11) NOT NULL,
+  `se_lavoro` INT(1) NULL DEFAULT '1', 
+  `se_disponibile` INT(1) NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000121
+
+-- orientamenti_sessuali
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `orientamenti_sessuali` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000122
+
+-- pagine
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `pagine` (
+`id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_sito` int(11) NOT NULL DEFAULT '1',
+  `nome` char(255) DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(32) DEFAULT NULL,
+  `id_contenuti` int(11) DEFAULT NULL,
+  `id_tipologia_pubblicazione` int(11) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000123
+
+-- pagine_gruppi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `pagine_gruppi` (
+`id` int(11) NOT NULL,
+  `id_pagina` int(11) NOT NULL,
+  `id_gruppo` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| FINE FILE
