@@ -1,0 +1,35 @@
+/*!
+
+    \page database_m database del framework, tabelle con la lettera N
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera N.
+
+    le tabelle del database di supporto NA - NZ
+    ===========================================
+    
+    notizie
+    -----
+    Questa tabella *gestita*...
+
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    notizie.id                        | l'ID della notizia
+    notizie.id_tipologia              | 
+    notizie.id_sito                   | 
+    notizie.nome                      | 
+    notizie.note                      | 
+    notizie.id_account_inserimento    | 
+    notizie.timestamp_inserimento     | 
+    notizie.id_account_aggiornamento  | 
+    notizie.timestamp_aggiornamento   | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista notizie_view relativa alla tabella notizie presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
