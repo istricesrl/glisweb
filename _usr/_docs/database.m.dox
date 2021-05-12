@@ -6,10 +6,54 @@
 
     le tabelle del database di supporto MA - MZ
     ===========================================
+    
+    macro
+    -----
+    Questa tabella *gestita*...
 
+    colonna               | descrizione
+    ----------------------|---------------------------------------------------------------------------------------
+    macro.id              | l'ID della macro
+    macro.id_pagina       | 
+    macro.macro           | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista macro_view relativa alla tabella macro presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     mail
     ----
+    Questa tabella *gestita*...
 
+    colonna                          | descrizione
+    ---------------------------------|---------------------------------------------------------------------------------------
+    mail.id                          | l'ID della mail
+    mail.id_anagrafica               | 
+    mail.se_notifiche                | 
+    mail.se_pec                      | 
+    mail.indirizzo                   | 
+    mail.descrizione                 | 
+    mail.timestamp_aggiornamento     | 
+    mail.id_account_aggiornamento    | 
+    mail.timestamp_inserimento       | 
+    mail.id_account_inserimento      | 
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista mail_view relativa alla tabella mail presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     mail_out
     --------
 
