@@ -1,0 +1,92 @@
+/*!
+
+    \page database_m database del framework, tabelle con la lettera P
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera P.
+
+    le tabelle del database di supporto PA - PZ
+    ===========================================
+    
+    pagine
+    ------
+    Questa tabella *gestita*...
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    pagine.id                         | l'ID della pagine
+    pagine.id_genitore                | l'ID parente
+    pagine.id_sito                    | l'ID del sito al quale la pagina fa riferimento
+    pagine.nome                       | 
+    pagine.template                   |   
+    pagine.schema_html                | 
+    pagine.tema_css                   | 
+    pagine.id_contenuti               | 
+    pagine.id_tipologia_pubblicazione | 
+    pagine.se_sitemap                 | 
+    pagine.se_cacheable               | 
+    pagine.timestamp_inseriment       | 
+    pagine.id_account_inserimento     | 
+    pagine.timestamp_aggiornamento    | 
+    pagine.id_account_aggiornamento   | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista pagine_view relativa alla tabella pagine presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    pagine_gruppi
+    -------------
+    Questa tabella *gestita*...
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    pagine_gruppi.id                  | l'ID dell'associazione fra la pagina e il gruppo
+    pagine_gruppi.id_pagina           | l'ID della pagina
+    pagine_gruppi.id_gruppo           | l'ID del gruppo
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista pagine_gruppi_view relativa alla tabella pagine_gruppi presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    pagine
+    ------
+    Questa tabella *gestita*...
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    pagine.id                         | l'ID della pagine
+    pagine.id_genitore                | l'ID parente
+    pagine.id_sito                    | l'ID del sito al quale la pagina fa riferimento
+    pagine.nome                       | 
+    pagine.template                   |   
+    pagine.schema_html                | 
+    pagine.tema_css                   | 
+    pagine.id_contenuti               | 
+    pagine.id_tipologia_pubblicazione | 
+    pagine.se_sitemap                 | 
+    pagine.se_cacheable               | 
+    pagine.timestamp_inseriment       | 
+    pagine.id_account_inserimento     | 
+    pagine.timestamp_aggiornamento    | 
+    pagine.id_account_aggiornamento   | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista pagine_view relativa alla tabella pagine presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    
+    */
