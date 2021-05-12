@@ -1131,7 +1131,6 @@ CREATE TABLE IF NOT EXISTS `garanzie_carrelli_prezzi` (
   `id_iva` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 --| 000001000076
 
 -- gruppi
@@ -1148,5 +1147,247 @@ CREATE TABLE IF NOT EXISTS `gruppi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- NOTE
 -- questa tabella contiene i gruppi aggiuntivi del framework
+
+--| 000001000077
+
+-- iban
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `iban` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `intestazione` char(255) DEFAULT NULL,
+  `iban` char(27) NOT NULL,
+  `note` text NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000078
+
+-- immagini
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `immagini` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_file` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_risorsa` int(11) DEFAULT NULL,
+  `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_evento` int(11) DEFAULT NULL,
+  `id_categoria_eventi` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_testata` int(11) DEFAULT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `orientamento` enum('L','P') DEFAULT NULL,
+  `path` char(255) NOT NULL,
+  `path_alternativo` char(255) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `anno` year(4) DEFAULT NULL,
+  `taglio` char(64) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `timestamp_scalamento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000079
+
+-- immagini_anagrafica
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `immagini_anagrafica` (
+`id` int(11) NOT NULL,
+  `id_immagine` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_ruolo` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000080
+
+-- immagini_ruoli
+-- tipologia: tabella gestita
+-- CREATE TABLE IF NOT EXISTS `immagini_ruoli` (
+-- `id` int(11) NOT NULL,
+--   `id_immagine` int(11) NOT NULL,
+--   `id_prodotto` char(32) COLLATE utf8_general_ci DEFAULT NULL,
+--   `id_categoria_prodotti` int(11) DEFAULT NULL,
+--   `id_ruolo` int(11) NOT NULL,
+--   `ordine` int(11) DEFAULT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--| 000001000081
+
+-- immobili
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `immobili` (
+`id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_indirizzo` int(11) NOT NULL,
+  `indirizzo_sostituzione` char(64) DEFAULT NULL,
+  `scala` char(32) DEFAULT NULL,
+  `interno` char(8) NOT NULL,
+  `piano` char(64) NOT NULL,
+  `campanello` char(128) DEFAULT NULL,
+  `livelli` int(11) DEFAULT NULL,
+  `mq_commerciali` decimal(15,2) DEFAULT NULL,
+  `mq_calpestabili` decimal(15,2) DEFAULT NULL,
+  `mq_modificatore` decimal(15,2) DEFAULT NULL,
+  `prezzo_mq` decimal(15,2) DEFAULT NULL,
+  `prezzo_valutazione` decimal(15,2) DEFAULT NULL,
+  `percentuale_incremento_commerciale` decimal(15,2) DEFAULT NULL,
+  `id_condizione` int(11) DEFAULT NULL,
+  `id_disponibilita` int(11) DEFAULT NULL,
+  `id_classe_energetica` int(11) DEFAULT NULL,
+  `spese_annue` decimal(15,2) DEFAULT NULL,
+  `note_censimento` text,
+  `note_struttura` text,
+  `id_account_editor` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000082
+
+-- immobili_anagrafica
+-- tiplogia: tabella gestita
+CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (
+`id` int(11) NOT NULL,
+  `id_immobile` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_ruolo` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000083
+
+-- immobili_caratteristiche
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `immobili_caratteristiche` (
+`id` int(11) NOT NULL,
+  `id_immobile` int(11) NOT NULL,
+  `id_caratteristica` int(11) NOT NULL,
+  `specifiche` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000084
+
+-- incarichi_immobili
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `incarichi_immobili` (
+`id` int(11) NOT NULL,
+  `riferimento` char(16) DEFAULT NULL,
+  `id_immobile` int(11) NOT NULL,
+  `indirizzo_sostituzione` char(255) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_agenzia` int(11) DEFAULT NULL,
+  `id_agente` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `data_notizia` date DEFAULT NULL,
+  `data_sviluppo` date DEFAULT NULL,
+  `data_valutazione` date DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `prezzo_richiesto` decimal(15,2) DEFAULT NULL,
+  `prezzo_mq` decimal(15,2) DEFAULT NULL,
+  `prezzo_valutazione` decimal(15,2) DEFAULT NULL,
+  `prezzo_incarico` decimal(15,2) DEFAULT NULL,
+  `percentuale_intervallo` decimal(15,2) DEFAULT NULL,
+  `prezzo_prefisso` char(32) DEFAULT NULL,
+  `prezzo` decimal(15,2) DEFAULT NULL,
+  `prezzo_suffisso` char(32) DEFAULT NULL,
+  `prezzo_sostituzione` char(64) DEFAULT NULL,
+  `note` text,
+  `timestamp_incrocio` int(11) DEFAULT NULL,
+  `id_esito_incarico` int(11) DEFAULT NULL,
+  `id_esito_notizia` int(11) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
+  `note_archiviazione` text,
+  `id_account_editor` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000085
+
+-- incroci_immobili
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `incroci_immobili` (
+`id` int(11) NOT NULL,
+  `id_incarico` int(11) NOT NULL,
+  `id_richiesta` int(11) NOT NULL,
+  `note_incrocio` text,
+  `id_esito` int(11) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
+  `note_archiviazione` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000086
+
+-- indirizzi
+-- tipologia: tabella gestita
+
+CREATE TABLE IF NOT EXISTS `indirizzi` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_tipologia_edificio` int(11) DEFAULT NULL,
+  `id_condizione` int(11) DEFAULT NULL,
+  `id_agente` int(11) DEFAULT NULL,
+  `piani` int(11) DEFAULT NULL,
+  `descrizione` char(128) CHARACTER SET utf8 DEFAULT NULL,
+  `indirizzo` char(128) CHARACTER SET utf8 NOT NULL,
+  `civico` char(16) CHARACTER SET utf8 DEFAULT NULL,
+  `cap` char(11) CHARACTER SET utf8 DEFAULT NULL,
+  `localita` char(128) CHARACTER SET utf8 DEFAULT NULL,
+  `id_comune` int(11) NOT NULL,
+  `latitudine` decimal(11,7) DEFAULT NULL,
+  `longitudine` decimal(11,7) DEFAULT NULL,
+  `timestamp_geocode` int(11) DEFAULT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `note` text CHARACTER SET utf8,
+  `id_account_editor` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000087
+
+-- indirizzi_caratteristiche
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `indirizzi_caratteristiche` (
+`id` int(11) NOT NULL,
+  `id_indirizzo` int(11) NOT NULL,
+  `id_caratteristica` int(11) NOT NULL,
+  `specifiche` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| FINE FILE
