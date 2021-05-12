@@ -210,7 +210,7 @@
 
     colonna                     | descrizione
     ----------------------------|---------------------------------------------------------------------------------------
-    mailing_mail.id             | l'ID che fa l'associazione fra l'ID mail, l'ID mailing e l'ID della coda
+    mailing_mail.id             | l'ID che fa l'associazione fra l'ID mail, l'ID mailing e l'ID coda
     mailing_mail.id_mail        | l'ID mail
     mailing_mail.id_mailing     | l'ID mailing
     mailing_mail.id_coda        | l'ID coda
@@ -222,6 +222,305 @@
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
     La vista mailing_mail_view relativa alla tabella mailing_mail presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+
+    mastri
+    ------
+    Questa tabella *gestita*...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    mastri.id                       |
+    mastri.nome                     | 
+    mastri.id_tipologia             |
+    mastri.note                     |
+    mastri.se_commerciale           |
+    mastri.se_produzione            | 
+    mastri.se_amministrazione       |
+    mastri.id_account_inserimento   |
+    mastri.timestamp_inserimento    |
+    mastri.id_account_aggiornamento |
+    mastri.timestamp_aggiornamento  |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista mastri_view relativa alla tabella mastri presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    marchi
+    ------
+    Questa tabella *gestita*...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    marchi.id                       |
+    marchi.nome                     | 
+    marchi.id_account_inserimento   |
+    marchi.timestamp_inserimento    |
+    marchi.id_account_aggiornamento |
+    marchi.timestamp_aggiornamento  |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista marchi_view relativa alla tabella marchi presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    matricole
+    ---------
+    Questa tabella *gestita*...
+
+    colonna                            | descrizione
+    -----------------------------------|---------------------------------------------------------------------------------------
+    matricole.id                       |
+    matricole.nome                     | 
+    matricole.testo                    |
+    matricole.id_account_inserimento   |
+    matricole.timestamp_inserimento    |
+    matricole.id_account_aggiornamento |
+    matricole.timestamp_aggiornamento  |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista matricole_view relativa alla tabella matricole presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    menu
+    ----
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    menu.id                           |
+    menu.id_pagina                    | 
+    menu.id_lingua                    |
+    menu.menu                         |
+    menu.nome                         |
+    menu.target                       |
+    menu.ordine                       |
+    menu.sottopagine                  |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista menu_view relativa alla tabella menu presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    metadati
+    --------
+    Questa tabella *gestita*...
+    
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    metadati.id                       |
+    metadati.id_anagrafica            | 
+    metadati.id_prodotto              |
+    metadati.id_articolo              |
+    metadati.id_categoria_prodotti    |
+    metadati.id_risorsa               |
+    metadati.id_categoria_risorse     |
+    metadati.id_immagine              |
+    metadati.id_video                 |
+    metadati.id_file                  |
+    metadati.id_pagina                |
+    metadati.id_evento                |
+    metadati.id_categoria_eventi      |
+    metadati.id_notizia               |
+    metadati.id_categoria_notizie     |
+    metadati.id_mailing               |
+    metadati.id_lingua                |
+    metadati.nome                     |
+    metadati.testo                    |
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista metadati_view relativa alla tabella metadati presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    modalita_consegna
+    -----------------
+    Questa tabella *gestita*...
+    
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    modalita_consegna.id              |
+    modalita_consegna.nome            | 
+    modalita_consegna.suggerimento    |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista modalita_consegna_view relativa alla tabella modalita_consegna presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    modalita_consegna_prezzi
+    ------------------------
+    Questa tabella *gestita*...
+    
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    modalita_consegna_prezzi.id                      |
+    modalita_consegna_prezzi.id_modalita             | 
+    modalita_consegna_prezzi.id_zona                 |
+    modalita_consegna_prezzi.id_categoria_prodotti   |
+    modalita_consegna_prezzi.prezzo                  | 
+    modalita_consegna_prezzi.id_listino              |
+    modalita_consegna_prezzi.id_valuta               |
+    modalita_consegna_prezzi.id_iva                  | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista modalita_consegna_prezzi_view relativa alla tabella modalita_consegna_prezzi presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    
+    modalita_pagamento
+    ------------------
+    Questa tabella *gestita*...
+    
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    modalita_pagamento.id                      |
+    modalita_pagamento.nome                    | 
+    modalita_pagamento.suggerimento            |
+    modalita_pagamento.ordine                  |
+    modalita_pagamento.importo_min             | 
+    modalita_pagamento.importo_max             |
+    modalita_pagamento.percentuale_acconto     |
+    modalita_pagamento.se_contanti             | 
+    modalita_pagamento.provider                |
+    modalita_pagamento.codice                  | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista modalita_pagamento_view relativa alla tabella modalita_pagamento presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    modalita_pagamento_prezzi
+    -------------------------
+    Questa tabella *gestita*...
+    
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    modalita_pagamento_prezzi.id                     |
+    modalita_pagamento_prezzi.id_modalita            | 
+    modalita_pagamento_prezzi.id_zona                |
+    modalita_pagamento_prezzi.id_categoria_prodotti  |
+    modalita_pagamento_prezzi.prezzo                 | 
+    modalita_pagamento_prezzi.prezzo_relativo        | 
+    modalita_pagamento_prezzi.id_listino             |
+    modalita_pagamento_prezzi.id_valuta              |
+    modalita_pagamento_prezzi.id_iva                 | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista modalita_pagamento_prezzi_view relativa alla tabella modalita_pagamento_prezzi presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    modalita_spedizione
+    -------------------
+    Questa tabella *gestita*...
+    
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    modalita_spedizione.id              |
+    modalita_spedizione.nome            | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista modalita_spedizione_view relativa alla tabella modalita_spedizione presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    modalita_spedizione_prezzi
+    ------------------------
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    modalita_spedizione_prezzi.id                     |
+    modalita_spedizione_prezzi.id_modalita            | 
+    modalita_spedizione_prezzi.id_zona                |
+    modalita_spedizione_prezzi.id_categoria_prodotti  |
+    modalita_spedizione_prezzi.prezzo                 | 
+    modalita_spedizione_prezzi.id_listino             |
+    modalita_spedizione_prezzi.id_valuta              |
+    modalita_spedizione_prezzi.id_iva                 | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista modalita_spedizione_prezzi_view relativa alla tabella modalita_spedizione_prezzi presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    motivazioni_tari_anagrafica
+    ---------------------------
+    Questa tabella di *supporto*...
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    motivazioni_tari_anagrafica.id                    |
+    motivazioni_tari_anagrafica.id_tari_anagrafica    | 
+    motivazioni_tari_anagrafica.id_motivazione        |
+    motivazioni_tari_anagrafica.riga_provenienza      | 
+    motivazioni_tari_anagrafica.dettagli_provenienza  |
+    motivazioni_tari_anagrafica.path                  | 
+    motivazioni_tari_anagrafica.riga                  | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista motivazioni_tari_anagrafica_view relativa alla tabella motivazioni_tari_anagrafica presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
