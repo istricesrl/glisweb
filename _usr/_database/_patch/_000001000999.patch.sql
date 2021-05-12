@@ -1916,4 +1916,119 @@ CREATE TABLE IF NOT EXISTS `pagine_gruppi` (
   `id_gruppo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000123
+
+-- patrocini_pratiche
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `patrocini_pratiche` (
+`id` int(11) NOT NULL,
+  `id_pratica` int(11) NOT NULL,
+  `numero` char(32) NOT NULL,
+  `se_liquidato` int(1) DEFAULT NULL,
+  `se_fatturato` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000124
+
+-- pause_progetti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `pause_progetti` (
+`id` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `data_inizio` date NOT NULL,
+  `data_fine` date NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000125
+
+-- periodi_variazioni_attivita
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `periodi_variazioni_attivita` (
+`id` int(11) NOT NULL,
+  `id_variazione` int(11) NOT NULL,
+  `data_inizio` date NOT NULL,
+  `data_fine` date NOT NULL,
+  `ora_inizio` time DEFAULT NULL,
+  `ora_fine` time DEFAULT NULL,
+  `timestamp_elaborazione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000126
+
+-- pianificazioni
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `pianificazioni` (
+`id` int(11) NOT NULL,
+  `entita` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
+  `id_turno` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `periodicita` int(11) NOT NULL,
+  `cadenza` int(11) DEFAULT NULL,
+  `se_lunedi` int(1) DEFAULT NULL,
+  `se_martedi` int(1) DEFAULT NULL,
+  `se_mercoledi` int(1) DEFAULT NULL,
+  `se_giovedi` int(1) DEFAULT NULL,
+  `se_venerdi` int(1) DEFAULT NULL,
+  `se_sabato` int(1) DEFAULT NULL,
+  `se_domenica` int(1) DEFAULT NULL,
+  `ripetizione_mese` int(11) DEFAULT NULL,
+  `ripetizione_anno` int(11) DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `data_ultimo_oggetto` date DEFAULT NULL,
+  `giorni_rinnovo` int(11) DEFAULT NULL,
+  `note` text,
+  `workspace` text,
+  `token` char(128) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000127
+
+-- popup
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `popup` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `id_html` char(128) DEFAULT NULL,
+  `classi_html` char(128) DEFAULT NULL,
+  `note` text,
+  `id_tipologia` int(11) NOT NULL,
+  `id_tipologia_pubblicazione` int(11) DEFAULT NULL,
+  `n_scroll` int(11) DEFAULT NULL,
+  `n_secondi` int(11) DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `classe_attivazione` char(128) DEFAULT NULL,
+  `se_ovunque` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000128
+
+-- popup_pagine`
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `popup_pagine` (
+`id` int(11) NOT NULL,
+  `id_pagina` int(11) NOT NULL,
+  `id_popup` int(11) NOT NULL,
+  `se_presente` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 --| FINE FILE
