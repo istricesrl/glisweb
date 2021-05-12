@@ -1510,4 +1510,79 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `id_account_inserimento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000097
+
+-- mail_liste_mailing
+-- tipolgia: tabella gestita
+CREATE TABLE IF NOT EXISTS `mail_liste_mailing` (
+`id` int(11) NOT NULL,
+  `id_mail` int(11) NOT NULL,
+  `id_lista` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000098
+
+-- mail_out
+-- tipolgia: tabella gestita
+CREATE TABLE IF NOT EXISTS `mail_out` (
+`id` int(11) NOT NULL,
+  `timestamp_composizione` int(11) NOT NULL,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `server` char(128) DEFAULT NULL,
+  `mittente` char(254) NOT NULL,
+  `destinatari` text NOT NULL,
+  `destinatari_cc` text,
+  `destinatari_bcc` text,
+  `oggetto` char(254) NOT NULL,
+  `corpo` text NOT NULL,
+  `allegati` text,
+  `headers` text,
+  `host` char(254) DEFAULT NULL,
+  `port` char(6) DEFAULT NULL,
+  `user` char(254) DEFAULT NULL,
+  `password` char(254) DEFAULT NULL,
+  `id_newsletter` int(11) DEFAULT NULL,
+  `id_email` int(11) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT '0',
+  `token` char(128) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000099
+
+-- mail_sent
+-- tipolgia: tabella gestita
+CREATE TABLE IF NOT EXISTS `mail_sent` (
+  `id` int(11) NOT NULL,
+  `timestamp_composizione` int(11) NOT NULL,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `server` char(128) DEFAULT NULL,
+  `mittente` char(254) NOT NULL,
+  `destinatari` text NOT NULL,
+  `destinatari_cc` text,
+  `destinatari_bcc` text,
+  `oggetto` char(254) NOT NULL,
+  `corpo` text NOT NULL,
+  `allegati` text,
+  `headers` text,
+  `host` char(254) DEFAULT NULL,
+  `port` char(6) DEFAULT NULL,
+  `user` char(254) DEFAULT NULL,
+  `password` char(254) DEFAULT NULL,
+  `id_newsletter` int(11) DEFAULT NULL,
+  `id_email` int(11) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT '0',
+  `token` char(128) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 --| FINE FILE
