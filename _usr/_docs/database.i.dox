@@ -6,14 +6,357 @@
 
     le tabelle del database di supporto IA - IZ
     ===========================================
+    
+    iban
+    ----
+    Questa tabella *gestita*...
 
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    iban.id                         | l'ID dell'iban
+    iban.id_anagrafica              | l'ID dell'anagrafica
+    iban.intestazione               | l'ID dell'intestazione dell'iban
+    iban.iban                       | 
+    iban.note                       | 
+    iban.id_account_inserimento     | 
+    iban.timestamp_inserimento      | 
+    iban.id_account_aggiornamento   |
+    iban.timestamp_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista iban_view relativa alla tabella iban presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     immagini
     --------
+    Questa tabella *gestita*...
 
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    immagini.id                         | l'ID dell'immagine
+    immagini.id_anagrafica              | l'ID dell'anagrafica 
+    immagini.id_pagina                  | l'ID della pagine dell'immagine
+    immagini.id_file                    | l'ID del file dell'immagine
+    immagini.id_prodotto                | l'ID del prodotto dell'immagine
+    immagini.id_articolo                | l'ID dell'articolo dell'immagine
+    immagini.id_categoria_prodotti      | l'ID della categoria prodotto dell'immagine
+    immagini.id_risorsa                 | l'ID della risorsa dell'immagine
+    immagini.id_categoria_risorse       | l'ID della categoria della risorsa dell'immagine
+    immagini.id_evento                  | l'ID dell'evento dell'immagine
+    immagini.id_categoria_eventi        | l'ID della categoria dell'evento dell'immagine
+    immagini.id_notizia                 | l'ID della notizia
+    immagini.id_categoria_notizie       | 
+    immagini.id_indirizzo               | 
+    immagini.id_immobile                | l'ID dell'immobile dell'immagine
+    immagini.id_testata                 | 
+    immagini.id_zona                    |
+    immagini.id_lingua                  | l'ID della lingua dell'immagine
+    immagini.orientamento               | 
+    immagini.path                       | 
+    immagini.path_alternativo           | 
+    immagini.nome                       | 
+    immagini.id_ruolo                   | 
+    immagini.ordine                     | 
+    immagini.anno                       | 
+    immagini.taglio                     |
+    immagini.token                      | 
+    immagini.id_account_inserimento     | 
+    immagini.timestamp_inserimento      | 
+    immagini.id_account_aggiornamento   |
+    immagini.timestamp_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista immagini_view relativa alla tabella immagini presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     immagini_anagrafica
     -------------------
+    Questa tabella *gestita*...
 
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    immagini_anagrafica.id                         | l'ID che fa l'associazione fra l'ID anagrafica e l'ID immagine
+    immagini_anagrafica.id_immagine                | l'ID dell'immagine
+    ibaimmagini_anagrafican.id_anagrafica          | l'ID dell'anagrafica
+    immagini_anagrafica.id_ruolo                   | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista immagini_anagrafica_view relativa alla tabella immagini_anagrafica presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    immagini_ruoli
+    --------------
+    Questa tabella *gestita*...
+
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    immagini_ruoli.id                         | 
+    immagini_ruoli.id_immagine                | 
+    immagini_ruoli.id_prodotto                | 
+    immagini_ruoli.id_categoria_prodotti      | 
+    immagini_ruoli.id_ruolo                   | 
+    immagini_ruoli.ordine                     | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista immagini_ruoli_view relativa alla tabella immagini_ruoli presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    immobili
+    --------
+    Questa tabella *gestita*...
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    immobili.id                                 | l'ID dell'immobile
+    immobili.id_tipologia                       | l'ID della tipologia immobile 
+    immobili.id_indirizzo                       | l'ID dell'indirizzo dell'immobile
+    immobili.indirizzo_sostituzione             | l'ID dell'indirizzo di sostituzione dell'immobile
+    immobili.scala                              | 
+    immobili.interno                            | 
+    immobili.piano                              | 
+    immobili.campanello                         | 
+    immobili.livelli                            | 
+    immobili.mq_commerciali                     | 
+    immobili.mq_calpestabili                    | 
+    immobili.mq_modificatore                    | 
+    immobili.prezzo_mq                          | 
+    immobili.prezzo_valutazione                 | 
+    immobili.percentuale_incremento_commerciale | 
+    immobili.id_condizione                      | 
+    immobili.id_disponibilita                   | l'ID della disponibilità dell'immobile
+    immobili.id_classe_energetica               | l'ID della classe energetica dell'immobile
+    immobili.spese_annue                        | 
+    immobili.note_censimento                    | 
+    immobili.note_struttura                     | 
+    immobili.id_account_editor                  | 
+    immobili.id_account_inserimento             | 
+    immobili.timestamp_inserimento              | 
+    immobili.id_account_aggiornamento           |
+    immobili.timestamp_aggiornamento            | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista immobili_view relativa alla tabella immobili presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    immobili_anagrafica
+    -------------------
+    Questa tabella *gestita*...
+
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    immobili_anagrafica.id                         | l'ID che fa l'associazione fra l'ID anagrafica e l'ID immobile
+    immobili_anagrafica.id_immobile                | l'ID dell'immobile
+    immobili_anagrafica.id_anagrafica              | l'ID dell'anagrafica 
+    immobili_anagrafica.id_ruolo                   | 
+    immobili_anagrafica.id_account_inserimento     | 
+    immobili_anagrafica.timestamp_inserimento      | 
+    immobili_anagrafica.id_account_aggiornamento   |
+    immobili_anagrafica.timestamp_aggiornamento    | 
+   
+   La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista immobili_anagrafica_view relativa alla tabella immobili_anagrafica presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    immobili_caratteristiche
+    ------------------------
+    Questa tabella *gestita*...
+
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    immobili_caratteristiche.id                    | l'ID che fa l'associazione fra l'ID caratteristica e l'ID immobile
+    immobili_caratteristiche.id_immobile           | l'ID dell'immobile
+    immobili_caratteristiche.id_caratteristica     | l'ID caratteristica
+    immobili_caratteristiche.specifiche            |
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista immobili_caratteristiche_view relativa alla tabella immobili_caratteristiche presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    incarichi_immobili
+    ------------------
+    Questa tabella *gestita*...
+
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    incarichi_immobili.id                            | l'ID dell'immobile
+    incarichi_immobili.riferimento                   | l'ID della tipologia immobile 
+    incarichi_immobili.id_immobile                   | l'ID dell'indirizzo dell'immobile
+    incarichi_immobili.indirizzo_sostituzione        | l'ID dell'indirizzo di sostituzione dell'immobile
+    incarichi_immobili.id_cliente                    | 
+    incarichi_immobili.id_agenzia                    | 
+    incarichi_immobili.id_agente                     |
+    incarichi_immobili.id_tipologia                  | 
+    incarichi_immobili.data_notizia                  | 
+    incarichi_immobili.data_sviluppo                 | 
+    incarichi_immobili.data_valutazione              |
+    incarichi_immobili.data_inizio                   | 
+    incarichi_immobili.data_fine                     | 
+    incarichi_immobili.prezzo_richiesto              | 
+    incarichi_immobili.prezzo_mq                     |
+    incarichi_immobili.prezzo_valutazione            | 
+    incarichi_immobili.prezzo_incarico               | 
+    incarichi_immobili.percentuale_intervallo        | 
+    incarichi_immobili.prezzo_prefisso               |
+    incarichi_immobili.prezzo                        | 
+    incarichi_immobili.prezzo_suffisso               |
+    incarichi_immobili.prezzo_sostituzione           | 
+    incarichi_immobili.note                          | 
+    incarichi_immobili.timestamp_incrocio            | 
+    incarichi_immobili.id_esito_incarico             |
+    incarichi_immobili.id_esito_notizia              | 
+    incarichi_immobili.timestamp_archiviazione       | 
+    incarichi_immobili.note_archiviazione            | 
+    incarichi_immobili.id_account_editor             |
+    incarichi_immobili.id_account_inserimento        | 
+    incarichi_immobili.timestamp_inserimento         | 
+    incarichi_immobili.id_account_aggiornamento      |
+    incarichi_immobili.timestamp_aggiornamento       | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista incarichi_immobili_view relativa alla tabella incarichi_immobili presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    incroci_immobili
+    ----------------
+    Questa tabella *gestita*...
+
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    incroci_immobili.id                       | 
+    incroci_immobili.id_incarico              | 
+    incroci_immobili.id_richiesta             | 
+    incroci_immobili.note_incrocio            |
+    incroci_immobili.id_esito                 | 
+    incroci_immobili.timestamp_archiviazione  | 
+    incroci_immobili.note_archiviazione       |
+    incroci_immobili.id_account_inserimento   | 
+    incroci_immobili.timestamp_inserimento    | 
+    incroci_immobili.id_account_aggiornamento | 
+    incroci_immobili.timestamp_aggiornamento  |
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista incroci_immobili_view relativa alla tabella incroci_immobili presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     indirizzi
     ---------
+    Questa tabella *gestita*...
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    indirizzi.id                            | l'ID dell'indirizzo
+    indirizzi.id_anagrafica                 | l'ID dell'anagrafica dell'indirizzo
+    indirizzi.id_tipologia                  | l'ID della tipologia di indirizzo
+    indirizzi.id_tipologia_edificio         | 
+    indirizzi.id_condizione                 | 
+    indirizzi.id_agente                     | 
+    indirizzi.piani                         |
+    indirizzi.descrizione                   | 
+    indirizzi.indirizzo                     | 
+    indirizzi.civico                        | 
+    indirizzi.cap                           |
+    indirizzi.localita                      | 
+    indirizzi.id_comune                     | 
+    indirizzi.latitudine                    | 
+    indirizzi.longitudine                   |
+    indirizzi.timestamp_geocode             | 
+    indirizzi.id_zona                       | l'ID della zona del''indirizzo
+    indirizzi.note                          | 
+    indirizzi.id_account_editor             |
+    indirizzi.id_account_inserimento        | 
+    indirizzi.timestamp_inserimento         | 
+    indirizzi.id_account_aggiornamento      |
+    indirizzi.timestamp_aggiornamento       | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista indirizzi_view relativa alla tabella indirizzi presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    indirizzi_caratteristiche
+    -------------------------
+    Questa tabella *gestita*...
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    indirizzi_caratteristiche.indirizzi_caratteristiche |
+    indirizzi_caratteristiche.id                        |
+    indirizzi_caratteristiche.id_indirizzo              |
+    indirizzi_caratteristiche.id_caratteristica         | 
+    indirizzi_caratteristiche.specifiche                |
+    indirizzi_caratteristiche.id_account_inserimento    | 
+    indirizzi_caratteristiche.timestamp_inserimento     | 
+    indirizzi_caratteristiche.id_account_aggiornamento  |
+    indirizzi_caratteristiche.timestamp_aggiornamento   | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista indirizzi_caratteristiche_view relativa alla tabella indirizzi_caratteristiche presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+   
 
 */
