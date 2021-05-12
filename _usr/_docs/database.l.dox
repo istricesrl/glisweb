@@ -1,5 +1,4 @@
 /*!
-
     \page database_i database del framework, tabelle con la lettera I
 
     Dettagli delle tabelle del database del framework che iniziano con la lettera I.
@@ -7,28 +6,115 @@
     le tabelle del database di supporto LA - LZ
     ===========================================
     
-    iban
-    ----
+    lingue
+    ------
     Questa tabella *gestita*...
 
     colonna                         | descrizione
     --------------------------------|---------------------------------------------------------------------------------------
-    iban.id                         | l'ID dell'iban
-    iban.id_anagrafica              | l'ID dell'anagrafica
-    iban.intestazione               | l'ID dell'intestazione dell'iban
-    iban.iban                       | 
-    iban.note                       | 
-    iban.id_account_inserimento     | 
-    iban.timestamp_inserimento      | 
-    iban.id_account_aggiornamento   |
-    iban.timestamp_aggiornamento    | 
-
+    lingue.id                       | l'ID della lingua
+    lingue.nome                     | contiene annotazioni libere sulla lingua, di solito il nome e il paese
+    lingue.note                     | contiene il nome comune della lingua, in italiano
+    lingue.iso6391alpha2            | fa riferimento allo standard ISO 639-1 alpha-2
+    lingue.iso6393alpha3            | fa riferimento allo standard ISO 639-3 alpha-3
+    lingue.ietf                     | fa riferimento allo standard IETF
+  
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
-    La vista iban_view relativa alla tabella iban presenta le seguenti colonne:
+    La vista lingue_view relativa alla tabella lingue presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    liste_mailing
+    -------------
+    Questa tabella *gestita*...
+
+    colonna                                  | descrizione
+    -----------------------------------------|---------------------------------------------------------------------------------------
+    liste_mailing.id                         | l'ID della mailing lista
+    liste_mailing.nome                       | il nome della mailing lista
+    liste_mailing.descrizione                | la descrizione del contenuto della mailing lista
+    liste_mailing.id_account_inserimento     | 
+    liste_mailing.timestamp_inserimento      | 
+    liste_mailing.id_account_aggiornamento   | 
+    liste_mailing.timestamp_aggiornamento    | 
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista liste_mailing_view relativa alla tabella liste_mailing presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    listini
+    -------
+    Questa tabella *gestita*...
+
+    colonna                            | descrizione
+    -----------------------------------|---------------------------------------------------------------------------------------
+    listini.id                         | l'ID del listino
+    listini.nome                       | il nome del listino
+    listini.id_valuta                  | 
+
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista listini_view relativa alla tabella listini presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    listini_clienti
+    ---------------
+    Questa tabella *gestita*...
+
+    colonna                            | descrizione
+    -----------------------------------|---------------------------------------------------------------------------------------
+    listini_clienti.id                 | l'ID che fa l'associazione fra l'id del listino e l'id del cliente
+    listini_clienti.id_listino         | l'ID del listino
+    listini_clienti.id_cliente         | l'ID del cliente
+
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista listini_clienti_view relativa alla tabella listini_clienti presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    luoghi
+    ------
+    Questa tabella *gestita*...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    luoghi.id                       | 
+    luoghi.id_genitore              | 
+    luoghi.nome                     | 
+    luoghi.id_account_inserimento   | 
+    luoghi.timestamp_inserimento    | 
+    luoghi.id_account_aggiornamento | 
+    luoghi.timestamp_aggiornamento  | 
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista luoghi_view relativa alla tabella luoghi presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
