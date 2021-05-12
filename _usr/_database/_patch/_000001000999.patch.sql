@@ -1046,7 +1046,6 @@ CREATE TABLE IF NOT EXISTS `eventi_categorie` (
   `ordine` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 --| 000001000072
 
 -- fatturati
@@ -1068,7 +1067,6 @@ CREATE TABLE IF NOT EXISTS `fatturati` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 --| 000001000073
 
@@ -1103,7 +1101,6 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 --| 000001000074
 
@@ -1384,6 +1381,102 @@ CREATE TABLE IF NOT EXISTS `indirizzi_caratteristiche` (
   `id_indirizzo` int(11) NOT NULL,
   `id_caratteristica` int(11) NOT NULL,
   `specifiche` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000088
+
+-- iva
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `iva` (
+`id` int(11) NOT NULL,
+  `aliquota` decimal(5,2) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `descrizione` text,
+  `codice` char(8) DEFAULT NULL,
+  `se_ecommerce` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000089
+
+-- job
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `job` (
+`id` int(11) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `job` char(255) NOT NULL,
+  `timestamp_apertura` int(11) DEFAULT NULL,
+  `totale` int(11) DEFAULT NULL,
+  `corrente` int(11) DEFAULT NULL,
+  `iterazioni` int(11) DEFAULT NULL,
+  `delay` int(11) DEFAULT NULL,
+  `workspace` text,
+  `timestamp_esecuzione` int(11) DEFAULT NULL,
+  `timestamp_completamento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000090
+
+-- lingue
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `lingue` (
+`id` int(11) NOT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `note` char(128) COLLATE utf8_general_ci DEFAULT NULL,
+  `iso6391alpha2` char(36) COLLATE utf8_general_ci DEFAULT NULL,
+  `iso6393alpha3` char(36) COLLATE utf8_general_ci DEFAULT NULL,
+  `ietf` char(36) COLLATE utf8_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000091
+
+-- liste_mailing
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `liste_mailing` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `descrizione` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000092
+
+-- listini
+-- tipologia: tabella assistita
+CREATE TABLE IF NOT EXISTS `listini` (
+`id` int(11) NOT NULL,
+  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `id_valuta` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000093
+
+-- listini_clienti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `listini_clienti` (
+`id` int(11) NOT NULL,
+  `id_listino` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000094
+
+-- luoghi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `luoghi` (
+`id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(255) COLLATE utf8_general_ci NOT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
