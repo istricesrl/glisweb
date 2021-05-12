@@ -1584,5 +1584,43 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000100
+
+-- mailing
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `mailing` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `note` text,
+  `id_job` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000101
+
+-- mailing_liste
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `mailing_liste` (
+`id` int(11) NOT NULL,
+  `id_mailing` int(11) NOT NULL,
+  `id_lista` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000102
+
+-- mailing_mail
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `mailing_mail` (
+`id` int(11) NOT NULL,
+  `id_mail` int(11) NOT NULL,
+  `id_mailing` int(11) NOT NULL,
+  `id_mail_coda` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 --| FINE FILE
