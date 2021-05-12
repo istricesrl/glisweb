@@ -54,10 +54,108 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     
+    mail_liste_mailing
+    ------------------
+    Questa tabella *gestita*...
+
+    colonna                          | descrizione
+    ---------------------------------|---------------------------------------------------------------------------------------
+    mail_liste_mailing.id            | l'ID che fa l'associazione fra l'ID della mail et l'ID della lista
+    mail_liste_mailing.id_mail       | l'ID della mail
+    mail_liste_mailing.id_lista      | l'ID della lista
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista mail_liste_mailing_view relativa alla tabella mail_liste_mailing presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     mail_out
     --------
+    Questa tabella *gestita*...
 
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    mail_out.id                       |
+    mail_out.timestamp_composizione   | 
+    mail_out.timestamp_invio          |
+    mail_out.server                   |
+    mail_out.mittente                 | 
+    mail_out.destinatari              |
+    mail_out.destinatari_cc           |
+    mail_out.destinatari_bcc          | 
+    mail_out.oggetto                  |
+    mail_out.corpo                    |
+    mail_out.allegati                 | 
+    mail_out.headers                  |
+    mail_out.host                     |
+    mail_out.port                     | 
+    mail_out.user                     |
+    mail_out.password                 |
+    mail_out.id_newsletter            | 
+    mail_out.id_email                 |
+    mail_out.tentativi                |
+    mail_out.token                    | 
+    mail_out.ordine                   | 
+    mail_out.id_account_inserimento   |
+    mail_out.timestamp_inserimento    |
+    mail_out.id_account_aggiornamento |
+    mail_out.timestamp_aggiornamento  |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista mail_out_view relativa alla tabella mail_out presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+   
     mail_sent
     ---------
+    Questa tabella *gestita*...
 
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    mail_sent.id                       |
+    mail_sent.timestamp_composizione   | 
+    mail_sent.timestamp_invio          |
+    mail_sent.server                   |
+    mail_sent.mittente                 | 
+    mail_sent.destinatari              |
+    mail_sent.destinatari_cc           |
+    mail_sent.destinatari_bcc          | 
+    mail_sent.oggetto                  |
+    mail_sent.corpo                    |
+    mail_sent.allegati                 | 
+    mail_sent.headers                  |
+    mail_sent.host                     |
+    mail_sent.port                     | 
+    mail_sent.user                     |
+    mail_sent.password                 |
+    mail_sent.id_newsletter            | 
+    mail_sent.id_email                 |
+    mail_sent.tentativi                |
+    mail_sent.token                    | 
+    mail_sent.ordine                   | 
+    mail_sent.id_account_inserimento   |
+    mail_sent.timestamp_inserimento    |
+    mail_sent.id_account_aggiornamento |
+    mail_sent.timestamp_aggiornamento  |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista mail_sent_view relativa alla tabella mail_sent presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+   
 */
