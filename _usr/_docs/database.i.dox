@@ -357,6 +357,50 @@
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-   
+    
+    ingombri
+    --------
+    Questa tabella *gestita*...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    ingombri.id                     | l'ID dell'ingombri
+    ingombri.nome                   | 
+    ingombri.min                    | 
+    ingombri.max                    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista ingombri_view relativa alla tabella ingombri presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    iva
+    ---
+    Questa tabella *gestita*...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    iva.id                          | l'ID dell'ingombri
+    iva.aliquota                    | aliquota dell'iva
+    iva.nome                        | 
+    iva.descrizione                 | 
+    iva.codice                      | 
+    iva.se_ecommerce                | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista iva_view relativa alla tabella iva presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
 
 */
