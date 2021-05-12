@@ -23,7 +23,7 @@
     pagine.id_tipologia_pubblicazione | 
     pagine.se_sitemap                 | 
     pagine.se_cacheable               | 
-    pagine.timestamp_inseriment       | 
+    pagine.timestamp_inserimento      | 
     pagine.id_account_inserimento     | 
     pagine.timestamp_aggiornamento    | 
     pagine.id_account_aggiornamento   | 
@@ -57,33 +57,173 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     
-    pagine
-    ------
+    patrocini_pratiche
+    ------------------
     Questa tabella *gestita*...
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
-    pagine.id                         | l'ID della pagine
-    pagine.id_genitore                | l'ID parente
-    pagine.id_sito                    | l'ID del sito al quale la pagina fa riferimento
-    pagine.nome                       | 
-    pagine.template                   |   
-    pagine.schema_html                | 
-    pagine.tema_css                   | 
-    pagine.id_contenuti               | 
-    pagine.id_tipologia_pubblicazione | 
-    pagine.se_sitemap                 | 
-    pagine.se_cacheable               | 
-    pagine.timestamp_inseriment       | 
-    pagine.id_account_inserimento     | 
-    pagine.timestamp_aggiornamento    | 
-    pagine.id_account_aggiornamento   | 
+    patrocini_pratiche.id             | l'ID del patrocini della pratica
+    patrocini_pratiche.id_pratica     |
+    patrocini_pratiche.numero         | 
+    patrocini_pratiche.nome           | 
+    patrocini_pratiche.se_liquidato   |   
+    patrocini_pratiche.se_fatturato   | 
+ 
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista patrocini_pratiche_view relativa alla tabella patrocini_pratiche presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    pause_progetti
+    --------------
+    Questa tabella *gestita*...
+    
+    colonna                                 | descrizione
+    ----------------------------------------|--------------------------------------------------------------------------------------------
+    pause_progetti.id                       | l'ID della pausa del progetto
+    pause_progetti.id_progetto              | l'ID del progetto
+    pause_progetti.data_inizio              |   
+    pause_progetti.data_fine                |    
+    pause_progetti.timestamp_inserimento    | 
+    pause_progetti.id_account_inserimento   | 
+    pause_progetti.timestamp_aggiornamento  | 
+    pause_progetti.id_account_aggiornamento | 
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
-    La vista pagine_view relativa alla tabella pagine presenta le seguenti colonne:
+    La vista pause_progetti_view relativa alla tabella pause_progetti presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    periodi_variazioni_attivita
+    ---------------------------
+    Questa tabella *gestita*...
+    
+    colonna                                              | descrizione
+    -----------------------------------------------------|--------------------------------------------------------------------------------------------
+    periodi_variazioni_attivita.id                       | l'ID del periodo di variazione
+    periodi_variazioni_attivita.id_variazione            | l'ID della variazione
+    periodi_variazioni_attivita.data_inizio              |   
+    periodi_variazioni_attivita.data_fine                |    
+    periodi_variazioni_attivita.ora_inizio               |  
+    periodi_variazioni_attivita.ora_fine                 | 
+    periodi_variazioni_attivita.timestamp_elaborazione   |             
+    periodi_variazioni_attivita.timestamp_inserimento    | 
+    periodi_variazioni_attivita.id_account_inserimento   | 
+    periodi_variazioni_attivita.timestamp_aggiornamento  | 
+    periodi_variazioni_attivita.id_account_aggiornamento | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista periodi_variazioni_attivita_view relativa alla tabella periodi_variazioni_attivita presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+  
+    pianificazioni
+    --------------
+    Questa tabella *gestita*...
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    pianificazioni.id                          | l'ID della pianificazione
+    pianificazioni.entita                      | 
+    pianificazioni.nome                        | 
+    pianificazioni.id_todo                     | 
+    pianificazioni.id_turno                    |   
+    pianificazioni.id_progetto                 |
+    pianificazioni.periodicita                 | 
+    pianificazioni.cadenza                     | 
+    pianificazioni.se_lunedi                   | 
+    pianificazioni.se_martedi                  | 
+    pianificazioni.se_mercoledi                | 
+    pianificazioni.se_giovedi                  | 
+    pianificazioni.se_venerdi                  | 
+    pianificazioni.se_sabato                   | 
+    pianificazioni.se_domenica                 | 
+    pianificazioni.ripetizione_mese            | 
+    pianificazioni.ripetizione_anno            | 
+    pianificazioni.data_fine                   | 
+    pianificazioni.data_ultimo_oggetto         | 
+    pianificazioni.giorni_rinnovo              | 
+    pianificazioni.note                        | 
+    pianificazioni.workspace                   | 
+    pianificazioni.token                       | 
+    pianificazioni.timestamp_inserimento       | 
+    pianificazioni.id_account_inserimento      | 
+    pianificazioni.timestamp_aggiornamento     | 
+    pianificazioni.id_account_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista pianificazioni_view relativa alla tabella pianificazioni presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    popup
+    ------
+    Questa tabella *gestita*...
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    popup.id                          | l'ID del popup
+    popup.nome                        | 
+    popup.id_html                     | l'ID dell'html del popup
+    popup.classi_html                 | l'ID della classe html del popup
+    popup.note                        |
+    popup.id_tipologia                | l'ID della tipologia del popup
+    popup.id_tipologia_pubblicazione  | l'ID della tipologia di pubblicazione nel popup
+    popup.n_scroll                    | 
+    popup.n_secondi                   | 
+    popup.template                    | 
+    popup.schema_html                 | 
+    popup.classe_attivazione          | 
+    popup.se_ovunque                  | 
+    popup.timestamp_inserimento       | 
+    popup.id_account_inserimento      | 
+    popup.timestamp_aggiornamento     | 
+    popup.id_account_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista popup_view relativa alla tabella popup presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    popup_pagine
+    ------
+    Questa tabella *gestita*...
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    popup_pagine.id                   | l'ID dell'associazione fra l'ID della pagina e l'ID popup
+    popup_pagine.id_pagina            | l'ID della pagina
+    popup_pagine.id_popup             | l'ID del popup
+    popup_pagine.se_presente          |   
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista popup_pagine_view relativa alla tabella popup_pagine presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
