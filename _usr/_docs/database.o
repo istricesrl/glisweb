@@ -1,0 +1,56 @@
+/*!
+
+    \page database_m database del framework, tabelle con la lettera O
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera O.
+
+    le tabelle del database di supporto OA - OZ
+    ===========================================
+    
+    orari_contratti
+    ---------------
+    
+    Questa tabella *gestita*...
+
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    orari_contratti.id                        | l'ID dell'orario contratti
+    orari_contratti.id_contratto              | l'ID del contratto
+    orari_contratti.turno                     | 
+    orari_contratti.id_giorno                 | 
+    orari_contratti.ora_inizio                | 
+    orari_contratti.ora_fine                  | 
+    orari_contratti.id_costo                  | 
+    orari_contratti.se_lavoro                 | 
+    orari_contratti.se_disponibile            | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista orari_contratti_view relativa alla tabella orari_contratti presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    orientamenti_sessuali
+    ---------------------
+    
+    Questa tabella di *supporto*...
+
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    orientamenti_sessuali.id          | l'ID dell'orientamento sessuale
+    orientamenti_sessuali.nome        | il nome commune dell'orientamento sessuale
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista orientamenti_sessuali_view relativa alla tabella orientamenti_sessuali presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
