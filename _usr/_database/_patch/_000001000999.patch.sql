@@ -2388,4 +2388,38 @@ CREATE TABLE IF NOT EXISTS `regioni` (
   `codice_istat` char(2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000152
+
+-- richieste_immobili
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `richieste_immobili` (
+`id` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `id_agente` int(11) DEFAULT NULL,
+  `piano_min` int(11) DEFAULT NULL,
+  `piano_max` int(11) DEFAULT NULL,
+  `mq_min` decimal(5,2) DEFAULT NULL,
+  `mq_max` decimal(5,2) DEFAULT NULL,
+  `cucine_min` int(11) DEFAULT NULL,
+  `cucine_max` int(11) DEFAULT NULL,
+  `bagni_min` int(11) DEFAULT NULL,
+  `bagni_max` int(11) DEFAULT NULL,
+  `camere_min` int(11) DEFAULT NULL,
+  `camere_max` int(11) DEFAULT NULL,
+  `spese_min` decimal(15,2) DEFAULT NULL,
+  `spese_max` decimal(15,2) DEFAULT NULL,
+  `note_richiesta` text,
+  `note_interne` text,
+  `timestamp_incrocio` int(11) DEFAULT NULL,
+  `id_esito` int(11) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
+  `note_archiviazione` text,
+  `id_account_editor` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 --| FINE FILE
