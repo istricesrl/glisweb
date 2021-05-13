@@ -6,6 +6,111 @@
 
     le tabelle del database di supporto TA - TZ
     ===========================================
+    
+    taglie
+    ------
+    Questa tabbella di *supporto*
+    
+    colonna                 | descrizione
+    ------------------------|---------------------------------------------------------------------------------------
+    taglie.id               | l'ID della taglia
+    taglie.it               | taglie italiane
+    taglie.eu               | taglie europee
+    taglie.us               | taglie americane
+    taglie.uk               | taglie nel Regno Unite
+    taglie.fr               | taglie francese
+    taglie.international    | taglie internazionale
+    taglie.jeans            | taglie jeans
+    taglie.id_tipologia     | l'ID della tipologia di taglie
+    taglie.cm               | taglia ripportata in centimetri
+  
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *taglie_view* relativa alla tabella *taglie* presenta le seguenti colonne:
+    
+    tari_anagrafica
+    ---------------
+    Questa tabbella di *supporto*
+    
+    colonna                          | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    tari_anagrafica.id                           | 
+    tari_anagrafica.id_anagrafica                | 
+    tari_anagrafica.anno                         | 
+    tari_anagrafica.se_verificato                | 
+    tari_anagrafica.data_verifica                | 
+    tari_anagrafica.id_operatore_verifica        | 
+    tari_anagrafica.note_verifica                | 
+    tari_anagrafica.se_gestito                   | 
+    tari_anagrafica.data_gestione                | 
+    tari_anagrafica.id_operatore_gestione        | 
+    tari_anagrafica.note_gestione                |
+    tari_anagrafica.se_convocato                 | 
+    tari_anagrafica.se_convocato                 | 
+    tari_anagrafica.data_convocazione            | 
+    tari_anagrafica.id_operatore_convocazione    | 
+    tari_anagrafica.note_convocazione            | 
+    tari_anagrafica.se_confermato                | 
+    tari_anagrafica.data_conferma                | 
+    tari_anagrafica.id_operatore_conferma        | 
+    tari_anagrafica.note_conferma                | 
+    tari_anagrafica.id_tipologia                 | 
+    tari_anagrafica.data_aggiornamento           | 
+    tari_anagrafica.id_account_inserimento       | 
+    tari_anagrafica.timestamp_inserimento        | 
+    tari_anagrafica.id_account_aggiornamento     | 
+    tari_anagrafica.timestamp_aggiornamento      | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tari_anagrafica_view* relativa alla tabella *tari_anagrafica* presenta le seguenti colonne:
+
+    task
+    -----
+    Questa tabbella di *supporto*
+    
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    task.id                           | l'ID della task
+    task.id_tipologia                 | l'ID della tipologia di task
+    task.id_priorita                  | l'ID della definizione della priorità associata alla task
+    task.id_anagrafica                | l'ID del cliente associato alla task
+    task.id_cliente                   | l'ID del progetto della task
+    task.id_progetto                  | l'ID del luogo della task
+    task.id_luogo                     | nome assegnato alla task
+    task.nome                         | 
+    task.testo                        | 
+    task.ore_previste                 | 
+    task.testo_ore_previste           |
+    task.anno_previsto                | 
+    task.settimana_prevista           | 
+    task.testo_pianificazione         | 
+    task.id_responsabile              | 
+    task.timestamp_apertura           | 
+    task.timestamp_pianificazione     | 
+    task.data_scadenza                | 
+    task.timestamp_revisione          | 
+    task.note_revisione               | 
+    task.timestamp_completamento      | 
+    task.testo_completamento          | 
+    task.id_account_inserimento       | 
+    task.timestamp_inserimento        | 
+    task.id_account_aggiornamento     | 
+    task.timestamp_aggiornamento      | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *task_view* relativa alla tabella *task* presenta le seguenti colonne:
 
     telefoni
     --------
