@@ -541,7 +541,8 @@
     }
 
 
-    // funzione che dato un progetto, ritorna l'elenco degli operatori che possono coprirne le attività scoperte con relativo punteggio
+    // funzione che dato un progetto, calcola l'elenco degli operatori che possono coprirne le attività scoperte con relativo punteggio
+    // e le salva nella tabella __report_progetti_sostituti__
     function elencoSostitutiProgetto( $id_progetto ){
 
         global $cf;
@@ -592,7 +593,7 @@
 			.'INNER JOIN contratti as c ON (a.id_anagrafica = c.id_anagrafica AND (c.data_fine_rapporto IS NULL AND ( c.data_fine IS NULL OR c.data_fine >= ? ) ) ) '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.data_programmazione < ? '
             .'AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_progetti WHERE id_progetto = ? AND data_scopertura = ? ) '
-            .'GROUP BY a.id_anagrafica ORDER BY esperienza DESC, a.data_programmazione DESC LIMIT 15',
+            .'GROUP BY a.id_anagrafica ORDER BY esperienza DESC, a.data_programmazione DESC',
             array(
                 array( 's' => $id_progetto ),
                 array( 's' => $dataPrima ),
@@ -742,7 +743,7 @@
             }
 
             // riordino l'array degli operatori in base al punteggio
-            $sort_data = array();
+        /*    $sort_data = array();
             foreach( $op as $key => $value ) {
                 $sort_data[ $key ] = $value['punteggio'];
             }
@@ -750,21 +751,46 @@
             if( isset( $sort_data ) ){
                 array_multisort( $sort_data, $op );
             }
+            */
 
             foreach( $op as $o ){
-                while( array_key_exists( $o['punteggio'], $candidati ) ){
+
+                if( $o['punteggio'] > 0 ){
+                    // inserisco il sostituto nella tabella __report_progetti_sostituti__
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'INSERT INTO __report_progetti_sostituti__ '
+                        .'(id_progetto, data_prima_scopertura, id_anagrafica, punti_totali, punti_sostituto, punti_progetto, punti_copertura, punti_distanza) '
+                        .'values ( ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE '
+                        .'punti_totali = VALUES( punti_totali ), punti_sostituto = VALUES(punti_sostituto), punti_progetto = VALUES(punti_progetto), punti_copertura = VALUES(punti_copertura), punti_distanza = VALUES(punti_distanza)',
+                        array(
+                            array( 's' => $id_progetto ),
+                            array( 's' => $dataPrima ),
+                            array( 's' => $o['id_anagrafica'] ),
+                            array( 's' => $o['punteggio'] ),
+                            array( 's' => $o['punti_sostituto'] ),
+                            array( 's' => $o['punti_progetto'] ),
+                            array( 's' => $o['punti_copertura'] ),
+                            array( 's' => $o['punti_distanza'] )
+                        )
+                    );
+                }
+                               
+                /*while( array_key_exists( $o['punteggio'], $candidati ) ){
                     $o['punteggio']++;
                 }
 
-                $candidati[ $o['punteggio'] ] = $o;
+                $candidati[ $o['punteggio'] ] = $o;*/
             }
             
-            krsort( $candidati );
+        #    krsort( $candidati );
         }
 
         timerCheck( $cf['speed'], 'fine calcolo punteggi');
 
-        return $candidati;
+    //    return $candidati;
+
+        return true;
 
     }
 
