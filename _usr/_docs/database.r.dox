@@ -457,7 +457,7 @@
     ---------------------------------------|---------------------------------------------------------------------------------------
     ruoli_anagrafica.id                    | l'ID del ruolo anagrafica
     ruoli_anagrafica.id_genitore           | 
-    ruoli_anagrafica.nome                  | 
+    ruoli_anagrafica.nome                  | la colonne nome contiene il nome del ruolo
     
     La vista ruoli_anagrafica_view relativa alla tabella ruoli_anagrafica presenta le seguenti colonne:
  
