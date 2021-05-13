@@ -13,9 +13,9 @@
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    scadenze.id                          | 
-    scadenze.id_documento                | 
-    scadenze.id_pratica                  | 
+    scadenze.id                          | l'ID che fa l'associazione fra il documento e la pratica
+    scadenze.id_documento                | l'ID del documento
+    scadenze.id_pratica                  | l'ID della pratica
     scadenze.data                        | 
     scadenze.id_modalita_pagamento       | 
     scadenze.nome                        | 
@@ -38,8 +38,8 @@
 
     colonna                             | descrizione
     ------------------------------------|---------------------------------------------------------------------------------------
-    settori.id                          | 
-    settori.id_genitore                 | 
+    settori.id                          | l'ID del settore
+    settori.id_genitore                 | l'ID parente
     settori.id_testata                  | 
     settori.ateco                       | 
     settori.nome                        | 
@@ -56,12 +56,12 @@
 
     colonna                             | descrizione
     ------------------------------------|---------------------------------------------------------------------------------------
-    sms_out.id                          | 
+    sms_out.id                          | l'ID dell'SMS in uscita
     sms_out.timestamp_composizione      | 
     sms_out.timestamp_invio             | 
     sms_out.server                      | 
-    sms_out.mittente                    | 
-    sms_out.destinatari                 |
+    sms_out.mittente                    | il mittente dell'SMS in uscita
+    sms_out.destinatari                 | il destinatario dell'SMS in uscita
     sms_out.corpo                       | 
     sms_out.host                        | 
     sms_out.port                        | 
@@ -85,7 +85,7 @@
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    sms_sent.id                          | 
+    sms_sent.id                          | l'ID dell'SMS mandato
     sms_sent.timestamp_composizione      | 
     sms_sent.timestamp_invio             | 
     sms_sent.server                      | 
@@ -158,10 +158,10 @@
 
     colonna                                             | descrizione
     ----------------------------------------------------|---------------------------------------------------------------------------------------
-    stagioni_prodotti.id                            | l'ID che fa l'associazione fra il progetto e l'anagrafica
-    stagioni_prodotti.nome                   | l'ID del progetto
-    stagioni_prodotti.new                 | l'ID dell'anagrafica
-  
+    stagioni_prodotti.id                                | l'ID della stagione associata al prodotto
+    stagioni_prodotti.nome                              | nome comune della stagione associata al prodotto
+    stagioni_prodotti.new                               | 
+    
     La vista stagioni_prodotti_view relativa alla tabella stagioni_prodotti presenta le seguenti colonne:
 
     colonna                              | descrizione
@@ -171,8 +171,8 @@
     -----
     Questa tabella *gestita* ...
 
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                    | descrizione
+    ---------------------------|---------------------------------------------------------------------------------------
     stati.id                   | l'ID dello Stato 
     stati.id_continente        | la colonna 'id_continente' fa riferimento alla tabella 'continenti
     stati.iso31661alpha2       | la colonna 'iso31661alpha2' contiene il codice del paese secondo lo standard ISO 3166-1 alpha 2
@@ -193,8 +193,8 @@
 
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
-    stati_lingue.id_stato                 | 
-    stati_lingue.id_lingua                |
+    stati_lingue.id_stato                 | l'ID del paese della lingua
+    stati_lingue.id_lingua                | l'ID della lingua 
  
   
     La vista stati_lingue_view relativa alla tabella stati_lingue presenta le seguenti colonne:
