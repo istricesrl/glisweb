@@ -363,12 +363,12 @@
                 ."( TIMESTAMP( data_programmazione, ora_inizio_programmazione) > ? and TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? ) "
                 ."OR "
                 ."( TIMESTAMP( data_programmazione, ora_fine_programmazione) > ? and TIMESTAMP( data_programmazione, ora_fine_programmazione) < ? ) "
-                /*    
+            /*    
                 ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
                 ."OR "
                 ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
-                */
-                .") ",
+*/     
+            .") ",
             array(
                 array( 's' => $id_anagrafica ),
                 array( 's' => $a['data_ora_inizio'] ),
@@ -545,6 +545,10 @@
     // e le salva nella tabella __report_progetti_sostituti__
     function elencoSostitutiProgetto( $id_progetto ){
 
+        $logdir = 'var/log/sostitutiProgetto.log';
+
+        appendToFile('cerco sostituti progetto ' . $id_progetto . PHP_EOL, $logdir);
+
         global $cf;
 
         $candidati = array();   // inizializzo l'array del risultato
@@ -603,6 +607,8 @@
             )
         );
 
+        appendToFile('operatori ' . print_r( $assegnati, true ) . PHP_EOL, $logdir);
+
         timerCheck( $cf['speed'], 'fine ricerca assegnati');
     
         if( !empty( $assegnati ) ){
@@ -631,6 +637,8 @@
 
             // per ciascun operatore
             foreach( $operatori as $o ){
+
+                appendToFile('operatore ' . $o['id_anagrafica'] . ' ' . $o['anagrafica'] . PHP_EOL, $logdir);
                 // scorro le attività e vedo se può coprirle
 
                 $o['punteggio'] = 0;
@@ -753,28 +761,28 @@
             }
             */
 
+            appendToFile('operatori dopo il calcolo' . print_r( $op, true ) . PHP_EOL, $logdir);
+
             foreach( $op as $o ){
 
-                if( $o['punteggio'] > 0 ){
-                    // inserisco il sostituto nella tabella __report_progetti_sostituti__
-                    mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'INSERT INTO __report_progetti_sostituti__ '
-                        .'(id_progetto, data_prima_scopertura, id_anagrafica, punti_totali, punti_sostituto, punti_progetto, punti_copertura, punti_distanza) '
-                        .'values ( ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE '
-                        .'punti_totali = VALUES( punti_totali ), punti_sostituto = VALUES(punti_sostituto), punti_progetto = VALUES(punti_progetto), punti_copertura = VALUES(punti_copertura), punti_distanza = VALUES(punti_distanza)',
-                        array(
-                            array( 's' => $id_progetto ),
-                            array( 's' => $dataPrima ),
-                            array( 's' => $o['id_anagrafica'] ),
-                            array( 's' => $o['punteggio'] ),
-                            array( 's' => $o['punti_sostituto'] ),
-                            array( 's' => $o['punti_progetto'] ),
-                            array( 's' => $o['punti_copertura'] ),
-                            array( 's' => $o['punti_distanza'] )
-                        )
-                    );
-                }
+                // inserisco il sostituto nella tabella __report_progetti_sostituti__
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO __report_progetti_sostituti__ '
+                    .'(id_progetto, data_prima_scopertura, id_anagrafica, punti_totali, punti_sostituto, punti_progetto, punti_copertura, punti_distanza) '
+                    .'values ( ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE '
+                    .'punti_totali = VALUES( punti_totali ), punti_sostituto = VALUES(punti_sostituto), punti_progetto = VALUES(punti_progetto), punti_copertura = VALUES(punti_copertura), punti_distanza = VALUES(punti_distanza)',
+                    array(
+                        array( 's' => $id_progetto ),
+                        array( 's' => $dataPrima ),
+                        array( 's' => $o['id_anagrafica'] ),
+                        array( 's' => $o['punteggio'] ),
+                        array( 's' => $o['punti_sostituto'] ),
+                        array( 's' => $o['punti_progetto'] ),
+                        array( 's' => $o['punti_copertura'] ),
+                        array( 's' => $o['punti_distanza'] )
+                    )
+                );
                                
                 /*while( array_key_exists( $o['punteggio'], $candidati ) ){
                     $o['punteggio']++;
