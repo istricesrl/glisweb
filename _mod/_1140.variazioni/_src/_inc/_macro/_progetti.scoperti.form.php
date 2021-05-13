@@ -32,10 +32,17 @@
             )
         );
 
+
         // cerco se ci sono già dei sostituti calcolati
         $ct['etc']['operatori'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT r.*, concat_ws(" ", a.cognome, a.nome ) as anagrafica FROM __report_progetti_sostituti__ AS r '
+            'SELECT r.*, coalesce(
+                a.soprannome,
+                a.denominazione,
+                concat_ws(" ", coalesce(a.nome, ""),
+                coalesce(a.cognome, "") ),
+                ""
+            ) as anagrafica FROM __report_progetti_sostituti__ AS r '
             .'LEFT JOIN anagrafica AS a ON r.id_anagrafica = a.id '
             .'WHERE r.id_progetto = ? AND r.data_prima_scopertura = ? ORDER BY r.punti_totali DESC, r.punti_sostituto DESC LIMIT 30',
             array(

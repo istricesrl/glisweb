@@ -360,14 +360,13 @@
             $cf['mysql']['connection'],
                 "SELECT count(*) FROM attivita_view WHERE id_anagrafica = ? "
                 ."AND ( "
-                ."( TIMESTAMP( data_programmazione, ora_inizio_programmazione) > ? and TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? ) "
+            /*    ."( TIMESTAMP( data_programmazione, ora_inizio_programmazione) > ? and TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? ) "
                 ."OR "
                 ."( TIMESTAMP( data_programmazione, ora_fine_programmazione) > ? and TIMESTAMP( data_programmazione, ora_fine_programmazione) < ? ) "
-            /*    
+            */    
                 ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
                 ."OR "
-                ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "
-*/     
+                ."(TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ?) "     
             .") ",
             array(
                 array( 's' => $id_anagrafica ),
@@ -584,6 +583,8 @@
             } 
         }
 
+        appendToFile('sostituti ' . print_r( $sostituti, true ) . PHP_EOL, $logdir);
+
         timerCheck( $cf['speed'], 'inizio ricerca assegnati');
 
         // elenco degli operatori che hanno attivita assegnate prima della prima scopertura e non sono già stati scartati, con priorità per quelli che conoscono già il progetto
@@ -607,7 +608,7 @@
             )
         );
 
-        appendToFile('operatori ' . print_r( $assegnati, true ) . PHP_EOL, $logdir);
+        appendToFile('assegnati ' . print_r( $assegnati, true ) . PHP_EOL, $logdir);
 
         timerCheck( $cf['speed'], 'fine ricerca assegnati');
     
@@ -708,7 +709,7 @@
                    
                 }
 
-                // se i punti attivià sono ancora a 0 vuol dire che non può coprire nessuna attività
+                // se i punti attività sono ancora a 0 vuol dire che non può coprire nessuna attività
                 // lo inserisco quindi nella tabella di sostituzioni come scarto
                 if( $o['punti_attivita'] == 0 ){
                     mysqlQuery(
