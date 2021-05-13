@@ -7,6 +7,85 @@
     le tabelle del database di supporto RA - RZ
     ===========================================
 
+    rassegna_stampa
+    ---------------
+    Questa tabella *gestita* ...
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    rassegna_stampa.id                          | l'ID della rassegna stampa
+    rassegna_stampa.data                        | la data della rassegna stampa
+    rassegna_stampa.id_testata                  | l'ID della testata della rassegna stampa
+    rassegna_stampa.id_tipologia                | l'ID della tipologie della rassegna stampa
+    rassegna_stampa.nome                        | il nome assegnato alla rassegna stampa
+    rassegna_stampa.testo                       | il corpo del testo
+    rassegna_stampa.id_account_inserimento      | 
+    rassegna_stampa.timestamp_inserimento       | 
+    rassegna_stampa.id_account_aggiornamento    | 
+    rassegna_stampa.timestamp_aggiornamento     | 
+    
+
+    La vista rassegna_stampa_view relativa alla tabella rassegna_stampa presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    rassegna_stampa_anagrafica
+    --------------------------
+    Questa tabella *gestita* ...
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    rassegna_stampa_anagrafica.id                   | l'ID che fa l'associazione fra la rassegna stampa, l'anagrafica e il ruolo
+    rassegna_stampa_anagrafica.id_rassegna_stampa   | l'ID della rassegna stampa di riferimento
+    rassegna_stampa_anagrafica.id_anagrafica        | l'ID dell'anagrafica 
+    rassegna_stampa_anagrafica.id_ruolo             | l'ID del ruolo 
+
+    La vista rassegna_stampa_anagrafica_view relativa alla tabella rassegna_stampa_anagrafica presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    rassegna_stampa_eventi
+    ----------------------
+    Questa tabella *gestita* ...
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    rassegna_stampa_eventi.id                   | l'ID che fa l'associazione fra la rassegna stampa e l'evento
+    rassegna_stampa_eventi.id_rassegna_stampa   | l'ID della rassegna stampa di riferimento
+    rassegna_stampa_eventi.id_evento            | l'ID dell'evento
+
+    La vista rassegna_stampa_eventi_view relativa alla tabella rassegna_stampa_eventi presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    recensioni
+    ----------
+    Questa tabella *gestita* ...
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    recensioni.id                          | l'ID della recensione
+    recensioni.id_lingua                   | l'ID della lingua della recensione
+    recensioni.id_prodotto                 | l'ID del prodotto al quale è riferita la recensione
+    recensioni.id_pagina                   | l'ID della pagina della recensione
+    recensioni.autore                      | l'autore della recensione
+    recensioni.valutazione                 | la valutazione della recensione
+    recensioni.titolo                      | il titolo della recensione
+    recensioni.testo                       | 
+    recensioni.se_approvata                | 
+    recensioni.id_account_inserimento      | 
+    recensioni.timestamp_inserimento       | 
+    recensioni.id_account_aggiornamento    | 
+    recensioni.timestamp_aggiornamento     | 
+    
+    La vista recensioni_view relativa alla tabella recensioni presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     redirect
     --------
     Questa tabella *gestita* contiene i redirect presenti nel deploy corrente.
@@ -31,5 +110,36 @@
     redirect.sorgente                    | vedi campo corrispondente sulla tabella relativa
     redirect.destinazione                | vedi campo corrispondente sulla tabella relativa
     redirect.__label__                   | -
+    
+    regimi_fiscali
+    --------------
+    Questa tabella *gestita* ...
 
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    regimi_fiscali.id                     | l'ID del regime fiscale
+    regimi_fiscali.nome                   | 
+    regimi_fiscali.codice                 | 
+    
+    La vista regimi_fiscali_view relativa alla tabella regimi_fiscali presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    regioni
+    -------
+    Questa tabella *gestita* ...
+
+    colonna                        | descrizione
+    -------------------------------|---------------------------------------------------------------------------------------
+    regioni.id                     | l'ID della regione
+    regioni.id_stato               | l'ID della stato della regione
+    regioni.nome                   | il nome comune della regione
+    regioni.codice_istat           | codice della regione attribuito dall'ISTAT
+    
+    La vista regioni_view relativa alla tabella regioni presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
 */
