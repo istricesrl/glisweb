@@ -2307,4 +2307,85 @@ CREATE TABLE IF NOT EXISTS `rassegna_stampa` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+--| 000001000146
+
+-- rassegna_stampa_anagrafica
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `rassegna_stampa_anagrafica` (
+`id` int(11) NOT NULL,
+  `id_rassegna_stampa` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_ruolo` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--| 000001000147
+
+-- rassegna_stampa_eventi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `rassegna_stampa_eventi` (
+`id` int(11) NOT NULL,
+  `id_rassegna_stampa` int(11) NOT NULL,
+  `id_evento` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--| 000001000148
+
+-- recensioni
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `recensioni` (
+`id` int(11) NOT NULL,
+  `id_lingua` int(11) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `autore` char(128) NOT NULL,
+  `valutazione` int(11) NOT NULL,
+  `titolo` char(255) DEFAULT NULL,
+  `testo` text,
+  `se_approvata` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--| 000001000149
+
+-- redirect
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `redirect` (
+`id` int(11) NOT NULL,
+  `codice` int(11) NOT NULL,
+  `sorgente` char(255) NOT NULL,
+  `destinazione` char(255) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000150
+
+-- regimi_fiscali
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `regimi_fiscali` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `codice` char(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000151
+
+-- regioni
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `regioni` (
+`id` int(11) NOT NULL,
+  `id_stato` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `codice_istat` char(2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| FINE FILE
