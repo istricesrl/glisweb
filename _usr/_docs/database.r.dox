@@ -565,7 +565,7 @@
     ----------------------------------------------|---------------------------------------------------------------------------------------
     ruoli_progetti.id                             | l'ID del ruolo progetto
     ruoli_progetti.id_genitore                    | 
-    ruoli_progetti.nome                   | 
+    ruoli_progetti.nome                           | 
     ruoli_progetti.se_responsabile_qualita        | 
     ruoli_progetti.se_responsabile_acquisti       | 
     ruoli_progetti.se_coordinatore                | 
