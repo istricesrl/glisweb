@@ -176,7 +176,7 @@
     -------------------------------------|---------------------------------------------------------------------------------------
     
     popup
-    ------
+    -----
     Questa tabella *gestita*...
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
@@ -209,7 +209,7 @@
     -------------------------------------|---------------------------------------------------------------------------------------
     
     popup_pagine
-    ------
+    ------------
     Questa tabella *gestita*...
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
@@ -233,14 +233,14 @@
     Questa tabella *gestita*...
     colonna                            | descrizione
     -----------------------------------|---------------------------------------------------------------------------------------
-    pratiche.id                        |
-    pratiche.numero                    | 
+    pratiche.id                        | l'ID della pratica
+    pratiche.numero                    | il numero della pratica
     pratiche.numero_ruolo              | 
-    pratiche.data_apertura             |  
-    pratiche.data_chiusura             |
+    pratiche.data_apertura             | la data in cui è stata aperta la pratica
+    pratiche.data_chiusura             | la data di chiusura della pratica 
     pratiche.id_sede_apertura          | 
     pratiche.id_categoria_diritto      | 
-    pratiche.id_provenienza            |   
+    pratiche.id_provenienza            | l'ID di provenienza della pratica
     pratiche.note_segnalazione         |
     pratiche.descrizione               | 
     pratiche.controparte               | 
@@ -248,7 +248,7 @@
     pratiche.se_accompagnamento        | 
     pratiche.note_chiusura             | 
     pratiche.ore_stimate               |   
-    pratiche.id_esito                  |
+    pratiche.id_esito                  | l'ID dell'esito della pratica
     pratiche.se_richiesta_liquidazione | 
     pratiche.se_richiesto_rimborso     | 
     pratiche.id_account_editor         |   
@@ -270,6 +270,356 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     
+    pratiche_assistiti
+    ------------------
+    Questa tabella *gestita*...
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    pratiche_assistiti.id                        | l'ID che fa l'associazione tra l'anagrafica e la pratica assistita
+    pratiche_assistiti.id_anagrafica             | l'ID anagrafica della pratica assistita
+    pratiche_assistiti.id_pratica                | l'ID della pratica assistita
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista pratiche_assistiti_view relativa alla tabella pratiche_assistiti presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
     
+    pratiche_avvocati
+    -----------------
+    Questa tabella *gestita*...
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    pratiche_avvocati.id                        | l'ID che fa l'associazione tra l'anagrafica e la pratica avvocata
+    pratiche_avvocati.id_anagrafica             | l'ID anagrafica della pratica avvocata
+    pratiche_avvocati.id_pratica                | l'ID della pratica aavvocata
+    pratiche_avvocati.se_responsabile           | 
     
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista pratiche_avvocati_view relativa alla tabella pratiche_avvocati presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    pratiche_servizi_contatto
+    -------------------------
+    Questa tabella *gestita*...
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    pratiche_servizi_contatto.id                   | l'ID che fa l'associazione tra la pratica e il servizio contatto
+    pratiche_servizi_contatto.id_pratica           | l'ID della pratica 
+    pratiche_servizi_contatto.id_servizio_contatto | l'ID del servizio contatto
+    pratiche_servizi_contatto.testo                | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista pratiche_servizi_contatto_view relativa alla tabella pratiche_servizi_contatto presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    prezzi
+    ------
+    Questa tabella *gestita*...
+    colonna                     | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+    prezzi.id                   | l'ID del prezzo
+    prezzi.id_prodotto          | l'ID del prodotto a cui si riferisce il prezzo
+    prezzi.id_articolo          | l'ID dell'articolo a cui si riferisce il prezzo
+    prezzi.prezzo               | il prezzo, in decimale, arrotondato a una ciffra dopo la virgola
+    prezzi.id_listino           | l'ID del listino del prezzo
+    prezzi.id_valuta            | l'ID della valuta del prezzo
+    prezzi.id_iva               | l'ID dell'iva del prezzo
+    prezzi.id_udm               | l'ID dell'unità di misura 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista prezzi_view relativa alla tabella prezzi presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    priorita
+    --------
+    Questa tabella *gestita*...
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    priorita.id                             | 
+    priorita.nome                           | 
+    priorita.ordine                         | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista priorita_view relativa alla tabella priorita presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    prodotti
+    --------
+    Questa tabella *gestita*...
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    prodotti.id                          | l'ID del prodotto
+    prodotti.id_tipologia                | l'ID della tipologia del prodotto
+    prodotti.nome                        | nome comune del prodotto
+    prodotti.descrizione                 | descrizione del prodotto
+    prodotti.ordine                      | 
+    prodotti.codifica                    | 
+    prodotti.id_udm                      | l'ID dell'unità di misura del prodotto 
+    prodotti.id_ingombro                 | l'ID dell'ingombro del prodotto
+    prodotti.ingombro_proporzionale      |
+    prodotti.larghezza_prodotto          | la misura del prodotto : in larghezza
+    prodotti.lunghezza_prodotto          | la misura del prodotto : in lunghezza
+    prodotti.altezza_prodotto            | l'altezza del prodotto
+    prodotti.id_produttore               | l'ID del produttore del prodotto
+    prodotti.codice_produttore           | 
+    prodotti.id_fornitore                | l'ID del fornitore del prodotto  
+    prodotti.id_marchio                  | l'ID del marchio del prodotto
+    prodotti.id_tipologia_pubblicazione  | 
+    prodotti.se_disponibile              | 
+    prodotti.se_importata                | 
+    prodotti.timestamp_pubblicazione     | 
+    prodotti.timestamp_archiviazione     | 
+    prodotti.timestamp_inserimento       | 
+    prodotti.id_account_inserimento      | 
+    prodotti.timestamp_aggiornamento     | 
+    prodotti.id_account_aggiornamento    | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista prodotti_view relativa alla tabella prodotti presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    prodotti_categorie
+    ------------------
+    Questa tabella *gestita*...
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_categorie.id                   | l'ID che fa l'associazione fra il prodotto, la categoria e il ruolo
+    prodotti_categorie.id_prodotto          | l'ID del prodotto
+    prodotti_categorie.id_categoria         | l'ID della categoria a cui si riferisce il prodotto
+    prodotti_categorie.id_ruolo             | l'ID del ruolo
+    prodotti_categorie.ordine               | 
+    prodotti_categorie.se_principale        |    
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista prodotti_categorie_view relativa alla tabella prodotti_categorie presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    prodotti_modalita_spedizione
+    ----------------------------
+    Questa tabella *gestita*...
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_modalita_spedizione.id             | l'ID che fa l'associazione fra il prodotto e la modalità di spedizione
+    prodotti_modalita_spedizione.id_prodotto    | l'ID del prodotto 
+    prodotti_modalita_spedizione.id_modalita    | l'ID della modalità di spedizione del prodotto
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista prodotti_modalita_spedizione_view relativa alla tabella prodotti_modalita_spedizione presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    prodotti_caratteristiche
+    ------------------------
+    Questa tabella *gestita*...
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_caratteristiche.id                       | l'ID che fa l'associazione fra il prodotto e la caratteristica
+    prodotti_caratteristiche.id_prodotto              | l'ID del prodotto a cui si riferisce la caratteristica
+    prodotti_caratteristiche.id_caratteristica        | l'ID della caratteristica 
+    prodotti_caratteristiche.ordine                   | 
+    prodotti_caratteristiche.testo                    | 
+    prodotti_caratteristiche.se_non_presente          |    
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista prodotti_caratteristiche_view relativa alla tabella prodotti_caratteristiche presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_stagioni
+    -----------------
+    Questa tabella *gestita*...
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_stagioni.id                    | l'ID che fa l'associazione fra il prodotto e la stagione
+    prodotti_stagioni.id_prodotto           | l'ID del prodotto
+    prodotti_stagioni.id_stagione           | l'ID della stagione
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista prodotti_stagioni_view relativa alla tabella prodotti_stagioni a presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    progetti
+    --------
+    Questa tabella *gestita*...
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    progetti.id                          | l'ID del progetto
+    progetti.id_tipologia                | l'ID della tipologia del progetto
+    progetti.id_cliente                  | l'ID del cliente del progetto
+    progetti.id_indirizzo                | l'ID dell'indirizzo del progetto
+    progetti.nome                        | 
+    progetti.testo                       | 
+    progetti.id_pianificazione           | 
+    progetti.ranking                     | 
+    progetti.id_account_accettazione     |
+    progetti.data_accettazione           | 
+    progetti.timestamp_accettazione      | 
+    progetti.fatturato_accettazione      | 
+    progetti.testo_accettazione          | 
+    progetti.fatturato_previsto          | 
+    progetti.ore_previste                | 
+    progetti.costi_previsti              | 
+    progetti.testo_previsioni            | 
+    progetti.id_account_chiusura         | 
+    progetti.timestamp_chiusura          | 
+    progetti.testo_chiusura              | 
+    progetti.timestamp_inserimento       | 
+    progetti.id_account_inserimento      | 
+    progetti.timestamp_aggiornamento     | 
+    progetti.id_account_aggiornamento    | 
+    progetti.se_lavoro_festivo           | 
+    progetti.se_lavoro_weekend           | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista progetti_view relativa alla tabella progetti presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    progetti_anagrafica
+    ------------------
+    Questa tabella *gestita*...
+    
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_anagrafica.id                       | l'ID che fa l'associazione fra il progetto, l'anagrafica e il ruolo
+    progetti_anagrafica.id_progetto              | l'ID del progetto
+    progetti_anagrafica.id_anagrafica            | l'ID dell'anagrafica
+    progetti_anagrafica.id_ruolo                 | l'ID del ruolo
+    progetti_anagrafica.se_sostituto             | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista progetti_anagrafica_view relativa alla tabella progetti_anagrafica presenta le seguenti colonne:
+    
+    provenienze_contatti
+    --------------------
+    Questa tabella *gestita*...
+    
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    provenienze_contatti.id                | l'ID della provenienza del contatto
+    provenienze_contatti.nome              |
+    provenienze_contatti.se_contatto       |
+    provenienze_contatti.se_segnalato      |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista provenienze_contatti_view relativa alla tabella provenienze_contatti presenta le seguenti colonne:
+    
+    provincie
+    ---------
+    Questa tabella *gestita*...
+    
+    colonna                     | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+    provincie.id                | l'ID della provincia
+    provincie.id_regione        | l'ID della regione della provincia
+    provincie.nome              | nome commune della provincia
+    provincie.sigla             | sigla della provincia
+    provincie.codice_istat      | Codice ISTAT identificativo della provincia : prime tre ciffre del codice attribuito ad ogni comune dall'Istituto nazionale di statistica.
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista provincie_view relativa alla tabella provincie presenta le seguenti colonne:
+
+    pubblicazione
+    -------------
+    Questa tabella *gestita*...
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    pubblicazione.id                          | l'ID della publicazione
+    pubblicazione.id_sito                     | 
+    pubblicazione.id_tipologia                | l'ID della tipologia del progetto
+    pubblicazione.ordine                      | 
+    pubblicazione.id_pagina                   | 
+    pubblicazione.id_categoria_prodotti       |
+    pubblicazione.id_prodotto                 | 
+    pubblicazione.id_genitore                 | 
+    pubblicazione.id_popup                    | 
+    pubblicazione.template                    | 
+    pubblicazione.schema_html                 | 
+    pubblicazione.tema_css                    | 
+    pubblicazione.se_sitemap                  | 
+    pubblicazione.se_cacheable                | 
+    pubblicazione.note                        | 
+    pubblicazione.timestamp_pubblicazione     | 
+    pubblicazione.timestamp_archiviazione     | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista pubblicazione_view relativa alla tabella pubblicazione presenta le seguenti colonne:
+
     */
