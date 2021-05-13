@@ -1,0 +1,2 @@
+ALTER TABLE `__report_progetti_sostituti__`
+ ADD PRIMARY KEY (`id`), ADD KEY `id_progetto` (`id_progetto`), ADD KEY `id_anagrafica` (`id_anagrafica`), ADD KEY `data_prima_scopertura` (`data_prima_scopertura`), ADD KEY `punti_totali` (`punti_totali`), ADD KEY `punti_sostituto` (`punti_sostituto`);
