@@ -50,3 +50,155 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     
+    sms_out
+    --------
+    Questa tabella *gestita* ...
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    sms_out.id                          | 
+    sms_out.timestamp_composizione      | 
+    sms_out.timestamp_invio             | 
+    sms_out.server                      | 
+    sms_out.mittente                    | 
+    sms_out.destinatari                 |
+    sms_out.corpo                       | 
+    sms_out.host                        | 
+    sms_out.port                        | 
+    sms_out.user                        | 
+    sms_out.password                    |
+    sms_out.id_newsletter               | 
+    sms_out.id_telefono                 | 
+    sms_out.id_account_inserimento      | 
+    sms_out.timestamp_inserimento       | 
+    sms_out.id_account_aggiornamento    | 
+    sms_out.timestamp_aggiornamento     | 
+    
+    La vista sms_out_view relativa alla tabella sms_out presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    sms_sent
+    --------
+    Questa tabella *gestita* ...
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    sms_sent.id                          | 
+    sms_sent.timestamp_composizione      | 
+    sms_sent.timestamp_invio             | 
+    sms_sent.server                      | 
+    sms_sent.mittente                    | 
+    sms_sent.destinatari                 |
+    sms_sent.corpo                       | 
+    sms_sent.host                        | 
+    sms_sent.port                        | 
+    sms_sent.user                        | 
+    sms_sent.password                    |
+    sms_sent.id_newsletter               | 
+    sms_sent.id_telefono                 | 
+    sms_sent.id_account_inserimento      | 
+    sms_sent.timestamp_inserimento       | 
+    sms_sent.id_account_aggiornamento    | 
+    sms_out.timestamp_aggiornamento      | 
+    
+    La vista sms_sent_view relativa alla tabella sms_sent presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    sostituzioni_attivita
+    ---------------------
+    Questa tabella *gestita* ...
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    sostituzioni_attivita.id                            | l'ID che fa l'associazione fra l'attività e l'anagrafica
+    sostituzioni_attivita.id_attivita                   | l'ID dell'attività
+    sostituzioni_attivita.id_anagrafica                 | l'ID dell'anagrafica
+    sostituzioni_attivita.data_richiesta                | 
+    sostituzioni_attivita.data_accettazione             | 
+    sostituzioni_attivita.data_rifiuto                  |
+    sostituzioni_attivita.data_scarto                   | 
+    sostituzioni_attivita.id_account_inserimento        | 
+    sostituzioni_attivita.timestamp_inserimento         | 
+    sostituzioni_attivita.id_account_aggiornamento      | 
+    sostituzioni_attivita.timestamp_aggiornamento       | 
+    
+    La vista sostituzioni_attivita_view relativa alla tabella sostituzioni_attivita presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+       
+    sostituzioni_progetti
+    ---------------------
+    Questa tabella *gestita* ...
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    sostituzioni_progetti.id                            | l'ID che fa l'associazione fra il progetto e l'anagrafica
+    sostituzioni_progetti.id_progetto                   | l'ID del progetto
+    sostituzioni_progetti.id_anagrafica                 | l'ID dell'anagrafica
+    sostituzioni_progetti.data_scopertura               | 
+    sostituzioni_progetti.data_scarto                   | 
+    sostituzioni_progetti.id_account_inserimento        | 
+    sostituzioni_progetti.timestamp_inserimento         | 
+    sostituzioni_progetti.id_account_aggiornamento      | 
+    sostituzioni_progetti.timestamp_aggiornamento       | 
+    
+    La vista sostituzioni_progetti_view relativa alla tabella sostituzioni_progetti presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    stagioni_prodotti
+    -----------------
+    Questa tabella di *supporto* ...
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    stagioni_prodotti.id                            | l'ID che fa l'associazione fra il progetto e l'anagrafica
+    stagioni_prodotti.nome                   | l'ID del progetto
+    stagioni_prodotti.new                 | l'ID dell'anagrafica
+  
+    La vista stagioni_prodotti_view relativa alla tabella stagioni_prodotti presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    stati
+    -----
+    Questa tabella *gestita* ...
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    stati.id                   | l'ID dello Stato 
+    stati.id_continente        | la colonna 'id_continente' fa riferimento alla tabella 'continenti
+    stati.iso31661alpha2       | la colonna 'iso31661alpha2' contiene il codice del paese secondo lo standard ISO 3166-1 alpha 2
+    stati.iso31661alpha3       | la colonna 'iso31661alpha3' contiene il codice del paese secondo lo standard ISO 3166-1 alpha 3
+    stati.nome                 | la colonna 'nome' contiene il nome convenzionale del paese, in italiano
+    stati.note                 | la colonna 'note' contiene il nome ufficiale del paese, in italiano
+    stati.codice_istat         | la colonna 'istat' contiene il codice ISTAT del paese
+    stati.data_cessazione      | 
+    
+    La vista stati_view relativa alla tabella stati presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+       
+    stati_lingue
+    -----------------
+    Questa tabella di *supporto* non ha una colonna 'id' perché non viene gestita in nessun caso dal CMS
+
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    stati_lingue.id_stato                 | 
+    stati_lingue.id_lingua                |
+ 
+  
+    La vista stati_lingue_view relativa alla tabella stati_lingue presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+     
