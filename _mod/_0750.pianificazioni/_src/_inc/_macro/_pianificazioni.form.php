@@ -24,7 +24,7 @@
 
     // tendina delle entita che è possibile gestire
     $ct['etc']['select']['entita'] = array(
-        array( 'id' => 'todo', '__label__' => 'progetti' ),
+        array( 'id' => 'progetti', '__label__' => 'progetti' ),
         array( 'id' => 'todo', '__label__' => 'todo' ),
         array( 'id' => 'turni', '__label__' => 'turni' )
     );
