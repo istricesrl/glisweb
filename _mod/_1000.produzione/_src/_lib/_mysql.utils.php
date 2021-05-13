@@ -661,6 +661,7 @@
                 $svr = array();     //
 
                 foreach( $attivita as $a ){
+                    appendToFile('attivita ' . $a['id'] . PHP_EOL, $logdir);
                     //14:00-15:45 2021-04-07 > ragionare a intervalli di 15 minuti, no ora inizio
                 //    $a['range'] = array( '202104071430', '202104071500', '202104071530', '202104071600');
 
@@ -675,6 +676,10 @@
                     }
 
                     $copertura = coperturaAttivita( $o['id_anagrafica'], $a['id'] );
+
+                    appendToFile('copertura ' . $copertura . PHP_EOL, $logdir);
+
+                    #appendToFile('count_intersect ' . $copertura . PHP_EOL, $logdir);count( array_intersect( $svr, $a['range'] ) )
 
                     // se può coprire l'attività e non ci sono sovrapposizioni con altre fasce orarie
                     if(  $copertura == 1 && count( array_intersect( $svr, $a['range'] ) ) == 0 ){
