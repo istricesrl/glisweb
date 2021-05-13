@@ -775,12 +775,12 @@
                 mysqlQuery(
                     $cf['mysql']['connection'],
                     'INSERT INTO __report_progetti_sostituti__ '
-                    .'(id_progetto, data_prima_scopertura, id_anagrafica, punti_totali, punti_sostituto, punti_progetto, punti_copertura, punti_distanza) '
+                    .'(id_progetto, data_scopertura, id_anagrafica, punteggio, punti_sostituto, punti_progetto, punti_copertura, punti_distanza) '
                     .'values ( ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE '
-                    .'punti_totali = VALUES( punti_totali ), punti_sostituto = VALUES(punti_sostituto), punti_progetto = VALUES(punti_progetto), punti_copertura = VALUES(punti_copertura), punti_distanza = VALUES(punti_distanza)',
+                    .'punteggio = VALUES( punteggio ), punti_sostituto = VALUES(punti_sostituto), punti_progetto = VALUES(punti_progetto), punti_copertura = VALUES(punti_copertura), punti_distanza = VALUES(punti_distanza)',
                     array(
                         array( 's' => $id_progetto ),
-                        array( 's' => $dataPrima ),
+                        array( 's' => $dataUltima ),
                         array( 's' => $o['id_anagrafica'] ),
                         array( 's' => $o['punteggio'] ),
                         array( 's' => $o['punti_sostituto'] ),

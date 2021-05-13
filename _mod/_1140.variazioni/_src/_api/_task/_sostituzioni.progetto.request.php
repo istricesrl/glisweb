@@ -23,13 +23,27 @@
 	$status = array();
 
     // verifico se sono arrivati un progetto e un'anagrafica
-    if( ! empty( $_REQUEST['id_progetto'] ) && ! empty( $_REQUEST['id_anagrafica'] ) ) {
+    if( ! empty( $_REQUEST['id_progetto'] ) && ! empty( $_REQUEST['id_anagrafica'] ) && ! empty( $_REQUEST['data_scopertura'] ) ) {
 
         // ID del progetto
         $status['id_progetto'] = $_REQUEST['id_progetto'];
 
         // ID dell'anagrafica
         $status['id_anagrafica'] = $_REQUEST['id_anagrafica'];
+
+        // data di scopertura
+        $status['data_scopertura'] = $_REQUEST['data_scopertura'];
+
+        // scrivo una riga nella tabella sostituzioni_progetti così al calcolo successivo dei sostituti questa anagrafica verrà esclusa
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'INSERT IGNORE INTO sostituzioni_progetti ( id_progetto, data_scopertura, id_anagrafica ) VALUES ( ?, ?, ? )',
+            array(
+                array( 's' => $_REQUEST['id_progetto'] ),
+                array( 's' => $_REQUEST['data_scopertura'] ),
+                array( 's' => $_REQUEST['id_anagrafica'] )
+            )
+        );
 
         // cerco le attività scoperte per il progetto corrente
         $attivita = mysqlQuery( 

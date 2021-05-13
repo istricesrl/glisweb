@@ -23,10 +23,10 @@
     // se ho un progetto, estraggo le attività scoperte ad esso relative e per ciascuna calcolo l'elenco dei sostituti
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
-        // estraggo la data di pianificazione della prima attività scoperta per il progetto corrente
-        $dataPrima = mysqlSelectValue(
+        // estraggo la data di pianificazione dell'ultima attività scoperta per il progetto corrente
+        $ct['etc']['data_scopertura'] = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT min(data_programmazione) FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
+            'SELECT max(data_programmazione) FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
             array(
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
             )
@@ -44,10 +44,12 @@
                 ""
             ) as anagrafica FROM __report_progetti_sostituti__ AS r '
             .'LEFT JOIN anagrafica AS a ON r.id_anagrafica = a.id '
-            .'WHERE r.id_progetto = ? AND r.data_prima_scopertura = ? ORDER BY r.punti_totali DESC, r.punti_sostituto DESC LIMIT 30',
+            .'LEFT JOIN sostituzioni_progetti AS s ON s.id_progetto = r.id_progetto AND s.id_anagrafica = r.id_anagrafica AND s.data_scopertura = r.data_scopertura '
+            .'WHERE r.id_progetto = ? AND r.data_scopertura = ? AND s.id IS NULL '
+            .'ORDER BY r.punteggio DESC, r.punti_sostituto DESC LIMIT 30',
             array(
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
-                array( 's' => $dataPrima )
+                array( 's' => $ct['etc']['data_scopertura'] )
             )
         );
 
