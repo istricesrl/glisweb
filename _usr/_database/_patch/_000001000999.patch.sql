@@ -2030,5 +2030,281 @@ CREATE TABLE IF NOT EXISTS `popup_pagine` (
   `se_presente` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000129
+
+-- pratiche
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `pratiche` (
+`id` int(11) NOT NULL,
+  `numero` char(16) NOT NULL,
+  `numero_ruolo` char(32) DEFAULT NULL,
+  `data_apertura` date NOT NULL,
+  `data_chiusura` date DEFAULT NULL,
+  `id_sede_apertura` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_categoria_diritto` int(11) DEFAULT NULL,
+  `id_provenienza` int(11) DEFAULT NULL,
+  `note_segnalazione` char(64) DEFAULT NULL,
+  `descrizione` text,
+  `controparte` char(128) DEFAULT NULL,
+  `se_patrocinio` int(1) DEFAULT NULL,
+  `se_accompagnamento` int(1) DEFAULT NULL,
+  `note_chiusura` text,
+  `ore_stimate` decimal(10,2) DEFAULT NULL,
+  `id_esito` int(11) DEFAULT NULL,
+  `se_richiesta_liquidazione` int(1) DEFAULT NULL,
+  `se_richiesto_rimborso` int(1) DEFAULT NULL,
+  `id_account_editor` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `se_importata` int(1) DEFAULT NULL,
+  `id_account_chiusura` int(11) DEFAULT NULL,
+  `timestamp_chiusura` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000130
+
+-- pratiche_assistiti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `pratiche_assistiti` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_pratica` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000131
+
+-- pratiche_avvocati
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `pratiche_avvocati` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_pratica` int(11) NOT NULL,
+  `se_responsabile` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000132
+
+-- pratiche_servizi_contatto
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `pratiche_servizi_contatto` (
+`id` int(11) NOT NULL,
+  `id_pratica` int(11) NOT NULL,
+  `id_servizio_contatto` int(11) NOT NULL,
+  `testo` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000133
+
+-- prezzi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `prezzi` (
+`id` int(11) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `prezzo` decimal(16,5) NOT NULL,
+  `id_listino` int(11) NOT NULL,
+  `id_valuta` int(11) DEFAULT NULL,
+  `id_iva` int(11) NOT NULL,
+  `id_udm` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000134
+
+-- priorita
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `priorita` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) COLLATE utf8_general_ci NOT NULL,
+  `ordine` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000135
+
+-- prodotti
+-- tipologia: tabella gestita
+	CREATE TABLE IF NOT EXISTS `prodotti` (	
+  `id` char(32) NOT NULL,	
+  `id_tipologia` int(11) NOT NULL,	
+  `nome` char(128) NOT NULL,	
+  `descrizione` text,	
+  `ordine` int(11) DEFAULT NULL,	
+  `codifica` text,	
+  `id_udm` int(11) DEFAULT NULL,	
+  `id_ingombro` int(11) DEFAULT NULL,	
+  `ingombro_proporzionale` decimal(16,5) DEFAULT NULL,	
+  `larghezza_prodotto` decimal(9,3) DEFAULT NULL,	
+  `lunghezza_prodotto` decimal(9,3) DEFAULT NULL,	
+  `altezza_prodotto` decimal(9,3) DEFAULT NULL,	
+  `id_produttore` int(11) DEFAULT NULL,	
+  `codice_produttore` char(64) DEFAULT NULL,	
+  `id_fornitore` int(11) DEFAULT NULL,	
+  `id_marchio` int(11) DEFAULT NULL,	
+  `id_tipologia_pubblicazione` int(11) NOT NULL,	
+  `se_disponibile` int(1) NULL DEFAULT '1',	
+  `timestamp_pubblicazione` int(11) DEFAULT NULL,	
+  `timestamp_archiviazione` int(11) DEFAULT NULL,	
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000136
+
+-- prodotti_categorie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
+`id` int(11) NOT NULL,
+  `id_prodotto` char(32) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `se_principale` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000137
+
+-- prodotti_modalita_spedizione
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `prodotti_modalita_spedizione` (
+`id` int(11) NOT NULL,
+  `id_prodotto` char(32) NOT NULL,
+  `id_modalita` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000138
+
+-- prodotti_caratteristiche
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `prodotti_caratteristiche` (
+`id` int(11) NOT NULL,
+  `id_prodotto` char(32) NOT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `testo` text,
+  `se_non_presente` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000139
+
+-- prodotti_stagioni
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `prodotti_stagioni` (
+`id` int(11) NOT NULL,
+  `id_prodotto` char(32) NOT NULL,
+  `id_stagione` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000140
+
+-- progetti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `progetti` (
+  `id` char(32) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `testo` text,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `ranking` char(32) DEFAULT NULL,
+  `id_account_accettazione` int(11) DEFAULT NULL,
+  `data_accettazione` DATE DEFAULT NULL,
+  `timestamp_accettazione` int(11) DEFAULT NULL,
+  `fatturato_accettazione` decimal(16,2) DEFAULT NULL,
+  `testo_accettazione` text,
+  `fatturato_previsto` decimal(16,2) DEFAULT NULL,
+  `ore_previste` decimal(16,2) DEFAULT NULL,
+  `costi_previsti` decimal(16,2) DEFAULT NULL,
+  `testo_previsioni` text,
+  `id_account_chiusura` int(11) DEFAULT NULL,
+  `timestamp_chiusura` int(11) DEFAULT NULL,
+  `testo_chiusura` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `se_lavoro_festivo` int(1) DEFAULT NULL,
+  `se_lavoro_weekend` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000141
+
+-- progetti_anagrafica
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `progetti_anagrafica` (
+`id` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `se_sostituto` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000142
+
+-- provenienze_contatti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `provenienze_contatti` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_contatto` int(11) DEFAULT NULL,
+  `se_segnalato` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000143
+
+-- provincie
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `provincie` (
+`id` int(11) NOT NULL,
+  `id_regione` int(11) NOT NULL,
+  `nome` varchar(254) NOT NULL,
+  `sigla` char(8) DEFAULT NULL,
+  `codice_istat` char(3) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000144
+
+-- pubblicazione
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `pubblicazione` (
+`id` int(11) NOT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_popup` int(11) DEFAULT NULL,
+  `template` char(32) DEFAULT NULL,
+  `schema_html` char(32) DEFAULT NULL,
+  `tema_css` char(32) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
+  `note` char(254) DEFAULT NULL,
+  `timestamp_pubblicazione` int(11) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000145
+
+-- rassegna_stampa
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `rassegna_stampa` (
+`id` int(11) NOT NULL,
+  `data` date DEFAULT NULL,
+  `id_testata` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `nome` char(255) COLLATE utf8_general_ci DEFAULT NULL,
+  `testo` text COLLATE utf8_general_ci,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| FINE FILE
