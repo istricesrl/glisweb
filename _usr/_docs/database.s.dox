@@ -1,0 +1,52 @@
+/*!
+
+    \page database_r database del framework, tabelle con la lettera S
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera S.
+
+    le tabelle del database di supporto SA - SZ
+    ===========================================
+
+    scadenze
+    --------
+    Questa tabella *gestita* ...
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    scadenze.id                          | 
+    scadenze.id_documento                | 
+    scadenze.id_pratica                  | 
+    scadenze.data                        | 
+    scadenze.id_modalita_pagamento       | 
+    scadenze.nome                        | 
+    scadenze.importo_lordo_totale        | 
+    scadenze.se_pagato                   | 
+    scadenze.id_account_inserimento      | 
+    scadenze.timestamp_inserimento       | 
+    scadenze.id_account_aggiornamento    | 
+    scadenze.timestamp_aggiornamento     | 
+    
+
+    La vista scadenze_view relativa alla tabella scadenze presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    settori
+    --------
+    Questa tabella *gestita* ...
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    settori.id                          | 
+    settori.id_genitore                 | 
+    settori.id_testata                  | 
+    settori.ateco                       | 
+    settori.nome                        | 
+    settori.soprannome                  |
+
+    La vista settori_view relativa alla tabella settori presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
