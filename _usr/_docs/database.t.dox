@@ -84,14 +84,14 @@
     
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
-    task.id                           | l'ID della task
+    task.id                           | l'ID dell'operazione pianificata
     task.id_tipologia                 | l'ID della tipologia di task
-    task.id_priorita                  | l'ID della definizione della priorità associata alla task
-    task.id_anagrafica                | l'ID del cliente associato alla task
-    task.id_cliente                   | l'ID del progetto della task
-    task.id_progetto                  | l'ID del luogo della task
-    task.id_luogo                     | nome assegnato alla task
-    task.nome                         | 
+    task.id_priorita                  | l'ID della definizione della priorità associata all'operazione
+    task.id_anagrafica                | 
+    task.id_cliente                   | l'ID del cliente associato alla task
+    task.id_progetto                  | l'ID del progetto della task
+    task.id_luogo                     | l'ID del luogo della task
+    task.nome                         | nome assegnato alla task
     task.testo                        | 
     task.ore_previste                 | 
     task.testo_ore_previste           |
@@ -303,7 +303,7 @@
     colonna                                    | descrizione
     -------------------------------------------|---------------------------------------------------------------------------------------
     tipologie_crm.id                           | l'ID della tipologia di CRM
-    tipologie_crm.nome                         |
+    tipologie_crm.nome                         | 
     tipologie_crm.ordine                       | 
     tipologie_crm.id_account_inserimento       | 
     tipologie_crm.timestamp_inserimento        | 
@@ -327,8 +327,8 @@
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
     tipologie_contatti.id                           | l'ID della tipologia di contatto
-    tipologie_contatti.nome                         |
-    tipologie_contatti.se_segnalazione                       | 
+    tipologie_contatti.nome                         | il nome di riferimento alla tipologia di contratto
+    tipologie_contatti.se_segnalazione              | 
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -347,7 +347,7 @@
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
     tipologie_contratti.id                          | l'ID della tipologia di contratto
-    tipologie_contratti.nome                        |
+    tipologie_contratti.nome                        | 
   
     La tabella ha le seguenti chiavi esterne:
 
@@ -366,14 +366,44 @@
     colonna                                    | descrizione
     -------------------------------------------|---------------------------------------------------------------------------------------
     tipologie_date.id                          | l'ID della tipologia di data
-    tipologie_date.nome                        |
+    tipologie_date.nome                        | il nome della tipologia di data
   
     La tabella ha le seguenti chiavi esterne:
 
     chiave                           | campo                        | tabella e campo collegati
     ---------------------------------|------------------------------|-----------------------------------------------------
  
-    La vista *ttipologie_date_view* relativa alla tabella *tipologie_date* presenta le seguenti colonne:
+    La vista *tipologie_date_view* relativa alla tabella *tipologie_date* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    
+    tipologie_documenti
+    -------------------
+    Questa tabbella *gestita*
+    
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_documenti.id                          | l'ID della tipologia di documento
+    tipologie_documenti.nome                        |
+    tipologie_documenti.codice                      | 
+    tipologie_documenti.se_fattura                  |
+    tipologie_documenti.se_nota_credito             | 
+    tipologie_documenti.se_trasporto                |
+    tipologie_documenti.se_pro_forma                | 
+    tipologie_documenti.se_offerta                  |
+    tipologie_documenti.se_ordine                   |
+    tipologie_documenti.se_ricevuta                 | 
+    tipologie_documenti.stampa_xml                  |
+    tipologie_documenti.stampa_pdf                  | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_documenti_view* relativa alla tabella *tipologie_documenti* presenta le seguenti colonne:
     
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
