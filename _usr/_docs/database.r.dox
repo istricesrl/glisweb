@@ -142,4 +142,42 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     
+    richieste_immobili
+    ---------------
+    Questa tabella *gestita* ...
+
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    richieste_immobili.id                          | l'ID della rischiesta immobile
+    richieste_immobili.id_cliente                  | l'ID del cliente che ha fatto la richiesta immobile
+    richieste_immobili.id_agente                   | l'ID dell'agente in carico della pratica
+    richieste_immobili.piano_min                   | 
+    richieste_immobili.piano_max                   | 
+    richieste_immobili.mq_min                      | 
+    richieste_immobili.mq_max                      | 
+    richieste_immobili.cucine_min                  | 
+    richieste_immobili.cucine_max                  | 
+    richieste_immobili.bagni_min                   | 
+    richieste_immobili.bagni_max                   | 
+    richieste_immobili.camere_min                  | 
+    richieste_immobili.camere_max                  | 
+    richieste_immobili.spese_min                   | 
+    richieste_immobili.spese_max                   | 
+    richieste_immobili.note_richiesta              | 
+    richieste_immobili.note_interne                | 
+    richieste_immobili.timestamp_incrocio          | 
+    richieste_immobili.id_esito                    | 
+    richieste_immobili.timestamp_archiviazione     | 
+    richieste_immobili.note_archiviazione          | 
+    richieste_immobili.id_account_editor           | 
+    richieste_immobili.id_account_inserimento      | 
+    richieste_immobili.timestamp_inserimento       | 
+    richieste_immobili.id_account_aggiornamento    | 
+    richieste_immobili.timestamp_aggiornamento     | 
+ 
+    La vista richieste_immobili_view relativa alla tabella richieste_immobili presenta le seguenti colonne:
+ 
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+       
 */
