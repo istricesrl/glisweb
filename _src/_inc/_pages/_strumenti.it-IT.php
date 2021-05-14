@@ -164,7 +164,76 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
+
+	// importazioni
+	$p['importazioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazioni' ),
+	    'h1'		=> array( $l		=> 'importazioni' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'importazioni' ),
+									'priority'	=> '970' ) )
+	);
+
+	// esportazioni
+	$p['esportazioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'esportazioni' ),
+	    'h1'		=> array( $l		=> 'esportazioni' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'esportazioni.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_esportazioni.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'esportazioni' ),
+									'priority'	=> '980' ) )
+	);
  
+	// importazione articoli
+	$p['importazione.articoli'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazione articoli' ),
+	    'h1'		=> array( $l		=> 'importazione articoli' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.articoli.html' ),
+	    'parent'		=> array( 'id'		=> 'importazioni' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.articoli.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	);
+
+	// importazione articoli
+	$p['importazione.prezzi.articoli'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazione prezzi articoli' ),
+	    'h1'		=> array( $l		=> 'importazione prezzi articoli' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.prezzi.articoli.html' ),
+	    'parent'		=> array( 'id'		=> 'importazioni' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.prezzi.articoli.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	);
+
+    // importazione prodotti
+	$p['importazione.prodotti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazione prodotti' ),
+	    'h1'		=> array( $l		=> 'importazione prodotti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.prodotti.html' ),
+	    'parent'		=> array( 'id'		=> 'importazioni' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.prodotti.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	);
+
+    // importazione prodotti
+	$p['importazione.prodotti.caratteristiche'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'importazione caratteristiche prodotti' ),
+	    'h1'		=> array( $l		=> 'importazione caratteristiche prodotti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'importazioni.prodotti.caratteristiche.html' ),
+	    'parent'		=> array( 'id'		=> 'importazioni' ),
+	    'macro'		=> array( '_src/_inc/_macro/_importazioni.prodotti.caratteristiche.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	);
 /*
     // pagina gestione cron
 	$p['cron'] = array(
