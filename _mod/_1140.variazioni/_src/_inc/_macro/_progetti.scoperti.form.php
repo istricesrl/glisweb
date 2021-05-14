@@ -44,8 +44,9 @@
                 ""
             ) as anagrafica FROM __report_progetti_sostituti__ AS r '
             .'LEFT JOIN anagrafica AS a ON r.id_anagrafica = a.id '
-            .'LEFT JOIN sostituzioni_progetti AS s ON s.id_progetto = r.id_progetto AND s.id_anagrafica = r.id_anagrafica AND s.data_scopertura = r.data_scopertura '
-            .'WHERE r.id_progetto = ? AND r.data_scopertura = ? AND s.id IS NULL '
+        #    .'LEFT JOIN sostituzioni_progetti AS s ON s.id_progetto = r.id_progetto AND s.id_anagrafica = r.id_anagrafica AND s.data_scopertura = r.data_scopertura '
+            .'WHERE r.id_progetto = ? AND r.data_scopertura = ? '
+        #    .'AND s.id IS NULL '
             .'ORDER BY r.punteggio DESC, r.punti_sostituto DESC LIMIT 30',
             array(
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),

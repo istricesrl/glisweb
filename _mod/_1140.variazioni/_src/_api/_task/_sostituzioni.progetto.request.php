@@ -34,10 +34,10 @@
         // data di scopertura
         $status['data_scopertura'] = $_REQUEST['data_scopertura'];
 
-        // scrivo una riga nella tabella sostituzioni_progetti così al calcolo successivo dei sostituti questa anagrafica verrà esclusa
+        // cancello la riga dalla tabella __report_progetti_sostituti__
         mysqlQuery(
             $cf['mysql']['connection'],
-            'INSERT IGNORE INTO sostituzioni_progetti ( id_progetto, data_scopertura, id_anagrafica ) VALUES ( ?, ?, ? )',
+            'DELETE FROM __report_progetti_sostituti__ WHERE id_progetto = ? AND data_scopertura = ? AND id_anagrafica = ?',
             array(
                 array( 's' => $_REQUEST['id_progetto'] ),
                 array( 's' => $_REQUEST['data_scopertura'] ),
