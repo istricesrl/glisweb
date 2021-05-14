@@ -1,4 +1,4 @@
-.pannello-cassa h2:first-child{
+/*.pannello-cassa h2:first-child{
 
 } 
 .pannello-cassa h2:nth-child(2){
@@ -25,8 +25,12 @@ padding: .5rem 1rem;
     height: calc(2.875rem + 2px);
 }
 
+  .pannello-cassa input.form-control {
+    height: calc(2.875rem + 2px);
+}
+*/
 .box {
-  height: 150px;
+  height: 80%;
   overflow: auto;
 }
 
@@ -70,6 +74,3 @@ padding: .5rem 1rem;
     color: #fff;
     }
 
-  .pannello-cassa input.form-control {
-    height: calc(2.875rem + 2px);
-}
