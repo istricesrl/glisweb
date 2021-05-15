@@ -24,7 +24,25 @@
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
         // richiamo la funzione che ritorna l'array degli operatori coi punteggi
-        $ct['etc']['operatori'] = elencoSostitutiAttivita( $_REQUEST[ $ct['form']['table'] ]['id'] );
+     #   $ct['etc']['operatori'] = elencoSostitutiAttivita( $_REQUEST[ $ct['form']['table'] ]['id'] );
+
+     // leggo i sostituti dalla tabella __report_sostituzioni_attivita__
+         $ct['etc']['operatori'] = mysqlQuery(
+             $cf['mysql']['connection'],
+             'SELECT r.*, '
+             .'coalesce(
+                a.soprannome,
+                a.denominazione,
+                concat_ws(" ", coalesce(a.nome, ""),
+                coalesce(a.cognome, "") ),
+                ""
+            ) as anagrafica '
+            .'FROM __report_sostituzioni_attivita__ AS r LEFT JOIN anagrafica AS a ON r.id_anagrafica = a.id '
+            .'WHERE id_attivita = ? AND punteggio > 0 ORDER BY punteggio DESC, punti_sostituto DESC, punti_progetto DESC, punti_distanza DESC LIMIT 30',
+             array(
+                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
+             )
+         );
 
         // tendina operatori per settaggio manuale
 	    $ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
@@ -33,9 +51,6 @@
             $cf['mysql']['connection'],
             "SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 AND "
             ."id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? )",
-        /*    "SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM attivita_view WHERE "
-            ."id_anagrafica IS NOT NULL AND "
-            ."id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) ORDER BY anagrafica",*/
             array(
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
             )

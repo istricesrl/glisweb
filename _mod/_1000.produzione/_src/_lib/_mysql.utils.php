@@ -540,6 +540,114 @@
     }
 
 
+
+    function sostitutiAttivita( $id_attivita ){
+
+        global $cf;
+
+        // estraggo i dati che mi occorrono per l'attività
+        $a = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            "SELECT id, id_progetto, data_programmazione, ora_inizio_programmazione, ora_fine_programmazione, TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
+            ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita_view "
+            ."WHERE id = ?",
+            array(
+                array( 's' => $id_attivita )
+            )
+        );
+
+    //    print_r($a);
+
+        // elenco degli operatori disponibili che non sono già stati analizzati
+        $operatori = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT c.id_anagrafica, c.anagrafica, max(ca.se_sostituto) as se_sostituto, '
+            .'( SELECT count(*) FROM attivita_view WHERE id_anagrafica = c.id_anagrafica '
+                .'AND ( '
+                .'( TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ? ) '
+                .'OR '
+                .'( TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ? ) '
+                .') '
+            .') AS collisioni '
+            .'FROM contratti_view AS c '
+            .'LEFT JOIN __report_sostituzioni_attivita__ AS r ON c.id_anagrafica = r.id_anagrafica AND r.id_attivita = ? '
+            .'LEFT JOIN anagrafica_categorie AS ac ON c.id_anagrafica = ac.id_anagrafica '
+            .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
+            .'LEFT JOIN sostituzioni_attivita AS s ON c.id_anagrafica = s.id_anagrafica AND s.id_attivita = ? '
+            .'WHERE r.id IS NULL AND s.id IS NULL '
+            .'GROUP BY c.id_anagrafica '
+            .'HAVING collisioni = 0'
+           ,
+            array(
+                array( 's' => $a['data_ora_inizio'] ),
+                array( 's' => $a['data_ora_fine'] ),
+                array( 's' => $a['data_ora_inizio'] ),
+                array( 's' => $a['data_ora_fine'] ),
+                array( 's' => $id_attivita ),
+                array( 's' => $id_attivita )               
+            )
+        );
+
+    //    echo $a['data_ora_inizio'] . ' ' . $a['data_ora_fine'];
+    //    print_r($operatori);
+
+        if( !empty( $operatori ) ){
+            foreach( $operatori as $o ){
+                
+                // calcolo i punteggi
+                $o['punteggio'] = 0;
+
+                if( $o['se_sostituto'] == 1 ){
+                    $o['punti_sostituto'] = 100;
+                }
+                else{
+                    $o['punti_sostituto'] = 0;
+                }
+
+                $o['punteggio'] += $o['punti_sostituto'];
+                    
+                $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $a['id_progetto'], $a['data_programmazione']);
+                $o['punti_disponibilita'] = puntiDisponibilitaOperatore( $o['id_anagrafica'], $a['data_programmazione'], $a['ora_inizio_programmazione'], $a['ora_fine_programmazione'] );
+                $o['punti_distanza'] = intval( puntiDistanzaAttivita( $o['id_anagrafica'], $a['id'] ) );
+                
+                $o['punteggio'] += $o['punti_progetto'];
+                $o['punteggio'] += $o['punti_disponibilita'];
+                $o['punteggio'] += $o['punti_distanza'];
+
+                // se il punteggio è > 0 inserisco la riga nella tabella __report_sostituzioni_attivita__
+                if( $o['punteggio'] > 0 ){
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'INSERT INTO __report_sostituzioni_attivita__ (id_attivita, id_anagrafica, punteggio, punti_progetto, punti_disponibilita, punti_distanza, punti_sostituto) VALUES ( ?, ?, ?, ?, ?, ?, ? ) '
+                        .'ON DUPLICATE KEY UPDATE punteggio = VALUES( punteggio ), punti_progetto = VALUES(punti_progetto), punti_disponibilita = VALUES(punti_disponibilita), punti_distanza = VALUES(punti_distanza), punti_sostituto = VALUES(punti_sostituto)',
+                        array(
+                            array( 's' => $id_attivita ),
+                            array( 's' => $o['id_anagrafica'] ),
+                            array( 's' => $o['punteggio'] ),
+                            array( 's' => $o['punti_progetto'] ),
+                            array( 's' => $o['punti_disponibilita'] ),
+                            array( 's' => $o['punti_distanza'] ),
+                            array( 's' => $o['punti_sostituto'] )
+                        )
+                    );
+                }
+                else{
+                    // chiamo il task che inserisce la riga di scarto
+                    restcall(
+                        $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_operatori.descard.php?id_anagrafica=' . $o['id_anagrafica'] . '&id_attivita=' . $id_attivita
+                    );
+                }
+                
+
+            } 
+        }
+
+    }
+
+
+
+
+
     // funzione che dato un progetto, calcola l'elenco degli operatori che possono coprirne le attività scoperte con relativo punteggio
     // e le salva nella tabella __report_progetti_sostituti__
     function elencoSostitutiProgetto( $id_progetto ){
