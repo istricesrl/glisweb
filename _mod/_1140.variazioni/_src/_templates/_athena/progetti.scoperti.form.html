@@ -1,0 +1,107 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+
+{# FORM DI GESTIONE #}
+
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        <div class="form-row view-filters d-print-none cks">
+            <div class="col-12 col-md">
+                <span class="label-top">operatore</span>
+                <div class="row m-0">
+                    <div class="col combobox-container p-0">
+                        <select name="id_anagrafica" onchange="$('#pager').val('0');" populate-api class="selectbox form-control form-control-sm" id="sceglioperatore">
+                            <option value="" ></option>
+                        {% for operatore in etc.select.operatori %}
+                            <option value="{{ operatore.id }}">{{ operatore.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-auto p-0 pl-1">
+                        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#sceglioperatore_inputbox').trigger('all');"><i class="fa fa-chevron-down"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-auto">
+                <button type="button" class="form-control form-control-sm btn btn-sm btn-secondary" data-toggle="modal" data-target="#richiesta" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreid').text( $('#sceglioperatore option:selected').val() );$('#modaloperatorenome').text( $('#sceglioperatore option:selected').text() );" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>
+            </div>
+
+            <div class="col-auto">
+                <button type="button" class="form-control form-control-sm btn btn-sm btn-secondary" data-toggle="modal" data-target="#sostituisci" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreSid').text( $('#sceglioperatore option:selected').val() );$('#modaloperatoreSnome').text( $('#sceglioperatore option:selected').text() );" placeholder="imposta sostituzione"  data-placement="bottom" data-delay="1000" title="" data-original-title="imposta sostituzione">sostituisci</button>
+            </div>
+
+        </div>
+    
+        {% if etc.operatori %}
+        <div class="form-row mt-2">
+            <div class="col-md-12 table-responsive">
+                <table class="view-table">
+                    <thead>
+                        <tr>
+                            <th>operatore</th>
+                            <th>sostituto</th>
+                            <th>progetto</th>
+                            <th>copertura</th>
+                            <th>distanza</th>
+                            <!--
+                                <th>blocchi (es. il cliente non vuole quell'operatore)</th>
+                            -->
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for o in etc.operatori %}
+                        <tr>
+                            <td class="text-left">{{ o.anagrafica }}</td>
+                            <td>{{ o.punti_sostituto }}</td>
+                            <td>{{ o.punti_progetto }}</td>
+                            <td>{{ o.punti_copertura }}</td>
+                            <td>{{ o.punti_distanza }}</td>
+                            <td class="text-right">
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"data-toggle="modal" data-target="#richiesta" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreid').text('{{ o.id_anagrafica }}');$('#modaloperatorenome').text('{{ o.anagrafica }}');" placeholder="invia richiesta"  data-placement="bottom" data-delay="1000" title="" data-original-title="invia richiesta">invia richiesta</button>
+                                <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"data-toggle="modal" data-target="#sostituisci" data-placement="bottom" data-delay="1000" onclick="$('#modaloperatoreSid').text('{{ o.id_anagrafica }}');$('#modaloperatoreSnome').text('{{ o.anagrafica }}');" placeholder="imposta sostituzione"  data-placement="bottom" data-delay="1000" title="" data-original-title="imposta sostituzione">sostituisci</button>
+                            </td>         
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+            <div class="row no-gutters d-print-none">
+                <div class="col-auto col-md-5">
+	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages['progetti.scoperti.view'].path[ localization.language.ietf ] }}','_self');" placeholder="torna indietro" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro"><i class="fa fa-undo"></i></button>
+                </div>
+                <div class="col-auto col-md-7 text-right">
+                    <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="calcola i sostituti" data-toggle="modal" data-target="#calcola" data-placement="bottom" data-delay="1000" title="" data-original-title="calcola sostituti">CALCOLA SOSTITUTI</button>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</section>
+
+{% endblock %}

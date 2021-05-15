@@ -49,14 +49,14 @@
 			<div class="form-group form-row">
 				<div class="col-12 col-md-1">
 					<span class="label-top">entità</span>
-					{# frm.select( table, '', '', 'entita', '', etc.select.entita, request, '', '', '', '', '', 1 ) #}
-
+					{{ frm.select( table, '', '', 'entita', '', etc.select.entita, request, '', '', '', '', '' ) }}
+<!--
 					<select name="{{ table[entita] }}" class="form-control form-control-sm" id="{{ table }}_entita" {% if request[ table ].id %} disabled {% endif %}>
 					{% for e in etc.select.entita %}
 						<option value="{{ e.id }}" {% if request[ table ].entita == e.id %}selected{% endif %}>{{ e.__label__ }}</option>
 					{% endfor %}
 					</select>
-
+-->
 				</div>
 				<div class="col-12 col-md-1">
 					<span class="label-top">id entità</span>
@@ -81,7 +81,7 @@
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">note</span>
-				{{ frm.textarea( table, '', '', 'note', 'note', 1, request ) }}
+				{{ frm.textarea( table, '', '', 'note', '', 1, request ) }}
 				</div>
 			</div>
 	

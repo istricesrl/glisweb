@@ -33,7 +33,7 @@
 	}
 
     // timer
-	timerCheck( $cf['speed'], ' -> fine logiche di gestione di default' );
+	timerCheck( $cf['speed'], '-> fine logiche di gestione di default' );
 
     // debug
 	// print_r( $ct['page'] );

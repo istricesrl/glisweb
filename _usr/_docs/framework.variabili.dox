@@ -28,6 +28,10 @@
     auth.groups.<g>.id              | ID sul database del gruppo <g>
     auth.groups.<g>.nome            | nome del gruppo <g>
     auth.groups.<g>.privilegi       | array dei privilegi del gruppo <g>
+    auth.jwt                        | array dei dati per il login tramite JWT
+    auth.jwt.pass                   | password per il login via JWT, ricavata a partire dai dati JWT
+    auth.jwt.secret                 | chiave segreta JWT
+    auth.jwt.token                  | token per il login via JWT
     auth.permissions                | array dei permessi disponibili
     auth.permissions.<e>            | array dei permessi disponibili per l'entità <e>
     auth.permissions.<e>.<l>        | array degli account con accesso <l> all'entità <e>
@@ -58,6 +62,9 @@
     \endcode
 
     Per generare l'hash di una password si può utilizzare lo script _src/_sh/_gw.password.hash.sh.
+
+    Il login tramite JWT avviene inviando una stringa JWT valida tramite $_REQUEST['jwt']; la stringa JWT valida può essere generata tramite la funzione getJwt(); l'invio
+    di questa stringa, posto che contenga un ID e un username validi per il sito (vedi _usr/_examples/_jwt/_jwt.write.01.php) innesca automaticamente il login.
 
     L'array $cf['auth'] viene integrato da $cx['auth'], per ulteriori dettagli vedi _src/_config/_200.auth.php.
 
@@ -904,6 +911,8 @@
 
     chiave                                    | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
+    session.__latest__                        | dettagli degli ultimi moduli inviati
+    session.__latest__.<e>                    | dettagli dell'ultimo modulo inviato per l'entità <e>
     session.__view__                          | dettagli sulla visualizzazione corrente
     session.__view__.__ietf__                 | il codice IETF del linguaggio collegato alla visualizzazione corrente
     session.__view__.__lang__                 | l'ID del linguaggio collegato alla visualizzazione corrente
@@ -942,6 +951,15 @@
 
     Si noti che la chiave $_SESSION['__view__'] viene linkata a $_REQUEST['__view__'] (vedi _src/_config/_715.session.php) in modo
     da essere disponibile alla funzione controller() invocata nel successivo _src/_config/_750.controller.php.
+
+    L'utilizzo principale di $_SESSION['__latest__'] è quello di bloccare il valore di un campo di form quando si effettua il salvataggio per l'inserimento di una nuova riga. Questo
+    è possibile sfruttando l'accessibilità di $_SESSION['__latest__'] da parte di Twig tramite session.__latest__ e utilizzando i dati recuperati per fornire un default ai campi, qui
+    vediamo un esempio con doppio default per un campo data:
+
+    \code{.html}
+		{% if not session.__latest__[ table ].data %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data %}{% endif %}
+		{{ frm.date( table, '', '', 'data', '', '', request, default ) }}
+    \endcode
 
     L'array $cf['session'] è linkato a $ct['session'], per ulteriori dettagli vedi _src/_config/_055.session.php.
 

@@ -33,20 +33,20 @@
     // tendina sesso
 	$ct['etc']['select']['sesso'] = array( 
 	    array( 'id' => '-', '__label__' => '-' ),
-	    array( 'id' => 'M', '__label__' => 'M' ),
-	    array( 'id' => 'F', '__label__' => 'F' ),
+	    array( 'id' => 'M', '__label__' => 'uomo' ),
+	    array( 'id' => 'F', '__label__' => 'donna' ),
 	);
 
     // tendina notifiche
 	$ct['etc']['select']['se_notifiche'] = array(
-	    array( 'id' => NULL, '__label__' => '&#xf1f6;' ),
-	    array( 'id' => 1, '__label__' => '&#xf0f3;' )
+	    array( 'id' => NULL, '__label__' => 'no' ),
+	    array( 'id' => 1, '__label__' => 'si' )
 	);
 
     // tendina PEC
 	$ct['etc']['select']['se_pec'] = array(
-	    array( 'id' => NULL, '__label__' => '&#xf003;' ),
-	    array( 'id' => 1, '__label__' => '&#xf0a3;' )
+	    array( 'id' => NULL, '__label__' => 'mail' ),
+	    array( 'id' => 1, '__label__' => 'pec' )
 	);
 
     // tendina categorie anagrafica

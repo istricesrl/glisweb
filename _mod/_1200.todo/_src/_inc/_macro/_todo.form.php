@@ -27,6 +27,12 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM priorita_view' );
+
+    // tendina tipologie
+	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
     
     // tendina collaboratori
 	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
@@ -47,7 +53,15 @@
 	    $cf['cache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM progetti_produzione_view' );
+        'SELECT id, __label__ FROM progetti_view' );
+
+    // tendina categorie attivita
+	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_attivita_view'
+	);
 
      // tendina anni
 	foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {

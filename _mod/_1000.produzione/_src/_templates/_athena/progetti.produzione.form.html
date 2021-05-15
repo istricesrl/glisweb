@@ -49,21 +49,26 @@
             <div class="form-group form-row">
                 <div class="col-12 col-md-2">
                     <span class="label-top">codice</span>
-                    {{ frm.inputRequired( table, '', '', 'id', 'codice del progetto', '', request ) }}
+                    {{ frm.inputRequired( table, '', '', 'id', '', '', request ) }}
                 </div>
                 <div class="col-12 col-md-2">
                     <span class="label-top">tipologia</span>
                     {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request ) }}
                 </div>
 
-				<div class="col-12 col-md-7">
+				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
-					{{ frm.inputRequired( table, '', '', 'nome', 'nome del progetto', '', request ) }}
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">ranking</span>
-					{{ frm.input( table, '', '', 'ranking', 'ranking', '', request ) }}
+					{{ frm.input( table, '', '', 'ranking', '', '', request ) }}
                 </div>
+				<div class="col-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_lavoro_festivo', 'lavoro festivo', '', request ) }}
+					</div>
+				</div>
             </div>
             
 	        <div class="form-group form-row">
@@ -90,11 +95,11 @@
 			<div class="form-group form-row">
 				<div class="col col-md-2">
 					<span class="label-top">data accettazione</span>
-					{{ frm.datetime( table, '', '', 'timestamp_accettazione', '', '', request, 'now'|date('Y-m-d\\TH:i') ) }}
+					{{ frm.date( table, '', '', 'data_accettazione', '', '', request ) }}
 				</div>
 				<div class="col-12 col-md-10">
 					<span class="label-top">note di accettazione</span>
-					{{ frm.input( table, '', '', 'testo_accettazione', 'note di accettazione del progetto', '', request ) }}
+					{{ frm.input( table, '', '', 'testo_accettazione', '', '', request ) }}
 				</div>
             </div>
 		</fieldset>

@@ -21,6 +21,7 @@
     // print_r( $_SERVER );
     // print_r( $_SESSION );
     // print_r( $_SESSION['account'] );
+    // print_r( apache_request_headers() );
 
     // output
 	buildJson( $reply );

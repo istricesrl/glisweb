@@ -95,6 +95,14 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_soddisfazione_view' );
 
+    // tendina categorie attivita
+	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_attivita_view'
+	);
+
     // tendina progetti
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) {
 	    $ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
@@ -116,7 +124,11 @@
             $cf['cache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', array( array( 's' => $_REQUEST[ $ct['etc']['table'] ]['id_progetto'] ), array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) );
+            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
+            array( 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ), 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) 
+            );
 	} else {
 	    $ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
             $cf['cache']['index'],

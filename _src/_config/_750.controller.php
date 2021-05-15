@@ -244,7 +244,7 @@
 	// print_r( $_GET );
 
     // timer
-	timerCheck( $cf['speed'], ' -> inizio lavoro controller' );
+	timerCheck( $cf['speed'], '-> inizio lavoro controller' );
 
     // esamino la coda
 	foreach( $_REQUEST as $k => &$v ) {
@@ -264,6 +264,7 @@
 			    // attivazione controller
 				$cf['controller']['status'][ $k ] = controller(
 				    $cf['mysql']['connection'],				// connessione al database
+				    $cf['memcache']['connection'],			// connessione a memcache
 				    $v,							// blocco dati di lavoro
 				    $k,							// nome dell'entità su cui lavorare
 				    $_SERVER['REQUEST_METHOD'],				// metodo da applicare
@@ -280,7 +281,7 @@
 				// if( $k == 'prodotti' ) { print_r( $v ); }
 
 			    // timer
-				timerCheck( $cf['speed'], ' -> fine elaborazione blocco ' . $k );
+				timerCheck( $cf['speed'], '-> fine elaborazione blocco ' . $k );
 
 			}
 

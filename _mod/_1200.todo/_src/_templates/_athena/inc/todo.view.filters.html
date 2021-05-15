@@ -8,6 +8,15 @@
 	    <option value="" {% if request.__view__[ view.id ].__filters__.completato.EQ is empty %}selected{% endif %}>tutti i task</option>
 	</select>
     </div-->
+	<div class="col-4 col-md-auto">
+		<span class="label-top">tipologia</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_tipologia][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == "" %}selected{% endif %}>tutte</option>
+			{% for t in etc.select.tipologie %}
+			<option value="{{ t.id }}" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == t.id %}selected{% endif %}>{{ t.__label__ }}</option>
+			{% endfor %}
+		</select>
+		</div>
     <div class="col-4 col-md-auto">
     <span class="label-top">assegnato a</span>
 	<select name="__view__[{{ view.id }}][__extra__][assegnato]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
@@ -40,7 +49,6 @@
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
 		</div>
 		<div class="col-auto">
-		<div class="label-top">&nbsp;</div>
 		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
 		{% if view.insert.path %}
 		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>

@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
+{% import 'bin/todo.form.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -52,6 +52,10 @@
 					<span class="label-top">data apertura</span>
 					{{ frm.datetime( table, '', '', 'timestamp_apertura', '', '', request, 'now'|date('Y-m-d\\TH:i') ) }}
 				</div>-->
+				<div class="col-auto">
+					<span class="label-top">tipologia</span>
+					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', 'nome della todo', '', request ) }}
@@ -102,15 +106,23 @@
 				</div>
 				{% endif %}
 			</fieldset>
-	
+			
 			{% if request[table].id %}
 			<fieldset>
 				<legend>pianificazione</legend>	
 
 				<div class="form-group form-row">
 					<div class="col-auto">
+						<span class="label-top">anno</span>
+						{{ frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, request ) }}
+					</div>
+					<div class="col-auto">
+						<span class="label-top">settimana</span>
+						{{ frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, request ) }}
+					</div>
+					<div class="col-auto">
 						<span class="label-top">data</span>
-						{{ frm.date( table, '', '', 'data_programmazione', '', '', request, 'now'|date('Y-m-d') ) }}
+						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
 					</div>
 					<div class="col-auto">
 						<span class="label-top">ora inizio</span>
@@ -131,6 +143,11 @@
 				</div>
 
 			</fieldset>
+
+			{# SUBFORM CATEGORIE #}
+	    	{{ sub.categorie( table, 'todo_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
+
+
 			{% endif %}
 		   
 	    {# BOTTONI E COMANDI DEL MODULO #}

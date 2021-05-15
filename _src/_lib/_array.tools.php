@@ -237,6 +237,26 @@
      * @todo documentare
      *
      */
+    function reindex_array_recursive($array) {
+        if (is_array($array)) {
+            if (array_keys($array) === range(0, count($array) - 1)) { // Indexed array
+                return array_values(array_map('reindex_array_recursive', $array));
+            } else { // Associative array
+                foreach ($array as $value) {
+                    $value = reindex_array_recursive($value);
+                }
+                return $array;
+            }
+        } else {
+            return $array;
+        }
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function arrayReplaceRecursive( &$a1, $a2 ) {
 
         $a1 = ( is_array( $a1 ) ) ? $a1 : array();

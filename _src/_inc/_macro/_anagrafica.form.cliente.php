@@ -29,6 +29,14 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view WHERE se_agente IS NOT NULL'
     );
+
+    // tendina responsabile operativo
+	$ct['etc']['select']['responsabili_operativi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore IS NOT NULL'
+    );
     
      // tendina crm
 	$ct['etc']['select']['tipologie_crm'] = mysqlCachedIndexedQuery(
