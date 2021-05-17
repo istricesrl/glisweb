@@ -34,10 +34,10 @@
     colonna                          | descrizione
     ---------------------------------|---------------------------------------------------------------------------------------
     mail.id                          | l'ID della mail
-    mail.id_anagrafica               | 
+    mail.id_anagrafica               | l'ID dell'anagrafica associata alla mail
     mail.se_notifiche                | 
     mail.se_pec                      | 
-    mail.indirizzo                   | 
+    mail.indirizzo                   | l'indirizzo della mail
     mail.descrizione                 | 
     mail.timestamp_aggiornamento     | 
     mail.id_account_aggiornamento    | 
@@ -80,13 +80,13 @@
 
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
-    mail_out.id                       |
+    mail_out.id                       | l'ID della mail in uscita
     mail_out.timestamp_composizione   | 
     mail_out.timestamp_invio          |
     mail_out.server                   |
-    mail_out.mittente                 | 
-    mail_out.destinatari              |
-    mail_out.destinatari_cc           |
+    mail_out.mittente                 | mittente associato alla mail in uscita
+    mail_out.destinatari              | destinatario della mail in uscita
+    mail_out.destinatari_cc           | altri destinatari della mail in uscita
     mail_out.destinatari_bcc          | 
     mail_out.oggetto                  |
     mail_out.corpo                    |
@@ -97,7 +97,7 @@
     mail_out.user                     |
     mail_out.password                 |
     mail_out.id_newsletter            | 
-    mail_out.id_email                 |
+    mail_out.id_email                 | l'ID della mail associato alla mail in uscita
     mail_out.tentativi                |
     mail_out.token                    | 
     mail_out.ordine                   | 
@@ -120,18 +120,18 @@
     ---------
     Questa tabella *gestita*...
 
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    mail_sent.id                       |
+    colonna                            | descrizione
+    -----------------------------------|---------------------------------------------------------------------------------------
+    mail_sent.id                       |  l'ID della mail inviata
     mail_sent.timestamp_composizione   | 
     mail_sent.timestamp_invio          |
-    mail_sent.server                   |
-    mail_sent.mittente                 | 
-    mail_sent.destinatari              |
-    mail_sent.destinatari_cc           |
+    mail_sent.server                   | server utilizzata per l'invio dell'email
+    mail_sent.mittente                 | mittente associato alla mail inviata
+    mail_sent.destinatari              | destinatario della mail inviata
+    mail_sent.destinatari_cc           | altri destinatari della mail inviata
     mail_sent.destinatari_bcc          | 
-    mail_sent.oggetto                  |
-    mail_sent.corpo                    |
+    mail_sent.oggetto                  | oggetto dell'email inviata
+    mail_sent.corpo                    | corpo della mail inviata
     mail_sent.allegati                 | 
     mail_sent.headers                  |
     mail_sent.host                     |
@@ -139,7 +139,7 @@
     mail_sent.user                     |
     mail_sent.password                 |
     mail_sent.id_newsletter            | 
-    mail_sent.id_email                 |
+    mail_sent.id_email                 | l'ID della mail associato alla mail inviata
     mail_sent.tentativi                |
     mail_sent.token                    | 
     mail_sent.ordine                   | 
@@ -164,7 +164,7 @@
 
     colonna                          | descrizione
     ---------------------------------|---------------------------------------------------------------------------------------
-    mailing.id                       | 
+    mailing.id                       | l'ID del mailing di riferimento
     mailing.nome                     | 
     mailing.timestamp_invio          | 
     mailing.note                     | 
@@ -213,7 +213,7 @@
     mailing_mail.id             | l'ID che fa l'associazione fra l'ID mail, l'ID mailing e l'ID coda
     mailing_mail.id_mail        | l'ID mail
     mailing_mail.id_mailing     | l'ID mailing
-    mailing_mail.id_coda        | l'ID coda
+    mailing_mail.id_coda        | l'ID della coda mail
 
 
     La tabella ha le seguenti chiavi esterne:
@@ -232,9 +232,9 @@
 
     colonna                         | descrizione
     --------------------------------|---------------------------------------------------------------------------------------
-    mastri.id                       |
+    mastri.id                       | l'ID del mastri
     mastri.nome                     | 
-    mastri.id_tipologia             |
+    mastri.id_tipologia             | l'ID della tipologia del mastri
     mastri.note                     |
     mastri.se_commerciale           |
     mastri.se_produzione            | 
@@ -260,7 +260,7 @@
 
     colonna                         | descrizione
     --------------------------------|---------------------------------------------------------------------------------------
-    marchi.id                       |
+    marchi.id                       | l'ID del marchio
     marchi.nome                     | 
     marchi.id_account_inserimento   |
     marchi.timestamp_inserimento    |
@@ -283,7 +283,7 @@
 
     colonna                            | descrizione
     -----------------------------------|---------------------------------------------------------------------------------------
-    matricole.id                       |
+    matricole.id                       | l'ID del matricolo
     matricole.nome                     | 
     matricole.testo                    |
     matricole.id_account_inserimento   |
@@ -305,10 +305,10 @@
     ----
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
-    menu.id                           |
-    menu.id_pagina                    | 
-    menu.id_lingua                    |
-    menu.menu                         |
+    menu.id                           | l'ID del menu che fa l'associazione fra la pagina e la lingua
+    menu.id_pagina                    | l'ID della pagina di riferimento del menu
+    menu.id_lingua                    | l'ID della lingua di riferimento del menu
+    menu.menu                         | 
     menu.nome                         |
     menu.target                       |
     menu.ordine                       |
@@ -330,23 +330,23 @@
     
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
-    metadati.id                       |
-    metadati.id_anagrafica            | 
-    metadati.id_prodotto              |
-    metadati.id_articolo              |
-    metadati.id_categoria_prodotti    |
-    metadati.id_risorsa               |
-    metadati.id_categoria_risorse     |
-    metadati.id_immagine              |
+    metadati.id                       | l'ID dei metadati
+    metadati.id_anagrafica            | l'ID dell'anagrafica di riferimento dei metadati
+    metadati.id_prodotto              | l'ID del prodotto di riferimento dei metadati
+    metadati.id_articolo              | l'ID dell'articolo di riferimento dei metadati
+    metadati.id_categoria_prodotti    | l'ID della categoria prodotto a cui si riferisce i metadati
+    metadati.id_risorsa               | l'ID della risorsa di riferimento dei metadati
+    metadati.id_categoria_risorse     | l'ID della categoria risorsa dei metadati
+    metadati.id_immagine              | 
     metadati.id_video                 |
     metadati.id_file                  |
-    metadati.id_pagina                |
-    metadati.id_evento                |
+    metadati.id_pagina                | l'ID della pagina di riferimento dei metadati
+    metadati.id_evento                | l'ID dell'evento di riferimento ai metadati
     metadati.id_categoria_eventi      |
     metadati.id_notizia               |
     metadati.id_categoria_notizie     |
     metadati.id_mailing               |
-    metadati.id_lingua                |
+    metadati.id_lingua                | l'ID della lingua dei metadati
     metadati.nome                     |
     metadati.testo                    |
   
@@ -366,8 +366,8 @@
     
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
-    modalita_consegna.id              |
-    modalita_consegna.nome            | 
+    modalita_consegna.id              | l'ID della modalita di consegna
+    modalita_consegna.nome            | il nome associato alla modalita di consegna
     modalita_consegna.suggerimento    |
     
     La tabella ha le seguenti chiavi esterne:
@@ -386,14 +386,14 @@
     
     colonna                                          | descrizione
     -------------------------------------------------|---------------------------------------------------------------------------------------
-    modalita_consegna_prezzi.id                      |
-    modalita_consegna_prezzi.id_modalita             | 
-    modalita_consegna_prezzi.id_zona                 |
-    modalita_consegna_prezzi.id_categoria_prodotti   |
+    modalita_consegna_prezzi.id                      | l'ID che fa l'associazione fra la modalita, la zona e la categoria di prodotto
+    modalita_consegna_prezzi.id_modalita             | l'ID della modalita associata alla consegna prezzo
+    modalita_consegna_prezzi.id_zona                 | l'ID della zona di riferimento
+    modalita_consegna_prezzi.id_categoria_prodotti   | l'ID della categoria di prodotto
     modalita_consegna_prezzi.prezzo                  | 
-    modalita_consegna_prezzi.id_listino              |
-    modalita_consegna_prezzi.id_valuta               |
-    modalita_consegna_prezzi.id_iva                  | 
+    modalita_consegna_prezzi.id_listino              | l'ID del listino prezzo
+    modalita_consegna_prezzi.id_valuta               | l'ID della valuta utilizzata
+    modalita_consegna_prezzi.id_iva                  | l'ID dell'iva utilizzata
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -412,7 +412,7 @@
     
     colonna                                    | descrizione
     -------------------------------------------|---------------------------------------------------------------------------------------
-    modalita_pagamento.id                      |
+    modalita_pagamento.id                      | l'ID della modalita di pagamento
     modalita_pagamento.nome                    | 
     modalita_pagamento.suggerimento            |
     modalita_pagamento.ordine                  |
@@ -439,10 +439,10 @@
     
     colonna                                          | descrizione
     -------------------------------------------------|---------------------------------------------------------------------------------------
-    modalita_pagamento_prezzi.id                     |
-    modalita_pagamento_prezzi.id_modalita            | 
-    modalita_pagamento_prezzi.id_zona                |
-    modalita_pagamento_prezzi.id_categoria_prodotti  |
+    modalita_pagamento_prezzi.id                     | l'ID che fa l'associazione fra la modalita di pagamento, la zona e la categoria del prodotto
+    modalita_pagamento_prezzi.id_modalita            | l'ID della modalità di pagamento
+    modalita_pagamento_prezzi.id_zona                | l'ID della zona geografica di referenza
+    modalita_pagamento_prezzi.id_categoria_prodotti  | l'ID della categoria del prodotto
     modalita_pagamento_prezzi.prezzo                 | 
     modalita_pagamento_prezzi.prezzo_relativo        | 
     modalita_pagamento_prezzi.id_listino             |
@@ -465,7 +465,7 @@
     
     colonna                             | descrizione
     ------------------------------------|---------------------------------------------------------------------------------------
-    modalita_spedizione.id              |
+    modalita_spedizione.id              | l'ID della modalita di spedizione
     modalita_spedizione.nome            | 
     
     La tabella ha le seguenti chiavi esterne:
@@ -480,12 +480,12 @@
     
     modalita_spedizione_prezzi
     ------------------------
-    colonna                                          | descrizione
-    -------------------------------------------------|---------------------------------------------------------------------------------------
-    modalita_spedizione_prezzi.id                     |
-    modalita_spedizione_prezzi.id_modalita            | 
-    modalita_spedizione_prezzi.id_zona                |
-    modalita_spedizione_prezzi.id_categoria_prodotti  |
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    modalita_spedizione_prezzi.id                     | l'ID che fa l'associazione fra la modalita di spedizione, la zona e la categoria del prodotto
+    modalita_spedizione_prezzi.id_modalita            | l'ID della modalita di referenza
+    modalita_spedizione_prezzi.id_zona                | l'ID della zona geografica
+    modalita_spedizione_prezzi.id_categoria_prodotti  | l'ID della categoria del prodotto
     modalita_spedizione_prezzi.prezzo                 | 
     modalita_spedizione_prezzi.id_listino             |
     modalita_spedizione_prezzi.id_valuta              |
