@@ -128,7 +128,7 @@
     
     regioni
     -------
-    Questa tabella *gestita* ...
+    Questa tabella di *supporto* ...
 
     colonna                        | descrizione
     -------------------------------|---------------------------------------------------------------------------------------
@@ -138,6 +138,23 @@
     regioni.codice_istat           | codice della regione attribuito dall'ISTAT
     
     La vista regioni_view relativa alla tabella regioni presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    reparti
+    -------
+    Questa tabella *gestita* ...
+
+    colonna                | descrizione
+    -----------------------|---------------------------------------------------------------------------------------
+    reparti.id             | l'ID che fa l'associazione fra l'iva e il settore del reparto
+    reparti.id_iva         | l'ID dell'iva
+    reparti.id_settore     | l'ID del settore
+    reparti.nome           |
+    reparti.note           |
+     
+    La vista reparti_view relativa alla tabella reparti presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
