@@ -29,3 +29,210 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     
+    vani_immobili
+    -------------
+    Questa tabbella *gestita*
+    
+    colonna                                       | descrizione
+    ----------------------------------------------|---------------------------------------------------------------------------------------
+    vani_immobili.id                              | l'ID del vano immobile
+    vani_immobili.id_immobile                     | l'ID dell'immobile 
+    vani_immobili.id_tipologia                    | l'ID della tipologia a cui si riferisce il vano immobile
+    vani_immobili.nome                            | 
+    vani_immobili.larghezza                       | 
+    vani_immobili.lunghezza                       |
+    vani_immobili.altezza                         | 
+    vani_immobili.percentuale_commerciale_custom  | 
+    vani_immobili.mq_commerciali                  | 
+    vani_immobili.mq_calpestabili                 | 
+    vani_immobili.mq_modificatore                 | 
+    vani_immobili.id_account_inserimento          | 
+    vani_immobili.timestamp_inserimento           | 
+    vani_immobili.id_account_aggiornamento        | 
+    vani_immobili.timestamp_aggiornamento         | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *vani_immobili_view* relativa alla tabella *vani_immobili* presenta le seguenti colonne:
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    variazioni_attivita
+    -------------------
+    Questa tabbella *gestita*
+    
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    variazioni_attivita.id                              | l'ID che fa l'associazione fra la variazione attività, la tipologia, la tipologia inps e l'anagrafica
+    variazioni_attivita.id_tipologia                    | 
+    variazioni_attivita.id_tipologia_inps               | 
+    variazioni_attivita.id_anagrafica                   | 
+    variazioni_attivita.data_richiesta                  | 
+    variazioni_attivita.data_approvazione               |
+    variazioni_attivita.data_rifiuto                    |
+    variazioni_attivita.id_account_inserimento          | 
+    variazioni_attivita.timestamp_inserimento           | 
+    variazioni_attivita.id_account_aggiornamento        | 
+    variazioni_attivita.timestamp_aggiornamento         | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *variazioni_attivita_view* relativa alla tabella *variazioni_attivita* presenta le seguenti colonne:
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    variazioni_prezzi
+    -----------------
+    Questa tabbella *gestita*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    variazioni_prezzi.id                              | l'ID della variazione prezzo
+    variazioni_prezzi.nome                            | 
+    variazioni_prezzi.timestamp_inizio                | 
+    variazioni_prezzi.timestamp_fine                  | 
+    variazioni_prezzi.sconto_percentuale              | 
+    variazioni_prezzi.ordine                          |
+    variazioni_prezzi.sconto_fisso                    |
+    variazioni_prezzi.id_account_inserimento          | 
+    variazioni_prezzi.timestamp_inserimento           | 
+    variazioni_prezzi.id_account_aggiornamento        | 
+    variazioni_prezzi.timestamp_aggiornamento         | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *variazioni_prezzi_view* relativa alla tabella *variazioni_prezzi* presenta le seguenti colonne:
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    variazioni_prezzi_listini
+    ------------------------
+    Questa tabbella *gestita*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    variazioni_prezzi_listini.id                      | l'ID che fa l'associazione fra la variazione prezzo e l'inizio
+    variazioni_prezzi_listini.id_variazione_prezzo    | l'ID della variazione prezzo di riferimento
+    variazioni_prezzi_listini.id_inizio               | 
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *variazioni_prezzi_listini_view* relativa alla tabella *variazioni_prezzi_listini* presenta le seguenti colonne:
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+   variazioni_prezzi_prodotti
+    -------------------------
+    Questa tabbella *gestita*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    variazioni_prezzi_prodotti.id                     | l'ID che fa l'associazione fra la variazione prezzo e il prodotto
+    variazioni_prezzi_prodotti.id_variazione_prezzo   | l'ID della variazione prezzo
+    variazioni_prezzi_prodotti.id_prodotto            | l'ID del prodotto
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista variazioni_prezzi_prodotti_view* relativa alla tabella *variazioni_prezzi_prodotti* presenta le seguenti colonne:
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+   variazioni_prezzi_categorie
+    --------------------------
+    Questa tabbella *gestita*
+    
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    variazioni_prezzi_categorie.id                      | l'ID che fa l'associazione fra la variazione prezzo e la categoria di prodotto
+    variazioni_prezzi_categorie.id_variazione_prezzo    | l'ID della variazione prezzo
+    variazioni_prezzi_categorie.id_categoria_prodotti   | l'ID della categoria di prodotto
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista variazioni_prezzi_prodotti_view* relativa alla tabella *variazioni_prezzi_prodotti* presenta le seguenti colonne:
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+   
+    variazioni_prezzi_stagioni
+    --------------------------
+    Questa tabbella *gestita*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    variazioni_prezzi_stagioni.id                     | l'ID che fa l'associazione fra la variazione prezzo e la stagione
+    variazioni_prezzi_stagioni.id_variazione_prezzo   | l'ID della variazione prezzo
+    variazioni_prezzi_stagioni.id_stagione            | l'ID della stagione
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista variazioni_prezzi_stagioni_view* relativa alla tabella *variazioni_prezzi_stagioni* presenta le seguenti colonne:
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    variazioni_prezzi_marchi
+    --------------------------
+    Questa tabbella *gestita*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    variazioni_prezzi_marchi.id                       | l'ID che fa l'associazione fra la variazione prezzo e il marchio 
+    variazioni_prezzi_marchi.id_variazione_prezzo     | l'ID della variazione di prezzo
+    variazioni_prezzi_marchi.id_marchio               | l'ID del marchio
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista variazioni_prezzi_marchi_view* relativa alla tabella *variazioni_prezzi_marchi* presenta le seguenti colonne:
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
+    video
+    -----
+    Questa tabbella *gestita*
+    
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    video.id                              | l'ID del video
+    video.nome                            | 
+    video.timestamp_inizio                | 
+    video.timestamp_fine                  | 
+    video.sconto_percentuale              | 
+    video.ordine                          |
+    video.sconto_fisso                    |
+    video.id_account_inserimento          | 
+    video.timestamp_inserimento           | 
+    video.id_account_aggiornamento        | 
+    video.timestamp_aggiornamento         | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *video_view* relativa alla tabella *video* presenta le seguenti colonne:
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+
