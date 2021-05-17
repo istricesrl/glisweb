@@ -1,0 +1,31 @@
+
+ /*!
+
+    \page database_a database del framework, tabelle con la lettera V
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera V.
+
+    le tabelle del database di supporto VA - VZ
+    ===========================================
+    
+    valute
+    ----
+    Questa tabella di *supporto* ...
+
+    colonna                        | descrizione
+    -------------------------------|---------------------------------------------------------------------------------------
+    valute.id                      | l'ID della valuta
+    valute.iso4217                 | codice standard internazionale impiegato per definire i nomi delle valute
+    valute.html                    | 
+    valute.utf8                    | 
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *valute_view* relativa alla tabella *valute* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
