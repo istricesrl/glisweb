@@ -3268,6 +3268,116 @@ CREATE TABLE IF NOT EXISTS `tipologie_interesse` (
   `nome` char(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000211
+
+-- tipologie_mastri
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_mastri` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000212
+
+-- tipologie_motivazioni_tari
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_motivazioni_tari` (
+  `id` int(11) NOT NULL,
+  `nome` char(40) NOT NULL,
+  `soprannome` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000213
+
+-- tipologie_notizie
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000214
+
+-- tipologie_orari_inps
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_orari_inps` (
+  `id` char(32) NOT NULL,
+  `nome` char(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000215
+
+-- tipologie_popup
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_popup` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000216
+
+-- tipologie_pratiche
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_pratiche` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000217
+
+-- tipologie_prodotti
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_colori` tinyint(1) DEFAULT NULL,
+  `se_taglie` tinyint(1) DEFAULT NULL,
+  `se_dimensioni` tinyint(1) DEFAULT NULL,
+  `se_imballo` tinyint(1) DEFAULT NULL,
+  `se_stagioni` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000218
+
+-- tipologie_progetti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_scalare` int(1) DEFAULT NULL,
+  `se_commessa` int(1) DEFAULT NULL,
+  `se_chiamata` int(1) DEFAULT NULL,
+  `se_contratto` int(1) DEFAULT NULL,
+  `se_forfait` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000219
+
+-- tipologie_pubblicazione
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_pubblicazione` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `se_bozza` int(11) DEFAULT NULL,
+  `se_pubblicato` int(1) DEFAULT NULL,
+  `se_evidenza` int(1) DEFAULT NULL,
+  `se_newsletter` int(1) DEFAULT NULL,
+  `se_secondario` int(1) DEFAULT NULL,
+  `se_incroci` int(1) DEFAULT NULL,
+  `se_suggerito` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000220
+
+-- tipologie_qualifiche_inps
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_qualifiche_inps` (
+  `id` char(32) NOT NULL,
+  `nome` char(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 
 
