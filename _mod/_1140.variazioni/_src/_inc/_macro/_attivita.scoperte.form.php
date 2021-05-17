@@ -72,6 +72,11 @@
         'modal' => array('id' => 'scarta', 'include' => 'inc/attivita.scoperte.form.modal.scarta.html' )
     );
 
+    // modal per la conferma di avvio calcolo sostituti
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'calcola', 'include' => 'inc/attivita.scoperte.form.modal.calcola.html' )
+    );
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
