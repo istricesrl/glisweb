@@ -3537,7 +3537,7 @@ CREATE TABLE IF NOT EXISTS `todo` (
 
 --| 000001000231
 
--- tabella todo_categorie
+-- todo_categorie
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `todo_categorie` (
 `id` int(11) NOT NULL,
@@ -3551,7 +3551,7 @@ CREATE TABLE IF NOT EXISTS `todo_categorie` (
 
 --| 000001000232
 
--- tabella_transcodifica_clienti
+-- transcodifica_clienti
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `transcodifica_clienti` (
 `id` int(11) NOT NULL,
@@ -3566,7 +3566,7 @@ CREATE TABLE IF NOT EXISTS `transcodifica_clienti` (
 
 --| 000001000233
 
--- tabella_turni
+-- turni
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `turni` (
 `id` int(11) NOT NULL,
