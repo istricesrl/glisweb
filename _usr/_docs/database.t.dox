@@ -1148,30 +1148,30 @@
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
     
-    tabella_turni
-    --------------
+    turni
+    -----
     Questa tabbella *gestita*
     
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    tabella_turni.id                        |
-    tabella_turni.turno                     |
-    tabella_turni.id_anagrafica             | 
-    tabella_turni.id_contratto              | 
-    tabella_turni.data_inizio               |
-    tabella_turni.data_fine                 |
-    tabella_turni.id_pianificazione         | 
-    tabella_turni.id_account_inserimento    |
-    tabella_turni.timestamp_inserimento     |
-    tabella_turni.id_account_aggiornamento  |
-    tabella_turni.timestamp_aggiornamento   |
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    turni.id                        |
+    turni.turno                     |
+    turni.id_anagrafica             | 
+    turni.id_contratto              | 
+    turni.data_inizio               |
+    turni.data_fine                 |
+    turni.id_pianificazione         | 
+    turni.id_account_inserimento    |
+    turni.timestamp_inserimento     |
+    turni.id_account_aggiornamento  |
+    turni.timestamp_aggiornamento   |
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                           | campo                        | tabella e campo collegati
     ---------------------------------|------------------------------|-----------------------------------------------------
  
-    La vista *tabella_turni_view* relativa alla tabella *tabella_turni* presenta le seguenti colonne:
+    La vista *turni_view* relativa alla tabella *turni* presenta le seguenti colonne:
     
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
