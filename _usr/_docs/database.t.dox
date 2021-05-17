@@ -381,7 +381,7 @@
     
     tipologie_documenti
     -------------------
-    Questa tabbella *gestita*
+    Questa tabbella di *supporto*
     
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
@@ -410,7 +410,7 @@
     
     tipologie_documenti_amministrativi
     -------------------
-    Questa tabbella *gestita*
+    Questa tabbella di *supporto*
     
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
@@ -435,4 +435,620 @@
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
     
+    
+    tipologie_durate_inps
+    -------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_durate_inps.id                        | l'ID della tipologia INPS di durata
+    tipologie_durate_inps.nome                      |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_durate_inps_view* relativa alla tabella *tipologie_durate_inps* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+   
+
+    tipologie_edifici
+    -------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_edifici.id                        | l'ID della tipologia edificio
+    tipologie_edifici.nome                      |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_edifici_view* relativa alla tabella *tipologie_edifici* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_embed
+    -------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_embed.id                          | l'ID della tipologia embed
+    tipologie_embed.nome                        |
+    tipologie_embed.se_video                    |
+    tipologie_embed.se_audio                    |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_embed_view* relativa alla tabella *tipologie_embed* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_eventi
+    -------------
+    Questa tabbella *gestita*
+    
+    colonna                                       | descrizione
+    ----------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_eventi.id                           | l'ID della tipologia di evento
+    tipologie_eventi.nome                         | 
+    tipologie_eventi.id_account_inserimento       | 
+    tipologie_eventi.timestamp_inserimento        | 
+    tipologie_eventi.id_account_aggiornamento     | 
+    tipologie_eventi.timestamp_aggiornamento      | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_eventi_view* relativa alla tabella *tipologie_eventi* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    tipologie_founding
+    -------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_founding.id                        | l'ID della tipologia edificio
+    tipologie_founding.nome                      |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_founding_view* relativa alla tabella *tipologie_founding* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_immobili
+    -------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_immobili.id                        | l'ID della tipologia edificio
+    tipologie_immobili.nome                      |
+     tipologie_immobili.se_residenziale          | l'ID della tipologia edificio
+    tipologie_immobili.se_industriale            |         |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_immobili_view* relativa alla tabella *tipologie_immobili* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_incarichi_immobili
+    -------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_incarichi_immobili.id              | l'ID della tipologia edificio
+    tipologie_incarichi_immobili.nome            |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_incarichi_immobili_view* relativa alla tabella *tipologie_incarichi_immobili* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_indirizzi
+    -------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_indirizzi.id                       | l'ID della tipologia di indirizzio
+    tipologie_indirizzi.nome                     |
+    tipologie_indirizzi.se_sede                  | 
+    tipologie_indirizzi.se_operativa             |
+    tipologie_indirizzi.se_abitazione            |
+    tipologie_indirizzi.html                     |
+    
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_indirizzi_view* relativa alla tabella *tipologie_indirizzi* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_interesse
+    -------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_interesse.id                       | l'ID della tipologia di interesse
+    tipologie_interesse.nome                     |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_interesse_view* relativa alla tabella *tipologie_interesse* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_mastri
+    ----------------
+    Questa tabbella di *supporto*
+    
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_mastri.id                       | l'ID della tipologia di interesse
+    tipologie_mastri.nome                     |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_mastri_view* relativa alla tabella *tipologie_mastri* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_motivazioni_tari
+    --------------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_motivazioni_tari.id                       | l'ID della tipologia di motivazione tari
+    tipologie_motivazioni_tari.nome                     |
+    tipologie_motivazioni_tari.soprannome               | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_motivazioni_tari_view* relativa alla tabella *tipologie_motivazioni_tari* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_notizie
+    --------------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_notizie.id                                | l'ID della tipologia di notizie
+    tipologie_notizie.nome                              |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_notizie_view* relativa alla tabella *tipologie_notizie* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+   
+    tipologie_orari_inps
+    --------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_orari_inps.id                                | l'ID della tipologia INPS di orario
+    tipologie_orari_inps.nome                              |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_orari_inps_view* relativa alla tabella *tipologie_orari_inps* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+   
+    tipologie_popup
+    ---------------
+    Questa tabbella di *supporto*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_popup.id                                | l'ID della tipologia popup
+    tipologie_popup.nome                              |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_popup_view* relativa alla tabella *tipologie_popup* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+  
+    tipologie_pratiche
+    ------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_pratiche.id                             | l'ID della tipologia popup
+    tipologie_pratiche.nome                           |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_pratiche_view* relativa alla tabella *tipologie_pratiche* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+  
+    tipologie_prodotti
+    ------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_prodotti.id                             | l'ID della tipologia prodotto
+    tipologie_prodotti.nome                           |
+    tipologie_prodotti.se_colori                      | 
+    tipologie_prodotti.se_taglie                      |
+    tipologie_prodotti.se_dimensioni                  |
+    tipologie_prodotti.se_imballo                     |
+    tipologie_prodotti.se_stagioni                    |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_prodotti_view* relativa alla tabella *tipologie_prodotti* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+  
+    tipologie_progetti
+    ------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_progetti.id                             | l'ID della tipologia progetto
+    tipologie_progetti.nome                           |
+    tipologie_progetti.se_scalare                     | 
+    tipologie_progetti.se_commessa                    |
+    tipologie_progetti.se_chiamata                    |
+    tipologie_progetti.se_contratto                   |
+    tipologie_progetti.se_forfait                     |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_progetti_view* relativa alla tabella *tipologie_progetti* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+  
+    tipologie_pubblicazione
+    ------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_pubblicazione.id                        | l'ID della tipologia di publicazione
+    tipologie_pubblicazione.nome                      |
+    tipologie_pubblicazione.ordine                    | 
+    tipologie_pubblicazione.se_bozza                  |
+    tipologie_pubblicazione.se_pubblicato             |
+    tipologie_pubblicazione.se_evidenza               |
+    tipologie_pubblicazione.se_newsletter             |
+    tipologie_pubblicazione.se_secondario             |
+    tipologie_pubblicazione.se_incroci                |
+    tipologie_pubblicazione.se_contratto              |
+    tipologie_pubblicazione.se_suggerito              |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_pubblicazione_view* relativa alla tabella *tipologie_pubblicazione* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+  
+    tipologie_qualifiche_inps
+    -------------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_qualifiche_inps.id                      | l'ID della tipologia di qualifica INPS
+    tipologie_qualifiche_inps.nome                    |
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_qualifiche_inps_view* relativa alla tabella *tipologie_qualifiche_inps* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+  
+    tipologie_rassegna_stampa
+    -------------------------
+    Questa tabbella *gestita*
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_rassegna_stampa.id                           | l'ID della tipologia di rassegna stampa
+    tipologie_rassegna_stampa.nome                         | 
+    tipologie_rassegna_stampa.id_account_inserimento       | 
+    tipologie_rassegna_stampa.timestamp_inserimento        | 
+    tipologie_rassegna_stampa.id_account_aggiornamento     | 
+    tipologie_rassegna_stampa.timestamp_aggiornamento      | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_rassegna_stampa_view* relativa alla tabella *tipologie_rassegna_stampa* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    tipologie_risorse
+    ------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_risorse.id                             | l'ID della tipologia di risorsa
+    tipologie_risorse.nome                           |
+    tipologie_risorse.ordine                         | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_risorse_view* relativa alla tabella *tipologie_risorse* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|-------------------------------------------------------------------------
+      
+    tipologie_soddisfazione
+    ------------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_soddisfazione.id                       | l'ID della tipologia di soddisfazione
+    tipologie_soddisfazione.nome                     |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_soddisfazione_view* relativa alla tabella *tipologie_soddisfazione* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+        
+    tipologie_taglie
+    ----------------
+    Questa tabbella *gestita*
+    
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_taglie.id                       | l'ID della tipologia di taglio
+    tipologie_taglie.nome                     |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_taglie_view* relativa alla tabella *tipologie_taglie* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+  
+    tipologie_task
+    ---------------
+    Questa tabbella *gestita*
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_task.id                           | l'ID della tipologia di compito
+    tipologie_task.nome                         |
+    tipologie_task.se_pianificata               | 
+    tipologie_task.se_richiesta                 | 
+    tipologie_task.se_imprevista                | 
+    tipologie_task.id_account_inserimento       | 
+    tipologie_task.timestamp_inserimento        | 
+    tipologie_task.id_account_aggiornamento     | 
+    tipologie_task.timestamp_aggiornamento      | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_task_view* relativa alla tabella *tipologie_task* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_telefoni
+    ------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_telefoni.id                       | l'ID della tipologia di telefono
+    tipologie_telefoni.nome                     |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+     
+    La vista *tipologie_telefoni_view* relativa alla tabella *tipologie_telefoni* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_todo
+    ---------------
+    Questa tabbella *gestita*
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_todo.id                           |
+    tipologie_todo.nome                         |
+    tipologie_todo.se_pianificata               | 
+    tipologie_todo.se_richiesta                 | 
+    tipologie_todo.se_imprevista                | 
+    tipologie_todo.se_contratto                 | 
+    tipologie_todo.se_chiamata                  | 
+    tipologie_todo.se_scalare                   | 
+    tipologie_todo.se_commessa                  | 
+    tipologie_todo.se_forfait                   | 
+    tipologie_todo.id_account_inserimento       | 
+    tipologie_todo.timestamp_inserimento        | 
+    tipologie_todo.id_account_aggiornamento     | 
+    tipologie_todo.timestamp_aggiornamento      | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_todo_view* relativa alla tabella *tipologie_todo* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_udm
+    ------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_udm.id                       | l'ID dell'unità di misura
+    tipologie_udm.nome                     |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+     
+    La vista *tipologie_udm_view* relativa alla tabella *tipologie_udm* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tipologie_vani
+    ---------------
+    Questa tabbella di *supporto*
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_vani.id                           |
+    tipologie_vani.nome                         |
+    tipologie_vani.se_camera                    | 
+    tipologie_vani.se_cucina                    | 
+    tipologie_vani.se_bagno                     | 
+    tipologie_vani.se_commerciale               | 
+    tipologie_vani.percentuale_commerciale      | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_vani_view* relativa alla tabella *tipologie_vani* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+     tipologie_variazioni_attivita
+    ------------------
+    Questa tabbella di *supporto*
+    
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_variazioni_attivita.id                       | l'ID dell'unità di misura
+    tipologie_variazioni_attivita.nome                     |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+     
+    La vista *tipologie_variazioni_attivita_view* relativa alla tabella *tipologie_variazioni_attivita* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
 */
+
