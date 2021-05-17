@@ -495,9 +495,14 @@
     articoli.id_taglia                           | l'ID della taglia
     articoli.id_colore                           | l'ID del colore
     articoli.id_udm                              | l'ID dell'unità di misura
+    articoli.id_reparto                          | l'ID del reparto 
     articoli.se_disponibile                      | flag di disponibilità
     articoli.quantita_disponibile                | quantità disponibile in magazzino
-
+    articoli.id_account_inserimento              |
+    articoli.timestamp_inserimento               | 
+    articoli.id_account_aggiornamento            |
+    articoli.timestamp_aggiornamento             |
+ 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
