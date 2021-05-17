@@ -65,7 +65,7 @@
 
 	// tendina tipologie
 	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
 

@@ -24,33 +24,33 @@
 
     // tendina priorita
 	$ct['etc']['select']['id_priorita'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM priorita_view' );
 
     // tendina tipologie
 	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
     
     // tendina collaboratori
 	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
-        $cf['cache']['index'],
+        $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1' );
 	
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_lead = 1 OR se_cliente = 1 OR se_prospect = 1' );
 
     // tendina progetti
 	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM progetti_view' );
@@ -74,7 +74,7 @@
 	}
 
     $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM indirizzi_view' );

@@ -24,7 +24,7 @@
     
     // tendina gruppi 
 	$ct['etc']['select']['gruppi'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM gruppi_view'

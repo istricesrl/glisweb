@@ -41,7 +41,7 @@
     
     // tendina condizioni pagamento
 	$ct['etc']['select']['condizioni_pagamento'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM condizioni_pagamento_view'
@@ -49,7 +49,7 @@
     
     // tendina modalità pagamento
 	$ct['etc']['select']['modalita_pagamento'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM modalita_pagamento_view'
