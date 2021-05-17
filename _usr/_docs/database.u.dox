@@ -1,1 +1,34 @@
 
+ /*!
+
+    \page database_a database del framework, tabelle con la lettera U
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera U.
+
+    le tabelle del database di supporto UA - UZ
+    ===========================================
+    
+    udm
+    ----
+    Questa tabella di *supporto* ...
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    udm.id                          | l'ID che fa l'associazione fra l'unità di misura e la tipologia
+    udm.id_udm                      | l'ID dell'unità di misura
+    udm.id_tipologia                | l'ID della tipologia a cui si riferisce l'unità di misura
+    udm.conversione                 | 
+    udm.nome                        | 
+    udm.soprannome                  | 
+    udm.sigla                       | 
+   
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *udm_view* relativa alla tabella *udm* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
