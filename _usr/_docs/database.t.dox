@@ -989,7 +989,7 @@
     -------------------------------------------------------|--------------------------------------------------------------------------
     
     tipologie_udm
-    ------------------
+    -------------
     Questa tabbella di *supporto*
     
     colonna                                | descrizione
@@ -1031,8 +1031,8 @@
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
     
-     tipologie_variazioni_attivita
-    ------------------
+    tipologie_variazioni_attivita
+    ----------------------------
     Questa tabbella di *supporto*
     
     colonna                                | descrizione
@@ -1050,5 +1050,130 @@
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
     
+    todo
+    ----
+    Questa tabbella *gestita*
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    todo.id                                     |
+    todo.nome                                   |
+    todo.id_tipologia                           | 
+    todo.id_priorita                            | 
+    todo.id_anagrafica                          | 
+    todo.id_cliente                             | 
+    todo.id_progetto                            | 
+    todo.id_luogo                               | 
+    todo.testo                                  | 
+    todo.testo_ore_previste                     | 
+    todo.anno_previsto                          | 
+    todo.settimana_prevista                     | 
+    todo.id_pianificazione                      | 
+    todo.testo_pianificazione                   | 
+    todo.id_responsabile                        | 
+    todo.timestamp_apertura                     | 
+    todo.timestamp_pianificazione               | 
+    todo.data_programmazione                    | 
+    todo.ora_inizio_programmazione              | 
+    todo.ora_fine_programmazione                | 
+    todo.anno_programmazione                    | 
+    todo.settimana_programmazione               | 
+    todo.data_scadenza                          |   
+    todo.ora_scadenza                           | 
+    todo.timestamp_revisione                    | 
+    todo.note_revisione                         | 
+    todo.timestamp_completamento                | 
+    todo.testo_completamento                    |
+    todo.id_account_inserimento                 |
+    todo.timestamp_inserimento                  |
+    todo.id_account_aggiornamento               |
+    todo.timestamp_aggiornamento                | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *todo_view* relativa alla tabella *todo* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    todo_categorie
+    --------------
+    Questa tabbella *gestita*
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    todo_categorie.id                           | l'ID che fa l'associazione fra il todo e la categoria
+    todo_categorie.id_todo                      | l'ID del todo, cioè, dei compiti da risolvere
+    todo_categorie.id_categoria                 | l'ID della categoria riferita al todo
+    todo_categorie.id_account_inserimento       |
+    todo_categorie.timestamp_inserimento        |
+    todo_categorie.id_account_aggiornamento     |
+    todo_categorie.timestamp_aggiornamento      |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *todo_categorie_view* relativa alla tabella *todo_categorie* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    transcodifica_clienti
+    ---------------------
+    Questa tabbella *gestita*
+    
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    transcodifica_clienti.id                        | l'ID che fa l'associazione fra il mandate e il cliente
+    transcodifica_clienti.id_mandante               | l'ID del mandante
+    transcodifica_clienti.id_cliente                | l'ID del cliente
+    transcodifica_clienti.id_cliente_mandante       | l'ID del cliente mandante
+    transcodifica_clienti.id_account_inserimento    |
+    transcodifica_clienti.timestamp_inserimento     |
+    transcodifica_clienti.id_account_aggiornamento  |
+    transcodifica_clienti.timestamp_aggiornamento   |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *transcodifica_clienti_view* relativa alla tabella *transcodifica_clienti* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    tabella_turni
+    --------------
+    Questa tabbella *gestita*
+    
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    tabella_turni.id                        |
+    tabella_turni.turno                     |
+    tabella_turni.id_anagrafica             | 
+    tabella_turni.id_contratto              | 
+    tabella_turni.data_inizio               |
+    tabella_turni.data_fine                 |
+    tabella_turni.id_pianificazione         | 
+    tabella_turni.id_account_inserimento    |
+    tabella_turni.timestamp_inserimento     |
+    tabella_turni.id_account_aggiornamento  |
+    tabella_turni.timestamp_aggiornamento   |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tabella_turni_view* relativa alla tabella *tabella_turni* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
 */
 
