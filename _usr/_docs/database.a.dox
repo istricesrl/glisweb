@@ -165,6 +165,7 @@
     anagrafica.anno_nascita                         | l'anno di nascita dell'anagrafica
     anagrafica.id_tipologia_crm                     | l'ID della tipologia CRM dell'anagrafica
     anagrafica.id_agente                            | l'ID dell'agente associato all'anagrafica
+    anagrafica.id_responsabile_operativo            | l'ID del respondabile operativo
     anagrafica.note_commerciali                     | le note commerciali relative all'anagrafica
     anagrafica.condizioni_vendita                   | le condizioni di vendita relative all'anagrafica
     anagrafica.condizioni_acquisto                  | le condizioni di acquisto relative all'anagrafica
