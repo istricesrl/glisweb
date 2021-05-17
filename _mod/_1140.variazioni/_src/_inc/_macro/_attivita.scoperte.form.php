@@ -38,7 +38,7 @@
                 ""
             ) as anagrafica '
             .'FROM __report_sostituzioni_attivita__ AS r LEFT JOIN anagrafica AS a ON r.id_anagrafica = a.id '
-            .'WHERE id_attivita = ? AND punteggio > 0 ORDER BY punteggio DESC, punti_sostituto DESC, punti_progetto DESC, punti_distanza DESC LIMIT 30',
+            .'WHERE r.id_attivita = ? AND r.se_convocato IS NULL AND r.se_scartato IS NULL ORDER BY punteggio DESC, punti_sostituto DESC, punti_progetto DESC, punti_distanza DESC LIMIT 30',
              array(
                  array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
              )

@@ -45,10 +45,10 @@
             )
         );
 
-        // setto a 0 il punteggio nella tabella __report_sostituzioni_attivita__ così non me la propone più
+        // setto a 1 la colonna se_scartato nella tabella __report_sostituzioni_attivita__ così non me la propone più
         mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE __report_sostituzioni_attivita__ SET punteggio = 0 WHERE id_attivita = ? AND id_anagrafica = ?',
+            'UPDATE __report_sostituzioni_attivita__ SET se_scartato = 1 WHERE id_attivita = ? AND id_anagrafica = ?',
             array(
                 array( 's' => $_REQUEST['id_attivita'] ),
                 array( 's' => $_REQUEST['id_anagrafica'] )

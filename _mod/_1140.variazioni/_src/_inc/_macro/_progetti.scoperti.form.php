@@ -24,7 +24,7 @@
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
         // estraggo la data di pianificazione dell'ultima attività scoperta per il progetto corrente
-        $ct['etc']['data_scopertura'] = mysqlSelectValue(
+ /*         $ct['etc']['data_scopertura'] = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT max(data_programmazione) FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
             array(
@@ -34,7 +34,7 @@
 
 
         // cerco se ci sono già dei sostituti calcolati
-        $ct['etc']['operatori'] = mysqlQuery(
+      $ct['etc']['operatori'] = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT r.*, coalesce(
                 a.soprannome,
@@ -53,9 +53,11 @@
                 array( 's' => $ct['etc']['data_scopertura'] )
             )
         );
-
+*/
         // richiamo la funzione che ritorna l'array degli operatori coi punteggi
     #    $ct['etc']['operatori'] = elencoSostitutiProgetto( $_REQUEST[ $ct['form']['table'] ]['id'] );
+
+        $ct['etc']['operatori'] = sostitutiProgetto( $_REQUEST[ $ct['form']['table'] ]['id'] );
 
         // tendina operatori per settaggio manuale
 	    $ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(

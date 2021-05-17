@@ -573,8 +573,7 @@
             .'LEFT JOIN __report_sostituzioni_attivita__ AS r ON c.id_anagrafica = r.id_anagrafica AND r.id_attivita = ? '
             .'LEFT JOIN anagrafica_categorie AS ac ON c.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
-            .'LEFT JOIN sostituzioni_attivita AS s ON c.id_anagrafica = s.id_anagrafica AND s.id_attivita = ? '
-            .'WHERE r.id IS NULL AND s.id IS NULL '
+            .'WHERE r.id IS NULL '
             .'GROUP BY c.id_anagrafica '
             .'HAVING collisioni = 0'
            ,
@@ -583,7 +582,6 @@
                 array( 's' => $a['data_ora_fine'] ),
                 array( 's' => $a['data_ora_inizio'] ),
                 array( 's' => $a['data_ora_fine'] ),
-                array( 's' => $id_attivita ),
                 array( 's' => $id_attivita )               
             )
         );
@@ -913,6 +911,96 @@
     //    return $candidati;
 
         return true;
+
+    }
+
+
+    // nuova funzione per calcolo sostituti progetto
+    function sostitutiProgetto( $id_progetto ){
+
+        $logdir = 'var/log/sostitutiProgetto.log';
+
+        appendToFile('cerco sostituti progetto ' . $id_progetto . PHP_EOL, $logdir);
+
+        global $cf;
+
+        $candidati = array();
+
+        // numero delle attività scoperte per il progetto corrente
+        $attivita = mysqlSelectRow( 
+            $cf['mysql']['connection'],
+            'SELECT count(id) as num_attivita, min(data_programmazione) as dataPrima FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
+            array(
+                array( 's' => $id_progetto )
+            )
+        );
+
+    //    print_r($attivita);
+
+        // elenco degli operatori calcolati per le attività scoperte del progetto corrente
+        $operatori = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT r.id_anagrafica,  count(r.id) as pta, sum(punteggio) as ptt, sum(punti_distanza) AS ptd, '
+            .'max(punti_sostituto) AS pts, sum(punti_progetto) AS ptp, '
+            .'coalesce(
+                an.soprannome,
+                an.denominazione,
+                concat_ws(" ", coalesce(an.nome, ""),
+                coalesce(an.cognome, "") ),
+                ""
+            ) AS anagrafica '
+            .'FROM __report_sostituzioni_attivita__ AS r LEFT JOIN attivita AS a ON r.id_attivita = a.id AND a.id_anagrafica IS NULL AND a.id_progetto = ? '
+            .'AND r.se_scartato IS NULL AND r.se_convocato IS NULL '
+            .'LEFT JOIN anagrafica AS an ON r.id_anagrafica = an.id '
+            .'GROUP BY r.id_anagrafica '
+           ,
+            array(
+                array( 's' => $id_progetto  )        
+            )
+        );
+
+        //print_r($operatori);
+        
+        // array di appoggio per il calcolo dei punteggi
+        $op = array();
+
+        foreach( $operatori as $o ){
+            $o['punteggio'] = 0;    // inizializzo il punteggio
+            $o['punti_sostituto'] = $o['pts'];
+            $o['punti_copertura'] = intval( $o['pta'] / $attivita['num_attivita'] * 100 );
+            $o['punti_distanza'] = intval( $o['ptd'] / $o['pta'] );
+            $o['punti_progetto'] = puntiConoscenzaProgetto( $o['id_anagrafica'], $id_progetto, $attivita['dataPrima'] );
+
+            $o['punteggio'] =  $o['punti_sostituto'] +  $o['punti_copertura'] +  $o['punti_distanza'] +  $o['punti_progetto'];
+
+            $op[ $o['id_anagrafica'] ] = $o;
+        }
+
+     //   print_r($op);
+
+        // riordino l'array degli operatori in base al punteggio
+        $sort_data = array();
+        foreach( $op as $key => $value ) {
+            $sort_data[ $key ] = $value['punteggio'];
+        }
+
+        if( isset( $sort_data ) ){
+            array_multisort( $sort_data, $op );
+        }
+
+        foreach( $op as $o ){
+            while( array_key_exists( $o['punteggio'], $candidati ) ){
+                $o['punteggio']++;
+            }
+
+            $candidati[ $o['punteggio'] ] = $o;
+        }
+    
+        krsort( $candidati );
+
+    //    print_r($candidati);
+       
+        return $candidati;
 
     }
 

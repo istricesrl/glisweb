@@ -26,7 +26,7 @@
     if( isset( $_REQUEST['id'] ) ) {
 
         // token della riga
-        $status['id'] = mysqlQuery(
+        $status['update'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE attivita SET token = ? WHERE id = ?',
             array(
@@ -38,7 +38,7 @@
     } else {
 
         // token della riga
-        $status['id'] = mysqlQuery(
+        $status['update'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE attivita SET token = ? WHERE id_anagrafica IS NULL AND id NOT IN ( SELECT DISTINCT id_attivita FROM __report_sostituzioni_attivita__ ) '.
             'AND token IS NULL '.
@@ -50,7 +50,7 @@
 
     }
 
-    if( !empty( $status['id'] ) ){
+    if( !empty( $status['update'] ) ){
 
         $cId = mysqlSelectValue(
             $cf['mysql']['connection'],
@@ -59,6 +59,8 @@
                 array( 's' => $status['token'] )
             )
         );
+
+        $status['id'] =  $cId;
 
         sostitutiAttivita( $cId );
 

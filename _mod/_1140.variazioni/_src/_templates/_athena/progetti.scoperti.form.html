@@ -69,7 +69,7 @@
                     </thead>
                     <tbody>
 
-                        {% for o in etc.operatori %}
+                        {% for o in etc.operatori|reverse %}
                         <tr>
                             <td class="text-left">{{ o.anagrafica }}</td>
                             <td>{{ o.punti_sostituto }}</td>
