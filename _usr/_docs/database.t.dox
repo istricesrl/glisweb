@@ -408,5 +408,31 @@
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
     
+    tipologie_documenti_amministrativi
+    -------------------
+    Questa tabbella *gestita*
+    
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_documenti_amministrativi.id                          | l'ID della tipologia di documento amministrativo
+    tipologie_documenti_amministrativi.nome                        |
+    tipologie_documenti_amministrativi.codice                      | 
+    tipologie_documenti_amministrativi.se_fattura                  |
+    tipologie_documenti_amministrativi.se_nota_credito             | 
+    tipologie_documenti_amministrativi.se_trasporto                |
+    tipologie_documenti_amministrativi.se_pro_forma                | 
+    tipologie_documenti_amministrativi.se_offerta                  |
+    tipologie_documenti_amministrativi.se_ordine                   |
+    tipologie_documenti_amministrativi.se_ricevuta                 | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *tipologie_documenti_amministrativi_view* relativa alla tabella *tipologie_documenti_amministrativi* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
     
 */
