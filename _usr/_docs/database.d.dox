@@ -153,6 +153,7 @@
     documenti_articoli.id_mastro_provenienza                | 
     documenti_articoli.id_mastro_destinazione               | 
     documenti_articoli.id_udm                               | l'ID dell'unità di misura
+    documenti_articoli.id_reparto                           | l'ID del reparto  
     documenti_articoli.ordine                               | 
     documenti_articoli.quantita                             | 
     documenti_articoli.data_lavorazione                     | 
