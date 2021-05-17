@@ -3175,4 +3175,100 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti_amministrativi` (
   `se_ricevuta` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000202
+
+-- tipologie_durate_inps
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_durate_inps` (
+  `id` char(32) NOT NULL,
+  `nome` char(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000203
+
+-- tipologie_edifici
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_edifici` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000204
+
+-- tipologie_embed
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_embed` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_video` int(1) DEFAULT NULL,
+  `se_audio` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000205
+
+-- tipologie_eventi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_eventi` (
+`id` int(11) NOT NULL,
+  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) NOT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000206
+
+-- tipologie_founding
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_founding` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000207
+
+-- tipologie_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `se_residenziale` int(1) DEFAULT NULL,
+  `se_industriale` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000208
+
+-- tipologie_incarichi_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_incarichi_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000209
+
+-- tipologie_indirizzi
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
+`id` int(11) NOT NULL,
+  `nome` char(32) COLLATE utf8_unicode_ci NOT NULL,
+  `se_sede` int(1) DEFAULT NULL,
+  `se_operativa` int(1) DEFAULT NULL,
+  `se_abitazione` int(1) DEFAULT NULL,
+  `html` char(16) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000210
+	
+-- tipologie_interesse
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_interesse` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
 --| FINE FILE
