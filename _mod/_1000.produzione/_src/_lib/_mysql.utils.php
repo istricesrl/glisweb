@@ -612,29 +612,42 @@
                 $o['punteggio'] += $o['punti_disponibilita'];
                 $o['punteggio'] += $o['punti_distanza'];
 
-                // se il punteggio è > 0 inserisco la riga nella tabella __report_sostituzioni_attivita__
-                if( $o['punteggio'] > 0 ){
-                    mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'INSERT INTO __report_sostituzioni_attivita__ (id_attivita, id_anagrafica, punteggio, punti_progetto, punti_disponibilita, punti_distanza, punti_sostituto) VALUES ( ?, ?, ?, ?, ?, ?, ? ) '
-                        .'ON DUPLICATE KEY UPDATE punteggio = VALUES( punteggio ), punti_progetto = VALUES(punti_progetto), punti_disponibilita = VALUES(punti_disponibilita), punti_distanza = VALUES(punti_distanza), punti_sostituto = VALUES(punti_sostituto)',
-                        array(
-                            array( 's' => $id_attivita ),
-                            array( 's' => $o['id_anagrafica'] ),
-                            array( 's' => $o['punteggio'] ),
-                            array( 's' => $o['punti_progetto'] ),
-                            array( 's' => $o['punti_disponibilita'] ),
-                            array( 's' => $o['punti_distanza'] ),
-                            array( 's' => $o['punti_sostituto'] )
-                        )
-                    );
-                }
-                else{
-                    // chiamo il task che inserisce la riga di scarto
-                    restcall(
-                        $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_operatori.descard.php?id_anagrafica=' . $o['id_anagrafica'] . '&id_attivita=' . $id_attivita
-                    );
-                }
+                // controllo se la persona ha preso ferie o permessi nella data attività
+                $permessi = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT count(*) FROM periodi_variazioni_attivita AS pv LEFT JOIN variazioni_attivita AS v '
+                    .'ON pv.id_variazione = v.id WHERE v.id_anagrafica = ? AND v.data_approvazione IS NOT NULL '
+                    .'AND ( '
+                    .'( TIMESTAMP( pv.data_inizio, coalesce( pv.ora_inizio, "00:00:01" ) ) <= ? AND TIMESTAMP( pv.data_fine, coalesce( pv.ora_fine, "23:59:59" ) ) >= ? ) '
+                    .'OR '
+                    .'( TIMESTAMP( pv.data_inizio, coalesce( pv.ora_inizio, "00:00:01" ) ) <= ? AND TIMESTAMP( pv.data_fine, coalesce( pv.ora_fine, "23:59:59" ) ) >= ? ) '
+                    .')',
+                    array(
+                        array( 's' => $o['id_anagrafica'] ),
+                        array( 's' => $a['data_ora_inizio'] ),
+                        array( 's' => $a['data_ora_inizio'] ),
+                        array( 's' => $a['data_ora_fine'] ),                   
+                        array( 's' => $a['data_ora_fine'] )
+                    )
+                );
+    
+                // inserisco la riga nella tabella __report_sostituzioni_attivita__
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO __report_sostituzioni_attivita__ (id_attivita, id_anagrafica, punteggio, punti_progetto, punti_disponibilita, punti_distanza, punti_sostituto, se_scartato) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) '
+                    .'ON DUPLICATE KEY UPDATE punteggio = VALUES( punteggio ), punti_progetto = VALUES(punti_progetto), punti_disponibilita = VALUES(punti_disponibilita), punti_distanza = VALUES(punti_distanza), punti_sostituto = VALUES(punti_sostituto)',
+                    array(
+                        array( 's' => $id_attivita ),
+                        array( 's' => $o['id_anagrafica'] ),
+                        array( 's' => $o['punteggio'] ),
+                        array( 's' => $o['punti_progetto'] ),
+                        array( 's' => $o['punti_disponibilita'] ),
+                        array( 's' => $o['punti_distanza'] ),
+                        array( 's' => $o['punti_sostituto'] ),
+                        array( 's' => ($permessi == 1) ? $permessi : NULL )
+                    )
+                );
+               
                 
 
             } 
@@ -959,7 +972,7 @@
             )
         );
 
-        //print_r($operatori);
+    //    print_r($operatori);
         
         // array di appoggio per il calcolo dei punteggi
         $op = array();
@@ -976,7 +989,7 @@
             $op[ $o['id_anagrafica'] ] = $o;
         }
 
-     //   print_r($op);
+    //    print_r($op);
 
         // riordino l'array degli operatori in base al punteggio
         $sort_data = array();
