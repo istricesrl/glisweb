@@ -40,7 +40,7 @@
 {% block main %}
 {% set cassa = pages.terminale.url[ localization.language.ietf ] %}
 
-{% if not request.__continue__ %}
+{% if not request.documenti.id %}
     <div class="col-12 mt-3 cassa">
         <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}?__continue__=1', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">apri</button>
     </div>
@@ -51,6 +51,9 @@
     <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
     <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
     <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+    <input type="hidden" id="numero" name="{{ table }}[id_emittente]" value="{{ etc.id_emittente }}">
+    <input type="hidden" id="numero" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d') }}">
+    <input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
     {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
@@ -63,11 +66,11 @@
                     <div class="row">
                         <div class="col-12">
                             <span class="label-top">tipologia</span>
-                            {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request, '1', '', '1', '1', 'select-terminale' ) }}
+                            {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request, '1', '', '1', '1', '' ) }}
                         </div>
                         <div class="col-12 mt-3">
                             <span class="label-top">cliente</span>
-                            {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.anagrafica, request, '', '', 1, '', 'select-terminale', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                            {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
                         </div>
                     <!--inizio prova scontrino-->
                     <div class="col-12 mt-3">
@@ -75,9 +78,10 @@
                             <div id="table" >
                                 <table style="width:100%;">
                                     <tr class="tabletitle">
-                                        <td class="item"><h2>prodotto</h2></td>
+                                        <td class="item"><h2>articolo</h2></td>
+                                        <td class="Hours"><h2>prezzo</h2></td>
                                         <td class="Hours"><h2>quantità</h2></td>
-                                        <td class="Rate"><h2>Sub Totale</h2></td>
+                                        <td class="Rate"><h2>sub totale</h2></td>
                                     </tr>
                                 </table>
                             </div>
@@ -85,94 +89,33 @@
                     <div class="col-12 mt-3 box mh-100 "  id="invoice-POS">
                         <div id="table" >
                             <table style="width:100%;">              
+                                        {% for riga in etc.righe %}
                                             <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Communication</p></td>
-                                                <td class="tableitem"><p class="itemtext">5</p></td>
-                                                <td class="tableitem"><p class="itemtext">$375.00</p></td>
+                                                <td class="tableitem"><p class="itemtext">{{ riga.id_articolo }}</p></td>
+                                                <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale }}</p></td>
+                                                <td class="tableitem"><p class="itemtext">{{ riga.quantita }}</p></td>
+                                                <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale * riga.quantita }}</p></td>
                                             </tr>
-
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Asset Gathering</p></td>
-                                                <td class="tableitem"><p class="itemtext">3</p></td>
-                                                <td class="tableitem"><p class="itemtext">$225.00</p></td>
-                                            </tr>
-
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Animation</p></td>
-                                                <td class="tableitem"><p class="itemtext">20</p></td>
-                                                <td class="tableitem"><p class="itemtext">$1500.00</p></td>
-                                            </tr>
-
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Animation Revisions</p></td>
-                                                <td class="tableitem"><p class="itemtext">10</p></td>
-                                                <td class="tableitem"><p class="itemtext">$750.00</p></td>
-                                            </tr>
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Communication</p></td>
-                                                <td class="tableitem"><p class="itemtext">5</p></td>
-                                                <td class="tableitem"><p class="itemtext">$375.00</p></td>
-                                            </tr>
-
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Asset Gathering</p></td>
-                                                <td class="tableitem"><p class="itemtext">3</p></td>
-                                                <td class="tableitem"><p class="itemtext">$225.00</p></td>
-                                            </tr>
-
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Animation</p></td>
-                                                <td class="tableitem"><p class="itemtext">20</p></td>
-                                                <td class="tableitem"><p class="itemtext">$1500.00</p></td>
-                                            </tr>
-
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Animation Revisions</p></td>
-                                                <td class="tableitem"><p class="itemtext">10</p></td>
-                                                <td class="tableitem"><p class="itemtext">$750.00</p></td>
-                                            </tr>
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Communication</p></td>
-                                                <td class="tableitem"><p class="itemtext">5</p></td>
-                                                <td class="tableitem"><p class="itemtext">$375.00</p></td>
-                                            </tr>
-
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Asset Gathering</p></td>
-                                                <td class="tableitem"><p class="itemtext">3</p></td>
-                                                <td class="tableitem"><p class="itemtext">$225.00</p></td>
-                                            </tr>
-
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Animation</p></td>
-                                                <td class="tableitem"><p class="itemtext">20</p></td>
-                                                <td class="tableitem"><p class="itemtext">$1500.00</p></td>
-                                            </tr>
-
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">Animation Revisions</p></td>
-                                                <td class="tableitem"><p class="itemtext">10</p></td>
-                                                <td class="tableitem"><p class="itemtext">$750.00</p></td>
-                                            </tr>
+                                        {% endfor %}
                                         </table>
                                     </div>
                     </div> 
                     <div class="col-12 mt-3 d-flex justify-content-end" >
                         <div id="table" >
                             <table style="width:100%;">      
-
+                                    {% if etc.totale %}
                                             <tr class="tabletitle">
                                                 <td>&nbsp;</td>
                                                 <td class="Rate"><h1>IVA</h1></td>
-                                                <td class="payment"><h1>$419.25</h1></td>
+                                                <td class="payment"><h1></h1></td>
                                             </tr>
 
                                             <tr class="tabletitle">
                                                 <td>&nbsp;</td>
                                                 <td class="Rate"><h1>Totale</h1></td>
-                                                <td class="payment"><h1>$3,644.25</h1></td>
+                                                <td class="payment"><h1>{{ etc.totale }}</h1></td>
                                             </tr>
-
+                                    {% endif %}
                                         </table>
                                     </div><!--End Table-->
                                 </div><!--End InvoiceBot-->
@@ -180,29 +123,24 @@
 
 <!--fine prova scontrino-->
 
-                    <div class="col mt-3 mt-auto">
-                            <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
-                    </div>
+
                 </div>  
+                <!--div class="col mt-3 mt-auto">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
+            </div-->
             </div>
             <div class="col-5 align-items-center">
                 <legend>comando</legend>
-                    <div class="row"> 
-                        <div class="col-12 ">
-                            <div class="input-group">
-                                
-                                <input type="text" class="form-control"  data-toggle="tooltip" data-placement="bottom" data-delay="1000"  placeholder="" aria-label="" aria-describedby="basic-addon2">
-
+                    <div class="form-row row"> 
+                                <div class="col ">
+                                    {{ frm.input( table, '', '', '__comando__', '', '', request ) }}
+                                </div>
+                                <div class="col-auto">
+                                    {{ frm.select( table, '', '', '__reparto__', '', etc.select.reparti, request, 0, '', 1, 1  ) }}
+                                </div>
                                 <div class="col-auto ">
-                                <select class="form-control" data-placement="bottom" data-delay="1000" data-style="btn-outline-light" data-size="7" >
-                                  <option>&#xf067;</option>
-                                  <option>&#xf068;</option>
-                                </select>
-                                    </div>
-                              </div>
-                        
-                        </button>
-                        </div>
+                                    {{ frm.select( table, '', '', '__operazione__', '', etc.select.operazioni, request, 1, '', 1,1  ) }}
+                                </div>
                     </div>
                     <div class="row">
                         <div class="col-12"><legend>tastiera</legend></div>
@@ -217,10 +155,12 @@
                             <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-credit-card" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-12 mt-3 cassa">
-                            <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
+                            <button type="submit" class="btn btn-secondary btn-sqr btn-block"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
                         </div>
                     </div>
             </div>
+
+    </form>
             <div class="col-2 align-items-center"  >
                 <legend>articoli frequenti</legend>
             <div class="box" style="height: 85vh;" >
@@ -241,6 +181,5 @@
         </div>
     </div>
 
-    </form>
     {% endif %}
 {% endblock %}
