@@ -94,10 +94,23 @@
             
             $ct['etc']['id_oggetto'] = $_REQUEST[ $ct['form']['table'] ]['id_progetto'];
         }
-
-
-
     }
+
+    $ct['page']['contents']['metros'] = array(
+	    'scorciatoie' => array(
+		'label' => 'scorciatoie'
+	    )
+	);
+
+     // modal per fermare la pianificazione originaria
+     $ct['page']['contents']['metro']['scorciatoie'][] = array(
+        'modal' => array('id' => 'ripianifica', 'include' => 'inc/pianificazioni.form.modal.ripianifica.html' ),
+        'icon' => NULL,
+        'fa' => 'fa-update',
+        'title' => 'ripianifica oggetti',
+        'text' => 'rimuove e ricrea gli oggetti da una certa data in poi'
+    );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+    require DIR_SRC_INC_MACRO . '_default.tools.php';
