@@ -66,6 +66,14 @@
 	    array( 'id' => 1, '__label__' => 'sostituto' )
 	);
 
+    // tendina mastri attivita
+	$ct['etc']['select']['mastri'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM mastri_view'
+    );
+
     if ( isset( $_REQUEST[ $ct['form']['table'] ]['progetti_anagrafica'] ) )
     { 
 
