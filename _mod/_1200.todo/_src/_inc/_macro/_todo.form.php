@@ -87,7 +87,7 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM indirizzi_view' );
 
-    // settaggio di cliente e indirizzo letti dal progetto
+    // settaggio di cliente, indirizzo, mastro attivita letti dal progetto
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ){
         $ct['etc']['id_cliente'] = mysqlSelectValue(
                  $cf['mysql']['connection'],
@@ -99,6 +99,17 @@
             $cf['mysql']['connection'],
             'SELECT id_indirizzo FROM progetti WHERE id = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) )
+        );
+       
+    }
+
+    // preset di id_mastro_attivita_default
+    if( isset( $_REQUEST['__preset__']['todo']['id_progetto']  ) ){
+
+        $ct['etc']['id_mastro_attivita_default'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id_mastro_attivita_default FROM progetti WHERE id = ?',
+            array( array( 's' => $_REQUEST['__preset__']['todo']['id_progetto'] ) )
         );
     }
 
