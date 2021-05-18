@@ -140,5 +140,30 @@ $p['progetti.produzione.form.tools'] = array(
 	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 );
 
+// vista categorie progetti
+$p['categorie.progetti.view'] = array(
+	'sitemap'		=> false,
+	'title'		=> array( $l		=> 'categorie' ),
+	'h1'		=> array( $l		=> 'categorie' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	'macro'		=> array(  $m . '_src/_inc/_macro/_categorie.progetti.view.php' ),
+	'etc'		=> array( 'tabs'	=> array( 'categorie.progetti.view' ) ),
+	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
+								'priority'	=> '115' ) )
+);
+
+// gestione categorie progetti
+$p['categorie.progetti.form'] = array(
+	'sitemap'		=> false,
+	'title'			=> array( $l		=> 'gestione' ),
+	'h1'			=> array( $l		=> 'gestione' ),
+	'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.html' ),
+	'macro'			=> array( $m.'_src/_inc/_macro/_categorie.progetti.form.php' ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	'etc'			=> array( 'tabs'	=> array(	'categorie.progetti.form' ) )
+);
 	
 

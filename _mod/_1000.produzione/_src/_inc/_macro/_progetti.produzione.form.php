@@ -74,6 +74,14 @@
 	    'SELECT id, __label__ FROM mastri_view'
     );
 
+    // tendina categorie progetti
+	$ct['etc']['select']['categorie_progetti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_progetti_view'
+	);
+
     if ( isset( $_REQUEST[ $ct['form']['table'] ]['progetti_anagrafica'] ) )
     { 
 

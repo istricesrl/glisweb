@@ -108,6 +108,9 @@
             </div>
 		</fieldset>
 
+		{# SUBFORM CATEGORIE #}
+		{{ sub.categorie( table, 'progetti_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
+
         {# SUBFORM RUOLI #}
         {{ sub.ruoli( table, 'progetti_anagrafica', 'ruoli', site, page, pages, ietf, etc, request, session ) }}
 		
