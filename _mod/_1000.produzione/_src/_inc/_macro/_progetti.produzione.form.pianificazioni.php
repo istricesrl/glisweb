@@ -74,8 +74,9 @@
                     'ora_inizio_programmazione' => '%null%',
                     'ora_fine_programmazione' => '%null%'
                 ),
-                'todo_categorie' => array()
-                /*,
+                'progetti_categorie' => array()
+                /*'todo_categorie' => array()
+                ,
                 'attivita' => array(
                     'data_programmazione' => '%null%',
                     'ora_inizio_programmazione' => '%null%',
