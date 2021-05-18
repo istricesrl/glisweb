@@ -40,24 +40,27 @@
 {% block main %}
 {% set cassa = pages.terminale.url[ localization.language.ietf ] %}
 
-{% if not request.documenti.id %}
-    <div class="col-12 mt-3 cassa">
-        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}?__continue__=1', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">apri</button>
-    </div>
-{% else %}
 <form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
     {# CAMPI HIDDEN DI BASE #}
     <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
     <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
     <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-    <input type="hidden" id="numero" name="{{ table }}[id_emittente]" value="{{ etc.id_emittente }}">
-    <input type="hidden" id="numero" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d') }}">
+    <input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ etc.id_emittente }}">
+    <input type="hidden" id="dato" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d') }}">
     <input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+    <input type="hidden" id="tipologia" name="{{ table }}[id_tipologia]" value="9">
+
     {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
     <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+{% if not request.documenti.id %}
+    <div class="col-12 mt-3 cassa">
+        <button type="sumbit" class="btn btn-secondary btn-sqr btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">apri</button>
+    </div>
+{% else %}
+
 
     <div class="container-fluid pannello-cassa">
         <div class="row">
@@ -82,6 +85,7 @@
                                         <td class="Hours"><h2>prezzo</h2></td>
                                         <td class="Hours"><h2>quantità</h2></td>
                                         <td class="Rate"><h2>sub totale</h2></td>
+                                        <td class="Rate"><h2>reparto</h2></td>
                                     </tr>
                                 </table>
                             </div>
@@ -95,6 +99,7 @@
                                                 <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale }}</p></td>
                                                 <td class="tableitem"><p class="itemtext">{{ riga.quantita }}</p></td>
                                                 <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale * riga.quantita }}</p></td>
+                                                <td class="tableitem"><p class="itemtext">{{ riga.reparto }}</p></td>                                            
                                             </tr>
                                         {% endfor %}
                                         </table>
@@ -160,12 +165,12 @@
                     </div>
             </div>
 
-    </form>
+
             <div class="col-2 align-items-center"  >
                 <legend>articoli frequenti</legend>
             <div class="box" style="height: 85vh;" >
                 {% for articolo in etc.articoli_frequenti %}
-                <a href="">
+                <a href="{{ cassa }}?__art__={{ articolo.id }}">
                 <div class="media">
                    
                     <div class="media-body p-3">
@@ -182,4 +187,5 @@
     </div>
 
     {% endif %}
+</form>
 {% endblock %}
