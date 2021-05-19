@@ -583,7 +583,10 @@
     attivita.id_attivita_completamento                   | l'ID dell'attività di completamento
     attivita.ore                                         | -
     attivita.id_esito                                    | l'ID dell'esito
-    
+    attivita.id_mastro_provenienza                       | -
+    attivita.id_mastro_destinazione                      | -
+    attivita.id_todo_articoli                            | -
+     
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
