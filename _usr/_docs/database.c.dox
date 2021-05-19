@@ -597,17 +597,16 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     
     coupon_listini
-    -------------------------
+    --------------
     Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *listini* per specificare l'ambito di
     validità del coupon.
 
-
     colonna                                  | descrizione
     -----------------------------------------|---------------------------------------------------------------------------------------
-    coupon_listini.id                        | l'ID dell'associazione fra l'ID coupon e l'ID listino
+    coupon_listini.id                        | l'ID dell'associazione fra il coupon e il listino
     coupon_listini.id_coupon                 | l'ID del coupon
     coupon_listini.id_listino                | l'ID del listino
-        
+
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
@@ -626,7 +625,7 @@
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    coupon_marchi.id                        | l'ID dell'associazione fra l'ID coupon e l'ID marchio
+    coupon_marchi.id                        | l'ID dell'associazione fra il coupon e il marchio
     coupon_marchi.id_coupon                 | l'ID del coupon
     coupon_marchi.id_marchio                | l'ID del marchio
         
@@ -647,7 +646,7 @@
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    coupon_prodotti.id                      | l'ID dell'associazione fra l'ID coupon e l'ID prodotto
+    coupon_prodotti.id                      | l'ID dell'associazione fra il coupon e il prodotto
     coupon_prodotti.id_coupon               | l'ID del coupon
     coupon_prodotti.id_prodotto             | l'ID del prodotto
         
@@ -668,7 +667,7 @@
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    coupon_stagioni.id                      | l'ID dell'associazione fra l'ID coupon e l'ID stagione
+    coupon_stagioni.id                      | l'ID dell'associazione fra il coupon e la stagione
     coupon_stagioni.id_coupon               | l'ID del coupon
     coupon_stagioni.id_stagione             | l'ID della stagione
         
@@ -684,25 +683,22 @@
 
     cron
     ----
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* descrive le operazioni pianificate del framework; viene consultata da _src/_api/_cron.php per eseguire task e job
+    secondo la pianificazione prevista. Per maggiori dettagli si veda \ref crontab "la pagina della documentazione relativa alle operazioni pianificate".
 
     colonna                         | descrizione
     --------------------------------|---------------------------------------------------------------------------------------
-    cron.id                         | l'ID del cron
-    cron.minuto                     | 
-    cron.ora                        | 
-    cron.giorno_del_mese            | 
-    cron.mese                       | 
-    cron.giorno_della_settimana     | 
-    cron.settimana                  | 
-    cron.task                       | 
-    cron.iterazioni                 | 
-    cron.delay                      | 
-    cron.timestamp_esecuzione       | 
-    cron.id_account_inserimento     | l'ID dell'account inserimento
-    cron.timestamp_inserimento      | 
-    cron.id_account_aggiornamento   | l'ID dell'account aggiornamento
-    cron.timestamp_aggiornamento    | 
+    cron.id                         | l'ID dell'operazione pianificata
+    cron.minuto                     | il minuto pianificato per l'esecuzione (NULL sta per qualsiasi valore)
+    cron.ora                        | l'ora pianificata per l'esecuzione (NULL sta per qualsiasi valore)
+    cron.giorno_del_mese            | il giorno del mese pianificato per l'esecuzione (NULL sta per qualsiasi valore)
+    cron.mese                       | il mese pianificato per l'esecuzione (NULL sta per qualsiasi valore)
+    cron.giorno_della_settimana     | il giorno della settimana pianificato per l'esecuzione (NULL sta per qualsiasi valore)
+    cron.settimana                  | il numero della settimana pianificata per l'esecuzione (NULL sta per qualsiasi valore)
+    cron.task                       | il percorso per il task da eseguire al momento specificato
+    cron.iterazioni                 | il numero di esecuzioni da compiere (minimo una)
+    cron.delay                      | il tempo di attesa in secondi fra un'esecuzione e la successiva dello stesso task
+    cron.timestamp_esecuzione       | la timestamp di ultima esecuzione della pianificazione
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -713,27 +709,5 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
-    cron_log
-    --------
-    Questa tabella *gestita* ...
-
-    colonna                             | descrizione
-    ------------------------------------|---------------------------------------------------------------------------------------
-    cron_log.id                         | l'ID del cron log
-    cron_log.id_cron                    | l'ID del cron
-    cron_log.testo                      | 
-    cron_log.timestamp_esecuzione       | 
-  
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *cron_log_view* relativa alla tabella *cron_log* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
 
 */

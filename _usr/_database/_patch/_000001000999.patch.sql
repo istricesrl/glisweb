@@ -717,7 +717,7 @@ CREATE TABLE IF NOT EXISTS `coupon_listini` (
 -- coupon_marchi
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `coupon_marchi` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_coupon` char(32) NOT NULL,
   `id_marchio` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -727,7 +727,7 @@ CREATE TABLE IF NOT EXISTS `coupon_marchi` (
 -- coupon_prodotti
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_coupon` char(32) NOT NULL,
   `id_prodotto` char(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -737,7 +737,7 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
 -- coupon_stagioni
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `coupon_stagioni` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_coupon` char(32) NOT NULL,
   `id_stagione` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -747,7 +747,7 @@ CREATE TABLE IF NOT EXISTS `coupon_stagioni` (
 -- cron
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `cron` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `minuto` int(11) DEFAULT NULL,
   `ora` int(11) DEFAULT NULL,
   `giorno_del_mese` int(11) DEFAULT NULL,
@@ -762,17 +762,6 @@ CREATE TABLE IF NOT EXISTS `cron` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000056
-
--- cron_log
--- tipologia: tabella gestita
-CREATE TABLE `cron_log` (
-  `id` int(11) NOT NULL,
-  `id_cron` int(11) NOT NULL,
-  `testo` text,
-  `timestamp_esecuzione` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000057

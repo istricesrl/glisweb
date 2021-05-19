@@ -20,7 +20,7 @@
     Dall'altra parte, i job rappresentano lavori pianificati con un inizio e una fine e un'estensione
     predeterminata, in quanto hanno cognizione del contesto globale del compito da svolgere.
 
-    Un esempio di task è la gestione delle code della posta; ad ogni chimata, il task controlla se c'è
+    Un esempio di task è la gestione delle code della posta; ad ogni chiamata, il task controlla se c'è
     almeno una mail da inviare, se sì la invia, dopodiché termina, senza preoccuparsi di quante mail da
     inviare ci siano nel complesso (perché è irrilevante dal suo punto di vista). Viceversa, un esempio
     di job è l'importazione dell'elenco aggiornato dei comuni italiani; in questo caso, il job prima
@@ -35,12 +35,12 @@
 
 
     struttura e gestione dei task
-    -----------------------------
+    =============================
 
 
 
     struttura e gestione dei job
-    ----------------------------
+    ============================
 
 
 
