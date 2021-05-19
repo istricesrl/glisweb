@@ -92,19 +92,6 @@
 
                     $status['info'][] = 'inserite ' . $raa . ' righe dalla tabella __report_attivita_assenze__';
 
-                    // creo una riga nella tabella __report_progetti_assenze__
-                /*    $rpa = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        "INSERT IGNORE INTO __report_progetti_assenze__ ( id_progetto, id_anagrafica, data_assenza ) VALUES ( ?, ?, ? )",
-                        array(
-                            array( 's' => $s['id_progetto'] ),
-                            array( 's' => $v['id_anagrafica'] ),
-                            array( 's' => $s['data_programmazione'] )
-                        )
-                    );
-
-                    $status['info'][] = 'inserite ' . $raa . ' righe dalla tabella __report_progetti_assenze__';
-                */
                 }
             }
            
