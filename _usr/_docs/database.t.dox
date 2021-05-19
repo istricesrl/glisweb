@@ -1058,7 +1058,7 @@
     --------------------------------------------|---------------------------------------------------------------------------------------
     todo.id                                     |
     todo.nome                                   |
-    todo.id_tipologia                           | 
+    todo.tipologie_attivita                     | 
     todo.id_priorita                            | 
     todo.id_anagrafica                          | 
     todo.id_cliente                             | 
@@ -1084,9 +1084,11 @@
     todo.note_revisione                         | 
     todo.timestamp_completamento                | 
     todo.testo_completamento                    |
+    todo.id_mastro_attivita_default             | 
     todo.id_account_inserimento                 |
     todo.timestamp_inserimento                  |
     todo.id_account_aggiornamento               |
+    todo.timestamp_aggiornamento                | 
     todo.timestamp_aggiornamento                | 
 
     La tabella ha le seguenti chiavi esterne:
