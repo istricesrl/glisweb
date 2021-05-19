@@ -598,7 +598,9 @@
     
     coupon_listini
     -------------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *listini* per specificare l'ambito di
+    validità del coupon.
+
 
     colonna                                  | descrizione
     -----------------------------------------|---------------------------------------------------------------------------------------
@@ -618,7 +620,9 @@
   
     coupon_marchi
     -------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *marchi* per specificare l'ambito di
+    validità del coupon.
+
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
@@ -638,13 +642,14 @@
   
     coupon_prodotti
     ---------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *prodotti* per specificare l'ambito di
+    validità del coupon.
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    coupon_prodotti.id                        | l'ID dell'associazione fra l'ID coupon e l'ID prodotto
-    coupon_prodotti.id_coupon                 | l'ID del coupon
-    coupon_prodotti.id_prodotto               | l'ID del prodotto
+    coupon_prodotti.id                      | l'ID dell'associazione fra l'ID coupon e l'ID prodotto
+    coupon_prodotti.id_coupon               | l'ID del coupon
+    coupon_prodotti.id_prodotto             | l'ID del prodotto
         
     La tabella ha le seguenti chiavi esterne:
 
@@ -658,7 +663,8 @@
   
     coupon_stagioni
     ---------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *stagioni* per specificare l'ambito di
+    validità del coupon.
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
@@ -709,7 +715,7 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     
     cron_log
-    ----
+    --------
     Questa tabella *gestita* ...
 
     colonna                             | descrizione
