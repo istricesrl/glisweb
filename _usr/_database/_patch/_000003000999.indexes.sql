@@ -82,4 +82,6 @@ ALTER TABLE `anagrafica_categorie`
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_categoria`);
 ALTER TABLE `anagrafica_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000006
+
 --| FINE FILE
