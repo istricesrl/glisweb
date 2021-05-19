@@ -164,7 +164,7 @@ ALTER TABLE `anagrafica_ruoli`
 	ADD UNIQUE KEY `id_genitore_unico` (`id_genitore`,`id_anagrafica`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_ruolo`);
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_ruolo`,`id_genitore`);
 ALTER TABLE `anagrafica_ruoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000013
@@ -455,9 +455,59 @@ ALTER TABLE `categorie_anagrafica`
 	ADD KEY `se_referente` (`se_referente`),
 	ADD KEY `se_sostituto` (`se_sostituto`),
 	ADD KEY `se_squadra` (`se_squadra`),
-	ADD KEY `indice` (`id`,`nome`,`se_rassegna_stampa`,`se_agente`,`se_mandante`,`se_fornitore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_concorrente`,`se_interinale`,`se_agenzia_interinale`,`se_dipendente`,`se_referente`,`se_sostituto`,`se_squadra`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_rassegna_stampa`,`se_agente`,`se_mandante`,`se_fornitore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_concorrente`,`se_interinale`,`se_agenzia_interinale`,`se_dipendente`,`se_referente`,`se_sostituto`,`se_squadra`);
 ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000031
+
+-- categorie_attivita
+-- tipologia: tabella gestita
+ALTER TABLE `categorie_attivita`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+ALTER TABLE `categorie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000032
+
+-- categorie_diritto
+-- tipologia: tabella di supporto
+ALTER TABLE `categorie_diritto`
+	ADD PRIMARY KEY (`id`), ADD KEY `nome` (`nome`), 
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+ALTER TABLE `categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+
+--| 000003000033
+
+-- categorie_eventi
+-- tipologia: tabella gestita
+ALTER TABLE `categorie_eventi`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+ALTER TABLE `categorie_eventi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+
+--| 000003000034
+
+-- categorie_notizie
+-- tipologia: tabella gestita
+ALTER TABLE `categorie_notizie`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 
 --| FINE FILE
