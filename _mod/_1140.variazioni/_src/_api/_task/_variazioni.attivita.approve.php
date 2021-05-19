@@ -2,8 +2,9 @@
 
     /**
      * riceve in ingresso l'id della variazione da approvare
-     * prende tutte le attività legate a quella richiesta di variazione e setta id_anagrafica a NULL
-     * per ogni giorno del periodo di variazione crea le attività previste da contratto settandole alla tipologia_inps indicata nella variazione
+     * - prende tutte le attività legate a quella richiesta di variazione e setta id_anagrafica a NULL
+     * - per ogni giorno del periodo di variazione crea le attività previste da contratto settandole alla tipologia_inps indicata nella variazione
+     * - rimuove dalla tabella "__report_sostituzioni_attivita__" le righe corrispondenti a questa anagrafica, così il task _sostituzioni.calculate.php la rianalizza
      *
      *
      * @todo commentare
@@ -70,17 +71,14 @@
         $status['info'][] = 'variazione ' . $_REQUEST['id'] . ' approvata con data ' . date('Y-m-d');
 
 
-         // passo successivo: per ogni giorno di ogni riga periodi
-            // 1- prendo la data
-            // 2- vado a vedere se c'è un turno attivo per quella data e quell'anagrafica
-            // 3- vado nel contratto attivo per l'anagrafica corrente e vedo per quel turno che orari sono previsti
-            // 4- creo una riga di attività con la tipologia inps indicata per ogni fascia di orari_contratti trovata
-            // 5- vedo se ci sono attività già pianificate per quella fascia di data e ora e setto id_anagrafica NULL
-        
-        // funzione utile:
-        /*
-            - funzione che partendo da data_inizio e data_fine restituisce l'elenco delle date comprese       
-        */
+        // rimuovo le righe sulla __report_sostituzioni_attivita__ legate a questa anagrafica
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE FROM __report_sostituzioni_attivita__ WHERE id_anagrafica = ?',
+            array(
+                array( 's' => $v['id_anagrafica'] )
+            )
+        );
 
 
     } else {
