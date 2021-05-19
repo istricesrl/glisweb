@@ -234,6 +234,30 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    
+    categorie_progetti
+    -----------------
+    Questa tabella *gestita* ...
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_progetti.id                           | l'ID della cattegoria del progetto
+    categorie_progetti.id_genitore                  | l'ID parente
+    categorie_progetti.nome                         | 
+    categorie_progetti.id_account_inserimento       | 
+    categorie_progetti.timestamp_inserimento        | 
+    categorie_progetti.id_account_aggiornamento     | 
+    categorie_progetti.timestamp_aggiornamento      | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *categorie_progetti_view* relativa alla tabella *categorie_progetti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
  
     categorie_risorse
     -----------------

@@ -555,6 +555,33 @@
 
     La vista progetti_anagrafica_view relativa alla tabella progetti_anagrafica presenta le seguenti colonne:
     
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    progetti_categorie
+    ------------------
+    Questa tabella *gestita*...
+    
+    colonna                                       | descrizione
+    ----------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_categorie.id                         | l'ID che fa l'associazione fra il progetto e la categoria
+    progetti_categorie.id_progetto                | l'ID del progetto
+    progetti_categorie.id_categoria               | l'ID della categoria
+    progetti_categorie.id_account_inserimento     | 
+    progetti_categorie.timestamp_inserimento      | 
+    progetti_categorie.id_account_aggiornamento   | 
+    progetti_categorie.timestamp_aggiornamento    | 
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista progetti_anagrafica_view relativa alla tabella progetti_anagrafica presenta le seguenti colonne:
+    
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     provenienze_contatti
     --------------------
     Questa tabella *gestita*...
@@ -572,6 +599,9 @@
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
     La vista provenienze_contatti_view relativa alla tabella provenienze_contatti presenta le seguenti colonne:
+    
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
     
     provincie
     ---------
@@ -591,7 +621,10 @@
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
     La vista provincie_view relativa alla tabella provincie presenta le seguenti colonne:
-
+    
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     pubblicazione
     -------------
     Questa tabella *gestita*...
@@ -621,5 +654,8 @@
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
     La vista pubblicazione_view relativa alla tabella pubblicazione presenta le seguenti colonne:
-
+    
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
     */

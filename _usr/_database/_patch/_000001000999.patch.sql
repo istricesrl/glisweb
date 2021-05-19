@@ -3129,4 +3129,691 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `stampa_pdf` char(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001000201
+
+-- tipologie_documenti_amministrativi
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_documenti_amministrativi` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `codice` char(8) DEFAULT NULL,
+  `se_fattura` int(1) DEFAULT NULL,
+  `se_nota_credito` int(1) DEFAULT NULL,
+  `se_trasporto` int(1) DEFAULT NULL,
+  `se_pro_forma` int(1) DEFAULT NULL,
+  `se_offerta` int(1) DEFAULT NULL,
+  `se_ordine` int(1) DEFAULT NULL,
+  `se_ricevuta` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000202
+
+-- tipologie_durate_inps
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_durate_inps` (
+  `id` char(32) NOT NULL,
+  `nome` char(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000203
+
+-- tipologie_edifici
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_edifici` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000204
+
+-- tipologie_embed
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_embed` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_video` int(1) DEFAULT NULL,
+  `se_audio` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000205
+
+-- tipologie_eventi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_eventi` (
+`id` int(11) NOT NULL,
+  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) NOT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000206
+
+-- tipologie_founding
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_founding` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000207
+
+-- tipologie_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `se_residenziale` int(1) DEFAULT NULL,
+  `se_industriale` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000208
+
+-- tipologie_incarichi_immobili
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_incarichi_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000209
+
+-- tipologie_indirizzi
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
+`id` int(11) NOT NULL,
+  `nome` char(32) COLLATE utf8_unicode_ci NOT NULL,
+  `se_sede` int(1) DEFAULT NULL,
+  `se_operativa` int(1) DEFAULT NULL,
+  `se_abitazione` int(1) DEFAULT NULL,
+  `html` char(16) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000210
+	
+-- tipologie_interesse
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_interesse` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000211
+
+-- tipologie_mastri
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_mastri` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000212
+
+-- tipologie_motivazioni_tari
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_motivazioni_tari` (
+  `id` int(11) NOT NULL,
+  `nome` char(40) NOT NULL,
+  `soprannome` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000213
+
+-- tipologie_notizie
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000214
+
+-- tipologie_orari_inps
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_orari_inps` (
+  `id` char(32) NOT NULL,
+  `nome` char(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000215
+
+-- tipologie_popup
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_popup` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000216
+
+-- tipologie_pratiche
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_pratiche` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000217
+
+-- tipologie_prodotti
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_colori` tinyint(1) DEFAULT NULL,
+  `se_taglie` tinyint(1) DEFAULT NULL,
+  `se_dimensioni` tinyint(1) DEFAULT NULL,
+  `se_imballo` tinyint(1) DEFAULT NULL,
+  `se_stagioni` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000218
+
+-- tipologie_progetti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_scalare` int(1) DEFAULT NULL,
+  `se_commessa` int(1) DEFAULT NULL,
+  `se_chiamata` int(1) DEFAULT NULL,
+  `se_contratto` int(1) DEFAULT NULL,
+  `se_forfait` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000219
+
+-- tipologie_pubblicazione
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_pubblicazione` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `se_bozza` int(11) DEFAULT NULL,
+  `se_pubblicato` int(1) DEFAULT NULL,
+  `se_evidenza` int(1) DEFAULT NULL,
+  `se_newsletter` int(1) DEFAULT NULL,
+  `se_secondario` int(1) DEFAULT NULL,
+  `se_incroci` int(1) DEFAULT NULL,
+  `se_suggerito` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000220
+
+-- tipologie_qualifiche_inps
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_qualifiche_inps` (
+  `id` char(32) NOT NULL,
+  `nome` char(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000221
+
+-- tipologie_rassegna_stampa
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_rassegna_stampa` (
+`id` int(11) NOT NULL,
+  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000222
+
+-- tipologie_risorse
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_risorse` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `ordine` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000223
+
+-- tipologie_soddisfazione
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_soddisfazione` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- tipologie_taglie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_taglie` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000224
+
+-- tipologie_task
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_task` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_pianificata` tinyint(1) DEFAULT NULL,
+  `se_richiesta` tinyint(1) DEFAULT NULL,
+  `se_imprevista` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000225
+
+-- tipologie_telefoni
+-- tipologia: tabella di supporto
+CREATE TABLE `tipologie_telefoni` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) COLLATE utf8_unicode_ci NOT NULL,
+  `html` char(16) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000226
+
+-- tipologie_todo
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_todo` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_pianificata` int(1) DEFAULT NULL,
+  `se_richiesta` int(1) DEFAULT NULL,
+  `se_imprevista` int(1) DEFAULT NULL,
+  `se_contratto` int(1) DEFAULT NULL,
+  `se_chiamata` int(1) DEFAULT NULL,
+  `se_scalare` int(1) DEFAULT NULL,
+  `se_commessa` int(1) DEFAULT NULL,
+  `se_forfait` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000227
+
+-- tipologie_udm
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_udm` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
+
+--| 000001000228
+
+-- tipologie_vani
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_vani` (
+`id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `se_camera` int(1) DEFAULT NULL,
+  `se_cucina` int(1) DEFAULT NULL,
+  `se_bagno` int(1) DEFAULT NULL,
+  `se_commerciale` int(1) DEFAULT NULL,
+  `percentuale_commerciale` decimal(5,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000229
+
+-- tipologie_variazioni_attivita
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `tipologie_variazioni_attivita` (
+`id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000230
+
+-- todo
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `todo` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_priorita` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_luogo` int(11) DEFAULT NULL,
+  `testo` text,
+  `ore_previste` decimal(5,2) DEFAULT NULL,
+  `testo_ore_previste` text,
+  `anno_previsto` year(4) DEFAULT NULL,
+  `settimana_prevista` int(11) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `testo_pianificazione` text,
+  `id_responsabile` int(11) DEFAULT NULL,
+  `timestamp_apertura` int(11) DEFAULT NULL,
+  `timestamp_pianificazione` int(11) DEFAULT NULL,
+  `data_programmazione` date DEFAULT NULL,
+  `ora_inizio_programmazione` time DEFAULT NULL,
+  `ora_fine_programmazione` time DEFAULT NULL,
+  `anno_programmazione` year(4) DEFAULT NULL,
+  `settimana_programmazione` int(11) DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `ora_scadenza` time DEFAULT NULL,
+  `timestamp_revisione` int(11) DEFAULT NULL,
+  `note_revisione` text,
+  `timestamp_completamento` int(11) DEFAULT NULL,
+  `testo_completamento` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000231
+
+-- todo_categorie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `todo_categorie` (
+`id` int(11) NOT NULL,
+  `id_todo` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000232
+
+-- transcodifica_clienti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `transcodifica_clienti` (
+`id` int(11) NOT NULL,
+  `id_mandante` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `id_cliente_mandante` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000233
+
+-- turni
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `turni` (
+`id` int(11) NOT NULL,
+  `turno` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000234
+
+-- udm
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `udm` (
+`id` int(11) NOT NULL,
+  `id_udm` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `conversione` float DEFAULT NULL,
+  `nome` char(32) NOT NULL,
+  `soprannone` char(32) DEFAULT NULL,
+  `sigla` char(8) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000235
+
+-- valute
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `valute` (
+`id` int(11) NOT NULL,
+  `iso4217` char(3) COLLATE utf8_general_ci NOT NULL,
+  `html` char(8) COLLATE utf8_general_ci NOT NULL,
+  `utf8` char(1) COLLATE utf8_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000236
+
+-- vani_immobili
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `vani_immobili` (
+`id` int(11) NOT NULL,
+  `id_immobile` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `larghezza` decimal(5,2) DEFAULT NULL,
+  `lunghezza` decimal(5,2) DEFAULT NULL,
+  `altezza` decimal(5,2) DEFAULT NULL,
+  `percentuale_commerciale_custom` decimal(5,2) DEFAULT NULL,
+  `mq_commerciali` decimal(5,2) DEFAULT NULL,
+  `mq_calpestabili` decimal(5,2) DEFAULT NULL,
+  `mq_modificatore` decimal(15,2) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000237
+
+-- variazioni_attivita
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `variazioni_attivita` (
+`id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_tipologia_inps` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `data_richiesta` date NOT NULL,
+  `data_approvazione` date DEFAULT NULL,
+  `data_rifiuto` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000238
+
+-- variazioni_prezzi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `variazioni_prezzi` (
+`id` int(11) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `timestamp_inizio` int(11) DEFAULT NULL,
+  `timestamp_fine` int(11) DEFAULT NULL,
+  `sconto_percentuale` decimal(5,2) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `sconto_fisso` decimal(15,2) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000239
+
+-- variazioni_prezzi_listini
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `variazioni_prezzi_listini` (
+	`id` int(11) NOT NULL,
+	`id_variazione_prezzo` int(11) NOT NULL,
+	`id_listino` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000240
+
+-- variazioni_prezzi_prodotti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `variazioni_prezzi_prodotti` (
+`id` int(11) NOT NULL,
+  `id_variazione_prezzo` int(11) NOT NULL,
+  `id_prodotto` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000241
+
+-- variazioni_prezzi_categorie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `variazioni_prezzi_categorie` (
+	`id` int(11) NOT NULL,
+  `id_variazione_prezzo` int(11) NOT NULL,
+  `id_categoria_prodotti` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000242
+
+-- variazioni_prezzi_stagioni
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `variazioni_prezzi_stagioni` (
+	`id` int(11) NOT NULL,
+	`id_variazione_prezzo` int(11) NOT NULL,
+	`id_stagione` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000243
+
+-- variazioni_prezzi_marchi
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `variazioni_prezzi_marchi` (
+	`id` int(11) NOT NULL,
+	`id_variazione_prezzo` int(11) NOT NULL,
+	`id_marchio` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000244
+
+-- video
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `video` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_file` int(11) DEFAULT NULL,
+  `id_risorsa` int(11) DEFAULT NULL,
+  `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_evento` int(11) DEFAULT NULL,
+  `id_categoria_eventi` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `path` char(255) DEFAULT NULL,
+  `codice_embed` char(255) DEFAULT NULL,
+  `id_tipologia_embed` int(11) NOT NULL,
+  `ratio` char(8) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `target` char(255) DEFAULT NULL,
+  `timestamp_scalamento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000245
+
+-- zone
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `zone` (
+`id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000246
+
+-- zone_cap
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `zone_cap` (
+`id` int(11) NOT NULL,
+  `id_zona` int(11) NOT NULL,
+  `cap` char(8) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000247
+
+-- zone_caratteristiche
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `zone_caratteristiche` (
+  `id` int(11) NOT NULL,
+  `id_zona` int(11) NOT NULL,
+  `id_caratteristica` int(11) NOT NULL,
+  `specifiche` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000248
+
+-- zone_listini
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `zone_listini` (
+`id` int(11) NOT NULL,
+  `id_zona` int(11) NOT NULL,
+  `id_listino` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000249
+
+-- zone_prezzi_spedizione
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `zone_prezzi_spedizione` (
+`id` int(11) NOT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `id_ingombro` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `prezzo` decimal(16,5) NOT NULL,
+  `prezzo_max` decimal(7,2) DEFAULT NULL,
+  `id_listino` int(11) NOT NULL,
+  `id_valuta` int(11) NOT NULL,
+  `id_iva` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000250
+
+-- zone_provincie
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `zone_provincie` (
+`id` int(11) NOT NULL,
+  `id_zona` int(11) NOT NULL,
+  `id_provincia` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000251
+
+-- zone_stati
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `zone_stati` (
+`id` int(11) NOT NULL,
+  `id_zona` int(11) NOT NULL,
+  `id_stato` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 --| FINE FILE

@@ -170,6 +170,7 @@
     anagrafica.anno_nascita                         | l'anno di nascita dell'anagrafica
     anagrafica.id_tipologia_crm                     | l'ID della tipologia CRM dell'anagrafica
     anagrafica.id_agente                            | l'ID dell'agente associato all'anagrafica
+    anagrafica.id_responsabile_operativo            | l'ID del respondabile operativo
     anagrafica.note_commerciali                     | le note commerciali relative all'anagrafica
     anagrafica.condizioni_vendita                   | le condizioni di vendita relative all'anagrafica
     anagrafica.condizioni_acquisto                  | le condizioni di acquisto relative all'anagrafica
@@ -501,6 +502,7 @@
     articoli.id_taglia                           | l'ID della taglia
     articoli.id_colore                           | l'ID del colore
     articoli.id_udm                              | l'ID dell'unità di misura
+    articoli.id_reparto                          | l'ID del reparto 
     articoli.se_disponibile                      | flag di disponibilità
     articoli.quantita_disponibile                | quantità disponibile in magazzino
 

@@ -128,7 +128,7 @@
     
     regioni
     -------
-    Questa tabella *gestita* ...
+    Questa tabella di *supporto* ...
 
     colonna                        | descrizione
     -------------------------------|---------------------------------------------------------------------------------------
@@ -138,6 +138,23 @@
     regioni.codice_istat           | codice della regione attribuito dall'ISTAT
     
     La vista regioni_view relativa alla tabella regioni presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    
+    reparti
+    -------
+    Questa tabella *gestita* ...
+
+    colonna                | descrizione
+    -----------------------|---------------------------------------------------------------------------------------
+    reparti.id             | l'ID che fa l'associazione fra l'iva e il settore del reparto
+    reparti.id_iva         | l'ID dell'iva
+    reparti.id_settore     | l'ID del settore
+    reparti.nome           |
+    reparti.note           |
+     
+    La vista reparti_view relativa alla tabella reparti presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
@@ -327,35 +344,35 @@
     ------------------------------
     Questa tabella *gestita* ...
 
-    colonna                                                 | descrizione
-    --------------------------------------------------------|---------------------------------------------------------------------------------------
-    righe_documenti_amministrativi.id                                   | 
-    righe_documenti_amministrativi.id_tipologia                         | 
-    righe_documenti_amministrativi.id_documento                         | 
-    righe_documenti_amministrativi.id_cliente                           | 
-    righe_documenti_amministrativi.id_emittente                         | 
+    colonna                                                             | descrizione
+    --------------------------------------------------------------------|---------------------------------------------------------------------------------------
+    righe_documenti_amministrativi.id                                   | l'ID che fa l'associazione fra la tipologia, il documento, il cliente, l'emittente, il progetto ecc
+    righe_documenti_amministrativi.id_tipologia                         | l'ID della tipologia 
+    righe_documenti_amministrativi.id_documento                         | l'ID del documento
+    righe_documenti_amministrativi.id_cliente                           | l'ID del cliente
+    righe_documenti_amministrativi.id_emittente                         | l'ID dell'emittente
     righe_documenti_amministrativi.id_genitore                          | 
-    righe_documenti_amministrativi.id_riferimento                       | 
-    righe_documenti_amministrativi.id_progetto                          | 
-    righe_documenti_amministrativi.id_pratica                           | 
-    righe_documenti_amministrativi.id_task                              | 
-    righe_documenti_amministrativi.id_todo                              | 
-    righe_documenti_amministrativi.id_attivita                          | 
-    righe_documenti_amministrativi.id_articolo                          | 
-    righe_documenti_amministrativi.id_udm                               | 
-    righe_documenti_amministrativi.ordine                               | 
+    righe_documenti_amministrativi.id_riferimento                       | l'ID di riferimento associato alla riga documento amministrativo
+    righe_documenti_amministrativi.id_progetto                          | l'ID del progetto
+    righe_documenti_amministrativi.id_pratica                           | l'ID della pratica
+    righe_documenti_amministrativi.id_task                              | l'ID del compito
+    righe_documenti_amministrativi.id_todo                              | l'ID del compito da svolgere
+    righe_documenti_amministrativi.id_attivita                          | l'ID dell'attività di referenza
+    righe_documenti_amministrativi.id_articolo                          | l'ID dell'articolo 
+    righe_documenti_amministrativi.id_udm                               | l'ID dell'unità di misura
+    righe_documenti_amministrativi.ordine                               | l'ordine di riferimento
     righe_documenti_amministrativi.quantita                             | 
     righe_documenti_amministrativi.data_lavorazione                     | 
     righe_documenti_amministrativi.data_fatturabile                     | 
     righe_documenti_amministrativi.data_scadenza                        | 
-    righe_documenti_amministrativi.id_listino                           | 
-    righe_documenti_amministrativi.id_valuta                            | 
+    righe_documenti_amministrativi.id_listino                           | l'ID del listino utilizzato
+    righe_documenti_amministrativi.id_valuta                            | l'ID della valuta utilizzata
     righe_documenti_amministrativi.id_modalita_pagamento                | 
     righe_documenti_amministrativi.importo_netto_totale                 | 
     righe_documenti_amministrativi.importo_netto_totale_non_scontato    | 
-    righe_documenti_amministrativi.id_iva                               | 
-    righe_documenti_amministrativi.nome                                 | 
-    righe_documenti_amministrativi.testo                                | 
+    righe_documenti_amministrativi.id_iva                               | l'ID dell'iva di riferimento della riga documento amministrativo
+    righe_documenti_amministrativi.nome                                 | il nome associato alla riga del documento amministrativo
+    righe_documenti_amministrativi.testo                                | la descrizione aggiuntiva della riga del documento amministrativo
     righe_documenti_amministrativi.path                                 | 
     righe_documenti_amministrativi.se_rimborso                          | 
     righe_documenti_amministrativi.id_account_inserimento               | 
@@ -374,12 +391,12 @@
 
     colonna                                              | descrizione
     -----------------------------------------------------|---------------------------------------------------------------------------------------
-    righe_fatturati.id                                   | 
-    righe_fatturati.id_fatturato                         | 
-    righe_fatturati.id_emittente                         | 
-    righe_fatturati.id_cliente                           | 
-    righe_fatturati.id_agente                            | 
-    righe_fatturati.id_mandante                          | 
+    righe_fatturati.id                                   | l'ID che fa l'associazione fra il fatturato, l'emittente, il cliente, l'agente e il mandante
+    righe_fatturati.id_fatturato                         | l'ID del fatturato
+    righe_fatturati.id_emittente                         | l'ID dell'emittente
+    righe_fatturati.id_cliente                           | l'ID del cliente
+    righe_fatturati.id_agente                            | l'ID dell'agente in carico
+    righe_fatturati.id_mandante                          | l'ID del mandante
     righe_fatturati.mese                                 | 
     righe_fatturati.anno                                 | 
     righe_fatturati.riferimento_fattura                  | 
@@ -403,12 +420,12 @@
 
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
-    risorse.id                                   | 
-    risorse.codice                               | 
+    risorse.id                                   | l'ID della risorsa
+    risorse.codice                               | il codice parlante della risorsa
     risorse.data_pubblicazione                   | 
-    risorse.id_testata                           | 
-    risorse.id_categoria                         | 
-    risorse.id_tipologia                         | 
+    risorse.id_testata                           | l'ID della testata della risorsa
+    risorse.id_categoria                         | l'ID della categoria della risorsa
+    risorse.id_tipologia                         | l'ID della tipologia della risorsa
     risorse.timestamp_inserimento                | 
     risorse.id_account_inserimento               | 
     risorse.timestamp_aggiornamento              | 
@@ -426,8 +443,8 @@
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
     risorse_anagrafica.id                        | l'ID che fa l'associazione fra la risorsa e l'anagrafica
-    risorse_anagrafica.id_risorsa                | l'ID della risorsa
-    risorse_anagrafica.id_anagrafica             | l'ID dell'anagrafica
+    risorse_anagrafica.id_risorsa                | l'ID della risorsa associata all'anagrafica
+    risorse_anagrafica.id_anagrafica             | l'ID dell'anagrafica associata alla risorsa
  
     La vista risorse_anagrafica_view relativa alla tabella risorse_anagrafica presenta le seguenti colonne:
  
@@ -440,8 +457,8 @@
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
     risorse_categorie.id                    | l'ID che fa l'associazione fra la risorsa e la categoria
-    risorse_categorie.id_categoria          | l'ID della categoria
-    risorse_categorie.id_risorsa            | l'ID della risorsa
+    risorse_categorie.id_categoria          | l'ID della categoria associata alla risorsa
+    risorse_categorie.id_risorsa            | l'ID della risorsa associata alla categoria
     risorse_categorie.ordine                | 
     
     La vista risorse_categorie_view relativa alla tabella risorse_categorie presenta le seguenti colonne:
@@ -516,7 +533,7 @@
     colonna                             | descrizione
     ------------------------------------|---------------------------------------------------------------------------------------
     ruoli_immagini.id                   | l'ID del ruolo immagine
-    ruoli_immagini.nome                 | 
+    ruoli_immagini.nome                 | nome del ruolo immagine
     ruoli_immagini.se_contenuti         | 
     ruoli_immagini.se_anagrafica        | 
     ruoli_immagini.se_immobili          | 
@@ -564,7 +581,7 @@
     colonna                                       | descrizione
     ----------------------------------------------|---------------------------------------------------------------------------------------
     ruoli_progetti.id                             | l'ID del ruolo progetto
-    ruoli_progetti.id_genitore                    | 
+    ruoli_progetti.id_genitore                    | l'ID parente
     ruoli_progetti.nome                           | 
     ruoli_progetti.se_responsabile_qualita        | 
     ruoli_progetti.se_responsabile_acquisti       | 
