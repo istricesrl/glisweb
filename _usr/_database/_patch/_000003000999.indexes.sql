@@ -352,8 +352,112 @@ ALTER TABLE `audio`
 	ADD KEY `id_risorsa` (`id_risorsa`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
-	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`);
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
 	ADD KEY `indice` (`id`,`codice_embed`,`id_prodotto`,`id_prodotto`,`id_ruolo`,`id_evento`,`id_file`);
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000025
+
+-- campagne
+-- tipologia: tabella gestita
+ALTER TABLE `campagne`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_account_chiusura` (`id_account_chiusura`),
+	ADD KEY `indice` (`id`,`nome`,`id_account_chiusura`);
+ALTER TABLE `campagne` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000026
+
+-- caratteristiche_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `caratteristiche_articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
+ALTER TABLE `caratteristiche_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000027
+
+-- caratteristiche_immobili
+-- tipologia: tabella di supporto
+ALTER TABLE `caratteristiche_immobili`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id` (`id`,`nome`),
+	ADD KEY `indice` (`id`,`nome`);
+ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000028
+
+-- carrelli
+-- tipologia: tabella gestita
+ALTER TABLE `carrelli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `session` (`session`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_listino` (`id_listino`), 
+	ADD KEY `id_tipologia_consegna` (`id_tipologia_consegna`), 
+	ADD KEY `id_tipologia_assicurazione_spedizione` (`id_assicurazione_trasporto`), 
+	ADD KEY `id_tipologia_assicurazione_montaggio` (`id_assicurazione_montaggio`), 
+	ADD KEY `id_garanzia` (`id_garanzia`), 
+	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`), 
+	ADD KEY `intestazione_id_provincia` (`intestazione_id_provincia`), 
+	ADD KEY `intestazione_id_anagrafica` (`intestazione_id_anagrafica`),
+	ADD KEY `spedizione_id_provincia` (`spedizione_id_provincia`), 
+	ADD KEY `spedizione_id_stato` (`spedizione_id_stato`), 
+	ADD KEY `intestazione_id_stato` (`intestazione_id_stato`), 
+	ADD KEY `id_zona` (`id_zona`), 
+	ADD KEY `id_tipologia_documento_carrello` (`id_tipologia_documento_carrello`),
+	ADD KEY `id_modalita_spedizione` (`id_modalita_spedizione`),
+	ADD KEY `indice` (`id`,`session`,`id_listino`,`id_tipologia_consegna`,`id_garanzia`,`id_modalita_pagamento`,`id_zona`,`id_tipologia_documento_carrello`);
+ALTER TABLE `carrelli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+
+--| 000003000029
+
+-- carrelli_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `carrelli_articoli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `articolo_unico` (`id_carrello`,`id_articolo`), 
+	ADD KEY `id_carrello` (`id_carrello`), 
+	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_tipologia_spedizione` (`id_modalita_spedizione`), 
+	ADD KEY `id_iva` (`id_iva`), 
+	ADD KEY `id_ingombro` (`id_ingombro`), 
+	ADD KEY `id_categoria` (`id_categoria`),
+	ADD KEY `indice` (`id`,`id_carrello`,`id_articolo`,`id_categoria`);
+ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000030
+
+-- categorie_anagrafica
+-- tipologia: tabella assistita
+ALTER TABLE `categorie_anagrafica`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `se_rassegna_stampa` (`se_rassegna_stampa`), 
+	ADD KEY `se_agente` (`se_agente`), 
+	ADD KEY `se_mandante` (`se_mandante`), 
+	ADD KEY `se_fornitore` (`se_fornitore`), 
+	ADD KEY `se_collaboratore` (`se_collaboratore`), 
+	ADD KEY `se_interno` (`se_interno`), 
+	ADD KEY `se_esterno` (`se_esterno`), 
+	ADD KEY `se_concorrente` (`se_concorrente`), 
+	ADD KEY `se_interinale` (`se_interinale`), 
+	ADD KEY `se_agenzia_interinale` (`se_agenzia_interinale`), 
+	ADD KEY `se_dipendente` (`se_dipendente`),
+	ADD KEY `se_referente` (`se_referente`),
+	ADD KEY `se_sostituto` (`se_sostituto`),
+	ADD KEY `se_squadra` (`se_squadra`),
+	ADD KEY `indice` (`id`,`nome`,`se_rassegna_stampa`,`se_agente`,`se_mandante`,`se_fornitore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_concorrente`,`se_interinale`,`se_agenzia_interinale`,`se_dipendente`,`se_referente`,`se_sostituto`,`se_squadra`);
+ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 
 --| FINE FILE
