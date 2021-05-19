@@ -25,6 +25,7 @@ Options -Indexes
 
     # directory ad accesso vietato
     RewriteRule ^tmp/*^ - [F,L,NC]
+    RewriteRule ^usr/database/* - [F,L,NC]
     RewriteRule ^usr/test/* - [F,L,NC]
     RewriteRule ^var/log/* - [F,L,NC]
     RewriteRule ^var/session/* - [F,L,NC]
@@ -111,6 +112,9 @@ Options -Indexes
     # gestione delle stampe standard moduli
     RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_print/_$2.php -f
     RewriteRule ^print/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_print/_$2.php [L,QSA]
+
+    # gestione dei job standalone
+    RewriteRule ^job/([0-9]+)$ _src/_api/_job.php?__id__=$1 [L,QSA]
 
     # gestione dei report speciali
     RewriteRule ^speed$ _src/_api/_report/_framework.speed.php [L]
