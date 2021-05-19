@@ -78,7 +78,7 @@
 
         $pause = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT count(*) FROM ' . $t . ' WHERE data_inizio <= ? AND data_fine >= ? AND ' . $fn . '= ?',
+            'SELECT count(*) FROM ' . $t . ' WHERE data_inizio <= ? AND ( data_fine >= ? OR data_fine IS NULL ) AND ' . $fn . '= ?',
             array(
                 array( 's' => $d ),
                 array( 's' => $d ),

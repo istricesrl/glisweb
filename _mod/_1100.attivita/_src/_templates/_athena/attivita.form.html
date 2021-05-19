@@ -47,13 +47,17 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 			<div class="form-group form-row">
-				<div class="col-6 col-md-2">
+				<div class="col-12 col-md-2">
 					<span class="label-top">tipologia</span>
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
 				</div>
-				<div class="col-6 col-md-2">
+				<div class="col-12 col-md-2">
 					<span class="label-top">tipologia INPS</span>
 					{{ frm.select( table, '', '', 'id_tipologia_inps', '', etc.select.id_tipologia_inps, request ) }}
+				</div>
+				<div class="col-12 col-md-2">
+					<span class="label-top">conto ore</span>
+					{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, etc.id_mastro_provenienza ) }}
 				</div>
 				<div class="col">
 					<span class="label-top">descrizione</span>
@@ -139,7 +143,7 @@
 			</fieldset>
 
 			{# SUBFORM CATEGORIE #}
-	    	{{ sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
+	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
 	
         
 	    {# BOTTONI E COMANDI DEL MODULO #}

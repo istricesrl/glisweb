@@ -144,6 +144,14 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM indirizzi_view' );
 
+    // tendina mastri
+	$ct['etc']['select']['mastri'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM mastri_view'
+    );
+
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
 	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
@@ -158,6 +166,10 @@
 
         if( ! empty($todo['id_indirizzo']) ){
 	        $_REQUEST['__preset__']['attivita']['id_indirizzo'] = $todo['id_indirizzo'];
+        }
+
+        if( ! empty($todo['id_mastro_attivita_default']) ){
+	        $_REQUEST['__preset__']['attivita']['id_mastro_provenienza'] = $todo['id_mastro_attivita_default'];
         }
 	}
 

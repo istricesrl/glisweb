@@ -49,6 +49,7 @@
 
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+
     /*    $ct['etc']['data'] = mysqlSelectValue( 
             $cf['mysql']['connection'], 
             "SELECT from_unixtime(timestamp_pianificazione, '%Y-%m-%d') FROM todo WHERE id = ?",
@@ -56,14 +57,15 @@
         );
     */
 
-        // cerco la pianificazione figlia di questa todo, se esiste
-        $pianificazione = mysqlSelectRow( 
-            $cf['mysql']['connection'], 
-            'SELECT * FROM pianificazioni WHERE id_todo = ?',
-            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
-        );
-
-
+    // cerco la todo genitore
+        if( !empty($_REQUEST[ $ct['form']['table'] ]['id_pianificazione'] ) ){
+            $ct['etc']['id_genitore'] = mysqlSelectValue( 
+                $cf['mysql']['connection'], 
+                'SELECT id_todo FROM pianificazioni WHERE id = ?',
+                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_pianificazione'] ) )
+            );
+        }
+        
         // array per il workspace della pianificazione
         $wks = array(
             'metadati' => array(
@@ -77,12 +79,12 @@
                     'data_programmazione' => '§data§',
                     'id_pianificazione' => '§id_pianificazione§'
                 ),
-                'todo_categorie' => array(),
                 'attivita' => array(
                     'data_attivita' => '§data§'
-                ),
-                'attivita_categorie' => array()
-            )
+                )
+                /*
+                'todo_categorie' => array(),
+                'attivita_categorie' => array()*/            )
         );
 
         $ct['etc']['wks'] = json_encode( $wks, JSON_UNESCAPED_UNICODE );
@@ -111,6 +113,15 @@
 	    'fa' => 'fa-calendar',
 	    'title' => 'modifica pianificazione',
 	    'text' => 'modifica la pianificazione'
+	);
+
+    // modal per accedere all'oggetto genitore
+    $ct['page']['contents']['metro']['pianificazione'][] = array(
+	    'modal' => array('id' => 'genitore', 'include' => 'inc/todo.form.pianificazioni.modal.genitore.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-pencil',
+	    'title' => 'modifica genitore',
+	    'text' => 'accede all\'oggetto genitore'
 	);
 
     // modal per fermare la pianificazione originaria

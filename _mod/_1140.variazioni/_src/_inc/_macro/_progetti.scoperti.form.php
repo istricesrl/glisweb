@@ -24,7 +24,9 @@
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
         // richiamo la funzione che ritorna l'array degli operatori coi punteggi
-        $ct['etc']['operatori'] = elencoSostitutiProgetto( $_REQUEST[ $ct['form']['table'] ]['id'] );
+    #    $ct['etc']['operatori'] = elencoSostitutiProgetto( $_REQUEST[ $ct['form']['table'] ]['id'] );
+
+        $ct['etc']['operatori'] = sostitutiProgetto( $_REQUEST[ $ct['form']['table'] ]['id'] );
 
         // tendina operatori per settaggio manuale
 	    $ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
@@ -32,7 +34,6 @@
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
             'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1' );
-            #    'SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM attivita_view WHERE id_anagrafica IS NOT NULL ORDER BY anagrafica' );
     }
 
      // modal per la conferma di invio richiesta sostituzione
@@ -43,6 +44,11 @@
     // modal per la conferma di sostituzione diretta
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'sostituisci', 'include' => 'inc/progetti.scoperti.form.modal.sostituisci.html' )
+    );
+
+    // modal per la conferma di avvio calcolo sostituti
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'calcola', 'include' => 'inc/progetti.scoperti.form.modal.calcola.html' )
     );
 
 	// macro di default

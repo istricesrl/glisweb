@@ -9,7 +9,7 @@
 		$('#btnrichiedi').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 		idoperatore = $('#modaloperatoreid').text();
 
-		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.progetto.request.php?id_progetto={{ request[table].id }}&id_anagrafica='+idoperatore;
+		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.progetto.request.php?id_progetto={{ request[table].id }}&id_anagrafica='+idoperatore+'&data_scopertura={{ etc.data_scopertura }}';
 
 		getws( call,'', function() {
 			window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');

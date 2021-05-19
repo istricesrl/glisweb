@@ -34,6 +34,19 @@
 								'priority'	=> '080' ) )
 	);
 
+	// progetti tools
+	$p['progetti.produzione.tools'] = array(
+	    'sitemap'		=> false,
+	    'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni' ),
+	    'h1'			=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'produzione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.tools.php' ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.view']['etc']['tabs'] ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
 	// gestione progetti
 	$p['progetti.produzione.form'] = array(
 	    'sitemap'		=> false,
@@ -45,9 +58,11 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form', 
 														'progetti.produzione.form.todo',
+														'progetti.produzione.form.attivita',
 														'progetti.produzione.form.pause',
 														'progetti.produzione.form.chiusura',
-														'progetti.produzione.form.pianificazioni' ) )
+														'progetti.produzione.form.pianificazioni',
+														'progetti.produzione.form.tools' ) )
 	);
 
 	// gestione todo progetti
@@ -75,7 +90,7 @@
 	);
 
 	// gestione attività progetti
-/*	$p['progetti.produzione.form.attivita'] = array(
+	$p['progetti.produzione.form.attivita'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'attivita' ),
 	    'h1'			=> array( $l		=> 'attività' ),
@@ -83,9 +98,9 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.attivita.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.attivita.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form' ) )
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 	);
-*/
+
 
 // gestione progetti pianificazioni
 $p['progetti.produzione.form.pianificazioni'] = array(
@@ -112,5 +127,43 @@ $p['progetti.produzione.form.chiusura'] = array(
 	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 );
 
+// gestione progetti tools
+$p['progetti.produzione.form.tools'] = array(
+	'sitemap'		=> false,
+	'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	'title'			=> array( $l		=> 'azioni' ),
+	'h1'			=> array( $l		=> 'azioni' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.form.tools.php' ),
+	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+);
+
+// vista categorie progetti
+$p['categorie.progetti.view'] = array(
+	'sitemap'		=> false,
+	'title'		=> array( $l		=> 'categorie' ),
+	'h1'		=> array( $l		=> 'categorie' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	'macro'		=> array(  $m . '_src/_inc/_macro/_categorie.progetti.view.php' ),
+	'etc'		=> array( 'tabs'	=> array( 'categorie.progetti.view' ) ),
+	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
+								'priority'	=> '115' ) )
+);
+
+// gestione categorie progetti
+$p['categorie.progetti.form'] = array(
+	'sitemap'		=> false,
+	'title'			=> array( $l		=> 'gestione' ),
+	'h1'			=> array( $l		=> 'gestione' ),
+	'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.html' ),
+	'macro'			=> array( $m.'_src/_inc/_macro/_categorie.progetti.form.php' ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	'etc'			=> array( 'tabs'	=> array(	'categorie.progetti.form' ) )
+);
 	
 

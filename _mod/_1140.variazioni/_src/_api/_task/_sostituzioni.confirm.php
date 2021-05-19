@@ -2,7 +2,10 @@
 
     /**
      * riceve in ingresso l'id della sostituzione da confermare
-     * estrae l'id dell'attività e dell'anagrafica collegate, aggiorna l'attività settando l'id_anagrafica e setta la data di accettazione della sostituzione
+     * - estrae l'id dell'attività e dell'anagrafica collegate
+     * - aggiorna l'attività settando l'id_anagrafica
+     * - setta la data di accettazione della sostituzione
+     * - rimuove dalla tabella "__report_sostituzioni_attivita__" le righe corrispondenti a questa anagrafica, così il task _sostituzioni.calculate.php la rianalizza
      * 
      *
      *
@@ -65,6 +68,15 @@
                 );
 
                 $status['info'][] = 'sostituzione ' . $_REQUEST['id'] . ' confermata con data ' . date('Y-m-d');
+
+                // rimuovo le righe sulla __report_sostituzioni_attivita__ legate a questa anagrafica
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'DELETE FROM __report_sostituzioni_attivita__ WHERE id_anagrafica = ?',
+                    array(
+                        array( 's' => $s['id_anagrafica'] )
+                    )
+                );
             }
         }
        

@@ -6,7 +6,7 @@
 
 <script>
     function approva( ) {
-	 	var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_variazioni.approve.php?id={{ request[table].id }}';
+	 	var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.approve.php?id={{ request[table].id }}';
 
 		getws( call,'', function() {
 			window.open('{{ pages['variazioni.form'].path[ ietf ] }}?variazioni_attivita[id]={{ request[table].id }}','_self');

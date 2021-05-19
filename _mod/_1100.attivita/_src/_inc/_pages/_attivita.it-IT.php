@@ -128,8 +128,8 @@
 	);
 
 
-	// vista categorie attività
-	$p['categorie.attivita.view'] = array(
+	// vista categorie attività - rimosso provvisoriamente
+/*	$p['categorie.attivita.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'categorie' ),
 		'h1'		=> array( $l		=> 'categorie' ),
@@ -142,7 +142,7 @@
 									'priority'	=> '115' ) )
 	);
 
-	// gestione categorie attività
+	// gestione categorie attività - rimosso provvisoriamente
 	$p['categorie.attivita.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
@@ -152,5 +152,31 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_categorie.attivita.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'categorie.attivita.form' ) )
+	);
+*/
+
+	$p['tipologie.attivita.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'attivita.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.attivita.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.attivita.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie' ),
+									'priority'	=> '115' ) )
+	);
+
+	// gestione categorie attività
+	$p['tipologie.attivita.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'tipologie.attivita.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.attivita.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_tipologie.attivita.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'tipologie.attivita.form' ) )
 	);
 	

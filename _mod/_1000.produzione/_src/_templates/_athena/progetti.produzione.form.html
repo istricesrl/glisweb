@@ -53,14 +53,18 @@
                 </div>
                 <div class="col-12 col-md-2">
                     <span class="label-top">tipologia</span>
-                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request ) }}
+                    {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request ) }}
+                </div>
+				<div class="col-12 col-md-2">
+                    <span class="label-top">conto ore</span>
+                    {{ frm.select( table, '', '', 'id_mastro_attivita_default', '', etc.select.mastri, request ) }}
                 </div>
 
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
-				<div class="col-12 col-md">
+				<div class="col-12 col-md-2">
 					<span class="label-top">ranking</span>
 					{{ frm.input( table, '', '', 'ranking', '', '', request ) }}
                 </div>
@@ -103,6 +107,9 @@
 				</div>
             </div>
 		</fieldset>
+
+		{# SUBFORM CATEGORIE #}
+		{{ sub.categorie( table, 'progetti_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
 
         {# SUBFORM RUOLI #}
         {{ sub.ruoli( table, 'progetti_anagrafica', 'ruoli', site, page, pages, ietf, etc, request, session ) }}
