@@ -5,6 +5,7 @@
      * verifica se ci sono attività in quel periodo assegnate all'utente e:
      * - setta id_anagrafica NULL
      * - crea una riga nella tabella di report __report_attivita_assenze__
+     * - setta il timestamp_controllo_attivita
      *
      *
      * @todo usare le funzioni di ACL per verificare se l'azione è autorizzata
@@ -35,7 +36,7 @@
             'SELECT pv.*, v.id_anagrafica, v.id_tipologia_inps FROM periodi_variazioni_attivita as pv '
             .'LEFT JOIN variazioni_attivita AS v ON pv.id_variazione = v.id '
             .'WHERE v.data_approvazione IS NOT NULL '
-            .'ORDER BY pv.timestamp_elaborazione LIMIT 1'
+            .'ORDER BY pv.timestamp_controllo_attivita LIMIT 1'
         );
     }
 
@@ -113,15 +114,15 @@
         $status['info'][] = 'aggiornate ' . $u . ' righe dalla tabella attivita per il periodo ' . $p['data_inizio'] . ' ' . $p['ora_inizio'] . ' - ' . $p['data_fine'] . ' ' . $p['ora_fine'];          
 
         // setto la riga come elaborata
-    /*    $u = mysqlQuery(
+        $u = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE periodi_variazioni_attivita SET timestamp_elaborazione = ? WHERE id = ?',
+            'UPDATE periodi_variazioni_attivita SET timestamp_controllo_attivita = ? WHERE id = ?',
             array(
                 array( 's' => time() ),
                 array( 's' => $p['id'] )
             )
         );
-*/
+
         $status['info'][] = 'settaggio riga come elaborata ' . $u;
 		
     }
