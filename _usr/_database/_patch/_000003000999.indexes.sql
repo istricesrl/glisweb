@@ -2,6 +2,9 @@
 -- INDICI
 -- questo file contiene le query per la creazione degli indici delle tabelle
 --
+-- NOTE
+--
+--
 
 --| 000003000001
 
