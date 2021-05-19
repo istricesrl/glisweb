@@ -21,6 +21,7 @@
             'INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
             'INNER JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = attivita.id_tipologia_inps '.
             'WHERE attivita.data_attivita BETWEEN ? AND ? '.
+            'AND anagrafica.codice IS NOT NULL '.
             'ORDER BY attivita.id_anagrafica ASC, attivita.data_attivita ASC, tipologie_attivita.id ASC ',
             array(
                     array( 's' => $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ),
