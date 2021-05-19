@@ -47,73 +47,14 @@
         );
 
         foreach( $periodi as $p ){
-    // se l'ora inizio non è settata parto dalla mezzanotte, idem per l'ora fine
-            if( empty( $p['ora_inizio'] ) ){
-                $p['ora_inizio'] = '00:00:01';
-            }
-            if( empty( $p['ora_fine'] ) ){
-                $p['ora_fine'] = '23:59:59';
-            }
+
+            // chiamo il task _variazioni.attivita.update che setta id_anagrafica NULL per le attività coinvolte
+            $url = $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.update.php?id=' . $p['id'];
+
+            $status['update_attivita'][$p['id'] ] = restcall(
+                $url
+            );
             
-            $data_ora_inizio = $p['data_inizio'] . " " . $p['ora_inizio'];
-            $data_ora_fine = $p['data_fine'] . " " . $p['ora_fine'];
-
-            // estraggo gli id delle attivita e dei progetti che rimangono scoperti
-            $scoperture = mysqlQuery(
-                $cf['mysql']['connection'],
-                "SELECT id, id_progetto, data_programmazione FROM attivita_view "
-                ."WHERE id_anagrafica = ? "
-                ."AND ( ( TIMESTAMP( data_programmazione, ora_inizio_programmazione ) between ? and ? ) "
-                ."OR ( TIMESTAMP( data_programmazione, ora_fine_programmazione ) between ? and ? ) )",
-                array(
-                    array( 's' =>  $v['id_anagrafica'] ),
-                    array( 's' =>  $data_ora_inizio ),
-                    array( 's' =>  $data_ora_fine ),
-                    array( 's' =>  $data_ora_inizio ),
-                    array( 's' =>  $data_ora_fine )
-                )
-            );
-
-
-            if( !empty( $scoperture) ){
-                
-                foreach( $scoperture as $s ){
-                    
-                    // creo una riga nella tabella __report_attivita_assenze__
-                    $raa = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        "INSERT IGNORE INTO __report_attivita_assenze__ ( id_attivita, id_anagrafica, data_assenza ) VALUES ( ?, ?, ? )",
-                        array(
-                            array( 's' => $s['id'] ),
-                            array( 's' => $v['id_anagrafica'] ),
-                            array( 's' => $s['data_programmazione'] )
-                        )
-                    );
-
-                    $status['info'][] = 'inserite ' . $raa . ' righe dalla tabella __report_attivita_assenze__';
-
-                }
-            }
-           
-            // aggiorno le attività coinvolte settando id_anagrafica NULL
-            $u = mysqlQuery( 
-                $cf['mysql']['connection'],
-                "UPDATE attivita LEFT JOIN todo ON todo.id = attivita.id_todo SET attivita.id_anagrafica = NULL "
-                ."WHERE attivita.id_anagrafica = ? "
-                ."AND ( ( coalesce( TIMESTAMP( attivita.data_programmazione, attivita.ora_inizio_programmazione ), TIMESTAMP( todo.data_programmazione, todo.ora_inizio_programmazione ) ) between ? and ? ) "
-                ."OR ( coalesce( TIMESTAMP( attivita.data_programmazione, attivita.ora_fine_programmazione ), TIMESTAMP( todo.data_programmazione, todo.ora_fine_programmazione ) ) between ? and ? ) )"
-            ,
-                array(
-                    array( 's' =>  $v['id_anagrafica'] ),
-                    array( 's' =>  $data_ora_inizio ),
-                    array( 's' =>  $data_ora_fine ),
-                    array( 's' =>  $data_ora_inizio ),
-                    array( 's' =>  $data_ora_fine )
-                )
-            );
-    
-            // status
-            $status['info'][] = 'aggiornate ' . $u . ' righe dalla tabella attivita per il periodo ' . $p['data_inizio'] . ' ' . $p['ora_inizio'] . ' - ' . $p['data_fine'] . ' ' . $p['ora_fine'];          
         }
 
         // setto la data di approvazione della variazione alla data corrente
