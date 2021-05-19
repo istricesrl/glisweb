@@ -1049,7 +1049,7 @@
     
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
-    
+ 
     todo
     ----
     Questa tabbella *gestita*
@@ -1088,6 +1088,31 @@
     todo.timestamp_inserimento                  |
     todo.id_account_aggiornamento               |
     todo.timestamp_aggiornamento                | 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+ 
+    La vista *todo_view* relativa alla tabella *todo* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|--------------------------------------------------------------------------
+    
+    todo_articoli
+    -------------
+    Questa tabbella *gestita*
+    
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    todo_articoli.id                                     |
+    todo_articoli.id_todo                                |
+    todo_articoli.id_articolo                            | 
+    todo_articoli.quantita                               | 
+    todo_articoli.id_account_inserimento                 |
+    todo_articoli.timestamp_inserimento                  |
+    todo_articoli.id_account_aggiornamento               |
+    todo_articoli.timestamp_aggiornamento                | 
 
     La tabella ha le seguenti chiavi esterne:
 
