@@ -1,7 +1,10 @@
 <?php
 
     /**
-     * task che gira, preleva le righe di periodi_variazioni_attivita per le variazioni approvate
+     * task che può:
+     * - girare autonomamente > preleva le righe di periodi_variazioni_attivita per le variazioni approvate
+     * - essere richiamato dal task _variazioni.attivita.approve.php > riceve in ingresso un id variazione
+     * 
      * verifica se ci sono attività in quel periodo assegnate all'utente e:
      * - setta id_anagrafica NULL
      * - crea una riga nella tabella di report __report_attivita_assenze__
@@ -56,7 +59,7 @@
         $data_ora_inizio = $p['data_inizio'] . " " . $p['ora_inizio'];
         $data_ora_fine = $p['data_fine'] . " " . $p['ora_fine'];
 
-        // estraggo gli id delle attivita e dei progetti che rimangono scoperti
+        // estraggo gli id delle attivita che rimangono scoperte
         $scoperture = mysqlQuery(
             $cf['mysql']['connection'],
             "SELECT id, id_progetto, data_programmazione FROM attivita_view "
@@ -72,10 +75,13 @@
             )
         );
 
+        $status['info']['righe_aggiornate'] = 0;
 
         if( !empty( $scoperture) ){
             
             foreach( $scoperture as $s ){
+
+                $status['info']['attivita_da_scoprire'][] = $s['id'];
                 
                 // creo una riga nella tabella __report_attivita_assenze__
                 $raa = mysqlQuery(
@@ -89,12 +95,20 @@
                 );
 
                 $status['info'][] = 'inserite ' . $raa . ' righe dalla tabella __report_attivita_assenze__';
+                
+                // aggiorno l'attività settando id_anagrafica NULL
+                $u = mysqlQuery( 
+                    $cf['mysql']['connection'],
+                    'UPDATE attivita SET id_anagrafica = NULL WHERE id = ?',
+                    array( array( 's' => $s['id']) )
+                );
 
+                $status['info']['righe_aggiornate'] += $u;
             }
         }
         
         // aggiorno le attività coinvolte settando id_anagrafica NULL
-        $u = mysqlQuery( 
+    /*    $u = mysqlQuery( 
             $cf['mysql']['connection'],
             "UPDATE attivita LEFT JOIN todo ON todo.id = attivita.id_todo SET attivita.id_anagrafica = NULL "
             ."WHERE attivita.id_anagrafica = ? "
@@ -109,9 +123,9 @@
                 array( 's' =>  $data_ora_fine )
             )
         );
-
+*/
         // status
-        $status['info'][] = 'aggiornate ' . $u . ' righe dalla tabella attivita per il periodo ' . $p['data_inizio'] . ' ' . $p['ora_inizio'] . ' - ' . $p['data_fine'] . ' ' . $p['ora_fine'];          
+    #    $status['info'][] = 'aggiornate ' . $u . ' righe dalla tabella attivita per il periodo ' . $p['data_inizio'] . ' ' . $p['ora_inizio'] . ' - ' . $p['data_fine'] . ' ' . $p['ora_fine'];          
 
         // setto la riga come elaborata
         $u = mysqlQuery(
