@@ -565,7 +565,8 @@ CREATE TABLE IF NOT EXISTS `contatti` (
 -- contenuti
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `contenuti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_lingua` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
@@ -579,7 +580,6 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `id_pagina` int(11) DEFAULT NULL,
   `id_popup` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
-  `id_incarico` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_zona` int(11) DEFAULT NULL,
   `id_rassegna_stampa` int(11) DEFAULT NULL,
@@ -590,9 +590,6 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `id_data` int(11) DEFAULT NULL,
   `id_template_mail` int(11) DEFAULT NULL,
   `id_mailing` int(11) DEFAULT NULL,
-  `id_notizia` int(11) DEFAULT NULL,
-  `id_categoria_notizie` int(11) DEFAULT NULL,
-  `id_lingua` int(11) NOT NULL,
   `id_colore` int(11) DEFAULT NULL,
   `path_custom` char(255) DEFAULT NULL,
   `url_custom` char(255) DEFAULT NULL,
@@ -632,7 +629,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
 -- continenti
 -- tipologia: tabella di supporto
 CREATE TABLE IF NOT EXISTS `continenti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `codice` char(2) COLLATE utf8_general_ci DEFAULT NULL,
   `nome` char(32) COLLATE utf8_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -642,7 +639,7 @@ CREATE TABLE IF NOT EXISTS `continenti` (
 -- contratti`
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `contratti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `id_agenzia` int(11) NOT NULL,
@@ -668,11 +665,11 @@ CREATE TABLE IF NOT EXISTS `contratti` (
 -- costi_contratti`
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `costi_contratti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_contratto` int(11) NOT NULL,
   `id_tipologia` INT NOT NULL,
-  `note` text,
-  `costo_orario` decimal(16,5) DEFAULT NULL
+  `costo_orario` decimal(16,5) DEFAULT NULL,
+  `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000049
@@ -700,7 +697,7 @@ CREATE TABLE IF NOT EXISTS `coupon` (
 -- coupon_categorie_prodotti
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `coupon_categorie_prodotti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_coupon` char(32) NOT NULL,
   `id_categoria_prodotti` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -710,7 +707,7 @@ CREATE TABLE IF NOT EXISTS `coupon_categorie_prodotti` (
 -- coupon_listini
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `coupon_listini` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_coupon` char(32) NOT NULL,
   `id_listino` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

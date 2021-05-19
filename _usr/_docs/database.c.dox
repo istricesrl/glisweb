@@ -398,6 +398,7 @@
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
     contenuti.id                           | l'ID del contenuto
+    contenuti.id_lingua                    | 
     contenuti.id_anagrafica                | l'ID dell'anagrafica cui si riferisce la riga (NULL se non presente)
     contenuti.id_prodotto                  | l'ID del prodotto cui si riferisce la riga (NULL se non presente)
     contenuti.id_articolo                  | l'ID dell'articolo cui si riferisce la riga (NULL se non presente)
@@ -411,52 +412,48 @@
     contenuti.id_pagina                    | l'ID della pagina cui si riferisce la riga (NULL se non presente)
     contenuti.id_popup                     | l'ID del popup cui si riferisce la riga (NULL se non presente)
     contenuti.id_immobile                  | l'ID dell'immobile cui si riferisce la riga (NULL se non presente)
-    contenuti.id_incarico                  | 
-    contenuti.id_indirizzo                 | 
-    contenuti.id_zona                      |  
-    contenuti.id_rassegna_stamp            | 
-    contenuti.id_evento                    |  
-    contenuti.id_categoria_eventi          | 
-    contenuti.id_video                     | 
-    contenuti.id_audio                        | 
-    contenuti.id_data                         |
-    contenuti.id_template_mail             | 
-    contenuti.id_mailing                   | 
-    contenuti.id_notizia                   | 
-    contenuti.id_categoria_notizie         |  
-    contenuti.id_lingua                    | 
-    contenuti.id_colore                    |  
-    contenuti.path_custom                  | 
-    contenuti.url_custom                     | 
-    contenuti.rewrite_custom                | 
-    contenuti.title                         |
-    contenuti.keywords                     | 
-    contenuti.description                  | 
-    contenuti.alt                          | 
-    contenuti.og_title                     |  
-    contenuti.og_type                      | 
-    contenuti.og_image                     |  
-    contenuti.og_audio                     |
-    contenuti.og_video                     | 
-    contenuti.og_determiner                | 
-    contenuti.og_description                | 
-    contenuti.cappello                     |
-    contenuti.h1                           | 
-    contenuti.h2                           | 
-    contenuti.h3                           | 
-    contenuti.label_menu                   |  
-    contenuti.abstract                     | 
-    contenuti.testo                        |  
-    contenuti.applicazioni                 | 
-    contenuti.specifiche                   | 
-    contenuti.mittente_nome                   | 
-    contenuti.mittente_mail                |
-    contenuti.destinatario_nome            | 
-    contenuti.destinatario_mail            | 
-    contenuti.destinatario_cc_nome         | 
-    contenuti.destinatario_cc_mail         |  
-    contenuti.destinatario_ccn_nome        | 
-    contenuti.destinatario_ccn_mail        |  
+    contenuti.id_indirizzo                 | l'ID dell'indirizzo cui si riferisce la riga (NULL se non presente)
+    contenuti.id_zona                      | l'ID della zona cui si riferisce la riga (NULL se non presente)
+    contenuti.id_rassegna_stampa           | -
+    contenuti.id_evento                    | l'ID dell'evento cui si riferisce la riga (NULL se non presente)
+    contenuti.id_categoria_eventi          | l'ID della categoria di eventi cui si riferisce la riga (NULL se non presente)
+    contenuti.id_video                     | l'ID del video cui si riferisce la riga (NULL se non presente)
+    contenuti.id_audio                     | l'ID dell'audio cui si riferisce la riga (NULL se non presente)
+    contenuti.id_data                      | l'ID della data cui si riferisce la riga (NULL se non presente)
+    contenuti.id_template_mail             | l'ID del template delle mail cui si riferisce la riga (NULL se non presente)
+    contenuti.id_mailing                   | l'ID della campagna di mailing cui si riferisce la riga (NULL se non presente)
+    contenuti.id_colore                    | l'ID del colore cui si riferisce la riga (NULL se non presente)
+    contenuti.path_custom                  | -
+    contenuti.url_custom                   | -
+    contenuti.rewrite_custom               | -
+    contenuti.title                        | -
+    contenuti.keywords                     | -
+    contenuti.description                  | -
+    contenuti.alt                          | -
+    contenuti.og_title                     | -
+    contenuti.og_type                      | -
+    contenuti.og_image                     | - 
+    contenuti.og_audio                     | -
+    contenuti.og_video                     | -
+    contenuti.og_determiner                | -
+    contenuti.og_description               | -
+    contenuti.cappello                     | -
+    contenuti.h1                           | -
+    contenuti.h2                           | -
+    contenuti.h3                           | -
+    contenuti.label_menu                   | -
+    contenuti.abstract                     | -
+    contenuti.testo                        | -
+    contenuti.applicazioni                 | -
+    contenuti.specifiche                   | -
+    contenuti.mittente_nome                | -
+    contenuti.mittente_mail                | -
+    contenuti.destinatario_nome            | -
+    contenuti.destinatario_mail            | -
+    contenuti.destinatario_cc_nome         | -
+    contenuti.destinatario_cc_mail         | -
+    contenuti.destinatario_ccn_nome        | -
+    contenuti.destinatario_ccn_mail        | -
    
     La tabella ha le seguenti chiavi esterne:
 
@@ -470,15 +467,24 @@
     
     continenti
     ----------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* contiene l'entità principale *continenti* che è l'elemento radice della struttura dati utilizzata dal framework
+    per gestire la localizzazione geografica degli oggetti. La struttura, in ordine gerarchico, è costituita da:
+
+    - continenti
+    - stati
+    - regioni
+    - provincie
+    - comuni
+    - indirizzi
+    - immobili
 
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
-    continenti.id                            | l'ID del continente
-    continenti.codice                     | 
-    continenti.nome                        | nome del continente, in italiano
+    continenti.id                         | l'ID del continente
+    continenti.codice                     | -
+    continenti.nome                       | nome del continente
     
-    La tabella ha le seguenti chiavi esterne:
+    Si noti che la tabella riporta i nomi dei continenti ad uso interno in italiano. La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
@@ -490,29 +496,25 @@
     
     contratti
     ----------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene i contratti di lavoro.
 
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
-    contratti.id                            | l'ID del contratto
+    contratti.id                          | l'ID del contratto
     contratti.id_tipologia                | l'ID della tipologia del contratto
-    contratti.id_anagrafica               | l'ID dell'anagrafica
-    contratti.id_agenzia                    | l'ID dell'agenzia
-    contratti.data_inizio                 | 
-    contratti.data_fine                   | 
-    contratti.data_inizio_rapporto        | 
-    contratti.data_fine_rapporto          | 
-    contratti.livello                     | 
-    contratti.id_tipologia_qualifica      | 
-    contratti.id_tipologia_durata         | 
-    contratti.id_tipologia_orario         | 
-    contratti.ore_settimanali             | 
-    contratti.note                        | 
-    contratti.percentuale_part_time       | 
-    contratti.id_account_inserimento      | l'ID dell'account inserimento
-    contratti.timestamp_inserimento       | 
-    contratti.id_account_aggiornamento    | l'ID dell'account aggiornamento 
-    contratti.timestamp_aggiornamento     |
+    contratti.id_anagrafica               | l'ID dell'anagrafica del dipendente
+    contratti.id_agenzia                  | l'ID dell'agenzia interinale cui fa riferimento il contratto
+    contratti.data_inizio                 | -
+    contratti.data_fine                   | -
+    contratti.data_inizio_rapporto        | -
+    contratti.data_fine_rapporto          | -
+    contratti.livello                     | -
+    contratti.id_tipologia_qualifica      | -
+    contratti.id_tipologia_durata         | -
+    contratti.id_tipologia_orario         | -
+    contratti.ore_settimanali             | -
+    contratti.note                        | -
+    contratti.percentuale_part_time       | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -523,19 +525,18 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-  
-      
+        
     costi_contratti
     ---------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* descrive i costi collegati all'entità principale *contratti*.
 
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
-    costi_contratti.id                    | l'ID dell'associazione fra l'ID contratto e l'ID tipologia
+    costi_contratti.id                    | l'ID del costo collegato al contratto
     costi_contratti.id_contratto          | l'ID del contratto
     costi_contratti.id_tipologia          | l'ID della tipologia
-    costi_contratti.note                    | 
-    costi_contratti.costo_orario          | 
+    costi_contratti.costo_orario          | -
+    costi_contratti.note                  | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -549,23 +550,20 @@
     
     coupon
     ------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene i coupon promozionali che possono essere associati ad alcune tipologie di documenti amministrativi
+    descritti dalla tabella *documenti*.
 
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
-    coupon.id                                | l'ID del coupon
-    coupon.nome                           | 
-    coupon.note                           | 
-    coupon.timestamp_inizio               | 
-    coupon.timestamp_fine                 | 
-    coupon.sconto_percentuale             | 
-    coupon.sconto_fisso                   | 
-    coupon.se_multiuso                    | 
-    coupon.se_globale                        | 
-    coupon.id_account_inserimento         | l'ID dell'account inserimento
-    coupon.timestamp_inserimento          | 
-    coupon.id_account_aggiornamento       | l'ID dell'account aggiornamento
-    coupon.timestamp_aggiornamento        | 
+    coupon.id                             | l'ID del coupon
+    coupon.nome                           | -
+    coupon.note                           | -
+    coupon.timestamp_inizio               | la timestamp di inizio della validità del coupon
+    coupon.timestamp_fine                 | la timestamp di fine della validità del coupon
+    coupon.sconto_percentuale             | -
+    coupon.sconto_fisso                   | -
+    coupon.se_multiuso                    | -
+    coupon.se_globale                     | -
         
     La tabella ha le seguenti chiavi esterne:
 
@@ -579,14 +577,15 @@
 
     coupon_categorie_prodotti
     -------------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *categorie_prodotti* per specificare l'ambito di
+    validità del coupon.
 
     colonna                                             | descrizione
     ----------------------------------------------------|---------------------------------------------------------------------------------------
-    coupon_categorie_prodotti.id                        | l'ID dell'associazione fra l'ID coupon e l'ID categoria prodotti
+    coupon_categorie_prodotti.id                        | l'ID dell'associazione fra il coupon e la categoria prodotti
     coupon_categorie_prodotti.id_coupon                 | l'ID del coupon
     coupon_categorie_prodotti.id_categoria_prodotti     | l'ID della categoria prodotti
-        
+
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
@@ -638,7 +637,7 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
   
     coupon_prodotti
-    -------------
+    ---------------
     Questa tabella *gestita* ...
 
     colonna                                 | descrizione
@@ -676,7 +675,7 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
+
     cron
     ----
     Questa tabella *gestita* ...
