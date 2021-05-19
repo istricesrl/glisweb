@@ -22,7 +22,7 @@
 -- account
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `account` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_mail` int(11) DEFAULT NULL,
   `username` char(64) NOT NULL,
