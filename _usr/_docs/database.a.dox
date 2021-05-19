@@ -60,6 +60,9 @@
     account_view.id_gruppi_attribuzione  | -
     account_view.__label__               | -
 
+    Per approfondire la procedura di login si veda _src/_config/_210.auth.php; per il logout, si veda _src/_config/_220.auth.php. Per la registrazione
+    automatica degli account e per le logiche legate al token, si veda principalmente _mod/_0650.registrazione/_src/_inc/_macro/_registrazione.php.
+
     account_gruppi
     --------------
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *account* con la secondaria *gruppi*.
@@ -94,6 +97,8 @@
     account_gruppi_view.id_gruppo             | vedi campo corrispondente sulla tabella relativa
     account_gruppi_view.se_amministratore     | vedi campo corrispondente sulla tabella relativa
     account_gruppi_view.__label__             | -
+
+    L'associazione fra account e gruppi viene utilizzata al momento del login, si veda _src/_config/_210.auth.php per ulteriori dettagli.
 
     account_gruppi_attribuzione
     ---------------------------
@@ -266,8 +271,9 @@
     anagrafica_view.agente                                 | -
     anagrafica_view.__label__                              | -
 
-    La vista *anagrafica_view* è presente anche in forma *statica* come *anagrafica_view_static*; la view statica è alimentata dai seguenti trigger tramite
-    la procedura anagrafica_view_static():
+    La vista *anagrafica_view* contiene molti campi booleani che qualificano i contatti in base alle categorie cui appartengono; questo è utile per la popolazione
+    delle tendine (vedi *anagrafica_categorie* e *categorie_anagrafica*). La vista è presente anche in forma *statica* come *anagrafica_view_static*; la view statica
+    è alimentata dai seguenti trigger tramite la procedura anagrafica_view_static():
     
     tabella                        | trigger                                | azione
     -------------------------------|----------------------------------------|------------------------------
@@ -415,7 +421,8 @@
 
     anagrafica_provenienze
     ----------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con varie entità collegate per descrivere
+    la provenienza dei contatti.
 
     colonna                                               | descrizione
     ------------------------------------------------------|---------------------------------------------------------------------------------------
@@ -497,6 +504,9 @@
     articoli.se_disponibile                      | flag di disponibilità
     articoli.quantita_disponibile                | quantità disponibile in magazzino
 
+    I campi *se_disponibile* e *quantita_disponibile* servono per la gestione manuale delle disponibilità, nel caso non sia attivo il modulo per la gestione
+    del magazzino; possono eventualmente fungere da cache nel caso il modulo sia attivo, tramite logiche da implementare custom di volta in volta.
+
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
@@ -545,31 +555,31 @@
     attivita.id_luogo                                    | l'ID del luogo
     attivita.referente                                   | testo descrittivo del referente per l'attività
     attivita.id_categoria_prodotti                       | l'ID della categoria dei prodotti collegata all'attività
-    attivita.data                                        | 
-    attivita.data_attivita                               | 
-    attivita.ora                                         | 
-    attivita.ora_inizio                                  |  
-    attivita.ora_fine                                    | 
-    attivita.data_programmazione                         | 
-    attivita.ora_inizio_programmazione                   | 
-    attivita.ora_fine_programmazione                     | 
+    attivita.data                                        | -
+    attivita.data_attivita                               | -
+    attivita.ora                                         | -
+    attivita.ora_inizio                                  | -
+    attivita.ora_fine                                    | -
+    attivita.data_programmazione                         | -
+    attivita.ora_inizio_programmazione                   | -
+    attivita.ora_fine_programmazione                     | -
     attivita.id_progetto                                 | l'ID del progetto
     attivita.id_campagna                                 | l'ID della campagna
-    attivita.id_todo                                     | 
+    attivita.id_todo                                     | -
     attivita.id_tipologia_interesse                      | l'ID della tipologia di interesse
     attivita.id_tipologia_soddisfazione                  | l'ID della tipologia di soddisfazione
-    attivita.note_feedback                               | 
+    attivita.note_feedback                               | -
     attivita.id_immobile                                 | l'ID dell'immobile
     attivita.id_incarico                                 | l'ID dell'incarico
     attivita.id_richiesta                                | l'ID della richiesta
-    attivita.nome                                        | 
-    attivita.testo                                       | 
-    attivita.timestamp_scadenza                          | 
-    attivita.data_scadenza                               |  
-    attivita.ora_scadenza                                | 
-    attivita.note_scadenza                               |  
+    attivita.nome                                        | -
+    attivita.testo                                       | -
+    attivita.timestamp_scadenza                          | -
+    attivita.data_scadenza                               | -
+    attivita.ora_scadenza                                | -
+    attivita.note_scadenza                               | -
     attivita.id_attivita_completamento                   | l'ID dell'attività di completamento
-    attivita.ore                                         |
+    attivita.ore                                         | -
     attivita.id_esito                                    | l'ID dell'esito
     
     La tabella ha le seguenti chiavi esterne:
@@ -620,14 +630,18 @@
     audio.id_evento                                      | l'ID dell'evento
     audio.id_categoria_eventi                            | l'ID della categoria degli eventi
     audio.id_lingua                                      | l'ID della lingua
-    audio.path                                           |  
-    audio.codice_embed                                   | 
+    audio.path                                           | -
+    audio.codice_embed                                   | -
     audio.id_tipologia_embed                             | l'ID della tipologia di embed
-    audio.nome                                           | 
+    audio.nome                                           | -
     audio.id_ruolo                                       | l'ID del ruolo
-    audio.ordine                                         | 
-    audio.target                                         | 
-   
+    audio.ordine                                         | -
+    audio.target                                         | -
+
+    Per gli audio caricati direttamente nella piattaforma ed embeddati con HTML5, si utilizza il campo *path*. Altrimenti va valorizzato il campo
+    *codice_embed* che viene poi gestito dalla macro Twig di embed. Per le logiche relative all'erogazione dei file caricati nella piattaforma si veda
+    _src/_api/_download.php mentre per le macro di embed si faccia riferimento a _src/_html/_bin/_default.html.
+
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati

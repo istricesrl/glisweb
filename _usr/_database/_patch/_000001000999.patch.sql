@@ -331,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000025
 
@@ -348,7 +348,7 @@ CREATE TABLE IF NOT EXISTS `campagne` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000027
 
@@ -361,7 +361,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
   `html` char(8) DEFAULT NULL,
   `se_immobile` int(1) DEFAULT NULL,
   `se_indirizzo` int(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000028
 
@@ -380,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `nome` char(64) NOT NULL,
   `se_lead` int(1) DEFAULT NULL,
@@ -400,10 +400,6 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `se_azienda_gestita` int(1) DEFAULT NULL,
   `se_amministrazione` int(1) DEFAULT NULL,
   `se_notizie` int(1) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `se_docente` int(1) DEFAULT NULL,
   `se_tutor` int(1) DEFAULT NULL,
   `se_classe` int(1) DEFAULT NULL,
@@ -411,17 +407,7 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `se_agenzia_interinale` int(1) DEFAULT NULL,
   `se_referente` int(1) DEFAULT NULL,
   `se_sostituto` int(1) DEFAULT NULL,
-  `se_squadra` int(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
-
---| 000001000032
-
--- categorie_attivita
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `categorie_attivita` (
-`id` int(11) NOT NULL,
-  `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `se_squadra` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -433,27 +419,20 @@ CREATE TABLE IF NOT EXISTS `categorie_attivita` (
 -- categorie_diritto
 -- tipologia: tabella assistita
 CREATE TABLE IF NOT EXISTS `categorie_diritto` (
-`id` int(11) NOT NULL,
-  `nome` varchar(128) NOT NULL,
-  `id_genitore` int(11) DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000034
-
--- categorie_documenti
--- tipologia: tabella assistita
 
 --| 000001000035
 
 -- categorie_eventi
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `categorie_eventi` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `id_pagina` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
-  `id_tipologia_pubblicazione` int(11) NOT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -465,13 +444,10 @@ CREATE TABLE IF NOT EXISTS `categorie_eventi` (
 -- categorie_notizie
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `categorie_notizie` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `id_pagina` int(11) DEFAULT NULL,
-  `menu` char(64) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
-  `id_tipologia_pubblicazione` int(11) NOT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -483,15 +459,13 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
 -- categorie_prodotti
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `id_pagina` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
-  `menu` char(64) DEFAULT NULL,
-  `id_tipologia_pubblicazione` int(11) NOT NULL,
+  `tema_css` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -503,12 +477,12 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
 -- categorie_prodotti_caratteristiche
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `categorie_prodotti_caratteristiche` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `id_categoria` int(11) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
-  `se_non_presente` int(1) DEFAULT NULL,
+  `se_assente` int(1) DEFAULT NULL,
   `se_visibile` int(1) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
   `testo` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -517,12 +491,10 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti_caratteristiche` (
 -- categorie_risorse
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `categorie_risorse` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `id_pagina` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
-  `menu` char(64) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000040
@@ -530,11 +502,11 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
 -- classi_energetiche_immobili
 -- tipologia: tabella di supporto
 CREATE TABLE IF NOT EXISTS `classi_energetiche_immobili` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `nome` char(8) NOT NULL,
   `ep_min` int(11) DEFAULT NULL,
   `ep_max` int(11) DEFAULT NULL,
-  `rgb` char(8) NOT NULL
+  `id_colore` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000041
@@ -542,7 +514,7 @@ CREATE TABLE IF NOT EXISTS `classi_energetiche_immobili` (
 -- colori
 -- tipologia: tabella di supporto
 CREATE TABLE IF NOT EXISTS `colori` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `nome` char(16) NOT NULL,
   `hex` char(8) DEFAULT NULL,
   `r` int(3) DEFAULT NULL,
@@ -555,7 +527,7 @@ CREATE TABLE IF NOT EXISTS `colori` (
 -- comuni
 -- tipologia: tabella di supporto
 CREATE TABLE IF NOT EXISTS `comuni` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_provincia` int(11) NOT NULL,
   `nome` varchar(254) NOT NULL,
   `codice_istat` char(12) DEFAULT NULL,
@@ -567,7 +539,7 @@ CREATE TABLE IF NOT EXISTS `comuni` (
 -- condizioni_immobili
 -- tipologia: tabella di supporto
 CREATE TABLE IF NOT EXISTS `condizioni_immobili` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `nome` char(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -577,12 +549,11 @@ CREATE TABLE IF NOT EXISTS `condizioni_immobili` (
 -- contatti
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `contatti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `nome` char(255) NOT NULL,
   `json` text NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
-  `id_segnalatore` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,

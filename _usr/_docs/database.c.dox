@@ -14,11 +14,11 @@
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
     campagne.id                                  | l'ID dell'associazione fra aacount di chiusura, account inserimento e account aggiornamento
-    campagne.nome                                | 
-    campagne.testo                               | 
+    campagne.nome                                | -
+    campagne.testo                               | -
     campagne.id_account_chiusura                 | l'ID dell'account di chiusura
-    campagne.timestamp_chiusura                  |  
-    campagne.testo_chiusura                      |  
+    campagne.timestamp_chiusura                  | -
+    campagne.testo_chiusura                      | -
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -38,13 +38,13 @@
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
     caratteristiche_immobili.id                  | l'ID della caratteristica
-    caratteristiche_immobili.nome                | 
-    caratteristiche_immobili.font_awesome        | 
-    caratteristiche_immobili.html                | 
-    caratteristiche_immobili.se_immobile         | 
-    caratteristiche_immobili.se_indirizzo        | 
+    caratteristiche_immobili.nome                | -
+    caratteristiche_immobili.font_awesome        | -
+    caratteristiche_immobili.html                | -
+    caratteristiche_immobili.se_immobile         | -
+    caratteristiche_immobili.se_indirizzo        | -
 
-    La tabella ha le seguenti chiavi esterne:
+    I flag *se_immobile* e *se_indirizzo* definiscono il contesto a cui la caratteristica è applicabile. La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
@@ -63,12 +63,12 @@
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
     caratteristiche_prodotti.id                  | l'ID delle caratteristiche prodotti
-    caratteristiche_prodotti.nome                | 
-    caratteristiche_prodotti.se_categoria        | 
-    caratteristiche_prodotti.se_prodotto         | 
-    caratteristiche_prodotti.se_articolo         | 
+    caratteristiche_prodotti.nome                | -
+    caratteristiche_prodotti.se_categoria        | -
+    caratteristiche_prodotti.se_prodotto         | -
+    caratteristiche_prodotti.se_articolo         | -
  
-    La tabella ha le seguenti chiavi esterne:
+    I flag *se_categoria*, *se_prodotto* e *se_articolo* definiscono il contesto a cui la caratteristica è applicabile.  La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
@@ -80,82 +80,60 @@
    
     categorie_anagrafica
     --------------------
-    Questa tabella *assistita* ...
+    Questa tabella *assistita* contiene le categorie applicabili ai contatti anagrafici; è essenzialmente un collettore di flag che definiscono i vari
+    ambiti in cui i contatti sono rilevanti. Il suo funzionamento è strettamente legato alla vista *anagrafica_view*. Le categorie anagrafiche sono organizzate
+    in un albero tramite il campo *id_genitore*.
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_anagrafica.id                                 | l'ID della categorie anagrafica
-    categorie_anagrafica.id_genitore                        | 
-    categorie_anagrafica.se_prospect                         | 
-    categorie_anagrafica.se_lead                            |
-    categorie_anagrafica.se_cliente                        | 
-    categorie_anagrafica.se_mandante                        | 
-    categorie_anagrafica.se_fornitore                      | 
-    categorie_anagrafica.se_produttore                     | 
-    categorie_anagrafica.se_collaboratore                  |
-    categorie_anagrafica.se_dipendente                        | 
-    categorie_anagrafica.se_interinale                     | 
-    categorie_anagrafica.se_interno                           | 
-    categorie_anagrafica.se_esterno                        | 
-    categorie_anagrafica.se_agente                         | 
-    categorie_anagrafica.se_concorrente                       | 
-    categorie_anagrafica.se_rassegna_stampa                | 
-    categorie_anagrafica.importo_lordo_sconto                   | 
-    categorie_anagrafica.se_azienda_gestita                | 
-    categorie_anagrafica.se_amministrazione                | 
-    categorie_anagrafica.se_notizie                        |
-    categorie_anagrafica.id_account_inserimento            | l'ID dell'account di inserimento
-    categorie_anagrafica.timestamp_inserimento                | 
-    categorie_anagrafica.id_account_aggiornamento          | l'ID dell'account dell'aggiornamento
-    categorie_anagrafica.se_docente                        | 
-    categorie_anagrafica.se_tutor                          | 
-    categorie_anagrafica.se_classe                          | 
-    categorie_anagrafica.se_allievo                        | 
-    categorie_anagrafica.se_agenzia_interinale                | 
-    categorie_anagrafica.se_referente                      | 
-    categorie_anagrafica.se_sostituto                      | 
-    categorie_anagrafica.se_squadra                        | 
+    categorie_anagrafica.id                                | l'ID della categorie anagrafica
+    categorie_anagrafica.id_genitore                       | l'ID della categoria genitore
+    categorie_anagrafica.nome                              | -
+    categorie_anagrafica.se_prospect                       | -
+    categorie_anagrafica.se_lead                           | -
+    categorie_anagrafica.se_cliente                        | -
+    categorie_anagrafica.se_mandante                       | -
+    categorie_anagrafica.se_fornitore                      | -
+    categorie_anagrafica.se_produttore                     | -
+    categorie_anagrafica.se_collaboratore                  | -
+    categorie_anagrafica.se_dipendente                     | -
+    categorie_anagrafica.se_interinale                     | -
+    categorie_anagrafica.se_interno                        | -
+    categorie_anagrafica.se_esterno                        | -
+    categorie_anagrafica.se_agente                         | -
+    categorie_anagrafica.se_concorrente                    | -
+    categorie_anagrafica.se_rassegna_stampa                | -
+    categorie_anagrafica.se_azienda_gestita                | -
+    categorie_anagrafica.se_amministrazione                | -
+    categorie_anagrafica.se_notizie                        | -
+    categorie_anagrafica.se_docente                        | -
+    categorie_anagrafica.se_tutor                          | -
+    categorie_anagrafica.se_classe                         | -
+    categorie_anagrafica.se_allievo                        | -
+    categorie_anagrafica.se_agenzia_interinale             | -
+    categorie_anagrafica.se_referente                      | -
+    categorie_anagrafica.se_sostituto                      | -
+    categorie_anagrafica.se_squadra                        | -
     
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
 
-    La vista *carrelli_articoli_view* relativa alla tabella *carrelli_articoli* presenta le seguenti colonne:
+    La vista *categorie_anagrafica_view* relativa alla tabella *categorie_anagrafica* presenta le seguenti colonne:
     
-    categorie_attivita
-    ------------------
-    Questa tabella *gestita* ...
-
-    colonna                                           | descrizione
-    --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_attivita.id                                | l'ID della categoria attività
-    categorie_attivita.id_genitore                       | 
-    categorie_attivita.nome                            | 
-    categorie_attivita.id_account_inserimento           | l'ID dell'account inserimento
-    categorie_attivita.timestamp_inserimento          | 
-    categorie_attivita.id_account_aggiornamento       | l'ID dell'account aggiornamento
-    categorie_attivita.timestamp_aggiornamento        | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *categorie_attivita_view* relativa alla tabella *categorie_attivita* presenta le seguenti colonne:
-
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
- 
+
     categorie_diritto
-    ------------------
-    Questa tabella *assistita* ...
+    -----------------
+    Questa tabella *assistita* contiene le categorie del diritto, organizzate ad albero tramite il campo *id_genitore*.
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_diritto.id                                | l'ID della categoria attività
-    categorie_diritto.nome                            | 
-    categorie_diritto.id_genitore                       | 
+    categorie_diritto.id                              | l'ID della categoria attività
+    categorie_diritto.id_genitore                     | -
+    categorie_diritto.nome                            | -
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -167,26 +145,16 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     
-    categorie_documento
-    ------------------
-    Questa tabella *assistita* ...
-    
     categorie_eventi
-    ------------------
-    Questa tabella *gestita* ...
+    ----------------
+    Questa tabella *gestita* contiene le categorie degli eventi, organizzate ad albero tramite il campo *id_genitore*.
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_eventi.id                                | l'ID della categoria di eventi
-    categorie_eventi.id_genitore                       | 
-    categorie_eventi.id_pagina                        | l'ID della pagine della categoria eventi
-    categorie_eventi.ordine                            | 
-    categorie_eventi.nome                                | 
-    categorie_eventi.id_tipologia_pubblicazione       | l'ID della tipologia di pubblicazione
-    categorie_eventi.id_account_inserimento           | l'ID dell'account inserimento
-    categorie_eventi.timestamp_inserimento            | 
-    categorie_eventi.id_account_aggiornamento         | l'ID dell'account aggiornamento
-    categorie_eventi.timestamp_aggiornamento          |  
+    categorie_eventi.id                               | l'ID della categoria di eventi
+    categorie_eventi.id_genitore                      | -
+    categorie_eventi.ordine                           | -
+    categorie_eventi.nome                             | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -199,22 +167,15 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
  
     categorie_notizie
-    ------------------
-    Questa tabella *gestita* ...
+    -----------------
+    Questa tabella *gestita* contiene le categorie delle notizie, organizzate ad albero tramite il campo *id_genitore*.
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_notizie.id                                | l'ID della categoria di notizie
-    categorie_notizie.id_genitore                       | 
-    categorie_notizie.id_pagina                        | l'ID della pagine della categoria di notizie
-    categorie_notizie.menu                            | 
-    categorie_notizie.ordine                            | 
-    categorie_notizie.nome                            | 
-    categorie_notizie.id_tipologia_pubblicazione      | l'ID della tipologia di pubblicazione
-    categorie_notizie.id_account_inserimento           | l'ID dell'account inserimento
-    categorie_notizie.timestamp_inserimento           | 
-    categorie_notizie.id_account_aggiornamento        | l'ID dell'account aggiornamento
-    categorie_notizie.timestamp_aggiornamento         |  
+    categorie_notizie.id                              | l'ID della categoria di notizie
+    categorie_notizie.id_genitore                     | -
+    categorie_notizie.ordine                          | -
+    categorie_notizie.nome                            | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -228,22 +189,17 @@
 
     categorie_prodotti
     ------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene le categorie dei prodotti, organizzate ad albero tramite il campo *id_genitore*.
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_prodotti.id                                | l'ID della categoria di notizie
-    categorie_prodotti.id_genitore                       | 
-    categorie_prodotti.id_pagina                        | l'ID della pagine della categoria di notizie
-    categorie_prodotti.ordine                            | 
-    categorie_prodotti.nome                            | 
-    categorie_prodotti.template                       | 
-    categorie_prodotti.schema_html                       |
-    categorie_prodotti.menu                            | 
-    categorie_prodotti.id_tipologia_pubblicazione     | l'ID della tipologia di pubblicazione
-    categorie_prodotti.timestamp_inserimento          | 
-    categorie_prodotti.id_account_aggiornamento       | l'ID dell'account aggiornamento
-    categorie_prodotti.timestamp_aggiornamento        |  
+    categorie_prodotti.id                             | l'ID della categoria di notizie
+    categorie_prodotti.id_genitore                    | -
+    categorie_prodotti.ordine                         | -
+    categorie_prodotti.nome                           | -
+    categorie_prodotti.template                       | -
+    categorie_prodotti.schema_html                    | -
+    categorie_prodotti.tema_css                       | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -257,18 +213,17 @@
     
     categorie_prodotti_caratteristiche
     ----------------------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *categorie_prodotti* con l'entità secondaria *caratteristiche_prodotti*.
 
     colonna                                                 | descrizione
     --------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_prodotti_caratteristiche.id                      | l'ID dell'associazione fra la cattegoria e la caratteristica dei prodotti
+    categorie_prodotti_caratteristiche.id                   | l'ID dell'associazione fra la cattegoria e la caratteristica dei prodotti
+    categorie_prodotti_caratteristiche.ordine               | -
     categorie_prodotti_caratteristiche.id_categoria         | l'ID della categoria di prodotti
     categorie_prodotti_caratteristiche.id_caratteristica    | l'ID della caratteristica di prodotti
-    categorie_prodotti_caratteristiche.se_non_presente      | 
-    categorie_prodotti_caratteristiche.se_visibile          | 
-    categorie_prodotti_caratteristiche.ordine               | 
-    categorie_prodotti_caratteristiche.ordine                 |
-    
+    categorie_prodotti_caratteristiche.se_assente           | flag che indica se la caratteristica è da considerare presente (NULL) o assente (NOT NULL)
+    categorie_prodotti_caratteristiche.se_visibile          | -
+    categorie_prodotti_caratteristiche.testo                | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -282,16 +237,14 @@
  
     categorie_risorse
     -----------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* descrive le categorie delle risorse, organizzate ad albero tramite il campo *id_genitore*.
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    categorie_risorse.id                      | l'ID della categoria risorse
-    categorie_risorse.id_genitore            |
-    categorie_risorse.id_pagina             | l'ID della pagina 
-    categorie_risorse.nome                  | 
-    categorie_risorse.menu                  | 
-    categorie_risorse.ordine                | 
+    categorie_risorse.id                    | l'ID della categoria di risorse
+    categorie_risorse.id_genitore           | -
+    categorie_risorse.ordine                | -
+    categorie_risorse.nome                  | -
     
     
     La tabella ha le seguenti chiavi esterne:
@@ -306,15 +259,15 @@
  
     classi_energetiche_immobili
     ---------------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* descrive le classi energetiche applicabili agli immobili.
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    classi_energetiche_immobili.id          | l'ID della classe energetica immobile
-    classi_energetiche_immobili.nome        | 
-    classi_energetiche_immobili.ep_min      |
-    classi_energetiche_immobili.ep_max      | 
-    classi_energetiche_immobili.rgb         | 
+    classi_energetiche_immobili.id          | l'ID della classe energetica
+    classi_energetiche_immobili.nome        | -
+    classi_energetiche_immobili.ep_min      | -
+    classi_energetiche_immobili.ep_max      | -
+    classi_energetiche_immobili.id_colore   | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -327,17 +280,17 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     
     colori
-    -----------------
-    Questa tabella di *supporto* ...
+    ------
+    Questa tabella di *supporto* descrive i colori secondo varie codifiche (RGB, esadecimale).
 
     colonna               | descrizione
     ----------------------|----------------------------------------------------------------------------------------------------------------------
     colori.id             | l'ID del colore
-    colori.nome              |
-    colori.hex            | 
-    colori.r              | colore rosse
-    colori.g              | colore giallo
-    colori.b              | colore blu
+    colori.nome           | il nome del colore
+    colori.hex            | il codice esadecimale del colore
+    colori.r              | la componente rossa del colore codificato in RGB
+    colori.g              | la componente gialla del colore codificato in RGB
+    colori.b              | la componente blu del colore codificato in RGB
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -351,15 +304,15 @@
  
     comuni
     ------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* contiene i comuni; i comuni contengono gli *indirizzi* e sono contenuti dalle *provincie*.
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    comuni.id                                | l'ID del comune
-    comuni.id_provincia                    | l'ID della provincia del comune
-    comuni.nome                           | 
-    comuni.codice_istat                   | 
-    comuni.codice_catasto                 |
+    comuni.id                                         | l'ID del comune
+    comuni.id_provincia                               | l'ID della provincia di appartenenza del comune
+    comuni.nome                                       | -
+    comuni.codice_istat                               | -
+    comuni.codice_catasto                             | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -373,12 +326,12 @@
  
     condizioni_immobili
     -------------------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* descrive le condizioni applicabili agli immobili.
 
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
     condizioni_immobili.id                            | l'ID delle condizione dell'immobile
-    condizioni_immobili.nome                            | 
+    condizioni_immobili.nome                          | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -390,46 +343,18 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
  
-    condizioni_pagamento
-    ------------------
-    Questa tabella *gestita* ...
-
-    colonna                                           | descrizione
-    --------------------------------------------------|---------------------------------------------------------------------------------------
-    condizioni_pagamento.id                            | l'ID delle condizioni di pagamento
-    condizioni_pagamento.nome                           | 
-    condizioni_pagamento.descrizione                    |
-    condizioni_pagamento.id_account_inserimento       | l'ID dell'account inserimento
-    condizioni_pagamento.timestamp_inserimento        | 
-    condizioni_pagamento.id_account_aggiornamento     | l'ID dell'account aggiornamento
-    condizioni_pagamento.timestamp_aggiornamento      |  
-    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *condizioni_pagamento_view* relativa alla tabella *condizioni_pagamento* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-
     contatti
     --------
     Questa tabella *gestita* ...
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
-    contatti.id                             | 
-    contatti.nome                            | 
-    contatti.json                             |
+    contatti.id                            | l'ID dell'evento di contatto
+    contatti.nome                          | -
+    contatti.json                          | -
     contatti.id_tipologia                  | l'ID della tipologia di contatto
     contatti.id_anagrafica                 | l'ID dell'anagrafica di contatto
-    contatti.id_segnalatore                | 
-    contatti.timestamp_aggiornamento       |  
-    contatti.id_account_aggiornamento      | l'ID dell'account aggiornamento 
-    contatti.timestamp_inserimento         |  
-    contatti.id_account_inserimento        | l'ID dell'account inserimento
+    contatti.id_segnalatore                | -
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -442,25 +367,26 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
   
     contenuti
-    --------
-    Questa tabella *gestita* ...
+    ---------
+    Questa tabella *gestita* contiene tutti i testi esposti nella parte web aperta al pubblico relativi alle entità principali del framework. Viene
+    utilizzata per associare testi in una data lingua agli oggetti.
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
-    contenuti.id                             | l'ID del contenuto
-    contenuti.id_anagrafica                | l'ID dell'anagrafica del contenuto
-    contenuti.id_prodotto                     | l'ID del prodotto del contenuto
-    contenuti.id_articolo                  | l'ID dell'articolo del contenuto
-    contenuti.id_categoria_prodotti        | l'ID della categoria prodotto del contenuto
-    contenuti.id_caratteristica_prodotti   | l'ID della caratteristica prodotto del contenuto
-    contenuti.id_marchio                   | l'ID del marchio
-    contenuti.id_immagine                  | l'ID dell'immagine
-    contenuti.id_file                      | l'ID del file
-    contenuti.id_risorsa                   | l'ID della risorsa del contenuto
-    contenuti.id_categoria_risorse         | 
-    contenuti.id_pagina                    | 
-    contenuti.id_popup                     |
-    contenuti.id_immobile                  | 
+    contenuti.id                           | l'ID del contenuto
+    contenuti.id_anagrafica                | l'ID dell'anagrafica cui si riferisce la riga (NULL se non presente)
+    contenuti.id_prodotto                  | l'ID del prodotto cui si riferisce la riga (NULL se non presente)
+    contenuti.id_articolo                  | l'ID dell'articolo cui si riferisce la riga (NULL se non presente)
+    contenuti.id_categoria_prodotti        | l'ID della categoria di prodotti cui si riferisce la riga (NULL se non presente)
+    contenuti.id_caratteristica_prodotti   | l'ID della caratteristica dei prodotti cui si riferisce la riga (NULL se non presente)
+    contenuti.id_marchio                   | l'ID del marchio cui si riferisce la riga (NULL se non presente)
+    contenuti.id_immagine                  | l'ID dell'immagine cui si riferisce la riga (NULL se non presente)
+    contenuti.id_file                      | l'ID del file cui si riferisce la riga (NULL se non presente)
+    contenuti.id_risorsa                   | l'ID della risorsa cui si riferisce la riga (NULL se non presente)
+    contenuti.id_categoria_risorse         | l'ID della categoria di risorse cui si riferisce la riga (NULL se non presente)
+    contenuti.id_pagina                    | l'ID della pagina cui si riferisce la riga (NULL se non presente)
+    contenuti.id_popup                     | l'ID del popup cui si riferisce la riga (NULL se non presente)
+    contenuti.id_immobile                  | l'ID dell'immobile cui si riferisce la riga (NULL se non presente)
     contenuti.id_incarico                  | 
     contenuti.id_indirizzo                 | 
     contenuti.id_zona                      |  
