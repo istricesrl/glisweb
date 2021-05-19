@@ -509,5 +509,53 @@ ALTER TABLE `categorie_notizie`
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000035
+
+-- categorie_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `categorie_prodotti`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000036
+
+-- categorie_prodotti_caratteristiche
+-- tipologia: tabella gestita
+ALTER TABLE `categorie_prodotti_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_categoria` (`id_categoria`,`id_caratteristica`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `indice` (`id`,`id_categoria`,`id_caratteristica`,`ordine`);
+ALTER TABLE `categorie_prodotti_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000037
+
+-- categorie_progetti
+-- tipologia: tabella gestita
+ALTER TABLE `categorie_progetti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000038
+
+-- categorie_risorse
+-- tipologia: tabella gestita
+ALTER TABLE `categorie_risorse`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`);
+ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| FINE FILE
