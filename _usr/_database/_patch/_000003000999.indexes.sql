@@ -225,7 +225,7 @@ ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 ALTER TABLE `assicurazioni_montaggio`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`,`nome`,`suggerimento`);
+	ADD KEY `indice` (`id`,`nome`);
 ALTER TABLE `assicurazioni_montaggio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000018
@@ -250,7 +250,7 @@ ALTER TABLE `assicurazioni_montaggio_prezzi` MODIFY `id` int(11) NOT NULL AUTO_I
 ALTER TABLE `assicurazioni_trasporto`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`,`nome`,`suggerimento`);
+	ADD KEY `indice` (`id`,`nome`);
 ALTER TABLE `assicurazioni_trasporto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000020
@@ -301,7 +301,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
 	ADD KEY `id_todo_articoli` (`id_todo_articoli`),
-	ADD KEY `indice` (`id`,`id_progetto`,`id_zona`,`id_task`,`id_mandante`,`id_cliente`,`id_immobile`, `id_pratica`,`id_luogo`,`id_tipologia_inps`,`id_todo`,`id_indirizzo`,`token`);
+	ADD KEY `indice` (`id`,`id_progetto`,`id_task`,`id_mandante`,`id_cliente`,`id_immobile`, `id_pratica`,`id_tipologia_inps`,`id_todo`,`id_indirizzo`,`token`);
 ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000022
@@ -322,11 +322,11 @@ ALTER TABLE `attivita_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `attivita_categorie`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unico` (`id_attivita`,`id_categoria`), 
+	ADD KEY `id_attivita` (`id_attivita`),
 	ADD KEY `id_categoria` (`id_categoria`), 
 	ADD KEY `indice` (`id`,`id_attivita`,`id_categoria`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `id_attivita` (`id_attivita`),
 	ADD KEY `indice` (`id`,`id_attivita`,`id_categoria`);
 ALTER TABLE `attivita_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -476,7 +476,8 @@ ALTER TABLE `categorie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- categorie_diritto
 -- tipologia: tabella di supporto
 ALTER TABLE `categorie_diritto`
-	ADD PRIMARY KEY (`id`), ADD KEY `nome` (`nome`), 
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`), 
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 ALTER TABLE `categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
@@ -492,7 +493,7 @@ ALTER TABLE `categorie_eventi`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`);
 ALTER TABLE `categorie_eventi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 
 --| 000003000034
@@ -506,7 +507,7 @@ ALTER TABLE `categorie_notizie`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`);
 ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000035
@@ -520,7 +521,7 @@ ALTER TABLE `categorie_prodotti`
 	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`);
 ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000036
@@ -544,7 +545,7 @@ ALTER TABLE `categorie_progetti`
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`);
 ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000038
