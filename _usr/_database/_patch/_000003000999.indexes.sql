@@ -1317,6 +1317,29 @@ ALTER TABLE `macro`
 	ADD KEY `indice` (`id`,`id_pagina`,`macro`);
 ALTER TABLE `macro` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000094
+
+-- mail
+-- tipologia: tabella gestita
+ALTER TABLE `mail`
+  	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_anagrafica`,`indirizzo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+  	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`indirizzo`,`se_notifiche`,`se_pec`);
+ALTER TABLE `mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000095
+
+-- mail_liste_mailing
+-- tipolgia: tabella gestita
+ALTER TABLE `mail_liste_mailing`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `id_mail` (`id_mail`,`id_lista`),
+	ADD KEY `id_lista` (`id_lista`),
+	ADD KEY `indice` (`id`,`id_mail`,`id_lista`);
+ALTER TABLE `mail_liste_mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -
 -| FINE FILE
