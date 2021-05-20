@@ -1341,5 +1341,72 @@ ALTER TABLE `mail_liste_mailing`
 	ADD KEY `indice` (`id`,`id_mail`,`id_lista`);
 ALTER TABLE `mail_liste_mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000096
+
+-- mail_out
+-- tipolgia: tabella gestita
+ALTER TABLE `mail_out`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `timestamp_composizione` (`timestamp_composizione`), 
+	ADD KEY `timestamp_invio` (`timestamp_invio`), 
+	ADD KEY `id_newsletter` (`id_newsletter`), 
+	ADD KEY `id_email` (`id_email`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
+	ADD KEY `token` (`token`),
+	ADD KEY `indice` (`id`,`timestamp_composizione`,`timestamp_invio`,`id_newsletter`,`id_email`,`oggetto`,`allegati`,`token`);
+ALTER TABLE `mail_out` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000097
+
+-- mail_sent
+-- tipolgia: tabella gestita
+ALTER TABLE `mail_sent`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `timestamp_composizione` (`timestamp_composizione`),
+	ADD KEY `timestamp_invio` (`timestamp_invio`),
+	ADD KEY `id_newsletter` (`id_newsletter`),
+	ADD KEY `id_email` (`id_email`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `token` (`token`),
+	ADD KEY `indice` (`id`,`timestamp_composizione`,`timestamp_invio`,`id_newsletter`,`id_email`,`oggetto`,`allegati`,`token`);
+
+--| 000003000098
+
+-- mailing
+-- tipologia: tabella gestita
+ALTER TABLE `mailing`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_job` (`id_job`),
+	ADD KEY `indice` (`id`,`nome`,`timestamp_invio`,`id_job`);
+ALTER TABLE `mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000099
+
+-- mailing_liste
+-- tipologia: tabella gestita
+ALTER TABLE `mailing_liste`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `id_mailing` (`id_mailing`,`id_lista`),
+	ADD KEY `id_lista` (`id_lista`),
+	ADD KEY `indice` (`id`,`id_mailing`,`id_lista`);
+ALTER TABLE `mailing_liste` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000100
+
+-- mailing_mail
+-- tipologia: tabella gestita
+ALTER TABLE `mailing_mail`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `id_mail` (`id_mail`,`id_mailing`),
+	ADD KEY `id_mail_coda` (`id_mail_coda`),
+	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `indice` (`id`,`id_mail`,`id_mailing`,id_mail_coda`);
+ALTER TABLE `mailing_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 -
 -| FINE FILE
