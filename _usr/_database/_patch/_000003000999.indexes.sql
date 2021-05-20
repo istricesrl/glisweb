@@ -186,8 +186,9 @@ ALTER TABLE `anagrafica_servizi_contatto`MODIFY `id` int(11) NOT NULL AUTO_INCRE
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_settori`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id_anagrafica` (`id_anagrafica`,`id_settore`), 
-	ADD KEY `id_settore` (`id_settore`);
+	ADD UNIQUE KEY `id_anagrafica` (`id_anagrafica`,`id_settori`), 
+	ADD KEY `id_settori` (`id_settori`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_settori`);
 ALTER TABLE `anagrafica_settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000015
@@ -204,7 +205,7 @@ ALTER TABLE `articoli`
  	ADD KEY `ordine` (`ordine`), 
  	ADD KEY `id_udm` (`id_udm`), 
 	ADD KEY `id_reparto` (`id_reparto`),
-	ADD KEY `indice` (`id`,`id_prodotto`,`id_taglia`,`id_colore`,`ordine`,`id_reparto`);
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_taglia`,`id_colore`,`ordine`,`id_reparto`, `se_disponibile`);
 
 --| 000003000016
 
@@ -215,7 +216,7 @@ ALTER TABLE `articoli_caratteristiche`
 	ADD UNIQUE KEY `id_articolo` (`id_articolo`,`id_caratteristica`), 
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
-	ADD KEY `indice` (`id`,`id_articolo`,`ordine`);
+	ADD KEY `indice` (`id`,`id_articolo`,`ordine`,`id_caratteristica`,`se_assente` );
 ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000017
@@ -224,7 +225,8 @@ ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 -- tipologia: tabella gestita
 ALTER TABLE `assicurazioni_montaggio`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
 ALTER TABLE `assicurazioni_montaggio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000018
@@ -248,7 +250,8 @@ ALTER TABLE `assicurazioni_montaggio_prezzi` MODIFY `id` int(11) NOT NULL AUTO_I
 -- tipologia: tabella gestita
 ALTER TABLE `assicurazioni_trasporto`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
 ALTER TABLE `assicurazioni_trasporto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000020
@@ -299,7 +302,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
 	ADD KEY `id_todo_articoli` (`id_todo_articoli`),
-	ADD KEY `indice` (`id`,`id_progetto`,`id_task`,`id_mandante`,`id_cliente`,`id_immobile`, `id_pratica`,`id_tipologia_inps`,`id_todo`,`id_indirizzo`,`token`);
+	ADD KEY `indice` (`id`,`id_progetto`,`id_task`,`id_mandante`,`id_cliente`,`id_immobile`, `id_pratica`,`id_tipologia_inps`,`id_todo`,`id_indirizzo`,`token`,`id_campagna`, `referente`, `luogo`, `id_attivita_completamento`);
 ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000022
@@ -351,7 +354,7 @@ ALTER TABLE `audio`
 	ADD KEY `id_lingua` (`id_lingua`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
-	ADD KEY `indice` (`id`,`codice_embed`,`id_prodotto`,`id_prodotto`,`id_ruolo`,`id_evento`,`id_file`);
+	ADD KEY `indice` (`id`,`codice_embed`,`id_prodotto`,`id_ruolo`,`id_evento`,`id_file`, `id_categoria_prodotti`);
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000025
