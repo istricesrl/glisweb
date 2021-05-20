@@ -2,23 +2,14 @@
 -- INDICI
 -- questo file contiene le query per la creazione degli indici delle tabelle
 --
--- CRITERI DI VERIFICA
--- una definizione di indici può dirsi verificata se:
--- - non si riferisce a tabelle deprecate e non contiene colonne deprecate
--- - riporta prima le definizioni di chiavi primarie, poi le uniche, poi gli indici generali
--- - le chiavi uniche sono nominate con il prefisso unica_ (la prima si chiama semplicemente unica)
--- - nella parte degli indici generali, riporta per primi gli indici che si riferiscono a chiavi esterne (identificate dal prefisso id_)
--- - nella parte degli indici generali, le colonne appaiono nell'ordine in cui compaiono nella tabella
--- - nella parte degli indici generali, le colonne indicizzate appaiono nello stesso ordine in cui appaiono nella tabella
--- - nella parte degli indici generali, dopo le colonne relative a chiavi esterne appaiono le colonne di flag (identificate dal prefisso se_)
--- - la parte degli indidi si chiude con gli indici multicolonna, nominati con il prefisso indice_ (il primo si chiama semplicemente indice)
+-- NOTE
+--
 --
 
 --| 000003000001
 
 -- account
 -- tipologia: tabella gestita
--- verifica: 2021-05-20 13:59 Fabio Mosti
 ALTER TABLE `account`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`username`),
@@ -28,7 +19,6 @@ ALTER TABLE `account`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `se_attivo` (`se_attivo`),
 	ADD KEY `token` (`token`),
-	ADD KEY `timestamp_cambio_password` (`timestamp_cambio_password`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`username`,`id_mail`,`password`,`se_attivo`,`token`);
 ALTER TABLE `account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -931,4 +921,122 @@ ALTER TABLE `esiti_incroci_immobili`
  	ADD PRIMARY KEY (`id`),
 	ADD KEY `indice` (`id`,`nome`,`se_positivo`);
 ALTER TABLE `esiti_incroci_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ --| 000003000066
+
+-- esiti_notizie_immobili
+-- tipologia: tabella di supporto
+ALTER TABLE `esiti_notizie_immobili`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `indice` (`id`,`nome`,`se_positivo`);
+ALTER TABLE `esiti_notizie_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ --| 000003000067
+ 
+-- esiti_pratiche
+-- tipologia: tabella di supporto
+ALTER TABLE `esiti_pratiche`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `indice` (`id`,`nome`,`se_positivo`);
+ALTER TABLE `esiti_pratiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ 
+ --| 000003000068
+ 
+-- esiti_richieste_immobili
+-- tipologia: tabella di supporto
+ALTER TABLE `esiti_richieste_immobili`
+ ADD PRIMARY KEY (`id`),
+ ADD KEY `indice` (`id`,`nome`,`se_positivo`);
+ALTER TABLE `esiti_richieste_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ 
+ --| 000003000069
+ 
+-- eventi
+-- tipologia: tabella gestita
+ALTER TABLE `eventi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`se_repertorio`);
+ALTER TABLE `eventi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ --| 000003000070
+ 
+ -- eventi_anagrafica
+-- tipologia: tabella gestita
+ALTER TABLE `eventi_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_evento` (`id_evento`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `indice` (`id`,`nome`,`id_evento`,`id_ruolo`,`id_anagrafica`,`ordine`);
+ALTER TABLE `eventi_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ --| 000003000071
+ 
+-- eventi_categorie
+-- tipologia: tabella gestita
+ALTER TABLE `eventi_categorie`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `id_evento` (`id_evento`,`id_categoria`),
+	ADD KEY `id_categoria` (`id_categoria`),
+	ADD KEY `indice` (`id`,`id_evento`,`id_categoria`),
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+	ADD KEY `indice` (`id`,`id_evento`,`id_categoria`,`ordine`);
+ALTER TABLE `eventi_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ --| 000003000072
+ 
+-- fatturati
+-- tipologia: tabella gestita
+ALTER TABLE `fatturati`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `fatturato_unico` (`id_cliente`,`id_mandante`,`mese`,`anno`), 
+	ADD KEY `id_emittente` (`id_emittente`),
+	ADD KEY `indice` (`id`,id_cliente`,`id_mandante`,`mese`,`anno`,`id_emittente`,`id_agente`);
+ALTER TABLE `fatturati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+-- NOTA: riguardo l'indice fatturato_unico valutare l'ipotesi di sostituirlo con un controllo (NOT NULL) sull'importo fatturato
+
+ --| 000003000073
+ 
+-- file
+-- tipologia: tabella gestita
+ALTER TABLE `file`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `prodotto_unico` (`id_prodotto`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `categoria_prodotti_unico` (`id_categoria_prodotti`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `anagrafica_unico` (`id_anagrafica`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `pagina_unico` (`id_pagina`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `task_unico` (`id_task`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `rassegna_stampa_unico` (`id_rassegna_stampa`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `evento_unico` (`id_evento`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `categoria_eventi_unico` (`id_categoria_eventi`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `pratica_unico` (`id_pratica`,`id_ruolo`,`path`), 
+	ADD KEY `path` (`path`), 
+	ADD KEY `id_task` (`id_task`), 
+	ADD KEY `indice` (`id`,`id_task`,`nome`,`path`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
+	ADD KEY `id_rassegna_stampa` (`id_rassegna_stampa`), 
+	ADD KEY `id_evento` (`id_evento`), 
+	ADD KEY `id_categoria_eventi` (`id_categoria_eventi`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_ruolo` (`id_ruolo`), 
+	ADD KEY `id_template_mail` (`id_template_mail`), 
+	ADD KEY `id_lingua` (`id_lingua`), 
+	ADD KEY `id_mailing` (`id_mailing`), 
+	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_pratica` (`id_pratica`), 
+	ADD KEY `id_todo` (`id_todo`), 
+	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_evento`,`id_categoria_eventi`,`id_pratica`,`id_ruolo`,`path`,`id_categoria_prodotti`,`id_anagrafica`,`id_pagina`,`id_task`,`id_rassegna_stampa`,`id_categoria_risorse`);
+ALTER TABLE `file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ 
+
 --| FINE FILE
