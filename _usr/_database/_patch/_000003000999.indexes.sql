@@ -162,10 +162,10 @@ ALTER TABLE `anagrafica_provenienze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT
 ALTER TABLE `anagrafica_ruoli`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `id_anagrafica` (`id_anagrafica`,`id_ruolo`),
-	ADD UNIQUE KEY `id_genitore_unico` (`id_genitore`,`id_anagrafica`),
+	ADD UNIQUE KEY `unica_id_genitore` (`id_genitore`,`id_anagrafica`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_genitore_unico`,`id_ruolo`,`id_genitore`);
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_ruolo`,`id_genitore`);
 ALTER TABLE `anagrafica_ruoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000013
@@ -422,7 +422,7 @@ ALTER TABLE `carrelli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMEN
 -- tipologia: tabella gestita
 ALTER TABLE `carrelli_articoli`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `articolo_unico` (`id_carrello`,`id_articolo`), 
+	ADD UNIQUE KEY `unica_articolo` (`id_carrello`,`id_articolo`), 
 	ADD KEY `id_carrello` (`id_carrello`), 
 	ADD KEY `id_articolo` (`id_articolo`), 
 	ADD KEY `id_tipologia_spedizione` (`id_modalita_spedizione`), 
@@ -630,19 +630,19 @@ ALTER TABLE `contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `contenuti`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id_prodotto_unico` (`id_prodotto`,`id_lingua`), 
-	ADD UNIQUE KEY `id_categoria_prodotti_unico` (`id_categoria_prodotti`,`id_lingua`), 
-	ADD UNIQUE KEY `id_eventi_unico` (`id_evento`,`id_lingua`), 
-	ADD UNIQUE KEY `id_categoria_eventi_unico` (`id_categoria_eventi`,`id_lingua`), 
-	ADD UNIQUE KEY `id_immagine_unico` (`id_immagine`,`id_lingua`), 
-	ADD UNIQUE KEY `id_file_unico` (`id_file`,`id_lingua`), 
-	ADD UNIQUE KEY `id_pagina_unico` (`id_pagina`,`id_lingua`), 
-	ADD UNIQUE KEY `id_rassegna_stampa_unico` (`id_rassegna_stampa`,`id_lingua`), 
-	ADD UNIQUE KEY `id_video_unico` (`id_video`,`id_lingua`), 
-	ADD UNIQUE KEY `id_audio_unico` (`id_audio`,`id_lingua`), 
-	ADD UNIQUE KEY `id_articolo_unico` (`id_articolo`,`id_lingua`), 
-	ADD UNIQUE KEY `id_marchio_unico` (`id_marchio`,`id_lingua`), 
-	ADD UNIQUE KEY `id_caratteristica_prodotti_unico` (`id_caratteristica_prodotti`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_prodotto` (`id_prodotto`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_categoria_prodotti` (`id_categoria_prodotti`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_eventi` (`id_evento`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_categoria_eventi` (`id_categoria_eventi`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_immagine` (`id_immagine`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_file` (`id_file`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_pagina` (`id_pagina`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_rassegna_stampa` (`id_rassegna_stampa`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_video` (`id_video`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_audio` (`id_audio`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_articolo` (`id_articolo`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_id_marchio` (`id_marchio`,`id_lingua`), 
+	ADD UNIQUE KEY `unica_d_caratteristica_prodotti` (`id_caratteristica_prodotti`,`id_lingua`), 
 	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
 	ADD KEY `id_evento` (`id_evento`), 
@@ -671,7 +671,7 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
-	ADD KEY `indice` (`id`,`id_prodotto`,`id_articolo`,`id_marchio`,`id_file`,`id_lingua`,`id_categoria_prodotti`, `id_categoria_prodotti_unico`,`id_eventi_unico`, `id_categoria_eventi_unico`,`id_immagine_unico`,`id_file_unico`,`id_pagina_unico`,`id_rassegna_stampa_unico`, `id_video_unico`, `id_audio_unico`,`id_articolo_unico`, `id_marchio_unico`,`id_caratteristica_prodotti_unico` );
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_articolo`,`id_marchio`,`id_file`,`id_lingua`,`id_categoria_prodotti`,`id_pagina_unico`,`id_rassegna_stampa_unico`, `id_video_unico`, `id_audio_unico`,`id_articolo_unico`, `id_marchio_unico`,`id_caratteristica_prodotti_unico` );
 ALTER TABLE `contenuti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000046
