@@ -385,7 +385,8 @@ ALTER TABLE `caratteristiche_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 -- tipologia: tabella di supporto
 ALTER TABLE `caratteristiche_immobili`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id` (`id`,`nome`);
+	ADD UNIQUE KEY `id` (`id`,`nome`),
+	ADD KEY `indice` (`id`,`nome`);
 ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000028
@@ -454,7 +455,7 @@ ALTER TABLE `categorie_anagrafica`
 	ADD KEY `se_referente` (`se_referente`),
 	ADD KEY `se_sostituto` (`se_sostituto`),
 	ADD KEY `se_squadra` (`se_squadra`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_rassegna_stampa`,`se_agente`,`se_mandante`,`se_fornitore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_concorrente`,`se_interinale`,`se_agenzia_interinale`,`se_dipendente`,`se_referente`,`se_sostituto`,`se_squadra`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_rassegna_stampa`,`se_agente`,`se_mandante`,`se_fornitore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_concorrente`,`se_interinale`,`se_agenzia_interinale`,`se_dipendente`,`se_referente`,`se_sostituto`,`se_squadra`, `se_azienda_gestita`, `se_amministrazione`, `se_prospect`, `se_lead`, `se_docente`,`se_tutor`,`se_classe`,`se_allievo`,`se_sostituto`);
 ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000031
@@ -477,7 +478,8 @@ ALTER TABLE `categorie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_diritto`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `nome` (`nome`), 
-	ADD KEY `id_genitore` (`id_genitore`);
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 ALTER TABLE `categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 
 --| 000003000033
@@ -491,7 +493,7 @@ ALTER TABLE `categorie_eventi`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`, `ordine`, `nome`);
 ALTER TABLE `categorie_eventi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 
 --| 000003000034
@@ -505,7 +507,7 @@ ALTER TABLE `categorie_notizie`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`, `nome`, `ordine`);
 ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000035
@@ -519,7 +521,7 @@ ALTER TABLE `categorie_prodotti`
 	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`, `nome`, `ordine`);
 ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000036
@@ -531,7 +533,7 @@ ALTER TABLE `categorie_prodotti_caratteristiche`
 	ADD UNIQUE KEY `id_categoria` (`id_categoria`,`id_caratteristica`), 
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
-	ADD KEY `indice` (`id`,`id_categoria`,`id_caratteristica`,`ordine`);
+	ADD KEY `indice` (`id`,`id_categoria`,`id_caratteristica`,`ordine`, `se_assente`, `se_visibile`);
 ALTER TABLE `categorie_prodotti_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000037
@@ -543,7 +545,7 @@ ALTER TABLE `categorie_progetti`
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`);
+	ADD KEY `indice` (`id`,`id_genitore`, `nome`);
 ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000038
@@ -553,7 +555,8 @@ ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_risorse`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `id_pagina` (`id_pagina`);
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `indice` (`id`,`id_genitore`, `nome`, `ordine`);
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000039
@@ -562,7 +565,8 @@ ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella di supporto
 ALTER TABLE `classi_energetiche_immobili`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`, `nome`, `id_colore`);
 ALTER TABLE `classi_energetiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000040
@@ -571,7 +575,8 @@ ALTER TABLE `classi_energetiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCR
 -- tipologia: tabella di supporto
 ALTER TABLE `colori`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `nome` (`nome`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`, `nome`);
 ALTER TABLE `colori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000041
@@ -583,7 +588,7 @@ ALTER TABLE `comuni`
 	ADD UNIQUE KEY `codice_istat` (`codice_istat`),
 	ADD UNIQUE KEY `codice_catasto` (`codice_catasto`),
 	ADD KEY `id_provincia` (`id_provincia`),
-	ADD KEY `indice` (`id`,`codice_istat`,`id_provincia`);
+	ADD KEY `indice` (`id`,`codice_istat`,`id_provincia`, `nome`, `codice_catasto`);
 ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000042
@@ -592,7 +597,8 @@ ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella di supporto
 ALTER TABLE `condizioni_immobili`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
 ALTER TABLE `condizioni_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000043
@@ -600,7 +606,8 @@ ALTER TABLE `condizioni_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- condizioni_pagamento
 -- tipologia: tabella gestita
 ALTER TABLE `condizioni_pagamento`
-	ADD PRIMARY KEY (`id`);
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `indice` (`id`,`nome`);
 ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000044
@@ -613,7 +620,8 @@ ALTER TABLE `contatti`
 	ADD KEY `id_segnalatore` (`id_segnalatore`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_coount_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`, `id_tipologia`, `id_anagrafica`,`id_segnalatore`);
 ALTER TABLE `contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000045
@@ -663,7 +671,7 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
-	ADD KEY `indice` (`id`,`id_prodotto`,`id_articolo`,`id_marchio`,`id_file`,`id_lingua`,`id_categoria_prodotti`);
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_articolo`,`id_marchio`,`id_file`,`id_lingua`,`id_categoria_prodotti`, `id_categoria_prodotti_unico`,`id_eventi_unico`, `id_categoria_eventi_unico`,`id_immagine_unico`,`id_file_unico`,`id_pagina_unico`,`id_rassegna_stampa_unico`, `id_video_unico`, `id_audio_unico`,`id_articolo_unico`, `id_marchio_unico`,`id_caratteristica_prodotti_unico` );
 ALTER TABLE `contenuti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000046
