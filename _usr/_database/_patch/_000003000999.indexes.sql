@@ -808,7 +808,7 @@ ALTER TABLE `date`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
-	ADD KEY `indice` (`id`,`id_evento`,`id_tipologia`,`id_notizia`);
+	ADD KEY `indice` (`id`,`id_evento`,`id_tipologia`,`id_notizia`,`timestamp_inizio`,`timestamp_fine`);
 ALTER TABLE `date` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000058
@@ -817,7 +817,8 @@ ALTER TABLE `date` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella di supporto
 ALTER TABLE `disponibilita_immobili`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`,`se_disponibile`);
 ALTER TABLE `disponibilita_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000059
@@ -842,6 +843,82 @@ ALTER TABLE `documenti_amministrativi`
  ADD KEY `indice` (`id`,`id_emittente`,`progressivo_invio`,`id_cliente`,`id_tipologia`,`id_fornitore`);
 ALTER TABLE `documenti_amministrativi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
- 
+--| 000003000060
 
+ -- documenti
+-- tipologia: tabella gestita
+ALTER TABLE `documenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_destinatario` (`id_destinatario`), 
+	ADD KEY `id_sede_destinatario` (`id_sede_destinatario`), 
+	ADD KEY `id_emittente` (`id_emittente`), 
+	ADD KEY `id_sede_emittente` (`id_sede_emittente`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_destinatario`,`id_sede_destinatario`,`id_emittente`,`id_sede_emittente`);
+ALTER TABLE `documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000061
+
+-- documenti_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `documenti_articoli`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_emittente` (`id_emittente`), 
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_todo` (`id_todo`), 
+	ADD KEY `id_attivita` (`id_attivita`), 
+	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_udm` (`id_udm`), 
+	ADD KEY `id_listino` (`id_listino`), 
+	ADD KEY `id_valuta` (`id_valuta`), 
+	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`), 
+	ADD KEY `id_iva` (`id_iva`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_destinatario` (`id_destinatario`), 
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
+	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `id_reparto` (`id_reparto`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_documento`,`id_emittente`,`id_genitore`,`id_progetto`,`id_attivita`,`id_articolo`,`id_listino`,`id_modalita_pagamento`,`id_destinatario`,`id_reparto`);
+ALTER TABLE `documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000062
+
+-- esigibilita_iva
+-- tipologia: tabella di supporto
+ALTER TABLE `esigibilita_iva`
+ ADD PRIMARY KEY (`id`),
+ ADD KEY `indice` (`id`,`nome`,`codice`);
+ 
+ --| 000003000063
+ 
+ -- esiti_attivita
+-- tipologia: tabella di supporto
+ALTER TABLE `esiti_attivita`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `indice` (`id`,`nome`,`se_positivo`,`se_richiede_azione`);
+ALTER TABLE `esiti_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ --| 000003000064
+ 
+-- esiti_incarichi_immobili
+-- tipologia: tabella di supporto
+ALTER TABLE `esiti_incarichi_immobili`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `indice` (`id`,`nome`,`se_positivo`);
+ALTER TABLE `esiti_incarichi_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ --| 000003000065
+ 
+ -- esiti_incroci_immobili
+-- tipologia: tabella di supporto
+ALTER TABLE `esiti_incroci_immobili`
+ 	ADD PRIMARY KEY (`id`),
+	ADD KEY `indice` (`id`,`nome`,`se_positivo`);
+ALTER TABLE `esiti_incroci_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --| FINE FILE
