@@ -696,5 +696,28 @@ ALTER TABLE `costi_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `coupon`
  ADD PRIMARY KEY (`id`);
+ 
+ --| 000003000050
+ 
+ -- coupon_categorie_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `coupon_categorie_prodotti`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_coupon` (`id_coupon`), 
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`);
+ALTER TABLE `coupon_categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ --| 000003000051
+ 
+ -- coupon_listini
+-- tipologia: tabella gestita
+ALTER TABLE `coupon_listini`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_coupon` (`id_coupon`), 
+	ADD KEY `id_listino` (`id_listino`);
+ALTER TABLE `coupon_listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ 
+
+ 
 
 --| FINE FILE
