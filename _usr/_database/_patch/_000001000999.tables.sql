@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (
 
 -- anagrafica
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:30 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica` (
   `id` int(11) NOT NULL,
   `codice` char(32) DEFAULT NULL,
@@ -122,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:30 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
@@ -136,16 +138,19 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
 
 -- anagrafica_categorie_diritto
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:30 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_categorie_diritto` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
-  `id_diritto` int(11) NOT NULL
+  `id_categoria` int(11) NOT NULL,
+  `se_specialita` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000007
 
 -- anagrafica_cittadinanze
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 21:26 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,

@@ -284,4 +284,47 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 	ORDER BY __label__
 ;
 
+--| 000008000013
+
+-- anagrafica_categorie_diritto_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:40 Fabio Mosti
+CREATE OR REPLACE VIEW anagrafica_categorie_diritto_view AS
+	SELECT
+		anagrafica_categorie_diritto.id,
+		anagrafica_categorie_diritto.id_anagrafica,
+		anagrafica_categorie_diritto.id_categoria,
+		anagrafica_categorie_diritto.se_specialita,
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			'/',
+			categorie_anagrafica.nome
+		) AS __label__
+	FROM anagrafica_categorie_diritto
+		INNER JOIN anagrafica ON anagrafica.id = anagrafica_categorie_diritto.id_anagrafica
+		INNER JOIN categorie_diritto ON categorie_diritto.id = anagrafica_categorie_diritto.id_categoria
+	ORDER BY __label__
+;
+
+--| 000008000014
+
+-- anagrafica_cittadinanze_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-20 21:47 Fabio Mosti
+DROP TABLE IF EXISTS `anagrafica_cittadinanze_view`;
+CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
+	SELECT
+	anagrafica_cittadinanze.id,
+	anagrafica_cittadinanze.id_anagrafica,
+	anagrafica_cittadinanze.id_stato,
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			'/',
+			stati.nome
+		) AS __label__
+	FROM anagrafica_cittadinanze
+		INNER JOIN anagrafica ON anagrafica.id = anagrafica_cittadinanze.id_anagrafica
+		INNER JOIN stati ON stati.id = anagrafica_cittadinanze.id_stato
+;
+
 --| FINE FILE

@@ -46,6 +46,7 @@ ALTER TABLE `account_gruppi_attribuzione`
 
 -- anagrafica
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:33 Fabio Mosti
 ALTER TABLE `anagrafica`	
     ADD CONSTRAINT `anagrafica_ibfk_01_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,	
     ADD CONSTRAINT `anagrafica_ibfk_02_nofollow` FOREIGN KEY (`id_pec_sdi`) REFERENCES `mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,	
@@ -62,10 +63,30 @@ ALTER TABLE `anagrafica`
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:33 Fabio Mosti
 ALTER TABLE `anagrafica_categorie`
     ADD CONSTRAINT `anagrafica_categorie_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `anagrafica_categorie_ibfk_02_nofollow` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `anagrafica_categorie_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_categorie_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 000006000006
+
+-- anagrafica_categorie_diritto
+-- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:35 Fabio Mosti
+ALTER TABLE `anagrafica_categorie_diritto`
+    ADD CONSTRAINT `anagrafica_categorie_diritto_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `anagrafica_categorie_diritto_ibfk_02_nofollow` FOREIGN KEY (`id_diritto`) REFERENCES `categorie_diritto` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
+--| 000006000007
+
+-- anagrafica_cittadinanze
+-- tipologia: tabella gestita
+-- verifica: 2021-05-20 21:27 Fabio Mosti
+ALTER TABLE `anagrafica_cittadinanze`
+    ADD CONSTRAINT `anagrafica_cittadinanze_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `anagrafica_cittadinanze_ibfk_02_nofollow` FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --| FINE FILE
