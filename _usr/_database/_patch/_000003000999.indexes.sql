@@ -707,7 +707,8 @@ ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `costi_contratti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_contratto` (`id_contratto`),
-	ADD UNIQUE KEY `unico` (`id_contratto`,`id_tipologia`);
+	ADD UNIQUE KEY `unico` (`id_contratto`,`id_tipologia`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_contratto`,`costo_orario`);
 ALTER TABLE `costi_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000049
@@ -715,7 +716,8 @@ ALTER TABLE `costi_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- coupon
 -- tipologia: tabella gestita
 ALTER TABLE `coupon`
- ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`),
+ ADD KEY `indice` (`id`,`nome`,`se_multiuso`,`se_globale`);
  
  --| 000003000050
  
@@ -724,7 +726,8 @@ ALTER TABLE `coupon`
 ALTER TABLE `coupon_categorie_prodotti`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_coupon` (`id_coupon`), 
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`);
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_categoria_prodotti`);
 ALTER TABLE `coupon_categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
  --| 000003000051
@@ -734,7 +737,8 @@ ALTER TABLE `coupon_categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREM
 ALTER TABLE `coupon_listini`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_coupon` (`id_coupon`), 
-	ADD KEY `id_listino` (`id_listino`);
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_listino`);
 ALTER TABLE `coupon_listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
  
 --| 000003000052
@@ -744,7 +748,8 @@ ALTER TABLE `coupon_listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `coupon_marchi`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_coupon` (`id_coupon`), 
-	ADD KEY `id_marchio` (`id_marchio`);
+	ADD KEY `id_marchio` (`id_marchio`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_marchio`);
 ALTER TABLE `coupon_marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000053
@@ -754,7 +759,8 @@ ALTER TABLE `coupon_marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `coupon_prodotti`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_coupon` (`id_coupon`), 
-	ADD KEY `id_prodotto` (`id_prodotto`);
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_prodotto`);
 ALTER TABLE `coupon_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000054
@@ -764,7 +770,8 @@ ALTER TABLE `coupon_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `coupon_stagioni`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_coupon` (`id_coupon`), 
-	ADD KEY `id_stagione` (`id_stagione`);
+	ADD KEY `id_stagione` (`id_stagione`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_stagione`);
 ALTER TABLE `coupon_stagioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000055
