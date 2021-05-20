@@ -13,12 +13,14 @@
 -- - nella parte degli indici generali, dopo le colonne relative a chiavi esterne appaiono le colonne di flag (identificate dal prefisso se_)
 -- - la parte degli indidi si chiude con gli indici multicolonna, nominati con il prefisso indice_ (il primo si chiama semplicemente indice)
 -- - ogni indice è sono correttamente documentato, in ordine, nel relativo file dox
+-- - la chiave primaria, se intera, è dichiarata AUTO_INCREMENT
 --
 
 --| 000003000001
 
 -- account
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 13:59 Fabio Mosti
 ALTER TABLE `account`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`username`),
@@ -35,12 +37,13 @@ ALTER TABLE `account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- account_gruppi
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 15:56 Fabio Mosti
 ALTER TABLE `account_gruppi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_account`,`id_gruppo`),
 	ADD KEY `id_account` (`id_account`),
 	ADD KEY `id_gruppo` (`id_gruppo`),
-	ADD KEY `indice` (`id`,`id_account`,`id_gruppo`,`se_amministratore`);
+	ADD KEY `indice` (`id`,`id_account`,`id_gruppo`);
 ALTER TABLE `account_gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000003

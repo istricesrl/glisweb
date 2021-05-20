@@ -28,6 +28,7 @@ ALTER TABLE `account`
 
 -- account_gruppi
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 16:07 Fabio Mosti
 ALTER TABLE `account_gruppi`
     ADD CONSTRAINT `account_gruppi_ibfk_1` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `account_gruppi_ibfk_2_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -38,7 +39,7 @@ ALTER TABLE `account_gruppi`
 -- tipologia: tabella gestita
 ALTER TABLE `account_gruppi_attribuzione`
     ADD CONSTRAINT `account_gruppi_attribuzione_ibfk_1` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `account_gruppi_attribuzione_ibfk_2_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `account_gruppi_attribuzione_ibfk_2_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --| 000006000004
 

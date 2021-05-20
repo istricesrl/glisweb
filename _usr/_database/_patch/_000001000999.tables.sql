@@ -23,6 +23,7 @@
 -- - l'ordine delle colonne rispetta l'ordine master
 -- - le colonne deprecate vanno eliminate
 -- - le colonne sono correttamente documentate, in ordine, nel relativo file dox
+-- - non viene riportato il valore di AUTO INCREMENT
 --
 
 --| 000001000001
@@ -50,6 +51,7 @@ CREATE TABLE IF NOT EXISTS `account` (
 
 -- account_gruppi
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 15:56 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `account_gruppi` (
   `id` int(11) NOT NULL,
   `id_account` int(11) NOT NULL,

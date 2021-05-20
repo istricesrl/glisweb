@@ -88,10 +88,13 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
-    account_gruppi_ibfk_1            | id_account                   | account.id
-    account_gruppi_ibfk_2_nofollow   | id_gruppo                    | gruppi.id
+    chiave                           | campo                        | tabella e campo collegati        | comportamento
+    ---------------------------------|------------------------------|----------------------------------|-------------------
+    account_gruppi_ibfk_1            | id_account                   | account.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    account_gruppi_ibfk_2_nofollow   | id_gruppo                    | gruppi.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+
+    Trattandosi di una tabella di associazione molti a molti, la cancellazione di una qualsiasi delle entità principali comporta l'eliminazione
+    delle relative associazioni.
 
     La vista *account_gruppi_view* relativa alla tabella *account_gruppi* presenta le seguenti colonne:
 
@@ -125,10 +128,13 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-    account_gruppi_attribuzione_ibfk_1            | id_account                   | account.id
-    account_gruppi_attribuzione_ibfk_2_nofollow   | id_gruppo                    | gruppi.id
+    chiave                                        | campo                        | tabella e campo collegati        | comportamento
+    ----------------------------------------------|------------------------------|----------------------------------|-------------------
+    account_gruppi_attribuzione_ibfk_1            | id_account                   | account.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    account_gruppi_attribuzione_ibfk_2_nofollow   | id_gruppo                    | gruppi.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+
+    Trattandosi di una tabella di associazione molti a molti, la cancellazione di una qualsiasi delle entità principali comporta l'eliminazione
+    delle relative associazioni.
 
     La vista *account_gruppi_attribuzione_view* relativa alla tabella *account_gruppi_attribuzione* presenta le seguenti colonne:
 
