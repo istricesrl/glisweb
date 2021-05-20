@@ -75,4 +75,11 @@
 
         }
 
+    } elseif( isset( $_REQUEST['__job__'] ) ) {
+
+        // TODO creare il job e restituire l'ID
+        // __job__ campo job
+        // __wksp__ campo workspace
+        // __nome__ campo nome
+
     }
