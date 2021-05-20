@@ -65,6 +65,7 @@ DROP TABLE IF EXISTS `account_gruppi_view`;
 
 -- account_gruppi_view
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 17:11 Fabio Mosti
 CREATE OR REPLACE VIEW account_gruppi_view AS
 	SELECT
 		account_gruppi.id,
@@ -92,6 +93,7 @@ DROP TABLE IF EXISTS `account_gruppi_attribuzione_view`;
 
 -- account_gruppi_attribuzione_view
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 17:12 Fabio Mosti
 CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 	SELECT
 		account_gruppi_attribuzione.id,
@@ -121,46 +123,22 @@ DROP TABLE IF EXISTS `anagrafica_view`;
 
 -- anagrafica_view
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 18:47 Fabio Mosti
 CREATE OR REPLACE VIEW anagrafica_view AS
 	SELECT
-		id,
-		codice,
-		riferimento,
-		id_tipologia,
-		nome,
-		cognome,
-		denominazione,
-		soprannome,
-		sesso,
-		stato_civile,
-		id_orientamento_sessuale,
-		codice_fiscale,
-		partita_iva,
-		codice_sdi,
-		id_pec_sdi,
-		id_regime_fiscale,
-		note_amministrative,
-		luogo_nascita,
-		stato_nascita,
-		id_stato_nascita,
-		comune_nascita,
-		giorno_nascita,
-		mese_nascita,
-		anno_nascita,
-		id_tipologia_crm,
-		id_agente,
-		note_commerciali,
-		condizioni_vendita,
-		condizioni_acquisto,
-		note,
-		data_cessazione,
-		note_cessazione,
-		recapiti,
-		se_importata,
-		se_stampa_privacy,
-		group_concat( DISTINCT pec.indirizzo ) AS pec_sdi,
-		group_concat( DISTINCT indirizzi_view.sigla_stato ) AS sigla_stato,
-		group_concat( DISTINCT stati.nome SEPARATOR ' | ' ) AS cittadinanze,
+		anagrafica.id,
+		anagrafica.codice,
+		anagrafica.riferimento,
+		tipologie_anagrafica.nome AS tipologia,
+		anagrafica.nome,
+		anagrafica.cognome,
+		anagrafica.denominazione,
+		anagrafica.soprannome,
+		anagrafica.sesso,
+		anagrafica.codice_fiscale,
+		anagrafica.partita_iva,
+		tipologie_crm.nome AS tipologia_crm,
+		anagrafica.recapiti,
 		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
 		max( categorie_anagrafica.se_dipendente ) AS se_dipendente,
 		max( categorie_anagrafica.se_interinale ) AS se_interinale,
@@ -184,20 +162,9 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		max( categorie_anagrafica.se_referente ) AS se_referente,
 		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
 		max( categorie_anagrafica.se_squadra ) AS se_squadra,
-		coalesce(
-			anagrafica.denominazione,
-			concat_ws(' ', coalesce(anagrafica.cognome, ''),
-			coalesce(anagrafica.nome, '') ),
-			''
-		) AS denominazione_fiscale,
-		coalesce( aAgente.soprannome, aAgente.denominazione , concat( aAgente.cognome, ' ', aAgente.nome ), '' ) AS agente,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
-		group_concat( DISTINCT categorie_diritto.nome SEPARATOR ' | ' ) AS specialita,
-		group_concat( DISTINCT provincie.sigla SEPARATOR ' | ' ) AS provincie,
-		group_concat( DISTINCT regimi_fiscali.codice ) AS codice_regime_fiscale,
-		group_concat( DISTINCT __acl_anagrafica__.id_gruppo SEPARATOR ' | ' ) AS id_gruppi_autorizzati,
 		coalesce(
 			anagrafica.soprannome,
 			anagrafica.denominazione,
@@ -206,19 +173,12 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 			''
 		) AS __label__
 	FROM anagrafica
+		LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia
+		LEFT JOIN tipologie_crm ON tipologie_crm.id = anagrafica.id_tipologia_crm
 		LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id
 		LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
 		LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id
 		LEFT JOIN mail ON mail.id_anagrafica = anagrafica.id
-		LEFT JOIN regimi_fiscali ON regimi_fiscali.id = anagrafica.id_regime_fiscale
-		LEFT JOIN mail AS pec ON ( pec.id = anagrafica.id_pec_sdi AND mail.se_pec = 1 )
-		LEFT JOIN anagrafica AS aAgente ON aAgente.id = anagrafica.id_agente
-		LEFT JOIN indirizzi_view ON ( indirizzi_view.id_anagrafica = anagrafica.id AND indirizzi_view.se_sede = 1 )
-		LEFT JOIN provincie ON provincie.id = indirizzi_view.id_provincia
-		LEFT JOIN anagrafica_categorie_diritto ON anagrafica_categorie_diritto.id_anagrafica = anagrafica.id
-		LEFT JOIN categorie_diritto ON categorie_diritto.id = anagrafica_categorie_diritto.id_diritto 
-		LEFT JOIN anagrafica_cittadinanze ON anagrafica_cittadinanze.id_anagrafica = anagrafica.id
-		LEFT JOIN stati ON stati.id = anagrafica_cittadinanze.id_stato
 		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
 	WHERE anagrafica.data_cessazione IS NULL
 	GROUP BY anagrafica.id
@@ -235,46 +195,22 @@ DROP TABLE IF EXISTS `anagrafica_archiviati_view`;
 
 -- anagrafica_archiviati_view
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:15 Fabio Mosti
 CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 	SELECT
-		id,
-		codice,
-		riferimento,
-		id_tipologia,
-		nome,
-		cognome,
-		denominazione,
-		soprannome,
-		sesso,
-		stato_civile,
-		id_orientamento_sessuale,
-		codice_fiscale,
-		partita_iva,
-		codice_sdi,
-		id_pec_sdi,
-		id_regime_fiscale,
-		note_amministrative,
-		luogo_nascita,
-		stato_nascita,
-		id_stato_nascita,
-		comune_nascita,
-		giorno_nascita,
-		mese_nascita,
-		anno_nascita,
-		id_tipologia_crm,
-		id_agente,
-		note_commerciali,
-		condizioni_vendita,
-		condizioni_acquisto,
-		note,
-		data_cessazione,
-		note_cessazione,
-		recapiti,
-		se_importata,
-		se_stampa_privacy,
-		group_concat( DISTINCT pec.indirizzo ) AS pec_sdi,
-		group_concat( DISTINCT indirizzi_view.sigla_stato ) AS sigla_stato,
-		group_concat( DISTINCT stati.nome SEPARATOR ' | ' ) AS cittadinanze,
+		anagrafica.id,
+		anagrafica.codice,
+		anagrafica.riferimento,
+		tipologie_anagrafica.nome AS tipologia,
+		anagrafica.nome,
+		anagrafica.cognome,
+		anagrafica.denominazione,
+		anagrafica.soprannome,
+		anagrafica.sesso,
+		anagrafica.codice_fiscale,
+		anagrafica.partita_iva,
+		tipologie_crm.nome AS tipologia_crm,
+		anagrafica.recapiti,
 		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
 		max( categorie_anagrafica.se_dipendente ) AS se_dipendente,
 		max( categorie_anagrafica.se_interinale ) AS se_interinale,
@@ -298,20 +234,10 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		max( categorie_anagrafica.se_referente ) AS se_referente,
 		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
 		max( categorie_anagrafica.se_squadra ) AS se_squadra,
-		coalesce(
-			anagrafica.denominazione,
-			concat_ws(' ', coalesce(anagrafica.cognome, ''),
-			coalesce(anagrafica.nome, '') ),
-			''
-		) AS denominazione_fiscale,
-		coalesce( aAgente.soprannome, aAgente.denominazione , concat( aAgente.cognome, ' ', aAgente.nome ), '' ) AS agente,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
-		group_concat( DISTINCT categorie_diritto.nome SEPARATOR ' | ' ) AS specialita,
-		group_concat( DISTINCT provincie.sigla SEPARATOR ' | ' ) AS provincie,
-		group_concat( DISTINCT regimi_fiscali.codice ) AS codice_regime_fiscale,
-		group_concat( DISTINCT __acl_anagrafica__.id_gruppo SEPARATOR ' | ' ) AS id_gruppi_autorizzati,
+		anagrafica.data_cessazione,
 		coalesce(
 			anagrafica.soprannome,
 			anagrafica.denominazione,
@@ -320,24 +246,16 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 			''
 		) AS __label__
 	FROM anagrafica
+		LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia
+		LEFT JOIN tipologie_crm ON tipologie_crm.id = anagrafica.id_tipologia_crm
 		LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id
 		LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
 		LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id
 		LEFT JOIN mail ON mail.id_anagrafica = anagrafica.id
-		LEFT JOIN regimi_fiscali ON regimi_fiscali.id = anagrafica.id_regime_fiscale
-		LEFT JOIN mail AS pec ON ( pec.id = anagrafica.id_pec_sdi AND mail.se_pec = 1 )
-		LEFT JOIN anagrafica AS aAgente ON aAgente.id = anagrafica.id_agente
-		LEFT JOIN indirizzi_view ON ( indirizzi_view.id_anagrafica = anagrafica.id AND indirizzi_view.se_sede = 1 )
-		LEFT JOIN provincie ON provincie.id = indirizzi_view.id_provincia
-		LEFT JOIN anagrafica_categorie_diritto ON anagrafica_categorie_diritto.id_anagrafica = anagrafica.id
-		LEFT JOIN categorie_diritto ON categorie_diritto.id = anagrafica_categorie_diritto.id_diritto 
-		LEFT JOIN anagrafica_cittadinanze ON anagrafica_cittadinanze.id_anagrafica = anagrafica.id
-		LEFT JOIN stati ON stati.id = anagrafica_cittadinanze.id_stato
 		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
 	WHERE anagrafica.data_cessazione IS NOT NULL
 	GROUP BY anagrafica.id
 	ORDER BY __label__
-;
 
 --| 000008000011
 
@@ -349,19 +267,20 @@ DROP TABLE IF EXISTS `anagrafica_categorie_view`;
 
 -- anagrafica_categorie_view
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:15 Fabio Mosti
 CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 	SELECT
-		id,
-		id_anagrafica,
-		id_categoria,
+		anagrafica_categorie.id,
+		anagrafica_categorie.id_anagrafica,
+		anagrafica_categorie.id_categoria,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			'/',
 			categorie_anagrafica.nome
 		) AS __label__
 	FROM anagrafica_categorie
-	INNER JOIN anagrafica ON anagrafica.id = anagrafica_categorie.id_anagrafica
-	INNER JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
+		INNER JOIN anagrafica ON anagrafica.id = anagrafica_categorie.id_anagrafica
+		INNER JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
 	ORDER BY __label__
 ;
 
