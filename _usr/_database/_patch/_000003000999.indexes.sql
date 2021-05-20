@@ -1555,7 +1555,17 @@ ALTER TABLE `modalita_spedizione_prezzi`
 	ADD KEY `indice` (`id`,`id_modalita`,`id_zona`,`id_categoria_prodotti`,`id_prodotto`,`id_listino`,`id_valuta`,`id_iva`);
 ALTER TABLE `modalita_spedizione_prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000112
 
+-- motivazioni_tari_anagrafica
+-- tipologia: tabella di supporto
+ALTER TABLE `motivazioni_tari_anagrafica`
+ 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_motivazione` (`id_tari_anagrafica`,`id_motivazione`), 
+	ADD KEY `id_tari_anagrafica` (`id_tari_anagrafica`), 
+	ADD KEY `id_motivazione` (`id_motivazione`),
+	ADD KEY `indice` (`id`,`id_tari_anagrafica`,`id_motivazione`,`riga_provenienza`,`riga`);
+ALTER TABLE `motivazioni_tari_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -
 -| FINE FILE
