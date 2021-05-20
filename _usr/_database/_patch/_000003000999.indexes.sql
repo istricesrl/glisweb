@@ -665,8 +665,36 @@ ALTER TABLE `continenti`
 	ADD KEY `indice` (`id`,`codice`,`nome`);
 ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000047
 
+-- contratti`
+-- tipologia: tabella gestita
+ALTER TABLE `contratti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_agenzia` (`id_agenzia`),
+	ADD KEY `id_tipologia_qualifica` (`id_tipologia_qualifica`), 
+	ADD KEY `id_tipologia_durata` (`id_tipologia_durata`), 
+	ADD KEY `id_tipologia_orario` (`id_tipologia_orario`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_agenzia`);
+ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000048
 
+-- costi_contratti`
+-- tipologia: tabella gestita
+ALTER TABLE `costi_contratti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD UNIQUE KEY `unico` (`id_contratto`,`id_tipologia`);
+ALTER TABLE `costi_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000049
+
+-- coupon
+-- tipologia: tabella gestita
+ALTER TABLE `coupon`
+ ADD PRIMARY KEY (`id`);
 
 --| FINE FILE
