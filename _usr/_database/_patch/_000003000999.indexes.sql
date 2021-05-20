@@ -1664,6 +1664,50 @@ ALTER TABLE `orientamenti_sessuali`
 	ADD KEY `indice` (`id`,`nome`);
 ALTER TABLE `orientamenti_sessuali` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000120
 
+-- pagine
+-- tipologia: tabella gestita
+ALTER TABLE `pagine`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia_pubblicazione`,`nome`,`se_sitemap`,`se_cacheable`);
+ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000121
+
+-- pagine_gruppi
+-- tipologia: tabella gestita
+ALTER TABLE `pagine_gruppi`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_gruppo` (`id_gruppo`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_gruppo`);
+ALTER TABLE `pagine_gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000122
+
+-- patrocini_pratiche
+-- tipologia: tabella gestita
+ALTER TABLE `patrocini_pratiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_pratica` (`id_pratica`),
+	ADD KEY `indice` (`id`,`id_pratica`,`nome`,`se_liquidato`,`se_fatturato`);
+ALTER TABLE `patrocini_pratiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000123
+
+-- periodi_variazioni_attivita
+-- tipologia: tabella gestita
+ALTER TABLE `periodi_variazioni_attivita`
+ ADD PRIMARY KEY (`id`), 
+ ADD UNIQUE KEY `unica` (`id_variazione`,`data_inizio`,`data_fine`,`ora_inizio`,`ora_fine`), 
+ ADD KEY `id_variazione` (`id_variazione`),
+ ADD KEY `indice` (`id`,`id_variazione`,`data_inizio`,`data_fine`,`ora_inizio`,`ora_fine`);
+ ALTER TABLE `periodi_variazioni_attivita`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -
 -| FINE FILE
