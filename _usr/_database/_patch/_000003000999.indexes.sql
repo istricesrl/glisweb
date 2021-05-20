@@ -130,6 +130,7 @@ ALTER TABLE `anagrafica_cittadinanze` MODIFY `id` int(11) NOT NULL AUTO_INCREMEN
 
 -- anagrafica_condizioni_pagamento
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 21:59 Fabio Mosti
 ALTER TABLE `anagrafica_condizioni_pagamento`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_condizione`), 

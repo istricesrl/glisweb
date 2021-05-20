@@ -52,7 +52,6 @@ CREATE OR REPLACE DEFINER = CURRENT_USER() VIEW account_view AS
 		LEFT JOIN account_gruppi_attribuzione ON account_gruppi_attribuzione.id_account = account.id
 		LEFT JOIN gruppi ON gruppi.id = account_gruppi.id_gruppo
 	GROUP BY account.id
-	ORDER BY __label__
 ;
 
 --| 000008000003
@@ -80,7 +79,6 @@ CREATE OR REPLACE VIEW account_gruppi_view AS
 	FROM account_gruppi
 		INNER JOIN account ON account.id = account_gruppi.id_account
 		INNER JOIN gruppi ON gruppi.id = account_gruppi.id_gruppo
-	ORDER BY __label__
 ;
 
 --| 000008000005
@@ -110,7 +108,6 @@ CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 	FROM account_gruppi_attribuzione
 		INNER JOIN account ON account.id = account_gruppi_attribuzione.id_account
 		INNER JOIN gruppi ON gruppi.id = account_gruppi_attribuzione.id_gruppo
-	ORDER BY __label__
 ;
 
 --| 000008000007
@@ -182,7 +179,6 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
 	WHERE anagrafica.data_cessazione IS NULL
 	GROUP BY anagrafica.id
-	ORDER BY __label__
 ;
 
 --| 000008000008
@@ -255,7 +251,7 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
 	WHERE anagrafica.data_cessazione IS NOT NULL
 	GROUP BY anagrafica.id
-	ORDER BY __label__
+;
 
 --| 000008000011
 
@@ -281,10 +277,15 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 	FROM anagrafica_categorie
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_categorie.id_anagrafica
 		INNER JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
-	ORDER BY __label__
 ;
 
---| 000008000013
+--| 000008000011
+
+-- anagrafica_categorie_diritto_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_categorie_diritto_view`;
+
+--| 000008000014
 
 -- anagrafica_categorie_diritto_view
 -- tipologia: tabella gestita
@@ -303,10 +304,15 @@ CREATE OR REPLACE VIEW anagrafica_categorie_diritto_view AS
 	FROM anagrafica_categorie_diritto
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_categorie_diritto.id_anagrafica
 		INNER JOIN categorie_diritto ON categorie_diritto.id = anagrafica_categorie_diritto.id_categoria
-	ORDER BY __label__
 ;
 
---| 000008000014
+--| 000008000015
+
+-- anagrafica_cittadinanze_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_cittadinanze_view`;
+
+--| 000008000016
 
 -- anagrafica_cittadinanze_view
 -- tipologia: tabella gestita
@@ -314,9 +320,11 @@ CREATE OR REPLACE VIEW anagrafica_categorie_diritto_view AS
 DROP TABLE IF EXISTS `anagrafica_cittadinanze_view`;
 CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 	SELECT
-	anagrafica_cittadinanze.id,
-	anagrafica_cittadinanze.id_anagrafica,
-	anagrafica_cittadinanze.id_stato,
+		anagrafica_cittadinanze.id,
+		anagrafica_cittadinanze.id_anagrafica,
+		anagrafica_cittadinanze.id_stato,
+		anagrafica_cittadinanze.data_inizio,
+		anagrafica_cittadinanze.data_fine,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			'/',
@@ -325,6 +333,33 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 	FROM anagrafica_cittadinanze
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_cittadinanze.id_anagrafica
 		INNER JOIN stati ON stati.id = anagrafica_cittadinanze.id_stato
+;
+
+--| 000008000017
+
+-- anagrafica_condizioni_pagamento_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_condizioni_pagamento_view`;
+
+--| 000008000018
+
+-- anagrafica_condizioni_pagamento_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-20 22:04 Fabio Mosti
+DROP TABLE IF EXISTS `anagrafica_condizioni_pagamento_view`;
+CREATE OR REPLACE VIEW `anagrafica_condizioni_pagamento_view` AS
+	SELECT
+		anagrafica_condizioni_pagamento.id,
+		anagrafica_condizioni_pagamento.id_anagrafica,
+		anagrafica_condizioni_pagamento.id_condizione,
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			'/',
+			condizioni_pagamento.nome
+		) AS __label__
+	FROM anagrafica_condizioni_pagamento
+		INNER JOIN anagrafica ON anagrafica.id = anagrafica_condizioni_pagamento.id_anagrafica
+		INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = anagrafica_condizioni_pagamento.id_condizione
 ;
 
 --| FINE FILE

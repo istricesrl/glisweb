@@ -163,10 +163,12 @@ CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
 
 -- anagrafica_condizioni_pagamento
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 21:59 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_condizioni_pagamento` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
-  `id_condizione` int(11) NOT NULL
+  `id_condizione` int(11) NOT NULL,
+  `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000009
@@ -179,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `id_anagrafica` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `interno` char(8) DEFAULT NULL,
-  `descrizione` text
+  `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000010

@@ -337,13 +337,19 @@
 
     chiave                                        | campo                        | tabella e campo collegati    | comportamento
     ----------------------------------------------|------------------------------|------------------------------|-----------------------
-    anagrafica_cittadinanze_ibfk_01               | id_anagrafica                | anagrafica.id                | ON DELETE CASCADE ON UPDATE CASCADE,
-    anagrafica_cittadinanze_ibfk_02_nofollow      | id_stato                     | stati.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION;
+    anagrafica_cittadinanze_ibfk_01               | id_anagrafica                | anagrafica.id                | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_cittadinanze_ibfk_02_nofollow      | id_stato                     | stati.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *anagrafica_cittadinanze_view* relativa alla tabella *anagrafica_cittadinanze* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_cittadinanze_view.id                        | -
+    anagrafica_cittadinanze_view.id_anagrafica             | -
+    anagrafica_cittadinanze_view.id_stato                  | -
+    anagrafica_cittadinanze_view.data_inizio               | -
+    anagrafica_cittadinanze_view.data_fine                 | -
+    anagrafica_cittadinanze_view.__label__                 | l'etichetta che descrive la cittadinanza
 
     anagrafica_condizioni_pagamento
     -------------------------------
@@ -355,16 +361,23 @@
     anagrafica_condizioni_pagamento.id                 | l'ID dell'associazione fra anagrafica e condizione di pagamento
     anagrafica_condizioni_pagamento.id_anagrafica      | l'ID dell'anagrafica
     anagrafica_condizioni_pagamento.id_condizione      | l'ID della condizione di pagamento
+    anagrafica_condizioni_pagamento.note               | note sull'associazione con la condizione di pagamento
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                              | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------------------------|-------------------------------|-------------------------------|----------------------
+    anagrafica_condizioni_pagamento_ibfk_01             | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_condizioni_pagamento_ibfk_02_nofollow    | id_condizione                 | condizioni_pagamento.id       | ON DELETE CASCADE ON UPDATE CASCADE
 
     La vista *anagrafica_condizioni_pagamento_view* relativa alla tabella *anagrafica_condizioni_pagamento* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_condizioni_pagamento_view.id                | -
+    anagrafica_condizioni_pagamento_view.id_anagrafica     | -
+    anagrafica_condizioni_pagamento_view.id_condizione     | -
+    anagrafica_condizioni_pagamento_view.__label__         | etichetta descrittiva dell'associazione con la condizione di pagamento
 
     anagrafica_indirizzi
     --------------------

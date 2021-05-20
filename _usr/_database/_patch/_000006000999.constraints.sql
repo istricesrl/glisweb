@@ -89,4 +89,13 @@ ALTER TABLE `anagrafica_cittadinanze`
     ADD CONSTRAINT `anagrafica_cittadinanze_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `anagrafica_cittadinanze_ibfk_02_nofollow` FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+--| 000006000008
+
+-- anagrafica_condizioni_pagamento
+-- tipologia: tabella gestita
+-- verifica: 2021-05-20 22:01 Fabio Mosti
+ALTER TABLE `anagrafica_condizioni_pagamento`
+    ADD CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_02_nofollow` FOREIGN KEY (`id_condizione`) REFERENCES `condizioni_pagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 --| FINE FILE
