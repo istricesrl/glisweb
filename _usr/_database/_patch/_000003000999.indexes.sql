@@ -1811,6 +1811,75 @@ ALTER TABLE `pratiche_servizi_contatto` MODIFY `id` int(11) NOT NULL AUTO_INCREM
 
 --| 000003000131
 
+-- prezzi
+-- tipologia: tabella gestita
+ALTER TABLE `prezzi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `prodotto_unico` (`id_prodotto`,`id_listino`,`id_iva`,`id_valuta`) USING BTREE, 
+	ADD UNIQUE KEY `articolo_unico` (`id_articolo`,`id_listino`,`id_iva`,`id_valuta`) USING BTREE, 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
+	ADD KEY `id_iva` (`id_iva`), 
+	ADD KEY `id_valuta` (`id_valuta`),  
+	ADD KEY `id_udm` (`id_udm`), 
+	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `indice` (`id`,`id_articolo`,id_prodotto`,`id_listino`,`id_iva`,`id_valuta`);
+ALTER TABLE `prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000132
+
+-- priorita
+-- tipologia: tabella di supporto
+ALTER TABLE `priorita`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`,`ordine`);
+ALTER TABLE `priorita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000133
+
+-- prodotti
+-- tipologia: tabella gestita
+	ALTER TABLE `prodotti`	
+	ADD PRIMARY KEY (`id`), 	
+	ADD KEY `id_tipologia` (`id_tipologia`), 	
+	ADD KEY `id_udm` (`id_udm`), 	
+	ADD KEY `id_ingombro` (`id_ingombro`), 	
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 	
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`), 	
+	ADD KEY `id_produttore` (`id_produttore`), 	
+	ADD KEY `id_marchio` (`id_marchio`), 	
+	ADD KEY `id_fornitore` (`id_fornitore`),	
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `indice` (`id`,`nome`,`id_tipologia`,`ordine`,`id_fornitore`,`id_marchio`,`id_fornitore`,`se_disponibile`,`se_importata`);
+
+--| 000003000134
+
+-- prodotti_categorie
+-- tipologia: tabella gestita
+ALTER TABLE `prodotti_categorie`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_prodotto` (`id_prodotto`,`id_categoria`), 
+	ADD KEY `id_categoria` (`id_categoria`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `se_principale` (`se_principale`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_categoria`,`ordine`,`se_principale`,`id_ruolo`);
+ALTER TABLE `prodotti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000135
+
+-- prodotti_caratteristiche
+-- tipologia: tabella gestita
+ALTER TABLE `prodotti_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_prodotto` (`id_prodotto`,`id_caratteristica`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`), 
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`,`se_non_presente`);
+ALTER TABLE `prodotti_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -
 -| FINE FILE
