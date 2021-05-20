@@ -16,11 +16,19 @@
 -- 000010 -> statiche
 -- 000011 -> trigger
 --
+-- CRITERI DI VERIFICA
+-- una tabella si può marcare come verificata dopo aver controllato le seguenti cose:
+-- - non è deprecata (se lo è, eliminarla)
+-- - le colonne corrispondono al database master
+-- - l'ordine delle colonne rispetta l'ordine master
+-- - le colonne deprecate vanno eliminate
+--
 
 --| 000001000001
 
 -- account
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 13:57 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `account` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
@@ -30,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `se_attivo` int(1) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
   `timestamp_login` int(11) DEFAULT NULL,
+  `timestamp_cambio_password` int(11) DEFAULT NULL
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -742,28 +751,6 @@ CREATE TABLE IF NOT EXISTS `coupon_stagioni` (
   `id_stagione` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000055
-
--- cron
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `cron` (
-  `id` int(11) NOT NULL,
-  `minuto` int(11) DEFAULT NULL,
-  `ora` int(11) DEFAULT NULL,
-  `giorno_del_mese` int(11) DEFAULT NULL,
-  `mese` int(11) DEFAULT NULL,
-  `giorno_della_settimana` int(11) DEFAULT NULL,
-  `settimana` int(11) DEFAULT NULL,
-  `task` char(255) NOT NULL,
-  `iterazioni` int(11) DEFAULT NULL,
-  `delay` int(11) DEFAULT NULL,
-  `timestamp_esecuzione` int(11) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 --| 000001000057
 
 -- date
@@ -1035,7 +1022,6 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_prodotto` char(32) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
-  `id_task` int(11) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_rassegna_stampa` int(11) DEFAULT NULL,
   `id_evento` int(11) DEFAULT NULL,
@@ -2512,7 +2498,6 @@ CREATE TABLE IF NOT EXISTS `righe_documenti_amministrativi` (
   `id_riferimento` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_pratica` int(11) DEFAULT NULL,
-  `id_task` int(11) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_attivita` int(11) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
@@ -2923,30 +2908,19 @@ CREATE TABLE IF NOT EXISTS `tari_anagrafica` (
 -- task
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `task` (
-`id` int(11) NOT NULL,
-  `id_tipologia` int(11) DEFAULT NULL,
-  `id_priorita` int(11) DEFAULT NULL,
-  `id_anagrafica` int(11) DEFAULT NULL,
-  `id_cliente` int(11) DEFAULT NULL,
-  `id_progetto` char(32) DEFAULT NULL,
-  `id_luogo` int(11) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
-  `testo` text,
-  `ore_previste` decimal(5,2) DEFAULT NULL,
-  `testo_ore_previste` text,
-  `anno_previsto` year(4) DEFAULT NULL,
-  `settimana_prevista` int(11) DEFAULT NULL,
-  `testo_pianificazione` text,
-  `id_responsabile` int(11) DEFAULT NULL,
-  `timestamp_apertura` int(11) DEFAULT NULL,
-  `timestamp_pianificazione` int(11) DEFAULT NULL,
-  `data_scadenza` date DEFAULT NULL,
-  `timestamp_revisione` int(11) DEFAULT NULL,
-  `note_revisione` text,
-  `timestamp_completamento` int(11) DEFAULT NULL,
-  `testo_completamento` text,
+  `id` int(11) NOT NULL,
+  `minuto` int(11) DEFAULT NULL,
+  `ora` int(11) DEFAULT NULL,
+  `giorno_del_mese` int(11) DEFAULT NULL,
+  `mese` int(11) DEFAULT NULL,
+  `giorno_della_settimana` int(11) DEFAULT NULL,
+  `settimana` int(11) DEFAULT NULL,
+  `task` char(255) NOT NULL,
+  `iterazioni` int(11) DEFAULT NULL,
+  `delay` int(11) DEFAULT NULL,
+  `timestamp_esecuzione` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) NOT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3799,7 +3773,5 @@ CREATE TABLE IF NOT EXISTS `zone_stati` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 
 --| FINE FILE

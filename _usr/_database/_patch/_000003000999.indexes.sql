@@ -2,14 +2,23 @@
 -- INDICI
 -- questo file contiene le query per la creazione degli indici delle tabelle
 --
--- NOTE
---
+-- CRITERI DI VERIFICA
+-- una definizione di indici può dirsi verificata se:
+-- - non si riferisce a tabelle deprecate e non contiene colonne deprecate
+-- - riporta prima le definizioni di chiavi primarie, poi le uniche, poi gli indici generali
+-- - le chiavi uniche sono nominate con il prefisso unica_ (la prima si chiama semplicemente unica)
+-- - nella parte degli indici generali, riporta per primi gli indici che si riferiscono a chiavi esterne (identificate dal prefisso id_)
+-- - nella parte degli indici generali, le colonne appaiono nell'ordine in cui compaiono nella tabella
+-- - nella parte degli indici generali, le colonne indicizzate appaiono nello stesso ordine in cui appaiono nella tabella
+-- - nella parte degli indici generali, dopo le colonne relative a chiavi esterne appaiono le colonne di flag (identificate dal prefisso se_)
+-- - la parte degli indidi si chiude con gli indici multicolonna, nominati con il prefisso indice_ (il primo si chiama semplicemente indice)
 --
 
 --| 000003000001
 
 -- account
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 13:59 Fabio Mosti
 ALTER TABLE `account`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`username`),
@@ -19,6 +28,7 @@ ALTER TABLE `account`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `se_attivo` (`se_attivo`),
 	ADD KEY `token` (`token`),
+	ADD KEY `timestamp_cambio_password` (`timestamp_cambio_password`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`username`,`id_mail`,`password`,`se_attivo`,`token`);
 ALTER TABLE `account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 

@@ -2,6 +2,14 @@
 -- VISTE
 -- questo file contiene le query per la creazione delle viste
 --
+-- CRITERI DI VERIFICA
+-- una definizione di view si può definire verificata se:
+-- - riporta esplicitamente tutte e sole le colonne significative (evitare SELECT * FROM)
+-- - le colonne appaiono nell'ordine in cui si trovano nella tabella, al netto delle colonne aggiunte dalla view
+-- - la view si riferisce a una tabella non deprecata e non contengono colonne deprecate
+-- - la view non fa riferimento a tabelle o colonne deprecate
+-- - il definer è CURRENT_USER()
+--
 
 --| 000008000001
 
@@ -13,6 +21,7 @@ DROP TABLE IF EXISTS `account_view`;
 
 -- account_view
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 14:27 Fabio Mosti
 CREATE OR REPLACE DEFINER = CURRENT_USER() VIEW account_view AS
 	SELECT
 		account.id,

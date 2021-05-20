@@ -681,33 +681,4 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
-    cron
-    ----
-    Questa tabella *gestita* descrive le operazioni pianificate del framework; viene consultata da _src/_api/_cron.php per eseguire task e job
-    secondo la pianificazione prevista. Per maggiori dettagli si veda \ref crontab "la pagina della documentazione relativa alle operazioni pianificate".
-
-    colonna                         | descrizione
-    --------------------------------|---------------------------------------------------------------------------------------
-    cron.id                         | l'ID dell'operazione pianificata
-    cron.minuto                     | il minuto pianificato per l'esecuzione (NULL sta per qualsiasi valore)
-    cron.ora                        | l'ora pianificata per l'esecuzione (NULL sta per qualsiasi valore)
-    cron.giorno_del_mese            | il giorno del mese pianificato per l'esecuzione (NULL sta per qualsiasi valore)
-    cron.mese                       | il mese pianificato per l'esecuzione (NULL sta per qualsiasi valore)
-    cron.giorno_della_settimana     | il giorno della settimana pianificato per l'esecuzione (NULL sta per qualsiasi valore)
-    cron.settimana                  | il numero della settimana pianificata per l'esecuzione (NULL sta per qualsiasi valore)
-    cron.task                       | il percorso per il task da eseguire al momento specificato
-    cron.iterazioni                 | il numero di esecuzioni da compiere (minimo una)
-    cron.delay                      | il tempo di attesa in secondi fra un'esecuzione e la successiva dello stesso task
-    cron.timestamp_esecuzione       | la timestamp di ultima esecuzione della pianificazione
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *cron_view* relativa alla tabella *cron* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-
 */

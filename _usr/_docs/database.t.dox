@@ -79,45 +79,31 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     task
-    -----
-    Questa tabbella *gestista*
-    
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    task.id                           | l'ID dell'operazione pianificata
-    task.id_tipologia                 | l'ID della tipologia di task
-    task.id_priorita                  | l'ID della definizione della priorità associata all'operazione
-    task.id_anagrafica                | 
-    task.id_cliente                   | l'ID del cliente associato alla task
-    task.id_progetto                  | l'ID del progetto della task
-    task.id_luogo                     | l'ID del luogo della task
-    task.nome                         | nome assegnato alla task
-    task.testo                        | 
-    task.ore_previste                 | 
-    task.testo_ore_previste           |
-    task.anno_previsto                | 
-    task.settimana_prevista           | 
-    task.testo_pianificazione         | 
-    task.id_responsabile              | 
-    task.timestamp_apertura           | 
-    task.timestamp_pianificazione     | 
-    task.data_scadenza                | 
-    task.timestamp_revisione          | 
-    task.note_revisione               | 
-    task.timestamp_completamento      | 
-    task.testo_completamento          | 
-    task.id_account_inserimento       | 
-    task.timestamp_inserimento        | 
-    task.id_account_aggiornamento     | 
-    task.timestamp_aggiornamento      | 
+    ----
+    Questa tabella *gestita* descrive le operazioni pianificate del framework; viene consultata da _src/_api/_cron.php per eseguire task e job
+    secondo la pianificazione prevista. Per maggiori dettagli si veda \ref crontab "la pagina della documentazione relativa alle operazioni pianificate".
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    task.id                         | l'ID dell'operazione pianificata
+    task.minuto                     | il minuto pianificato per l'esecuzione (NULL sta per qualsiasi valore)
+    task.ora                        | l'ora pianificata per l'esecuzione (NULL sta per qualsiasi valore)
+    task.giorno_del_mese            | il giorno del mese pianificato per l'esecuzione (NULL sta per qualsiasi valore)
+    task.mese                       | il mese pianificato per l'esecuzione (NULL sta per qualsiasi valore)
+    task.giorno_della_settimana     | il giorno della settimana pianificato per l'esecuzione (NULL sta per qualsiasi valore)
+    task.settimana                  | il numero della settimana pianificata per l'esecuzione (NULL sta per qualsiasi valore)
+    task.task                       | il percorso per il task da eseguire al momento specificato
+    task.iterazioni                 | il numero di esecuzioni da compiere (minimo una)
+    task.delay                      | il tempo di attesa in secondi fra un'esecuzione e la successiva dello stesso task
+    task.timestamp_esecuzione       | la timestamp di ultima esecuzione della pianificazione
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
     La vista *task_view* relativa alla tabella *task* presenta le seguenti colonne:
-    
+
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
