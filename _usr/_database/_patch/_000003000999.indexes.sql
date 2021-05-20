@@ -1203,4 +1203,93 @@ ALTER TABLE `indirizzi`
 	ADD KEY `indice` (`id`,`indirizzo`,`civico`,`cap`,`id_comune`,`id_tipologia`,`id_agente`);
 ALTER TABLE `indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| FINE FILE
+  --| 000003000084
+  
+  -- indirizzi_caratteristiche
+-- tipologia: tabella gestita
+ALTER TABLE `indirizzi_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_indirizzo`,`id_caratteristica`), 
+	ADD KEY `id_indirizzo` (`id_indirizzo`), 
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `indice` (`id`,`id_indirizzo`,`id_caratteristica`);
+ALTER TABLE `indirizzi_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+
+--| 000003000085
+
+-- ingombri
+-- tipologia: tabella gestita
+ALTER TABLE `ingombri`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `min` (`min`),
+	ADD KEY `max` (`max`),
+	ADD KEY `indice` (`id`,`nome`,`min`,`max`);
+ALTER TABLE `ingombri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000086
+
+-- iva
+-- tipologia: tabella di supporto
+ALTER TABLE `iva`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `aliquota` (`aliquota`),
+	ADD KEY `indice` (`id`,`aliquota`,`nome`,`codice`);
+ALTER TABLE `iva` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000087
+
+-- job
+-- tipologia: tabella gestita
+ALTER TABLE `job`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `indice` (`id`,`nome`,`timestamp_apertura`,`corrente`,`delay`,`workspace`,`timestamp_esecuzione`,`timestamp_completamento`);
+ALTER TABLE `job` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000088
+
+-- lingue
+-- tipologia: tabella di supporto
+ALTER TABLE `lingue`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD UNIQUE KEY `iso6391alpha2` (`iso6391alpha2`),
+	ADD UNIQUE KEY `iso6393alpha3` (`iso6393alpha3`),
+	ADD UNIQUE KEY `ietf` (`ietf`),
+	ADD KEY `indice` (`id`,`nome`,`note`,`ietf`);
+ALTER TABLE `lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000089
+
+-- liste_mailing
+-- tipologia: tabella gestita
+ALTER TABLE `liste_mailing`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`);
+ALTER TABLE `liste_mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000090
+
+-- listini
+-- tipologia: tabella assistita
+ALTER TABLE `listini`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `indice` (`id`,`nome`,`id_valuta`);
+ALTER TABLE `listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000091
+-- listini_clienti
+-- tipologia: tabella gestita
+ALTER TABLE `listini_clienti`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_listino` (`id_listino`,`id_cliente`),
+	ADD KEY `id_cliente` (`id_cliente`),
+	ADD KEY `indice` (`id`,`id_listino`,`id_cliente`);
+ALTER TABLE `listini_clienti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+-
+-| FINE FILE
