@@ -466,6 +466,26 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+   
+    anagrafica_servizi_contatto
+    -----------------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità *modalità_pagamento*.
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_servizi_contatto.id                      | l'ID dell'associazione fra anagrafica e il servizio di contatto
+    anagrafica_servizi_contatto.id_anagrafica           | l'ID dell'anagrafica    
+    anagrafica_servizi_contatto.id_servizio_contatto    | l'ID del servizio di contatto
+    anagrafica_servizi_contatto.testo                   | -
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+
+    La vista *anagrafica_servizi_contatto_view* relativa alla tabella *anagrafica_servizi_contatto* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
 
     anagrafica_settori
     ------------------
