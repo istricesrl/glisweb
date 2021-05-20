@@ -89,7 +89,7 @@ ALTER TABLE `anagrafica_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_categorie_diritto`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_diritto`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_diritto`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_diritto` (`id_diritto`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_diritto`);
@@ -101,7 +101,7 @@ ALTER TABLE `anagrafica_categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INC
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_cittadinanze`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_stato`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_stato`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_stato` (`id_stato`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_stato`);
@@ -113,7 +113,7 @@ ALTER TABLE `anagrafica_cittadinanze` MODIFY `id` int(11) NOT NULL AUTO_INCREMEN
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_condizioni_pagamento`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_condizione`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_condizione`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_condizione` (`id_condizione`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_condizione`);
@@ -125,7 +125,7 @@ ALTER TABLE `anagrafica_condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_indirizzi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_indirizzo`,`id_tipologia`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_indirizzo`,`id_tipologia`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_tipologia`);
@@ -174,7 +174,7 @@ ALTER TABLE `anagrafica_ruoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_servizi_contatto`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_servizio_contatto`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_servizio_contatto`), 
 	ADD KEY `id_servizio_contatto` (`id_servizio_contatto`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_servizio_contatto`);
@@ -376,7 +376,8 @@ ALTER TABLE `campagne` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `caratteristiche_articoli`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`);
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
 ALTER TABLE `caratteristiche_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000027
@@ -438,7 +439,6 @@ ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_anagrafica`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `se_rassegna_stampa` (`se_rassegna_stampa`), 
@@ -707,7 +707,7 @@ ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `costi_contratti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_contratto` (`id_contratto`),
-	ADD UNIQUE KEY `unico` (`id_contratto`,`id_tipologia`),
+	ADD UNIQUE KEY `unica` (`id_contratto`,`id_tipologia`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_contratto`,`costo_orario`);
 ALTER TABLE `costi_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
@@ -991,7 +991,7 @@ ALTER TABLE `eventi_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `fatturati`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `fatturato_unico` (`id_cliente`,`id_mandante`,`mese`,`anno`), 
+	ADD UNIQUE KEY `fatturato_unica` (`id_cliente`,`id_mandante`,`mese`,`anno`), 
 	ADD KEY `id_emittente` (`id_emittente`),
 	ADD KEY `indice` (`id`,id_cliente`,`id_mandante`,`mese`,`anno`,`id_emittente`,`id_agente`);
 ALTER TABLE `fatturati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -1087,17 +1087,19 @@ ALTER TABLE `iban`
 	ADD KEY `indice` (`id`,`id_anagrafica`,`iban`);
 ALTER TABLE `iban` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+ --| 000003000078
+ 
 -- immagini
 -- tipologia: tabella gestita
 ALTER TABLE `immagini`
  	ADD PRIMARY KEY (`id`), 
- 	ADD UNIQUE KEY `anagrafica_unico` (`id_anagrafica`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `pagina_unico` (`id_pagina`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `file_unico` (`id_file`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `prodotto_unico` (`id_prodotto`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `categoria_prodotti_unico` (`id_categoria_prodotti`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `evento_unico` (`id_evento`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `categoria_eventi_unico` (`id_categoria_eventi`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `anagrafica_unica` (`id_anagrafica`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `pagina_unica` (`id_pagina`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `file_unica` (`id_file`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `prodotto_unica` (`id_prodotto`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `categoria_prodotti_unica` (`id_categoria_prodotti`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `evento_unico` (`id_eventa`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `categoria_eventi_unica` (`id_categoria_eventi`,`id_ruolo`,`path`), 
  	ADD KEY `path` (`path`), 
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
@@ -1122,6 +1124,8 @@ ALTER TABLE `immagini`
 	ADD KEY `indice` (`id`,`path`,`nome`,`ordine`,`token`,`id_ruolo`,`id_file`,`ordine`,`anno`,`id_anagrafica`,`id_pagina`,`id_notizia`,`id_prodotto`,`id_categoria_prodotti`,`id_evento`,`id_categoria_eventi`);
 ALTER TABLE `immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+ --| 000003000079
+ 
 -- immagini_anagrafica
 -- tipologia: tabella gestita
 ALTER TABLE `immagini_anagrafica`
@@ -1132,5 +1136,71 @@ ALTER TABLE `immagini_anagrafica`
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_ruolo`,`id_immagine`);
 ALTER TABLE `immagini_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
  
+  --| 000003000080
+  
+-- immobili_caratteristiche
+-- tipologia: tabella gestita
+ALTER TABLE `immobili_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_immobile`,`id_caratteristica`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `indice` (`id`,`id_immobile`,`id_caratteristica`);
+ALTER TABLE `immobili_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+  --| 000003000081
+  
+-- incarichi_immobili
+-- tipologia: tabella gestita
+ALTER TABLE `incarichi_immobili`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id` (`id`), 
+	ADD UNIQUE KEY `incarico_unico` (`id_immobile`,`id_agenzia`,`data_inizio`), 
+	ADD KEY `id_agenzia` (`id_agenzia`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_cliente` (`id_cliente`), 
+	ADD KEY `id_esito` (`id_esito_incarico`), 
+	ADD KEY `id_agente` (`id_agente`), 
+	ADD KEY `id_esito_incarico` (`id_esito_incarico`), 
+	ADD KEY `id_esito_notizia` (`id_esito_notizia`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_account_editor` (`id_account_editor`),
+	ADD KEY `indice` (`id`,`id_immobile`,`id_agenzia`,`data_inizio`,`id_tipologia`,`id_cliente`);
+ALTER TABLE `incarichi_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+  --| 000003000082
+
+-- incroci_immobili
+-- tipologia: tabella gestita
+ALTER TABLE `incroci_immobili`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_incarico`,`id_richiesta`), 
+	ADD KEY `id_incarico` (`id_incarico`), 
+	ADD KEY `id_richiesta` (`id_richiesta`), 
+	ADD KEY `id_esito` (`id_esito`),
+	ADD KEY `indice` (`id`,`id_incarico`,`id_richiesta`);
+ALTER TABLE `incroci_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+  --| 000003000083
+
+-- indirizzi
+-- tipologia: tabella gestita
+ALTER TABLE `indirizzi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`indirizzo`,`civico`,`cap`,`id_comune`),
+	ADD KEY `id_comune` (`id_comune`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_zona` (`id_zona`), 
+	ADD KEY `id_tipologia_edificio` (`id_tipologia_edificio`), 
+	ADD KEY `id_condizione` (`id_condizione`), 
+	ADD KEY `id_agente` (`id_agente`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_account_editor` (`id_account_editor`),
+	ADD KEY `indice` (`id`,`indirizzo`,`civico`,`cap`,`id_comune`,`id_tipologia`,`id_agente`);
+ALTER TABLE `indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| FINE FILE
