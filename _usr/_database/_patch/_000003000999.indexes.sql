@@ -1627,7 +1627,6 @@ ALTER TABLE `notizie_immobili`
 	ADD KEY `indice` (`id`,`id_immobile`,`id_agenzia`,`id_agente`,`data_alert`,`id_esito`);
 ALTER TABLE `notizie_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-
 --| 000003000117
 
 -- notizie_prodotti
@@ -1639,6 +1638,31 @@ ALTER TABLE `notizie_prodotti`
 	ADD KEY `indice` (`id`,`id_notizia`,`id_prodotto`);
 ALTER TABLE `notizie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000118
+
+-- orari_contratti
+-- tipologia: tabella gestita
+ALTER TABLE `orari_contratti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_lavoro` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_lavoro`), 
+	ADD UNIQUE KEY `unica_disponibile` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_disponibile`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `turno` (`turno`), 
+	ADD KEY `id_costo` (`id_costo`),
+	ADD KEY `se_lavoro` (`se_lavoro`),
+	ADD KEY `se_disponibile` (`se_disponibile`),
+	ADD KEY `indice` (`id`,`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_disponibile`,`se_lavoro`);
+ALTER TABLE `orari_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000119
+
+-- orientamenti_sessuali
+-- tipologia: tabella di supporto
+ALTER TABLE `orientamenti_sessuali`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
+ALTER TABLE `orientamenti_sessuali` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 
 -
