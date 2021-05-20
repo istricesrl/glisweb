@@ -1407,6 +1407,54 @@ ALTER TABLE `mailing_mail`
 	ADD KEY `indice` (`id`,`id_mail`,`id_mailing`,id_mail_coda`);
 ALTER TABLE `mailing_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000101
+
+-- mastri
+-- tipologia: tabella gestita
+ALTER TABLE `mastri`
+ 	ADD PRIMARY KEY (`id`), 
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+ 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `indice` (`id`,`nome`,`id_tipologia`,`se_commerciale`,`se_produzione`,se_amministrazione`);
+ALTER TABLE `mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000102
+
+-- marchi
+-- tipologia: tabella gestita
+ALTER TABLE `marchi`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD UNIQUE KEY `indice` (`id`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`);
+ALTER TABLE `marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000103
+
+-- matricole
+-- tipologia: tabella gestita
+ALTER TABLE `matricole`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`);
+ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000104
+
+ALTER TABLE `menu`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_id_pagina` (`id_pagina`,`id_lingua`,`menu`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_lingua`,`menu`,`nome`);
+ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
 
 -
 -| FINE FILE
