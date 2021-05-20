@@ -1453,6 +1453,107 @@ ALTER TABLE `menu`
 	ADD KEY `indice` (`id`,`id_pagina`,`id_lingua`,`menu`,`nome`);
 ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000105
+
+-- metadati
+-- tipologia: tabella gestita
+ALTER TABLE `metadati`
+ 	ADD PRIMARY KEY (`id`), 
+ 	ADD UNIQUE KEY `prodotto_unico` (`id_prodotto`,`nome`), 
+ 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+ 	ADD KEY `id_prodotto` (`id_prodotto`), 
+ 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
+ 	ADD KEY `id_immagine` (`id_immagine`), 
+ 	ADD KEY `id_file` (`id_file`), 
+ 	ADD KEY `id_pagina` (`id_pagina`), 
+ 	ADD KEY `id_evento` (`id_evento`), 
+ 	ADD KEY `id_categoria_eventi` (`id_categoria_eventi`), 
+ 	ADD KEY `id_lingua` (`id_lingua`), 
+ 	ADD KEY `id_mailing` (`id_mailing`), 
+ 	ADD KEY `id_notizia` (`id_notizia`), 
+ 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+ 	ADD KEY `id_articolo` (`id_articolo`), 
+ 	ADD KEY `id_video` (`id_video`), 
+ 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
+ 	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`nome`,`id_anagrafica`,`id_file`,`id_articolo`,`id_anagrafica`,`id_file`);
+ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000106
+
+-- modalita_consegna
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_consegna`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`,`suggerimento`);
+ALTER TABLE `modalita_consegna` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000107
+
+-- modalita_consegna_prezzi
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_consegna_prezzi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_modalita`),
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `indice` (`id`,`id_modalita`,`id_zona`,`id_categoria_prodotti`,`id_listino`);
+ALTER TABLE `modalita_consegna_prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000108
+
+-- modalita_pagamento
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_pagamento`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`,`suggerimento`,`ordine`,`percentuale_acconto`,`se_contanti`,`codice`);
+ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000109
+
+-- modalita_pagamento_prezzi
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_pagamento_prezzi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_modalita`),
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `indice` (`id`,`id_modalita`,`id_zona`,`id_categoria_prodotti`,`id_listino`,`prezzo`);
+ALTER TABLE `modalita_pagamento_prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000110
+
+-- modalita_spedizione
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_spedizione`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
+ALTER TABLE `modalita_spedizione` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000111
+
+-- modalita_spedizione_prezzi
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_spedizione_prezzi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_modalita` (`id_modalita`),
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `indice` (`id`,`id_modalita`,`id_zona`,`id_categoria_prodotti`,`id_prodotto`,`id_listino`,`id_valuta`,`id_iva`);
+ALTER TABLE `modalita_spedizione_prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 
 
