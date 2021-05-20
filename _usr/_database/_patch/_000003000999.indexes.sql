@@ -1815,8 +1815,8 @@ ALTER TABLE `pratiche_servizi_contatto` MODIFY `id` int(11) NOT NULL AUTO_INCREM
 -- tipologia: tabella gestita
 ALTER TABLE `prezzi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `prodotto_unico` (`id_prodotto`,`id_listino`,`id_iva`,`id_valuta`) USING BTREE, 
-	ADD UNIQUE KEY `articolo_unico` (`id_articolo`,`id_listino`,`id_iva`,`id_valuta`) USING BTREE, 
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_listino`,`id_iva`,`id_valuta`) USING BTREE, 
+	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_listino`,`id_iva`,`id_valuta`) USING BTREE, 
 	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_iva` (`id_iva`), 
 	ADD KEY `id_valuta` (`id_valuta`),  
@@ -1876,7 +1876,6 @@ ALTER TABLE `prodotti_caratteristiche`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `id_prodotto` (`id_prodotto`,`id_caratteristica`), 
 	ADD KEY `ordine` (`ordine`), 
-	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`), 
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`,`se_non_presente`);
 ALTER TABLE `prodotti_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
