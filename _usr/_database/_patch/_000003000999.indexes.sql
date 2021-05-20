@@ -717,6 +717,103 @@ ALTER TABLE `coupon_listini`
 	ADD KEY `id_listino` (`id_listino`);
 ALTER TABLE `coupon_listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
  
+--| 000003000052
+
+-- coupon_marchi
+-- tipologia: tabella gestita
+ALTER TABLE `coupon_marchi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_coupon` (`id_coupon`), 
+	ADD KEY `id_marchio` (`id_marchio`);
+ALTER TABLE `coupon_marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000053
+
+-- coupon_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `coupon_prodotti`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_coupon` (`id_coupon`), 
+	ADD KEY `id_prodotto` (`id_prodotto`);
+ALTER TABLE `coupon_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000054
+
+-- coupon_stagioni
+-- tipologia: tabella gestita
+ALTER TABLE `coupon_stagioni`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_coupon` (`id_coupon`), 
+	ADD KEY `id_stagione` (`id_stagione`);
+ALTER TABLE `coupon_stagioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000055
+
+-- cron
+-- tipologia: tabella gestita
+ALTER TABLE `cron`
+ 	ADD PRIMARY KEY (`id`), 
+	ADD KEY `indice` (`id`,`minuto`,`ora`,`giorno_del_mese`,`mese`,`giorno_della_settimana`,`settimana`,`task`,`iterazioni`,`timestamp_esecuzione`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+ALTER TABLE `cron` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000056
+
+-- cron_log
+-- tipologia: tabella gestita
+ALTER TABLE `cron_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_cron` (`id_cron`),
+  ADD KEY `indice` (`id`,`id_cron`,`timestamp_esecuzione`);
+ALTER TABLE `cron_log` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000057
+
+-- date
+-- tipologia: tabella gestita
+ALTER TABLE `date`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_evento` (`id_evento`), 
+	ADD KEY `id_luogo` (`id_luogo`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+	ADD KEY `indice` (`id`,`id_evento`,`id_tipologia`,`id_notizia`);
+ALTER TABLE `date` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000058
+
+-- disponibilita_immobili
+-- tipologia: tabella di supporto
+ALTER TABLE `disponibilita_immobili`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`);
+ALTER TABLE `disponibilita_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000059
+
+-- documenti_amministrativi
+-- tipologia: tabella gestita
+ALTER TABLE `documenti_amministrativi`
+ ADD PRIMARY KEY (`id`), 
+ ADD UNIQUE KEY `codice_univoco_unico` (`id_emittente`,`progressivo_invio`), 
+ ADD KEY `id_emittente` (`id_emittente`), 
+ ADD KEY `id_cliente` (`id_cliente`), 
+ ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+ ADD KEY `id_tipologia` (`id_tipologia`), 
+ ADD KEY `id_sede_emittente` (`id_sede_emittente`), 
+ ADD KEY `id_sede_cliente` (`id_sede_cliente`), 
+ ADD KEY `id_fornitore` (`id_fornitore`), 
+ ADD KEY `id_referente_emittente` (`id_referente_emittente`), 
+ ADD KEY `id_referente_cliente` (`id_referente_cliente`), 
+ ADD KEY `id_agente_emittente` (`id_agente_emittente`), 
+ ADD KEY `id_esigibilita` (`id_esigibilita`),
+ ADD KEY `indice` (`id`,`id_emittente`,`progressivo_invio`,`id_cliente`,`id_tipologia`,`id_fornitore`);
+ALTER TABLE `documenti_amministrativi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
  
 
