@@ -1579,5 +1579,67 @@ ALTER TABLE `motivazioni_tari_anagrafica`
 	ADD KEY `indice` (`id`,`id_tari_anagrafica`,`id_motivazione`,`riga_provenienza`,`riga`);
 ALTER TABLE `motivazioni_tari_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000113
+
+-- notizie
+-- tipologia: tabella gestita
+ALTER TABLE `notizie`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `indice` (`id`,`nome`,id_sito`,`id_tipologia`);
+ALTER TABLE `notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000114
+
+-- notizie_categorie
+-- tipologia: tabella gestita
+ALTER TABLE `notizie_categorie`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_evento` (`id_notizia`,`id_categoria`),
+	ADD KEY `id_categoria` (`id_categoria`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_notizia`,`id_categoria`);
+ALTER TABLE `notizie_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000115
+
+-- notizie_categorie_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `notizie_categorie_prodotti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `indice` (`id`,`id_notizia`,`id_categoria_prodotti`);
+ALTER TABLE `notizie_categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000116
+
+-- notizie_immobili
+-- tipologia: tabella gestita
+ALTER TABLE `notizie_immobili`
+ 	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_agenzia` (`id_agenzia`), 
+	ADD KEY `id_agente` (`id_agente`), 
+	ADD KEY `data_alert` (`data_alert`), 
+	ADD KEY `id_esito` (`id_esito`),
+	ADD KEY `indice` (`id`,`id_immobile`,`id_agenzia`,`id_agente`,`data_alert`,`id_esito`);
+ALTER TABLE `notizie_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+--| 000003000117
+
+-- notizie_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `notizie_prodotti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `indice` (`id`,`id_notizia`,`id_prodotto`);
+ALTER TABLE `notizie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
 -
 -| FINE FILE
