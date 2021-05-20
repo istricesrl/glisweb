@@ -697,7 +697,7 @@ ALTER TABLE `contratti`
 	ADD KEY `id_tipologia_qualifica` (`id_tipologia_qualifica`), 
 	ADD KEY `id_tipologia_durata` (`id_tipologia_durata`), 
 	ADD KEY `id_tipologia_orario` (`id_tipologia_orario`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_agenzia`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_agenzia`, `livello`, `data_inizio_rapporto`, `data_fine_rapporto`);
 ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000048
