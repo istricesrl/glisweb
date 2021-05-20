@@ -16,11 +16,15 @@
 
 -- account
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 14:31 Fabio Mosti
 ALTER TABLE `account`
     ADD CONSTRAINT `account_ibfk_1_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `account_ibfk_2_nofollow` FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `account_ibfk_3_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `account_ibfk_4_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+-- NOTE quando un'anagrafica viene cancellata, sono eliminati a cascata anche i suoi account; quando una mail viene eliminata, l'account rimane privo
+-- del riferimento alla mail ma comunque attivo
 
 --| 000006000002
 
