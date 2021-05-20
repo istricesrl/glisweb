@@ -22,6 +22,7 @@
 -- - le colonne corrispondono al database master
 -- - l'ordine delle colonne rispetta l'ordine master
 -- - le colonne deprecate vanno eliminate
+-- - le colonne sono correttamente documentate, in ordine, nel relativo file dox
 --
 
 --| 000001000001

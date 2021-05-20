@@ -12,6 +12,7 @@
 -- - nella parte degli indici generali, le colonne indicizzate appaiono nello stesso ordine in cui appaiono nella tabella
 -- - nella parte degli indici generali, dopo le colonne relative a chiavi esterne appaiono le colonne di flag (identificate dal prefisso se_)
 -- - la parte degli indidi si chiude con gli indici multicolonna, nominati con il prefisso indice_ (il primo si chiama semplicemente indice)
+-- - ogni indice è sono correttamente documentato, in ordine, nel relativo file dox
 --
 
 --| 000003000001

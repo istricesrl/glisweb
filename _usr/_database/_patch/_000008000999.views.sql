@@ -9,6 +9,7 @@
 -- - la view si riferisce a una tabella non deprecata e non contengono colonne deprecate
 -- - la view non fa riferimento a tabelle o colonne deprecate
 -- - il definer è CURRENT_USER()
+-- - le colonne sono correttamente documentate, in ordine, nel relativo file dox
 --
 
 --| 000008000001
@@ -32,6 +33,7 @@ CREATE OR REPLACE DEFINER = CURRENT_USER() VIEW account_view AS
 		account.se_attivo,
 		account.token,
 		account.timestamp_login,
+		account.timestamp_cambio_password,
 		if( account.se_attivo = '1', 'attivo', 'inattivo' ) AS attivo,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS utente,
 		group_concat( gruppi.nome ORDER BY gruppi.id SEPARATOR '|' ) AS gruppi,

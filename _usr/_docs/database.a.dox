@@ -33,33 +33,37 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                        | campo                        | tabella e campo collegati
-    ------------------------------|------------------------------|-----------------------------------------------------
-    account_ibfk_1_nofollow       | id_anagrafica                | anagrafica.id
-    account_ibfk_2_nofollow       | id_mail                      | mail.id
-    account_ibfk_3_nofollow       | id_account_inserimento       | account.id
-    account_ibfk_4_nofollow       | id_account_aggiornamento     | account.id
+    chiave                        | campo                        | tabella e campo collegati        | comportamento
+    ------------------------------|------------------------------|----------------------------------|-------------------
+    account_ibfk_1_nofollow       | id_anagrafica                | anagrafica.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    account_ibfk_2_nofollow       | id_mail                      | mail.id                          | ON DELETE SET NULL ON UPDATE CASCADE
+    account_ibfk_3_nofollow       | id_account_inserimento       | account.id                       | ON DELETE SET NULL ON UPDATE CASCADE
+    account_ibfk_4_nofollow       | id_account_aggiornamento     | account.id                       | ON DELETE SET NULL ON UPDATE CASCADE
+
+    Quando un'anagrafica viene cancellata, sono eliminati a cascata anche i suoi account; quando una mail viene eliminata, l'account rimane privo del riferimento
+    alla mail ma comunque attivo
 
     La vista account_view relativa alla tabella account presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    account_view.id                      | vedi campo corrispondente sulla tabella relativa
-    account_view.id_anagrafica           | vedi campo corrispondente sulla tabella relativa
-    account_view.id_mail                 | vedi campo corrispondente sulla tabella relativa
-    account_view.username                | vedi campo corrispondente sulla tabella relativa
-    account_view.password                | vedi campo corrispondente sulla tabella relativa
-    account_view.se_attivo               | vedi campo corrispondente sulla tabella relativa
-    account_view.token                   | vedi campo corrispondente sulla tabella relativa
-    account_view.timestamp_login         | vedi campo corrispondente sulla tabella relativa
-    account_view.attivo                  | descrizione letterale dello status del campo se_attivo
-    account_view.utente                  | -
-    account_view.gruppi                  | -
-    account_view.id_gruppi               | -
-    account_view.gruppo_sede             | -
-    account_view.id_anagrafica_struttura | -
-    account_view.id_gruppi_attribuzione  | -
-    account_view.__label__               | -
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    account_view.id                           | vedi campo corrispondente sulla tabella relativa
+    account_view.id_anagrafica                | vedi campo corrispondente sulla tabella relativa
+    account_view.id_mail                      | vedi campo corrispondente sulla tabella relativa
+    account_view.username                     | vedi campo corrispondente sulla tabella relativa
+    account_view.password                     | vedi campo corrispondente sulla tabella relativa
+    account_view.se_attivo                    | vedi campo corrispondente sulla tabella relativa
+    account_view.token                        | vedi campo corrispondente sulla tabella relativa
+    account_view.timestamp_login              | vedi campo corrispondente sulla tabella relativa
+    account_view.timestamp_cambio_password    | vedi campo corrispondente sulla tabella relativa
+    account_view.attivo                       | descrizione letterale dello status del campo se_attivo
+    account_view.utente                       | -
+    account_view.gruppi                       | -
+    account_view.id_gruppi                    | -
+    account_view.gruppo_sede                  | -
+    account_view.id_anagrafica_struttura      | -
+    account_view.id_gruppi_attribuzione       | -
+    account_view.__label__                    | -
 
     Per approfondire la procedura di login si veda _src/_config/_210.auth.php; per il logout, si veda _src/_config/_220.auth.php. Per la registrazione
     automatica degli account e per le logiche legate al token, si veda principalmente _mod/_0650.registrazione/_src/_inc/_macro/_registrazione.php.
