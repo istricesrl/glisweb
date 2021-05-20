@@ -1283,6 +1283,7 @@ ALTER TABLE `listini`
 ALTER TABLE `listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000091
+
 -- listini_clienti
 -- tipologia: tabella gestita
 ALTER TABLE `listini_clienti`
@@ -1291,5 +1292,31 @@ ALTER TABLE `listini_clienti`
 	ADD KEY `id_cliente` (`id_cliente`),
 	ADD KEY `indice` (`id`,`id_listino`,`id_cliente`);
 ALTER TABLE `listini_clienti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000092
+
+-- luoghi
+-- tipologia: tabella gestita
+ALTER TABLE `luoghi`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+ALTER TABLE `luoghi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000093
+
+-- macro
+-- tipologia: tabella gestita
+ALTER TABLE `macro`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_pagina` (`id_pagina`,`macro`), 
+	ADD KEY `id_gruppo` (`macro`),
+	ADD KEY `indice` (`id`,`id_pagina`,`macro`);
+ALTER TABLE `macro` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 -
 -| FINE FILE
