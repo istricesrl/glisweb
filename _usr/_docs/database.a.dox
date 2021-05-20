@@ -45,15 +45,15 @@
 
     colonna                                   | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
-    account_view.id                           | vedi campo corrispondente sulla tabella relativa
-    account_view.id_anagrafica                | vedi campo corrispondente sulla tabella relativa
-    account_view.id_mail                      | vedi campo corrispondente sulla tabella relativa
-    account_view.username                     | vedi campo corrispondente sulla tabella relativa
-    account_view.password                     | vedi campo corrispondente sulla tabella relativa
-    account_view.se_attivo                    | vedi campo corrispondente sulla tabella relativa
-    account_view.token                        | vedi campo corrispondente sulla tabella relativa
-    account_view.timestamp_login              | vedi campo corrispondente sulla tabella relativa
-    account_view.timestamp_cambio_password    | vedi campo corrispondente sulla tabella relativa
+    account_view.id                           | -
+    account_view.id_anagrafica                | -
+    account_view.id_mail                      | -
+    account_view.username                     | -
+    account_view.password                     | -
+    account_view.se_attivo                    | -
+    account_view.token                        | -
+    account_view.timestamp_login              | -
+    account_view.timestamp_cambio_password    | -
     account_view.attivo                       | descrizione letterale dello status del campo se_attivo
     account_view.utente                       | -
     account_view.gruppi                       | -
@@ -61,7 +61,7 @@
     account_view.gruppo_sede                  | -
     account_view.id_anagrafica_struttura      | -
     account_view.id_gruppi_attribuzione       | -
-    account_view.__label__                    | -
+    account_view.__label__                    | l'etichetta che descrive l'account
 
     Per approfondire la procedura di login si veda _src/_config/_210.auth.php; per il logout, si veda _src/_config/_220.auth.php. Per la registrazione
     automatica degli account e per le logiche legate al token, si veda principalmente _mod/_0650.registrazione/_src/_inc/_macro/_registrazione.php.
@@ -98,11 +98,11 @@
 
     colonna                                   | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
-    account_gruppi_view.id                    | vedi campo corrispondente sulla tabella relativa
-    account_gruppi_view.id_account            | vedi campo corrispondente sulla tabella relativa
-    account_gruppi_view.id_gruppo             | vedi campo corrispondente sulla tabella relativa
-    account_gruppi_view.se_amministratore     | vedi campo corrispondente sulla tabella relativa
-    account_gruppi_view.__label__             | -
+    account_gruppi_view.id                    | -
+    account_gruppi_view.id_account            | -
+    account_gruppi_view.id_gruppo             | -
+    account_gruppi_view.se_amministratore     | -
+    account_gruppi_view.__label__             | l'etichetta che descrive l'associazione
 
     L'associazione fra account e gruppi viene utilizzata al momento del login, si veda _src/_config/_210.auth.php per ulteriori dettagli.
 
@@ -138,11 +138,11 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-    account_gruppi_attribuzione_view.id                    | vedi campo corrispondente sulla tabella relativa
-    account_gruppi_attribuzione_view.id_account            | vedi campo corrispondente sulla tabella relativa
-    account_gruppi_attribuzione_view.id_gruppo             | vedi campo corrispondente sulla tabella relativa
-    account_gruppi_attribuzione_view.entita                | vedi campo corrispondente sulla tabella relativa
-    account_gruppi_attribuzione_view.__label__             | -
+    account_gruppi_attribuzione_view.id                    | -
+    account_gruppi_attribuzione_view.id_account            | -
+    account_gruppi_attribuzione_view.id_gruppo             | -
+    account_gruppi_attribuzione_view.entita                | -
+    account_gruppi_attribuzione_view.__label__             | l'etichetta che descrive la regola di attribuzione
 
     Questa tabella è la base del meccanismo di attribuzione automatica delle entità ai gruppi che consente di dare visibilità agli oggetti a gruppi specifici
     in scenari dove è presente una tabella di ACL.
@@ -246,7 +246,7 @@
     anagrafica_view.categorie                              | -
     anagrafica_view.telefoni                               | -
     anagrafica_view.mail                                   | -
-    anagrafica_view.__label__                              | -
+    anagrafica_view.__label__                              | l'etichetta che descrive l'anagrafica
 
     La vista *anagrafica_view* contiene molti campi booleani che qualificano i contatti in base alle categorie cui appartengono; questo è utile per la popolazione
     delle tendine (vedi *anagrafica_categorie* e *categorie_anagrafica*). La vista è presente anche in forma *statica* come *anagrafica_view_static*; la view statica
@@ -278,7 +278,7 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati     |
+    chiave                                        | campo                        | tabella e campo collegati     | comportamento
     ----------------------------------------------|------------------------------|-------------------------------|----------------------
     anagrafica_categorie_ibfk_01                  | id_anagrafica                | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
     anagrafica_categorie_ibfk_02_nofollow         | id_categoria                 | categorie_anagrafica.id       | ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -299,17 +299,25 @@
     ------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica_categorie_diritto.id                 | l'ID dell'associazione fra anagrafica e diritto
     anagrafica_categorie_diritto.id_anagrafica      | l'ID dell'anagrafica
-    anagrafica_categorie_diritto.id_diritto         | l'ID della categoria del diritto
+    anagrafica_categorie_diritto.id_categoria       | l'ID della categoria del diritto
+    anagrafica_categorie_diritto.se_specialita      | flag che indica se la categoria del diritto è una specialità per l'anagrafica associata
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                          | campo                        | tabella e campo collegati     | comportamento
+    ------------------------------------------------|------------------------------|-------------------------------|----------------------
+    anagrafica_categorie_diritto_ibfk_01            | id_anagrafica                | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_categorie_diritto_ibfk_02_nofollow   | id_diritto                   | categorie_diritto.id          | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *anagrafica_categorie_diritto_view* relativa alla tabella *anagrafica_categorie_diritto* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_categorie_diritto_view.id                   | -
+    anagrafica_categorie_diritto_view.id_anagrafica        | -
+    anagrafica_categorie_diritto_view.id_categoria         | -
+    anagrafica_categorie_diritto_view.se_specialita        | -
+    anagrafica_categorie_diritto_view.__label__            | l'etichetta che descrive l'associazione
 
     anagrafica_cittadinanze
     -----------------------
@@ -327,8 +335,10 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                        | campo                        | tabella e campo collegati    | comportamento
+    ----------------------------------------------|------------------------------|------------------------------|-----------------------
+    anagrafica_cittadinanze_ibfk_01               | id_anagrafica                | anagrafica.id                | ON DELETE CASCADE ON UPDATE CASCADE,
+    anagrafica_cittadinanze_ibfk_02_nofollow      | id_stato                     | stati.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION;
 
     La vista *anagrafica_cittadinanze_view* relativa alla tabella *anagrafica_cittadinanze* presenta le seguenti colonne:
 
