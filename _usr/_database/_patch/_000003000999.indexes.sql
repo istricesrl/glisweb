@@ -1329,6 +1329,255 @@ ALTER TABLE `macro`
 	ADD KEY `indice` (`id`,`id_pagina`,`macro`);
 ALTER TABLE `macro` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 000003000094
+
+-- mail
+-- tipologia: tabella gestita
+ALTER TABLE `mail`
+  	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_anagrafica`,`indirizzo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+  	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`indirizzo`,`se_notifiche`,`se_pec`);
+ALTER TABLE `mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000095
+
+-- mail_liste_mailing
+-- tipolgia: tabella gestita
+ALTER TABLE `mail_liste_mailing`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `id_mail` (`id_mail`,`id_lista`),
+	ADD KEY `id_lista` (`id_lista`),
+	ADD KEY `indice` (`id`,`id_mail`,`id_lista`);
+ALTER TABLE `mail_liste_mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000096
+
+-- mail_out
+-- tipolgia: tabella gestita
+ALTER TABLE `mail_out`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `timestamp_composizione` (`timestamp_composizione`), 
+	ADD KEY `timestamp_invio` (`timestamp_invio`), 
+	ADD KEY `id_newsletter` (`id_newsletter`), 
+	ADD KEY `id_email` (`id_email`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
+	ADD KEY `token` (`token`),
+	ADD KEY `indice` (`id`,`timestamp_composizione`,`timestamp_invio`,`id_newsletter`,`id_email`,`oggetto`,`allegati`,`token`);
+ALTER TABLE `mail_out` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000097
+
+-- mail_sent
+-- tipolgia: tabella gestita
+ALTER TABLE `mail_sent`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `timestamp_composizione` (`timestamp_composizione`),
+	ADD KEY `timestamp_invio` (`timestamp_invio`),
+	ADD KEY `id_newsletter` (`id_newsletter`),
+	ADD KEY `id_email` (`id_email`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `token` (`token`),
+	ADD KEY `indice` (`id`,`timestamp_composizione`,`timestamp_invio`,`id_newsletter`,`id_email`,`oggetto`,`allegati`,`token`);
+
+--| 000003000098
+
+-- mailing
+-- tipologia: tabella gestita
+ALTER TABLE `mailing`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_job` (`id_job`),
+	ADD KEY `indice` (`id`,`nome`,`timestamp_invio`,`id_job`);
+ALTER TABLE `mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000099
+
+-- mailing_liste
+-- tipologia: tabella gestita
+ALTER TABLE `mailing_liste`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `id_mailing` (`id_mailing`,`id_lista`),
+	ADD KEY `id_lista` (`id_lista`),
+	ADD KEY `indice` (`id`,`id_mailing`,`id_lista`);
+ALTER TABLE `mailing_liste` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000100
+
+-- mailing_mail
+-- tipologia: tabella gestita
+ALTER TABLE `mailing_mail`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `id_mail` (`id_mail`,`id_mailing`),
+	ADD KEY `id_mail_coda` (`id_mail_coda`),
+	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `indice` (`id`,`id_mail`,`id_mailing`,id_mail_coda`);
+ALTER TABLE `mailing_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000101
+
+-- mastri
+-- tipologia: tabella gestita
+ALTER TABLE `mastri`
+ 	ADD PRIMARY KEY (`id`), 
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+ 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `indice` (`id`,`nome`,`id_tipologia`,`se_commerciale`,`se_produzione`,se_amministrazione`);
+ALTER TABLE `mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000102
+
+-- marchi
+-- tipologia: tabella gestita
+ALTER TABLE `marchi`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD UNIQUE KEY `indice` (`id`,`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`);
+ALTER TABLE `marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000103
+
+-- matricole
+-- tipologia: tabella gestita
+ALTER TABLE `matricole`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`);
+ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000104
+
+ALTER TABLE `menu`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_id_pagina` (`id_pagina`,`id_lingua`,`menu`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_lingua`,`menu`,`nome`);
+ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000105
+
+-- metadati
+-- tipologia: tabella gestita
+ALTER TABLE `metadati`
+ 	ADD PRIMARY KEY (`id`), 
+ 	ADD UNIQUE KEY `prodotto_unico` (`id_prodotto`,`nome`), 
+ 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+ 	ADD KEY `id_prodotto` (`id_prodotto`), 
+ 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
+ 	ADD KEY `id_immagine` (`id_immagine`), 
+ 	ADD KEY `id_file` (`id_file`), 
+ 	ADD KEY `id_pagina` (`id_pagina`), 
+ 	ADD KEY `id_evento` (`id_evento`), 
+ 	ADD KEY `id_categoria_eventi` (`id_categoria_eventi`), 
+ 	ADD KEY `id_lingua` (`id_lingua`), 
+ 	ADD KEY `id_mailing` (`id_mailing`), 
+ 	ADD KEY `id_notizia` (`id_notizia`), 
+ 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+ 	ADD KEY `id_articolo` (`id_articolo`), 
+ 	ADD KEY `id_video` (`id_video`), 
+ 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
+ 	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`nome`,`id_anagrafica`,`id_file`,`id_articolo`,`id_anagrafica`,`id_file`);
+ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000106
+
+-- modalita_consegna
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_consegna`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`,`suggerimento`);
+ALTER TABLE `modalita_consegna` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000107
+
+-- modalita_consegna_prezzi
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_consegna_prezzi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_modalita`),
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `indice` (`id`,`id_modalita`,`id_zona`,`id_categoria_prodotti`,`id_listino`);
+ALTER TABLE `modalita_consegna_prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000108
+
+-- modalita_pagamento
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_pagamento`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`,`suggerimento`,`ordine`,`percentuale_acconto`,`se_contanti`,`codice`);
+ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000109
+
+-- modalita_pagamento_prezzi
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_pagamento_prezzi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_modalita`),
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `indice` (`id`,`id_modalita`,`id_zona`,`id_categoria_prodotti`,`id_listino`,`prezzo`);
+ALTER TABLE `modalita_pagamento_prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000110
+
+-- modalita_spedizione
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_spedizione`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
+ALTER TABLE `modalita_spedizione` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000111
+
+-- modalita_spedizione_prezzi
+-- tipologia: tabella gestita
+ALTER TABLE `modalita_spedizione_prezzi`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_modalita` (`id_modalita`),
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `indice` (`id`,`id_modalita`,`id_zona`,`id_categoria_prodotti`,`id_prodotto`,`id_listino`,`id_valuta`,`id_iva`);
+ALTER TABLE `modalita_spedizione_prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000112
+
+-- motivazioni_tari_anagrafica
+-- tipologia: tabella di supporto
+ALTER TABLE `motivazioni_tari_anagrafica`
+ 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_motivazione` (`id_tari_anagrafica`,`id_motivazione`), 
+	ADD KEY `id_tari_anagrafica` (`id_tari_anagrafica`), 
+	ADD KEY `id_motivazione` (`id_motivazione`),
+	ADD KEY `indice` (`id`,`id_tari_anagrafica`,`id_motivazione`,`riga_provenienza`,`riga`);
+ALTER TABLE `motivazioni_tari_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -
 -| FINE FILE
