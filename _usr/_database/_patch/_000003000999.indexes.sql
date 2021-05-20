@@ -30,8 +30,7 @@ ALTER TABLE `account_gruppi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_account`,`id_gruppo`),
 	ADD KEY `id_account` (`id_account`),
-	ADD KEY `id_gruppo` (`id_gruppo`),
-	
+	ADD KEY `id_gruppo` (`id_gruppo`);
 ALTER TABLE `account_gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000003
@@ -78,8 +77,7 @@ ALTER TABLE `anagrafica_categorie`
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_categoria`), 
 	ADD KEY `id_categoria` (`id_categoria`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 ALTER TABLE `anagrafica_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000006
@@ -90,8 +88,7 @@ ALTER TABLE `anagrafica_categorie_diritto`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_diritto`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_diritto` (`id_diritto`)
-
+	ADD KEY `id_diritto` (`id_diritto`);
 ALTER TABLE `anagrafica_categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000007
@@ -102,8 +99,7 @@ ALTER TABLE `anagrafica_cittadinanze`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_stato`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_stato` (`id_stato`),
-
+	ADD KEY `id_stato` (`id_stato`);
 ALTER TABLE `anagrafica_cittadinanze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000008
@@ -114,8 +110,7 @@ ALTER TABLE `anagrafica_condizioni_pagamento`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_condizione`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_condizione` (`id_condizione`),
-
+	ADD KEY `id_condizione` (`id_condizione`);
 ALTER TABLE `anagrafica_condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000009
@@ -126,8 +121,7 @@ ALTER TABLE `anagrafica_indirizzi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_indirizzo`,`id_tipologia`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
-	ADD KEY `id_tipologia` (`id_tipologia`),
-	
+	ADD KEY `id_tipologia` (`id_tipologia`);
 ALTER TABLE `anagrafica_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000010
@@ -138,8 +132,7 @@ ALTER TABLE `anagrafica_modalita_pagamento`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_modalita_pagamento`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
-	
+	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`);
 ALTER TABLE `anagrafica_modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000011
@@ -150,8 +143,7 @@ ALTER TABLE `anagrafica_provenienze`
  	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_provenienza`), 
 	ADD KEY `id_provenienza` (`id_provenienza`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-
+	ADD KEY `id_anagrafica` (`id_anagrafica`);
 ALTER TABLE `anagrafica_provenienze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000012
@@ -187,7 +179,6 @@ ALTER TABLE `anagrafica_settori`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `id_anagrafica` (`id_anagrafica`,`id_settore`), 
 	ADD KEY `id_settore` (`id_settore`);
-
 ALTER TABLE `anagrafica_settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000015
@@ -224,8 +215,7 @@ ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 -- tipologia: tabella gestita
 ALTER TABLE `assicurazioni_montaggio`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
-
+	ADD UNIQUE KEY `nome` (`nome`);
 ALTER TABLE `assicurazioni_montaggio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000018
@@ -249,8 +239,7 @@ ALTER TABLE `assicurazioni_montaggio_prezzi` MODIFY `id` int(11) NOT NULL AUTO_I
 -- tipologia: tabella gestita
 ALTER TABLE `assicurazioni_trasporto`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
-
+	ADD UNIQUE KEY `nome` (`nome`);
 ALTER TABLE `assicurazioni_trasporto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000020
@@ -375,8 +364,7 @@ ALTER TABLE `campagne` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `caratteristiche_articoli`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
-
+	ADD UNIQUE KEY `nome` (`nome`);
 ALTER TABLE `caratteristiche_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000027
@@ -385,8 +373,7 @@ ALTER TABLE `caratteristiche_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 -- tipologia: tabella di supporto
 ALTER TABLE `caratteristiche_immobili`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id` (`id`,`nome`),
-
+	ADD UNIQUE KEY `id` (`id`,`nome`);
 ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000028
@@ -478,8 +465,7 @@ ALTER TABLE `categorie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_diritto`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `nome` (`nome`), 
-	ADD KEY `id_genitore` (`id_genitore`),
-	
+	ADD KEY `id_genitore` (`id_genitore`);
 ALTER TABLE `categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 
 --| 000003000033
@@ -555,8 +541,132 @@ ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_risorse`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `id_pagina` (`id_pagina`),
-	
+	ADD KEY `id_pagina` (`id_pagina`);
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000039
+
+-- classi_energetiche_immobili
+-- tipologia: tabella di supporto
+ALTER TABLE `classi_energetiche_immobili`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`);
+ALTER TABLE `classi_energetiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000040
+
+-- colori
+-- tipologia: tabella di supporto
+ALTER TABLE `colori`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `nome` (`nome`);
+ALTER TABLE `colori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000041
+
+-- comuni
+-- tipologia: tabella di supporto
+ALTER TABLE `comuni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice_istat` (`codice_istat`),
+	ADD UNIQUE KEY `codice_catasto` (`codice_catasto`),
+	ADD KEY `id_provincia` (`id_provincia`),
+	ADD KEY `indice` (`id`,`codice_istat`,`id_provincia`);
+ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000042
+
+-- condizioni_immobili
+-- tipologia: tabella di supporto
+ALTER TABLE `condizioni_immobili`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`);
+ALTER TABLE `condizioni_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000043
+
+-- condizioni_pagamento
+-- tipologia: tabella gestita
+ALTER TABLE `condizioni_pagamento`
+	ADD PRIMARY KEY (`id`);
+ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000044
+
+-- contatti
+-- tipologia: tabella gestita
+ALTER TABLE `contatti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_segnalatore` (`id_segnalatore`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_coount_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+ALTER TABLE `contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000045
+
+-- contenuti
+-- tipologia: tabella gestita
+ALTER TABLE `contenuti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_prodotto_unico` (`id_prodotto`,`id_lingua`), 
+	ADD UNIQUE KEY `id_categoria_prodotti_unico` (`id_categoria_prodotti`,`id_lingua`), 
+	ADD UNIQUE KEY `id_eventi_unico` (`id_evento`,`id_lingua`), 
+	ADD UNIQUE KEY `id_categoria_eventi_unico` (`id_categoria_eventi`,`id_lingua`), 
+	ADD UNIQUE KEY `id_immagine_unico` (`id_immagine`,`id_lingua`), 
+	ADD UNIQUE KEY `id_file_unico` (`id_file`,`id_lingua`), 
+	ADD UNIQUE KEY `id_pagina_unico` (`id_pagina`,`id_lingua`), 
+	ADD UNIQUE KEY `id_rassegna_stampa_unico` (`id_rassegna_stampa`,`id_lingua`), 
+	ADD UNIQUE KEY `id_video_unico` (`id_video`,`id_lingua`), 
+	ADD UNIQUE KEY `id_audio_unico` (`id_audio`,`id_lingua`), 
+	ADD UNIQUE KEY `id_articolo_unico` (`id_articolo`,`id_lingua`), 
+	ADD UNIQUE KEY `id_marchio_unico` (`id_marchio`,`id_lingua`), 
+	ADD UNIQUE KEY `id_caratteristica_prodotti_unico` (`id_caratteristica_prodotti`,`id_lingua`), 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
+	ADD KEY `id_evento` (`id_evento`), 
+	ADD KEY `id_categoria_eventi` (`id_categoria_eventi`), 
+	ADD KEY `id_data` (`id_data`),
+	ADD KEY `id_lingua` (`id_lingua`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_rassegna_stampa` (`id_rassegna_stampa`), 
+	ADD KEY `id_immagine` (`id_immagine`), 
+	ADD KEY `id_video` (`id_video`), 
+	ADD KEY `id_audio` (`id_audio`), 
+	ADD KEY `id_file` (`id_file`), 
+	ADD KEY `id_template_mail` (`id_template_mail`), 
+	ADD KEY `id_mailing` (`id_mailing`), 
+	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_indirizzo` (`id_indirizzo`), 
+	ADD KEY `id_zona` (`id_zona`), 
+	ADD KEY `id_incarico` (`id_incarico`), 
+	ADD KEY `id_colore` (`id_colore`), 
+	ADD KEY `id_caratteristica_prodotti` (`id_caratteristica_prodotti`), 
+	ADD KEY `id_popup` (`id_popup`), 
+	ADD KEY `id_marchio` (`id_marchio`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_articolo`,`id_marchio`,`id_file`,`id_lingua`,`id_categoria_prodotti`);
+ALTER TABLE `contenuti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000046
+
+-- continenti
+-- tipologia: tabella di supporto
+ALTER TABLE `continenti`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY (`codice`),
+	ADD KEY (`nome`),
+	ADD KEY `indice` (`id`,`codice`,`nome`);
+ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
+
 
 --| FINE FILE
