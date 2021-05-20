@@ -1019,15 +1019,15 @@ ALTER TABLE `fatturati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `file`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `prodotto_unico` (`id_prodotto`,`id_ruolo`,`path`), 
-	ADD UNIQUE KEY `categoria_prodotti_unico` (`id_categoria_prodotti`,`id_ruolo`,`path`), 
-	ADD UNIQUE KEY `anagrafica_unico` (`id_anagrafica`,`id_ruolo`,`path`), 
-	ADD UNIQUE KEY `pagina_unico` (`id_pagina`,`id_ruolo`,`path`), 
-	ADD UNIQUE KEY `task_unico` (`id_task`,`id_ruolo`,`path`), 
-	ADD UNIQUE KEY `rassegna_stampa_unico` (`id_rassegna_stampa`,`id_ruolo`,`path`), 
-	ADD UNIQUE KEY `evento_unico` (`id_evento`,`id_ruolo`,`path`), 
-	ADD UNIQUE KEY `categoria_eventi_unico` (`id_categoria_eventi`,`id_ruolo`,`path`), 
-	ADD UNIQUE KEY `pratica_unico` (`id_pratica`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_anagrafica` (`id_anagrafica`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_task` (`id_task`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_rassegna_stampa` (`id_rassegna_stampa`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_evento` (`id_evento`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_categoria_eventi` (`id_categoria_eventi`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_pratica` (`id_pratica`,`id_ruolo`,`path`), 
 	ADD KEY `path` (`path`), 
 	ADD KEY `id_task` (`id_task`), 
 	ADD KEY `indice` (`id`,`id_task`,`nome`,`path`), 
@@ -1109,13 +1109,13 @@ ALTER TABLE `iban` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `immagini`
  	ADD PRIMARY KEY (`id`), 
- 	ADD UNIQUE KEY `anagrafica_unica` (`id_anagrafica`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `pagina_unica` (`id_pagina`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `file_unica` (`id_file`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `prodotto_unica` (`id_prodotto`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `unica_anagrafica` (`id_anagrafica`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `unica_file` (`id_file`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_ruolo`,`path`), 
  	ADD UNIQUE KEY `categoria_prodotti_unica` (`id_categoria_prodotti`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `evento_unico` (`id_eventa`,`id_ruolo`,`path`), 
- 	ADD UNIQUE KEY `categoria_eventi_unica` (`id_categoria_eventi`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `unica_evento` (`id_eventa`,`id_ruolo`,`path`), 
+ 	ADD UNIQUE KEY `unica_categoria_eventi` (`id_categoria_eventi`,`id_ruolo`,`path`), 
  	ADD KEY `path` (`path`), 
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
@@ -1192,7 +1192,7 @@ ALTER TABLE `incarichi_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `incroci_immobili`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_incarico`,`id_richiesta`), 
+	ADD UNIQUE KEY `unica` (`id_incarico`,`id_richiesta`), 
 	ADD KEY `id_incarico` (`id_incarico`), 
 	ADD KEY `id_richiesta` (`id_richiesta`), 
 	ADD KEY `id_esito` (`id_esito`),
@@ -1475,7 +1475,7 @@ ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `metadati`
  	ADD PRIMARY KEY (`id`), 
- 	ADD UNIQUE KEY `prodotto_unico` (`id_prodotto`,`nome`), 
+ 	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`nome`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
  	ADD KEY `id_prodotto` (`id_prodotto`), 
  	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
@@ -1582,6 +1582,307 @@ ALTER TABLE `motivazioni_tari_anagrafica`
 	ADD KEY `id_motivazione` (`id_motivazione`),
 	ADD KEY `indice` (`id`,`id_tari_anagrafica`,`id_motivazione`,`riga_provenienza`,`riga`);
 ALTER TABLE `motivazioni_tari_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000113
+
+-- notizie
+-- tipologia: tabella gestita
+ALTER TABLE `notizie`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `indice` (`id`,`nome`,id_sito`,`id_tipologia`);
+ALTER TABLE `notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000114
+
+-- notizie_categorie
+-- tipologia: tabella gestita
+ALTER TABLE `notizie_categorie`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_evento` (`id_notizia`,`id_categoria`),
+	ADD KEY `id_categoria` (`id_categoria`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_notizia`,`id_categoria`);
+ALTER TABLE `notizie_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000115
+
+-- notizie_categorie_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `notizie_categorie_prodotti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `indice` (`id`,`id_notizia`,`id_categoria_prodotti`);
+ALTER TABLE `notizie_categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000116
+
+-- notizie_immobili
+-- tipologia: tabella gestita
+ALTER TABLE `notizie_immobili`
+ 	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_agenzia` (`id_agenzia`), 
+	ADD KEY `id_agente` (`id_agente`), 
+	ADD KEY `data_alert` (`data_alert`), 
+	ADD KEY `id_esito` (`id_esito`),
+	ADD KEY `indice` (`id`,`id_immobile`,`id_agenzia`,`id_agente`,`data_alert`,`id_esito`);
+ALTER TABLE `notizie_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000117
+
+-- notizie_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `notizie_prodotti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `indice` (`id`,`id_notizia`,`id_prodotto`);
+ALTER TABLE `notizie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000118
+
+-- orari_contratti
+-- tipologia: tabella gestita
+ALTER TABLE `orari_contratti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_lavoro` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_lavoro`), 
+	ADD UNIQUE KEY `unica_disponibile` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_disponibile`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `turno` (`turno`), 
+	ADD KEY `id_costo` (`id_costo`),
+	ADD KEY `se_lavoro` (`se_lavoro`),
+	ADD KEY `se_disponibile` (`se_disponibile`),
+	ADD KEY `indice` (`id`,`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_disponibile`,`se_lavoro`);
+ALTER TABLE `orari_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000119
+
+-- orientamenti_sessuali
+-- tipologia: tabella di supporto
+ALTER TABLE `orientamenti_sessuali`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`);
+ALTER TABLE `orientamenti_sessuali` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000120
+
+-- pagine
+-- tipologia: tabella gestita
+ALTER TABLE `pagine`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia_pubblicazione`,`nome`,`se_sitemap`,`se_cacheable`);
+ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000121
+
+-- pagine_gruppi
+-- tipologia: tabella gestita
+ALTER TABLE `pagine_gruppi`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_gruppo` (`id_gruppo`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_gruppo`);
+ALTER TABLE `pagine_gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000122
+
+-- patrocini_pratiche
+-- tipologia: tabella gestita
+ALTER TABLE `patrocini_pratiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_pratica` (`id_pratica`),
+	ADD KEY `indice` (`id`,`id_pratica`,`nome`,`se_liquidato`,`se_fatturato`);
+ALTER TABLE `patrocini_pratiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000123
+
+-- periodi_variazioni_attivita
+-- tipologia: tabella gestita
+ALTER TABLE `periodi_variazioni_attivita`
+ ADD PRIMARY KEY (`id`), 
+ ADD UNIQUE KEY `unica` (`id_variazione`,`data_inizio`,`data_fine`,`ora_inizio`,`ora_fine`), 
+ ADD KEY `id_variazione` (`id_variazione`),
+ ADD KEY `indice` (`id`,`id_variazione`,`data_inizio`,`data_fine`,`ora_inizio`,`ora_fine`);
+ ALTER TABLE `periodi_variazioni_attivita`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000124
+
+-- pianificazioni
+-- tipologia: tabella gestita
+ALTER TABLE `pianificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_turno` (`id_turno`), 
+	ADD UNIQUE KEY `id_todo` (`id_todo`), 
+	ADD UNIQUE KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `token` (`token`), 
+	ADD KEY `timestamp_estensione` (`timestamp_estensione`), 
+	ADD KEY `timestamp_popolazione` (`timestamp_popolazione`),
+	ADD KEY `data_fine` (`data_fine`),
+	ADD KEY `data_ultimo_oggetto` (`data_ultimo_oggetto`),
+	ADD KEY `indice` (`id`,`id_turno`,`id_todo`,`id_progetto`,`token`,`timestamp_estensione`,`timestamp_popolazione`,`data_ultimo_oggetto`,`data_fine`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`);
+ALTER TABLE `pianificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000125
+
+-- popup
+-- tipologia: tabella gestita
+ALTER TABLE `popup`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+	ADD KEY `indice` (`id`,`nome`,`id_tipologia`,`id_tipologia_pubblicazione`,`se_ovunque`,`timestamp_inserimento`,`timestamp_aggiornamento`);
+ALTER TABLE `popup` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000126
+
+-- popup_pagine
+-- tipologia: tabella gestita
+ALTER TABLE `popup_pagine`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_pagina`,`id_popup`), 
+	ADD KEY `id_popup` (`id_popup`), 
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_popup`,`se_presente`);
+ALTER TABLE `popup_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000127
+
+-- pratiche
+-- tipologia: tabella gestita
+ALTER TABLE `pratiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`numero`,`data_apertura`,`id_sede_apertura`),
+	ADD KEY `numero` (`numero`), 
+	ADD KEY `id_provenienza` (`id_provenienza`), 
+	ADD KEY `id_sede_apertura` (`id_sede_apertura`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_categoria_diritto` (`id_categoria_diritto`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_account_chiusura` (`id_account_chiusura`), 
+	ADD KEY `id_esito` (`id_esito`), 
+	ADD KEY `id_esito_2` (`id_esito`), 
+	ADD KEY `id_account_editor` (`id_account_editor`),
+	ADD KEY `indice` (`id`,`numero`,`data_apertura`,`id_sede_apertura`,`id_provenienza`,`id_sede_apertura`,`id_tipologia`,`id_categoria_diritto`,`id_account_inserimento`,`id_account_aggiornamento`,`id_account_chiusura`,`esito`,`se_importata`);
+ALTER TABLE `pratiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000128
+
+-- pratiche_assistiti
+-- tipologia: tabella gestita
+ALTER TABLE `pratiche_assistiti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_pratica`), 
+	ADD KEY `id_pratica` (`id_pratica`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_pratica`);
+ALTER TABLE `pratiche_assistiti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000129
+
+-- pratiche_avvocati
+-- tipologia: tabella gestita
+ALTER TABLE `pratiche_avvocati`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_pratica`) 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_pratica` (`id_pratica`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_pratica`,`se_responsabile`);
+ALTER TABLE `pratiche_avvocati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000130
+
+-- pratiche_servizi_contatto
+-- tipologia: tabella gestita
+ALTER TABLE `pratiche_servizi_contatto`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_pratica`,`id_servizio_contatto`), 
+	ADD KEY `id_servizio_contatto` (`id_servizio_contatto`), 
+	ADD KEY `id_pratica` (`id_pratica`),
+	ADD KEY `indice` (`id`,`id_pratica`,`id_servizio_contatto`);
+ALTER TABLE `pratiche_servizi_contatto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+--| 000003000131
+
+-- prezzi
+-- tipologia: tabella gestita
+ALTER TABLE `prezzi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_listino`,`id_iva`,`id_valuta`) USING BTREE, 
+	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_listino`,`id_iva`,`id_valuta`) USING BTREE, 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
+	ADD KEY `id_iva` (`id_iva`), 
+	ADD KEY `id_valuta` (`id_valuta`),  
+	ADD KEY `id_udm` (`id_udm`), 
+	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `indice` (`id`,`id_articolo`,id_prodotto`,`id_listino`,`id_iva`,`id_valuta`);
+ALTER TABLE `prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000132
+
+-- priorita
+-- tipologia: tabella di supporto
+ALTER TABLE `priorita`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`nome`,`ordine`);
+ALTER TABLE `priorita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000133
+
+-- prodotti
+-- tipologia: tabella gestita
+	ALTER TABLE `prodotti`	
+	ADD PRIMARY KEY (`id`), 	
+	ADD KEY `id_tipologia` (`id_tipologia`), 	
+	ADD KEY `id_udm` (`id_udm`), 	
+	ADD KEY `id_ingombro` (`id_ingombro`), 	
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 	
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
+	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`), 	
+	ADD KEY `id_produttore` (`id_produttore`), 	
+	ADD KEY `id_marchio` (`id_marchio`), 	
+	ADD KEY `id_fornitore` (`id_fornitore`),	
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `indice` (`id`,`nome`,`id_tipologia`,`ordine`,`id_fornitore`,`id_marchio`,`id_fornitore`,`se_disponibile`,`se_importata`);
+
+--| 000003000134
+
+-- prodotti_categorie
+-- tipologia: tabella gestita
+ALTER TABLE `prodotti_categorie`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_prodotto` (`id_prodotto`,`id_categoria`), 
+	ADD KEY `id_categoria` (`id_categoria`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `se_principale` (`se_principale`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_categoria`,`ordine`,`se_principale`,`id_ruolo`);
+ALTER TABLE `prodotti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000135
+
+-- prodotti_caratteristiche
+-- tipologia: tabella gestita
+ALTER TABLE `prodotti_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_prodotto` (`id_prodotto`,`id_caratteristica`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`,`se_non_presente`);
+ALTER TABLE `prodotti_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -
 -| FINE FILE
