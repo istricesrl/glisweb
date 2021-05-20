@@ -1709,5 +1709,23 @@ ALTER TABLE `periodi_variazioni_attivita`
  ADD KEY `indice` (`id`,`id_variazione`,`data_inizio`,`data_fine`,`ora_inizio`,`ora_fine`);
  ALTER TABLE `periodi_variazioni_attivita`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003000124
+
+-- pianificazioni
+-- tipologia: tabella gestita
+ALTER TABLE `pianificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `id_turno` (`id_turno`), 
+	ADD UNIQUE KEY `id_todo` (`id_todo`), 
+	ADD UNIQUE KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `token` (`token`), 
+	ADD KEY `timestamp_estensione` (`timestamp_estensione`), 
+	ADD KEY `timestamp_popolazione` (`timestamp_popolazione`),
+	ADD KEY `data_fine` (`data_fine`),
+	ADD KEY `data_ultimo_oggetto` (`data_ultimo_oggetto`),
+	ADD KEY `indice` (`id`,`id_turno`,`id_todo`,`id_progetto`,`token`,`timestamp_estensione`,`timestamp_popolazione`,`data_ultimo_oggetto`,`data_fine`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`);
+ALTER TABLE `pianificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -
 -| FINE FILE
