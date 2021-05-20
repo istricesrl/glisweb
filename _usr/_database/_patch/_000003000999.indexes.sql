@@ -29,8 +29,8 @@ ALTER TABLE `account`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `se_attivo` (`se_attivo`),
-	ADD KEY `token` (`token`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`username`,`id_mail`,`password`,`se_attivo`,`token`);
+	ADD KEY `indice` (`id`,`id_anagrafica`,`username`,`id_mail`,`password`,`se_attivo`,`token`),
+	ADD KEY `indice_token` (`id`,`token`);
 ALTER TABLE `account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000002
@@ -50,6 +50,7 @@ ALTER TABLE `account_gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- account_gruppi_attribuzione
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 17:05 Fabio Mosti
 ALTER TABLE `account_gruppi_attribuzione`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_account`,`id_gruppo`,`entita`), 
@@ -62,30 +63,33 @@ ALTER TABLE `account_gruppi_attribuzione` MODIFY `id` int(11) NOT NULL AUTO_INCR
 
 -- anagrafica
 -- tipologia: tabella gestita
-ALTER TABLE `anagrafica`	
-	ADD PRIMARY KEY (`id`), 	
-	ADD UNIQUE KEY `unica` (`codice`), 	
-	ADD UNIQUE KEY `unica_persone` (`nome`,`cognome`,`codice_fiscale`), 	
-	ADD UNIQUE KEY `unica_aziende` (`denominazione`,`partita_iva`,`codice_fiscale`), 	
+-- verifica: 2021-05-20 17:05 Fabio Mosti
+ALTER TABLE `anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`codice`),
+	ADD UNIQUE KEY `unica_persone` (`nome`,`cognome`,`codice_fiscale`),
+	ADD UNIQUE KEY `unica_aziende` (`denominazione`,`partita_iva`,`codice_fiscale`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_tipologia_crm` (`id_tipologia_crm`), 	
-	ADD KEY `id_agente` (`id_agente`), 	
-	ADD KEY `id_pec_sdi` (`id_pec_sdi`), 	
-	ADD KEY `id_regime_fiscale` (`id_regime_fiscale`), 	
-	ADD KEY `id_orientamento_sessuale` (`id_orientamento_sessuale`), 	
+	ADD KEY `id_pec_sdi` (`id_pec_sdi`),
+	ADD KEY `id_regime_fiscale` (`id_regime_fiscale`),
 	ADD KEY `id_stato_nascita` (`id_stato_nascita`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 	
+	ADD KEY `id_comune_nascita` (`id_comune_nascita`),
+	ADD KEY `id_tipologia_crm` (`id_tipologia_crm`),	
+	ADD KEY `id_agente` (`id_agente`),
+	ADD KEY `id_responsabile_operativo` (`id_responsabile_operativo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `se_importata` (`se_importata`),
 	ADD KEY `se_stampa_privacy` (`se_stampa_privacy`),
-	ADD KEY `riferimento` (`riferimento`),
-	ADD KEY `indice` (`id`,`codice`,`nome`,`cognome`,`id_tipologia`,`denominazione`,`se_importata`,`se_stampa_privacy`,`codice_fiscale`,`partita_iva`,`id_agente`,`id_responsabile_operativo`);
+	ADD KEY `indice` (`id`,`codice`,`nome`,`cognome`,`id_tipologia`,`denominazione`,`se_stampa_privacy`,`codice_fiscale`,`partita_iva`),
+	ADD KEY `indice_riferimento` (`id`,`riferimento`);
 ALTER TABLE `anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
 
 --| 000003000005
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:01 Fabio Mosti
 ALTER TABLE `anagrafica_categorie`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_categoria`), 

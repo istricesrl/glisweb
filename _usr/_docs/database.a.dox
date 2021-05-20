@@ -35,10 +35,8 @@
 
     chiave                        | campo                        | tabella e campo collegati        | comportamento
     ------------------------------|------------------------------|----------------------------------|-------------------
-    account_ibfk_1_nofollow       | id_anagrafica                | anagrafica.id                    | ON DELETE CASCADE ON UPDATE CASCADE
-    account_ibfk_2_nofollow       | id_mail                      | mail.id                          | ON DELETE SET NULL ON UPDATE CASCADE
-    account_ibfk_3_nofollow       | id_account_inserimento       | account.id                       | ON DELETE SET NULL ON UPDATE CASCADE
-    account_ibfk_4_nofollow       | id_account_aggiornamento     | account.id                       | ON DELETE SET NULL ON UPDATE CASCADE
+    account_ibfk_01_nofollow      | id_anagrafica                | anagrafica.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    account_ibfk_02_nofollow      | id_mail                      | mail.id                          | ON DELETE SET NULL ON UPDATE CASCADE
 
     Quando un'anagrafica viene cancellata, sono eliminati a cascata anche i suoi account; quando una mail viene eliminata, l'account rimane privo del riferimento
     alla mail ma comunque attivo
@@ -88,10 +86,10 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati        | comportamento
-    ---------------------------------|------------------------------|----------------------------------|-------------------
-    account_gruppi_ibfk_1            | id_account                   | account.id                       | ON DELETE CASCADE ON UPDATE CASCADE
-    account_gruppi_ibfk_2_nofollow   | id_gruppo                    | gruppi.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                            | campo                        | tabella e campo collegati        | comportamento
+    ----------------------------------|------------------------------|----------------------------------|-------------------
+    account_gruppi_ibfk_01            | id_account                   | account.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    account_gruppi_ibfk_02_nofollow   | id_gruppo                    | gruppi.id                        | ON DELETE CASCADE ON UPDATE CASCADE
 
     Trattandosi di una tabella di associazione molti a molti, la cancellazione di una qualsiasi delle entità principali comporta l'eliminazione
     delle relative associazioni.
@@ -128,10 +126,10 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati        | comportamento
-    ----------------------------------------------|------------------------------|----------------------------------|-------------------
-    account_gruppi_attribuzione_ibfk_1            | id_account                   | account.id                       | ON DELETE CASCADE ON UPDATE CASCADE
-    account_gruppi_attribuzione_ibfk_2_nofollow   | id_gruppo                    | gruppi.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                                         | campo                        | tabella e campo collegati        | comportamento
+    -----------------------------------------------|------------------------------|----------------------------------|-------------------
+    account_gruppi_attribuzione_ibfk_01            | id_account                   | account.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    account_gruppi_attribuzione_ibfk_02_nofollow   | id_gruppo                    | gruppi.id                        | ON DELETE CASCADE ON UPDATE CASCADE
 
     Trattandosi di una tabella di associazione molti a molti, la cancellazione di una qualsiasi delle entità principali comporta l'eliminazione
     delle relative associazioni.
@@ -157,7 +155,7 @@
     ------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica.id                                   | l'ID dell'anagrafica
     anagrafica.codice                               | il codice parlante dell'anagrafica (codice cliente, codice fornitore, matricola dipendente, eccetera)
-    anagrafica.riferimento                          | -
+    anagrafica.riferimento                          | un riferimento non univoco all'anagrafica
     anagrafica.id_tipologia                         | l'ID della tipologia associata all'anagrafica
     anagrafica.nome                                 | il nome per le persone fisiche
     anagrafica.cognome                              | il cognome per le persone fisiche
@@ -165,7 +163,6 @@
     anagrafica.soprannome                           | il soprannome o nome convenzionale, usato ad es. nelle tendine eccetera
     anagrafica.sesso                                | il sesso dell'anagrafica (M, F o trattino)
     anagrafica.stato_civile                         | lo stato civile dell'anagrafica
-    anagrafica.id_orientamento_sessuale             | l'ID dell'orientamento sessuale dell'anagrafica
     anagrafica.codice_fiscale                       | il codice fiscale dell'anagrafica
     anagrafica.partita_iva                          | la partita IVA dell'anagrafica
     anagrafica.codice_sdi                           | il codice SDI per la fatturazione elettronica dell'anagrafica
@@ -176,6 +173,7 @@
     anagrafica.stato_nascita                        | lo stato di nascita dell'anagrafica
     anagrafica.id_stato_nascita                     | l'ID dello stato di nascita dell'anagrafica
     anagrafica.comune_nascita                       | il comune di nascita dell'anagrafica
+    anagrafica.id_comune_nascita                    | l'ID del comune di nascita dell'anagrafica
     anagrafica.giorno_nascita                       | il giorno di nascita dell'anagrafica
     anagrafica.mese_nascita                         | il mese di nascita dell'anagrafica
     anagrafica.anno_nascita                         | l'anno di nascita dell'anagrafica
@@ -194,18 +192,16 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-    anagrafica_ibfk_1_nofollow                    | id_orientamento_sessuale     | orientamenti_sessuali.id
-    anagrafica_ibfk_2_nofollow                    | id_account_inserimento       | account.id
-    anagrafica_ibfk_3_nofollow                    | id_stato_nascita             | stati.id
-    anagrafica_ibfk_4_nofollow                    | id_account_aggiornamento     | account.id
-    anagrafica_ibfk_5_nofollow                    | id_tipologia_crm             | tipologie_crm.id
-    anagrafica_ibfk_6_nofollow                    | id_pec_sdi                   | mail.id
-    anagrafica_ibfk_7_nofollow                    | id_tipologia                 | tipologie_anagrafica.id
-    anagrafica_ibfk_8_nofollow                    | id_agente                    | anagrafica.id
-    anagrafica_ibfk_9_nofollow                    | id_regime_fiscale            | regimi_fiscali.id
-    anagrafica_ibfk_10_nofollow                   | comune_nascita               | comuni.id
+    chiave                                        | campo                        | tabella e campo collegati    | comportamento
+    ----------------------------------------------|------------------------------|------------------------------|-----------------------
+    anagrafica_ibfk_01_nofollow                   | id_tipologia                 | tipologie_anagrafica.id      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_02_nofollow                   | id_pec_sdi                   | mail.id                      | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_ibfk_03_nofollow                   | id_regime_fiscale            | regimi_fiscali.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_04_nofollow                   | id_stato_nascita             | stati.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_05_nofollow                   | id_comune_nascita            | comuni.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_06_nofollow                   | id_tipologia_crm             | tipologie_crm.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_07_nofollow                   | id_agente                    | anagrafica.id                | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_ibfk_08_nofollow                   | id_responsabile_operativo    | anagrafica.id                | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *anagrafica_view* relativa alla tabella *anagrafica* presenta le seguenti colonne:
 
@@ -214,73 +210,42 @@
     anagrafica_view.id                                     | l'ID dell'anagrafica
     anagrafica_view.codice                                 | il codice parlante dell'anagrafica (codice cliente, codice fornitore, matricola dipendente, eccetera)
     anagrafica_view.riferimento                            | -
-    anagrafica_view.id_tipologia                           | l'ID della tipologia associata all'anagrafica
+    anagrafica_view.tipologia                              | la tipologia associata all'anagrafica
     anagrafica_view.nome                                   | il nome per le persone fisiche
     anagrafica_view.cognome                                | il cognome per le persone fisiche
     anagrafica_view.denominazione                          | la denominazione per le persone giuridiche
     anagrafica_view.soprannome                             | il soprannome o nome convenzionale, usato ad es. nelle tendine eccetera
     anagrafica_view.sesso                                  | il sesso dell'anagrafica (M, F o trattino)
-    anagrafica_view.stato_civile                           | lo stato civile dell'anagrafica
-    anagrafica_view.id_orientamento_sessuale               | l'ID dell'orientamento sessuale dell'anagrafica
     anagrafica_view.codice_fiscale                         | il codice fiscale dell'anagrafica
     anagrafica_view.partita_iva                            | la partita IVA dell'anagrafica
-    anagrafica_view.codice_sdi                             | il codice SDI per la fatturazione elettronica dell'anagrafica
-    anagrafica_view.id_pec_sdi                             | l'ID della casella PEC per la fatturazione elettronica dell'anagrafica
-    anagrafica_view.id_regime_fiscale                      | l'ID del regime fiscale dell'anagrafica
-    anagrafica_view.note_amministrative                    | le note amministrative relative all'anagrafica
-    anagrafica_view.luogo_nascita                          | il luogo di nascita dell'anagrafica
-    anagrafica_view.stato_nascita                          | lo stato di nascita dell'anagrafica
-    anagrafica_view.id_stato_nascita                       | l'ID dello stato di nascita dell'anagrafica
-    anagrafica_view.comune_nascita                         | il comune di nascita dell'anagrafica
-    anagrafica_view.giorno_nascita                         | il giorno di nascita dell'anagrafica
-    anagrafica_view.mese_nascita                           | il mese di nascita dell'anagrafica
-    anagrafica_view.anno_nascita                           | l'anno di nascita dell'anagrafica
-    anagrafica_view.id_tipologia_crm                       | l'ID della tipologia CRM dell'anagrafica
-    anagrafica_view.id_agente                              | l'ID dell'agente associato all'anagrafica
-    anagrafica_view.note_commerciali                       | le note commerciali relative all'anagrafica
-    anagrafica_view.condizioni_vendita                     | le condizioni di vendita relative all'anagrafica
-    anagrafica_view.condizioni_acquisto                    | le condizioni di acquisto relative all'anagrafica
-    anagrafica_view.note                                   | le note relative all'anagrafica
-    anagrafica_view.data_cessazione                        | la data di cessazione dell'anagrafica
-    anagrafica_view.note_cessazione                        | le note relative alla cessazione dell'anagrafica
+    anagrafica_view.tipologia_crm                          | la tipologia CRM dell'anagrafica
     anagrafica_view.recapiti                               | recapiti dell'anagrafica
-    anagrafica_view.se_importata                           | flag che indica se l'anagrafica è stata importata
-    anagrafica_view.se_stampa_privacy                      | flag che indica se è stata stampata l'informativa privacy per l'anagrafica
-    anagrafica_view.pec_sdi                                | l'indirizzo PEC per la fatturazione elettronica
-    anagrafica_view.sigla_stato                            | -
-    anagrafica_view.cittadinanze                           | -
-    anagrafica_view.se_collaboratore                       | -
-    anagrafica_view.se_dipendente                          | -
-    anagrafica_view.se_interinale                          | -
-    anagrafica_view.se_cliente                             | -
-    anagrafica_view.se_lead                                | -
-    anagrafica_view.se_prospect                            | -
-    anagrafica_view.se_mandante                            | -
-    anagrafica_view.se_fornitore                           | -
-    anagrafica_view.se_produttore                          | -
-    anagrafica_view.se_agente                              | -
-    anagrafica_view.se_interno                             | -
-    anagrafica_view.se_esterno                             | -
+    anagrafica_view.se_collaboratore                       | flag che identifica se il contatto è un collaboratore
+    anagrafica_view.se_dipendente                          | flag che identifica se il contatto è un dipendente
+    anagrafica_view.se_interinale                          | flag che identifica se il contatto è un interinale
+    anagrafica_view.se_cliente                             | flag che identifica se il contatto è un cliente
+    anagrafica_view.se_lead                                | flag che identifica se il contatto è un lead
+    anagrafica_view.se_prospect                            | flag che identifica se il contatto è un prospect
+    anagrafica_view.se_mandante                            | flag che identifica se il contatto è un mandante
+    anagrafica_view.se_fornitore                           | flag che identifica se il contatto è un fornitore
+    anagrafica_view.se_produttore                          | flag che identifica se il contatto è un produttore
+    anagrafica_view.se_agente                              | flag che identifica se il contatto è un agente
+    anagrafica_view.se_interno                             | flag che identifica se il contatto è un interno
+    anagrafica_view.se_esterno                             | flag che identifica se il contatto è un estermp
     anagrafica_view.se_amministrazione                     | -
-    anagrafica_view.se_azienda_gestita                     | -
-    anagrafica_view.se_concorrente                         | -
-    anagrafica_view.se_tutor                               | -
-    anagrafica_view.se_classe                              | -
-    anagrafica_view.se_docente                             | -
-    anagrafica_view.se_allievo                             | -
-    anagrafica_view.se_agenzia_interinale                  | -
-    anagrafica_view.se_referente                           | -
-    anagrafica_view.se_sostituto                           | -
-    anagrafica_view.se_squadra                             | -
-    anagrafica_view.denominazione_fiscale                  | -
+    anagrafica_view.se_azienda_gestita                     | flag che identifica se il contatto è un'azienda gestita
+    anagrafica_view.se_concorrente                         | flag che identifica se il contatto è un concorrente
+    anagrafica_view.se_tutor                               | flag che identifica se il contatto è un tutor
+    anagrafica_view.se_classe                              | flag che identifica se il contatto è una classe
+    anagrafica_view.se_docente                             | flag che identifica se il contatto è un docente
+    anagrafica_view.se_allievo                             | flag che identifica se il contatto è un allievo
+    anagrafica_view.se_agenzia_interinale                  | flag che identifica se il contatto è un'agenzia interinale
+    anagrafica_view.se_referente                           | flag che identifica se il contatto è un referente
+    anagrafica_view.se_sostituto                           | flag che identifica se il contatto è un sostituto
+    anagrafica_view.se_squadra                             | flag che identifica se il contatto è un membro della squadra emergenze
     anagrafica_view.categorie                              | -
     anagrafica_view.telefoni                               | -
     anagrafica_view.mail                                   | -
-    anagrafica_view.specialita                             | -
-    anagrafica_view.provincia                              | -
-    anagrafica_view.codice_regime_fiscale                  | -
-    anagrafica_view.gruppo                                 | -
-    anagrafica_view.agente                                 | -
     anagrafica_view.__label__                              | -
 
     La vista *anagrafica_view* contiene molti campi booleani che qualificano i contatti in base alle categorie cui appartengono; questo è utile per la popolazione
@@ -298,7 +263,8 @@
 
     anagrafica_archiviati
     ---------------------
-    Questa tabella *virtuale* contiene le anagrafiche cessate, individuate in base al fatto che il campo data_cessazione non è NULL. Ha gli stessi campi dell'*anagrafica_view*.
+    Questa tabella *virtuale* contiene le anagrafiche cessate, individuate in base al fatto che il campo data_cessazione non è NULL.
+    La relativa vista *anagrafica_archiviati_view* Ha il campo data_cessazione in più oltre agli stessi campi dell'*anagrafica_view*.
 
     anagrafica_categorie
     --------------------
@@ -312,8 +278,10 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                        | campo                        | tabella e campo collegati     |
+    ----------------------------------------------|------------------------------|-------------------------------|----------------------
+    anagrafica_categorie_ibfk_01                  | id_anagrafica                | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_categorie_ibfk_02_nofollow         | id_categoria                 | categorie_anagrafica.id       | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *anagrafica_categorie_view* relativa alla tabella *anagrafica_categorie* presenta le seguenti colonne:
 
@@ -478,26 +446,6 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
    
-    anagrafica_servizi_contatto
-    -----------------------------
-    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità *modalità_pagamento*.
-
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_servizi_contatto.id                      | l'ID dell'associazione fra anagrafica e il servizio di contatto
-    anagrafica_servizi_contatto.id_anagrafica           | l'ID dell'anagrafica    
-    anagrafica_servizi_contatto.id_servizio_contatto    | l'ID del servizio di contatto
-    anagrafica_servizi_contatto.testo                   | -
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *anagrafica_servizi_contatto_view* relativa alla tabella *anagrafica_servizi_contatto* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-
     anagrafica_settori
     ------------------
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità secondaria *settori* che rappresentano i settori

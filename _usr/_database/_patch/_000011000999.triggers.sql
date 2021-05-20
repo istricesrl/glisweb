@@ -12,7 +12,7 @@ DROP PROCEDURE IF EXISTS `anagrafica_view_static`;
 
 -- anagrafica_view_static
 CREATE
-    DEFINER=CURRENT_USER()
+    DEFINER = CURRENT_USER()
     PROCEDURE `anagrafica_view_static`( IN `i` INT(11) )
     BEGIN
 
@@ -26,8 +26,7 @@ CREATE
         
             DELETE FROM anagrafica_view_static WHERE anagrafica_view_static.id = i;
 
-            INSERT INTO anagrafica_view_static
-            SELECT * FROM anagrafica_view WHERE anagrafica_view.id = i;
+            INSERT INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE anagrafica_view.id = i;
         
         END IF;
 
