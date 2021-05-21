@@ -32,7 +32,7 @@
         }
 
 
-    die(print_r($prodotti));
+    //die(print_r($prodotti));
 
     // creazione del PDF
 	$pdf = new TCPDF( 'P', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
@@ -62,6 +62,24 @@
 	$brdc		= array(
 	    'B' => array( 'width' => $lts, 'color' => $rgb1 )
 	);
+
+    // stiel del barcode
+    $style = array(
+        'position' => '',
+        'align' => 'C',
+        'stretch' => false,
+        'fitwidth' => true,
+        'cellfitalign' => '',
+        'border' => true,
+        'hpadding' => 'auto',
+        'vpadding' => 'auto',
+        'fgcolor' => array(0,0,0),
+        'bgcolor' => false, //array(255,255,255),
+        'text' => true,
+        'font' => 'helvetica',
+        'fontsize' => 8,
+        'stretchtext' => 4
+    );
 
     // carattere di base
 	$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
