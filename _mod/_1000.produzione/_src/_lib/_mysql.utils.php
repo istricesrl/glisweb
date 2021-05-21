@@ -533,7 +533,7 @@
         // elenco degli operatori disponibili che non sono già stati analizzati
         $operatori = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT c.id_anagrafica, c.anagrafica, max(ca.se_sostituto) as se_sostituto, '
+            'SELECT c.id_anagrafica, c.anagrafica, max(ca.se_sostituto) as se_sostituto, max(ca.se_produzione) as se_produzione, '
             .'( SELECT count(*) FROM attivita WHERE id_anagrafica = c.id_anagrafica '
                 .'AND ( '
                 .'( TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ? ) '
@@ -547,7 +547,7 @@
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'WHERE r.id IS NULL '
             .'GROUP BY c.id_anagrafica '
-            .'HAVING collisioni = 0'
+            .'HAVING collisioni = 0 AND se_produzione = 1'
            ,
             array(
                 array( 's' => $a['data_ora_inizio'] ),
