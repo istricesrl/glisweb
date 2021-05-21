@@ -33,7 +33,7 @@
         $_REQUEST[ $ct['form']['table'] ]['__comando__']  = $_REQUEST['__art__'];
         $_REQUEST[ $ct['form']['table'] ]['__operazione__'] = 1;
         $_REQUEST[ $ct['form']['table'] ]['__reparto__'] = 0;
-        print_r( "trovato articolo da aggiungere codice ".$_REQUEST[ $ct['form']['table'] ]['__comando__'] );
+       // print_r( "trovato articolo da aggiungere codice ".$_REQUEST[ $ct['form']['table'] ]['__comando__'] );
     }
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['__comando__']  ) ){

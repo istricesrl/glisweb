@@ -1,5 +1,6 @@
 {% import '_bin/_default.html' as cms %}
 {% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
 
 {% extends 'ext/blank.html' %}
 
@@ -31,8 +32,10 @@
     <div class="col text-left">
         {% set target = pages.casse.url[ localization.language.ietf ] %}
         <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+
     </div>
-    <div class="col text-right">
+       <div class="col text-right">
+      
     </div>
 </header>
 {% endblock %}
@@ -73,10 +76,11 @@
                         </div>
                         <div class="col-12 mt-3">
                             <span class="label-top">cliente</span>
-                            {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
+                            {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
                         </div>
                     <!--inizio prova scontrino-->
                     <div class="col-12 mt-3">
+                        {% if etc.righe %}
                         <div id="bot">
                             <div id="table" >
                                 <table style="width:100%;">
@@ -90,6 +94,7 @@
                                 </table>
                             </div>
                         </div> 
+                        {% endif %}
                     <div class="col-12 mt-3 box mh-100 "  id="invoice-POS">
                         <div id="table" >
                             <table style="width:100%;">              
@@ -170,7 +175,7 @@
                 <legend>articoli frequenti</legend>
             <div class="box" style="height: 85vh;" >
                 {% for articolo in etc.articoli_frequenti %}
-                <a href="{{ cassa }}?__art__={{ articolo.id }}">
+                <a href="{{ cassa }}?documenti[id]={{ request.documenti.id  }}&__art__={{ articolo.id }}">
                 <div class="media">
                    
                     <div class="media-body p-3">
