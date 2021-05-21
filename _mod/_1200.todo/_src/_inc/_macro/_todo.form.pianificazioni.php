@@ -80,6 +80,7 @@
                     'id_pianificazione' => '§id_pianificazione§'
                 ),
                 'attivita' => array(
+                    'data_programmazione' => '§data§',
                     'data_attivita' => '§data§'
                 )
                 /*
