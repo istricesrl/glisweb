@@ -24,14 +24,15 @@
 
         foreach($prodotti as &$p){
 
-            $p['articoli'] =  mysqlQuery(     $cf['mysql']['connection'], 
-                                                'SELECT * FROM articoli_view WHERE id_prodotto = ?',
-                                                array( array('s' => $p['id'] ) ) );
+            $p['articoli'] =  mysqlQuery(    
+                $cf['mysql']['connection'], 
+                'SELECT articoli_view.*, contenuti.testo FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 WHERE articoli_view.id_prodotto = ?',
+                array( array('s' => $p['id'] ) ) );
 
         }
-    }
 
-    //die(print_r($prodotti));
+
+    die(print_r($prodotti));
 
     // creazione del PDF
 	$pdf = new TCPDF( 'P', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
@@ -91,6 +92,48 @@
     // aggiunta di una pagina
 	$pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
 
+    foreach( $prodotti as $p){
+
+        if( sizeof($p['articoli'] > 0) ){
+
+
+            // spazio 
+	        $pdf->SetY( $pdf->GetY() + $stdsp * 2 );
+
+            // scrivo il nome del prodotto
+            $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+            $pdf->Cell( $col * 12, 0, $p['__label__'], 0, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+
+            // spazio sotto il nome del prodotto
+	        $pdf->SetY( $pdf->GetY() + $stdsp * 2 );
+
+            // tabella di articoli e relativi barcode
+            // intestazione tabella di dettaglio
+            $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+            $pdf->Cell( $col * 2, 0, 'codice', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 2, 0, 'nome', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 2, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 6, 0, 'barcode', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+
+
+            // tabella di dettaglio
+            $pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
+            foreach( $p['articoli'] as $articolo ) {
+                $trh = $pdf->GetStringHeight( $col * 2, $articolo['testo'], false, true, '', 'B' );					// 
+                $pdf->Cell( $col, $trh, $articolo['id'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, $trh, $articolo['nome'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->MultiCell( $col * 2, $lh, $articolo['testo'], $brdc, 'L', false, 0 );						// w, h, testo, bordo, allineamento, riempimento, newline
+                $pdf->Cell( $col * 2, $trh, ' ||||||||||||||', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+
+                }
+
+        }
+
+    }
+
+
+
       // output
 	if( isset( $_REQUEST['d'] ) ) {
 	    $pdf->Output($dobj.'.pdf' , 'D' );					// invia l'output al browser per il download diretto
@@ -101,3 +144,9 @@
 	} else {
 	    $pdf->Output($dobj.'.pdf');								// invia l'output al browser
 	}
+
+} else{
+
+    die(print_r("non sono presenti articoli nel catalogo"));
+
+}
