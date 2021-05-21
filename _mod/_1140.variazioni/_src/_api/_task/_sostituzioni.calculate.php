@@ -40,7 +40,7 @@
         // token della riga
         $status['update'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE attivita SET token = ? WHERE id_anagrafica IS NULL AND id NOT IN ( SELECT DISTINCT id_attivita FROM __report_sostituzioni_attivita__ ) '.
+            'UPDATE attivita SET token = ? WHERE id_anagrafica IS NULL AND timestamp_calcolo_sostituti IS NULL '.
             'AND token IS NULL '.
             'ORDER BY timestamp_aggiornamento ASC LIMIT 1',
             array(
@@ -67,9 +67,10 @@
         // rilascio il token
         $status['sblocco'] = mysqlQuery( 
             $cf['mysql']['connection'],
-            'UPDATE attivita SET timestamp_aggiornamento = ?, token = NULL WHERE token = ?', 
+            'UPDATE attivita SET timestamp_aggiornamento = ?, timestamp_calcolo_sostituti = ?, token = NULL WHERE token = ?', 
             array(
                 array( 's' => time() ),
+				array( 's' => time() ),
                 array( 's' => $status['token'] )
             )
         );
