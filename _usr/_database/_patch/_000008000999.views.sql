@@ -73,7 +73,7 @@ CREATE OR REPLACE VIEW account_gruppi_view AS
 		account_gruppi.se_amministratore,
 		concat(
 			account.username,
-			'/',
+			' / ',
 			gruppi.nome
 		) AS __label__
 	FROM account_gruppi
@@ -100,7 +100,7 @@ CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 		account_gruppi_attribuzione.entita,
 		concat(
 			account.username,
-			'/',
+			' / ',
 			gruppi.nome,
 			' - ',
 			account_gruppi_attribuzione.entita
@@ -149,6 +149,7 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		max( categorie_anagrafica.se_interno ) AS se_interno,
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
 		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
+		max( categorie_anagrafica.se_produzione ) AS se_produzione,
 		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
 		max( categorie_anagrafica.se_tutor ) AS se_tutor,
@@ -220,6 +221,7 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		max( categorie_anagrafica.se_interno ) AS se_interno,
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
 		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
+		max( categorie_anagrafica.se_produzione ) AS se_produzione,
 		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
 		max( categorie_anagrafica.se_tutor ) AS se_tutor,
@@ -271,7 +273,7 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 		anagrafica_categorie.id_categoria,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			'/',
+			' / ',
 			categorie_anagrafica.nome
 		) AS __label__
 	FROM anagrafica_categorie
@@ -298,7 +300,7 @@ CREATE OR REPLACE VIEW anagrafica_categorie_diritto_view AS
 		anagrafica_categorie_diritto.se_specialita,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			'/',
+			' / ',
 			categorie_anagrafica.nome
 		) AS __label__
 	FROM anagrafica_categorie_diritto
@@ -317,7 +319,6 @@ DROP TABLE IF EXISTS `anagrafica_cittadinanze_view`;
 -- anagrafica_cittadinanze_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 21:47 Fabio Mosti
-DROP TABLE IF EXISTS `anagrafica_cittadinanze_view`;
 CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 	SELECT
 		anagrafica_cittadinanze.id,
@@ -327,7 +328,7 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 		anagrafica_cittadinanze.data_fine,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			'/',
+			' / ',
 			stati.nome
 		) AS __label__
 	FROM anagrafica_cittadinanze
@@ -346,20 +347,73 @@ DROP TABLE IF EXISTS `anagrafica_condizioni_pagamento_view`;
 -- anagrafica_condizioni_pagamento_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 22:04 Fabio Mosti
-DROP TABLE IF EXISTS `anagrafica_condizioni_pagamento_view`;
 CREATE OR REPLACE VIEW `anagrafica_condizioni_pagamento_view` AS
 	SELECT
 		anagrafica_condizioni_pagamento.id,
 		anagrafica_condizioni_pagamento.id_anagrafica,
 		anagrafica_condizioni_pagamento.id_condizione,
+		condizioni_pagamento.nome AS condizione,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			'/',
+			' / ',
 			condizioni_pagamento.nome
 		) AS __label__
 	FROM anagrafica_condizioni_pagamento
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_condizioni_pagamento.id_anagrafica
 		INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = anagrafica_condizioni_pagamento.id_condizione
+;
+
+--| 000008000019
+
+-- anagrafica_indirizzi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_indirizzi_view`;
+
+--| 000008000020
+
+-- anagrafica_indirizzi_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
+	SELECT
+		anagrafica_indirizzi.id,
+		anagrafica_indirizzi.id_tipologia,
+		tipologie_indirizzi.nome AS tipologia,
+		anagrafica_indirizzi.id_anagrafica,
+		anagrafica_indirizzi.id_indirizzo,
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			' / ',
+			coalesce( anagrafica_indirizzi.note, anagrafica_indirizzi.id_indirizzo )
+		) AS __label__
+	FROM anagrafica_indirizzi
+		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
+;
+
+--| 000008000021
+
+-- anagrafica_modalita_pagamento_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_modalita_pagamento_view`;
+
+--| 000008000022
+
+-- anagrafica_modalita_pagamento_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-22 16:28 Fabio Mosti
+CREATE OR REPLACE VIEW `anagrafica_modalita_pagamento_view` AS
+	SELECT
+		anagrafica_modalita_pagamento.id,
+		anagrafica_modalita_pagamento.id_anagrafica,
+		anagrafica_modalita_pagamento.id_modalita,
+		modalita_pagamento.nome AS modalita,
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			' / ',
+			modalita_pagamento.nome
+		) AS __label__
+	FROM anagrafica_modalita_pagamento
+		INNER JOIN anagrafica ON anagrafica.id = anagrafica_modalita_pagamento.id_anagrafica
+		INNER JOIN modalita_pagamento ON modalita_pagamento.id = modalita_pagamento_pagamento.id_modalita
 ;
 
 --| FINE FILE

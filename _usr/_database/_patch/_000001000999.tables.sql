@@ -175,11 +175,12 @@ CREATE TABLE IF NOT EXISTS `anagrafica_condizioni_pagamento` (
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
+-- verifica: 2021-05-21 16:30 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `id` int(11) NOT NULL,
-  `id_indirizzo` int(11) NOT NULL,
-  `id_anagrafica` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_indirizzo` int(11) NOT NULL,
   `interno` char(8) DEFAULT NULL,
   `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -188,10 +189,12 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
 
 -- anagrafica_modalita_pagamento
 -- tipologia: tabella gestita
+-- verifica: 2021-05-22 16:23 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_modalita_pagamento` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
-  `id_modalita_pagamento` int(11) NOT NULL
+  `id_modalita` int(11) NOT NULL,
+  `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000011
@@ -420,6 +423,7 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `se_rassegna_stampa` int(1) DEFAULT NULL,
   `se_azienda_gestita` int(1) DEFAULT NULL,
   `se_amministrazione` int(1) DEFAULT NULL,
+  `se_produzione` int(1) DEFAULT NULL,
   `se_notizie` int(1) DEFAULT NULL,
   `se_docente` int(1) DEFAULT NULL,
   `se_tutor` int(1) DEFAULT NULL,

@@ -143,24 +143,26 @@ ALTER TABLE `anagrafica_condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
+-- verifica: 2021-05-21 16:34 Fabio Mosti
 ALTER TABLE `anagrafica_indirizzi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_indirizzo`,`id_tipologia`), 
-	ADD KEY `id_indirizzo` (`id_indirizzo`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_indirizzo`), 
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_tipologia`);
+	ADD KEY `id_indirizzo` (`id_indirizzo`), 
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_indirizzo`,`id_tipologia`);
 ALTER TABLE `anagrafica_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000010
 
 -- anagrafica_modalita_pagamento
 -- tipologia: tabella gestita
+-- verifica: 2021-05-22 16:23 Fabio Mosti
 ALTER TABLE `anagrafica_modalita_pagamento`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_modalita_pagamento`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_modalita`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_modalita_pagamento`);
+	ADD KEY `id_modalita` (`id_modalita`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_modalita`);
 ALTER TABLE `anagrafica_modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000011

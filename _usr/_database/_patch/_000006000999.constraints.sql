@@ -98,4 +98,22 @@ ALTER TABLE `anagrafica_condizioni_pagamento`
     ADD CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_02_nofollow` FOREIGN KEY (`id_condizione`) REFERENCES `condizioni_pagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--| 000006000008
+
+-- anagrafica_indirizzi
+-- tipologia: tabella gestita
+-- verifica: 2021-05-21 16:36 Fabio Mosti
+ALTER TABLE `anagrafica_indirizzi`
+    ADD CONSTRAINT `anagrafica_indirizzi_ibfk_01` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `anagrafica_indirizzi_ibfk_02` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `anagrafica_indirizzi_ibfk_03` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 000006000009
+
+-- anagrafica_modalita_pagamento
+-- tipologia: tabella gestita
+ALTER TABLE `anagrafica_modalita_pagamento`
+    ADD CONSTRAINT `anagrafica_modalita_pagamento_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `anagrafica_modalita_pagamento_ibfk_02` FOREIGN KEY (`id_modalita`) REFERENCES `modalita_pagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 --| FINE FILE

@@ -232,7 +232,8 @@
     anagrafica_view.se_agente                              | flag che identifica se il contatto è un agente
     anagrafica_view.se_interno                             | flag che identifica se il contatto è un interno
     anagrafica_view.se_esterno                             | flag che identifica se il contatto è un estermp
-    anagrafica_view.se_amministrazione                     | -
+    anagrafica_view.se_amministrazione                     | flag che identifica se il contatto è un impiegato amministrativo
+    anagrafica_view.se_produzione                          | flag che identifica se il contatto è un impiegato in produzione
     anagrafica_view.se_azienda_gestita                     | flag che identifica se il contatto è un'azienda gestita
     anagrafica_view.se_concorrente                         | flag che identifica se il contatto è un concorrente
     anagrafica_view.se_tutor                               | flag che identifica se il contatto è un tutor
@@ -377,6 +378,7 @@
     anagrafica_condizioni_pagamento_view.id                | -
     anagrafica_condizioni_pagamento_view.id_anagrafica     | -
     anagrafica_condizioni_pagamento_view.id_condizione     | -
+    anagrafica_condizioni_pagamento_view.condizione        | il nome della condizione di pagamento
     anagrafica_condizioni_pagamento_view.__label__         | etichetta descrittiva dell'associazione con la condizione di pagamento
 
     anagrafica_indirizzi
@@ -386,21 +388,30 @@
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica_indirizzi.id                         | l'ID dell'associazione fra indirizio e anagrafica
-    anagrafica_indirizzi.id_indirizzo               | l'ID dell'indirizzo
-    anagrafica_indirizzi.id_anagrafica              | l'ID dell'anagrafica
     anagrafica_indirizzi.id_tipologia               | l'ID della tipologia di associazione fra indirizzo e anagrafica
+    anagrafica_indirizzi.id_anagrafica              | l'ID dell'anagrafica
+    anagrafica_indirizzi.id_indirizzo               | l'ID dell'indirizzo
     anagrafica_indirizzi.interno                    | l'interno occupato dall'anagrafica all'indirizzo
-    anagrafica_indirizzi.descrizione                | la descrizione dell'indirizzo relativamente all'anagrafica
+    anagrafica_indirizzi.note                       | le note sull'indirizzo relativamente all'anagrafica
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                     | tabella e campo collegati         | comportamento
+    --------------------------------------------|---------------------------|-----------------------------------|------------------
+    anagrafica_indirizzi_ibfk_01                | id_tipologia              | tipologie_indirizzi.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_indirizzi_ibfk_02                | id_anagrafica             | anagrafica.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_indirizzi_ibfk_03                | id_indirizzo              | indirizzi.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *anagrafica_indirizzi_view* relativa alla tabella *anagrafica_indirizzi* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_indirizzi_view.id                           | -
+    anagrafica_indirizzi_view.id_tipologia                 | -
+    anagrafica_indirizzi_view.tipologia                    | il nome della tipologia di associazione fra anagrafica e indirizzo
+    anagrafica_indirizzi_view.id_anagrafica                | -
+    anagrafica_indirizzi_view.id_indirizzo                 | -
+    anagrafica_indirizzi_view.__label__                    | l'etichetta che descrive l'associazione fra anagrafica e indirizzo
 
     anagrafica_modalita_pagamento
     -----------------------------
@@ -410,17 +421,25 @@
     ------------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica_modalita_pagamento.id                      | l'ID dell'associazione fra anagrafica e modalità di pagamento
     anagrafica_modalita_pagamento.id_anagrafica           | l'ID dell'anagrafica    
-    anagrafica_modalita_pagamento.id_modalita_pagamento   | l'ID della modalità di pagamento
+    anagrafica_modalita_pagamento.id_modalita             | l'ID della modalità di pagamento
+    anagrafica_modalita_pagamento.note                    | note sull'associazione con la modalità di pagamento
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                          | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------------------|---------------------------|-------------------------------|----------------------
+    anagrafica_modalita_pagamento_ibfk_01           | id_anagrafica             | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE,
+    anagrafica_modalita_pagamento_ibfk_02           | id_modalita               | modalita_pagamento.id         | ON DELETE CASCADE ON UPDATE CASCADE;
 
     La vista *anagrafica_modalita_pagamento_view* relativa alla tabella *anagrafica_modalita_pagamento* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                                    | descrizione
+    -----------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_modalita_pagamento_view.id                      | -
+    anagrafica_modalita_pagamento_view.id_anagrafica           | -    
+    anagrafica_modalita_pagamento_view.id_modalita             | -
+    anagrafica_modalita_pagamento_view.modalita                | il nome della modalità di pagamento
+    anagrafica_modalita_pagamento_view.__label__               | l'etichetta descrittiva dell'associazione fra anagrafica e modalità di pagamento
 
     anagrafica_provenienze
     ----------------------
