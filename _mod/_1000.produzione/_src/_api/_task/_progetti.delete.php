@@ -25,8 +25,15 @@
         // ID del progetto in oggetto
         $status['id_progetto'] = $_REQUEST['id'];
 
+        mysqlDeleteRowRecursive(
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'progetti',
+            $_REQUEST['id']
+        );
+
         // rimuovo le todo figlie del progetto
-        mysqlQuery(
+    /*    mysqlQuery(
             $cf['mysql']['connection'],
             'DELETE FROM todo WHERE id_progetto = ?',
             array(
@@ -51,7 +58,7 @@
                 array( 's' => $_REQUEST['id'])
             )
         );
-       
+    */   
 
     } else {
 
