@@ -139,10 +139,10 @@
 	$ct['etc']['select']['diritti'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_diritto_view' );
 
     // tendina agenti
-	$ct['etc']['select']['id_agente'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view WHERE se_agente = 1' );
+	$ct['etc']['select']['id_agente'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_agente = 1' );
 
     // tendina mandanti/fornitori
-	$ct['etc']['select']['id_mandante_fornitore'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view WHERE se_mandante = 1 OR se_fornitore = 1' );
+	$ct['etc']['select']['id_mandante_fornitore'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_mandante = 1 OR se_fornitore = 1' );
 
     // tendina categorie prodotti
 	$ct['etc']['select']['id_categoria_prodotti'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_prodotti_view' );

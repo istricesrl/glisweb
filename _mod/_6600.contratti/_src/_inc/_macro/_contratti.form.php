@@ -19,7 +19,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 OR se_dipendente = 1 OR se_interinale = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1 OR se_dipendente = 1 OR se_interinale = 1'
     );
 
     // tendina agenzia
@@ -27,7 +27,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view WHERE se_agenzia_interinale = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_agenzia_interinale = 1'
     );
     
     // tendina per le tipologie di contratto

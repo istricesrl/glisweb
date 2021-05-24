@@ -49,7 +49,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
-            "SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 AND "
+            "SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1 AND "
             ."id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? )",
             array(
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )

@@ -39,14 +39,14 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
 	
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_lead = 1 OR se_cliente = 1 OR se_prospect = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_lead = 1 OR se_cliente = 1 OR se_prospect = 1' );
 
     // tendina progetti
 	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(

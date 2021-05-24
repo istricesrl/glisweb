@@ -427,7 +427,7 @@
         // sono esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente      
         $sostituti = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view WHERE se_sostituto = 1 '
+            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view_static WHERE se_sostituto = 1 '
             .'AND id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) ',
             array(
                 array( 's' => $id_attivita )
@@ -692,7 +692,7 @@
         // operatori che di base sono assegnati alle sostituzioni
         $sostituti = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view WHERE se_sostituto = 1'
+            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view_static WHERE se_sostituto = 1'
         );
 
         if( !empty( $sostituti ) ){
