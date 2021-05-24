@@ -30,8 +30,10 @@
 	$h = escpos_connect( '192.168.1.137' );
 
     // scrittura di test
-	escpos_write( $h, '1H1R' );
-	escpos_write( $h, '1T' );
+	// escpos_write( $h, '1H1R' );
+	// escpos_write( $h, '"PROVA"1*1000H2R' );
+	// escpos_write( $h, '1*1000H2R' );
+	// escpos_write( $h, '1T' );
 
     // chiusura
 	escpos_disconnect( $h );
