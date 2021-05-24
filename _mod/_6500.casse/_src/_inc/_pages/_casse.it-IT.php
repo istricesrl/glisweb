@@ -15,9 +15,22 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'casse', 'casse.documenti.view', 'casse.tools' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'casse', 'casse.documenti.view', 'casse.tools', 'casse.stampe' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'casse' ),
 									'priority'	=> '650' ) )
+	);
+
+	// stampe cassa
+	$p['casse.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'casse' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['casse']['etc']['tabs'] )
 	);
 
     // view scontrini

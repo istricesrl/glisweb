@@ -68,16 +68,16 @@
         'position' => 'M',
         'align' => 'C',
         'stretch' => false,
-        'fitwidth' => false,
-        'cellfitalign' => 'C',
+        'fitwidth' => true,
+        //'cellfitalign' => 'C',
         'border' => false,
-        'hpadding' => '2',
+        'hpadding' => '20',
         'vpadding' => 'auto',
         'fgcolor' => array(0,0,0),
         'bgcolor' => false, //array(255,255,255),
         'text' => true,
         'font' => 'helvetica',
-        'fontsize' => 6,
+        'fontsize' => 10,
         'stretchtext' => 0
     );
 
@@ -116,6 +116,18 @@
 
             // spazio 
 	        $pdf->SetY( $pdf->GetY() + $stdsp * 2 );
+            // controllo se è necessario aggiungere una pagina
+            $ha = 0;
+            foreach( $p['articoli'] as $articolo ) {
+
+                $ha += max( $pdf->GetStringHeight( $col * 4, $articolo['testo'], false, true, '', '' ) + 4,  $fnts + 8) ;					// 
+ 
+            }
+
+            if(( $pdf->GetY()+$ha +10 ) > ($pdf-> GetPageHeight() -15) ){
+                $pdf->AddPage();
+
+            }
 
             // scrivo il nome del prodotto
             $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
@@ -134,22 +146,26 @@
 
             // tabella di dettaglio
             $pdf->SetFont( $fnt, '', $fnts );	
-            									// font, stile, dimensione
+            		
+
+
+            // font, stile, dimensione
             foreach( $p['articoli'] as $articolo ) {
 
-                $trh = $pdf->GetStringHeight( $col * 4, $articolo['testo'], false, true, '', '' ) + 4;					// 
+                $trh = max( $pdf->GetStringHeight( $col * 4, $articolo['testo'], false, true, '', '' ) + 4,  $fnts + 8) ;					// 
            
                 $pdf->Cell( $col * 2 , $trh, $articolo['nome'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->MultiCell( $col * 4,$trh , $articolo['testo'], $brdc, 'L', false, 0 );						// w, h, testo, bordo, allineamento, riempimento, newline
+                $pdf->MultiCell( $col * 4,$trh , $articolo['testo'], $brdc, 'L', false, 0,'','', true, 0, false, true, 0, 'M', false );					// w, h, testo, bordo, allineamento, riempimento, newline
                 
+
                 $x = $pdf->GetX();
                 $y = $pdf->GetY();
                
-                $pdf->write1DBarcode($articolo['id'], 'C128B', '', '', '', $fnts -1 ,2, $style);
+                $pdf->write1DBarcode($articolo['id'], 'C128', '', '', '', $fnts + 12 ,2, $style);
                 $pdf->SetXY($x,$y);
                 $pdf->Cell( $col * 6, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
 
-                }
+            }
 
         }
 
