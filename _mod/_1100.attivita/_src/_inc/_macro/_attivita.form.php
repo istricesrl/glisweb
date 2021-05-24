@@ -124,7 +124,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
+            'SELECT id, __label__ FROM todo_view_static WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ), 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) 
@@ -134,7 +134,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view' );
+            'SELECT id, __label__ FROM todo_view_static' );
 	}
 
     // tendina indirizzi
@@ -153,7 +153,7 @@
     );
 
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
-	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 
+	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
         
         if( ! empty($todo['id_cliente']) ){
