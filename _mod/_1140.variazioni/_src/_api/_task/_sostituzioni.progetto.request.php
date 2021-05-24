@@ -34,7 +34,7 @@
         // cerco le attività scoperte per il progetto corrente
         $attivita = mysqlQuery( 
             $cf['mysql']['connection'],
-            'SELECT * FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
+            'SELECT * FROM attivita_view_static WHERE id_progetto = ? AND id_anagrafica IS NULL',
             array(
                 array( 's' => $status['id_progetto'] )
             )

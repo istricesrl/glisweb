@@ -62,7 +62,7 @@
         // estraggo gli id delle attivita che rimangono scoperte
         $scoperture = mysqlQuery(
             $cf['mysql']['connection'],
-            "SELECT id, id_progetto, data_programmazione FROM attivita_view "
+            "SELECT id, id_progetto, data_programmazione FROM attivita_view_static "
             ."WHERE id_anagrafica = ? "
             ."AND ( ( TIMESTAMP( data_programmazione, ora_inizio_programmazione ) between ? and ? ) "
             ."OR ( TIMESTAMP( data_programmazione, ora_fine_programmazione ) between ? and ? ) )",
