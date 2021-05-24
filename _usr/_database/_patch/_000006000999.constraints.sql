@@ -13,7 +13,7 @@
 -- - ogni constraint è correttamente documentato con il giusto nome, in ordine, nel relativo file dox
 --
 
---| 000006000001
+--| 000006000100
 
 -- account
 -- tipologia: tabella gestita
@@ -24,7 +24,7 @@ ALTER TABLE `account`
     ADD CONSTRAINT `account_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
     ADD CONSTRAINT `account_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
---| 000006000002
+--| 000006000200
 
 -- account_gruppi
 -- tipologia: tabella gestita
@@ -33,7 +33,7 @@ ALTER TABLE `account_gruppi`
     ADD CONSTRAINT `account_gruppi_ibfk_01` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `account_gruppi_ibfk_02_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
---| 000006000003
+--| 000006000300
 
 -- account_gruppi_attribuzione
 -- tipologia: tabella gestita
@@ -42,7 +42,7 @@ ALTER TABLE `account_gruppi_attribuzione`
     ADD CONSTRAINT `account_gruppi_attribuzione_ibfk_01` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `account_gruppi_attribuzione_ibfk_02_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
---| 000006000004
+--| 000006000400
 
 -- anagrafica
 -- tipologia: tabella gestita
@@ -59,7 +59,7 @@ ALTER TABLE `anagrafica`
     ADD CONSTRAINT `anagrafica_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,	
     ADD CONSTRAINT `anagrafica_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,	
 
---| 000006000005
+--| 000006000500
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
@@ -70,7 +70,7 @@ ALTER TABLE `anagrafica_categorie`
     ADD CONSTRAINT `anagrafica_categorie_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_categorie_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 000006000006
+--| 000006000600
 
 -- anagrafica_categorie_diritto
 -- tipologia: tabella gestita
@@ -80,7 +80,7 @@ ALTER TABLE `anagrafica_categorie_diritto`
     ADD CONSTRAINT `anagrafica_categorie_diritto_ibfk_02_nofollow` FOREIGN KEY (`id_diritto`) REFERENCES `categorie_diritto` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 
---| 000006000007
+--| 000006000700
 
 -- anagrafica_cittadinanze
 -- tipologia: tabella gestita
@@ -89,7 +89,7 @@ ALTER TABLE `anagrafica_cittadinanze`
     ADD CONSTRAINT `anagrafica_cittadinanze_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `anagrafica_cittadinanze_ibfk_02_nofollow` FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 000006000008
+--| 000006000800
 
 -- anagrafica_condizioni_pagamento
 -- tipologia: tabella gestita
@@ -98,7 +98,7 @@ ALTER TABLE `anagrafica_condizioni_pagamento`
     ADD CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `anagrafica_condizioni_pagamento_ibfk_02_nofollow` FOREIGN KEY (`id_condizione`) REFERENCES `condizioni_pagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
---| 000006000008
+--| 000006000900
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
@@ -108,12 +108,32 @@ ALTER TABLE `anagrafica_indirizzi`
     ADD CONSTRAINT `anagrafica_indirizzi_ibfk_02` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `anagrafica_indirizzi_ibfk_03` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 000006000009
+--| 000006001000
 
 -- anagrafica_modalita_pagamento
 -- tipologia: tabella gestita
+-- verifica: 2021-05-23 14:43 Fabio Mosti
 ALTER TABLE `anagrafica_modalita_pagamento`
     ADD CONSTRAINT `anagrafica_modalita_pagamento_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `anagrafica_modalita_pagamento_ibfk_02` FOREIGN KEY (`id_modalita`) REFERENCES `modalita_pagamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 000006001100
+
+-- anagrafica_ruoli
+-- tipologia: tabella gestita
+-- verifica: 2021-05-23 14:43 Fabio Mosti
+ALTER TABLE `anagrafica_ruoli`
+    ADD CONSTRAINT `anagrafica_ruoli_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `anagrafica_ruoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `anagrafica_ruoli_ibfk_02` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `anagrafica_ruoli_ibfk_03_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 000006001200
+
+-- anagrafica_settori
+-- tipologia: tabella gestita
+-- verifica: 2021-05-23 15:31 Fabio Mosti
+ALTER TABLE `anagrafica_settori`
+    ADD CONSTRAINT `anagrafica_settori_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE.
+    ADD CONSTRAINT `anagrafica_settori_ibfk_02_nofollow` FOREIGN KEY (`id_settore`) REFERENCES `settori` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --| FINE FILE

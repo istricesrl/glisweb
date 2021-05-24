@@ -26,7 +26,7 @@
 -- - non viene riportato il valore di AUTO INCREMENT
 --
 
---| 000001000001
+--| 000001000100
 
 -- account
 -- tipologia: tabella gestita
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000002
+--| 000001000200
 
 -- account_gruppi
 -- tipologia: tabella gestita
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `account_gruppi` (
   `se_amministratore` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000003
+--| 000001000300
 
 -- account_gruppi_attribuzione
 -- tipologia: tabella gestita
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (
   `entita` char(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000004
+--| 000001000400
 
 -- anagrafica
 -- tipologia: tabella gestita
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000005
+--| 000001000500
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000006
+--| 000001000600
 
 -- anagrafica_categorie_diritto
 -- tipologia: tabella gestita
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie_diritto` (
   `se_specialita` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000007
+--| 000001000700
 
 -- anagrafica_cittadinanze
 -- tipologia: tabella gestita
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
   `data_fine` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000008
+--| 000001000800
 
 -- anagrafica_condizioni_pagamento
 -- tipologia: tabella gestita
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_condizioni_pagamento` (
   `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000009
+--| 000001000900
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000010
+--| 000001001000
 
 -- anagrafica_modalita_pagamento
 -- tipologia: tabella gestita
@@ -197,63 +197,53 @@ CREATE TABLE IF NOT EXISTS `anagrafica_modalita_pagamento` (
   `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000011
-
--- anagrafica_provenienze
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `anagrafica_provenienze` (
-  `id` int(11) NOT NULL,
-  `id_anagrafica` int(11) NOT NULL,
-  `id_tipologia` int(11) NOT NULL,
-  `id_inviante` int(11) DEFAULT NULL,
-  `id_campagna` int(11) DEFAULT NULL,
-  `testo` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000012
+--| 000001001100
 
 -- anagrafica_ruoli
 -- tipologia: tabella gestita
+-- verifica: 2021-05-23 14:39 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_ruoli` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
-  `specifica_ruolo` char(255) DEFAULT NULL,
-  `id_anagrafica` int(11) DEFAULT NULL
+  `nome` char(255) DEFAULT NULL,
+  `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000014
+--| 000001001200
 
 -- anagrafica_settori
 -- tipologia: tabella gestita
+-- verifica: 2021-05-23 15:38 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `id_settore` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000015
+-- NOTA servirebbe un campo ordine oppure un campo per indicare in qualche modo il peso relativo del settore per l'anagrafica?
+
+--| 000001001300
 
 -- articoli
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `articoli` (
   `id` char(32) NOT NULL,
   `id_prodotto` char(32) NOT NULL,
-  `nome` char(128) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_taglia` int(11) DEFAULT NULL,
   `id_colore` int(11) DEFAULT NULL,
   `id_udm` int(11) DEFAULT NULL,
-  `se_disponibile` int(1) DEFAULT '1',
-  `quantita_disponibile` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000016
+--| 000001001600
 
 -- articoli_caratteristiche
 -- tipologia: tabella gestita

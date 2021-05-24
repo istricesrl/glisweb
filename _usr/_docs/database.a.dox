@@ -441,53 +441,41 @@
     anagrafica_modalita_pagamento_view.modalita                | il nome della modalità di pagamento
     anagrafica_modalita_pagamento_view.__label__               | l'etichetta descrittiva dell'associazione fra anagrafica e modalità di pagamento
 
-    anagrafica_provenienze
-    ----------------------
-    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con varie entità collegate per descrivere
-    la provenienza dei contatti.
-
-    colonna                                               | descrizione
-    ------------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_provenienze.id                             | l'ID dell'associazione fra anagrafica e la provenienza
-    anagrafica_provenienze.id_anagrafica                  | l'ID dell'anagrafica a cui assegnare la provenienza
-    anagrafica_provenienze.id_tipologia                   | l'ID della tipologia di provenienza
-    anagrafica_provenienze.id_campagna                    | l'ID della campagna di provenienza
-    anagrafica_provenienze.id_inviante                    | l'ID dell'anagrafica inviante
-    anagrafica_provenienze.testo                          | la descrizione aggiuntiva della provenienza
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *anagrafica_provenienze_view* relativa alla tabella *anagrafica_provenienze* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-
     anagrafica_ruoli
     ----------------
     Questa tabella *gestita* mette in relazione ad albero i ruoli ricoperti dalle entità anagrafiche specificandone i rapporti e le organizzazioni.
 
     colonna                                               | descrizione
     ------------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_ruoli.id                                   | l'ID dell'associazione fra genitore, anagrafica e ruolo
-    anagrafica_ruoli.id_genitore                          | l'ID parente    
-    anagrafica_ruoli.ordine                               | campo di ordinamento delle associazioni
-    anagrafica_ruoli.id_ruolo                             | l'ID del ruolo
-    anagrafica_ruoli.specifica_ruolo                      | la descrizione aggiuntiva dell'associazione
-    anagrafica_ruoli.id_anagrafica                        | l'ID dell'anagrafica
+    anagrafica_ruoli.id                                   | l'ID del nodo nell'albero dell'organizzazione
+    anagrafica_ruoli.id_genitore                          | l'ID del nodo genitore nell'albero dell'organizzazione
+    anagrafica_ruoli.ordine                               | campo di ordinamento
+    anagrafica_ruoli.id_anagrafica                        | l'ID dell'anagrafica collegata al nodo
+    anagrafica_ruoli.id_ruolo                             | l'ID del ruolo ricoperto dall'anagrafica nel nodo
+    anagrafica_ruoli.nome                                 | nome del nodo dell'organizzazione
+    anagrafica_ruoli.note                                 | note sul nodo dell'organizzazione
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                          | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------------------|-------------------------------|-------------------------------|----------------------
+    anagrafica_ruoli_ibfk_01_nofollow               | id_genitore                   | anagrafica_ruoli.id           | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_ruoli_ibfk_02                        | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_ruoli_ibfk_03_nofollow               | id_ruolo                      | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *anagrafica_ruoli_view* relativa alla tabella *anagrafica_ruoli* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-   
+    anagrafica_ruoli_view.id                               | -
+    anagrafica_ruoli_view.id_genitore                      | -
+    anagrafica_ruoli_view.ordine                           | -
+    anagrafica_ruoli_view.id_anagrafica                    | -
+    anagrafica_ruoli_view.id_ruolo                         | -
+    anagrafica_ruoli_view.ruolo                            | il nome del ruolo ricoperto dall'anagrafica nel nodo
+    anagrafica_ruoli_view.nome                             | -
+    anagrafica_ruoli_view.__label__                        | etichetta descrittiva del nodo dell'organizzazione
+
     anagrafica_settori
     ------------------
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità secondaria *settori* che rappresentano i settori
@@ -495,19 +483,26 @@
 
     colonna                                               | descrizione
     ------------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_settori.id                                 |  l'ID dell'associazione fra anagrafica e settori
-    anagrafica_settori.id_anagrafica                      |  l'ID dell'anagrafica        
-    anagrafica_settori.id_settori                         |  l'ID del settore
+    anagrafica_settori.id                                 | l'ID dell'associazione fra anagrafica e settore
+    anagrafica_settori.id_anagrafica                      | l'ID dell'anagrafica        
+    anagrafica_settori.id_settore                         | l'ID del settore
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    anagrafica_settori_ibfk_01                  | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_settori_ibfk_02_nofollow         | id_settore                    | settori.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *anagrafica_settori_view* relativa alla tabella *anagrafica_settori* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                               | descrizione
+    ------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_settori_view.id                            | -
+    anagrafica_settori_view.id_anagrafica                 | -
+    anagrafica_settori_view.id_settore                    | -
+    anagrafica_settori_view.settore                       | il nome del settore
+    anagrafica_settori_view.__label__                     | l'etichetta descrittiva dell'associazione fra anagrafica e settore
 
     articoli
     --------

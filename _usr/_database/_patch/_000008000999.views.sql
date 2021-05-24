@@ -12,13 +12,13 @@
 -- - le colonne sono correttamente documentate, in ordine, nel relativo file dox
 --
 
---| 000008000001
+--| 000008000100
 
 -- account_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `account_view`;
 
---| 000008000002
+--| 000008000101
 
 -- account_view
 -- tipologia: tabella gestita
@@ -54,13 +54,13 @@ CREATE OR REPLACE DEFINER = CURRENT_USER() VIEW account_view AS
 	GROUP BY account.id
 ;
 
---| 000008000003
+--| 000008000200
 
 -- account_gruppi_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `account_gruppi_view`;
 
---| 000008000004
+--| 000008000201
 
 -- account_gruppi_view
 -- tipologia: tabella gestita
@@ -81,13 +81,13 @@ CREATE OR REPLACE VIEW account_gruppi_view AS
 		INNER JOIN gruppi ON gruppi.id = account_gruppi.id_gruppo
 ;
 
---| 000008000005
+--| 000008000300
 
 -- account_gruppi_attribuzione_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `account_gruppi_attribuzione_view`;
 
---| 000008000006
+--| 000008000301
 
 -- account_gruppi_attribuzione_view
 -- tipologia: tabella gestita
@@ -110,13 +110,13 @@ CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 		INNER JOIN gruppi ON gruppi.id = account_gruppi_attribuzione.id_gruppo
 ;
 
---| 000008000007
+--| 000008000400
 
 -- anagrafica_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_view`;
 
---| 000008000008
+--| 000008000401
 
 -- anagrafica_view
 -- tipologia: tabella gestita
@@ -182,13 +182,13 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 	GROUP BY anagrafica.id
 ;
 
---| 000008000008
+--| 000008000410
 
 -- anagrafica_archiviati_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_archiviati_view`;
 
---| 000008000009
+--| 000008000411
 
 -- anagrafica_archiviati_view
 -- tipologia: tabella gestita
@@ -255,13 +255,13 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 	GROUP BY anagrafica.id
 ;
 
---| 000008000011
+--| 000008000500
 
 -- anagrafica_categorie_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_categorie_view`;
 
---| 000008000012
+--| 000008000501
 
 -- anagrafica_categorie_view
 -- tipologia: tabella gestita
@@ -281,13 +281,15 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 		INNER JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
 ;
 
---| 000008000011
+-- NOTA non dovrebbe esserci il path qui?
+
+--| 000008000600
 
 -- anagrafica_categorie_diritto_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_categorie_diritto_view`;
 
---| 000008000014
+--| 000008000601
 
 -- anagrafica_categorie_diritto_view
 -- tipologia: tabella gestita
@@ -308,13 +310,13 @@ CREATE OR REPLACE VIEW anagrafica_categorie_diritto_view AS
 		INNER JOIN categorie_diritto ON categorie_diritto.id = anagrafica_categorie_diritto.id_categoria
 ;
 
---| 000008000015
+--| 000008000700
 
 -- anagrafica_cittadinanze_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_cittadinanze_view`;
 
---| 000008000016
+--| 000008000701
 
 -- anagrafica_cittadinanze_view
 -- tipologia: tabella gestita
@@ -336,13 +338,13 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 		INNER JOIN stati ON stati.id = anagrafica_cittadinanze.id_stato
 ;
 
---| 000008000017
+--| 000008000800
 
 -- anagrafica_condizioni_pagamento_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_condizioni_pagamento_view`;
 
---| 000008000018
+--| 000008000801
 
 -- anagrafica_condizioni_pagamento_view
 -- tipologia: tabella gestita
@@ -363,13 +365,13 @@ CREATE OR REPLACE VIEW `anagrafica_condizioni_pagamento_view` AS
 		INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = anagrafica_condizioni_pagamento.id_condizione
 ;
 
---| 000008000019
+--| 000008000900
 
 -- anagrafica_indirizzi_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_indirizzi_view`;
 
---| 000008000020
+--| 000008000901
 
 -- anagrafica_indirizzi_view
 -- tipologia: tabella gestita
@@ -389,13 +391,13 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
 ;
 
---| 000008000021
+--| 000008001000
 
 -- anagrafica_modalita_pagamento_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_modalita_pagamento_view`;
 
---| 000008000022
+--| 000008001001
 
 -- anagrafica_modalita_pagamento_view
 -- tipologia: tabella gestita
@@ -415,5 +417,64 @@ CREATE OR REPLACE VIEW `anagrafica_modalita_pagamento_view` AS
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_modalita_pagamento.id_anagrafica
 		INNER JOIN modalita_pagamento ON modalita_pagamento.id = modalita_pagamento_pagamento.id_modalita
 ;
+
+--| 000008001100
+
+-- anagrafica_ruoli_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-23 15:35 Fabio Mosti
+DROP TABLE IF EXISTS `anagrafica_ruoli_view`;
+
+--| 000008001101
+
+-- anagrafica_ruoli_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-23 15:35 Fabio Mosti
+CREATE OR REPLACE VIEW anagrafica_ruoli_view AS
+	SELECT
+		anagrafica_ruoli.id,
+		anagrafica_ruoli.id_genitore,
+		anagrafica_ruoli.ordine,
+		anagrafica_ruoli.id_anagrafica,
+		anagrafica_ruoli.id_ruolo,
+		anagrafica_ruoli_path( anagrafica_ruoli.id ) AS ruolo,
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			' / ',
+			anagrafica_ruoli_path( anagrafica_ruoli.id )
+		) AS __label__
+	FROM anagrafica_ruoli
+		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_ruoli.id_anagrafica
+;
+
+--| 000008001200
+
+-- anagrafica_settori_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-23 15:35 Fabio Mosti
+DROP TABLE IF EXISTS `anagrafica_settori_view`;
+
+--| 000008001201
+
+-- anagrafica_settori_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-23 15:35 Fabio Mosti
+CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
+	SELECT
+		anagrafica_settori.id,
+		anagrafica_settori.id_anagrafica,
+		anagrafica_settori.id_settore,
+		settori.nome AS settore,
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			' / ',
+			settori.nome
+		) AS __label__
+	FROM anagrafica_settori
+		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_settori.id_anagrafica
+		LEFT JOIN settori ON settori.id = anagrafica_settori.id_settore
+;
+
+-- NOTA per il nome del settore usare settori_path?
 
 --| FINE FILE

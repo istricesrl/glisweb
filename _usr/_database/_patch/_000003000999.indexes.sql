@@ -16,7 +16,7 @@
 -- - la chiave primaria, se intera, è dichiarata AUTO_INCREMENT
 --
 
---| 000003000001
+--| 000003000100
 
 -- account
 -- tipologia: tabella gestita
@@ -33,7 +33,7 @@ ALTER TABLE `account`
 	ADD KEY `indice_token` (`id`,`token`);
 ALTER TABLE `account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000002
+--| 000003000200
 
 -- account_gruppi
 -- tipologia: tabella gestita
@@ -46,7 +46,7 @@ ALTER TABLE `account_gruppi`
 	ADD KEY `indice` (`id`,`id_account`,`id_gruppo`);
 ALTER TABLE `account_gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000003
+--| 000003000300
 
 -- account_gruppi_attribuzione
 -- tipologia: tabella gestita
@@ -59,7 +59,7 @@ ALTER TABLE `account_gruppi_attribuzione`
 	ADD KEY `indice` (`id`,`id_account`,`id_gruppo`,`entita`);
 ALTER TABLE `account_gruppi_attribuzione` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000004
+--| 000003000400
 
 -- anagrafica
 -- tipologia: tabella gestita
@@ -85,21 +85,22 @@ ALTER TABLE `anagrafica`
 	ADD KEY `indice_riferimento` (`id`,`riferimento`);
 ALTER TABLE `anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
 
---| 000003000005
+--| 000003000500
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 19:01 Fabio Mosti
 ALTER TABLE `anagrafica_categorie`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_categoria`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_categoria`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_categoria` (`id_categoria`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_categoria`);
 ALTER TABLE `anagrafica_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000006
+--| 000003000600
 
 -- anagrafica_categorie_diritto
 -- tipologia: tabella gestita
@@ -113,7 +114,7 @@ ALTER TABLE `anagrafica_categorie_diritto`
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_diritto`,`se_specialita`);
 ALTER TABLE `anagrafica_categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000007
+--| 000003000700
 
 -- anagrafica_cittadinanze
 -- tipologia: tabella gestita
@@ -126,7 +127,7 @@ ALTER TABLE `anagrafica_cittadinanze`
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_stato`,`data_inizio`,`data_fine`);
 ALTER TABLE `anagrafica_cittadinanze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000008
+--| 000003000800
 
 -- anagrafica_condizioni_pagamento
 -- tipologia: tabella gestita
@@ -139,7 +140,7 @@ ALTER TABLE `anagrafica_condizioni_pagamento`
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_condizione`);
 ALTER TABLE `anagrafica_condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000009
+--| 000003000900
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
@@ -147,12 +148,13 @@ ALTER TABLE `anagrafica_condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_
 ALTER TABLE `anagrafica_indirizzi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_indirizzo`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_indirizzo`,`id_tipologia`);
 ALTER TABLE `anagrafica_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000010
+--| 000003001000
 
 -- anagrafica_modalita_pagamento
 -- tipologia: tabella gestita
@@ -165,52 +167,31 @@ ALTER TABLE `anagrafica_modalita_pagamento`
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_modalita`);
 ALTER TABLE `anagrafica_modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000011
-
--- anagrafica_provenienze
--- tipologia: tabella gestita
-ALTER TABLE `anagrafica_provenienze`
- 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_provenienza`), 
-	ADD KEY `id_provenienza` (`id_provenienza`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_provenienza`,`id_tipologia`);
-ALTER TABLE `anagrafica_provenienze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000012
+--| 000003001100
 
 -- anagrafica_ruoli
 -- tipologia: tabella gestita
+-- verifica: 2021-05-23 14:39 Fabio Mosti
 ALTER TABLE `anagrafica_ruoli`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `id_anagrafica` (`id_anagrafica`,`id_ruolo`),
-	ADD UNIQUE KEY `unica_id_genitore` (`id_genitore`,`id_anagrafica`),
-	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`id_anagrafica`,`id_ruolo`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_ruolo`,`id_genitore`);
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`id_anagrafica`,`id_ruolo`);
 ALTER TABLE `anagrafica_ruoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000013
-
--- anagrafica_servizi_contatto
--- tipologia: tabella gestita
-ALTER TABLE `anagrafica_servizi_contatto`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_servizio_contatto`), 
-	ADD KEY `id_servizio_contatto` (`id_servizio_contatto`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_servizio_contatto`);
-ALTER TABLE `anagrafica_servizi_contatto`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000014
+--| 000003001200
 
 -- anagrafica_settori
 -- tipologia: tabella gestita
+-- verifica: 2021-05-23 15:28 Fabio Mosti
 ALTER TABLE `anagrafica_settori`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id_anagrafica` (`id_anagrafica`,`id_settori`), 
-	ADD KEY `id_settori` (`id_settori`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_settori`);
+	ADD UNIQUE KEY `id_anagrafica` (`id_anagrafica`,`id_settore`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_settore` (`id_settore`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_settore`);
 ALTER TABLE `anagrafica_settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000015
