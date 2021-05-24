@@ -71,5 +71,16 @@
 									'priority'	=> 100 ) )
 	);
 
+	// terminale della casse
+	$p['anteprima.documento'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'anteprima' ),
+			'h1'		=> array( $l		=> 'anteprima' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anteprima.documento.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_anteprima.documento.php' ),
+			'parent'		=> array( 'id'		=> 'casse' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) )
+		);
+
     // debug
 	// die( print_r( $p ) );

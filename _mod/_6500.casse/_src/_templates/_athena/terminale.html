@@ -25,7 +25,20 @@
     {% set activity = 'inserimento' %}
     {% set legend = 'inserimento nuovo oggetto' %}
 {% endif %}
+{% block javascript %}
 
+<script >
+
+    function anteprima(){
+
+       document.getElementById("form-documenti").submit();
+       // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
+        window.open( 'http://localhost/casse/anteprima.it-IT.html?id={{ request.documenti.id }}', '_self' );
+    }
+    
+</script>
+
+{% endblock %}
 {% block header %}
 <header class="fixed-top">
 <div class="row widget no-gutters">
@@ -143,7 +156,7 @@
                 <legend>comando</legend>
                     <div class="form-row row"> 
                                 <div class="col ">
-                                    {{ frm.input( table, '', '', '__comando__', '', '', request ) }}
+                                    {{ frm.input( table, '', '', '__comando__', '', '' ) }}
                                 </div>
                                 <div class="col-auto">
                                     {{ frm.select( table, '', '', '__reparto__', '', etc.select.reparti, request, 0, '', 1, 1  ) }}
@@ -165,7 +178,7 @@
                             <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-credit-card" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-12 mt-3 cassa">
-                            <button type="submit" class="btn btn-secondary btn-sqr btn-block"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
+                            <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="anteprima()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
                         </div>
                     </div>
             </div>
@@ -194,3 +207,4 @@
     {% endif %}
 </form>
 {% endblock %}
+
