@@ -24,9 +24,15 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
-  //  $_REQUEST[ $ct['form']['table'] ]['id'] = 12;
-
-   // print_r($_REQUEST);
+    // riapertura scontrino prima della stampa
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__open__'] ) ){
+        $update = mysqlQuery( 
+            $cf['mysql']['connection'], 
+            'UPDATE documenti SET timestamp_chiusura = NULL WHERE id = ?',
+            array( 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
+    }
+    
 
     if(  isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__art__'] ) && !empty( $_REQUEST['__art__'] ) ){
         
@@ -44,8 +50,6 @@
             // verifico se esiste l'atricolo e se ha un prezzo associato
             $articolo = mysqlSelectRow(
                 $cf['mysql']['connection'],
-#                'SELECT * FROM articoli LEFT JOIN prezzi ON prezzi.id_articolo = articoli.id AND prezzi.id_listino = ? WHERE articoli.id = ? LIMIT 1',
-#                array( array( 's' => 1 ), array( 's' => '`'.$_REQUEST[ $ct['form']['table'] ]['__comando__'].'`' ) )
                 "SELECT * FROM articoli LEFT JOIN prezzi ON prezzi.id_articolo = articoli.id AND prezzi.id_listino = 1 WHERE articoli.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
                 );
 
@@ -59,11 +63,12 @@
                 // verifico se l'articolo è già nel documento
                 $in_doc = mysqlSelectRow(
                     $cf['mysql']['connection'],
-                    "SELECT * FROM documenti_articoli  WHERE  id_articolo = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" "
+                    "SELECT * FROM documenti_articoli  WHERE  id_articolo = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\"  AND id_documento = ?",
+                    array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id']  ) )
                 );
 
                 if( $in_doc ){
-                    
+                 //   print_r("articolo presente nel documento modifico la quantità ".$_REQUEST[ $ct['form']['table'] ]['__operazione__']);
                     if( $in_doc['quantita'] == 1 && $_REQUEST[ $ct['form']['table'] ]['__operazione__'] == '-1' ){
 
                         $delete = mysqlQuery( 
@@ -83,14 +88,21 @@
 
 
                 } elseif ( $_REQUEST[ $ct['form']['table'] ]['__operazione__'] != '-1' ) {
+
+                 //   print_r("articolo NON presente nel documento lo aggiungo");
+
+                    $id_iva = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_iva FROM reparti WHERE id = ?', array( array( 's' => $reparto ) ) );
+
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, 1, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, 1, ?, ?, ? )",
                                 array( 
                                     array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                                     array( 's' => date("Y-m-d") ),
                                     array( 's' => $articolo['prezzo'] ),
-                                    array( 's' => $reparto )
+                                    array( 's' => $reparto ),
+                                    array( 's' => $id_iva ),
+                                    array( 's' => $articolo['id_udm'] )
                                 ) );
                 }
             }
@@ -155,7 +167,6 @@
 	    'SELECT * FROM documenti_articoli_view WHERE id_documento = ?',
         array( array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) 
 	);
-
 
     if( sizeof( $ct['etc']['righe'] ) > 0 ){
 

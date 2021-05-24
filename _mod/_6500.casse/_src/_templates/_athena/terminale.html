@@ -25,20 +25,7 @@
     {% set activity = 'inserimento' %}
     {% set legend = 'inserimento nuovo oggetto' %}
 {% endif %}
-{% block javascript %}
 
-<script >
-
-    function anteprima(){
-
-       document.getElementById("form-documenti").submit();
-       // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
-        window.open( 'http://localhost/casse/anteprima.it-IT.html?id={{ request.documenti.id }}', '_self' );
-    }
-    
-</script>
-
-{% endblock %}
 {% block header %}
 <header class="fixed-top">
 <div class="row widget no-gutters">
@@ -175,7 +162,7 @@
                             <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-money" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-6 mt-3 cassa">
-                            <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-credit-card" aria-hidden="true"></i></button>
+                            <button type="submit" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-credit-card" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-12 mt-3 cassa">
                             <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="anteprima()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
@@ -207,4 +194,17 @@
     {% endif %}
 </form>
 {% endblock %}
+{% block javascript %}
 
+<script >
+
+    function anteprima(){
+
+       document.getElementById("form-documenti").submit();
+       // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
+        window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?id={{ request.documenti.id }}", '_self' );
+    }
+    
+</script>
+
+{% endblock %}

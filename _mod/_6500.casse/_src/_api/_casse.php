@@ -16,12 +16,16 @@
      */
 
     // debug
-	// print_r( $_REQUEST );
+    
 	// print_r( $_GET );
 	// die();
 
     // inclusione del framework
 	require '../../../../_src/_config.php';
+
+
+    print_r(  $_REQUEST );
+     
 
     // array di stato
 	$status = array();

@@ -36,4 +36,93 @@
 {% endblock %}
 
 {% block main %}
+
+<h1> {{ etc.documento.__label__ }} </h1>
+{% if etc.documento.righe %}
+<div class="col-12 mt-3">
+
+    <div id="bot">
+        <div id="table" >
+            <table style="width:100%;">
+                <tr class="tabletitle">
+                    <td class="item"><h2>articolo</h2></td>
+                    <td class="Hours"><h2>prezzo</h2></td>
+                    <td class="Hours"><h2>quantità</h2></td>
+                    <td class="Rate"><h2>sub totale</h2></td>
+                    <td class="Rate"><h2>reparto</h2></td>
+                </tr>
+            </table>
+        </div>
+    </div> 
+
+<div class="col-12 mt-3 box mh-80 "  id="invoice-POS">
+    <div id="table" >
+        <table style="width:100%;">              
+                    {% for riga in etc.documento.righe %}
+                        <tr class="service">
+                            <td class="tableitem"><p class="itemtext">{{ riga.id_articolo }}</p></td>
+                            <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale }}</p></td>
+                            <td class="tableitem"><p class="itemtext">{{ riga.quantita }}</p></td>
+                            <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale * riga.quantita }}</p></td>
+                            <td class="tableitem"><p class="itemtext">{{ riga.reparto }}</p></td>                                            
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+</div> 
+<div class="col-12 d-flex justify-content-end" >
+    <div id="table" >
+        <table style="width:100%;">      
+                {% if etc.totale %}
+                        <tr class="tabletitle">
+                            <td>&nbsp;</td>
+                            <td class="Rate"><h1>IVA</h1></td>
+                            <td class="payment"><h1></h1></td>
+                        </tr>
+
+                        <tr class="tabletitle">
+                            <td>&nbsp;</td>
+                            <td class="Rate"><h1>Totale</h1></td>
+                            <td class="payment"><h1>{{ etc.totale }}</h1></td>
+                        </tr>
+                {% endif %}
+                    </table>
+                </div><!--End Table-->
+            </div><!--End InvoiceBot-->
+</div><!--End Invoice-->
+<div class="col">
+<div class="row " style="align-self: flex-end;">
+    <div class="col-12"><legend>conferma scontrino</legend></div>
+
+    <div class="col-6 mt-3 cassa">
+        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?documenti[id]={{ request.id }}&__open__=1', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">modifica</button>
+    </div>
+    <div class="col-6 mt-3 cassa">
+        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="stampaScontrino()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
+    </div>
+</div>   
+</div> 
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+
+ function stampaScontrino(){
+
+   
+    /*getws('{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php', '__data__='+doc, 
+                function( data ){ 
+                   console.log("ciao");
+                }
+            );*/
+   
+ }
+
+</script>
+
+
+
 {% endblock %}
