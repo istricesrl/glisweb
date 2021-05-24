@@ -65,20 +65,20 @@
 
     // stiel del barcode
     $style = array(
-        'position' => '',
+        'position' => 'M',
         'align' => 'C',
         'stretch' => false,
         'fitwidth' => true,
-        'cellfitalign' => '',
-        'border' => true,
+        'cellfitalign' => 'C',
+        'border' => false,
         'hpadding' => 'auto',
         'vpadding' => 'auto',
         'fgcolor' => array(0,0,0),
         'bgcolor' => false, //array(255,255,255),
         'text' => true,
         'font' => 'helvetica',
-        'fontsize' => 8,
-        'stretchtext' => 4
+        'fontsize' => 6,
+        'stretchtext' => 0
     );
 
     // carattere di base
@@ -102,7 +102,7 @@
 	$pdf->SetDefaultMonospacedFont( PDF_FONT_MONOSPACED );				// imposta il font a larghezza fissa
 
     // set auto page breaks
-	$pdf->SetAutoPageBreak( false );						// se aggiungere automaticamente pagine
+	$pdf->SetAutoPageBreak( true );						// se aggiungere automaticamente pagine
 
     // set image scale factor
 	$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );					// fattore di conversione da pixel a millimetri
@@ -112,8 +112,7 @@
 
     foreach( $prodotti as $p){
 
-        if( sizeof($p['articoli'] > 0) ){
-
+        if( isset( $p['articoli'] ) && ! empty( $p['articoli'] ) ){
 
             // spazio 
 	        $pdf->SetY( $pdf->GetY() + $stdsp * 2 );
@@ -129,28 +128,32 @@
             // tabella di articoli e relativi barcode
             // intestazione tabella di dettaglio
             $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-            $pdf->Cell( $col * 2, 0, 'codice', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 2, 0, 'nome', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 2, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 6, 0, 'barcode', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
-
+            $pdf->Cell( $col * 2, 0, 'nome', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 6, 0, 'barcode', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
             // tabella di dettaglio
-            $pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
+            $pdf->SetFont( $fnt, '', $fnts );	
+            									// font, stile, dimensione
             foreach( $p['articoli'] as $articolo ) {
-                $trh = $pdf->GetStringHeight( $col * 2, $articolo['testo'], false, true, '', 'B' );					// 
-                $pdf->Cell( $col, $trh, $articolo['id'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->Cell( $col, $trh, $articolo['nome'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->MultiCell( $col * 2, $lh, $articolo['testo'], $brdc, 'L', false, 0 );						// w, h, testo, bordo, allineamento, riempimento, newline
-                $pdf->Cell( $col * 2, $trh, ' ||||||||||||||', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+
+                $trh = $pdf->GetStringHeight( $col * 4, $articolo['testo'], false, true, '', '' ) + 4;					// 
+           
+                $pdf->Cell( $col * 2 , $trh, $articolo['nome'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->MultiCell( $col * 4,$trh , $articolo['testo'], $brdc, 'L', false, 0 );						// w, h, testo, bordo, allineamento, riempimento, newline
+                
+                $x = $pdf->GetX();
+                $y = $pdf->GetY();
+               
+                $pdf->write1DBarcode($articolo['id'], 'C128B', '', '', '', $fnts  ,2, $style);
+                $pdf->SetXY($x,$y);
+                $pdf->Cell( $col * 6, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
 
                 }
 
         }
 
     }
-
-
 
       // output
 	if( isset( $_REQUEST['d'] ) ) {
@@ -163,7 +166,7 @@
 	    $pdf->Output($dobj.'.pdf');								// invia l'output al browser
 	}
 
-} else{
+} else {
 
     die(print_r("non sono presenti articoli nel catalogo"));
 
