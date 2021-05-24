@@ -20,7 +20,7 @@
 		</div>
 		<div class="col-auto">
 			<span class="label-top">menu</span>
-			{{ frm.selectRequired( table, subtable, i, '', '', etc.select.menu, request, '', '', '', disabled ) }}
+			{{ frm.selectRequired( table, subtable, i, 'menu', '', etc.select.menu, request, '', '', '', disabled ) }}
 	    </div>
 		<div class="col-auto">
 			<span class="label-top">lingua</span>
@@ -28,15 +28,15 @@
 		</div>  
 		<div class="col">
 			<span class="label-top">voce</span>
-			{{ frm.input( table, subtable, i, '', '', '', request, '', '', '', '', disabled  ) }}
+			{{ frm.input( table, subtable, i, 'nome', '', '', request, '', '', '', '', disabled  ) }}
 		</div>
 		<div class="col-auto">
 			<span class="label-top">target</span>
-			{{ frm.select( table, subtable, i, '', '', etc.select.target, request, '', '', '', '', '', disabled ) }}
+			{{ frm.select( table, subtable, i, 'target', '', etc.select.target, request, '', '', '', '', '', disabled ) }}
 	    </div>
 		<div class="col-auto">
 			<span class="label-top">sottopagine</span>
-			{{ frm.selectRequired( table, subtable, i, '', '', etc.select.sottopagine, request, '', '', '', disabled ) }}
+			{{ frm.selectRequired( table, subtable, i, 'sottopagine', '', etc.select.sottopagine, request, '', '', '', disabled ) }}
 	    </div>
 		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">

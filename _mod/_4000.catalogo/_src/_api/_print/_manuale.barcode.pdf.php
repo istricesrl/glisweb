@@ -68,10 +68,10 @@
         'position' => 'M',
         'align' => 'C',
         'stretch' => false,
-        'fitwidth' => true,
+        'fitwidth' => false,
         'cellfitalign' => 'C',
         'border' => false,
-        'hpadding' => 'auto',
+        'hpadding' => '2',
         'vpadding' => 'auto',
         'fgcolor' => array(0,0,0),
         'bgcolor' => false, //array(255,255,255),
@@ -145,7 +145,7 @@
                 $x = $pdf->GetX();
                 $y = $pdf->GetY();
                
-                $pdf->write1DBarcode($articolo['id'], 'C128B', '', '', '', $fnts  ,2, $style);
+                $pdf->write1DBarcode($articolo['id'], 'C128B', '', '', '', $fnts -1 ,2, $style);
                 $pdf->SetXY($x,$y);
                 $pdf->Cell( $col * 6, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
 
