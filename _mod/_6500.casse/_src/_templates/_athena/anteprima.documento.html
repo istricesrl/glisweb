@@ -28,18 +28,21 @@
 
 {% block header %}
 <header class="fixed-top">
-<div class="row widget no-gutters">
-       <div class="col text-right">
-      
-    </div>
-</header>
+    <div class="row widget no-gutters">
+        <div class="col text-left">
+            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?documenti[id]={{ request.documenti.id }}&__open__=1', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+        </div>
+           <div class="col text-right">
+          
+        </div>
+    </header>
 {% endblock %}
 
 {% block main %}
 
 <h1> {{ etc.documento.__label__ }} </h1>
 {% if etc.documento.righe %}
-<div class="col-12 mt-3">
+<div class="">
 
     <div id="bot">
         <div id="table" >
@@ -55,7 +58,7 @@
         </div>
     </div> 
 
-<div class="col-12 mt-3 box mh-80 "  id="invoice-POS">
+<div class="col-12">
     <div id="table" >
         <table style="width:100%;">              
                     {% for riga in etc.documento.righe %}
@@ -91,11 +94,11 @@
             </div><!--End InvoiceBot-->
 </div><!--End Invoice-->
 <div class="col">
-<div class="row " style="align-self: flex-end;">
+<div class="row " >
     <div class="col-12"><legend>conferma scontrino</legend></div>
 
     <div class="col-6 mt-3 cassa">
-        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?documenti[id]={{ request.id }}&__open__=1', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">modifica</button>
+        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?documenti[id]={{ request.documenti.id }}&__open__=1', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">modifica</button>
     </div>
     <div class="col-6 mt-3 cassa">
         <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="stampaScontrino()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
@@ -111,14 +114,17 @@
 <script>
 
  function stampaScontrino(){
+    var parsedJSON = JSON.parse('{{ etc.documento|json_encode|e('js') }}');
 
-   
-    /*getws('{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php', '__data__='+doc, 
+console.log(parsedJSON);
+window.open( "{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php?__data__={{ etc.documento|json_encode|e('js') }}", '_blank');
+  /*
+    getws('{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php', '__data__='+doc, 
                 function( data ){ 
                    console.log("ciao");
                 }
-            );*/
-   
+            );
+   */
  }
 
 </script>

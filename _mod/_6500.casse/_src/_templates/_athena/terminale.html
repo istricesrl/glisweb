@@ -78,7 +78,39 @@
                             <span class="label-top">cliente</span>
                             {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
                         </div>
-                    <!--inizio prova scontrino-->
+                        <div class="col-12 mt-3">
+                            {% if etc.righe %}
+                            <div id="bot" class=" table-responsive">
+
+                                <table class="view-table">
+                                    
+                                    <thead>
+                                        <tr>
+                                        <th class="text-left"><span class="d-print-inline ">articolo</span></th>
+                                        <th class="text-center"><span class="d-print-inline">prezzo</span></th>
+                                        <th class="text-center"><span class="d-print-inline">quantità</span></th>
+                                        <th class="text-right"><span class="d-print-inline">reparto</span></th>
+                                        <th class="text-right"><span class="d-print-inline">sub totale</span></th>
+                                        </tr>
+                                    </thead>
+                                  
+                                    <tbody class="col-12 mt-3 box " >
+                                        {% for riga in etc.righe %}
+                                        <tr>
+                                        <td class="{{ view.class[key] }}">{{ riga.id_articolo }}</td>
+                                        <td class="text-right">{{ riga.importo_netto_totale }}</td>
+                                        <td class="text-center">{{ riga.quantita }}</td>
+                                        <td class="text-right">{{ riga.importo_netto_totale * riga.quantita }}</td>
+                                        <td class="text-right">{{ riga.reparto }}</td>  
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                
+                                    </table>
+                            </div>
+                            {% endif %}
+                        </div>       
+                    <!--inizio prova scontrino>
                     <div class="col-12 mt-3">
                         {% if etc.righe %}
                         <div id="bot">
@@ -109,35 +141,32 @@
                                         {% endfor %}
                                         </table>
                                     </div>
-                    </div> 
+                    </div> fine prova scontrino-->
                     <div class="col-12 mt-3 d-flex justify-content-end" >
                         <div id="table" >
                             <table style="width:100%;">      
                                     {% if etc.totale %}
                                             <tr class="tabletitle">
                                                 <td>&nbsp;</td>
-                                                <td class="Rate"><h1>IVA</h1></td>
-                                                <td class="payment"><h1></h1></td>
+                                                <td class="Rate"><h3>IVA</h3></td>
+                                                <td class="payment"><h3></h3></td>
                                             </tr>
 
                                             <tr class="tabletitle">
                                                 <td>&nbsp;</td>
-                                                <td class="Rate"><h1>Totale</h1></td>
-                                                <td class="payment"><h1>{{ etc.totale }}</h1></td>
+                                                <td class="Rate"><h3>Totale</h3></td>
+                                                <td class="payment"><h3>{{ etc.totale }}</h3></td>
                                             </tr>
                                     {% endif %}
                                         </table>
-                                    </div><!--End Table-->
-                                </div><!--End InvoiceBot-->
-                </div><!--End Invoice-->
+                                    </div>
+                                </div>
 
-<!--fine prova scontrino-->
+
 
 
                 </div>  
-                <!--div class="col mt-3 mt-auto">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
-            </div-->
+
             </div>
             <div class="col-5 align-items-center">
                 <legend>comando</legend>
@@ -202,7 +231,7 @@
 
        document.getElementById("form-documenti").submit();
        // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
-        window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?id={{ request.documenti.id }}", '_self' );
+        window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?documenti[id]={{ request.documenti.id }}", '_self' );
     }
     
 </script>
