@@ -70,38 +70,35 @@
             <div class="col-5 align-items-center">
                 <legend>documento</legend>
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-12 ">
                             <span class="label-top">tipologia</span>
                             {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request, '1', '', '1', '1', '' ) }}
                         </div>
-                        <div class="col-12 mt-3">
+                        <div class="col-12 mt-2">
                             <span class="label-top">cliente</span>
                             {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
                         </div>
-                        <div class="col-12 mt-3">
+                        <div class="col-12">
                             {% if etc.righe %}
-                            <div id="bot" class=" table-responsive">
-
+                            <div id="bot" class=" table-responsive box">
                                 <table class="view-table">
-                                    
                                     <thead>
                                         <tr>
                                         <th class="text-left"><span class="d-print-inline ">articolo</span></th>
-                                        <th class="text-center"><span class="d-print-inline">prezzo</span></th>
-                                        <th class="text-center"><span class="d-print-inline">quantità</span></th>
                                         <th class="text-right"><span class="d-print-inline">reparto</span></th>
+                                        <th class="text-right"><span class="d-print-inline">prezzo</span></th>
+                                        <th class="text-right"><span class="d-print-inline">quantità</span></th>
                                         <th class="text-right"><span class="d-print-inline">sub totale</span></th>
                                         </tr>
                                     </thead>
-                                  
-                                    <tbody class="col-12 mt-3 box " >
+                                    <tbody class="col-12" >
                                         {% for riga in etc.righe %}
                                         <tr>
                                         <td class="{{ view.class[key] }}">{{ riga.id_articolo }}</td>
-                                        <td class="text-right">{{ riga.importo_netto_totale }}</td>
-                                        <td class="text-center">{{ riga.quantita }}</td>
-                                        <td class="text-right">{{ riga.importo_netto_totale * riga.quantita }}</td>
-                                        <td class="text-right">{{ riga.reparto }}</td>  
+                                        <td class="text-right">{{ riga.reparto }}</td>
+                                        <td class="text-right">€ {{ riga.importo_netto_totale }}</td>
+                                        <td class="text-right">{{ riga.quantita }}</td>
+                                        <td class="text-right">€ {{ riga.importo_netto_totale * riga.quantita }}</td>  
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -109,62 +106,26 @@
                                     </table>
                             </div>
                             {% endif %}
-                        </div>       
-                    <!--inizio prova scontrino>
-                    <div class="col-12 mt-3">
-                        {% if etc.righe %}
-                        <div id="bot">
-                            <div id="table" >
-                                <table style="width:100%;">
-                                    <tr class="tabletitle">
-                                        <td class="item"><h2>articolo</h2></td>
-                                        <td class="Hours"><h2>prezzo</h2></td>
-                                        <td class="Hours"><h2>quantità</h2></td>
-                                        <td class="Rate"><h2>sub totale</h2></td>
-                                        <td class="Rate"><h2>reparto</h2></td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div> 
-                        {% endif %}
-                    <div class="col-12 mt-3 box mh-100 "  id="invoice-POS">
-                        <div id="table" >
-                            <table style="width:100%;">              
-                                        {% for riga in etc.righe %}
-                                            <tr class="service">
-                                                <td class="tableitem"><p class="itemtext">{{ riga.id_articolo }}</p></td>
-                                                <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale }}</p></td>
-                                                <td class="tableitem"><p class="itemtext">{{ riga.quantita }}</p></td>
-                                                <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale * riga.quantita }}</p></td>
-                                                <td class="tableitem"><p class="itemtext">{{ riga.reparto }}</p></td>                                            
-                                            </tr>
-                                        {% endfor %}
-                                        </table>
-                                    </div>
-                    </div> fine prova scontrino-->
-                    <div class="col-12 mt-3 d-flex justify-content-end" >
-                        <div id="table" >
                             <table style="width:100%;">      
                                     {% if etc.totale %}
-                                            <tr class="tabletitle">
+                                            <tr>
                                                 <td>&nbsp;</td>
-                                                <td class="Rate"><h3>IVA</h3></td>
-                                                <td class="payment"><h3></h3></td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td class="text-right"><h3>IVA</h3></td>
+                                                <td class="text-right"><h3></h3></td>
                                             </tr>
-
-                                            <tr class="tabletitle">
+                                            <tr>
                                                 <td>&nbsp;</td>
-                                                <td class="Rate"><h3>Totale</h3></td>
-                                                <td class="payment"><h3>{{ etc.totale }}</h3></td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td class="text-right"><h3>Totale</h3></td>
+                                                <td class="text-right"><h3>{{ etc.totale }}</h3></td>
                                             </tr>
                                     {% endif %}
                                         </table>
-                                    </div>
-                                </div>
 
-
-
-
+</div>
                 </div>  
 
             </div>
@@ -175,10 +136,10 @@
                                     {{ frm.input( table, '', '', '__comando__', '', '' ) }}
                                 </div>
                                 <div class="col-auto">
-                                    {{ frm.select( table, '', '', '__reparto__', '', etc.select.reparti, request, 0, '', 1, 1  ) }}
+                                    {{ frm.select( table, '', '', '__reparto__', '', etc.select.reparti, request, etc.default_reparto, '', 1, 1  ) }}
                                 </div>
                                 <div class="col-auto ">
-                                    {{ frm.select( table, '', '', '__operazione__', '', etc.select.operazioni, request, 1, '', 1,1  ) }}
+                                    {{ frm.select( table, '', '', '__operazione__', '', etc.select.operazioni, request, etc.default_operazione, '', 1,1  ) }}
                                 </div>
                     </div>
                     <div class="row">
@@ -224,11 +185,17 @@
 </form>
 {% endblock %}
 {% block javascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script >
 
-    function anteprima(){
+$( document ).ready(function() {
+    $("#documenti___comando__ ").focus();
+    $("#documenti___operazione__ ").val('{{ etc.default_operazione }}');
+    //$("#documenti_id_tipologia").val('{{ etc.tipologia }}');
+});
 
+    function anteprima(){
        document.getElementById("form-documenti").submit();
        // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
         window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?documenti[id]={{ request.documenti.id }}", '_self' );

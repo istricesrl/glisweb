@@ -42,58 +42,52 @@
 
 <h1> {{ etc.documento.__label__ }} </h1>
 {% if etc.documento.righe %}
-<div class="">
-
-    <div id="bot">
-        <div id="table" >
-            <table style="width:100%;">
-                <tr class="tabletitle">
-                    <td class="item"><h2>articolo</h2></td>
-                    <td class="Hours"><h2>prezzo</h2></td>
-                    <td class="Hours"><h2>quantità</h2></td>
-                    <td class="Rate"><h2>sub totale</h2></td>
-                    <td class="Rate"><h2>reparto</h2></td>
-                </tr>
-            </table>
-        </div>
-    </div> 
-
-<div class="col-12">
-    <div id="table" >
-        <table style="width:100%;">              
+    <div class="col-12">
+        {% if etc.documento.righe %}
+        <div id="bot" class=" table-responsive box">
+            <table class="view-table">
+                <thead>
+                    <tr>
+                    <th class="text-left"><span class="d-print-inline ">articolo</span></th>
+                    <th class="text-right"><span class="d-print-inline">reparto</span></th>
+                    <th class="text-right"><span class="d-print-inline">prezzo</span></th>
+                    <th class="text-right"><span class="d-print-inline">quantità</span></th>
+                    <th class="text-right"><span class="d-print-inline">sub totale</span></th>
+                    </tr>
+                </thead>
+                <tbody class="col-12" >
                     {% for riga in etc.documento.righe %}
-                        <tr class="service">
-                            <td class="tableitem"><p class="itemtext">{{ riga.id_articolo }}</p></td>
-                            <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale }}</p></td>
-                            <td class="tableitem"><p class="itemtext">{{ riga.quantita }}</p></td>
-                            <td class="tableitem"><p class="itemtext">{{ riga.importo_netto_totale * riga.quantita }}</p></td>
-                            <td class="tableitem"><p class="itemtext">{{ riga.reparto }}</p></td>                                            
-                        </tr>
+                    <tr>
+                    <td class="{{ view.class[key] }}">{{ riga.id_articolo }}</td>
+                    <td class="text-right">{{ riga.reparto }}</td>
+                    <td class="text-right">€ {{ riga.importo_netto_totale }}</td>
+                    <td class="text-right">{{ riga.quantita }}</td>
+                    <td class="text-right">€ {{ riga.importo_netto_totale * riga.quantita }}</td>  
+                    </tr>
                     {% endfor %}
-                    </table>
-                </div>
-</div> 
-<div class="col-12 d-flex justify-content-end" >
-    <div id="table" >
-        <table style="width:100%;">      
-                {% if etc.totale %}
-                        <tr class="tabletitle">
-                            <td>&nbsp;</td>
-                            <td class="Rate"><h1>IVA</h1></td>
-                            <td class="payment"><h1></h1></td>
-                        </tr>
+                </tbody>
+                </table>
+                <table style="width:100%;">      
+                    {% if etc.totale %}
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="text-right"><h3>IVA</h3></td>
+                                <td class="text-right"><h3></h3></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="text-right"><h3>Totale</h3></td>
+                                <td class="text-right"><h3>{{ etc.totale }}</h3></td>
+                            </tr>
+                    {% endif %}
+                </table>
+        </div>
+        {% endif %}
 
-                        <tr class="tabletitle">
-                            <td>&nbsp;</td>
-                            <td class="Rate"><h1>Totale</h1></td>
-                            <td class="payment"><h1>{{ etc.totale }}</h1></td>
-                        </tr>
-                {% endif %}
-                    </table>
-                </div><!--End Table-->
-            </div><!--End InvoiceBot-->
-</div><!--End Invoice-->
-<div class="col">
 <div class="row " >
     <div class="col-12"><legend>conferma scontrino</legend></div>
 
@@ -104,7 +98,7 @@
         <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="stampaScontrino()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
     </div>
 </div>   
-</div> 
+
 {% endif %}
 
 {% endblock %}

@@ -24,6 +24,18 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
+    $ct['etc']['default_reparto'] = '0';
+    $ct['etc']['default_operazione'] = '1';
+
+    // tendina  reparti
+	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM reparti_view'
+	);
+
+    $ct['etc']['select']['reparti'][] = array( 'id' => '0', '__label__' => 'default' );
     // riapertura scontrino prima della stampa
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__open__'] ) ){
         $update = mysqlQuery( 
@@ -44,9 +56,29 @@
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['__comando__']  ) ){
 
+        $comando = explode( '.', $_REQUEST[ $ct['form']['table'] ]['__comando__'] );
+        //print_r($_REQUEST[ $ct['form']['table'] ]['__comando__']);
         // verifico se si tratta di un articolo
-        if( true ){
+        if( $comando[0] == 'TRCKG' ){
+            // gestisco il codice di tracking
+            //print_r('tracking');
+        } elseif( $comando[0] == 'CPON'){
+            // gestisco il coupon
+            //print_r('coupon');
+        } elseif( $comando[0] == 'CMD' ){
+            // gestisco il comando rapido
+            //print_r('comando');
+            switch( $_REQUEST[ $ct['form']['table'] ]['__comando__'] ){
+                case 'CMD.OPZ.0001':
+                    $ct['etc']['default_operazione'] = '1';
+                    break;
+                case 'CMD.OPZ.0002':
+                    $ct['etc']['default_operazione'] = '-1';
+                    break;    
+                }
 
+        } else{
+            //print_r('articolo');
             // verifico se esiste l'atricolo e se ha un prezzo associato
             $articolo = mysqlSelectRow(
                 $cf['mysql']['connection'],
@@ -134,16 +166,6 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view'
 	);
-
-    // tendina  reparti
-	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM reparti_view'
-	);
-
-    $ct['etc']['select']['reparti'][] = array( 'id' => '0', '__label__' => 'default' );
 
     // articoli recenti
 	$ct['etc']['articoli_frequenti'] = mysqlCachedIndexedQuery(
