@@ -194,83 +194,34 @@ ALTER TABLE `anagrafica_settori`
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_settore`);
 ALTER TABLE `anagrafica_settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000015
+--| 000003001300
 
 -- articoli
 -- tipologia: tabella gestita
+-- verifica: 2021-05-25 11:23 Fabio Mosti
 ALTER TABLE `articoli`
  	ADD PRIMARY KEY (`id`), 
  	ADD KEY `id_prodotto` (`id_prodotto`), 
- 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
- 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_reparto` (`id_reparto`),
  	ADD KEY `id_taglia` (`id_taglia`), 
  	ADD KEY `id_colore` (`id_colore`), 
- 	ADD KEY `ordine` (`ordine`), 
- 	ADD KEY `id_udm` (`id_udm`), 
-	ADD KEY `id_reparto` (`id_reparto`),
-	ADD KEY `indice` (`id`,`id_prodotto`,`id_taglia`,`id_colore`,`ordine`,`id_reparto`, `se_disponibile`);
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`ordine`,`ean`,`isbn`,`id_prodotto`,`id_reparto`,`id_taglia`,`id_colore`),
+	ADD KEY `indice_dimensioni` (`id`,`ordine`,`ean`,`isbn`,`id_prodotto`,`id_reparto`,`larghezza`,`lunghezza`,`altezza`,`peso`,`volume`,`capacita`);
 
---| 000003000016
+--| 000003001600
 
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
+-- verifica: 2021-05-25 12:11 Fabio Mosti
 ALTER TABLE `articoli_caratteristiche`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `id_articolo` (`id_articolo`,`id_caratteristica`), 
-	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
-	ADD KEY `indice` (`id`,`id_articolo`,`ordine`,`id_caratteristica`,`se_assente` );
+	ADD KEY `indice` (`id`,`id_articolo`,`id_caratteristica`,`ordine`,`valore`,`se_assente` );
 ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000017
-
--- assicurazioni_montaggio
--- tipologia: tabella gestita
-ALTER TABLE `assicurazioni_montaggio`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`,`nome`);
-ALTER TABLE `assicurazioni_montaggio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000018
-
--- assicurazioni_montaggio_prezzi
--- tipologia: tabella gestita
-ALTER TABLE `assicurazioni_montaggio_prezzi`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_tipologia` (`id_assicurazione`),
-	ADD KEY `id_zona` (`id_zona`),
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
-	ADD KEY `id_listino` (`id_listino`),
-	ADD KEY `id_valuta` (`id_valuta`),
-	ADD KEY `id_iva` (`id_iva`),
-	ADD KEY `indice` (`id`,`id_assicurazione`,`id_zona`,`id_categoria_prodotti`,`id_listino`);
-ALTER TABLE `assicurazioni_montaggio_prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000019
-
--- assicurazioni_trasporto
--- tipologia: tabella gestita
-ALTER TABLE `assicurazioni_trasporto`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`,`nome`);
-ALTER TABLE `assicurazioni_trasporto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000020
-
--- assicurazioni_trasporto_prezzi
--- tipologia: tabella gestita
-ALTER TABLE `assicurazioni_trasporto_prezzi`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_tipologia` (`id_assicurazione`),
-	ADD KEY `id_zona` (`id_zona`),
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
-	ADD KEY `id_listino` (`id_listino`),
-	ADD KEY `id_valuta` (`id_valuta`),
-	ADD KEY `id_iva` (`id_iva`);
-	ADD KEY `indice` (`id`,`id_assicurazione`,`id_zona`,`id_categoria_prodotti`,`id_listino`);
-ALTER TABLE `assicurazioni_trasporto_prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000021
 
