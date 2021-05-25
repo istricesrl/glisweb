@@ -10,15 +10,11 @@
         var form = $( t ).closest('.modal');		
         var data = form.find('#_data_inizio_pulizia').val();
 	
-		var stop = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php?id={{ request[table].id }}&data_inizio_pulizia='+data;
+		var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.flag.php?id={{ request[table].id }}&data_inizio_pulizia='+data+'&ripopola=1';
 		
-		getws( stop,'', function() {
-			var restart = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php?id={{ request[table].id }}';
-
-			getws( restart,'', function() {
-				$('#ripianifica').modal('toggle');
-			});
-			
+		getws( call,'', function() {
+			$('#btnripianifica').html('conferma');
+			$('#ripianifica').modal('toggle');			
 		});
 	
 	}
