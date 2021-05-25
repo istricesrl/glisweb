@@ -712,13 +712,22 @@
     /**
      *
      * @todo documentare
+	 * 
+	 * la funzione effettua l'eliminazione ricorsiva di un oggetto e, a cascata, di tutti gli oggetti collegati da vincoli di chiave "NO ACTION".
+	 * riceve in ingresso i parametri seguenti:
+	 * - $m: connessione a memcache
+	 * - $c: connessione al database
+	 * - $t: nome della tabella
+	 * - $d: id del record da eliminare
+	 * 
+	 * NOTA: poiché la funzione utilizza memcache, se si apportano modifiche alle tipologia dei vincoli di chiave tra le tabelle del database, svuotare sempre memcache
      *
      */
 	function mysqlDeleteRowRecursive( $m, $c, $t, $d ) {
 
 		// debug
-		echo 'chiamata funzione cancellazione ricorsiva' . PHP_EOL;
-		echo "richiesta la cancellazione della riga #${d} dalla tabella {$t}" . PHP_EOL;
+	#	echo 'chiamata funzione cancellazione ricorsiva' . PHP_EOL;
+	#	echo "richiesta la cancellazione della riga #${d} dalla tabella {$t}" . PHP_EOL;
 
 		// cerco i vincoli di chiave esterna per l'entità $t
 		// NOTA mi interessano TABLE_NAME, COLUMN_NAME, REFERENCED_COLUMN_NAME
@@ -741,7 +750,7 @@
 		foreach( $x as $x1 ) {
 
 			// debug
-			print_r( $x1 );
+		#	print_r( $x1 );
 
 			// variabili in uso
 			$t1 = $x1['TABLE_NAME'];
@@ -749,8 +758,8 @@
 			$l1 = $x1['REFERENCED_COLUMN_NAME'];
 
 			// debug
-			echo "SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?" . PHP_EOL;
-			echo "cerco le righe di ${t1} che hanno ${t1}.${f1} uguale a ${d}" . PHP_EOL;
+		#	echo "SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?" . PHP_EOL;
+		#	echo "cerco le righe di ${t1} che hanno ${t1}.${f1} uguale a ${d}" . PHP_EOL;
 
 			// prelevo le righe referenziate
 			$r = mysqlQuery(
@@ -762,7 +771,7 @@
 			);
 
 			// debug
-			print_r( $r );
+		#	print_r( $r );
 
 			// per ogni riga delle tabelle referenziate chiamo ricorsivamente
 			foreach( $r as $r1 ) {
@@ -775,7 +784,7 @@
 		}
 
 		// debug
-		echo "elimino la riga #${d} dalla tabella {$t}" . PHP_EOL;
+		# echo "elimino la riga #${d} dalla tabella {$t}" . PHP_EOL;
 
 		// cancello l'oggetto richiesto
 		$r = mysqlQuery(

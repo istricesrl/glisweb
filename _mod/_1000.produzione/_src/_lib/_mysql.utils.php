@@ -128,7 +128,7 @@
 
         $frequenza = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT count(*) FROM attivita_view WHERE id_progetto = ? AND id_anagrafica = ? '
+            'SELECT count(*) FROM attivita WHERE id_progetto = ? AND id_anagrafica = ? '
             .'AND (data_programmazione between ? AND ?)',
             array(
                 array( 's' => $id_progetto ),
@@ -147,35 +147,7 @@
             }
         }
 
-/*
-        // verifico quante attività passate ci sono legate a questo operatore per questo progetto
-        $a = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT count(*) as frequenza FROM attivita_view WHERE id_anagrafica = ? AND id_progetto = ? AND data_programmazione < ?',
-            array(
-                array( 's' => $id_anagrafica ),
-                array( 's' => $id_progetto ),
-                array( 's' => $data )
-            )
-        );
 
-
-        if( !empty( $a ) ){
-            // inizializzo il punteggio a 100
-            $punti = 100;
-
-            // calcolo il numero di settimane passate tra la data di ultima attività e la data dell'attività da svolgere
-            $lw = date('W', strtotime( $a ) );
-            $cw = date('W', strtotime( $data ) );
-
-            $result['settimana_ultima_attivita'] = $lw;
-            $result['settimana_attivita_corrente'] = $cw;
-
-            // sottraggo 1 punto per ogni settimana passata tra l'ultima attività e quella da effettuare
-            $punti -= ($cw - $lw);
-  
-       }
-*/
 
         return $punti;
     }
@@ -239,7 +211,7 @@
             $cf['mysql']['connection'], 
             'SELECT t1.latitudine, t1.longitudine, a1.data_programmazione, a1.ora_inizio_programmazione, a1.ora_fine_programmazione '.
             'FROM indirizzi AS t1 '.
-            'INNER JOIN attivita_view AS a1 ON a1.id_indirizzo = t1.id '.
+            'INNER JOIN attivita AS a1 ON a1.id_indirizzo = t1.id '.
             'WHERE a1.id = ?',
             array(
                 array( 's' => $id_attivita )
@@ -272,7 +244,7 @@
                 $cf['mysql']['connection'], 
                 'SELECT t1.latitudine, t1.longitudine '.
                 'FROM indirizzi AS t1 '.
-                'INNER JOIN attivita_view AS a1 ON a1.id_indirizzo = t1.id '.
+                'INNER JOIN attivita AS a1 ON a1.id_indirizzo = t1.id '.
                 'WHERE a1.id_anagrafica = ? '.
                 'AND a1.data_programmazione = ? '.
                 'AND a1.ora_fine_programmazione < ? '.
@@ -292,7 +264,7 @@
                 $cf['mysql']['connection'], 
                 'SELECT t1.latitudine, t1.longitudine '.
                 'FROM indirizzi AS t1 '.
-                'INNER JOIN attivita_view AS a1 ON a1.id_indirizzo = t1.id '.
+                'INNER JOIN attivita AS a1 ON a1.id_indirizzo = t1.id '.
                 'WHERE a1.id_anagrafica = ? '.
                 'AND a1.data_programmazione = ? '.
                 'AND a1.ora_inizio_programmazione > ? '.
@@ -348,7 +320,7 @@
         $a = mysqlSelectRow(
             $cf['mysql']['connection'],
             "SELECT TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
-            ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita_view "
+            ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita "
             ."WHERE id = ?",
             array(
                 array( 's' => $id_attivita )
@@ -358,7 +330,7 @@
         // conteggio delle eventuali attività in collisione
         $collisioni = mysqlSelectValue(
             $cf['mysql']['connection'],
-                "SELECT count(*) FROM attivita_view WHERE id_anagrafica = ? "
+                "SELECT count(*) FROM attivita WHERE id_anagrafica = ? "
                 ."AND ( "
             /*    ."( TIMESTAMP( data_programmazione, ora_inizio_programmazione) > ? and TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? ) "
                 ."OR "
@@ -416,7 +388,7 @@
         $a = mysqlSelectRow(
             $cf['mysql']['connection'],
             "SELECT id, id_progetto, data_programmazione, ora_inizio_programmazione, ora_fine_programmazione, TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
-            ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita_view "
+            ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita "
             ."WHERE id = ?",
             array(
                 array( 's' => $id_attivita )
@@ -549,7 +521,7 @@
         $a = mysqlSelectRow(
             $cf['mysql']['connection'],
             "SELECT id, id_progetto, data_programmazione, ora_inizio_programmazione, ora_fine_programmazione, TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
-            ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita_view "
+            ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita "
             ."WHERE id = ?",
             array(
                 array( 's' => $id_attivita )
@@ -561,8 +533,8 @@
         // elenco degli operatori disponibili che non sono già stati analizzati
         $operatori = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT c.id_anagrafica, c.anagrafica, max(ca.se_sostituto) as se_sostituto, '
-            .'( SELECT count(*) FROM attivita_view WHERE id_anagrafica = c.id_anagrafica '
+            'SELECT c.id_anagrafica, c.anagrafica, max(ca.se_sostituto) as se_sostituto, max(ca.se_produzione) as se_produzione, '
+            .'( SELECT count(*) FROM attivita WHERE id_anagrafica = c.id_anagrafica '
                 .'AND ( '
                 .'( TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ? ) '
                 .'OR '
@@ -575,7 +547,7 @@
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'WHERE r.id IS NULL '
             .'GROUP BY c.id_anagrafica '
-            .'HAVING collisioni = 0'
+            .'HAVING collisioni = 0 AND se_produzione = 1'
            ,
             array(
                 array( 's' => $a['data_ora_inizio'] ),
@@ -674,7 +646,7 @@
         // data di pianificazione della prima attività scoperta per il progetto corrente
         $dataPrima = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT min(data_programmazione) FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
+            'SELECT min(data_programmazione) FROM attivita WHERE id_progetto = ? AND id_anagrafica IS NULL',
             array(
                 array( 's' => $id_progetto )
             )
@@ -683,7 +655,7 @@
         // data di pianificazione dell'ultima attività scoperta per il progetto corrente
         $dataUltima = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT max(data_programmazione) FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
+            'SELECT max(data_programmazione) FROM attivita WHERE id_progetto = ? AND id_anagrafica IS NULL',
             array(
                 array( 's' => $id_progetto )
             )
@@ -716,7 +688,7 @@
 			.'INNER JOIN contratti as c ON (a.id_anagrafica = c.id_anagrafica AND (c.data_fine_rapporto IS NULL AND ( c.data_fine IS NULL OR c.data_fine >= ? ) ) ) '
             .'WHERE a.id_anagrafica IS NOT NULL AND a.data_programmazione < ? '
             .'AND a.id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_progetti WHERE id_progetto = ? AND data_scopertura = ? ) '
-            .'GROUP BY a.id_anagrafica ORDER BY esperienza DESC, a.data_programmazione DESC LIMIT 15',
+            .'GROUP BY a.id_anagrafica ORDER BY esperienza DESC, a.data_programmazione DESC LIMIT 20',
             array(
                 array( 's' => $id_progetto ),
                 array( 's' => $dataPrima ),
@@ -741,7 +713,7 @@
         // elenco delle attività scoperte per il progetto corrente
         $attivita = mysqlQuery( 
             $cf['mysql']['connection'],
-            'SELECT * FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
+            'SELECT * FROM attivita WHERE id_progetto = ? AND id_anagrafica IS NULL',
             array(
                 array( 's' => $id_progetto )
             )
@@ -920,7 +892,7 @@
         // numero delle attività scoperte per il progetto corrente
         $attivita = mysqlSelectRow( 
             $cf['mysql']['connection'],
-            'SELECT count(id) as num_attivita, min(data_programmazione) as dataPrima FROM attivita_view WHERE id_progetto = ? AND id_anagrafica IS NULL',
+            'SELECT count(id) as num_attivita, min(data_programmazione) as dataPrima FROM attivita WHERE id_progetto = ? AND id_anagrafica IS NULL',
             array(
                 array( 's' => $id_progetto )
             )
