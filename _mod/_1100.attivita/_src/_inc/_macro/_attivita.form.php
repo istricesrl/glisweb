@@ -171,6 +171,18 @@
         if( ! empty($todo['id_mastro_attivita_default']) ){
 	        $_REQUEST['__preset__']['attivita']['id_mastro_provenienza'] = $todo['id_mastro_attivita_default'];
         }
+
+        if( !empty($todo['data_programmazione'] ) ){
+            $_REQUEST['__preset__']['attivita']['data_programmazione'] = $todo['data_programmazione'];
+        }
+
+        if( !empty($todo['ora_inizio_programmazione'] ) ){
+            $_REQUEST['__preset__']['attivita']['ora_inizio_programmazione'] = $todo['ora_inizio_programmazione'];
+        }
+        
+        if( !empty($todo['ora_fine_programmazione'] ) ){
+            $_REQUEST['__preset__']['attivita']['ora_fine_programmazione'] = $todo['ora_fine_programmazione'];
+        }
 	}
 
 	// macro di default

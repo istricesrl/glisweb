@@ -94,12 +94,15 @@
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.view.php';
     
-    foreach ( $ct['view']['data'] as &$row ){
-	    if( $row['completato'] == 2 ){ $row['completato']='completato';  }
-	    else {
-	    if( $row['completato'] == 1 ){ $row['completato']='in revisione';  }
-	    else { $row['completato']='';  }
-	    }
+	if( !empty( $ct['view']['data'] ) ){
+		foreach ( $ct['view']['data'] as &$row ){
+			if( $row['completato'] == 2 ){ $row['completato']='completato';  }
+			else {
+			if( $row['completato'] == 1 ){ $row['completato']='in revisione';  }
+			else { $row['completato']='';  }
+			}
+		}
 	}
+    
 
    
