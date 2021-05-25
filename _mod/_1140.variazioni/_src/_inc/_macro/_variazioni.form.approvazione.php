@@ -55,12 +55,12 @@
             // elenco delle righe di attività già pianificate coinvolte nella sostituzione
             $attivita = mysqlQuery( 
                 $cf['mysql']['connection'],
-                "SELECT attivita_view.id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
-                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, attivita_view.id_progetto, progetto, "
+                "SELECT attivita_view_static.id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
+                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, attivita_view_static.id_progetto, progetto, "
                 ."coalesce( p1.id, p2.id) AS id_pianificazione, coalesce( p1.data_fine, p2.data_fine) as data_fine, "
-                ."coalesce( p1.giorni_rinnovo, p2.giorni_rinnovo) as giorni_rinnovo FROM attivita_view "
-                ."LEFT JOIN pianificazioni as p1 ON attivita_view.id_pianificazione = p1.id "
-                ."LEFT JOIN pianificazioni as p2 ON attivita_view.id_todo = p2.id_todo "
+                ."coalesce( p1.giorni_rinnovo, p2.giorni_rinnovo) as giorni_rinnovo FROM attivita_view_static "
+                ."LEFT JOIN pianificazioni as p1 ON attivita_view_static.id_pianificazione = p1.id "
+                ."LEFT JOIN pianificazioni as p2 ON attivita_view_static.id_todo = p2.id_todo "
                 ."WHERE id_anagrafica = ? "
                 ."AND ( ( TIMESTAMP( data_programmazione, ora_inizio_programmazione ) between ? and ? ) OR ( TIMESTAMP( data_programmazione, ora_fine_programmazione ) between ? and ? ) ) "
                 ."ORDER by data_programmazione, id_progetto, ora_inizio_programmazione"
@@ -106,7 +106,7 @@
             $progetti = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT a.id_progetto, a.progetto, min( p.data_fine ) as data_fine FROM pianificazioni as p '
-                .'INNER JOIN attivita_view as a ON ( p.id_todo = a.id_todo AND a.id_anagrafica = ? ) '
+                .'INNER JOIN attivita_view_static as a ON ( p.id_todo = a.id_todo AND a.id_anagrafica = ? ) '
                 .'WHERE p.data_fine < ? AND p.giorni_rinnovo > 0 '
                 .'GROUP BY a.id_progetto',
                 array(

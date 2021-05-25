@@ -37,20 +37,20 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view' );
+        'SELECT id, __label__ FROM anagrafica_view_static' );
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) ) {
 	    $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
 	        $cf['memcache']['index'],
 	        $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 OR id = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) ) );
+            'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1 OR id = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) ) );
 	} else {
 	    $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1' );
+            'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
 	}
 
     // tendina tipologia
@@ -72,7 +72,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_lead = 1 OR se_cliente = 1 OR se_prospect = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_lead = 1 OR se_cliente = 1 OR se_prospect = 1' );
 
     // tendina esiti
 	$ct['etc']['select']['id_esito'] = mysqlCachedIndexedQuery(
@@ -124,7 +124,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
+            'SELECT id, __label__ FROM todo_view_static WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ), 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) 
@@ -134,7 +134,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view' );
+            'SELECT id, __label__ FROM todo_view_static' );
 	}
 
     // tendina indirizzi
@@ -153,7 +153,7 @@
     );
 
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
-	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 
+	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
         
         if( ! empty($todo['id_cliente']) ){

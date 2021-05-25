@@ -75,12 +75,12 @@
 		<div class="form-group form-row">
 			<div class="col-12 col-md">
 				<span class="label-top">mittente</span>
-				{{ frm.selectBox( table, '', '', 'id_emittente', 'mittente', etc.select.id_mittenti, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_mittente' , page, pages, ietf ) }}
+				{{ frm.selectBox( table, '', '', 'id_emittente', 'mittente', etc.select.id_mittenti, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_mittente' , page, pages, ietf,'anagrafica' ) }}
 			</div>
 			{% if request[ table ].id %}
 			<div class="col-12 col-md-8">
 				<span class="label-top">sede mittente</span>
-				{{ frm.selectBox( table, '', '', 'id_sede_emittente', 'sede mittente', etc.select.id_sedi_mittente, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_mittente' , page, pages, ietf ) }}
+				{{ frm.selectBox( table, '', '', 'id_sede_emittente', 'sede mittente', etc.select.id_sedi_mittente, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_mittente' , page, pages, ietf,'indirizzi' ) }}
 			</div>
 			{% endif %}
 		</div>

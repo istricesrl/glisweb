@@ -120,7 +120,7 @@
 
     // funzione che verifica se un operatore ha già lavorato ad un dato progetto prima di una certa data e restituisce un punteggio
 
-    function puntiConoscenzaProgetto( $id_anagrafica, $id_progetto, $data ){
+    function puntiConoscenzaProgetto( $id_anagrafica, $id_progetto, $data ) {
 
         global $cf;
         
@@ -138,20 +138,17 @@
             )
         );
 
-        if( !empty( $frequenza ) ){
-            if( $frequenza >= 100 ){
+        if( ! empty( $frequenza ) ) {
+            if( $frequenza >= 100 ) {
                 $punti = 100;
-            }
-            else{
+            } else {
                 $punti = $frequenza;
             }
         }
 
-
-
         return $punti;
-    }
 
+    }
 
     /* funzione che verifica se un operatore da contratto è disponibile in una certa data/fascia oraria e restituisce:
         - 50 punti se sì
@@ -399,7 +396,7 @@
         // sono esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente      
         $sostituti = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view WHERE se_sostituto = 1 '
+            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view_static WHERE se_sostituto = 1 '
             .'AND id NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) ',
             array(
                 array( 's' => $id_attivita )
@@ -416,7 +413,7 @@
         // esclusi quelli per cui esiste una riga nella tabella sostituzioni_attivita per l'attivita corrente
         $assegnati = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto, progetti.id as esperienza FROM attivita_view AS a '
+            'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto, progetti.id as esperienza FROM attivita_view_static AS a '
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'LEFT JOIN progetti ON a.id_progetto = progetti.id AND progetti.id = ? '
@@ -664,7 +661,7 @@
         // operatori che di base sono assegnati alle sostituzioni
         $sostituti = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view WHERE se_sostituto = 1'
+            'SELECT id AS id_anagrafica, __label__ as anagrafica, se_sostituto FROM anagrafica_view_static WHERE se_sostituto = 1'
         );
 
         if( !empty( $sostituti ) ){
@@ -680,7 +677,7 @@
         // elenco degli operatori che hanno attivita assegnate prima della prima scopertura e non sono già stati scartati, con priorità per quelli che conoscono già il progetto
         $assegnati = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto, progetti.id as esperienza FROM attivita_view AS a '
+            'SELECT a.id_anagrafica, a.anagrafica, max(ca.se_sostituto) as se_sostituto, progetti.id as esperienza FROM attivita_view_static AS a '
             .'LEFT JOIN anagrafica_categorie AS ac ON a.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'LEFT JOIN progetti ON a.id_progetto = progetti.id AND progetti.id = ? '
