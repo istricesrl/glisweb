@@ -205,9 +205,9 @@ CREATE TABLE IF NOT EXISTS `anagrafica_modalita_pagamento` (
 CREATE TABLE IF NOT EXISTS `anagrafica_ruoli` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -229,13 +229,23 @@ CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
 
 -- articoli
 -- tipologia: tabella gestita
+-- verifica: 2021-05-25 10:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `articoli` (
   `id` char(32) NOT NULL,
   `id_prodotto` char(32) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `ean` char(32) DEFAULT NULL,
+  `isbn` char(32) DEFAULT NULL,
+  `id_reparto` int(11) DEFAULT NULL,
   `id_taglia` int(11) DEFAULT NULL,
   `id_colore` int(11) DEFAULT NULL,
-  `id_udm` int(11) DEFAULT NULL,
+  `larghezza` int(11) DEFAULT NULL,
+  `lunghezza` int(11) DEFAULT NULL,
+  `altezza` int(11) DEFAULT NULL,
+  `peso` int(11) DEFAULT NULL,
+  `volume` int(11) DEFAULT NULL,
+  `capacita` int(11) DEFAULT NULL,
+  `durata` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -247,16 +257,34 @@ CREATE TABLE IF NOT EXISTS `articoli` (
 
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
+-- verifica: 2021-05-25 11:47 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
   `id` int(11) NOT NULL,
   `id_articolo` char(32) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `testo` text,
+  `valore` decimal(5,2) DEFAULT NULL,
+  `note` text,
   `se_assente` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000021
+--| 000001001700
+
+-- articoli_correlati
+-- tipologia: tabella assistita
+-- verifica: 2021-05-25 18:07 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `articoli_correlati` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_articolo` int(11) DEFAULT NULL,
+  `id_prodotto_correlato` int(11) DEFAULT NULL,
+  `id_articolo_correlato` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `se_upselling` int(1) DEFAULT NULL,
+  `se_crosselling` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001001800
 
 -- attivita
 -- tipologia: tabella gestita
@@ -383,6 +411,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
 -- tipologia: tabella gestita
 CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
   `id` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
   `nome` char(64) NOT NULL,
   `se_categoria` int(1) DEFAULT NULL,
   `se_prodotto` int(1) DEFAULT NULL,
@@ -3020,6 +3049,15 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita_inps` (
   `nome` char(255) NOT NULL,
   `codice` char(32) DEFAULT NULL,
   `se_quadratura` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001000XXX
+
+-- tipologie_caratteristiche_prodotti
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `tipologie_caratteristiche_prodotti` (
+`id` int(11) NOT NULL,
+  `nome` char(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000195

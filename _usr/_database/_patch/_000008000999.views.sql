@@ -477,4 +477,74 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 
 -- NOTA per il nome del settore usare settori_path?
 
+--| 000008001300
+
+-- articoli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `articoli_view`;
+
+--| 000008001301
+
+-- articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-25 10:56 Fabio Mosti
+CREATE OR REPLACE VIEW `articoli_view` AS
+	SELECT
+		articoli.id,
+		articoli.id_prodotto,
+		articoli.ordine,
+		articoli.ean,
+		articoli.isbn,
+		articoli.id_reparto,
+		articoli.id_taglia,
+		articoli.id_colore,
+		articoli.larghezza,
+		articoli.lunghezza,
+		articoli.altezza,
+		articoli.peso,
+		articoli.volume,
+		articoli.capacita,
+		articoli.nome,
+		concat(
+			articoli.id_prodotto,
+			' / ',
+			articoli.id,
+			' / ',
+			articoli.nome
+		) AS __label__
+	FROM articoli
+;
+
+--| 000008001600
+
+-- articoli_caratteristiche_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `articoli_caratteristiche_view`;
+
+--| 000008001601
+
+-- articoli_caratteristiche_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
+	SELECT
+		articoli_caratteristiche.id,
+		articoli_caratteristiche.id_articolo,
+		articoli_caratteristiche.id_caratteristica,
+		articoli_caratteristiche.ordine,
+		articoli_caratteristiche.valore,
+		articoli_caratteristiche.se_assente,
+		concat(
+			articoli.id,
+			' / ',
+			tipologie_caratteristiche_prodotti.nome
+			': ',
+			caratteristiche_prodotti.nome
+			' ',
+			articoli_caratteristiche.valore
+		) AS __label__
+	FROM articoli_caratteristiche
+		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = articoli_caratteristiche.id_caratteristica
+		LEFT JOIN tipologie_caratteristiche_prodotti ON tipologie_caratteristiche_prodotti.id = caratteristiche_prodotti.id_tipologia
+;
+
 --| FINE FILE

@@ -513,27 +513,49 @@
     ---------------------------------------------|---------------------------------------------------------------------------------------
     articoli.id                                  | l'ID dell'articolo, costituito dal codice articolo (la colonna non è auto incrementante)
     articoli.id_prodotto                         | l'ID del prodotto cui appartiene l'articolo
-    articoli.nome                                | il nome dell'articolo, a uso interno
     articoli.ordine                              | campo di ordinamento
+    articoli.ean                                 | il codice EAN dell'articolo
+    articoli.isbn                                | il codice ISBN dell'articolo
+    articoli.id_reparto                          | l'ID del reparto di default dell'articolo
     articoli.id_taglia                           | l'ID della taglia
     articoli.id_colore                           | l'ID del colore
-    articoli.id_udm                              | l'ID dell'unità di misura
-    articoli.id_reparto                          | l'ID del reparto 
-    articoli.se_disponibile                      | flag di disponibilità
-    articoli.quantita_disponibile                | quantità disponibile in magazzino
-
-    I campi *se_disponibile* e *quantita_disponibile* servono per la gestione manuale delle disponibilità, nel caso non sia attivo il modulo per la gestione
-    del magazzino; possono eventualmente fungere da cache nel caso il modulo sia attivo, tramite logiche da implementare custom di volta in volta.
+    articoli.larghezza                           | la larghezza dell'articolo, in millimetri
+    articoli.lunghezza                           | la lunghezza dell'articolo, in millimetri
+    articoli.altezza                             | l'altezza dell'articolo, in millimetri
+    articoli.peso                                | il peso dell'articolo, in grammi
+    articoli.volume                              | il volume dell'articolo in millimetri cubi
+    articoli.capacita                            | la capacità dell'articolo in millilitri
+    articoli.nome                                | il nome dell'articolo, a uso interno
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                 | tabella e campo collegati         | comportamento
+    --------------------------------------------|-----------------------|-----------------------------------|------------------
+    articoli_ibfk_01_nofollow                   | id_prodotto           | prodotti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_ibfk_02_nofollow                   | id_reparto            | reparti.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    articoli_ibfk_03_nofollow                   | id_taglia             | taglie.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_ibfk_04_nofollow                   | id_colore             | colori.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *articoli_view* relativa alla tabella *articoli* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    articoli_view.id                                  | -
+    articoli_view.id_prodotto                         | -
+    articoli_view.ordine                              | -
+    articoli_view.ean                                 | -
+    articoli_view.isbn                                | -
+    articoli_view.id_reparto                          | -
+    articoli_view.id_taglia                           | -
+    articoli_view.id_colore                           | -
+    articoli_view.larghezza                           | -
+    articoli_view.lunghezza                           | -
+    articoli_view.altezza                             | -
+    articoli_view.peso                                | -
+    articoli_view.volume                              | -
+    articoli_view.capacita                            | -
+    articoli_view.nome                                | -
+    articoli_view.__label__                           | l'etichetta descrittiva dell'articolo
 
     articoli_caratteristiche
     ------------------------
@@ -545,19 +567,69 @@
     articoli_caratteristiche.id_articolo         | l'ID dell'articolo
     articoli_caratteristiche.id_caratteristica   | l'ID della caratteristica
     articoli_caratteristiche.ordine              | campo di ordinamento
-    articoli_caratteristiche.testo               | descrizione aggiuntiva
+    articoli_caratteristiche.valore              | il valore numerico della caratteristica associata all'articolo
+    articoli_caratteristiche.note                | note relative all'associazione fra articolo e caratteristica
     articoli_caratteristiche.se_assente          | flag che indica se la caratteristica è da considerare presente (NULL) o assente (NOT NULL)
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------------------|---------------------------|-------------------------------|----------------------
+    articoli_caratteristiche_ibfk_01            | id_articolo               | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_caratteristiche_ibfk_02_nofollow   | id_caratteristica         | caratteristiche_prodotti.id   | ON DELETE CASCADE ON UPDATE CASCADE
 
     La vista *articoli_caratteristiche_view* relativa alla tabella *articoli_caratteristiche* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    articoli_caratteristiche_view.id                       | -
+    articoli_caratteristiche_view.id_articolo              | -
+    articoli_caratteristiche_view.id_caratteristica        | -
+    articoli_caratteristiche_view.ordine                   | -
+    articoli_caratteristiche_view.valore                   | -
+    articoli_caratteristiche_view.se_assente               | -
+    articoli_caratteristiche_view.__label__                | etichetta descrittiva dell'associazione fra articolo e caratteristica
  
+    articoli_correlati
+    ------------------
+    Questa tabella *gestita* mette in relazione gli articoli con altri *articoli* o con *prodotti* per indicare correlazioni tecniche come
+    ricambi, consumabili, accessori oppure commerciali come prodotti consigliati eccetera.
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    articoli_correlati.id                       | l'ID della correlazione
+    articoli_correlati.id_tipologia             | l'ID della tipologia di correlazione
+    articoli_correlati.id_articolo              | l'ID dell'articolo del quale si indica la correlazione
+    articoli_correlati.id_prodotto_correlato    | l'ID del prodotto a cui l'articolo è correlato
+    articoli_correlati.id_articolo_correlato    | l'ID dell'articolo a cui l'articolo è correlato
+    articoli_correlati.ordine                   | campo di ordinamento
+    articoli_correlati.se_upselling             | flag che indica se la correlazione rappresenta un upselling
+    articoli_correlati.se_crosselling           | flag che indica se la correlazione rappresenta un crosselling
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                     | tabella e campo collegati                 | comportamento
+    ------------------------------------|---------------------------|-------------------------------------------|----------------------
+    articoli_correlati_ibfk_01          | id_tipologia              | tipologie_correlazioni_articoli.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_correlati_ibfk_02          | id_articolo               | articoli.id                               | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_correlati_ibfk_03          | id_prodotto_correlato     | prodotti.id                               | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_correlati_ibfk_04          | id_articolo_correlato     | articoli.id                               | ON DELETE CASCADE ON UPDATE CASCADE
+
+    La vista *articoli_correlati_view* relativa alla tabella *articoli_correlati* presenta le seguenti colonne:
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    articoli_correlati_view.id                          | -
+    articoli_correlati_view.id_tipologia                | -
+    articoli_correlati_view.tipologia                   | -
+    articoli_correlati_view.id_articolo                 | -
+    articoli_correlati_view.id_prodotto_correlato       | -
+    articoli_correlati_view.id_articolo_correlato       | -
+    articoli_correlati_view.ordine                      | -
+    articoli_correlati_view.se_upselling                | -
+    articoli_correlati_view.se_crosselling              | -
+    articoli_correlati_view.__label__                   | etichetta descrittiva della correlazione
+
     attivita
     --------
     Questa tabella *gestita* descrive le attività intese come eventi significativi relativi ad altre entità oppure in sé stessi.
