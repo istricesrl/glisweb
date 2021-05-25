@@ -110,12 +110,12 @@
  function stampaScontrino(){
     var parsedJSON = JSON.parse('{{ etc.documento|json_encode|e('js') }}');
 
-console.log(parsedJSON);
-window.open( "{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php?__data__={{ etc.documento|json_encode|e('js') }}", '_blank');
+//console.log(parsedJSON);
+    window.open( "{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php?__data__={{ etc.documento|json_encode|e('js') }}", '_blank');
   /*
-    getws('{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php', '__data__='+doc, 
+    getws('{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php', '__data__={{ etc.documento|json_encode|e('js') }}'', 
                 function( data ){ 
-                   console.log("ciao");
+                   console.log( data );
                 }
             );
    */
