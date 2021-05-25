@@ -139,6 +139,11 @@
 	    'modal' => array('id' => 'pulisci', 'include' => 'inc/todo.form.pianificazioni.modal.pulisci.html' )
 	);
 
+    // modal per ricreare gli oggetti futuri e crearli di nuovo
+    $ct['page']['contents']['metro'][NULL][] = array(
+	    'modal' => array('id' => 'ripianifica', 'include' => 'inc/todo.form.pianificazioni.modal.ripianifica.html' )
+	);
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 

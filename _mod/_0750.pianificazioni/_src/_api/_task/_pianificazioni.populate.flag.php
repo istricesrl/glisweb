@@ -44,6 +44,7 @@
 
         // se è arrivato il parametro ripopola, setto la pianificazione da ripopolare
         if( !empty( $_REQUEST['ripopola'] ) ){
+            $status['ripopola'] = 1;
             $u = mysqlQuery(
                 $cf['mysql']['connection'],
                 'UPDATE pianificazioni SET se_ripopolare = 1 WHERE id = ?',
