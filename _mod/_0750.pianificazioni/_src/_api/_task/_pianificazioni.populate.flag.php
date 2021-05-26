@@ -42,8 +42,21 @@
 
         $status['info'][] = 'aggiornata ' . $u . ' riga di pianificazioni per settaggio se_pulire e data_inizio_pulizia';
 
+        // se è arrivato il parametro ferma, setto la pianificazione da fermare
+        if( !empty( $_REQUEST['ferma'] ) ){
+            $status['ferma'] = 1;
+            $u = mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE pianificazioni SET se_fermare = 1 WHERE id = ?',
+                array(
+                    array( 's' => $_REQUEST['id'] )
+                )
+            );
+    
+            $status['info'][] = 'aggiornata ' . $u . ' riga di pianificazioni per settaggio se_fermare';
+        }
         // se è arrivato il parametro ripopola, setto la pianificazione da ripopolare
-        if( !empty( $_REQUEST['ripopola'] ) ){
+        elseif( !empty( $_REQUEST['ripopola'] ) ){
             $status['ripopola'] = 1;
             $u = mysqlQuery(
                 $cf['mysql']['connection'],
@@ -55,6 +68,7 @@
     
             $status['info'][] = 'aggiornata ' . $u . ' riga di pianificazioni per settaggio se_ripopolare';
         }
+        
        
     } else {
 

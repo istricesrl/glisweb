@@ -36,45 +36,74 @@
 
         $status['id'] = $p['id'];
 
-        // se è specificata una data di inizio pulizia chiamo il task _pianificazioni.clean.php per pulire gli oggetti
+        // se è specificata una data di inizio pulizia procedo
         if( !empty( $p['data_inizio_pulizia'] ) ){
-            $status['clean'] = restcall(
-                $cf['site']['url'] . '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php?id=' . $p['id'] . '&data_inizio_pulizia=' . $p['data_inizio_pulizia']
-            );
-        }
 
-        // se l'eliminazione è andata a buon fine verifico se bisogna ripopolare
-        if( isset( $status['clean']['delete'] ) && $status['clean']['delete'] > 0 ){
+            // verifico se la pianificazione è da fermare
+           if( $p['se_fermare'] == 1 ){
 
-            $cl = mysqlQuery(
-                $cf['mysql']['connection'],
-                'UPDATE pianificazioni SET se_pulire = NULL, data_inizio_pulizia = NULL WHERE id = ?',
-                array(
-                    array( 's' => $p['id'] )
-                )
-            );
+               // chiamo il task _pianificazioni.stop.php per pulire gli oggetti
+                $url = $cf['site']['url'] . '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.stop.php?id=' . $p['id'] . '&data_inizio_pulizia=' . $p['data_inizio_pulizia'];
 
-            $status['info'][] = 'aggiornamento riga dopo clean: ' . $cl;
+                $status['stop'] = restcall( $url );
 
-            if( $p['se_ripopolare'] == 1 ){
-                $status['ripopola'] = 1;
-                
-                restcall(
-                    $cf['site']['url'] . '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php?id=' . $p['id']
-                );
+                // se lo stop è andato a buon fine aggiorno resettando i flag
+                if( isset( $status['stop']['delete'] ) && $status['stop']['delete'] > 0 ){
 
-                $rp = mysqlQuery(
-                    $cf['mysql']['connection'],
-                    'UPDATE pianificazioni SET se_ripopolare = NULL WHERE id = ?',
-                    array(
-                        array( 's' => $p['id'] )
-                    )
-                );
+                    $cl = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE pianificazioni SET se_pulire = NULL, data_inizio_pulizia = NULL, se_fermare = NULL WHERE id = ?',
+                        array(
+                            array( 's' => $p['id'] )
+                        )
+                    );
+    
+                    $status['info'][] = 'aggiornamento riga dopo stop: ' . $cl;
+                }
 
-                $status['info'][] = 'aggiornamento riga dopo repopulate: ' . $rp;
-            }
+           }
+           // se la pianificazione è solo da pulire ma non da fermare
+           else{
+                // chiamo il task _pianificazioni.clean.php per pulire gli oggetti
+                $url = $cf['site']['url'] . '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php?id=' . $p['id'] . '&data_inizio_pulizia=' . $p['data_inizio_pulizia'];
 
-        }
+                $status['clean'] = restcall( $url );
+
+                // se la pulizia è andata a buon fine aggiorno i flag e controllo se bisogna ripopolare
+                if( isset( $status['clean']['delete'] ) && $status['clean']['delete'] > 0 ){
+
+                    $cl = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE pianificazioni SET se_pulire = NULL, data_inizio_pulizia = NULL WHERE id = ?',
+                        array(
+                            array( 's' => $p['id'] )
+                        )
+                    );
+
+                    $status['info'][] = 'aggiornamento riga dopo clean: ' . $cl;
+
+                    if( $p['se_ripopolare'] == 1 ){
+                        $status['ripopola'] = 1;
+                        
+                        restcall(
+                            $cf['site']['url'] . '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php?id=' . $p['id']
+                        );
+
+                        $rp = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'UPDATE pianificazioni SET se_ripopolare = NULL WHERE id = ?',
+                            array(
+                                array( 's' => $p['id'] )
+                            )
+                        );
+
+                        $status['info'][] = 'aggiornamento riga dopo repopulate: ' . $rp;
+                    }
+
+                }
+           }
+
+        }       
 		
     }
     else{
