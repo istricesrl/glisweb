@@ -188,7 +188,7 @@ ALTER TABLE `anagrafica_ruoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-05-23 15:28 Fabio Mosti
 ALTER TABLE `anagrafica_settori`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id_anagrafica` (`id_anagrafica`,`id_settore`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_settore`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_settore` (`id_settore`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_settore`);
@@ -217,11 +217,27 @@ ALTER TABLE `articoli`
 -- verifica: 2021-05-25 12:11 Fabio Mosti
 ALTER TABLE `articoli_caratteristiche`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id_articolo` (`id_articolo`,`id_caratteristica`), 
+	ADD UNIQUE KEY `unica` (`id_articolo`,`id_caratteristica`), 
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `indice` (`id`,`id_articolo`,`id_caratteristica`,`ordine`,`valore`,`se_assente` );
 ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 000003001700
+
+-- articoli_correlati
+-- tipologia: tabella gestita
+-- verifica: 2021-05-26 11:59 Fabio Mosti
+ALTER TABLE `articoli_correlati`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_prodotto` (`id_tipologia`,`id_articolo`,`id_prodotto_correlato`), 
+	ADD UNIQUE KEY `unica_articolo` (`id_tipologia`,`id_articolo`,`id_articolo_correlato`), 
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_prodotto_correlato` (`id_prodotto_correlato`),
+	ADD KEY `id_articolo_correlato` (`id_articolo_correlato`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_articolo`,`id_prodotto_correlato`,`id_prodotto_correlato`,`ordine`,`se_upselling`,`se_crosselling` );
+ALTER TABLE `articoli_correlati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000021
 

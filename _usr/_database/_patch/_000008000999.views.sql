@@ -525,6 +525,7 @@ DROP TABLE IF EXISTS `articoli_caratteristiche_view`;
 
 -- articoli_caratteristiche_view
 -- tipologia: tabella gestita
+-- verifica: 2021-05-26 12:01 Fabio Mosti
 CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 	SELECT
 		articoli_caratteristiche.id,
@@ -545,6 +546,42 @@ CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 	FROM articoli_caratteristiche
 		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = articoli_caratteristiche.id_caratteristica
 		LEFT JOIN tipologie_caratteristiche_prodotti ON tipologie_caratteristiche_prodotti.id = caratteristiche_prodotti.id_tipologia
+;
+
+--| 000008001700
+
+-- articoli_correlati_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `articoli_correlati_view`;
+
+--| 000008001701
+
+-- articoli_correlati_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-26 12:08 Fabio Mosti
+CREATE OR REPLACE VIEW `articoli_correlati_view` AS
+	SELECT
+		articoli_correlati.id,
+		articoli_correlati.id_tipologia,
+		tipologie_correlazioni_articoli.nome AS tipologia,
+		articoli_correlati.id_articolo,
+		articoli_correlati.id_prodotto_correlato,
+		articoli_correlati.id_articolo_correlato,
+		articoli_correlati.ordine,
+		articoli_correlati.se_upselling,
+		articoli_correlati.se_crosselling,
+		concat(
+			articoli_correlati.id_articolo,
+			' / ',
+			tipologie_correlazioni_articoli.nome,
+			' / ',
+			coalesce(
+				articoli_correlati.id_prodotto_correlato,
+				articoli_correlati.id_articolo_correlato
+			)
+		) AS __label__
+	FROM articoli_correlati
+		LEFT JOIN tipologie_correlazioni_articoli ON tipologie_correlazioni_articoli.id = articoli_correlati.id_tipologia
 ;
 
 --| FINE FILE
