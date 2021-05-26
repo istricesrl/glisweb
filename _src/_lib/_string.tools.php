@@ -19,17 +19,21 @@
 
     /**
      *
-     * @todo documentare
+     * @questa funzione converte il peso in unità di misura byte in funzione del tipo di file. 
      *
      */
     function writeByte( $filesize ) {
 
 	$type = array( 'Bytes' , 'Kb' , 'Mb' , 'Gb' , 'Tb' );
-
-	for( $i = 0 ; $filesize > 1024 ; $i++ ) {
+	    
+	//type i : i = 0 fino alla taglia del parametro passato : filesize. finché filesize supera 1024 viene diviso per 1024 e ogni volta che viene diviso, i incrementa.
+	
+	    for( $i = 0 ; $filesize > 1024 ; $i++ ) {
 	    $filesize /= 1024;
 	}
-
+	    
+	// printf di controllo : con il peso del file finale associato al tipo passato
+		
 	return sprintf( '%0.2f', round( $filesize , 2 ) ) . ' ' . $type[ $i ];
 
     }
