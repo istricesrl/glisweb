@@ -101,7 +101,7 @@
 
     /**
      *
-     * @todo documentare
+     * @converte i campi vuoti in valore NULL
      *
      */
     function empty2null( $s, $numeric = false ) {
@@ -118,7 +118,7 @@
 
     /**
      *
-     * @todo documentare
+     * @converte il tipo string passato in un tipo boolean
      *
      */
     function string2boolean( $s ) {
@@ -135,7 +135,7 @@
 
     /**
      *
-     * @todo documentare
+     * @passaggio di 4 string : riduce tagliando il centro della stringa : converte in abreviazione
      *
      */
     function riduciStringa( $s, $l, $c = '~', $t = CUT_CENTER ) {
@@ -153,7 +153,7 @@
 
     /**
      *
-     * @todo documentare
+     * @con la lingua impostata in italiano : convert i numeri dei mesi in nome string
      *
      */
     function int2month( $m, $l = 'it-IT' ) {
@@ -204,7 +204,7 @@
 
     /**
      *
-     * @todo documentare
+     * @come sopra ma per i giorni
      *
      */
     function int2day( $d, $l = 'it-IT' ) {
@@ -243,7 +243,7 @@
      *
      *
      *
-     * @todo commentare
+     * @idem ma per i log
      *
      */
     function logLvl2string( $l ) {
