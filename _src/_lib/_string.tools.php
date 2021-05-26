@@ -19,8 +19,8 @@
 
     /**
      *
-     * @todo documentare
-     *
+     * @questa funzione converte il peso in octet in altri pesi in funzione del tipo di file. 
+     *type i : i = 0 fino alla taglia del parametro passato : filesize. finché filesize supera 1024 viene / per 1024 e i incrementa. printf di controllo : con il peso del file finale associato al tipo passato
      */
     function writeByte( $filesize ) {
 
