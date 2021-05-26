@@ -33,14 +33,14 @@
 
         $u = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE pianificazioni SET se_pulire = 1, data_inizio_pulizia = ? WHERE id = ?',
+            'UPDATE pianificazioni SET data_inizio_pulizia = ? WHERE id = ?',
             array(
                 array( 's' => $_REQUEST['data_inizio_pulizia'] ),
                 array( 's' => $_REQUEST['id'] )
             )
         );
 
-        $status['info'][] = 'aggiornata ' . $u . ' riga di pianificazioni per settaggio se_pulire e data_inizio_pulizia';
+        $status['info'][] = 'aggiornata ' . $u . ' riga di pianificazioni per settaggio data_inizio_pulizia';
 
         // se è arrivato il parametro ferma, setto la pianificazione da fermare
         if( !empty( $_REQUEST['ferma'] ) ){
