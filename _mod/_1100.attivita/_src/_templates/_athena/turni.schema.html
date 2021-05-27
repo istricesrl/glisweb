@@ -34,7 +34,7 @@
                         <span class="label-top">contratto</span>
                         <div class="row m-0">
                             <div class="col combobox-container p-0">
-                                <select name="__view__[{{ view.id }}][__filters__][id_contratto][EQ]" onchange="$('#pager').val('0');" class="selectbox form-control form-control-sm" id="contratto">
+                                <select name="__view__[{{ view.id }}][__filters__][id_contratto][EQ]" populate-api onchange="$('#pager').val('0');" class="selectbox form-control form-control-sm" id="contratto">
                                     <option value="" {% if request.__view__[ view.id ].__filters__.id_contratto.EQ == "" %}selected{% endif %}></option>
                                 {% for contratto  in etc.select.contratti %}
                                     <option value="{{ contratto.id }}" {% if request.__view__[ view.id ].__filters__.id_contratto.EQ == contratto.id %}selected{% endif %}>{{ contratto.__label__ }}</option>

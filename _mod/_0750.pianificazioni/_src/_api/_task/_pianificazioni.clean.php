@@ -61,6 +61,7 @@
 
                     // status
                     $status['info'][] = 'eliminate ' . $del . ' righe dalla tabella ' . $status['entita'];
+                    $status['delete'] = $del;
 
                     // modalità hard/stop
                     if( ! empty( $_REQUEST['hard'] ) ) {

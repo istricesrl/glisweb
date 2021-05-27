@@ -153,9 +153,10 @@
                     </div>
                     <div class="col-auto col-md-7 text-right">
                         {% if request[table][subtable][0].id %}
-                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="popolaPianificazione();" placeholder="crea eventi" data-placement="bottom" data-delay="1000" title="" data-original-title="crea eventi">CREA TURNI</button>
+                    <!--<button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="popolaPianificazione();" placeholder="crea eventi" data-placement="bottom" data-delay="1000" title="" data-original-title="crea eventi">CREA TURNI</button>-->
                         <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="ferma la pianificazione" data-toggle="modal" data-target="#ferma" data-placement="bottom" data-delay="1000" title="" data-original-title="ferma pianificazione">FERMA PIANIFICAZIONE</button>
                         <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="rimuovi turni futuri errati" data-toggle="modal" data-target="#pulisci" data-placement="bottom" data-delay="1000" title="" data-original-title="rimuovi turni futuri">RIMUOVI TURNI FUTURI</button>
+                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="ripianifica" data-toggle="modal" data-target="#ripianifica" data-placement="bottom" data-delay="1000" title="" data-original-title="ripianifica">RIPIANIFICA</button>
                         {% endif %}
                         <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">SALVA PIANIFICAZIONE</button>
                     </div>
