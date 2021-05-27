@@ -31,15 +31,15 @@
             if( empty( $job['corrente'] ) ) {
 
                 $status['result'] = mysqlSelectColumn(
-					'id',
+					'id_anagrafica',
                     $cf['mysql']['connection'],
-                    'SELECT a.id FROM anagrafica_view_static WHERE se_collaboratore = 1'
+                   "SELECT a.id FROM anagrafica_view_static WHERE se_cliente = 1"
                 );
                              
-                // creo la lista delle anagrafiche da lavorare
+                // creo la lista dei clienti da lavorare
                 $job['workspace']['list'] = $status['result'];
 
-                // segno il totale delle anagrafiche da lavorare
+                // segno il totale dei clienti da lavorare
                 $job['totale'] = count( $job['workspace']['list'] );
 
                 // avvio il contatore
@@ -70,36 +70,29 @@
             // aggiusto l'indice di lavoro (gli array partono da zero)
             $widx = $job['corrente'] - 1;
 
-            // ricavo l'ID dell'anagrafica corrente
+            // ricavo l'ID del cliente corrente
             $cid = $job['workspace']['list'][ $widx ];
 			
 			// logiche di calcolo e scrittura nel report
             $mese = $job['workspace']['mese'];
             $anno = $job['workspace']['anno'];
 
-            // costruisco l'elenco giorni
-            $giorni = array();
+            // calcolo le ore di todo peviste
+            $ore_previste = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT sum(ore_previste) FROM todo WHERE month(data_programmazione) = ? AND year(data_programmazione) = ? AND id_cliente = ?',
+                array(
+                    array( 's' => $mese ),
+                    array( 's' => $anno ),
+                    array( 's' => $cid )
+                )
+            );
 
-            for( $d=1; $d<=31; $d++ )
-            {
-                $time=mktime(12, 0, 0, $mese, $d, $anno);          
-                if (date('m', $time) == $mese){  
-                    $giorno = intval( date('d', $time) );
-                    $giorni[] = date( 'Y-m-d', strtotime("$anno-$mese-$giorno") );
-                }
-            }
-
-            // inizializzo il monte ore
-            $ore_contratto = 0;
-
-            foreach( $giorni as $g ){
-                $ore_contratto += oreGiornaliereContratto(  $cid, $g );
-            }
 
             // calcolo le ore di attività fatte
             $ore_fatte = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT sum(ore) FROM attivita WHERE mese = ? AND anno = ? AND id_anagrafica = ?',
+                'SELECT sum(ore) FROM attivita WHERE mese = ? AND anno = ? AND id_cliente = ?',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),
@@ -110,13 +103,13 @@
             // inserisco la riga nella tabella di report
             $insert = mysqlQuery(
                 $cf['mysql']['connection'],
-                'INSERT INTO __report_ore_operatori__ (mese, anno, id_job, id_anagrafica, ore_contratto, ore_fatte) VALUES ( ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO __report_ore_clienti__ (mese, anno, id_job, id_cliente, ore_previste, ore_fatte) VALUES ( ?, ?, ?, ?, ?, ?)',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),
                     array( 's' => $job['id'] ),
                     array( 's' => $cid ),
-                    array( 's' => $ore_contratto ),
+                    array( 's' => $ore_previste ),
                     array( 's' => $ore_fatte )
                 )
             );

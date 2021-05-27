@@ -31,9 +31,9 @@
             if( empty( $job['corrente'] ) ) {
 
                 $status['result'] = mysqlSelectColumn(
-					'id',
+					'id_anagrafica',
                     $cf['mysql']['connection'],
-                    'SELECT a.id FROM anagrafica_view_static WHERE se_collaboratore = 1'
+                   "SELECT a.id FROM anagrafica_view_static WHERE se_collaboratore = 1"
                 );
                              
                 // creo la lista delle anagrafiche da lavorare
@@ -77,29 +77,10 @@
             $mese = $job['workspace']['mese'];
             $anno = $job['workspace']['anno'];
 
-            // costruisco l'elenco giorni
-            $giorni = array();
-
-            for( $d=1; $d<=31; $d++ )
-            {
-                $time=mktime(12, 0, 0, $mese, $d, $anno);          
-                if (date('m', $time) == $mese){  
-                    $giorno = intval( date('d', $time) );
-                    $giorni[] = date( 'Y-m-d', strtotime("$anno-$mese-$giorno") );
-                }
-            }
-
-            // inizializzo il monte ore
-            $ore_contratto = 0;
-
-            foreach( $giorni as $g ){
-                $ore_contratto += oreGiornaliereContratto(  $cid, $g );
-            }
-
-            // calcolo le ore di attività fatte
-            $ore_fatte = mysqlSelectValue(
+            // calcolo le ore di attività fatte per cliente
+            $ore = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SELECT sum(ore) FROM attivita WHERE mese = ? AND anno = ? AND id_anagrafica = ?',
+                'SELECT id_cliente, sum(ore) as ore_fatte FROM attivita WHERE mese = ? AND anno = ? AND id_anagrafica = ? GROUP BY id_cliente',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),
@@ -107,19 +88,23 @@
                 )
             );
 
-            // inserisco la riga nella tabella di report
-            $insert = mysqlQuery(
-                $cf['mysql']['connection'],
-                'INSERT INTO __report_ore_operatori__ (mese, anno, id_job, id_anagrafica, ore_contratto, ore_fatte) VALUES ( ?, ?, ?, ?, ?, ?)',
-                array(
-                    array( 's' => $mese ),
-                    array( 's' => $anno ),
-                    array( 's' => $job['id'] ),
-                    array( 's' => $cid ),
-                    array( 's' => $ore_contratto ),
-                    array( 's' => $ore_fatte )
-                )
-            );
+            if( !empty( $ore ) ){
+                foreach( $ore as $o ){
+                    // inserisco la riga nella tabella di report
+                    $insert = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'INSERT INTO __report_ore_operatori_per_cliente__ (mese, anno, id_job, id_anagrafica, id_cliente, ore_fatte) VALUES ( ?, ?, ?, ?, ?)',
+                        array(
+                            array( 's' => $mese ),
+                            array( 's' => $anno ),
+                            array( 's' => $job['id'] ),
+                            array( 's' => $cid ),
+                            array( 's' => $o['id_cliente'] ),
+                            array( 's' => $o['ore_fatte'] )
+                        )
+                    );
+                }
+            }           
 
             // status
             $status['info'][] = 'ho lavorato la riga: ' . $cid;
