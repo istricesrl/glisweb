@@ -197,6 +197,16 @@
 <script language="javascript" type="text/javascript">
 
 $( document ).ready(function() {
+
+    
+        if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 1 ){ 
+            $('#pagamento-contanti').attr('class', 'btn btn-dark btn-block'); 
+            $('#pagamento-elettronico').attr('class', 'btn btn-secondary btn-block');
+        } 
+        if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 5 ){ 
+            $('#pagamento-elettronico').attr('class', 'btn btn-dark btn-block'); 
+            $('#pagamento-contanti').attr('class', 'btn btn-secondary btn-block');
+         }
   //  $("#documenti___comando__ ").focus();
     $("#documenti___operazione__").val('{{ etc.default_operazione }}');
     $("#documenti___reparto__").val('{{ etc.default_reparto }}');
@@ -212,16 +222,27 @@ $( document ).ready(function() {
        
         $( "#form-documenti" ).submit();
        // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
-        window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?documenti[id]={{ request.documenti.id }}", '_self' );
+       if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 1 || $("#documenti_scadenze_0_id_modalita_pagamento").val() == 5 ){ 
+       window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?documenti[id]={{ request.documenti.id }}", '_self' );
+       } else {
+           alert("devi selezionare un metodo di pagamento per poter stampare lo scontrino");
+       }
     }
     
    function clickPagamento(b){
         
         var id = b.id;
         $("#documenti_scadenze_0_id_modalita_pagamento").val( $('#'+id).val()  );
-        //console.log( $("#documenti_scadenze_0_id_modalita_pagamento").val() );
-       
- 
+        
+        if( $('#'+id).val() == 1 ){ 
+            $('#pagamento-contanti').attr('class', 'btn btn-dark btn-block'); 
+            $('#pagamento-elettronico').attr('class', 'btn btn-secondary btn-block');
+        } else {
+            $('#pagamento-elettronico').attr('class', 'btn btn-dark btn-block'); 
+            $('#pagamento-contanti').attr('class', 'btn btn-secondary btn-block');
+         }
+        
+        $("#documenti___comando__ ").focus();
    }
 </script>
 
