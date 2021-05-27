@@ -54,7 +54,7 @@
     <input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-    <input type="hidden" id="tipologia" name="{{ table }}[id_tipologia]" value="9">
+    <input type="hidden" id="tipologia" name="{{ table }}[id_tipologia]" value="{{ etc.default_tipologia }}">
 
     {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
     <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
@@ -133,13 +133,14 @@
                 <legend>comando</legend>
                     <div class="form-row row"> 
                                 <div class="col ">
-                                    {{ frm.input( table, '', '', '__comando__', '', '' ) }}
+                                    {{ frm.input( table, '', '', '__comando__', '', '', '', '', '', '', 'focus-on-load' ) }}
                                 </div>
+                                <input type="submit" hidden>
                                 <div class="col-auto">
-                                    {{ frm.select( table, '', '', '__reparto__', '', etc.select.reparti, request, etc.default_reparto, '', 1, 1  ) }}
+                                    {{ frm.select( table, '', '', '__reparto__', '', etc.select.reparti, request, '', '', 1, 1  ) }}
                                 </div>
                                 <div class="col-auto ">
-                                    {{ frm.select( table, '', '', '__operazione__', '', etc.select.operazioni, request, etc.default_operazione, '', 1,1  ) }}
+                                    {{ frm.select( table, '', '', '__operazione__', '', etc.select.operazioni, request, '', '', 1,1  ) }}
                                 </div>
                     </div>
                     <div class="row">
@@ -147,13 +148,19 @@
                     </div>
                     <div class="row " style="align-self: flex-end;">
                         <div class="col-12"><legend>chiusura scontrino</legend></div>
-
+                        
                         <div class="col-6 mt-3 cassa">
-                            <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-money" aria-hidden="true"></i></button>
+                            <button type="button" class="btn btn-secondary btn-sqr btn-block" id="pagamento-contanti" value="1" clicked onclick="clickPagamento(this)" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-money" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-6 mt-3 cassa">
-                            <button type="submit" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ cassa }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-credit-card" aria-hidden="true"></i></button>
+                            <button type="button" class="btn btn-secondary btn-sqr btn-block" id="pagamento-elettronico" value="5" onclick="clickPagamento(this)" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-credit-card" aria-hidden="true"></i></button>
                         </div>
+                        {{ frm.input( table, 'scadenze', '0', 'id', '', '', request, '', 'hidden') }}
+                        {{ frm.input( table, 'scadenze', '0', 'id_documento', '', '', '','__parent_id__' , 'hidden' ) }}
+                        {{ frm.input( table, 'scadenze', '0', 'nome', '', '', request,'pagamento pronto scontrino','','', 'hidden' ) }}
+                        {{ frm.input( table, 'scadenze', '0', 'data', '', '', request, 'now'|date('Y-m-d'),'','', 'hidden' ) }}
+                        {{ frm.input( table, 'scadenze', '0', 'id_modalita_pagamento', '', '', request, '','','', 'hidden' ) }}
+                        {{ frm.input( table, 'scadenze', '0', 'se_pagato', '', '', request, '1','','', 'hidden' ) }}
                         <div class="col-12 mt-3 cassa">
                             <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="anteprima()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
                         </div>
@@ -185,22 +192,37 @@
 </form>
 {% endblock %}
 {% block javascript %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
-<script >
+<script language="javascript" type="text/javascript">
 
 $( document ).ready(function() {
-    $("#documenti___comando__ ").focus();
-    $("#documenti___operazione__ ").val('{{ etc.default_operazione }}');
+  //  $("#documenti___comando__ ").focus();
+    $("#documenti___operazione__").val('{{ etc.default_operazione }}');
+    $("#documenti___reparto__").val('{{ etc.default_reparto }}');
+    $("#documenti_id_tipologia").val('{{ etc.default_tipologia }}');
     //$("#documenti_id_tipologia").val('{{ etc.tipologia }}');
 });
 
+/*$( "#form-documenti" ).submit(function( event ) {
+  alert( "Handler for .submit() called." );
+});*/
+
     function anteprima(){
-       document.getElementById("form-documenti").submit();
+       
+        $( "#form-documenti" ).submit();
        // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
         window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?documenti[id]={{ request.documenti.id }}", '_self' );
     }
     
+   function clickPagamento(b){
+        
+        var id = b.id;
+        $("#documenti_scadenze_0_id_modalita_pagamento").val( $('#'+id).val()  );
+        //console.log( $("#documenti_scadenze_0_id_modalita_pagamento").val() );
+       
+ 
+   }
 </script>
 
 {% endblock %}

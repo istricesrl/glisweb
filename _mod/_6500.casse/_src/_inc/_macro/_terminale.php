@@ -20,12 +20,14 @@
      */
 
 
-
+//print_r( $_REQUEST['documenti']);
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
     $ct['etc']['default_reparto'] = '0';
     $ct['etc']['default_operazione'] = '1';
+    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
+                                    'SELECT id FROM tipologie_documenti WHERE nome = "scontrino"');
 
     // tendina  reparti
 	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
@@ -36,6 +38,8 @@
 	);
 
     $ct['etc']['select']['reparti'][] = array( 'id' => '0', '__label__' => 'default' );
+
+
     // riapertura scontrino prima della stampa
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__open__'] ) ){
         $update = mysqlQuery( 
@@ -67,7 +71,9 @@
             //print_r('coupon');
         } elseif( $comando[0] == 'CMD' ){
             // gestisco il comando rapido
-            //print_r('comando');
+
+            // comando aggiungi/rimuovi articolo
+            if( $comando[1] == 'OPZ' ){
             switch( $_REQUEST[ $ct['form']['table'] ]['__comando__'] ){
                 case 'CMD.OPZ.0001':
                     $ct['etc']['default_operazione'] = '1';
@@ -76,6 +82,30 @@
                     $ct['etc']['default_operazione'] = '-1';
                     break;    
                 }
+            }    
+
+            // comando per modificare il reparto
+            if( $comando[1] == 'REP' ){
+
+                foreach(  $ct['etc']['select']['reparti'] as $rep ){
+                
+                    if( $_REQUEST[ $ct['form']['table'] ]['__comando__'] == 'CMD.REP.000'.$rep['id']  ){
+                        $ct['etc']['default_reparto'] = $rep['id'];
+                    }
+
+                }
+
+            }
+
+            if( $comando[1] == 'TPL' ){
+
+                if( $_REQUEST[ $ct['form']['table'] ]['__comando__'] == 'CMD.TPL.000'.$ct['etc']['default_tipologia']  ){
+                    $ct['etc']['default_tipologia'] = $ct['etc']['default_tipologia'];
+                } else {
+                    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
+                                    'SELECT id FROM tipologie_documenti WHERE nome = "fattura"');
+                }
+            }
 
         } else{
             //print_r('articolo');
@@ -150,7 +180,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_documenti_view'
+	    'SELECT id, __label__ FROM tipologie_documenti_view WHERE nome = "scontrino" OR nome = "fattura" '
 	);
 
     // tendina tipologie documenti
