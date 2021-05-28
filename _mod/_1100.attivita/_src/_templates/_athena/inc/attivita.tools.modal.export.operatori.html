@@ -34,13 +34,13 @@
 				</div>
 			</div>
 			{% endif %}
-            <div class="form-row">
+            <div class="form-row mt-3">
 
 				<div class="col">
                     <span class="label-top">mese</span>
                     <select id="mese" class="form-control form-control-sm">
-                    {% for id, nome in etc.select.mesi %}
-                        <option value="{{ id }}">{{ nome }}</option>
+                    {% for m in etc.select.mesi %}
+                        <option value="{{ m.id }}">{{ m.__label__ }}</option>
                     {% endfor %}
                     </select>
                 </div>
@@ -48,8 +48,8 @@
                 <div class="col">
                     <span class="label-top">anno</span>
                     <select id="anno" class="form-control form-control-sm">
-                    {% for id, nome in etc.select.anni %}
-                        <option value="{{ id }}">{{ nome }}</option>
+                    {% for a in etc.select.anni %}
+                        <option value="{{ a.id }}">{{ a.__label__ }}</option>
                     {% endfor %}
                     </select>
                 </div>

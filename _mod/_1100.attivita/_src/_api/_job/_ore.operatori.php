@@ -89,17 +89,18 @@
                 }
             }
 
-            // inizializzo il monte ore
+            // inizializzo il monte ore di quadratura da contratto
             $ore_contratto = 0;
 
             foreach( $giorni as $g ){
                 $ore_contratto += oreGiornaliereContratto(  $cid, $g );
             }
 
-            // calcolo le ore di attività fatte
+            // calcolo le ore di attività di quadratura fatte
             $ore_fatte = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT sum(ore) FROM attivita AS a LEFT JOIN tipologie_attivita_inps AS t ON a.id_tipologia_inps = t.id WHERE month(a.data_attivita) = ? AND year(a.data_attivita) = ? AND id_anagrafica = ? AND t.se_quadratura = 1',
+                'SELECT sum(ore) FROM attivita AS a LEFT JOIN tipologie_attivita_inps AS t ON a.id_tipologia_inps = t.id '
+                .'WHERE month(a.data_attivita) = ? AND year(a.data_attivita) = ? AND id_anagrafica = ? AND t.se_quadratura = 1',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),
