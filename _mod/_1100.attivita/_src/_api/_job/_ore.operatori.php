@@ -33,7 +33,7 @@
                 $status['result'] = mysqlSelectColumn(
 					'id',
                     $cf['mysql']['connection'],
-                    'SELECT a.id FROM anagrafica_view_static WHERE se_collaboratore = 1'
+                    'SELECT id FROM anagrafica_view_static WHERE se_collaboratore = 1'
                 );
                              
                 // creo la lista delle anagrafiche da lavorare
@@ -99,7 +99,7 @@
             // calcolo le ore di attività fatte
             $ore_fatte = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT sum(ore) FROM attivita WHERE mese = ? AND anno = ? AND id_anagrafica = ?',
+                'SELECT sum(ore) FROM attivita AS a LEFT JOIN tipologie_attivita_inps AS t ON a.id_tipologia_inps = t.id WHERE month(a.data_attivita) = ? AND year(a.data_attivita) = ? AND id_anagrafica = ? AND t.se_quadratura = 1',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),
@@ -116,8 +116,8 @@
                     array( 's' => $anno ),
                     array( 's' => $job['id'] ),
                     array( 's' => $cid ),
-                    array( 's' => $ore_contratto ),
-                    array( 's' => $ore_fatte )
+                    array( 's' => str_replace(',', '.', $ore_contratto ) ),
+                    array( 's' => ( empty( $ore_fatte ) ) ? 0 : $ore_fatte )
                 )
             );
 
