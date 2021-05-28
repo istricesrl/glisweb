@@ -1,41 +1,30 @@
 {% import '_bin/_form.html' as frm %}
 
 <script>
-    function exportOreOperatoriPerCliente( t ) {
+    function exportOreOperatoriPerProgetto( t ) {
         var form = $( t ).closest('.modal');		
         var mese = form.find('#mese').val();
         var anno = form.find('#anno').val();
 		
-        var call = '{{ site.url }}_mod/_1100.attivita/_src/_api/_task/_ore.operatori.per.cliente.start.php?mese='+mese+'&anno='+anno;
+        var call = '{{ site.url }}_mod/_1100.attivita/_src/_api/_task/_report.ore.operatori.per.progetto.start.php?mese='+mese+'&anno='+anno;
 		
 		getws( call,'', function() {
-			$('#operatori-per-cliente').modal('toggle');
+			$('#operatori-per-progetto').modal('toggle');
 		});
 	
 	}
 </script>
 
-<div class="modal" tabindex="-1" role="dialog" id="operatori-per-cliente">
+<div class="modal" tabindex="-1" role="dialog" id="operatori-per-progetto">
     <div class="modal-dialog" role="document">
 	<div class="modal-content">
 	    <div class="modal-header">
-		<h5 class="modal-title">esportazione ore operatori per cliente</h5>
+		<h5 class="modal-title">esportazione ore operatori per progetto</h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	    </div>
 	    <div class="modal-body">
 		<div class="container-fluid">
-			{% if etc.report.operatori_per_cliente %}
-			<div class="form-row">
-				<div class="col">
-					<p><b>elenco report richiesti</b></p>
-					{% for f in etc.report.operatori_per_cliente %}
-					<a href="{{ site.url }}_mod/_1100.attivita/_src/_api/_print/_ore.operatori.per.cliente.csv.php?mese={{ f.mese }}&anno={{ f.anno }}" target="_blank">{{ f.nome }} > {{ f.stato }}</a><br>
-					{% endfor %}
-				</div>
-			</div>
-			{% endif %}
-            <div class="form-row mt-3">
-
+            <div class="form-row mb-3">
 				<div class="col">
                     <span class="label-top">mese</span>
                     <select id="mese" class="form-control form-control-sm">
@@ -43,8 +32,7 @@
                         <option value="{{ m.id }}">{{ m.__label__ }}</option>
                     {% endfor %}
                     </select>
-                </div>
-        
+                </div>        
                 <div class="col">
                     <span class="label-top">anno</span>
                     <select id="anno" class="form-control form-control-sm">
@@ -53,12 +41,21 @@
                     {% endfor %}
                     </select>
                 </div>
-
 			</div>
+			{% if etc.report.operatori_per_progetto %}
+			<div class="form-row">
+				<div class="col">
+					<p><b>elenco report richiesti</b></p>
+					{% for k,v in etc.report.operatori_per_progetto %}
+					<a href="{{ site.url }}_mod/_1100.attivita/_src/_api/_print/_report.ore.operatori.per.progetto.csv.php?mese={{ v.mese }}&anno={{ v.anno }}&job={{ k }}" target="_blank">{{ k }} - {{ v.nome }} > {{ v.stato }}</a><br>
+					{% endfor %}
+				</div>
+			</div>
+			{% endif %}
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="exportOreOperatoriPerCliente(this);">crea report</button>
+		<button type="button" class="btn btn-secondary btn-sm" onclick="exportOreOperatoriPerProgetto(this);">crea report</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

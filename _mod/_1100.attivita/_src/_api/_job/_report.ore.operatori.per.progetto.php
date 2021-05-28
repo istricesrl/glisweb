@@ -79,11 +79,11 @@
             $mese = $job['workspace']['mese'];
             $anno = $job['workspace']['anno'];
 
-             // calcolo le ore di attività fatte per cliente
+             // calcolo le ore di attività fatte per progetto
              $ore = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SELECT a.id_cliente, sum(ore) as ore_fatte FROM attivita AS a LEFT JOIN tipologie_attivita_inps AS t ON a.id_tipologia_inps = t.id '
-                .'WHERE month(a.data_attivita) = ? AND year(a.data_attivita) = ? AND a.id_anagrafica = ? AND t.se_quadratura = 1 GROUP BY a.id_cliente',
+                'SELECT a.id_progetto, sum(ore) as ore_fatte FROM attivita AS a LEFT JOIN tipologie_attivita_inps AS t ON a.id_tipologia_inps = t.id '
+                .'WHERE month(a.data_attivita) = ? AND year(a.data_attivita) = ? AND a.id_anagrafica = ? AND t.se_quadratura = 1 GROUP BY a.id_progetto',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),
@@ -96,13 +96,13 @@
                     // inserisco la riga nella tabella di report
                     $insert = mysqlQuery(
                         $cf['mysql']['connection'],
-                        'INSERT INTO __report_ore_operatori_per_cliente__ (mese, anno, id_job, id_anagrafica, id_cliente, ore_fatte) VALUES ( ?, ?, ?, ?, ?, ?)',
+                        'INSERT INTO __report_ore_operatori_per_progetto__ (mese, anno, id_job, id_anagrafica, id_progetto, ore_fatte) VALUES ( ?, ?, ?, ?, ?, ?)',
                         array(
                             array( 's' => $mese ),
                             array( 's' => $anno ),
                             array( 's' => $job['id'] ),
                             array( 's' => $cid ),
-                            array( 's' => $o['id_cliente'] ),
+                            array( 's' => $o['id_progetto'] ),
                             array( 's' => ( empty( $o['ore_fatte'] ) ) ? 0 : str_replace(',', '.', $o['ore_fatte'] ) )
                         )
                     );
