@@ -27,8 +27,8 @@
         // metto il lock sui job richiesto
         mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE job SET token = ? WHERE id = ? AND '.
-            'timestamp_apertura <= ? OR timestamp_apertura IS NULL AND timestamp_completamento IS NULL AND token IS NULL ',
+            'UPDATE job SET token = ? WHERE id = ? AND ('.
+            'timestamp_apertura <= ? OR timestamp_apertura IS NULL ) AND timestamp_completamento IS NULL AND token IS NULL ',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['__id__'] ),
