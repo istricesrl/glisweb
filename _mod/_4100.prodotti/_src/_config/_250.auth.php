@@ -45,6 +45,9 @@
             ),
             'listini' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'reparti' => array(
+                CONTROL_FULL => array( 'roots' )
             )
             )
 	);
