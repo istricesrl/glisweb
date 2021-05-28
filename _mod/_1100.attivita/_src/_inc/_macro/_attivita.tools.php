@@ -34,6 +34,15 @@
         'text' => 'esporta le ore previste e fatte per cliente in un determinato mese e anno'
     );
 
+    // esportazione ore clienti
+    $ct['page']['contents']['metro']['esportazioni'][] = array(
+        'modal' => array('id' => 'operatori-per-cliente', 'include' => 'inc/attivita.tools.modal.export.operatori.per.cliente.html' ),
+        'icon' => NULL,
+        'fa' => 'fa-file-excel-o',
+        'title' => 'esportazione ore operatori per cliente',
+        'text' => 'esporta le ore fatte per operatore e per cliente in un determinato mese e anno'
+    );
+
     // tendina mesi
     foreach( range( 1, 12 ) as $mese ) {
         $ct['etc']['select']['mesi'][ $mese ] = array( 'id' => $mese, '__label__' =>  int2month( $mese ) );

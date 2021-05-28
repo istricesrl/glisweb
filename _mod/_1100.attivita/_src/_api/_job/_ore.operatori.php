@@ -12,8 +12,10 @@
     // lavoro lungo
     set_time_limit( 0 );
 
+    echo JOB_RUNNING;
+
     // inclusione del framework
-	if( defined( 'CRON_RUNNING' ) ) {
+	if( defined( 'CRON_RUNNING' ) || defined( 'JOB_RUNNING' ) ) {
 
         // verifiche formali (questo per gestire il caso di ciclo a vuoto)
         if( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
@@ -118,7 +120,7 @@
                     array( 's' => $job['id'] ),
                     array( 's' => $cid ),
                     array( 's' => str_replace(',', '.', $ore_contratto ) ),
-                    array( 's' => ( empty( $ore_fatte ) ) ? 0 : $ore_fatte )
+                    array( 's' => ( empty( $ore_fatte ) ) ? 0 : str_replace(',', '.', $ore_fatte ) )
                 )
             );
 

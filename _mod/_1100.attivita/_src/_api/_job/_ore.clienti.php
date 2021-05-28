@@ -13,7 +13,7 @@
     set_time_limit( 0 );
 
     // inclusione del framework
-	if( defined( 'CRON_RUNNING' ) ) {
+	if( defined( 'CRON_RUNNING' )  || defined( 'JOB_RUNNING' ) ) {
 
         // verifiche formali (questo per gestire il caso di ciclo a vuoto)
         if( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
@@ -88,7 +88,6 @@
                 )
             );
 
-
             // calcolo le ore di attività fatte
             $ore_fatte = mysqlSelectValue(
                 $cf['mysql']['connection'],
@@ -111,7 +110,7 @@
                     array( 's' => $job['id'] ),
                     array( 's' => $cid ),
                     array( 's' => ( empty( $ore_previste ) ) ? 0 : str_replace(',', '.', $ore_previste ) ),
-                    array( 's' => ( empty( $ore_previste ) ) ? 0 : str_replace(',', '.', $ore_fatte ) )
+                    array( 's' => ( empty( $ore_fatte ) ) ? 0 : str_replace(',', '.', $ore_fatte ) )
                 )
             );
 
