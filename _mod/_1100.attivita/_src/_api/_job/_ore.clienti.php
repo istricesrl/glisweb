@@ -92,7 +92,8 @@
             // calcolo le ore di attività fatte
             $ore_fatte = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT sum(ore) FROM attivita WHERE mese = ? AND anno = ? AND id_cliente = ?',
+                'SELECT sum(ore) FROM attivita AS a LEFT JOIN tipologie_attivita_inps AS t ON a.id_tipologia_inps = t.id '
+                .'WHERE month(a.data_attivita) = ? AND year(a.data_attivita) = ? AND id_cliente = ? AND t.se_quadratura = 1',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),
@@ -109,8 +110,8 @@
                     array( 's' => $anno ),
                     array( 's' => $job['id'] ),
                     array( 's' => $cid ),
-                    array( 's' => $ore_previste ),
-                    array( 's' => $ore_fatte )
+                    array( 's' => ( empty( $ore_previste ) ) ? 0 : str_replace(',', '.', $ore_previste ) ),
+                    array( 's' => ( empty( $ore_previste ) ) ? 0 : str_replace(',', '.', $ore_fatte ) )
                 )
             );
 
