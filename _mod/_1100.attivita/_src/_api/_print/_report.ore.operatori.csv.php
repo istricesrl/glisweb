@@ -8,7 +8,7 @@
 	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 	// se sono indicati mese e anno
-	if ( isset( $_REQUEST['mese'] ) && isset( $_REQUEST['anno'] ) ){
+	if ( isset( $_REQUEST['mese'] ) && isset( $_REQUEST['anno'] ) && isset( $_REQUEST['job'] ) ){
 		$mese = $_REQUEST['mese'];
 		$anno = $_REQUEST['anno'];
 
@@ -16,7 +16,13 @@
 		$report = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT r.*, a.__label__ as operatore FROM __report_ore_operatori__ AS r LEFT JOIN anagrafica_view_static AS a '
-			.'ON r.id_anagrafica = a.id ORDER BY a.__label__');
+			.'ON r.id_anagrafica = a.id WHERE mese = ? AND anno = ? AND id_job = ? ORDER BY a.__label__',
+			array(
+				array( 's' => $mese ),
+				array( 's' => $anno ),
+				array( 's' => $_REQUEST['job'] )
+			)
+		);
 
 		if( !empty( $report ) ){
 			$filename = "esportazione ore operatori " . int2month($mese) . " " . $anno . ".csv";
