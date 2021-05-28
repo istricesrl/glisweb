@@ -73,7 +73,7 @@ CREATE OR REPLACE VIEW account_gruppi_view AS
 		account_gruppi.se_amministratore,
 		concat(
 			account.username,
-			' / ',
+			' | ',
 			gruppi.nome
 		) AS __label__
 	FROM account_gruppi
@@ -100,9 +100,9 @@ CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 		account_gruppi_attribuzione.entita,
 		concat(
 			account.username,
-			' / ',
+			' | ',
 			gruppi.nome,
-			' - ',
+			' | ',
 			account_gruppi_attribuzione.entita
 		) AS __label__
 	FROM account_gruppi_attribuzione
@@ -273,7 +273,7 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 		anagrafica_categorie.id_categoria,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
+			' | ',
 			categorie_anagrafica.nome
 		) AS __label__
 	FROM anagrafica_categorie
@@ -302,7 +302,7 @@ CREATE OR REPLACE VIEW anagrafica_categorie_diritto_view AS
 		anagrafica_categorie_diritto.se_specialita,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
+			' | ',
 			categorie_anagrafica.nome
 		) AS __label__
 	FROM anagrafica_categorie_diritto
@@ -330,7 +330,7 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 		anagrafica_cittadinanze.data_fine,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
+			' | ',
 			stati.nome
 		) AS __label__
 	FROM anagrafica_cittadinanze
@@ -357,7 +357,7 @@ CREATE OR REPLACE VIEW `anagrafica_condizioni_pagamento_view` AS
 		condizioni_pagamento.nome AS condizione,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
+			' | ',
 			condizioni_pagamento.nome
 		) AS __label__
 	FROM anagrafica_condizioni_pagamento
@@ -384,7 +384,7 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		anagrafica_indirizzi.id_indirizzo,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
+			' | ',
 			coalesce( anagrafica_indirizzi.note, anagrafica_indirizzi.id_indirizzo )
 		) AS __label__
 	FROM anagrafica_indirizzi
@@ -410,7 +410,7 @@ CREATE OR REPLACE VIEW `anagrafica_modalita_pagamento_view` AS
 		modalita_pagamento.nome AS modalita,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
+			' | ',
 			modalita_pagamento.nome
 		) AS __label__
 	FROM anagrafica_modalita_pagamento
@@ -440,7 +440,7 @@ CREATE OR REPLACE VIEW anagrafica_ruoli_view AS
 		anagrafica_ruoli_path( anagrafica_ruoli.id ) AS ruolo,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
+			' | ',
 			anagrafica_ruoli_path( anagrafica_ruoli.id )
 		) AS __label__
 	FROM anagrafica_ruoli
@@ -467,7 +467,7 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 		settori.nome AS settore,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
+			' | ',
 			settori.nome
 		) AS __label__
 	FROM anagrafica_settori
@@ -507,9 +507,9 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		articoli.nome,
 		concat(
 			articoli.id_prodotto,
-			' / ',
+			' | ',
 			articoli.id,
-			' / ',
+			' | ',
 			articoli.nome
 		) AS __label__
 	FROM articoli
@@ -536,10 +536,10 @@ CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 		articoli_caratteristiche.se_assente,
 		concat(
 			articoli.id,
-			' / ',
-			tipologie_caratteristiche_prodotti.nome
+			' | ',
+			tipologie_caratteristiche_prodotti.nome,
 			': ',
-			caratteristiche_prodotti.nome
+			caratteristiche_prodotti.nome,
 			' ',
 			articoli_caratteristiche.valore
 		) AS __label__
@@ -572,9 +572,9 @@ CREATE OR REPLACE VIEW `articoli_correlati_view` AS
 		articoli_correlati.se_crosselling,
 		concat(
 			articoli_correlati.id_articolo,
-			' / ',
+			' | ',
 			tipologie_correlazioni_articoli.nome,
-			' / ',
+			' | ',
 			coalesce(
 				articoli_correlati.id_prodotto_correlato,
 				articoli_correlati.id_articolo_correlato
@@ -582,6 +582,133 @@ CREATE OR REPLACE VIEW `articoli_correlati_view` AS
 		) AS __label__
 	FROM articoli_correlati
 		LEFT JOIN tipologie_correlazioni_articoli ON tipologie_correlazioni_articoli.id = articoli_correlati.id_tipologia
+;
+
+--| 000008001800
+
+-- attivita_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `attivita_view`;
+
+--| 000008001801
+
+-- attivita_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-28 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `attivita_view` AS
+	SELECT	
+		attivita.id,
+		attivita.id_tipologia,
+		tipologie_attivita.nome AS tipologia,
+		attivita.id_tipologia_inps,
+		tipologie_attivita.nome AS tipologia_inps,
+		attivita.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		attivita.id_cliente,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		coalesce( attivita.referenti, progetti_referenti_view_static.referenti ) AS referenti,
+		attivita.id_indirizzo,
+		indirizzi_view_static.indirizzo,
+		attivita.id_luogo,
+		luoghi_view_static.luogo,
+		attivita.data_scadenza,
+		attivita.ora_scadenza,
+		attivita.data_programmazione,
+		attivita.ora_inizio_programmazione,
+		attivita.ora_fine_programmazione,
+		attivita.ore_programmazione,
+		attivita.data_attivita,
+		day( data_attivita ) as giorno_attivita,
+		month( data_attivita ) as mese_attivita,
+		year( data_attivita ) as anno_attivita,
+		attivita.ora_inizio,
+		attivita.latitudine_ora_inizio,
+		attivita.longitudine_ora_inizio,
+		attivita.ora_fine,
+		attivita.latitudine_ora_fine,
+		attivita.longitudine_ora_fine,
+		attivita.ore,
+		attivita.nome,
+		attivita.id_progetto,
+		progetti.nome AS progetto,
+		attivita.id_todo,
+		todo.nome AS todo,
+		attivita.id_campagna,
+		attivita.id_immobile,
+		attivita.id_richiesta,
+		attivita.id_todo_articoli,
+		attivita.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		attivita.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		max( categorie_progetti.se_ordinario ) AS se_ordinario,
+		max( categorie_progetti.se_straordinario ) AS se_straordinario,
+		attivita.token,
+		concat(
+			attivita.nome,
+			' | ',
+			attivita.ore,
+			' | ',
+			coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM attivita
+		LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia
+		LEFT JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = attivita.id_tipologia_inps
+		LEFT JOIN anagrafica AS a1 ON a1.id = attivita.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = attivita.id_cliente
+		LEFT JOIN progetti_referenti_view_static ON progetti_referenti_view_static.id_progetto = attivita.id_progetto
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
+		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
+		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
+		LEFT JOIN todo ON todo.id = attivita.id_todo
+		LEFT JOIN mastri AS m1 ON m1.id = attivita.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
+;
+
+--| 000008002100
+
+-- audio_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `audio_view`;
+
+--| 000008002101
+
+-- audio_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-28 16:25 Fabio Mosti
+CREATE OR REPLACE VIEW `audio_view` AS
+	SELECT
+		audio.id,
+		audio.id_lingua,
+		lingue.nome AS lingua,
+		audio.id_ruolo,
+		ruoli_audio.nome AS ruolo,
+		audio.ordine,
+		audio.path,
+		audio.codice_embed,
+		audio.id_tipologia_embed,
+		tipologie_embed.nome AS tipologia_embed,
+		audio.nome,
+		audio.target,
+		audio.id_anagrafica,
+		audio.id_pagina,
+		audio.id_file,
+		audio.id_risorsa,
+		audio.id_prodotto,
+		audio.id_categoria_prodotti,
+		audio.id_notizia,
+		audio.id_categoria_notizie,
+		audio.id_evento,
+		audio.id_categoria_eventi,
+		concat(
+			audio.nome,
+			' | ',
+			lingue.nome
+		) AS __label__
+	FROM audio
+		LEFT JOIN lingue ON lingue.id = audio.id_lingua
+		LEFT JOIN ruoli_audio ON ruoli_audio.id = audio.id_ruolo
+		LEFT JOIN tipologie_embed ON tipologie_embed.id = audio.id_tipologia_embed
 ;
 
 --| FINE FILE

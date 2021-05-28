@@ -17,19 +17,23 @@ CREATE
     PROCEDURE `anagrafica_view_static`( IN `i` INT(11) )
     BEGIN
 
-        IF i IS NULL THEN
+--        IF @TRIGGER_LAZY IS NULL THEN
 
-            DELETE FROM anagrafica_view_static;
+            IF i IS NULL THEN
+
+                DELETE FROM anagrafica_view_static;
+                
+                REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view;
+
+            ELSE
             
-            REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view;
+                DELETE FROM anagrafica_view_static WHERE anagrafica_view_static.id = i;
 
-        ELSE
-        
-            DELETE FROM anagrafica_view_static WHERE anagrafica_view_static.id = i;
+                INSERT INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE anagrafica_view.id = i;
+            
+            END IF;
 
-            INSERT INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE anagrafica_view.id = i;
-        
-        END IF;
+--        END IF;
 
     END;
 

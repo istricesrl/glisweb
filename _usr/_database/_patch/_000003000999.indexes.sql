@@ -239,92 +239,65 @@ ALTER TABLE `articoli_correlati`
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_articolo`,`id_prodotto_correlato`,`id_prodotto_correlato`,`ordine`,`se_upselling`,`se_crosselling` );
 ALTER TABLE `articoli_correlati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000021
+--| 000003001800
 
 -- attivita
 -- tipologia: tabella gestita
+-- verifica: 2021-05-27 15:07 Fabio Mosti
 ALTER TABLE `attivita`
 	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_progetto` (`id_progetto`), 
-	ADD KEY `id_task` (`id_task`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_mandante` (`id_mandante`), 
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
-	ADD KEY `id_cliente` (`id_cliente`), 
-	ADD KEY `id_incrocio_immobile` (`id_incrocio_immobile`), 
-	ADD KEY `id_esito` (`id_esito`), 
-	ADD KEY `id_immobile` (`id_immobile`), 
-	ADD KEY `id_pratica` (`id_pratica`),
-	ADD KEY `id_incarico` (`id_incarico`), 
-	ADD KEY `id_richiesta` (`id_richiesta`), 
-	ADD KEY `id_campagna` (`id_campagna`), 
-	ADD KEY `id_tipologia_soddisfazione` (`id_tipologia_soddisfazione`), 
-	ADD KEY `id_tipologia_interesse` (`id_tipologia_interesse`), 
-	ADD KEY `id_account_editor` (`id_account_editor`), 
-	ADD KEY `id_luogo` (`id_luogo`), 
 	ADD KEY `id_tipologia_inps` (`id_tipologia_inps`), 
-	ADD KEY `id_todo` (`id_todo`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_cliente` (`id_cliente`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
-	ADD KEY `token` (`token`), 
+	ADD KEY `id_luogo` (`id_luogo`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_todo` (`id_todo`), 
+	ADD KEY `id_campagna` (`id_campagna`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_richiesta` (`id_richiesta`), 
+	ADD KEY `id_todo_articoli` (`id_todo_articoli`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
-	ADD KEY `id_todo_articoli` (`id_todo_articoli`),
-	ADD KEY `indice` (`id`,`id_progetto`,`id_task`,`id_mandante`,`id_cliente`,`id_immobile`, `id_pratica`,`id_tipologia_inps`,`id_todo`,`id_indirizzo`,`token`,`id_campagna`, `referente`, `luogo`, `id_attivita_completamento`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`),
+	ADD KEY `indice_scadenza` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`data_scadenza`,`ora_scadenza`),
+	ADD KEY `indice_programmazione` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`),
+	ADD KEY `indice_attivita` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`data_attivita`,`ora_inizio`,`ora_fine`),
+	ADD KEY `indice_mastri` (`id`,`id_tipologia`,`id_mastro_provenienza`,`id_mastro_destinazione`),
+	ADD KEY `indice_sostituti` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`timestamp_calcolo_sostituti`),
+	ADD KEY `indice_token` (`id`,`token`);
 ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000022
-
--- attivita_anagrafica
--- tipologia: tabella gestita
-ALTER TABLE `attivita_anagrafica`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_attivita` (`id_attivita`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `indice` (`id`,`id_attivita`,`id_anagrafica`);
-ALTER TABLE `attivita_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000023
-
--- attivita_categorie
--- tipologia: tabella gestita
-ALTER TABLE `attivita_categorie`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_attivita`,`id_categoria`), 
-	ADD KEY `id_attivita` (`id_attivita`),
-	ADD KEY `id_categoria` (`id_categoria`), 
-	ADD KEY `indice` (`id`,`id_attivita`,`id_categoria`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_attivita`,`id_categoria`);
-ALTER TABLE `attivita_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000024
+--| 000003002100
 
 -- audio
 -- tipologia: tabella gestita
+-- verifica: 2021-05-28 16:04 Fabio Mosti
 ALTER TABLE `audio`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `codice_embed` (`codice_embed`), 
 	ADD UNIQUE KEY `path` (`path`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD UNIQUE KEY `codice_embed` (`codice_embed`), 
+	ADD KEY `id_lingua` (`id_lingua`), 
+	ADD KEY `id_ruolo` (`id_ruolo`), 
+	ADD KEY `id_tipologia_embed` (`id_tipologia_embed`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_file` (`id_file`), 
+	ADD KEY `id_risorsa` (`id_risorsa`), 
 	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
-	ADD KEY `id_ruolo` (`id_ruolo`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_evento` (`id_evento`), 
-	ADD KEY `id_file` (`id_file`), 
-	ADD KEY `id_tipologia_embed` (`id_tipologia_embed`), 
-	ADD KEY `id_categoria_eventi` (`id_categoria_eventi`), 
-	ADD KEY `id_risorsa` (`id_risorsa`), 
-	ADD KEY `id_lingua` (`id_lingua`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
-	ADD KEY `indice` (`id`,`codice_embed`,`id_prodotto`,`id_ruolo`,`id_evento`,`id_file`, `id_categoria_prodotti`);
+	ADD KEY `id_evento` (`id_evento`), 
+	ADD KEY `id_categoria_eventi` (`id_categoria_eventi`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_tipologia_embed`),
+	ADD KEY `indice_anagrafica` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_tipologia_embed`,`id_anagrafica`),
+	ADD KEY `indice_pagine` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_tipologia_embed`,`id_pagina`,`id_file`,`id_risorsa`);
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000025

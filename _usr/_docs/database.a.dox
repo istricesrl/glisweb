@@ -639,71 +639,111 @@
     attivita.id                                          | l'ID dell'attività
     attivita.id_tipologia                                | l'ID della tipologia
     attivita.id_tipologia_inps                           | l'ID della tipologia INPS
-    attivita.id_anagrafica                               | l'ID dell'anagrafica
-    attivita.id_mandante                                 | l'ID del mandante
-    attivita.id_cliente                                  | l'ID del cliente
-    attivita.id_luogo                                    | l'ID del luogo
-    attivita.referente                                   | testo descrittivo del referente per l'attività
-    attivita.id_categoria_prodotti                       | l'ID della categoria dei prodotti collegata all'attività
-    attivita.data                                        | -
-    attivita.data_attivita                               | -
-    attivita.ora                                         | -
-    attivita.ora_inizio                                  | -
-    attivita.ora_fine                                    | -
-    attivita.data_programmazione                         | -
-    attivita.ora_inizio_programmazione                   | -
-    attivita.ora_fine_programmazione                     | -
-    attivita.id_progetto                                 | l'ID del progetto
-    attivita.id_campagna                                 | l'ID della campagna
-    attivita.id_todo                                     | -
-    attivita.id_tipologia_interesse                      | l'ID della tipologia di interesse
-    attivita.id_tipologia_soddisfazione                  | l'ID della tipologia di soddisfazione
-    attivita.note_feedback                               | -
+    attivita.id_anagrafica                               | l'ID dell'anagrafica che svolge l'attività
+    attivita.id_cliente                                  | l'ID del cliente a cui è riferita l'attività
+    attivita.referenti                                   | testo descrittivo del referente (lato cliente) per l'attività
+    attivita.id_indirizzo                                | l'ID dell'indirizzo dove è svolta l'attività
+    attivita.id_luogo                                    | l'ID del luogo dove è svolta l'attività
+    attivita.data_scadenza                               | data entro la quale va svolta l'attività
+    attivita.ora_scadenza                                | l'ora entro la quale va svolta l'attività
+    attivita.note_scadenza                               | note relative alla data e ora entro le quali va svolta l'attività
+    attivita.data_programmazione                         | la data in cui è programmata l'esecuzione dell'attività
+    attivita.ora_inizio_programmazione                   | l'ora in cui è programmato l'inizio dell'esecuzione dell'attività
+    attivita.ora_fine_programmazione                     | l'ora in cui è programmata la fine dell'esecuzione dell'attività
+    attivita.note_programmazione                         | note relative alla data e ora in cui è programmata l'esecuzione dell'attività
+    attivita.ore_programmazione                          | numero di ore uomo previste per l'esecuzione dell'attività
+    attivita.data_attivita                               | la data in cui si svolge l'attività
+    attivita.ora_inizio                                  | l'ora in cui inizia l'attività
+	attivita.latitudine_ora_inizio                       | la latitudine associata all'invio dell'orario di inizio attività
+	attivita.longitudine_ora_inizio                      | la longitudine associata all'invio dell'orario di inizio attività
+    attivita.ora_fine                                    | l'ora in cui termina l'attività
+	attivita.latitudine_ora_fine                         | la latitudine associata all'invio dell'orario di fine attività
+	attivita.longitudine_ora_fine                        | la longitudine associata all'invio dell'orario di fine attività
+    attivita.ore                                         | numero di ore uomo impiegate per l'esecuzione dell'attività
+    attivita.nome                                        | descrizione sintetica dell'attività
+    attivita.testo                                       | descrizione estesa dell'attività
+    attivita.id_progetto                                 | l'ID del progetto cui è riferita l'attività
+    attivita.id_todo                                     | l'ID della todo cui si riferisce l'attività
+    attivita.id_campagna                                 | l'ID della campagna marketing cui è riferita l'attività
     attivita.id_immobile                                 | l'ID dell'immobile
-    attivita.id_incarico                                 | l'ID dell'incarico
     attivita.id_richiesta                                | l'ID della richiesta
-    attivita.nome                                        | -
-    attivita.testo                                       | -
-    attivita.timestamp_scadenza                          | -
-    attivita.data_scadenza                               | -
-    attivita.ora_scadenza                                | -
-    attivita.note_scadenza                               | -
-    attivita.id_attivita_completamento                   | l'ID dell'attività di completamento
-    attivita.ore                                         | -
-    attivita.id_esito                                    | l'ID dell'esito
-    attivita.id_mastro_provenienza                       | -
-    attivita.id_mastro_destinazione                      | -
     attivita.id_todo_articoli                            | -
+    attivita.id_mastro_provenienza                       | mastro dal quale viene sottratto il valore del campo ore
+    attivita.id_mastro_destinazione                      | mastro al quale viene aggiunto il valore del campo ore
+    attivita.token                                       | token per il lock software della riga nelle elaborazioni automatiche
+    attivita.timestamp_calcolo_sostituti                 | la timestamp del momento in cui la riga di attività è stata analizzata per il calcolo dei sostituti
      
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                          | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------------------|-------------------------------|----------------------
+    attivita_ibfk_01_nofollow       | id_tipologia                  | tipologie_attivita.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_02_nofollow       | id_tipologia_inps             | tipologie_attivita_inps.id    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_03_nofollow       | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_04_nofollow       | id_cliente                    | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_05_nofollow       | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_06_nofollow       | id_luogo                      | luoghi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_07_nofollow       | id_progetto                   | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_08_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_09_nofollow       | id_campagna                   | campagne.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_10_nofollow       | id_immobile                   | immobili.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_11_nofollow       | id_richiesta                  | richieste_immobili.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_12_nofollow       | id_todo_articoli              | todo_articoli.id              | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_13_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_14_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *attivita_view* relativa alla tabella *attivita* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-
-    attivita_categorie
-    ------------------
-    Questa tabella *gestita* mette in relazione l'entità principale *attivita* con l'entità secondaria *categorie_attivita*.
-
-    colonna                                              | descrizione
-    -----------------------------------------------------|---------------------------------------------------------------------------------------
-    attivita_categorie.id                                | l'ID dell'associazione fra attività e cattegoria di attività
-    attivita_categorie.id_attivita                       | l'ID dell'attività
-    attivita_categorie.id_categoria                      | l'ID della categoria
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *attivita_categorie_view* relativa alla tabella *attivita_categorie* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita_view.id                                | -
+    attivita_view.id_tipologia                      | -
+    attivita_view.tipologia                         | -
+    attivita_view.id_tipologia_inps                 | -
+    attivita_view.tipologia_inps                    | il nome della tipologia INPS dell'attività
+    attivita_view.id_anagrafica                     | -
+    attivita_view.anagrafica                        | l'anagrafica che esegue l'attività
+    attivita_view.id_cliente                        | -
+    attivita_view.cliente                           | il cliente associato all'attività
+    attivita_view.referenti                         | i referenti per il cliente associato all'attività
+    attivita_view.id_indirizzo                      | -
+    attivita_view.indirizzo                         | l'indirizzo associato all'attività
+    attivita_view.id_luogo                          | -
+    attivita_view.luogo                             | il luogo associato all'attività
+    attivita_view.data_scadenza                     | -
+    attivita_view.ora_scadenza                      | -
+    attivita_view.data_programmazione               | -
+    attivita_view.ora_inizio_programmazione         | -
+    attivita_view.ora_fine_programmazione           | -
+    attivita_view.ore_programmazione                | -
+    attivita_view.data_attivita                     | -
+    attivita_view.giorno_attivita                   | il giorno in cui si è svolta l'attività
+    attivita_view.mese_attivita                     | il mese in cui si è svolta l'attività
+    attivita_view.anno_attivita                     | l'anno in cui si è svolta l'attività
+    attivita_view.ora_inizio                        | -
+    attivita_view.latitudine_ora_inizio             | -
+    attivita_view.longitudine_ora_inizio            | -
+    attivita_view.ora_fine                          | -
+    attivita_view.latitudine_ora_fine               | -
+    attivita_view.longitudine_ora_fine              | -
+    attivita_view.ore                               | -
+    attivita_view.nome                              | -
+    attivita_view.id_progetto                       | -
+    attivita_view.progetto                          | il nome del progetto associato all'attività
+    attivita_view.id_todo                           | -
+    attivita_view AS todo                           | il nome della todo associata al progetto
+    attivita_view.id_campagna                       | -
+    attivita_view.id_immobile                       | -
+    attivita_view.id_richiesta                      | -
+    attivita_view.id_todo_articoli                  | -
+    attivita_view.id_mastro_provenienza             | -
+    attivita_view.mastro_provenienza                | il mastro da cui viene sottratto il valore del campo ore
+    attivita_view.id_mastro_destinazione            | -
+    attivita_view.mastro_destinazione               | il mastro al quale viene sommato il valore del campo ore
+    attivita_view.se_ordinario                      | flag che indica se l'attività è riferita a un progetto ordinario
+    attivita_view.se_straordinario                  | flag che indica se l'attività è riferita a un progetto straordinario
+    attivita_view.token                             | -
+    attivita_view.__label__                         | etichetta descrittiva dell'attività
 
     audio
     -----
@@ -712,24 +752,24 @@
     colonna                                              | descrizione
     -----------------------------------------------------|---------------------------------------------------------------------------------------
     audio.id                                             | l'ID dell'audio
-    audio.id_anagrafica                                  | l'ID dell'anagrafica
-    audio.id_pagina                                      | l'ID della pagina
-    audio.id_file                                        | l'ID del file
-    audio.id_risorsa                                     | l'ID della risorsa
-    audio.id_prodotto                                    | l'ID del prodotto
-    audio.id_categoria_prodotti                          | l'ID della categoria del prodotto
-    audio.id_notizia                                     | l'ID della notizia
-    audio.id_categoria_notizie                           | l'ID della categoria delle notizie
-    audio.id_evento                                      | l'ID dell'evento
-    audio.id_categoria_eventi                            | l'ID della categoria degli eventi
-    audio.id_lingua                                      | l'ID della lingua
-    audio.path                                           | -
-    audio.codice_embed                                   | -
-    audio.id_tipologia_embed                             | l'ID della tipologia di embed
-    audio.nome                                           | -
-    audio.id_ruolo                                       | l'ID del ruolo
-    audio.ordine                                         | -
+    audio.id_lingua                                      | l'ID della lingua in cui è registrato l'audio
+    audio.id_ruolo                                       | l'ID del ruolo dell'audio relativamente all'oggetto associato
+    audio.ordine                                         | campo di ordinamento
+    audio.path                                           | il percorso relativo del file audio
+    audio.codice_embed                                   | il codice di embed da usare per incorporare audio esterni
+    audio.id_tipologia_embed                             | l'ID della tipologia di embed da usare per l'inclusione di audio esterni
+    audio.nome                                           | il nome dell'audio, a uso interno
     audio.target                                         | -
+    audio.id_anagrafica                                  | l'ID dell'anagrafica cui è associato l'audio
+    audio.id_pagina                                      | l'ID della pagina cui è associato l'audio
+    audio.id_file                                        | l'ID del file cui è associato l'audio
+    audio.id_risorsa                                     | l'ID della risorsa cui è associato l'audio
+    audio.id_prodotto                                    | l'ID del prodotto cui è associato l'audio
+    audio.id_categoria_prodotti                          | l'ID della categoria di prodotti cui è associato l'audio
+    audio.id_notizia                                     | l'ID della notizia cui è associato l'audio
+    audio.id_categoria_notizie                           | l'ID della categoria di notizie cui è associato l'audio
+    audio.id_evento                                      | l'ID dell'evento cui è associato l'audio
+    audio.id_categoria_eventi                            | l'ID della categoria degli eventi cui è associato l'audio
 
     Per gli audio caricati direttamente nella piattaforma ed embeddati con HTML5, si utilizza il campo *path*. Altrimenti va valorizzato il campo
     *codice_embed* che viene poi gestito dalla macro Twig di embed. Per le logiche relative all'erogazione dei file caricati nella piattaforma si veda
@@ -737,12 +777,48 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|----------------------
+    audio_ibfk_01_nofollow              | id_lingua                 | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    audio_ibfk_02_nofollow              | id_ruolo                  | ruoli_audio.id                | ON DELETE NO ACTION ON UPDATE NO ACTION
+    audio_ibfk_03_nofollow              | id_tipologia_embed        | tipologie_embed.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    audio_ibfk_04                       | id_anagrafica             | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_05                       | id_pagina                 | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_06                       | id_file                   | file.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_07                       | id_risorsa                | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_08                       | id_prodotto               | prodotti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_09                       | id_categoria_prodotti     | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_10                       | id_notizia                | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_11                       | id_categoria_notizie      | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_12                       | id_evento                 | eventi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_13                       | id_categoria_eventi       | categorie_eventi.id           | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *audio_view* relativa alla tabella *audio* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    audio_view.id                                   | -
+    audio_view.id_lingua                            | -
+    audio_view.lingua                               | la lingua in cui è registrato l'audio
+    audio_view.id_ruolo                             | -
+    audio_view.ruolo                                | il ruolo ricoperto dall'audio relativamente all'oggetto collegato
+    audio_view.ordine                               | -
+    audio_view.path                                 | -
+    audio_view.codice_embed                         | -
+    audio_view.id_tipologia_embed                   | -
+    audio_view.tipologia_embed                      | la tipologia di codice da utilizzare per l'embed di audio esterni
+    audio_view.nome                                 | -
+    audio_view.target                               | -
+    audio_view.id_anagrafica                        | -
+    audio_view.id_pagina                            | -
+    audio_view.id_file                              | -
+    audio_view.id_risorsa                           | -
+    audio_view.id_prodotto                          | -
+    audio_view.id_categoria_prodotti                | -
+    audio_view.id_notizia                           | -
+    audio_view.id_categoria_notizie                 | -
+    audio_view.id_evento                            | -
+    audio_view.id_categoria_eventi                  | -
+    audio_view.__label__                            | l'etichetta descrittiva dell'audio
 
 */

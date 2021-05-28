@@ -288,69 +288,65 @@ CREATE TABLE IF NOT EXISTS `articoli_correlati` (
 
 -- attivita
 -- tipologia: tabella gestita
+-- verifica: 2021-05-25 17:14 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `attivita` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_tipologia_inps` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
-  `id_mandante` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
+  `referenti` char(255) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
   `id_luogo` int(11) DEFAULT NULL,
-  `referente` char(255) DEFAULT NULL,
-  `id_categoria_prodotti` int(11) DEFAULT NULL,
-  `data` date DEFAULT NULL,
-  `data_attivita` date DEFAULT NULL,
-  `ora` time DEFAULT NULL,
-  `ora_inizio` time DEFAULT NULL,
-  `ora_fine` time DEFAULT NULL,
-  `data_programmazione` date DEFAULT NULL,
-  `ora_inizio_programmazione` time DEFAULT NULL,
-  `ora_fine_programmazione` time DEFAULT NULL,
-  `id_progetto` char(32) DEFAULT NULL,
-  `id_campagna` int(11) DEFAULT NULL,
-  `id_task` int(11) DEFAULT NULL,
-  `id_todo` int(11) DEFAULT NULL,
-  `id_tipologia_interesse` int(11) DEFAULT NULL,
-  `id_tipologia_soddisfazione` int(11) DEFAULT NULL,
-  `note_feedback` text,
-  `id_immobile` int(11) DEFAULT NULL,
-  `id_incarico` int(11) DEFAULT NULL,
-  `id_richiesta` int(11) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
-  `testo` text,
-  `timestamp_scadenza` int(11) DEFAULT NULL,
   `data_scadenza` date DEFAULT NULL,
   `ora_scadenza` time DEFAULT NULL,
   `note_scadenza` text,
-  `id_attivita_completamento` int(11) DEFAULT NULL,
+  `data_programmazione` date DEFAULT NULL,
+  `ora_inizio_programmazione` time DEFAULT NULL,
+  `ora_fine_programmazione` time DEFAULT NULL,
+  `note_programmazione` text,
+  `ore_programmazione` decimal(5,2) DEFAULT NULL,
+  `data_attivita` date DEFAULT NULL,
+  `ora_inizio` time DEFAULT NULL,
+  `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL,
+  `longitudine_ora_inizio` decimal(11,7) DEFAULT NULL,
+  `ora_fine` time DEFAULT NULL,
+  `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,
+  `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,
   `ore` decimal(5,2) DEFAULT NULL,
-  `id_esito` int(11) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `testo` text,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
+  `id_campagna` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_richiesta` int(11) DEFAULT NULL,
+  `id_todo_articoli` int(11) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `token` char(128) NOT NULL,
+  `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000023
-
--- attivita_categorie
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `attivita_categorie` (
-  `id` int(11) NOT NULL,
-  `id_attivita` int(11) NOT NULL,
-  `id_categoria` int(11) NOT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 000001000024
+--| 000001002100
 
 -- audio
 -- tipologia: tabella gestita
+-- verifica: 2021-05-28 15:39 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `audio` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `path` char(255) DEFAULT NULL,
+  `codice_embed` char(255) DEFAULT NULL,
+  `id_tipologia_embed` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `target` char(255) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_file` int(11) DEFAULT NULL,
@@ -361,14 +357,6 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_evento` int(11) DEFAULT NULL,
   `id_categoria_eventi` int(11) DEFAULT NULL,
-  `id_lingua` int(11) DEFAULT NULL,
-  `path` char(255) DEFAULT NULL,
-  `codice_embed` char(255) DEFAULT NULL,
-  `id_tipologia_embed` int(11) NOT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `id_ruolo` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `target` char(255) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
