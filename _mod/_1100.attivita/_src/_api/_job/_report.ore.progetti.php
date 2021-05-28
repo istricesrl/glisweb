@@ -31,15 +31,15 @@
             if( empty( $job['corrente'] ) ) {
 
                 $status['result'] = mysqlSelectColumn(
-					'id_anagrafica',
+				    'id',
                     $cf['mysql']['connection'],
-                   "SELECT a.id FROM anagrafica_view_static WHERE se_cliente = 1"
+                    'SELECT id FROM progetti_produzione_view'
                 );
                              
-                // creo la lista dei clienti da lavorare
+                // creo la lista dei progetti da lavorare
                 $job['workspace']['list'] = $status['result'];
 
-                // segno il totale dei clienti da lavorare
+                // segno il totale dei progetti da lavorare
                 $job['totale'] = count( $job['workspace']['list'] );
 
                 // avvio il contatore
@@ -70,7 +70,7 @@
             // aggiusto l'indice di lavoro (gli array partono da zero)
             $widx = $job['corrente'] - 1;
 
-            // ricavo l'ID del cliente corrente
+            // ricavo l'ID del progetto corrente
             $cid = $job['workspace']['list'][ $widx ];
 			
 			// logiche di calcolo e scrittura nel report
@@ -80,7 +80,7 @@
             // calcolo le ore di todo peviste
             $ore_previste = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT sum(ore_previste) FROM todo WHERE month(data_programmazione) = ? AND year(data_programmazione) = ? AND id_cliente = ?',
+                'SELECT sum(ore_previste) FROM todo WHERE month(data_programmazione) = ? AND year(data_programmazione) = ? AND id_progetto = ?',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),
@@ -92,7 +92,7 @@
             $ore_fatte = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT sum(ore) FROM attivita AS a LEFT JOIN tipologie_attivita_inps AS t ON a.id_tipologia_inps = t.id '
-                .'WHERE month(a.data_attivita) = ? AND year(a.data_attivita) = ? AND id_cliente = ? AND t.se_quadratura = 1',
+                .'WHERE month(a.data_attivita) = ? AND year(a.data_attivita) = ? AND id_progetto = ? AND t.se_quadratura = 1',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),
@@ -103,7 +103,7 @@
             // inserisco la riga nella tabella di report
             $insert = mysqlQuery(
                 $cf['mysql']['connection'],
-                'INSERT INTO __report_ore_clienti__ (mese, anno, id_job, id_cliente, ore_previste, ore_fatte) VALUES ( ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO __report_ore_progetti__ (mese, anno, id_job, id_progetto, ore_previste, ore_fatte) VALUES ( ?, ?, ?, ?, ?, ?)',
                 array(
                     array( 's' => $mese ),
                     array( 's' => $anno ),

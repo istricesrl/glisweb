@@ -25,16 +25,16 @@
         'text' => 'esporta le ore previste e fatte per operatore in un determinato mese e anno'
     );
 
-    // esportazione ore clienti
+    // esportazione ore progetti
     $ct['page']['contents']['metro']['esportazioni'][] = array(
-        'modal' => array('id' => 'clienti', 'include' => 'inc/attivita.tools.modal.export.clienti.html' ),
+        'modal' => array('id' => 'progetti', 'include' => 'inc/attivita.tools.modal.export.progetti.html' ),
         'icon' => NULL,
         'fa' => 'fa-file-excel-o',
-        'title' => 'esportazione ore per cliente',
-        'text' => 'esporta le ore previste e fatte per cliente in un determinato mese e anno'
+        'title' => 'esportazione ore per progetto',
+        'text' => 'esporta le ore previste e fatte per progetto in un determinato mese e anno'
     );
 
-    // esportazione ore clienti
+    // esportazione ore operatore per cliente
     $ct['page']['contents']['metro']['esportazioni'][] = array(
         'modal' => array('id' => 'operatori-per-cliente', 'include' => 'inc/attivita.tools.modal.export.operatori.per.cliente.html' ),
         'icon' => NULL,
@@ -79,26 +79,26 @@
         }
     }
 
-    // elenco dei job per export ore clienti
-    $jc = mysqlQuery(
+    // elenco dei job per export ore progetti
+    $jp = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT j.* FROM job AS j INNER JOIN __report_ore_clienti__ AS r ON j.id = r.id_job GROUP BY j.id'
+        'SELECT j.* FROM job AS j INNER JOIN __report_ore_progetti__ AS r ON j.id = r.id_job GROUP BY j.id'
     );
 
-    if( !empty( $jc ) ){
-        foreach( $jc as $j ){
+    if( !empty( $jp ) ){
+        foreach( $jp as $j ){
             $wksp = json_decode( $j['workspace'], true );
 
-            $ct['etc']['report']['clienti'][ $j['id'] ] = $j;
-            $ct['etc']['report']['clienti'][ $j['id'] ]['mese'] = $wksp['mese'];
-            $ct['etc']['report']['clienti'][ $j['id'] ]['anno'] = $wksp['anno'];
-            $ct['etc']['report']['clienti'][ $j['id'] ]['nome'] = int2month( $wksp['mese'] ) . ' ' . $wksp['anno'];
+            $ct['etc']['report']['progetti'][ $j['id'] ] = $j;
+            $ct['etc']['report']['progetti'][ $j['id'] ]['mese'] = $wksp['mese'];
+            $ct['etc']['report']['progetti'][ $j['id'] ]['anno'] = $wksp['anno'];
+            $ct['etc']['report']['progetti'][ $j['id'] ]['nome'] = int2month( $wksp['mese'] ) . ' ' . $wksp['anno'];
             
             if( !empty( $j['timestamp_completamento'] ) ){
-                $ct['etc']['report']['clienti'][ $j['id'] ]['stato'] = 'completato';
+                $ct['etc']['report']['progetti'][ $j['id'] ]['stato'] = 'completato';
             }
             elseif( $j['corrente'] < $j['totale'] ){
-                $ct['etc']['report']['clienti'][ $j['id'] ]['stato'] = 'in corso';
+                $ct['etc']['report']['progetti'][ $j['id'] ]['stato'] = 'in corso';
             }
             
         }

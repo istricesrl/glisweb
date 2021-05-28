@@ -1,41 +1,30 @@
 {% import '_bin/_form.html' as frm %}
 
 <script>
-    function exportOreClienti( t ) {
+    function exportOreProgetti( t ) {
         var form = $( t ).closest('.modal');		
         var mese = form.find('#mese').val();
         var anno = form.find('#anno').val();
 		
-        var call = '{{ site.url }}_mod/_1100.attivita/_src/_api/_task/_ore.clienti.start.php?mese='+mese+'&anno='+anno;
+        var call = '{{ site.url }}_mod/_1100.attivita/_src/_api/_task/_report.ore.progetti.start.php?mese='+mese+'&anno='+anno;
 		
 		getws( call,'', function() {
-			$('#clienti').modal('toggle');
+			$('#progetti').modal('toggle');
 		});
 	
 	}
 </script>
 
-<div class="modal" tabindex="-1" role="dialog" id="clienti">
+<div class="modal" tabindex="-1" role="dialog" id="progetti">
     <div class="modal-dialog" role="document">
 	<div class="modal-content">
 	    <div class="modal-header">
-		<h5 class="modal-title">esportazione ore clienti</h5>
+		<h5 class="modal-title">esportazione ore progetti</h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	    </div>
 	    <div class="modal-body">
 		<div class="container-fluid">
-			{% if etc.report.clienti %}
-			<div class="form-row">
-				<div class="col">
-					<p><b>elenco report richiesti</b></p>
-					{% for f in etc.report.clienti %}
-					<a href="{{ site.url }}_mod/_1100.attivita/_src/_api/_print/_ore.clienti.csv.php?mese={{ f.mese }}&anno={{ f.anno }}" target="_blank">{{ f.nome }} > {{ f.stato }}</a><br>
-					{% endfor %}
-				</div>
-			</div>
-			{% endif %}
-            <div class="form-row mt-3">
-
+            <div class="form-row mb-3">
 				<div class="col">
                     <span class="label-top">mese</span>
                     <select id="mese" class="form-control form-control-sm">
@@ -53,12 +42,21 @@
                     {% endfor %}
                     </select>
                 </div>
-
 			</div>
+			{% if etc.report.progetti %}
+			<div class="form-row">
+				<div class="col">
+					<p><b>elenco report richiesti</b></p>
+					{% for k,v in etc.report.progetti %}
+					<a href="{{ site.url }}_mod/_1100.attivita/_src/_api/_print/_report.ore.progetti.csv.php?mese={{ v.mese }}&anno={{ v.anno }}&job={{ k }}" target="_blank">{{ k }} - {{ v.nome }} > {{ v.stato }}</a><br>
+					{% endfor %}
+				</div>
+			</div>
+			{% endif %}
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="exportOreClienti(this);">crea report</button>
+		<button type="button" class="btn btn-secondary btn-sm" onclick="exportOreProgetti(this);">crea report</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>
