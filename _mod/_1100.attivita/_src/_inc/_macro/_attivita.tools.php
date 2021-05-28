@@ -53,7 +53,6 @@
         $ct['etc']['select']['anni'][ $y ] = array( 'id' => $y, '__label__' => $y ) ;
     }
 
-
     
     // elenco dei job per export ore operatori
     $jo = mysqlQuery(
