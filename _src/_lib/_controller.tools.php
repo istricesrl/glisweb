@@ -47,7 +47,8 @@
 		// var_dump( $d );
 
 	// modifico in NULL tutti i valori vuoti
-	    $d = array_map( 'empty2null', $d );
+	    // $d = array_map( 'empty2null', $d );
+	    $d = array_map( 'numeric2null', $d );
 
 	// genero l'array delle chiavi, dei valori e dei sottomoduli
 	    foreach( $d as $k => $v ) {
