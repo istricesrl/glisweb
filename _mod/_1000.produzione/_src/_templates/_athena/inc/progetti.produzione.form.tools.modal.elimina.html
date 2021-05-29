@@ -8,7 +8,7 @@
     function elimina( ) {
         $('#btnelimina').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 	 
-	 	var call = '{{ site.url }}_mod/_1000.produzione/_src/_api/_task/_progetti.delete.php?id={{ request[table].id }}';
+	 	var call = '{{ site.url }}_mod/_1000.produzione/_src/_api/_task/_progetti.delete.flag.php?id={{ request[table].id }}';
 
 		getws( call,'', function() {
 			window.open('{{ pages['progetti.produzione.view'].path[ localization.language.ietf ] }}', '_self');
