@@ -44,16 +44,24 @@
             );                
 
             foreach( $pause as $p ){
+                $whr[] = 'id_progetto = ?';
+                $par[] = array( 's' => $_REQUEST['id'] );
 
-            // elimino le todo (e relative attività figlie) con data_programmazione compresa nel range di pausa
-               $t = mysqlQuery(
+                $whr[] = 'data_programmazione >= ?';
+                $par[] = array( 's' => $p['data_inizio'] );
+
+                if( !empty( $p['data_fine'] ) ) {
+                    $whr[] = 'data_programmazione <= ?';
+                    $par[] = array( 's' => $p['data_fine'] );
+                }
+
+                $q = 'DELETE FROM todo WHERE ('  . implode( ' AND ', $whr ) . ')';
+
+                // elimino le todo (e relative attività figlie) con data_programmazione compresa nel range di pausa
+                $t = mysqlQuery(
                     $cf['mysql']['connection'],
-                    "DELETE FROM todo WHERE id_progetto = ? AND (data_programmazione BETWEEN ? AND ?)",
-                    array(
-                        array( 's' => $_REQUEST['id'] ),
-                        array( 's' => $p['data_inizio'] ),
-                        array( 's' => $p['data_fine'] )
-                    )
+                    $q,
+                    $par
                 );
 
                 $status['todo'][] = 'eliminate ' . $t . ' todo per la pausa ' . $p['id'];
