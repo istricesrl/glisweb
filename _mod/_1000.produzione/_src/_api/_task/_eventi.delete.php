@@ -41,7 +41,7 @@
             $troff = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SET @TRIGGER_LAZY = 1'
-            );                
+            );
 
             foreach( $pause as $p ){
                 $whr[] = 'id_progetto = ?';
