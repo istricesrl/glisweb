@@ -49,6 +49,14 @@
                     // status
                     $status['info'][] = 'pulizia oggetti collegati alla pianificazione';
 
+                    // se la pianificazione riguarda todo, bypasso i trigger
+                    if( $status['entita'] == 'todo' ){
+                        $troff = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'SET @TRIGGER_LAZY = 1'
+                        );                
+                    }
+
                     // query
                     $q = 'DELETE FROM ' . $status['entita'] . ' WHERE id_pianificazione = ? AND ' . $status['campo'] . ' > ?';
 
@@ -83,6 +91,34 @@
                          // esecuzione della query
                          $status['hard'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['inizio'] ), array( 's' => $status['id'] ) ) );
 
+                    }
+
+                    // se la pianificazione riguarda todo, riattivo i trigger e ripopolo le statiche per todo e attivita
+                    if( $status['entita'] == 'todo' ){
+                        $tron = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'SET @TRIGGER_LAZY = NULL'
+                        );
+
+                        $tdel = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'TRUNCATE todo_view_static'
+                        );
+                        
+                        $tpop = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'INSERT INTO todo_view_static SELECT * FROM todo_view'
+                        );
+                        
+                        $adel = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'TRUNCATE attivita_view_static'
+                        );
+                        
+                        $apop = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'INSERT INTO attivita_view_static SELECT * FROM attivita_view'
+                        );
                     }
 
                 } else {

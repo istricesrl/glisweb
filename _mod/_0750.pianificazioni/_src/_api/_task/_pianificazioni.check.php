@@ -38,7 +38,6 @@
 
         // verifico se la pianificazione è da fermare
         if( $p['se_fermare'] == 1 ){
-
             // chiamo il task _pianificazioni.stop.php per pulire gli oggetti
             $url = $cf['site']['url'] . '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.stop.php?id=' . $p['id'] . '&data_inizio_pulizia=' . $p['data_inizio_pulizia'];
 
@@ -94,7 +93,7 @@
                 }
 
             }
-        }   
+        }        
 		
     }
     else{
