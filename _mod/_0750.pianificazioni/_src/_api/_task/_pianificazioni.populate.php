@@ -124,6 +124,13 @@
     #    print_r( $date );
         // debug
          
+        // se la pianificazione riguarda todo, bypasso i trigger
+        if( $current['entita'] == 'todo' ){
+            $troff = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = 1'
+            );                
+        }
 
         // per ogni data...
         foreach( $date as $data ) {
@@ -179,15 +186,6 @@
 
                 $status['info']['sostituzioni'] = $wksp['sostituzioni'];
 
-                // se la pianificazione riguarda todo, bypasso i trigger
-                if( $current['entita'] == 'todo' ){
-                    $troff = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'SET @TRIGGER_LAZY = 1'
-                    );                
-                }
-
-
                 // chiamo la funzione mysqlDuplicateRowRecursive()
                 mysqlDuplicateRowRecursive(
                     $cf['mysql']['connection'],
@@ -210,34 +208,6 @@
                     )
                 );
 
-
-                // se la pianificazione riguarda todo, riattivo i trigger e ripopolo le statiche per todo e attivita
-                if( $current['entita'] == 'todo' ){
-                    $tron = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'SET @TRIGGER_LAZY = NULL'
-                    );
-
-                    $tdel = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'TRUNCATE todo_view_static'
-                    );
-                    
-                    $tpop = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'INSERT INTO todo_view_static SELECT * FROM todo_view'
-                    );
-                    
-                    $adel = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'TRUNCATE attivita_view_static'
-                    );
-                    
-                    $apop = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'INSERT INTO attivita_view_static SELECT * FROM attivita_view'
-                    );
-                }
             }
 
         }
@@ -251,6 +221,34 @@
                 array( 's' => $status['token'] )
             )
         );
+
+        // se la pianificazione riguarda todo, riattivo i trigger e ripopolo le statiche per todo e attivita
+        if( $current['entita'] == 'todo' ){
+            $tron = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = NULL'
+            );
+
+            $tdel = mysqlQuery(
+                $cf['mysql']['connection'],
+                'TRUNCATE todo_view_static'
+            );
+            
+            $tpop = mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO todo_view_static SELECT * FROM todo_view'
+            );
+            
+            $adel = mysqlQuery(
+                $cf['mysql']['connection'],
+                'TRUNCATE attivita_view_static'
+            );
+            
+            $apop = mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO attivita_view_static SELECT * FROM attivita_view'
+            );
+        }
 
     } else {
 
