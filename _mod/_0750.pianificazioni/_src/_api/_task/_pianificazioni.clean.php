@@ -49,8 +49,13 @@
                     // status
                     $status['info'][] = 'pulizia oggetti collegati alla pianificazione';
 
-                    // se la pianificazione riguarda todo, bypasso i trigger
-                    if( $status['entita'] == 'todo' ){
+                    // estraggo le statiche coinvolte nell'eliminazione
+                    $status['statiche'] = pianificazioniGetStatic( $status['id'] );
+
+                    // se ci sono statiche, bypasso i trigger
+                    if( !empty(  $status['statiche'] ) ){
+                        $status['info'][] = 'disttivo i trigger';
+
                         $troff = mysqlQuery(
                             $cf['mysql']['connection'],
                             'SET @TRIGGER_LAZY = 1'
@@ -93,23 +98,21 @@
 
                     }
 
-                    // se la pianificazione riguarda todo, riattivo i trigger e ripopolo le statiche per todo e attivita
-                    if( $status['entita'] == 'todo' ){
+                    // se erano presenti statiche, riattivo i trigger e le ripopolo
+                    if( !empty( $status['statiche'] ) ){
+                        $status['info'][] = 'riattivo i trigger';
                         $tron = mysqlQuery(
                             $cf['mysql']['connection'],
                             'SET @TRIGGER_LAZY = NULL'
                         );
 
-                        $t = mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'CALL todo_view_static(NULL)'
-                        );
-                                               
-                        $a = mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'CALL attivita_view_static(NULL)'
-                        );
-                        
+                        foreach( $status['statiche'] as $s ){
+                            $status['info'][] = 'chiamo la procedure ' . $s ;
+                            $exec = mysqlQuery(
+                                $cf['mysql']['connection'],
+                                'CALL ' . $s . '(NULL)'
+                            );
+                        }
                     }
 
                 } else {

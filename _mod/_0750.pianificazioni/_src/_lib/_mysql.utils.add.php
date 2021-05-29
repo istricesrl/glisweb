@@ -40,6 +40,35 @@
         
     }
 
+
+    // funzione che riceve in ingresso l'id di una pianificazione e ritorna le tabelle con view statiche coinvolte
+    function pianificazioniGetStatic( $id ) {
+
+        global $cf;
+
+        $s = array();
+
+        $wsp = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT workspace FROM pianificazioni WHERE id = ?',
+            array( array( 's' => $id ) )
+        );
+
+        if( ! empty( $wsp ) ) {
+            $w = json_decode( $wsp, true );
+            if( !empty( $w['sostituzioni'] ) ){
+                foreach( $w['sostituzioni'] as $k => $v ){
+                    $t = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME like "' . $k . '_view_static"' );
+                    if( !empty( $t ) ){
+                         $s[] = $t;
+                    }              
+                }               
+            }
+        }       
+        return $s;                
+    }
+    
+
     function pianificazioniGetLatestObjectDate( $id, $e, $r=NULL ) {
 
         $field = pianificazioniGetMatchFieldName( $id, $e );
