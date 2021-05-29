@@ -100,25 +100,16 @@
                             'SET @TRIGGER_LAZY = NULL'
                         );
 
-                        $tdel = mysqlQuery(
+                        $t = mysqlQuery(
                             $cf['mysql']['connection'],
-                            'TRUNCATE todo_view_static'
+                            'CALL todo_view_static(NULL)'
+                        );
+                                               
+                        $a = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'CALL attivita_view_static(NULL)'
                         );
                         
-                        $tpop = mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'INSERT INTO todo_view_static SELECT * FROM todo_view'
-                        );
-                        
-                        $adel = mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'TRUNCATE attivita_view_static'
-                        );
-                        
-                        $apop = mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'INSERT INTO attivita_view_static SELECT * FROM attivita_view'
-                        );
                     }
 
                 } else {
