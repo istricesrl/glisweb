@@ -37,6 +37,12 @@
 
         if( !empty( $pause ) ){
 
+            // bypasso i trigger
+            $troff = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = 1'
+            );                
+
             foreach( $pause as $p ){
 
             // elimino le todo (e relative attività figlie) con data_programmazione compresa nel range di pausa
@@ -58,7 +64,23 @@
                 // TODO potrebbe verificarsi il caso in cui un'attività è figlia di una todo e le date di programmazione
                 // sono tali per cui la todo rientra nel range da eliminare ma l'attività no?
 
-            }           
+            }     
+            
+            // riattivo i trigger e ripopolo le statiche di todo e attivita
+            $tron = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = NULL'
+            );
+
+            $t = mysqlQuery(
+                $cf['mysql']['connection'],
+                'CALL todo_view_static(NULL)'
+            );
+                                   
+            $a = mysqlQuery(
+                $cf['mysql']['connection'],
+                'CALL attivita_view_static(NULL)'
+            );
            
         }
        
