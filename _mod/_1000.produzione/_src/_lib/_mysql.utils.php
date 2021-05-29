@@ -545,6 +545,7 @@
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'WHERE r.id IS NULL '
             .'GROUP BY c.id_anagrafica '
+            #.'HAVING collisioni = 0 AND se_produzione = 1'
             .'HAVING collisioni = 0 '
            ,
             array(
