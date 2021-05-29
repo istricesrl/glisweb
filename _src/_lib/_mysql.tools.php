@@ -134,6 +134,10 @@
 			    $r = mysqlFetchResult( mysqli_query( $c, $q ) );
 			break;
 
+			case 'CALL':
+				$r = mysqli_query( $c, $q );
+			break;
+			
 			case 'SET':
 			    $r = mysqli_query( $c, $q );
 			break;
