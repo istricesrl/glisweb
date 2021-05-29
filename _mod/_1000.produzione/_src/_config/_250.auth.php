@@ -31,6 +31,10 @@
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),
+            'progetti_eliminare' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
+            ),
             'progetti_produzione' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
