@@ -58,7 +58,12 @@
 
     {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
     <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
-{% if not request.documenti.id %}
+{% if etc.scontrino and not request.documenti.id %}
+<div class="col-12 mt-3 cassa">
+    <button type="button" onclick="window.open('{{ cassa }}?documenti[id]={{ etc.scontrino }}', '_self')" class="btn btn-secondary btn-sqr btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">riprendi scontrino in sospeso</button>
+    <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open('{{ cassa }}?__delete__[documenti][id]={{ etc.scontrino }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">scarta scontrino in sospeso</button>
+</div>
+{% elseif not request.documenti.id  %}
     <div class="col-12 mt-3 cassa">
         <button type="sumbit" class="btn btn-secondary btn-sqr btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">apri</button>
     </div>

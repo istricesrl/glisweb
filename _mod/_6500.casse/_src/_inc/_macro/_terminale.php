@@ -24,6 +24,29 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
+    if( isset( $_REQUEST['__delete__'] ) ){
+
+        $del = mysqlQuery(  $cf['mysql']['connection'],
+        'DELETE FROM documenti_articoli WHERE id_documento = ?',
+        array( array( 's' =>$_REQUEST['__delete__']['documenti']['id'] ) ) );
+
+        $del = mysqlQuery(  $cf['mysql']['connection'],
+        'DELETE FROM documenti WHERE id = ?',
+        array( array( 's' =>$_REQUEST['__delete__']['documenti']['id'] ) ) );
+    }
+
+    // controllo se è connesso un account
+    if( isset( $_SESSION['account'] )  ){ 
+
+       // if( isset($_REQUEST[ $ct['form']['table'] ]) && !$_REQUEST[ $ct['form']['table'] ]['id'] ){ 
+        // verifico se l'account ha uno scontrino in sospeso
+        $ct['etc']['scontrino'] = mysqlSelectValue(  $cf['mysql']['connection'],
+        'SELECT id FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL',
+        array( array( 's' => $_SESSION['account']['id'] ) ) );
+        
+
+    }
+
     $ct['etc']['default_reparto'] = '0';
     $ct['etc']['default_operazione'] = '1';
     $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
