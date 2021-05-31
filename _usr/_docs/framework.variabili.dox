@@ -205,9 +205,10 @@
     contents.pages.<x>.metadata                  | array dei metadati della pagina <x>
     contents.pages.<x>.menu                      | dettagli sui menu in cui è presente la pagina <x>
     contents.pages.<x>.menu.<m>                  | dettagli della voce di menu della pagina <x> nel menu <m>
-    contents.pages.<x>.menu.<m>.label            | etichette della voce di menu della pagina <x> nel menu <m>
-    contents.pages.<x>.menu.<m>.label.<l>        | etichetta della voce di menu della pagina <x> nel menu <m> nella lingua <l>
-    contents.pages.<x>.menu.<m>.priority         | posizione della pagina <x> nel menu <m>
+    contents.pages.<x>.menu.<m>.<k>              | dettagli della voce di menu della pagina <x> nel menu <m> per l'ancora <k>
+    contents.pages.<x>.menu.<m>.<k>.label        | etichette della voce di menu della pagina <x> nel menu <m> per l'ancora <k>
+    contents.pages.<x>.menu.<m>.<k>.label.<l>    | etichetta della voce di menu della pagina <x> nel menu <m> per l'ancora <k> nella lingua <l>
+    contents.pages.<x>.menu.<m>.<k>.priority     | posizione della pagina <x> nel menu <m>
     contents.pages.<x>.parent                    | dettagli del genitore della pagina <x>
     contents.pages.<x>.parent.h1                 | i tag H1 del genitore della pagina <x>
     contents.pages.<x>.parent.h1.<l>             | il tag H1 del genitore della pagina <x> nella lingua <l>
