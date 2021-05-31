@@ -14,8 +14,8 @@
 		'etc'			=> array( 'tabs'	=> array(	'documenti.view',
 														'documenti.articoli.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'documenti' ),
-														'priority'	=> '100' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'documenti' ),
+														'priority'	=> '100' ) ) )
 	);
 
 	// gestione documenti

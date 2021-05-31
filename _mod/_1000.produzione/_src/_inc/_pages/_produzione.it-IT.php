@@ -16,8 +16,8 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_produzione.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'produzione' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'produzione' ),
-														'priority'	=> '200' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'produzione' ),
+																		'priority'	=> '200' ) ) )														
 	);
 
 	// vista progetti
@@ -30,8 +30,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'progetti.produzione.view', 'progetti.produzione.tools' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'progetti' ),
-								'priority'	=> '080' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'progetti' ),
+																		'priority'	=> '080' ) ) )									
 	);
 
 	// progetti tools
@@ -150,8 +150,8 @@ $p['categorie.progetti.view'] = array(
 	'macro'		=> array(  $m . '_src/_inc/_macro/_categorie.progetti.view.php' ),
 	'etc'		=> array( 'tabs'	=> array( 'categorie.progetti.view' ) ),
 	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
-								'priority'	=> '115' ) )
+	'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'categorie' ),
+																		'priority'	=> '115' ) ) )									
 );
 
 // gestione categorie progetti

@@ -16,8 +16,8 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'casse', 'casse.documenti.view', 'casse.tools' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'casse' ),
-									'priority'	=> '650' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'casse' ),
+														'priority'	=> '650' ) ) )
 	);
 
     // view scontrini
@@ -54,8 +54,8 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_terminale.php' ),
 	    'parent'		=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'terminale' ),
-									'priority'	=> 100 ) )
+	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'terminale' ),
+														'priority'	=> '100' ) ) )
 	);
 
     // debug

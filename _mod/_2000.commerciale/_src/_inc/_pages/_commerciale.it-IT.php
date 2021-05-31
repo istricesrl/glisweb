@@ -16,8 +16,8 @@
 	    'parent'	=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'commerciale' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'commerciale' ),
-									'priority'	=> '310' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'commerciale' ),
+														'priority'	=> '310' ) ) )	
     );
     
    // vista progetti
@@ -30,8 +30,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.commerciale.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'progetti.commerciale.view' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'progetti' ),
-								'priority'	=> '080' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'progetti' ),
+														'priority'	=> '080' ) ) )	
 	);
 
 	// gestione progetti
