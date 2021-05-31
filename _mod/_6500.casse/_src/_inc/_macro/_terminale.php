@@ -220,6 +220,7 @@
 	    'SELECT id, __label__ FROM anagrafica_view'
 	);
 
+
     // articoli recenti
 	$ct['etc']['articoli_frequenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -254,6 +255,17 @@
             $ct['etc']['totale'] += $r['importo_netto_totale'];
         }
 
+        $ct['etc']['totale_iva'] = 0;
+
+        foreach( $ct['etc']['totale_parziale'] as $iva => $tot){
+
+                // tendina  iva
+                $ct['etc']['select']['iva'] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT aliquota FROM iva_view WHERE id = ?', array( array( 's' => $iva  ) )
+                );
+            $ct['etc']['totale_iva'] += $ct['etc']['select']['iva'] * $tot /100;
+        }
     }
 
 }

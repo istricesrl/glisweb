@@ -65,7 +65,7 @@
                     <td class="text-right">{{ riga.reparto }}</td>
                     <td class="text-right">€ {{ riga.importo_netto_totale }}</td>
                     <td class="text-right">{{ riga.quantita }}</td>
-                    <td class="text-right">€ {{ riga.importo_netto_totale * riga.quantita }}</td>  
+                    <td class="text-right">€ {{ (riga.importo_netto_totale * riga.quantita)|number_format(2, ',', '.') }}</td>  
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -76,21 +76,28 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
+                                <td class="text-right"><h3>imponibile</h3></td>
+                                <td class="text-right"><h3>{{ etc.totale|number_format(2, ',', '.')  }}</h3></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
                                 <td class="text-right"><h3>IVA</h3></td>
-                                <td class="text-right"><h3></h3></td>
+                                <td class="text-right"><h3>{{ etc.totale_iva|number_format(2, ',', '.')  }}</h3></td>
                             </tr>
                             <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td class="text-right"><h3>Totale</h3></td>
-                                <td class="text-right"><h3>{{ etc.totale }}</h3></td>
+                                <td class="text-right"><h3>{{ (etc.totale + etc.totale_iva )|number_format(2, ',', '.')  }}</h3></td>
                             </tr>
                             <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td class="text-right"><h3>Modalità pagamento</h3></td>
+                                <td class="text-right"><h3>Modalità di pagamento</h3></td>
                                 <td class="text-right"><h3>{{ etc.documento.modalita_pagamento }}</h3></td>
                             </tr>
                     {% endif %}
