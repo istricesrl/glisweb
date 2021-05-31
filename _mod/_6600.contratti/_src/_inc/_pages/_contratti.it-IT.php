@@ -16,8 +16,8 @@
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.view.php' ),
 	    'etc'		=> array( 'tabs'	=> array( 'contratti.view', 'contratti.archivio.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contratti' ),
-									'priority'	=> '200' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'contratti' ),
+									'priority'	=> '200' ) ) )						
 	);
 
 	// vista archivio contratti
@@ -115,8 +115,8 @@
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.contratti.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie' ),
-									'priority'	=> '120' ) )
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+									'priority'	=> '120' ) ) )
 	);
 
 	// gestione tipologie contratti

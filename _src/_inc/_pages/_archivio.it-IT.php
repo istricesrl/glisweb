@@ -13,8 +13,8 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'archivio' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'archivio' ),
-									'priority'	=> 930 ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'archivio' ),
+		'priority'	=> '930' ) ) )
 	);
 
 	// vista indirizzi
@@ -27,8 +27,8 @@
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'indirizzi.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'indirizzi' ),
-									'priority'	=> '050' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'indirizzi' ),
+		'priority'	=> '050' ) ) )
 	);
 
 	// gestione indirizzi
