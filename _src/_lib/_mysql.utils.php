@@ -158,6 +158,7 @@
                     'menu'	=> array( $mn['menu']	=> array(
                         'label'		=> array( $mn['ietf'] => $mn['nome'] ),
                         'subpages'	=> $mn['sottopagine'],
+                        'ancora'    => ( isset( $mn['ancora'] ) ) ? $mn['ancora'] : NULL,
                         'target'	=> ( isset( $mn['target'] ) ) ? $mn['target'] : NULL,
                         'priority'	=> $mn['ordine'] )
                     )

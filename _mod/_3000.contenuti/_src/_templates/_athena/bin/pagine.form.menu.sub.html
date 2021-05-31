@@ -34,6 +34,10 @@
 			<span class="label-top">target</span>
 			{{ frm.select( table, subtable, i, '', '', etc.select.target, request, '', '', '', '', '', disabled ) }}
 	    </div>
+		<div class="col">
+			<span class="label-top">ancora</span>
+			{{ frm.input( table, subtable, i, 'ancora', '', '', request, '', '', '', '', disabled  ) }}
+		</div>
 		<div class="col-auto">
 			<span class="label-top">sottopagine</span>
 			{{ frm.selectRequired( table, subtable, i, '', '', etc.select.sottopagine, request, '', '', '', disabled ) }}

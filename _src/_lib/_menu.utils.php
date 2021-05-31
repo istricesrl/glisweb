@@ -72,12 +72,12 @@
 						    }
 
 						// costruisco la voce corrente
-						    $nav[ $key ] = array(
+						$nav[ $key ] = array(
 							'label' => $pages[ $k ]['menu'][ $menu ]['label']
 							,
 							'location' => ( ( isset( $pages[ $k ]['forced'] ) ) ? $pages[ $k ]['url'] : $pages[ $k ]['path'] )
 							,
-							'target' => ( ( isset( $pages[ $k ]['menu'][ $menu ]['target'] ) && ! empty( $pages[ $k ]['menu'][ $menu ]['target'] ) ) ? $pages[ $k ]['menu'][ $menu ]['target'] : NULL )
+							'target' => ( ( isset( $pages[ $k ]['menu'][ $menu ]['target'] ) && ! empty( $pages[ $k ]['menu'][ $menu ]['target'] ) ) ? $pages[ $k ]['menu'][ $menu ]['target'] : NULL ).( (!empty( $pages[ $k ]['menu'][ $menu ]['ancora'] ) )? '#'.$pages[ $k ]['menu'][ $menu ]['ancora'] : NULL ) 
 							,
 							'active' => ( $k == $active ) ? true : false
 							,
