@@ -95,6 +95,10 @@
         } elseif( $comando[0] == 'CPON'){
             // gestisco il coupon
             //print_r('coupon');
+        } elseif( $comando[0] == 'DOC' ){
+            // apro la pagina di gestione del documento
+            header("Location: ".$cf['contents']['pages']['documenti.form']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.str_replace('0', '', $comando[1]) );
+            exit;
         } elseif( $comando[0] == 'CMD' ){
             // gestisco il comando rapido
 
@@ -108,7 +112,9 @@
                     $ct['etc']['default_operazione'] = '-1';
                     break;
                 case 'CMD.OPZ.0003':
-                    header("Location: ".$ct['contents']);
+                    //print_r($cf['contents']['pages']['anteprima.documento']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$_REQUEST['documenti']['id'] );
+                    header("Location: ".$cf['contents']['pages']['anteprima.documento']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$_REQUEST['documenti']['id'] );
+                    exit;
                     break;        
                 }
             }    

@@ -26,7 +26,8 @@
         array( array( 's' =>  $_REQUEST['documenti']['id'] ) ) 
 	);
 
-    //print_r($ct['etc']['documento']);
+    $barcode = str_pad( $ct['etc']['documento']['id'] ,8,"0", STR_PAD_LEFT);
+    print_r( $barcode );
 
     if( sizeof(  $ct['etc']['documento']['righe'] ) > 0 ){
 

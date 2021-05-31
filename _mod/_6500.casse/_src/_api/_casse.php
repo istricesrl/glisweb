@@ -41,12 +41,20 @@
 	// escpos_write( $h, '1*1000H2R' );
 	// escpos_write( $h, '1T' );
 
+    $barcode = str_pad( $documento['id'] ,4,"0", STR_PAD_LEFT)."";
+ 
+    // barcode documento
+   escpos_write( $h, '"{BDOC.'.$barcode.'"4Z' );
+
     foreach(  $documento['righe'] as $riga ){
 
         $write_string = '"'.$riga['articolo'].'"'.str_replace('.00', '', $riga['quantita']).'*'.str_replace('.', '', $riga['importo_netto_totale']).'H'.$riga['id_reparto'].'R';
         escpos_write( $h, $write_string);
 
     }
+
+
+
 
     if( $documento['id_modalita_pagamento'] == 1 ){
         // pagamento in contanti
@@ -56,6 +64,8 @@
         escpos_write( $h, '3T' );
     }
     
+ 
+
 
     // chiusura
 	escpos_disconnect( $h );
