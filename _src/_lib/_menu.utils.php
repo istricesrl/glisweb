@@ -77,7 +77,7 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 						$nav[ $key ] = array(
 							'label' => $mv['label']
 							,
-							'ancora' => $mv['ancora']
+							'ancora' => ( isset( $mv['ancora'] ) ) ? $mv['ancora'] : NULL
 							,
 							'location' => ( ( isset( $pages[ $k ]['forced'] ) ) ? $pages[ $k ]['url'] : $pages[ $k ]['path'] )
 							,
