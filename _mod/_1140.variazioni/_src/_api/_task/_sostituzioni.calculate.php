@@ -21,6 +21,8 @@
 
     // chiave di lock
 	$status['token'] = getToken( __FILE__ );
+	
+	$cf['cron']['cache']['view']['static']['refresh'][] = 'attivita_view_static';
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {

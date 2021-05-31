@@ -19,6 +19,8 @@
 
      // inizializzo l'array del risultato
 	$status = array();
+	
+	$cf['cron']['cache']['view']['static']['refresh'][] = 'attivita_view_static';
 
     $p = mysqlSelectRow(
         $cf['mysql']['connection'],

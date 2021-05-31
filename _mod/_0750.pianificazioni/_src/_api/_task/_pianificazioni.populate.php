@@ -35,7 +35,7 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE pianificazioni SET token = ? WHERE id = ?',
+            'UPDATE pianificazioni SET token = ? WHERE id = ? AND token IS NULL',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['id'] )
@@ -123,15 +123,13 @@
 
         // estraggo le statiche coinvolte nella creazione
         $status['statiche'] = pianificazioniGetStatic( $current['id'] );
-
-         // se ci sono statiche, bypasso i trigger
-        if( !empty( $status['statiche'] ) ){
-            $status['info'][] = 'disttivo i trigger';
-            $troff = mysqlQuery(
-                $cf['mysql']['connection'],
-                'SET @TRIGGER_LAZY = 1'
-            );                
+		
+		if( !empty( $status['statiche'] ) ){
+            foreach( $status['statiche'] as $s ){
+				$cf['cron']['cache']['view']['static']['refresh'][] = $s;
+            }
         }
+
 
         // per ogni data...
         foreach( $date as $data ) {
@@ -221,24 +219,8 @@
                 array( 's' => time() ),
                 array( 's' => $status['token'] )
             )
-        );
-
-        // se erano presenti statiche, riattivo i trigger e le ripopolo
-        if( !empty( $status['statiche'] ) ){
-            $status['info'][] = 'riattivo i trigger';
-            $tron = mysqlQuery(
-                $cf['mysql']['connection'],
-                'SET @TRIGGER_LAZY = NULL'
-            );
-
-            foreach( $status['statiche'] as $s ){
-                $status['info'][] = 'chiamo la procedure ' . $s ;
-                $exec = mysqlQuery(
-                    $cf['mysql']['connection'],
-                    'CALL ' . $s . '(NULL)'
-                );
-            }
-        }
+        );       
+		
 
     } else {
 

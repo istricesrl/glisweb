@@ -30,6 +30,9 @@
 
     // chiave di lock
 	$cf['cron']['results']['token'] = getToken( __FILE__ );
+		
+	// inizializzo
+	$cf['cron']['cache']['view']['static']['refresh'] = array();
 
     // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
 	$tasks = mysqlQuery(
@@ -63,6 +66,7 @@
 			array( 's' => $cf['cron']['results']['token'] )
 		)
 	);
+	
 
     // log
 	logWrite( 'criteri di ricerca -> '
@@ -77,6 +81,13 @@
 
 	// log
 	logWrite( 'task trovati: ' . print_r( $cf['cron']['tasks'], true), 'cron' );
+
+	// spengo i trigger
+	$troff = mysqlQuery(
+			$cf['mysql']['connection'],
+			'SET @TRIGGER_LAZY = 1'
+		);
+	logWrite( 'spengo i trigger', 'cron' );		
 
     // ciclo sui task
 	foreach( $cf['cron']['tasks'] as $task ) {
@@ -128,6 +139,23 @@
 			)
 		);
 
+	}
+	
+	$tron = mysqlQuery(
+			$cf['mysql']['connection'],
+			'SET @TRIGGER_LAZY = NULL'
+		);
+	logWrite( 'riattivo i trigger', 'cron' );
+		
+	$cf['cron']['cache']['view']['static']['refresh'] = array_unique( $cf['cron']['cache']['view']['static']['refresh'] );
+	
+	logWrite( 'statiche da chiamare dopo unique: ' . print_r( $cf['cron']['cache']['view']['static']['refresh'], true ), 'cron' );	
+		
+	foreach( $cf['cron']['cache']['view']['static']['refresh'] as $s ){
+		$exec = mysqlQuery(
+			$cf['mysql']['connection'],
+			'CALL ' . $s . '(NULL)'
+		);
 	}
 
 	// metto il lock sui job aperti
