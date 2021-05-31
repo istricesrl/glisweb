@@ -289,8 +289,10 @@
           "template": { "path": "_src/_templates/_athena/" },
           "menu": {
             "main": {
-              "label": { "it-IT": "test Json" },
-              "priority": 10
+              "": {
+                "label": { "it-IT": "test Json" },
+                "priority": 10
+              }
             }
           }
         }
