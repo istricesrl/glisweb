@@ -1,7 +1,9 @@
 <?php
 
     /**
-     * riceve in ingresso l'id di un progetto e lo elimina
+     * effettua l'eliminazione di un progetto e di tutti gli oggetti as esso collegati
+     * - se riceve in ingresso un id, analizza quel progetto
+     * - altrimenti analizza i progetti che hanno il flag se_cancellare = 1
      * 
      *
      *
@@ -24,41 +26,48 @@
 
         // ID del progetto in oggetto
         $status['id_progetto'] = $_REQUEST['id'];
+    }
+    else{
+        $status['id_progetto'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM progetti WHERE se_cancellare = 1 ORDER BY timestamp_aggiornamento LIMIT 1'
+        );
+    }
+
+    if( !empty( $status['id_progetto'] ) ){
+
+        $status['info'][] = 'bypasso i trigger';
+
+        // bypasso i trigger
+        $troff = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SET @TRIGGER_LAZY = 1'
+        );
 
         mysqlDeleteRowRecursive(
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
             'progetti',
-            $_REQUEST['id']
+            $status['id_progetto']
         );
 
-        // rimuovo le todo figlie del progetto
-    /*    mysqlQuery(
+        $status['info'][] = 'riattivo i trigger e ripopolo le statiche';
+
+        // riattivo i trigger e ripopolo le statiche di todo e attivita
+        $tron = mysqlQuery(
             $cf['mysql']['connection'],
-            'DELETE FROM todo WHERE id_progetto = ?',
-            array(
-                array( 's' => $_REQUEST['id'])
-            )
+            'SET @TRIGGER_LAZY = NULL'
         );
 
-        // rimuovo le attività figlie del progetto
-        mysqlQuery(
+        $t = mysqlQuery(
             $cf['mysql']['connection'],
-            'DELETE FROM attivita WHERE id_progetto = ?',
-            array(
-                array( 's' => $_REQUEST['id'])
-            )
+            'CALL todo_view_static(NULL)'
         );
-
-        // elimino il progetto
-        mysqlQuery(
+                               
+        $a = mysqlQuery(
             $cf['mysql']['connection'],
-            'DELETE FROM progetti WHERE id = ?',
-            array(
-                array( 's' => $_REQUEST['id'])
-            )
+            'CALL attivita_view_static(NULL)'
         );
-    */   
 
     } else {
 

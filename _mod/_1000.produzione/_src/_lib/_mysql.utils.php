@@ -517,8 +517,9 @@
         // estraggo i dati che mi occorrono per l'attività
         $a = mysqlSelectRow(
             $cf['mysql']['connection'],
-            "SELECT id, id_progetto, data_programmazione, ora_inizio_programmazione, ora_fine_programmazione, TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
-            ."TIMESTAMP( data_programmazione, ora_fine_programmazione) as data_ora_fine FROM attivita "
+            "SELECT id, id_progetto, data_programmazione, ora_inizio_programmazione, ora_fine_programmazione, "
+            ."TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
+            ."TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, '00:00:01') ) as data_ora_fine FROM attivita "
             ."WHERE id = ?",
             array(
                 array( 's' => $id_attivita )
@@ -535,7 +536,7 @@
                 .'AND ( '
                 .'( TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ? ) '
                 .'OR '
-                .'( TIMESTAMP( data_programmazione, ora_fine_programmazione) between ? and ? ) '
+                .'( TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, "00:00:01" ) ) between ? and ? ) '
                 .') '
             .') AS collisioni '
             .'FROM contratti_view AS c '
@@ -544,7 +545,8 @@
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
             .'WHERE r.id IS NULL '
             .'GROUP BY c.id_anagrafica '
-            .'HAVING collisioni = 0 AND se_produzione = 1'
+            #.'HAVING collisioni = 0 AND se_produzione = 1'
+            .'HAVING collisioni = 0 '
            ,
             array(
                 array( 's' => $a['data_ora_inizio'] ),

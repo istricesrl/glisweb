@@ -41,6 +41,14 @@
         );
 
         if( !empty( $attivita ) ){
+
+            $status['info'][] = 'disttivo i trigger';
+
+             // bypasso i trigger
+             $troff = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = 1'
+            );
             
             foreach( $attivita as $a ){               
                 $copertura = coperturaAttivita(  $status['id_anagrafica'], $a['id'] );
@@ -76,6 +84,18 @@
                     }
                 }
             }
+
+            // riattivo i trigger e ripopolo attivita_view_static
+            $status['info'][] = 'riattivo i trigger e popolo attivita_view_static';
+            $tron = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = NULL'
+            );
+
+            $a = mysqlQuery(
+                $cf['mysql']['connection'],
+                'CALL attivita_view_static(NULL)'
+            );
         }
 
     } else {

@@ -49,6 +49,19 @@
                     // status
                     $status['info'][] = 'pulizia oggetti collegati alla pianificazione';
 
+                    // estraggo le statiche coinvolte nell'eliminazione
+                    $status['statiche'] = pianificazioniGetStatic( $status['id'] );
+
+                    // se ci sono statiche, bypasso i trigger
+                    if( !empty(  $status['statiche'] ) ){
+                        $status['info'][] = 'disttivo i trigger';
+
+                        $troff = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'SET @TRIGGER_LAZY = 1'
+                        );                
+                    }
+
                     // query
                     $q = 'DELETE FROM ' . $status['entita'] . ' WHERE id_pianificazione = ? AND ' . $status['campo'] . ' > ?';
 
@@ -83,6 +96,23 @@
                          // esecuzione della query
                          $status['hard'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['inizio'] ), array( 's' => $status['id'] ) ) );
 
+                    }
+
+                    // se erano presenti statiche, riattivo i trigger e le ripopolo
+                    if( !empty( $status['statiche'] ) ){
+                        $status['info'][] = 'riattivo i trigger';
+                        $tron = mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'SET @TRIGGER_LAZY = NULL'
+                        );
+
+                        foreach( $status['statiche'] as $s ){
+                            $status['info'][] = 'chiamo la procedure ' . $s ;
+                            $exec = mysqlQuery(
+                                $cf['mysql']['connection'],
+                                'CALL ' . $s . '(NULL)'
+                            );
+                        }
                     }
 
                 } else {

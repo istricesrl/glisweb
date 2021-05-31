@@ -47,16 +47,39 @@
             )
         );
 
-        foreach( $periodi as $p ){
+        if( !empty( $periodi ) ){
+            $status['info'][] = 'disttivo i trigger';
 
-            // chiamo il task _variazioni.attivita.update che setta id_anagrafica NULL per le attività coinvolte
-            $url = $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.update.php?id=' . $p['id'];
-
-            $status['update_attivita'][$p['id'] ] = restcall(
-                $url
+             // bypasso i trigger
+             $troff = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = 1'
             );
-            
+
+            foreach( $periodi as $p ){
+
+                // chiamo il task _variazioni.attivita.update che setta id_anagrafica NULL per le attività coinvolte
+                $url = $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.update.php?id=' . $p['id'];
+
+                $status['update_attivita'][$p['id'] ] = restcall(
+                    $url
+                );
+                
+            }
+
+            // riattivo i trigger e ripopolo attivita_view_static
+            $status['info'][] = 'riattivo i trigger e popolo attivita_view_static';
+            $tron = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = NULL'
+            );
+
+            $a = mysqlQuery(
+                $cf['mysql']['connection'],
+                'CALL attivita_view_static(NULL)'
+            );
         }
+            
 
         // setto la data di approvazione della variazione alla data corrente
         $approva = mysqlQuery(

@@ -121,9 +121,17 @@
     
         $date = array_diff( $date, array( $current['data_ultimo_oggetto'] ) );
 
-    #    print_r( $date );
-        // debug
-         
+        // estraggo le statiche coinvolte nella creazione
+        $status['statiche'] = pianificazioniGetStatic( $current['id'] );
+
+         // se ci sono statiche, bypasso i trigger
+        if( !empty( $status['statiche'] ) ){
+            $status['info'][] = 'disttivo i trigger';
+            $troff = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = 1'
+            );                
+        }
 
         // per ogni data...
         foreach( $date as $data ) {
@@ -179,7 +187,6 @@
 
                 $status['info']['sostituzioni'] = $wksp['sostituzioni'];
 
-
                 // chiamo la funzione mysqlDuplicateRowRecursive()
                 mysqlDuplicateRowRecursive(
                     $cf['mysql']['connection'],
@@ -201,6 +208,7 @@
                         array( 's' => $status['token'] )
                     )
                 );
+
             }
 
         }
@@ -214,6 +222,23 @@
                 array( 's' => $status['token'] )
             )
         );
+
+        // se erano presenti statiche, riattivo i trigger e le ripopolo
+        if( !empty( $status['statiche'] ) ){
+            $status['info'][] = 'riattivo i trigger';
+            $tron = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = NULL'
+            );
+
+            foreach( $status['statiche'] as $s ){
+                $status['info'][] = 'chiamo la procedure ' . $s ;
+                $exec = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'CALL ' . $s . '(NULL)'
+                );
+            }
+        }
 
     } else {
 

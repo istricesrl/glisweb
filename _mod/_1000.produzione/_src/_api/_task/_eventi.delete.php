@@ -37,17 +37,31 @@
 
         if( !empty( $pause ) ){
 
-            foreach( $pause as $p ){
+            // bypasso i trigger
+            $troff = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = 1'
+            );
 
-            // elimino le todo (e relative attività figlie) con data_programmazione compresa nel range di pausa
-               $t = mysqlQuery(
+            foreach( $pause as $p ){
+                $whr[] = 'id_progetto = ?';
+                $par[] = array( 's' => $_REQUEST['id'] );
+
+                $whr[] = 'data_programmazione >= ?';
+                $par[] = array( 's' => $p['data_inizio'] );
+
+                if( !empty( $p['data_fine'] ) ) {
+                    $whr[] = 'data_programmazione <= ?';
+                    $par[] = array( 's' => $p['data_fine'] );
+                }
+
+                $q = 'DELETE FROM todo WHERE ('  . implode( ' AND ', $whr ) . ')';
+
+                // elimino le todo (e relative attività figlie) con data_programmazione compresa nel range di pausa
+                $t = mysqlQuery(
                     $cf['mysql']['connection'],
-                    "DELETE FROM todo WHERE id_progetto = ? AND (data_programmazione BETWEEN ? AND ?)",
-                    array(
-                        array( 's' => $_REQUEST['id'] ),
-                        array( 's' => $p['data_inizio'] ),
-                        array( 's' => $p['data_fine'] )
-                    )
+                    $q,
+                    $par
                 );
 
                 $status['todo'][] = 'eliminate ' . $t . ' todo per la pausa ' . $p['id'];
@@ -58,7 +72,23 @@
                 // TODO potrebbe verificarsi il caso in cui un'attività è figlia di una todo e le date di programmazione
                 // sono tali per cui la todo rientra nel range da eliminare ma l'attività no?
 
-            }           
+            }     
+            
+            // riattivo i trigger e ripopolo le statiche di todo e attivita
+            $tron = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY = NULL'
+            );
+
+            $t = mysqlQuery(
+                $cf['mysql']['connection'],
+                'CALL todo_view_static(NULL)'
+            );
+                                   
+            $a = mysqlQuery(
+                $cf['mysql']['connection'],
+                'CALL attivita_view_static(NULL)'
+            );
            
         }
        
