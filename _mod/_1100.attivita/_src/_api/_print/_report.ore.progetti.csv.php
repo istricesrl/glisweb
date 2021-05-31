@@ -8,7 +8,7 @@
 	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 	// se sono indicati mese e anno
-	if ( isset( $_REQUEST['mese'] ) && isset( $_REQUEST['anno'] ) && isset( $_REQUEST['job'] ) ){
+	if ( isset( $_REQUEST['mese'] ) && isset( $_REQUEST['anno'] ) ){
 		$mese = $_REQUEST['mese'];
 		$anno = $_REQUEST['anno'];
 
@@ -16,11 +16,10 @@
 		$report = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT r.*, p.nome as progetto FROM __report_ore_progetti__ AS r LEFT JOIN progetti AS p '
-			.'ON r.id_progetto = p.id WHERE r.mese = ? AND r.anno = ? AND r.id_job = ? ORDER BY p.nome',
+			.'ON r.id_progetto = p.id WHERE r.mese = ? AND r.anno = ? ORDER BY p.nome',
 			array(
 				array( 's' => $mese ),
-				array( 's' => $anno ),
-				array( 's' => $_REQUEST['job'] )
+				array( 's' => $anno )
 			)
 		);
 

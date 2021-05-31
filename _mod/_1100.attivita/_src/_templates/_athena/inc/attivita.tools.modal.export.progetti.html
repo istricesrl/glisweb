@@ -47,8 +47,8 @@
 			<div class="form-row">
 				<div class="col">
 					<p><b>elenco report richiesti</b></p>
-					{% for k,v in etc.report.progetti %}
-					<a href="{{ site.url }}_mod/_1100.attivita/_src/_api/_print/_report.ore.progetti.csv.php?mese={{ v.mese }}&anno={{ v.anno }}&job={{ k }}" target="_blank">{{ k }} - {{ v.nome }} > {{ v.stato }}</a><br>
+					{% for r in etc.report.progetti %}
+					<a href="{{ site.url }}_mod/_1100.attivita/_src/_api/_print/_report.ore.progetti.csv.php?mese={{ r.mese }}&anno={{ r.anno }}" target="_blank">{{ r.nome }} > {{ r.stato }}</a><br>
 					{% endfor %}
 				</div>
 			</div>
