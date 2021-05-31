@@ -17,21 +17,8 @@
 	$dobj = 'manuale barcode';
 
     // elenco dei prodotti
-    $prodotti = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM prodotti_view' );
+    $reparti = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM reparti_view' );
   
-   // per ogni prodotto recupero i suoi articoli
-    if( $prodotti ){
-
-        foreach($prodotti as &$p){
-
-            $p['articoli'] =  mysqlQuery(    
-                $cf['mysql']['connection'], 
-                'SELECT articoli_view.*, contenuti.testo FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 WHERE articoli_view.id_prodotto = ?',
-                array( array('s' => $p['id'] ) ) );
-
-        }
-
-
     //die(print_r($prodotti));
 
     // creazione del PDF
@@ -116,18 +103,6 @@
 
             // spazio 
 	        $pdf->SetY( $pdf->GetY() + $stdsp * 2 );
-            // controllo se è necessario aggiungere una pagina
-            $ha = 0;
-            foreach( $p['articoli'] as $articolo ) {
-
-                $ha += max( $pdf->GetStringHeight( $col * 4, $articolo['testo'], false, true, '', '' ) + 4,  $fnts + 8) ;					// 
- 
-            }
-
-            if(( $pdf->GetY()+$ha +10 ) > ($pdf-> GetPageHeight() -15) ){
-                $pdf->AddPage();
-
-            }
 
             // scrivo il nome del prodotto
             $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
@@ -182,8 +157,3 @@
 	    $pdf->Output($dobj.'.pdf');								// invia l'output al browser
 	}
 
-} else {
-
-    die(print_r("non sono presenti articoli nel catalogo"));
-
-}
