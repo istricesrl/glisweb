@@ -16,8 +16,8 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'prodotti.view') ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'prodotti' ),
-									'priority'	=> '015' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'prodotti' ),
+									'priority'	=> '015' ) ) )	
 	);
 	
     // gestione prodotti
@@ -192,8 +192,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_articoli.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'articoli.view' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'articoli' ),
-								'priority'	=> '020' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'articoli' ),
+									'priority'	=> '020' ) ) )
 	);
 
 	// gestione articoli
@@ -355,8 +355,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_listini.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'listini.view' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'listini' ),
-								'priority'	=> '025' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'listini' ),
+								'priority'	=> '025' ) ) )
 	);
 
 	// gestione listini

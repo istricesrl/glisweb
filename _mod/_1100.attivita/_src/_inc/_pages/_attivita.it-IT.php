@@ -16,8 +16,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'cartellini', 'attivita.tools' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'attività' ),
-														'priority'	=> '100' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'attività' ),
+																		'priority'	=> '100' ) ) )	
 	);
 
     // tools attività
@@ -70,8 +70,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_turni.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'turni.view', 'turni.schema' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'turni' ),
-									'priority'	=> '110' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'turni' ),
+																		'priority'	=> '110' ) ) )	
 	);
 
 
@@ -164,8 +164,8 @@
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.attivita.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.attivita.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie' ),
-									'priority'	=> '115' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																		'priority'	=> '115' ) ) )	
 	);
 
 	// gestione categorie attività

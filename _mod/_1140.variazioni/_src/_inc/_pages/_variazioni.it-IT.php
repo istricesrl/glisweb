@@ -16,8 +16,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_variazioni.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'variazioni.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'variazioni' ),
-														'priority'	=> '115' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'variazioni' ),
+																		'priority'	=> '115' ) ) )	
 	);
 
     
@@ -60,8 +60,8 @@
 													'sostituzioni.view',
 													'variazioni.tools' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'sostituzioni' ),
-														'priority'	=> '120' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'sostituzioni' ),
+														'priority'	=> '120' ) ) )	
 	);
 
 	$p['progetti.scoperti.form'] = array(
@@ -133,8 +133,8 @@
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.variazioni.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.variazioni.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie' ),
-									'priority'	=> '115' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+														'priority'	=> '115' ) ) )	
 	);
 
 	// gestione tipologie variazioni
