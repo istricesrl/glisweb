@@ -32,6 +32,16 @@
             // attività di avvio
             if( empty( $job['corrente'] ) ) {
 
+                // rimuovo le eventuali righe di report già esistenti legate ad altri job
+                $del = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'DELETE FROM __report_ore_operatori_per_progetto__ WHERE mese = ? AND anno = ?',
+                    array(
+                        array( 's' => $job['workspace']['mese'] ),
+                        array( 's' => $job['workspace']['anno'] )
+                    )
+                );
+
                 $status['result'] = mysqlSelectColumn(
 					'id',
                     $cf['mysql']['connection'],
@@ -68,6 +78,7 @@
                 $job['corrente']++;
 
             }
+
 
             // aggiusto l'indice di lavoro (gli array partono da zero)
             $widx = $job['corrente'] - 1;

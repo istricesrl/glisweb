@@ -8,7 +8,7 @@
 	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 	// se sono indicati mese e anno
-	if ( isset( $_REQUEST['mese'] ) && isset( $_REQUEST['anno'] ) && isset( $_REQUEST['job'] ) ){
+	if ( isset( $_REQUEST['mese'] ) && isset( $_REQUEST['anno'] ) ){
 		$mese = $_REQUEST['mese'];
 		$anno = $_REQUEST['anno'];
 
@@ -18,12 +18,11 @@
 			'SELECT r.*, a.__label__ as operatore, p.nome as progetto FROM __report_ore_operatori_per_progetto__ AS r '
 			.'LEFT JOIN anagrafica_view_static AS a ON r.id_anagrafica = a.id '
 			.'LEFT JOIN progetti AS p ON r.id_progetto = p.id '
-			.'WHERE r.mese = ? AND r.anno = ? AND r.id_job = ? '
-			.'ORDER BY a1.__label__, a2.__label__',
+			.'WHERE r.mese = ? AND r.anno = ? '
+			.'ORDER BY a.__label__, p.nome',
 			array(
 				array( 's' => $mese ),
-				array( 's' => $anno ),
-				array( 's' => $_REQUEST['job'] )
+				array( 's' => $anno )
 			)
 		);
 
