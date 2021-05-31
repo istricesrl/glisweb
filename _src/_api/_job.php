@@ -23,6 +23,7 @@
 
     // verifico la presenza di un ID
     if( isset( $_REQUEST['__id__'] ) ) {
+        echo "id del job " . $_REQUEST['__id__'];
 
         // metto il lock sui job richiesto
         mysqlQuery(
