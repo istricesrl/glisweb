@@ -24,6 +24,9 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
+    //print_r( $_REQUEST );
+
+    // eliminazione scontrino in sospeso
     if( isset( $_REQUEST['__delete__'] ) ){
 
         $del = mysqlQuery(  $cf['mysql']['connection'],
@@ -103,7 +106,10 @@
                     break;
                 case 'CMD.OPZ.0002':
                     $ct['etc']['default_operazione'] = '-1';
-                    break;    
+                    break;
+                case 'CMD.OPZ.0003':
+                    header("Location: ".$ct['contents']);
+                    break;        
                 }
             }    
 
@@ -118,6 +124,19 @@
 
                 }
 
+            }
+
+            // comando per modificare la modalità di pagamento
+            if( $comando[1] == 'PGM' ){
+
+                if( $_REQUEST[ $ct['form']['table'] ]['__comando__'] == 'CMD.PGM.0001' ){
+                    // contanti
+                    $_REQUEST[ $ct['form']['table'] ]['scadenze'][0]['id_modalita_pagamento'] = 1;
+
+                } else {
+                    // elettronico
+                    $_REQUEST[ $ct['form']['table'] ]['scadenze'][0]['id_modalita_pagamento'] = 5;
+                }
             }
 
             if( $comando[1] == 'TPL' ){

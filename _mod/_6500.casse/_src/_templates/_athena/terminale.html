@@ -210,15 +210,14 @@
 
 $( document ).ready(function() {
 
-    
-        if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 1 ){ 
-            $('#pagamento-contanti').attr('class', 'btn btn-dark btn-block'); 
-            $('#pagamento-elettronico').attr('class', 'btn btn-secondary btn-block');
-        } 
-        if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 5 ){ 
-            $('#pagamento-elettronico').attr('class', 'btn btn-dark btn-block'); 
-            $('#pagamento-contanti').attr('class', 'btn btn-secondary btn-block');
-         }
+    if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 1 ){ 
+        $('#pagamento-contanti').attr('class', 'btn btn-dark btn-block'); 
+        $('#pagamento-elettronico').attr('class', 'btn btn-secondary btn-block');
+    } 
+    if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 5 ){ 
+        $('#pagamento-elettronico').attr('class', 'btn btn-dark btn-block'); 
+        $('#pagamento-contanti').attr('class', 'btn btn-secondary btn-block');
+    }
   //  $("#documenti___comando__ ").focus();
     $("#documenti___operazione__").val('{{ etc.default_operazione }}');
     $("#documenti___reparto__").val('{{ etc.default_reparto }}');
