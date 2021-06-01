@@ -73,7 +73,7 @@ CREATE OR REPLACE VIEW account_gruppi_view AS
 		account_gruppi.se_amministratore,
 		concat(
 			account.username,
-			' | ',
+			' / ',
 			gruppi.nome
 		) AS __label__
 	FROM account_gruppi
@@ -100,9 +100,9 @@ CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 		account_gruppi_attribuzione.entita,
 		concat(
 			account.username,
-			' | ',
+			' / ',
 			gruppi.nome,
-			' | ',
+			' / ',
 			account_gruppi_attribuzione.entita
 		) AS __label__
 	FROM account_gruppi_attribuzione
@@ -160,9 +160,9 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		max( categorie_anagrafica.se_referente ) AS se_referente,
 		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
 		max( categorie_anagrafica.se_squadra ) AS se_squadra,
-		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
-		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
-		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
+		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' / ' ) AS categorie,
+		group_concat( DISTINCT telefoni.numero SEPARATOR ' / ' ) AS telefoni,
+		group_concat( DISTINCT mail.indirizzo SEPARATOR ' / ' ) AS mail,
 		coalesce(
 			anagrafica.soprannome,
 			anagrafica.denominazione,
@@ -232,9 +232,9 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		max( categorie_anagrafica.se_referente ) AS se_referente,
 		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
 		max( categorie_anagrafica.se_squadra ) AS se_squadra,
-		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
-		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
-		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
+		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' / ' ) AS categorie,
+		group_concat( DISTINCT telefoni.numero SEPARATOR ' / ' ) AS telefoni,
+		group_concat( DISTINCT mail.indirizzo SEPARATOR ' / ' ) AS mail,
 		anagrafica.data_cessazione,
 		coalesce(
 			anagrafica.soprannome,
@@ -273,7 +273,7 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 		anagrafica_categorie.id_categoria,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' | ',
+			' / ',
 			categorie_anagrafica.nome
 		) AS __label__
 	FROM anagrafica_categorie
@@ -302,7 +302,7 @@ CREATE OR REPLACE VIEW anagrafica_categorie_diritto_view AS
 		anagrafica_categorie_diritto.se_specialita,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' | ',
+			' / ',
 			categorie_anagrafica.nome
 		) AS __label__
 	FROM anagrafica_categorie_diritto
@@ -330,7 +330,7 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 		anagrafica_cittadinanze.data_fine,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' | ',
+			' / ',
 			stati.nome
 		) AS __label__
 	FROM anagrafica_cittadinanze
@@ -357,7 +357,7 @@ CREATE OR REPLACE VIEW `anagrafica_condizioni_pagamento_view` AS
 		condizioni_pagamento.nome AS condizione,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' | ',
+			' / ',
 			condizioni_pagamento.nome
 		) AS __label__
 	FROM anagrafica_condizioni_pagamento
@@ -384,7 +384,7 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		anagrafica_indirizzi.id_indirizzo,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' | ',
+			' / ',
 			coalesce( anagrafica_indirizzi.note, anagrafica_indirizzi.id_indirizzo )
 		) AS __label__
 	FROM anagrafica_indirizzi
@@ -410,7 +410,7 @@ CREATE OR REPLACE VIEW `anagrafica_modalita_pagamento_view` AS
 		modalita_pagamento.nome AS modalita,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' | ',
+			' / ',
 			modalita_pagamento.nome
 		) AS __label__
 	FROM anagrafica_modalita_pagamento
@@ -440,7 +440,7 @@ CREATE OR REPLACE VIEW anagrafica_ruoli_view AS
 		anagrafica_ruoli_path( anagrafica_ruoli.id ) AS ruolo,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' | ',
+			' / ',
 			anagrafica_ruoli_path( anagrafica_ruoli.id )
 		) AS __label__
 	FROM anagrafica_ruoli
@@ -467,7 +467,7 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 		settori.nome AS settore,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' | ',
+			' / ',
 			settori.nome
 		) AS __label__
 	FROM anagrafica_settori
@@ -507,9 +507,9 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		articoli.nome,
 		concat(
 			articoli.id_prodotto,
-			' | ',
+			' / ',
 			articoli.id,
-			' | ',
+			' / ',
 			articoli.nome
 		) AS __label__
 	FROM articoli
@@ -536,7 +536,7 @@ CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 		articoli_caratteristiche.se_assente,
 		concat(
 			articoli.id,
-			' | ',
+			' / ',
 			tipologie_caratteristiche_prodotti.nome,
 			': ',
 			caratteristiche_prodotti.nome,
@@ -572,9 +572,9 @@ CREATE OR REPLACE VIEW `articoli_correlati_view` AS
 		articoli_correlati.se_crosselling,
 		concat(
 			articoli_correlati.id_articolo,
-			' | ',
+			' / ',
 			tipologie_correlazioni_articoli.nome,
-			' | ',
+			' / ',
 			coalesce(
 				articoli_correlati.id_prodotto_correlato,
 				articoli_correlati.id_articolo_correlato
@@ -646,9 +646,9 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.token,
 		concat(
 			attivita.nome,
-			' | ',
+			' / ',
 			attivita.ore,
-			' | ',
+			' / ',
 			coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' )
 		) AS __label__
 	FROM attivita
@@ -702,13 +702,266 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		audio.id_categoria_eventi,
 		concat(
 			audio.nome,
-			' | ',
+			' / ',
 			lingue.nome
 		) AS __label__
 	FROM audio
 		LEFT JOIN lingue ON lingue.id = audio.id_lingua
 		LEFT JOIN ruoli_audio ON ruoli_audio.id = audio.id_ruolo
 		LEFT JOIN tipologie_embed ON tipologie_embed.id = audio.id_tipologia_embed
+;
+
+--| 000008002500
+
+-- campagne_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `campagne_view`;
+
+--| 000008002501
+
+-- campagne_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-28 17:53 Fabio Mosti
+CREATE OR REPLACE VIEW `campagne_view` AS
+	SELECT
+		campagne.id,
+		campagne.nome,
+		campagne.timestamp_apertura,
+		campagne.timestamp_chiusura,
+		campagne.nome AS __label__
+	FROM campagne
+;
+
+--| 000008002700
+
+-- caratteristiche_immobili_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `caratteristiche_immobili_view`;
+
+--| 000008002701
+
+-- caratteristiche_immobili_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-05-28 18:51 Fabio Mosti
+CREATE OR REPLACE VIEW `caratteristiche_immobili_view` AS
+	SELECT
+		caratteristiche_immobili.id,
+		caratteristiche_immobili.id_tipologia,
+		tipologie_caratteristiche_immobili.nome AS tipologia,
+		caratteristiche_immobili.nome,
+		caratteristiche_immobili.html_entity,
+		caratteristiche_immobili.font_awesome,
+		caratteristiche_immobili.se_indirizzo,
+		caratteristiche_immobili.se_immobile,
+		concat(
+			tipologie_caratteristiche_immobili.nome,
+			' / ',
+			caratteristiche_immobili.nome
+		) AS __label__
+	FROM caratteristiche_immobili
+		LEFT JOIN tipologie_caratteristiche_immobili ON tipologie_caratteristiche_immobili.id = caratteristiche_immobili.id_tipologia
+;
+
+--| 000008002900
+
+-- caratteristiche_prodotti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `caratteristiche_prodotti_view`;
+
+--| 000008002901
+
+-- caratteristiche_prodotti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-28 18:51 Fabio Mosti
+CREATE OR REPLACE VIEW caratteristiche_prodotti_view AS
+	SELECT
+		caratteristiche_prodotti.id,
+		caratteristiche_prodotti.id_tipologia,
+		tipologie_caratteristiche_prodotti.nome AS tipologia,
+		caratteristiche_prodotti.nome,
+		caratteristiche_prodotti.html_entity,
+		caratteristiche_prodotti.font_awesome,
+		caratteristiche_prodotti.se_categoria,
+		caratteristiche_prodotti.se_prodotto,
+		caratteristiche_prodotti.se_articolo,
+		concat(
+			tipologie_caratteristiche_prodotti.nome,
+			' / ',
+			caratteristiche_prodotti.nome
+		) AS __label__
+	FROM caratteristiche_prodotti
+		LEFT JOIN tipologie_caratteristiche_prodotti ON tipologie_caratteristiche_prodotti.id = caratteristiche_prodotti.id_tipologia
+;
+
+--| 000008003100
+
+-- categorie_anagrafica_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `categorie_anagrafica_view`;
+
+--| 000008003101
+
+-- categorie_anagrafica_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-01 10:55 Fabio Mosti
+CREATE OR REPLACE VIEW categorie_anagrafica_view AS
+	SELECT
+		categorie_anagrafica.id,
+		categorie_anagrafica.id_genitore,
+		categorie_anagrafica.ordine,
+		categorie_anagrafica.nome,
+		categorie_anagrafica.se_prospect,
+		categorie_anagrafica.se_lead,
+		categorie_anagrafica.se_cliente,
+		categorie_anagrafica.se_mandante,
+		categorie_anagrafica.se_fornitore,
+		categorie_anagrafica.se_produttore,
+		categorie_anagrafica.se_collaboratore,
+		categorie_anagrafica.se_dipendente,
+		categorie_anagrafica.se_interinale,
+		categorie_anagrafica.se_interno,
+		categorie_anagrafica.se_esterno,
+		categorie_anagrafica.se_agente,
+		categorie_anagrafica.se_concorrente,
+		categorie_anagrafica.se_rassegna_stampa,
+		categorie_anagrafica.se_azienda_gestita,
+		categorie_anagrafica.se_amministrazione,
+		categorie_anagrafica.se_notizie,
+		categorie_anagrafica.se_docente,
+		categorie_anagrafica.se_tutor,
+		categorie_anagrafica.se_classe,
+		categorie_anagrafica.se_allievo,
+		categorie_anagrafica.se_agenzia_interinale,
+		categorie_anagrafica.se_referente,
+		categorie_anagrafica.se_sostituto,
+		categorie_anagrafica.se_squadra,
+		count( c1.id ) AS figli,
+		count( anagrafica_categorie.id ) AS membri,
+	 	categorie_anagrafica_path( categorie_anagrafica.id ) AS __label__
+	FROM categorie_anagrafica
+		LEFT JOIN categorie_anagrafica AS c1 ON c1.id_genitore = categorie_anagrafica.id
+		LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_categoria = categorie_anagrafica.id
+	GROUP BY categorie_anagrafica.id
+;
+
+--| 000008003300
+
+-- categorie_diritto_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `categorie_diritto_view`;
+
+--| 000008003301
+
+-- categorie_diritto_view
+-- tipologia: tabella assistita
+-- verifica: 2021-06-01 10:56 Fabio Mosti
+CREATE OR REPLACE VIEW categorie_diritto_view AS
+	SELECT
+		categorie_diritto.id,
+		categorie_diritto.id_genitore,
+		categorie_diritto.ordine,
+		categorie_diritto.nome,
+		categorie_diritto.template,
+		categorie_diritto.schema_html.
+		categorie_diritto.tema_css,
+		categorie_diritto.id_pagina,
+		count( c1.id ) AS figli,
+		count( anagrafica_categorie_diritto.id ) AS membri,
+		categorie_diritto_path( categorie_diritto.id ) AS __label__
+	FROM categorie_diritto
+		LEFT JOIN categorie_diritto AS c1 ON c1.id_genitore = categorie_diritto.id
+		LEFT JOIN anagrafica_categorie_diritto ON anagrafica_categorie_diritto.id_categoria = categorie_diritto.id
+	GROUP BY categorie_diritto.id
+;
+
+--| 000008003500
+
+-- categorie_eventi_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `categorie_eventi_view`;
+
+--| 000008003501
+
+-- categorie_eventi_view
+-- tipologia: tabella assistita
+-- verifica: 2021-06-01 10:56 Fabio Mosti
+CREATE OR REPLACE VIEW categorie_eventi_view AS
+	SELECT
+		categorie_eventi.id,
+		categorie_eventi.id_genitore,
+		categorie_eventi.ordine,
+		categorie_eventi.nome,
+		categorie_eventi.template,
+		categorie_eventi.schema_html.
+		categorie_eventi.tema_css,
+		categorie_eventi.id_pagina,
+		count( c1.id ) AS figli,
+		count( eventi_categorie.id ) AS membri,
+		categorie_eventi_path( categorie_eventi.id ) AS __label__
+	FROM categorie_eventi
+		LEFT JOIN categorie_eventi AS c1 ON c1.id_genitore = categorie_eventi.id
+		LEFT JOIN eventi_categorie ON eventi_categorie.id_categoria = categorie_eventi.id
+	GROUP BY categorie_eventi.id
+;
+
+--| 000008003700
+
+-- categorie_notizie_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `categorie_notizie_view`;
+
+--| 000008003701
+
+-- categorie_notizie_view
+-- tipologia: tabella assistita
+-- verifica: 2021-06-01 18:36 Fabio Mosti
+CREATE OR REPLACE VIEW categorie_notizie_view AS
+	SELECT
+		categorie_notizie.id,
+		categorie_notizie.id_genitore,
+		categorie_notizie.ordine,
+		categorie_notizie.nome,
+		categorie_notizie.template,
+		categorie_notizie.schema_html.
+		categorie_notizie.tema_css,
+		categorie_notizie.id_pagina,
+		count( c1.id ) AS figli,
+		count( notizie_categorie.id ) AS membri,
+		categorie_notizie_path( categorie_notizie.id ) AS __label__
+	FROM categorie_notizie
+		LEFT JOIN categorie_notizie AS c1 ON c1.id_genitore = categorie_notizie.id
+		LEFT JOIN notizie_categorie ON notizie_categorie.id_categoria = categorie_notizie.id
+	GROUP BY categorie_notizie.id
+;
+
+--| 000008003900
+
+-- categorie_prodotti_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `categorie_prodotti_view`;
+
+--| 000008003901
+
+-- categorie_prodotti_view
+-- tipologia: tabella assistita
+-- verifica: 2021-06-01 20:02 Fabio Mosti
+CREATE OR REPLACE VIEW categorie_prodotti_view AS
+	SELECT
+		categorie_prodotti.id,
+		categorie_prodotti.id_genitore,
+		categorie_prodotti.ordine,
+		categorie_prodotti.nome,
+		categorie_prodotti.template,
+		categorie_prodotti.schema_html.
+		categorie_prodotti.tema_css,
+		categorie_prodotti.id_pagina,
+		count( c1.id ) AS figli,
+		count( prodotti_categorie.id ) AS membri,
+		categorie_prodotti_path( categorie_prodotti.id ) AS __label__
+	FROM categorie_prodotti
+		LEFT JOIN categorie_prodotti AS c1 ON c1.id_genitore = categorie_prodotti.id
+		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_categoria = categorie_prodotti.id
+	GROUP BY categorie_prodotti.id
 ;
 
 --| FINE FILE

@@ -13,22 +13,24 @@
 
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
-    campagne.id                                  | l'ID dell'associazione fra aacount di chiusura, account inserimento e account aggiornamento
-    campagne.nome                                | -
-    campagne.testo                               | -
-    campagne.id_account_chiusura                 | l'ID dell'account di chiusura
-    campagne.timestamp_chiusura                  | -
-    campagne.testo_chiusura                      | -
+    campagne.id                                  | l'ID della campagna
+    campagne.nome                                | il nome della campagna
+    campagne.note                                | note aggiuntive sulla campagna
+    campagne.timestamp_apertura                  | la timestamp del momento in cui viene aperta la campagna
+    campagne.timestamp_chiusura                  | la timestamp del momento in cui viene chiusa la campagna
+    campagne.note_chiusura                       | note aggiuntive sulla chiusura della campagna
 
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    La tabella non ha chiavi esterne oltre a quelle standard.
 
     La vista *campagne_view* relativa alla tabella *campagne* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    campagne_view.id                                | -
+    campagne_view.nome                              | -
+    campagne_view.timestamp_apertura                | -
+    campagne_view.timestamp_chiusura                | -
+    campagne_view.__label__                         | l'etichetta descrittiva della campagna
 
     caratteristiche_immobili
     ------------------------
@@ -38,16 +40,18 @@
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
     caratteristiche_immobili.id                  | l'ID della caratteristica
-    caratteristiche_immobili.nome                | -
+    caratteristiche_immobili.id_tipologia        | l'ID della tipologia
+    caratteristiche_immobili.nome                | il nome della caratteristica
+    caratteristiche_immobili.html_entity         | -
     caratteristiche_immobili.font_awesome        | -
-    caratteristiche_immobili.html                | -
-    caratteristiche_immobili.se_immobile         | -
-    caratteristiche_immobili.se_indirizzo        | -
+    caratteristiche_immobili.se_indirizzo        | flag che indica se la caratteristica si applica agli stabili (indirizzi)
+    caratteristiche_immobili.se_immobile         | flag che indica se la caratteristica si applica agli interni (immobili)
 
     I flag *se_immobile* e *se_indirizzo* definiscono il contesto a cui la caratteristica è applicabile. La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                          | campo                     | tabella e campo collegati                 | comportamento
+    ------------------------------------------------|---------------------------|-------------------------------------------|----------
+    caratteristiche_immobili_ibfk_01_nofollow       | id_tipologia              | tipologie_caratteristiche_immobili.id     | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *caratteristiche_immobili_view* relativa alla tabella *caratteristiche_immobili* presenta le seguenti colonne:
 
@@ -63,15 +67,19 @@
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
     caratteristiche_prodotti.id                  | l'ID delle caratteristiche prodotti
-    caratteristiche_prodotti.nome                | -
-    caratteristiche_prodotti.se_categoria        | -
-    caratteristiche_prodotti.se_prodotto         | -
-    caratteristiche_prodotti.se_articolo         | -
+    caratteristiche_prodotti.id_tipologia        | l'ID della tipologia
+    caratteristiche_prodotti.nome                | il nome della caratteristica
+    caratteristiche_prodotti.html_entity         | -
+    caratteristiche_prodotti.font_awesome        | -
+    caratteristiche_prodotti.se_categoria        | flag che indica se la caratteristica si applica alle categorie di prodotti
+    caratteristiche_prodotti.se_prodotto         | flag che indica se la caratteristica si applica ai prodotti
+    caratteristiche_prodotti.se_articolo         | flag che indica se la caratteristica si applica agli articoli
  
     I flag *se_categoria*, *se_prodotto* e *se_articolo* definiscono il contesto a cui la caratteristica è applicabile.  La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                          | campo                 | tabella e campo collegati                 | comportamento
+    ------------------------------------------------|-----------------------|-------------------------------------------|----------
+    caratteristiche_prodotti_ibfk_01_nofollow       | id_tipologia          | tipologie_caratteristiche_prodotti.id     | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *caratteristiche_prodotti_view* relativa alla tabella *caratteristiche_prodotti* presenta le seguenti colonne:
 
@@ -88,7 +96,8 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     categorie_anagrafica.id                                | l'ID della categorie anagrafica
     categorie_anagrafica.id_genitore                       | l'ID della categoria genitore
-    categorie_anagrafica.nome                              | -
+    categorie_anagrafica.ordine                            | campo di ordinamento
+    categorie_anagrafica.nome                              | il nome della categoria
     categorie_anagrafica.se_prospect                       | -
     categorie_anagrafica.se_lead                           | -
     categorie_anagrafica.se_cliente                        | -
@@ -117,13 +126,46 @@
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------|-------------------------------|----------------------
+    categorie_anagrafica_ibfk_01_nofollow       | id_genitore           | categorie_anagrafica.id       | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *categorie_anagrafica_view* relativa alla tabella *categorie_anagrafica* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_anagrafica_view.id                            | -
+    categorie_anagrafica_view.id_genitore                   | -
+    categorie_anagrafica_view.ordine                        | -
+    categorie_anagrafica_view.nome                          | -
+    categorie_anagrafica_view.se_prospect                   | -
+    categorie_anagrafica_view.se_lead                       | -
+    categorie_anagrafica_view.se_cliente                    | -
+    categorie_anagrafica_view.se_mandante                   | -
+    categorie_anagrafica_view.se_fornitore                  | -
+    categorie_anagrafica_view.se_produttore                 | -
+    categorie_anagrafica_view.se_collaboratore              | -
+    categorie_anagrafica_view.se_dipendente                 | -
+    categorie_anagrafica_view.se_interinale                 | -
+    categorie_anagrafica_view.se_interno                    | -
+    categorie_anagrafica_view.se_esterno                    | -
+    categorie_anagrafica_view.se_agente                     | -
+    categorie_anagrafica_view.se_concorrente                | -
+    categorie_anagrafica_view.se_rassegna_stampa            | -
+    categorie_anagrafica_view.se_azienda_gestita            | -
+    categorie_anagrafica_view.se_amministrazione            | -
+    categorie_anagrafica_view.se_notizie                    | -
+    categorie_anagrafica_view.se_docente                    | -
+    categorie_anagrafica_view.se_tutor                      | -
+    categorie_anagrafica_view.se_classe                     | -
+    categorie_anagrafica_view.se_allievo                    | -
+    categorie_anagrafica_view.se_agenzia_interinale         | -
+    categorie_anagrafica_view.se_referente                  | -
+    categorie_anagrafica_view.se_sostituto                  | -
+    categorie_anagrafica_view.se_squadra                    | -
+    categorie_anagrafica_view.figli                         | il numero di categorie figlie di questa categoria
+    categorie_anagrafica_view.membri                        | il numero di anagrafiche collegate a questa categoria
+    categorie_anagrafica_view.__label__                     | l'etichetta descrittiva della categoria
 
     categorie_diritto
     -----------------
@@ -132,18 +174,36 @@
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
     categorie_diritto.id                              | l'ID della categoria attività
-    categorie_diritto.id_genitore                     | -
-    categorie_diritto.nome                            | -
+    categorie_diritto.id_genitore                     | l'ID della categoria genitore
+    categorie_diritto.ordine                          | campo di ordinamento
+    categorie_diritto.nome                            | il nome della categoria
+    categorie_diritto.template                        | il template da applicare alla categoria per la pubblicazione sul web
+    categorie_diritto.schema_html                     | lo schema da applicare alla categoria per la pubblicazione sul web
+    categorie_diritto.tema_css                        | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_diritto.id_pagina                       | l'ID della pagina genitore della categoria per la pubblicazione sul web
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------|-------------------------------|----------------------
+    categorie_diritto_ibfk_01_nofollow          | id_genitore           | categorie_diritto.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_diritto_ibfk_02_nofollow          | id_pagina             | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *categorie_diritto_view* relativa alla tabella *categorie_diritto* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_diritto_view.id                              | -
+    categorie_diritto_view.id_genitore                     | -
+    categorie_diritto_view.ordine                          | -
+    categorie_diritto_view.nome                            | -
+    categorie_diritto_view.template                        | -
+    categorie_diritto_view.schema_html                     | -
+    categorie_diritto_view.tema_css                        | -
+    categorie_diritto_view.id_pagina                       | -
+    categorie_diritto_view.figli                           | il numero di categorie figlie di questa categoria
+    categorie_diritto_view.membri                          | il numero di anagrafiche collegate a questa categoria
+    categorie_diritto_view.__label__                       | l'etichetta descrittiva della categoria
     
     categorie_eventi
     ----------------
@@ -152,19 +212,36 @@
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
     categorie_eventi.id                               | l'ID della categoria di eventi
-    categorie_eventi.id_genitore                      | -
-    categorie_eventi.ordine                           | -
-    categorie_eventi.nome                             | -
-    
+    categorie_eventi.id_genitore                      | l'ID della categoria genitore
+    categorie_eventi.ordine                           | campo di ordinamento
+    categorie_eventi.nome                             | il nome della categoria
+    categorie_eventi.template                         | il template da applicare alla categoria per la pubblicazione sul web
+    categorie_eventi.schema_html                      | lo schema da applicare alla categoria per la pubblicazione sul web
+    categorie_eventi.tema_css                         | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_eventi.id_pagina                        | l'ID della pagina genitore della categoria per la pubblicazione sul web
+
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------------------|---------------------------|-------------------------------|----------------------
+    categorie_eventi_ibfk_01_nofollow           | id_genitore               | categorie_eventi.id           | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_eventi_ibfk_02_nofollow           | id_pagina                 | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *categorie_eventi_view* relativa alla tabella *categorie_eventi* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_eventi_view.id                               | -
+    categorie_eventi_view.id_genitore                      | -
+    categorie_eventi_view.ordine                           | -
+    categorie_eventi_view.nome                             | -
+    categorie_eventi_view.template                         | -
+    categorie_eventi_view.schema_html                      | -
+    categorie_eventi_view.tema_css                         | -
+    categorie_eventi_view.id_pagina                        | -
+    categorie_eventi_view.figli                            | il numero di categorie figlie di questa categoria
+    categorie_eventi_view.membri                           | il numero di eventi collegati a questa categoria
+    categorie_eventi_view.__label__                        | l'etichetta descrittiva della categoria
  
     categorie_notizie
     -----------------
@@ -173,19 +250,36 @@
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
     categorie_notizie.id                              | l'ID della categoria di notizie
-    categorie_notizie.id_genitore                     | -
-    categorie_notizie.ordine                          | -
-    categorie_notizie.nome                            | -
-    
+    categorie_notizie.id_genitore                     | l'ID della categoria genitore
+    categorie_notizie.ordine                          | campo di ordinamento
+    categorie_notizie.nome                            | il nome della categoria
+    categorie_notizie.template                        | il template da applicare alla categoria per la pubblicazione sul web
+    categorie_notizie.schema_html                     | lo schema da applicare alla categoria per la pubblicazione sul web
+    categorie_notizie.tema_css                        | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_notizie.id_pagina                       | l'ID della pagina genitore della categoria per la pubblicazione sul web
+
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                        | campo                        | tabella e campo collegati     | comportamento
+    ----------------------------------------------|------------------------------|-------------------------------|----------------------
+    categorie_notizie_ibfk_01_nofollow            | id_genitore                  | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_notizie_ibfk_02_nofollow            | id_pagina                    | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *categorie_notizie_view* relativa alla tabella *categorie_notizie* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_notizie_view.id                              | -
+    categorie_notizie_view.id_genitore                     | -
+    categorie_notizie_view.ordine                          | -
+    categorie_notizie_view.nome                            | -
+    categorie_notizie_view.template                        | -
+    categorie_notizie_view.schema_html                     | -
+    categorie_notizie_view.tema_css                        | -
+    categorie_notizie_view.id_pagina                       | -
+    categorie_notizie_view.figli                           | il numero di categorie figlie di questa categoria
+    categorie_notizie_view.membri                          | il numero di eventi collegati a questa categoria
+    categorie_notizie_view.__label__                       | l'etichetta descrittiva della categoria
 
     categorie_prodotti
     ------------------
@@ -194,22 +288,36 @@
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
     categorie_prodotti.id                             | l'ID della categoria di notizie
-    categorie_prodotti.id_genitore                    | -
-    categorie_prodotti.ordine                         | -
-    categorie_prodotti.nome                           | -
-    categorie_prodotti.template                       | -
-    categorie_prodotti.schema_html                    | -
-    categorie_prodotti.tema_css                       | -
+    categorie_prodotti.id_genitore                    | l'ID della categoria genitore
+    categorie_prodotti.ordine                         | campo di ordinamento
+    categorie_prodotti.nome                           | il nome della categoria
+    categorie_prodotti.template                       | il template da applicare alla categoria per la pubblicazione sul web
+    categorie_prodotti.schema_html                    | lo schema da applicare alla categoria per la pubblicazione sul web
+    categorie_prodotti.tema_css                       | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_prodotti.id_pagina                      | l'ID della pagina genitore della categoria per la pubblicazione sul web
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------|-------------------------------|----------------------
+    categorie_prodotti_ibfk_01_nofollow         | id_genitore           | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_prodotti_ibfk_02_nofollow         | id_pagina             | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *categorie_prodotti_view* relativa alla tabella *categorie_prodotti* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_prodotti_view.id                             | -
+    categorie_prodotti_view.id_genitore                    | -
+    categorie_prodotti_view.ordine                         | -
+    categorie_prodotti_view.nome                           | -
+    categorie_prodotti_view.template                       | -
+    categorie_prodotti_view.schema_html                    | -
+    categorie_prodotti_view.tema_css                       | -
+    categorie_prodotti_view.id_pagina                      | -
+    categorie_prodotti_view.figli                          | il numero di categorie figlie di questa categoria
+    categorie_prodotti_view.membri                         | il numero di eventi collegati a questa categoria
+    categorie_prodotti_view.__label__                      | l'etichetta descrittiva della categoria
     
     categorie_prodotti_caratteristiche
     ----------------------------------
@@ -236,7 +344,7 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     
     categorie_progetti
-    -----------------
+    ------------------
     Questa tabella *gestita* ...
 
     colonna                                         | descrizione

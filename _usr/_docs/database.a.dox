@@ -262,6 +262,8 @@
     anagrafica_categorie           | anagrafica_categorie_insert_static     | insert
     anagrafica_categorie           | anagrafica_categorie_delete_static     | delete
 
+    La tabella *anagrafica* è vincolata dalle ACL memorizzate sulla tabella *__acl_anagrafica__*.
+
     anagrafica_archiviati
     ---------------------
     Questa tabella *virtuale* contiene le anagrafiche cessate, individuate in base al fatto che il campo data_cessazione non è NULL.
@@ -744,6 +746,8 @@
     attivita_view.se_straordinario                  | flag che indica se l'attività è riferita a un progetto straordinario
     attivita_view.token                             | -
     attivita_view.__label__                         | etichetta descrittiva dell'attività
+
+    La tabella *attivita* è vincolata dalle ACL memorizzate sulla tabella *__acl_attivita__*.
 
     audio
     -----

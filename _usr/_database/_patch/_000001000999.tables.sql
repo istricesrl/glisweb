@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_ruoli` (
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
   `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -345,7 +345,7 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `path` char(255) DEFAULT NULL,
   `codice_embed` char(255) DEFAULT NULL,
   `id_tipologia_embed` int(11) NOT NULL,
-  `nome` char(32) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
   `target` char(255) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
@@ -363,56 +363,64 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000025
+--| 000001002500
 
 -- campagne
 -- tipologia: tabella gestita
+-- verifica: 2021-05-28 17:41 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `campagne` (
-`id` int(11) NOT NULL,
-  `nome` char(128) NOT NULL,
-  `testo` text,
-  `id_account_chiusura` int(11) DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `note` text,
+  `timestamp_apertura` int(11) DEFAULT NULL,
   `timestamp_chiusura` int(11) DEFAULT NULL,
-  `testo_chiusura` text,
+  `note_chiusura` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000027
+--| 000001002700
 
 -- caratteristiche_immobili
 -- tipologia: tabella di supporto
+-- verifica: 2021-05-28 18:22 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
   `id` int(11) NOT NULL,
-  `nome` char(128) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
   `font_awesome` char(24) DEFAULT NULL,
-  `html` char(8) DEFAULT NULL,
-  `se_immobile` int(1) DEFAULT NULL,
-  `se_indirizzo` int(1) DEFAULT NULL
+  `html_entity` char(8) DEFAULT NULL,
+  `se_indirizzo` int(1) DEFAULT NULL,
+  `se_immobile` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000028
+--| 000001002900
 
 -- caratteristiche_prodotti
 -- tipologia: tabella gestita
+-- verifica: 2021-05-28 18:22 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) NOT NULL,
   `nome` char(64) NOT NULL,
+  `font_awesome` char(24) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
   `se_categoria` int(1) DEFAULT NULL,
   `se_prodotto` int(1) DEFAULT NULL,
   `se_articolo` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000031
+--| 000001003100
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
+-- verifica: 2021-05-28 19:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `nome` char(64) NOT NULL,
   `se_lead` int(1) DEFAULT NULL,
   `se_prospect` int(1) DEFAULT NULL,
@@ -446,50 +454,67 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000033
+--| 000001003300
 
 -- categorie_diritto
 -- tipologia: tabella assistita
+-- verifica: 2021-05-31 14:34 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `categorie_diritto` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` varchar(128) NOT NULL
+  `ordine` int(11) DEFAULT NULL,
+  `nome` varchar(128) NOT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000035
+--| 000001003500
 
 -- categorie_eventi
 -- tipologia: tabella gestita
+-- verifica: 2021-06-01 18:26 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `categorie_eventi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000036
+--| 000001003700
 
 -- categorie_notizie
 -- tipologia: tabella gestita
+-- verifica: 2021-06-01 18:26 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `categorie_notizie` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000037
+--| 000001003900
 
 -- categorie_prodotti
 -- tipologia: tabella gestita
+-- verifica: 2021-06-01 19:43 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -498,6 +523,7 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

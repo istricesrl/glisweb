@@ -278,8 +278,8 @@ ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-05-28 16:04 Fabio Mosti
 ALTER TABLE `audio`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `path` (`path`), 
-	ADD UNIQUE KEY `codice_embed` (`codice_embed`), 
+	ADD UNIQUE KEY `unica` (`path`), 
+	ADD UNIQUE KEY `unica_codice_embed` (`codice_embed`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
 	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_tipologia_embed` (`id_tipologia_embed`), 
@@ -300,171 +300,139 @@ ALTER TABLE `audio`
 	ADD KEY `indice_pagine` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_tipologia_embed`,`id_pagina`,`id_file`,`id_risorsa`);
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000025
+--| 000003002500
 
 -- campagne
 -- tipologia: tabella gestita
+-- verifica: 2021-05-28 17:50 Fabio Mosti
 ALTER TABLE `campagne`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `nome` (`nome`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `id_account_chiusura` (`id_account_chiusura`),
-	ADD KEY `indice` (`id`,`nome`,`id_account_chiusura`);
+	ADD KEY `indice` (`id`,`nome`,`timestamp_apertura`,`timestamp_chiusura`);
 ALTER TABLE `campagne` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000026
-
--- caratteristiche_articoli
--- tipologia: tabella gestita
-ALTER TABLE `caratteristiche_articoli`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`,`nome`);
-ALTER TABLE `caratteristiche_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000027
+--| 000003002700
 
 -- caratteristiche_immobili
 -- tipologia: tabella di supporto
+-- verifica: 2021-05-28 18:27 Fabio Mosti
 ALTER TABLE `caratteristiche_immobili`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id` (`id`,`nome`),
-	ADD KEY `indice` (`id`,`nome`);
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`nome`),
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`se_indirizzo`,`se_immobile`);
 ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000028
+--| 000003002900
 
--- carrelli
+-- caratteristiche_prodotti
 -- tipologia: tabella gestita
-ALTER TABLE `carrelli`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `session` (`session`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `id_listino` (`id_listino`), 
-	ADD KEY `id_tipologia_consegna` (`id_tipologia_consegna`), 
-	ADD KEY `id_tipologia_assicurazione_spedizione` (`id_assicurazione_trasporto`), 
-	ADD KEY `id_tipologia_assicurazione_montaggio` (`id_assicurazione_montaggio`), 
-	ADD KEY `id_garanzia` (`id_garanzia`), 
-	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`), 
-	ADD KEY `intestazione_id_provincia` (`intestazione_id_provincia`), 
-	ADD KEY `intestazione_id_anagrafica` (`intestazione_id_anagrafica`),
-	ADD KEY `spedizione_id_provincia` (`spedizione_id_provincia`), 
-	ADD KEY `spedizione_id_stato` (`spedizione_id_stato`), 
-	ADD KEY `intestazione_id_stato` (`intestazione_id_stato`), 
-	ADD KEY `id_zona` (`id_zona`), 
-	ADD KEY `id_tipologia_documento_carrello` (`id_tipologia_documento_carrello`),
-	ADD KEY `id_modalita_spedizione` (`id_modalita_spedizione`),
-	ADD KEY `indice` (`id`,`session`,`id_listino`,`id_tipologia_consegna`,`id_garanzia`,`id_modalita_pagamento`,`id_zona`,`id_tipologia_documento_carrello`);
-ALTER TABLE `carrelli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
+-- verifica: 2021-05-28 18:27 Fabio Mosti
+ALTER TABLE `caratteristiche_prodotti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`nome`),
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`);
+ALTER TABLE `caratteristiche_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000029
-
--- carrelli_articoli
--- tipologia: tabella gestita
-ALTER TABLE `carrelli_articoli`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica_articolo` (`id_carrello`,`id_articolo`), 
-	ADD KEY `id_carrello` (`id_carrello`), 
-	ADD KEY `id_articolo` (`id_articolo`), 
-	ADD KEY `id_tipologia_spedizione` (`id_modalita_spedizione`), 
-	ADD KEY `id_iva` (`id_iva`), 
-	ADD KEY `id_ingombro` (`id_ingombro`), 
-	ADD KEY `id_categoria` (`id_categoria`),
-	ADD KEY `indice` (`id`,`id_carrello`,`id_articolo`,`id_categoria`);
-ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000030
+--| 000003003100
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
+-- verifica: 2021-05-28 19:56 Fabio Mosti
 ALTER TABLE `categorie_anagrafica`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `se_rassegna_stampa` (`se_rassegna_stampa`), 
-	ADD KEY `se_agente` (`se_agente`), 
+	ADD KEY `se_lead` (`se_lead`), 
+	ADD KEY `se_prospect` (`se_prospect`), 
+	ADD KEY `se_cliente` (`se_cliente`), 
 	ADD KEY `se_mandante` (`se_mandante`), 
 	ADD KEY `se_fornitore` (`se_fornitore`), 
+	ADD KEY `se_produttore` (`se_produttore`), 
 	ADD KEY `se_collaboratore` (`se_collaboratore`), 
+	ADD KEY `se_dipendente` (`se_dipendente`),
+	ADD KEY `se_interinale` (`se_interinale`), 
 	ADD KEY `se_interno` (`se_interno`), 
 	ADD KEY `se_esterno` (`se_esterno`), 
+	ADD KEY `se_agente` (`se_agente`), 
 	ADD KEY `se_concorrente` (`se_concorrente`), 
-	ADD KEY `se_interinale` (`se_interinale`), 
+	ADD KEY `se_rassegna_stampa` (`se_rassegna_stampa`), 
+	ADD KEY `se_azienda_gestita` (`se_azienda_gestita`), 
+	ADD KEY `se_amministrazione` (`se_amministrazione`), 
+	ADD KEY `se_notizie` (`se_notizie`), 
+	ADD KEY `se_docente` (`se_docente`), 
+	ADD KEY `se_tutor` (`se_tutor`), 
+	ADD KEY `se_classe` (`se_classe`), 
+	ADD KEY `se_allievo` (`se_allievo`), 
 	ADD KEY `se_agenzia_interinale` (`se_agenzia_interinale`), 
-	ADD KEY `se_dipendente` (`se_dipendente`),
 	ADD KEY `se_referente` (`se_referente`),
 	ADD KEY `se_sostituto` (`se_sostituto`),
 	ADD KEY `se_squadra` (`se_squadra`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_rassegna_stampa`,`se_agente`,`se_mandante`,`se_fornitore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_concorrente`,`se_interinale`,`se_agenzia_interinale`,`se_dipendente`,`se_referente`,`se_sostituto`,`se_squadra`, `se_azienda_gestita`, `se_amministrazione`, `se_prospect`, `se_lead`, `se_docente`,`se_tutor`,`se_classe`,`se_allievo`,`se_sostituto`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_rassegna_stampa`,`se_agente`,`se_mandante`,`se_fornitore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_concorrente`,`se_interinale`,`se_agenzia_interinale`,`se_dipendente`,`se_referente`,`se_sostituto`,`se_squadra`, `se_azienda_gestita`, `se_amministrazione`, `se_prospect`, `se_lead`, `se_docente`,`se_tutor`,`se_classe`,`se_allievo`,`se_sostituto`);
 ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000031
-
--- categorie_attivita
--- tipologia: tabella gestita
-ALTER TABLE `categorie_attivita`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
-ALTER TABLE `categorie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 000003000032
+--| 000003003300
 
 -- categorie_diritto
 -- tipologia: tabella di supporto
+-- verifica: 2021-06-01 10:44 Fabio Mosti
 ALTER TABLE `categorie_diritto`
 	ADD PRIMARY KEY (`id`), 
-	ADD KEY `nome` (`nome`), 
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
-ALTER TABLE `categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_pagina`);
+ALTER TABLE `categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000033
+--| 000003003500
 
 -- categorie_eventi
 -- tipologia: tabella gestita
+-- verifica: 2021-06-01 17:37 Fabio Mosti
 ALTER TABLE `categorie_eventi`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_pagina` (`id_pagina`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`, `ordine`, `nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_pagina`);
 ALTER TABLE `categorie_eventi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 
---| 000003000034
+--| 000003003700
 
 -- categorie_notizie
 -- tipologia: tabella gestita
+-- verifica: 2021-06-01 18:28 Fabio Mosti
 ALTER TABLE `categorie_notizie`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_pagina` (`id_pagina`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`, `nome`, `ordine`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_pagina`);
 ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000035
+--| 000003003900
 
 -- categorie_prodotti
 -- tipologia: tabella gestita
+-- verifica: 2021-06-01 19:48 Fabio Mosti
 ALTER TABLE `categorie_prodotti`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_pagina`, `nome`, `ordine`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_pagina`);
 ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000036
