@@ -20,11 +20,9 @@
      */
 
 
-//print_r( $_REQUEST['documenti']);
+
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
-
-    //print_r( $_REQUEST );
 
     // eliminazione scontrino in sospeso
     if( isset( $_REQUEST['__delete__'] ) ){
@@ -38,12 +36,19 @@
         array( array( 's' =>$_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
 
-    // controllo se è connesso un account
-    if( isset( $_SESSION['account'] )  ){ 
+    // riapertura scontrino prima della stampa
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__open__'] ) ){
+        $update = mysqlQuery( 
+            $cf['mysql']['connection'], 
+            'UPDATE documenti SET timestamp_chiusura = NULL WHERE id = ?',
+            array( 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
+
+    } elseif( isset( $_SESSION['account'] )  ){ 
 
        // if( isset($_REQUEST[ $ct['form']['table'] ]) && !$_REQUEST[ $ct['form']['table'] ]['id'] ){ 
         // verifico se l'account ha uno scontrino in sospeso
-        $ct['etc']['scontrino'] = mysqlSelectValue(  $cf['mysql']['connection'],
+        $_REQUEST[ $ct['form']['table'] ]['id'] = mysqlSelectValue(  $cf['mysql']['connection'],
         'SELECT id FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL',
         array( array( 's' => $_SESSION['account']['id'] ) ) );
         
@@ -66,14 +71,7 @@
     $ct['etc']['select']['reparti'][] = array( 'id' => '0', '__label__' => 'default' );
 
 
-    // riapertura scontrino prima della stampa
-    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__open__'] ) ){
-        $update = mysqlQuery( 
-            $cf['mysql']['connection'], 
-            'UPDATE documenti SET timestamp_chiusura = NULL WHERE id = ?',
-            array( 
-                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
-    }
+
     
 
     if(  isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__art__'] ) && !empty( $_REQUEST['__art__'] ) ){
@@ -81,7 +79,6 @@
         $_REQUEST[ $ct['form']['table'] ]['__comando__']  = $_REQUEST['__art__'];
         $_REQUEST[ $ct['form']['table'] ]['__operazione__'] = 1;
         $_REQUEST[ $ct['form']['table'] ]['__reparto__'] = 0;
-       // print_r( "trovato articolo da aggiungere codice ".$_REQUEST[ $ct['form']['table'] ]['__comando__'] );
     }
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['__comando__']  ) ){
@@ -94,6 +91,9 @@
             //print_r('tracking');
         } elseif( $comando[0] == 'CPON'){
             // gestisco il coupon
+            //print_r('coupon');
+        } elseif( $comando[0] == 'TODO' ){
+            // la todo
             //print_r('coupon');
         } elseif( $comando[0] == 'DOC' ){
             // apro la pagina di gestione del documento

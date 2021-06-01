@@ -27,17 +27,15 @@
 {% endif %}
 
 {% block header %}
-<header class="fixed-top">
-<div class="row widget no-gutters">
-    <div class="col text-left">
+
+
+    <div class="text-left">
         {% set target = pages.casse.url[ localization.language.ietf ] %}
         <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
 
     </div>
-       <div class="col text-right">
-      
-    </div>
-</header>
+
+
 {% endblock %}
 
 {% block main %}
@@ -58,17 +56,9 @@
 
     {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
     <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
-{% if etc.scontrino and not request.documenti.id %}
-<div class="col-12 mt-3 cassa">
-    <button type="button" onclick="window.open('{{ cassa }}?documenti[id]={{ etc.scontrino }}', '_self')" class="btn btn-secondary btn-sqr btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">riprendi scontrino in sospeso</button>
-    <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open('{{ cassa }}?__delete__[documenti][id]={{ etc.scontrino }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">scarta scontrino in sospeso</button>
-</div>
-{% elseif not request.documenti.id  %}
-    <div class="col-12 mt-3 cassa">
-        <button type="sumbit" class="btn btn-secondary btn-sqr btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">apri</button>
-    </div>
-{% else %}
 
+
+{% if  request.documenti.id  %}
 
     <div class="container-fluid pannello-cassa">
         <div class="row">
@@ -118,21 +108,21 @@
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td class="text-right"><h3>imponibile</h3></td>
-                                                <td class="text-right"><h3>{{ etc.totale|number_format(2, ',', '.')  }}</h3></td>
+                                                <td class="text-right"><h3>€ {{ etc.totale|number_format(2, ',', '.')  }}</h3></td>
                                             </tr>
                                             <tr>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td class="text-right"><h3>IVA</h3></td>
-                                                <td class="text-right"><h3>{{ etc.totale_iva|number_format(2, ',', '.')  }}</h3></td>
+                                                <td class="text-right"><h3>€ {{ etc.totale_iva|number_format(2, ',', '.')  }}</h3></td>
                                             </tr>
                                             <tr>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td class="text-right"><h3>Totale</h3></td>
-                                                <td class="text-right"><h3>{{ (etc.totale + etc.totale_iva )|number_format(2, ',', '.')  }}</h3></td>
+                                                <td class="text-right"><h3>€ {{ (etc.totale + etc.totale_iva )|number_format(2, ',', '.')  }}</h3></td>
                                             </tr>
                                     {% endif %}
                                         </table>
@@ -155,27 +145,34 @@
                                     {{ frm.select( table, '', '', '__operazione__', '', etc.select.operazioni, request, '', '', 1,1  ) }}
                                 </div>
                     </div>
-                    <div class="row">
+                    <div class="form-row row">
                         <div class="col-12"><legend>tastiera</legend></div>
-                    </div>
-                    <div class="row " style="align-self: flex-end;">
-                        <div class="col-12"><legend>chiusura scontrino</legend></div>
-                        
                         <div class="col-6 mt-3 cassa">
-                            <button type="button" class="btn btn-secondary btn-sqr btn-block" id="pagamento-contanti" value="1" clicked onclick="clickPagamento(this)" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-money" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-lg btn-secondary  btn-block btn-lg" id="pagamento-contanti" value="1" clicked onclick="clickPagamento(this)" data-toggle="button" aria-pressed="false" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-money" aria-hidden="true"></i></button>
                         </div>
                         <div class="col-6 mt-3 cassa">
-                            <button type="button" class="btn btn-secondary btn-sqr btn-block" id="pagamento-elettronico" value="5" onclick="clickPagamento(this)" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-credit-card" aria-hidden="true"></i></button>
+                            <button type="button" class="btn-lg btn-secondary  btn-block btn-lg" id="pagamento-elettronico" value="5" onclick="clickPagamento(this)" data-toggle="button" aria-pressed="false"  data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-credit-card" aria-hidden="true"></i></button>
                         </div>
+
                         {{ frm.input( table, 'scadenze', '0', 'id', '', '', request, '', 'hidden') }}
                         {{ frm.input( table, 'scadenze', '0', 'id_documento', '', '', '','__parent_id__' , 'hidden' ) }}
                         {{ frm.input( table, 'scadenze', '0', 'nome', '', '', request,'pagamento pronto scontrino','','', 'hidden' ) }}
                         {{ frm.input( table, 'scadenze', '0', 'data', '', '', request, 'now'|date('Y-m-d'),'','', 'hidden' ) }}
                         {{ frm.input( table, 'scadenze', '0', 'id_modalita_pagamento', '', '', request, '','','', 'hidden' ) }}
                         {{ frm.input( table, 'scadenze', '0', 'se_pagato', '', '', request, '1','','', 'hidden' ) }}
+                    </div>
+                    <div class="mt-3 col-10 fixed-bottom " style="margin-bottom: 2%;" >
+                    <div>
+                        <div class="col-12"><legend>chiusura scontrino</legend></div>
+                        
+
                         <div class="col-12 mt-3 cassa">
-                            <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="anteprima()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
+                            <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="anteprima()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
                         </div>
+                        <div class="col-12 mt-3 cassa">
+                            <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="window.open('{{ cassa }}?__delete__[documenti][id]={{ request.documenti.id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
+                        </div>
+                    </div>
                     </div>
             </div>
 
@@ -200,6 +197,11 @@
         </div>
     </div>
 
+    {% else %}
+    <div class="col-12 mt-3 cassa">
+        <button type="sumbit" class="btn btn-secondary btn-sqr btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">apri</button>
+    </div>
+
     {% endif %}
 </form>
 {% endblock %}
@@ -211,12 +213,12 @@
 $( document ).ready(function() {
 
     if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 1 ){ 
-        $('#pagamento-contanti').attr('class', 'btn btn-dark btn-block'); 
-        $('#pagamento-elettronico').attr('class', 'btn btn-secondary btn-block');
+        $('#pagamento-contanti').attr('class', 'btn-lg btn-dark btn-block'); 
+        $('#pagamento-elettronico').attr('class', 'btn-lg btn-secondary btn-block');
     } 
     if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 5 ){ 
-        $('#pagamento-elettronico').attr('class', 'btn btn-dark btn-block'); 
-        $('#pagamento-contanti').attr('class', 'btn btn-secondary btn-block');
+        $('#pagamento-elettronico').attr('class', 'btn-lg btn-dark btn-block'); 
+        $('#pagamento-contanti').attr('class', 'btn-lg btn-secondary btn-block');
     }
   //  $("#documenti___comando__ ").focus();
     $("#documenti___operazione__").val('{{ etc.default_operazione }}');
@@ -248,11 +250,11 @@ $( document ).ready(function() {
         $("#documenti_scadenze_0_id_modalita_pagamento").val( $('#'+id).val()  );
         
         if( $('#'+id).val() == 1 ){ 
-            $('#pagamento-contanti').attr('class', 'btn btn-dark btn-block'); 
-            $('#pagamento-elettronico').attr('class', 'btn btn-secondary btn-block');
+            $('#pagamento-contanti').attr('class', 'btn-lg btn-dark btn-block'); 
+            $('#pagamento-elettronico').attr('class', 'btn-lg btn-secondary btn-block');
         } else {
-            $('#pagamento-elettronico').attr('class', 'btn btn-dark btn-block'); 
-            $('#pagamento-contanti').attr('class', 'btn btn-secondary btn-block');
+            $('#pagamento-elettronico').attr('class', 'btn-lg btn-dark btn-block'); 
+            $('#pagamento-contanti').attr('class', 'btn-lg btn-secondary btn-block');
          }
          $( "#form-documenti" ).submit();
         //$("#documenti___comando__ ").focus();

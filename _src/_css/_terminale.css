@@ -74,3 +74,6 @@ padding: .5rem 1rem;
     color: #fff;
     }
 
+    .pannello-cassa .btn-secondary {
+      border-radius: 5px !important;
+  }

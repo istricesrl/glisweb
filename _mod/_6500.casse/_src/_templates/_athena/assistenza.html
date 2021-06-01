@@ -1,0 +1,255 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends 'ext/blank.html' %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{% block header %}
+
+
+    <div class="text-left">
+        {% set target = pages.casse.url[ localization.language.ietf ] %}
+        <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+
+    </div>
+
+
+{% endblock %}
+
+{% block main %}
+
+<form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+<div class="form-group ">
+{% if not session.assistenza.id_cliente %}
+<legend>cliente</legend>
+<div class="row col">
+    <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+</div>
+
+{% if view.data and session.__view__[ view.id ].__search__  %}
+<div class="form-group form-row">
+<div class=" col-md-12 text-center table-responsive">
+
+    <table class="view-table  clickable">
+
+    <thead>
+        <tr>
+        {% for key in view.fields %}
+        <th class="{{ view.class[key] }}">
+            {% if view.cols[ key ] %}
+            <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
+            <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+            <option value="">{{ view.cols[ key ] }}</option>
+            <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
+            <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+            </select>
+            <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
+            {% endif %}
+        </th>
+        {% endfor %}
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for row in view.data %}
+        <tr onClick="window.open('{{ page.path[ localization.language.ietf ] }}?__cliente__[id]={{ row.id }}','_self');">
+        {# for key,col in view.cols #}
+        {% for key in view.fields %}
+        <td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
+        {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+
+    </table>
+
+</div>
+</div>
+
+{% endif %}
+{% elseif not session.assistenza.id_progetto %}
+<div class="form-group form-row">
+    <legend>cliente</legend>
+    <div class="col-12">{{ etc.cliente.__label__ }}</div>
+    <legend>progetto</legend>
+
+{% if view.data %}
+
+
+<div class=" col-md-12 text-center table-responsive">
+
+    <table class="view-table  clickable">
+
+    <thead>
+        <tr>
+        {% for key in view.fields %}
+        <th class="{{ view.class[key] }}">
+            {% if view.cols[ key ] %}
+            <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
+            <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+            <option value="">{{ view.cols[ key ] }}</option>
+            <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
+            <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+            </select>
+            <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
+            {% endif %}
+        </th>
+        {% endfor %}
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for row in view.data %}
+        <tr onClick="window.open('{{ page.path[ localization.language.ietf ] }}?__progetto__[id]={{ row.id }}','_self');">
+        {# for key,col in view.cols #}
+        {% for key in view.fields %}
+        <td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
+        {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+
+    </table>
+
+</div>
+</div>
+{% endif %}
+    <fieldset class=" ">
+        <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 2%;" >
+            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
+        </div>
+    </fieldset>
+{% else %}
+<div class="form-group form-row">
+    <legend>cliente</legend>
+    <div class="col-12">{{ etc.cliente.__label__ }}</div>
+    <legend>progetto</legend>
+    <div class="col-12">{{ etc.progetto.__label__ }}</div>
+    <legend>todo</legend>
+    <section class="row flex-fill">
+        <div class="col-md-12 d-flex flex-column">
+        <form id="form-assistenza class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+            {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
+            {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '','__parent_id__' , 'hidden' ) }}
+            {{ frm.input( 'todo', '', '', 'nome', '', '', request,'pagamento pronto scontrino','','', 'hidden' ) }}
+	<div class="form-group form-row">
+		<div class="col-12 col-md">
+			<span class="label-top">nome</span>
+			{{ frm.inputRequired( 'todo', '', '', 'nome', '', '', request ) }}
+		</div>
+	</div>
+    <div class="form-group form-row">
+        <div class="col-12 col-md">
+        <span class="label-top">descrizione del problema</span>
+        {{ frm.textarea( 'todo', '', '', 'testo', '', 2, request ) }}
+        </div>
+    </div>
+
+    <fieldset>
+    <legend>attivita</legend>
+
+			<div class="form-group form-row">
+				<div class="col">
+					<span class="label-top">descrizione</span>
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				</div>
+			</div>
+			<div class="form-group form-row">
+				<div class="col-12">
+				<span class="label-top">note</span>
+				{{ frm.textarea( table, '', '', 'testo', '', 3, request ) }}
+				</div>
+			</div>
+	
+			</fieldset>
+
+			<fieldset>
+				<legend>esecuzione</legend>
+				<div class="form-group form-row">
+					<div class="col-12 col-md">
+						<span class="label-top">esecutore</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf ) }}
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset>
+				<legend>programmazione</legend>
+				<div class="form-group form-row">
+					<div class="col-6 col-md-auto">
+						<span class="label-top">data</span>
+						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora inizio</span>
+						{{ frm.time( table, '', '', 'ora_inizio_programmazione', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora fine</span>
+						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
+					</div>
+                    <div class="col-12 col-md">
+                        <span class="label-top">indirizzo</span>
+                        {{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf ) }}
+                    </div>
+				</div>
+			</fieldset>
+
+			<!--fieldset>
+			<legend>attribuzione</legend>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md-6">
+					<span class="label-top">todo</span>
+					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, '', '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf ) }}
+				</div>
+				<div class="col-12 col-md-6">
+					<span class="label-top">progetto</span>
+					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.form','','anagrafica', 'id_progetto', page, pages, ietf ) }}
+				</div>
+				<div class="col-12 col-md-6">
+					<span class="label-top">cliente</span>
+					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf ) }}
+				</div>
+
+			</div>
+			</fieldset-->
+        </div>
+</div>    
+
+    </div>
+    <fieldset class=" ">
+        <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 2%;" >
+            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
+            <button type="submit" class="btn-lg btn-secondary " onclick="window.open('{{ cassa }}?__delete__[documenti][id]={{ request.documenti.id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+        </div>
+    </fieldset>
+    </form>
+    </section>
+    
+{% endif %}
+</div>
+</form>
+{% endblock %}
