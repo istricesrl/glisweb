@@ -1,0 +1,6 @@
+  "casse": {
+    "printer": {
+      "address": "%indirizzo della stampante%",
+      "port": "%porta della stampante%"
+    }
+  }
