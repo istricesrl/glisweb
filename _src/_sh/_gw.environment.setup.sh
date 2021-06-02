@@ -89,15 +89,29 @@ apt-get install -y default-mysql-server
 apt-get install -y adminer
 a2enconf adminer
 
+## richiesta
+echo -n "vuoi configurare automaticamente il sito di default su localhost (s/n)? "
+read YN
+
+## configurazione
+if [ "$YN" = "s" ]; then
+    a2dissite 000-default.conf
+    cp _usr/_config/_apache2/default.http.conf /etc/apache2/sites-available/
+    a2ensite default.http.conf
+    service apache2 restart
+fi
+
 ## password di root
 read -s -p "inserisci la password per MySQL root (vuoto per saltare): " SRVPASS && echo
 if [ -n "$SRVPASS" ]; then
-    sudo /etc/init.d/mysql stop
+    sudo service mysql stop
     sudo mkdir -p /var/run/mysqld
     sudo chown mysql:mysql /var/run/mysqld
     sudo mysqld_safe --skip-grant-tables &
-    mysql -u root mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$SRVPASS'; FLUSH PRIVILEGES; exit;"
+    mysql -u root mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$SRVPASS';"
+    sudo killall mysqld
     sudo service mysql restart
+    mysql -u root -p$SRVPASS mysql -e "FLUSH PRIVILEGES;"
 fi
 
 ## installazione di certbot
