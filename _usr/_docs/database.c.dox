@@ -325,18 +325,20 @@
 
     colonna                                                 | descrizione
     --------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_prodotti_caratteristiche.id                   | l'ID dell'associazione fra la cattegoria e la caratteristica dei prodotti
-    categorie_prodotti_caratteristiche.ordine               | -
-    categorie_prodotti_caratteristiche.id_categoria         | l'ID della categoria di prodotti
-    categorie_prodotti_caratteristiche.id_caratteristica    | l'ID della caratteristica di prodotti
+    categorie_prodotti_caratteristiche.id                   | l'ID dell'associazione fra categoria e caratteristica
+    categorie_prodotti_caratteristiche.id_categoria         | l'ID della categoria
+    categorie_prodotti_caratteristiche.id_caratteristica    | l'ID della caratteristica
+    categorie_prodotti_caratteristiche.ordine               | campo di ordinamento
+    categorie_prodotti_caratteristiche.note                 | note relative all'associazione fra categoria e caratteristica
     categorie_prodotti_caratteristiche.se_assente           | flag che indica se la caratteristica è da considerare presente (NULL) o assente (NOT NULL)
-    categorie_prodotti_caratteristiche.se_visibile          | -
-    categorie_prodotti_caratteristiche.testo                | -
+    categorie_prodotti_caratteristiche.se_visibile          | flag che indica se la caratteristica è visibile sul web
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                          | campo                     | tabella e campo collegati         | comportamento
+    ------------------------------------------------|---------------------------|-----------------------------------|------------------
+    categorie_prodotti_caratteristiche_ibfk_01      | id_categoria              | categorie_prodotti.id             | ON DELETE CASCADE ON UPDATE CASCADE
+    categorie_prodotti_caratteristiche_ibfk_02      | id_caratteristica         | caratteristiche_prodotti.id       | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *categorie_prodotti_caratteristiche_view* relativa alla tabella *categorie_prodotti_caratteristiche* presenta le seguenti colonne:
 
@@ -345,28 +347,37 @@
     
     categorie_progetti
     ------------------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene le categorie dei progetti, organizzate ad albero tramite il campo *id_genitore*
 
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_progetti.id                           | l'ID della cattegoria del progetto
-    categorie_progetti.id_genitore                  | l'ID parente
-    categorie_progetti.nome                         | 
-    categorie_progetti.id_account_inserimento       | 
-    categorie_progetti.timestamp_inserimento        | 
-    categorie_progetti.id_account_aggiornamento     | 
-    categorie_progetti.timestamp_aggiornamento      | 
+    categorie_progetti.id                           | l'ID della categoria di progetti
+    categorie_progetti.id_genitore                  | l'ID della categoria genitore
+    categorie_progetti.ordine                       | campo di ordinamento
+    categorie_progetti.nome                         | il nome della categoria
+    categorie_progetti.se_ordinario                 | flag che indica se i progetti di questa categoria sono ordinari
+    categorie_progetti.se_straordinario             | flag che indica se i progetti di questa categoria sono straordinari
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                     | tabella e campo collegati         | comportamento
+    --------------------------------------------|---------------------------|-----------------------------------|------------------
+    categorie_progetti_ibfk_01_nofollow         | id_genitore               | categorie_progetti.id             | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *categorie_progetti_view* relativa alla tabella *categorie_progetti* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
- 
+    categorie_progetti_view.id                             | -
+    categorie_progetti_view.id_genitore                    | -
+    categorie_progetti_view.ordine                         | -
+    categorie_progetti_view.nome                           | -
+    categorie_progetti_view.se_ordinario                   | -
+    categorie_progetti_view.se_straordinario               | -
+    categorie_progetti_view.figli                          | il numero di categorie figlie di questa categoria
+    categorie_progetti_view.membri                         | il numero di eventi collegati a questa categoria
+    categorie_progetti_view.__label__                      | l'etichetta descrittiva della categoria
+
     categorie_risorse
     -----------------
     Questa tabella *gestita* descrive le categorie delle risorse, organizzate ad albero tramite il campo *id_genitore*.
@@ -374,43 +385,67 @@
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
     categorie_risorse.id                    | l'ID della categoria di risorse
-    categorie_risorse.id_genitore           | -
-    categorie_risorse.ordine                | -
-    categorie_risorse.nome                  | -
-    
-    
+    categorie_risorse.id_genitore           | l'ID della categoria genitore
+    categorie_risorse.ordine                | campo di ordinamento
+    categorie_risorse.nome                  | il nome della categoria
+    categorie_risorse.template              | il template da applicare alla categoria per la pubblicazione sul web
+    categorie_risorse.schema_html           | lo schema da applicare alla categoria per la pubblicazione sul web
+    categorie_risorse.tema_css              | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_risorse.id_pagina             | l'ID della pagina genitore della categoria per la pubblicazione sul web
+
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------|-------------------------------|----------------------
+    categorie_risorse_ibfk_01_nofollow          | id_genitore           | categorie_risorse.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_risorse_ibfk_02_nofollow          | id_pagina             | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *categorie_risorse_view* relativa alla tabella *categorie_risorse* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_risorse_view.id                              | -
+    categorie_risorse_view.id_genitore                     | -
+    categorie_risorse_view.ordine                          | -
+    categorie_risorse_view.nome                            | -
+    categorie_risorse_view.figli                           | il numero di categorie figlie di questa categoria
+    categorie_risorse_view.membri                          | il numero di eventi collegati a questa categoria
+    categorie_risorse_view.__label__                       | l'etichetta descrittiva della categoria
  
-    classi_energetiche_immobili
-    ---------------------------
-    Questa tabella *gestita* descrive le classi energetiche applicabili agli immobili.
+    classi_energetiche
+    ------------------
+    Questa tabella *gestita* descrive le classi energetiche applicabili a varie entità principali.
 
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    classi_energetiche_immobili.id          | l'ID della classe energetica
-    classi_energetiche_immobili.nome        | -
-    classi_energetiche_immobili.ep_min      | -
-    classi_energetiche_immobili.ep_max      | -
-    classi_energetiche_immobili.id_colore   | -
+    colonna                          | descrizione
+    ---------------------------------|---------------------------------------------------------------------------------------
+    classi_energetiche.id            | l'ID della classe energetica
+    classi_energetiche.nome          | il nome della classe energetica
+    classi_energetiche.ep_min        | -
+    classi_energetiche.ep_max        | -
+    classi_energetiche.id_colore     | l'ID del colore associato alla classe energetica
+    classi_energetiche.se_immobili   | flag che indica se la classe energetica è applicabile agli immobili
+    classi_energetiche.se_prodotti   | flag che indica se la classe energetica è applicabile ai prodotti e agli articoli
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo             | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------|-------------------------------|----------------------
+    classi_energetiche_ibfk_01_nofollow         | id_colore         | colori.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista *classi_energetiche_immobili_view* relativa alla tabella *classi_energetiche_immobili* presenta le seguenti colonne:
+    La vista *classi_energetiche_view* relativa alla tabella *classi_energetiche* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    classi_energetiche_view.id                  | -
+    classi_energetiche_view.nome                | -
+    classi_energetiche_view.ep_min              | -
+    classi_energetiche_view.ep_max              | -
+    classi_energetiche_view.id_colore           | -
+    classi_energetiche_view.hex                 | il codice esadecimale del colore associato alla classe energetica
+    classi_energetiche_view.se_immobili         | -
+    classi_energetiche_view.se_prodotti         | -
+    classi_energetiche_view.__label__           | l'etichetta descrittiva della classe energetica
+
     colori
     ------
     Questa tabella di *supporto* descrive i colori secondo varie codifiche (RGB, esadecimale).

@@ -530,41 +530,70 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000038
+--| 000001004100
 
 -- categorie_prodotti_caratteristiche
 -- tipologia: tabella gestita
+-- verifica: 2021-06-02 19:12 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `categorie_prodotti_caratteristiche` (
   `id` int(11) NOT NULL,
-  `ordine` int(11) DEFAULT NULL,
   `id_categoria` int(11) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `note` text,
   `se_assente` int(1) DEFAULT NULL,
-  `se_visibile` int(1) DEFAULT NULL,
-  `testo` text
+  `se_visibile` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000039
+--| 000001004300
+
+-- categorie_progetti
+-- tipologia: tabella gestita
+-- verifica: 2021-06-02 19:40 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `categorie_progetti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 000001004500
 
 -- categorie_risorse
 -- tipologia: tabella gestita
+-- verifica: 2021-06-02 20:04 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL
+  `nome` char(64) NOT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000040
+--| 000001004700
 
--- classi_energetiche_immobili
+-- classi_energetiche
 -- tipologia: tabella di supporto
-CREATE TABLE IF NOT EXISTS `classi_energetiche_immobili` (
+-- verifica: 2021-06-02 20:35 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `classi_energetiche` (
   `id` int(11) NOT NULL,
   `nome` char(8) NOT NULL,
   `ep_min` int(11) DEFAULT NULL,
   `ep_max` int(11) DEFAULT NULL,
-  `id_colore` int(11) DEFAULT NULL
+  `id_colore` int(11) DEFAULT NULL,
+  `se_immobili` int(1) DEFAULT NULL,
+  `se_prodotti` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000041

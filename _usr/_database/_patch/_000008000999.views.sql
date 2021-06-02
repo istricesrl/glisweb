@@ -964,4 +964,119 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 	GROUP BY categorie_prodotti.id
 ;
 
+--| 000008004100
+
+-- categorie_prodotti_caratteristiche_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `categorie_prodotti_caratteristiche_view`;
+
+--| 000008004101
+
+-- categorie_prodotti_caratteristiche_view
+-- tipologia: tabella assistita
+-- verifica: 2021-06-02 19:29 Fabio Mosti
+CREATE OR REPLACE VIEW categorie_prodotti_caratteristiche_view AS
+	SELECT
+		categorie_prodotti_caratteristiche.id,
+		categorie_prodotti_caratteristiche.id_categoria,
+		categorie_prodotti_caratteristiche.id_caratteristica,
+		categorie_prodotti_caratteristiche.ordine,
+		categorie_prodotti_caratteristiche.se_assente,
+		categorie_prodotti_caratteristiche.se_visibile,
+		count( prodotti_categorie.id ) AS membri,
+		concat(
+			categorie_prodotti.nome,
+			' / ',
+			caratteristiche_prodotti.nome
+		) AS __label__
+	FROM categorie_prodotti
+		LEFT JOIN categorie_prodotti ON categorie_prodotti.id = categorie_prodotti_caratteristiche.id_categoria
+		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = categorie_prodotti_caratteristiche.id_caratteristica
+	GROUP BY categorie_prodotti.id
+;
+
+--| 000008004300
+
+-- categorie_progetti_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `categorie_progetti_view`;
+
+--| 000008004301
+
+-- categorie_progetti_view
+-- tipologia: tabella assistita
+-- verifica: 2021-06-01 20:02 Fabio Mosti
+CREATE OR REPLACE VIEW categorie_progetti_view AS
+	SELECT
+		categorie_progetti.id,
+		categorie_progetti.id_genitore,
+		categorie_progetti.ordine,
+		categorie_progetti.nome,
+		categorie_progetti.se_ordinario,
+		categorie_progetti.se_straordinario,
+		count( c1.id ) AS figli,
+		count( progetti_categorie.id ) AS membri,
+		categorie_progetti_path( categorie_progetti.id ) AS __label__
+	FROM categorie_progetti
+		LEFT JOIN categorie_progetti AS c1 ON c1.id_genitore = categorie_progetti.id
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_categoria = categorie_progetti.id
+	GROUP BY categorie_progetti.id
+;
+
+--| 000008004500
+
+-- categorie_risorse_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `categorie_risorse_view`;
+
+--| 000008004501
+
+-- categorie_risorse_view
+-- tipologia: tabella assistita
+-- verifica: 2021-06-01 20:25 Fabio Mosti
+CREATE OR REPLACE VIEW categorie_risorse_view AS
+	SELECT
+		categorie_risorse.id,
+		categorie_risorse.id_genitore,
+		categorie_risorse.ordine,
+		categorie_risorse.nome,
+		count( c1.id ) AS figli,
+		count( risorse_categorie.id ) AS membri,
+		categorie_risorse_path( categorie_risorse.id ) AS __label__
+	FROM categorie_risorse
+		LEFT JOIN categorie_risorse AS c1 ON c1.id_genitore = categorie_risorse.id
+		LEFT JOIN risorse_categorie ON risorse_categorie.id_categoria = categorie_risorse.id
+	GROUP BY categorie_risorse.id
+;
+
+--| 000008004700
+
+-- classi_energetiche_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `classi_energetiche_view`;
+
+--| 000008004701
+
+-- classi_energetiche_view
+-- tipologia: tabella assistita
+-- verifica: 2021-06-01 20:25 Fabio Mosti
+CREATE OR REPLACE VIEW classi_energetiche_view AS
+	SELECT
+		classi_energetiche.id,
+		classi_energetiche.nome,
+		classi_energetiche.ep_min,
+		classi_energetiche.ep_max,
+		classi_energetiche.id_colore,
+		colori.hex,
+		classi_energetiche.se_immobili,
+		classi_energetiche.se_prodotti,
+		concat(
+			classi_energetiche.nome,
+			' / ',
+			colori.hex
+		) AS __label__
+	FROM categorie_risorse
+		LEFT JOIN colori ON colori.id = classi_energetiche.id_colore
+;
+
 --| FINE FILE

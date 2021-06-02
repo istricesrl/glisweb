@@ -429,56 +429,67 @@ ALTER TABLE `categorie_prodotti`
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_pagina` (`id_pagina`),
-	ADD KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_pagina`);
 ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000036
+--| 000003004100
 
 -- categorie_prodotti_caratteristiche
 -- tipologia: tabella gestita
+-- verifica: 2021-06-02 19:14 Fabio Mosti
 ALTER TABLE `categorie_prodotti_caratteristiche`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id_categoria` (`id_categoria`,`id_caratteristica`), 
-	ADD KEY `ordine` (`ordine`), 
+	ADD UNIQUE KEY `unica` (`id_categoria`,`id_caratteristica`), 
+	ADD KEY `id_categoria` (`id_categoria`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `indice` (`id`,`id_categoria`,`id_caratteristica`,`ordine`, `se_assente`, `se_visibile`);
 ALTER TABLE `categorie_prodotti_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000037
+--| 000003004300
 
 -- categorie_progetti
 -- tipologia: tabella gestita
+-- verifica: 2021-06-02 20:10 Fabio Mosti
 ALTER TABLE `categorie_progetti`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_genitore` (`id_genitore`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`, `nome`);
+	ADD KEY `se_ordinario` (`se_ordinario`), 
+	ADD KEY `se_straordinario` (`se_straordinario`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_ordinario`,`se_straordinario`);
 ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000038
+--| 000003004500
 
 -- categorie_risorse
 -- tipologia: tabella gestita
+-- verifica: 2021-06-02 20:10 Fabio Mosti
 ALTER TABLE `categorie_risorse`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_pagina` (`id_pagina`),
-	ADD KEY `indice` (`id`,`id_genitore`, `nome`, `ordine`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_pagina`);
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000039
+--| 000003004700
 
--- classi_energetiche_immobili
+-- classi_energetiche
 -- tipologia: tabella di supporto
-ALTER TABLE `classi_energetiche_immobili`
+-- verifica: 2021-06-02 20:38 Fabio Mosti
+ALTER TABLE `classi_energetiche`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`, `nome`, `id_colore`);
-ALTER TABLE `classi_energetiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+	ADD KEY `id_colore` (`id_colore`),
+	ADD KEY `se_immobili` (`se_immobili`), 
+	ADD KEY `se_prodotti` (`se_prodotti`), 
+	ADD KEY `indice` (`id`, `nome`, `id_colore`, `se_immobili`, `se_prodotti`);
+ALTER TABLE `classi_energetiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000040
 
