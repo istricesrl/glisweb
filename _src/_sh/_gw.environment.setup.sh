@@ -93,9 +93,11 @@ a2enconf adminer
 read -s -p "inserisci la password per MySQL root (vuoto per saltare): " SRVPASS && echo
 if [ -n "$SRVPASS" ]; then
     sudo /etc/init.d/mysql stop
-    sudo mysqld --skip-grant-tables &
+    sudo mkdir -p /var/run/mysqld
+    sudo chown mysql:mysql /var/run/mysqld
+    sudo mysqld_safe --skip-grant-tables &
     mysql -u root mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$SRVPASS'; FLUSH PRIVILEGES; exit;"
-    service mysql restart
+    sudo service mysql restart
 fi
 
 ## installazione di certbot
