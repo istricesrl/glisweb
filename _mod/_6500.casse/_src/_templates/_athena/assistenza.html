@@ -27,28 +27,22 @@
 {% endif %}
 
 {% block header %}
-
-
-    <div class="text-left">
+<div class="text-left">
         {% set target = pages.casse.url[ localization.language.ietf ] %}
         <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
-
-    </div>
-
-
+</div>
 {% endblock %}
 
 {% block main %}
-
 <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
-<div class="form-group ">
+<div class="form-group">
 {% if not session.assistenza.id_cliente %}
 <legend>cliente</legend>
 <div class="form-group form-row">
-    <div class="col">
+    <div class="col mt-3">
         <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>    
-    <div class="col-auto">
+    <div class="col-auto mt-3">
         {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
     <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');"><i class="fa fa-plus"></i></button>
     </div>
@@ -98,7 +92,12 @@
 {% elseif not session.assistenza.id_progetto %}
 <div class="form-group form-row">
     <legend>cliente</legend>
-    <div class="col-12">{{ etc.cliente.__label__ }}</div>
+    <div class="col-12">
+        <h3>{{ etc.cliente.__label__ }}</h3>
+        {% if etc.cliente.mail %}indirizzo mail: {{ etc.cliente.mail }} <br>{% endif %}
+        {% if etc.cliente.telefoni %}telefoni: {{ etc.cliente.telefoni }} <br>{% endif %}
+    </div>
+
     <legend>progetto</legend>
 
     <div class="form-group form-row">
@@ -157,99 +156,151 @@
 {% else %}
 <div class="form-group form-row">
     <legend>cliente</legend>
-    <div class="col-12">{{ etc.cliente.__label__ }}</div>
+    <div class="col-12">
+        <h3>{{ etc.cliente.__label__ }}</h3>
+        {% if etc.cliente.mail %}indirizzo mail: {{ etc.cliente.mail }} <br>{% endif %}
+        {% if etc.cliente.telefoni %}telefoni: {{ etc.cliente.telefoni }} <br>{% endif %}
+    </div>
+    {% if session.assistenza.id_cliente %}
+    <div class="col-auto">
+        {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
+    <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&anagrafica[id]={{ session.assistenza.id_cliente }}','_self');"><i class="fa fa-pencil"> modifica anagrafica</i></button>
+    </div>
+{% endif %}
+</div>    
     <legend>progetto</legend>
-    <div class="col-12">{{ etc.progetto.__label__ }}</div>
+    <div class="form-group form-row">
+    <div class="col"><h3>{{ etc.progetto.__label__ }}</h3></div>
+{% if session.assistenza.id_progetto %}
+    <div class="col-auto">
+        {% set progetto = pages[ 'progetti.form' ].url[ localization.language.ietf ] %}
+    <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetto }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&progetti[id]={{ session.assistenza.id_progetto }}','_self');"><i class="fa fa-pencil"> modifica progetto</i></button>
+    </div>
+{% endif %}
+</div>
     <legend>todo</legend>
 
-    <section class="col">
-        <div class="col-md-12 d-flex flex-column">
-        <form id="form-assistenza class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
-            {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
-            {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '','__parent_id__' , 'hidden' ) }}
-            {{ frm.input( 'todo', '', '', 'nome', '', '', request,'pagamento pronto scontrino','','', 'hidden' ) }}
-	<div class="form-group form-row">
+    <form id="form-assistenza class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+
+        {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
+        {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }}
+<div class="form-group form-row">       
+	<div class="col">
 		<div class="col-12 col-md">
 			<span class="label-top">nome</span>
+            {% if session.assistenza.id_todo %}
+			{{ frm.inputRequired( 'todo', '', '', 'nome', '', '', request, '', '', '', 1 ) }}
+            {% else %}
 			{{ frm.inputRequired( 'todo', '', '', 'nome', '', '', request ) }}
-		</div>
-	</div>
-    <div class="form-group form-row">
-        <div class="col col-md">
+            {% endif %}
+        </div>
+        <div class="col col-md mt-3">
         <span class="label-top">descrizione del problema</span>
-        {{ frm.textarea( 'todo', '', '', 'testo', '', 2, request ) }}
+        {% if session.assistenza.id_todo %}
+        {{ frm.textarea( 'todo', '', '', 'testo', '', '3', request, '', '', '', '', '', 1) }}
+        {% else %}
+        {{ frm.textarea( 'todo', '', '', 'testo', '', 3, request ) }}
+        {% endif %}
         </div>
     </div>
+{% if session.assistenza.id_todo %}
 
+    <div class="col-auto">
+        {% set todo = pages[ 'todo.form' ].url[ localization.language.ietf ] %}
+    <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ todo }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&todo[id]={{ session.assistenza.id_todo }}','_self');"><i class="fa fa-pencil"> modifica todo</i></button>
+    </div>
+</div>
+</div>
     <fieldset>
     <legend>attivita</legend>
-
+    {{ frm.input( 'attivita', '', '', 'id', '', '', request, '', 'hidden') }}
+    {{ frm.input( 'attivita', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }}
+    {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
+    {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.assistenza.id_todo , 'hidden' ) }}
+    <div class="form-group form-row">       
+        <div class="form-group col">
 			<div class="form-group form-row">
 				<div class="col">
 					<span class="label-top">descrizione</span>
-					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+					
+                    {% if session.assistenza.id_attivita %}
+                    {{ frm.inputRequired( 'attivita', '', '', 'nome', '', '', request, '', '', '', 1 ) }}
+                    {% else %}
+                    {{ frm.inputRequired( 'attivita', '', '', 'nome', '', '', request ) }}
+                    {% endif %}
 				</div>
 			</div>
 			<div class="form-group form-row">
-				<div class="col-12 col-md">
+				<div class="col-12 col-md mt-3">
 				<span class="label-top">note</span>
-				{{ frm.textarea( table, '', '', 'testo', '', 3, request ) }}
+                {% if session.assistenza.id_attivita %}
+                {{ frm.textarea( 'attivita', '', '', 'testo', '', 3, request, '', '', '', '', '', 1) }}
+                {% else %}
+                {{ frm.textarea( 'attivita', '', '', 'testo', '', 3, request ) }}
+                {% endif %}
 				</div>
 			</div>
 	
-			</fieldset>
 
-			<fieldset>
-				<legend>esecuzione</legend>
+				<!--legend>esecuzione</legend-->
 				<div class="form-group form-row">
-					<div class="col-12 col-md">
+					<div class="col-12 col-md mt-3">
 						<span class="label-top">esecutore</span>
-						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf ) }}
-					</div>
-				</div>
-			</fieldset>
-
-			<fieldset>
-				<legend>programmazione</legend>
-				<div class="form-group form-row">
-					<div class="col-6 col-md-auto">
-						<span class="label-top">data</span>
-						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
-					</div>
-					<div class="col-2 col-md-1">
-						<span class="label-top">ora inizio</span>
-						{{ frm.time( table, '', '', 'ora_inizio_programmazione', '', '', request) }} 
-					</div>
-					<div class="col-2 col-md-1">
-						<span class="label-top">ora fine</span>
-						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
-					</div>
-                    <div class="col-12 col-md">
-                        <span class="label-top">indirizzo</span>
-                        {{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf ) }}
+                        {% if session.assistenza.id_attivita %}
+						{{ frm.selectDisabled( 'attivita', '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request ) }}
+                        {% else %}
+                        {{ frm.selectBox( 'attivita', '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica,  '', '', '', '', '', '', '', '', page, pages, ietf ) }}
+                        {% endif %}
                     </div>
 				</div>
-			</fieldset>
 
-			<!--fieldset>
-			<legend>attribuzione</legend>
+				<!--legend>programmazione</legend-->
+				<div class="form-group form-row">
+					<div class="col-6 col-md-auto mt-3">
+						<span class="label-top">data</span>
+                        {% if session.assistenza.id_attivita %}
+                        {{ frm.date( 'attivita', '', '', 'data_programmazione', '', '', request, '', '', '', '', 1) }}
+                        {% else %}
+						{{ frm.date( 'attivita', '', '', 'data_programmazione', '', '', request ) }}
+                        {% endif %}
+					</div>
+					<div class="col-2 col-md-1 mt-3">
+						<span class="label-top">ora inizio</span>
+                        {% if session.assistenza.id_attivita %}
+                        {{ frm.time( 'attivita', '', '', 'ora_inizio_programmazione', '', '', request, '', '', '', '', 1) }}
+                        {% else %}
+						{{ frm.time( 'attivita', '', '', 'ora_inizio_programmazione', '', '', request) }}
+                        {% endif %} 
+					</div>
+					<div class="col-2 col-md-1 mt-3">
+						<span class="label-top">ora fine</span>
+                        {% if session.assistenza.id_attivita %}
+                        {{ frm.time( 'attivita', '', '', 'ora_fine_programmazione', '', '', request, '', '', '', '', 1) }}
+                        {% else %}
+						{{ frm.time( 'attivita', '', '', 'ora_fine_programmazione', '', '', request) }}
+                        {% endif %} 
+					</div>
+                    <div class="col-12 col-md mt-3">
+                        <span class="label-top">indirizzo</span>
+                        {% if session.assistenza.id_attivita %}
+						{{ frm.selectDisabled( 'attivita', '', '', 'id_indirizzo', '', etc.select.indirizzi, request ) }}
+                        {% else %}
+                        {{ frm.selectBox( 'attivita', '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','','','', '', page, pages, ietf ) }}
+                        {% endif %}
+                    </div>
+				</div>
+        </div>
+{% endif %}
+{% if session.assistenza.id_attivita %}
 
-			<div class="form-group form-row">
-				<div class="col-12 col-md-6">
-					<span class="label-top">todo</span>
-					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, '', '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf ) }}
-				</div>
-				<div class="col-12 col-md-6">
-					<span class="label-top">progetto</span>
-					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.form','','anagrafica', 'id_progetto', page, pages, ietf ) }}
-				</div>
-				<div class="col-12 col-md-6">
-					<span class="label-top">cliente</span>
-					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf ) }}
-				</div>
+    <div class="col-auto">
+        {% set attivita = pages[ 'attivita.form' ].url[ localization.language.ietf ] %}
+    <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ attivita }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&attivita[id]={{ session.assistenza.id_attivita }}','_self');"><i class="fa fa-pencil"> modifica attività</i></button>
+    </div>
 
-			</div>
-			</fieldset-->
+{% endif %}
+</div>
         </div>
 </div>    
 
@@ -257,11 +308,15 @@
     <fieldset class=" ">
         <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 2%;" >
             <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
-            <button type="submit" class="btn-lg btn-secondary " onclick="window.open('{{ cassa }}?__delete__[documenti][id]={{ request.documenti.id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+            {% if not session.assistenza.id_attivita %}
+            <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+            {% else %}
+            <button type="submit" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
+            {% endif %}
         </div>
     </fieldset>
     </form>
-    </section>
+
     
 {% endif %}
 </div>
