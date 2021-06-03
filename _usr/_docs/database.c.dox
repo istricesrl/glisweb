@@ -448,27 +448,36 @@
 
     colori
     ------
-    Questa tabella di *supporto* descrive i colori secondo varie codifiche (RGB, esadecimale).
+    Questa tabella di *supporto* descrive i colori secondo varie codifiche (RGB, esadecimale); i colori sono organizzati
+    ad albero per facilitare le ricerche per colore nei siti.
 
     colonna               | descrizione
     ----------------------|----------------------------------------------------------------------------------------------------------------------
     colori.id             | l'ID del colore
+    colori.id_genitore    | l'ID del colore genitore
     colori.nome           | il nome del colore
     colori.hex            | il codice esadecimale del colore
     colori.r              | la componente rossa del colore codificato in RGB
     colori.g              | la componente gialla del colore codificato in RGB
     colori.b              | la componente blu del colore codificato in RGB
+    colori.ral            | il codice RAL del colore
+    colori.pantone        | il codice Pantone del colore
+    colori.c              | la componente ciano del colore codificato in CMYK
+    colori.m              | la componente magenta del colore codificato in CMYK
+    colori.y              | la componente gialla del colore codificato in CMYK
+    colori.k              | la componente nera del colore codificato in CMYK
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|----------------------
+    colori_ibfk_01_nofollow             | id_genitore               | colori.id                     | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *colori_view* relativa alla tabella *colori* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
- 
+
     comuni
     ------
     Questa tabella di *supporto* contiene i comuni; i comuni contengono gli *indirizzi* e sono contenuti dalle *provincie*.

@@ -491,14 +491,23 @@ ALTER TABLE `classi_energetiche`
 	ADD KEY `indice` (`id`, `nome`, `id_colore`, `se_immobili`, `se_prodotti`);
 ALTER TABLE `classi_energetiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000040
+--| 000003005100
 
 -- colori
 -- tipologia: tabella di supporto
+-- verifica: 2021-06-02 22:27 Fabio Mosti
 ALTER TABLE `colori`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`, `nome`);
+	ADD UNIQUE KEY `unica_hex` (`nome`,`hex`),
+	ADD UNIQUE KEY `unica_rgb` (`nome`,`r`,`g`,`b`),
+	ADD UNIQUE KEY `unica_ral` (`nome`,`ral`),
+	ADD UNIQUE KEY `unica_pantone` (`nome`,`pantone`),
+	ADD UNIQUE KEY `unica_cmyk` (`nome`,`c`,`m`,`y`,`k`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`, `nome`,`id_genitore`,`hex`,`r`,`g`,`b`),
+	ADD KEY `indice_ral` (`id`, `nome`,`id_genitore`,`ral`),
+	ADD KEY `indice_pantone` (`id`, `nome`,`id_genitore`,`pantone`),
+	ADD KEY `indice_cmyk` (`id`, `nome`,`id_genitore`,`c`,`m`,`y`,`k`);
 ALTER TABLE `colori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000041

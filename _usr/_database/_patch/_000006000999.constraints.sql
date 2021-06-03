@@ -329,4 +329,12 @@ ALTER TABLE `categorie_risorse`
 ALTER TABLE `classi_energetiche`
     ADD CONSTRAINT `classi_energetiche_ibfk_01_nofollow` FOREIGN KEY (`id_colore`) REFERENCES `colori` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+--| 000006005100
+
+-- colori
+-- tipologia: tabella di supporto
+-- verifica: 2021-06-02 22:33 Fabio Mosti
+ALTER TABLE `colori`
+    ADD CONSTRAINT `colori_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `colori` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 --| FINE FILE

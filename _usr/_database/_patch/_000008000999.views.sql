@@ -1079,4 +1079,34 @@ CREATE OR REPLACE VIEW classi_energetiche_view AS
 		LEFT JOIN colori ON colori.id = classi_energetiche.id_colore
 ;
 
+--| 000008005100
+
+-- colori_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `colori_view`;
+
+--| 000008005101
+
+-- colori_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-06-03 15:05 Fabio Mosti
+CREATE OR REPLACE VIEW colori_view AS
+	SELECT
+		colori.id,
+		colori.id_genitore,
+		colori.nome,
+		colori.hex,
+		colori.r,
+		colori.g,
+		colori.b,
+		colori.ral,
+		colori.pantone,
+		colori.c,
+		colori.m,
+		colori.y,
+		colori.k,
+		colori_path( colori.id ) AS __label__
+	FROM colori
+;
+
 --| FINE FILE

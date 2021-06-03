@@ -596,17 +596,25 @@ CREATE TABLE IF NOT EXISTS `classi_energetiche` (
   `se_prodotti` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000041
+--| 000001005100
 
 -- colori
 -- tipologia: tabella di supporto
+-- verifica: 2021-06-02 22:22 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `colori` (
   `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `nome` char(16) NOT NULL,
   `hex` char(8) DEFAULT NULL,
   `r` int(3) DEFAULT NULL,
   `g` int(3) DEFAULT NULL,
-  `b` int(3) DEFAULT NULL
+  `b` int(3) DEFAULT NULL,
+  `ral` char(16) DEFAULT NULL,
+  `pantone` char(8) DEFAULT NULL,
+  `c` decimal(5,2) DEFAULT NULL,
+  `m` decimal(5,2) DEFAULT NULL,
+  `y` decimal(5,2) DEFAULT NULL,
+  `k` decimal(5,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 000001000042
