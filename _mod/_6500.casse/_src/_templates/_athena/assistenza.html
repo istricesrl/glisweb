@@ -44,8 +44,14 @@
 <div class="form-group ">
 {% if not session.assistenza.id_cliente %}
 <legend>cliente</legend>
-<div class="row col">
-    <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+<div class="form-group form-row">
+    <div class="col">
+        <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+    </div>    
+    <div class="col-auto">
+        {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
+    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');"><i class="fa fa-plus"></i></button>
+    </div>
 </div>
 
 {% if view.data and session.__view__[ view.id ].__search__  %}
@@ -95,6 +101,13 @@
     <div class="col-12">{{ etc.cliente.__label__ }}</div>
     <legend>progetto</legend>
 
+    <div class="form-group form-row">
+        <div class="col">
+            {% set progetti = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
+        <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetti }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&__preset__[progetti][id_cliente]={{ session.assistenza.id_cliente }}','_self');"><i class="fa fa-plus"> crea un nuovo progetto per il cliente</i></button>
+        </div>
+    </div>
+</div>    
 {% if view.data %}
 
 
@@ -148,7 +161,8 @@
     <legend>progetto</legend>
     <div class="col-12">{{ etc.progetto.__label__ }}</div>
     <legend>todo</legend>
-    <section class="row flex-fill">
+
+    <section class="col">
         <div class="col-md-12 d-flex flex-column">
         <form id="form-assistenza class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
             {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
@@ -161,7 +175,7 @@
 		</div>
 	</div>
     <div class="form-group form-row">
-        <div class="col-12 col-md">
+        <div class="col col-md">
         <span class="label-top">descrizione del problema</span>
         {{ frm.textarea( 'todo', '', '', 'testo', '', 2, request ) }}
         </div>
@@ -177,7 +191,7 @@
 				</div>
 			</div>
 			<div class="form-group form-row">
-				<div class="col-12">
+				<div class="col-12 col-md">
 				<span class="label-top">note</span>
 				{{ frm.textarea( table, '', '', 'testo', '', 3, request ) }}
 				</div>
