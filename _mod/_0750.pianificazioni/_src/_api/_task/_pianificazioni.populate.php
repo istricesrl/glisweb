@@ -131,7 +131,7 @@
 		if( !empty( $status['statiche'] ) && !empty( $date ) ){
 			// disattivo i trigger per le entità coinvolte e aggiungo l'entità alle statiche da ripopolare
             foreach( $status['statiche'] as $s ){
-                triggerOff( $s );
+                triggerOff( $s, 'pianificazioni.populate' );
 				$cf['cron']['cache']['view']['static']['refresh'][] = $s;
             }
         }

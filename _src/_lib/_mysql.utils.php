@@ -254,11 +254,13 @@
 
     }
 
-    function triggerOff( $entita ){
+    function triggerOff( $entita, $task = NULL ){
 
         global $cf;
 
-        logWrite( 'spengo i trigger per ' . $entita, 'cron' );
+        logWrite( 'richiesto spegnimento trigger per ' . $entita . ' da task ' . $task , 'cron' );
+
+    #    logWrite( 'spengo i trigger per ' . $entita, 'cron' );
 
         $troff = mysqlQuery(
 			$cf['mysql']['connection'],
