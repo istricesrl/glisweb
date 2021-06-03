@@ -51,6 +51,7 @@
             'WHERE ( timestamp_popolazione < ? OR timestamp_popolazione IS NULL ) '.
             'AND data_fine > ? '.
             'AND token IS NULL '.
+			'AND data_inizio_pulizia IS NULL '.		// non deve leggere quelle chiamate dalla check
             'ORDER BY timestamp_popolazione ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] ),
@@ -70,9 +71,12 @@
         'WHERE token = ? ',
         array( array( 's' => $status['token'] ) )
     );
+	
 
     // se c'è almeno una riga da inviare
     if( ! empty( $current ) ) {
+		
+	#	appendToFile( date('d-m-Y H:i') . ' lavoro la pianificazione ' . $current['id'] . PHP_EOL, 'ver/log/pianificazioni.populate.log');
 
         // prelevo la data dell'oggetto master
         $current['data_ultimo_oggetto'] = 
@@ -124,12 +128,13 @@
         // estraggo le statiche coinvolte nella creazione
         $status['statiche'] = pianificazioniGetStatic( $current['id'] );
 		
-		if( !empty( $status['statiche'] ) ){
+		if( !empty( $status['statiche'] ) && !empty( $date ) ){
+			// disattivo i trigger per le entità coinvolte e aggiungo l'entità alle statiche da ripopolare
             foreach( $status['statiche'] as $s ){
+                triggerOff( $s );
 				$cf['cron']['cache']['view']['static']['refresh'][] = $s;
             }
         }
-
 
         // per ogni data...
         foreach( $date as $data ) {

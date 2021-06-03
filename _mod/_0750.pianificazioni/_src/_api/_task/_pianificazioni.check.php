@@ -123,8 +123,8 @@
         $status['info'][] = 'nessuna pianificazione da elaborare';
     }
 	
-	appendToFile( date('d-m-Y H:i') . print_r( $status, true ) . PHP_EOL, 'var/log/pianificazioni.check.log');
-	appendToFile( print_r($status, true), 'var/log/pianificazioni.check.log');
+#	appendToFile( date('d-m-Y H:i') . print_r( $status, true ) . PHP_EOL, 'var/log/pianificazioni.check.log');
+#	appendToFile( print_r($status, true), 'var/log/pianificazioni.check.log');
         
 
     // output

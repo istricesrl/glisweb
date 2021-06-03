@@ -82,13 +82,6 @@
 	// log
 	logWrite( 'task trovati: ' . print_r( $cf['cron']['tasks'], true), 'cron' );
 
-	// spengo i trigger
-	$troff = mysqlQuery(
-			$cf['mysql']['connection'],
-			'SET @TRIGGER_LAZY = 1'
-		);
-	logWrite( 'spengo i trigger', 'cron' );		
-
     // ciclo sui task
 	foreach( $cf['cron']['tasks'] as $task ) {
 	    if( file_exists( DIR_BASE . $task['task'] ) ) {
@@ -138,24 +131,21 @@
 				array( 's' => $task['id'] )
 			)
 		);
-
 	}
-	
-	$tron = mysqlQuery(
-			$cf['mysql']['connection'],
-			'SET @TRIGGER_LAZY = NULL'
-		);
-	logWrite( 'riattivo i trigger', 'cron' );
 		
 	$cf['cron']['cache']['view']['static']['refresh'] = array_unique( $cf['cron']['cache']['view']['static']['refresh'] );
 	
-	logWrite( 'statiche da chiamare dopo unique: ' . print_r( $cf['cron']['cache']['view']['static']['refresh'], true ), 'cron' );	
-		
-	foreach( $cf['cron']['cache']['view']['static']['refresh'] as $s ){
-		$exec = mysqlQuery(
-			$cf['mysql']['connection'],
-			'CALL ' . $s . '(NULL)'
-		);
+	if( !empty($cf['cron']['cache']['view']['static']['refresh']  ) ){
+		foreach( $cf['cron']['cache']['view']['static']['refresh'] as $s ){
+			// riattivo i trigger per l'entità
+			triggerOn( $s );
+
+			// chiamo le statiche per ripopolare
+			$exec = mysqlQuery(
+				$cf['mysql']['connection'],
+				'CALL ' . $s . '_view_static(NULL)'
+			);
+		}
 	}
 
 	// metto il lock sui job aperti

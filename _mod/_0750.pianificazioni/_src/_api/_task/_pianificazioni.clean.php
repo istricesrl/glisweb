@@ -62,7 +62,7 @@
                     $status['statiche'] = pianificazioniGetStatic( $status['id'] );
                     // se ci sono righe da eliminare estraggo le statiche e disattivo i trigger
                     
-                    if( !empty( $status['to_delete'] ) && !empty( $status['statiche'] ) ){                       
+                    if( !empty( $status['to_delete'] ) && !empty( $status['statiche'] ) ){                   
                         foreach( $status['statiche'] as $s ){
                             triggerOff( $s );
                             $cf['cron']['cache']['view']['static']['refresh'][] = $s;
