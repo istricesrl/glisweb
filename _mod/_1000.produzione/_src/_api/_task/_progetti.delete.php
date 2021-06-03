@@ -35,8 +35,11 @@
     }
 
     if( !empty( $status['id_progetto'] ) ){
-		$cf['cron']['cache']['view']['static']['refresh'][] = 'attivita_view_static';
-		$cf['cron']['cache']['view']['static']['refresh'][] = 'todo_view_static';        
+		$cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
+        triggerOff( 'attivita', '_mod/_1000.produzione/_src/_api/_task/_progetti.delete.php' );
+
+		$cf['cron']['cache']['view']['static']['refresh'][] = 'todo';  
+        triggerOff( 'todo', '_mod/_1000.produzione/_src/_api/_task/_progetti.delete.php' );      
 
         mysqlDeleteRowRecursive(
             $cf['memcache']['connection'],
