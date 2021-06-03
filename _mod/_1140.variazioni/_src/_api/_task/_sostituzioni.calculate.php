@@ -21,8 +21,6 @@
 
     // chiave di lock
 	$status['token'] = getToken( __FILE__ );
-	
-	$cf['cron']['cache']['view']['static']['refresh'][] = 'attivita_view_static';
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
@@ -53,6 +51,9 @@
     }
 
     if( !empty( $status['update'] ) ){
+
+        $cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
+        triggerOff( 'attivita', '_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.calculate.php' );
 
         $cId = mysqlSelectValue(
             $cf['mysql']['connection'],
