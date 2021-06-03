@@ -30,6 +30,9 @@
 
     // chiave di lock
 	$cf['cron']['results']['token'] = getToken( __FILE__ );
+		
+	// inizializzo
+	$cf['cron']['cache']['view']['static']['refresh'] = array();
 
     // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
 	$tasks = mysqlQuery(
@@ -63,6 +66,7 @@
 			array( 's' => $cf['cron']['results']['token'] )
 		)
 	);
+	
 
     // log
 	logWrite( 'criteri di ricerca -> '
@@ -127,7 +131,21 @@
 				array( 's' => $task['id'] )
 			)
 		);
+	}
+		
+	$cf['cron']['cache']['view']['static']['refresh'] = array_unique( $cf['cron']['cache']['view']['static']['refresh'] );
+	
+	if( !empty($cf['cron']['cache']['view']['static']['refresh']  ) ){
+		foreach( $cf['cron']['cache']['view']['static']['refresh'] as $s ){
+			// riattivo i trigger per l'entità
+			triggerOn( $s );
 
+			// chiamo le statiche per ripopolare
+			$exec = mysqlQuery(
+				$cf['mysql']['connection'],
+				'CALL ' . $s . '_view_static(NULL)'
+			);
+		}
 	}
 
 	// metto il lock sui job aperti

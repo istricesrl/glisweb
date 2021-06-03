@@ -253,3 +253,29 @@
         }
 
     }
+
+    function triggerOff( $entita, $task = NULL ){
+
+        global $cf;
+
+        logWrite( 'richiesto spegnimento trigger per ' . $entita . ' da task ' . $task , 'cron' );
+
+    #    logWrite( 'spengo i trigger per ' . $entita, 'cron' );
+
+        $troff = mysqlQuery(
+			$cf['mysql']['connection'],
+            'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = 1'
+		);
+    }
+
+    function triggerOn( $entita ){
+        
+        global $cf;
+
+        logWrite( 'accendo i trigger per ' . $entita, 'cron' );
+
+        $tron = mysqlQuery(
+			$cf['mysql']['connection'],
+			'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = NULL'
+		);
+    }

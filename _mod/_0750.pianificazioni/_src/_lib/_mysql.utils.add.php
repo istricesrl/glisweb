@@ -60,7 +60,7 @@
                 foreach( $w['sostituzioni'] as $k => $v ){
                     $t = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME like "' . $k . '_view_static"' );
                     if( !empty( $t ) ){
-                         $s[] = $t;
+                         $s[] = $k;
                     }              
                 }               
             }

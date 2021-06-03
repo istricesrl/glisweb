@@ -49,21 +49,25 @@
                     // status
                     $status['info'][] = 'pulizia oggetti collegati alla pianificazione';
 
-                    // estraggo le statiche coinvolte nell'eliminazione
-                    $status['statiche'] = pianificazioniGetStatic( $status['id'] );
-
-                    // se ci sono statiche, bypasso i trigger
-                    if( !empty(  $status['statiche'] ) ){
-                        $status['info'][] = 'disttivo i trigger';
-
-                        $troff = mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'SET @TRIGGER_LAZY = 1'
-                        );                
-                    }
-
                     // query
                     $q = 'DELETE FROM ' . $status['entita'] . ' WHERE id_pianificazione = ? AND ' . $status['campo'] . ' > ?';
+					
+					// cerco se ci sono righe da eliminare
+					$status['to_delete'] = mysqlSelectValue(
+						$cf['mysql']['connection'],
+						'SELECT count(id) FROM ' . $status['entita'] . ' WHERE id_pianificazione = ? AND ' . $status['campo'] . ' > ?',
+						array( array( 's' => $status['id'] ), array( 's' => $status['inizio'] ) )
+					);
+                    
+                    $status['statiche'] = pianificazioniGetStatic( $status['id'] );
+                    // se ci sono righe da eliminare estraggo le statiche e disattivo i trigger
+                    
+                    if( !empty( $status['to_delete'] ) && !empty( $status['statiche'] ) ){                   
+                        foreach( $status['statiche'] as $s ){
+                            triggerOff( $s, '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php' );
+                            $cf['cron']['cache']['view']['static']['refresh'][] = $s;
+                        }
+                    }
 
                 #    var_dump( $q );
                 #    var_dump( $status['id'] );
@@ -74,7 +78,14 @@
 
                     // status
                     $status['info'][] = 'eliminate ' . $del . ' righe dalla tabella ' . $status['entita'];
-                    $status['delete'] = $del;
+
+					if( ( $status['to_delete'] > 0 && $del == $status['to_delete'] ) ||  $status['to_delete'] == 0 ){
+						$status['delete'] = 1;
+					}
+					else{
+						$status['delete'] = 0;
+					}
+                    
 
                     // modalità hard/stop
                     if( ! empty( $_REQUEST['hard'] ) ) {
@@ -99,7 +110,7 @@
                     }
 
                     // se erano presenti statiche, riattivo i trigger e le ripopolo
-                    if( !empty( $status['statiche'] ) ){
+                /*    if( !empty( $status['statiche'] ) ){
                         $status['info'][] = 'riattivo i trigger';
                         $tron = mysqlQuery(
                             $cf['mysql']['connection'],
@@ -114,6 +125,7 @@
                             );
                         }
                     }
+					*/
 
                 } else {
 

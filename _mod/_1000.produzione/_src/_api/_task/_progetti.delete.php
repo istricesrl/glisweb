@@ -35,14 +35,11 @@
     }
 
     if( !empty( $status['id_progetto'] ) ){
+		$cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
+        triggerOff( 'attivita', '_mod/_1000.produzione/_src/_api/_task/_progetti.delete.php' );
 
-        $status['info'][] = 'bypasso i trigger';
-
-        // bypasso i trigger
-        $troff = mysqlQuery(
-            $cf['mysql']['connection'],
-            'SET @TRIGGER_LAZY = 1'
-        );
+		$cf['cron']['cache']['view']['static']['refresh'][] = 'todo';  
+        triggerOff( 'todo', '_mod/_1000.produzione/_src/_api/_task/_progetti.delete.php' );      
 
         mysqlDeleteRowRecursive(
             $cf['memcache']['connection'],
@@ -51,23 +48,6 @@
             $status['id_progetto']
         );
 
-        $status['info'][] = 'riattivo i trigger e ripopolo le statiche';
-
-        // riattivo i trigger e ripopolo le statiche di todo e attivita
-        $tron = mysqlQuery(
-            $cf['mysql']['connection'],
-            'SET @TRIGGER_LAZY = NULL'
-        );
-
-        $t = mysqlQuery(
-            $cf['mysql']['connection'],
-            'CALL todo_view_static(NULL)'
-        );
-                               
-        $a = mysqlQuery(
-            $cf['mysql']['connection'],
-            'CALL attivita_view_static(NULL)'
-        );
 
     } else {
 
