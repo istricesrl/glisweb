@@ -64,7 +64,7 @@
                     
                     if( !empty( $status['to_delete'] ) && !empty( $status['statiche'] ) ){                   
                         foreach( $status['statiche'] as $s ){
-                            triggerOff( $s, 'pianificazioni.clean' );
+                            triggerOff( $s, '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php' );
                             $cf['cron']['cache']['view']['static']['refresh'][] = $s;
                         }
                     }

@@ -19,8 +19,6 @@
 
      // inizializzo l'array del risultato
 	$status = array();
-	
-	$cf['cron']['cache']['view']['static']['refresh'][] = 'attivita_view_static';
 
     $p = mysqlSelectRow(
         $cf['mysql']['connection'],
@@ -74,6 +72,10 @@
         }
 
         if( !empty( $giornate ) ){
+
+            $cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
+            triggerOff( 'attivita', '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.create.php' );
+
             foreach( $giornate as $g ){
                 
                 $ore = oreGiornaliereContratto( $p['id_anagrafica'], $g['data'], $g['ora_inizio'], $g['ora_fine'] );

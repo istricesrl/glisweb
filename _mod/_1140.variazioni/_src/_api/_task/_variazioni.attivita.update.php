@@ -23,8 +23,6 @@
 
      // inizializzo l'array del risultato
 	$status = array();
-	
-	$cf['cron']['cache']['view']['static']['refresh'][] = 'attivita_view_static';
 
     if( ! empty( $_REQUEST['id'] ) ) {
         $p = mysqlSelectRow(
@@ -80,6 +78,9 @@
         $status['info']['righe_aggiornate'] = 0;
 
         if( !empty( $scoperture) ){
+
+            $cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
+            triggerOff( 'attivita', '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.update.php' );
             
             foreach( $scoperture as $s ){
 
