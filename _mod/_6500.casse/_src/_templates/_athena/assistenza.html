@@ -35,7 +35,7 @@
 
 {% block main %}
 <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
-<div class="form-group">
+<div class="form-group"-->
 {% if not session.assistenza.id_cliente %}
 <legend>cliente</legend>
 <div class="form-group form-row">
@@ -46,6 +46,7 @@
         {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
     <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');"><i class="fa fa-plus"></i></button>
     </div>
+</div>
 </div>
 
 {% if view.data and session.__view__[ view.id ].__search__  %}
@@ -92,7 +93,7 @@
 {% elseif not session.assistenza.id_progetto %}
 <div class="form-group form-row">
     <legend>cliente</legend>
-    <div class="col-12">
+    <div class="col">
         <h3>{{ etc.cliente.__label__ }}</h3>
         {% if etc.cliente.mail %}indirizzo mail: {{ etc.cliente.mail }} <br>{% endif %}
         {% if etc.cliente.telefoni %}telefoni: {{ etc.cliente.telefoni }} <br>{% endif %}
@@ -156,7 +157,7 @@
 {% else %}
 <div class="form-group form-row">
     <legend>cliente</legend>
-    <div class="col-12">
+    <div class="col">
         <h3>{{ etc.cliente.__label__ }}</h3>
         {% if etc.cliente.mail %}indirizzo mail: {{ etc.cliente.mail }} <br>{% endif %}
         {% if etc.cliente.telefoni %}telefoni: {{ etc.cliente.telefoni }} <br>{% endif %}
@@ -307,7 +308,7 @@
     </div>
     <fieldset class=" ">
         <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 2%;" >
-            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
+            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"> {% if session.assistenza.id_attivita %}pulisci{% else %}annulla{% endif %}</button>
             {% if not session.assistenza.id_attivita %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             {% else %}
