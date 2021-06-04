@@ -64,7 +64,7 @@
     <div class="form-group form-row">
         <div class="col">{{ etc.progetto.__label__ }}</div>
         <div class="col-auto">
-            {% set progetto = pages[ 'progetti.form' ].url[ localization.language.ietf ] %}
+            {% set progetto = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
             <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetto }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&progetti[id]={{ session.assistenza.id_progetto }}','_self');"><i class="fa fa-pencil"></i></button>
             {% if not session.assistenza.id_todo  %}
             <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__=progetto','_self');"><i class="fa fa-times"></i></button>

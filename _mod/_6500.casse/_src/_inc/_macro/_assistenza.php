@@ -7,16 +7,29 @@ $ct['form']['table'] = '';
 $ct['view']['cols'] = array(
     'id' => '#'
 );
-
 if( isset( $_REQUEST['__unset__'] ) ){
 
-    unset( $_SESSION['assistenza']['id_cliente'] );
-    unset( $_SESSION['assistenza']['id_progetto'] );
-    unset( $_SESSION['assistenza']['id_todo']  );
-    unset( $_SESSION['assistenza']['id_attivita']  );
-    unset( $_SESSION['__view__'][ 'clienti' ]['__search__'] );
+    if(  $_REQUEST['__unset__'] == 'cliente' ){
+
+        unset( $_SESSION['assistenza']['id_cliente'] );
+        if( isset($_SESSION['assistenza']['id_progetto']) ){unset( $_SESSION['assistenza']['id_progetto'] );}
+    
+    } elseif(  $_REQUEST['__unset__'] == 'progetto' ){
+
+        unset( $_SESSION['assistenza']['id_progetto'] );
+    
+    } else{
+    
+        unset( $_SESSION['assistenza']['id_cliente'] );
+        unset( $_SESSION['assistenza']['id_progetto'] );
+        unset( $_SESSION['assistenza']['id_todo']  );
+        unset( $_SESSION['assistenza']['id_attivita']  );
+        unset( $_SESSION['__view__'][ 'clienti' ]['__search__'] );
+    
+    }
 
 }
+
 
 // id della vista
 $ct['view']['id'] = md5( $ct['view']['table'] );
