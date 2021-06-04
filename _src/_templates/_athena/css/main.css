@@ -421,7 +421,7 @@ header.subform-intestazione {
     margin-bottom: 10px;
 }
 
-#info {
+#info, #jobs {
     background-color: #555555;
     color: #ffffff;
     display: none;
@@ -432,12 +432,12 @@ header.subform-intestazione {
     z-index: 999;
 }
 
-#info h2 {
+#info h2, #jobs h2 {
     font-size: 1.6em;
     margin: 0px;
 }
 
-#info p {
+#info p, #jobs p {
     margin: 0px;
     margin-top: 5px;
 }
@@ -445,7 +445,11 @@ header.subform-intestazione {
 #info a,
 #info a:visited,
 #info a:hover,
-#info a:active {
+#info a:active,
+#jobs a,
+#jobs a:visited,
+#jobs a:hover,
+#jobs a:active {
     color: #ffffff;
 }
 
