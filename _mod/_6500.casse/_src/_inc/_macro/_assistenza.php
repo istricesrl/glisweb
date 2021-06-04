@@ -108,7 +108,7 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
 
     if( isset( $_SESSION['assistenza']['id_attivita'] ) ){
 
-           $_REQUEST['attivita'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM attivita_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_attivita']) ));   
+           $_REQUEST['attivita'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_attivita']) ));   
     }
 
 
