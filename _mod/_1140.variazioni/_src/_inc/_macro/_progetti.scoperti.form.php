@@ -37,8 +37,16 @@
     
         // se ho una richiesta di sostituzione creo il job relativo
         if( !empty( $_REQUEST['__sostituzione__']['id_anagrafica'] ) ){
+
+            $anagrafica = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT __label__ FROM anagrafica_view_static WHERE id = ?',
+                array( array( 's' => $_REQUEST['__sostituzione__']['id_anagrafica'] ) )
+            );
+
             $nome =  ( !isset( $_REQUEST['__sostituzione__']['hard'] ) ) ? 'richiesta ' : '';
-            $nome .= 'sostituzione progetto ' . $_REQUEST[ $ct['form']['table'] ]['id'] . ' con anagrafica ' . $_REQUEST['__sostituzione__']['id_anagrafica'];
+            $nome .= 'sostituzione progetto ' . $_REQUEST[ $ct['form']['table'] ]['id'] . ' con anagrafica ' . $_REQUEST['__sostituzione__']['id_anagrafica'] . ' - ' . $anagrafica;
+            
             $job = mysqlQuery(
                 $cf['mysql']['connection'],
                 'INSERT INTO job ( nome, job, iterazioni, workspace, se_foreground, delay ) VALUES ( ?, ?, ?, ?, ?, ? )',
