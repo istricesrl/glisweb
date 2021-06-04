@@ -9,12 +9,13 @@
 		$('#btnsostituisci').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 		idoperatore = $('#modaloperatoreSid').text();
 
-		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.progetto.request.php?id_progetto={{ request[table].id }}&id_anagrafica='+idoperatore+'&hard=1';
+		window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}&__sostituzione__[id_anagrafica]='+idoperatore+'&__sostituzione__[hard]=1', '_self');
+	/*	var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.progetto.request.php?id_progetto={{ request[table].id }}&id_anagrafica='+idoperatore+'&hard=1';
 
 		getws( call,'', function() {
 			window.open('{{ pages['progetti.scoperti.view'].path[ localization.language.ietf ] }}','_self');
 		});
-		
+	*/	
 	}
 
 </script>

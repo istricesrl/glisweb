@@ -109,24 +109,6 @@
 
                     }
 
-                    // se erano presenti statiche, riattivo i trigger e le ripopolo
-                /*    if( !empty( $status['statiche'] ) ){
-                        $status['info'][] = 'riattivo i trigger';
-                        $tron = mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'SET @TRIGGER_LAZY = NULL'
-                        );
-
-                        foreach( $status['statiche'] as $s ){
-                            $status['info'][] = 'chiamo la procedure ' . $s ;
-                            $exec = mysqlQuery(
-                                $cf['mysql']['connection'],
-                                'CALL ' . $s . '(NULL)'
-                            );
-                        }
-                    }
-					*/
-
                 } else {
 
                     // status

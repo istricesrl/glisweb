@@ -37,10 +37,14 @@
 
         if( !empty( $pause ) ){
 
-            // bypasso i trigger
-            $troff = mysqlQuery(
+            // spengo i trigger
+            $trAoff = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SET @TRIGGER_LAZY = 1'
+                'SET @TRIGGER_LAZY_ATTIVITA = 1'
+            );
+            $trToff = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY_TODO = 1'
             );
 
             foreach( $pause as $p ){
@@ -75,9 +79,13 @@
             }     
             
             // riattivo i trigger e ripopolo le statiche di todo e attivita
-            $tron = mysqlQuery(
+            $trAon = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SET @TRIGGER_LAZY = NULL'
+                'SET @TRIGGER_LAZY_ATTIVITA = NULL'
+            );
+            $trTon = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SET @TRIGGER_LAZY_TODO = NULL'
             );
 
             $t = mysqlQuery(

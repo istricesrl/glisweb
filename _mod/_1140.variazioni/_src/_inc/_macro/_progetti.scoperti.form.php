@@ -2,7 +2,7 @@
 
     /**
      *
-     * form che calcola e mostra l'elenco dei candidati sostituti per l'attività corrente
+     * form che calcola e mostra l'elenco dei candidati sostituti per il progetto corrente
      *
      *
      *
@@ -34,6 +34,31 @@
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
             'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
+    
+        // se ho una richiesta di sostituzione creo il job relativo
+        if( !empty( $_REQUEST['__sostituzione__']['id_anagrafica'] ) ){
+            $nome =  ( !isset( $_REQUEST['__sostituzione__']['hard'] ) ) ? 'richiesta ' : '';
+            $nome .= 'sostituzione progetto ' . $_REQUEST[ $ct['form']['table'] ]['id'] . ' con anagrafica ' . $_REQUEST['__sostituzione__']['id_anagrafica'];
+            $job = mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO job ( nome, job, iterazioni, workspace, se_foreground, delay ) VALUES ( ?, ?, ?, ?, ?, ? )',
+                array(
+                    array( 's' => $nome ),
+                    array( 's' => '_mod/_1140.variazioni/_src/_api/_job/_sostituzioni.progetto.request.php' ),
+                    array( 's' => 10 ),
+                    array( 's' => json_encode(
+                        array(
+                            'id_progetto' => $_REQUEST[ $ct['form']['table'] ]['id'],
+                            'id_anagrafica' => $_REQUEST['__sostituzione__']['id_anagrafica'],
+                            'hard' => ( isset( $_REQUEST['__sostituzione__']['hard'] ) ) ? $_REQUEST['__sostituzione__']['hard'] : NULL
+                        )
+                    ) ),
+                    array( 's' => 1 ),
+                    array( 's' => 3 )
+                )
+            );
+        }
+    
     }
 
      // modal per la conferma di invio richiesta sostituzione
