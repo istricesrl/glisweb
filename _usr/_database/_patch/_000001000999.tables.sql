@@ -617,10 +617,11 @@ CREATE TABLE IF NOT EXISTS `colori` (
   `k` decimal(5,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000042
+--| 000001005300
 
 -- comuni
 -- tipologia: tabella di supporto
+-- verifica: 2021-06-03 19:53 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `comuni` (
   `id` int(11) NOT NULL,
   `id_provincia` int(11) NOT NULL,
@@ -629,36 +630,44 @@ CREATE TABLE IF NOT EXISTS `comuni` (
   `codice_catasto` char(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000043
+--| 000001005900
 
 -- condizioni_immobili
 -- tipologia: tabella di supporto
-CREATE TABLE IF NOT EXISTS `condizioni_immobili` (
-  `id` int(11) NOT NULL,
-  `nome` char(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- CREATE TABLE IF NOT EXISTS `condizioni_immobili` (
+--   `id` int(11) NOT NULL,
+--   `nome` char(32) NOT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 000001005900
 
---| 000001000044
+-- condizioni_pagamento
+
+--| 000001006700
 
 -- contatti
 -- tipologia: tabella gestita
+-- verifica: 2021-06-03 21:33 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `contatti` (
   `id` int(11) NOT NULL,
-  `nome` char(255) NOT NULL,
-  `json` text NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `id_campagna` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `id_inviante` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `json` text DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 000001000045
+--| 000001006900
 
 -- contenuti
 -- tipologia: tabella gestita
+-- verifica: 2021-06-04 17:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `contenuti` (
   `id` int(11) NOT NULL,
   `id_lingua` int(11) NOT NULL,
@@ -704,11 +713,11 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `h1` char(255) DEFAULT NULL,
   `h2` char(255) DEFAULT NULL,
   `h3` char(255) DEFAULT NULL,
-  `label_menu` char(255) DEFAULT NULL,
   `abstract` text,
   `testo` text,
   `applicazioni` text,
   `specifiche` text,
+  `label_menu` char(255) DEFAULT NULL,
   `mittente_nome` char(128) DEFAULT NULL,
   `mittente_mail` char(128) DEFAULT NULL,
   `destinatario_nome` char(128) DEFAULT NULL,

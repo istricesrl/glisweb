@@ -510,99 +510,131 @@ ALTER TABLE `colori`
 	ADD KEY `indice_cmyk` (`id`, `nome`,`id_genitore`,`c`,`m`,`y`,`k`);
 ALTER TABLE `colori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000041
+--| 000003005300
 
 -- comuni
 -- tipologia: tabella di supporto
+-- verifica: 2021-06-03 19:58 Fabio Mosti
 ALTER TABLE `comuni`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `codice_istat` (`codice_istat`),
-	ADD UNIQUE KEY `codice_catasto` (`codice_catasto`),
+	ADD UNIQUE KEY `unica_istat` (`codice_istat`),
+	ADD UNIQUE KEY `unica_catasto` (`codice_catasto`),
 	ADD KEY `id_provincia` (`id_provincia`),
-	ADD KEY `indice` (`id`,`codice_istat`,`id_provincia`, `nome`, `codice_catasto`);
+	ADD KEY `indice` (`id`,`id_provincia`, `nome`,`codice_istat`,`codice_catasto`);
 ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000042
+--| 000003005900
 
 -- condizioni_immobili
 -- tipologia: tabella di supporto
-ALTER TABLE `condizioni_immobili`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
-	ADD KEY `indice` (`id`,`nome`);
-ALTER TABLE `condizioni_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+-- ALTER TABLE `condizioni_immobili`
+-- 	ADD PRIMARY KEY (`id`),
+-- 	ADD UNIQUE KEY `nome` (`nome`),
+-- 	ADD KEY `indice` (`id`,`nome`);
+-- ALTER TABLE `condizioni_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000043
+--| 000003006100
 
 -- condizioni_pagamento
 -- tipologia: tabella gestita
-ALTER TABLE `condizioni_pagamento`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `indice` (`id`,`nome`);
-ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+-- ALTER TABLE `condizioni_pagamento`
+-- 	ADD PRIMARY KEY (`id`),
+-- 	ADD KEY `indice` (`id`,`nome`);
+-- ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000044
+--| 000003006700
 
 -- contatti
 -- tipologia: tabella gestita
+-- verifica: 2021-06-03 21:52 Fabio Mosti
 ALTER TABLE `contatti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_segnalatore` (`id_segnalatore`), 
+	ADD KEY `id_campagna` (`id_campagna`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_coount_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_inviante` (`id_inviante`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`nome`, `id_tipologia`, `id_anagrafica`,`id_segnalatore`);
+	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_campagna`, `id_anagrafica`,`id_inviante`,`nome`,`timestamp_contatto`);
 ALTER TABLE `contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 000003000045
+--| 000003006900
 
 -- contenuti
 -- tipologia: tabella gestita
 ALTER TABLE `contenuti`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica_id_prodotto` (`id_prodotto`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_categoria_prodotti` (`id_categoria_prodotti`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_eventi` (`id_evento`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_categoria_eventi` (`id_categoria_eventi`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_immagine` (`id_immagine`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_file` (`id_file`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_pagina` (`id_pagina`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_rassegna_stampa` (`id_rassegna_stampa`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_video` (`id_video`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_audio` (`id_audio`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_articolo` (`id_articolo`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_id_marchio` (`id_marchio`,`id_lingua`), 
-	ADD UNIQUE KEY `unica_d_caratteristica_prodotti` (`id_caratteristica_prodotti`,`id_lingua`), 
-	ADD KEY `id_prodotto` (`id_prodotto`), 
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
-	ADD KEY `id_evento` (`id_evento`), 
-	ADD KEY `id_categoria_eventi` (`id_categoria_eventi`), 
-	ADD KEY `id_data` (`id_data`),
+	ADD UNIQUE KEY `unica_anagrafica` (`id_lingua`,`id_anagrafica`), 
+	ADD UNIQUE KEY `unica_prodotto` (`id_lingua`,`id_prodotto`), 
+	ADD UNIQUE KEY `unica_articolo` (`id_lingua`,`id_articolo`), 
+	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_lingua`,`id_categoria_prodotti`), 
+	ADD UNIQUE KEY `unica_caratteristica_prodotti` (`id_lingua`,`id_caratteristica_prodotti`), 
+	ADD UNIQUE KEY `unica_marchio` (`id_lingua`,`id_marchio`), 
+	ADD UNIQUE KEY `unica_immagine` (`id_lingua`,`id_immagine`), 
+	ADD UNIQUE KEY `unica_file` (`id_lingua`,`id_file`), 
+	ADD UNIQUE KEY `unica_risorsa` (`id_lingua`,`id_risorsa`), 
+	ADD UNIQUE KEY `unica_categoria_risorse` (`id_lingua`,`id_categoria_risorse`), 
+	ADD UNIQUE KEY `unica_pagina` (`id_lingua`,`id_pagina`), 
+	ADD UNIQUE KEY `unica_popup` (`id_lingua`,`id_popup`), 
+	ADD UNIQUE KEY `unica_immobile` (`id_lingua`,`id_immobile`), 
+	ADD UNIQUE KEY `unica_indirizzo` (`id_lingua`,`id_indirizzo`), 
+	ADD UNIQUE KEY `unica_zona` (`id_lingua`,`id_zona`), 
+	ADD UNIQUE KEY `unica_rassegna_stampa` (`id_lingua`,`id_rassegna_stampa`),
+	ADD UNIQUE KEY `unica_evento` (`id_lingua`,`id_evento`), 
+	ADD UNIQUE KEY `unica_categoria_eventi` (`id_lingua`,`id_categoria_eventi`), 
+	ADD UNIQUE KEY `unica_notizia` (`id_lingua`,`id_notizia`), 
+	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`), 
+	ADD UNIQUE KEY `unica_video` (`id_lingua`,`id_video`), 
+	ADD UNIQUE KEY `unica_audio` (`id_lingua`,`id_audio`), 
+	ADD UNIQUE KEY `unica_data` (`id_lingua`,`id_data`), 
+	ADD UNIQUE KEY `unica_template_mail` (`id_lingua`,`id_template_mail`), 
+	ADD UNIQUE KEY `unica_mailing` (`id_lingua`,`id_mailing`), 
+	ADD UNIQUE KEY `unica_colore` (`id_lingua`,`id_colore`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
-	ADD KEY `id_pagina` (`id_pagina`), 
-	ADD KEY `id_rassegna_stampa` (`id_rassegna_stampa`), 
-	ADD KEY `id_immagine` (`id_immagine`), 
-	ADD KEY `id_video` (`id_video`), 
-	ADD KEY `id_audio` (`id_audio`), 
-	ADD KEY `id_file` (`id_file`), 
-	ADD KEY `id_template_mail` (`id_template_mail`), 
-	ADD KEY `id_mailing` (`id_mailing`), 
-	ADD KEY `id_notizia` (`id_notizia`), 
-	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
+	ADD KEY `id_caratteristica_prodotti` (`id_caratteristica_prodotti`), 
+	ADD KEY `id_marchio` (`id_marchio`), 
+	ADD KEY `id_immagine` (`id_immagine`), 
+	ADD KEY `id_file` (`id_file`), 
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
+	ADD KEY `id_pagina` (`id_pagina`), 
+	ADD KEY `id_popup` (`id_popup`), 
 	ADD KEY `id_immobile` (`id_immobile`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_zona` (`id_zona`), 
-	ADD KEY `id_incarico` (`id_incarico`), 
+	ADD KEY `id_rassegna_stampa` (`id_rassegna_stampa`), 
+	ADD KEY `id_evento` (`id_evento`), 
+	ADD KEY `id_categoria_eventi` (`id_categoria_eventi`), 
+	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_video` (`id_video`), 
+	ADD KEY `id_audio` (`id_audio`), 
+	ADD KEY `id_data` (`id_data`),
+	ADD KEY `id_template_mail` (`id_template_mail`), 
+	ADD KEY `id_mailing` (`id_mailing`), 
 	ADD KEY `id_colore` (`id_colore`), 
-	ADD KEY `id_caratteristica_prodotti` (`id_caratteristica_prodotti`), 
-	ADD KEY `id_popup` (`id_popup`), 
-	ADD KEY `id_marchio` (`id_marchio`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_risorsa` (`id_risorsa`),
-	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`),
-	ADD KEY `indice` (`id`,`id_prodotto`,`id_articolo`,`id_marchio`,`id_file`,`id_lingua`,`id_categoria_prodotti`,`id_pagina_unico`,`id_rassegna_stampa_unico`, `id_video_unico`, `id_audio_unico`,`id_articolo_unico`, `id_marchio_unico`,`id_caratteristica_prodotti_unico` );
+	ADD KEY `indice` (`id`,`id_lingua`),
+	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`),
+	ADD KEY `indice_prodotti` (`id`,`id_lingua`,`id_prodotto`,`id_articolo`,`id_categoria_prodotti`,`id_marchio`),
+	ADD KEY `indice_immagini` (`id`,`id_lingua`,`id_immagine`),
+	ADD KEY `indice_file` (`id`,`id_lingua`,`id_file`),
+	ADD KEY `indice_risorse` (`id`,`id_lingua`,`id_risorsa`,`id_categoria_risorse`),
+	ADD KEY `indice_pagine` (`id`,`id_lingua`,`id_pagina`,`id_popup`),
+	ADD KEY `indice_immobili` (`id`,`id_lingua`,`id_immobile`,`id_indirizzo`,`id_zona`),
+	ADD KEY `indice_rassegna_stampa` (`id`,`id_lingua`,`id_rassegna_stampa`,`id_categoria_rassegna_stampa`),
+	ADD KEY `indice_eventi` (`id`,`id_lingua`,`id_evento`,`id_categoria_eventi`),
+	ADD KEY `indice_notizie` (`id`,`id_lingua`,`id_notizie`,`id_categoria_notizie`),
+	ADD KEY `indice_video` (`id`,`id_lingua`,`id_video`),
+	ADD KEY `indice_audio` (`id`,`id_lingua`,`id_audio`),
+	ADD KEY `indice_data` (`id`,`id_lingua`,`id_data`),
+	ADD KEY `indice_template_mail` (`id`,`id_lingua`,`id_template_mail`),
+	ADD KEY `indice_mailing` (`id`,`id_lingua`,`id_mailing`),
+	ADD KEY `indice_colore` (`id`,`id_lingua`,`id_colore`);
 ALTER TABLE `contenuti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 000003000046

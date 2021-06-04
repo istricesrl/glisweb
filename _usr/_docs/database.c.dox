@@ -475,8 +475,22 @@
 
     La vista *colori_view* relativa alla tabella *colori* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                     | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+    colori_view.id              | -
+    colori_view.id_genitore     | -
+    colori_view.nome            | -
+    colori_view.hex             | -
+    colori_view.r               | -
+    colori_view.g               | -
+    colori_view.b               | -
+    colori_view.ral             | -
+    colori_view.pantone         | -
+    colori_view.c               | -
+    colori_view.m               | -
+    colori_view.y               | -
+    colori_view.k               | -
+    colori_view.__label__       | l'etichetta del colore
 
     comuni
     ------
@@ -486,19 +500,32 @@
     --------------------------------------------------|---------------------------------------------------------------------------------------
     comuni.id                                         | l'ID del comune
     comuni.id_provincia                               | l'ID della provincia di appartenenza del comune
-    comuni.nome                                       | -
-    comuni.codice_istat                               | -
-    comuni.codice_catasto                             | -
+    comuni.nome                                       | il nome del comune
+    comuni.codice_istat                               | il codice ISTAT del comune
+    comuni.codice_catasto                             | il codice catastale del comune
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                          | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------|---------------------------|-------------------------------|----------------------
+    comuni_ibfk_01_nofollow         | id_provincia              | provincie.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *comuni_view* relativa alla tabella *comuni* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    comuni_view.id                                         | -
+    comuni_view.id_provincia                               | -
+    comuni_view.provincia                                  | la provincia di appartenenza del comune
+    comuni_view.sigla_provincia                            | la sigla della provincia di appartenenza del comune
+    comuni_view.id_regione                                 | l'ID della regione di appartenenza del comune
+    comuni_view.regione                                    | la regione di appartenenza del comune
+    comuni_view.id_stato                                   | l'ID dello stato di appartenenza del comune
+    comuni_view.stato                                      | lo stato di appartenenza del comune
+    comuni_view.nome                                       | -
+    comuni_view.codice_istat                               | -
+    comuni_view.codice_catasto                             | -
+    comuni_view.__label__                                  | l'etichetta descrittiva del comune
  
     condizioni_immobili
     -------------------
@@ -518,29 +545,52 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
- 
+
+    condizioni_pagamento
+    --------------------
+
     contatti
     --------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene l'entità principale *contatti*, che rappresenta gli eventi di contatto effettuate da potenziali
+    clienti in conseguenza di campagne di marketing attive o altre sorgenti quali segnalazioni di altre anagrafiche e simili.
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
     contatti.id                            | l'ID dell'evento di contatto
-    contatti.nome                          | -
-    contatti.json                          | -
     contatti.id_tipologia                  | l'ID della tipologia di contatto
-    contatti.id_anagrafica                 | l'ID dell'anagrafica di contatto
-    contatti.id_segnalatore                | -
+    contatti.id_campagna                   | l'ID della campagna di provenienza del contatto
+    contatti.id_anagrafica                 | l'ID dell'anagrafica che ha effettuato il contatto
+    contatti.id_inviante                   | l'ID dell'anagrafica che ha generato il contatto
+    contatti.nome                          | una descrizione sintetica del contatto ed eventuali riferimenti della persona
+    contatti.note                          | annotazioni estese sul contatto, le richieste, e simili
+    contatti.json                          | il JSON dei contatti via web
+    contatti.timestamp_contatto            | la timestamp del momento in cui avviene il contatto
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|----------------------
+    contatti_ibfk_01_nofollow           | id_tipologia              | tipologie_contatti.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contatti_ibfk_02_nofollow           | id_campagna               | campagne.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    contatti_ibfk_03_nofollow           | id_anagrafica             | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    contatti_ibfk_04_nofollow           | id_inviante               | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *contatti_view* relativa alla tabella *contatti* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    contatti_view.id                            | -
+    contatti_view.id_tipologia                  | -
+    contatti_view.tipologia                     | la tipologia del contatto
+    contatti_view.id_campagna                   | -
+    contatti_view.campagna                      | la campagna di provenienza del contatto
+    contatti_view.id_anagrafica                 | -
+    contatti_view.anagrafica                    | l'anagrafica che ha effettuato il contatto
+    contatti_view.id_inviante                   | -
+    contatti_view.inviante                      | l'anagrafica che ha generato il contatto
+    contatti_view.nome                          | -
+    contatti_view.timestamp_contatto            | -
+    contatti_view.__label__                     | l'etichetta descrittiva del contatto
   
     contenuti
     ---------
@@ -550,7 +600,7 @@
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
     contenuti.id                           | l'ID del contenuto
-    contenuti.id_lingua                    | 
+    contenuti.id_lingua                    | l'ID della lingua del contenuto
     contenuti.id_anagrafica                | l'ID dell'anagrafica cui si riferisce la riga (NULL se non presente)
     contenuti.id_prodotto                  | l'ID del prodotto cui si riferisce la riga (NULL se non presente)
     contenuti.id_articolo                  | l'ID dell'articolo cui si riferisce la riga (NULL se non presente)
@@ -566,9 +616,11 @@
     contenuti.id_immobile                  | l'ID dell'immobile cui si riferisce la riga (NULL se non presente)
     contenuti.id_indirizzo                 | l'ID dell'indirizzo cui si riferisce la riga (NULL se non presente)
     contenuti.id_zona                      | l'ID della zona cui si riferisce la riga (NULL se non presente)
-    contenuti.id_rassegna_stampa           | -
+    contenuti.id_rassegna_stampa           | l'ID dell'oggetto di rassegna stampa cui si riferisce la riga (NULL se non presente)
     contenuti.id_evento                    | l'ID dell'evento cui si riferisce la riga (NULL se non presente)
     contenuti.id_categoria_eventi          | l'ID della categoria di eventi cui si riferisce la riga (NULL se non presente)
+    contenuti.id_notizia                   | l'ID della notizia cui si riferisce la riga (NULL se non presente)
+    contenuti.id_categoria_notizie         | l'ID della categoria di notizie cui si riferisce la riga (NULL se non presente)
     contenuti.id_video                     | l'ID del video cui si riferisce la riga (NULL se non presente)
     contenuti.id_audio                     | l'ID dell'audio cui si riferisce la riga (NULL se non presente)
     contenuti.id_data                      | l'ID della data cui si riferisce la riga (NULL se non presente)
@@ -578,34 +630,34 @@
     contenuti.path_custom                  | -
     contenuti.url_custom                   | -
     contenuti.rewrite_custom               | -
-    contenuti.title                        | -
-    contenuti.keywords                     | -
-    contenuti.description                  | -
-    contenuti.alt                          | -
-    contenuti.og_title                     | -
-    contenuti.og_type                      | -
-    contenuti.og_image                     | - 
-    contenuti.og_audio                     | -
-    contenuti.og_video                     | -
-    contenuti.og_determiner                | -
-    contenuti.og_description               | -
-    contenuti.cappello                     | -
-    contenuti.h1                           | -
-    contenuti.h2                           | -
-    contenuti.h3                           | -
-    contenuti.label_menu                   | -
-    contenuti.abstract                     | -
-    contenuti.testo                        | -
-    contenuti.applicazioni                 | -
-    contenuti.specifiche                   | -
-    contenuti.mittente_nome                | -
-    contenuti.mittente_mail                | -
-    contenuti.destinatario_nome            | -
-    contenuti.destinatario_mail            | -
-    contenuti.destinatario_cc_nome         | -
-    contenuti.destinatario_cc_mail         | -
-    contenuti.destinatario_ccn_nome        | -
-    contenuti.destinatario_ccn_mail        | -
+    contenuti.title                        | valore del tag title
+    contenuti.keywords                     | valore del meta tag keywords
+    contenuti.description                  | valore del meta tag description
+    contenuti.alt                          | valore dell'attributo alt per le immagini
+    contenuti.og_title                     | valore del meta tag og:title
+    contenuti.og_type                      | valore del meta tag og:type
+    contenuti.og_image                     | valore del meta tag og:image
+    contenuti.og_audio                     | valore del meta tag og:audio
+    contenuti.og_video                     | valore del meta tag og:video
+    contenuti.og_determiner                | valore del meta tag og:determiner
+    contenuti.og_description               | valore del meta tag og:description
+    contenuti.cappello                     | testo del cappello
+    contenuti.h1                           | valore del tag h1
+    contenuti.h2                           | valore del tag h2
+    contenuti.h3                           | valore del tag h3
+    contenuti.abstract                     | testo dell'abstract
+    contenuti.testo                        | testo principale
+    contenuti.applicazioni                 | testo delle applicazioni
+    contenuti.specifiche                   | testo delle specifiche
+    contenuti.label_menu                   | etichetta per il menù
+    contenuti.mittente_nome                | nome del mittente per i template delle mail
+    contenuti.mittente_mail                | mail del mittente per i template delle mail
+    contenuti.destinatario_nome            | nome del destinatario per i template delle mail
+    contenuti.destinatario_mail            | mail del destinatario per i template delle mail
+    contenuti.destinatario_cc_nome         | nome del destinatario in copia per i template delle mail
+    contenuti.destinatario_cc_mail         | mail del destinatario in copia per i template delle mail
+    contenuti.destinatario_ccn_nome        | nome del destinatario in copia nascosta per i template delle mail
+    contenuti.destinatario_ccn_mail        | mail del destinatario in copia nascosta per i template delle mail
    
     La tabella ha le seguenti chiavi esterne:
 
