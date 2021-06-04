@@ -193,7 +193,7 @@
      * 400         | configurazioni relative all'URL rewriting
      * 500         | configurazioni relative alla posta
      * 600         | integrazioni con piattaforme di terze parti
-     * 700         | configurazioni relative all'importazione e all'esportazione dei dati
+     * 700         | configurazioni relative all'importazione, all'elaborazione e all'esportazione dei dati
      * 800         | -
      * 900         | operazioni finali
      *
