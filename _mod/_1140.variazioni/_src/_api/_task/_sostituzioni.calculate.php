@@ -52,9 +52,6 @@
 
     if( !empty( $status['update'] ) ){
 
-        $cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
-        triggerOff( 'attivita', '_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.calculate.php' );
-
         $cId = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT id FROM attivita WHERE token = ?',

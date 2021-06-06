@@ -214,6 +214,17 @@
                     )
                 );
 
+                // inserisco una richiesta di ripopolamento delle statiche
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                    array(
+                        array( 's' => 'attivita' ),
+                        array( 's' => '_mod/_1140.variazioni/_src/_api/_job/_variazioni.attivita.update.php'),
+                        array( 's' => time() )
+                    )
+                );
+
                 $status['info'][] = 'scrivo la timestamp di completamento';
                 // scrivo la timestamp di completamento
                 $jobs = mysqlQuery(

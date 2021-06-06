@@ -77,7 +77,7 @@
         $status['info']['righe_aggiornate'] = 0;
 
         if( !empty( $scoperture) ){
-            
+
             foreach( $scoperture as $s ){
 
                 $status['info']['attivita_da_scoprire'][] = $s['id'];
@@ -104,6 +104,18 @@
 
                 $status['info']['righe_aggiornate'] += $u;
             }
+
+            // inserisco una richiesta di ripopolamento delle statiche
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                array(
+                    array( 's' => 'attivita' ),
+                    array( 's' => '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.update.php'),
+                    array( 's' => time() )
+                )
+            );
+            
 
             // estraggo le attività della tabella __report_sostituzioni_attivita__ in cui è coinvolta l'anagrafica corrente
             $report = mysqlSelectColumn(

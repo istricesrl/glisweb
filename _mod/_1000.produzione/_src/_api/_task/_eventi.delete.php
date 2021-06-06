@@ -37,16 +37,6 @@
 
         if( !empty( $pause ) ){
 
-            // spengo i trigger
-            $trAoff = mysqlQuery(
-                $cf['mysql']['connection'],
-                'SET @TRIGGER_LAZY_ATTIVITA = 1'
-            );
-            $trToff = mysqlQuery(
-                $cf['mysql']['connection'],
-                'SET @TRIGGER_LAZY_TODO = 1'
-            );
-
             foreach( $pause as $p ){
                 $whr[] = 'id_progetto = ?';
                 $par[] = array( 's' => $_REQUEST['id'] );
@@ -78,24 +68,25 @@
 
             }     
             
-            // riattivo i trigger e ripopolo le statiche di todo e attivita
-            $trAon = mysqlQuery(
+           // inserisco una richiesta di ripopolamento per attivita_view_static e todo_view_static
+           mysqlQuery(
                 $cf['mysql']['connection'],
-                'SET @TRIGGER_LAZY_ATTIVITA = NULL'
-            );
-            $trTon = mysqlQuery(
-                $cf['mysql']['connection'],
-                'SET @TRIGGER_LAZY_TODO = NULL'
+                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                array(
+                    array( 's' => 'attivita' ),
+                    array( 's' => '_mod/_1000.produzione/_src/_api/_task/_eventi.delete.php'),
+                    array( 's' => time() )
+                )
             );
 
-            $t = mysqlQuery(
+            mysqlQuery(
                 $cf['mysql']['connection'],
-                'CALL todo_view_static(NULL)'
-            );
-                                   
-            $a = mysqlQuery(
-                $cf['mysql']['connection'],
-                'CALL attivita_view_static(NULL)'
+                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                array(
+                    array( 's' => 'todo' ),
+                    array( 's' => '_mod/_1000.produzione/_src/_api/_task/_eventi.delete.php'),
+                    array( 's' => time() )
+                )
             );
            
         }

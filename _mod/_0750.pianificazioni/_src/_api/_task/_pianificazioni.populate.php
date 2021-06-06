@@ -125,17 +125,6 @@
     
         $date = array_diff( $date, array( $current['data_ultimo_oggetto'] ) );
 
-        // estraggo le statiche coinvolte nella creazione
-        $status['statiche'] = pianificazioniGetStatic( $current['id'] );
-		
-		if( !empty( $status['statiche'] ) && !empty( $date ) ){
-			// disattivo i trigger per le entità coinvolte e aggiungo l'entità alle statiche da ripopolare
-            foreach( $status['statiche'] as $s ){
-                triggerOff( $s, '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php' );
-				$cf['cron']['cache']['view']['static']['refresh'][] = $s;
-            }
-        }
-
         // per ogni data...
         foreach( $date as $data ) {
 
@@ -214,6 +203,25 @@
 
             }
 
+        }
+
+        // estraggo le statiche coinvolte nella creazione
+        $status['statiche'] = pianificazioniGetStatic( $current['id'] );
+		
+		if( !empty( $status['statiche'] ) && !empty( $date ) ){
+            
+			// inserisco una richiesta di ripopolamento delle statiche
+            foreach( $status['statiche'] as $s ){
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                    array(
+                        array( 's' => $s ),
+                        array( 's' => '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php'),
+                        array( 's' => time() )
+                    )
+                );
+            }
         }
 
         // rilascio il token

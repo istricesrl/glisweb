@@ -60,18 +60,6 @@
 					);
                     
                     $status['statiche'] = pianificazioniGetStatic( $status['id'] );
-                    // se ci sono righe da eliminare estraggo le statiche e disattivo i trigger
-                    
-                    if( !empty( $status['to_delete'] ) && !empty( $status['statiche'] ) ){                   
-                        foreach( $status['statiche'] as $s ){
-                            triggerOff( $s, '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php' );
-                            $cf['cron']['cache']['view']['static']['refresh'][] = $s;
-                        }
-                    }
-
-                #    var_dump( $q );
-                #    var_dump( $status['id'] );
-                #    var_dump( $status['inizio'] );
                 
                     // esecuzione della query
                     $del = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['id'] ), array( 's' => $status['inizio'] ) ) );
@@ -85,6 +73,21 @@
 					else{
 						$status['delete'] = 0;
 					}
+
+                    // se ho eliminato righe, inserisco una richiesta di ripopolamento delle statiche
+                    if( !empty( $status['to_delete'] ) && !empty( $status['statiche'] ) ){
+                        foreach( $status['statiche'] as $s ){
+                            mysqlQuery(
+                                $cf['mysql']['connection'],
+                                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                                array(
+                                    array( 's' => $s ),
+                                    array( 's' => '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php'),
+                                    array( 's' => time() )
+                                )
+                            );
+                        }
+                    }
                     
 
                     // modalità hard/stop
