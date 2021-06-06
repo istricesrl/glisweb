@@ -32,7 +32,7 @@
 	$cf['cron']['results']['token'] = getToken( __FILE__ );
 		
 	// inizializzo
-	$cf['cron']['cache']['view']['static']['refresh'] = array();
+#	$cf['cron']['cache']['view']['static']['refresh'] = array();
 
     // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
 	$tasks = mysqlQuery(
@@ -133,7 +133,7 @@
 		);
 	}
 		
-	$cf['cron']['cache']['view']['static']['refresh'] = array_unique( $cf['cron']['cache']['view']['static']['refresh'] );
+/*	$cf['cron']['cache']['view']['static']['refresh'] = array_unique( $cf['cron']['cache']['view']['static']['refresh'] );
 	
 	if( !empty($cf['cron']['cache']['view']['static']['refresh']  ) ){
 		foreach( $cf['cron']['cache']['view']['static']['refresh'] as $s ){
@@ -147,6 +147,7 @@
 			);
 		}
 	}
+*/
 
 	// metto il lock sui job aperti
 		$jobs = mysqlQuery(
