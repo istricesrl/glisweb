@@ -16,7 +16,7 @@
         $cf['mysql']['connection'],
         'SELECT * FROM job WHERE se_foreground IS NOT NULL AND ( id_account_inserimento = ? OR id_account_inserimento IS NULL ) AND timestamp_completamento IS NULL',
         array(
-            array( 's' => $cf['session']['account']['id'] )
+            array( 's' => isset( $cf['session']['account']['id'] )  ? $cf['session']['account']['id'] : NULL )
         )
     );
 
