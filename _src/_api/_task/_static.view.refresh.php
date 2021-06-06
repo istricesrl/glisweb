@@ -23,7 +23,7 @@
 	$status['token'] = getToken( __FILE__ );
 
     // blocco una riga
-    $status['row'] = mysqlSelectRow(
+    $status['lock'] = mysqlSelectRow(
         $cf['mysql']['connection'],
         'UPDATE refresh_view_statiche SET token = ? WHERE token IS NULL ORDER BY timestamp_prenotazione ASC LIMIT 1',
         array(
@@ -44,13 +44,13 @@
     if( ! empty( $status['row'] ) ) {
 
         // aggiorno la vista
-        $status['refresh'] = mysqlSelectRow(
+        $status['refresh'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'CALL ' . $status['entita'] . '_view_static(NULL)'
+            'CALL ' . $status['row']['entita'] . '_view_static(NULL)'
         );
 
         // elimino la richiesta
-        $status['remove'] = mysqlSelectRow(
+        $status['remove'] = mysqlQuery(
             $cf['mysql']['connection'],
             'DELETE FROM refresh_view_statiche WHERE token = ?',
             array(
