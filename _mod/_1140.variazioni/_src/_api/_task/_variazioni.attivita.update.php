@@ -1,14 +1,13 @@
 <?php
 
     /**
-     * task che può:
-     * - girare autonomamente > preleva le righe di periodi_variazioni_attivita per le variazioni approvate
-     * - essere richiamato dal task _variazioni.attivita.approve.php > riceve in ingresso un id variazione
-     * 
-     * verifica se ci sono attività in quel periodo assegnate all'utente e:
-     * - setta id_anagrafica NULL
-     * - crea una riga nella tabella di report __report_attivita_assenze__
-     * - setta il timestamp_controllo_attivita
+     * task che gira autonomamente > preleva una riga di periodi_variazioni_attivita per le variazioni approvate  * 
+     *- verifica se ci sono attività in quel periodo assegnate all'anagrafica corrispondente e:
+     *      - setta id_anagrafica NULL
+     *      - crea una riga nella tabella di report __report_attivita_assenze__
+     *      - aggiorna il timestamp_controllo_attivita per i periodi_variazioni_attivita figli
+     *      - legge le attività della tabella __report_sostituzioni_attivita__ in cui l'anagrafica è stata coinvolta e azzera il timestamp_calcolo_sostituti per quelle attvità
+     *      - elimina le righe __report_sostituzioni_attivita__ per l'anagrafica
      *
      *
      * @todo usare le funzioni di ACL per verificare se l'azione è autorizzata
@@ -78,9 +77,6 @@
         $status['info']['righe_aggiornate'] = 0;
 
         if( !empty( $scoperture) ){
-
-            $cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
-            triggerOff( 'attivita', '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.update.php' );
             
             foreach( $scoperture as $s ){
 
@@ -108,28 +104,43 @@
 
                 $status['info']['righe_aggiornate'] += $u;
             }
-        }
-        
-        // aggiorno le attività coinvolte settando id_anagrafica NULL
-    /*    $u = mysqlQuery( 
-            $cf['mysql']['connection'],
-            "UPDATE attivita LEFT JOIN todo ON todo.id = attivita.id_todo SET attivita.id_anagrafica = NULL "
-            ."WHERE attivita.id_anagrafica = ? "
-            ."AND ( ( coalesce( TIMESTAMP( attivita.data_programmazione, attivita.ora_inizio_programmazione ), TIMESTAMP( todo.data_programmazione, todo.ora_inizio_programmazione ) ) between ? and ? ) "
-            ."OR ( coalesce( TIMESTAMP( attivita.data_programmazione, attivita.ora_fine_programmazione ), TIMESTAMP( todo.data_programmazione, todo.ora_fine_programmazione ) ) between ? and ? ) )"
-        ,
-            array(
-                array( 's' =>  $p['id_anagrafica'] ),
-                array( 's' =>  $data_ora_inizio ),
-                array( 's' =>  $data_ora_fine ),
-                array( 's' =>  $data_ora_inizio ),
-                array( 's' =>  $data_ora_fine )
-            )
-        );
-*/
-        // status
-    #    $status['info'][] = 'aggiornate ' . $u . ' righe dalla tabella attivita per il periodo ' . $p['data_inizio'] . ' ' . $p['ora_inizio'] . ' - ' . $p['data_fine'] . ' ' . $p['ora_fine'];          
 
+            // estraggo le attività della tabella __report_sostituzioni_attivita__ in cui è coinvolta l'anagrafica corrente
+            $report = mysqlSelectColumn(
+                'id_attivita',
+                $cf['mysql']['connection'],
+                'SELECT id_attivita FROM __report_sostituzioni_attivita__ WHERE id_anagrafica = ?',
+                array(
+                    array( 's' =>  $p['id_anagrafica'] )
+                )
+            );
+
+            $status['attivita_ricalcolo_sostituti'] = $report;
+
+            if( !empty( $report ) ){
+                foreach( $report as $rid ){
+                    $status['attivita_aggiorno_timestamp'][] = $rid;
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE attivita SET timestamp_calcolo_sostituti = NULL WHERE id = ?',
+                        array( array( 's' => $rid ) )
+                    );
+                }
+            }
+
+            $status['info'][] = 'rimuovo le righe da __report_sostituzioni_attivita__ per l\'anagrafica coinvolta';
+
+            // rimuovo le righe sulla __report_sostituzioni_attivita__ legate a questa anagrafica
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'DELETE FROM __report_sostituzioni_attivita__ WHERE id_anagrafica = ?',
+                array(
+                    array( 's' =>  $p['id_anagrafica'] )
+                )
+            );
+
+        }
+    
         // setto la riga come elaborata
         $u = mysqlQuery(
             $cf['mysql']['connection'],
