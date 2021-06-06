@@ -40,9 +40,9 @@
         // token della riga
         $status['update'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE attivita SET token = ? WHERE id_anagrafica IS NULL AND timestamp_calcolo_sostituti IS NULL '.
+            'UPDATE attivita SET token = ? WHERE id_anagrafica IS NULL '.
             'AND token IS NULL '.
-            'ORDER BY timestamp_aggiornamento ASC LIMIT 1',
+            'ORDER BY timestamp_calcolo_sostituti ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] )
             )
