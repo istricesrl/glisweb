@@ -27,7 +27,7 @@
         $cf['mysql']['connection'],
         'UPDATE refresh_view_statiche SET token = ? WHERE token IS NULL ORDER BY timestamp_prenotazione ASC LIMIT 1',
         array(
-            array( 's' => $status['token'])
+            array( 's' => $status['token'] )
         )
     );
 
@@ -36,7 +36,7 @@
         $cf['mysql']['connection'],
         'SELECT * FROM refresh_view_statiche WHERE token = ?'
         array(
-            array( 's' => $status['token'])
+            array( 's' => $status['token'] )
         )
     );
 
@@ -54,7 +54,7 @@
             $cf['mysql']['connection'],
             'DELETE FROM refresh_view_statiche WHERE token = ?',
             array(
-                array( 's' => $status['token'])
+                array( 's' => $status['token'] )
             )
         );
     
