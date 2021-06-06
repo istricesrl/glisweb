@@ -34,7 +34,7 @@
     // seleziono le view statiche da aggiornare
     $status['row'] = mysqlSelectRow(
         $cf['mysql']['connection'],
-        'SELECT * FROM refresh_view_statiche WHERE token = ?'
+        'SELECT * FROM refresh_view_statiche WHERE token = ?',
         array(
             array( 's' => $status['token'] )
         )
@@ -46,7 +46,7 @@
         // aggiorno la vista
         $status['refresh'] = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'CALL ' . $status['entita'] . '_view_static()'
+            'CALL ' . $status['entita'] . '_view_static(NULL)'
         );
 
         // elimino la richiesta
