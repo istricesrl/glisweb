@@ -80,7 +80,7 @@
 
             foreach( $scoperture as $s ){
 
-                $status['info']['attivita_da_scoprire'][] = $s['id'];
+                $status['info'][] = 'presenti attivita da scoprire';
                 
                 // creo una riga nella tabella __report_attivita_assenze__
                 $raa = mysqlQuery(
@@ -127,11 +127,11 @@
                 )
             );
 
-            $status['attivita_ricalcolo_sostituti'] = $report;
+        #    $status['attivita_ricalcolo_sostituti'] = $report;
 
             if( !empty( $report ) ){
                 foreach( $report as $rid ){
-                    $status['attivita_aggiorno_timestamp'][] = $rid;
+                #    $status['attivita_aggiorno_timestamp'][] = $rid;
                     mysqlQuery(
                         $cf['mysql']['connection'],
                         'UPDATE attivita SET timestamp_calcolo_sostituti = NULL WHERE id = ?',

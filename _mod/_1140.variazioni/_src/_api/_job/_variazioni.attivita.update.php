@@ -178,11 +178,11 @@
                     )
                 );
 
-                $status['attivita_report'] = $report;
+            #    $status['attivita_report'] = $report;
 
                 if( !empty( $report ) ){
                     foreach( $report as $rid ){
-                        $status['attivita_da_aggiornare'][] = $rid;
+                    #    $status['attivita_da_aggiornare'][] = $rid;
                         mysqlQuery(
                             $cf['mysql']['connection'],
                             'UPDATE attivita SET timestamp_calcolo_sostituti = NULL WHERE id = ?',
