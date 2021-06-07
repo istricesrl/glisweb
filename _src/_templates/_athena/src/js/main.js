@@ -187,6 +187,8 @@
 
 		});
 
+		var fgSliders = [];
+
 		// attivazione dei job in foreground
 		$('.foreground-job-slider').each( function() {
 
@@ -196,7 +198,7 @@
 			var jobId = $( this ).attr('job-id');
 			var pgBar = $( this );
 
-			setInterval( function() {
+			fgSliders[ jobId ] = setInterval( function() {
 
 				getws( '/job/' + jobId, null, function( d ) {
 
@@ -215,6 +217,26 @@
 					var percentuale = Math.round( percentuale = d.corrente / d.totale * 100 );
 
 					pgBar.width( percentuale + '%' );
+
+					var container = pgBar.closest('.foreground-job-container');
+					var parent = pgBar.closest('.progress');
+
+					if( d.corrente >= d.totale ) {
+
+						clearInterval( fgSliders[ jobId ] );
+
+						parent.slideUp();
+						parent.remove();
+
+						if( d.hasOwnProperty('result') ) {
+							if( d.result.hasOwnProperty('link') ) {
+								container.append('<p><a target="_blank" href="'+d.result.link+'">'+d.result.label+'</a></p>');
+							} else {
+								container.append('<p>'+d.result.label+'</p>');
+							}
+						}
+
+					}
 
 				});
 	
