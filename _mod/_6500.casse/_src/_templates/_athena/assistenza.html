@@ -15,17 +15,6 @@
     {% set account = '__null__' %}
 {% endif %}
 
-{# TIPO DI METODO E ATTIVITA' SVOLTA #}
-{% if request[ table ].id %}
-    {% set method = 'update' %}
-    {% set activity = 'aggiornamento' %}
-    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
-{% else %}
-    {% set method = 'post' %}
-    {% set activity = 'inserimento' %}
-    {% set legend = 'inserimento nuovo oggetto' %}
-{% endif %}
-
 {% block header %}
 <div class="text-left">
         {% set target = pages.casse.url[ localization.language.ietf ] %}
@@ -35,8 +24,63 @@
 
 
 {% block main %}
+{% if not session.assistenza.id_assistenza %}
 <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 <div class="form-group">
+    {% if not session.assistenza.id_cliente %}
+    <div class="form-group form-row">
+        <legend>cliente</legend>
+            <div class="col-6 mt-2">
+                <span class="label-top">ricerca cliente</span>
+                <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" >
+            </div>    
+            <div class="col-auto mt-2">
+                {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
+                <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');"><i class="fa fa-plus"></i></button>
+                <button type="submit" class="btn btn-secondary btn-sqr btn-sm" ><i class="fa fa-search"></i></button>
+            </div>
+            <div class="col mt-2">
+                <span class="label-top">ricerca assistenza</span>
+                <input type="text" class="form-control form-control-sm" name="__assistenza__" value="" autofocus>
+            </div>   
+    </div>
+    
+        {% if view.data and session.__view__[ view.id ].__search__  %}
+        <div class="form-group form-row">
+            <div class=" col-md-12 text-center table-responsive">
+                <table class="view-table  clickable">
+                    <thead>
+                        <tr>
+                        {% for key in view.fields %}
+                        <th class="{{ view.class[key] }}">
+                            {% if view.cols[ key ] %}
+                            <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
+                            <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+                            <option value="">{{ view.cols[ key ] }}</option>
+                            <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
+                            <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+                            </select>
+                            <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
+                            {% endif %}
+                        </th>
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in view.data %}
+                        <tr onClick="window.open('{{ page.path[ localization.language.ietf ] }}?__cliente__[id]={{ row.id }}','_self');">
+                        {# for key,col in view.cols #}
+                        {% for key in view.fields %}
+                        <td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
+                        {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    {% endif %}
 
 <div class="form-group form-row">
 {% if session.assistenza.id_cliente %}
@@ -45,8 +89,8 @@
     <div class="form-group form-row">
         <div class="col">
             {{ etc.cliente.__label__ }}
-            {% if etc.cliente.mail %}indirizzo mail: {{ etc.cliente.mail }} <br>{% endif %}
-            {% if etc.cliente.telefoni %}telefoni: {{ etc.cliente.telefoni }} <br>{% endif %}
+            {% if etc.cliente.mail %}<br>indirizzo mail: {{ etc.cliente.mail }} {% endif %}
+            {% if etc.cliente.telefoni %} <br>telefoni: {{ etc.cliente.telefoni }}{% endif %}
         </div>
         <div class="col-auto" >
             {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
@@ -58,99 +102,8 @@
     </div>   
 </div>  
 {% endif %}
-{% if session.assistenza.id_progetto %}  
+{% if session.assistenza.id_cliente and not session.assistenza.id_progetto %}
 <div class="col-3">
-    <legend>progetto</legend>
-    <div class="form-group form-row">
-        <div class="col">{{ etc.progetto.__label__ }}</div>
-        <div class="col-auto">
-            {% set progetto = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
-            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetto }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&progetti[id]={{ session.assistenza.id_progetto }}','_self');"><i class="fa fa-pencil"></i></button>
-            {% if not session.assistenza.id_todo  %}
-            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__=progetto','_self');"><i class="fa fa-times"></i></button>
-            {% endif %}
-        </div>
-    </div>    
-</div>
-{% endif %}
-{% if session.assistenza.id_todo %}  
-<div class="col">
-    <div class="form-group form-row">      
-        <legend>todo</legend>
-        <input type="hidden" id="method" name="todo[__method__]" value="update">
-        {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
-        {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }} 
-        <div class="form-group col">
-            <div class="col-12 col-md">
-                <span class="label-top">nome</span>
-                {{ frm.inputRequired( 'todo', '', '', 'nome', '', '', request ) }}
-            </div>
-            <div class="col col-md mt-2" >
-                <span class="label-top">descrizione del problema</span>
-                {{ frm.textarea( 'todo', '', '', 'testo', '', 3, request ) }}
-            </div>  
-        </div>   
-            <div class="col-auto ">
-                {% set todo = pages[ 'todo.form' ].url[ localization.language.ietf ] %}
-                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ todo }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&todo[id]={{ session.assistenza.id_todo }}','_self');"><i class="fa fa-pencil"></i></button>
-                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__delete__=todo','_self');"><i class="fa fa-trash"></i></button>
-            </div>    
-        </div>  
-</div>
-{% endif %}
-</div>
-
-{% if not session.assistenza.id_cliente %}
-<div class="form-group form-row">
-    <legend>cliente</legend>
-        <div class="col mt-2">
-            <span class="label-top">ricerca</span>
-            <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
-        </div>    
-        <div class="col-auto mt-2">
-            {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
-            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');"><i class="fa fa-plus"></i></button>
-        </div>
-</div>
-
-    {% if view.data and session.__view__[ view.id ].__search__  %}
-    <div class="form-group form-row">
-        <div class=" col-md-12 text-center table-responsive">
-            <table class="view-table  clickable">
-                <thead>
-                    <tr>
-                    {% for key in view.fields %}
-                    <th class="{{ view.class[key] }}">
-                        {% if view.cols[ key ] %}
-                        <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
-                        <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
-                        <option value="">{{ view.cols[ key ] }}</option>
-                        <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
-                        <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
-                        </select>
-                        <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
-                        {% endif %}
-                    </th>
-                    {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in view.data %}
-                    <tr onClick="window.open('{{ page.path[ localization.language.ietf ] }}?__cliente__[id]={{ row.id }}','_self');">
-                    {# for key,col in view.cols #}
-                    {% for key in view.fields %}
-                    <td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
-                    {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% endif %}
-
-{% elseif not session.assistenza.id_progetto %}
-<div class="form-group form-row">
     <legend>progetto</legend>
         <div class="form-group form-row">
             <div class="col">
@@ -192,40 +145,90 @@
     </table>
 </div>
 {% endif %}
+{% endif %}
+{% if session.assistenza.id_progetto %}  
+<div class="col-3">
+    <legend>progetto</legend>
+    <div class="form-group form-row">
+        <div class="col">{{ etc.progetto.__label__ }}</div>
+        <div class="col-auto">
+            {% set progetto = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetto }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&progetti[id]={{ session.assistenza.id_progetto }}','_self');"><i class="fa fa-pencil"></i></button>
+            {% if not session.assistenza.id_todo  %}
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__=progetto','_self');"><i class="fa fa-times"></i></button>
+            {% endif %}
+        </div>
+    </div>    
+</div>
+{% endif %}
+{% if session.assistenza.id_progetto %}  
+<div class="col form-group form-row">
+  
+        <legend>todo</legend>
+        {% if session.assistenza.id_todo %}
+            {% set method_t = 'update' %}
+            {% set activity_t = 'aggiornamento' %}
+        {% else %}
+            {% set method_t = 'post' %}
+            {% set activity_t = 'inserimento' %}
+        {% endif %}
+    
+        <input type="hidden" id="method" name="todo[__method__]" value="{{ method_t }}">
+        <input type="hidden" id="timestamp" name="todo[timestamp_{{ activity_t }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="todo[id_account_{{ activity_t }}]" value="{{ account }}">
+        {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
+        {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }} 
+        {{ frm.input( 'todo', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
+        <div class="form-group col" style="padding: 0%;">
+            <div class="col-12 col-md">
+                <span class="label-top">nome</span>
+                {{ frm.inputRequired( 'todo', '', '', 'nome', '', '', request ) }}
+            </div>
+            <div class="col col-md mt-2" >
+                <span class="label-top">descrizione del problema</span>
+                {{ frm.textarea( 'todo', '', '', 'testo', '', 3, request ) }}
+            </div>  
+        </div> 
+        {% if session.assistenza.id_todo %}
+            <div class="col-auto ">
+                {% set todo = pages[ 'todo.form' ].url[ localization.language.ietf ] %}
+                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ todo }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&todo[id]={{ session.assistenza.id_todo }}','_self');"><i class="fa fa-pencil"></i></button>
+                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=todo&__delete__[id]={{ session.assistenza.id_todo }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
+            </div>    
+        {% endif %}    
+        </div>  
+
+{% endif %}
+</div>
+
+
+
     <!--fieldset class=" ">
         <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 2%;" >
             <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
         </div>
     </fieldset-->
-{% elseif not session.assistenza.id_todo %}
 
 
-<div class="form-group form-row">      
-    <legend>todo</legend>
-    {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
-    {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }} 
 
-		<div class="col-12 col-md-12">
-			<span class="label-top">nome</span>
-			{{ frm.inputRequired( 'todo', '', '', 'nome', '', '', request ) }}
-        </div>
-        <div class="col col-md mt-3">
-            <span class="label-top">descrizione del problema</span>
-            {{ frm.textarea( 'todo', '', '', 'testo', '', 3, request ) }}
-        </div>
 
  
-{% elseif session.assistenza.id_todo %}
+{% if session.assistenza.id_todo %}
 
 </div>
 
     <fieldset>
     <legend>attivita</legend>
     {% if session.assistenza.id_attivita %}
-    {% set method = 'update' %}
+        {% set method = 'update' %}
+        {% set activity = 'aggiornamento' %}
     {% else %}
-    {% set method = 'post' %}
+        {% set method = 'post' %}
+        {% set activity = 'inserimento' %}
     {% endif %}
+
+    <input type="hidden" id="timestamp" name="attivita[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+    <input type="hidden" id="account" name="attivita[id_account_{{ activity }}]" value="{{ account }}">
     <input type="hidden" id="method" name="attivita[__method__]" value="{{ method }}">
     {{ frm.input( 'attivita', '', '', 'id', '', '', request, '', 'hidden') }}
     {{ frm.input( 'attivita', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }}
@@ -281,17 +284,26 @@
     <div class="col-auto">
         {% set attivita = pages[ 'attivita.form' ].url[ localization.language.ietf ] %}
         <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ attivita }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&attivita[id]={{ session.assistenza.id_attivita }}','_self');"><i class="fa fa-pencil"></i></button>
-        <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__delete__=attivita','_self');"><i class="fa fa-trash"></i></button>
+        <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=attivita&__delete__[id]={{ session.assistenza.id_attivita }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
     </div>
 
 {% endif %}
 </div>
     <fieldset class=" ">
-        <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 2%;" >
+        <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
+            <div>
+            {% if  session.assistenza.id_cliente %}
             <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"> {% if session.assistenza.id_attivita %}pulisci{% else %}annulla{% endif %}</button>
-            {% if not session.assistenza.id_attivita %}
+            {% endif  %}
+            {% if session.assistenza.id_attivita  %}
+            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__delete_all__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">elimina</button>
+            {% endif  %}
+            </div>
+            {% if session.assistenza.id_cliente and session.assistenza.id_progetto %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
-            {% else %}
+            {% endif %}
+            
+            {% if session.assistenza.id_attivita %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             <button type="submit" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
             {% endif %}
@@ -300,4 +312,99 @@
 
 </form>
 </div>
+{% else %}
+<div class="form-row">
+    <div class="col-3">
+        <legend>cliente</legend>
+        <div class="form-row">
+            <div class="col">{{ etc.todo.cliente }} </div>
+            <div class="col-auto">
+                {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
+                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&anagrafica[id]={{ etc.todo.id_cliente }}','_self');"><i class="fa fa-pencil"></i></button>        
+            </div>
+        </div>
+
+        
+
+    <!--/div>
+    <div class="col-3"-->
+        <legend>progetto</legend>
+        <div class="form-row">
+            <div class="col"> {{ etc.todo.progetto }}</div>
+        <div class="col-auto">
+            {% set progetto = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetto }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&progetti[id]={{ etc.todo.id_progetto }}','_self');"><i class="fa fa-pencil"></i></button>
+        </div>
+    </div>
+    </div>
+    <div class="col-4">
+        <legend>todo</legend>
+        {{ etc.todo.nome }}
+        <br>{{ etc.todo.testo }}
+        {% if etc.todo.data_programmazione %}<br>data programmazione: {{  etc.todo.data_programmazione|date('d/m/Y') }} {% endif %}
+        {% if etc.todo.ora_inizio_programmazione %}<br>ora programmazione: {{  etc.todo.ora_inizio_programmazione|date('H:i') }}{% if etc.todo.ora_fine_programmazione %} - {{  etc.todo.ora_fine_programmazione|date('H:i') }}{% endif %} {% endif %}
+
+    </div>
+    <div class="col">
+        {% if etc.attivita %}
+        <legend>attività</legend>
+            <ul>
+            {% for a in etc.attivita %}
+                <li>{{ a.nome }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>    
+    <legend>completamento</legend>  <div class="col-md-12 d-flex flex-column">
+        {% set table = 'todo' %}
+        {% set method = 'update' %}
+        {% set activity = 'aggiornamento' %}
+        <form id="form-{{ table }}" class=" d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+    
+            {# CAMPI HIDDEN DI BASE #}
+            <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request.todo.id }}">
+            <input type="hidden" id="nome" name="{{ table }}[nome]" value="{{ request.todo.nome }}">
+            <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+            <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+            <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+            <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+            {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+            <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+    
+            {# MODULO PRINCIPALE #}
+            <fieldset>
+
+            <div class="form-group form-row">
+                <div class="col-auto">
+                    <span class="label-top">data</span>
+                    {{ frm.date( table, '', '', 'timestamp_completamento', '', '', request, 'now'|date('Y-m-d') ) }}
+                </div>
+                <div class="col">
+                    <span class="label-top">testo completamento</span>
+                    {{ frm.textarea( table, '', '', 'testo_completamento', '', '3', request ) }}
+                </div>
+            </div>
+    
+    
+            </fieldset>
+    
+            <fieldset class=" ">
+                <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
+                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
+                    <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+                </div>
+            </fieldset>
+        </form>
+        </div>
+    
+
+</div>
+
+
+
+
+
+
+
+{% endif %}
 {% endblock %}

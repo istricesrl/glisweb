@@ -7,6 +7,25 @@ $ct['form']['table'] = '';
 $ct['view']['cols'] = array(
     'id' => '#'
 );
+
+
+if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza__'] )[0] == 'TODO') || isset( $_SESSION['assistenza']['id_assistenza']) ){
+ 
+    if( isset( $_SESSION['assistenza']['id_assistenza']) ){
+        $todo =   $_SESSION['assistenza']['id_assistenza'];
+    } else {
+        $todo = str_replace('0', '',explode( '.', $_REQUEST['__assistenza__'] )[1]);
+        $_SESSION['assistenza']['id_assistenza'] = $todo;
+    }
+
+
+    $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
+    $ct['etc']['attivita'] = mysqlCachedIndexedQuery(  $cf['cache']['index'], $cf['memcache']['connection'],$cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ?', array( array( 's' => $todo) ));
+    $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo WHERE id = ?', array( array( 's' => $todo) ));
+    $ct['form']['table'] = 'todo';
+print_r( $_REQUEST['todo'] );
+}
+
 if( isset( $_REQUEST['__unset__'] ) ){
 
     if(  $_REQUEST['__unset__'] == 'cliente' ){
@@ -24,6 +43,7 @@ if( isset( $_REQUEST['__unset__'] ) ){
         unset( $_SESSION['assistenza']['id_progetto'] );
         unset( $_SESSION['assistenza']['id_todo']  );
         unset( $_SESSION['assistenza']['id_attivita']  );
+        unset( $_SESSION['assistenza']['id_assistenza']);
         unset( $_SESSION['__view__'][ 'clienti' ]['__search__'] );
     
     }
@@ -111,7 +131,7 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
      //   $_SESSION['assistenza']['id_todo'] = $_REQUEST['todo']['id'];
         $ct['form']['table'] = 'attivita';
         $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo']) ));
-    
+        if( !$_REQUEST['todo'] ){ unset( $_SESSION['assistenza']['id_todo'] ); }
     }
 
     if( isset( $_REQUEST['attivita']['id'] ) && !empty( $_REQUEST['attivita']['id'] ) ){
@@ -122,6 +142,7 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
     if( isset( $_SESSION['assistenza']['id_attivita'] ) ){
 
            $_REQUEST['attivita'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_attivita']) ));   
+           if( !$_REQUEST['attivita'] ){ unset( $_SESSION['assistenza']['id_attivita'] ); }
     }
 
 
@@ -131,11 +152,11 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 '  );
 
-        $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
-            $cf['cache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM indirizzi_view' );
+    $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
+        $cf['cache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM indirizzi_view' );
 
    // macro di default
    require DIR_SRC_INC_MACRO . '_default.view.php';

@@ -49,11 +49,11 @@
             <div class="form-group form-row">
                 <div class="col-12 col-md-2">
                     <span class="label-top">codice</span>
-                    {{ frm.inputRequired( table, '', '', 'id', '', '', request ) }}
+                    {{ frm.inputRequired( table, '', '', 'id', '', '', request,  'now'|date('YmdHi') ) }}
                 </div>
                 <div class="col-12 col-md-2">
                     <span class="label-top">tipologia</span>
-                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request ) }}
+                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request, '', '', '', '', 'nomeProgetto()' ) }}
                 </div>
 
 				<div class="col-12 col-md-7">
@@ -111,5 +111,22 @@
 	</form>
     </div>
 </section>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="jquery-3.5.1.min.js"></script>
+
+<script>
+function nomeProgetto(){
+	var tipologia = $('#progetti_id_tipologia option:selected').text();
+	console.log(tipologia);
+	var cliente = $('#progetti_id_cliente_inputbox').val();
+	console.log(cliente);
+	var testo = ""+tipologia+" per "+cliente;
+	$('#progetti_nome').val(testo);
+}
+</script>
+
 
 {% endblock %}
