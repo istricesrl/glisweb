@@ -1,0 +1,166 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends 'ext/blank.html' %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{% block header %}
+<header class="fixed-top">
+    <div class="row widget no-gutters">
+        <div class="col text-left" id="annulla-scontrino">
+            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?documenti[id]={{ request.documenti.id }}&__open__=1', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+        </div>
+        <!--div class="col text-left" id="home-terminale" hidden>
+            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+        </div-->
+           <div class="col text-right">
+          
+        </div>
+    </header>
+{% endblock %}
+
+{% block main %}
+
+<h1> {{ etc.documento.__label__ }} </h1>
+{% if etc.documento.righe %}
+    <div class="col-12">
+        {% if etc.documento.righe %}
+        <div id="bot" class=" table-responsive box">
+            <table class="view-table">
+                <thead>
+                    <tr>
+                    <th class="text-left"><span class="d-print-inline ">articolo</span></th>
+                    <th class="text-right"><span class="d-print-inline">reparto</span></th>
+                    <th class="text-right"><span class="d-print-inline">prezzo</span></th>
+                    <th class="text-right"><span class="d-print-inline">quantità</span></th>
+                    <th class="text-right"><span class="d-print-inline">sub totale</span></th>
+                    </tr>
+                </thead>
+                <tbody class="col-12" >
+                    {% for riga in etc.documento.righe %}
+                    <tr>
+                    <td class="{{ view.class[key] }}">{{ riga.id_articolo }}</td>
+                    <td class="text-right">{{ riga.reparto }}</td>
+                    <td class="text-right">€ {{ riga.importo_netto_totale }}</td>
+                    <td class="text-right">{{ riga.quantita }}</td>
+                    <td class="text-right">€ {{ (riga.importo_netto_totale * riga.quantita)|number_format(2, ',', '.') }}</td>  
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+                <table style="width:100%;">      
+                    {% if etc.totale %}
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="text-right"><h3>imponibile</h3></td>
+                                <td class="text-right"><h3>{{ etc.totale|number_format(2, ',', '.')  }}</h3></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="text-right"><h3>IVA</h3></td>
+                                <td class="text-right"><h3>{{ etc.totale_iva|number_format(2, ',', '.')  }}</h3></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="text-right"><h3>Totale</h3></td>
+                                <td class="text-right"><h3>{{ (etc.totale + etc.totale_iva )|number_format(2, ',', '.')  }}</h3></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="text-right"><h3>Modalità di pagamento</h3></td>
+                                <td class="text-right"><h3>{{ etc.documento.modalita_pagamento }}</h3></td>
+                            </tr>
+                    {% endif %}
+                </table>
+        </div>
+        {% endif %}
+
+<div class="row " id="pulsanti">
+    <div class="col-12"><legend>conferma scontrino</legend></div>
+
+    <div class="col-6 mt-3 cassa">
+        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?documenti[id]={{ request.documenti.id }}&__open__=1', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">modifica</button>
+    </div>
+    {% if etc.documento.tipologia == 'scontrino' %}
+    <div class="col-6 mt-3 cassa">
+        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="stampaScontrino()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
+    </div>
+    {% else %}
+    <div class="col-6 mt-3 cassa">
+        {% set pagina = "documenti.form.stampe" %}
+        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages[ pagina ].url[  ietf ] }}?documenti[id]={{ request.documenti.id }}', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
+    </div>
+    {% endif %}
+</div>   
+<div class="row" id="response" hidden>
+    <div class="col-auto"style=" background-color: #999999; color: white; padding-top: 1%;  padding-right: 1%; padding-bottom: 1%; padding-left: 1%; margin-bottom: 1%;">
+        <h3><i class="fa fa-check" aria-hidden="true"></i>&nbsp; errore</h3>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+
+ function stampaScontrino(){
+    //var parsedJSON = JSON.parse('{{ etc.documento|json_encode|e('js') }}');
+    
+//console.log(parsedJSON);
+    //window.open( "{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php?__data__={{ etc.documento|json_encode|e('js') }}", '_blank');
+    var document = '{{ etc.documento|json_encode|e('js') }}';
+
+    getws('{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php?__data__='+document, '',
+                function( data ){ 
+
+                   if( data[0] == 'OK' ){
+                    window.open( '{{ pages.terminale.url[  ietf ] }}', '_self' );
+                   } else{
+                        $('#pulsanti').hide();
+                        $('#response').removeAttr('hidden');
+                     //   $('#annulla-scontrino').hide();
+                     //   $('#home-terminale').removeAttr('hidden');
+                   }
+                }    
+            );
+   
+ }
+
+</script>
+
+
+
+{% endblock %}

@@ -58,6 +58,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM udm_view' );
 
+    // tendina reparti
+	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM reparti_view' );    
+
     if( isset( $_REQUEST['__preset__']['articoli']['id_prodotto']  ) ){
         // unità di misura di default
         $ct['etc']['value']['udm'] = mysqlSelectValue(

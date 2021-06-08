@@ -15,9 +15,22 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_catalogo.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'catalogo' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'catalogo' ),
-									'priority'	=> '650' ) ) )	
+		'etc'		=> array( 'tabs'	=> array(	'catalogo', 'catalogo.stampe' ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'catalogo' ),
+									'priority'	=> '650' ) )
+	);
+
+	// gestione anagrafica stampe
+	$p['catalogo.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_catalogo.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['catalogo']['etc']['tabs'] )
 	);
 
 	 // vista categorie prodotti

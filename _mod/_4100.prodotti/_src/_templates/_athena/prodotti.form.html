@@ -57,7 +57,7 @@
             <div class="form-group form-row">
                 <div class="col-12 col-md-auto">
                     <span class="label-top">tipologia</span>
-                    {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
                 </div>  
                 <div class="col-12 col-md-auto">
                     <span class="label-top">codice</span>
@@ -65,7 +65,7 @@
                 </div>  
                 <div class="col-12 col-md">
                     <span class="label-top">nome</span>
-                    {{ frm.input( table, '', '', 'nome', 'nome del prodotto', '', request ) }}
+                    {{ frm.input( table, '', '', 'nome', 'nome del prodotto', '', request, '', '', 1 ) }}
                 </div>
             </div>
         </fieldset>

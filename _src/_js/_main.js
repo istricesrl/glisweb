@@ -43,6 +43,9 @@
 	    // apro i modal con classe popup-open
 		$('.popup-open').modal();
 
+		// focus su un elemento
+		$('.focus-on-load').focus();
+
 	    // apro in ritardo i modal con classe popup-delay in base al valore dell'attributo popup-delay
 		$('.popup-delay').each( function() {
 		    var modal = $( this );
