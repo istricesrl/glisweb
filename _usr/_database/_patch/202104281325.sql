@@ -1,0 +1,1 @@
+ALTER TABLE `pianificazioni` ADD `id_progetto` CHAR(32) NULL DEFAULT NULL AFTER `id_turno`, ADD UNIQUE KEY `id_progetto` (`id_progetto`) ;

@@ -1,0 +1,1 @@
+ALTER TABLE `reparti` ADD INDEX(`id_account_inserimento`), ADD INDEX(`id_account_aggiornamento`);

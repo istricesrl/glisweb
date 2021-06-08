@@ -1,0 +1,1 @@
+ALTER TABLE `tipologie_mastri` ADD UNIQUE KEY `nome` (`nome`);

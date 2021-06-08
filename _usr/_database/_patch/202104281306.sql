@@ -1,0 +1,1 @@
+ALTER TABLE `progetti` ADD CONSTRAINT `progetti_ibfk_33_nofollow` FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;

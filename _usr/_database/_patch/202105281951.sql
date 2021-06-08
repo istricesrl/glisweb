@@ -1,0 +1,1 @@
+ALTER TABLE `__report_ore_operatori_per_progetto__` CHANGE `id_progetto` `id_progetto` CHAR(32) NOT NULL;
