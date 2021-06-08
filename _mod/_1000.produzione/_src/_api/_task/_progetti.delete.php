@@ -35,17 +35,33 @@
     }
 
     if( !empty( $status['id_progetto'] ) ){
-		$cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
-        triggerOff( 'attivita', '_mod/_1000.produzione/_src/_api/_task/_progetti.delete.php' );
-
-		$cf['cron']['cache']['view']['static']['refresh'][] = 'todo';  
-        triggerOff( 'todo', '_mod/_1000.produzione/_src/_api/_task/_progetti.delete.php' );      
 
         mysqlDeleteRowRecursive(
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
             'progetti',
             $status['id_progetto']
+        );
+
+        // inserisco una richiesta di ripopolamento per attivita_view_static e todo_view_static
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+            array(
+                array( 's' => 'attivita' ),
+                array( 's' => '_mod/_1000.produzione/_src/_api/_task/_progetti.delete.php'),
+                array( 's' => time() )
+            )
+        );
+
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+            array(
+                array( 's' => 'todo' ),
+                array( 's' => '_mod/_1000.produzione/_src/_api/_task/_progetti.delete.php'),
+                array( 's' => time() )
+            )
         );
 
 

@@ -155,7 +155,6 @@
 				
                 // mando un messaggio su Slack
                 slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
-				
 
             }
 

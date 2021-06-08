@@ -72,10 +72,7 @@
         }
 
         if( !empty( $giornate ) ){
-
-            $cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
-            triggerOff( 'attivita', '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.create.php' );
-
+           
             foreach( $giornate as $g ){
                 
                 $ore = oreGiornaliereContratto( $p['id_anagrafica'], $g['data'], $g['ora_inizio'], $g['ora_fine'] );
@@ -99,6 +96,17 @@
                 
                 }
             }
+
+             // inserisco una richiesta di ripopolamento delle statiche
+             mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                array(
+                    array( 's' => 'attivita' ),
+                    array( 's' => '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.create.php'),
+                    array( 's' => time() )
+                )
+            );
         }
 
         // setto la riga come elaborata

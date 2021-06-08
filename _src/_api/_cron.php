@@ -32,7 +32,7 @@
 	$cf['cron']['results']['token'] = getToken( __FILE__ );
 		
 	// inizializzo
-	$cf['cron']['cache']['view']['static']['refresh'] = array();
+#	$cf['cron']['cache']['view']['static']['refresh'] = array();
 
     // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
 	$tasks = mysqlQuery(
@@ -45,7 +45,7 @@
 	    '( giorno_della_settimana = ?								OR giorno_della_settimana IS NULL ) AND '.
 	    '( settimana = ?											OR settimana IS NULL ) AND '.
 		'( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?	OR timestamp_esecuzione IS NULL ) AND '.
-		'token IS NULL',
+		'( token IS NULL OR ( timestamp_esecuzione < ? ) )',
 	    array(
 			array( 's' => $cf['cron']['results']['token'] ),		//
 			array( 's' => intval( date( 'i', $time ) ) ),			// 
@@ -54,7 +54,8 @@
 			array( 's' => date( 'n', $time ) ),						// 
 			array( 's' => date( 'w', $time ) ),						// 0 - 6, 0 -> domenica
 			array( 's' => date( 'W', $time ) ),						// 1 - 52/53
-			array( 's' => date( 'YmdHi', $time ) )					//
+			array( 's' => date( 'YmdHi', $time ) ),					//
+			array( 's' => strtotime( '-10 minutes' ) )				//
 	    )
 	);
 
@@ -133,7 +134,7 @@
 		);
 	}
 		
-	$cf['cron']['cache']['view']['static']['refresh'] = array_unique( $cf['cron']['cache']['view']['static']['refresh'] );
+/*	$cf['cron']['cache']['view']['static']['refresh'] = array_unique( $cf['cron']['cache']['view']['static']['refresh'] );
 	
 	if( !empty($cf['cron']['cache']['view']['static']['refresh']  ) ){
 		foreach( $cf['cron']['cache']['view']['static']['refresh'] as $s ){
@@ -147,15 +148,29 @@
 			);
 		}
 	}
+*/
+
+    // porto in background i job fermi in foreground
+    $status['job']['foreground'] = mysqlSelectRow(
+        $cf['mysql']['connection'],
+        'UPDATE job SET se_foreground = NULL WHERE timestamp_completamento IS NULL AND timestamp_esecuzione < ?',
+        array(
+            array( 's' => strtotime( '-10 minutes' ) )
+        )
+    );
 
 	// metto il lock sui job aperti
 		$jobs = mysqlQuery(
 			$cf['mysql']['connection'],
 			'UPDATE job SET token = ? WHERE '.
-			'timestamp_apertura <= ? OR timestamp_apertura IS NULL AND timestamp_completamento IS NULL AND token IS NULL AND se_foreground IS NULL ',
+			'( timestamp_apertura <= ? OR timestamp_apertura IS NULL ) '.
+			'AND timestamp_completamento IS NULL '.
+			'AND ( token IS NULL OR timestamp_esecuzione < ? ) '.
+			'AND se_foreground IS NULL ',
 			array(
 				array( 's' => $cf['cron']['results']['token'] ),
-				array( 's' => $time )
+				array( 's' => $time ),
+				array( 's' => strtotime( '-10 minutes' ) )
 			)
 		);
 	
