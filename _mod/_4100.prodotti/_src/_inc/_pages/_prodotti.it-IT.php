@@ -394,8 +394,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_reparti.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'reparti.view' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'reparti' ),
-								'priority'	=> '025' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'reparti' ),
+		'priority'	=> '025' ) ) )
 	);
 
 	// gestione reparti

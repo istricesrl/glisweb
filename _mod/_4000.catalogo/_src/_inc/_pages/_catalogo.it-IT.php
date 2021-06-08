@@ -16,8 +16,8 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'catalogo', 'catalogo.stampe' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'catalogo' ),
-									'priority'	=> '650' ) )
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'catalogo' ),
+									'priority'	=> '650' ) ) )								
 	);
 
 	// gestione anagrafica stampe
