@@ -3,7 +3,8 @@
     <span class="label-top">stato</span>
 	<select name="__view__[{{ view.id }}][__filters__][approvata][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 	    <option value="0" {% if request.__view__[ view.id ].__filters__.approvata.EQ == "0" %}selected{% endif %}>da approvare</option>
-	    <option value="1" {% if request.__view__[ view.id ].__filters__.approvata.EQ == "1" %}selected{% endif %}>approvata</option>
+	    <option value="1" {% if request.__view__[ view.id ].__filters__.approvata.EQ == "1" %}selected{% endif %}>approvate</option>
+		<option value="2" {% if request.__view__[ view.id ].__filters__.approvata.EQ == "2" %}selected{% endif %}>rifiutate</option>
 	    <option value="" {% if request.__view__[ view.id ].__filters__.approvata.EQ is empty %}selected{% endif %}>tutte</option>
 	</select>
     </div>
@@ -23,7 +24,6 @@
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
 		</div>
 		<div class="col-auto">
-		<div class="label-top">&nbsp;</div>
 		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
 		{% if view.insert.path %}
 		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>

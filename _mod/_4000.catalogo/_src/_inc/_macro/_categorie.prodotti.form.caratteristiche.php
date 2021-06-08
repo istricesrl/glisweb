@@ -24,7 +24,7 @@
 
     // tendina id caratteristiche
 	$ct['etc']['select']['id_caratteristiche'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM caratteristiche_prodotti_view'

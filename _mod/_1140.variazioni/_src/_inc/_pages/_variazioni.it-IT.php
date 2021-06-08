@@ -16,8 +16,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_variazioni.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'variazioni.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'variazioni' ),
-														'priority'	=> '115' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'variazioni' ),
+																		'priority'	=> '115' ) ) )	
 	);
 
     
@@ -57,10 +57,11 @@
 													'progetti.scoperti.view', 
 													'attivita.scoperte.view', 
 													'conferme.view',
-													'sostituzioni.view' ) ),
+													'sostituzioni.view',
+													'variazioni.tools' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'sostituzioni' ),
-														'priority'	=> '120' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'sostituzioni' ),
+														'priority'	=> '120' ) ) )	
 	);
 
 	$p['progetti.scoperti.form'] = array(
@@ -132,8 +133,8 @@
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.variazioni.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.variazioni.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie' ),
-									'priority'	=> '115' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+														'priority'	=> '115' ) ) )	
 	);
 
 	// gestione tipologie variazioni
@@ -146,5 +147,18 @@
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.variazioni.form.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.variazioni.form' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
+	);
+
+	// tools per variazioni
+	$p['variazioni.tools'] = array(
+	    'sitemap'		=> false,
+	    'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni' ),
+	    'h1'			=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'variazioni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_variazioni.tools.php' ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.scoperti.view']['etc']['tabs'] ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 

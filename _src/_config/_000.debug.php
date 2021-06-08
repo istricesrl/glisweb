@@ -66,7 +66,7 @@
 
     // costanti che descrivono lo stato di funzionamento del framework
 	define( 'DEVELOPEMENT'					, 'DEV' );
-	define( 'TESTING'					, 'TEST' );
+	define( 'TESTING'				    	, 'TEST' );
 	define( 'PRODUCTION'					, 'PROD' );
 
     // costanti che definiscono le destinazioni possibili di log
@@ -83,27 +83,27 @@
      */
 
     // livello di errori dei log
-	$cf['debug'][ DEVELOPEMENT ]['*']['log']['lvl']		= LOG_DEBUG;
+	$cf['debug'][ DEVELOPEMENT ]['*']['log']['lvl']		        = LOG_DEBUG;
 
     // frequenza di rotazione dei log
 	$cf['debug'][ DEVELOPEMENT ]['*']['log']['rotation']		= 'Ym';
 
     // livello di PHP error_reporting()
-	$cf['debug'][ DEVELOPEMENT ]['*']['report']['lvl']		= E_ALL;
+	$cf['debug'][ DEVELOPEMENT ]['*']['report']['lvl']		    = E_ALL;
 
     // destinazione dei log
-	$cf['debug'][ DEVELOPEMENT ]['*']['target']['*']		= array( LOG_TO_FILE => true );
+	$cf['debug'][ DEVELOPEMENT ]['*']['target']['*']		    = array( LOG_TO_FILE => true );
 
     // impostazioni aggiuntive per TESTING
-	$cf['debug'][ TESTING ]				= $cf['debug'][ DEVELOPEMENT ];
-	$cf['debug'][ TESTING ]['*']['log']['lvl']		= LOG_NOTICE;
+	$cf['debug'][ TESTING ]				                        = $cf['debug'][ DEVELOPEMENT ];
+	$cf['debug'][ TESTING ]['*']['log']['lvl']		            = LOG_NOTICE;
 
     // impostazioni aggiuntive per PRODUCTION
-	$cf['debug'][ PRODUCTION ]				= $cf['debug'][ DEVELOPEMENT ];
-	$cf['debug'][ PRODUCTION ]['*']['log']['lvl']		= LOG_ERR;
+	$cf['debug'][ PRODUCTION ]				                    = $cf['debug'][ DEVELOPEMENT ];
+	$cf['debug'][ PRODUCTION ]['*']['log']['lvl']		        = LOG_ERR;
 
     // debug utilizzo memoria
-	$cf['debug']['mem']					= array();
+	$cf['debug']['mem']					                        = array();
 
     // configurazione extra
 	if( isset( $cx['debug'] ) ) {
@@ -111,4 +111,4 @@
 	}
 
     // collegamento a $ct
-	$ct['debug']						= &$cf['debug'];
+	$ct['debug']						                        = &$cf['debug'];

@@ -5,7 +5,7 @@
 {% macro menu( links, lang, site, query ) %}
 {% import _self as nav %}
 {% for link in links %}<li class="nav-item{% if link.active %} active{% elseif link.current %} current{% endif %}">
-    {% if link.label[ lang ] %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% endif %}
+    {% if link.label[ lang ] %}<a href="{{ link.location[ lang ] }}{% if link.ancora %}#{{ link.ancora }}{% endif %}{% if query %}?{{ query }}{% endif %}" class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% endif %}
     {% if link.content %}<ul>{{ nav.menu( link.content, lang, site, query ) }}</ul>{% endif %}
 </li>{% endfor %}
 {% endmacro %}

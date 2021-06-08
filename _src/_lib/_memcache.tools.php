@@ -26,6 +26,16 @@
 
     }
 
+    function memcacheAddKeyAgeSuffix( $k ) {
+
+        if( substr( $k, -4 ) != '_AGE' ) {
+            $k .= '_AGE';
+        }
+
+        return $k;
+
+    }
+
     /**
      *
      * @todo documentare
@@ -50,8 +60,8 @@
             if( $r == false ) {
                 logWrite( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
             } else {
-                memcacheWrite( $conn, $key . '_AGE', time() );
-                logWrite( 'scrittura effettuata, chiave: ' . $key, 'memcache', LOG_DEBUG );
+                $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), time(), $ttl );
+                logWrite( 'scrittura effettuata, chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache', LOG_DEBUG );
             }
 
             return $r;
@@ -67,7 +77,7 @@
      */
     function memcacheGetKeyAge( $conn, $key ) {
 
-        return memcacheRead( $conn, $key . '_AGE' );
+        return memcacheRead( $conn, memcacheAddKeyAgeSuffix( $key ) );
 
     }
 

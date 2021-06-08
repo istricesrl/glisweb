@@ -68,7 +68,7 @@
 	$ct['etc']['select']['clienti'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_cliente = 1'
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_interno = 1 OR se_cliente = 1'
     );
 
      // tendina progetti

@@ -36,7 +36,7 @@
 			$cf['memcache']['index'],
 			$cf['memcache']['connection'],
 			$cf['mysql']['connection'],
-			'SELECT id, __label__ FROM anagrafica_view WHERE id = ?',
+			'SELECT id, __label__ FROM anagrafica_view_static WHERE id = ?',
 		    array( array( 's' => $_REQUEST['account']['id_anagrafica'] ) )
 		);
 

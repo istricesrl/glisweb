@@ -16,7 +16,7 @@
 
      // tendina contratti
     $ct['etc']['select']['contratti'] = mysqlCachedIndexedQuery(
-        $cf['cache']['index'],
+        $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
         'SELECT id, __label__ FROM contratti_view'
@@ -24,10 +24,10 @@
 
     // tendina anagrafica
     $ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
-        $cf['cache']['index'],
+        $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1'
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1'
     );
 
     // se è settato un contratto ricavo l'anagrafica corrispondente

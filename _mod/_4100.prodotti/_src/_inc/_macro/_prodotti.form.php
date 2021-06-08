@@ -44,15 +44,15 @@
 */
     // tendina produttori
 	$ct['etc']['select']['produttori'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_produttore = 1' 
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_produttore = 1' 
     );
 
     // tendina marchi
 	$ct['etc']['select']['marchi'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM marchi_view' 
@@ -60,7 +60,7 @@
 
      // tendina tipologie
 	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_prodotti_view' 
@@ -68,7 +68,7 @@
     
      // tendina id_tipologia_pubblicazione
 	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
@@ -76,7 +76,7 @@
 
     // tendina unità di misura
 	$ct['etc']['select']['udm'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM udm_view' );

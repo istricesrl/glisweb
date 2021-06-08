@@ -10,7 +10,7 @@
     cron di sistema garantisce un'elevatissima affidabilità e prestazioni elevate. Dal lato del sistema,
     una riga di /etc/crontab oppure uno script in /etc/cron.d/ che può essere installato anche tramite
     lo script _src/_sh/_gw.crontab.install.sh devono richiamare l'API _src/_api/_cron.php del framework
-    ogni minuto. L'API si occuperà di controllare sulle tabelle task e job quali compiti vanno eseguiti
+    ogni minuto. L'API si occuperà di controllare sulle tabelle *task* e *job* quali compiti vanno eseguiti
     e provvederà a sbrigarli di conseguenza.
 
     Come accennato, il meccanismo di esecuzione pianificata si articola su due diverse strategie,
@@ -35,12 +35,12 @@
 
 
     struttura e gestione dei task
-    -----------------------------
+    =============================
 
 
 
     struttura e gestione dei job
-    ----------------------------
+    ============================
 
 
 

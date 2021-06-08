@@ -24,21 +24,21 @@
 
     // tendina prodotti
 	$ct['etc']['select']['prodotti'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM prodotti_view' );
 
     // tendina colori
 	$ct['etc']['select']['colori'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM colori_view' );
 
     // tendina id_tipologia_pubblicazione
 	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
@@ -46,14 +46,14 @@
 
     // tendina taglie
 	$ct['etc']['select']['taglie'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM taglie_view' );
 
     // tendina unità di misura
 	$ct['etc']['select']['udm'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM udm_view' );

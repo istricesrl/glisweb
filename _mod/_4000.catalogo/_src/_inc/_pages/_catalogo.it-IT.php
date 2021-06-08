@@ -43,8 +43,8 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'categorie.prodotti.view') ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
-									'priority'	=> '010' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'categorie' ),
+									'priority'	=> '010' ) ) )	
 	);
 	
     // gestione categorie prodotti
@@ -233,8 +233,8 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_caratteristiche.prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'caratteristiche.prodotti.view') ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'caratteristiche' ),
-									'priority'	=> '022' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'caratteristiche' ),
+									'priority'	=> '022' ) ) )	
 	);
 
 	 // gestione catecaratteristichegorie prodotti

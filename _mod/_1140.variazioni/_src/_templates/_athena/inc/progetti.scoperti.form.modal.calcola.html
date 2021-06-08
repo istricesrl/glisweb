@@ -1,0 +1,44 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+     function calcolaSostituti() {
+		$('#btncalcola').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+	/*	var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituti.progetto.create.php?id={{ request[table].id }}';
+
+		getws( call,'', function() {
+			window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
+		});
+	*/	
+	}
+
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="calcola">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">calcola sostituti</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+				avviare la ricerca dei sostituti per le attività del progetto {{ request[table].id }}?<br>
+				l'operazione potrebbe richiedere alcuni minuti
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="btncalcola" type="button" class="btn btn-secondary btn-sm" onclick="calcolaSostituti();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

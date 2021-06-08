@@ -139,10 +139,10 @@
 	$ct['etc']['select']['diritti'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_diritto_view' );
 
     // tendina agenti
-	$ct['etc']['select']['id_agente'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view WHERE se_agente = 1' );
+	$ct['etc']['select']['id_agente'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_agente = 1' );
 
     // tendina mandanti/fornitori
-	$ct['etc']['select']['id_mandante_fornitore'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view WHERE se_mandante = 1 OR se_fornitore = 1' );
+	$ct['etc']['select']['id_mandante_fornitore'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_mandante = 1 OR se_fornitore = 1' );
 
     // tendina categorie prodotti
 	$ct['etc']['select']['id_categoria_prodotti'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_prodotti_view' );
@@ -189,7 +189,7 @@
     // gli agenti possono solo inserire le attività
 #	if( isset( $_REQUEST['anagrafica']['id'] ) && isset( $_SESSION['account']['se_agente'] ) && ! empty( $_SESSION['account']['se_agente'] ) ) {
 	if( isset( $_REQUEST['anagrafica']['id'] ) ) {
-	    $ct['etc']['attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view WHERE id_cliente = ? ORDER BY data DESC', array( array( 's' => $_REQUEST['anagrafica']['id'] ) ) );
+	    $ct['etc']['attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_cliente = ? ORDER BY data DESC', array( array( 's' => $_REQUEST['anagrafica']['id'] ) ) );
 #	    $_REQUEST['anagrafica']['attivita'] = array();
 	}
 

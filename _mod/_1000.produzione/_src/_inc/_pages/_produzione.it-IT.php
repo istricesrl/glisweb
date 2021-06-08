@@ -16,8 +16,8 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_produzione.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'produzione' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'produzione' ),
-														'priority'	=> '200' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'produzione' ),
+																		'priority'	=> '200' ) ) )														
 	);
 
 	// vista progetti
@@ -28,10 +28,36 @@
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'progetti.produzione.view', 'progetti.produzione.tools' ) ),
+		'etc'			=> array( 'tabs'	=> array( 'progetti.produzione.view', 'progetti.eliminare.view', 'progetti.produzione.tools' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'progetti' ),
-								'priority'	=> '080' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'progetti' ),
+																		'priority'	=> '080' ) ) )									
+	);
+
+	// vista progetti eliminare
+	$p['progetti.eliminare.view'] = array(
+	    'sitemap'		=> false,
+	    'icon'			=> '<i class="fa fa-trash" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'eliminare' ),
+	    'h1'			=> array( $l		=> 'eliminare' ),
+	    'parent'		=> array( 'id'		=> 'produzione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.eliminare.view.php' ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.view']['etc']['tabs'] ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
+	// progetti tools
+	$p['progetti.produzione.tools'] = array(
+	    'sitemap'		=> false,
+	    'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni' ),
+	    'h1'			=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'produzione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.tools.php' ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.view']['etc']['tabs'] ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
 	// gestione progetti
@@ -45,7 +71,11 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form', 
 														'progetti.produzione.form.todo',
-														'progetti.produzione.form.pause' ) )
+														'progetti.produzione.form.attivita',
+														'progetti.produzione.form.pause',
+														'progetti.produzione.form.chiusura',
+														'progetti.produzione.form.pianificazioni',
+														'progetti.produzione.form.tools' ) )
 	);
 
 	// gestione todo progetti
@@ -73,7 +103,7 @@
 	);
 
 	// gestione attività progetti
-/*	$p['progetti.produzione.form.attivita'] = array(
+	$p['progetti.produzione.form.attivita'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'attivita' ),
 	    'h1'			=> array( $l		=> 'attività' ),
@@ -81,9 +111,72 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.attivita.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.attivita.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form' ) )
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 	);
-*/
 
+
+// gestione progetti pianificazioni
+$p['progetti.produzione.form.pianificazioni'] = array(
+	'sitemap'		=> false,
+	'title'			=> array( $l		=> 'pianificazione' ),
+	'icon'			=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
+	'h1'			=> array( $l		=> 'pianificazione' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.pianificazioni.html' ),
+	'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.pianificazioni.php' ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+);
+
+// gestione progetti chiusura
+$p['progetti.produzione.form.chiusura'] = array(
+	'sitemap'		=> false,
+	'title'			=> array( $l		=> 'chiusura' ),
+	'h1'			=> array( $l		=> 'chiusura' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.chiusura.html' ),
+	'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.chiusura.php' ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+);
+
+// gestione progetti tools
+$p['progetti.produzione.form.tools'] = array(
+	'sitemap'		=> false,
+	'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	'title'			=> array( $l		=> 'azioni' ),
+	'h1'			=> array( $l		=> 'azioni' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.form.tools.php' ),
+	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+);
+
+// vista categorie progetti
+$p['categorie.progetti.view'] = array(
+	'sitemap'		=> false,
+	'title'		=> array( $l		=> 'categorie' ),
+	'h1'		=> array( $l		=> 'categorie' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	'macro'		=> array(  $m . '_src/_inc/_macro/_categorie.progetti.view.php' ),
+	'etc'		=> array( 'tabs'	=> array( 'categorie.progetti.view' ) ),
+	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'categorie' ),
+																		'priority'	=> '115' ) ) )									
+);
+
+// gestione categorie progetti
+$p['categorie.progetti.form'] = array(
+	'sitemap'		=> false,
+	'title'			=> array( $l		=> 'gestione' ),
+	'h1'			=> array( $l		=> 'gestione' ),
+	'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.html' ),
+	'macro'			=> array( $m.'_src/_inc/_macro/_categorie.progetti.form.php' ),
+	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	'etc'			=> array( 'tabs'	=> array(	'categorie.progetti.form' ) )
+);
 	
 

@@ -24,22 +24,22 @@
     
     // tendina clienti
 	$ct['etc']['select']['clienti'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_cliente = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1' );
 
     // tendina anagrafica per referenti e operatori (TODO vedere se filtrare sui referenti del cliente)
     $ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
-        $cf['cache']['index'],
+        $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1 OR se_referente = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1 OR se_referente = 1' );
 
 
     // tendina indirizzi
 	$ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM indirizzi_view' );
@@ -64,6 +64,22 @@
 	$ct['etc']['select']['funzioni'] = array(
 	    array( 'id' => NULL, '__label__' => 'titolare' ),
 	    array( 'id' => 1, '__label__' => 'sostituto' )
+	);
+
+    // tendina mastri attivita
+	$ct['etc']['select']['mastri'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM mastri_view'
+    );
+
+    // tendina categorie progetti
+	$ct['etc']['select']['categorie_progetti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_progetti_view'
 	);
 
     if ( isset( $_REQUEST[ $ct['form']['table'] ]['progetti_anagrafica'] ) )

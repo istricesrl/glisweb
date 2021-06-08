@@ -18,13 +18,21 @@
 	    )
 	);
 
+    $ct['page']['contents']['metro']['azioni'][] = array(
+        'modal' => array('id' => 'crea', 'include' => 'inc/pianificazioni.form.tools.modal.crea.html' ),
+        'icon' => NULL,
+        'fa' => 'fa-plus-circle',
+        'title' => 'crea oggetti',
+        'text' => 'crea i nuovi oggetti'
+    );
+
     // modal per pulire gli oggetti futuri non più conformi
     $ct['page']['contents']['metro']['azioni'][] = array(
 	    'modal' => array('id' => 'pulisci', 'include' => 'inc/pianificazioni.form.tools.modal.pulisci.html' ),
         'icon' => NULL,
 	    'fa' => 'fa-eraser',
 	    'title' => 'rimuovi oggetti futuri',
-	    'text' => 'rimuove gli oggetti futuri già esistenti in caso di modifica'
+	    'text' => 'rimuove gli oggetti futuri già esistenti'
 	);
 
     // modal per fermare la pianificazione originaria

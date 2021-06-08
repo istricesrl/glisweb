@@ -13,8 +13,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_mastri.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'mastri.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'mastri' ),
-														'priority'	=> '130' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'mastri' ),
+														'priority'	=> '130' ) ) )
 	);
 
 	// gestione mastri

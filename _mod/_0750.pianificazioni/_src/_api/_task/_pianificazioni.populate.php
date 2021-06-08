@@ -35,7 +35,7 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE pianificazioni SET token = ? WHERE id = ?',
+            'UPDATE pianificazioni SET token = ? WHERE id = ? AND token IS NULL',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['id'] )
@@ -51,6 +51,7 @@
             'WHERE ( timestamp_popolazione < ? OR timestamp_popolazione IS NULL ) '.
             'AND data_fine > ? '.
             'AND token IS NULL '.
+			'AND data_inizio_pulizia IS NULL '.		// non deve leggere quelle chiamate dalla check
             'ORDER BY timestamp_popolazione ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] ),
@@ -65,14 +66,17 @@
     $current = mysqlSelectRow(
         $cf['mysql']['connection'],
         'SELECT pianificazioni.*, '.
-        'coalesce( id_todo, id_turno ) AS ref_id '.
+        'coalesce( id_todo, id_turno, id_progetto ) AS ref_id '.
         'FROM pianificazioni '.
         'WHERE token = ? ',
         array( array( 's' => $status['token'] ) )
     );
+	
 
     // se c'è almeno una riga da inviare
     if( ! empty( $current ) ) {
+		
+	#	appendToFile( date('d-m-Y H:i') . ' lavoro la pianificazione ' . $current['id'] . PHP_EOL, 'ver/log/pianificazioni.populate.log');
 
         // prelevo la data dell'oggetto master
         $current['data_ultimo_oggetto'] = 
@@ -121,10 +125,6 @@
     
         $date = array_diff( $date, array( $current['data_ultimo_oggetto'] ) );
 
-    #    print_r( $date );
-        // debug
-         
-
         // per ogni data...
         foreach( $date as $data ) {
 
@@ -169,10 +169,15 @@
                             $value = $current['id'];
                         } elseif( preg_match_all( '/%data\+([0-9]+)%/', $value, $matches ) ) {
                             $value = date( 'Y-m-d', strtotime( '+' . $matches[1][0] . ' days', strtotime( $data ) ) );
+                        } elseif( $value == '§ref_id+data§'){
+                            $value = $current['ref_id'] . '-' . date( 'Ymd', strtotime( $data ) );
+                        } elseif( $value == '%null%'){
+                            $value = NULL;
                         }
                     }
                 }
 
+                $status['info']['sostituzioni'] = $wksp['sostituzioni'];
 
                 // chiamo la funzione mysqlDuplicateRowRecursive()
                 mysqlDuplicateRowRecursive(
@@ -195,8 +200,28 @@
                         array( 's' => $status['token'] )
                     )
                 );
+
             }
 
+        }
+
+        // estraggo le statiche coinvolte nella creazione
+        $status['statiche'] = pianificazioniGetStatic( $current['id'] );
+		
+		if( !empty( $status['statiche'] ) && !empty( $date ) ){
+            
+			// inserisco una richiesta di ripopolamento delle statiche
+            foreach( $status['statiche'] as $s ){
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                    array(
+                        array( 's' => $s ),
+                        array( 's' => '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php'),
+                        array( 's' => time() )
+                    )
+                );
+            }
         }
 
         // rilascio il token
@@ -207,7 +232,8 @@
                 array( 's' => time() ),
                 array( 's' => $status['token'] )
             )
-        );
+        );       
+		
 
     } else {
 

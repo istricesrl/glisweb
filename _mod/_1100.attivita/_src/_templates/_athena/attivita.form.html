@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
+{% import 'bin/attivita.form.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -47,13 +47,17 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 			<div class="form-group form-row">
-				<div class="col-6 col-md-2">
+				<div class="col-12 col-md-2">
 					<span class="label-top">tipologia</span>
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
 				</div>
-				<div class="col-6 col-md-2">
+				<div class="col-12 col-md-2">
 					<span class="label-top">tipologia INPS</span>
 					{{ frm.select( table, '', '', 'id_tipologia_inps', '', etc.select.id_tipologia_inps, request ) }}
+				</div>
+				<div class="col-12 col-md-2">
+					<span class="label-top">conto ore</span>
+					{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, etc.id_mastro_provenienza ) }}
 				</div>
 				<div class="col">
 					<span class="label-top">descrizione</span>
@@ -92,7 +96,7 @@
 					</div>
 					<div class="col-12 col-md">
 						<span class="label-top">esecutore</span>
-						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf ) }}
+						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 				</div>
 			</fieldset>
@@ -121,22 +125,25 @@
 			<div class="form-group form-row">
 				<div class="col-12 col-md-6">
 					<span class="label-top">todo</span>
-					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, '', '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf ) }}
+					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, '', '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf,'todo' ) }}
 				</div>
 				<div class="col-12 col-md-6">
 					<span class="label-top">progetto</span>
-					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.form','','anagrafica', 'id_progetto', page, pages, ietf ) }}
+					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
 				</div>
 				<div class="col-12 col-md-6">
 					<span class="label-top">cliente</span>
-					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf ) }}
+					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
 				</div>
 				<div class="col-12 col-md-6">
 					<span class="label-top">indirizzo</span>
-					{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf ) }}
+					{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
 				</div>
 			</div>
 			</fieldset>
+
+			{# SUBFORM CATEGORIE #}
+	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
 	
         
 	    {# BOTTONI E COMANDI DEL MODULO #}

@@ -70,6 +70,7 @@
 		'etc'		=> array( 'sheets' => array( 'terminale' , 'assistenza' ) ), 
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'terminale' ),
 									'priority'	=> 100 ) )
+
 	);
 
 	// terminale della casse
