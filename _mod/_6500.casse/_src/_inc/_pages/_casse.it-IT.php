@@ -16,8 +16,8 @@
 	    'parent'	=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'casse', 'casse.documenti.view', 'casse.tools', 'casse.stampe' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'casse' ),
-									'priority'	=> '650' ) )
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'casse' ),
+									'priority'	=> '650' ) ) )
 	);
 
 	// stampe cassa
@@ -68,9 +68,8 @@
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'sheets' => array( 'terminale' , 'assistenza' ) ), 
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'terminale' ),
-									'priority'	=> 100 ) )
-
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'terminale' ),
+									'priority'	=> '100' ) ) )
 	);
 
 	// terminale della casse
