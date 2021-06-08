@@ -105,7 +105,7 @@
 {% if session.assistenza.id_cliente and not session.assistenza.id_progetto %}
 <div class="col-3">
     <legend>progetto</legend>
-        <div class="form-group form-row">
+        <div class="form-row">
             <div class="col">
                 {% set progetti = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
                 <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetti }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&__preset__[progetti][id_cliente]={{ session.assistenza.id_cliente }}','_self');"><i class="fa fa-plus"> crea un nuovo progetto per il cliente</i></button>
@@ -326,8 +326,8 @@
 
         
 
-    <!--/div>
-    <div class="col-3"-->
+    </div>
+    <div class="col-3">
         <legend>progetto</legend>
         <div class="form-row">
             <div class="col"> {{ etc.todo.progetto }}</div>
@@ -337,15 +337,21 @@
         </div>
     </div>
     </div>
-    <div class="col-4">
+    <div class="col">
         <legend>todo</legend>
-        {{ etc.todo.nome }}
+        <div class="form-row">
+            <div class="col">{{ etc.todo.nome }}
         <br>{{ etc.todo.testo }}
         {% if etc.todo.data_programmazione %}<br>data programmazione: {{  etc.todo.data_programmazione|date('d/m/Y') }} {% endif %}
         {% if etc.todo.ora_inizio_programmazione %}<br>ora programmazione: {{  etc.todo.ora_inizio_programmazione|date('H:i') }}{% if etc.todo.ora_fine_programmazione %} - {{  etc.todo.ora_fine_programmazione|date('H:i') }}{% endif %} {% endif %}
-
     </div>
-    <div class="col">
+        <div class="col-auto">
+            {% set todo = pages[ 'todo.form' ].url[ localization.language.ietf ] %}
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ todo }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&todo[id]={{ etc.todo.id }}','_self');"><i class="fa fa-pencil"></i></button>
+        </div>
+    </div>
+    </div>
+    <div class="col-12">
         {% if etc.attivita %}
         <legend>attività</legend>
             <ul>
@@ -376,8 +382,8 @@
 
             <div class="form-group form-row">
                 <div class="col-auto">
-                    <span class="label-top">data</span>
-                    {{ frm.date( table, '', '', 'timestamp_completamento', '', '', request, 'now'|date('Y-m-d') ) }}
+                    <span class="label-top">data</span> 
+                    {{ frm.date( table, '', '', 'timestamp_completamento', '', '', request ) }}
                 </div>
                 <div class="col">
                     <span class="label-top">testo completamento</span>
@@ -392,6 +398,9 @@
                 <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
                     <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
                     <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+                    {% if request.todo.timestamp_completamento %}
+                    <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
+                    {% endif %}
                 </div>
             </fieldset>
         </form>

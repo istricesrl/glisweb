@@ -14,15 +14,27 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
     if( isset( $_SESSION['assistenza']['id_assistenza']) ){
         $todo =   $_SESSION['assistenza']['id_assistenza'];
     } else {
-        $todo = str_replace('0', '',explode( '.', $_REQUEST['__assistenza__'] )[1]);
+        $todo = ltrim(explode( '.', $_REQUEST['__assistenza__'] )[1], "0"); 
         $_SESSION['assistenza']['id_assistenza'] = $todo;
     }
 
 
     $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
     $ct['etc']['attivita'] = mysqlCachedIndexedQuery(  $cf['cache']['index'], $cf['memcache']['connection'],$cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ?', array( array( 's' => $todo) ));
-    $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo WHERE id = ?', array( array( 's' => $todo) ));
+   // $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $todo) ));
     $ct['form']['table'] = 'todo';
+    if( !isset( $_REQUEST['todo']  ) ){
+        $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
+        if( !empty( $_REQUEST['todo']['timestamp_completamento'] ) ){
+            $_REQUEST['todo']['timestamp_completamento'] = strtotime( $_REQUEST['todo']['timestamp_completamento'] );
+        }    
+        
+    
+    }
+  /*  if( !empty( $_REQUEST['todo']['timestamp_completamento'] ) ){
+       // $_REQUEST['todo']['timestamp_completamento'] = strtotime( $_REQUEST['todo']['timestamp_completamento'] );
+        print_r( $_REQUEST['todo']);
+    }*/
 
 }
 
@@ -45,7 +57,7 @@ if( isset( $_REQUEST['__unset__'] ) ){
         unset( $_SESSION['assistenza']['id_attivita']  );
         unset( $_SESSION['assistenza']['id_assistenza']);
         unset( $_SESSION['__view__'][ 'clienti' ]['__search__'] );
-    
+        unset( $_REQUEST['todo']['id'] );
     }
 
 }
@@ -92,6 +104,7 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && !isset( $_SESSION['assiste
 	);
 
     $ct['view']['__restrict__']['id_cliente']['EQ'] = $_SESSION['assistenza']['id_cliente'];
+   
 }
 
 
@@ -126,12 +139,13 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
    //     $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo']) ));
     }
 
-    if( isset( $_SESSION['assistenza']['id_todo'] ) ){
+    if( isset( $_SESSION['assistenza']['id_todo'] ) && !isset($_SESSION['assistenza']['id_assistenza']) ){
 
      //   $_SESSION['assistenza']['id_todo'] = $_REQUEST['todo']['id'];
         $ct['form']['table'] = 'attivita';
-        $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo']) ));
-        if( !$_REQUEST['todo'] ){ unset( $_SESSION['assistenza']['id_todo'] ); }
+        $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo']) ));
+       // if( !$_REQUEST['todo'] ){ unset( $_SESSION['assistenza']['id_todo'] ); }
+
     }
 
     if( isset( $_REQUEST['attivita']['id'] ) && !empty( $_REQUEST['attivita']['id'] ) ){
