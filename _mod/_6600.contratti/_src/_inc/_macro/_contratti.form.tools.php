@@ -34,17 +34,16 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'general' => array(
-		'label' => NULL
-	    ),
 	    'variazione' => array(
 		'label' => ''
-	    )
+		),
+		'azioni' => array(
+			'label' => ''
+		)
 	);
 
     // duplica contratto
 	$ct['page']['contents']['metro']['variazione'][] = array(
-	#   'url' =>  $base . '_contratti.duplicate.php?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
 		'modal' => array('id' => 'duplica-contratto', 'include' => 'inc/contratti.form.tools.modal.duplica.contratto.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-files-o',
@@ -69,6 +68,15 @@
 		'title' => 'duplicazione turno',
 		'text' => 'duplica gli orari di un determinato turno di lavoro in un nuovo turno'
 	);
+
+    // modal per la conferma di eliminazione contratto
+    $ct['page']['contents']['metro']['azioni'][] = array(
+        'modal' => array('id' => 'elimina', 'include' => 'inc/contratti.form.tools.modal.elimina.html' ),
+        'icon' => NULL,
+	    'fa' => 'fa-trash',
+	    'title' => 'eliminazione contratto',
+	    'text' => 'elimina il contratto e gli orari e turni collegati'
+    );
 
 	// macro di default per l'entità contratti
 	require '_contratti.form.default.php';
