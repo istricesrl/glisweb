@@ -104,14 +104,14 @@ fi
 ## password di root
 read -s -p "inserisci la password per MySQL root (vuoto per saltare): " SRVPASS && echo
 if [ -n "$SRVPASS" ]; then
-    sudo service mysql stop
-    sudo mkdir -p /var/run/mysqld
-    sudo chown mysql:mysql /var/run/mysqld
-    sudo mysqld_safe --skip-grant-tables &
-    mysql -u root mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$SRVPASS';"
-    sudo killall mysqld
-    sudo service mysql restart
-    mysql -u root -p$SRVPASS mysql -e "FLUSH PRIVILEGES;"
+#    sudo service mysql stop
+#    sudo mkdir -p /var/run/mysqld
+#    sudo chown mysql:mysql /var/run/mysqld
+#    sudo mysqld_safe --skip-grant-tables &
+#    mysql -u root mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$SRVPASS';"
+#    sudo killall mysqld
+#    sudo service mysql restart
+#    mysql -u root -p$SRVPASS mysql -e "FLUSH PRIVILEGES;"
 fi
 
 ## installazione di certbot
