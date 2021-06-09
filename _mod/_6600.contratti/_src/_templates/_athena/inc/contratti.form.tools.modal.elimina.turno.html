@@ -1,0 +1,52 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function eliminaTurno( t ) {
+        $('#btneliminaturno').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+        var form = $( t ).closest('.modal');
+        var t = form.find('#t').val();
+	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_orari.turno.delete.php?id={{ request[table].id }}&t='+t;
+        getws( call,'', function() {
+			$('#elimina-turno').modal('toggle');
+		});
+        
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="elimina-turno">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+            <h5 class="modal-title">eliminazione turno</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+            <div class="container-fluid">
+                <div class="form-row">
+                    <div class="col">
+                        questa procedura eliminerà gli orari di lavoro di un determinato turno
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <span class="label-top">turno da eliminare</span>
+                        <select id="t" class="form-control form-control-sm">
+                        {% for t in etc.select.turni %}
+                            <option value="{{ t.id }}">{{ t.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+	    </div>
+	    <div class="modal-footer">
+            <button type="button" id="btneliminaturno" class="btn btn-secondary btn-sm" onclick="eliminaTurno(this);">conferma</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

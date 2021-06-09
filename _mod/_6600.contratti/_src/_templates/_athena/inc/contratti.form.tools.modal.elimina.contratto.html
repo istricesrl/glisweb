@@ -5,9 +5,9 @@
 {% set ietf = localization.language.ietf %}
 
 <script>
-    function elimina( ) {
-        $('#btnelimina').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
-	 
+    function eliminaContratto( ) {
+		$('#btneliminacontratto').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+		
 	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_contratti.delete.php?id={{ request[table].id }}';
 
 		getws( call,'', function() {
@@ -17,7 +17,7 @@
 	}
 </script>
 
-<div class="modal" tabindex="-1" role="dialog" id="elimina">
+<div class="modal" tabindex="-1" role="dialog" id="elimina-contratto">
     <div class="modal-dialog" role="document">
 	<div class="modal-content">
 	    <div class="modal-header">
@@ -35,7 +35,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button id="btnelimina" type="button" class="btn btn-secondary btn-sm" onclick="elimina();">conferma</button>
+		<button id="btneliminacontratto" type="button" class="btn btn-secondary btn-sm" onclick="eliminaContratto();">conferma</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

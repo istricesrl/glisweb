@@ -34,16 +34,16 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'variazione' => array(
-		'label' => ''
+	    'orari' => array(
+			'label' => 'orari'
 		),
-		'azioni' => array(
-			'label' => ''
+		'contratto' => array(
+			'label' => 'contratto'
 		)
 	);
 
-    // duplica contratto
-	$ct['page']['contents']['metro']['variazione'][] = array(
+    // modal per la conferma di duplicazione contratto
+	$ct['page']['contents']['metro']['contratto'][] = array(
 		'modal' => array('id' => 'duplica-contratto', 'include' => 'inc/contratti.form.tools.modal.duplica.contratto.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-files-o',
@@ -51,8 +51,8 @@
 	    'text' => 'crea un duplicato del contratto per inserire variazioni'
 	);
 
-	// duplica orari giorno
-	$ct['page']['contents']['metro']['variazione'][] = array(
+	// modal per la conferma di duplicazione orari giorno
+	$ct['page']['contents']['metro']['orari'][] = array(
 		'modal' => array('id' => 'duplica-giorno', 'include' => 'inc/contratti.form.tools.modal.duplica.giorno.html' ),
 		'icon' => NULL,
 		'fa' => 'fa-files-o',
@@ -60,8 +60,8 @@
 		'text' => 'duplica gli orari di un determinato giorno e turno di lavoro'
 	);
 
-	// duplica orari turno
-	$ct['page']['contents']['metro']['variazione'][] = array(
+	// modal per la conferma di duplicazione orari turno
+	$ct['page']['contents']['metro']['orari'][] = array(
 		'modal' => array('id' => 'duplica-turno', 'include' => 'inc/contratti.form.tools.modal.duplica.turno.html' ),
 		'icon' => NULL,
 		'fa' => 'fa-files-o',
@@ -69,9 +69,27 @@
 		'text' => 'duplica gli orari di un determinato turno di lavoro in un nuovo turno'
 	);
 
+	// modal per la conferma di eliminazione turno
+    $ct['page']['contents']['metro']['orari'][] = array(
+        'modal' => array('id' => 'elimina-turno', 'include' => 'inc/contratti.form.tools.modal.elimina.turno.html' ),
+        'icon' => NULL,
+	    'fa' => 'fa-trash',
+	    'title' => 'eliminazione turno',
+	    'text' => 'elimina gli orari di un determinato turno di lavoro'
+    );
+
+	// modal per la conferma di eliminazione orari
+    $ct['page']['contents']['metro']['orari'][] = array(
+        'modal' => array('id' => 'elimina-orari', 'include' => 'inc/contratti.form.tools.modal.elimina.orari.html' ),
+        'icon' => NULL,
+	    'fa' => 'fa-trash',
+	    'title' => 'eliminazione orari',
+	    'text' => 'elimina gli orari di lavoro del contratto'
+    );
+
     // modal per la conferma di eliminazione contratto
-    $ct['page']['contents']['metro']['azioni'][] = array(
-        'modal' => array('id' => 'elimina', 'include' => 'inc/contratti.form.tools.modal.elimina.html' ),
+    $ct['page']['contents']['metro']['contratto'][] = array(
+        'modal' => array('id' => 'elimina-contratto', 'include' => 'inc/contratti.form.tools.modal.elimina.contratto.html' ),
         'icon' => NULL,
 	    'fa' => 'fa-trash',
 	    'title' => 'eliminazione contratto',
