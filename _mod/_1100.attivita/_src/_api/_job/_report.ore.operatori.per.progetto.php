@@ -12,8 +12,6 @@
     // lavoro lungo
     set_time_limit( 0 );
 
-    echo JOB_RUNNING;
-
     // inclusione del framework
 	if( defined( 'CRON_RUNNING' ) || defined( 'JOB_RUNNING' ) ) {
 
