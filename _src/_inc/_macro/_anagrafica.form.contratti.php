@@ -23,7 +23,7 @@
     $ct['form']['table'] = 'anagrafica';
 
     // tabella della vista
-    $ct['view']['table'] = 'contratti';
+    $ct['view']['table'] = 'contratti_completa';
 
      // campi della vista
 	$ct['view']['cols'] = array(
