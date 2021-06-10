@@ -34,6 +34,15 @@
         'text' => 'esporta le ore previste e fatte per progetto in un determinato mese e anno'
     );
 
+    // esportazione ore progetti per tipologia e conto ore
+    $ct['page']['contents']['metro']['esportazioni'][] = array(
+        'modal' => array('id' => 'progetti-tipologie-mastri', 'include' => 'inc/attivita.tools.modal.export.progetti.tipologie.mastri.html' ),
+        'icon' => NULL,
+        'fa' => 'fa-file-excel-o',
+        'title' => 'esportazione ore per progetto, tipologia e conto ore',
+        'text' => 'esporta le ore previste e fatte per progetto, tipologia e conto ore in un determinato mese e anno'
+    );
+
     // esportazione ore operatore per progetto
     $ct['page']['contents']['metro']['esportazioni'][] = array(
         'modal' => array('id' => 'operatori-per-progetto', 'include' => 'inc/attivita.tools.modal.export.operatori.per.progetto.html' ),
@@ -99,6 +108,31 @@
             }
             elseif( $j['corrente'] < $j['totale'] ){
                 $ct['etc']['report']['progetti'][ $j['id'] ]['stato'] = 'in corso';
+            }
+            
+        }
+    }
+
+    // elenco dei job per export ore progetti, tipologie e mastri
+    $jptm = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT j.* FROM job AS j INNER JOIN __report_ore_progetti__ AS r ON j.id = r.id_job GROUP BY j.id'
+    );
+
+    if( !empty( $jptm ) ){
+        foreach( $jptm as $j ){
+            $wksp = json_decode( $j['workspace'], true );
+
+            $ct['etc']['report']['progetti_tipologie_mastri'][ $j['id'] ] = $j;
+            $ct['etc']['report']['progetti_tipologie_mastri'][ $j['id'] ]['mese'] = $wksp['mese'];
+            $ct['etc']['report']['progetti_tipologie_mastri'][ $j['id'] ]['anno'] = $wksp['anno'];
+            $ct['etc']['report']['progetti_tipologie_mastri'][ $j['id'] ]['nome'] = int2month( $wksp['mese'] ) . ' ' . $wksp['anno'];
+            
+            if( !empty( $j['timestamp_completamento'] ) ){
+                $ct['etc']['report']['progetti_tipologie_mastri'][ $j['id'] ]['stato'] = 'completato';
+            }
+            elseif( $j['corrente'] < $j['totale'] ){
+                $ct['etc']['report']['progetti_tipologie_mastri'][ $j['id'] ]['stato'] = 'in corso';
             }
             
         }
