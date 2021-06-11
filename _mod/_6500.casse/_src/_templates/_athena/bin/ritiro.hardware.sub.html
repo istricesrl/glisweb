@@ -47,10 +47,6 @@
 	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
 		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
 		</div>
-        {% elseif  i <= require %}
-	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
-        {{ frm.button( '<i class="fa fa-minus"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
-        </div>
 		{% else %}
 	    <div class="col-auto text-right d-print-none">
 		{{ frm.button( '<i class="fa fa-minus"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}

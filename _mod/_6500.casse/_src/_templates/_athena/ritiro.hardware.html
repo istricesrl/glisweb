@@ -25,7 +25,7 @@
 
 {% block main %}
 
-{% if (not request.todo.id) and ( not request[ table ].id ) %}
+{# if (not request.todo.id) and ( not request[ table ].id ) %}
 <form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 	<div class="form-group form-row">
 		<legend>todo</legend>
@@ -36,7 +36,7 @@
 			</div>   
 	</div>
 </div>
-{% else %}
+{% else #}
 <legend>todo</legend>
 {{ request.todo.__label__ }}<br>
 {{ request.todo.testo }}
@@ -51,7 +51,7 @@
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-		<input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+		<input type="" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
 		<input type="hidden" id="id_todo" name="{{ table }}[id_todo]" value="{{ request.todo.id }}">
 		<input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ etc.numero }}">
 		<input type="hidden" id="id_tipologia" name="{{ table }}[id_tipologia]" value="{{ etc.id_tipologia }}">
@@ -62,7 +62,7 @@
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
 		{# SUBFORM GRUPPI #}
-	    {{ sub.righe( table, 'documenti_articoli', 'hardware', site, page, pages, ietf, etc, request, session ) }}
+	    {{ sub.righe( table, 'documenti_articoli', 'hardware', site, page, pages, ietf, etc, request, session, 1 ,2 ) }}
 	
 		<fieldset>
 			<div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
@@ -70,10 +70,11 @@
 					<button type="submit" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo ritiro</button>
 					<button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{ request[ table ].id  }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
 				{% else %}
-					<button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
+					<button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
 				{% endif %}
-				<button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+				<button type="submit" class="btn-lg btn-secondary " onclick="submitFormOkay = true;" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
 			</div>
+			
 		</fieldset>	
 
 
@@ -81,6 +82,6 @@
     </div>
 </section>
 
-{% endif %}
+{# endif #}
 
 {% endblock %}

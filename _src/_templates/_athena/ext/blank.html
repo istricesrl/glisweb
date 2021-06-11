@@ -13,8 +13,11 @@
 
         {% include '_inc/_page.open.html' %}
 
+        {% if pages[ page.id ].etc.sheets %}
         <header class="fixed-top">
+            
             <div class="row widget no-gutters" style=" border-bottom: 5px solid #343A40;">
+                
                 {% block header %}
                 
                 {% endblock %}
@@ -22,6 +25,7 @@
                 {{ nav.sheets( page, pages, localization.language.ietf, etc, form, request ) }}
             </div>
         </header>
+        {% endif %}
 
         <main class="d-flex flex-column container-fluid w-100 vh-100">
             
