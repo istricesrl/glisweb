@@ -24,14 +24,14 @@
 
     // tendina interesse
 	$ct['etc']['select']['id_interesse'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_interesse_view' );
 
     // tendina soddisfazione
 	$ct['etc']['select']['id_soddisfazione'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_soddisfazione_view' );

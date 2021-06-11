@@ -1,0 +1,1 @@
+ALTER TABLE documenti_categorie RENAME TO risorse_categorie;

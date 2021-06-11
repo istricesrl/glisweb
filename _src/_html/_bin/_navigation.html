@@ -5,7 +5,7 @@
 {% macro menu( links, lang, site, query ) %}
 {% import _self as nav %}
 {% for link in links %}<li class="nav-item{% if link.active %} active{% elseif link.current %} current{% endif %}">
-    {% if link.label[ lang ] %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% endif %}
+    {% if link.label[ lang ] %}<a href="{{ link.location[ lang ] }}{% if link.ancora %}#{{ link.ancora }}{% endif %}{% if query %}?{{ query }}{% endif %}" class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% endif %}
     {% if link.content %}<ul>{{ nav.menu( link.content, lang, site, query ) }}</ul>{% endif %}
 </li>{% endfor %}
 {% endmacro %}
@@ -72,5 +72,22 @@
 
 {% macro flags( links, lang, site, query ) %}
 {% for link in links %}<li class="flags-item{% if link.active %} active{% endif %}"><a href="{{ link.location }}{% if query %}?{{ query }}{% endif %}" class="flags-link"><img data-src="{{ site.root }}_src/_img/_flags/{{ link.country }}.png" alt="change language to {{ link.country }}" class="lazyload"></a></li>{% endfor %}
+{% endmacro %}
+
+{% macro sheets( page, pages, lang, etc, form, request ) %}
+{% if pages[ page.id ].etc.sheets %}
+
+
+    {% for t in pages[ page.id ].etc.sheets %}
+        <div class="text-left  d-flex justify-content-start">
+            <button type="button" class="btn {% if pages[ t ].id == page.id %} btn-dark{% else %}btn-secondary {% endif %}  btn-sm " onclick='window.open( "{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}", "_self" );' data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% else %}{{ pages[ t ].h1[ lang ] }}{% endif %}</button>
+        </div>
+    {% endfor %}
+
+
+{% endif %}
+
+</section>
+
 {% endmacro %}
 

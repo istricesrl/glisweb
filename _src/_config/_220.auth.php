@@ -91,7 +91,7 @@
         }
 
 	    // TODO lanciare questo header serve?
-	    header('HTTP/1.0 401 Unauthorized');
+	    // header('HTTP/1.0 401 Unauthorized');
 
 	}
 

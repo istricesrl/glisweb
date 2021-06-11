@@ -1,0 +1,1 @@
+ALTER TABLE `obiettivi_categorie_prodotti` ADD UNIQUE KEY `unico` (`id_obiettivo`,`id_categoria_prodotti`), ADD KEY `id_obiettivo` (`id_obiettivo`), ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`);

@@ -17,6 +17,9 @@ echo "lavoro su: $(pwd)"
 FILE1="_usr/_database/mysql.schema.sql"
 FILE2="_usr/_database/mysql.data.sql"
 
+## intestazione
+echo "installazione del database"
+
 ## se il file su cui lavorare è specificato
 if [ -f "$FILE1" -a -f "$FILE2" ]; then
 

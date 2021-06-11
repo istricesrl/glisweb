@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `righe_documenti_amministrativi_view`;

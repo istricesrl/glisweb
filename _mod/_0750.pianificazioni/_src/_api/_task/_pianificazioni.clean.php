@@ -51,16 +51,44 @@
 
                     // query
                     $q = 'DELETE FROM ' . $status['entita'] . ' WHERE id_pianificazione = ? AND ' . $status['campo'] . ' > ?';
-
-                #    var_dump( $q );
-                #    var_dump( $status['id'] );
-                #    var_dump( $status['inizio'] );
+					
+					// cerco se ci sono righe da eliminare
+					$status['to_delete'] = mysqlSelectValue(
+						$cf['mysql']['connection'],
+						'SELECT count(id) FROM ' . $status['entita'] . ' WHERE id_pianificazione = ? AND ' . $status['campo'] . ' > ?',
+						array( array( 's' => $status['id'] ), array( 's' => $status['inizio'] ) )
+					);
+                    
+                    $status['statiche'] = pianificazioniGetStatic( $status['id'] );
                 
                     // esecuzione della query
                     $del = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['id'] ), array( 's' => $status['inizio'] ) ) );
 
                     // status
                     $status['info'][] = 'eliminate ' . $del . ' righe dalla tabella ' . $status['entita'];
+
+					if( ( $status['to_delete'] > 0 && $del == $status['to_delete'] ) ||  $status['to_delete'] == 0 ){
+						$status['delete'] = 1;
+					}
+					else{
+						$status['delete'] = 0;
+					}
+
+                    // se ho eliminato righe, inserisco una richiesta di ripopolamento delle statiche
+                    if( !empty( $status['to_delete'] ) && !empty( $status['statiche'] ) ){
+                        foreach( $status['statiche'] as $s ){
+                            mysqlQuery(
+                                $cf['mysql']['connection'],
+                                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                                array(
+                                    array( 's' => $s ),
+                                    array( 's' => '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php'),
+                                    array( 's' => time() )
+                                )
+                            );
+                        }
+                    }
+                    
 
                     // modalità hard/stop
                     if( ! empty( $_REQUEST['hard'] ) ) {
@@ -74,13 +102,14 @@
                         // esecuzione della query
                         $status['hard'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['inizio'] ), array( 's' => $status['id'] ) ) );
 
-                    }
-                    else{
-                         // query
-                         $q = 'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE id = ?';
+                    } else {
+
+                        // query
+                         $q = 'UPDATE pianificazioni SET data_ultimo_oggetto = ?, timestamp_popolazione = NULL WHERE id = ?';
 
                          // esecuzione della query
                          $status['hard'] = mysqlQuery( $cf['mysql']['connection'], $q, array( array( 's' => $status['inizio'] ), array( 's' => $status['id'] ) ) );
+
                     }
 
                 } else {

@@ -1,0 +1,1 @@
+ALTER TABLE `attivita` ADD CONSTRAINT `attivita_ibfk_19_nofollow` FOREIGN KEY (`id_mastro_destinazione`) REFERENCES `mastri`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION; 

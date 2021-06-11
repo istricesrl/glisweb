@@ -11,7 +11,7 @@ nav.sticky-top {
     background-color: #eeeeee;
     border-bottom: 1px solid #dddddd;
     border-top: 1px solid #dddddd;
-    box-shadow: 0em 0em 0.5em #cccccc;
+    box-shadow: 0em 0em 0.5em #bbbbbb;
     padding: 0em;
 }
 
@@ -24,8 +24,8 @@ footer > .container > .row > .col {
 }
 
 footer:first-of-type {
-    background-color: #cccccc;
-    box-shadow: 0em 0em 0.5em #aaaaaa;
+    background-color: #eeeeee;
+    box-shadow: 0em 0em 0.5em #bbbbbb;
     color: #000000;
 }
 
@@ -40,7 +40,7 @@ footer p {
     font-size: 0.8em;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
     margin: 0.5em 0em;
 }
 
@@ -54,6 +54,10 @@ h2 {
 
 h3 {
     font-size: 1.25em;
+}
+
+h4, h5 {
+    font-size: 1em;
 }
 
 header {
@@ -87,6 +91,15 @@ a, a:visited {
 
 a:active, a:hover {
     color: #666666;
+    text-decoration: underline !important;
+}
+
+footer a, a:visited {
+    color: #111111;
+}
+
+footer a:active, a:hover {
+    color: #111111;
     text-decoration: underline !important;
 }
 

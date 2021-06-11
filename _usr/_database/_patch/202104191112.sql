@@ -1,0 +1,1 @@
+ALTER TABLE `sostituzioni_progetti` ADD CONSTRAINT `sostituzioni_progetti_ibfk_1_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -35,7 +35,7 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE pianificazioni SET token = ? WHERE id = ?',
+            'UPDATE pianificazioni SET token = ? WHERE id = ? AND token IS NULL',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['id'] )
@@ -49,11 +49,14 @@
             $cf['mysql']['connection'],
             'UPDATE pianificazioni SET token = ? '.
             'WHERE ( timestamp_popolazione < ? OR timestamp_popolazione IS NULL ) '.
+            'AND data_fine > ? '.
             'AND token IS NULL '.
+			'AND data_inizio_pulizia IS NULL '.		// non deve leggere quelle chiamate dalla check
             'ORDER BY timestamp_popolazione ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] ),
-                array( 's' => strtotime( '-1 day' ) )
+                array( 's' => strtotime( '-1 day' ) ),
+                array( 's' => date( 'Y-m-d' ) )
             )
         );
 
@@ -63,14 +66,17 @@
     $current = mysqlSelectRow(
         $cf['mysql']['connection'],
         'SELECT pianificazioni.*, '.
-        'coalesce( id_todo, id_turno ) AS ref_id '.
+        'coalesce( id_todo, id_turno, id_progetto ) AS ref_id '.
         'FROM pianificazioni '.
         'WHERE token = ? ',
         array( array( 's' => $status['token'] ) )
     );
+	
 
     // se c'è almeno una riga da inviare
     if( ! empty( $current ) ) {
+		
+	#	appendToFile( date('d-m-Y H:i') . ' lavoro la pianificazione ' . $current['id'] . PHP_EOL, 'ver/log/pianificazioni.populate.log');
 
         // prelevo la data dell'oggetto master
         $current['data_ultimo_oggetto'] = 
@@ -119,10 +125,6 @@
     
         $date = array_diff( $date, array( $current['data_ultimo_oggetto'] ) );
 
-    #    print_r( $date );
-        // debug
-         
-
         // per ogni data...
         foreach( $date as $data ) {
 
@@ -132,44 +134,94 @@
             // decodifico il workspace
             $wksp = json_decode( $current['workspace'], true );
 
-            // array di match
-            $matches = array();
+            $a = 1;
 
-            // faccio le sostituzioni nel workspace
-            foreach( $wksp as $ent => &$wks ) {
-                foreach( $wks as $field => &$value ) {
-                    if( $value == '%data%' || $value == '§data§' ) {
-                        $value = $data;
-                    } elseif( $value == '%id_pianificazione%' || $value == '§id_pianificazione§' ) {
-                        $value = $current['id'];
-                    } elseif( preg_match_all( '/%data\+([0-9]+)%/', $value, $matches ) ) {
-                        $value = date( 'Y-m-d', strtotime( '+' . $matches[1][0] . ' days', strtotime( $data ) ) );
-                    }
-                }
+            if( !empty( $wksp['metadati']['pause'] ) ){
+                
+                // vado nell'oggetto genitore della pianificazione ed estraggo il valore del campo di match per la tabella di pausa
+                $val = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT ' . $wksp['metadati']['pause']['campo'] . ' FROM ' . $current['entita'] . ' WHERE id = ?',
+                    array(
+                        array( 's' => $current['ref_id'] )
+                    )
+                );
+
+                $status['info'][ $data ][] = 'cerco pause su tabella ' . $wksp['metadati']['pause']['tabella'] .', campo di match ' . $wksp['metadati']['pause']['campo'] . ', valore ' . $val;
+
+                $a = seDataAttiva( $data, $wksp['metadati']['pause']['tabella'], $wksp['metadati']['pause']['campo'], $val );
             }
 
-            // chiamo la funzione mysqlDuplicateRowRecursive()
-            mysqlDuplicateRowRecursive(
-                $cf['mysql']['connection'],
-                $current['entita'],
-                $current['ref_id'],
-                NULL,
-                $wksp
-            );
+            $status['info'][ $data ]['attiva'] = $a;
 
-            // status
-            $status['info'][ $data ][] = 'chiamata duplicazione ricorsiva per '.$current['entita'].' #'.$current['ref_id'];
 
-            // aggiorno la data dell'ultimo oggetto
-            mysqlQuery(
-                $cf['mysql']['connection'],
-                'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE token = ?',
-                array(
-                    array( 's' => $data ),
-                    array( 's' => $status['token'] )
-                )
-            );
+            // solo se non ci sono pause o la data corrente non è nel periodo di pausa procedo con la duplicazione
+            if( $a == 1 ){
+                // array di match
+                $matches = array();
 
+                // faccio le sostituzioni nel workspace
+                foreach( $wksp['sostituzioni'] as $ent => &$wks ) {
+                    foreach( $wks as $field => &$value ) {
+                        if( $value == '%data%' || $value == '§data§' ) {
+                            $value = $data;
+                        } elseif( $value == '%id_pianificazione%' || $value == '§id_pianificazione§' ) {
+                            $value = $current['id'];
+                        } elseif( preg_match_all( '/%data\+([0-9]+)%/', $value, $matches ) ) {
+                            $value = date( 'Y-m-d', strtotime( '+' . $matches[1][0] . ' days', strtotime( $data ) ) );
+                        } elseif( $value == '§ref_id+data§'){
+                            $value = $current['ref_id'] . '-' . date( 'Ymd', strtotime( $data ) );
+                        } elseif( $value == '%null%'){
+                            $value = NULL;
+                        }
+                    }
+                }
+
+                $status['info']['sostituzioni'] = $wksp['sostituzioni'];
+
+                // chiamo la funzione mysqlDuplicateRowRecursive()
+                mysqlDuplicateRowRecursive(
+                    $cf['mysql']['connection'],
+                    $current['entita'],
+                    $current['ref_id'],
+                    NULL,
+                    $wksp['sostituzioni']
+                );
+
+                // status
+                $status['info'][ $data ][] = 'chiamata duplicazione ricorsiva per '.$current['entita'].' #'.$current['ref_id'];
+
+                // aggiorno la data dell'ultimo oggetto
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE pianificazioni SET data_ultimo_oggetto = ? WHERE token = ?',
+                    array(
+                        array( 's' => $data ),
+                        array( 's' => $status['token'] )
+                    )
+                );
+
+            }
+
+        }
+
+        // estraggo le statiche coinvolte nella creazione
+        $status['statiche'] = pianificazioniGetStatic( $current['id'] );
+		
+		if( !empty( $status['statiche'] ) && !empty( $date ) ){
+            
+			// inserisco una richiesta di ripopolamento delle statiche
+            foreach( $status['statiche'] as $s ){
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                    array(
+                        array( 's' => $s ),
+                        array( 's' => '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php'),
+                        array( 's' => time() )
+                    )
+                );
+            }
         }
 
         // rilascio il token
@@ -180,7 +232,8 @@
                 array( 's' => time() ),
                 array( 's' => $status['token'] )
             )
-        );
+        );       
+		
 
     } else {
 

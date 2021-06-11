@@ -1,0 +1,1 @@
+ALTER TABLE `caratteristiche_prodotti` ADD `se_prodotto` INT(1) NULL DEFAULT NULL AFTER `nome`, ADD `se_articolo` INT(1) NULL DEFAULT NULL AFTER `se_prodotto`, ADD `se_categoria` INT(1) NULL DEFAULT NULL AFTER `se_articolo`;

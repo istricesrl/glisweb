@@ -32,7 +32,7 @@
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'pianificazione' => 'pianificato',
+	    'data_programmazione' => 'pianificato',
 	    'priorita' => 'priorità',
 	    'nome' => 'attività',
 	    'cliente' => 'da fare per',
@@ -46,7 +46,6 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    'id_priorita' => 'd-none',
-	    'pianificazione' => 'text-left no-wrap',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
 	    'priorita' => 'text-left',
@@ -62,7 +61,13 @@
 	$ct['etc']['select']['id_cliente'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_cliente = 1');
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_interno = 1 OR se_cliente = 1');
+
+	// tendina tipologie
+	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
 
     // preset filtro custom todo completati
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] ) ) {
@@ -89,12 +94,15 @@
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.view.php';
     
-    foreach ( $ct['view']['data'] as &$row ){
-	    if( $row['completato'] == 2 ){ $row['completato']='completato';  }
-	    else {
-	    if( $row['completato'] == 1 ){ $row['completato']='in revisione';  }
-	    else { $row['completato']='';  }
-	    }
+	if( !empty( $ct['view']['data'] ) ){
+		foreach ( $ct['view']['data'] as &$row ){
+			if( $row['completato'] == 2 ){ $row['completato']='completato';  }
+			else {
+			if( $row['completato'] == 1 ){ $row['completato']='in revisione';  }
+			else { $row['completato']='';  }
+			}
+		}
 	}
+    
 
    

@@ -1,0 +1,1 @@
+ALTER TABLE `tipologie_todo` DROP INDEX `se_ordinaria`, ADD KEY `se_contratto` (`se_contratto`) ;

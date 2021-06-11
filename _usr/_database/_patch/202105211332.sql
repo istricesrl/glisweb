@@ -1,0 +1,1 @@
+ALTER TABLE `categorie_anagrafica` ADD `se_produzione` INT(1) NULL DEFAULT NULL , ADD KEY `se_produzione` (`se_produzione`)  ;

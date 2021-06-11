@@ -88,6 +88,9 @@
 	    'categorie_anagrafica' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
+		'categorie_attivita' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
 	    'comuni' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
@@ -196,6 +199,10 @@
 #	    ),
 	    'tipologie_crm' => array(
 		CONTROL_FULL => array( 'roots' )
+		),
+		'todo' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
 		),
 		'turni' => array(
 			CONTROL_FULL => array( 'roots' )

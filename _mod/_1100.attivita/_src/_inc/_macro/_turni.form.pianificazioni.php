@@ -67,10 +67,15 @@
 
         // array per il workspace della pianificazione
         $wks = array(
-            'turni' => array(
-                'data_inizio' => '§data§',
-                'data_fine' => '%data+' . $giorni . '%',
-                'id_pianificazione' => '§id_pianificazione§'
+            'metadati' => array(
+                'pause' => array()
+            ),
+            'sostituzioni' => array(
+                'turni' => array(
+                    'data_inizio' => '§data§',
+                    'data_fine' => '%data+' . $giorni . '%',
+                    'id_pianificazione' => '§id_pianificazione§'
+                )
             )
         );
 
@@ -115,6 +120,11 @@
     // modal per pulire gli oggetti futuri
     $ct['page']['contents']['metro'][NULL][] = array(
 	    'modal' => array('id' => 'pulisci', 'include' => 'inc/turni.form.pianificazioni.modal.pulisci.html' )
+	);
+
+    // modal per ricreare gli oggetti futuri e crearli di nuovo
+    $ct['page']['contents']['metro'][NULL][] = array(
+	    'modal' => array('id' => 'ripianifica', 'include' => 'inc/turni.form.pianificazioni.modal.ripianifica.html' )
 	);
 
 	// macro di default

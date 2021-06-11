@@ -43,6 +43,9 @@
 	    // apro i modal con classe popup-open
 		$('.popup-open').modal();
 
+		// focus su un elemento
+		$('.focus-on-load').focus();
+
 	    // apro in ritardo i modal con classe popup-delay in base al valore dell'attributo popup-delay
 		$('.popup-delay').each( function() {
 		    var modal = $( this );
@@ -91,7 +94,16 @@
 		    $(this).attr('img-hover', src );
 		});
 
-	    // ???
+	    // collego il campo hidden per le checkbox
+		$('input[type=checkbox]').click( function() {
+		    if( this.checked ) {
+			$(this).prev().val('1');
+		    } else {
+			$(this).prev().val('0');
+		    }
+		});
+
+		// ???
 		$( window ).scroll( function() {
 		    $('.hide-on-scroll').hide();
 		    if( $(this).scrollTop() > 50 ) {

@@ -1,0 +1,15 @@
+"memcache": {
+    "servers": {
+      "default": {
+        "address": "%indirizzo del server memcache%",
+        "port": "%porta del server memcache%"
+      }
+    },
+    "profiles": {
+      "%stage del sito%": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  }

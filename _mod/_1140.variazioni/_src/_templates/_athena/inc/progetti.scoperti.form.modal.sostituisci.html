@@ -1,0 +1,47 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+     function sostituisci() {
+		$('#btnsostituisci').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+		idoperatore = $('#modaloperatoreSid').text();
+
+		window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}&__sostituzione__[id_anagrafica]='+idoperatore+'&__sostituzione__[hard]=1', '_self');
+	/*	var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.progetto.request.php?id_progetto={{ request[table].id }}&id_anagrafica='+idoperatore+'&hard=1';
+
+		getws( call,'', function() {
+			window.open('{{ pages['progetti.scoperti.view'].path[ localization.language.ietf ] }}','_self');
+		});
+	*/	
+	}
+
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="sostituisci">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">effettua sostituzione</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+				si desidera effettuare direttamente la sostituzione assegnando 
+				all'operatore <span id="modaloperatoreSid"></span> - <span id="modaloperatoreSnome"></span>
+				le attività del progetto {{ request[table].id }} che può coprire senza inviare una richiesta?
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="btnsostituisci" type="button" class="btn btn-secondary btn-sm" onclick="sostituisci();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

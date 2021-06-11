@@ -25,9 +25,11 @@ Options -Indexes
 
     # directory ad accesso vietato
     RewriteRule ^tmp/*^ - [F,L,NC]
+    RewriteRule ^usr/database/* - [F,L,NC]
     RewriteRule ^usr/test/* - [F,L,NC]
     RewriteRule ^var/log/* - [F,L,NC]
     RewriteRule ^var/session/* - [F,L,NC]
+    RewriteRule ^var/spool/* - [F,L,NC]
 
     # directory ad accesso diretto
     RewriteRule ^usr/pages/* - [L,NC]
@@ -72,6 +74,10 @@ Options -Indexes
     RewriteCond %{DOCUMENT_ROOT}/_src/_api/_$1.php -f
     RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_$1.php [L,QSA]
 
+    # gestione delle API di login e logout
+    RewriteRule ^api/login$ _src/_api/_user.php [L,QSA]
+    RewriteRule ^api/logout$ _src/_api/_user.php?__logout__=1 [L,QSA]
+
     # gestione delle API generiche
     RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_rest.php?__ws__=$1&__id__=$2 [L,QSA]
 
@@ -91,6 +97,25 @@ Options -Indexes
     RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_$2.php -f
     RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_$2.php [L,QSA]
 
+    # gestione delle stampe custom base
+    RewriteCond %{DOCUMENT_ROOT}/src/api/print/$1.php -f
+    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)$ src/api/print/$1.php [L,QSA]
+
+    # gestione delle stampe standard base
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_print/_$1.php -f
+    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)$ _src/_api/_print/_$1.php [L,QSA]
+
+    # gestione delle stampe custom moduli
+    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/print/$2.php -f
+    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/print/$2.php [L,QSA]
+
+    # gestione delle stampe standard moduli
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_print/_$2.php -f
+    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_print/_$2.php [L,QSA]
+
+    # gestione dei job standalone
+    RewriteRule ^job/([0-9]+)*$ _src/_api/_job.php?__id__=$1 [L,QSA]
+
     # gestione dei report speciali
     RewriteRule ^speed$ _src/_api/_report/_framework.speed.php [L]
     RewriteRule ^status$ _src/_api/_report/_framework.status.php [L]
@@ -98,9 +123,6 @@ Options -Indexes
 
     # gestione dei report generici
     RewriteRule ^report/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_report/_$1.php [L,QSA]
-
-    # gestione delle stampe generiche
-    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_print/_$1.php [L,QSA]
 
     # proxy OSM
     RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]

@@ -17,4 +17,8 @@ apt-get install -y phing rsync
 echo "lavoro su: $(pwd)"
 
 ## avvio deploy
-phing -f ./_usr/_deploy/_phing/_build.xml $1
+if [ -n "$1" ]; then
+    phing -f ./_usr/_deploy/_phing/_build.xml -propertyfile ./usr/deploy/phing/$1
+else
+    echo "$0 nomefile.properties"
+fi

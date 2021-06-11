@@ -1,0 +1,31 @@
+/*!
+
+    \page deploy strategie di deploy del framework
+
+    Descrizione delle strategie di deploy del framework.
+
+    introduzione
+    ============
+
+    deploy manuale
+    --------------
+
+    Phing
+    -----
+
+    Kubernetes
+    ----------
+
+    il deploy a tre step
+    ====================
+
+    developement
+    ------------
+
+    testing
+    -------
+
+    production
+    ----------
+
+*/

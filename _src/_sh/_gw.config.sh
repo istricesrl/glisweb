@@ -18,6 +18,9 @@ cd $RL
 ## informazioni
 echo "lavoro su: $(pwd)"
 
+## intestazione
+echo "configurazione del framework"
+
 ## file di lavoro
 if [ -z "$2" ]; then
 	FILE="./src/config.json"
@@ -114,6 +117,8 @@ if [ -f "$FILE" ]; then
     else
 		echo "ATTENZIONE installare il crontab manualmente"
     fi
+
+    ./_src/_sh/_gw.permissions.reset.sh
 
 elif [ -n "$1" ]; then
 

@@ -134,6 +134,10 @@
 			    $r = mysqlFetchResult( mysqli_query( $c, $q ) );
 			break;
 
+			case 'CALL':
+				$r = mysqli_query( $c, $q );
+			break;
+			
 			case 'SET':
 			    $r = mysqli_query( $c, $q );
 			break;
@@ -184,10 +188,16 @@
 		    }
 
 		// cronometro
-		    $tElapsed = timerDiff( $tStart );
+		    $tElapsed = sprintf( '%0.11f', timerDiff( $tStart ) );
 
 		// log
-		    if( $tElapsed > 0.5 ) { logWrite( $q . ' -> TEMPO ' . $tElapsed . ' secondi', 'speed', LOG_ERR ); }
+		    if( $tElapsed > 0.5 ) {
+			logWrite( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR ); 
+			appendToFile( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, '/var/log/slow/mysql/' . date( 'YmdH' ) . '.log' );
+		    }
+
+		// debug
+			// var_dump( mysqli_errno( $c ) );
 
 		// gestione errore
 		    if( mysqli_errno( $c ) ) {
@@ -200,6 +210,10 @@
 
 				case 1062:
 				    $e['1062'][] = 'errore MySQL 1062, dati dupilcati';
+				break;
+
+				case 1054:
+				    $e['1054'][] = 'errore MySQL 1054, nome colonna errato';
 				break;
 
 				default:
@@ -302,13 +316,16 @@
 			    $xStatement = mysqli_stmt_execute( $pq );
 
 			// cronometro
-			    $tElapsed = timerDiff( $tStart );
+			    $tElapsed = sprintf( '%0.11f', timerDiff( $tStart ) );
 
 			// log
 			    if( $tElapsed > 0.5 ) {
-				logWrite( $q . ' -> TEMPO ' . $tElapsed . ' secondi', 'speed', LOG_ERR );
-				appendToFile( $tElapsed . ' secondi -> ' . $q . PHP_EOL, '/var/log/slow/mysql/' . date( 'YmdH' ) . '.log' );
+				logWrite( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR );
+				appendToFile( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, '/var/log/slow/mysql/' . date( 'YmdH' ) . '.log' );
 			    }
+
+			// debug
+				// var_dump( mysqli_errno( $c ) );
 
 			// gestione errore
 			    if( mysqli_errno( $c ) ) {
@@ -363,11 +380,35 @@
 
 		    } else {
 
-			// log
-			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+				// log
+					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
 
-			// restituisco false
-			    return false;
+				// debug
+					// var_dump( mysqli_errno( $c ) );
+
+				// gestione errore
+				if( mysqli_errno( $c ) ) {
+
+					// log
+						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+
+					// gestione specifici errori
+						switch( mysqli_errno( $c ) ) {
+
+						case 1054:
+							$e['1054'][] = 'errore MySQL 1054, nome colonna errato';
+						break;
+		
+						default:
+							$e[ mysqli_errno( $c ) ][] = mysqli_error( $c );
+						break;
+
+						}
+
+					}
+
+				// restituisco false
+					return false;
 
 		    }
 
@@ -629,6 +670,9 @@
      */
     function mysqlDuplicateRow( $c, $t, $o, $n = NULL, $x = array() ) {
 
+		// salvo l'id
+		$id = isset( $x['id'] ) ? $x['id'] : null;
+
 	// campi da modificare
 	    $x = array_merge( array( 'id' => $n ), $x );
 
@@ -654,6 +698,10 @@
 	// esecuzione della query
 		$n = mysqlQuery( $c, $q, $values );
 
+		if( empty( $n ) ){
+			$n = $id;
+		}
+
 	// debug
 		// echo $q . PHP_EOL;
 		// print_r( $values );
@@ -668,16 +716,104 @@
     /**
      *
      * @todo documentare
+	 * 
+	 * la funzione effettua l'eliminazione ricorsiva di un oggetto e, a cascata, di tutti gli oggetti collegati da vincoli di chiave "NO ACTION".
+	 * riceve in ingresso i parametri seguenti:
+	 * - $m: connessione a memcache
+	 * - $c: connessione al database
+	 * - $t: nome della tabella
+	 * - $d: id del record da eliminare
+	 * 
+	 * NOTA: poiché la funzione utilizza memcache, se si apportano modifiche alle tipologia dei vincoli di chiave tra le tabelle del database, svuotare sempre memcache
+     *
+     */
+	function mysqlDeleteRowRecursive( $m, $c, $t, $d ) {
+
+		// debug
+	#	echo 'chiamata funzione cancellazione ricorsiva' . PHP_EOL;
+	#	echo "richiesta la cancellazione della riga #${d} dalla tabella {$t}" . PHP_EOL;
+
+		// cerco i vincoli di chiave esterna per l'entità $t
+		// NOTA mi interessano TABLE_NAME, COLUMN_NAME, REFERENCED_COLUMN_NAME
+		$x = mysqlCachedQuery(
+			$m,
+			$c,
+			'SELECT information_schema.key_column_usage.TABLE_NAME, information_schema.key_column_usage.COLUMN_NAME, information_schema.key_column_usage.REFERENCED_COLUMN_NAME, information_schema.key_column_usage.REFERENCED_TABLE_NAME, '.
+			'information_schema.referential_constraints.DELETE_RULE '.
+			'FROM information_schema.key_column_usage '.
+			'INNER JOIN information_schema.referential_constraints ON ( information_schema.referential_constraints.REFERENCED_TABLE_NAME = information_schema.key_column_usage.REFERENCED_TABLE_NAME '.
+			'AND information_schema.referential_constraints.TABLE_NAME = information_schema.key_column_usage.TABLE_NAME ) '.
+			'WHERE information_schema.key_column_usage.REFERENCED_TABLE_NAME = ? AND table_schema = database() AND information_schema.referential_constraints.DELETE_RULE = ? ',
+			array(
+				array( 's' => $t ),
+				array( 's' => 'NO ACTION' )
+			)
+		);
+
+		// dati prelevati
+		foreach( $x as $x1 ) {
+
+			// debug
+		#	print_r( $x1 );
+
+			// variabili in uso
+			$t1 = $x1['TABLE_NAME'];
+			$f1 = $x1['COLUMN_NAME'];
+			$l1 = $x1['REFERENCED_COLUMN_NAME'];
+
+			// debug
+		#	echo "SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?" . PHP_EOL;
+		#	echo "cerco le righe di ${t1} che hanno ${t1}.${f1} uguale a ${d}" . PHP_EOL;
+
+			// prelevo le righe referenziate
+			$r = mysqlQuery(
+				$c,
+				"SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?",
+				array(
+					array( 's' => $d )
+				)
+			);
+
+			// debug
+		#	print_r( $r );
+
+			// per ogni riga delle tabelle referenziate chiamo ricorsivamente
+			foreach( $r as $r1 ) {
+
+				// chiamata ricorsiva
+				mysqlDeleteRowRecursive( $m, $c, $t1, $r1[ $l1 ] );
+
+			}
+
+		}
+
+		// debug
+		# echo "elimino la riga #${d} dalla tabella {$t}" . PHP_EOL;
+
+		// cancello l'oggetto richiesto
+		$r = mysqlQuery(
+			$c,
+			"DELETE FROM ${t} WHERE ${t}.id = ?",
+			array(
+				array( 's' => $d )
+			)
+		);
+
+	}
+
+    /**
+     *
+     * @todo documentare
      *
      */
     function mysqlInsertRow( $c, $r, $t, $d = true ) {
 
-	return mysqlQuery( $c,
-	    'INSERT INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
-	    .'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
-	    .( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
-	    array2mysqlStatementParameters( $r )
-	);
+		return mysqlQuery( $c,
+			'INSERT INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
+			.'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
+			.( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
+			array2mysqlStatementParameters( $r )
+		);
 
     }
 
@@ -688,7 +824,7 @@
      */
     function array2mysqlFieldnames( $a ) {
 
-	return implode( ', ', addStr2arrayElements( array_keys( $a ), '`', '`' ) );
+		return implode( ', ', addStr2arrayElements( array_keys( $a ), '`', '`' ) );
 
     }
 
@@ -762,4 +898,23 @@
 			return $matches[1];
 		}
 		return array();
+	}
+
+	function getStaticViewExtension( $m, $c, $t ) {
+
+			// verifico se esiste la view statica
+			$stv = mysqlSelectCachedValue(
+				$m,
+				$c,
+				'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+				array( array('s' => $t . '_view_static' ) )
+			);
+
+		// se esiste la vista statica...
+			if( ! empty( $stv ) ) {
+				return '_view_static';
+			} else {
+				return '_view';
+			}
+
 	}

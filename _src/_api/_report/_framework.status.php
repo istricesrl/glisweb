@@ -37,38 +37,44 @@
 	    echo '[ -- ] directory base: ' . DIR_BASE . PHP_EOL;
 	}
 
-    // directory da controllare
-	$dirs = array( 'var/', 'var/log/', 'tmp/' );
-
     // permessi di scrittura
-	foreach( $dirs as $dir ) {
-	    if( is_dir( DIR_BASE . $dir ) && is_writeable( DIR_BASE . $dir ) ) {
-		echo '[ OK ] posso scrivere su ' . $dir . PHP_EOL;
+	foreach( $cf['debug']['fs']['folders'] as $dir ) {
+	    if( is_dir( $dir ) && is_writeable( $dir ) ) {
+		echo '[ OK ] posso scrivere su ' . shortPath( $dir ) . PHP_EOL;
 	    } else {
-		die( '[FAIL] non posso scrivere su ' . $dir . PHP_EOL );
+		die( '[FAIL] non posso scrivere su ' . shortPath( $dir ) . PHP_EOL );
 	    }
 	}
 
-    // file di configurazione JSON
-	if( ! file_exists( DIR_BASE . 'src/config/external/config.json' ) ) {
-	    echo '[ -- ] file /src/config/external/config.json non trovato' . PHP_EOL;
-	    if( ! file_exists( DIR_BASE . 'src/config.json' ) ) {
-		echo '[ -- ] file /src/config.json non trovato' . PHP_EOL;
+    // permessi di scrittura
+	foreach( $cf['debug']['fs']['files'] as $file ) {
+	    if( is_writeable( $file ) ) {
+		echo '[ OK ] posso scrivere su ' . shortPath( $file ) . PHP_EOL;
 	    } else {
-		echo '[ -- ] file /src/config.json trovato' . PHP_EOL;
+		die( '[FAIL] non posso scrivere su ' . shortPath( $file ) . PHP_EOL );
+	    }
+	}
+
+	// file di configurazione JSON
+	if( ! file_exists( DIR_BASE . 'src/config/external/config.json' ) ) {
+	    echo '[ -- ] file src/config/external/config.json non trovato' . PHP_EOL;
+	    if( ! file_exists( DIR_BASE . 'src/config.json' ) ) {
+		echo '[ -- ] file src/config.json non trovato' . PHP_EOL;
+	    } else {
+		echo '[ -- ] file src/config.json trovato' . PHP_EOL;
 		if( jsonCheck( readFromFile( 'src/config.json', FILE_READ_AS_STRING ) ) ) {
-		    echo '[ OK ] file /src/config.json sintatticamente corretto' . PHP_EOL;
+		    echo '[ OK ] file src/config.json sintatticamente corretto' . PHP_EOL;
 		} else {
-		    die( '[FAIL] file /src/config.json corrotto o malformato' . PHP_EOL );
+		    die( '[FAIL] file src/config.json corrotto o malformato' . PHP_EOL );
 		}
 	    }
 	} else {
-	    echo '[ -- ] file /src/config.json ignorato' . PHP_EOL;
-	    echo '[ -- ] file /src/config/external/config.json trovato' . PHP_EOL;
+	    echo '[ -- ] file src/config.json ignorato' . PHP_EOL;
+	    echo '[ -- ] file src/config/external/config.json trovato' . PHP_EOL;
 	    if( jsonCheck( readFromFile( 'src/config/external/config.json', FILE_READ_AS_STRING ) ) ) {
-		echo '[ OK ] file /src/config/external/config.json sintatticamente corretto' . PHP_EOL;
+		echo '[ OK ] file src/config/external/config.json sintatticamente corretto' . PHP_EOL;
 	    } else {
-		die( '[FAIL] file /src/config/external/config.json corrotto o malformato' . PHP_EOL );
+		die( '[FAIL] file src/config/external/config.json corrotto o malformato' . PHP_EOL );
 	    }
 	}
 

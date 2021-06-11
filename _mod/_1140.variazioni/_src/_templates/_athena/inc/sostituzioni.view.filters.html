@@ -1,0 +1,42 @@
+<div class="form-row view-filters d-print-none">
+    <div class="col-4 col-md-auto">
+    <span class="label-top">stato</span>
+	<select name="__view__[{{ view.id }}][__filters__][accettata][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="0" {% if request.__view__[ view.id ].__filters__.accettata.EQ == "0" %}selected{% endif %}>in attesa</option>
+	    <option value="1" {% if request.__view__[ view.id ].__filters__.accettata.EQ == "1" %}selected{% endif %}>accettate</option>
+        <option value="2" {% if request.__view__[ view.id ].__filters__.accettata.EQ == "2" %}selected{% endif %}>rifiutate</option>
+	    <option value="" {% if request.__view__[ view.id ].__filters__.accettata.EQ is empty %}selected{% endif %}>tutte</option>
+	</select>
+    </div>
+
+    <div class="col-4 col-md-auto">
+        <span class="label-top">operatore</span>
+        <select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+            <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>tutti</option>
+            {% for o in etc.select.operatori %}
+            <option value="{{ o.id }}" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == o.id %}selected{% endif %}>{{ o.__label__ }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-4 col-md-auto">
+        <span class="label-top">progetto</span>
+        <select name="__view__[{{ view.id }}][__filters__][id_progetto][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+            <option value="" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ == "" %}selected{% endif %}>tutti</option>
+            {% for p in etc.select.progetti %}
+            <option value="{{ p.id }}" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ == p.id %}selected{% endif %}>{{ p.__label__ }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col">
+		<div class="label-top">ricerca per parola chiave</div>
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+		</div>
+		<div class="col-auto">
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		{% if view.insert.path %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		{% endif %}
+	</div>
+</div>

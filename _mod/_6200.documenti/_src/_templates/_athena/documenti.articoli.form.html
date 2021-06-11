@@ -1,0 +1,165 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{# import 'bin/default.form.pubblicazione.sub.html' as sub #}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+		
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>dati generali <small>{{ legend }}</small></legend>
+
+
+	
+		<div class="form-group form-row">
+			<div class="col-auto">
+				<span class="label-top remove-after-duplicate">data</span>
+				{{ frm.date( table, '', '', 'data_lavorazione', 'data', '', request ) }}
+			</div>
+			<div class="col-md-auto col-4">
+				<span class="label-top">tipologia</span>
+				{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request, etc.id_tipologia ) }}
+			</div>	
+			<div class="col">
+				<span class="label-top remove-after-duplicate">descrizione</span>
+				{{ frm.input( table, '', '', 'nome', 'descrizione', '', request ) }}
+			</div>
+		</div>
+
+
+		<legend>dettaglio</legend>
+		<div class="form-group form-row">
+			<div class="col-1">
+				<span class="label-top remove-after-duplicate">quantità</span>
+				{{ frm.input( table, '', '', 'quantita', 'quantità', '', request ) }}
+			</div>
+			<div class="col-auto">
+				<span class="label-top remove-after-duplicate">unità di misura</span>
+				{{ frm.select( table, '', '', 'id_udm', '', etc.select.id_udm, request ) }}
+			</div>
+			<div class="col-auto">
+				<span class="label-top remove-after-duplicate">articolo</span>
+				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+			</div>
+			<div class="col">
+				<span class="label-top remove-after-duplicate">specifiche</span>
+				{{ frm.input( table, '', '', 'specifiche', 'specifiche', '', request ) }}
+			</div>
+			<div class="col-1">
+				<span class="label-top remove-after-duplicate">importo</span>
+				{{ frm.input( table, '', '', 'importo_netto_totale', 'importo', '', request ) }}
+			</div>
+			<!--div class="col-auto">
+				<span class="label-top remove-after-duplicate">valuta</span>
+				{{ frm.select( table, '', '', 'id_valuta', '', etc.select.id_valute, request ) }}
+			</div-->
+			<div class="col-auto">
+				<span class="label-top remove-after-duplicate">listino</span>
+				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request ) }}
+			</div>
+			<div class="col-auto">
+				<span class="label-top remove-after-duplicate">iva</span>
+				{{ frm.select( table, '', '', 'id_iva', '', etc.select.id_iva, request ) }}
+			</div>
+		</div>	
+		<div class="form-group form-row">
+
+
+		</div>
+	{% if  request.__preset__[ table ].id_documento %}
+		{% set default_documento = request.__preset__[ table ].id_documento %}
+	{% elseif  session.__latest__[ table ].id_documento %}
+		{% set default_documento = session.__latest__[ table ].id_documento %}
+	{% endif %}
+
+		<legend>riferimenti</legend>
+		<div class="form-group form-row">
+			<div class="col-md col">
+				<span class="label-top remove-after-duplicate">emittente</span>
+				{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, etc.id_emittente, '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+			</div>
+			<div class="col-md col">
+				<span class="label-top remove-after-duplicate">destinatario</span>
+				{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, etc.id_destinatario, '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+			</div>
+		</div>
+		<div class="form-group form-row">
+			<div class="col-md col">
+				<span class="label-top remove-after-duplicate">documento</span>
+				{{ frm.selectBox( table, '', '', 'id_documento', '', etc.select.id_documenti, request, default_documento, 1, '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+			</div>
+			 {% if ( request[ table ].id) or default_documento %}
+			<div class="col-md-6 col">
+				<span class="label-top remove-after-duplicate">riga genitore</span>
+				{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.id_righe_genitori, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+			</div>
+			{% endif %}
+		</div>
+
+		<legend>attribuzione</legend>
+		<div class="form-group form-row">
+			<div class="col-md-4 col">
+				<span class="label-top remove-after-duplicate">progetto</span>
+				{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetti, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+			</div>
+			<div class="col-md-4 col">
+				<span class="label-top remove-after-duplicate">carico</span>
+				{{ frm.selectBox( table, '', '', 'id_mastro_provenienza', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+			</div>
+			<div class="col-md-4 col">
+				<span class="label-top remove-after-duplicate">scarico</span>
+				{{ frm.selectBox( table, '', '', 'id_mastro_destinazione', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+			</div>
+		</div>	
+
+        </fieldset>
+
+     
+	    {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

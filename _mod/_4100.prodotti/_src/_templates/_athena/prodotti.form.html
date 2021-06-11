@@ -1,0 +1,124 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+        {% if request.__preset__[ table ] %}
+            {% set subtable = request.__preset__[ table ]|keys|first %}
+            {{ frm.input( table, subtable, '0', 'id', '', '', request, '', 'hidden' ) }}
+            {{ frm.input( table, subtable, '0', 'ordine', '', '', '', '10', 'hidden' ) }}
+            {{ frm.input( table, subtable, '0', 'id_prodotto', '', '', '', '__parent_id__', 'hidden' ) }}
+            {{ frm.input( table, subtable, '0', 'id_categoria', '', '', '', request.__preset__[ table ]|first[0]['id_categoria'], 'hidden' ) }}
+        {% endif %}
+
+        {# MODULO PRINCIPALE #}
+	    <fieldset>
+            <legend>dati generali <small>{{ legend }}</small></legend>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">tipologia</span>
+                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+                </div>  
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">codice</span>
+                    {{ frm.inputRequired( table, '', '', 'id', 'codice', '', request ) }}
+                </div>  
+                <div class="col-12 col-md">
+                    <span class="label-top">nome</span>
+                    {{ frm.input( table, '', '', 'nome', 'nome del prodotto', '', request, '', '', 1 ) }}
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>dati tecnici</legend>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">udm</span>
+                    {{ frm.select( table, '', '', 'id_udm', '', etc.select.udm, request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">codice produttore</span>
+                    {{ frm.input( table, '', '', 'codice_produttore', 'codice produttore', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">produttore</span>
+                    {{ frm.select( table, '', '', 'id_produttore', '', etc.select.produttori, request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">marchio</span>
+                    {{ frm.select( table, '', '', 'id_marchio', '', etc.select.marchi, request ) }}
+                </div>
+            </div>
+
+		</fieldset>
+
+	    <fieldset>
+		    <legend>descrizione e codifica</legend>
+
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <span class="label-top">descrizione</span>
+                    {{ frm.textarea( table, '', '', 'descrizione', 'descrizione (ad uso interno)', 2, request ) }}
+                </div>  
+                <div class="col-12">
+                    <span class="label-top">codifica</span>
+                    {{ frm.textarea( table, '', '', 'codifica', 'note di codifica (ad uso interno)', 2, request ) }}
+                </div>
+            </div>  
+
+		</fieldset>
+
+		{# SUBFORM PUBBLICAZIONE #}
+        {{ sub.pubblicazione( table, 'pubblicazione', 'pubblicazione', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
+
+	    {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

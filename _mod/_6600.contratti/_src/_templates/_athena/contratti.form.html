@@ -53,11 +53,11 @@
             </div>
             <div class="col-12 col-md-5">
                 <span class="label-top">agenzia</span>
-                {{ frm.selectBox( table, '', '', 'id_agenzia', '', etc.select.agenzia, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_agenzia', page, pages, ietf ) }}
+                {{ frm.selectBox( table, '', '', 'id_agenzia', '', etc.select.agenzia, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_agenzia', page, pages, ietf, 'anagrafica' ) }}
             </div>
             <div class="col-12 col-md-5">
                 <span class="label-top">anagrafica</span>
-                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf ) }}
+                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
             </div>
         </div>
 
@@ -83,11 +83,11 @@
         <div class="form-group form-row">
             <div class="col-12 col-md-1">
                 <span class="label-top">livello</span>
-                {{ frm.input( table, '', '', 'livello', 'livello', '', request ) }}
+                {{ frm.input( table, '', '', 'livello', '', '', request ) }}
             </div>
             <div class="col-12 col-md-1">
                 <span class="label-top">ore settimana</span>
-                {{ frm.input( table, '', '', 'ore_settimanali', 'ore sett.', '', request ) }}
+                {{ frm.input( table, '', '', 'ore_settimanali', '', '', request ) }}
             </div>
             <div class="col-12 col-md-3">
                 <span class="label-top">qualifica INPS</span>
@@ -110,7 +110,7 @@
         <div class="form-group form-row">
             <div class="col">
             <span class="label-top">descrizione e note</span>
-			{{ frm.textarea( table, '', '', 'note', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
+			{{ frm.textarea( table, '', '', 'note', 'ad uso interno', 3, request ) }}
             </div>
         </div>
        

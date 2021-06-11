@@ -6,11 +6,11 @@
     },
     "require": {
         "phpoffice/phpword": "0.14.*",
-        "phpoffice/phpspreadsheet": "1.8.*",
+        "phpoffice/phpspreadsheet": "1.*",
         "phpoffice/phppresentation": "0.9.*",
         "html2text/html2text": "4.1.*",
         "phpmailer/phpmailer": "6.1.*",
-        "tecnickcom/tcpdf": "6.2.*",
+        "tecnickcom/tcpdf": "6.4.*",
         "twig/twig": "<2.14.0",
         "predis/predis": "*",
         "codeception/codeception": "*",

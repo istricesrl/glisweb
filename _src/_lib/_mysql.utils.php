@@ -18,37 +18,37 @@
 
     }
 
-    function aggiungiImmagini( &$p, $f, $id, $r = null ) {
+    function aggiungiImmagini( &$p, $id, $f, $r = null ) {
 
-        aggiungiDati( $p, $f, $id, 'immagini', $r );
-
-    }
-
-    function aggiungiVideo( &$p, $f, $id, $r = null ) {
-
-        aggiungiDati( $p, $f, $id, 'video', $r );
+        aggiungiDati( $p, $id, $f, 'immagini', $r );
 
     }
 
-    function aggiungiAudio( &$p, $f, $id, $r = null ) {
+    function aggiungiVideo( &$p, $id, $f, $r = null ) {
 
-        aggiungiDati( $p, $f, $id, 'audio', $r );
-
-    }
-
-    function aggiungiFile( &$p, $f, $id, $r = null ) {
-
-        aggiungiDati( $p, $f, $id, 'file', $r );
+        aggiungiDati( $p, $id, $f, 'video', $r );
 
     }
 
-    function aggiungiRecensioni( &$p, $f, $id, $r = null ) {
+    function aggiungiAudio( &$p, $id, $f, $r = null ) {
 
-        aggiungiDati( $p, $f, $id, 'recensioni', $r );
+        aggiungiDati( $p, $id, $f, 'audio', $r );
 
     }
 
-    function aggiungiDati( &$p, $f, $id, $t, $r = null ) {
+    function aggiungiFile( &$p, $id, $f, $r = null ) {
+
+        aggiungiDati( $p, $id, $f, 'file', $r );
+
+    }
+
+    function aggiungiRecensioni( &$p, $id, $f, $r = null ) {
+
+        aggiungiDati( $p, $id, $f, 'recensioni', $r );
+
+    }
+
+    function aggiungiDati( &$p, $id, $f, $t, $r = null ) {
 
         global $cf;
 
@@ -138,7 +138,7 @@
 
     }
 
-    function aggiungiMenu(  &$p, $f, $id  ) {
+    function aggiungiMenu(  &$p, $id, $f  ) {
 
         global $cf;
         
@@ -151,15 +151,18 @@
                 array( 's' => $id )
             )
         );
-
+        
         foreach( $mnu as $mn ) {
             $p = array_replace_recursive( $p,
                 array(
                     'menu'	=> array( $mn['menu']	=> array(
-                        'label'		=> array( $mn['ietf'] => $mn['nome'] ),
-                        'subpages'	=> $mn['sottopagine'],
-                        'target'	=> ( isset( $mn['target'] ) ) ? $mn['target'] : NULL,
-                        'priority'	=> $mn['ordine'] )
+                        $mn['ancora'] => array(
+                            'label'		=> array( $mn['ietf'] => $mn['nome'] ),
+                            'subpages'	=> $mn['sottopagine'],
+                            'ancora'    => ( isset( $mn['ancora'] ) ) ? $mn['ancora'] : NULL,
+                            'target'	=> ( isset( $mn['target'] ) ) ? $mn['target'] : NULL,
+                            'priority'	=> $mn['ordine'] )
+                        )
                     )
                 )
             );
@@ -167,7 +170,7 @@
 
     }
 
-    function aggiungiMetadati( &$p, $f, $id ) {
+    function aggiungiMetadati( &$p, $id, $f ) {
 
         global $cf;
         
@@ -191,7 +194,7 @@
 
     }
 
-    function aggiungiGruppi( &$p, $f, $id ) {
+    function aggiungiGruppi( &$p, $id, $f = 'id_pagina', $t = 'pagine_gruppi' ) {
 
         // TODO l'assetto dei gruppi cambierà, probabilmente per usare le ACL
 
@@ -214,7 +217,7 @@
 
     }
 
-    function aggiungiContenuti( &$p, $f, $id ) {
+    function aggiungiContenuti( &$p, $id, $f ) {
 
         global $cf;
 
@@ -249,4 +252,30 @@
             );
         }
 
+    }
+
+    function triggerOff( $entita, $task = NULL ){
+
+        global $cf;
+
+        logWrite( 'richiesto spegnimento trigger per ' . $entita . ' da task ' . $task , 'cron' );
+
+    #    logWrite( 'spengo i trigger per ' . $entita, 'cron' );
+
+        $troff = mysqlQuery(
+			$cf['mysql']['connection'],
+            'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = 1'
+		);
+    }
+
+    function triggerOn( $entita ){
+        
+        global $cf;
+
+        logWrite( 'accendo i trigger per ' . $entita, 'cron' );
+
+        $tron = mysqlQuery(
+			$cf['mysql']['connection'],
+			'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = NULL'
+		);
     }

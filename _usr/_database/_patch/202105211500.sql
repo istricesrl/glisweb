@@ -1,0 +1,1 @@
+ALTER TABLE `todo` DROP FOREIGN KEY `todo_ibfk_9_nofollow`; 
