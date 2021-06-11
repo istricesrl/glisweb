@@ -1,0 +1,63 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends 'ext/blank.html' %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{% block header %}
+<div class="text-left">
+        {% set target = pages.casse.url[ localization.language.ietf ] %}
+        <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+</div>
+{% endblock %}
+
+{% block main %}
+
+{% if not request.todo.it %}
+<div class="form-group form-row">
+    <legend>todo</legend>
+        <div class="col mt-2">
+            <span class="label-top">ricerca todo</span>
+            <input type="text" class="form-control form-control-sm" name="__todo__" value="" autofocus>
+        </div>   
+</div>
+{% else %}
+
+{{ request.todo.__label__ }}
+{{ request.todo.cliente }}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		{# SUBFORM GRUPPI #}
+	    {{ sub.gruppi( table, 'account_gruppi', 'gruppi', site, page, pages, ietf, etc, request, session ) }}
+	
+	</form>
+    </div>
+</section>
+
+{% endif %}
+
+{% endblock %}

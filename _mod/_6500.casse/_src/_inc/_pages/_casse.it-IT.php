@@ -67,7 +67,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_terminale.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'sheets' => array( 'terminale' , 'assistenza' ) ), 
+		'etc'		=> array( 'sheets' => array( 'terminale' , 'contatti', 'assistenza', 'ritiro.hardware' ) ), 
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'terminale' ),
 									'priority'	=> '100' ) ) )
 	);
@@ -83,7 +83,7 @@
 			'auth'		=> array( 'groups'	=> array(	'roots' ) )
 		);
 
-	// terminale della casse
+	// assistenza
 	$p['assistenza'] = array(
 	    'sitemap'	=> false,
 	    'title'		=> array( $l		=> 'assistenza' ),
@@ -94,6 +94,29 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
 	);
+
+	// contatti
+	$p['contatti'] = array(
+	    'sitemap'	=> false,
+	    'title'		=> array( $l		=> 'contatti' ),
+	    'h1'		=> array( $l		=> 'contatti' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contatti.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_contatti.php' ),
+	    'parent'	=> array( 'id'		=> 'casse' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
+	);
 	
+	// ritiro hardware
+	$p['ritiro.hardware'] = array(
+	    'sitemap'	=> false,
+	    'title'		=> array( $l		=> 'ritiro hardware' ),
+	    'h1'		=> array( $l		=> 'ritiro hardware' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ritiro.hardware.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_ritiro.hardware.php' ),
+	    'parent'	=> array( 'id'		=> 'casse' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
+	);
     // debug
 	// die( print_r( $p ) );
