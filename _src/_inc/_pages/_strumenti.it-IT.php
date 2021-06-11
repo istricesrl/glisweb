@@ -180,6 +180,21 @@
 									'priority'	=> '960' ) )
 	);
 
+	    // gestione job
+		$p['job.form'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'gestione' ),
+			'h1'		=> array( $l		=> 'gestione' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'job.form.html' ),
+			'macro'		=> array( '_src/_inc/_macro/_job.form.php' ),
+			'parent'		=> array( 'id'		=> 'job.view' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> array(	'job.form',
+
+													 ) ),
+		);
+	
+
 	// 
 
 
