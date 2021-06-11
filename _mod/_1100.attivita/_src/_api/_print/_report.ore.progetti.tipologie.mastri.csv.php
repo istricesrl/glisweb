@@ -33,11 +33,24 @@
 			$csv[0] = array('ID progetto', 'Progetto', 'Tipologia', 'Conto ore', 'Ore previste', 'Ore lavorate', 'Differenza');
 
 			foreach( $report as $r ){
+				// estraggo il nome di tipologia e mastro
+				$tipologia = mysqlSelectValue(
+					$cf['mysql']['connection'],
+					'SELECT nome FROM tipologie_attivita WHERE id = ?',
+					array( array( 's' => $r['id_tipologia_attivita'] ) )
+				);
+
+				$mastro = mysqlSelectValue(
+					$cf['mysql']['connection'],
+					'SELECT nome FROM mastri WHERE id = ?',
+					array( array( 's' => $r['id_mastro'] ) )
+				);
+
 				$csv[] = array( 
 					$r['id_progetto'],
 					$r['progetto'],
-					$r['id_tipologia_attivita'],
-					$r['id_mastro'], 
+					$tipologia,
+					$mastro, 
 					str_replace('.', ',', $r['ore_previste'] ), 
 					str_replace( '.', ',', $r['ore_fatte'] ), 
 					str_replace( '.', ',', $r['ore_fatte'] - $r['ore_previste'] ) 
