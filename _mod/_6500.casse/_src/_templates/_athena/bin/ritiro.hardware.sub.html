@@ -1,8 +1,8 @@
-{% macro righe( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% macro righe( table, subtable, legend, site, page, pages, lang, etc, request, session, mastro_scarico, mastro_carico ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
-	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+	{% set require = 0 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
     {{ frm.subformLegend( subtable, legend ) }}
     {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
@@ -18,6 +18,8 @@
     {{ frm.input( table, subtable, i, 'id_udm', '', '', request, '1', 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_listino', '', '', request, '1', 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_valuta', '', '', request, '1', 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_mastro_provenienza', '', '', request, mastro_scarico, 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_mastro_destinazione', '', '', request, mastro_carico, 'hidden', '', '', disabled  ) }}   
     {{ frm.input( table, subtable, i, 'id_emittente', '', '', request, request[ table ][ 'id_emittente' ], 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_destinatario', '', '', request, request[ table ][ 'id_destinatario' ], 'hidden', '', '', disabled  ) }}
     {% if request[ table ][ 'data' ] %}
@@ -30,37 +32,13 @@
     {% endif %}
 	<div class="form-group form-row">
         <div class="col">
-            <span class="label-top">ordine</span>
-            {{ frm.input( table, subtable, i, 'ordine', '', '', request ) }}
-        </div>
-	    <div class="col-auto">
-		    <span class="label-top">articolo</span>
-            {{ frm.selectBox( table, subtable, i, 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
-	    </div>
-        <div class="col">
             <span class="label-top">descrizione</span>
-            {{ frm.input( table, subtable, i, 'nome', '', '', request ) }}
-        </div>
-        <div class="col-1">
-            <span class="label-top">importo</span>
-            {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request ) }}
+            {{ frm.inputRequired( table, subtable, i, 'nome', '', '', request, '', '', '', disabled ) }}
         </div>
 	    <div class="col-1">
 		    <span class="label-top">>quantità</span>
-		    {{ frm.input( table, subtable, i, 'quantita', '', '', request ) }}
+		    {{ frm.inputRequired( table, subtable, i, 'quantita', '', '', request, '', '', '', disabled ) }}
 	    </div>
-        <div class="col-md-2 col">
-            <span class="label-top">progetto</span>
-            {{ frm.selectBox( table, subtable, i, 'id_progetto', '', etc.select.id_progetti, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
-         </div>
-        <div class="col-md-2 col">
-            <span class="label-top">carico</span>
-            {{ frm.selectBox( table, subtable, i, 'id_mastro_provenienza', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
-	    </div>
-        <div class="col-md-2 col">
-            <span class="label-top">scarico</span>
-            {{ frm.selectBox( table, subtable, i, 'id_mastro_destinazione', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
-         </div>
 		<div class="w-100 d-block d-md-none m-0"></div>
 		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
@@ -69,6 +47,10 @@
 	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
 		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
 		</div>
+        {% elseif  i <= require %}
+	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
+        {{ frm.button( '<i class="fa fa-minus"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
+        </div>
 		{% else %}
 	    <div class="col-auto text-right d-print-none">
 		{{ frm.button( '<i class="fa fa-minus"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}
