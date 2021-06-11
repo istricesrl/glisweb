@@ -88,7 +88,7 @@
             $anno = $job['workspace']['anno'];
 
             // calcolo le ore di todo peviste
-            $ore_previste = mysqlSelectValue(
+            $ore_previste = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT id_tipologia, id_mastro_attivita_default as id_mastro, sum(ore_previste) as tot_ore FROM todo '
                 .'WHERE month(data_programmazione) = ? AND year(data_programmazione) = ? AND id_progetto = ? '
@@ -100,14 +100,16 @@
                 )
             );
 
-            foreach( $ore_previste as $op ){
-                $ore['id_tipologia']['id_mastro']['ore_previste'] = $op['tot_ore'];
+            if( !empty( $ore_previste ) ){
+                foreach( $ore_previste as $op ){
+                    $ore[$op['id_tipologia']][$op['id_mastro']]['ore_previste'] = $op['tot_ore'];
+                }
             }
-
+            
             // calcolo le ore di attività fatte
-            $ore_fatte = mysqlSelectValue(
+            $ore_fatte = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SELECT id_tipologia, id_mastro_provenienza, sum(ore) as tot_ore FROM attivita AS a '
+                'SELECT id_tipologia, id_mastro_provenienza as id_mastro, sum(ore) as tot_ore FROM attivita AS a '
                 .'LEFT JOIN tipologie_attivita_inps AS t ON a.id_tipologia_inps = t.id '
                 .'WHERE month(a.data_attivita) = ? AND year(a.data_attivita) = ? AND id_progetto = ? AND t.se_quadratura = 1 '
                 .'GROUP BY id_tipologia, id_mastro_provenienza',
@@ -118,16 +120,19 @@
                 )
             );
 
-            foreach( $ore_fatte as $of ){
-                $ore['id_tipologia']['id_mastro']['ore_fatte'] = $of['tot_ore'];
+            if( !empty( $ore_fatte ) ){
+                 foreach( $ore_fatte as $of ){
+                    $ore[$of['id_tipologia']][$of['id_mastro']]['ore_fatte'] = $of['tot_ore'];
+                }
             }
-
+         
+           
             if( isset( $ore ) && !empty( $ore ) ){
                 foreach( $ore as $kt => $t ){
                     foreach( $t as $km => $m){
                         $insert = mysqlQuery(
                             $cf['mysql']['connection'],
-                            'INSERT INTO __report_ore_progetti_tipologie_mastri__ ( mese, anno, id_job, id_progetto, id_tipologia, id_mastro, ore_previste, ore_fatte) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
+                            'INSERT INTO __report_ore_progetti_tipologie_mastri__ ( mese, anno, id_job, id_progetto, id_tipologia_attivita, id_mastro, ore_previste, ore_fatte) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
                             array(
                                 array( 's' => $mese ),
                                 array( 's' => $anno ),
@@ -136,7 +141,7 @@
                                 array( 's' => $kt ),
                                 array( 's' => $km ),
                                 array( 's' => ( empty( $m['ore_previste'] ) ) ? 0 : str_replace(',', '.', $m['ore_previste'] ) ),
-                                array( 's' => ( empty( $m['ore_fatte'] ) ) ? 0 : str_replace(',', '.', $mc['ore_fatte'] ) )
+                                array( 's' => ( empty( $m['ore_fatte'] ) ) ? 0 : str_replace(',', '.', $m['ore_fatte'] ) )
                             )
                         ); 
                     }
@@ -166,7 +171,7 @@
                     $cf['mysql']['connection'],
                     'UPDATE job SET timestamp_completamento = ? WHERE id = ?',
                     array(
-                    array( 's' => $time ),
+                    array( 's' => time() ),
                     array( 's' => $job['id'] )
                     )
                 );

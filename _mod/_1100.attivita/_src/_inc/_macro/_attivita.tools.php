@@ -116,7 +116,7 @@
     // elenco dei job per export ore progetti, tipologie e mastri
     $jptm = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT j.* FROM job AS j INNER JOIN __report_ore_progetti__ AS r ON j.id = r.id_job GROUP BY j.id'
+        'SELECT j.* FROM job AS j INNER JOIN __report_ore_progetti_tipologie_mastri__ AS r ON j.id = r.id_job GROUP BY j.id'
     );
 
     if( !empty( $jptm ) ){

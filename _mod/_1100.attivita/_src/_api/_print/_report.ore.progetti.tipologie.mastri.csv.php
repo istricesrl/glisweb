@@ -36,7 +36,7 @@
 				$csv[] = array( 
 					$r['id_progetto'],
 					$r['progetto'],
-					$r['id_tipologia'],
+					$r['id_tipologia_attivita'],
 					$r['id_mastro'], 
 					str_replace('.', ',', $r['ore_previste'] ), 
 					str_replace( '.', ',', $r['ore_fatte'] ), 

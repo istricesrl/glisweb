@@ -6,7 +6,7 @@
         var mese = form.find('#mese').val();
         var anno = form.find('#anno').val();
 		
-        var call = '{{ site.url }}_mod/_1100.attivita/_src/_api/_task/__report.ore.progetti.tipologie.mastri.start.php?mese='+mese+'&anno='+anno;
+        var call = '{{ site.url }}_mod/_1100.attivita/_src/_api/_task/_report.ore.progetti.tipologie.mastri.start.php?mese='+mese+'&anno='+anno;
 		
 		getws( call,'', function() {
 			$('#progetti-tipologie-mastri').modal('toggle');
@@ -42,12 +42,12 @@
                     </select>
                 </div>
 			</div>
-			{% if etc.report.progetti.tipologie.mastri %}
+			{% if etc.report.progetti_tipologie_mastri %}
 			<div class="form-row">
 				<div class="col">
 					<p><b>elenco report richiesti</b></p>
 					{% for r in etc.report.progetti_tipologie_mastri %}
-					<a href="{{ site.url }}_mod/_1100.attivita/_src/_api/_print/_report.ore.progett.csv.php?mese={{ r.mese }}&anno={{ r.anno }}" target="_blank">{{ r.nome }} > {{ r.stato }}</a><br>
+					<a href="{{ site.url }}_mod/_1100.attivita/_src/_api/_print/_report.ore.progetti.tipologie.mastri.csv.php?mese={{ r.mese }}&anno={{ r.anno }}" target="_blank">{{ r.nome }} > {{ r.stato }}</a><br>
 					{% endfor %}
 				</div>
 			</div>
