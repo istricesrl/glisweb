@@ -51,6 +51,24 @@
 	    'text' => 'crea un duplicato del contratto per inserire variazioni'
 	);
 
+	// modal per la conferma di eliminazione contratto
+    $ct['page']['contents']['metro']['contratto'][] = array(
+        'modal' => array('id' => 'elimina-contratto', 'include' => 'inc/contratti.form.tools.modal.elimina.contratto.html' ),
+        'icon' => NULL,
+	    'fa' => 'fa-trash',
+	    'title' => 'eliminazione contratto',
+	    'text' => 'elimina il contratto e gli orari e turni collegati'
+    );
+
+	// modal per la proroga del contratto
+    $ct['page']['contents']['metro']['contratto'][] = array(
+        'modal' => array('id' => 'proroga', 'include' => 'inc/contratti.form.tools.modal.proroga.contratto.html' ),
+        'icon' => NULL,
+	    'fa' => 'fa-trash',
+	    'title' => 'proroga contratto',
+	    'text' => 'aggiorna la data di fine del contratto e inserisce un\'attività di proroga'
+    );
+
 	// modal per la conferma di duplicazione orari giorno
 	$ct['page']['contents']['metro']['orari'][] = array(
 		'modal' => array('id' => 'duplica-giorno', 'include' => 'inc/contratti.form.tools.modal.duplica.giorno.html' ),
@@ -85,15 +103,6 @@
 	    'fa' => 'fa-trash',
 	    'title' => 'eliminazione orari',
 	    'text' => 'elimina gli orari di lavoro del contratto'
-    );
-
-    // modal per la conferma di eliminazione contratto
-    $ct['page']['contents']['metro']['contratto'][] = array(
-        'modal' => array('id' => 'elimina-contratto', 'include' => 'inc/contratti.form.tools.modal.elimina.contratto.html' ),
-        'icon' => NULL,
-	    'fa' => 'fa-trash',
-	    'title' => 'eliminazione contratto',
-	    'text' => 'elimina il contratto e gli orari e turni collegati'
     );
 
 	// macro di default per l'entità contratti

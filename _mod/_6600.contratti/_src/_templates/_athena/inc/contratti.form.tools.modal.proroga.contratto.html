@@ -1,0 +1,49 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function prorogaContratto( ) {
+		$('#btnprorogacontratto').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+		var form = $( t ).closest('.modal');
+		var data = form.find('#_data_proroga').val();
+
+		var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_contratti.proroga.php?id={{ request[table].id }}&data='+data;
+		getws( call,'', function(data) {
+			$('#proroga').modal('toggle');
+		});
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="proroga">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">proroga contratto</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				<div class="col">
+					questa procedura imposterà una nuova data di fine contratto e inserirà un'attività di proroga.<br>
+					si desidera procedere con la proroga?
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-6 col-md-auto">
+					<span class="label-top">data proroga</span>
+					{{ frm.date( table, '', '', 'data_proroga', '', '', request, default, '', 1 ) }}
+				</div>
+			</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" id="btnprorogacontratto" class="btn btn-secondary btn-sm" onclick="prorogaContratto();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
