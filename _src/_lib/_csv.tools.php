@@ -40,7 +40,7 @@
 
 	$csv = array_map( 'str_getcsv', $data );
 
-    array_walk( $csv, function( &$a ) use ( $csv ) {
+    	array_walk( $csv, function( &$a ) use ( $csv ) {
 	    $a = array_combine( $csv[0], $a );
 	});
 
