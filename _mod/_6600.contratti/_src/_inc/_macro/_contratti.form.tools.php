@@ -64,7 +64,7 @@
     $ct['page']['contents']['metro']['contratto'][] = array(
         'modal' => array('id' => 'proroga', 'include' => 'inc/contratti.form.tools.modal.proroga.contratto.html' ),
         'icon' => NULL,
-	    'fa' => 'fa-trash',
+	    'fa' => 'fa-calendar',
 	    'title' => 'proroga contratto',
 	    'text' => 'aggiorna la data di fine del contratto e inserisce un\'attività di proroga'
     );
