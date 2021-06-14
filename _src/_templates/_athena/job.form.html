@@ -59,7 +59,7 @@
 					</div>
 				</div>
 				<fieldset>
-					<legend>job <small>{{ legend }}</small></legend>
+					<legend>job <small></small></legend>
 					<div class="form-group form-row">
 						<div class="col-12">
 						<span class="label-top">job</span>
@@ -71,26 +71,31 @@
 							</div>
 								<div class="col-12 col-md">
 								<span class="label-top">data e ora esecuzione job</span>
-								{{ frm.datetimeRequired( table, '', '', 'timestamp_esecuzione', '', '', request ) }}
+								{{ frm.datetime( table, '', '', 'timestamp_esecuzione', '', '', request ) }}
 								</div>
 									<div class="col-12 col-md">
 									<span class="label-top">data e ora completamento job</span>
-									{{ frm.datetimeRequired( table, '', '', 'timestamp_completamento', '', '', request ) }}
+									{{ frm.datetime( table, '', '', 'timestamp_completamento', '', '', request ) }}
 									</div>
 									</div>
 									<div class="form-group form-row">
-									<div class="col-12 col-md">
+									<div class="col-3">
 										<span class="label-top">iterazioni</span>
 										{{ frm.input( table, '', '', 'iterazioni', '', '', request ) }}
 										</div>
-										<div class="col-12 col-md">
+										<div class="col-3">
 											<span class="label-top">totale</span>
 											{{ frm.input( table, '', '', 'totale', '', '', request ) }}
 											</div>
-											<div class="col-12 col-md">
+											<div class="col-3">
 												<span class="label-top">corrente</span>
 												{{ frm.input( table, '', '', 'corrente', '', '', request ) }}
 												</div>
+												<div class="col-auto col-form-label">
+													<div class="form-check">
+														{{ frm.checkbox( table, '', '', 'se_foreground', 'attivo', '', request, etc.attivo ) }}
+													</div>
+													</div>
 									</div>
 				</fieldset>
 

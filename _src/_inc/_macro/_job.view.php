@@ -12,7 +12,8 @@
         'totale' => 'totale',
         'corrente' => 'corrente',
         'timestamp_esecuzione' => 'esecuzione',
-        'timestamp_completamento' => 'completamento'
+        'timestamp_completamento' => 'completamento',
+        'se_foreground' => 'foreground'
         
     );
 
