@@ -42,6 +42,46 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
+		{# MODULO PRINCIPALE #}
+	    <fieldset>
+            <legend>informazioni job <small>{{ legend }}</small></legend>
+			<div class="form-group form-row">
+				<div class="col-12">
+				<span class="label-top ">nome</span>
+					{{ frm.input( table, '', '', 'nome', '', '', request ) }}
+				</div>
+				</div>
+		</fieldset>
+			<div class="form-group form-row">
+				<div class="col-12">
+					<span class="label-top">workspace</span>
+						{{ frm.textarea( table, '', '', 'job','', '', request ) }}
+					</div>
+				</div>
+				<fieldset>
+					<legend>job <small>{{ legend }}</small></legend>
+					<div class="form-group form-row">
+						<div class="col-12">
+						<span class="label-top">job</span>
+						{{ frm.input( table, '', '', 'job', '', '', request ) }}
+						</div>
+						<div class="form-group form-row">
+							<div class="col-12 col-md">
+							<span class="label-top">data e ora apertura job</span>
+							{{ frm.datetime( table, '', '', 'timestamp_apertura', '', '', request ) }}
+							</div>
+							<div class="form-group form-row">
+								<div class="col-12 col-md">
+								<span class="label-top">data e ora esecuzione job</span>
+								{{ frm.datetime( table, '', '', 'timestamp_esecuzione', '', '', request ) }}
+								</div>
+								<div class="form-group form-row">
+									<div class="col-12 col-md">
+									<span class="label-top">data e ora completamento job</span>
+									{{ frm.datetime( table, '', '', 'timestamp_completamento', '', '', request ) }}
+									</div>
+				</fieldset>
+
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}

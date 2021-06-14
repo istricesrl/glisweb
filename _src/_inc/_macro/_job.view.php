@@ -2,13 +2,13 @@
 // tabella della vista
 	$ct['view']['table'] = 'job';
 
-        // pagina per la gestione degli oggetti esistenti
+    // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'job.form';
 
     //campi della vista
     $ct['view']['cols'] =  array(
         'id' => '#',
-        '__label__' => 'job',
+        '__label__' => 'nome',
         'totale' => 'totale',
         'corrente' => 'corrente',
         'timestamp_esecuzione' => 'esecuzione',
