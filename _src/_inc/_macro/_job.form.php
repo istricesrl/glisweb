@@ -4,13 +4,19 @@
     // tabella gestita
 	$ct['form']['table'] = 'job';
 
-    // tendina
-	$ct['etc']['select']['job'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM job_view'
-	);
+    // recupero job
+	$jb = array_unique(
+        array_merge(
+            glob( glob2custom( DIR_SRC_API_JOB . '*.php' ), GLOB_BRACE ),
+            glob( glob2custom( DIR_MOD_ATTIVI_SRC_API_JOB . '*.php' ), GLOB_BRACE )
+        )
+    );
 
-    // macro di default
+    // tendina job
+	foreach( $jb as $t ) {
+        shortPath( $t );
+	    $ct['etc']['select']['job'][] = array( 'id' => $t, '__label__' => $t );
+	}
+
+	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
