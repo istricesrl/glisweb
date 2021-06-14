@@ -48,7 +48,7 @@
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top ">nome</span>
-					{{ frm.input( table, '', '', 'nome', '', '', request ) }}
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
 				</div>
 		</fieldset>
@@ -63,19 +63,19 @@
 					<div class="form-group form-row">
 						<div class="col-12">
 						<span class="label-top">job</span>
-						{{ frm.input( table, '', '', 'job', '', '', request ) }}
+						{{ frm.inputRequired( table, '', '', 'job', '', '', request ) }}
 						</div>
 							<div class="col-12 col-md">
 							<span class="label-top">data e ora apertura job</span>
-							{{ frm.datetime( table, '', '', 'timestamp_apertura', '', '', request ) }}
+							{{ frm.datetimeRequired( table, '', '', 'timestamp_apertura', '', '', request ) }}
 							</div>
 								<div class="col-12 col-md">
 								<span class="label-top">data e ora esecuzione job</span>
-								{{ frm.datetime( table, '', '', 'timestamp_esecuzione', '', '', request ) }}
+								{{ frm.datetimeRequired( table, '', '', 'timestamp_esecuzione', '', '', request ) }}
 								</div>
 									<div class="col-12 col-md">
 									<span class="label-top">data e ora completamento job</span>
-									{{ frm.datetime( table, '', '', 'timestamp_completamento', '', '', request ) }}
+									{{ frm.datetimeRequired( table, '', '', 'timestamp_completamento', '', '', request ) }}
 									</div>
 									</div>
 									<div class="form-group form-row">
