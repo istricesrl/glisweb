@@ -20,7 +20,7 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
 
 
     $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
-    $ct['etc']['attivita'] = mysqlCachedIndexedQuery(  $cf['cache']['index'], $cf['memcache']['connection'],$cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ?', array( array( 's' => $todo) ));
+    $ct['etc']['attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ?', array( array( 's' => $todo) ));
    // $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $todo) ));
     $ct['form']['table'] = 'todo';
     if( !isset( $_REQUEST['todo']  ) ){

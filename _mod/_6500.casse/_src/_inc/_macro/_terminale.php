@@ -29,11 +29,11 @@
 
         $del = mysqlQuery(  $cf['mysql']['connection'],
         'DELETE FROM documenti_articoli WHERE id_documento = ?',
-        array( array( 's' =>$_REQUEST['__delete__']['documenti']['id'] ) ) );
+        array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
 
         $del = mysqlQuery(  $cf['mysql']['connection'],
         'DELETE FROM documenti WHERE id = ?',
-        array( array( 's' =>$_REQUEST['__delete__']['documenti']['id'] ) ) );
+        array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
 
     // riapertura scontrino prima della stampa
@@ -52,7 +52,6 @@
         'SELECT id FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL',
         array( array( 's' => $_SESSION['account']['id'] ) ) );
         
-
     }
 
     $ct['etc']['default_reparto'] = '0';

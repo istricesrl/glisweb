@@ -356,7 +356,7 @@
         <legend>attività</legend>
             <ul>
             {% for a in etc.attivita %}
-                <li>{{ a.nome }}</li>
+                <li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.testo }}</li>
             {% endfor %}
             </ul>
         {% endif %}

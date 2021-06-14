@@ -41,7 +41,7 @@
 {{ request.todo.__label__ }}<br>
 {{ request.todo.testo }}<br>
 {{ request.documenti.__label__ }}
-{% if session.assistenza.id_ritiro %}
+{% if session.assistenza.id_documento_ritiro %}
 {% set method = 'update' %}
 {% set activity = 'aggiornamento' %}
 {% else %}
@@ -58,13 +58,14 @@
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-		<input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+		<input type="hidden" id="id" name="{{ table }}[id]" value="{{ session.assistenza.id_documento_ritiro }}">
 		<input type="hidden" id="id_todo" name="{{ table }}[id_todo]" value="{{ request.todo.id }}">
 		<input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ etc.numero }}">
 		<input type="hidden" id="id_tipologia" name="{{ table }}[id_tipologia]" value="{{ etc.id_tipologia }}">
 		<input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ etc.id_emittente }}">
 		<input type="hidden" id="id_destinatario" name="{{ table }}[id_destinatario]" value="{{ request.todo.id_cliente }}">
 		<input type="hidden" id="data" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d')}}">
+		
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
@@ -74,14 +75,14 @@
 		<fieldset>
 			<div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
 				{% if request[ table ].id %}
-					<button type="submit" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo ritiro</button>
+					<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo ritiro</button>
 					{% if request[ table ].documenti_articoli|length <= 0  %}	
 					<button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{ request[ table ].id  }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__unset__=1&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
 					{% endif %}	
 				{% else %}
-					<button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
+					<button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
 				{% endif %}
-				<button type="submit" class="btn-lg btn-secondary " onclick="submitFormOkay = true;" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+				<button type="submit" class="btn-lg btn-secondary" onclick="submitFormOkay = true;" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
 			</div>
 			
 		</fieldset>	
