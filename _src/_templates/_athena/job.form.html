@@ -44,28 +44,30 @@
 
 		{# MODULO PRINCIPALE #}
 	    <fieldset>
-            <legend>informazioni job <small>{{ legend }}</small></legend>
+            <legend>informazioni generali <small>{{ legend }}</small></legend>
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top ">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
 				</div>
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">job</span>
+					{{ frm.inputRequired( table, '', '', 'job', '', '', request ) }}
+					</div>
+				</div>
 		</fieldset>
 			<div class="form-group form-row">
 				<div class="col-12">
 					<span class="label-top">workspace</span>
-						{{ frm.textarea( table, '', '', 'job','', '', request ) }}
+						{{ frm.textarea( table, '', '', 'workspace','', '5', request ) }}
 					</div>
 				</div>
 				<fieldset>
-					<legend>job <small></small></legend>
+					<legend>esecuzione del job <small></small></legend>
 					<div class="form-group form-row">
-						<div class="col-12">
-						<span class="label-top">job</span>
-						{{ frm.inputRequired( table, '', '', 'job', '', '', request ) }}
-						</div>
-							<div class="col-12 col-md">
+						<div class="col-12 col-md">
 							<span class="label-top">data e ora apertura job</span>
 							{{ frm.datetimeRequired( table, '', '', 'timestamp_apertura', '', '', request ) }}
 							</div>
@@ -77,21 +79,19 @@
 									<span class="label-top">data e ora completamento job</span>
 									{{ frm.datetime( table, '', '', 'timestamp_completamento', '', '', request ) }}
 									</div>
-									</div>
-									<div class="form-group form-row">
-									<div class="col-3">
+									<div class="col-12 col-md">
 										<span class="label-top">iterazioni</span>
 										{{ frm.input( table, '', '', 'iterazioni', '', '', request ) }}
 										</div>
-										<div class="col-3">
+										<div class="col-12 col-md">
 											<span class="label-top">totale</span>
 											{{ frm.input( table, '', '', 'totale', '', '', request ) }}
 											</div>
-											<div class="col-3">
+											<div class="col-12 col-md">
 												<span class="label-top">corrente</span>
 												{{ frm.input( table, '', '', 'corrente', '', '', request ) }}
 												</div>
-												<div class="col-auto col-form-label">
+												<div class="col-12 col-md-auto col-form-label">
 													<div class="form-check">
 														{{ frm.checkbox( table, '', '', 'se_foreground', 'attivo', '', request, etc.attivo ) }}
 													</div>
