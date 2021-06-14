@@ -299,7 +299,7 @@
             <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__delete_all__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">elimina</button>
             {% endif  %}
             </div>
-            {% if session.assistenza.id_cliente and session.assistenza.id_progetto %}
+            {% if session.assistenza.id_cliente and session.assistenza.id_progetto and ( not session.assistenza.id_attivita ) %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             {% endif %}
             
@@ -397,10 +397,11 @@
             <fieldset class=" ">
                 <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
                     <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
-                    <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
                     {% if request.todo.timestamp_completamento %}
                     <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
                     {% endif %}
+                    <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+
                 </div>
             </fieldset>
         </form>

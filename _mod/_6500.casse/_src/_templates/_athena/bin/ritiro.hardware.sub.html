@@ -10,6 +10,10 @@
 	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
 	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
 	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
     <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
     {{ frm.input( table, subtable, i, 'id_documento', '', '', '', '__parent_id__', 'hidden', '', '', disabled  ) }}
@@ -22,7 +26,9 @@
     {{ frm.input( table, subtable, i, 'id_mastro_destinazione', '', '', request, mastro_carico, 'hidden', '', '', disabled  ) }}   
     {{ frm.input( table, subtable, i, 'id_emittente', '', '', request, request[ table ][ 'id_emittente' ], 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_destinatario', '', '', request, request[ table ][ 'id_destinatario' ], 'hidden', '', '', disabled  ) }}
-    {% if request[ table ][ 'data' ] %}
+    {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request, '1', 'hidden', '', '', disabled  ) }}
+	
+	{% if request[ table ][ 'data' ] %}
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, request[ table ][ 'data' ], 'hidden', '', '', disabled  ) }}
     {% else %}
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, 'now'|date('Y-m-d'), 'hidden', '', '', disabled  ) }}

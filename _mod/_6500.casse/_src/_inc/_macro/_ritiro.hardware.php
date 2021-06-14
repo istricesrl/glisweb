@@ -3,17 +3,38 @@
     //unset(  $_REQUEST['documenti']['id'] );
     $ct['form']['table'] = 'documenti';
 
+    if( isset( $_REQUEST['todo'] ) && !isset( $_SESSION['assistenza']['id_todo_ritiro'] ) ){
+        unset($_REQUEST['todo']);
+    }
+
+    if( isset( $_REQUEST['__unset__'] ) ){
+        unset( $_SESSION['assistenza']['id_documento_ritiro'] );
+        unset( $_SESSION['assistenza']['id_todo_ritiro'] );
+    }
+
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['__method__'] ) && $_REQUEST[ $ct['form']['table'] ]['__method__'] == 'post'  ){
+        $_SESSION['assistenza']['id_documento_ritiro'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+    }
+    
+    if( isset( $_SESSION['assistenza']['id_documento_ritiro'] ) ){
+        $_REQUEST[ $ct['form']['table'] ]['id'] = $_SESSION['assistenza']['id_documento_ritiro'];
+    } else {
+        $_REQUEST[ $ct['form']['table'] ]['id'] = NULL;
+    }
+
+
+
+
     if( isset( $_REQUEST['__todo__'] ) && explode( '.', $_REQUEST['__todo__'] )[0] == 'TODO'){
 
         $todo =  ltrim(explode( '.', $_REQUEST['__todo__'] )[1], "0"); 
+        $_SESSION['assistenza']['id_todo_ritiro'] = $todo;
         $_REQUEST['todo'] =  mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
 
     }
 
-    if( !isset( $_REQUEST['todo'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ){
-
-        $_REQUEST['todo'] =  mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ));
-
+    if( !isset( $_REQUEST['todo'] ) && isset( $_SESSION['assistenza']['id_todo_ritiro'] ) ){
+        $_REQUEST['todo'] =  mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo_ritiro'] ) ));
     }
 
     if( isset( $_REQUEST['todo'] ) ){
