@@ -126,9 +126,9 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'job' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'job' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'luoghi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
