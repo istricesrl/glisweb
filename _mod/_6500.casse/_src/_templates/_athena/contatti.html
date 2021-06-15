@@ -22,3 +22,91 @@
         <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
 </div>
 {% endblock %}
+
+{% block main %}
+{% if request[ table ].id %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% else %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% endif %}
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+		<input type="hidden" id="id" name="{{ table }}[id]" value="{{ session.assistenza.id_documento_ritiro }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+        <section>
+            <legend>dati contatto</legend>
+            <div class="form-row">
+                <div class="col-12 col-md-6 mt-2">
+                    <span class="label-top">tipologia</span>
+                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+                </div>
+                <div class="col-12 col-md-6  mt-2">
+                    <span class="label-top">campagna</span>
+                    {{ frm.selectRequired( table, '', '', 'id_campagna', '', etc.select.campagne, request ) }}
+                </div>
+            </div>
+          <div class="form-row">
+            <div class="col-12 col-md-6 mt-2">
+                <span class="label-top">segnalatore</span>
+                {{ frm.selectBox( table, '', '', 'id_segnalatore', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
+            </div>
+            <div class="col-12 col-md-6 mt-2">
+                <span class="label-top">cliente</span>
+                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-12  mt-2">
+                <span class="label-top">nome</span>
+                {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-12  mt-2">
+            <span class="label-top">note</span>
+            {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+        </div>
+        </div>
+        </section>
+
+		<fieldset>
+			<div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
+                {% if not request[ table ].id %}<div>{% endif %}
+                {% if request[ table ].id %}
+                <div>
+                    <button type="button"  class="btn-lg btn-secondary" onclick="window.open('{{ pages.terminale.url[ localization.language.ietf ] }}?__contatto__={{ request[ table ].id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea scontrino</button>
+                    <button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ pages.assistenza.url[ localization.language.ietf ] }}?__contatto__={{request[ table ].id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea assistenza</button>	
+                </div>
+                 <div class="group">
+                    {% if session.contatto %}
+                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
+                    {% endif  %}
+                    <button type="button" class=" btn-lg btn-secondary" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=contatti&__delete__[id]={{ request[ table ].id  }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');">elimina</button>
+                 </div>               	            
+                 {% endif %}
+                 {% if not request[ table ].id %}</div>{% endif %}
+
+				<button type="submit" class="btn-lg btn-secondary" onclick="submitFormOkay = true;" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+			</div>
+			
+		</fieldset>	
+
+
+	</form>
+    </div>
+</section>
+
+
+{% endblock %}

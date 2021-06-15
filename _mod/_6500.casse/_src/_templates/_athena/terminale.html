@@ -44,6 +44,7 @@
     <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
     <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
     <input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ etc.id_emittente }}">
+    <input type="hidden" id="id_contatto" name="{{ table }}[id_contatto]" value="{{ session.contatto }}">
     <input type="hidden" id="dato" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d') }}">
     <input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">

@@ -19,7 +19,8 @@
      *
      */
 
-
+    // mastro di scarico [magazzino]
+    $ct['etc']['mastro'] = NULL;
 
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
@@ -87,6 +88,14 @@
         // verifico se si tratta di un articolo
         if( $comando[0] == 'TRCKG' ){
             // gestisco il codice di tracking
+
+            /*$insert = mysqlQuery( 
+                $cf['mysql']['connection'], 
+                "INSERT INTO contatti ( nome, id_campagna )  VALUES ( ?, ? )",
+                array( 
+                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                    array( 's' => date("Y-m-d") )
+                ) );*/
             //print_r('tracking');
         } elseif( $comando[0] == 'CPON'){
             // gestisco il coupon
@@ -204,14 +213,15 @@
 
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, 1, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, 1, ?, ?, ? )",
                                 array( 
                                     array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                                     array( 's' => date("Y-m-d") ),
                                     array( 's' => $articolo['prezzo'] ),
                                     array( 's' => $reparto ),
                                     array( 's' => $id_iva ),
-                                    array( 's' => $articolo['id_udm'] )
+                                    array( 's' => $articolo['id_udm'] ),
+                                    array( 's' => $ct['etc']['mastro'] )
                                 ) );
                 }
             }

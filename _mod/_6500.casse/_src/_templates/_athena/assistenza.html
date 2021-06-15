@@ -176,6 +176,7 @@
         <input type="hidden" id="method" name="todo[__method__]" value="{{ method_t }}">
         <input type="hidden" id="timestamp" name="todo[timestamp_{{ activity_t }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="todo[id_account_{{ activity_t }}]" value="{{ account }}">
+        <input type="hidden" id="id_contatto" name="todo[id_contatto]" value="{{ session.contatto }}">
         {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
         {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }} 
         {{ frm.input( 'todo', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}

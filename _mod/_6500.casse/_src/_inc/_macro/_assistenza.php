@@ -1,5 +1,6 @@
 <?php
 
+
 $ct['view']['table'] = '';
 $ct['form']['table'] = '';
 
