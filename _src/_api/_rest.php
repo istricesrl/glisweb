@@ -147,10 +147,12 @@
 		}
 
 	    // debug
-		// print_r( $_SERVER['REDIRECT_URL'] );
+		// die( print_r( $_SERVER['REDIRECT_URL'], true ) );
+		die( $_SERVER['REQUEST_URI'] );
 		// die( print_r( $_REQUEST, true ) );
 		// die( $_SERVER['CONTENT_TYPE'] );
 		// die( $_SERVER['HTTP_ACCEPT'] );
+		// die( $_SERVER['REQUEST_METHOD'] );
 		// die( print_r( $cf['ws'], true ) );
 		// die( 'input: ' . $cf['ws']['input'] );
 		// die( 'incoming ' . $cf['ws']['incoming'] . ': ' . $incoming );
