@@ -166,7 +166,7 @@
 	);
 
 
-	// vistajob
+	// vista job
 	$p['job.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'job' ),
@@ -176,27 +176,23 @@
 		'parent'		=> array( 'id'		=> 'strumenti' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'job.view',) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'job' ),
-									'priority'	=> '960' ) )
-	);
-
-	    // gestione job
-		$p['job.form'] = array(
-			'sitemap'		=> false,
-			'title'		=> array( $l		=> 'gestione' ),
-			'h1'		=> array( $l		=> 'gestione' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'job.form.html' ),
-			'macro'		=> array( '_src/_inc/_macro/_job.form.php' ),
-			'parent'		=> array( 'id'		=> 'job.view' ),
-			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-			'etc'		=> array( 'tabs'	=> array(	'job.form',
-
-													 ) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'job' ),
+																		'priority'	=> '960' ) ) )
 		);
-	
 
-	// 
+	// gestione job
+	$p['job.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'job.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_job.form.php' ),
+		'parent'		=> array( 'id'		=> 'job.view' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'job.form',
 
+													) ),
+	);
 
 /*
     // pagina gestione cron
