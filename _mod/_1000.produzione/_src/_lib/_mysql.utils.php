@@ -531,7 +531,7 @@
         // elenco degli operatori disponibili che non sono già stati analizzati
         $operatori = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT c.id_anagrafica, c.anagrafica, max(ca.se_sostituto) as se_sostituto, max(ca.se_produzione) as se_produzione, '
+            'SELECT c.id_anagrafica, max(ca.se_sostituto) as se_sostituto, max(ca.se_produzione) as se_produzione, '
             .'( SELECT count(*) FROM attivita WHERE id_anagrafica = c.id_anagrafica '
                 .'AND ( '
                 .'( TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ? ) '
@@ -539,11 +539,11 @@
                 .'( TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, "00:00:01" ) ) between ? and ? ) '
                 .') '
             .') AS collisioni '
-            .'FROM contratti_view AS c '
+            .'FROM contratti AS c '
             .'LEFT JOIN __report_sostituzioni_attivita__ AS r ON c.id_anagrafica = r.id_anagrafica AND r.id_attivita = ? '
             .'LEFT JOIN anagrafica_categorie AS ac ON c.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
-            .'WHERE r.id IS NULL '
+            .'WHERE r.id IS NULL AND c.data_fine_rapporto IS NULL '
             .'GROUP BY c.id_anagrafica '
             #.'HAVING collisioni = 0 AND se_produzione = 1'
             .'HAVING collisioni = 0 '
