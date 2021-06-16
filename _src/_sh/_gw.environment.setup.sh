@@ -25,6 +25,9 @@ a2enmod expires
 ## attivazione del modulo headers
 a2enmod headers
 
+## attivazione del modulo CGI
+a2enmod cgi
+
 ## installazione di PHP
 apt-get install -y php
 

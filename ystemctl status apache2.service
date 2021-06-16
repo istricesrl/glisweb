@@ -1,0 +1,1084 @@
+-- Logs begin at Tue 2021-06-15 17:50:06 CEST, end at Wed 2021-06-16 09:53:01 CEST. --
+giu 16 09:44:32 web CRON[5225]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:01 web CRON[5312]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5321]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5323]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5320]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5325]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5318]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5316]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5319]: pam_unix(cron:session): session opened for user munin by (uid=0)
+giu 16 09:45:01 web CRON[5322]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5324]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5317]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5326]: (root) CMD (   curl -s 'http://www.biessebo.com/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5328]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/_src/_api/_task/_mail.queue.send.php' > /dev/null)
+giu 16 09:45:01 web CRON[5331]: (root) CMD (if [ -x /etc/munin/plugins/apt_all ]; then /etc/munin/plugins/apt_all update 7200 12 >/dev/null; elif [ -x /etc/munin/plugins/apt ]; then /etc/munin/plugins/apt update 7200 12 >/dev/null; fi)
+giu 16 09:45:01 web CRON[5330]: (root) CMD (   curl -s 'https://glisweb.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5314]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5325]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:01 web CRON[5327]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5333]: (root) CMD (   curl -s 'https://gianlucascala.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5315]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5329]: (root) CMD (   curl -s 'https://gliswebamministrazione.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5334]: (root) CMD (   curl -s 'https://franchising.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5336]: (munin) CMD (if [ -x /usr/bin/munin-cron ]; then /usr/bin/munin-cron; fi)
+giu 16 09:45:01 web CRON[5313]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5332]: (root) CMD (   curl -s 'http://effebi.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5337]: (root) CMD (   curl -s 'https://www.silviacaldironi.com/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5341]: (root) CMD (   curl -s 'http://tecnoel.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5346]: (root) CMD (   curl -s 'https://avvocatodistrada.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5311]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:45:01 web CRON[5347]: (root) CMD (   curl -s 'https://landing.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5354]: (root) CMD (   curl -s 'http://monzali.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:45:01 web CRON[5322]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:01 web CRON[5323]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:01 web CRON[5312]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:01 web CRON[5311]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:01 web CRON[5315]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:01 web CRON[5320]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:07 web CRON[5316]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:09 web CRON[5319]: pam_unix(cron:session): session closed for user munin
+giu 16 09:45:13 web CRON[5324]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:13 web CRON[5314]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:13 web CRON[5317]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:13 web CRON[5321]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:13 web CRON[5313]: pam_unix(cron:session): session closed for user root
+giu 16 09:45:32 web CRON[5318]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:01 web CRON[5799]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5811]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5810]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5809]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5807]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5805]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5804]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5814]: (root) CMD (   curl -s 'https://gianlucascala.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5815]: (root) CMD (   curl -s 'https://gliswebamministrazione.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5806]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5803]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5802]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5801]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5812]: (root) CMD (   curl -s 'http://monzali.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5817]: (root) CMD (   curl -s 'https://avvocatodistrada.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5818]: (root) CMD (   curl -s 'http://effebi.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5808]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5820]: (root) CMD (   curl -s 'https://landing.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5813]: (root) CMD (   curl -s 'https://franchising.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5819]: (root) CMD (   curl -s 'https://glisweb.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5816]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/_src/_api/_task/_mail.queue.send.php' > /dev/null)
+giu 16 09:46:01 web CRON[5826]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5800]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:46:01 web CRON[5823]: (root) CMD (   curl -s 'http://tecnoel.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5831]: (root) CMD (   curl -s 'https://www.silviacaldironi.com/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5834]: (root) CMD (   curl -s 'http://www.biessebo.com/api/cron' > /dev/null)
+giu 16 09:46:01 web CRON[5809]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:01 web CRON[5810]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:01 web CRON[5800]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:01 web CRON[5799]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:01 web CRON[5803]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:01 web CRON[5807]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:07 web CRON[5804]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:13 web CRON[5811]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:13 web CRON[5805]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:13 web CRON[5802]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:13 web CRON[5801]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:13 web CRON[5808]: pam_unix(cron:session): session closed for user root
+giu 16 09:46:31 web CRON[5806]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:01 web CRON[6300]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6310]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6308]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6309]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6306]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6305]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6312]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6303]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6304]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6307]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6311]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6302]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6313]: (root) CMD (   curl -s 'http://monzali.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6316]: (root) CMD (   curl -s 'http://effebi.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6314]: (root) CMD (   curl -s 'https://gianlucascala.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6315]: (root) CMD (   curl -s 'https://avvocatodistrada.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6317]: (root) CMD (   curl -s 'https://franchising.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6319]: (root) CMD (   curl -s 'http://tecnoel.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6321]: (root) CMD (   curl -s 'https://glisweb.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6323]: (root) CMD (   curl -s 'https://landing.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6324]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6318]: (root) CMD (   curl -s 'https://www.silviacaldironi.com/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6322]: (root) CMD (   curl -s 'https://gliswebamministrazione.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6320]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/_src/_api/_task/_mail.queue.send.php' > /dev/null)
+giu 16 09:47:01 web CRON[6301]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:47:01 web CRON[6336]: (root) CMD (   curl -s 'http://www.biessebo.com/api/cron' > /dev/null)
+giu 16 09:47:01 web CRON[6310]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:01 web CRON[6311]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:01 web CRON[6300]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:01 web CRON[6301]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:01 web CRON[6304]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:02 web CRON[6308]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:08 web CRON[6305]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:14 web CRON[6312]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:14 web CRON[6303]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:14 web CRON[6306]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:14 web CRON[6302]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:14 web CRON[6309]: pam_unix(cron:session): session closed for user root
+giu 16 09:47:32 web CRON[6307]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:01 web CRON[6431]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6439]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6443]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6438]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6441]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6440]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6436]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6442]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6435]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6444]: (root) CMD (   curl -s 'http://monzali.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6433]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6437]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6446]: (root) CMD (   curl -s 'https://glisweb.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6445]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/_src/_api/_task/_mail.queue.send.php' > /dev/null)
+giu 16 09:48:01 web CRON[6434]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6450]: (root) CMD (   curl -s 'http://effebi.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6449]: (root) CMD (   curl -s 'https://franchising.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6451]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6447]: (root) CMD (   curl -s 'https://gianlucascala.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6448]: (root) CMD (   curl -s 'https://avvocatodistrada.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6432]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:48:01 web CRON[6456]: (root) CMD (   curl -s 'https://gliswebamministrazione.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6457]: (root) CMD (   curl -s 'http://tecnoel.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6455]: (root) CMD (   curl -s 'https://www.silviacaldironi.com/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6462]: (root) CMD (   curl -s 'https://landing.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6468]: (root) CMD (   curl -s 'http://www.biessebo.com/api/cron' > /dev/null)
+giu 16 09:48:01 web CRON[6441]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:01 web CRON[6442]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:01 web CRON[6432]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:01 web CRON[6431]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:01 web CRON[6435]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:01 web CRON[6439]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:07 web CRON[6436]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:13 web CRON[6443]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:13 web CRON[6437]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:13 web CRON[6434]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:13 web CRON[6433]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:13 web CRON[6440]: pam_unix(cron:session): session closed for user root
+giu 16 09:48:26 web collectd[1123]: [0;1;39muc_update: Value too old: name = /processes-all/io_octets; value time = 1623829706.979; last cache update = 1623829706.979;[0m
+giu 16 09:48:31 web CRON[6438]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:01 web CRON[6547]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6558]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6556]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6557]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6555]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6554]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6551]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6552]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6560]: (root) CMD (   curl -s 'http://monzali.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6559]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6553]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6563]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6549]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6550]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6562]: (root) CMD (   curl -s 'https://gianlucascala.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6565]: (root) CMD (   curl -s 'https://glisweb.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6564]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/_src/_api/_task/_mail.queue.send.php' > /dev/null)
+giu 16 09:49:01 web CRON[6561]: (root) CMD (   curl -s 'https://gliswebamministrazione.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6566]: (root) CMD (   curl -s 'https://franchising.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6548]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:49:01 web CRON[6576]: (root) CMD (   curl -s 'https://www.silviacaldironi.com/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6570]: (root) CMD (   curl -s 'https://avvocatodistrada.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6574]: (root) CMD (   curl -s 'http://tecnoel.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6577]: (root) CMD (   curl -s 'https://landing.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6569]: (root) CMD (   curl -s 'http://effebi.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6578]: (root) CMD (   curl -s 'http://www.biessebo.com/api/cron' > /dev/null)
+giu 16 09:49:01 web CRON[6557]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:02 web CRON[6558]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:02 web CRON[6551]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:02 web CRON[6547]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:02 web CRON[6548]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:02 web CRON[6555]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:08 web CRON[6552]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:14 web CRON[6559]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:14 web CRON[6550]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:14 web CRON[6549]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:14 web CRON[6553]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:14 web CRON[6556]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:25 web libapache2-mod-python[6654]: apache2_invoke: Enable module python
+giu 16 09:49:25 web systemd[1]: Reloading.
+giu 16 09:49:26 web systemd[1]: certbot.timer: Adding 4h 50min 4.546250s random time.
+giu 16 09:49:26 web systemd[1]: apt-daily-upgrade.timer: Adding 50min 5.763070s random time.
+giu 16 09:49:26 web systemd[1]: certbot.timer: Adding 4h 54min 18.109683s random time.
+giu 16 09:49:26 web systemd[1]: apt-daily.timer: Adding 4h 3min 45.468979s random time.
+giu 16 09:49:26 web systemd[1]: Starting Certbot...
+-- Subject: L'unità certbot.service inizia la fase di avvio
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità certbot.service ha iniziato la fase di avvio.
+giu 16 09:49:26 web systemd[1]: Stopping The Apache HTTP Server...
+-- Subject: L'unità apache2.service inizia la fase di spegnimento
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha iniziato la fase di spegnimento.
+giu 16 09:49:26 web apachectl[6681]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:49:26 web apachectl[6681]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:49:26 web apachectl[6681]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:49:26 web CRON[6554]: pam_unix(cron:session): session closed for user root
+giu 16 09:49:36 web systemd[1]: Stopped The Apache HTTP Server.
+-- Subject: L'unità apache2.service termina la fase di spegnimento
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha terminato la fase di spegnimento.
+giu 16 09:49:36 web systemd[1]: Starting The Apache HTTP Server...
+-- Subject: L'unità apache2.service inizia la fase di avvio
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha iniziato la fase di avvio.
+giu 16 09:49:36 web apachectl[6721]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:49:36 web apachectl[6721]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:49:36 web apachectl[6721]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:49:36 web systemd[1]: Started The Apache HTTP Server.
+-- Subject: L'unità apache2.service termina la fase di avvio
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha terminato la fase di avvio.
+-- 
+-- La fase di avvio è done.
+giu 16 09:49:45 web systemd[1]: Stopping The Apache HTTP Server...
+-- Subject: L'unità apache2.service inizia la fase di spegnimento
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha iniziato la fase di spegnimento.
+giu 16 09:49:45 web apachectl[6748]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:49:45 web apachectl[6748]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:49:45 web apachectl[6748]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:49:45 web systemd[1]: Stopped The Apache HTTP Server.
+-- Subject: L'unità apache2.service termina la fase di spegnimento
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha terminato la fase di spegnimento.
+giu 16 09:49:45 web systemd[1]: Starting The Apache HTTP Server...
+-- Subject: L'unità apache2.service inizia la fase di avvio
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha iniziato la fase di avvio.
+giu 16 09:49:45 web apachectl[6755]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:49:45 web apachectl[6755]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:49:45 web apachectl[6755]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:49:45 web systemd[1]: Started The Apache HTTP Server.
+-- Subject: L'unità apache2.service termina la fase di avvio
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha terminato la fase di avvio.
+-- 
+-- La fase di avvio è done.
+giu 16 09:49:52 web certbot[6675]: Attempting to renew cert (ugoborghello.istricesrl.it) from /etc/letsencrypt/renewal/ugoborghello.istricesrl.it.conf produced an unexpected error: Failed authorization procedure. www.ugoborghello.it (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from https://www.ugoborghello.it/.well-known/acme-challenge/4OYiPANgpGwsoep7yz_GgutGxZCsFU_xAx7dJmO-u-o [35.195.59.127]: "<!DOCTYPE html>\n<html class=\"avada-html-layout-wide\" lang=\"it-IT\" prefix=\"og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#\">\n<head". Skipping.
+giu 16 09:50:01 web CRON[6822]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6835]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6828]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6833]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6830]: pam_unix(cron:session): session opened for user munin by (uid=0)
+giu 16 09:50:01 web CRON[6831]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6832]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6829]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6826]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6837]: (root) CMD (   curl -s 'http://monzali.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6834]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6839]: (root) CMD (   curl -s 'https://avvocatodistrada.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6836]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6824]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6842]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/_src/_api/_task/_mail.queue.send.php' > /dev/null)
+giu 16 09:50:01 web CRON[6827]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6840]: (root) CMD (   curl -s 'https://gianlucascala.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6844]: (root) CMD (   curl -s 'http://tecnoel.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6841]: (munin) CMD (if [ -x /usr/bin/munin-cron ]; then /usr/bin/munin-cron; fi)
+giu 16 09:50:01 web CRON[6838]: (root) CMD (   curl -s 'https://franchising.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6845]: (root) CMD (   curl -s 'https://gliswebamministrazione.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6843]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6846]: (root) CMD (   curl -s 'https://landing.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6825]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6847]: (root) CMD (   curl -s 'https://glisweb.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6850]: (root) CMD (   curl -s 'http://effebi.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6823]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:50:01 web CRON[6856]: (root) CMD (if [ -x /etc/munin/plugins/apt_all ]; then /etc/munin/plugins/apt_all update 7200 12 >/dev/null; elif [ -x /etc/munin/plugins/apt ]; then /etc/munin/plugins/apt update 7200 12 >/dev/null; fi)
+giu 16 09:50:01 web CRON[6836]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:01 web CRON[6860]: (root) CMD (   curl -s 'https://www.silviacaldironi.com/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6862]: (root) CMD (   curl -s 'http://www.biessebo.com/api/cron' > /dev/null)
+giu 16 09:50:01 web CRON[6833]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:01 web CRON[6834]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:01 web CRON[6823]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:01 web CRON[6826]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:01 web CRON[6822]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:02 web CRON[6831]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:05 web CRON[6827]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:05 web certbot[6675]: Attempting to renew cert (biessebo.com) from /etc/letsencrypt/renewal/biessebo.com.conf produced an unexpected error: Failed authorization procedure. biessebo.com (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from http://biessebo.com/.well-known/acme-challenge/xzL7nApcERjrA0VEYox_aVm8KdrtIP1w8Fuz6t2Pb8w [46.254.34.67]: "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n<html><head>\n<title>404 Not Found</title>\n</head><body>\n<h1>Not Found</h1>\n<p", www.biessebo.com (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from http://www.biessebo.com/.well-known/acme-challenge/a5wFphmGXNR50aCRb2dYkfAGG70uSqBbcKah0aHMprI [46.254.34.67]: "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n<html><head>\n<title>404 Not Found</title>\n</head><body>\n<h1>Not Found</h1>\n<p". Skipping.
+giu 16 09:50:11 web CRON[6830]: pam_unix(cron:session): session closed for user munin
+giu 16 09:50:11 web CRON[6824]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:11 web CRON[6825]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:11 web CRON[6828]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:13 web CRON[6832]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:13 web CRON[6835]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:19 web CRON[6829]: pam_unix(cron:session): session closed for user root
+giu 16 09:50:50 web certbot[6675]: Attempting to renew cert (www.pelomagia.it) from /etc/letsencrypt/renewal/www.pelomagia.it.conf produced an unexpected error: Failed authorization procedure. www.pelomagia.it (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from https://www.pelomagia.it/.well-known/acme-challenge/0XGKDyTRQ_0NDHZhXMY5M9ZVtYssrbxB8X9yDp-rVVI [35.195.59.127]: "<!DOCTYPE html>\n<html lang=\"it-IT\">\n<head><style>img.lazy{min-height:1px}</style><link rel=\"preload\" href=\"https://www.pelomagia". Skipping.
+giu 16 09:51:01 web CRON[7362]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7374]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7372]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7373]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7369]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7370]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7368]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7367]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7371]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7366]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7377]: (root) CMD (   curl -s 'https://gliswebamministrazione.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7365]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7375]: (root) CMD (   curl -s 'http://monzali.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7376]: (root) CMD (   curl -s 'https://franchising.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7364]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7378]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/_src/_api/_task/_mail.queue.send.php' > /dev/null)
+giu 16 09:51:01 web CRON[7379]: (root) CMD (   curl -s 'http://effebi.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7380]: (root) CMD (   curl -s 'http://tecnoel.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7381]: (root) CMD (   curl -s 'https://gianlucascala.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7382]: (root) CMD (   curl -s 'https://www.silviacaldironi.com/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7383]: (root) CMD (   curl -s 'https://avvocatodistrada.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7385]: (root) CMD (   curl -s 'https://glisweb.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7363]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:51:01 web CRON[7387]: (root) CMD (   curl -s 'https://landing.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7386]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7397]: (root) CMD (   curl -s 'http://www.biessebo.com/api/cron' > /dev/null)
+giu 16 09:51:01 web CRON[7372]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:01 web CRON[7363]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:01 web CRON[7362]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:01 web CRON[7366]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:01 web CRON[7373]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:01 web CRON[7370]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:07 web CRON[7367]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:11 web certbot[6675]: Attempting to renew cert (www.costanzabeghelli.it) from /etc/letsencrypt/renewal/www.costanzabeghelli.it.conf produced an unexpected error: Failed authorization procedure. www.costanzabeghelli.it (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from https://www.costanzabeghelli.it/.well-known/acme-challenge/6Qei9L6NHtz_g3YW1q7k5cVYwJwohzl3SzbrXgfNoSc [35.195.59.127]: "<!DOCTYPE html>\n<html lang=\"it-IT\" class=\"no-js no-svg\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=devi". Skipping.
+giu 16 09:51:13 web CRON[7371]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:13 web CRON[7365]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:13 web CRON[7364]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:13 web CRON[7374]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:13 web CRON[7368]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:20 web CRON[7369]: pam_unix(cron:session): session closed for user root
+giu 16 09:51:24 web certbot[6675]: Attempting to renew cert (www.barbarabelottiestetica.it) from /etc/letsencrypt/renewal/www.barbarabelottiestetica.it.conf produced an unexpected error: Failed authorization procedure. barbarabelottiestetica.it (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from https://barbarabelottiestetica.it/.well-known/acme-challenge/X7xdmH2xOh5wWftrGrj2zPi-FtBS90QiY-cHj3cABlI [35.195.90.82]: 404, www.barbarabelottiestetica.it (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from https://www.barbarabelottiestetica.it/.well-known/acme-challenge/g20ITMODf_M8aokVrnSn5Dr0N6Zs97ZaTWpNk2VQBW0 [35.195.90.82]: 404. Skipping.
+giu 16 09:51:27 web collectd[1123]: [0;1;39muc_update: Value too old: name = /processes-all/io_octets; value time = 1623829887.025; last cache update = 1623829887.027;[0m
+giu 16 09:51:38 web certbot[6675]: Attempting to renew cert (www.federicotransport.com) from /etc/letsencrypt/renewal/www.federicotransport.com.conf produced an unexpected error: Failed authorization procedure. www.federicotransport.com (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from https://www.federicotransport.com/.well-known/acme-challenge/MFUGjVyrKPjnBdC5d6f7YF151h4xDXCpThNB-i3O_3A [35.195.90.82]: 404. Skipping.
+giu 16 09:51:50 web certbot[6675]: Attempting to renew cert (www.virginiadirocco.com) from /etc/letsencrypt/renewal/www.virginiadirocco.com.conf produced an unexpected error: Failed authorization procedure. www.virginiadirocco.com (http-01): urn:ietf:params:acme:error:dns :: DNS problem: NXDOMAIN looking up A for www.virginiadirocco.com - check that a DNS record exists for this domain. Skipping.
+giu 16 09:51:55 web sudo[7655]: [0;1;39m    root : TTY=pts/8 ; PWD=/var/www/glisweb.istricesrl.it/test ; USER=root ; COMMAND=/usr/bin/apt install libapache2-mod-wsgi-py3[0m
+giu 16 09:51:55 web sudo[7655]: pam_unix(sudo:session): session opened for user root by (uid=0)
+giu 16 09:51:57 web libapache2-mod-wsgi-py3[7709]: apache2_invoke: Enable module wsgi
+giu 16 09:51:57 web systemd[1]: Reloading.
+giu 16 09:51:57 web systemd[1]: apt-daily-upgrade.timer: Adding 53min 29.898013s random time.
+giu 16 09:51:57 web systemd[1]: apt-daily.timer: Adding 11h 9min 54.630575s random time.
+giu 16 09:51:57 web systemd[1]: Stopping The Apache HTTP Server...
+-- Subject: L'unità apache2.service inizia la fase di spegnimento
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha iniziato la fase di spegnimento.
+giu 16 09:51:58 web apachectl[7733]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:51:58 web apachectl[7733]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:51:58 web apachectl[7733]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:51:58 web systemd[1]: Stopped The Apache HTTP Server.
+-- Subject: L'unità apache2.service termina la fase di spegnimento
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha terminato la fase di spegnimento.
+giu 16 09:51:58 web systemd[1]: Starting The Apache HTTP Server...
+-- Subject: L'unità apache2.service inizia la fase di avvio
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha iniziato la fase di avvio.
+giu 16 09:51:58 web apachectl[7747]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:51:58 web apachectl[7747]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:51:58 web apachectl[7747]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:51:58 web apachectl[7747]: Action 'start' failed.
+giu 16 09:51:58 web apachectl[7747]: The Apache error log may have more information.
+giu 16 09:51:58 web systemd[1]: [0;1;39mapache2.service: Control process exited, code=exited status=1[0m
+giu 16 09:51:58 web systemd[1]: [0;1;31mFailed to start The Apache HTTP Server.[0m
+-- Subject: L'unità apache2.service è fallita
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service è fallita.
+-- 
+-- Il risultato è failed.
+giu 16 09:51:58 web systemd[1]: [0;1;39mapache2.service: Unit entered failed state.[0m
+giu 16 09:51:58 web systemd[1]: [0;1;39mapache2.service: Failed with result 'exit-code'.[0m
+giu 16 09:51:58 web sudo[7655]: pam_unix(sudo:session): session closed for user root
+giu 16 09:52:01 web CRON[7760]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7770]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7769]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7768]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7763]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7767]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7764]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7772]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7765]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7766]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7771]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7773]: (root) CMD (   curl -s 'http://monzali.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7762]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7774]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/_src/_api/_task/_mail.queue.send.php' > /dev/null)
+giu 16 09:52:01 web CRON[7777]: (root) CMD (   curl -s 'http://tecnoel.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7776]: (root) CMD (   curl -s 'https://glisweb.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7780]: (root) CMD (   curl -s 'https://avvocatodistrada.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7782]: (root) CMD (   curl -s 'https://landing.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7781]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7783]: (root) CMD (   curl -s 'https://gliswebamministrazione.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7775]: (root) CMD (   curl -s 'https://www.silviacaldironi.com/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7761]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:52:01 web CRON[7778]: (root) CMD (   curl -s 'https://franchising.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7779]: (root) CMD (   curl -s 'http://effebi.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7791]: (root) CMD (   curl -s 'https://gianlucascala.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7794]: (root) CMD (   curl -s 'http://www.biessebo.com/api/cron' > /dev/null)
+giu 16 09:52:01 web CRON[7764]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7760]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7765]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7766]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7771]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7763]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7762]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7767]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7768]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7770]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7769]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:01 web CRON[7761]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:13 web CRON[7772]: pam_unix(cron:session): session closed for user root
+giu 16 09:52:17 web sshd[7812]: Accepted publickey for root from 151.84.213.170 port 44892 ssh2: RSA SHA256:UwC9EH63UqKrgQq1lA7dYlqlwqlEbLHygBrqlOD4POc
+giu 16 09:52:17 web sshd[7812]: pam_unix(sshd:session): session opened for user root by (uid=0)
+giu 16 09:52:18 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:18 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:18 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:18 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:18 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:18 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:18 web certbot[6675]: Encountered exception during recovery:
+giu 16 09:52:18 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 82, in handle_authorizations
+giu 16 09:52:18 web certbot[6675]:     self._respond(aauthzrs, resp, best_effort)
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 161, in _respond
+giu 16 09:52:18 web certbot[6675]:     self._poll_challenges(aauthzrs, chall_update, best_effort)
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 232, in _poll_challenges
+giu 16 09:52:18 web certbot[6675]:     raise errors.FailedChallenges(all_failed_achalls)
+giu 16 09:52:18 web certbot[6675]: certbot.errors.FailedChallenges: Failed authorization procedure. www.ugoborghello.com (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from https://www.ugoborghello.com/.well-known/acme-challenge/_RCauJLMRYsFbr_l9S55PhcRmE43rEzA0RHsRH2kaGY [35.195.59.127]: "<!DOCTYPE html>\n<html class=\"avada-html-layout-wide\" lang=\"it-IT\" prefix=\"og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#\">\n<head"
+giu 16 09:52:18 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:18 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:18 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:18 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:18 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:18 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:18 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:18 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:18 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:18 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:18 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:18 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/error_handler.py", line 108, in _call_registered
+giu 16 09:52:18 web certbot[6675]:     self.funcs[-1]()
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 316, in _cleanup_challenges
+giu 16 09:52:18 web certbot[6675]:     self.auth.cleanup(achalls)
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2311, in cleanup
+giu 16 09:52:18 web certbot[6675]:     self.restart()
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:18 web certbot[6675]:     self._reload()
+giu 16 09:52:18 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:18 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:18 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:18 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:18 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:18 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:18 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:18 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:18 web certbot[6675]: Attempting to renew cert (ugoborghello.com) from /etc/letsencrypt/renewal/ugoborghello.com.conf produced an unexpected error: Failed authorization procedure. www.ugoborghello.com (http-01): urn:ietf:params:acme:error:unauthorized :: The client lacks sufficient authorization :: Invalid response from https://www.ugoborghello.com/.well-known/acme-challenge/_RCauJLMRYsFbr_l9S55PhcRmE43rEzA0RHsRH2kaGY [35.195.59.127]: "<!DOCTYPE html>\n<html class=\"avada-html-layout-wide\" lang=\"it-IT\" prefix=\"og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#\">\n<head". Skipping.
+giu 16 09:52:23 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:23 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:23 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:23 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:23 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:23 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:23 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:23 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:23 web certbot[6675]: Encountered exception during recovery:
+giu 16 09:52:23 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:23 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:23 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:23 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:23 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:23 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:23 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:23 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:23 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 75, in handle_authorizations
+giu 16 09:52:23 web certbot[6675]:     resp = self._solve_challenges(aauthzrs)
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 132, in _solve_challenges
+giu 16 09:52:23 web certbot[6675]:     resp = self.auth.perform(all_achalls)
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2286, in perform
+giu 16 09:52:23 web certbot[6675]:     self.restart()
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:23 web certbot[6675]:     self._reload()
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:23 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:23 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:23 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:23 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:23 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:23 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:23 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:23 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:23 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:23 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:23 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:23 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:23 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:23 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:23 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/error_handler.py", line 108, in _call_registered
+giu 16 09:52:23 web certbot[6675]:     self.funcs[-1]()
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 316, in _cleanup_challenges
+giu 16 09:52:23 web certbot[6675]:     self.auth.cleanup(achalls)
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2311, in cleanup
+giu 16 09:52:23 web certbot[6675]:     self.restart()
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:23 web certbot[6675]:     self._reload()
+giu 16 09:52:23 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:23 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:23 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:23 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:23 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:23 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:23 web certbot[6675]: Attempting to renew cert (landing.parksaffibologna.it) from /etc/letsencrypt/renewal/landing.parksaffibologna.it.conf produced an unexpected error: Error while running apache2ctl graceful.
+giu 16 09:52:23 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:23 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:23 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:23 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:23 web certbot[6675]: . Skipping.
+giu 16 09:52:27 web collectd[1123]: write_gcm: Asking metadata server for auth token
+giu 16 09:52:29 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:29 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:29 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:29 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:29 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:29 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:29 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:29 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:29 web certbot[6675]: Encountered exception during recovery:
+giu 16 09:52:29 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:29 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:29 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:29 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:29 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:29 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:29 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:29 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:29 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 75, in handle_authorizations
+giu 16 09:52:29 web certbot[6675]:     resp = self._solve_challenges(aauthzrs)
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 132, in _solve_challenges
+giu 16 09:52:29 web certbot[6675]:     resp = self.auth.perform(all_achalls)
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2286, in perform
+giu 16 09:52:29 web certbot[6675]:     self.restart()
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:29 web certbot[6675]:     self._reload()
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:29 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:29 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:29 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:29 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:29 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:29 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:29 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:29 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:29 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:29 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:29 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:29 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:29 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:29 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:29 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/error_handler.py", line 108, in _call_registered
+giu 16 09:52:29 web certbot[6675]:     self.funcs[-1]()
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 316, in _cleanup_challenges
+giu 16 09:52:29 web certbot[6675]:     self.auth.cleanup(achalls)
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2311, in cleanup
+giu 16 09:52:29 web certbot[6675]:     self.restart()
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:29 web certbot[6675]:     self._reload()
+giu 16 09:52:29 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:29 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:29 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:29 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:29 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:29 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:29 web certbot[6675]: Attempting to renew cert (www.eco-italia.it) from /etc/letsencrypt/renewal/www.eco-italia.it.conf produced an unexpected error: Error while running apache2ctl graceful.
+giu 16 09:52:29 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:29 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:29 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:29 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:29 web certbot[6675]: . Skipping.
+giu 16 09:52:35 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:35 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:35 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:35 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:35 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:35 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:35 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:35 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:35 web certbot[6675]: Encountered exception during recovery:
+giu 16 09:52:35 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:35 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:35 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:35 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:35 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:35 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:35 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:35 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:35 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 75, in handle_authorizations
+giu 16 09:52:35 web certbot[6675]:     resp = self._solve_challenges(aauthzrs)
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 132, in _solve_challenges
+giu 16 09:52:35 web certbot[6675]:     resp = self.auth.perform(all_achalls)
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2286, in perform
+giu 16 09:52:35 web certbot[6675]:     self.restart()
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:35 web certbot[6675]:     self._reload()
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:35 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:35 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:35 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:35 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:35 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:35 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:35 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:35 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:35 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:35 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:35 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:35 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:35 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:35 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:35 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/error_handler.py", line 108, in _call_registered
+giu 16 09:52:35 web certbot[6675]:     self.funcs[-1]()
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 316, in _cleanup_challenges
+giu 16 09:52:35 web certbot[6675]:     self.auth.cleanup(achalls)
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2311, in cleanup
+giu 16 09:52:35 web certbot[6675]:     self.restart()
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:35 web certbot[6675]:     self._reload()
+giu 16 09:52:35 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:35 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:35 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:35 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:35 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:35 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:35 web certbot[6675]: Attempting to renew cert (ecommercedev.istricesrl.it) from /etc/letsencrypt/renewal/ecommercedev.istricesrl.it.conf produced an unexpected error: Error while running apache2ctl graceful.
+giu 16 09:52:35 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:35 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:35 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:35 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/consulenza.istricesrl.it/stable] does not exist
+giu 16 09:52:35 web certbot[6675]: . Skipping.
+giu 16 09:52:41 web certbot[6675]: Unable to add file /etc/apache2/sites-enabled/consulenza.istricesrl.it.conf to checkpoint /var/lib/letsencrypt/temp_checkpoint
+giu 16 09:52:41 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:41 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:41 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:41 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:41 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:41 web certbot[6675]: Encountered exception during recovery:
+giu 16 09:52:41 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/reverter.py", line 240, in _add_to_checkpoint_dir
+giu 16 09:52:41 web certbot[6675]:     cp_dir, os.path.basename(filename) + "_" + str(idx)))
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3.5/shutil.py", line 257, in copy2
+giu 16 09:52:41 web certbot[6675]:     copyfile(src, dst, follow_symlinks=follow_symlinks)
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3.5/shutil.py", line 120, in copyfile
+giu 16 09:52:41 web certbot[6675]:     with open(src, 'rb') as fsrc:
+giu 16 09:52:41 web certbot[6675]: FileNotFoundError: [Errno 2] No such file or directory: '/etc/apache2/sites-enabled/consulenza.istricesrl.it.conf'
+giu 16 09:52:41 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:41 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/plugins/common.py", line 137, in add_to_checkpoint
+giu 16 09:52:41 web certbot[6675]:     checkpoint_func(save_files, save_notes)
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/reverter.py", line 197, in add_to_temp_checkpoint
+giu 16 09:52:41 web certbot[6675]:     self.config.temp_checkpoint_dir, save_files, save_notes)
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/reverter.py", line 250, in _add_to_checkpoint_dir
+giu 16 09:52:41 web certbot[6675]:     "{1}".format(filename, cp_dir))
+giu 16 09:52:41 web certbot[6675]: certbot.errors.ReverterError: Unable to add file /etc/apache2/sites-enabled/consulenza.istricesrl.it.conf to checkpoint /var/lib/letsencrypt/temp_checkpoint
+giu 16 09:52:41 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:41 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 75, in handle_authorizations
+giu 16 09:52:41 web certbot[6675]:     resp = self._solve_challenges(aauthzrs)
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 132, in _solve_challenges
+giu 16 09:52:41 web certbot[6675]:     resp = self.auth.perform(all_achalls)
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2280, in perform
+giu 16 09:52:41 web certbot[6675]:     http_response = http_doer.perform()
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/http_01.py", line 74, in perform
+giu 16 09:52:41 web certbot[6675]:     self.configurator.save("HTTP Challenge", True)
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/augeas_configurator.py", line 147, in save
+giu 16 09:52:41 web certbot[6675]:     self.save_notes, temporary=temporary)
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/plugins/common.py", line 139, in add_to_checkpoint
+giu 16 09:52:41 web certbot[6675]:     raise errors.PluginError(str(err))
+giu 16 09:52:41 web certbot[6675]: certbot.errors.PluginError: Unable to add file /etc/apache2/sites-enabled/consulenza.istricesrl.it.conf to checkpoint /var/lib/letsencrypt/temp_checkpoint
+giu 16 09:52:41 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:41 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:41 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:41 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:41 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:41 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:41 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:41 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:41 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:41 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:41 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/error_handler.py", line 108, in _call_registered
+giu 16 09:52:41 web certbot[6675]:     self.funcs[-1]()
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 316, in _cleanup_challenges
+giu 16 09:52:41 web certbot[6675]:     self.auth.cleanup(achalls)
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2311, in cleanup
+giu 16 09:52:41 web certbot[6675]:     self.restart()
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:41 web certbot[6675]:     self._reload()
+giu 16 09:52:41 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:41 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:41 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:41 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:41 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:41 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:41 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:41 web certbot[6675]: Attempting to renew cert (www.laboratorioanalisiclinichemicrobiologiche.it) from /etc/letsencrypt/renewal/www.laboratorioanalisiclinichemicrobiologiche.it.conf produced an unexpected error: Unable to add file /etc/apache2/sites-enabled/consulenza.istricesrl.it.conf to checkpoint /var/lib/letsencrypt/temp_checkpoint. Skipping.
+giu 16 09:52:45 web sudo[8002]: [0;1;39m    root : TTY=pts/8 ; PWD=/var/www/glisweb.istricesrl.it/test ; USER=root ; COMMAND=/usr/bin/apt install libapache2-mod-wsgi-py3[0m
+giu 16 09:52:45 web sudo[8002]: pam_unix(sudo:session): session opened for user root by (uid=0)
+giu 16 09:52:45 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:45 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:45 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:45 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:45 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:45 web sudo[8002]: pam_unix(sudo:session): session closed for user root
+giu 16 09:52:45 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:45 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:45 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:45 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:45 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:45 web certbot[6675]: Encountered exception during recovery:
+giu 16 09:52:45 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:45 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:45 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:45 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:45 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:45 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:45 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:45 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:45 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:45 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 75, in handle_authorizations
+giu 16 09:52:45 web certbot[6675]:     resp = self._solve_challenges(aauthzrs)
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 132, in _solve_challenges
+giu 16 09:52:45 web certbot[6675]:     resp = self.auth.perform(all_achalls)
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2286, in perform
+giu 16 09:52:45 web certbot[6675]:     self.restart()
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:45 web certbot[6675]:     self._reload()
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:45 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:45 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:45 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:45 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:45 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:45 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:45 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:45 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:45 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:45 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:45 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:45 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:45 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:45 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:45 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:45 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:45 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/error_handler.py", line 108, in _call_registered
+giu 16 09:52:45 web certbot[6675]:     self.funcs[-1]()
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 316, in _cleanup_challenges
+giu 16 09:52:45 web certbot[6675]:     self.auth.cleanup(achalls)
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2311, in cleanup
+giu 16 09:52:45 web certbot[6675]:     self.restart()
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:45 web certbot[6675]:     self._reload()
+giu 16 09:52:45 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:45 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:45 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:45 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:45 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:45 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:45 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:45 web certbot[6675]: Attempting to renew cert (landing.valledelsole.net) from /etc/letsencrypt/renewal/landing.valledelsole.net.conf produced an unexpected error: Error while running apache2ctl graceful.
+giu 16 09:52:45 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:45 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:45 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:45 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:45 web certbot[6675]: . Skipping.
+giu 16 09:52:51 web systemd[1]: Starting The Apache HTTP Server...
+-- Subject: L'unità apache2.service inizia la fase di avvio
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service ha iniziato la fase di avvio.
+giu 16 09:52:51 web apachectl[8040]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:52 web apachectl[8040]: Action 'start' failed.
+giu 16 09:52:52 web apachectl[8040]: The Apache error log may have more information.
+giu 16 09:52:52 web systemd[1]: [0;1;39mapache2.service: Control process exited, code=exited status=1[0m
+giu 16 09:52:52 web systemd[1]: [0;1;31mFailed to start The Apache HTTP Server.[0m
+-- Subject: L'unità apache2.service è fallita
+-- Defined-By: systemd
+-- Support: https://www.debian.org/support
+-- 
+-- L'unità apache2.service è fallita.
+-- 
+-- Il risultato è failed.
+giu 16 09:52:52 web systemd[1]: [0;1;39mapache2.service: Unit entered failed state.[0m
+giu 16 09:52:52 web systemd[1]: [0;1;39mapache2.service: Failed with result 'exit-code'.[0m
+giu 16 09:52:52 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:52 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:52 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:52 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:52 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:52 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:52 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:52 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:52 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:52 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:52 web certbot[6675]: Encountered exception during recovery:
+giu 16 09:52:52 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:52 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:52 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:52 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:52 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:52 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:52 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:52 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:52 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:52 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 75, in handle_authorizations
+giu 16 09:52:52 web certbot[6675]:     resp = self._solve_challenges(aauthzrs)
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 132, in _solve_challenges
+giu 16 09:52:52 web certbot[6675]:     resp = self.auth.perform(all_achalls)
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2286, in perform
+giu 16 09:52:52 web certbot[6675]:     self.restart()
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:52 web certbot[6675]:     self._reload()
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:52 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:52 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:52 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:52 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:52 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:52 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:52 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:52 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:52 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:52 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:52 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:52 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:52 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:52 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:52 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:52 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:52 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/error_handler.py", line 108, in _call_registered
+giu 16 09:52:52 web certbot[6675]:     self.funcs[-1]()
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 316, in _cleanup_challenges
+giu 16 09:52:52 web certbot[6675]:     self.auth.cleanup(achalls)
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2311, in cleanup
+giu 16 09:52:52 web certbot[6675]:     self.restart()
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:52 web certbot[6675]:     self._reload()
+giu 16 09:52:52 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:52 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:52 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:52 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:52 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:52 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:52 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:52 web certbot[6675]: Attempting to renew cert (www.urbesrura.it) from /etc/letsencrypt/renewal/www.urbesrura.it.conf produced an unexpected error: Error while running apache2ctl graceful.
+giu 16 09:52:52 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:52 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:52 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:52 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:52 web certbot[6675]: . Skipping.
+giu 16 09:52:58 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:58 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:58 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:58 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:58 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:58 web certbot[6675]: Error while running apache2ctl graceful.
+giu 16 09:52:58 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:58 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:58 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:58 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:58 web certbot[6675]: Encountered exception during recovery:
+giu 16 09:52:58 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:58 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:58 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:58 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:58 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:58 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:58 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:58 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:58 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:58 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 75, in handle_authorizations
+giu 16 09:52:58 web certbot[6675]:     resp = self._solve_challenges(aauthzrs)
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 132, in _solve_challenges
+giu 16 09:52:58 web certbot[6675]:     resp = self.auth.perform(all_achalls)
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2286, in perform
+giu 16 09:52:58 web certbot[6675]:     self.restart()
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:58 web certbot[6675]:     self._reload()
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:58 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:58 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:58 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:58 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:58 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:58 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:58 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:58 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2184, in _reload
+giu 16 09:52:58 web certbot[6675]:     util.run_script(self.option("restart_cmd"))
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/util.py", line 86, in run_script
+giu 16 09:52:58 web certbot[6675]:     raise errors.SubprocessError(msg)
+giu 16 09:52:58 web certbot[6675]: certbot.errors.SubprocessError: Error while running apache2ctl graceful.
+giu 16 09:52:58 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:58 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:58 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:58 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:58 web certbot[6675]: During handling of the above exception, another exception occurred:
+giu 16 09:52:58 web certbot[6675]: Traceback (most recent call last):
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/error_handler.py", line 108, in _call_registered
+giu 16 09:52:58 web certbot[6675]:     self.funcs[-1]()
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot/auth_handler.py", line 316, in _cleanup_challenges
+giu 16 09:52:58 web certbot[6675]:     self.auth.cleanup(achalls)
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2311, in cleanup
+giu 16 09:52:58 web certbot[6675]:     self.restart()
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2174, in restart
+giu 16 09:52:58 web certbot[6675]:     self._reload()
+giu 16 09:52:58 web certbot[6675]:   File "/usr/lib/python3/dist-packages/certbot_apache/configurator.py", line 2202, in _reload
+giu 16 09:52:58 web certbot[6675]:     raise errors.MisconfigurationError(error)
+giu 16 09:52:58 web certbot[6675]: certbot.errors.MisconfigurationError: Error while running apache2ctl graceful.
+giu 16 09:52:58 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:58 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:58 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:58 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:58 web certbot[6675]: Attempting to renew cert (pcstop.istricesrl.it) from /etc/letsencrypt/renewal/pcstop.istricesrl.it.conf produced an unexpected error: Error while running apache2ctl graceful.
+giu 16 09:52:58 web certbot[6675]: httpd not running, trying to start
+giu 16 09:52:58 web certbot[6675]: Action 'graceful' failed.
+giu 16 09:52:58 web certbot[6675]: The Apache error log may have more information.
+giu 16 09:52:58 web certbot[6675]: AH00112: Warning: DocumentRoot [/var/www/assoproprietari.istricesrl.it/test] does not exist
+giu 16 09:52:58 web certbot[6675]: . Skipping.
+giu 16 09:52:58 web certbot[6675]: Attempting to renew cert (csicasalecchio.com-0001) from /etc/letsencrypt/renewal/csicasalecchio.com-0001.conf produced an unexpected error: The manual plugin is not working; there may be problems with your existing configuration.
+giu 16 09:52:58 web certbot[6675]: The error was: PluginError('An authentication script must be provided with --manual-auth-hook when using the manual plugin non-interactively.',). Skipping.
+giu 16 09:53:01 web CRON[8105]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8116]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8113]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8112]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8111]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8110]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8114]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8118]: (root) CMD (   curl -s 'http://monzali.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8117]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8115]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8107]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8108]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8119]: (root) CMD (   curl -s 'https://gliswebamministrazione.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8109]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8120]: (root) CMD (   curl -s 'https://glisweb.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8122]: (root) CMD (   curl -s 'http://effebi.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8121]: (root) CMD (   curl -s 'https://avvocatodistrada.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8124]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8127]: (root) CMD (   curl -s 'https://gianlucascala.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8128]: (root) CMD (   curl -s 'http://tecnoel.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8123]: (root) CMD (   curl -s 'https://franchising.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8126]: (root) CMD (   curl -s 'https://laboratorio.illettoredifantasia.it/_src/_api/_task/_mail.queue.send.php' > /dev/null)
+giu 16 09:53:01 web CRON[8106]: pam_unix(cron:session): session opened for user root by (uid=0)
+giu 16 09:53:01 web CRON[8132]: (root) CMD (   curl -s 'https://landing.istricesrl.it/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8138]: (root) CMD (   curl -s 'https://www.silviacaldironi.com/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8140]: (root) CMD (   curl -s 'http://www.biessebo.com/api/cron' > /dev/null)
+giu 16 09:53:01 web CRON[8105]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8109]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8114]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8112]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8116]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8110]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8111]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8107]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8115]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8108]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8113]: pam_unix(cron:session): session closed for user root
+giu 16 09:53:01 web CRON[8106]: pam_unix(cron:session): session closed for user root
