@@ -91,6 +91,9 @@
 	    // ip chiamante
 		$cf['ws']['from']		= $_SERVER['REMOTE_ADDR'];
 
+		// headers della richiesta
+		$cf['ws']['request']['headers'] = getallheaders();
+
 	    // debug
 		// die( print_r( $cf['ws'], true ) );
 
@@ -148,7 +151,11 @@
 
 	    // debug
 		// die( print_r( $_SERVER['REDIRECT_URL'], true ) );
-		die( $_SERVER['REQUEST_URI'] );
+		// die( $_SERVER['HTTP_HOST'] );
+		// die( $_SERVER['REQUEST_URI'] );
+		// die( $_SERVER['REQUEST_SCHEME'] );
+		// print_r( getallheaders() );
+		// die( print_r( $_SERVER, true ) );
 		// die( print_r( $_REQUEST, true ) );
 		// die( $_SERVER['CONTENT_TYPE'] );
 		// die( $_SERVER['HTTP_ACCEPT'] );
@@ -158,11 +165,13 @@
 		// die( 'incoming ' . $cf['ws']['incoming'] . ': ' . $incoming );
 		// die( print_r( $cf['ws'], true ) );
 
-		function redirectProtection($configArray=$cf['ws']['request']['headers']['Referer']){
-            if( isset( $configArray ) && substr( $configArray, 0, strpos( $configArray, ':' ) ) != $_SERVER['REQUEST_SCHEME'] ) {
-            http_response_code( 400 );
-            exit('redirecting from HTTP to HTTPS is not allowed in API context');
-        }
+		// protezione da redirect HTTP -> HTTPS
+		// todo substr2char( $cf['ws']['request']['headers']['Referer'], ':' )
+		// die( substr( $cf['ws']['request']['headers']['Referer'], 0, strpos( $cf['ws']['request']['headers']['Referer'], ':' ) ) . ' -> ' . $_SERVER['REQUEST_SCHEME'] );
+		if( isset( $cf['ws']['request']['headers']['Referer'] ) && substr( $cf['ws']['request']['headers']['Referer'], 0, strpos( $cf['ws']['request']['headers']['Referer'], ':' ) ) != $_SERVER['REQUEST_SCHEME'] ) {
+			http_response_code( 400 );
+			exit('redirecting from HTTP to HTTPS is not allowed in API context');
+		}
 
 	    // runlevel da saltare
 		$cf['lvls']['skip'] = array(
