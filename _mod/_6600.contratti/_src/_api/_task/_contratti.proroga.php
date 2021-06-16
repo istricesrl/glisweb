@@ -41,11 +41,12 @@
 
         // inserisco la riga di attività
         $nome = 'proroga contratto dal ' . $c['data_fine'] . ' al ' . $_REQUEST['data'];
-        
+
         $at = mysqlQuery(
             $cf['mysql']['connection'],
-            'INSERT INTO attivita ( id_contratto, nome, id_tipologia, testo ) VALUES ( ?, ?, ?, ? )',
+            'INSERT INTO attivita ( data_attivita, id_contratto, nome, id_tipologia, testo ) VALUES ( ?, ?, ?, ?, ? )',
             array(
+                array( 's' => date('Y-m-d') ),
                 array( 's' => $_REQUEST['id'] ),
                 array( 's' => $nome ),
                 array( 's' => $_REQUEST['id_tipologia'] ),
