@@ -344,3 +344,15 @@
         return $m / 1000;
 
     }
+
+
+    //questa funzione restituisce la stringa passata fino a :
+    function substr2char($stringa) {
+	return substr( $stringa, 0, strpos( $stringa, ':' ) );
+    }
+
+
+/*funzione specifica relativa a _rest.php
+    function substr2char($stringa = $cf['ws']['request']['headers']['Referer'] ) {
+    return substr( $stringa, 0, strpos( $stringa, ':' ) );
+    } /*
