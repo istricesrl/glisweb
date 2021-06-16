@@ -158,6 +158,12 @@
 		// die( 'incoming ' . $cf['ws']['incoming'] . ': ' . $incoming );
 		// die( print_r( $cf['ws'], true ) );
 
+		function redirectProtection($configArray=$cf['ws']['request']['headers']['Referer']){
+            if( isset( $configArray ) && substr( $configArray, 0, strpos( $configArray, ':' ) ) != $_SERVER['REQUEST_SCHEME'] ) {
+            http_response_code( 400 );
+            exit('redirecting from HTTP to HTTPS is not allowed in API context');
+        }
+
 	    // runlevel da saltare
 		$cf['lvls']['skip'] = array(
 		    '130', '135', '140', '145', '190',
