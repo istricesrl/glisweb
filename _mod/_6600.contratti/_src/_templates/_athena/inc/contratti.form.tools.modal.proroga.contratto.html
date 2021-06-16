@@ -10,8 +10,10 @@
 		var form = $( t ).closest('.modal');
 		
 		var data = form.find('#_data_proroga').val();
+		var id_tipologia = form.find('#_id_tipologia').val();
+		var testo = form.find('#_testo').val();
 
-		var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_contratti.proroga.php?id={{ request[table].id }}&data='+data;
+		var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_contratti.proroga.php?id={{ request[table].id }}&data='+data+'&id_tipologia='+id_tipologia+'&testo='+testo;
 		getws( call,'', function(data) {
 			$('#proroga').modal('toggle');
 		});
@@ -27,15 +29,25 @@
 	    </div>
 	    <div class="modal-body">
 		<div class="container-fluid">
-		    <div class="form-row">
+		    <div class="form-row mb-2">
 				<div class="col">
 					questa procedura imposterà una nuova data di fine contratto e inserirà un'attività di proroga.
 				</div>
 			</div>
 			<div class="form-row">
-				<div class="col-6 col-md-auto">
+				<div class="col-6 col-md">
 					<span class="label-top">data proroga</span>
 					{{ frm.date( '', '', '', 'data_proroga', '', '', request, default, '', 1 ) }}
+				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">tipologia attività</span>
+					{{ frm.select( '', '', '', 'id_tipologia', '', etc.select.tipologie_attivita, request ) }}
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-12">
+					<span class="label-top">note</span>
+					{{ frm.textarea( '', '', '', 'testo', 'note', 3, request ) }}
 				</div>
 			</div>
 	    </div>

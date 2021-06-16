@@ -27,6 +27,13 @@
         array( 'id' => '7', '__label__' => 'domenica' )
     );
 
+	// tendina tipologia dell'attività da creare
+	$ct['etc']['select']['tipologie_attivita'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_contratto = 1' );
+
     // tendina turni
 	foreach( range( 1, 9 ) as $turno ) {
 	    $ct['etc']['select']['turni'][] =  array( 'id' => $turno, '__label__' => $turno );
