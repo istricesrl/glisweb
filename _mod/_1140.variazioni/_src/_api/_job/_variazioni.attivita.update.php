@@ -1,7 +1,8 @@
 <?php
 
     /**
-     * job in foreground che analizza una riga di variazioni_attivita approvata
+     * job in foreground che viene creato dal task _variazioni.attivita.approve.php
+     * analizza una riga di variazioni_attivita approvata
      * - verifica se ci sono attività in quel periodo assegnate all'anagrafica corrispondente e:
      *      - setta id_anagrafica NULL
      *      - crea una riga nella tabella di report __report_attivita_assenze__

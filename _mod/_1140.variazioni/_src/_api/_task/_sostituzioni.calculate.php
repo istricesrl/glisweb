@@ -37,10 +37,10 @@
         
     } else {
 
-        // token della riga
+        // token della riga (cerco le attività senza anagrafica associate a progetti)
         $status['update'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE attivita SET token = ? WHERE id_anagrafica IS NULL '.
+            'UPDATE attivita SET token = ? WHERE id_anagrafica IS NULL AND id_progetto IS NOT NULL '.
             'AND token IS NULL '.
             'ORDER BY timestamp_calcolo_sostituti ASC LIMIT 1',
             array(
