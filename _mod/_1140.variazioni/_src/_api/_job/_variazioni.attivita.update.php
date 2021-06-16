@@ -40,11 +40,27 @@
             // attività di avvio
             if( empty( $job['corrente'] ) ) {
 
-                // leggo i periodi della periodo corrente
+                // chiave di lock
+	            $status['tk'] = getToken( __FILE__ );
+
+                // metto il lock sui periodi della variazione che non hanno già un token
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE periodi_variazioni_attivita SET token = ? WHERE id_variazione = ? AND token IS NULL',
+                    array(
+                        array( 's' => $status['tk'] ),
+                        array( 's' => $job['workspace']['id_variazione'] )
+                    )
+                );
+
+                // leggo i periodi da elaborare
                 $periodi = mysqlQuery(
                     $cf['mysql']['connection'],
-                    'SELECT pv.*, v.id_anagrafica FROM periodi_variazioni_attivita AS pv LEFT JOIN variazioni_attivita AS v ON pv.id_variazione = v.id WHERE v.id = ?',
-                    array( array( 's' => $job['workspace']['id_variazione'] ) )
+                    'SELECT pv.*, v.id_anagrafica FROM periodi_variazioni_attivita AS pv LEFT JOIN variazioni_attivita AS v ON pv.id_variazione = v.id WHERE v.id = ? AND pv.token = ?',
+                    array( 
+                        array( 's' => $job['workspace']['id_variazione'] ),
+                        array( 's' => $status['tk'] )
+                    )
                 );
 
                 $status['result'] = array();
@@ -208,7 +224,7 @@
                 // setto le righe di periodo come elaborate
                 $elab = mysqlQuery(
                     $cf['mysql']['connection'],
-                    'UPDATE periodi_variazioni_attivita SET timestamp_controllo_attivita = ? WHERE id_variazione = ?',
+                    'UPDATE periodi_variazioni_attivita SET timestamp_controllo_attivita = ?, token = NULL WHERE id_variazione = ?',
                     array(
                         array( 's' => time() ),
                         array( 's' => $job['workspace']['id_variazione'] )
