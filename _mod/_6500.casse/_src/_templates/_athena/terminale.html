@@ -32,12 +32,22 @@
         <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
 
     </div>
+
+{% endblock %}
+
+{% block line %}
+{% if session.contatto  %}
+<div style="color: white; background-color: #343A40;">
+    contatto
+</div>
+{% endif %}
 {% endblock %}
 
 {% block main %}
+
 {% set cassa = pages.terminale.url[ localization.language.ietf ] %}
 
-<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+<form id="form-{{ table }}" class="{% if session.contatto  %}mt-3{% endif %}form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
     {# CAMPI HIDDEN DI BASE #}
     <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -49,7 +59,9 @@
     <input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+    {% if not request[table].id %}
     <input type="hidden" id="tipologia" name="{{ table }}[id_tipologia]" value="{{ etc.default_tipologia }}">
+    {% endif %}
 
     {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
     <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
@@ -64,7 +76,7 @@
                     <div class="row">
                         <div class="col-12 ">
                             <span class="label-top">tipologia</span>
-                            {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request, '1', '', '1', '1', '' ) }}
+                            {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request,  etc.default_tipologia, '', '1', '1' ) }}
                         </div>
                         <div class="col-12 mt-2">
                             <span class="label-top">cliente</span>
@@ -167,7 +179,7 @@
                             <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="anteprima()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
                         </div>
                         <div class="col-12 mt-3 cassa">
-                            <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="window.open('{{ cassa }}?__delete__[documenti][id]={{ request.documenti.id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">annulla</button>
+                            <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{request.documenti.id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti][id]={{ request.documenti.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');">elimina</button>
                         </div>
                     </div>
                     </div>
@@ -220,7 +232,7 @@ $( document ).ready(function() {
   //  $("#documenti___comando__ ").focus();
     $("#documenti___operazione__").val('{{ etc.default_operazione }}');
     $("#documenti___reparto__").val('{{ etc.default_reparto }}');
-    $("#documenti_id_tipologia").val('{{ etc.default_tipologia }}');
+ //   $("#documenti_id_tipologia").val('{{ etc.default_tipologia }}');
     //$("#documenti_id_tipologia").val('{{ etc.tipologia }}');
 });
 

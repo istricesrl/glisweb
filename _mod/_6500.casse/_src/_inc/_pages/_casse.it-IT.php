@@ -65,9 +65,10 @@
 	    'h1'		=> array( $l		=> 'terminale' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'terminale.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_terminale.php' ),
+		'parser'	=> array( $m . '_src/_inc/_parser/_terminale.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'sheets' => array( 'terminale' , 'contatti', 'assistenza', 'ritiro.hardware', 'consegna.hardware' ) ), 
+		'etc'		=> array( 'sheets' => array(  'contatti', 'terminale' , 'assistenza', 'ritiro.hardware', 'consegna.hardware' ) ), 
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'terminale' ),
 									'priority'	=> '100' ) ) )
 	);
