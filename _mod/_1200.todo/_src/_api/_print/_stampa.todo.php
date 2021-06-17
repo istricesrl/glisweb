@@ -14,7 +14,7 @@
     require '../../../../../_src/_config.php';
 
     // oggetto del documento
-	$dobj = 'manuale barcode';
+	$dobj = 'prova stampa pdf assistenza';
 
     // elenco dei prodotti
     $prodotti = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM prodotti_view' );
@@ -99,6 +99,65 @@
 
     // aggiunta di una pagina
 	$pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
+
+    //titolo rapporto
+    $pdf->SetFont( $fnt, 'B', $fnts );
+    $pdf->Cell(0, 5, 'rapporto di intervento di assistenza tecnica');
+    $pdf->SetFont( $fnt, '', $fnts );
+
+
+    // spazio sotto 
+    $pdf->SetY( $pdf->GetY() + $stdsp * 2 );
+    
+    
+    //titolo richiesta
+    $pdf->SetFont( $fnt, '', $fnts );						
+    $pdf->MultiCell( $col * 4, $lh, 'richiesta ricevuta da', '', 'L', false, 0 );
+    $pdf->MultiCell( $col * 4, $lh, 'in data', '', 'C', false, 0 );
+    $pdf->MultiCell( $col * 4, $lh, 'alle ore', '', 'R', false, 0 );
+
+
+    //data e ora da mettere di fianco
+
+    // spazio sotto 
+    $pdf->SetY( $pdf->GetY() + $stdsp * 3 );
+
+    //anagrafica del cliente
+    $pdf->SetFont( $fnt, 'B', $fnts );
+    $pdf->Cell(0, 5, '1.dati del cliente:');
+    $pdf->SetY( $pdf->GetY() + $stdsp * 3 );
+    $pdf->SetFont( $fnt, '', $fnts );
+    $pdf->Cell( 0, 5, 'nome e cognome o denominazione', 0, 1, 'L');
+    $pdf->SetY( $pdf->GetY() + $stdsp * 3 );
+    $pdf->SetFont( $fnt, '', $fnts );
+    $pdf->Cell( 0, 5, 'indirizzo della sede intervento', 0, 1, 'L');
+    $pdf->SetY( $pdf->GetY() + $stdsp * 3 );
+    $pdf->SetFont( $fnt, '', $fnts );
+   
+    $pdf->MultiCell( $col * 4, $lh, 'città', '', 'L', false, 0 );
+    $pdf->MultiCell( $col * 4, $lh, 'prov', '', 'C', false, 0 );
+    $pdf->MultiCell( $col * 4, $lh, 'CAP', '', 'R', false, 0 );
+    $pdf->SetY( $pdf->GetY() + $stdsp * 3 );
+    $pdf->SetFont( $fnt, '', $fnts );
+    $pdf->MultiCell( $col * 4, $lh, 'codice fiscale', '', 'L', false, 0 );
+    $pdf->MultiCell( $col * 4, $lh, 'partita IVA', '', 'C', false, 0 );
+    $pdf->MultiCell( $col * 4, $lh, 'codice', '', 'R', false, 0 );
+    $pdf->SetY( $pdf->GetY() + $stdsp * 3 );
+    $pdf->SetFont( $fnt, '', $fnts );
+    $pdf->MultiCell( $col * 4, $lh, 'telefono', '', 'L', false, 0 );
+    $pdf->MultiCell( $col * 4, $lh, 'email o PEC', '', 'C', false, 0 );
+    $pdf->SetY( $pdf->GetY() + $stdsp * 3 );
+
+    $pdf->SetFont( $fnt, 'B', $fnts );
+    $pdf->Cell(0, 5, '2.descrizione del problema:');
+    $pdf->SetY( $pdf->GetY() + $stdsp * 3 );
+
+   
+
+   
+
+    //#Cell(w, h = 0, txt = '', border = 0, ln = 0, align = '', fill = 0, link = nil, stretch = 0, ignore_min_height = false, calign = 'T', valign = 'M')
+
 
     /*foreach( $prodotti as $p){
 
