@@ -19,7 +19,8 @@
      *
      */
 
-
+    // mastro di scarico [magazzino]
+    $ct['etc']['mastro'] = NULL;
 
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
@@ -29,11 +30,11 @@
 
         $del = mysqlQuery(  $cf['mysql']['connection'],
         'DELETE FROM documenti_articoli WHERE id_documento = ?',
-        array( array( 's' =>$_REQUEST['__delete__']['documenti']['id'] ) ) );
+        array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
 
         $del = mysqlQuery(  $cf['mysql']['connection'],
         'DELETE FROM documenti WHERE id = ?',
-        array( array( 's' =>$_REQUEST['__delete__']['documenti']['id'] ) ) );
+        array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
 
     // riapertura scontrino prima della stampa
@@ -44,15 +45,14 @@
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
 
-    } elseif( isset( $_SESSION['account'] )  ){ 
+    } elseif( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_SESSION['account'] )  ){ 
 
        // if( isset($_REQUEST[ $ct['form']['table'] ]) && !$_REQUEST[ $ct['form']['table'] ]['id'] ){ 
         // verifico se l'account ha uno scontrino in sospeso
-        $_REQUEST[ $ct['form']['table'] ]['id'] = mysqlSelectValue(  $cf['mysql']['connection'],
-        'SELECT id FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL',
+        $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
+        'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL',
         array( array( 's' => $_SESSION['account']['id'] ) ) );
         
-
     }
 
     $ct['etc']['default_reparto'] = '0';
@@ -88,6 +88,14 @@
         // verifico se si tratta di un articolo
         if( $comando[0] == 'TRCKG' ){
             // gestisco il codice di tracking
+
+            /*$insert = mysqlQuery( 
+                $cf['mysql']['connection'], 
+                "INSERT INTO contatti ( nome, id_campagna )  VALUES ( ?, ? )",
+                array( 
+                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                    array( 's' => date("Y-m-d") )
+                ) );*/
             //print_r('tracking');
         } elseif( $comando[0] == 'CPON'){
             // gestisco il coupon
@@ -148,10 +156,10 @@
             if( $comando[1] == 'TPL' ){
 
                 if( $_REQUEST[ $ct['form']['table'] ]['__comando__'] == 'CMD.TPL.000'.$ct['etc']['default_tipologia']  ){
-                    $ct['etc']['default_tipologia'] = $ct['etc']['default_tipologia'];
+                 //   $ct['etc']['default_tipologia'] = $ct['etc']['default_tipologia'];
                 } else {
-                    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
-                                    'SELECT id FROM tipologie_documenti WHERE nome = "fattura"');
+                   /* $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
+                                    'SELECT id FROM tipologie_documenti WHERE nome = "fattura"');*/
                 }
             }
 
@@ -205,14 +213,15 @@
 
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, 1, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, 1, ?, ?, ?, ? )",
                                 array( 
                                     array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                                     array( 's' => date("Y-m-d") ),
                                     array( 's' => $articolo['prezzo'] ),
                                     array( 's' => $reparto ),
                                     array( 's' => $id_iva ),
-                                    array( 's' => $articolo['id_udm'] )
+                                    array( 's' => $articolo['id_udm'] ),
+                                    array( 's' => $ct['etc']['mastro'] )
                                 ) );
                 }
             }
@@ -294,3 +303,8 @@
     }
 
 }
+
+//print_r( $_REQUEST );
+
+	// macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';

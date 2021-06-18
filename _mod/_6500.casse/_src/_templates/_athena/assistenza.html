@@ -22,10 +22,18 @@
 </div>
 {% endblock %}
 
+{% block line %}
+{% if session.contatto  %}
+<div class="row d-flex align-items-center" style="color: white; background-color: #343A40; padding: 5px;padding-right: 15px;padding-left: 15px;">
+    <div class="col"><h3>{{ session.contatto.nome }}</h3></div>
+    <div class="col-auto text-right" ><button class="btn btn-light" onclick='window.open("{{ pages.contatti.url[ localization.language.ietf ] }}?__unset__", "_self")'>inserisci nuovo</button> </div>
+</div>
+{% endif %}
+{% endblock %}
 
 {% block main %}
 {% if not session.assistenza.id_assistenza %}
-<form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+<form  {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 <div class="form-group">
     {% if not session.assistenza.id_cliente %}
     <div class="form-group form-row">
@@ -176,14 +184,16 @@
         <input type="hidden" id="method" name="todo[__method__]" value="{{ method_t }}">
         <input type="hidden" id="timestamp" name="todo[timestamp_{{ activity_t }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="todo[id_account_{{ activity_t }}]" value="{{ account }}">
+        <input type="hidden" id="id_contatto" name="todo[id_contatto]" value="{{ session.contatto.id }}">
+        <input type="hidden" id="nome" name="todo[nome]" value="assistenza in cassa del {{ 'now'|date('d/m/Y') }} alle {{ 'now'|date('H:i') }}">
         {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
         {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }} 
         {{ frm.input( 'todo', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
         <div class="form-group col" style="padding: 0%;">
-            <div class="col-12 col-md">
+            <!--div class="col-12 col-md">
                 <span class="label-top">nome</span>
                 {{ frm.inputRequired( 'todo', '', '', 'nome', '', '', request ) }}
-            </div>
+            </div-->
             <div class="col col-md mt-2" >
                 <span class="label-top">descrizione del problema</span>
                 {{ frm.textarea( 'todo', '', '', 'testo', '', 3, request ) }}
@@ -234,6 +244,7 @@
     {{ frm.input( 'attivita', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.assistenza.id_todo , 'hidden' ) }}
+    {{ frm.input( 'attivita', '', '', 'id_tipologia', '', '', '', etc.tipologia_attivita, 'hidden' ) }}
     <div class="form-group form-row">       
         <div class="form-group col">
 			<div class="form-group form-row">
@@ -293,13 +304,13 @@
         <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
             <div>
             {% if  session.assistenza.id_cliente %}
-            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"> {% if session.assistenza.id_attivita %}pulisci{% else %}annulla{% endif %}</button>
+            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"> {% if session.assistenza.id_attivita %}inserisci nuovo{% else %}annulla{% endif %}</button>
             {% endif  %}
             {% if session.assistenza.id_attivita  %}
             <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__delete_all__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">elimina</button>
             {% endif  %}
             </div>
-            {% if session.assistenza.id_cliente and session.assistenza.id_progetto %}
+            {% if session.assistenza.id_cliente and session.assistenza.id_progetto and ( not session.assistenza.id_attivita ) %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             {% endif %}
             
@@ -356,7 +367,7 @@
         <legend>attività</legend>
             <ul>
             {% for a in etc.attivita %}
-                <li>{{ a.nome }}</li>
+                <li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.testo }}</li>
             {% endfor %}
             </ul>
         {% endif %}
@@ -396,11 +407,12 @@
     
             <fieldset class=" ">
                 <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
-                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
-                    <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
                     {% if request.todo.timestamp_completamento %}
                     <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
                     {% endif %}
+                    <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+
                 </div>
             </fieldset>
         </form>

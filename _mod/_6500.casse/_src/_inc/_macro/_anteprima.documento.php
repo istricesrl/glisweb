@@ -1,4 +1,7 @@
 <?php
+
+    // tabella gestita
+
 //print_r( $_REQUEST );
     if( isset( $_REQUEST['documenti']['id'] ) && !empty( $_REQUEST['documenti']['id'] ) ){
 
@@ -26,8 +29,8 @@
         array( array( 's' =>  $_REQUEST['documenti']['id'] ) ) 
 	);
 
-    $barcode = str_pad( $ct['etc']['documento']['id'] ,8,"0", STR_PAD_LEFT);
-    print_r( $barcode );
+   // $barcode = str_pad( $ct['etc']['documento']['id'] ,8,"0", STR_PAD_LEFT);
+   
 
     if( sizeof(  $ct['etc']['documento']['righe'] ) > 0 ){
 
@@ -53,3 +56,4 @@
         }
     }
     }
+

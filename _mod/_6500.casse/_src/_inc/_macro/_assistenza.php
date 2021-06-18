@@ -1,5 +1,6 @@
 <?php
 
+
 $ct['view']['table'] = '';
 $ct['form']['table'] = '';
 
@@ -8,6 +9,11 @@ $ct['view']['cols'] = array(
     'id' => '#'
 );
 
+if( isset( $_SESSION['contatto']['id_anagrafica'] ) ){
+
+    $_SESSION['assistenza']['id_cliente'] = $_SESSION['contatto']['id_anagrafica'];
+
+}
 
 if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza__'] )[0] == 'TODO') || isset( $_SESSION['assistenza']['id_assistenza']) ){
  
@@ -20,7 +26,7 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
 
 
     $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
-    $ct['etc']['attivita'] = mysqlCachedIndexedQuery(  $cf['cache']['index'], $cf['memcache']['connection'],$cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ?', array( array( 's' => $todo) ));
+    $ct['etc']['attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ?', array( array( 's' => $todo) ));
    // $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $todo) ));
     $ct['form']['table'] = 'todo';
     if( !isset( $_REQUEST['todo']  ) ){
@@ -171,6 +177,9 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM indirizzi_view' );
+
+    $ct['etc']['tipologia_attivita'] = mysqlSelectValue(  $cf['mysql']['connection'],
+        'SELECT id FROM tipologie_documenti WHERE nome = "diagnosi"');
 
    // macro di default
    require DIR_SRC_INC_MACRO . '_default.view.php';

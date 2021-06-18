@@ -75,6 +75,24 @@
 			</fieldset>
 
 			<fieldset>
+				<legend>programmazione</legend>
+				<div class="form-group form-row">
+					<div class="col-6 col-md-auto">
+						<span class="label-top">data</span>
+						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora inizio</span>
+						{{ frm.time( table, '', '', 'ora_inizio_programmazione', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora fine</span>
+						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset>
 				<legend>esecuzione</legend>
 				<div class="form-group form-row">
 					<div class="col-6 col-md-auto">
@@ -97,24 +115,6 @@
 					<div class="col-12 col-md">
 						<span class="label-top">esecutore</span>
 						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
-					</div>
-				</div>
-			</fieldset>
-
-			<fieldset>
-				<legend>programmazione</legend>
-				<div class="form-group form-row">
-					<div class="col-6 col-md-auto">
-						<span class="label-top">data</span>
-						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
-					</div>
-					<div class="col-2 col-md-1">
-						<span class="label-top">ora inizio</span>
-						{{ frm.time( table, '', '', 'ora_inizio_programmazione', '', '', request) }} 
-					</div>
-					<div class="col-2 col-md-1">
-						<span class="label-top">ora fine</span>
-						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
 					</div>
 				</div>
 			</fieldset>
