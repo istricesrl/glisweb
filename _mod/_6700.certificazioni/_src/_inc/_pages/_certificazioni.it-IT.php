@@ -51,7 +51,7 @@
 		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
 		'title'		=> array( $l		=> 'file' ),
 		'h1'		=> array( $l		=> 'file' ),
-		'parent'		=> array( 'id'		=> 'pagine.view' ),
+		'parent'		=> array( 'id'		=> 'certificazioni.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'certificazioni.form.file.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_certificazioni.form.file.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),

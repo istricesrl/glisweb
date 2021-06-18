@@ -30,8 +30,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    #'SELECT id, __label__ FROM ruoli_file_view WHERE se_contenuti = 1 '
-        'SELECT id, __label__ FROM ruoli_file_view'
+	    'SELECT id, __label__ FROM ruoli_file_view'
 	);
 
     // tendina lingue
