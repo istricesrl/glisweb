@@ -22,6 +22,10 @@
         'contatti' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
+        ),
+        'campagne' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         )
         )
 	);

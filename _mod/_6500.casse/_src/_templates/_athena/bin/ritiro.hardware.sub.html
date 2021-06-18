@@ -37,9 +37,13 @@
         {{ frm.input( table, subtable, i, 'id_tipologia', '', '', request, request[ table ][ 'id_tipologia' ], 'hidden', '', '', disabled  ) }}
     {% endif %}
 	<div class="form-group form-row">
-        <div class="col">
+        <div class="col-4">
             <span class="label-top">descrizione</span>
             {{ frm.inputRequired( table, subtable, i, 'nome', '', '', request, '', '', '', disabled ) }}
+        </div>
+        <div class="col">
+            <span class="label-top">marca, modello e matricola</span>
+            {{ frm.inputRequired( table, subtable, i, 'specifiche', '', '', request, '', '', '', disabled ) }}
         </div>
 	    <div class="col-1">
 		    <span class="label-top">>quantità</span>

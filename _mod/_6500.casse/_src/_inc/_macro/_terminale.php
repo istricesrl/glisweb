@@ -45,7 +45,7 @@
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
 
-    } elseif( isset( $_SESSION['account'] )  ){ 
+    } elseif( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_SESSION['account'] )  ){ 
 
        // if( isset($_REQUEST[ $ct['form']['table'] ]) && !$_REQUEST[ $ct['form']['table'] ]['id'] ){ 
         // verifico se l'account ha uno scontrino in sospeso
@@ -304,7 +304,7 @@
 
 }
 
-#print_r( $_REQUEST );
+//print_r( $_REQUEST );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

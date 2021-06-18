@@ -37,8 +37,9 @@
 
 {% block line %}
 {% if session.contatto  %}
-<div style="color: white; background-color: #343A40;">
-    contatto
+<div class="row d-flex align-items-center" style="color: white; background-color: #343A40; padding: 5px;padding-right: 15px;padding-left: 15px;">
+    <div class="col"><h3>{{ session.contatto.nome }}</h3></div>
+    <div class="col-auto text-right" ><button class="btn btn-light" onclick='window.open("{{ pages.contatti.url[ localization.language.ietf ] }}?__unset__", "_self")'>inserisci nuovo</button> </div>
 </div>
 {% endif %}
 {% endblock %}
@@ -46,15 +47,17 @@
 {% block main %}
 
 {% set cassa = pages.terminale.url[ localization.language.ietf ] %}
+<div>
 
-<form id="form-{{ table }}" class="{% if session.contatto  %}mt-3{% endif %}form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+</div>
+<form  {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-{{ table }}" class="{% if session.contatto  %}mt-5{% endif %}form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
     {# CAMPI HIDDEN DI BASE #}
     <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
     <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
     <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
     <input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ etc.id_emittente }}">
-    <input type="hidden" id="id_contatto" name="{{ table }}[id_contatto]" value="{{ session.contatto }}">
+    <input type="hidden" id="id_contatto" name="{{ table }}[id_contatto]" value="{{ session.contatto.id }}">
     <input type="hidden" id="dato" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d') }}">
     <input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
@@ -80,7 +83,7 @@
                         </div>
                         <div class="col-12 mt-2">
                             <span class="label-top">cliente</span>
-                            {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
+                            {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.anagrafica, request, session.contatto.id_anagrafica, '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
                         </div>
                         <div class="col-12">
                             {% if etc.righe %}
@@ -207,7 +210,7 @@
     </div>
 
     {% else %}
-    <div class="col-12 mt-3 cassa">
+    <div class="col-12 mt-3 cassa" >
         <button type="sumbit" class="btn btn-secondary btn-sqr btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">apri</button>
     </div>
 

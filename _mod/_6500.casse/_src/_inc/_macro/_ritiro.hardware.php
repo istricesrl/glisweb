@@ -65,6 +65,10 @@
 
     }
 
+    if( isset( $_REQUEST[ $ct['form']['table'] ] ) && !isset( $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] ) && isset($_SESSION['assistenza']['id_documento_ritiro']) ){
+        $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = mysqlQuery($cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE id_documento = ?', array( array( 's' => $_SESSION['assistenza']['id_documento_ritiro'] ) ));
+
+    }
 
 
     //print_r( $_SESSION['assistenza'] );

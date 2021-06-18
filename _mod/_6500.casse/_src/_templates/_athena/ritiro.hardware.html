@@ -23,10 +23,20 @@
 </div>
 {% endblock %}
 
+
+{% block line %}
+{% if session.contatto  %}
+<div class="row d-flex align-items-center" style="color: white; background-color: #343A40; padding: 5px;padding-right: 15px;padding-left: 15px;">
+    <div class="col"><h3>{{ session.contatto.nome }}</h3></div>
+    <div class="col-auto text-right" ><button class="btn btn-light" onclick='window.open("{{ pages.contatti.url[ localization.language.ietf ] }}?__unset__", "_self")'>inserisci nuovo</button> </div>
+</div>
+{% endif %}
+{% endblock %}
+
 {% block main %}
 
 {% if (not request.todo.id) and ( not request[ table ].id ) %}
-<form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+<form {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 	<div class="form-group form-row">
 		<legend>todo</legend>
 			<div class="col ">
@@ -37,10 +47,13 @@
 	</div>
 </div>
 {% else %}
-<legend>todo</legend>
-{{ request.todo.__label__ }}<br>
-{{ request.todo.testo }}<br>
-{{ request.documenti.__label__ }}
+<div  {% if session.contatto %}style="margin-top: 45px;"{% endif %} >
+	<legend>todo</legend>
+	{{ request.todo.__label__ }}<br>
+	{{ request.todo.testo }}<br>
+	{{ request.documenti.__label__ }}
+</div>
+
 {% if session.assistenza.id_documento_ritiro %}
 {% set method = 'update' %}
 {% set activity = 'aggiornamento' %}
@@ -75,12 +88,18 @@
 		<fieldset>
 			<div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
 				{% if request[ table ].id %}
-					<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo ritiro</button>
+					<div>
+						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo ritiro</button>
+						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa etichette</button>
+						
+					</div>
+					<button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
+                
 					{% if request[ table ].documenti_articoli|length <= 0  %}	
 					<button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{ request[ table ].id  }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__unset__=1&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
 					{% endif %}	
 				{% else %}
-					<button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">pulisci</button>
+					<button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
 				{% endif %}
 				<button type="submit" class="btn-lg btn-secondary" onclick="submitFormOkay = true;" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
 			</div>

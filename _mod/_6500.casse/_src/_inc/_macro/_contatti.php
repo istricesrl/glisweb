@@ -5,14 +5,15 @@
     if( isset( $_REQUEST['__unset__'] ) ){
         unset( $_SESSION['contatto'] );
         unset( $_REQUEST[ $ct['form']['table'] ]['id'] );
+		unset( $_SESSION['assistenza']['id_cliente'] );
     }
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-        $_SESSION['contatto'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+        $_SESSION['contatto'] = $_REQUEST[ $ct['form']['table'] ];
     }
 
     if( isset( $_SESSION['contatto'] ) && !empty( $_SESSION['contatto'])  && !isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-        $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM contatti_view WHERE id = ?', array( array( 's' => $_SESSION['contatto']  ) ) );
+        $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM contatti_view WHERE id = ?', array( array( 's' => $_SESSION['contatto']['id']  ) ) );
 
     }
 
