@@ -1,0 +1,1 @@
+ALTER TABLE `progetti` ADD CONSTRAINT `progetti_ibfk_32_nofollow` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

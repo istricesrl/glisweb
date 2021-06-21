@@ -1,0 +1,1 @@
+ALTER TABLE `documenti_articoli` ADD `id_reparto` INT NULL DEFAULT NULL AFTER `id_udm`, ADD INDEX (`id_reparto`) ;
