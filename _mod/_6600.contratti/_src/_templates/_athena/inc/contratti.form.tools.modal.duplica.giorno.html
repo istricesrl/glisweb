@@ -6,6 +6,7 @@
 
 <script>
     function duplicaGiorno( t ) {
+        $('#btnduplicagiorno').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var form = $( t ).closest('.modal');		
         var turno = form.find('#turno').val();
         var gb = form.find('#gb').val();
@@ -62,7 +63,7 @@
             </div>
 	    </div>
 	    <div class="modal-footer">
-            <button type="button" class="btn btn-secondary btn-sm" onclick="duplicaGiorno(this);">duplica</button>
+            <button type="button" id="btnduplicagiorno" class="btn btn-secondary btn-sm" onclick="duplicaGiorno(this);">duplica</button>
             <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

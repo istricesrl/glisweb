@@ -13,7 +13,7 @@
      */
 
    // tabella della vista
-   $ct['view']['table'] = 'contratti_archiviati';
+   $ct['view']['table'] = 'contratti_completa';
 
 	// tabella per l'apertura
 	$ct['view']['open']['table'] = 'contratti';
@@ -28,7 +28,8 @@
 	   'data_fine' => 'data fine',
       'data_inizio_rapporto' => 'data inizio rapporto',
       'data_fine_rapporto' => 'data fine rapporto',
-	   '__label__' => 'contratto'
+      '__label__' => 'contratto',
+      'proroghe' => 'proroghe'
    );
 
    // stili della vista
@@ -37,14 +38,7 @@
    );
 
    // inclusione filtri speciali
-	$ct['etc']['include']['filters'] = 'inc/contratti.view.filters.html';
-
-   // tendina tipologia
-  $ct['etc']['select']['tipologie_contratti'] = mysqlCachedQuery(
-      $cf['memcache']['connection'],
-      $cf['mysql']['connection'],
-      'SELECT id, __label__ FROM tipologie_contratti_view'
-   );
+	$ct['etc']['include']['filters'] = 'inc/contratti.scadenze.view.filters.html';
 
    // gestione default
    require DIR_SRC_INC_MACRO . '_default.view.php';

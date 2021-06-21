@@ -23,13 +23,15 @@
     $ct['form']['table'] = 'anagrafica';
 
     // tabella della vista
-    $ct['view']['table'] = 'contratti';
+    $ct['view']['table'] = 'contratti_completa';
 
      // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
         'data_inizio' => 'data inizio',
         'data_fine' => 'data fine',
+        'data_inizio_rapporto' => 'data inizio rapporto',
+        'data_fine_rapporto' => 'data fine rapporto',
 	    '__label__' => 'contratto'
 	);
 
