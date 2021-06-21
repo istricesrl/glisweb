@@ -13,7 +13,7 @@
      */
 
     // costanti
-	define( 'CUT_CENTER'		, 'CUT_C' );
+	define( 'CUT_CENTER'			, 'CUT_C' );
 	define( 'CUT_RIGHT'			, 'CUT_R' );
 	define( 'CUT_LEFT'			, 'CUT_L' );
 
