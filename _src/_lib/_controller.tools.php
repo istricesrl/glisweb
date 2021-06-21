@@ -47,7 +47,8 @@
 		// var_dump( $d );
 
 	// modifico in NULL tutti i valori vuoti
-	    $d = array_map( 'empty2null', $d );
+	    // $d = array_map( 'empty2null', $d );
+	    $d = array_map( 'numeric2null', $d );
 
 	// genero l'array delle chiavi, dei valori e dei sottomoduli
 	    foreach( $d as $k => $v ) {
@@ -134,6 +135,11 @@
 				$i['__group__'] = array( $t . $rm . '.id' );
 			    }
 
+				// filtri per i campi
+			    foreach( $ks as $fk ) {
+					$whr[] = "${fk} = ?";
+				}
+
 			// ricerca nella vista
 			    if( isset( $i['__fields__'] ) && isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
 					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
@@ -160,10 +166,7 @@
 					$whr[] = '(' . implode( ' AND ', $cond ) . ')';
 				}
 
-			// filtri per i campi
-			    foreach( $ks as $fk ) {
-				$whr[] = "${fk} = ?";
-			    }
+			
 
 			// debug
 				// print_r( $i['__filters__'] );
@@ -267,6 +270,7 @@
 			// debug
 			    // print_r( $i );
 			     // echo $q . PHP_EOL;
+				// print_r($vs);
 
 			// eseguo la query
 			    $d = mysqlQuery( $c, $q, $vs, $e['__codes__'] );
