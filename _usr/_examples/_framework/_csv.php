@@ -37,7 +37,7 @@
 	$f	= DIR_TMP . time() . '.test';
 
     // test scrittura su file
-	$r	= array2csv( $d1, $f );
+	$r	= array2csvFile( $d1, $f );
 
     // output
 	$tx	.= PHP_EOL;
