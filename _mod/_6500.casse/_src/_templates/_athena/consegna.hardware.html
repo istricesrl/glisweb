@@ -34,32 +34,35 @@
 
 {% block main %}
 
-{% if (not request.todo.id) and ( not request[ table ].id ) %}
+{% if  not request[ table ].id  %}
 <form {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 	<div class="form-group form-row">
-		<legend>todo</legend>
-			<div class="col ">
-				<span class="label-top">barcode</span>
-				<input type="text" class="form-control form-control-sm" name="__todo__" value="" autofocus>
-				<button type="submit" hidden></button>
-			</div>   
+			<div class="col form-row">
+                <legend>todo o modulo di ritiro</legend>
+                <div class="col">
+                    <span class="label-top">barcode</span>
+                    <input type="text" class="form-control form-control-sm" name="__barcode__" value="" autofocus>
+                </div>
+            </div>  
 	</div>
-</div>
+    <button type="submit" hidden></button>
+</form>
 {% else %}
 <div  {% if session.contatto %}style="margin-top: 45px;"{% endif %} >
 	<legend>todo</legend>
-	{{ request.todo.__label__ }}<br>
-	{{ request.todo.testo }}<br>
+	{{ request.documenti.todo.__label__ }}<br>
+	{{ request.documenti.todo.testo }}<br>
 	{{ request.documenti.__label__ }}
 </div>
 
-{% if session.assistenza.id_documento_ritiro %}
+{% if session.assistenza.id_documento_consegna %}
 {% set method = 'update' %}
 {% set activity = 'aggiornamento' %}
 {% else %}
 {% set method = 'post' %}
 {% set activity = 'inserimento' %}
 {% endif %}
+
 {# FORM DI GESTIONE #}
 <section class="row flex-fill mt-3">
     <div class="col-md-12 d-flex flex-column">
@@ -82,14 +85,13 @@
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
 		{# SUBFORM GRUPPI #}
-	    {{ sub.righe( table, 'documenti_articoli', 'hardware', site, page, pages, ietf, etc, request, session, 1 ,2 ) }}
+	    {{ sub.righe( table, 'documenti_articoli', 'hardware', site, page, pages, ietf, etc, request, session, etc.mastro, '' ) }}
 	
 		<fieldset>
 			<div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
 				{% if request[ table ].id %}
 					<div>
-						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo ritiro</button>
-						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa etichette</button>
+						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo consegna</button>
 						
 					</div>
 					<button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>

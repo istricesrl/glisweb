@@ -1,0 +1,32 @@
+<script>
+    function genera_matricola( t ) {
+        var form = $( t ).closest('.modal');
+        var data = form.find('.id_categoria').first().val();
+	    window.open( '/print/indirizzario.csv?__categoria__='+data, '_self');
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="genera_matricola">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">genera matricola hardware</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+				<span class="label-top">categoria</span>
+			    {{ frm.selectRequired( table, '', '', '', 'tutte', etc.select.categorie_anagrafica, request, '', '','selectpicker id_categoria' ) }}
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="genera_matricola(this);">esporta</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

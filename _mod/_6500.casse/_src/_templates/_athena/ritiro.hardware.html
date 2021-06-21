@@ -83,7 +83,7 @@
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
 		{# SUBFORM GRUPPI #}
-	    {{ sub.righe( table, 'documenti_articoli', 'hardware', site, page, pages, ietf, etc, request, session, 1 ,2 ) }}
+	    {{ sub.righe( table, 'documenti_articoli', 'hardware', site, page, pages, ietf, etc, request, session, '' , etc.mastro ) }}
 	
 		<fieldset>
 			<div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
@@ -113,4 +113,6 @@
 
 {% endif %}
 
+
 {% endblock %}
+

@@ -25,6 +25,12 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
+
+    $ct['etc']['default_reparto'] = '0';
+    $ct['etc']['default_operazione'] = '1';
+    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
+                                    'SELECT id FROM tipologie_documenti WHERE nome = "scontrino"');
+
     // eliminazione scontrino in sospeso
     if( isset( $_REQUEST['__delete__'] ) ){
 
@@ -50,15 +56,11 @@
        // if( isset($_REQUEST[ $ct['form']['table'] ]) && !$_REQUEST[ $ct['form']['table'] ]['id'] ){ 
         // verifico se l'account ha uno scontrino in sospeso
         $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
-        'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL',
-        array( array( 's' => $_SESSION['account']['id'] ) ) );
+        'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL AND id_tipologia = ?',
+        array( array( 's' => $_SESSION['account']['id'] ), array( 's' => $ct['etc']['default_tipologia'] ) ) );
         
     }
 
-    $ct['etc']['default_reparto'] = '0';
-    $ct['etc']['default_operazione'] = '1';
-    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
-                                    'SELECT id FROM tipologie_documenti WHERE nome = "scontrino"');
 
     // tendina  reparti
 	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
