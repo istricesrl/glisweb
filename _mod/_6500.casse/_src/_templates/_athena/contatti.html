@@ -105,7 +105,7 @@
                     <button type="button"  class="btn-lg btn-secondary" onclick="window.open('{{ pages.terminale.url[ localization.language.ietf ] }}?__contatto__={{ request[ table ].id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea scontrino</button>
                     <button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ pages.assistenza.url[ localization.language.ietf ] }}?__contatto__={{request[ table ].id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea assistenza</button>	
                     {% set progetto = 'progetti.produzione.form' %}
-                    <button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ pages[ progetto ].url[ localization.language.ietf ] }}?__preset__[progetti][id_cliente]={{request[ table ].id }}&__backurl__={{ page.backurl[ ietf ] }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">apri progetto</button>	
+                    <button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ pages[ progetto ].url[ localization.language.ietf ] }}?__preset__[progetti][id_cliente]={{request[ table ].id }}&__backurl__={{ page.backurl[ ietf ] }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea progetto</button>	
                 </div>
                  <div class="group">
                     {% if session.contatto %}
