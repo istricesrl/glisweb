@@ -150,10 +150,16 @@
         pdfTitolo( $pdf, $testo, $fFamily, $fSize, $fWeight, $border, $newline, $align );
     }
     
-    function pdfFormCellTxt( $pdf, $testo, $nCols = 0, $colWidth = 0, $fFamily = 'helvetica', $fSize = 10, $fWeight = '', $border = 0, $newline = 1, $align = 'L'  ) {
+    function pdfFormCellTxt( $pdf, $testo, $nCols = 0, $colWidth = 0, $fFamily = 'helvetica', $fSize = 10, $fWeight = '', $border = 0, $newline = 1, $align = 'L' ) {
 
         $pdf->SetFont( $fFamily, $fWeight, $fSize );
         $pdf->Cell( ( $nCols * $colWidth ), 0, $testo, $border, $newline, $align );
+
+    }
+
+    function pdfFormCellLine( $pdf, $testo, $nRows, $nCols = 0, $colWidth = 0, $fFamily = 'helvetica', $fSize = 10, $fWeight = '', $border = 0, $newline = 1, $align = 'L' ) {
+
+
 
     }
 
@@ -169,17 +175,23 @@
         $cells = array();
 
         foreach( $testi as $testo ) {
+
             $element++;
+
             $thisFamily = ( isset( $testo['family'] ) ) ? $testo['family'] : $fFamily;
             $thisWeight = ( isset( $testo['weight'] ) ) ? $testo['weight'] : $fWeight;
             $thisSize = ( isset( $testo['size'] ) ) ? $testo['size'] : $fSize;
-            $thisBorder = ( isset( $testo['border'] ) ) ? $testo['border'] : $border;
+            $thisBorder = ( isset( $testo['border'] ) ) ? $testo['border'] : 1;
+
             $pdf->SetFont( $thisFamily, $thisWeight, $thisSize );
             $pdf->Cell( ( $testo['cols'] * $colWidth ), 0, $testo['testo'], $border, ( $element == $nElements ) ? $newline : 0, $align );
+
             if( $element < $nElements ) {
                 $pdf->Cell( $colWidth, 0, '', $border, 0 );
             }
+
             $cells[] = array( 'cols' => $testo['cols'], 'border' => $thisBorder );
+
         }
 
         pdfFormCellRow( $pdf, $cells, $colWidth );
@@ -195,14 +207,15 @@
 
             $element++;
 
-            $thisFamily = ( isset( $testo['family'] ) ) ? $testo['family'] : $fFamily;
-            $thisWeight = ( isset( $testo['weight'] ) ) ? $testo['weight'] : $fWeight;
-            $thisSize = ( isset( $testo['size'] ) ) ? $testo['size'] : $fSize;
+            $thisFamily = ( isset( $blocco['family'] ) ) ? $blocco['family'] : $fFamily;
+            $thisWeight = ( isset( $blocco['weight'] ) ) ? $blocco['weight'] : $fWeight;
+            $thisSize = ( isset( $blocco['size'] ) ) ? $blocco['size'] : $fSize;
+            $thisBorder = ( isset( $blocco['border'] ) ) ? $blocco['border'] : $border;
 
             $pdf->SetFont( $thisFamily, $thisWeight, $thisSize );
 
             for( $cell = 1; $cell <= $blocco['cols']; $cell++ ) {
-                $pdf->Cell( $colWidth, 0, '', $border, ( $element == $nElements && $cell == $blocco['cols'] ) ? $newline : 0, $align );
+                $pdf->Cell( $colWidth, 0, '', $thisBorder, ( $element == $nElements && $cell == $blocco['cols'] ) ? $newline : 0, $align );
             }
 
             if( $element < $nElements ) {
@@ -283,6 +296,18 @@
             array( 'cols' => 28, 'testo' => 'richiesta ricevuta da' ),
             array( 'cols' => 10, 'testo' => 'in data' ),
             array( 'cols' => 5, 'testo' => 'alle ore' )
+        ),
+        $cellw
+    );
+
+    // ...
+
+    pdfFormCellTxtRow(
+        $pdf,
+        array(
+            array( 'cols' => 12, 'testo' => 'codice contratto' ),
+            array( 'cols' => 23, 'testo' => '', 'border' => 0 ),
+            array( 'cols' => 8, 'testo' => 'ore residue' )
         ),
         $cellw
     );
