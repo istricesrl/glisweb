@@ -3,7 +3,7 @@
     //unset(  $_REQUEST['documenti']['id'] );
     $ct['form']['table'] = 'documenti';
 
-    $ct['etc']['mastro'] = NULL;
+    $ct['etc']['mastro'] = 5;
 
     // pulizia documento attuale
     if( isset( $_REQUEST['__unset__'] ) ){
@@ -16,28 +16,25 @@
 
         if( $barcode[0] == 'TODO' ){
 
-            // tutti gli hardware
-            $campo = 'documenti.id_todo';
-            $valore = ltrim( $barcode[1], "0"); 
+            $todo = ltrim( $barcode[1], "0"); 
 
         } elseif( $barcode[0] == 'DOC' ){
 
-            $campo = 'documenti.id';
-            $valore = ltrim( $barcode[1], "0"); 
+            $todo =  mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_todo FROM documenti WHERE id = ?',
+                        array( array( 's' => ltrim( $barcode[1], "0") ) ) );
+
         }
 
 
 
-        $id_tipologia_ritiro = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM tipologie_documenti WHERE nome = "documento di ritiro"');
-        //print_r($campo . ' ' . $valore. ' '.$id_tipologia_ritiro );
-        $righe = mysqlQuery(    $cf['mysql']['connection'], 
-                                'SELECT documenti_articoli.*, documenti.id_emittente AS emittente, documenti.id_destinatario AS destinatario, documenti.id_todo AS todo   FROM documenti_articoli LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento WHERE documenti.id_tipologia = ? AND  '.$campo.' = ? ',
-                                array(  array( 's' => $id_tipologia_ritiro ),
-                                       // array( 's' => $campo ),
-                                        array( 's' => $valore) ) );
-       //print_r( $righe );                                 
+        // tutte le righe legate alla todo
 
-        if( $righe ){
+        $righe = mysqlQuery(    $cf['mysql']['connection'], 
+                                'SELECT * FROM __report_mastri_todo__ WHERE id_todo = ? ',
+                                array(  array( 's' => $todo ) ) );
+                              
+
+        if( count($righe) > 0 ){
 
             $ct['etc']['id_tipologia'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM tipologie_documenti WHERE nome = "consegna"');
 
@@ -54,9 +51,11 @@
                     array( 's' => $ct['etc']['numero'] ),
                     array( 's' => date("Y-m-d") ),
                     array( 's' => $ct['etc']['id_tipologia'] ),
-                    array( 's' => $righe[0]['todo'] ),
-                    array( 's' => $righe[0]['emittente'] ),
-                    array( 's' => $righe[0]['destinatario'] ),
+                    array( 's' => $righe[0]['id_todo'] ),
+                 //   array( 's' => $righe[0]['id_emittente'] ),
+                 //   array( 's' => $righe[0]['id_destinatario'] ),
+                 array( 's' => 2 ),
+                 array( 's' => 4 ),
                     array( 's' => date("U") ),
                     array( 's' => ( isset( $_SESSION['account']['id'] ) ? $_SESSION['account']['id'] : NULL ) )
                     )

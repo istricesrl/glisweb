@@ -6,7 +6,7 @@
     /*if( isset( $_SESSION['assistenza']['id_documento'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && ( $_SESSION['assistenza']['id_documento'] == $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
         unset( $_REQUEST[ $ct['form']['table'] ] );
     }*/
-    $ct['etc']['mastro'] = NULL;
+    $ct['etc']['mastro'] = 5;
 
     if( isset( $_REQUEST['todo'] ) && !isset( $_SESSION['assistenza']['id_todo_ritiro'] ) ){
         unset($_REQUEST['todo']);

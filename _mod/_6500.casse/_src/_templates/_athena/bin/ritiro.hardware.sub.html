@@ -17,7 +17,7 @@
     <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
     {{ frm.input( table, subtable, i, 'id_documento', '', '', '', '__parent_id__', 'hidden', '', '', disabled  ) }}
-    {{ frm.input( table, subtable, i, 'id_todo', '', '', '', request[ table ][ 'id_todo' ], 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_todo', '', '', '', request.todo.id, 'hidden', '', '', disabled  ) }}
 	{{ frm.input( table, subtable, i, 'id_account_' ~ action, '', '', '', account, 'hidden', '', '', disabled  ) }}
 	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_udm', '', '', request, '1', 'hidden', '', '', disabled  ) }}
