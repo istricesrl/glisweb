@@ -150,19 +150,31 @@
         pdfTitolo( $pdf, $testo, $fFamily, $fSize, $fWeight, $border, $newline, $align );
     }
     
-    function pdfFormCellTxt( $pdf, $testo, $nCols = 0, $colWidth = 0, $fFamily = 'helvetica', $fSize = 10, $fWeight = '', $border = 0, $newline = 1, $align = 'L' ) {
+    function pdfFormCellTxt( $pdf, $testo, $nCols = 0, $colWidth = 0, $fFamily = 'helvetica', $fSize = 10, $fWeight = '', $border = 0, $newline = 1, $align = 'L'  ) {
 
         $pdf->SetFont( $fFamily, $fWeight, $fSize );
         $pdf->Cell( ( $nCols * $colWidth ), 0, $testo, $border, $newline, $align );
 
     }
+/*
+    function pdfLine($pdf, $testo, $border=0, $newline=1, $align='L', $stretch=1,$fFamily='helvetica', $fWeight='', $fSize=0 ){
+        $pdf->SetFont( $fFamily, $fWeight, $fSize);
+        $pdf->Cell(0, 0, $border, $newline, $align, $stretch, $testo );
+    }
+    */
+    
 
-    function pdfFormCellLine( $pdf, $testo, $nRows, $nCols = 0, $colWidth = 0, $fFamily = 'helvetica', $fSize = 10, $fWeight = '', $border = 0, $newline = 1, $align = 'L' ) {
+    function pdfFormCellLine( $pdf, $testo, $nRows = 5, $nCols = 26, $colWidth = 0 , $fFamily = 'helvetica',  $fSize=0, $fWeight = '', $border = 0, $newline = 1, $align = 'L', $stretch=0 ){
 
-
-
+        $pdf->SetFont( $fFamily, $fWeight, $fSize, $nCols, $colWidth,);
+        $pdf->MultiCell($nCols * $nRows, $border, $newline, $align, $nRows, $testo, $stretch );
+        // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
+        
+        
     }
 
+
+    
     /**
      * $testi = array(
      *   array( 'cols' => 5, 'testo' => 'testo', 'weight' => 'B' )
@@ -177,20 +189,16 @@
         $cells = array();
 
         foreach( $testi as $testo ) {
-
             $element++;
-
             $thisFamily = ( isset( $testo['family'] ) ) ? $testo['family'] : $fFamily;
             $thisWeight = ( isset( $testo['weight'] ) ) ? $testo['weight'] : $fWeight;
             $thisSize = ( isset( $testo['size'] ) ) ? $testo['size'] : $fSize;
             $thisBorder = ( isset( $testo['border'] ) ) ? $testo['border'] : 1;
             $pdf->SetFont( $thisFamily, $thisWeight, $thisSize );
             $pdf->Cell( ( $testo['cols'] * $colWidth ), 0, $testo['testo'], $border, ( $element == $nElements ) ? $newline : 0, $align );
-
             if( $element < $nElements ) {
                 $pdf->Cell( $colWidth, 0, '', $border, 0 );
             }
-
             $cells[] = array( 'cols' => $testo['cols'], 'border' => $thisBorder );
            
 
@@ -228,7 +236,7 @@
     }
 }
 
-    function spazio($dim=2, $pdf, $stdsp){
+    function spazio($pdf, $dim=2, $stdsp){
         //global $pdf, $stdsp;
         $pdf->SetY( $pdf->GetY() + $stdsp * $dim );
     };
@@ -303,20 +311,20 @@
         ),
         $cellw
     );
-    spazio(1, $pdf, $stdsp);
+    spazio($pdf, 1, $stdsp);
     pdfSottoTitolo( $pdf, "2. descrizione del problema" );
-    //creazione funzione pdfLinea
-    /*
-    spazio(1, $pdf, $stdsp);
-    pdfLine($pdf, '__' );
-    spazio(1, $pdf, $stdsp);
-    pdfLine($pdf, '__' );
-    spazio(1, $pdf, $stdsp);
-    pdfLine($pdf, '__' );
-   
-    spazio(2, $pdf, $stdsp);
-    */
+    spazio($pdf, 1, $stdsp);
+    pdfFormCellLine($pdf, '__' );
+    
 
+
+    /*
+    pdfFormCellLine($pdf, '__' );
+    spazio(1, $pdf, $stdsp);
+    pdfFormCellLine($pdf, '__' );
+    */
+    
+    spazio($pdf, 1, $stdsp);
     pdfSottoTitolo($pdf, "3. appuntamento");
     pdfFormCellTxtRow(
         $pdf,
@@ -332,12 +340,18 @@
         $pdf,
         array(
             array( 'cols' => 10, 'testo' => 'in data' ),
+            array( 'cols' => 18,'testo' => '', 'border' => 0),
             array( 'cols' => 5,'testo' => 'partenza'),
             array( 'cols' => 5, 'testo' => 'arrivo' ),
             array( 'cols' => 5, 'testo' => 'totale' )
         ),
         $cellw
     );
+    spazio($pdf, 0.5, $stdsp);
+    pdfSottoTitolo($pdf, "5. diagnosi");
+    
+    
+
     /*
     spazio(1, $pdf, $stdsp);
     pdfSottoTitolo( $pdf, "5. diagnosi" );
@@ -353,18 +367,6 @@
     
 
 
-    // ...
-
-    pdfFormCellTxtRow(
-        $pdf,
-        array(
-            array( 'cols' => 12, 'testo' => 'codice contratto' ),
-            array( 'cols' => 23, 'testo' => '', 'border' => 0 ),
-            array( 'cols' => 8, 'testo' => 'ore residue' )
-        ),
-        $cellw
-    );
-
     /*
     pdfFormCellRow(
         $pdf,
@@ -377,41 +379,9 @@
     );
     */
 
-    //qui inserimento della query
-    //trecella();
-    //spazio();
-    //trecella("codice fiscale", "partita IVA", "codice", $col1=4,$col2 = 4, $col3 = 4, $pdf, $fnt, $fnts, $col, $lh);
-    //spazio();
-    //bicella("telefono", "email o PEC",$col1=7, $col2=5, $pdf, $fnt, $fnts, $col, $lh);
-    //spazio();
-    //riga("codice contratto",$pdf, $fnt, $fnts);
-    //spazio();
-    //pdfSottoTitolo( $pdf, "2.descrizione del problema" );
-    //spazio(4);
-    //pdfSottoTitolo( $pdf, "3.appuntamento");
+
     
     
-    
-    
-    
-    /*
-       //tentativo di far passare i parametri $pdf, $fnt (..) 
-        function pdfTitolo($testo, $pdf2, $fnt2, $fnts2, $font='B', $size=12){
-        $pdf2->SetFont( $fnt2, $font, $fnts2=$size );
-        $pdf2->Cell(0, 5, $testo, 0, 1, 'L');
-        // return $pdf2
-        }
-        pdfTitolo("test titolo", $pdf, $fnt, $fnts);
-        */
-    
-    //tentativo sottotitolo
-    /*function pdfSottoTitolo($testo, $pdf2, $fnt2, $fnts2, $font='B', $size=8){
-        $pdf2->SetFont( $fnt2, $font, $fnts2=$size );
-        $pdf2->Cell(0, 5, $testo, 0, 1, 'L');
-    }
-    
-    pdfSottoTitolo("prova sottotitolo", $pdf, $fnt, $fnts);
-    */
     
     
     // output
