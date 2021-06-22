@@ -54,7 +54,7 @@
                 <div class="col-12 col-md-2">
                     <span class="label-top">tipologia</span>
                     {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request, '', '', '', '', 'nomeProgetto()' ) }}
-  </div>
+  				</div>
 				<div class="col-12 col-md-2">
                     <span class="label-top">conto ore</span>
                     {{ frm.select( table, '', '', 'id_mastro_attivita_default', '', etc.select.mastri, request ) }}
@@ -63,15 +63,6 @@
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-				</div>
-				<div class="col-12 col-md-2">
-					<span class="label-top">ranking</span>
-					{{ frm.input( table, '', '', 'ranking', '', '', request ) }}
-                </div>
-				<div class="col-auto col-form-label">
-					<div class="form-check">
-						{{ frm.checkbox( table, '', '', 'se_lavoro_festivo', 'lavoro festivo', '', request ) }}
-					</div>
 				</div>
             </div>
             
