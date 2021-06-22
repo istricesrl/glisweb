@@ -157,7 +157,7 @@
 
     }
 
-    function pdfFormCellLine( $pdf, $testo, $nRows, $nCols = 0, $colWidth = 0, $fFamily = 'helvetica', $fSize = 10, $fWeight = '', $border = 0, $newline = 1, $align = 'L' ) {
+    function pdfFormCellLine( $pdf, $testo, $nRows,$nCols = 0, $colWidth = 0, $fFamily = 'helvetica', $fSize = 10, $fWeight = '', $border = 0, $newline = 1, $align = 'L' ) {
 
 
 
