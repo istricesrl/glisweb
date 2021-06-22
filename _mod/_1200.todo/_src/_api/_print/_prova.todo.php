@@ -157,11 +157,18 @@
 
     }
 
+    function pdfLine($pdf, $testo, $border=0, $newline=1, $align='L', $stretch=1,$fFamily='helvetica', $fWeight='', $fSize=0 ){
+        $pdf->SetFont( $fFamily, $fWeight, $fSize);
+        $pdf->Cell(0, 0, $border, $newline, $align, $stretch, $testo );
+    }
+
     /**
      * $testi = array(
      *   array( 'cols' => 5, 'testo' => 'testo', 'weight' => 'B' )
      * )
      */
+
+    
     function pdfFormCellTxtRow( $pdf, $testi, $colWidth = 0, $fFamily = 'helvetica', $fSize = 8, $fWeight = '', $border = 0, $newline = 1, $align = 'L' ) {
 
         $nElements = count( $testi );
@@ -173,13 +180,16 @@
             $thisFamily = ( isset( $testo['family'] ) ) ? $testo['family'] : $fFamily;
             $thisWeight = ( isset( $testo['weight'] ) ) ? $testo['weight'] : $fWeight;
             $thisSize = ( isset( $testo['size'] ) ) ? $testo['size'] : $fSize;
-            $thisBorder = ( isset( $testo['border'] ) ) ? $testo['border'] : $border;
+            $thisBorder = ( isset( $testo['border'] ) ) ? $testo['border'] : 1;
             $pdf->SetFont( $thisFamily, $thisWeight, $thisSize );
             $pdf->Cell( ( $testo['cols'] * $colWidth ), 0, $testo['testo'], $border, ( $element == $nElements ) ? $newline : 0, $align );
             if( $element < $nElements ) {
                 $pdf->Cell( $colWidth, 0, '', $border, 0 );
             }
             $cells[] = array( 'cols' => $testo['cols'], 'border' => $thisBorder );
+           
+
+            
         }
 
         pdfFormCellRow( $pdf, $cells, $colWidth );
@@ -195,60 +205,44 @@
 
             $element++;
 
-            $thisFamily = ( isset( $testo['family'] ) ) ? $testo['family'] : $fFamily;
-            $thisWeight = ( isset( $testo['weight'] ) ) ? $testo['weight'] : $fWeight;
-            $thisSize = ( isset( $testo['size'] ) ) ? $testo['size'] : $fSize;
+            $thisFamily = ( isset( $blocco['family'] ) ) ? $blocco['family'] : $fFamily;
+            $thisWeight = ( isset( $blocco['weight'] ) ) ? $blocco['weight'] : $fWeight;
+            $thisSize = ( isset( $blocco['size'] ) ) ? $blocco['size'] : $fSize;
+            $thisBorder = ( isset( $blocco['border'] ) ) ? $blocco['border'] : $border;
 
             $pdf->SetFont( $thisFamily, $thisWeight, $thisSize );
 
             for( $cell = 1; $cell <= $blocco['cols']; $cell++ ) {
-                $pdf->Cell( $colWidth, 0, '', $border, ( $element == $nElements && $cell == $blocco['cols'] ) ? $newline : 0, $align );
+                $pdf->Cell( $colWidth, 0, '', $thisBorder, ( $element == $nElements && $cell == $blocco['cols'] ) ? $newline : 0, $align );
             }
 
             if( $element < $nElements ) {
                 $pdf->Cell( $colWidth, 0, '', 0, 0 );
             }
 
-        }
-
     }
+}
 
-    function trecella($testo1, $testo2, $testo3, $col1=4, $col2 = 4, $col3 = 4, $pdf, $fnt, $fnts=8, $col, $lh){
-        global $pdf, $fnt, $fnts, $col, $lh;
-        $pdf->SetFont( $fnt, '', $fnts);						
-        $pdf->MultiCell( $col * $col1, $lh, $testo1, '', 'L', false, 0 );
-        $pdf->MultiCell( $col * $col2, $lh, $testo2, '', 'C', false, 0 );
-        $pdf->MultiCell( $col * $col3, $lh, $testo3, '', 'R', false, 1 );
-    };
-    
-    
-    function riga($testo, $pdf, $fnt, $fnts=8){
-        //global $pdf, $fnt, $fnts;
-        $pdf->SetFont( $fnt, '', $fnts );
-        $pdf->Cell(0, 5, $testo, 0, 1, 'L');
-    }
-    
-    function spazio($dim=2){
-        global $pdf, $stdsp;
+    function spazio($dim=2, $pdf, $stdsp){
+        //global $pdf, $stdsp;
         $pdf->SetY( $pdf->GetY() + $stdsp * $dim );
     };
-    
-    
-    function bicella($testo1, $testo2, $col1=7, $col2=5, $pdf, $fnt, $fnts=8, $col, $lh){
-        //global $pdf, $fnt, $fnts, $col, $lh;
-        $pdf->SetFont( $fnt, '', $fnts );
-        $pdf->MultiCell( $col * $col1, $lh, $testo1, '', 'L', false, 0 );
-        $pdf->MultiCell( $col * $col2, $lh, $testo2, '', 'C', false, 0 );
-        // $pdf->MultiCell( $col * $col3, $lh, '', 'R', false, 0);
-    }
-    
+
+
     
     pdfTitolo( $pdf, 'rapporto di intervento di assistenza tecnica' );
     
+    pdfFormCellTxtRow(
+        $pdf,
+        array(
+            array( 'cols' => 28, 'testo' => 'richiesta ricevuta da' ),
+            array( 'cols' => 10, 'testo' => 'in data' ),
+            array( 'cols' => 5, 'testo' => 'alle ore' )
+        ),
+        $cellw
+    );
     
-    pdfSottoTitolo( $pdf, "1.dati cliente" );
-    // treriga("città", "prov", "cap");
-    // riga("nome e cognome o denominazione",$pdf, $fnt, $fnts);
+    pdfSottoTitolo( $pdf, "1. dati cliente" );
     // pdfFormCellTxt( $pdf, 'nome e cognome o denominazione' );
 
     pdfFormCellTxtRow(
@@ -258,16 +252,6 @@
         ),
         $cellw
     );
-
-    // pdfFormCellTxt( $pdf, 'indirizzo  sede intervento' );
-
-    //mysqlQuery();
-    //spazio();
-    //riga("indirizzo  sede intervento",$pdf, $fnt, $fnts);
-    //spazio();
-    //trecella("richiesta ricevuta da", "in data","alle ore",$col1=4,$col2 = 4, $col3 = 4, $pdf, $fnt, $fnts, $col, $lh );
-    //spazio();
-    //trecella("città", "prov", "cap", 8, 1, 3, $col1=4,$col2 = 4, $col3 = 4, $pdf, $fnt, $fnts, $col, $lh);
 
     pdfFormCellTxtRow(
         $pdf,
@@ -280,12 +264,89 @@
     pdfFormCellTxtRow(
         $pdf,
         array(
-            array( 'cols' => 28, 'testo' => 'richiesta ricevuta da' ),
-            array( 'cols' => 10, 'testo' => 'in data' ),
+            array( 'cols' => 36, 'testo' => 'città' ),
+            array( 'cols' => 2, 'testo' => 'prov' ),
+            array( 'cols' => 5, 'testo' => 'CAP' )
+        ),
+        $cellw
+    );
+
+    pdfFormCellTxtRow(
+        $pdf,
+        array(
+            array( 'cols' => 16, 'testo' => 'codice fiscale' ),
+            array( 'cols' => 16, 'testo' => 'partita IVA' ),
+            array( 'cols' => 11, 'testo' => 'codice SDI' )
+        ),
+        $cellw
+    );
+
+    pdfFormCellTxtRow(
+        $pdf,
+        array(
+            array( 'cols' => 13, 'testo' => 'telefono' ),
+            array( 'cols' => 31, 'testo' => 'email o PEC' )
+        ),
+        $cellw
+    );
+    pdfFormCellTxtRow(
+        $pdf,
+        array(
+            array( 'cols' => 12, 'testo' => 'codice contratto' ),
+            array( 'cols' => 23, 'testo' => '', 'border' => 0 ),
+            array( 'cols' => 8, 'testo' => 'ore residue pre intervento' )
+        ),
+        $cellw
+    );
+    spazio(1, $pdf, $stdsp);
+    pdfSottoTitolo( $pdf, "2. descrizione del problema" );
+    //creazione funzione pdfLinea
+    /*
+    spazio(1, $pdf, $stdsp);
+    pdfLine($pdf, '__' );
+    spazio(1, $pdf, $stdsp);
+    pdfLine($pdf, '__' );
+    spazio(1, $pdf, $stdsp);
+    pdfLine($pdf, '__' );
+   
+    spazio(2, $pdf, $stdsp);
+    */
+
+    pdfSottoTitolo($pdf, "3. appuntamento");
+    pdfFormCellTxtRow(
+        $pdf,
+        array(
+            array( 'cols' => 28, 'testo' => 'appuntamento fissato per il tecnico' ),
+            array( 'cols' => 10,'testo' => 'in data'),
             array( 'cols' => 5, 'testo' => 'alle ore' )
         ),
         $cellw
     );
+    pdfSottoTitolo($pdf, "4. viaggio di andata");
+    pdfFormCellTxtRow(
+        $pdf,
+        array(
+            array( 'cols' => 10, 'testo' => 'in data' ),
+            array( 'cols' => 5,'testo' => 'partenza'),
+            array( 'cols' => 5, 'testo' => 'arrivo' ),
+            array( 'cols' => 5, 'testo' => 'totale' )
+        ),
+        $cellw
+    );
+    /*
+    spazio(1, $pdf, $stdsp);
+    pdfSottoTitolo( $pdf, "5. diagnosi" );
+    spazio(1, $pdf, $stdsp);
+    pdfLine($pdf, '__' );
+    spazio(1, $pdf, $stdsp);
+    pdfLine($pdf, '__' );
+    spazio(1, $pdf, $stdsp);
+    pdfLine($pdf, '__' );
+    /*
+    
+
+    
+
 
     /*
     pdfFormCellRow(
