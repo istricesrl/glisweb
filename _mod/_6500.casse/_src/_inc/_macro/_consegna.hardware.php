@@ -5,6 +5,7 @@
 
     $ct['etc']['mastro'] = NULL;
 
+    // pulizia documento attuale
     if( isset( $_REQUEST['__unset__'] ) ){
         unset( $_SESSION['assistenza']['id_documento_consegna'] );
     }
@@ -15,6 +16,7 @@
 
         if( $barcode[0] == 'TODO' ){
 
+            // tutti gli hardware
             $campo = 'documenti.id_todo';
             $valore = ltrim( $barcode[1], "0"); 
 

@@ -80,4 +80,14 @@
 	    'etc'		=> array( 'tabs'	=> $p['mastri.form']['etc']['tabs'] )
 	);
 
-
+	// gestione todo progetti
+	$p['progetti.produzione.form.mastri'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'mastri' ),
+	    'h1'			=> array( $l		=> 'mastri' ),
+	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.mastri.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.mastri.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+	);

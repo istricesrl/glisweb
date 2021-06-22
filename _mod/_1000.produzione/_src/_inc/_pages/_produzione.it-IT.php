@@ -71,6 +71,7 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form', 
 														'progetti.produzione.form.todo',
+														'progetti.produzione.form.mastri',
 														'progetti.produzione.form.attivita',
 														'progetti.produzione.form.pause',
 														'progetti.produzione.form.chiusura',
