@@ -58,7 +58,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view' );
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_produzione = 1' );
 
     // tendina tipologia inps
 	$ct['etc']['select']['id_tipologia_inps'] = mysqlCachedIndexedQuery(

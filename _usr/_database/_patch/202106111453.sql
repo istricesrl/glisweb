@@ -1,0 +1,1 @@
+ALTER TABLE `documenti` ADD CONSTRAINT `documenti_ibfk_8_nofollow` FOREIGN KEY (`id_todo`) REFERENCES `todo`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

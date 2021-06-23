@@ -16,7 +16,7 @@
 	if( defined( 'CRON_RUNNING' )  || defined( 'JOB_RUNNING' ) ) {
 
         // verifiche formali (questo per gestire il caso di ciclo a vuoto)
-        if( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
+        if( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
 
             // status
             $status['info'][] = 'iterazione a vuoto su job già completato';
@@ -139,14 +139,14 @@
             );
 
             // operazioni di chiusura
-            if( $job['corrente'] == $job['totale'] ) {
+            if( $job['corrente'] >= $job['totale'] ) {
 
                 // scrivo la timestamp di completamento
                 $jobs = mysqlQuery(
                     $cf['mysql']['connection'],
                     'UPDATE job SET timestamp_completamento = ? WHERE id = ?',
                     array(
-                    array( 's' => $time ),
+                    array( 's' => time() ),
                     array( 's' => $job['id'] )
                     )
                 );

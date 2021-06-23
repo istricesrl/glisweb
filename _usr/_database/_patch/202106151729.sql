@@ -1,0 +1,1 @@
+ALTER TABLE `todo` ADD `id_contatto` INT NULL DEFAULT NULL AFTER `id_indirizzo`, ADD INDEX (`id_contatto`) ;

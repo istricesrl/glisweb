@@ -377,7 +377,7 @@
     }
 
     // funzione che data un'attività, ritorna l'elenco degli operatori che possono coprirla per una sostituzione con relativo punteggio
-    function elencoSostitutiAttivita( $id_attivita ){
+/*    function elencoSostitutiAttivita( $id_attivita ){
 
         global $cf;
 
@@ -507,7 +507,7 @@
         return $candidati;
 
     }
-
+*/
 
 
     function sostitutiAttivita( $id_attivita ){
@@ -543,7 +543,8 @@
             .'LEFT JOIN __report_sostituzioni_attivita__ AS r ON c.id_anagrafica = r.id_anagrafica AND r.id_attivita = ? '
             .'LEFT JOIN anagrafica_categorie AS ac ON c.id_anagrafica = ac.id_anagrafica '
             .'LEFT JOIN categorie_anagrafica AS ca ON ac.id_categoria = ca.id '
-            .'WHERE r.id IS NULL AND c.data_fine_rapporto IS NULL '
+            .'WHERE r.id IS NULL '
+            .'AND ( c.data_fine_rapporto IS NULL or data_fine_rapporto >= ?) '
             .'GROUP BY c.id_anagrafica '
             #.'HAVING collisioni = 0 AND se_produzione = 1'
             .'HAVING collisioni = 0 '
@@ -553,12 +554,10 @@
                 array( 's' => $a['data_ora_fine'] ),
                 array( 's' => $a['data_ora_inizio'] ),
                 array( 's' => $a['data_ora_fine'] ),
-                array( 's' => $id_attivita )               
+                array( 's' => $id_attivita ),
+                array( 's' => $a['data_programmazione'] )
             )
         );
-
-    //    echo $a['data_ora_inizio'] . ' ' . $a['data_ora_fine'];
-    //    print_r($operatori);
 
         if( !empty( $operatori ) ){
             foreach( $operatori as $o ){
