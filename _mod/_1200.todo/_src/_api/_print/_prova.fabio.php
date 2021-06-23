@@ -110,6 +110,13 @@
             'bar' => array( 'text' => 'test1' )
         )
     ) );
-   
+
+    // ESEMPIO #9 line multi cell con testo
+    pdfFormCellTitle( $pdf, $info, 'esempio di blocco linee' );
+    pdfFormLineRow( $pdf, $info, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 35, 5 );
+
+    // ESEMPIO #10 titolo dopo la line multi cell
+    pdfFormCellTitle( $pdf, $info, 'esempio dopo la line multicell' );
+
     // output
     $pdf->Output( 'prova.pdf' );								// invia l'output al browser

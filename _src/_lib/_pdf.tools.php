@@ -204,6 +204,89 @@
      * @todo documentare
      * 
      */
+    function pdfFormLineRow( $pdf, $info, $text, $width, $height, $style = 'default' ) {
+
+        $cellWidth = $info['form']['column']['width'];
+        $barHeight = $info['form']['bar']['height'];
+        $blockWidth = ( $width * $cellWidth );
+
+        pdfFormSaveXY( $pdf, $info );
+        pdfFormSaveLineHeightRatio( $pdf, $info );
+
+        pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
+        $pdf->setCellHeightRatio(1.7);
+
+        $pdf->MultiCell( $blockWidth, 0, $text, 0, 'L' );
+
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
+        pdfFormLoadLineHeightRatio( $pdf, $info );
+
+        pdfFormLoadXY( $pdf, $info );
+
+        $x1 = $pdf->GetX();
+        $x2 = $x1 + $blockWidth;
+        $y = $pdf->GetY();
+
+        for( $i = 0; $i < $height; $i++ ) {
+            $y += $barHeight;
+            $pdf->Line( $x1, $y, $x2, $y );
+        }
+
+        $pdf->SetY( $y + $info['form']['row']['spacing'] );
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function pdfFormSaveLineHeightRatio( $pdf, &$info, $key = '0' ) {
+
+        $info['cache']['ratio']['lineheight'][ $key ] = $pdf->getCellHeightRatio();
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function pdfFormLoadLineHeightRatio( $pdf, &$info, $key = '0' ) {
+
+        $pdf->setCellHeightRatio( $info['cache']['ratio']['lineheight'][ $key ] );
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function pdfFormSaveXY( $pdf, &$info, $key = '0' ) {
+
+        $info['cache']['coords'][ $key ]['x'] = $pdf->getX();
+        $info['cache']['coords'][ $key ]['y'] = $pdf->getY();
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function pdfFormLoadXY( $pdf, &$info, $key = '0' ) {
+
+        $pdf->SetX( $info['cache']['coords'][ $key ]['x'] );
+        $pdf->SetY( $info['cache']['coords'][ $key ]['y'] );
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
     function pdfSetRelativeX( $pdf, $offset ) {
         $pdf->SetX( $pdf->GetX() + $offset );
     }
