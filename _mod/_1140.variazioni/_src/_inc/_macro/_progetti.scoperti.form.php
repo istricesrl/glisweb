@@ -66,6 +66,30 @@
                 )
             );
         }
+
+
+        // se ho una richiesta di calcolo sostituzione creo il job relativo
+        if( !empty( $_REQUEST['__calcolo_sostituti__'] ) ){
+
+            $nome = 'calcolo sostituti progetto ' . $_REQUEST[ $ct['form']['table'] ]['id'];
+            
+            $job = mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO job ( nome, job, iterazioni, workspace, se_foreground, delay ) VALUES ( ?, ?, ?, ?, ?, ? )',
+                array(
+                    array( 's' => $nome ),
+                    array( 's' => '_mod/_1140.variazioni/_src/_api/_job/_sostituzioni.progetto.calculate.php' ),
+                    array( 's' => 10 ),
+                    array( 's' => json_encode(
+                        array(
+                            'id_progetto' => $_REQUEST[ $ct['form']['table'] ]['id']
+                        )
+                    ) ),
+                    array( 's' => 1 ),
+                    array( 's' => 3 )
+                )
+            );
+        }
     
     }
 

@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * 
+     * job che forza il calcolo dei sostituti per le attività di un progetto
      *  
      * 
      */
@@ -22,25 +22,41 @@
             $status['info'][] = 'iterazione a vuoto su job già completato';
 
         } 
-        elseif( !isset( $job['workspace']['id_progetto'] ) || !isset( $job['workspace']['id_anagrafica'] ) ){
-            $status['err'][] = 'id_progetto o id_anagrafica non settati';
+        elseif( !isset( $job['workspace']['id_progetto'] ) ){
+            $status['err'][] = 'id_progetto non settato';
         }
         else {
 
             // attività di avvio
             if( empty( $job['corrente'] ) ) {
 
+                // chiave di lock
+	            $status['tk'] = getToken( __FILE__ );
+
+                // metto il lock sulle attività scoperte del progetto che non hanno già un token
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE attivita SET token = ? WHERE id_anagrafica IS NULL AND id_progetto = ? AND token IS NULL',
+                    array(
+                        array( 's' => $status['tk'] ),
+                        array( 's' => $job['workspace']['id_progetto'] )
+                    )
+                );
+
                 $status['result'] = mysqlSelectColumn(
 				    'id',
                     $cf['mysql']['connection'],
-                    'SELECT id FROM attivita WHERE id_progetto = ? AND id_anagrafica IS NULL',
-                    array( array( 's' => $job['workspace']['id_progetto'] ) )
+                    'SELECT id FROM attivita WHERE id_progetto = ? AND id_anagrafica IS NULL AND token= ?',
+                    array( 
+                        array( 's' => $job['workspace']['id_progetto'] ),
+                        array( 's' => $status['tk'] )
+                    )
                 );
 
-                // creo la lista dei progetti da lavorare
+                // creo la lista delle attività da lavorare
                 $job['workspace']['list'] = $status['result'];
 
-                // segno il totale dei progetti da lavorare
+                // segno il totale delle attività da lavorare
                 $job['totale'] = count( $job['workspace']['list'] );
 
                 // avvio il contatore
@@ -68,39 +84,22 @@
             // aggiusto l'indice di lavoro (gli array partono da zero)
             $widx = $job['corrente'] - 1;
 
-            // ricavo l'ID del progetto corrente
+            // ricavo l'ID dell'attività corrente
             $cid = $job['workspace']['list'][ $widx ];
-            $id_anagrafica =  $job['workspace']['id_anagrafica'];
 
             // logiche di calcolo
-            $copertura = coperturaAttivita( $id_anagrafica, $cid );
+            sostitutiAttivita( $cid );
 
-            if( $copertura == 1){
-                
-                // verifico se ci sono già delle richieste di sostituzione
-                $richieste = mysqlSelectValue(
-                    $cf['mysql']['connection'],
-                    'SELECT count(*) FROM sostituzioni_attivita WHERE id_anagrafica = ? AND id_attivita = ?',
-                    array(
-                        array( 's' => $id_anagrafica ),
-                        array( 's' => $cid )
-                    )
-                );
-                
-                // se non c'è già una richiesta la creo
-                if( empty( $richieste ) ){
-                    $url = $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.request.php?id_attivita=' . $cid . '&id_anagrafica=' . $id_anagrafica;
-                    
-                    // se la richiesta arriva in modalità hard aggiungo il parametro per creare le attività
-                    if( !empty( $job['workspace']['hard'] ) ){
-                        $status['hard'] =  $job['workspace']['hard'];
-                        $url .= '&hard=1';
-                    }
-                    $status['attivita'][$cid]['creazione_richiesta'] = restcall(
-                        $url
-                    );
-                }
-            }
+            // rilascio il token
+            $status['sblocco'] = mysqlQuery( 
+                $cf['mysql']['connection'],
+                'UPDATE attivita SET timestamp_aggiornamento = ?, timestamp_calcolo_sostituti = ?, token = NULL WHERE id = ?', 
+                array(
+                    array( 's' => time() ),
+                    array( 's' => time() ),
+                    array( 's' => $cid )
+                )
+            );
 
             // status
             $status['info'][] = 'ho lavorato la riga: ' . $cid;

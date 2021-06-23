@@ -92,13 +92,15 @@
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
             <div class="row no-gutters d-print-none">
-                <div class="col-auto col-md-12">
+                <div class="col-auto col-md-5">
 	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages['progetti.scoperti.view'].path[ localization.language.ietf ] }}','_self');" placeholder="torna indietro" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro"><i class="fa fa-undo"></i></button>
                 </div>
-            <!--    <div class="col-auto col-md-7 text-right">
-                    <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="calcola i sostituti" data-toggle="modal" data-target="#calcola" data-placement="bottom" data-delay="1000" title="" data-original-title="calcola sostituti">CALCOLA SOSTITUTI</button>
+                <div class="col-auto col-md-7 text-right">
+                    {% if etc.operatori is empty %}
+                        <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" placeholder="calcola i sostituti" data-toggle="modal" data-target="#calcola" data-placement="bottom" data-delay="1000" title="" data-original-title="calcola sostituti">CALCOLA SOSTITUTI</button>
+                    {% endif %}
                 </div>
-            -->
+            
             </div>
         </fieldset>
 

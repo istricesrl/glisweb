@@ -7,13 +7,7 @@
 <script>
      function calcolaSostituti() {
 		$('#btncalcola').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
-
-	/*	var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituti.progetto.create.php?id={{ request[table].id }}';
-
-		getws( call,'', function() {
-			window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
-		});
-	*/	
+		window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}&__calcolo_sostituti__=1', '_self');
 	}
 
 </script>
