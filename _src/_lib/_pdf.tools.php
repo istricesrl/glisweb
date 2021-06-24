@@ -31,6 +31,15 @@
             $info['form']['row']['spacing'] = $info['form']['row']['height'] * 0.2;
         }
 
+        // definizione colori
+        $info['colors']['nero']                     = array( 0, 0, 0 );
+        $info['colors']['grigio']                   = array( 128, 128, 128 );
+        $info['colors']['bianco']                   = array( 255, 255, 255 );
+
+        // impostazione linee
+        $info['lines']['thick']                     = array( 'thickness' => .2, 'color' => $info['colors']['nero'] );
+        $info['lines']['thin']                      = array( 'thickness' => .12, 'color' => $info['colors']['grigio'] );
+
         // imposto il titolo del documento
         $pdf->SetTitle( $info['doc']['title'] );
 
@@ -88,6 +97,17 @@
      * @todo documentare
      * 
      */
+    function pdfSetLineStyle( $pdf, $style ) {
+
+        $pdf->SetLineStyle( array( 'width' => $style['thickness'], 'color' => $style['color'] ) );
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
     function pdfFormCellBar( $pdf, $info, $text, $width = 0 ) {
 
         $cellWidth = $info['form']['column']['width'];
@@ -106,8 +126,10 @@
             if( $i == 0 ) {
                 $border .= 'L';
             } else {
+                pdfSetLineStyle( $pdf, $info['lines']['thin'] );
                 $pdf->Cell( $cellWidth, $barHeight, '', 'L', 0 );
                 pdfSetRelativeX( $pdf, $cellWidth * -1 );
+                pdfSetLineStyle( $pdf, $info['lines']['thick'] );
             }
             
             if( $i == ( count( $str ) - 1 ) ) {
@@ -261,6 +283,30 @@
         $pdf->SetCellPadding( 0 );
 
         pdfSetRelativeY( $pdf, $blockHeight + $info['form']['row']['spacing'] );
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function pdfHtmlColumns( $pdf, $info, $cols, $text, $style = 'default') {
+
+        $pdf->resetColumns();
+        $pdf->setEqualColumns( $cols, ( $info['style']['page']['viewport'] / $cols ) );
+        pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
+
+        $pdf->selectColumn();
+        $pdf->SetAutoPageBreak( true, 250 );
+
+        // $pdf->writeHTML( $text, true, 0, false, false, 'J' );
+        // $pdf->writeHTML( $text );
+        $pdf->writeHTML( $text, true, 0, true, false, 'J' );
+
+        $pdf->resetColumns();
+        $pdf->SetAutoPageBreak( true, 20 );
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
 
     }
 

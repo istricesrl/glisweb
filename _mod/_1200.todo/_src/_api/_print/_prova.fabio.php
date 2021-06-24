@@ -27,8 +27,8 @@
     $info['style']['text']['label']             = array( 'font' => 'helvetica', 'size' => 8, 'weight' => '' );
 
     // impostazione linee
-    $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['nero'] );
-    $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['grigio'] );
+    $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => 'nero' );
+    $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => 'grigio' );
 
     // impostazione form
     $info['form']['columns']                    = 45;
