@@ -81,3 +81,6 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // macro per l'apertura dei modal
+    require DIR_SRC_INC_MACRO . '_default.tools.php';

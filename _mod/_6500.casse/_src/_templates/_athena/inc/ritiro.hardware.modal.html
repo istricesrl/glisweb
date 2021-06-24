@@ -1,8 +1,52 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = 'matricole' %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{% if request.table.id %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% else %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% endif %}
 <script>
     function genera_matricola( t ) {
-        var form = $( t ).closest('.modal');
-        var data = form.find('.id_categoria').first().val();
-	    window.open( '/print/indirizzario.csv?__categoria__='+data, '_self');
+
+		var marchio = $( '#{{ table }}_id_marchio' ).val();
+		var produttore = $( '#{{ table }}_id_produttore' ).val();
+		var serial = $( '#{{ table }}_serial_number' ).val();
+		var nome = $( '#{{ table }}_nome' ).val();
+		var testo = $( '#{{ table }}_testo' ).val();
+
+		if(nome  == ''){
+	    	document.getElementById("{{ table }}_nome").style.borderColor="#FF0000";
+
+		} else {
+			
+	    	document.getElementById("{{ table }}_nome").style.borderColor = "#ced4da";
+				
+			$('#genera-btn').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+			var call = '{{ site.url }}_mod/_4100.prodotti/_src/_api/_task/_generazione.matricola.php?id_marchio='+marchio+'&id_produttore='+produttore+'&serial='+serial+'&nome='+nome+'&testo='+testo;
+
+			getws( call,'', function(data) {
+
+				var id = $('#genitore').val()+'_matricola';
+				$('#documenti_'+id).val( data.numero );
+
+				$( "#form-documenti" ).submit();
+			});
+		}
+
     }
 </script>
 
@@ -15,18 +59,42 @@
 	    </div>
 	    <div class="modal-body">
 		<div class="container-fluid">
+			<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+				{# CAMPI HIDDEN DI BASE #}
+				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+				<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+				<input type="hidden" id="genitore" name="{{ table }}[genitore]" value="">
+					
 		    <div class="form-row">
-			<div class="col">
-				<span class="label-top">categoria</span>
-			    {{ frm.selectRequired( table, '', '', '', 'tutte', etc.select.categorie_anagrafica, request, '', '','selectpicker id_categoria' ) }}
+			<div class="col-6">
+				<span class="label-top">marchio</span>
+			    {{ frm.select( table, '', '', 'id_marchio', '', etc.select.marchi, request ) }}
+			</div>
+			<div class="col-6">
+				<span class="label-top">produttore</span>
+			    {{ frm.select( table, '', '', 'id_produttore', '', etc.select.produttori, request ) }}
+			</div>
+			<div class="col-12">
+				<span class="label-top">serial number</span>
+			    {{ frm.input( table, '', '', 'serial_number', '', '', request ) }}
+			</div>
+			<div class="col-12">
+				<span class="label-top">nome</span>
+			    {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+			</div>
+			<div class="col-12">
+				<span class="label-top">descrizione</span>
+			    {{ frm.textarea( table, '', '', 'testo', '', '3', request ) }}
 			</div>
 		</div>
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="genera_matricola(this);">esporta</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+		<button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="genera_matricola(this);">genera</button>
 	    </div>
+		</div></form>
 	</div>
     </div>
 </div>

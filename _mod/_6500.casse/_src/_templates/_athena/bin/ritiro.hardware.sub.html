@@ -42,16 +42,27 @@
             <span class="label-top">descrizione</span>
             {{ frm.inputRequired( table, subtable, i, 'nome', '', '', request, '', '', '', disabled ) }}
         </div>
-        <div class="col-2">
+        
+        {% if not r.matricola %}
+            <div class="col-2">
             <span class="label-top">matricola</span>
-            {{ frm.inputRequired( table, subtable, i, 'matricola', '', '', request, '', '', '', disabled ) }}
-        </div>
+                 {{ frm.inputRequired( table, subtable, i, 'matricola', '', '', request, '', '', 'matricola', disabled ) }}
+            </div>
+        {% else %}
+            <div class="col-auto">
+                {{ frm.input( table, subtable, i, 'id_todo', '', '', '', r.matricola, 'hidden', '', '', disabled  ) }}
+                <div class="justify-content-center align-self-center mt-1 text-right">MAT.{{ "%'-010.10s"|format(r.matricola) }}</div> 
+            </div>
+        {% endif %}
+
+        {% if not r.matricola %}
         <div class="col-auto">
-            {% if not r.matricola %} <button type="button" class=" btn-secondary btn" data-toggle="modal" data-target="#genera_matricola">genera matricola</button>{% endif %}
+             <button id="{{ i }}" type="button" onclick="$('#genitore').val( $( this ).parent().parent().parent().attr('id'))" class=" btn-secondary btn" data-toggle="modal" data-target="#genera_matricola">genera matricola</button>
         </div>
+        {% endif %}
 	    <div class="col-1">
 		    <span class="label-top">quantità</span>
-		    {{ frm.inputRequired( table, subtable, i, 'quantita', '', '', request, '', '', '', disabled ) }}
+		    {{ frm.inputRequired( table, subtable, i, 'quantita', '', '', request, '', 'number', '', disabled, '1' ) }}
 	    </div>
 		<div class="w-100 d-block d-md-none m-0"></div>
 		{% if r.id %}
