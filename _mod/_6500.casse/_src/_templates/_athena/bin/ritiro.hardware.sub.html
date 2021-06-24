@@ -46,7 +46,7 @@
         {% if not r.matricola %}
             <div class="col-2">
             <span class="label-top">matricola</span>
-                 {{ frm.inputRequired( table, subtable, i, 'matricola', '', '', request, '', '', 'matricola', disabled ) }}
+                 {{ frm.selectBox( table, subtable, i, 'matricola', '', etc.select.matricole, request, '', '', '1', '', '', '', '', '', '', page, pages, ietf, 'matricole', disabled ) }}
             </div>
         {% else %}
             <div class="col-auto">
@@ -62,7 +62,7 @@
         {% endif %}
 	    <div class="col-1">
 		    <span class="label-top">quantità</span>
-		    {{ frm.inputRequired( table, subtable, i, 'quantita', '', '', request, '', 'number', '', disabled, '1' ) }}
+		    {{ frm.inputRequired( table, subtable, i, 'quantita', '', '', request, '1', 'number', '', disabled, '1' ) }}
 	    </div>
 		<div class="w-100 d-block d-md-none m-0"></div>
 		{% if r.id %}

@@ -31,7 +31,7 @@
 	    	document.getElementById("{{ table }}_nome").style.borderColor="#FF0000";
 
 		} else {
-			
+
 	    	document.getElementById("{{ table }}_nome").style.borderColor = "#ced4da";
 				
 			$('#genera-btn').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
@@ -42,7 +42,7 @@
 
 				var id = $('#genitore').val()+'_matricola';
 				$('#documenti_'+id).val( data.numero );
-
+				submitFormOkay = true;
 				$( "#form-documenti" ).submit();
 			});
 		}

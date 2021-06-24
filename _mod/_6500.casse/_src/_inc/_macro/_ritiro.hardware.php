@@ -77,7 +77,11 @@
 		'modal' => array( 'id' => 'genera_matricola', 'include' => 'inc/ritiro.hardware.modal.html' )
 	    );
 
-
+    $ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
+        $cf['cache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id,  concat( "MAT.", LPAD(id,10,"0") )AS __label__ FROM matricole_view' );
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
