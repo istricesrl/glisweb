@@ -83,6 +83,18 @@
         $cf['mysql']['connection'], 
         'SELECT id,  concat( "MAT.", LPAD(id,10,"0") )AS __label__ FROM matricole_view' );
 
+    $ct['etc']['select']['marchi'] = mysqlCachedIndexedQuery(
+        $cf['cache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM marchi_view' );
+
+    $ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
+        $cf['cache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view WHERE se_produttore = 1' );
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 

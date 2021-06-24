@@ -26,11 +26,23 @@
 		var serial = $( '#{{ table }}_serial_number' ).val();
 		var nome = $( '#{{ table }}_nome' ).val();
 		var testo = $( '#{{ table }}_testo' ).val();
+		var bar = $( '#{{ table }}_bar' ).val();
+		var id_riga = $( '#{{ table }}_id_matricola' ).val();
 
-		if(nome  == ''){
-	    	document.getElementById("{{ table }}_nome").style.borderColor="#FF0000";
+		if( id_riga > 0 ){
+
+			if( bar == '' ){
+
+			} else {
+
+			}
 
 		} else {
+
+			if(nome  == ''){
+	    	document.getElementById("{{ table }}_nome").style.borderColor="#FF0000";
+
+			} else {
 
 	    	document.getElementById("{{ table }}_nome").style.borderColor = "#ced4da";
 				
@@ -45,7 +57,7 @@
 				submitFormOkay = true;
 				$( "#form-documenti" ).submit();
 			});
-		}
+		}}
 
     }
 </script>
@@ -55,7 +67,7 @@
 	<div class="modal-content">
 	    <div class="modal-header">
 		<h5 class="modal-title">genera matricola hardware</h5>
-		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<button type="button" id="close_matricola" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	    </div>
 	    <div class="modal-body">
 		<div class="container-fluid">
@@ -65,8 +77,13 @@
 				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 				<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 				<input type="hidden" id="genitore" name="{{ table }}[genitore]" value="">
+				<input type="hidden" id="id_matricola" name="{{ table }}[id]" value="">
 					
 		    <div class="form-row">
+			<div class="col-12" id="barcode_matricola" hidden>
+					<span class="label-top">barcode</span>
+					{{ frm.input( table, '', '', 'barcode', '', '', request ) }}
+			</div>
 			<div class="col-6">
 				<span class="label-top">marchio</span>
 			    {{ frm.select( table, '', '', 'id_marchio', '', etc.select.marchi, request ) }}
@@ -91,7 +108,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+		<button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 		<button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="genera_matricola(this);">genera</button>
 	    </div>
 		</div></form>
