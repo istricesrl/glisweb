@@ -22,9 +22,9 @@
     $info['colors']['bianco']                   = array( 255, 255, 255 );
 
     // impostazione stili
-    $info['style']['page']                      = array( 'w' => 210, 'h' => 297, 'mt' => 15, 'ml' => 15, 'mr' => 15 );
-    $info['style']['text']['title']             = array( 'font' => 'helvetica', 'size' => 10, 'weight' => 'B' );
-    $info['style']['text']['label']             = array( 'font' => 'helvetica', 'size' => 8, 'weight' => '' );
+    $info['style']['page']                      = array( 'w' => 210, 'h' => 297, 'mt' => 10, 'ml' => 15, 'mr' => 15 );
+    $info['style']['text']['title']             = array( 'font' => 'helvetica', 'size' => 9, 'weight' => 'B' );
+    $info['style']['text']['label']             = array( 'font' => 'helvetica', 'size' => 7, 'weight' => '' );
 
     // impostazione linee
     $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['nero'] );
@@ -32,14 +32,15 @@
 
     // impostazione form
     $info['form']['columns']                    = 45;
-    $info['form']['row']['height']              = 10;
+    $info['form']['row']['height']              = 9;
 
     // prelievo dati dal database
 
     // creazione del PDF
 	$pdf = pdfInit( $info );
 
-
+    // impostazione stili
+    $info['style']['text']['default']           = array( 'font' => 'helvetica', 'size' => 8, 'weight' => '' );
   
     pdfFormCellTitle( $pdf, $info, 'rapporto di intervento di assistenza tecnica' );
     pdfFormCellLabel( $pdf, $info, 'modulo per assistenza tecnica a chiamata');
@@ -81,7 +82,8 @@
                 )
                 )
             );
-        pdfFormCellRow( $pdf, $info, array(
+
+            pdfFormCellRow( $pdf, $info, array(
                 array(
                     'width' => 36,
                     'label' => array( 'text' => 'città' ),
@@ -150,11 +152,20 @@
 
                 )
             );
+
+        $boxY = $pdf->GetY();
+
         pdfFormCellTitle( $pdf, $info, '2. descrizione del problema' );
-        pdfFormLineRow( $pdf, $info, '', 26, 4);
+        pdfFormLineRow( $pdf, $info, '', 32, 3);
+
+//        pdfFormBox( $pdf, $info, 'firma del cliente\nper accettazione', 8, 4, $boxX, pdfFormCalcY( $info, 27 ) );
+//            pdfFormBox( $pdf, $info, "firma del cliente\nper accettazione", 8, 4, 130, 130 );
+        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con le attività di diagnosi", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
+
         //rettangolo
-        $pdf->Cell(30, 30, '', 1, 1);
-        pdfFormCellTitle( $pdf, $info, '3. appuntamento' );
+        //$pdf->Cell(30, 30, '', 1, 1);
+        //pdfFormCellTitle( $pdf, $info, '3. appuntamento' );
+
         pdfFormCellRow( $pdf, $info, array(
                 array(
                     'width' => 28,
@@ -204,23 +215,27 @@
 
                 )
             );
-        pdfFormCellTitle( $pdf, $info, '5. diagnosi' );
+
+            pdfFormCellTitle( $pdf, $info, '5. diagnosi' );
         pdfFormLineRow( $pdf, $info, '', 45, 4 );
+
+        $boxY = $pdf->GetY();
+
         pdfFormCellTitle( $pdf, $info, '6. soluzione proposta' );
-        pdfFormLineRow( $pdf, $info, '', 25, 4 );
-        $pdf->Cell(60, 30, '', 1, 1);
-        pdfSetRelativeY( $pdf, 20 );
-        pdfFormCellTitle( $pdf, $info, '7. esito intervento' );
+        pdfFormLineRow( $pdf, $info, '', 32, 3 );
+
+//        $pdf->Cell(60, 30, '', 1, 1);
+//        pdfSetRelativeY( $pdf, 20 );
+
+        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con la soluzione proposta", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
+
+        pdfFormCellTitle( $pdf, $info, '7. esito e tempo di intervento' );
         pdfFormLineRow( $pdf, $info, '', 45, 4 );
-        pdfSetRelativeY( $pdf, 10 );
-        pdfFormCellTitle( $pdf, $info, '7.1. tempo di intervento' );
+
         pdfFormCellRow( $pdf, $info, array(
-
                 array(
-                    'width' => 27, 
+                    'width' => 26, 
                 ),
-
-
                 array(
                     'width' => 5,
                     'label' => array( 'text' => 'inizio' ),
@@ -232,16 +247,14 @@
                     'bar' => array( 'text' => '' )
                 ),
                 array(
-                    'width' => 5,
+                    'width' => 6,
                     'label' => array( 'text' => 'totale' ),
                     'bar' => array( 'text' => '  h  m' )
                 )
-
-
-                )
-                );
+            )
+        );
             pdfFormCellTitle( $pdf, $info, '8. chiusura intervento' );
-            pdfFormLineRow( $pdf, $info, 'Io sottoscritto _______________________ dichiaro di aver letto, compreso e approvato il contenuto del presente rapporto di assistenza tecnica, che corrisponde a verità; dichiaro di aver verificato l\'n esito dell\'intervento e confermo la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione di quanto dovuto.', 45, 0);
+            pdfFormLineRow( $pdf, $info, 'Io sottoscritto _______________________ dichiaro di aver letto, compreso e approvato il contenuto del presente rapporto di assistenza tecnica, che corrisponde a verità; dichiaro di aver verificato l\'esito dell\'intervento e confermo la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione di quanto dovuto.', 45, 0);
                 
 
                 //spazio per spazio precompilato
@@ -260,6 +273,7 @@
             pdfFormCellTitle( $pdf, $info, 'spazio riservato a Istrice srl');
             pdfFormCellLabel( $pdf, $info, 'per note di amministrazione e customer care');
             pdfSetRelativeY( $pdf, 10 );
+
             pdfFormCellTitle( $pdf, $info, '9.fatturazione' );
             pdfFormCellRow( $pdf, $info, array(
                 array(
@@ -280,6 +294,7 @@
 
                 )
             );
+
             pdfFormCellTitle( $pdf, $info, '10. customer care' );
             pdfFormCellRow( $pdf, $info, array(
                 array(
@@ -300,6 +315,7 @@
 
                 )
             );
+
             pdfFormCellTitle( $pdf, $info, '10.1 feedback del cliente, richieste successive, osservazioni' );
             pdfFormLineRow( $pdf, $info, '', 45, 3);
             pdfFormCellTitle( $pdf, $info, '10.2 soddisfazione e referral' );

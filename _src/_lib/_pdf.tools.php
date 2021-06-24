@@ -138,7 +138,7 @@
             $current++;
 
             if( isset( $item['label']['text'] ) ) {
-                pdfFormCellLabel( $pdf, $info, $item['label']['text'], $item['width'], ( ( isset( $item['label']['style'] ) ) ? $item['label']['style'] : 'default' ) );
+                pdfFormCellLabel( $pdf, $info, $item['label']['text'], $item['width'], ( ( isset( $item['label']['style'] ) ) ? $item['label']['style'] : 'label' ) );
             } else {
                 pdfSetRelativeX( $pdf, $item['width'] * $cellWidth );
             }
@@ -238,6 +238,34 @@
 
     /**
      * 
+     */
+    function pdfFormBox( $pdf, $info, $text, $width, $height, $x, $y, $style = 'label' ) {
+
+        $cellWidth = $info['form']['column']['width'];
+        $barHeight = $info['form']['bar']['height'];
+        $blockWidth = ( $width * $cellWidth );
+        $blockHeight = ( $height * $barHeight ) - $info['form']['row']['spacing'];
+
+        pdfFormSaveXY( $pdf, $info );
+        pdfFormSaveLineHeightRatio( $pdf, $info );
+
+        $pdf->SetXY( $x, $y + $info['form']['row']['spacing'] );
+        pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
+        $pdf->setCellHeightRatio(1);
+        $pdf->SetCellPadding( 3 );
+
+        $pdf->MultiCell( $blockWidth, $blockHeight, $text, 1, 'L', 0, 0, '', '', true, 0, false, true, 0, 'T' );
+
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
+        pdfFormLoadLineHeightRatio( $pdf, $info );
+        $pdf->SetCellPadding( 0 );
+
+        pdfSetRelativeY( $pdf, $blockHeight + $info['form']['row']['spacing'] );
+
+    }
+
+    /**
+     * 
      * @todo documentare
      * 
      */
@@ -307,4 +335,13 @@
      */
     function pdfSetRelativeXY( $pdf, $offsetx, $offsety ) {
         $pdf->SetXY( $pdf->GetX() + $offsetx, $pdf->GetY() + $offsety );
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function pdfFormCalcX( $info, $cols ) {
+        return $info['style']['page']['ml'] + ( $info['form']['column']['width'] * $cols );
     }
