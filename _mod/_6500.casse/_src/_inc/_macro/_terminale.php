@@ -18,12 +18,21 @@
      * @file
      *
      */
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array( 'id' => 'genera_matricola', 'include' => 'inc/ritiro.hardware.modal.html' )
+        );
 
     // mastro di scarico [magazzino]
     $ct['etc']['mastro'] = NULL;
 
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
+
+
+    $ct['etc']['default_reparto'] = '0';
+    $ct['etc']['default_operazione'] = '1';
+    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
+                                    'SELECT id FROM tipologie_documenti WHERE nome = "scontrino"');
 
     // eliminazione scontrino in sospeso
     if( isset( $_REQUEST['__delete__'] ) ){
@@ -50,15 +59,11 @@
        // if( isset($_REQUEST[ $ct['form']['table'] ]) && !$_REQUEST[ $ct['form']['table'] ]['id'] ){ 
         // verifico se l'account ha uno scontrino in sospeso
         $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
-        'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL',
-        array( array( 's' => $_SESSION['account']['id'] ) ) );
+        'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL AND id_tipologia = ?',
+        array( array( 's' => $_SESSION['account']['id'] ), array( 's' => $ct['etc']['default_tipologia'] ) ) );
         
     }
 
-    $ct['etc']['default_reparto'] = '0';
-    $ct['etc']['default_operazione'] = '1';
-    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
-                                    'SELECT id FROM tipologie_documenti WHERE nome = "scontrino"');
 
     // tendina  reparti
 	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
@@ -72,7 +77,9 @@
 
 
 
-    
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) ){
+        $_REQUEST[ $ct['form']['table'] ]['__comando__'] = trim(  $_REQUEST[ $ct['form']['table'] ]['__comando__'] );
+    }
 
     if(  isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__art__'] ) && !empty( $_REQUEST['__art__'] ) ){
         
@@ -168,10 +175,15 @@
             // verifico se esiste l'atricolo e se ha un prezzo associato
             $articolo = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                "SELECT * FROM articoli LEFT JOIN prezzi ON prezzi.id_articolo = articoli.id AND prezzi.id_listino = 1 WHERE articoli.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
+                "SELECT * FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = 1 WHERE articoli_view.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
                 );
 
             if( $articolo ){    
+
+                if( $articolo['se_ore'] ){
+
+                }
+
 
                 if( $_REQUEST[ $ct['form']['table'] ]['__reparto__'] == 0 ){ $reparto = $articolo['id_reparto']; }
                 else { $reparto = $_REQUEST[ $ct['form']['table'] ]['__reparto__']; }
@@ -202,8 +214,11 @@
                             array( 
                                 array( 's' => $in_doc['quantita'] + $_REQUEST[ $ct['form']['table'] ]['__operazione__'] ), 
                                 array( 's' => $in_doc['id'] ) ) );
-                    }
+                    
+                                $insert = $in_doc['id'];
+                     }
 
+                 
 
                 } elseif ( $_REQUEST[ $ct['form']['table'] ]['__operazione__'] != '-1' ) {
 
@@ -225,6 +240,26 @@
                                 ) );
                 }
             }
+
+            if( $articolo['se_matricola'] && isset( $insert ) && $insert > 0){
+  /*
+                echo '
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript">
+                $(document).ready(function(){
+                    $("#id_matricola").val('.  $insert  .');
+                    $("#close_matricola").hide();
+                    $("#barcode_matricola").removeAttr("hidden");
+                    $("#annulla_matricola").hide();
+                    $("#genera_matricola").modal({
+                        backdrop: "static",
+                        keyboard: false
+                      });
+
+                    $("#genera_matricola").modal("show");
+
+                });
+            </script>';*/
+              }
 
             }
         }
@@ -304,7 +339,12 @@
 
 }
 
+
+
 //print_r( $_REQUEST );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // macro per l'apertura dei modal
+    require DIR_SRC_INC_MACRO . '_default.tools.php';

@@ -6,7 +6,7 @@
     /*if( isset( $_SESSION['assistenza']['id_documento'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && ( $_SESSION['assistenza']['id_documento'] == $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
         unset( $_REQUEST[ $ct['form']['table'] ] );
     }*/
-
+    $ct['etc']['mastro'] = 5;
 
     if( isset( $_REQUEST['todo'] ) && !isset( $_SESSION['assistenza']['id_todo_ritiro'] ) ){
         unset($_REQUEST['todo']);
@@ -49,8 +49,8 @@
         $ct['etc']['id_emittente'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM anagrafica_view WHERE se_azienda_gestita = 1 LIMIT 1');
 
         if( $ct['etc']['id_tipologia'] && $ct['etc']['id_emittente'] ){
-            $ct['etc']['numero'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT MAX(numero) FROM documenti WHERE id_tipologia = ? AND id_emittente = ?', 
-                                    array( array( 's' => $ct['etc']['id_tipologia'] ), array( 's' => $ct['etc']['id_emittente'] ) ) )+1;
+            $ct['etc']['numero'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT MAX(numero) FROM documenti WHERE id_tipologia = ? ', 
+                                    array( array( 's' => $ct['etc']['id_tipologia'] ) ) )+1;
         }
 
 
@@ -73,6 +73,30 @@
 
     //print_r( $_SESSION['assistenza'] );
     //print_r( $_REQUEST );
+    $ct['page']['contents']['metro'][NULL][] = array(
+		'modal' => array( 'id' => 'genera_matricola', 'include' => 'inc/ritiro.hardware.modal.html' )
+	    );
+
+    $ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
+        $cf['cache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id,  concat( "MAT.", LPAD(id,10,"0") )AS __label__ FROM matricole_view' );
+
+    $ct['etc']['select']['marchi'] = mysqlCachedIndexedQuery(
+        $cf['cache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM marchi_view' );
+
+    $ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
+        $cf['cache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view WHERE se_produttore = 1' );
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // macro per l'apertura dei modal
+    require DIR_SRC_INC_MACRO . '_default.tools.php';

@@ -31,3 +31,87 @@
 </div>
 {% endif %}
 {% endblock %}
+
+{% block main %}
+
+{% if  not request[ table ].id  %}
+<form {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+	<div class="form-group form-row">
+			<div class="col form-row">
+                <legend>todo o modulo di ritiro</legend>
+                <div class="col">
+                    <span class="label-top">barcode</span>
+                    <input type="text" class="form-control form-control-sm" name="__barcode__" value="" autofocus>
+                </div>
+            </div>  
+	</div>
+    <button type="submit" hidden></button>
+</form>
+{% else %}
+<div  {% if session.contatto %}style="margin-top: 45px;"{% endif %} >
+	<legend>todo</legend>
+	{{ request.documenti.todo.__label__ }}<br>
+	{{ request.documenti.todo.testo }}<br>
+	{{ request.documenti.__label__ }}
+</div>
+
+{% if session.assistenza.id_documento_consegna %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% else %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill mt-3">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+		<input type="hidden" id="id" name="{{ table }}[id]" value="{{ session.assistenza.id_documento_ritiro }}">
+		<input type="hidden" id="id_todo" name="{{ table }}[id_todo]" value="{{ request.todo.id }}">
+		<input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ etc.numero }}">
+		<input type="hidden" id="id_tipologia" name="{{ table }}[id_tipologia]" value="{{ etc.id_tipologia }}">
+		<input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ etc.id_emittente }}">
+		<input type="hidden" id="id_destinatario" name="{{ table }}[id_destinatario]" value="{{ request.todo.id_cliente }}">
+		<input type="hidden" id="data" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d')}}">
+		
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		{# SUBFORM GRUPPI #}
+	    {{ sub.righe( table, 'documenti_articoli', 'hardware', site, page, pages, ietf, etc, request, session, etc.mastro, '' ) }}
+	
+		<fieldset>
+			<div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
+				{% if request[ table ].id %}
+					<div>
+						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo consegna</button>
+						
+					</div>
+					<button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
+                
+					{% if request[ table ].documenti_articoli|length <= 0  %}	
+					<button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{ request[ table ].id  }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__unset__=1&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
+					{% endif %}	
+				{% else %}
+					<button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
+				{% endif %}
+				<button type="submit" class="btn-lg btn-secondary" onclick="submitFormOkay = true;" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+			</div>
+			
+		</fieldset>	
+
+
+	</form>
+    </div>
+</section>
+
+{% endif %}
+
+{% endblock %}
