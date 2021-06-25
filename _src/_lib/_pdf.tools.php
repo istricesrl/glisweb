@@ -308,7 +308,8 @@
 
         foreach( $colText as $col ) {
             $x = $x + ( $colWidth + $info['form']['column']['width'] ) * $current;
-            $pdf->writeHTMLCell( $colWidth, 0, $x, $y, $col, true, 0, false, false, 'J' );
+            $pdf->writeHTMLCell( $colWidth, 0, $x, $y, $col, 0, 0, 0, true, 'J', true );
+            $current++;
 
         }
         // $pdf->writeHTML( $text, true, 0, false, false, 'J' );

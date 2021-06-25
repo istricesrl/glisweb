@@ -25,6 +25,7 @@
     $info['style']['page']                      = array( 'w' => 210, 'h' => 297, 'mt' => 10, 'ml' => 15, 'mr' => 15 );
     $info['style']['text']['title']             = array( 'font' => 'helvetica', 'size' => 9, 'weight' => 'B' );
     $info['style']['text']['label']             = array( 'font' => 'helvetica', 'size' => 7, 'weight' => '' );
+    $info['style']['text']['small']             = array( 'font' => 'helvetica', 'size' => 6, 'weight' => '' );
 
     // impostazione linee
     $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['nero'] );
@@ -267,7 +268,6 @@
             $pdf->AddPage();
 
             pdfHtmlColumns( $pdf, $info, 2,
-/*
                 'tra XXXXX, con sede in XXXXXXXXXXXXXXXXXXXXXX, C.F. e P.IVA XXXXXXXXXXXX, d\'ora in avanti Fornitore da una parte;
                 e
                 il soggetto identificato al quadro 1, d\'ora in avanti Cliente, dall\'altra parte;
@@ -283,10 +283,10 @@
                 5. corrispettivo e condizioni di pagamento
                 il corrispettivo per le prestazioni di cui sopra è determinato dalle tariffe del Fornitore vigenti al momento dell\'intervento, che il Cliente dichiara di conoscere e accettare. La regolarità dei pagamenti è presupposto necessario per l\'attivazione della garanzia sugli interventi.
                 6. garanzia
-                l'esito dell'intervento è coperto da garanzia per trenta giorni dalla data di accettazione da parte del Cliente dell\'esito dell'intervento; entro tale periodo il Fornitore si impegna, senza ulteriori costi per il Cliente, a rettificare la soluzione applicata nel caso questa presenti dei problemi, o non si riveli definitiva.
+                l\'esito dell\'intervento è coperto da garanzia per trenta giorni dalla data di accettazione da parte del Cliente dell\'esito dell\'intervento; entro tale periodo il Fornitore si impegna, senza ulteriori costi per il Cliente, a rettificare la soluzione applicata nel caso questa presenti dei problemi, o non si riveli definitiva.
                 Il Fornitore si impegna ad intervenire con la diligenza dovuta e nei tempi concordati. Se non espressamente previsto il contrario, le obbligazioni del fornitore sono di mezzi e non di risultato; il Fornitore è tenuto soltanto a ripetere tempestivamente le eventuali operazioni non svolte con la dovuta competenza e diligenza. In nessun caso è previsto il rimborso degli interventi accettati tramite firma da parte del Cliente, e il Fornitore non è tenuto a rispondere di danni ai dati, al software e all\'hardware e in generale ai beni del Cliente salvo casi di dolo o colpa grave nell\'esecuzione dell\'intervento.
                 7. altri contratti
-                Il servizio non comprende il costo di eventuali ricambi, parti aggiuntive, licenze, e qualsiasi altro costo vivo che dovesse rendersi necessario per il completamente dell'assistenza; il Fornitore si impegna ad avvisare tempestivamente il Cliente di qualsiasi costo dovesse rendersi necessario, procedendo con il lavoro solo previa autorizzazione data in forma libera dal Cliente.
+                Il servizio non comprende il costo di eventuali ricambi, parti aggiuntive, licenze, e qualsiasi altro costo vivo che dovesse rendersi necessario per il completamente dell\'assistenza; il Fornitore si impegna ad avvisare tempestivamente il Cliente di qualsiasi costo dovesse rendersi necessario, procedendo con il lavoro solo previa autorizzazione data in forma libera dal Cliente.
                 Ulteriori prestazioni, quali lo sviluppo di software, l\'erogazione di corsi di formazione, le prestazioni di consulenza, la vendita di hardware e software, formeranno eventuale oggetto di separati contratti.
                 8. subappalto
                 il Fornitore ha facoltà di subappaltare a terzi l\'attività dandone comunicazione al Cliente nel solo caso in cui i subappaltatori abbiano necessità di accedere ai locali di quest\'ultimo, ferma la responsabilità esclusiva del Fornitore per l\'operato dei subappaltatori nonché i necessari adempimenti in materia di protezione dei dati personali.
@@ -303,12 +303,10 @@
                 14. risoluzione delle controversie
                 il presente contratto è regolato dalle leggi della Repubblica Italiana e ogni eventuale controversia sarà esclusivamente devoluta al foro di Bologna.
                 15. comunicazioni
-                il Cliente si impegna a monitorare l'indirizzo mail o PEC specificato al quadro 1, che il Fornitore utilizzerà per tutte le comunicazioni relative all'intervento in corso; il Cliente accetta inoltre che le comunicazioni scritte avvenute tramite questo indirizzo abbiano valore legale in merito alle autorizzazioni a procedere eventualmente richieste dal Fornitore.
+                il Cliente si impegna a monitorare l\'indirizzo mail o PEC specificato al quadro 1, che il Fornitore utilizzerà per tutte le comunicazioni relative all\'intervento in corso; il Cliente accetta inoltre che le comunicazioni scritte avvenute tramite questo indirizzo abbiano valore legale in merito alle autorizzazioni a procedere eventualmente richieste dal Fornitore.
                 16. clausole finali
                 I quadri compilati sul presente rapporto di assistenza sono parte integrante ed essenziale del contratto stesso. Il presente contratto non potrà essere modificato o integrato se non tramite atto scritto.',
-    */
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-                'label'
+                'small'
             );
 
 
