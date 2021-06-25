@@ -25,6 +25,9 @@
     // tabella della vista
     $ct['view']['table'] = 'contratti_completa';
 
+    // tabella per la gestione
+    $ct['view']['open']['table'] = 'contratti';
+
      // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',

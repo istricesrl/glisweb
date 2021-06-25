@@ -37,7 +37,7 @@
             $cf['mysql']['connection'],
             'SELECT pv.*, v.id_anagrafica, v.id_tipologia_inps FROM periodi_variazioni_attivita as pv '
             .'LEFT JOIN variazioni_attivita AS v ON pv.id_variazione = v.id '
-            .'WHERE v.data_approvazione IS NOT NULL '
+            .'WHERE v.data_approvazione IS NOT NULL AND pv.token IS NULL '
             .'ORDER BY pv.timestamp_controllo_attivita LIMIT 1'
         );
     }
