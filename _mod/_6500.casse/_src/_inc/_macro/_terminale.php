@@ -77,7 +77,9 @@
 
 
 
-    
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) ){
+        $_REQUEST[ $ct['form']['table'] ]['__comando__'] = trim(  $_REQUEST[ $ct['form']['table'] ]['__comando__'] );
+    }
 
     if(  isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__art__'] ) && !empty( $_REQUEST['__art__'] ) ){
         
@@ -240,7 +242,7 @@
             }
 
             if( $articolo['se_matricola'] && isset( $insert ) && $insert > 0){
-  
+  /*
                 echo '
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript">
                 $(document).ready(function(){
@@ -256,7 +258,7 @@
                     $("#genera_matricola").modal("show");
 
                 });
-            </script>';
+            </script>';*/
               }
 
             }
