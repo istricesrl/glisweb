@@ -293,19 +293,28 @@
      */
     function pdfHtmlColumns( $pdf, $info, $cols, $text, $style = 'default') {
 
-        $pdf->resetColumns();
-        $pdf->setEqualColumns( $cols, ( $info['style']['page']['viewport'] / $cols ) );
+        $x = $info['style']['page']['ml'];
+        $y = $pdf->GetY();
+        $current = 0;
+
+        $textLength = strlen( $text );
+        $colLength = $textLength / $cols;
+        $colWidth = ( $info['style']['page']['viewport'] - ( $info['form']['column']['width'] * ( $cols - 1 ) ) ) / $cols;
+
+        $splitText = wordwrap( $text, $colLength, '§' );
+        $colText = explode( '§', $splitText );
+
         pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
 
-        $pdf->selectColumn();
-        $pdf->SetAutoPageBreak( true, 250 );
+        foreach( $colText as $col ) {
+            $x = $x + ( $colWidth + $info['form']['column']['width'] ) * $current;
+            $pdf->writeHTMLCell( $colWidth, 0, $x, $y, $col, true, 0, false, false, 'J' );
 
+        }
         // $pdf->writeHTML( $text, true, 0, false, false, 'J' );
         // $pdf->writeHTML( $text );
-        $pdf->writeHTML( $text, true, 0, true, false, 'J' );
+        // $pdf->writeHTML( $text, true, 0, true, false, 'J' );
 
-        $pdf->resetColumns();
-        $pdf->SetAutoPageBreak( true, 20 );
         pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
 
     }
