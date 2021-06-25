@@ -45,7 +45,7 @@
   
     pdfFormCellTitle( $pdf, $info, 'rapporto di intervento di assistenza tecnica' );
     pdfFormCellLabel( $pdf, $info, 'modulo per assistenza tecnica a chiamata');
-    pdfSetRelativeY( $pdf, 10 );
+    pdfSetRelativeY( $pdf, 5 );
 
     pdfFormCellRow( $pdf, $info, array(
         array(
@@ -65,7 +65,6 @@
                 )
             ));
             
-            
             pdfFormCellTitle( $pdf, $info, '1. dati del cliente' );
             pdfFormCellRow( $pdf, $info, array(
                 array(
@@ -75,6 +74,7 @@
                 )
                 )
             );
+
             pdfFormCellRow( $pdf, $info, array(
                 array(
                     'width' => 45,
@@ -266,7 +266,9 @@
             pdfFormBox( $pdf, $info, "firma del tecnico", 12, 3, pdfFormCalcX( $info, 33 ), $boxY );
 
             $pdf->AddPage();
-
+            pdfFormCellTitle( $pdf, $info, 'condizioni di servizio' );
+            pdfFormCellLabel( $pdf, $info, 'condizioni del servizio di assistenza tecnica');
+            pdfSetRelativeY( $pdf, 5 );
             pdfHtmlColumns( $pdf, $info, 2,
                 'tra XXXXX, con sede in XXXXXXXXXXXXXXXXXXXXXX, C.F. e P.IVA XXXXXXXXXXXX, d\'ora in avanti Fornitore da una parte;
                 e
@@ -310,19 +312,13 @@
             );
 
 
-
-
-
-
-            pdfSetRelativeY( $pdf, 20 );
+            pdfSetRelativeY( $pdf, 150 );
             pdfFormCellTitle( $pdf, $info, '' );
-            pdfFormLineRow( $pdf, $info,'Luogo e data ____________________ timbro e firma per accettazione delle condizioni di servizio _________________', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Luogo e data ____________________ timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
             pdfSetRelativeY( $pdf, 10 );
+            pdfFormLineRow( $pdf, $info,'Ai sensi dell\'art. 1341 c.c. il Cliente approva specificamente gli artt. 3 (modalità di espletamento), 4 (durata del contratto), 5 (corrispettivo e condizioni di pagamento), 6 (garanzia), 8 (subappalto), 11 (clausola risolutiva espressa), 13 (esclusioni), 14 (risoluzione delle controversie).', 45, 0);
             pdfFormCellTitle( $pdf, $info, '' );
-            pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali', 45, 0);
-
-            //problema celline dentro le linee
-
+            pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali per l\n esecuzione del contratto e le dovute operazioni di fatturazione per essere ricontattato ai fini di marketing e customer care per l\iscrizione alla newsletter di Istrice srl.', 45, 0);
 
 
             pdfSetRelativeY( $pdf, 10 );
@@ -408,14 +404,6 @@
 
                 )
             );
-
-
-            //pdfFormBox( $pdf, $info, "luogo e data", 12, 3, pdfFormCalcX( $info, 24 ), $boxY );
-            //pdfFormBox( $pdf, $info, "timbro e firma accettazione intervento", 12, 3, pdfFormCalcX( $info, 12 ), $boxY );
-            //pdfFormBox( $pdf, $info, "firma del tecnico", 12, 3, pdfFormCalcX( $info, 0 ), $boxY );
-
-
-    
 
 
 
