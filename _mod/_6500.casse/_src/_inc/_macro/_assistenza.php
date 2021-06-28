@@ -44,6 +44,8 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
 
 }
 
+
+
 if( isset( $_REQUEST['__unset__'] ) ){
 
     if(  $_REQUEST['__unset__'] == 'cliente' ){
@@ -54,6 +56,10 @@ if( isset( $_REQUEST['__unset__'] ) ){
     } elseif(  $_REQUEST['__unset__'] == 'progetto' ){
 
         unset( $_SESSION['assistenza']['id_progetto'] );
+    
+    } elseif(  $_REQUEST['__unset__'] == 'todo' ){
+
+        unset( $_SESSION['assistenza']['id_todo'] );
     
     } else{
     
@@ -120,7 +126,7 @@ if( !( isset( $_SESSION['assistenza']['id_cliente'] ) ) ){
    $ct['view']['table'] = 'anagrafica';
 
     // id della vista
-    $ct['view']['id'] = 'clienti';
+   $ct['view']['id'] = 'clienti';
 
         // campi della vista
 	$ct['view']['cols'] = array(

@@ -81,7 +81,8 @@
 			'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anteprima.documento.html' ),
 			'macro'		=> array( $m . '_src/_inc/_macro/_anteprima.documento.php' ),
 			'parent'	=> array( 'id'		=> 'casse' ),
-			'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) )
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+			'etc'		=> array( 'sheets' => array( 'anteprima.documento') )
 		);
 
 	// assistenza
