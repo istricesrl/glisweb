@@ -26,21 +26,59 @@
 		var serial = $( '#{{ table }}_serial_number' ).val();
 		var nome = $( '#{{ table }}_nome' ).val();
 		var testo = $( '#{{ table }}_testo' ).val();
-		var bar = $( '#{{ table }}_bar' ).val();
-		var id_riga = $( '#{{ table }}_id_matricola' ).val();
+		var bar = $( '#{{ table }}_barcode' ).val();
+		var id_riga = $( '#id_riga' ).val();
 
 		if( id_riga > 0 ){
 
 			if( bar == '' ){
+				
+				if(nome  == ''){
+
+					document.getElementById("{{ table }}_nome").style.borderColor="#FF0000";
+
+				} else {
+
+					document.getElementById("{{ table }}_nome").style.borderColor = "#ced4da";
+
+					$('#genera-btn').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+					var call = '{{ site.url }}_mod/_4100.prodotti/_src/_api/_task/_generazione.matricola.php?id_marchio='+marchio+'&id_produttore='+produttore+'&serial='+serial+'&nome='+nome+'&testo='+testo+'&id_riga='+id_riga;
+					
+					getws( call,'', function(data) {
+
+						console.log(data);
+					var id = $('#genitore').val()+'_matricola';
+					$('#documenti_'+id).val( data.numero );
+					submitFormOkay = true;
+					$( "#form-documenti" ).submit();
+					});
+				}
 
 			} else {
 
+					$('#genera-btn').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+					var call = '{{ site.url }}_mod/_4100.prodotti/_src/_api/_task/_generazione.matricola.php?barcode='+bar+'&id_riga='+id_riga;
+					
+					getws( call,'', function(data) {
+
+						if( data.status == 'OK' ){
+							console.log(data);
+							submitFormOkay = true;
+							$( "#form-documenti" ).submit();
+						} else {
+
+						}
+
+					});
 			}
 
 		} else {
 
 			if(nome  == ''){
-	    	document.getElementById("{{ table }}_nome").style.borderColor="#FF0000";
+
+	    		document.getElementById("{{ table }}_nome").style.borderColor="#FF0000";
 
 			} else {
 
@@ -49,7 +87,7 @@
 			$('#genera-btn').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 
 			var call = '{{ site.url }}_mod/_4100.prodotti/_src/_api/_task/_generazione.matricola.php?id_marchio='+marchio+'&id_produttore='+produttore+'&serial='+serial+'&nome='+nome+'&testo='+testo;
-
+			
 			getws( call,'', function(data) {
 
 				var id = $('#genitore').val()+'_matricola';
@@ -66,7 +104,7 @@
     <div class="modal-dialog" role="document">
 	<div class="modal-content">
 	    <div class="modal-header">
-		<h5 class="modal-title">genera matricola hardware</h5>
+		<h3 class="modal-title">matricola hardware</h3>
 		<button type="button" id="close_matricola" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	    </div>
 	    <div class="modal-body">
@@ -76,14 +114,17 @@
 				{# CAMPI HIDDEN DI BASE #}
 				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 				<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-				<input type="hidden" id="genitore" name="{{ table }}[genitore]" value="">
-				<input type="hidden" id="id_matricola" name="{{ table }}[id]" value="">
+				<input type="hidden" id="genitore" name="{{ table }}[__genitore__]" value="">
+				<input type="hidden" id="id_riga" name="{{ table }}[__id_riga__]" value="">
 					
-		    <div class="form-row">
-			<div class="col-12" id="barcode_matricola" hidden>
+				
+		    <div class="form-row form-group">
+			<legend id="legenda_1" hidden>esistente</legend>
+			<div class="col-12" id="barcode_matricola" hidden >
 					<span class="label-top">barcode</span>
-					{{ frm.input( table, '', '', 'barcode', '', '', request ) }}
+					{{ frm.input( table, '', '', 'barcode', '', '', request, '', '', '', 'focus-on-load' ) }}
 			</div>
+			<legend id="legenda_2" hidden>nuova</legend>
 			<div class="col-6">
 				<span class="label-top">marchio</span>
 			    {{ frm.select( table, '', '', 'id_marchio', '', etc.select.marchi, request ) }}
@@ -109,6 +150,7 @@
 	    </div>
 	    <div class="modal-footer">
 		<button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+		<button id="elimina_articolo" hidden type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti_articoli&__delete__[id]={{ etc.id_riga }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}','_self');">elimina articolo</button>
 		<button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="genera_matricola(this);">genera</button>
 	    </div>
 		</div></form>

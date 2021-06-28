@@ -39,7 +39,19 @@
     
         if( $st['numero'] > 0 ){
 
-            $st['status'] = 'OK';
+            if( isset( $_REQUEST['id_riga'] ) ){
+
+                $update = mysqlQuery( $cf['mysql']['connection'], 'UPDATE documenti_articoli SET matricola = ? WHERE id = ? ',
+                                    array( array( 's' => $st['numero'] ), array( 's' => $_REQUEST['id_riga'] ) ) );
+            }
+
+            if( $update ){
+                $st['status'] = 'OK';
+            } else {
+                $st['status'] = 'NO';
+                $st['error'][] = 'errore aggiornamento riga documento';
+            }
+           
 
         } else {
 
@@ -48,10 +60,39 @@
 
         }
     
+    } elseif( isset( $_REQUEST['barcode'] ) && !empty( $_REQUEST['barcode'] ) && explode( '.', $_REQUEST['barcode'] )[0] == 'MAT'  ){
+
+        $id_matricola = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM matricole WHERE id = ? ',
+        array( array( 's' =>  ltrim(explode( '.', $_REQUEST['barcode'] )[1], "0") ) ) );
+    
+        if( $id_matricola && isset( $_REQUEST['id_riga'] ) ){
+
+            $update = mysqlQuery( $cf['mysql']['connection'], 'UPDATE documenti_articoli SET matricola = ? WHERE id = ? ',
+                                array( array( 's' => $id_matricola ), array( 's' => $_REQUEST['id_riga'] ) ) );
+        
+
+            if( $update ){
+
+                $st['status'] = 'OK';
+
+            } else {
+
+                $st['status'] = 'NO';
+                $st['error'][] = 'errore aggiornamento riga documento';
+
+            }
+            
+        } else {
+         
+            $st['status'] = 'NO';
+            $st['error'][] = 'nessun matricola corrispondente a barcode';
+
+        }
+
     } else {
 
         $st['status'] = 'NO';
-        $st['error'][] = 'nessun nome matricola passato';
+        $st['error'][] = 'nessun dato per generazione matricola matricola passato';
 
     }
 

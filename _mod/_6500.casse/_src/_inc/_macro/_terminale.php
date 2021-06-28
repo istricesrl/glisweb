@@ -22,11 +22,18 @@
         'modal' => array( 'id' => 'genera_matricola', 'include' => 'inc/ritiro.hardware.modal.html' )
         );
 
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array( 'id' => 'crea_attivita', 'include' => 'inc/creazione.attivita.modal.html' )
+        );
+
     // mastro di scarico [magazzino]
     $ct['etc']['mastro'] = NULL;
+    // mastro di carico attivta[magazzino]
+    $ct['etc']['mastro_attivita'] = NULL;
 
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
+
 
 
     $ct['etc']['default_reparto'] = '0';
@@ -130,7 +137,10 @@
                     //print_r($cf['contents']['pages']['anteprima.documento']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$_REQUEST['documenti']['id'] );
                     header("Location: ".$cf['contents']['pages']['anteprima.documento']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$_REQUEST['documenti']['id'] );
                     exit;
-                    break;        
+                    break;  
+                case 'CMD.OPZ.0004':
+                    $ct['etc']['default_operazione'] = '0';
+                    break;      
                 }
             }    
 
@@ -180,9 +190,7 @@
 
             if( $articolo ){    
 
-                if( $articolo['se_ore'] ){
 
-                }
 
 
                 if( $_REQUEST[ $ct['form']['table'] ]['__reparto__'] == 0 ){ $reparto = $articolo['id_reparto']; }
@@ -197,9 +205,10 @@
                     array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id']  ) )
                 );
 
-                if( $in_doc ){
+                if( $in_doc && !$articolo['se_matricola'] ){
                  //   print_r("articolo presente nel documento modifico la quantità ".$_REQUEST[ $ct['form']['table'] ]['__operazione__']);
-                    if( $in_doc['quantita'] == 1 && $_REQUEST[ $ct['form']['table'] ]['__operazione__'] == '-1' ){
+                    
+                    if( ( $in_doc['quantita'] == 1 && $_REQUEST[ $ct['form']['table'] ]['__operazione__'] == '-1') || $_REQUEST[ $ct['form']['table'] ]['__operazione__'] == '0' ){
 
                         $delete = mysqlQuery( 
                             $cf['mysql']['connection'], 
@@ -241,15 +250,35 @@
                 }
             }
 
-            if( $articolo['se_matricola'] && isset( $insert ) && $insert > 0){
-  /*
+            if( $articolo['se_ore']  && isset( $insert ) && $insert > 0){
+                $ct['etc']['id_riga'] = $insert;
                 echo '
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript">
                 $(document).ready(function(){
-                    $("#id_matricola").val('.  $insert  .');
+                    $("#id_documenti_articoli").val('.  $insert  .');
+                    $("#crea_attivita").modal({
+                        backdrop: "static",
+                        keyboard: false
+                      });
+
+                    $("#crea_attivita").modal("show");
+
+                });
+            </script>';
+            }
+            if( $articolo['se_matricola'] && isset( $insert ) && $insert > 0){
+                $ct['etc']['id_riga'] = $insert;
+                echo '
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript">
+                $(document).ready(function(){
+                    $("#id_riga").val('.  $insert  .');
                     $("#close_matricola").hide();
                     $("#barcode_matricola").removeAttr("hidden");
+                    $("#legenda_1").removeAttr("hidden");
+                    $("#legenda_2").removeAttr("hidden");
+                    $("#elimina_articolo").removeAttr("hidden");
                     $("#annulla_matricola").hide();
+                    $("#matricole_barcode").prop("autofocus");
                     $("#genera_matricola").modal({
                         backdrop: "static",
                         keyboard: false
@@ -258,7 +287,7 @@
                     $("#genera_matricola").modal("show");
 
                 });
-            </script>';*/
+            </script>';
               }
 
             }
@@ -277,8 +306,9 @@
 
     // tendina tipologie documenti
 	$ct['etc']['select']['operazioni'] = array(
-            array( 'id' => '1', '__label__' => '&#xf067;' ),
-            array( 'id' => '-1', '__label__' => '&#xf068;' )
+            array( 'id' => '1', '__label__' => 'aggiungi' ),
+            array( 'id' => '-1', '__label__' => 'togli' ),
+            array( 'id' => '0', '__label__' => 'elimina' )
 	);
 
     // tendina  anagrafica
@@ -309,7 +339,10 @@
    // righe del documento
 	$ct['etc']['righe'] = mysqlQuery(
 	    $cf['mysql']['connection'],
-	    'SELECT * FROM documenti_articoli_view WHERE id_documento = ?',
+	    'SELECT documenti_articoli_view.*, attivita.ore, progetti.nome AS progetto FROM documenti_articoli_view '.
+        'LEFT JOIN attivita ON attivita.id_documenti_articoli = documenti_articoli_view.id '.
+        'LEFT JOIN progetti ON progetti.id = attivita.id_progetto '
+        .'WHERE documenti_articoli_view.id_documento = ?',
         array( array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) 
 	);
 
@@ -339,10 +372,50 @@
 
 }
 
+if( !isset( $_REQUEST['documenti']['scadenze'] ) && isset( $_REQUEST['documenti']['id']) ){
+
+            $_REQUEST['documenti']['scadenze'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                "SELECT * FROM scadenze_view  WHERE id_documento = ?", array( array( 's' =>  $_REQUEST['documenti']['id'] ) )
+                );
+        
+        }
 
 
-//print_r( $_REQUEST );
 
+    if( isset( $_SESSION['assistenza']['id_cliente'] ) ){
+
+             // tendina clienti
+        $ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM anagrafica_view_static WHERE id = ? ', array( array( 's' => $_SESSION['assistenza']['id_cliente'] ) ) );
+
+    	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE timestamp_chiusura IS NULL AND progetti_view.id_cliente = ? ORDER BY __label__',
+             array( array( 's' => $_SESSION['assistenza']['id_cliente'] ) ) );
+    
+    } else {
+
+   
+        // tendina clienti
+        $ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM anagrafica_view_static WHERE se_lead = 1 OR se_cliente = 1 OR se_prospect = 1' );
+
+    	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE timestamp_chiusura IS NULL ORDER BY __label__' );
+    
+    }
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
