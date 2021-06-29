@@ -965,4 +965,25 @@
 
     }
 
+    // funzione che ritorna un array dei giorni festivi (timestamp) relativi ad un certo anno
+    function getHolidays( $anno ){
+
+        $festivi = array(
+			strtotime( $anno . '-01-01' ), 	    // Capodanno
+			strtotime( $anno . '-01-06' ),  	// Epifania
+			easter_date( $anno ),		        // Pasqua calcolata per l'anno corrente
+			strtotime( date("Y-m-d", easter_date( $anno ) ) . '+ 1 days'),	// Pasquetta calcolata per l'anno corrente
+			strtotime( $anno . '-04-25' ),  	// Liberazione
+			strtotime( $anno . '-05-01' ),  	// Festa Lavoratori
+			strtotime( $anno . '-06-02' ),  	// Festa Repubblica
+			strtotime( $anno . '-08-15' ),  	// Ferragosto
+			strtotime( $anno . '-11-01' ),  	// Tutti i santi
+			strtotime( $anno . '-12-08' ),  	// Immacolata
+			strtotime( $anno . '-12-25' ),  	// Natale
+			strtotime( $anno . '-12-26' ) 	    // Santo Stefano
+		);
+
+        return $festivi;
+    }
+
 	
