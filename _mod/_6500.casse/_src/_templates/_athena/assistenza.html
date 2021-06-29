@@ -42,7 +42,7 @@
                 <legend>nuova assistenza</legend>
                 <div class="col">
                     <span class="label-top">ricerca cliente</span>
-                    <input id="nuova_anagrafica" type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]"  value="{{ session.__view__[ view.id ].__search__ }}"  onchange="{% set cliente = '__cliente__' %}  $('#pager').val('0');" >
+                    <input id="nuova_anagrafica" type="text" class="form-control form-control-sm" name="__view__[clienti][__search__]"  value="{{ session.__view__.clienti.__search__ }}" onchange="$('#anagrafica_esistente').val(''); $('#pager').val('0');" >
 
                 </div>
                             
@@ -58,14 +58,14 @@
                     <span class="label-top">ricerca todo</span>
                     <input type="text" class="form-control form-control-sm" name="__assistenza__" value="" autofocus>
                 </div>
-                <!--div class="col-6">
+                <div class="col-6">
                     <span class="label-top">ricerca cliente</span>
-                    <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="{% set cliente = '__cliente_open__' %} $('#pager').val('0'); " >
-                </div-->
+                    <input type="text" id="anagrafica_esistente" class="form-control form-control-sm" name="__view__[clienti_esistenti][__search__]" value="{{ session.__view__.clienti_esistenti.__search__ }}" onchange=" $('#nuova_anagrafica').val(''); $('#pager').val('0');">
+                </div>
             </div>   
     </div>
     
-        {% if view.data and session.__view__[ view.id ].__search__ or session.__view__[ view.id ].__search_a__  %}
+        {% if view.data and not ( session.__view__.clienti.__search__ is empty )  %}
         <div class="form-group form-row">
             <div class=" col-md-12 text-center table-responsive">
                 <table class="view-table  clickable">
@@ -74,11 +74,11 @@
                         {% for key in view.fields %}
                         <th class="{{ view.class[key] }}">
                             {% if view.cols[ key ] %}
-                            <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
+                            <input type="hidden" name="__view__[clienti][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__.clienti.__sort__[ key ] }}">
                             <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
                             <option value="">{{ view.cols[ key ] }}</option>
-                            <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
-                            <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+                            <option value="ASC"{% if session.__view__.clienti.__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
+                            <option value="DESC"{% if session.__view__.clienti.__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
                             </select>
                             <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
                             {% endif %}
@@ -101,10 +101,48 @@
             </div>
         </div>
         {% endif %}
+
+    {% if view.data and  not ( session.__view__.clienti_esistenti.__search__ is empty ) %}
+
+    <div class="form-group form-row">
+        <div class=" col-md-12 text-center table-responsive">
+            <table class="view-table  clickable">
+                <thead>
+                    <tr>
+                    {% for key in view.fields %}
+                    <th class="{{ view.class[key] }}">
+                        {% if view.cols[ key ] %}
+                        <input type="hidden" name="__view__[clienti_esistenti][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__.clienti_esistenti.__sort__[ key ] }}">
+                        <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+                        <option value="">{{ view.cols[ key ] }}</option>
+                        <option value="ASC"{% if session.__view__.clienti_esistenti.__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
+                        <option value="DESC"{% if session.__view__.clienti_esistenti.__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+                        </select>
+                        <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
+                        {% endif %}
+                    </th>
+                    {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in view.data %}
+                    <tr onClick="window.open('{{ page.path[ localization.language.ietf ] }}?__cliente_old__[id]={{ row.id }}','_self');">
+    
+                       {# for key,col in view.cols #}
+                    {% for key in view.fields %}
+                    <td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
+                    {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
     {% endif %}
+{% endif %}
 
 <div class="form-group form-row">
-{% if session.assistenza.id_cliente %}
+{% if session.assistenza.id_cliente and not( session.assistenza.riapri ) %}
 <div class="col-3">
     <legend>cliente</legend>
     <div class="form-group form-row">
@@ -122,8 +160,64 @@
         </div>
     </div>   
 </div>  
+{% elseif session.assistenza.id_cliente %}
+<div class="col-3">
+    <legend>cliente</legend>
+    <div class="form-group form-row">
+        <div class="col">
+            {{ etc.cliente.__label__ }}
+            {% if etc.cliente.mail %}<br>indirizzo mail: {{ etc.cliente.mail }} {% endif %}
+            {% if etc.cliente.telefoni %} <br>telefoni: {{ etc.cliente.telefoni }}{% endif %}
+        </div>
+        <div class="col-auto" >
+            {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&anagrafica[id]={{ session.assistenza.id_cliente }}','_self');"><i class="fa fa-pencil"></i></button>
+            {% if not session.assistenza.id_todo %} 
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__=cliente','_self');"><i class="fa fa-times"></i></button>
+            {% endif %}
+        </div>
+    </div>   
+</div>  
+<div class="col-12">
+    <legend>todo aperte</legend>
+
+{% if view.data %}
+<div class=" col-md-12 text-center table-responsive">
+    <table class="view-table  clickable">
+        <thead>
+            <tr>
+            {% for key in view.fields %}
+            <th class="{{ view.class[key] }}">
+                {% if view.cols[ key ] %}
+                <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
+                <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+                <option value="">{{ view.cols[ key ] }}</option>
+                <option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
+                <option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+                </select>
+                <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
+                {% endif %}
+            </th>
+            {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in view.data %}
+            <tr onClick="window.open('{{ page.path[ localization.language.ietf ] }}?__todo__[id]={{ row.id }}','_self');">
+            {# for key,col in view.cols #}
+            {% for key in view.fields %}
+            <td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
+            {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endif %}
-{% if session.assistenza.id_cliente and not session.assistenza.id_progetto %}
+</div>
+
+{% endif %}
+{% if session.assistenza.id_cliente and not(session.assistenza.id_progetto)  and not( session.assistenza.riapri )%}
 <div class="col-3">
     <legend>progetto</legend>
         <div class="form-row">
@@ -167,7 +261,7 @@
 </div>
 {% endif %}
 {% endif %}
-{% if session.assistenza.id_progetto %}  
+{% if session.assistenza.id_progetto and not( session.assistenza.riapri ) %}  
 <div class="col-3">
     <legend>progetto</legend>
     <div class="form-group form-row">
@@ -182,7 +276,7 @@
     </div>    
 </div>
 {% endif %}
-{% if session.assistenza.id_progetto %}  
+{% if session.assistenza.id_progetto and not( session.assistenza.riapri ) %}  
 <div class="col form-group form-row">
   
         <legend>todo</legend>
@@ -236,7 +330,7 @@
 
 
  
-{% if session.assistenza.id_todo %}
+{% if session.assistenza.id_todo and not( session.assistenza.riapri ) %}
 
 </div>
 
@@ -305,6 +399,7 @@
 				</div>
                 {% endif %}
         </div>
+
 {% endif %}
 {% if session.assistenza.id_attivita %}
 
@@ -329,8 +424,10 @@
             {% endif  %}
             </div>
             {% if session.assistenza.id_attivita %}
-             <button type="submit" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
-             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
+            {% if request.attivita.data_programmazione %}
+            <button type="submit" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
+            {% endif %}
+            <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
              {% endif %}
             {% if session.assistenza.id_cliente and session.assistenza.id_progetto and ( not session.assistenza.id_attivita ) %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
@@ -382,10 +479,18 @@
     </div>
     </div>
     <div class="col-12">
-        {% if etc.attivita %}
-        <legend>attività</legend>
+        {% if etc.attivita_completate %}
+        <legend>attività completate</legend>
             <ul>
-            {% for a in etc.attivita %}
+            {% for a in etc.attivita_completate %}
+                <li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.testo }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% if etc.attivita_pianificate %}
+        <legend>attività pianificate</legend>
+            <ul>
+            {% for a in etc.attivita_pianificate %}
                 <li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.testo }}</li>
             {% endfor %}
             </ul>
@@ -413,7 +518,7 @@
             <div class="form-group form-row">
                 <div class="col-auto">
                     <span class="label-top">data</span> 
-                    {{ frm.date( table, '', '', 'timestamp_completamento', '', '', request ) }}
+                    {{ frm.datetime( table, '', '', 'timestamp_completamento', '', '', request ) }}
                 </div>
                 <div class="col">
                     <span class="label-top">testo completamento</span>
@@ -426,7 +531,7 @@
     
             <fieldset class=" ">
                 <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
-                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
+                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">{% if request.todo.timestamp_completamento %}inserisci nuovo{% else %}annulla{% endif %}</button>
                     {% if request.todo.timestamp_completamento %}
                     <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
                     {% endif %}
