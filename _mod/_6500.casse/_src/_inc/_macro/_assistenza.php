@@ -15,6 +15,10 @@ if( isset( $_SESSION['contatto']['id_anagrafica'] ) ){
 
 }
 
+if( isset( $_SESSION['assistenza']['riapri'] ) && isset( $_REQUEST['__todo__']['id'] ) && !isset( $_SESSION['assistenza']['id_assistenza']) ){
+    $_SESSION['assistenza']['id_assistenza'] = $_REQUEST['__todo__']['id'] ;
+}
+
 if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza__'] )[0] == 'TODO') || isset( $_SESSION['assistenza']['id_assistenza']) ){
  
     if( isset( $_SESSION['assistenza']['id_assistenza']) ){
@@ -26,13 +30,15 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
 
 
     $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
-    $ct['etc']['attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ?', array( array( 's' => $todo) ));
-   // $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $todo) ));
+    $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL', array( array( 's' => $todo) ));
+    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS  NULL', array( array( 's' => $todo) ));
+
+    // $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $todo) ));
     $ct['form']['table'] = 'todo';
     if( !isset( $_REQUEST['todo']  ) ){
         $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
         if( !empty( $_REQUEST['todo']['timestamp_completamento'] ) ){
-            $_REQUEST['todo']['timestamp_completamento'] = strtotime( $_REQUEST['todo']['timestamp_completamento'] );
+            $_REQUEST['todo']['timestamp_completamento'] = date( 'Y-m-d\TH:i', $_REQUEST['todo']['timestamp_completamento']) ;
         }    
         
     
@@ -63,6 +69,7 @@ if( isset( $_REQUEST['__unset__'] ) ){
     
     } else{
     
+        unset( $_SESSION['assistenza']['riapri'] );
         unset( $_SESSION['assistenza']['id_cliente'] );
         unset( $_SESSION['assistenza']['id_progetto'] );
         unset( $_SESSION['assistenza']['id_todo']  );
@@ -99,7 +106,13 @@ if( isset( $_REQUEST['__cliente__']['id'] ) && !isset( $_SESSION['assistenza']['
     $_SESSION['assistenza']['id_cliente'] = $_REQUEST['__cliente__']['id'];
 }
 
-if( isset( $_SESSION['assistenza']['id_cliente'] ) && !isset( $_SESSION['assistenza']['id_progetto'] ) ){
+if( isset( $_REQUEST['__cliente_old__']['id'] ) && !isset( $_SESSION['assistenza']['id_progetto'] ) ){
+
+    $_SESSION['assistenza']['id_cliente'] = $_REQUEST['__cliente_old__']['id'];
+    $_SESSION['assistenza']['riapri'] = 1;
+}
+
+if( isset( $_SESSION['assistenza']['id_cliente'] ) && !isset( $_SESSION['assistenza']['id_progetto'] ) && !isset($_SESSION['assistenza']['riapri']) ){
     $ct['etc']['cliente'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_cliente']) ));
 
     // tabella della vista
@@ -119,14 +132,60 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && !isset( $_SESSION['assiste
    
 }
 
+if( isset( $_SESSION['assistenza']['id_cliente'] ) && !isset( $_SESSION['assistenza']['id_progetto'] ) && isset($_SESSION['assistenza']['riapri']) ){
+    $ct['etc']['cliente'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_cliente']) ));
+
+    // tabella della vista
+	$ct['view']['table'] = 'todo';
+
+    // id della vista
+    $ct['view']['id'] = md5( $ct['view']['table'] );
+
+    // campi della vista
+	$ct['view']['cols'] = array(
+        'id' => '#',
+        'cliente' => 'cliente',
+        '__label__' => 'nome'
+	);
+
+    $ct['view']['__restrict__']['id_cliente']['EQ'] = $_SESSION['assistenza']['id_cliente'];
+    $ct['view']['__restrict__']['timestamp_completamento']['NL'] = true;
+}
 
 
-if( !( isset( $_SESSION['assistenza']['id_cliente'] ) ) ){
+if( !( isset( $_SESSION['assistenza']['id_cliente'] ) ) && isset( $_SESSION['__view__']['clienti_esistenti']['__search__'] ) && !empty($_SESSION['__view__']['clienti_esistenti']['__search__']) ){
     // tabella della vista
    $ct['view']['table'] = 'anagrafica';
 
+
+
+   // id della vista
+   $ct['view']['id'] = 'clienti_esistenti'; 
+   
     // id della vista
-   $ct['view']['id'] = 'clienti';
+   //$ct['view']['id'] = 'clienti';
+
+        // campi della vista
+	$ct['view']['cols'] = array(
+	    'id' => '#',
+	    '__label__' => 'contatto',
+	    'telefoni' => 'telefoni',
+	    'mail' => 'mail',
+	    'categorie' => 'categorie'
+	);
+
+}
+if( !( isset( $_SESSION['assistenza']['id_cliente'] ) ) && isset( $_SESSION['__view__']['clienti']['__search__'] ) && !empty($_SESSION['__view__']['clienti']['__search__']) ){
+    // tabella della vista
+   $ct['view']['table'] = 'anagrafica';
+
+
+
+   // id della vista
+   $ct['view']['id'] = 'clienti'; 
+   
+    // id della vista
+   //$ct['view']['id'] = 'clienti';
 
         // campi della vista
 	$ct['view']['cols'] = array(
@@ -192,4 +251,6 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+
    
