@@ -328,11 +328,7 @@
         $collisioni = mysqlSelectValue(
             $cf['mysql']['connection'],
                 "SELECT count(*) FROM attivita WHERE id_anagrafica = ? "
-                ."AND ( "
-            /*    ."( TIMESTAMP( data_programmazione, ora_inizio_programmazione) > ? and TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? ) "
-                ."OR "
-                ."( TIMESTAMP( data_programmazione, ora_fine_programmazione) > ? and TIMESTAMP( data_programmazione, ora_fine_programmazione) < ? ) "
-            */    
+                ."AND ( "  
                 ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
                 ."OR "
                 ."(TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, '00:00:01' ) ) between ? and ?) "     
@@ -546,8 +542,7 @@
             .'WHERE r.id IS NULL '
             .'AND ( c.data_fine_rapporto IS NULL or data_fine_rapporto >= ?) '
             .'GROUP BY c.id_anagrafica '
-            #.'HAVING collisioni = 0 AND se_produzione = 1'
-            .'HAVING collisioni = 0 '
+            .'HAVING collisioni = 0 AND se_produzione = 1'
            ,
             array(
                 array( 's' => $a['data_ora_inizio'] ),
@@ -630,7 +625,7 @@
 
 
     // funzione che dato un progetto, calcola l'elenco degli operatori che possono coprirne le attività scoperte con relativo punteggio
-    function elencoSostitutiProgetto( $id_progetto ){
+/*    function elencoSostitutiProgetto( $id_progetto ){
 
         $logdir = 'var/log/sostitutiProgetto.log';
 
@@ -874,14 +869,14 @@
         return $candidati;
 
     }
-
+*/
 
     // nuova funzione per calcolo sostituti progetto
     function sostitutiProgetto( $id_progetto ){
 
-        $logdir = 'var/log/sostitutiProgetto.log';
+    #    $logdir = 'var/log/sostitutiProgetto.log';
 
-        appendToFile('cerco sostituti progetto ' . $id_progetto . PHP_EOL, $logdir);
+    #    appendToFile('cerco sostituti progetto ' . $id_progetto . PHP_EOL, $logdir);
 
         global $cf;
 
