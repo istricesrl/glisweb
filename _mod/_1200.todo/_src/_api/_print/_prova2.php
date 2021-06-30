@@ -13,6 +13,28 @@
     // inclusione del framework
     require '../../../../../_src/_config.php';
 
+    // DATI
+    if( isset( $_REQUEST['todo'] ) ){
+
+        // dati todo
+        $todo = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT todo_view.*, account_view.utente FROM todo_view LEFT JOIN account_view ON account_view.id = todo_view.id_account_inserimento WHERE todo_view.id = ? ',
+            array( array( 's' => $_REQUEST['todo'] ) )
+        );
+
+        if( $todo ){
+            // anagrafica cliente
+            $cliente =  mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $todo['id_cliente'] ) ));
+        
+            // attività di diagnosi
+            $attivita = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia WHERE attivita.id_todo = ? AND tipologie_attivita.nome = ? ORDER BY attivita.timestamp_inserimento LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => 'diagnosi') ));
+        } else {
+
+            die( print_r('dati todo assenti', true) );
+        }
+    }
+
     // impostazione documento
     $info['doc']['title']                       = 'PDF di prova';
 
@@ -51,17 +73,17 @@
         array(
             'width' => 28,
             'label' => array( 'text' => 'richiesta ricevuta da' ),
-            'bar' => array( 'text' => '' )
+            'bar' => array( 'text' => ( isset( $todo ) ? $todo['utente'] : '' ) )
         ),
         array(
             'width' => 10,
             'label' => array( 'text' => 'in data' ),
-            'bar' => array( 'text' => '' )
+            'bar' => array( 'text' => ( isset( $todo ) ? date( 'd/m/Y',$todo['timestamp_inserimento']) : '' ) )
         ),
             array(
                 'width' => 5,
                 'label' => array( 'text' => 'alle ore' ),
-                'bar' => array( 'text' => '' )
+                'bar' => array( 'text' => ( isset( $todo ) ? date( 'H:i',$todo['timestamp_inserimento']) : '' ) )
                 )
             ));
             
@@ -70,7 +92,7 @@
                 array(
                     'width' => 45,
                     'label' => array( 'text' => 'nome e cognome o denominazione' ),
-                    'bar' => array( 'text' => '' )
+                    'bar' => array( 'text' => ( isset( $cliente ) ? $cliente['__label__'] : '' ) )
                 )
                 )
             );
@@ -107,17 +129,17 @@
                 array(
                     'width' => 15,
                     'label' => array( 'text' => 'codice fiscale' ),
-                    'bar' => array( 'text' => '' )
+                    'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['codice_fiscale'] ) ? $cliente['codice_fiscale'] : '' ) )
                 ),
                 array(
                     'width' => 10,
                     'label' => array( 'text' => 'partita IVA' ),
-                    'bar' => array( 'text' => '' )
+                    'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['partita_iva'] ) ? $cliente['partita_iva'] : '' ) )
                 ),
                 array(
                     'width' => 16,
                     'label' => array( 'text' => 'codice SDI' ),
-                    'bar' => array( 'text' => '' )
+                    'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['codice_sdi'] ) ? $cliente['codice_sdi'] : '' ) )
                 ) 
 
                 )
@@ -126,12 +148,12 @@
                 array(
                     'width' => 13,
                     'label' => array( 'text' => 'telefono' ),
-                    'bar' => array( 'text' => '' )
+                    'bar' => array( 'text' => ( isset( $cliente ) ? $cliente['telefoni'] : '' ) )
                 ),
                 array(
                     'width' => 31,
                     'label' => array( 'text' => 'email o PEC' ),
-                    'bar' => array( 'text' => '' )
+                    'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['mail'] ) ? $cliente['mail'] : '' ) )
                 )
 
                 )
@@ -140,7 +162,7 @@
                 array(
                     'width' => 12,
                     'label' => array( 'text' => 'codice contratto' ),
-                    'bar' => array( 'text' => '' )
+                    'bar' => array( 'text' => ( isset( $todo ) ? $todo['id_progetto'] : '' ) )
                 ),
                 array(
                     'width' => 23
@@ -157,7 +179,7 @@
         $boxY = $pdf->GetY();
 
         pdfFormCellTitle( $pdf, $info, '2. descrizione del problema' );
-        pdfFormLineRow( $pdf, $info, '', 32, 3);
+        pdfFormLineRow( $pdf, $info, ( isset( $todo ) ? $todo['testo'] : '' ), 32, 3);
 
 //        pdfFormBox( $pdf, $info, 'firma del cliente\nper accettazione', 8, 4, $boxX, pdfFormCalcY( $info, 27 ) );
 //            pdfFormBox( $pdf, $info, "firma del cliente\nper accettazione", 8, 4, 130, 130 );
