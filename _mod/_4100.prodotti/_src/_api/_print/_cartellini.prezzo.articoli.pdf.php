@@ -14,13 +14,15 @@
     require '../../../../../_src/_config.php';
 
     // oggetto del documento
-	$dobj = 'comandi cassa barcode';
+	$dobj = 'cartellini articoli';
+
+    $logo = anagraficaGetLogo(2);
 
     // elenco dei prodotti
     if( isset( $_REQUEST['prodotto'] ) ){
-        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM articoli_view WHERE id_prodotto = ?', array( array( 's' => $_REQUEST['prodotto'] ) ) );
+        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract FROM articoli_view WHERE id_prodotto = ?', array( array( 's' => $_REQUEST['prodotto'] ) ) );
     } else {
-        $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id ');
+        $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LIMIT 5');
     }
    
   
@@ -40,15 +42,19 @@
 	$mr		= 15;								// margine destro
 	$fnt		= 'helvetica';							// font base
 	$fnts		= 10;								// dimensione del font base
+    $fntt		= 20;								// dimensione del font titolo
 	$stdsp		= 5;								// spaziatore standard
 	$lth		= .3;								// spessore linea standard
 	$lts		= .15;								// spessore linea sottile
 	$rgb0		= array( 0, 0, 0 );						// il nero
 	$rgb1		= array( 128, 128, 128 );					// grigio
 	$rgb9		= array( 255, 255, 255 );					// il bianco
-    $hBox       = 37;
-    $wBox       = 60;
+    $rgBlu      = array( 26, 99, 154 );
+    $hBox       = 40;
+    $wBox       = 62;
 
+    $startX = ($w - $wBox * 4) / 2;
+    $startY = ($h - $hBox * 5) / 2;
     // bordi delle celle
 	$brdh		= array(
 	    'B' => array( 'width' => $lth, 'color' => $rgb0 )
@@ -65,13 +71,13 @@
         'fitwidth' => true,
         //'cellfitalign' => 'C',
         'border' => false,
-        'hpadding' => '20',
+        'hpadding' => 'auto',
         'vpadding' => 'auto',
         'fgcolor' => array(0,0,0),
         'bgcolor' => false, //array(255,255,255),
         'text' => true,
         'font' => 'helvetica',
-        'fontsize' => 9,
+        'fontsize' => 5,
         'stretchtext' => 0
     );
 
@@ -104,33 +110,73 @@
     // aggiunta di una pagina
 	$pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
 
-    $x = 5;
-    $y = 5;
-
+    $x = $startX;
+    $y = $startY;
+    $pdf -> setTextColor( 26, 99, 154 );
     //print_r($articoli);
+// convert TTF font to TCPDF format and store it on the fonts folder
+//$fontname = TCPDF_FONTS::addTTFfont('var/www/html/glisweb/var/contenuti/AllertaStencil-Regular.ttf', 'TrueTypeUnicode', '', 96);
 
-    for( $i = 1; $i < count($articoli); $i++){
+// use the font
+//$pdf->SetFont($fontname, '', 14, '', false);
 
-        $pdf->Rect( $x, $y, $wBox, $hBox );	
+    for( $i = 0; $i < count($articoli); $i++){
+
+        $pdf-> Rect( $x, $y, $wBox, $hBox );	
+
+        $pdf->setXY( $x + 2, $y + 4);
+        $pdf->SetFont( $fnt, 'B', 12 );	
+        $pdf -> Cell($wBox - 5, '',$articoli[$i]['h1'],'',1);
+        $pdf->SetFont( $fnt, 'B', $fnts );	
+        // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
+        $pdf-> Image($logo, $x + 2 , $y + 17, 15, 15);
+        $pdf-> MultiCell($wBox - 20, '', strip_tags($articoli[$i]['abstract']), '', 'L', '', '', $x + 20, $y + 15);
+        $pdf->setXY( $x - 5, $y + $hBox - 10);
+        $pdf->SetFont( $fnt, 'B', 12 );	
+        $pdf -> Cell($wBox , '','€ '.number_format($articoli[$i]['prezzo'], 2),'',1,'R');
+        $pdf->SetFont( $fnt, '', 5 );	
+        $pdf->setX( $x + $wBox/2 + 7);
+        $pdf -> Cell($wBox - 5, '','prezzo (compreso di IVA)','',1);
         $x += $wBox;
-        if( $i%4 == 0){
+        if( ($i + 1) %4 == 0){
             
             if( $y + ( $hBox * 2 ) > $h) { 
                 $pdf -> AddPage();
-                $y = 5;
+                $y = $startY;
             } else {
                 $y += $hBox; 
             }
-            $x = 5;
+            $x = $startX;
         
         } 
 
-        
-
-    
-       
     }
 
+    $pdf -> AddPage();
+    $x = $startX;
+    $y = $startY;
+    for( $i = 0; $i < count($articoli); $i++){
+
+        $pdf-> Rect( $x, $y, $wBox, $hBox );	
+
+        $pdf->setXY( $x + 5, $y + $hBox/2);
+        $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts + 7 ,0.19, $style);
+               
+
+        $x += $wBox;
+        if( ( $i + 1) %4 == 0){
+            
+            if( $y + ( $hBox * 2 ) > $h) { 
+                $pdf -> AddPage();
+                $y = $startY;
+            } else {
+                $y += $hBox; 
+            }
+            $x = $startX;
+        
+        } 
+
+    }
     /*
     foreach( $prodotti as $p){
 
