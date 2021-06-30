@@ -23,6 +23,22 @@
         // tipografia derivata
         $info['style']['page']['viewport'] = $info['style']['page']['w'] - ( $info['style']['page']['ml'] + $info['style']['page']['mr'] );
 
+        $info['style']['barcode'] = array(
+            'position' => 'M',
+            'align' => 'L',
+            'stretch' => false,
+            'fitwidth' => false,
+            'border' => false,
+            'hpadding' => 'auto',
+            'vpadding' => 'auto',
+            'fgcolor' => array(0,0,0),
+            'bgcolor' => false, //array(255,255,255),
+            'text' => true,
+            'font' => 'helvetica',
+            'fontsize' => 10,
+            'stretchtext' => 0
+        );
+
         // form
         if( isset( $info['form']['columns'] ) ) {
             $info['form']['column']['width'] = $info['style']['page']['viewport'] / $info['form']['columns'];
@@ -108,6 +124,22 @@
      * @todo documentare
      * 
      */
+    function pdfFormBarcode( $pdf, $info, $text, $height = 15, $code = 'C128' ){
+ 
+        
+        $cellWidth = $info['form']['column']['width'];
+        $barHeight = $info['form']['bar']['height'];
+       // pdfSetRelativeY( $pdf, $barHeight * -1 );
+        $pdf->write1DBarcode( $text, $code, '', '', '', $height ,0.35 , $info['style']['barcode']);
+        pdfSetRelativeY( $pdf, $barHeight *  - 1.5);
+        pdfSetRelativeX( $pdf, $cellWidth * 30);
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
     function pdfFormCellBar( $pdf, $info, $text, $width = 0 ) {
 
         $cellWidth = $info['form']['column']['width'];
@@ -169,6 +201,8 @@
 
             if( isset( $item['bar']['text'] ) ) {
                 pdfFormCellBar( $pdf, $info, $item['bar']['text'], $item['width'], ( ( isset( $item['bar']['style'] ) ) ? $item['bar']['style'] : 'default' ) );
+            } elseif( isset( $item['bar']['barcode'] ) ){
+                pdfFormBarcode(  $pdf, $info, $item['bar']['barcode'] );
             } else {
                 pdfSetRelativeX( $pdf, $item['width'] * $cellWidth );
             }
@@ -213,6 +247,26 @@
         $cellWidth = $info['form']['column']['width'];
         $barHeight = $info['form']['bar']['height'];
 
+        pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
+
+        $pdf->Cell( ( $width * $cellWidth ), $barHeight, $text, 0, $newline );
+
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function pdfFormCellPdfTitle( $pdf, $info, $text, $size = 0, $width = 0, $style = 'title', $newline = 1 ) {
+
+        $cellWidth = $info['form']['column']['width'];
+        $barHeight = $info['form']['bar']['height']; 
+        
+        if( $size != 0 ){   $info['style']['text'][ $style ]['size'] = $size;
+         }
         pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
 
         $pdf->Cell( ( $width * $cellWidth ), $barHeight, $text, 0, $newline );
