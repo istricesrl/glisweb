@@ -75,13 +75,14 @@
 				    // inserisco l'articolo di questa riga
 					$id = mysqlQuery(
 					    $cf['mysql']['connection'],
-					    'INSERT INTO articoli ( id, nome, id_prodotto ) VALUES ( ?, ?, ? ) '.
+					    'INSERT INTO articoli ( id, nome, id_prodotto, id_reparto ) VALUES ( ?, ?, ?, ? ) '.
 					    'ON DUPLICATE KEY UPDATE id = VALUES( id ), '.
-					    'nome = VALUES( nome ), id_prodotto = VALUES( id_prodotto ) ',
+					    'nome = VALUES( nome ), id_prodotto = VALUES( id_prodotto ), id_reparto = VALUES( id_reparto ) ',
 					    array(
 						array( 's' => $row['codice'] ),
 						array( 's' => $row['nome'] ),
-						array( 's' => $row['prodotto'] )
+						array( 's' => $row['prodotto'] ),
+						array( 's' => ( isset( $row['reparto'] ) && !empty( $row['reparto'] ) ? $row['reparto'] : NULL ) )
 					    )
 					);
 					

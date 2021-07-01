@@ -75,10 +75,10 @@
 				    // inserisco l'articolo di questa riga
 					$id = mysqlQuery(
 					    $cf['mysql']['connection'],
-					    'INSERT INTO prezzi ( id_articolo, prezzo, id_listino, id_udm, id_iva, id_valuta ) VALUES ( ?, ?, ?, ?, ?, ? ) ',
+					    'INSERT INTO prezzi ( id_articolo, prezzo, id_listino, id_udm, id_iva, id_valuta ) VALUES (  ?, ?, ?, ?, ?, ? ) ',
 					    array(
 						array( 's' => $row['articolo'] ),
-						array( 's' => str_replace (',', '.', $row['prezzo'] )  ),
+						array( 's' => str_replace ( '€','',str_replace (',', '.', $row['prezzo'] ) ) ),
 						array( 's' => $row['listino'] ),
                         array( 's' => $row['udm'] ),
                         array( 's' => $row['iva'] ),

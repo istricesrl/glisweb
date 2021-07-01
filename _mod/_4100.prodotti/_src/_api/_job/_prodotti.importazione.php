@@ -126,16 +126,18 @@
 				    // inserisco il prodotto di questa riga
 					$id = mysqlQuery(
 					    $cf['mysql']['connection'],
-					    'INSERT INTO prodotti ( id, id_tipologia, nome, id_udm, descrizione, id_tipologia_pubblicazione ) VALUES ( ?, ?, ?, ?, ?, ? ) '.
+					    'INSERT INTO prodotti ( id, id_tipologia, nome, id_udm, descrizione, id_tipologia_pubblicazione, se_matricola, se_ore ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) '.
 					    'ON DUPLICATE KEY UPDATE id = VALUES( id ), '.
-					    'nome = VALUES( nome ), id_tipologia = VALUES( id_tipologia ), id_udm = VALUES( id_udm ), descrizione = VALUES( descrizione ), id_tipologia_pubblicazione = VALUES ( id_tipologia_pubblicazione)  ',
+					    'nome = VALUES( nome ), id_tipologia = VALUES( id_tipologia ), id_udm = VALUES( id_udm ), se_matricola = VALUES( se_matricola ),se_ore = VALUES( se_ore ), descrizione = VALUES( descrizione ), id_tipologia_pubblicazione = VALUES ( id_tipologia_pubblicazione)  ',
 					    array(
 						array( 's' => $row['codice'] ),
 						array( 's' => $idTipologia ),
 						array( 's' => $row['nome'] ),
 						array( 's' => $idUdm ),
 						array( 's' => $row['descrizione'] ),
-						array( 's' => '2' )
+						array( 's' => '2' ),
+						array( 's' => ( isset( $row['matricola'] ) && !empty( $row['matricola'] ) ? 1 : NULL ) ),
+						array( 's' => ( isset( $row['ore'] ) && !empty( $row['ore'] ) ? 1 : NULL ) )
 					    )
 					);
 
@@ -143,7 +145,7 @@
 					 logWrite( 'inserisco in prodotti ' . $row['nome'] . ' (id ' . $id . ', riga #' . ( $i + 1 ) . ' su totali ' . $totale . ' limite ciclo da ' . $corrente . ' minore di ' . $limite . ')', 'job' );
 
 					// log
-					    logWrite( 'prodotto ' . $id .' categoria  '.$idCategoria . ' riga#' . ( $i + 1 ) . ')', 'job' );
+					logWrite( 'prodotto ' . $id .' categoria  '.$idCategoria . ' riga#' . ( $i + 1 ) . ')', 'job' );
 
 					if( ! empty( $idCategoria ) ){
 					    $catProd = mysqlQuery($cf['mysql']['connection'],
