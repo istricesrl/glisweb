@@ -24,7 +24,7 @@
         $info['style']['page']['viewport'] = $info['style']['page']['w'] - ( $info['style']['page']['ml'] + $info['style']['page']['mr'] );
 
         $info['style']['barcode'] = array(
-            'position' => 'M',
+            'position' => '',
             'align' => 'L',
             'stretch' => false,
             'fitwidth' => false,

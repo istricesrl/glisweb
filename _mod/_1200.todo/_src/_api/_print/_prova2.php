@@ -79,6 +79,7 @@
         $pdf->SetTextColor( 255,255,255 );
         $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['bianco'] );
         $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['bianco'] );
+        $info['style']['barcode']['fgcolor']        = array( 255, 255, 255); 
     }
    
 
@@ -202,7 +203,7 @@
                 ),
                 array(
                     'width' => 23,
-                    'bar' => array( 'barcode' => ( isset( $todo ) ? 'TODO.00000'.$todo['id'] : '' ) )
+                    'bar' =>  ( isset( $_REQUEST['todo'] ) ? array( 'barcode' =>  'TODO.00000'.$todo['id']  ) : array() ) 
                 ),
                 array(
                     'width' => 8,
@@ -224,7 +225,7 @@
 
         //rettangolo
         //$pdf->Cell(30, 30, '', 1, 1);
-        //pdfFormCellTitle( $pdf, $info, '3. appuntamento' );
+        pdfFormCellTitle( $pdf, $info, '3. appuntamento' );
 
         pdfFormCellRow( $pdf, $info, array(
                 array(
@@ -353,7 +354,7 @@
             pdfFormCellLabel( $pdf, $info, 'condizioni del servizio di assistenza tecnica');
             pdfSetRelativeY( $pdf, 5 );
             pdfHtmlColumns( $pdf, $info, 2,
-                'tra '.$azienda['__label__'].', con sede in '.$sede['__label__'].', C.F. e P.IVA '.$azienda['codice_fiscale'].' '.$azienda['partita_iva'].', d\'ora in avanti Fornitore da una parte;
+                'tra '.( isset($azienda) ? $azienda['__label__'] : '___________________').', con sede in '.( isset( $sede['__label__'] ) ? $sede['__label__'] : '_____________________').', C.F. e P.IVA '.( isset( $azienda ) ? $azienda['codice_fiscale'].' '.$azienda['partita_iva'] : '__________________' ).', d\'ora in avanti Fornitore da una parte;
                 e
                 il soggetto identificato al quadro 1, d\'ora in avanti Cliente, dall\'altra parte;
                 si conviene e si stipula quanto segue
