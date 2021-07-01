@@ -150,8 +150,8 @@
         $pdf->Line($x + $wBox + $litsp, $y + $hBox , $x + $wBox + $stdsp, $y + $hBox);
 
         // rettangolo guida
-        $pdf-> Rect( $x, $y, $wBox, $hBox );	
-        $pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
+        //$pdf-> Rect( $x, $y, $wBox, $hBox );	
+        //$pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
 
         // trasform
         ///$pdf->setXY( $x + $wBox/2 + 1  , $y + $hBox/2 );
