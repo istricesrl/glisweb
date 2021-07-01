@@ -33,8 +33,8 @@
 	    )
 	);
 
-    if(file_exists(DIR_MOD.'4000.catalogo/src/api/print/manuale.barcode.pdf.php')  ){$file = DIR_MOD.'4000.catalogo/src/api/print/manuale.barcode.pdf.php';}
-    else {$file = DIR_MOD.'_4000.catalogo/_src/_api/_print/_manuale.barcode.pdf.php';  }
+    if(file_exists(DIR_MOD.'4000.catalogo/src/api/print/manuale.barcode.pdf.php')  ){$file = $cf['site']['url'].'4000.catalogo/src/api/print/manuale.barcode.pdf.php';}
+    else {$file = $cf['site']['url'].'_4000.catalogo/_src/_api/_print/_manuale.barcode.pdf.php';  }
 
 	$ct['page']['contents']['metro']['general'][] = array(
         'target' => '_blank' ,
