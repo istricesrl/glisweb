@@ -20,9 +20,11 @@
 
     // elenco dei prodotti
     if( isset( $_REQUEST['prodotto'] ) ){
-        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva WHERE articoli_view.id_prodotto = ?', array( array( 's' => $_REQUEST['prodotto'] ) ) );
+        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva  FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva WHERE articoli_view.id_prodotto = ?', array( array( 's' => $_REQUEST['prodotto'] ) ) );
+    } elseif( isset( $_REQUEST['articolo'] ) ){
+        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva  FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva WHERE articoli_view.id = ?', array( array( 's' => $_REQUEST['articolo'] ) ) );
     } else {
-        $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva');
+        $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva ');
     }
    
   
@@ -55,7 +57,7 @@
     $wBox       = 62;
 
 
-    $startX = ($w - ($wBox  ) * 4) / 2;
+    $startX = ($w - ($wBox  ) * 4) / 2 - 10;
     $startY = ($h - ($hBox  + $stdsp ) * 4) / 2;
     
     // bordi delle celle
@@ -96,7 +98,7 @@
 	$pdf->SetPrintFooter( false );							// se stampare il footer
 
     // imposto i margini
-	$pdf->SetMargins( $ml, $mt, $mr );						// left, top, right
+	$pdf->SetMargins( 0, 0, 0 );						// left, top, right
 	$pdf->SetHeaderMargin( 0 );							// margine dell'intestazione
 	$pdf->SetFooterMargin( 0 );							// margine del footer
 
@@ -148,18 +150,18 @@
         $pdf->Line($x + $wBox + $litsp, $y + $hBox , $x + $wBox + $stdsp, $y + $hBox);
 
         // rettangolo guida
-       // $pdf-> Rect( $x, $y, $wBox, $hBox );	
-       // $pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
+        $pdf-> Rect( $x, $y, $wBox, $hBox );	
+        $pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
 
         // trasform
         ///$pdf->setXY( $x + $wBox/2 + 1  , $y + $hBox/2 );
-        $pdf->setXY( $x + $wBox/2 + 15, $y + $hBox/2 );
+        $pdf->setXY( $x + $wBox/2 + 22, $y + $hBox/2 );
         
         $pdf->StartTransform();
 
         $pdf->Rotate(180);
         
-        $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts + 3 ,0.1, $style, 'N');
+        $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts + 5 ,0.17, $style);
                
 
         // Stop Transformation
@@ -171,26 +173,26 @@
       
         $pdf->setXY( $x - $stdsp/2, $y  + $hBox );
         $pdf->SetFont( $fnt, 'B', 12 );	
-        $pdf -> Cell($wBox + $stdsp, $fnts + $stdsp, $articoli[$i]['id'], '','1', 'C', 1);
+        $pdf -> Cell($wBox + $stdsp, $fnts + $stdsp, $articoli[$i]['h1'], '','1', 'C', 1);
 
         $pdf -> setTextColor( 26, 99, 154 );
         $pdf->setXY( $x + $litsp, $pdf->getY() + $litsp );
         $pdf-> MultiCell($wBox - $litsp, '', strip_tags($articoli[$i]['abstract']), '', 'L', '', '');
 
-        $pdf->setXY( $x - $litsp, $y + $hBox * 2 - 12);
-        $pdf->SetFont( $fnt, 'B', $fntt );	
-        $pdf -> Cell($wBox , '','€ '.number_format( ceil($articoli[$i]['prezzo'] * (100 + $articoli[$i]['aliquota']) / 100), 2),'',1,'R');
-        $pdf->SetFont( $fnt, '', 5 );	
-        $pdf->setX( $x + $wBox/2 + 7);
-        $pdf -> Cell($wBox - 5, '','prezzo (compreso di IVA)','',1);
+        $pdf-> setXY( $x - $litsp, $y + $hBox * 2 - 12);
+        $pdf-> SetFont( $fnt, 'B', $fntt );	
+        $pdf-> Cell($wBox , '','€ '.number_format( ceil($articoli[$i]['prezzo'] * (100 + $articoli[$i]['aliquota']) / 100), 2, ',','.'),'',1,'R');
+        $pdf-> SetFont( $fnt, '', 5 );	
+        $pdf-> setX( $x );
+        $pdf-> Cell($wBox, '','prezzo (compreso di '.$articoli[$i]['descrizione_iva'].')','',1, 'R' );
       
         // logo
         //$pdf->setXY( $x - $litsp, $y + $hBox * 2 - 12);
         //$pdf-> Image($logo, $x + $litsp , $y + $hBox * 2 - 10, 7, 7);
   
 
-        if( ($i + 1) % 3 == 0){
-            
+       // if( ($i + 1) % 3 == 0){
+         if( ( $x + $wBox * 2 + ( $stdsp * 4  ) ) > $w  ) {   
             if( $y + ( $hBox * 3 ) > $h) { 
                 $pdf -> AddPage();
                 $y = $startY ;
@@ -201,7 +203,7 @@
         
         } else {
 
-            $x = $x + $wBox + ( $stdsp * 4  ) ;
+            $x +=  $wBox + ( $stdsp * 4  ) ;
             
         }
 
