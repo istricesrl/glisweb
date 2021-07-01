@@ -16,7 +16,7 @@
     // oggetto del documento
 	$dobj = 'cartellini articoli';
 
-    $logo = anagraficaGetLogo(2);
+   // $logo = anagraficaGetLogo(2);
 
     // elenco dei prodotti
     if( isset( $_REQUEST['prodotto'] ) ){
