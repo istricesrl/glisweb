@@ -117,7 +117,7 @@
     
     //print_r($articoli);
 // convert TTF font to TCPDF format and store it on the fonts folder
-//$fontname = TCPDF_FONTS::addTTFfont('var/www/html/glisweb/var/contenuti/AllertaStencil-Regular.ttf', 'TrueTypeUnicode', '', 96);
+//$fontname = TCPDF_FONTS::addTTFfont('var/www/html/glisweb/var/contenuti/AllertaStencil-Regular.ttf', 'TrueTypeUnicode');
 
 // use the font
 //$pdf->SetFont($fontname, '', 14, '', false);
