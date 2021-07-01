@@ -89,6 +89,16 @@
                     <span class="label-top">marchio</span>
                     {{ frm.select( table, '', '', 'id_marchio', '', etc.select.marchi, request ) }}
                 </div>
+                <div class="col-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_matricola', 'matricola', '', request ) }}
+					</div>
+				</div>
+				<div class="col-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_ore', 'ore', '', request ) }}
+					</div>
+				</div>
             </div>
 
 		</fieldset>
