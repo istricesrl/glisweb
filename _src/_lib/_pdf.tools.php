@@ -161,13 +161,13 @@
                 pdfSetLineStyle( $pdf, $info['lines']['thin'] );
                 $pdf->Cell( $cellWidth, $barHeight, '', 'L', 0 );
                 pdfSetRelativeX( $pdf, $cellWidth * -1 );
-                pdfSetLineStyle( $pdf, $info['lines']['thick'] );
             }
             
             if( $i == ( count( $str ) - 1 ) ) {
                 $border .= 'R';
             }
 
+            pdfSetLineStyle( $pdf, $info['lines']['thick'] );
             $pdf->Cell( $cellWidth, $barHeight, $str[ $i ], $border, 0, 'C' );
 
         }

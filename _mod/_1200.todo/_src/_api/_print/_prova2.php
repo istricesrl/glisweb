@@ -174,7 +174,7 @@
                     'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['partita_iva'] ) ? $cliente['partita_iva'] : '' ) )
                 ),
                 array(
-                    'width' => 16,
+                    'width' => 18,
                     'label' => array( 'text' => 'codice SDI' ),
                     'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['codice_sdi'] ) ? $cliente['codice_sdi'] : '' ) )
                 ) 
@@ -236,12 +236,12 @@
                 array(
                     'width' => 10,
                     'label' => array( 'text' => 'in data' ),
-                    'bar' => array( 'text' => ( isset( $attivita ) ? date( 'd/m/Y', strtotime( $attivita['data_programmazione'] ) ) : '' ) )
+                    'bar' => array( 'text' => ( isset( $attivita ) ? date( 'd/m/Y', strtotime( $attivita['data_programmazione'] ) ) : '  /  /    ' ) )
                 ),
                 array(
                     'width' => 5,
                     'label' => array( 'text' => 'alle ore' ),
-                    'bar' => array( 'text' => ( isset( $attivita ) ? date( 'H:i',strtotime( $attivita['ora_inizio_programmazione'] ) ) : '' ) )
+                    'bar' => array( 'text' => ( isset( $attivita ) ? date( 'H:i',strtotime( $attivita['ora_inizio_programmazione'] ) ) : '  :  ' ) )
                 )
 
                 )
@@ -258,7 +258,7 @@
         $pdf->SetTextColor( 255,255,255 );
         $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['bianco'] );
         $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['bianco'] );
-  
+        
     }
         pdfFormCellTitle( $pdf, $info, '4. viaggio di andata' );
         pdfFormCellRow( $pdf, $info, array(
@@ -299,8 +299,8 @@
         pdfFormCellTitle( $pdf, $info, '6. soluzione proposta' );
         pdfFormLineRow( $pdf, $info, '', 32, 3 );
 
-//        $pdf->Cell(60, 30, '', 1, 1);
-//        pdfSetRelativeY( $pdf, 20 );
+        //$pdf->Cell(60, 30, '', 1, 1);
+        //pdfSetRelativeY( $pdf, 20 );
 
         pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con la soluzione proposta", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
 
@@ -401,7 +401,7 @@
             pdfSetRelativeY( $pdf, 10 );
             pdfFormLineRow( $pdf, $info,'Ai sensi dell\'art. 1341 c.c. il Cliente approva specificamente gli artt. 3 (modalità di espletamento), 4 (durata del contratto), 5 (corrispettivo e condizioni di pagamento), 6 (garanzia), 8 (subappalto), 11 (clausola risolutiva espressa), 13 (esclusioni), 14 (risoluzione delle controversie).', 45, 0);
             pdfFormCellTitle( $pdf, $info, '' );
-            pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali per l\' esecuzione del contratto e le dovute operazioni di fatturazione per essere ricontattato ai fini di marketing e customer care per l\iscrizione alla newsletter di Istrice srl.', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali per l\' esecuzione del contratto e le dovute operazioni di fatturazione per essere ricontattato ai fini di marketing e customer care per l\' iscrizione alla newsletter di Istrice srl.', 45, 0);
 
             pdfSetRelativeY( $pdf, 10 );
 
@@ -415,7 +415,7 @@
                 array(
                     'width' => 10,
                     'label' => array( 'text' => 'in data' ),
-                    'bar' => array( 'text' => '' )
+                    'bar' => array( 'text' => '  /  /    ' )
                 ),
                 array(
                     'width' => 5,
