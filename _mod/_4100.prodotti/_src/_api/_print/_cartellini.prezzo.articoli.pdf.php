@@ -22,7 +22,7 @@
     if( isset( $_REQUEST['prodotto'] ) ){
         $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract FROM articoli_view WHERE id_prodotto = ?', array( array( 's' => $_REQUEST['prodotto'] ) ) );
     } else {
-        $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LIMIT 5');
+        $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva');
     }
    
   
@@ -42,9 +42,10 @@
 	$mr		= 15;								// margine destro
 	$fnt		= 'helvetica';							// font base
 	$fnts		= 10;								// dimensione del font base
-    $fntt		= 20;								// dimensione del font titolo
+    $fntt		= 18;								// dimensione del font titolo
 	$stdsp		= 5;								// spaziatore standard
-	$lth		= .3;								// spessore linea standard
+    $litsp      = 2;
+    $lth		= .3;								// spessore linea standard
 	$lts		= .15;								// spessore linea sottile
 	$rgb0		= array( 0, 0, 0 );						// il nero
 	$rgb1		= array( 128, 128, 128 );					// grigio
@@ -53,8 +54,10 @@
     $hBox       = 40;
     $wBox       = 62;
 
-    $startX = ($w - $wBox * 4) / 2;
-    $startY = ($h - $hBox * 5) / 2;
+
+    $startX = ($w - ($wBox  + 9) * 4) / 2;
+    $startY = ($h - ($hBox  + $stdsp ) * 4) / 2;
+    
     // bordi delle celle
 	$brdh		= array(
 	    'B' => array( 'width' => $lth, 'color' => $rgb0 )
@@ -65,11 +68,11 @@
 
     // stiel del barcode
     $style = array(
-        'position' => 'M',
-        'align' => 'C',
-        'stretch' => false,
+        'position' => '',
+        'align' => 'R',
+        'stretch' => true,
         'fitwidth' => true,
-        //'cellfitalign' => 'C',
+        'cellfitalign' => 'L',
         'border' => false,
         'hpadding' => 'auto',
         'vpadding' => 'auto',
@@ -77,8 +80,7 @@
         'bgcolor' => false, //array(255,255,255),
         'text' => true,
         'font' => 'helvetica',
-        'fontsize' => 5,
-        'stretchtext' => 0
+        'fontsize' => 8
     );
 
     // carattere di base
@@ -112,7 +114,7 @@
 
     $x = $startX;
     $y = $startY;
-    $pdf -> setTextColor( 26, 99, 154 );
+    
     //print_r($articoli);
 // convert TTF font to TCPDF format and store it on the fonts folder
 //$fontname = TCPDF_FONTS::addTTFfont('var/www/html/glisweb/var/contenuti/AllertaStencil-Regular.ttf', 'TrueTypeUnicode', '', 96);
@@ -122,111 +124,91 @@
 
     for( $i = 0; $i < count($articoli); $i++){
 
-        $pdf-> Rect( $x, $y, $wBox, $hBox );	
+        // angoli di stampa
+        // angolo in alto a sinistra
+        $pdf->Line($x , $y - $litsp , $x , $y - $stdsp);
+        $pdf->Line($x - $litsp, $y   , $x - $stdsp , $y  );
 
-        $pdf->setXY( $x + 2, $y + 4);
+        // angolo in alto a destra
+        $pdf->Line($x + $wBox , $y - $litsp , $x + $wBox, $y - $stdsp);
+        $pdf->Line($x + $wBox + $litsp, $y  , $x + $wBox  + $stdsp , $y  );
+
+        // angolo in basso a sinistra 
+        $pdf->Line($x , $y + ($hBox*2) + $litsp , $x , $y + ($hBox*2) +$stdsp);
+        $pdf->Line($x - $litsp, $y + ($hBox*2)  , $x - $stdsp , $y + ($hBox*2)  );
+
+        // angolo in basso a destra
+        $pdf->Line($x + $wBox , $y + ($hBox*2) + $litsp , $x + $wBox, $y + ($hBox*2) +$stdsp);
+        $pdf->Line($x + $wBox + $litsp, $y + ($hBox*2)  , $x + $wBox + $stdsp , $y + ($hBox*2)  );
+
+        // linea di piega sinistra 
+        $pdf->Line($x - $litsp, $y + $hBox , $x - $stdsp, $y + $hBox);
+
+        // linea di piega destra 
+        $pdf->Line($x + $wBox + $litsp, $y + $hBox , $x + $wBox + $stdsp, $y + $hBox);
+
+        // rettangolo guida
+       // $pdf-> Rect( $x, $y, $wBox, $hBox );	
+       // $pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
+
+        // trasform
+        ///$pdf->setXY( $x + $wBox/2 + 1  , $y + $hBox/2 );
+        $pdf->setXY( $x + $wBox/2 + 17, $y + $hBox/2 );
+        
+        $pdf->StartTransform();
+
+        $pdf->Rotate(180);
+        
+        $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts + 5 ,0.15, $style, 'T');
+               
+
+        // Stop Transformation
+        $pdf->StopTransform();
+
+        $pdf -> setTextColor( 255, 255, 255 );
+        $pdf-> SetFillColor( 26, 99, 154);
+        #Cell(w, h = 0, txt = '', border = 0, ln = 0, align = '', fill = 0, link = nil, stretch = 0, ignore_min_height = false, calign = 'T', valign = 'M') 
+      
+        $pdf->setXY( $x - $stdsp/2, $y  + $hBox );
         $pdf->SetFont( $fnt, 'B', 12 );	
-        $pdf -> Cell($wBox - 5, '',$articoli[$i]['h1'],'',1);
-        $pdf->SetFont( $fnt, 'B', $fnts );	
-        // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
-        $pdf-> Image($logo, $x + 2 , $y + 17, 15, 15);
-        $pdf-> MultiCell($wBox - 20, '', strip_tags($articoli[$i]['abstract']), '', 'L', '', '', $x + 20, $y + 15);
-        $pdf->setXY( $x - 5, $y + $hBox - 10);
-        $pdf->SetFont( $fnt, 'B', 12 );	
-        $pdf -> Cell($wBox , '','€ '.number_format($articoli[$i]['prezzo'], 2),'',1,'R');
+        $pdf -> Cell($wBox + $stdsp, $fnts + $stdsp, $articoli[$i]['id'], '','1', 'C', 1);
+
+        $pdf -> setTextColor( 26, 99, 154 );
+        $pdf->setXY( $x + $litsp, $pdf->getY() + $litsp );
+        $pdf-> MultiCell($wBox - $litsp, '', strip_tags($articoli[$i]['abstract']), '', 'L', '', '');
+
+        $pdf->setXY( $x - $litsp, $y + $hBox * 2 - 12);
+        $pdf->SetFont( $fnt, 'B', $fntt );	
+        $pdf -> Cell($wBox , '','€ '.number_format( ceil($articoli[$i]['prezzo'] * (100 + $articoli[$i]['aliquota']) / 100), 2),'',1,'R');
         $pdf->SetFont( $fnt, '', 5 );	
         $pdf->setX( $x + $wBox/2 + 7);
         $pdf -> Cell($wBox - 5, '','prezzo (compreso di IVA)','',1);
-        $x += $wBox;
-        if( ($i + 1) %4 == 0){
+      
+        // logo
+        //$pdf->setXY( $x - $litsp, $y + $hBox * 2 - 12);
+        //$pdf-> Image($logo, $x + $litsp , $y + $hBox * 2 - 10, 7, 7);
+  
+
+        if( ($i + 1) % 3 == 0){
             
-            if( $y + ( $hBox * 2 ) > $h) { 
+            if( $y + ( $hBox * 3 ) > $h) { 
                 $pdf -> AddPage();
-                $y = $startY;
+                $y = $startY ;
             } else {
-                $y += $hBox; 
+                $y += $hBox * 2 +  $stdsp * 3; 
             }
             $x = $startX;
         
-        } 
+        } else {
 
-    }
-
-    $pdf -> AddPage();
-    $x = $startX;
-    $y = $startY;
-    for( $i = 0; $i < count($articoli); $i++){
-
-        $pdf-> Rect( $x, $y, $wBox, $hBox );	
-
-        $pdf->setXY( $x + 5, $y + $hBox/2);
-        $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts + 7 ,0.19, $style);
-               
-
-        $x += $wBox;
-        if( ( $i + 1) %4 == 0){
+            $x = $x + $wBox + ( $stdsp * 2  ) + $litsp;
             
-            if( $y + ( $hBox * 2 ) > $h) { 
-                $pdf -> AddPage();
-                $y = $startY;
-            } else {
-                $y += $hBox; 
-            }
-            $x = $startX;
-        
-        } 
-
-    }
-    /*
-    foreach( $prodotti as $p){
-
-        if( isset( $p['articoli'] ) && ! empty( $p['articoli'] ) ){
-
-            // spazio 
-	        $pdf->SetY( $pdf->GetY() + $stdsp * 2 );
-
-            // scrivo il nome del prodotto
-            $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-            $pdf->Cell( $col * 12, 0, $p['__label__'], 0, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
-
-            // spazio sotto il nome del prodotto
-	        $pdf->SetY( $pdf->GetY() + $stdsp * 2 );
-
-            // tabella di articoli e relativi barcode
-            // intestazione tabella di dettaglio
-            $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-            $pdf->Cell( $col * 2, 0, 'nome', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 6, 0, 'barcode', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
-
-            // tabella di dettaglio
-            $pdf->SetFont( $fnt, '', $fnts );	
-            		
-
-
-            // font, stile, dimensione
-            foreach( $p['articoli'] as $articolo ) {
-
-                $trh = max( $pdf->GetStringHeight( $col * 4, $articolo['testo'], false, true, '', '' ) + 4,  $fnts + 8) ;					// 
-           
-                $pdf->Cell( $col * 2 , $trh, $articolo['nome'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->MultiCell( $col * 4,$trh , $articolo['testo'], $brdc, 'L', false, 0,'','', true, 0, false, true, 0, 'M', false );					// w, h, testo, bordo, allineamento, riempimento, newline
-                
-
-                $x = $pdf->GetX();
-                $y = $pdf->GetY();
-               
-                $pdf->write1DBarcode($articolo['id'], 'C128', '', '', '', $fnts + 12 ,2, $style);
-                $pdf->SetXY($x,$y);
-                $pdf->Cell( $col * 6, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
-
-            }
-
         }
 
+       
+
     }
-*/
+
       // output
 	if( isset( $_REQUEST['d'] ) ) {
 	    $pdf->Output($dobj.'.pdf' , 'D' );					// invia l'output al browser per il download diretto
