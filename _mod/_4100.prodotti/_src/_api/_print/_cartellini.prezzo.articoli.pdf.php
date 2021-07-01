@@ -20,7 +20,7 @@
 
     // elenco dei prodotti
     if( isset( $_REQUEST['prodotto'] ) ){
-        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract FROM articoli_view WHERE id_prodotto = ?', array( array( 's' => $_REQUEST['prodotto'] ) ) );
+        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva WHERE articoli_view.id_prodotto = ?', array( array( 's' => $_REQUEST['prodotto'] ) ) );
     } else {
         $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva');
     }
@@ -55,7 +55,7 @@
     $wBox       = 62;
 
 
-    $startX = ($w - ($wBox  + 9) * 4) / 2;
+    $startX = ($w - ($wBox  ) * 4) / 2;
     $startY = ($h - ($hBox  + $stdsp ) * 4) / 2;
     
     // bordi delle celle
@@ -195,13 +195,13 @@
                 $pdf -> AddPage();
                 $y = $startY ;
             } else {
-                $y += $hBox * 2 +  $stdsp * 3; 
+                $y += $hBox * 2 +  $stdsp * 4; 
             }
             $x = $startX;
         
         } else {
 
-            $x = $x + $wBox + ( $stdsp * 2  ) + $litsp;
+            $x = $x + $wBox + ( $stdsp * 4  ) ;
             
         }
 
