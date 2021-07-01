@@ -69,8 +69,8 @@
     // stiel del barcode
     $style = array(
         'position' => '',
-        'align' => 'R',
-        'stretch' => true,
+        'align' => 'C',
+        'stretch' => false,
         'fitwidth' => true,
         'cellfitalign' => 'L',
         'border' => false,
@@ -80,7 +80,7 @@
         'bgcolor' => false, //array(255,255,255),
         'text' => true,
         'font' => 'helvetica',
-        'fontsize' => 8
+        'fontsize' => 6
     );
 
     // carattere di base
@@ -153,13 +153,13 @@
 
         // trasform
         ///$pdf->setXY( $x + $wBox/2 + 1  , $y + $hBox/2 );
-        $pdf->setXY( $x + $wBox/2 + 17, $y + $hBox/2 );
+        $pdf->setXY( $x + $wBox/2 + 15, $y + $hBox/2 );
         
         $pdf->StartTransform();
 
         $pdf->Rotate(180);
         
-        $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts + 5 ,0.15, $style, 'T');
+        $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts + 3 ,0.1, $style, 'N');
                
 
         // Stop Transformation
