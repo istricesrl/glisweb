@@ -42,8 +42,12 @@
                 $indirizzo = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM indirizzi_view WHERE id = ?', array( array( 's' => $attivita['id_indirizzo'] ) ) ); 
             }
 
-            $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? ORDER BY attivita_view.id ', array( array( 's' => $todo['id']) )  );
-
+            if( isset( $attivita['id'] ) ){
+                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? AND id <> ? ORDER BY attivita_view.id ', array( array( 's' => $todo['id']), array( 's' => $attivita['id'] ) )  );
+            } else {
+                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? ORDER BY attivita_view.id ', array( array( 's' => $todo['id']) )  );
+            }
+            
         } else {
 
             die( print_r('dati todo assenti', true) );
