@@ -153,8 +153,8 @@
         $pdf->Line($x + $wBox + $litsp, $y + $hBox , $x + $wBox + $stdsp, $y + $hBox);
 
         // rettangolo guida
-     //   $pdf-> Rect( $x, $y, $wBox, $hBox );	
-      //  $pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
+        //$pdf-> Rect( $x, $y, $wBox, $hBox );	
+        //$pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
 
         // trasform
         ///$pdf->setXY( $x + $wBox/2 + 1  , $y + $hBox/2 );
@@ -184,14 +184,15 @@
 
         $pdf -> setTextColor( 26, 99, 154 );
         $pdf->setXY( $x + $litsp, $pdf->getY() + $litsp );
-        $pdf-> MultiCell($wBox - $litsp, '', strip_tags($articoli[$i]['abstract_prodotto']).' '.strip_tags($articoli[$i]['abstract']), '', 'JL', '', '');
+        $pdf->SetFont( $fnt, '', 10 );	
+        $pdf-> MultiCell($wBox - $litsp*2, '', trim(strip_tags($articoli[$i]['abstract_prodotto'])).' '.trim(strip_tags($articoli[$i]['abstract'])), '', 'JL', '', '');
 
         $pdf-> setXY( $x - $litsp, $y + $hBox * 2 - 12);
         $pdf-> SetFont( $fnt, 'B', $fntt );	
         $pdf-> Cell($wBox , '','€ '.number_format( ceil($articoli[$i]['prezzo'] * (100 + $articoli[$i]['aliquota']) / 100), 2, ',','.'),'',1,'R');
         $pdf-> SetFont( $fnt, '', 5 );	
         $pdf-> setX( $x );
-        $pdf-> Cell($wBox, '','prezzo (compreso di '.$articoli[$i]['descrizione_iva'].')','',1, 'R' );
+        $pdf-> Cell($wBox - $litsp, '','prezzo (compreso di '.$articoli[$i]['descrizione_iva'].')','',1, 'R' );
       
         // logo
         //$pdf->setXY( $x - $litsp, $y + $hBox * 2 - 12);
