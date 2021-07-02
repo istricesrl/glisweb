@@ -56,6 +56,10 @@
         $info['lines']['thick']                     = array( 'thickness' => .2, 'color' => $info['colors']['nero'] );
         $info['lines']['thin']                      = array( 'thickness' => .12, 'color' => $info['colors']['grigio'] );
 
+            // bordi delle celle
+        $info['cell']['thick'] 		                = array( 'B' => array( 'width' => .2, 'color' => $info['colors']['nero']  ) );
+        $info['cell']['thin']		                = array( 'B' => array( 'width' => .12, 'color' => $info['colors']['grigio']  )	);
+
         // imposto il titolo del documento
         $pdf->SetTitle( $info['doc']['title'] );
 

@@ -42,6 +42,8 @@
                 $indirizzo = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM indirizzi_view WHERE id = ?', array( array( 's' => $attivita['id_indirizzo'] ) ) ); 
             }
 
+            $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? ORDER BY attivita_view.id ', array( array( 's' => $todo['id']) )  );
+
         } else {
 
             die( print_r('dati todo assenti', true) );
@@ -61,6 +63,7 @@
     $info['style']['text']['title']             = array( 'font' => 'helvetica', 'size' => 10, 'weight' => 'B' );
     $info['style']['text']['label']             = array( 'font' => 'helvetica', 'size' => 7, 'weight' => '' );
     $info['style']['text']['small']             = array( 'font' => 'helvetica', 'size' => 6, 'weight' => '' );
+    $info['style']['text']['small_bold']        = array( 'font' => 'helvetica', 'size' => 8, 'weight' => 'B' );
 
     // impostazione linee
     $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['nero'] );
@@ -75,33 +78,27 @@
     // creazione del PDF
 	$pdf = pdfInit( $info );
 
-    if( isset( $_REQUEST['part2'] ) && ! isset( $_REQUEST['part1'] ) ){
-        $pdf->SetTextColor( 255,255,255 );
-        $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['bianco'] );
-        $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['bianco'] );
-        $info['style']['barcode']['fgcolor']        = array( 255, 255, 255); 
-    }
-   
 
     // impostazione stili
     $info['style']['text']['default']           = array( 'font' => 'helvetica', 'size' => 8, 'weight' => '' );
   
-    if( ( isset(  $_REQUEST['part1'] ) && ! isset( $_REQUEST['part2'] ) ) || ( !isset(  $_REQUEST['part1'] ) && ! isset( $_REQUEST['part2'] )  )  || ! isset( $_REQUEST['todo'] )){
-        if( isset( $logo ) ){
-                // inserisco il logo in alto a sinistra
-                $pdf->image( $logo, 15, 15, 10, 10, NULL, NULL, 'T', false, 10, '', false, false, 0, true );		// x, y, w, h, type, link, align, resize
-                $x = $pdf -> getX() + 2;
-                $pdf -> setX( $x );
-                pdfFormCellPdfTitle( $pdf, $info, 'rapporto di intervento di assistenza tecnica', 15 );
-                $pdf -> setX( $x );
-                pdfFormCellLabel( $pdf, $info, 'modulo per assistenza tecnica a chiamata');
+
+
+    if( isset( $logo ) ){
+            // inserisco il logo in alto a sinistra
+            $pdf->image( $logo, 15, 15, 10, 10, NULL, NULL, 'T', false, 10, '', false, false, 0, true );		// x, y, w, h, type, link, align, resize
+            $x = $pdf -> getX() + 2;
+            $pdf -> setX( $x );
+            pdfFormCellPdfTitle( $pdf, $info, 'rapporto di intervento di assistenza tecnica', 15 );
+            $pdf -> setX( $x );
+            pdfFormCellLabel( $pdf, $info, 'modulo per assistenza tecnica a chiamata');
 
         } else {
 
                 pdfFormCellPdfTitle( $pdf, $info, 'rapporto di intervento di assistenza tecnica', 15 );
                 pdfFormCellLabel( $pdf, $info, 'modulo per assistenza tecnica a chiamata');
         }
-    }
+    
 
 
     pdfSetRelativeY( $pdf, 5 );
@@ -225,6 +222,7 @@
 
         //rettangolo
         //$pdf->Cell(30, 30, '', 1, 1);
+        /*
         pdfFormCellTitle( $pdf, $info, '3. appuntamento' );
 
         pdfFormCellRow( $pdf, $info, array(
@@ -246,20 +244,13 @@
 
                 )
             );
+*/
 
-    if( isset( $_REQUEST['part2'] ) && ! isset( $_REQUEST['part1'] ) ){
-    
-        $pdf->SetTextColor( 0,0,0 );
-        $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['grigio'] );
-        $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['nero'] );
-    
-    } elseif( !isset( $_REQUEST['part2'] ) && isset( $_REQUEST['part1'] ) ){
 
-        $pdf->SetTextColor( 255,255,255 );
-        $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['bianco'] );
-        $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['bianco'] );
-        
-    }
+
+
+ 
+    /*
         pdfFormCellTitle( $pdf, $info, '4. viaggio di andata' );
         pdfFormCellRow( $pdf, $info, array(
                 array(
@@ -290,13 +281,25 @@
 
                 )
             );
+*/
 
-            pdfFormCellTitle( $pdf, $info, '5. diagnosi' );
+if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
+    $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['nero'] );
+    $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['grigio'] );
+    $pdf->SetTextColor(0,0,0);
+ } elseif(  isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
+ 
+     $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['bianco'] );
+    $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['bianco'] );
+    $pdf->SetTextColor(255,255,255);
+ }  
+        pdfFormCellTitle( $pdf, $info, '3. diagnosi' );
+
         pdfFormLineRow( $pdf, $info, ( isset( $attivita ) && ! empty( $attivita['testo'] ) ? $attivita['testo'] : '' ), 45, 4 );
 
         $boxY = $pdf->GetY();
 
-        pdfFormCellTitle( $pdf, $info, '6. soluzione proposta' );
+        pdfFormCellTitle( $pdf, $info, '4. soluzione proposta' );
         pdfFormLineRow( $pdf, $info, '', 32, 3 );
 
         //$pdf->Cell(60, 30, '', 1, 1);
@@ -304,9 +307,55 @@
 
         pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con la soluzione proposta", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
 
-        pdfFormCellTitle( $pdf, $info, '7. esito e tempo di intervento' );
-        pdfFormLineRow( $pdf, $info, '', 45, 4 );
+        pdfFormCellTitle( $pdf, $info, '5. esito e tempo di intervento' );
+        pdfSetRelativeY( $pdf, 2);
+        // tabella attivita
+        $margin = $pdf->getMargins();
+        $w = $pdf->getPageWidth();
+        $col = ( $w - $margin['right'] - $margin['left'] )/12;
+        
+        pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
+         // intestazione tabella di dettaglio
+        //$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+        $pdf->Cell( $col * 2, 0, 'data',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 9, 0, 'descrizione',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col, 0, 'ore',  $info['cell']['thick'], 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
+        
+        $i = 1;
 
+        if( isset($elenco_attivita) && count($elenco_attivita) > 0 ){
+
+            $totore = 0;
+            foreach( $elenco_attivita as $a){
+
+                $pdf->Cell( $col * 2, 0, ( $a['data_attivita'] == NULL ? '' : date_format( date_create($a['data_attivita']) , 'd/m/Y') ) , ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 9, 0, $a['testo'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, 0, $a['ore'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $totore += $a['ore'];
+                $i++;
+            }
+    
+         
+        } else {
+
+            for( $i = 1; $i <= 10; $i++){
+
+                $pdf->Cell( $col * 2, 0, '' , ( $i == 10 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 9, 0, '', ( $i == 10 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, 0, '', ( $i == 10  ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+       
+            }
+    
+        }
+        pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
+        $pdf->Cell( $col * 10, 0,  'totale ore' , '', 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col , 0,  '' ,  '', 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col, 0,( isset($totore) ? $totore : '' ), '', 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+
+        pdfSetRelativeY( $pdf, 5 );
+        //pdfFormLineRow( $pdf, $info, '', 45, 4 );
+/*
         pdfFormCellRow( $pdf, $info, array(
                 array(
                     'width' => 26, 
@@ -327,9 +376,9 @@
                     'bar' => array( 'text' => '  h  m' )
                 )
             )
-        );
-            pdfFormCellTitle( $pdf, $info, '8. chiusura intervento' );
-            pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente rapporto di assistenza tecnica, che corrisponde a verità; dichiaro di aver verificato l\'esito dell\'intervento e confermo la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione di quanto dovuto.', 45, 0);
+        );*/
+            pdfFormCellTitle( $pdf, $info, '6. chiusura intervento' );
+            pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e confermo la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione di quanto dovuto.', 45, 0);
             pdfSetRelativeY( $pdf, 10 );
 
             pdfSetRelativeY( $pdf, $info['form']['row']['spacing'] );
@@ -341,13 +390,6 @@
 
         if( ( isset(  $_REQUEST['part1'] ) && ! isset( $_REQUEST['part2'] ) ) || ( !isset(  $_REQUEST['part1'] ) && ! isset( $_REQUEST['part2'] )  ) || ! isset( $_REQUEST['todo'] ) ){
             
-            if( !isset( $_REQUEST['part2'] ) && isset( $_REQUEST['part1'] ) ){
-
-                $pdf->SetTextColor( 0, 0, 0 );
-                $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['grigio'] );
-                $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['nero'] );
-          
-            }
 
             $pdf->AddPage();
             pdfFormCellTitle( $pdf, $info, 'condizioni di servizio' );
@@ -358,37 +400,37 @@
                 e
                 il soggetto identificato al quadro 1, d\'ora in avanti Cliente, dall\'altra parte;
                 si conviene e si stipula quanto segue
-                <br><b>1. oggetto del contratto</b><br>
+                <br><b>1. oggetto del contratto</b><br/>
                 il Fornitore si obbliga col presente contratto a fornire le prestazioni di assistenza opportune per le problematiche specificate al quadro 2.
-                <br><b>2. tempo e luogo delle attività di assistenza</b><br>
+                <br><b>2. tempo e luogo delle attività di assistenza</b><br/>
                 l\'assistenza è fornita dal Fornitore, oltre a quanto stabilito dal presente contratto, anche secondo i propri livelli di servizio generali e nei tempi da essi previsti, visionabili anche sul sito www.pcstop.eu che il Cliente dichiara di conoscere, di aver compreso, e di accettare nella loro interezza.
-                <br><b>3. modalità di espletamento dell\'assistenza</b><br>
+                <br><b>3. modalità di espletamento dell\'assistenza</b><br/>
                 il Fornitore assiste solo hardware e software originale corredato dai necessari certificati di autenticità del relativo produttore. Nell\'esecuzione delle prestazioni a suo carico, il Fornitore opererà con autonoma organizzazione di personale e mezzi. Tra il Cliente e i dipendenti o collaboratori del Fornitore non potrà sussistere alcun rapporto di lavoro né subordinato né autonomo. Qualora in fase di analisi il Fornitore riscontri situazioni in cui non vengono rispettati i canoni di stabilità, affidabilità e sicurezza del sistema informativo del Cliente, ne darà tempestiva segnalazione, in forma libera, al Cliente stesso precisando inoltre gli interventi e le procedure necessarie per porvi rimedio. Se il Cliente rifiuta di adeguarsi alle richieste del Fornitore, questo sarà esonerato da qualsiasi responsabilità riguardo a eventuali danni che dovessero derivare da guasto o malfunzionamento dei sistemi informativi oggetto della segnalazione. Il Cliente ha facoltà, entro trenta giorni dal termine del singolo intervento, di segnalare per iscritto al Fornitore eventuali contestazioni, decorsi i quali il risultato dell\'intervento si intende accettato. In caso di contestazione il Fornitore, se ritiene fondate le richieste del Cliente, provvederà ad un ulteriore intervento per rettificare il risultato di quello contestato senza ulteriori costi per il Cliente. Qualora una delle prestazioni previste dal presente contratto debba essere effettuata tramite la connessione internet del cliente (assistenza remota) e tale connessione non sia disponibile, il Fornitore avrà facoltà di posticipare la prestazione fino al momento in cui gli sia nuovamente possibile effettuarla ovvero, a sua discrezione, potrà effettuarla presso la sede del cliente aggiungendo in tal caso i costi di spostamento a quelli di intervento in accordo con le tariffe vigenti al momento della prestazione.
-                <br><b>4. durata del contratto</b><br>
+                <br><b>4. durata del contratto</b><br/>
                 il presente contratto si esaurisce dopo trenta giorni dall\'accettazione da parte del Cliente delle prestazioni ricevute, manifestata per iscritto firmando il presente modulo.
-                <br><b>5. corrispettivo e condizioni di pagamento</b><br>
+                <br><b>5. corrispettivo e condizioni di pagamento</b><br/>
                 il corrispettivo per le prestazioni di cui sopra è determinato dalle tariffe del Fornitore vigenti al momento dell\'intervento, che il Cliente dichiara di conoscere e accettare. La regolarità dei pagamenti è presupposto necessario per l\'attivazione della garanzia sugli interventi.
-                <br><b>6. garanzia</b><br>
+                <br><b>6. garanzia</b><br/>
                 l\'esito dell\'intervento è coperto da garanzia per trenta giorni dalla data di accettazione da parte del Cliente dell\'esito dell\'intervento; entro tale periodo il Fornitore si impegna, senza ulteriori costi per il Cliente, a rettificare la soluzione applicata nel caso questa presenti dei problemi, o non si riveli definitiva.
                 Il Fornitore si impegna ad intervenire con la diligenza dovuta e nei tempi concordati. Se non espressamente previsto il contrario, le obbligazioni del fornitore sono di mezzi e non di risultato; il Fornitore è tenuto soltanto a ripetere tempestivamente le eventuali operazioni non svolte con la dovuta competenza e diligenza. In nessun caso è previsto il rimborso degli interventi accettati tramite firma da parte del Cliente, e il Fornitore non è tenuto a rispondere di danni ai dati, al software e all\'hardware e in generale ai beni del Cliente salvo casi di dolo o colpa grave nell\'esecuzione dell\'intervento.
-                <br><b>7. altri contratti</b><br>
+                <br><b>7. altri contratti</b><br/>
                 Il servizio non comprende il costo di eventuali ricambi, parti aggiuntive, licenze, e qualsiasi altro costo vivo che dovesse rendersi necessario per il completamente dell\'assistenza; il Fornitore si impegna ad avvisare tempestivamente il Cliente di qualsiasi costo dovesse rendersi necessario, procedendo con il lavoro solo previa autorizzazione data in forma libera dal Cliente.
                 Ulteriori prestazioni, quali lo sviluppo di software, l\'erogazione di corsi di formazione, le prestazioni di consulenza, la vendita di hardware e software, formeranno eventuale oggetto di separati contratti.
-                <br><b>8. subappalto</b><br>
+                <br><b>8. subappalto</b><br/>
                 il Fornitore ha facoltà di subappaltare a terzi l\'attività dandone comunicazione al Cliente nel solo caso in cui i subappaltatori abbiano necessità di accedere ai locali di quest\'ultimo, ferma la responsabilità esclusiva del Fornitore per l\'operato dei subappaltatori nonché i necessari adempimenti in materia di protezione dei dati personali.
                 §<br/><b>9. riservatezza</b><br/>
                 il Fornitore si impegna a mantenere riservate le password di accesso ricevute o comunque in suo possesso relative ai sistemi informativi del Cliente, nonché le notizie relative agli affari, ai piani, ai processi produttivi del Cliente, ai clienti e fornitori di quest\'ultimo e ai suoi sistemi di elaborazione dati di cui sia venuto a conoscenza durante o in occasione della conclusione del contratto, Il Cliente a sua volta si impegna a mantenere riservate le notizie relative agli affari, alle tecniche, ai programmi e metodologie del Fornitore di cui sia venuto a conoscenza durante o in occasione della conclusione del contratto. Le parti adotteranno tutte le misure di prevenzione necessarie per evitare la diffusione e l\'utilizzo delle informazioni ritenute riservate. Qualora la diffusione presso terzi di materiale o di informazioni ritenuti riservati sia stato causato da atti o fatti direttamente imputabili alle parti o ai loro dipendenti o fornitori, il responsabile sarà tenuto a risarcire all\'altra parte gli eventuali danni connessi alla violazione dell\'obbligo di riservatezza. Non rientrano negli obblighi di riservatezza di cui al presente articolo le informazioni delle quali una delle parti possa dimostrare che a) era già a conoscenza prima dell\'acquisizione delle stesse in virtù del presente contratto ovvero b) le informazioni e le documentazioni relative o connesse, direttamente o indirettamente, alla esecuzione degli obblighi derivanti dal presente contratto ovvero c) siano già di pubblico dominio, indipendentemente da un\'azione omissiva degli obblighi contrattuali contemplati nel presente articolo. Il vincolo di riservatezza di cui al presente articolo continuerà ad avere valore per cinque anni dopo la conclusione del presente contratto o finché le informazioni riservate non diventino di pubblico dominio.
-                <br><b>10.  privacy</b><br>
+                <br><b>10.  privacy</b><br/>
                 Le parti dichiarano di essere state informate di quanto previsto dal d.lgs. n. 196 del 30 giugno 2003 aggiornato secondo il Regolamento UE 679/2016 (GDPR) e di acconsentire al trattamento dei propri dati personali per le finalità indicate nel presente contratto. Con la sottoscrizione del presente contratto le parti, ai sensi del d.lgs. n. 196/2003 e successive modifiche e integrazioni, prestano il loro consenso espresso ed informato a che i dati che le riguardano ed indicati nel presente contratto siano oggetto di tutte operazioni di trattamento elencate alla citata norma. In particolare, le parti dichiarano che a) I dati forniti sono necessari per ogni adempimento del presente contratto e delle norme di legge, civili e fiscali; b) il rifiuto di fornirli di una delle parti comporterebbe la mancata stipulazione del contratto; c) le parti, in ogni momento, potranno esercitare I propri diritti. Resta infine espressamente inteso che il Cliente rimane esclusivo titolare del trattamento dei dati personali che vengano a trovarsi sulle apparecchiature oggetto del presente contratto e assicura e garantisce al Fornitore di essere in possesso di tutti i necessari consensi e di aver espletato tutti gli adempimenti necessari per assicurare la regolarità del trattamento manlevando in proposito il Fornitore.
-                <br><b>11. clausola risolutiva espressa</b><br>
+                <br><b>11. clausola risolutiva espressa</b><br/>
                 il contratto può essere risolto di pieno diritto da ciascuna delle parti in caso di violazione da parte dell\'altra degli obblighi stabiliti dal presente contratto.
-                <br><b>12. obblighi del Cliente</b><br>
+                <br><b>12. obblighi del Cliente</b><br/>
                 il Cliente fornirà tempestivamente l\'accesso logico e fisico ai suoi ambienti informatici necessario per l\'esecuzione delle operazioni di assistenza richieste. Il Cliente comunicherà inoltre con la massima celerità possibile le eventuali modifiche apportate al proprio sistema informatico al fine di consentire l\'efficace svolgimento delle operazioni. Il Fornitore non è responsabile in alcun caso dei danni eventualmente causati da una mancata o errata comunicazione di dati o informazioni da parte del Cliente. Il Cliente è responsabile della conservazione dei programmi originali, dei dati aziendali e del loro salvataggio, nonché della corretta comunicazione di tali informazioni al Fornitore.
-                <br><b>13. esclusioni</b><br>
+                <br><b>13. esclusioni</b><br/>
                 Sono esclusi dalla garanzia del presente contratto di assistenza, e sollevano il Fornitore da ogni responsabilità, i problemi causati da utilizzo improprio di hardware e software, utilizzo di prodotti non originali, mancato rispetto delle norme ambientali, violazione delle normative vigenti, incuria dell\'utente, virus, manomissioni non autorizzate, incuria da trasporto interno ed esterno, fulmini, sbalzi di tensione, interventi di terze parti, e quant\'altro sia al di fuori del ragionevole controllo del Fornitore.
-                <br><b>14. risoluzione delle controversie</b><br>
+                <br><b>14. risoluzione delle controversie</b><br/>
                 il presente contratto è regolato dalle leggi della Repubblica Italiana e ogni eventuale controversia sarà esclusivamente devoluta al foro di Bologna.
-                <br><b>15. comunicazioni</b><br>
+                <br><b>15. comunicazioni</b><br/>
                 il Cliente si impegna a monitorare l\'indirizzo mail o PEC specificato al quadro 1, che il Fornitore utilizzerà per tutte le comunicazioni relative all\'intervento in corso; il Cliente accetta inoltre che le comunicazioni scritte avvenute tramite questo indirizzo abbiano valore legale in merito alle autorizzazioni a procedere eventualmente richieste dal Fornitore.
                 <br><b>16. clausole finali</b><br/>I quadri compilati sul presente rapporto di assistenza sono parte integrante ed essenziale del contratto stesso. Il presente contratto non potrà essere modificato o integrato se non tramite atto scritto.',
                 'small'
