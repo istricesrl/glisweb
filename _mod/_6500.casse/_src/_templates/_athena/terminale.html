@@ -183,19 +183,22 @@
                     <div>
                         <div class="col-12"><legend>chiusura scontrino</legend></div>
                         
-                        <div class="col-12 mt-3 cassa row">
+                        <div class="col-12 mt-3 cassa form-row">
                       
                             <div class="col-6  cassa">
                                 <button type="button" class="btn-lg btn-secondary  btn-block btn-lg" id="pagamento-contanti" value="1" clicked onclick="clickPagamento(this)" data-toggle="button" aria-pressed="false" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-money" aria-hidden="true"></i> contanti</button>
                             </div>
-                            <div class="col-6  cassa">
+                            <div class="col-6 cassa">
                                 <button type="button" class="btn-lg btn-secondary  btn-block btn-lg" id="pagamento-elettronico" value="5" onclick="clickPagamento(this)" data-toggle="button" aria-pressed="false"  data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-credit-card" aria-hidden="true"></i> pagamento elettronico</button>
                             </div>
                         </div>  
-                        <div class="col-12 mt-3 cassa">
+
+                      
+                        <div class="col-12 cassa ">
                             <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="anteprima()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
                         </div>
-                        <div class="col-12 mt-3 cassa">
+
+                        <div class="col-12 mt-2 cassa">
                             <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{request.documenti.id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti][id]={{ request.documenti.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');">elimina</button>
                         </div>
                     </div>
