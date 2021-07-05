@@ -1,0 +1,1 @@
+ALTER TABLE `matricole` ADD CONSTRAINT `matricole_ibfk_4_nofollow` FOREIGN KEY (`id_produttore`) REFERENCES `anagrafica`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;
