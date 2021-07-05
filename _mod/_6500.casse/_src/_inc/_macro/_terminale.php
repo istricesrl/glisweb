@@ -185,10 +185,21 @@
             // verifico se esiste l'atricolo e se ha un prezzo associato
             $articolo = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                "SELECT * FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = 1 WHERE articoli_view.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
+                "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = 1 WHERE articoli_view.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
                 );
 
-            if( $articolo ){    
+            if( empty( $articolo )){
+                // verifico se esiste l'atricolo associato all'ean  e se ha un prezzo associato
+                $articolo = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = 1 WHERE articoli_view.codice_produttore = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
+                    );
+                
+                    $_REQUEST[ $ct['form']['table'] ]['__comando__'] = $articolo['id'];
+
+            }
+
+            if( !empty($articolo) ){    
 
 
 
