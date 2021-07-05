@@ -59,6 +59,7 @@
 
 	foreach( range( 1, 9 ) as $i ) {
 		$p['contratti.form']['etc']['tabs'][] = 'contratti.form.orari.'.  $i ;
+		$p['contratti.form']['etc']['tabs'][] = 'contratti.form.fasce.orarie.'.  $i ;
 	}
 
 	$p['contratti.form']['etc']['tabs'][] = 'contratti.form.disponibilita';
@@ -77,6 +78,19 @@
 			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'turno'			=> $i	// setto il numero del turno per ciascuna pagina
 		);
+
+		$p['contratti.form.fasce.orarie.' . $i ] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'fasce orarie turno ' . $i ),
+			'h1'			=> array( $l		=> 'fasce turno ' . $i ),
+			'parent'		=> array( 'id'		=> 'contratti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.fasce.orarie.html' ),
+			'macro'			=> array(  $m . '_src/_inc/_macro/_contratti.form.fasce.orarie.php' ),
+			'etc'			=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+			'turno'			=> $i	// setto il numero del turno per ciascuna pagina
+		);
+		
 	}
 
 	// disponibilita

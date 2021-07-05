@@ -18,6 +18,10 @@
             $ct['page']['etc']['tabs'] = array_diff(
                 $ct['page']['etc']['tabs'],
                 ['contratti.form.orari.' . $i] );
+
+                $ct['page']['etc']['tabs'] = array_diff(
+                    $ct['page']['etc']['tabs'],
+                    ['contratti.form.fasce.orarie.' . $i] );
         }
     }
     // se sono presenti meno di 8 turni, rimuovo le tab successive tranne la prima (es. 3 turni, nascondo dalla 5 alla 9)
@@ -26,6 +30,10 @@
             $ct['page']['etc']['tabs'] = array_diff(
                 $ct['page']['etc']['tabs'],
                 ['contratti.form.orari.' . $i] );
+            
+            $ct['page']['etc']['tabs'] = array_diff(
+                $ct['page']['etc']['tabs'],
+                ['contratti.form.fasce.orarie.' . $i] );
         }
     }
 

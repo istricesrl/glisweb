@@ -31,6 +31,9 @@
         'costi_contratti' => array(
             CONTROL_FULL => array( 'roots' )
         ),
+        'fasce_orarie_contratti' => array(
+            CONTROL_FULL => array( 'roots' )
+        ),
         'orari_contratti' => array(
             CONTROL_FULL => array( 'roots' )
         ),
