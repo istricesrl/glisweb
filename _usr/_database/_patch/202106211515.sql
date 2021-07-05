@@ -1,0 +1,1 @@
+ALTER TABLE `documenti_articoli` ADD CONSTRAINT `documenti_articoli_ibfk_9_nofollow` FOREIGN KEY (`matricola`) REFERENCES `matricole`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
