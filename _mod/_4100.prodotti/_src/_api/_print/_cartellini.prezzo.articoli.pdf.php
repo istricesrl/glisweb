@@ -189,7 +189,7 @@
 
         $pdf-> setXY( $x - $litsp, $y + $hBox * 2 - 12);
         $pdf-> SetFont( $fnt, 'B', $fntt );	
-        $pdf-> Cell($wBox , '','€ '.number_format( ceil($articoli[$i]['prezzo'] * (100 + $articoli[$i]['aliquota']) / 100), 2, ',','.'),'',1,'R');
+        $pdf-> Cell( $wBox , '','€ '.number_format( ( $articoli[$i]['prezzo'] * ( 100 + $articoli[$i]['aliquota'] ) / 100 ), 2, ',', '.' ), '', 1 ,'R' );
         $pdf-> SetFont( $fnt, '', 5 );	
         $pdf-> setX( $x );
         $pdf-> Cell($wBox - $litsp, '','prezzo (compreso di '.$articoli[$i]['descrizione_iva'].')','',1, 'R' );
