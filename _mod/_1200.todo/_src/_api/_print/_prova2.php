@@ -33,7 +33,7 @@
         if( $todo ){
             // anagrafica cliente
             $cliente =  mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $todo['id_cliente'] ) ));
-        
+
             // attività di diagnosi
             $attivita = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? AND tipologia = ? ORDER BY attivita_view.id LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => 'diagnosi') ));
         
@@ -381,8 +381,11 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
                 )
             )
         );*/
+
+            $pdf->SetY( 250 );
+
             pdfFormCellTitle( $pdf, $info, '6. chiusura intervento' );
-            pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e confermo la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione di quanto dovuto.', 45, 0);
+            pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione del dovuto.', 45, 0);
             pdfSetRelativeY( $pdf, 10 );
 
             pdfSetRelativeY( $pdf, $info['form']['row']['spacing'] );
@@ -476,38 +479,36 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             pdfFormLineRow( $pdf, $info, '', 45, 3);
             pdfFormCellTitle( $pdf, $info, '9.2 soddisfazione e referral' );
             pdfFormCellRow( $pdf, $info, array(
-                array(
-                    'width' => 3,
-                    
-                ),
-                array(
-                    'width' => 12,
-                    'label' => array( 'text' => 'quanto è soddisfatto da 1 a 10?' ),
-                    
-                ),
-                array(
-                    'width' => 2,
-                    'label' => array( 'text' => '' ),
-                    'bar' => array( 'text' => '' )
-                ),
-                array(
-                    'width' => 9,
-                    
-                    
-                ),
-                array(
-                    'width' => 12,
-                    'label' => array( 'text' => 'quanto ci raccomanderebbe agli amici da 1 a 10?' ),
-                    
-                ),
-                array(
-                    'width' => 2,
-                    'label' => array( 'text' => '' ),
-                    'bar' => array( 'text' => '' )
-                )
-
+                    array(
+                        'width' => 5,
+                        
+                    ),
+                    array(
+                        'width' => 10,
+                        'inline' => array( 'text' => 'quanto è soddisfatto da 1 a 10?' ),
+                        
+                    ),
+                    array(
+                        'width' => 2,
+                        'bar' => array( 'text' => '' )
+                    ),
+                    array(
+                        'width' => 5,
+                        
+                        
+                    ),
+                    array(
+                        'width' => 16,
+                        'inline' => array( 'text' => 'quanto ci raccomanderebbe agli amici da 1 a 10?' ),
+                        
+                    ),
+                    array(
+                        'width' => 2,
+                        'bar' => array( 'text' => '' )
+                    )
                 )
             );
+
         }
 
 

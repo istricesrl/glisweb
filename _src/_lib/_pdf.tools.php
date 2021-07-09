@@ -128,15 +128,24 @@
      * @todo documentare
      * 
      */
-    function pdfFormBarcode( $pdf, $info, $text, $height = 15, $code = 'C128' ){
+    function pdfFormBarcode( &$pdf, &$info, $text, $width = 0, $height = 15, $code = 'C128' ){
  
         
         $cellWidth = $info['form']['column']['width'];
         $barHeight = $info['form']['bar']['height'];
-       // pdfSetRelativeY( $pdf, $barHeight * -1 );
-        $pdf->write1DBarcode( $text, $code, '', '', '', $height ,0.35 , $info['style']['barcode']);
-        pdfSetRelativeY( $pdf, $barHeight *  - 1.5);
-        pdfSetRelativeX( $pdf, $cellWidth * 30);
+        // pdfSetRelativeY( $pdf, $barHeight * -1 );
+        pdfFormSaveXY( $pdf, $info, 'bc' );
+#        $x = $pdf->GetX();
+#        $y = $pdf->GetY();
+
+        // $pdf->write1DBarcode( $text, $code, '', '', '', $height ,0.35 , $info['style']['barcode'] );
+        
+        pdfFormLoadXY( $pdf, $info, 'bc' );
+        // pdfSetRelativeY( $pdf, $barHeight * -1.5 );
+#        $pdf->SetX( $x );
+#        $pdf->SetY( $y );
+        pdfSetRelativeX( $pdf, $cellWidth * $width );
+
     }
 
     /**
@@ -195,18 +204,22 @@
 
             $current++;
 
-            if( isset( $item['label']['text'] ) ) {
+            if( isset( $item['label']['text'] ) && ! empty( $item['label']['text'] ) ) {
+                $labels = 1;
                 pdfFormCellLabel( $pdf, $info, $item['label']['text'], $item['width'], ( ( isset( $item['label']['style'] ) ) ? $item['label']['style'] : 'label' ) );
             } else {
+                $labels = 0;
                 pdfSetRelativeX( $pdf, $item['width'] * $cellWidth );
             }
 
-            pdfSetRelativeXY( $pdf, $item['width'] * $cellWidth * -1, $lblHeight );
+            pdfSetRelativeXY( $pdf, $item['width'] * $cellWidth * -1, $lblHeight * $labels );
 
             if( isset( $item['bar']['text'] ) ) {
                 pdfFormCellBar( $pdf, $info, $item['bar']['text'], $item['width'], ( ( isset( $item['bar']['style'] ) ) ? $item['bar']['style'] : 'default' ) );
+            } elseif( isset( $item['inline'] ) ) {
+                pdfFormInlineCellLabel( $pdf, $info, $item['inline']['text'], $item['width'], ( ( isset( $item['label']['style'] ) ) ? $item['label']['style'] : 'default' ) );
             } elseif( isset( $item['bar']['barcode'] ) ){
-                pdfFormBarcode(  $pdf, $info, $item['bar']['barcode'] );
+                pdfFormBarcode( $pdf, $info, $item['bar']['barcode'], $item['width'] );
             } else {
                 pdfSetRelativeX( $pdf, $item['width'] * $cellWidth );
             }
@@ -215,7 +228,7 @@
                 pdfFormCellLabel( $pdf, $info, '', 1 );
             }
 
-            pdfSetRelativeXY( $pdf, 0, $lblHeight * -1 );
+            pdfSetRelativeXY( $pdf, 0, $lblHeight * $labels * -1 );
 
         }
 
@@ -236,6 +249,25 @@
         pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
 
         $pdf->Cell( ( $width * $cellWidth ), $lblHeight, $text, 0, $newline );
+
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function pdfFormInlineCellLabel( $pdf, $info, $text, $width = 0, $style = 'default', $newline = 0 ) {
+
+        $cellWidth = $info['form']['column']['width'];
+        $lblHeight = $info['form']['label']['height'];
+        $barHeight = $info['form']['bar']['height'];
+
+        pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
+
+        $pdf->Cell( ( $width * $cellWidth ), $barHeight, $text, 0, $newline );
 
         pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
 
@@ -355,11 +387,11 @@
         $y = $pdf->GetY();
         $current = 0;
 
-        $textLength = strlen( $text );
+        $textLength = mb_strlen( $text );
         $colLength = $textLength / $cols;
         $colWidth = ( $info['style']['page']['viewport'] - ( $info['form']['column']['width'] * ( $cols - 1 ) ) ) / $cols;
 
-        $splitText = wordwrap( $text, $colLength, '§' );
+        if( strpos( '§', $text ) !== false ) { $splitText = wordwrap( $text, $colLength, '§' ); } else { $splitText = $text; }
         $colText = explode( '§', $splitText );
 
         pdfSetFontStyle( $pdf, $info['style']['text'][ $style ] );
@@ -405,7 +437,7 @@
      * @todo documentare
      * 
      */
-    function pdfFormSaveXY( $pdf, &$info, $key = '0' ) {
+    function pdfFormSaveXY( &$pdf, &$info, $key = '0' ) {
 
         $info['cache']['coords'][ $key ]['x'] = $pdf->getX();
         $info['cache']['coords'][ $key ]['y'] = $pdf->getY();
@@ -417,7 +449,7 @@
      * @todo documentare
      * 
      */
-    function pdfFormLoadXY( $pdf, &$info, $key = '0' ) {
+    function pdfFormLoadXY( &$pdf, &$info, $key = '0' ) {
 
         $pdf->SetX( $info['cache']['coords'][ $key ]['x'] );
         $pdf->SetY( $info['cache']['coords'][ $key ]['y'] );
@@ -429,7 +461,7 @@
      * @todo documentare
      * 
      */
-    function pdfSetRelativeX( $pdf, $offset ) {
+    function pdfSetRelativeX( &$pdf, $offset ) {
         $pdf->SetX( $pdf->GetX() + $offset );
     }
 
@@ -438,7 +470,7 @@
      * @todo documentare
      * 
      */
-    function pdfSetRelativeY( $pdf, $offset ) {
+    function pdfSetRelativeY( &$pdf, $offset ) {
         $pdf->SetY( $pdf->GetY() + $offset );
     }
 
@@ -447,7 +479,7 @@
      * @todo documentare
      * 
      */
-    function pdfSetRelativeXY( $pdf, $offsetx, $offsety ) {
+    function pdfSetRelativeXY( &$pdf, $offsetx, $offsety ) {
         $pdf->SetXY( $pdf->GetX() + $offsetx, $pdf->GetY() + $offsety );
     }
 
