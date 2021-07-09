@@ -18,7 +18,7 @@
         $info['style']['text']['default'] = array( 'font' => 'helvetica', 'size' => 10, 'weight' => '' );
 
         // creo il PDF (portrait, millimetri, A4 x->210 y->297)
-        $pdf = new TCPDF( 'P', 'mm', 'A4' );						
+        $pdf = new TCPDF( 'P', 'mm', 'A4' );
 
         // tipografia derivata
         $info['style']['page']['viewport'] = $info['style']['page']['w'] - ( $info['style']['page']['ml'] + $info['style']['page']['mr'] );
@@ -133,18 +133,13 @@
         
         $cellWidth = $info['form']['column']['width'];
         $barHeight = $info['form']['bar']['height'];
-        // pdfSetRelativeY( $pdf, $barHeight * -1 );
-        pdfFormSaveXY( $pdf, $info, 'bc' );
-#        $x = $pdf->GetX();
-#        $y = $pdf->GetY();
 
-        // $pdf->write1DBarcode( $text, $code, '', '', '', $height ,0.35 , $info['style']['barcode'] );
+        pdfFormSaveXY( $pdf, $info, 'bc' );
+
+        $pdf->write1DBarcode( $text, $code, '', '', '', $height, 0.35, $info['style']['barcode'] );
         
         pdfFormLoadXY( $pdf, $info, 'bc' );
-        // pdfSetRelativeY( $pdf, $barHeight * -1.5 );
-#        $pdf->SetX( $x );
-#        $pdf->SetY( $y );
-        pdfSetRelativeX( $pdf, $cellWidth * $width );
+        pdfSetRelativeX( $pdf, ( $cellWidth * $width ) );
 
     }
 
@@ -439,8 +434,8 @@
      */
     function pdfFormSaveXY( &$pdf, &$info, $key = '0' ) {
 
-        $info['cache']['coords'][ $key ]['x'] = $pdf->getX();
-        $info['cache']['coords'][ $key ]['y'] = $pdf->getY();
+        $info['cache']['coords'][ $key ]['x'] = $pdf->GetX();
+        $info['cache']['coords'][ $key ]['y'] = $pdf->GetY();
 
     }
 
@@ -451,8 +446,10 @@
      */
     function pdfFormLoadXY( &$pdf, &$info, $key = '0' ) {
 
-        $pdf->SetX( $info['cache']['coords'][ $key ]['x'] );
-        $pdf->SetY( $info['cache']['coords'][ $key ]['y'] );
+        $pdf->SetXY(
+            $info['cache']['coords'][ $key ]['x'],
+            $info['cache']['coords'][ $key ]['y']
+        );
 
     }
 
