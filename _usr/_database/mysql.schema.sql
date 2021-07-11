@@ -5544,13 +5544,13 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
--- Table structure for table `fasce_orari_contratti`
+-- Table structure for table `fasce_orarie_contratti`
 --
 
-DROP TABLE IF EXISTS `fasce_orari_contratti`;
+DROP TABLE IF EXISTS `fasce_orarie_contratti`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `fasce_orari_contratti` (
+CREATE TABLE `fasce_orarie_contratti` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_contratto` int(11) NOT NULL,
   `turno` int(11) DEFAULT '1',
@@ -5565,20 +5565,20 @@ CREATE TABLE `fasce_orari_contratti` (
   KEY `ora_inizio` (`ora_inizio`),
   KEY `ora_fine` (`ora_fine`),
   KEY `id_tipologia_inps` (`id_tipologia_inps`),
-  CONSTRAINT `fasce_orari_contratti_ibfk_1` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fasce_orari_contratti_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia_inps`) REFERENCES `tipologie_attivita_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `fasce_orarie_contratti_ibfk_1` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fasce_orarie_contratti_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia_inps`) REFERENCES `tipologie_attivita_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Temporary table structure for view `fasce_orari_contratti_view`
+-- Temporary table structure for view `fasce_orarie_contratti_view`
 --
 
-DROP TABLE IF EXISTS `fasce_orari_contratti_view`;
-/*!50001 DROP VIEW IF EXISTS `fasce_orari_contratti_view`*/;
+DROP TABLE IF EXISTS `fasce_orarie_contratti_view`;
+/*!50001 DROP VIEW IF EXISTS `fasce_orarie_contratti_view`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE TABLE `fasce_orari_contratti_view` (
+/*!50001 CREATE TABLE `fasce_orarie_contratti_view` (
   `id` tinyint NOT NULL,
   `id_contratto` tinyint NOT NULL,
   `turno` tinyint NOT NULL,
@@ -20887,11 +20887,11 @@ DELIMITER ;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
--- Final view structure for view `fasce_orari_contratti_view`
+-- Final view structure for view `fasce_orarie_contratti_view`
 --
 
-/*!50001 DROP TABLE IF EXISTS `fasce_orari_contratti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `fasce_orari_contratti_view`*/;
+/*!50001 DROP TABLE IF EXISTS `fasce_orarie_contratti_view`*/;
+/*!50001 DROP VIEW IF EXISTS `fasce_orarie_contratti_view`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -20900,7 +20900,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `fasce_orari_contratti_view` AS select `fasce_orari_contratti`.`id` AS `id`,`fasce_orari_contratti`.`id_contratto` AS `id_contratto`,`fasce_orari_contratti`.`turno` AS `turno`,`fasce_orari_contratti`.`id_giorno` AS `id_giorno`,`fasce_orari_contratti`.`ora_inizio` AS `ora_inizio`,`fasce_orari_contratti`.`ora_fine` AS `ora_fine`,`fasce_orari_contratti`.`id_tipologia_inps` AS `id_tipologia_inps`,`tipologie_attivita_inps`.`nome` AS `tipologia_inps`,concat_ws(' - ',concat('turno ',`fasce_orari_contratti`.`turno`),concat('giorno ',`fasce_orari_contratti`.`id_giorno`),`fasce_orari_contratti`.`ora_inizio`,`fasce_orari_contratti`.`ora_fine`,`tipologie_attivita_inps`.`nome`) AS `__label__` from ((`fasce_orari_contratti` left join `contratti` on((`contratti`.`id` = `fasce_orari_contratti`.`id_contratto`))) left join `tipologie_attivita_inps` on((`tipologie_attivita_inps`.`id` = `fasce_orari_contratti`.`id_tipologia_inps`))) order by concat_ws(' - ',concat('turno ',`fasce_orari_contratti`.`turno`),concat('giorno ',`fasce_orari_contratti`.`id_giorno`),`fasce_orari_contratti`.`ora_inizio`,`fasce_orari_contratti`.`ora_fine`,`tipologie_attivita_inps`.`nome`) */;
+/*!50001 VIEW `fasce_orarie_contratti_view` AS select `fasce_orarie_contratti`.`id` AS `id`,`fasce_orarie_contratti`.`id_contratto` AS `id_contratto`,`fasce_orarie_contratti`.`turno` AS `turno`,`fasce_orarie_contratti`.`id_giorno` AS `id_giorno`,`fasce_orarie_contratti`.`ora_inizio` AS `ora_inizio`,`fasce_orarie_contratti`.`ora_fine` AS `ora_fine`,`fasce_orarie_contratti`.`id_tipologia_inps` AS `id_tipologia_inps`,`tipologie_attivita_inps`.`nome` AS `tipologia_inps`,concat_ws(' - ',concat('turno ',`fasce_orarie_contratti`.`turno`),concat('giorno ',`fasce_orarie_contratti`.`id_giorno`),`fasce_orarie_contratti`.`ora_inizio`,`fasce_orarie_contratti`.`ora_fine`,`tipologie_attivita_inps`.`nome`) AS `__label__` from ((`fasce_orarie_contratti` left join `contratti` on((`contratti`.`id` = `fasce_orarie_contratti`.`id_contratto`))) left join `tipologie_attivita_inps` on((`tipologie_attivita_inps`.`id` = `fasce_orarie_contratti`.`id_tipologia_inps`))) order by concat_ws(' - ',concat('turno ',`fasce_orarie_contratti`.`turno`),concat('giorno ',`fasce_orarie_contratti`.`id_giorno`),`fasce_orarie_contratti`.`ora_inizio`,`fasce_orarie_contratti`.`ora_fine`,`tipologie_attivita_inps`.`nome`) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -24961,4 +24961,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-04 23:46:07
+-- Dump completed on 2021-07-11 23:46:14
