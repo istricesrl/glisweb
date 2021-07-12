@@ -14,6 +14,30 @@ if(  isset( $_REQUEST['__documento__'] ) ){
     $documento['righe'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
 
 }
+$azienda = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_azienda_gestita = 1');
+
+if( $azienda ){ 
+    $logo = anagraficaGetLogo( $azienda['id'] );  
+    $sede = anagraficaGetSedeLegale( $azienda['id']  );
+}
+
+    // stiel del barcode
+    $style = array(
+        'position' => '',
+        'align' => 'C',
+        'stretch' => false,
+        'fitwidth' => true,
+        'cellfitalign' => 'L',
+        'border' => false,
+        'hpadding' => 'auto',
+        'vpadding' => 'auto',
+        'fgcolor' => array(0,0,0),
+        'bgcolor' => false, //array(255,255,255),
+        'text' => true,
+        'font' => 'helvetica',
+        'fontsize' => 6
+    );
+
 
 // impostazione documento
 $info['doc']['title']                       = 'PDF ritiro hardware'.( isset( $todo ) ? ' todo #'.$todo['id'] : '' );
@@ -55,19 +79,30 @@ if( isset( $logo ) ){
 $pdf->image( $logo, 15, 15, 10, 10, NULL, NULL, 'T', false, 10, '', false, false, 0, true );		// x, y, w, h, type, link, align, resize
 $x = $pdf -> getX() + 2;
 $pdf -> setX( $x );
-pdfFormCellPdfTitle( $pdf, $info, 'rapporto di intervento di assistenza tecnica', 15 );
+pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware', 15 );
 $pdf -> setX( $x );
-pdfFormCellLabel( $pdf, $info, 'modulo ritiro materiale hardware');
+pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
 
 } else {
 
-    pdfFormCellPdfTitle( $pdf, $info, 'rapporto di intervento di assistenza tecnica', 15 );
-    pdfFormCellLabel( $pdf, $info, 'modulo ritiro materiale hardware');
+    pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware', 15 );
+    pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
 }
 
-pdfSetRelativeY( $pdf, 15);
+pdfSetRelativeY( $pdf, 5);
 pdfFormCellTitle( $pdf, $info, 'dati dell\'assistenza' );
+pdfSetRelativeY( $pdf, 1);
+
+if( isset( $documento ) ){
+    pdfFormCellLabel( $pdf, $info, $documento['cliente'] );
     pdfSetRelativeY( $pdf, 5);
+    pdfFormCellLabel( $pdf, $info, $documento['progetto'] );
+    pdfSetRelativeY( $pdf, 5);
+    $pdf->write1DBarcode('TODO.'.str_pad( $documento['id_todo'] ,11,"0", STR_PAD_LEFT), 'C128', '', '', '', 15 ,0.17, $style);
+    pdfSetRelativeY( $pdf, 10);
+
+}
+
     // tabella attivita
     $margin = $pdf->getMargins();
     $w = $pdf->getPageWidth();
