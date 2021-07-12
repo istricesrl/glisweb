@@ -43,9 +43,9 @@
             }
 
             if( isset( $attivita['id'] ) ){
-                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? AND id <> ? ORDER BY attivita_view.id ', array( array( 's' => $todo['id']), array( 's' => $attivita['id'] ) )  );
+                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? AND id <> ? AND attivita_view.data_attivita IS NOT NULL AND attivita_view.ore > 0  ORDER BY attivita_view.id ', array( array( 's' => $todo['id']), array( 's' => $attivita['id'] ) )  );
             } else {
-                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? ORDER BY attivita_view.id ', array( array( 's' => $todo['id']) )  );
+                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? AND attivita_view.data_attivita IS NOT NULL AND attivita_view.ore > 0  ORDER BY attivita_view.id ', array( array( 's' => $todo['id']) )  );
             }
             
         } else {
@@ -312,7 +312,7 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
         pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con la soluzione proposta", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
 
         pdfFormCellTitle( $pdf, $info, '5. esito e tempo di intervento' );
-        pdfSetRelativeY( $pdf, 2);
+      
         // tabella attivita
         $margin = $pdf->getMargins();
         $w = $pdf->getPageWidth();
@@ -321,9 +321,9 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
         pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
          // intestazione tabella di dettaglio
         //$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-        $pdf->Cell( $col * 2, 0, 'data',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-        $pdf->Cell( $col * 9, 0, 'descrizione',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-        $pdf->Cell( $col, 0, 'ore',  $info['cell']['thick'], 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 2, $info['form']['bar']['height'], 'data',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 9, $info['form']['bar']['height'], 'descrizione',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col, $info['form']['bar']['height'], 'ore',  $info['cell']['thick'], 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
         pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
         
         $i = 1;
@@ -333,9 +333,9 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             $totore = 0;
             foreach( $elenco_attivita as $a){
 
-                $pdf->Cell( $col * 2, 0, ( $a['data_attivita'] == NULL ? '' : date_format( date_create($a['data_attivita']) , 'd/m/Y') ) , ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->Cell( $col * 9, 0, $a['testo'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->Cell( $col, 0, $a['ore'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 2, $info['form']['bar']['height'], ( $a['data_attivita'] == NULL ? '' : date_format( date_create($a['data_attivita']) , 'd/m/Y') ) , ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 9, $info['form']['bar']['height'], $a['testo'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, $info['form']['bar']['height'], $a['ore'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
                 $totore += $a['ore'];
                 $i++;
             }
@@ -345,17 +345,17 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
 
             for( $i = 1; $i <= 10; $i++){
 
-                $pdf->Cell( $col * 2, 0, '' , ( $i == 10 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->Cell( $col * 9, 0, '', ( $i == 10 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->Cell( $col, 0, '', ( $i == 10  ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 2, $info['form']['bar']['height'], '' , ( $i == 10 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 9, $info['form']['bar']['height'], '', ( $i == 10 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, $info['form']['bar']['height'], '', ( $i == 10  ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
        
             }
     
         }
         pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
-        $pdf->Cell( $col * 10, 0,  'totale ore' , '', 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
-        $pdf->Cell( $col , 0,  '' ,  '', 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
-        $pdf->Cell( $col, 0,( isset($totore) ? $totore : '' ), '', 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 10, $info['form']['bar']['height'],  'totale ore' , '', 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col , $info['form']['bar']['height'],  '' ,  '', 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col, $info['form']['bar']['height'], ( isset($totore) ? $totore : '' ), '', 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
         pdfSetRelativeY( $pdf, 5 );
         //pdfFormLineRow( $pdf, $info, '', 45, 4 );
@@ -382,7 +382,7 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             )
         );*/
 
-            $pdf->SetY( 250 );
+            $pdf->SetY( 255 );
 
             pdfFormCellTitle( $pdf, $info, '6. chiusura intervento' );
             pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione del dovuto.', 45, 0);
