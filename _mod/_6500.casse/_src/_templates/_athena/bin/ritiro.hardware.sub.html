@@ -46,8 +46,8 @@
         {% if not r.matricola %}
             <div class="col-2">
             <span class="label-top">matricola</span>
-                 {{ frm.selectBox( table, subtable, i, 'matricola', '', etc.select.matricole, request, '', '', '1', '', '', '', '', '', '', page, pages, ietf, 'matricole', disabled ) }}
-            </div>
+                 {{ frm.selectBox( table, subtable, i, 'matricola', '', etc.select.matricole, request, '', '', '', '', 'required-on-duplicate', '', '', '', '', page, pages, ietf, 'matricole', disabled ) }}
+                </div>
         {% else %}
             <div class="col-auto">
                 {{ frm.input( table, subtable, i, 'id_todo', '', '', '', r.matricola, 'hidden', '', '', disabled  ) }}

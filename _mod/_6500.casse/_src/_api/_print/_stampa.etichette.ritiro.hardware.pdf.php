@@ -14,21 +14,24 @@
     require '../../../../../_src/_config.php';
 
     // oggetto del documento
-	$dobj = 'cartellini articoli';
+	$dobj = 'etichette ritiro';
 
    // $logo = anagraficaGetLogo(2);
 
     // elenco dei prodotti
-    if( isset( $_REQUEST['prodotto'] ) ){
-        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti_prodotto.h1 AS h1_prodotto, contenuti_prodotto.abstract AS abstract_prodotto,  contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva LEFT JOIN contenuti AS contenuti_prodotto ON contenuti_prodotto.id_prodotto = articoli_view.id_prodotto  WHERE articoli_view.id_prodotto = ?', array( array( 's' => $_REQUEST['prodotto'] ) ) );
-    } elseif( isset( $_REQUEST['articolo'] ) ){
-        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti_prodotto.h1 AS h1_prodotto, contenuti_prodotto.abstract AS abstract_prodotto,  contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva LEFT JOIN contenuti AS contenuti_prodotto ON contenuti_prodotto.id_prodotto = articoli_view.id_prodotto  WHERE articoli_view.id = ?', array( array( 's' => $_REQUEST['articolo'] ) ) );
-    } else {
-        $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti_prodotto.h1 AS h1_prodotto, contenuti_prodotto.abstract AS abstract_prodotto,  contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva LEFT JOIN contenuti AS contenuti_prodotto ON contenuti_prodotto.id_prodotto = articoli_view.id_prodotto ');
-    }
-   
+    if( isset( $_REQUEST['__documento__'] ) ){
+        $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
+        $documnento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_view.nome AS nome_todo, todo_view.testo AS testo_todo, todo_view.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_view ON todo_view.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
+
+    
+        if( empty( $righe ) ){
+            die( print_r( "nessun hardware da stampare", true ) );
+        }
+    } 
+
+
   
-    //die(print_r($prodotti));
+ //   die(print_r($righe));
 
     // creazione del PDF
 	$pdf = new TCPDF( 'L', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
@@ -39,27 +42,30 @@
     // tipografia
 	$w		= 297;								// altezza del foglio
 	$h		= 210;								// larghezza del foglio
-	$ml		= 15;								// margine sinistro
-	$mt		= 15;								// margine superiore
-	$mr		= 15;								// margine destro
+	$ml		= 21;								// margine sinistro
+	$mt		= 8;								// margine superiore
+	$mr		= 21;								// margine destro
 	$fnt		= 'helvetica';							// font base
 	$fnts		= 10;								// dimensione del font base
-    $fntt		= 18;								// dimensione del font titolo
+    $fntt		= 15;								// dimensione del font titolo
 	$stdsp		= 5;								// spaziatore standard
-    $litsp      = 2;
+    $litsp      = 3;
     $lth		= .3;								// spessore linea standard
 	$lts		= .15;								// spessore linea sottile
 	$rgb0		= array( 0, 0, 0 );						// il nero
 	$rgb1		= array( 128, 128, 128 );					// grigio
 	$rgb9		= array( 255, 255, 255 );					// il bianco
     $rgBlu      = array( 26, 99, 154 );
-    $hBox       = 40;
-    $wBox       = 62;
+    $hBox       = 95;
+    $wBox       = 50;
+    $hBarr      = 15;
 
-
-    $startX = ($w - ($wBox  ) * 4) / 2 - 10;
-    $startY = ($h - ($hBox  + $stdsp ) * 4) / 2;
+    $startX = $ml;
+    $startY = $mt;
     
+
+
+
     // bordi delle celle
 	$brdh		= array(
 	    'B' => array( 'width' => $lth, 'color' => $rgb0 )
@@ -70,7 +76,7 @@
 
     // stiel del barcode
     $style = array(
-        'position' => '',
+       
         'align' => 'C',
         'stretch' => false,
         'fitwidth' => true,
@@ -117,105 +123,82 @@
     $x = $startX;
     $y = $startY;
     
-    //print_r($articoli);
-// convert TTF font to TCPDF format and store it on the fonts folder
-//$fontname = TCPDF_FONTS::addTTFfont('var/www/html/glisweb/var/contenuti/AllertaStencil-Regular.ttf', 'TrueTypeUnicode');
+    // scalamento inzio stampa per rispario carta
+    if( isset( $_REQUEST['__start__'] ) ){
+        for( $i = 0; $i < $_REQUEST['__start__']; $i++){
+             if( ( $x + $wBox * 2 ) > $w  ) {   
+                $y += $hBox + $litsp; 
+                $x = $startX;
+            } else {
+                $x +=  $wBox;
+            }   
+        }
+    } 
 
-// use the font
-//$pdf->SetFont($fontname, '', 14, '', false);
-
-    for( $i = 0; $i < count($articoli); $i++){
+   // $pdf->SetLineStyle(array('width' => 0.000000015, 'color' => array(0, 0, 0)));
+    foreach( $righe as $r){
 
         // angoli di stampa
         // angolo in alto a sinistra
-        $pdf->Line($x , $y - $litsp , $x , $y - $stdsp);
-        $pdf->Line($x - $litsp, $y   , $x - $stdsp , $y  );
 
-        // angolo in alto a destra
-        $pdf->Line($x + $wBox , $y - $litsp , $x + $wBox, $y - $stdsp);
-        $pdf->Line($x + $wBox + $litsp, $y  , $x + $wBox  + $stdsp , $y  );
-
-        // angolo in basso a sinistra 
-        $pdf->Line($x , $y + ($hBox*2) + $litsp , $x , $y + ($hBox*2) +$stdsp);
-        $pdf->Line($x - $litsp, $y + ($hBox*2)  , $x - $stdsp , $y + ($hBox*2)  );
-
-        // angolo in basso a destra
-        $pdf->Line($x + $wBox , $y + ($hBox*2) + $litsp , $x + $wBox, $y + ($hBox*2) +$stdsp);
-        $pdf->Line($x + $wBox + $litsp, $y + ($hBox*2)  , $x + $wBox + $stdsp , $y + ($hBox*2)  );
-
-        // linea di piega sinistra 
-        $pdf->Line($x - $litsp, $y + $hBox , $x - $stdsp, $y + $hBox);
-
-        // rettangolo blu
-        $pdf-> Rect( $x - $stdsp, $y + $hBox, $wBox + $stdsp * 2 , $fnts + $stdsp, 'F', '',  array(26, 99, 154));
-
-        // linea di piega destra 
-        $pdf->Line($x + $wBox + $litsp, $y + $hBox , $x + $wBox + $stdsp, $y + $hBox);
-
+       
         // rettangolo guida
         //$pdf-> Rect( $x, $y, $wBox, $hBox );	
         //$pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
-
-        // trasform
-        ///$pdf->setXY( $x + $wBox/2 + 1  , $y + $hBox/2 );
-        $pdf->setXY( $x + $wBox/2 + 22, $y + $hBox/2 );
+        $pdf -> setXY( $x + $litsp, $y + $litsp );
         
-        $pdf->StartTransform();
+        // carattere di base
+	    $pdf->SetFont( $fnt, 'B', $fntt );						// font, stile, dimensione
+        $pdf->MultiCell( $wBox - $stdsp, '', $documnento['cliente'], '', 'L', '', '1', '', '', true);
 
-        $pdf->Rotate(180);
-        
-        $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts + 5 ,0.17, $style);
-               
+        // carattere di base
+	   /* $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+        $pdf -> setXY( $x + $litsp, $pdf -> getY()  );
+        $pdf-> Cell($wBox, '',$documnento['progetto_todo'] ,'',1, 'L' ); */
+    
+        $pdf->SetFont( $fnt, '', $fntt / 2);		
+        $pdf -> setXY( $x + $litsp, $pdf -> getY()  );
+        $pdf-> Cell($wBox, '','ritirato il '.date('d/m/Y', $documnento['timestamp_inserimento'] ),'',1, 'L' ); 
+    
+        $pdf -> Line( $x + $litsp, $pdf -> getY() + $litsp, $x + $wBox - $litsp , $pdf -> getY() + $litsp );
 
-        // Stop Transformation
-        $pdf->StopTransform();
+        $pdf->SetFont( $fnt, '', $fnts );				
+        $pdf -> setXY( $x + $litsp, $pdf -> getY() + $stdsp );
+        $pdf->MultiCell( $wBox - $stdsp, '', $r['nome'], '', 'L', '', 1);
 
-        $pdf -> setTextColor( 255, 255, 255 );
-       // $pdf-> SetFillColor( 26, 99, 154);
-        #Cell(w, h = 0, txt = '', border = 0, ln = 0, align = '', fill = 0, link = nil, stretch = 0, ignore_min_height = false, calign = 'T', valign = 'M') 
-      
-        //$pdf->setXY( $x - $stdsp/2, $y  + $hBox );
-        $pdf->SetFont( $fnt, 'B', 12 );	    
-      //  $pdf -> Cell($wBox + $stdsp, $fnts + $stdsp,'   ', '','', '');
-        $pdf->setXY( $x  , $y  + $hBox );
+        if( !empty($r['label_matricola']) ){
+            $pdf -> setXY( $x, $pdf -> getY() + $litsp );
+            $pdf->write1DBarcode($r['label_matricola'], 'C128', '', '', '', $hBarr ,0.267, $style, 'N');
+        }
 
-        $pdf-> MultiCell($wBox , $fnts + $stdsp, $articoli[$i]['h1_prodotto'].' '. $articoli[$i]['h1'], '', 'C', '1', '1','','','','','','20',$fnts + $stdsp , 'M' );
-#MultiCell(w, h, txt, border = 0, align = 'J', fill = 0, ln = 1, x = '', y = '', reseth = true, stretch = 0, ishtml = false, autopadding = true, maxh = 0) ⇒ Object
+        $pdf -> Line( $x + $litsp, $pdf -> getY() + $litsp, $x + $wBox - $litsp , $pdf -> getY() + $litsp );
 
-        $pdf -> setTextColor( 26, 99, 154 );
-        $pdf->setXY( $x + $litsp, $pdf->getY() + $litsp );
-        $pdf->SetFont( $fnt, '', 10 );	
-        $pdf-> MultiCell($wBox - $litsp*2, '', trim(strip_tags($articoli[$i]['abstract_prodotto'])).' '.trim(strip_tags($articoli[$i]['abstract'])), '', 'JL', '', '');
+        $pdf -> setXY( $x + $litsp, $pdf -> getY() + $stdsp );
+        $pdf->SetFont( $fnt, 'B', $fnts );		
+        $pdf->MultiCell( $wBox - $stdsp, '', $documnento['nome_todo'], '', 'L', '', 1);
+        $pdf->SetFont( $fnt, '', $fnts );		
+        $pdf -> setXY( $x + $litsp, $pdf -> getY() );
 
-        $pdf-> setXY( $x - $litsp, $y + $hBox * 2 - 12);
-        $pdf-> SetFont( $fnt, 'B', $fntt );	
-        $pdf-> Cell( $wBox , '','€ '.number_format( ( $articoli[$i]['prezzo'] * ( 100 + $articoli[$i]['aliquota'] ) / 100 ), 2, ',', '.' ), '', 1 ,'R' );
-        $pdf-> SetFont( $fnt, '', 5 );	
-        $pdf-> setX( $x );
-        $pdf-> Cell($wBox - $litsp, '','prezzo (compreso di '.$articoli[$i]['descrizione_iva'].')','',1, 'R' );
-      
-        // logo
-        //$pdf->setXY( $x - $litsp, $y + $hBox * 2 - 12);
-        //$pdf-> Image($logo, $x + $litsp , $y + $hBox * 2 - 10, 7, 7);
-  
+        $remSp = ( $x + $hBox ) - $pdf -> getY() - $hBarr*2;
+
+        $pdf->MultiCell( $wBox - $stdsp, '', $documnento['testo_todo'].'', '', 'L', '', 1,'','',true,'','','',  $remSp);
+// MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
+
+        $pdf -> setXY( $x, $pdf -> getY() + $litsp );
+        $pdf->write1DBarcode( 'TODO.'.str_pad( $documnento['id_todo'],10,"0", STR_PAD_LEFT), 'C128', '', '', '',$hBarr  ,0.285, $style, 'N');
 
        // if( ($i + 1) % 3 == 0){
-         if( ( $x + $wBox * 2 + ( $stdsp * 4  ) ) > $w  ) {   
-            if( $y + ( $hBox * 3 ) > $h) { 
+         if( ( $x + $wBox * 2 ) > $w  ) {   
+            if( $y +  $hBox * 2  > $h) { 
                 $pdf -> AddPage();
                 $y = $startY ;
             } else {
-                $y += $hBox * 2 +  $stdsp * 4; 
+                $y += $hBox + $litsp; 
             }
             $x = $startX;
-        
         } else {
-
-            $x +=  $wBox + ( $stdsp * 4  ) ;
-            
+            $x +=  $wBox;
         }
-
-       
 
     }
 
