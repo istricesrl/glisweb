@@ -19,6 +19,12 @@
 {% set activity = 'inserimento' %}
 {% endif %}
 <script>
+	function stampa_etichette( t ){
+		var documento = $( '#id_doc' ).val();
+		var start = $( '#start' ).val();
+		window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_stampa.etichette.ritiro.hardware.pdf.php?__documento__='+documento+'&__start__='+start, '_blank');
+	}
+
     function genera_matricola( t ) {
 
 		var marchio = $( '#{{ table }}_id_marchio' ).val();
@@ -154,6 +160,50 @@
 		<button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 		<button id="elimina_articolo" hidden type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti_articoli&__delete__[id]={{ etc.id_riga }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}','_self');">elimina articolo</button>
 		<button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="genera_matricola(this);">genera</button>
+	    </div>
+		</div></form>
+	</div>
+    </div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="stampa_etichette">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h3 class="modal-title">stampa etichetta hardware</h3>
+		<button type="button" id="close_matricola" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+			<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+				{# CAMPI HIDDEN DI BASE #}
+				<input type="hidden" id="id_doc" value="">
+					
+				
+		    <div class="form-row form-group">
+
+
+			<div class="col-12">
+				<span class="label-top">posizione partenza stampa</span>
+				<select id="start" class=" form-control form-control-sm">
+					<option value="0">1</option>
+					<option value="1">2</option>
+					<option value="2">3</option>
+					<option value="3">4</option>
+					<option value="4">5</option>
+					<option value="5">6</option>
+					<option value="6">7</option>
+					<option value="7">8</option>
+				</select>
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+		<button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="stampa_etichette(this);">genera</button>
 	    </div>
 		</div></form>
 	</div>
