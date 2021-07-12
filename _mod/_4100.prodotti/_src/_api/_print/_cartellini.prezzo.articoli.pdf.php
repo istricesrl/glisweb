@@ -146,7 +146,7 @@
         // linea di piega sinistra 
         $pdf->Line($x - $litsp, $y + $hBox , $x - $stdsp, $y + $hBox);
 
-        $pdf->SetLineStyle(array('width' => 0.000000015, 'color' => array(26, 99, 154)));
+        $pdf->SetLineStyle(array('width' => 0.000000015, 'color' => array(200, 200, 200)));
         // rettangolo guida
         $pdf-> Rect( $x, $y, $wBox, $hBox * 2);	
 
@@ -159,7 +159,7 @@
 
 
         // rettangolo guida
-        $pdf-> Rect( $x, $y, $wBox, $hBox * 2);	
+     //   $pdf-> Rect( $x, $y, $wBox, $hBox * 2);	
       //  $pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
 
         // trasform
