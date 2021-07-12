@@ -146,21 +146,15 @@
         // linea di piega sinistra 
         $pdf->Line($x - $litsp, $y + $hBox , $x - $stdsp, $y + $hBox);
 
-        $pdf->SetLineStyle(array('width' => 0.000000015, 'color' => array(26, 99, 154)));
-        // rettangolo guida
-        $pdf-> Rect( $x, $y, $wBox, $hBox * 2);	
-
         // rettangolo blu
         $pdf-> Rect( $x - $stdsp, $y + $hBox, $wBox + $stdsp * 2 , $fnts + $stdsp, 'F', '',  array(26, 99, 154));
 
         // linea di piega destra 
         $pdf->Line($x + $wBox + $litsp, $y + $hBox , $x + $wBox + $stdsp, $y + $hBox);
 
-
-
         // rettangolo guida
-        $pdf-> Rect( $x, $y, $wBox, $hBox * 2);	
-      //  $pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
+        //$pdf-> Rect( $x, $y, $wBox, $hBox );	
+        //$pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
 
         // trasform
         ///$pdf->setXY( $x + $wBox/2 + 1  , $y + $hBox/2 );
@@ -171,15 +165,7 @@
         $pdf->Rotate(180);
         
         $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts + 5 ,0.17, $style);
-            
-        if( !empty($articoli[$i]['codice_produttore']) ){
-            $pdf->setXY($x + $wBox/2 + 13 , $pdf->getY() - $fnts - $stdsp  );
-            $pdf-> Cell($wBox, '','codice produttore: '.$articoli[$i]['codice_produttore'],'',1, 'C' ); 
-        }
-
-        $pdf->setXY($x + $wBox/2 + 13 , $y + $hBox - $litsp );
-        $pdf->SetFont( $fnt, 'B', 3 );	
-        $pdf-> Cell($wBox, '',date('d/m/Y H:i'),'',1, 'R' ); 
+               
 
         // Stop Transformation
         $pdf->StopTransform();
