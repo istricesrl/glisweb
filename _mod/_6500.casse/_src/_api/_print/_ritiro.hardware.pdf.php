@@ -54,15 +54,59 @@ if( isset( $logo ) ){
         pdfFormCellLabel( $pdf, $info, 'modulo ritiro materiale hardware', 10);
 }
 
+pdfSetRelativeY( $pdf, 15);
+pdfFormCellTitle( $pdf, $info, 'dati dell\'assistenza' );
+        pdfSetRelativeY( $pdf, 2);
+        // tabella attivita
+        $margin = $pdf->getMargins();
+        $w = $pdf->getPageWidth();
+        $col = ( $w - $margin['right'] - $margin['left'] )/12;
+        
+        pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
+         // intestazione tabella di dettaglio
+        //$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+        $pdf->Cell( $col * 6, 0, 'descrizione',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 5, 0, 'matricola',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col, 0, 'quantità',  $info['cell']['thick'], 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
+        
+        
+        $i = 1;
+
+        if( isset($elenco_attivita) && count($elenco_attivita) > 0 ){
+
+            $totore = 0;
+            foreach( $elenco_attivita as $a){
+
+                $pdf->Cell( $col * 2, 0, ( $a['data_attivita'] == NULL ? '' : date_format( date_create($a['data_attivita']) , 'd/m/Y') ) , ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 9, 0, $a['testo'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, 0, $a['ore'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $totore += $a['ore'];
+                $i++;
+            }
+    
+         
+        } else {
+
+            for( $i = 1; $i <= 35; $i++){
+
+                $pdf->Cell( $col * 6, 0, '' , ( $i == 35 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 5, 0, '', ( $i == 35 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, 0, '', ( $i == 35  ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+       
+            }
+    
+        }
+
+        
+        
 
 
 
 
 
 
-
-
-pdfSetRelativeY( $pdf, 255 );
+pdfSetRelativeY( $pdf, 95);
 pdfSetRelativeY( $pdf, $info['form']['row']['spacing'] );
             $boxY = $pdf->GetY();
 
