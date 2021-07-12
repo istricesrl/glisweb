@@ -18,6 +18,8 @@
 
     $st = array(); 
 
+    //die( print_r( $_REQUEST ) );
+
     // calcolo del numero pratica in base alla sede di aapertura se la pratica non ha un numero
     if( isset( $_REQUEST['nome'] ) && !empty( $_REQUEST['nome'] ) ) {
 
@@ -43,15 +45,15 @@
 
                 $update = mysqlQuery( $cf['mysql']['connection'], 'UPDATE documenti_articoli SET matricola = ? WHERE id = ? ',
                                     array( array( 's' => $st['numero'] ), array( 's' => $_REQUEST['id_riga'] ) ) );
-            }
+            
 
-            if( $update ){
-                $st['status'] = 'OK';
-            } else {
-                $st['status'] = 'NO';
-                $st['error'][] = 'errore aggiornamento riga documento';
+                if( $update ){
+                    $st['status'] = 'OK';
+                } else {
+                    $st['status'] = 'NO';
+                    $st['error'][] = 'errore aggiornamento riga documento';
+                }
             }
-           
 
         } else {
 

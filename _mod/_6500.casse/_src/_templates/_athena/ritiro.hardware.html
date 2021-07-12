@@ -89,7 +89,7 @@
 			<div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
 				{% if request[ table ].id %}
 					<div>
-						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo ritiro</button>
+						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_ritiro.hardware.pdf.php?__documento__={{request[ table ].id }}', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo ritiro</button>
 						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_modulo.assistenza.php?__dati__=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa etichette</button>
 						
 					</div>

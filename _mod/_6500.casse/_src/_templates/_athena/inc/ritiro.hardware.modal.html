@@ -24,9 +24,9 @@
 		var marchio = $( '#{{ table }}_id_marchio' ).val();
 		var produttore = $( '#{{ table }}_id_produttore' ).val();
 		var serial = $( '#{{ table }}_serial_number' ).val();
-		var nome = $( '#{{ table }}_nome' ).val();
-		var testo = $( '#{{ table }}_testo' ).val();
-		var bar = $( '#{{ table }}_barcode' ).val();
+		var nome = encodeURIComponent($( '#{{ table }}_nome' ).val());
+		var testo = encodeURIComponent($( '#{{ table }}_testo' ).val());
+		var bar = $( '#{{ table }}___barcode__' ).val();
 		var id_riga = $( '#id_riga' ).val();
 
 		if( id_riga > 0 ){
@@ -87,14 +87,16 @@
 			$('#genera-btn').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 
 			var call = '{{ site.url }}_mod/_4100.prodotti/_src/_api/_task/_generazione.matricola.php?id_marchio='+marchio+'&id_produttore='+produttore+'&serial='+serial+'&nome='+nome+'&testo='+testo;
-			
-			getws( call,'', function(data) {
+			console.log(call);
 
+			getws( call,'', function(data) {
+				console.log(data);
 				var id = $('#genitore').val()+'_matricola';
 				$('#documenti_'+id).val( data.numero );
 				submitFormOkay = true;
 				$( "#form-documenti" ).submit();
 			});
+
 		}}
 
     }
@@ -122,7 +124,7 @@
 			<legend id="legenda_1" hidden>esistente</legend>
 			<div class="col-12" id="barcode_matricola" hidden >
 					<span class="label-top">barcode</span>
-					{{ frm.input( table, '', '', 'barcode', '', '', request, '', '', '', 'focus-on-load' ) }}
+					{{ frm.input( table, '', '', '__barcode__', '', '', request, '', '', '', 'focus-on-load' ) }}
 			</div>
 			<legend id="legenda_2" hidden>nuova</legend>
 			<div class="col-6">

@@ -3,6 +3,17 @@
 // inclusione del framework
 require '../../../../../_src/_config.php';
 
+// dati
+if(  isset( $_REQUEST['__documento__'] ) ){
+
+    $documento = mysqlSelectRow(  $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_view.progetto FROM documenti_view LEFT JOIN todo_view ON documenti_view.id_todo = todo_view.id WHERE documenti_view.id = ?', 
+    array( 
+        array( 's' => $_REQUEST['__documento__'] ) ) 
+        );
+
+    $documento['righe'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
+
+}
 
 // impostazione documento
 $info['doc']['title']                       = 'PDF ritiro hardware'.( isset( $todo ) ? ' todo #'.$todo['id'] : '' );
@@ -65,24 +76,22 @@ pdfFormCellTitle( $pdf, $info, 'dati dell\'assistenza' );
     pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
         // intestazione tabella di dettaglio
     //$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-    $pdf->Cell( $col * 6, 0, 'descrizione',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col * 5, 0, 'matricola',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col, 0, 'quantità',  $info['cell']['thick'], 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 6, $info['form']['bar']['height'], 'descrizione',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 5, $info['form']['bar']['height'], 'matricola',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col, $info['form']['bar']['height'], 'quantità',  $info['cell']['thick'], 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
     pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
     
     
     $i = 1;
 
-    if( isset($elenco_attivita) && count($elenco_attivita) > 0 ){
+    if( isset( $documento['righe'] ) && count( $documento['righe']) > 0 ){
 
-        $totore = 0;
-        foreach( $elenco_attivita as $a){
+        foreach( $documento['righe'] as $r){
 
-            $pdf->Cell( $col * 2, 0, ( $a['data_attivita'] == NULL ? '' : date_format( date_create($a['data_attivita']) , 'd/m/Y') ) , ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 9, 0, $a['testo'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col, 0, $a['ore'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $totore += $a['ore'];
-            $i++;
+            $pdf->Cell( $col * 6, $info['form']['bar']['height'], $r['nome'], $info['cell']['thin'] , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 5, $info['form']['bar']['height'], $r['label_matricola'], $info['cell']['thin'] , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col, $info['form']['bar']['height'], $r['quantita'], $info['cell']['thin'] , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+
         }
 
         
@@ -106,7 +115,8 @@ pdfFormCellTitle( $pdf, $info, 'dati dell\'assistenza' );
 
 
 
-pdfSetRelativeY( $pdf, 100);
+//pdfSetRelativeY( $pdf, 100);
+$pdf -> setY( 250 );
 pdfFormCellTitle( $pdf, $info, 'accettazione ritiro hardware' );
         
         pdfSetRelativeY( $pdf, 5 );
