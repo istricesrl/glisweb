@@ -382,7 +382,7 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             )
         );*/
 
-            $pdf->SetY( 255 );
+            $pdf->SetY( 250 );
 
             pdfFormCellTitle( $pdf, $info, '6. chiusura intervento' );
             pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione del dovuto.', 45, 0);
@@ -403,7 +403,7 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             pdfFormCellLabel( $pdf, $info, 'condizioni del servizio di assistenza tecnica');
             pdfSetRelativeY( $pdf, 5 );
             pdfHtmlColumns( $pdf, $info, 2,
-                'tra '.( !empty($azienda) ? $azienda['__label__'] : '___________________').', con sede in '.( !empty( $sede['__label__'] ) ? $sede['__label__'] : '_____________________').', C.F. e P.IVA '.( !empty( $azienda ) ? $azienda['codice_fiscale'].' '.$azienda['partita_iva'] : '__________________' ).', d\'ora in avanti Fornitore da una parte;
+                'tra '.( ( ! empty( $azienda ) ) ? $azienda['__label__'].', con sede in '.$sede['__label__'].', C.F. e P.IVA '.$azienda['codice_fiscale'].' '.$azienda['partita_iva'].', ' : "<br><br><br><br><br>" ).'d\'ora in avanti Fornitore da una parte;
                 e
                 il soggetto identificato al quadro 1, d\'ora in avanti Cliente, dall\'altra parte;
                 si conviene e si stipula quanto segue
@@ -443,16 +443,19 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
                 'small'
             );
 
+            pdfSetFontStyle( $pdf, $info['style']['text']['label'] );
 
-            pdfSetRelativeY( $pdf, 175 );
-            pdfFormCellTitle( $pdf, $info, '' );
-            pdfFormLineRow( $pdf, $info,'Luogo e data _________, '. date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
-            pdfSetRelativeY( $pdf, 10 );
+            pdfSetRelativeY( $pdf, 182 );
+            pdfFormLineRow( $pdf, $info,'Luogo e data __________________, '. date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfSetRelativeY( $pdf, 5 );
             pdfFormLineRow( $pdf, $info,'Ai sensi dell\'art. 1341 c.c. il Cliente approva specificamente gli artt. 3 (modalità di espletamento), 4 (durata del contratto), 5 (corrispettivo e condizioni di pagamento), 6 (garanzia), 8 (subappalto), 11 (clausola risolutiva espressa), 13 (esclusioni), 14 (risoluzione delle controversie).', 45, 0);
-            pdfFormCellTitle( $pdf, $info, '' );
-            pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali per l\' esecuzione del contratto e le dovute operazioni di fatturazione per essere ricontattato ai fini di marketing e customer care per l\' iscrizione alla newsletter di Istrice srl.', 45, 0);
-
-            pdfSetRelativeY( $pdf, 10 );
+            pdfSetRelativeY( $pdf, 7 );
+            pdfFormLineRow( $pdf, $info,'Luogo e data __________________, '. date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfSetRelativeY( $pdf, 5 );
+            pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali [ ] per l\' esecuzione del contratto e le dovute operazioni di fatturazione [ ] per essere ricontattato ai fini di marketing e customer care [ ] per l\' iscrizione alla newsletter di Istrice srl.', 45, 0);
+            pdfSetRelativeY( $pdf, 7 );
+            pdfFormLineRow( $pdf, $info,'Luogo e data __________________, '. date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfSetRelativeY( $pdf, 5 );
 
             pdfFormCellTitle( $pdf, $info, '9. customer care' );
             pdfFormCellRow( $pdf, $info, array(
@@ -476,7 +479,7 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             );
 
             pdfFormCellTitle( $pdf, $info, '9.1 feedback del cliente, richieste successive, osservazioni' );
-            pdfFormLineRow( $pdf, $info, '', 45, 3);
+            pdfFormLineRow( $pdf, $info, '', 45, 2);
             pdfFormCellTitle( $pdf, $info, '9.2 soddisfazione e referral' );
             pdfFormCellRow( $pdf, $info, array(
                     array(
