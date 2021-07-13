@@ -106,6 +106,7 @@
 
 
     pdfSetRelativeY( $pdf, 5 );
+    //ciao 
 
     pdfFormCellRow( $pdf, $info, array(
         array(
