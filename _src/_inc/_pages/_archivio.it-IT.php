@@ -26,7 +26,7 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'indirizzi.view' ) ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'indirizzi' ),
 		'priority'	=> '050' ) ) )
 	);
@@ -39,7 +39,7 @@
 		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> array( 'indirizzi.form',
 												'indirizzi.form.associazioni',
 												'indirizzi.form.mappa',
@@ -55,7 +55,7 @@
 		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.associazioni.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.associazioni.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] )
 	);
 
@@ -67,7 +67,7 @@
 		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.form.mappa.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.mappa.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] )
 	);
 

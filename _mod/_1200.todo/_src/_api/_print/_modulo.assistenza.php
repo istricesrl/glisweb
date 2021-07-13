@@ -19,6 +19,7 @@
     if( $azienda ){ 
         $logo = anagraficaGetLogo( $azienda['id'] );  
         $sede = anagraficaGetSedeLegale( $azienda['id']  );
+        //print_r( $sede );
     }
 
     if( isset( $_REQUEST['todo'] ) ){
@@ -35,19 +36,19 @@
             $cliente =  mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $todo['id_cliente'] ) ));
 
             // attività di diagnosi
-            $attivita = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? AND tipologia = ? ORDER BY attivita_view.id LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => 'diagnosi') ));
-        
+            $attivita = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita WHERE attivita.id_todo = ? AND id_tipologia = ? AND attivita.data_attivita IS NOT NULL ORDER BY attivita.id LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => '1') ));
+        //print_r($attivita);
             // indirizzo completo dell'intervento se predente
             if( $attivita && !empty( $attivita['id_indirizzo'] ) ){
                 $indirizzo = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM indirizzi_view WHERE id = ?', array( array( 's' => $attivita['id_indirizzo'] ) ) ); 
             }
 
             if( isset( $attivita['id'] ) ){
-                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? AND id <> ? AND attivita_view.data_attivita IS NOT NULL AND attivita_view.ore > 0  ORDER BY attivita_view.id ', array( array( 's' => $todo['id']), array( 's' => $attivita['id'] ) )  );
+                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita WHERE attivita.id_todo = ? AND id <> ? AND attivita.data_attivita IS NOT NULL AND attivita.ore > 0  ORDER BY attivita.data_attivita ', array( array( 's' => $todo['id']), array( 's' => $attivita['id'] ) )  );
             } else {
-                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita_view.* FROM attivita_view WHERE attivita_view.id_todo = ? AND attivita_view.data_attivita IS NOT NULL AND attivita_view.ore > 0  ORDER BY attivita_view.id ', array( array( 's' => $todo['id']) )  );
+                $elenco_attivita = mysqlQuery( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita WHERE attivita.id_todo = ? AND attivita.data_attivita IS NOT NULL AND attivita.ore > 0  ORDER BY attivita.data_attivita ', array( array( 's' => $todo['id']) )  );
             }
-            
+        //   print_r($elenco_attivita);
         } else {
 
             die( print_r('dati todo assenti', true) );
@@ -83,6 +84,8 @@
 	$pdf = pdfInit( $info );
 
 
+    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 0 ) || !isset( $_REQUEST['todo'] )  ) {
+
     // impostazione stili
     $info['style']['text']['default']           = array( 'font' => 'helvetica', 'size' => 8, 'weight' => '' );
   
@@ -106,6 +109,7 @@
 
 
     pdfSetRelativeY( $pdf, 5 );
+    //ciao 
 
     pdfFormCellRow( $pdf, $info, array(
         array(
@@ -223,7 +227,9 @@
 //        pdfFormBox( $pdf, $info, 'firma del cliente\nper accettazione', 8, 4, $boxX, pdfFormCalcY( $info, 27 ) );
 //            pdfFormBox( $pdf, $info, "firma del cliente\nper accettazione", 8, 4, 130, 130 );
         pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con le attività di diagnosi", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
-
+        } else {
+            pdfSetRelativeY( $pdf, 120 );
+        }
         //rettangolo
         //$pdf->Cell(30, 30, '', 1, 1);
         /*
@@ -286,17 +292,8 @@
                 )
             );
 */
-
-if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
-    $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['nero'] );
-    $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['grigio'] );
-    $pdf->SetTextColor(0,0,0);
- } elseif(  isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
- 
-     $info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['bianco'] );
-    $info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['bianco'] );
-    $pdf->SetTextColor(255,255,255);
- }  
+//if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  ) {
+    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  ) {
         pdfFormCellTitle( $pdf, $info, '3. diagnosi' );
 
         pdfFormLineRow( $pdf, $info, ( isset( $attivita ) && ! empty( $attivita['testo'] ) ? $attivita['testo'] : '' ), 45, 4 );
@@ -310,6 +307,11 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
         //pdfSetRelativeY( $pdf, 20 );
 
         pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con la soluzione proposta", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
+    } else {
+        pdfSetRelativeY( $pdf, 51 );
+    }
+
+    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 2 ) || !isset( $_REQUEST['todo'] )  ) {
 
         pdfFormCellTitle( $pdf, $info, '5. esito e tempo di intervento' );
       
@@ -352,7 +354,7 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             }
     
         }
-        pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
+        pdfSetFontStyle( $pdf, $info['style']['text']['title'] );
         $pdf->Cell( $col * 10, $info['form']['bar']['height'],  'totale ore' , '', 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
         $pdf->Cell( $col , $info['form']['bar']['height'],  '' ,  '', 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
         $pdf->Cell( $col, $info['form']['bar']['height'], ( isset($totore) ? $totore : '' ), '', 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
@@ -386,7 +388,7 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
 
             pdfFormCellTitle( $pdf, $info, '6. chiusura intervento' );
             pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione del dovuto.', 45, 0);
-            pdfSetRelativeY( $pdf, 10 );
+            pdfSetRelativeY( $pdf, 12);
 
             pdfSetRelativeY( $pdf, $info['form']['row']['spacing'] );
             $boxY = $pdf->GetY();
@@ -395,7 +397,11 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             pdfFormBox( $pdf, $info, "timbro e firma accettazione intervento", 21, 3, pdfFormCalcX( $info, 12), $boxY );
             pdfFormBox( $pdf, $info, "firma del tecnico", 12, 3, pdfFormCalcX( $info, 33 ), $boxY );
 
-        if( ( isset(  $_REQUEST['part1'] ) && ! isset( $_REQUEST['part2'] ) ) || ( !isset(  $_REQUEST['part1'] ) && ! isset( $_REQUEST['part2'] )  ) || ! isset( $_REQUEST['todo'] ) ){
+        } else {
+            pdfSetRelativeY( $pdf, 20 );
+        }
+    
+        if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 0 ) || !isset( $_REQUEST['todo'] ) ){
             
 
             $pdf->AddPage();
@@ -403,7 +409,7 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             pdfFormCellLabel( $pdf, $info, 'condizioni del servizio di assistenza tecnica');
             pdfSetRelativeY( $pdf, 5 );
             pdfHtmlColumns( $pdf, $info, 2,
-                'tra '.( ( ! empty( $azienda ) ) ? $azienda['__label__'].', con sede in '.$sede['__label__'].', C.F. e P.IVA '.$azienda['codice_fiscale'].' '.$azienda['partita_iva'].', ' : "<br><br><br><br><br>" ).'d\'ora in avanti Fornitore da una parte;
+                'tra '.( ( ! empty( $azienda ) ) ? $azienda['__label__'].', con sede in '.( isset($sede['__label__']) ? $sede['__label__'] : '_________________').', C.F. e P.IVA '.$azienda['codice_fiscale'].' '.$azienda['partita_iva'].', ' : "<br><br><br><br><br>" ).'d\'ora in avanti Fornitore da una parte;
                 e
                 il soggetto identificato al quadro 1, d\'ora in avanti Cliente, dall\'altra parte;
                 si conviene e si stipula quanto segue
@@ -446,15 +452,15 @@ if( isset( $_REQUEST['part1']) && !isset( $_REQUEST['part2'] ) ){
             pdfSetFontStyle( $pdf, $info['style']['text']['label'] );
 
             pdfSetRelativeY( $pdf, 182 );
-            pdfFormLineRow( $pdf, $info,'Luogo e data __________________, '. date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
             pdfSetRelativeY( $pdf, 5 );
             pdfFormLineRow( $pdf, $info,'Ai sensi dell\'art. 1341 c.c. il Cliente approva specificamente gli artt. 3 (modalità di espletamento), 4 (durata del contratto), 5 (corrispettivo e condizioni di pagamento), 6 (garanzia), 8 (subappalto), 11 (clausola risolutiva espressa), 13 (esclusioni), 14 (risoluzione delle controversie).', 45, 0);
             pdfSetRelativeY( $pdf, 7 );
-            pdfFormLineRow( $pdf, $info,'Luogo e data __________________, '. date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
             pdfSetRelativeY( $pdf, 5 );
             pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali [ ] per l\' esecuzione del contratto e le dovute operazioni di fatturazione [ ] per essere ricontattato ai fini di marketing e customer care [ ] per l\' iscrizione alla newsletter di Istrice srl.', 45, 0);
             pdfSetRelativeY( $pdf, 7 );
-            pdfFormLineRow( $pdf, $info,'Luogo e data __________________, '. date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
             pdfSetRelativeY( $pdf, 5 );
 
             pdfFormCellTitle( $pdf, $info, '9. customer care' );

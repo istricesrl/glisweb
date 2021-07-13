@@ -13,8 +13,10 @@
     }
 
     if( isset( $_REQUEST['__unset__'] ) ){
+        unset( $_SESSION['assistenza'] );
         unset( $_SESSION['assistenza']['id_documento_ritiro'] );
         unset( $_SESSION['assistenza']['id_todo_ritiro'] );
+        unset( $_SESSION['assistenza'] );
     }
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['__method__'] ) && $_REQUEST[ $ct['form']['table'] ]['__method__'] == 'post'  ){

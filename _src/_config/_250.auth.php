@@ -65,7 +65,8 @@
 		CONTROL_FILTERED => array( 'staff' )
 		),
 		'anagrafica_indirizzi' => array(
-		CONTROL_FULL => array( 'roots' )
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
 		),
 		'anagrafica_modalita_pagamento' => array(
 		CONTROL_FULL => array( 'roots' ),
@@ -95,7 +96,8 @@
 		CONTROL_FULL => array( 'roots' )
 		),
 	    'contenuti' => array(
-		CONTROL_FULL => array( 'roots' )
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
 		),
 #	    'cron' => array(
 #		CONTROL_FULL => array( 'roots' )

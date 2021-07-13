@@ -40,11 +40,11 @@
 	$pdf->SetTitle($dobj.'.pdf');
 
     // tipografia
-	$w		= 297;								// altezza del foglio
-	$h		= 210;								// larghezza del foglio
-	$ml		= 21;								// margine sinistro
-	$mt		= 8;								// margine superiore
-	$mr		= 21;								// margine destro
+	$w		    = 297;								// altezza del foglio
+	$h		    = 210;								// larghezza del foglio
+	$ml		    = 25;								// margine sinistro
+	$mt		    = 8;								// margine superiore
+	$mr		    = 21;								// margine destro
 	$fnt		= 'helvetica';							// font base
 	$fnts		= 10;								// dimensione del font base
     $fntt		= 15;								// dimensione del font titolo
