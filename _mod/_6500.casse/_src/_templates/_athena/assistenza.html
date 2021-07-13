@@ -360,12 +360,12 @@
                     {{ frm.inputRequired( 'attivita', '', '', 'nome', '', '', request ) }}
 				</div>
 			</div>
-			<div class="form-group form-row">
+			<!--div class="form-group form-row">
 				<div class="col-12 col-md mt-3">
 				<span class="label-top">note</span>
                 {{ frm.textarea( 'attivita', '', '', 'testo', '', 3, request ) }}
 				</div>
-			</div>
+			</div-->
 	
 
 				<!--legend>esecuzione</legend-->
@@ -427,7 +427,7 @@
             </div>
             {% if session.assistenza.id_attivita %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
-            <button type="submit" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
+            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
             {% endif %}
             {% if session.assistenza.id_cliente and session.assistenza.id_progetto and ( not session.assistenza.id_attivita ) %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
