@@ -32,7 +32,7 @@
 	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_attivita_view' );
+        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_produzione = 1' );
     
     // tendina collaboratori
 	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(

@@ -23,9 +23,6 @@
     // se ho un progetto, estraggo le attività scoperte ad esso relative e per ciascuna calcolo l'elenco dei sostituti
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
-        // richiamo la funzione che ritorna l'array degli operatori coi punteggi
-    #    $ct['etc']['operatori'] = elencoSostitutiProgetto( $_REQUEST[ $ct['form']['table'] ]['id'] );
-
         $ct['etc']['operatori'] = sostitutiProgetto( $_REQUEST[ $ct['form']['table'] ]['id'] );
 
         // tendina operatori per settaggio manuale
@@ -59,6 +56,30 @@
                             'id_progetto' => $_REQUEST[ $ct['form']['table'] ]['id'],
                             'id_anagrafica' => $_REQUEST['__sostituzione__']['id_anagrafica'],
                             'hard' => ( isset( $_REQUEST['__sostituzione__']['hard'] ) ) ? $_REQUEST['__sostituzione__']['hard'] : NULL
+                        )
+                    ) ),
+                    array( 's' => 1 ),
+                    array( 's' => 3 )
+                )
+            );
+        }
+
+
+        // se ho una richiesta di calcolo sostituzione creo il job relativo
+        if( !empty( $_REQUEST['__calcolo_sostituti__'] ) ){
+
+            $nome = 'calcolo sostituti progetto ' . $_REQUEST[ $ct['form']['table'] ]['id'];
+            
+            $job = mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO job ( nome, job, iterazioni, workspace, se_foreground, delay ) VALUES ( ?, ?, ?, ?, ?, ? )',
+                array(
+                    array( 's' => $nome ),
+                    array( 's' => '_mod/_1140.variazioni/_src/_api/_job/_sostituzioni.progetto.calculate.php' ),
+                    array( 's' => 10 ),
+                    array( 's' => json_encode(
+                        array(
+                            'id_progetto' => $_REQUEST[ $ct['form']['table'] ]['id']
                         )
                     ) ),
                     array( 's' => 1 ),

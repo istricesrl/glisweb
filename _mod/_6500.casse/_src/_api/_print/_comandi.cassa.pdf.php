@@ -64,7 +64,7 @@
         'bgcolor' => false, //array(255,255,255),
         'text' => true,
         'font' => 'helvetica',
-        'fontsize' => 10,
+        'fontsize' => 9,
         'stretchtext' => 0
     );
 
@@ -103,52 +103,7 @@
     $pdf->SetFont( $fnt, 'B', $fnts * 1.5 );
     $pdf->Cell( $col * 12, 0, 'comandi rapidi cassa', 0, 1, 'C' );
 
-    $pdf->SetY( $pdf->GetY() + $stdsp  );
-    $pdf->SetFont( $fnt, 'B', $fnts * 1.2  );
-    $pdf->Cell( $col * 12, 0, 'reparti', 0, 0, 'L' );
-
-    // spazio sotto il nome del prodotto
-    $pdf->SetY( $pdf->GetY() + $stdsp * 1.5 );
-
-    $pdf->SetFont( $fnt, 'B', $fnts  );
-    // tabella di articoli e relativi barcode
-    // intestazione tabella di dettaglio
-    $pdf->Cell( $col * 2, 0, 'nome', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col * 2, 0, 'aliquota', $brdh, 0, 'C' );			// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col * 3, 0, 'note', $brdh, 0, 'L' );
-    $pdf->Cell( $col * 5, 0, 'barcode', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
-
-    $pdf->SetFont( $fnt, '', $fnts  );
-
-    // reparto di default
-    $trh = max( $pdf->GetStringHeight( $col * 3, 'viene preso automaticamente il reparto di default dell\'articolo', false, true, '', '' ) + 4,  $fnts + 8) ;					// 
-           
-    $pdf->Cell( $col * 2 , $trh, 'default', $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col * 2 , $trh, 'automatica', $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );
-    $pdf->MultiCell( $col * 3,$trh , 'viene preso automaticamente il reparto di default dell\'articolo', $brdc, 'L', false, 0,'','', true, 0, false, true, 0, 'M', false );					// w, h, testo, bordo, allineamento, riempimento, newline
     
-    $x = $pdf->GetX();
-    $y = $pdf->GetY();
-   
-    $pdf->write1DBarcode( 'CMD.REP.0000', 'C128', '', '', '', $fnts + 12 ,2, $style);
-    $pdf->SetXY($x,$y);
-    $pdf->Cell( $col * 5, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
-
-    foreach( $reparti as $r ){
-        $trh = max( $pdf->GetStringHeight( $col * 3, $r['note'], false, true, '', '' ) + 4,  $fnts + 8) ;					// 
-           
-        $pdf->Cell( $col * 2 , $trh, $r['nome'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
-        $pdf->Cell( $col * 2 , $trh, $r['aliquota_iva'].' %', $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );
-        $pdf->MultiCell( $col * 3,$trh , $r['note'], $brdc, 'L', false, 0,'','', true, 0, false, true, 0, 'M', false );					// w, h, testo, bordo, allineamento, riempimento, newline
-        
-
-        $x = $pdf->GetX();
-        $y = $pdf->GetY();
-       
-        $pdf->write1DBarcode( 'CMD.REP.000'.$r['id'], 'C128', '', '', '', $fnts + 12 ,2, $style);
-        $pdf->SetXY($x,$y);
-        $pdf->Cell( $col * 5, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
-    }
 
     $pdf->SetY( $pdf->GetY() + $stdsp  );
     $pdf->SetFont( $fnt, 'B', $fnts * 1.2  );
@@ -222,6 +177,15 @@
     $pdf->SetXY($x,$y);
     $pdf->Cell( $col * 5, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
 
+    $pdf->Cell( $col * 7 , $trh, 'elimina articolo', $brdc, 0, 'L', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+ 
+    $x = $pdf->GetX();
+    $y = $pdf->GetY();
+   
+    $pdf->write1DBarcode( 'CMD.OPZ.0004', 'C128', '', '', '', $fnts + 12 ,2, $style);
+    $pdf->SetXY($x,$y);
+    $pdf->Cell( $col * 5, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
+
     $pdf->Cell( $col * 7 , $trh, 'stampa documento', $brdc, 0, 'L', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
  
     $x = $pdf->GetX();
@@ -267,6 +231,54 @@
     $pdf->SetXY($x,$y);
     $pdf->Cell( $col * 5, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
 
+    $pdf->SetY( $pdf->GetY() + $stdsp  );
+    $pdf->SetFont( $fnt, 'B', $fnts * 1.2  );
+    $pdf->Cell( $col * 12, 0, 'reparti', 0, 0, 'L' );
+
+    // spazio sotto il nome del prodotto
+    $pdf->SetY( $pdf->GetY() + $stdsp * 1.5 );
+
+    $pdf->SetFont( $fnt, 'B', $fnts  );
+    // tabella di articoli e relativi barcode
+    // intestazione tabella di dettaglio
+    $pdf->Cell( $col * 2, 0, 'nome', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 2, 0, 'aliquota', $brdh, 0, 'C' );			// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 3, 0, 'note', $brdh, 0, 'L' );
+    $pdf->Cell( $col * 5, 0, 'barcode', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+
+    $pdf->SetFont( $fnt, '', $fnts  );
+
+    if( sizeof( $reparti) > 2 ){ $pdf->AddPage(); }
+
+    // reparto di default
+    $trh = max( $pdf->GetStringHeight( $col * 3, 'viene preso automaticamente il reparto di default dell\'articolo', false, true, '', '' ) + 4,  $fnts + 8) ;					// 
+           
+    $pdf->Cell( $col * 2 , $trh, 'default', $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 2 , $trh, 'automatica', $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );
+    $pdf->MultiCell( $col * 3,$trh , 'viene preso automaticamente il reparto di default dell\'articolo', $brdc, 'L', false, 0,'','', true, 0, false, true, 0, 'M', false );					// w, h, testo, bordo, allineamento, riempimento, newline
+    
+    $x = $pdf->GetX();
+    $y = $pdf->GetY();
+   
+    $pdf->write1DBarcode( 'CMD.REP.0000', 'C128', '', '', '', $fnts + 12 ,2, $style);
+    $pdf->SetXY($x,$y);
+    $pdf->Cell( $col * 5, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
+
+    foreach( $reparti as $r ){
+        $trh = max( $pdf->GetStringHeight( $col * 3, $r['note'], false, true, '', '' ) + 4,  $fnts + 8) ;					// 
+           
+        $pdf->Cell( $col * 2 , $trh, $r['nome'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 2 , $trh, $r['aliquota_iva'].' %', $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );
+        $pdf->MultiCell( $col * 3,$trh , $r['note'], $brdc, 'L', false, 0,'','', true, 0, false, true, 0, 'M', false );					// w, h, testo, bordo, allineamento, riempimento, newline
+        
+
+        $x = $pdf->GetX();
+        $y = $pdf->GetY();
+       
+        $pdf->write1DBarcode( 'CMD.REP.000'.$r['id'], 'C128', '', '', '', $fnts + 12 ,2, $style);
+        $pdf->SetXY($x,$y);
+        $pdf->Cell( $col * 5, $trh, '', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );
+    }
     
     /*
     foreach( $prodotti as $p){

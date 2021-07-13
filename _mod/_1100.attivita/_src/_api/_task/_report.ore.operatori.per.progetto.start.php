@@ -18,7 +18,7 @@
             $cf['mysql']['connection'],
             'INSERT INTO job ( nome, job, iterazioni, workspace ) VALUES ( ?, ?, ?, ? )',
             array(
-                array( 's' => 'export ore operatori per progetto ' . $nomemese . ' ' . $_REQUEST['anno'] ),
+                array( 's' => 'esportazione ore operatori per progetto ' . $nomemese . ' ' . $_REQUEST['anno'] ),
                 array( 's' => '_mod/_1100.attivita/_src/_api/_job/_report.ore.operatori.per.progetto.php' ),
                 array( 's' => 10 ),
                 array( 's' => json_encode(

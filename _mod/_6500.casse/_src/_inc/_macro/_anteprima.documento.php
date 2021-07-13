@@ -1,4 +1,8 @@
 <?php
+
+    // tabella gestita
+    // tabella gestita
+//	$ct['form']['table'] = 'documenti';
 //print_r( $_REQUEST );
     if( isset( $_REQUEST['documenti']['id'] ) && !empty( $_REQUEST['documenti']['id'] ) ){
 
@@ -17,17 +21,20 @@
             'WHERE documenti_view.id = ?',
             array( 
                 array( 's' => $_REQUEST['documenti']['id'] ) ) );
-
+//print_r($ct['etc']['documento']);
 
 
     $ct['etc']['documento']['righe'] = mysqlQuery(
 	    $cf['mysql']['connection'],
-	    'SELECT * FROM documenti_articoli_view WHERE id_documento = ?',
+	    'SELECT documenti_articoli_view.*, attivita.ore, attivita.id_progetto, progetti.nome AS progetto FROM documenti_articoli_view '.
+        'LEFT JOIN attivita ON attivita.id_documenti_articoli = documenti_articoli_view.id '.
+        'LEFT JOIN progetti ON progetti.id = attivita.id_progetto '.
+        'WHERE documenti_articoli_view.id_documento = ?',
         array( array( 's' =>  $_REQUEST['documenti']['id'] ) ) 
 	);
 
-    $barcode = str_pad( $ct['etc']['documento']['id'] ,8,"0", STR_PAD_LEFT);
-    print_r( $barcode );
+   // $barcode = str_pad( $ct['etc']['documento']['id'] ,8,"0", STR_PAD_LEFT);
+
 
     if( sizeof(  $ct['etc']['documento']['righe'] ) > 0 ){
 
@@ -53,3 +60,6 @@
         }
     }
     }
+
+	// macro di default
+	//require DIR_SRC_INC_MACRO . '_default.form.php';

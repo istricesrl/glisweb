@@ -18,22 +18,39 @@
      * @file
      *
      */
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array( 'id' => 'genera_matricola', 'include' => 'inc/ritiro.hardware.modal.html' )
+        );
 
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array( 'id' => 'crea_attivita', 'include' => 'inc/creazione.attivita.modal.html' )
+        );
 
+    // mastro di scarico [magazzino]
+    $ct['etc']['mastro'] = NULL;
+    // mastro di carico attivta[magazzino]
+    $ct['etc']['mastro_attivita'] = NULL;
 
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
+
+
+
+    $ct['etc']['default_reparto'] = '0';
+    $ct['etc']['default_operazione'] = '1';
+    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
+                                    'SELECT id FROM tipologie_documenti WHERE nome = "scontrino"');
 
     // eliminazione scontrino in sospeso
     if( isset( $_REQUEST['__delete__'] ) ){
 
         $del = mysqlQuery(  $cf['mysql']['connection'],
         'DELETE FROM documenti_articoli WHERE id_documento = ?',
-        array( array( 's' =>$_REQUEST['__delete__']['documenti']['id'] ) ) );
+        array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
 
         $del = mysqlQuery(  $cf['mysql']['connection'],
         'DELETE FROM documenti WHERE id = ?',
-        array( array( 's' =>$_REQUEST['__delete__']['documenti']['id'] ) ) );
+        array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
 
     // riapertura scontrino prima della stampa
@@ -44,21 +61,16 @@
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
 
-    } elseif( isset( $_SESSION['account'] )  ){ 
+    } elseif( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_SESSION['account'] )  ){ 
 
        // if( isset($_REQUEST[ $ct['form']['table'] ]) && !$_REQUEST[ $ct['form']['table'] ]['id'] ){ 
         // verifico se l'account ha uno scontrino in sospeso
-        $_REQUEST[ $ct['form']['table'] ]['id'] = mysqlSelectValue(  $cf['mysql']['connection'],
-        'SELECT id FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL',
-        array( array( 's' => $_SESSION['account']['id'] ) ) );
+        $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
+        'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL AND id_tipologia = ?',
+        array( array( 's' => $_SESSION['account']['id'] ), array( 's' => $ct['etc']['default_tipologia'] ) ) );
         
-
     }
 
-    $ct['etc']['default_reparto'] = '0';
-    $ct['etc']['default_operazione'] = '1';
-    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
-                                    'SELECT id FROM tipologie_documenti WHERE nome = "scontrino"');
 
     // tendina  reparti
 	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
@@ -72,7 +84,9 @@
 
 
 
-    
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) ){
+        $_REQUEST[ $ct['form']['table'] ]['__comando__'] = trim(  $_REQUEST[ $ct['form']['table'] ]['__comando__'] );
+    }
 
     if(  isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__art__'] ) && !empty( $_REQUEST['__art__'] ) ){
         
@@ -88,6 +102,14 @@
         // verifico se si tratta di un articolo
         if( $comando[0] == 'TRCKG' ){
             // gestisco il codice di tracking
+
+            /*$insert = mysqlQuery( 
+                $cf['mysql']['connection'], 
+                "INSERT INTO contatti ( nome, id_campagna )  VALUES ( ?, ? )",
+                array( 
+                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                    array( 's' => date("Y-m-d") )
+                ) );*/
             //print_r('tracking');
         } elseif( $comando[0] == 'CPON'){
             // gestisco il coupon
@@ -115,7 +137,10 @@
                     //print_r($cf['contents']['pages']['anteprima.documento']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$_REQUEST['documenti']['id'] );
                     header("Location: ".$cf['contents']['pages']['anteprima.documento']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$_REQUEST['documenti']['id'] );
                     exit;
-                    break;        
+                    break;  
+                case 'CMD.OPZ.0004':
+                    $ct['etc']['default_operazione'] = '0';
+                    break;      
                 }
             }    
 
@@ -148,10 +173,10 @@
             if( $comando[1] == 'TPL' ){
 
                 if( $_REQUEST[ $ct['form']['table'] ]['__comando__'] == 'CMD.TPL.000'.$ct['etc']['default_tipologia']  ){
-                    $ct['etc']['default_tipologia'] = $ct['etc']['default_tipologia'];
+                 //   $ct['etc']['default_tipologia'] = $ct['etc']['default_tipologia'];
                 } else {
-                    $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
-                                    'SELECT id FROM tipologie_documenti WHERE nome = "fattura"');
+                   /* $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
+                                    'SELECT id FROM tipologie_documenti WHERE nome = "fattura"');*/
                 }
             }
 
@@ -160,10 +185,24 @@
             // verifico se esiste l'atricolo e se ha un prezzo associato
             $articolo = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                "SELECT * FROM articoli LEFT JOIN prezzi ON prezzi.id_articolo = articoli.id AND prezzi.id_listino = 1 WHERE articoli.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
+                "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = 1 WHERE articoli_view.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
                 );
 
-            if( $articolo ){    
+            if( empty( $articolo )){
+                // verifico se esiste l'atricolo associato all'ean  e se ha un prezzo associato
+                $articolo = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = 1 WHERE articoli_view.codice_produttore = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
+                    );
+                
+                    $_REQUEST[ $ct['form']['table'] ]['__comando__'] = $articolo['id'];
+
+            }
+
+            if( !empty($articolo) ){    
+
+
+
 
                 if( $_REQUEST[ $ct['form']['table'] ]['__reparto__'] == 0 ){ $reparto = $articolo['id_reparto']; }
                 else { $reparto = $_REQUEST[ $ct['form']['table'] ]['__reparto__']; }
@@ -177,9 +216,10 @@
                     array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id']  ) )
                 );
 
-                if( $in_doc ){
+                if( $in_doc && !$articolo['se_matricola'] ){
                  //   print_r("articolo presente nel documento modifico la quantità ".$_REQUEST[ $ct['form']['table'] ]['__operazione__']);
-                    if( $in_doc['quantita'] == 1 && $_REQUEST[ $ct['form']['table'] ]['__operazione__'] == '-1' ){
+                    
+                    if( ( $in_doc['quantita'] == 1 && $_REQUEST[ $ct['form']['table'] ]['__operazione__'] == '-1') || $_REQUEST[ $ct['form']['table'] ]['__operazione__'] == '0' ){
 
                         $delete = mysqlQuery( 
                             $cf['mysql']['connection'], 
@@ -194,8 +234,11 @@
                             array( 
                                 array( 's' => $in_doc['quantita'] + $_REQUEST[ $ct['form']['table'] ]['__operazione__'] ), 
                                 array( 's' => $in_doc['id'] ) ) );
-                    }
+                    
+                                $insert = $in_doc['id'];
+                     }
 
+                 
 
                 } elseif ( $_REQUEST[ $ct['form']['table'] ]['__operazione__'] != '-1' ) {
 
@@ -205,17 +248,58 @@
 
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, 1, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, 1, ?, ?, ?, ? )",
                                 array( 
                                     array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                                     array( 's' => date("Y-m-d") ),
                                     array( 's' => $articolo['prezzo'] ),
                                     array( 's' => $reparto ),
                                     array( 's' => $id_iva ),
-                                    array( 's' => $articolo['id_udm'] )
+                                    array( 's' => $articolo['id_udm'] ),
+                                    array( 's' => $ct['etc']['mastro'] )
                                 ) );
                 }
             }
+
+            if( $articolo['se_ore']  && isset( $insert ) && $insert > 0){
+                $ct['etc']['id_riga'] = $insert;
+                echo '
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript">
+                $(document).ready(function(){
+                    $("#id_documenti_articoli").val('.  $insert  .');
+                    $("#crea_attivita").modal({
+                        backdrop: "static",
+                        keyboard: false
+                      });
+
+                    $("#crea_attivita").modal("show");
+
+                });
+            </script>';
+            }
+            if( $articolo['se_matricola'] && isset( $insert ) && $insert > 0){
+                $ct['etc']['id_riga'] = $insert;
+                echo '
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript">
+                $(document).ready(function(){
+                    $("#id_riga").val('.  $insert  .');
+                    $("#close_matricola").hide();
+                    $("#barcode_matricola").removeAttr("hidden");
+                    $("#legenda_1").removeAttr("hidden");
+                    $("#legenda_2").removeAttr("hidden");
+                    $("#elimina_articolo").removeAttr("hidden");
+                    $("#annulla_matricola").hide();
+                    $("#matricole_barcode").prop("autofocus");
+                    $("#genera_matricola").modal({
+                        backdrop: "static",
+                        keyboard: false
+                      });
+
+                    $("#genera_matricola").modal("show");
+
+                });
+            </script>';
+              }
 
             }
         }
@@ -233,8 +317,9 @@
 
     // tendina tipologie documenti
 	$ct['etc']['select']['operazioni'] = array(
-            array( 'id' => '1', '__label__' => '&#xf067;' ),
-            array( 'id' => '-1', '__label__' => '&#xf068;' )
+            array( 'id' => '1', '__label__' => 'aggiungi' ),
+            array( 'id' => '-1', '__label__' => 'togli' ),
+            array( 'id' => '0', '__label__' => 'elimina' )
 	);
 
     // tendina  anagrafica
@@ -265,7 +350,10 @@
    // righe del documento
 	$ct['etc']['righe'] = mysqlQuery(
 	    $cf['mysql']['connection'],
-	    'SELECT * FROM documenti_articoli_view WHERE id_documento = ?',
+	    'SELECT documenti_articoli_view.*, attivita.ore, progetti.nome AS progetto FROM documenti_articoli_view '.
+        'LEFT JOIN attivita ON attivita.id_documenti_articoli = documenti_articoli_view.id '.
+        'LEFT JOIN progetti ON progetti.id = attivita.id_progetto '
+        .'WHERE documenti_articoli_view.id_documento = ?',
         array( array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) 
 	);
 
@@ -294,3 +382,53 @@
     }
 
 }
+
+if( !isset( $_REQUEST['documenti']['scadenze'] ) && isset( $_REQUEST['documenti']['id']) ){
+
+            $_REQUEST['documenti']['scadenze'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                "SELECT * FROM scadenze_view  WHERE id_documento = ?", array( array( 's' =>  $_REQUEST['documenti']['id'] ) )
+                );
+        
+        }
+
+
+
+    if( isset( $_SESSION['assistenza']['id_cliente'] ) ){
+
+             // tendina clienti
+        $ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM anagrafica_view_static WHERE id = ? ', array( array( 's' => $_SESSION['assistenza']['id_cliente'] ) ) );
+
+    	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE timestamp_chiusura IS NULL AND progetti_view.id_cliente = ? ORDER BY __label__',
+             array( array( 's' => $_SESSION['assistenza']['id_cliente'] ) ) );
+    
+    } else {
+
+   
+        // tendina clienti
+        $ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM anagrafica_view_static WHERE se_lead = 1 OR se_cliente = 1 OR se_prospect = 1' );
+
+    	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE timestamp_chiusura IS NULL ORDER BY __label__' );
+    
+    }
+	// macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // macro per l'apertura dei modal
+    require DIR_SRC_INC_MACRO . '_default.tools.php';

@@ -27,15 +27,13 @@
 	$ct['view']['cols'] = array(
         'id' => 'codice',
 	    'codice_produttore' => 'codice produttore',
-	    'categorie' => 'categorie',
-	    'pubblicazione' => 'pubblicazione'
+	    'categorie' => 'categorie'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'codice_produttore' => 'text-left',
-	    'categorie' => 'text-left',
-	    'pubblicazione' => 'text-left'
+	    'categorie' => 'text-left'
 	);
 
     // gestione default

@@ -14,7 +14,7 @@
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'casse.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'casse', 'casse.documenti.view', 'casse.tools', 'casse.stampe' ) ),
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'casse' ),
 									'priority'	=> '650' ) ) )
@@ -41,7 +41,7 @@
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.documenti.view.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['casse']['etc']['tabs'] )
 	);
 
@@ -65,9 +65,10 @@
 	    'h1'		=> array( $l		=> 'terminale' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'terminale.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_terminale.php' ),
+		'parser'	=> array( $m . '_src/_inc/_parser/_terminale.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'sheets' => array( 'terminale' , 'assistenza' ) ), 
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'sheets' => array(  'contatti', 'terminale' , 'assistenza', 'ritiro.hardware', 'consegna.hardware' ) ), 
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'terminale' ),
 									'priority'	=> '100' ) ) )
 	);
@@ -80,10 +81,11 @@
 			'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anteprima.documento.html' ),
 			'macro'		=> array( $m . '_src/_inc/_macro/_anteprima.documento.php' ),
 			'parent'	=> array( 'id'		=> 'casse' ),
-			'auth'		=> array( 'groups'	=> array(	'roots' ) )
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+			'etc'		=> array( 'sheets' => array( 'anteprima.documento') )
 		);
 
-	// terminale della casse
+	// assistenza
 	$p['assistenza'] = array(
 	    'sitemap'	=> false,
 	    'title'		=> array( $l		=> 'assistenza' ),
@@ -91,9 +93,44 @@
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'assistenza.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_assistenza.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'		=> array( 'groups'	=> array( 'roots', 'staff'  ) ),
+		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
+	);
+
+	// contatti
+	$p['contatti'] = array(
+	    'sitemap'	=> false,
+	    'title'		=> array( $l		=> 'contatti' ),
+	    'h1'		=> array( $l		=> 'contatti' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contatti.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_contatti.php' ),
+	    'parent'	=> array( 'id'		=> 'casse' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
 	);
 	
+	// ritiro hardware
+	$p['ritiro.hardware'] = array(
+	    'sitemap'	=> false,
+	    'title'		=> array( $l		=> 'ritiro hardware' ),
+	    'h1'		=> array( $l		=> 'ritiro hardware' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ritiro.hardware.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_ritiro.hardware.php' ),
+	    'parent'	=> array( 'id'		=> 'casse' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
+	);
+
+	// ritiro hardware
+	$p['consegna.hardware'] = array(
+	    'sitemap'	=> false,
+	    'title'		=> array( $l		=> 'consegna hardware' ),
+	    'h1'		=> array( $l		=> 'consegna hardware' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'consegna.hardware.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_consegna.hardware.php' ),
+	    'parent'	=> array( 'id'		=> 'casse' ),
+	    'auth'		=> array( 'groups'	=> array('roots', 'staff'  ) ),
+		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
+	);
     // debug
 	// die( print_r( $p ) );

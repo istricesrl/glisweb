@@ -14,7 +14,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'catalogo.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_catalogo.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'catalogo', 'catalogo.stampe' ) ),
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'catalogo' ),
 									'priority'	=> '650' ) ) )								

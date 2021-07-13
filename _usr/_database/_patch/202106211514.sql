@@ -1,0 +1,1 @@
+ALTER TABLE `documenti_articoli` ADD `matricola` INT NULL DEFAULT NULL AFTER `specifiche`, ADD INDEX (`matricola`) ;

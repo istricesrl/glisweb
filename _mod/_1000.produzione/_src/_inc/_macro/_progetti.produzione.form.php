@@ -36,13 +36,31 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1 OR se_referente = 1' );
 
+    if( isset( $_REQUEST[$ct['form']['table']]['id_cliente'] ) ){
 
-    // tendina indirizzi
-	$ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM indirizzi_view' );
+        if( !empty( $_REQUEST[$ct['form']['table']]['id_indirizzo'] ) ){
+            // tendina indirizzi
+            $ct['etc']['select']['indirizzi'] = mysqlQuery(
+                $cf['mysql']['connection'], 
+                'SELECT id, __label__ FROM indirizzi_view WHERE id = ? '
+				.'UNION SELECT id_indirizzo AS id, indirizzo AS __label__ FROM anagrafica_indirizzi_view WHERE id_anagrafica = ? AND id_indirizzo != ?',
+                array( 
+					array( 's' => $_REQUEST[$ct['form']['table']]['id_indirizzo'] ),
+					array( 's' => $_REQUEST[$ct['form']['table']]['id_cliente'] ),
+					array( 's' => $_REQUEST[$ct['form']['table']]['id_indirizzo'] )
+				)
+            );
+        }
+        else{
+            // tendina indirizzi
+            $ct['etc']['select']['indirizzi'] = mysqlQuery(
+                $cf['mysql']['connection'], 
+                'SELECT id_indirizzo AS id, indirizzo AS __label__ FROM anagrafica_indirizzi_view WHERE id_anagrafica = ?',
+                array( array( 's' => $_REQUEST[$ct['form']['table']]['id_cliente'] ) )
+            );
+        }
+        
+    }
 
     // tendina tipologie progetti
 	$ct['etc']['select']['tipologie_progetti'] = mysqlCachedIndexedQuery(

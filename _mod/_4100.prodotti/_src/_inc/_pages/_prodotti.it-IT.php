@@ -40,6 +40,7 @@
 													'prodotti.form.video',
 													'prodotti.form.audio',
 													'prodotti.form.file',
+													'prodotti.form.stampe',
 													'prodotti.form.metadati'
 												) )
 	);
@@ -169,6 +170,19 @@
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 
+	// gestione anagrafica stampe
+	$p['prodotti.form.stampe'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'prodotti.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_prodotti.form.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
+	);
+
 	// gestione prodotti metadati
 	$p['prodotti.form.metadati'] = array(
 		'sitemap'		=> false,
@@ -190,10 +204,23 @@
 	    'parent'		=> array( 'id'		=> 'catalogo' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_articoli.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'articoli.view' ) ),
+		'etc'			=> array( 'tabs'	=> array( 'articoli.view' , 'articoli.stampe' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'articoli' ),
 									'priority'	=> '020' ) ) )
+	);
+
+	// gestione articoli stampe
+	$p['articoli.stampe'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe_articoli' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'articoli.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_articoli.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['articoli.view']['etc']['tabs'] )
 	);
 
 	// gestione articoli
@@ -215,6 +242,7 @@
 													'articoli.form.video',
 													'articoli.form.audio',
 													'articoli.form.file',
+													'articoli.form.stampe',
 													'articoli.form.metadati'
 												) )
 	);
@@ -331,6 +359,20 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
+
+	// gestione articoli stampe
+	$p['articoli.form.stampe'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'articoli.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_articoli.form.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
 
 	// gestione articoli metadati
 	$p['articoli.form.metadati'] = array(

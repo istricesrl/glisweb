@@ -75,6 +75,24 @@
 			</fieldset>
 
 			<fieldset>
+				<legend>programmazione</legend>
+				<div class="form-group form-row">
+					<div class="col-6 col-md-auto">
+						<span class="label-top">data</span>
+						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora inizio</span>
+						{{ frm.time( table, '', '', 'ora_inizio_programmazione', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora fine</span>
+						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset>
 				<legend>esecuzione</legend>
 				<div class="form-group form-row">
 					<div class="col-6 col-md-auto">
@@ -102,24 +120,6 @@
 			</fieldset>
 
 			<fieldset>
-				<legend>programmazione</legend>
-				<div class="form-group form-row">
-					<div class="col-6 col-md-auto">
-						<span class="label-top">data</span>
-						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
-					</div>
-					<div class="col-2 col-md-1">
-						<span class="label-top">ora inizio</span>
-						{{ frm.time( table, '', '', 'ora_inizio_programmazione', '', '', request) }} 
-					</div>
-					<div class="col-2 col-md-1">
-						<span class="label-top">ora fine</span>
-						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
-					</div>
-				</div>
-			</fieldset>
-
-			<fieldset>
 			<legend>attribuzione</legend>
 
 			<div class="form-group form-row">
@@ -139,6 +139,16 @@
 					<span class="label-top">indirizzo</span>
 					{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
 				</div>
+				{% if '4100.prodotti' in mods.active.array %}
+				<div class="col-12 col-md-6">
+					<span class="label-top">matricola</span>
+					{{ frm.selectBox( table, '', '', 'id_matricola', 'matricola', etc.select.matricole, request, '', '','','','','matricole.form','','matricole', 'id_matricola', page, pages, ietf,'matricole' ) }}
+				</div>
+				<div class="col-2 col-md-6">
+					<span class="label-top">barcode matricola</span>
+					{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
+				</div>
+				{% endif %}
 			</div>
 			</fieldset>
 

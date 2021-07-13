@@ -37,7 +37,7 @@
     // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
 	$tasks = mysqlQuery(
 	    $cf['mysql']['connection'],
-	    'UPDATE cron SET token = ? WHERE '.
+	    'UPDATE cron SET token = ?, timestamp_esecuzione = ? WHERE '.
 	    '( minuto = ?												OR minuto IS NULL ) AND '.
 	    '( ora = ?													OR ora IS NULL ) AND '.
 	    '( giorno_del_mese = ?										OR giorno_del_mese IS NULL ) AND '.
@@ -48,6 +48,7 @@
 		'( token IS NULL OR ( timestamp_esecuzione < ? ) )',
 	    array(
 			array( 's' => $cf['cron']['results']['token'] ),		//
+			array( 's' => $time ),								//
 			array( 's' => intval( date( 'i', $time ) ) ),			// 
 			array( 's' => date( 'G', $time ) ),						// 
 			array( 's' => date( 'j', $time ) ),						// 
@@ -162,13 +163,14 @@
 	// metto il lock sui job aperti
 		$jobs = mysqlQuery(
 			$cf['mysql']['connection'],
-			'UPDATE job SET token = ? WHERE '.
+			'UPDATE job SET token = ?, timestamp_esecuzione = ? WHERE '.
 			'( timestamp_apertura <= ? OR timestamp_apertura IS NULL ) '.
 			'AND timestamp_completamento IS NULL '.
 			'AND ( token IS NULL OR timestamp_esecuzione < ? ) '.
 			'AND se_foreground IS NULL ',
 			array(
 				array( 's' => $cf['cron']['results']['token'] ),
+				array( 's' => $time ),
 				array( 's' => $time ),
 				array( 's' => strtotime( '-10 minutes' ) )
 			)

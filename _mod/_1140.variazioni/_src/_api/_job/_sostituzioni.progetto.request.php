@@ -65,9 +65,6 @@
 
             }
 
-            triggerOff( 'attivita', '_mod/_1140.variazioni/_src/_api/_job/_sostituzioni.progetto.request.php' );
-            $cf['cron']['cache']['view']['static']['refresh'][] = 'attivita';
-
             // aggiusto l'indice di lavoro (gli array partono da zero)
             $widx = $job['corrente'] - 1;
 

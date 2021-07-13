@@ -174,6 +174,7 @@
 	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden', '', '', disabled ) }}
 	<div class="form-group form-row">
 	    <div class="col">
+		<span class="label-top">categoria</span>
 		{{ frm.selectRequired( table, subtable, i, 'id_categoria', '', etc.select.categorie_anagrafica, request, '2', '', '', disabled ) }}
 	    </div>
 	    {% if r.id %}

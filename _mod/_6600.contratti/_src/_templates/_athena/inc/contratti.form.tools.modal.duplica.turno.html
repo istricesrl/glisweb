@@ -6,6 +6,7 @@
 
 <script>
     function duplicaTurno( t ) {
+        $('#btnduplicaturno').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var form = $( t ).closest('.modal');		
         var tb = form.find('#tb').val();
         var tn = form.find('#tn').val();
@@ -53,7 +54,7 @@
             </div>
 	    </div>
 	    <div class="modal-footer">
-            <button type="button" class="btn btn-secondary btn-sm" onclick="duplicaTurno(this);">duplica</button>
+            <button type="button" id="btnduplicaturno" class="btn btn-secondary btn-sm" onclick="duplicaTurno(this);">duplica</button>
             <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

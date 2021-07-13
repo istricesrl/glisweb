@@ -1,0 +1,1 @@
+ALTER TABLE `menu` ADD `ancora` CHAR(128) NULL DEFAULT NULL AFTER `nome`;

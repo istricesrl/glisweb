@@ -48,6 +48,10 @@
             ),
             'reparti' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'matricole' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
             )
 	);

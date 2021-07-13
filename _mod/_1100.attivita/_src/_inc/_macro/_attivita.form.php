@@ -58,7 +58,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view' );
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_produzione = 1' );
 
     // tendina tipologia inps
 	$ct['etc']['select']['id_tipologia_inps'] = mysqlCachedIndexedQuery(
@@ -152,6 +152,14 @@
 	    'SELECT id, __label__ FROM mastri_view'
     );
 
+    // tendina matricole
+	$ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM matricole_view'
+    );
+
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
 	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
@@ -185,5 +193,14 @@
         }
 	}
 
+   /* if( isset($_REQUEST['attivita']['__matricola__']) ){
+        $_REQUEST['attivita']['id_matricola'] =  mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM matricole_view WHERE __label__ = ?', array( array( 's' => $_REQUEST['attivita']['__matricola__'] ) )
+        );
+    }*/
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+ 

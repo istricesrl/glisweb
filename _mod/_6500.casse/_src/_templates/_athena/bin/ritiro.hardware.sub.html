@@ -1,0 +1,86 @@
+{% macro righe( table, subtable, legend, site, page, pages, lang, etc, request, session, mastro_scarico, mastro_carico ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable }}">
+	{% set require = 0 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {{ frm.subformLegend( subtable, legend ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = require %}{% endif %}
+	{% for i in -1..t %}
+	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
+    {{ frm.input( table, subtable, i, 'id_documento', '', '', '', '__parent_id__', 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_todo', '', '', '', request.todo.id, 'hidden', '', '', disabled  ) }}
+	{{ frm.input( table, subtable, i, 'id_account_' ~ action, '', '', '', account, 'hidden', '', '', disabled  ) }}
+	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_udm', '', '', request, '1', 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_listino', '', '', request, '1', 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_valuta', '', '', request, '1', 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_mastro_provenienza', '', '', request, mastro_scarico, 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_mastro_destinazione', '', '', request, mastro_carico, 'hidden', '', '', disabled  ) }}   
+    {{ frm.input( table, subtable, i, 'id_emittente', '', '', request, request[ table ][ 'id_emittente' ], 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_destinatario', '', '', request, request[ table ][ 'id_destinatario' ], 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request, '1', 'hidden', '', '', disabled  ) }}
+
+	{% if request[ table ][ 'data' ] %}
+    {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, request[ table ][ 'data' ], 'hidden', '', '', disabled  ) }}
+    {% else %}
+    {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, 'now'|date('Y-m-d'), 'hidden', '', '', disabled  ) }}
+    {% endif %}    
+    {% if request[ table ][ 'id_tipologia' ] %}
+        {{ frm.input( table, subtable, i, 'id_tipologia', '', '', request, request[ table ][ 'id_tipologia' ], 'hidden', '', '', disabled  ) }}
+    {% endif %}
+	<div class="form-group form-row">
+        <div class="col">
+            <span class="label-top">descrizione</span>
+            {{ frm.inputRequired( table, subtable, i, 'nome', '', '', request, '', '', '', disabled ) }}
+        </div>
+        
+        {% if not r.matricola %}
+            <div class="col-2">
+            <span class="label-top">matricola</span>
+
+                 {{ frm.selectBox( table, subtable, i, 'matricola', '', etc.select.matricole, request, '', '', '', '', '', '', '', '', '', page, pages, ietf, 'matricole', disabled ) }}
+            </div>
+
+        {% else %}
+            <div class="col-auto">
+                {{ frm.input( table, subtable, i, 'id_todo', '', '', '', r.matricola, 'hidden', '', '', disabled  ) }}
+                <div class="justify-content-center align-self-center mt-1 text-right">MAT.{{ "%'-010.10s"|format(r.matricola) }}</div> 
+            </div>
+        {% endif %}
+
+        {% if not r.matricola %}
+        <div class="col-auto">
+             <button id="{{ i }}" type="button" onclick="$('#genitore').val( $( this ).parent().parent().parent().attr('id'))" class=" btn-secondary btn" data-toggle="modal" data-target="#genera_matricola">genera matricola</button>
+        </div>
+        {% endif %}
+	    <div class="col-1">
+		    <span class="label-top">quantità</span>
+		    {{ frm.inputRequired( table, subtable, i, 'quantita', '', '', request, '1', 'number', '', disabled, '1' ) }}
+	    </div>
+		<div class="w-100 d-block d-md-none m-0"></div>
+		{% if r.id %}
+	    <div class="col-auto text-right remove-on-duplicate d-print-none">
+		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+	    </div>
+	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
+		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
+		</div>
+		{% else %}
+	    <div class="col-auto text-right d-print-none">
+		{{ frm.button( '<i class="fa fa-minus"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}
+		</div>
+		{% endif %}
+	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}

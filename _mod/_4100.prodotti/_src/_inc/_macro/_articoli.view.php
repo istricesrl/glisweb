@@ -27,6 +27,7 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
 	    'nome' => 'nome',
+        'codice_produttore' => 'ean',
 	    'id_prodotto' => 'prodotto'
 	);
 

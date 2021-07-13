@@ -15,16 +15,6 @@
     {% set account = '__null__' %}
 {% endif %}
 
-{# TIPO DI METODO E ATTIVITA' SVOLTA #}
-{% if request[ table ].id %}
-    {% set method = 'update' %}
-    {% set activity = 'aggiornamento' %}
-    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
-{% else %}
-    {% set method = 'post' %}
-    {% set activity = 'inserimento' %}
-    {% set legend = 'inserimento nuovo oggetto' %}
-{% endif %}
 
 {% block header %}
 <header class="fixed-top">
@@ -61,7 +51,7 @@
                 <tbody class="col-12" >
                     {% for riga in etc.documento.righe %}
                     <tr>
-                    <td class="{{ view.class[key] }}">{{ riga.id_articolo }}</td>
+                    <td class="text-left">{{ riga.id_articolo }} {% if riga.matricola %} <br>{{ riga.label_matricola  }}{% endif %}{% if riga.ore %} <br>+{{ riga.ore }}h su {{ riga.progetto  }}{% endif %}</td>
                     <td class="text-right">{{ riga.reparto }}</td>
                     <td class="text-right">€ {{ riga.importo_netto_totale }}</td>
                     <td class="text-right">{{ riga.quantita }}</td>

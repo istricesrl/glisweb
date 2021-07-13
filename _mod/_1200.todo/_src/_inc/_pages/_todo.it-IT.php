@@ -31,7 +31,9 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'todo.form', 
 														'todo.form.attivita',
-														'todo.form.pianificazioni' ) )
+														'todo.form.documenti',
+														'todo.form.pianificazioni',
+														'todo.form.tools' ) )
 	);
 
 	$p['todo.form.attivita'] = array(
@@ -41,6 +43,17 @@
 	    'parent'		=> array( 'id'		=> 'todo.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.attivita.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.attivita.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
+	);
+
+	$p['todo.form.documenti'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'documenti' ),
+	    'h1'			=> array( $l		=> 'documenti' ),
+	    'parent'		=> array( 'id'		=> 'todo.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.documenti.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.documenti.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 	);
@@ -57,3 +70,18 @@
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 	);
+
+
+	// gestione todo tools
+	$p['todo.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni' ),
+		'h1'			=> array( $l		=> 'azioni' ),
+		'parent'		=> array( 'id'		=> 'todo.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_todo.form.tools.php' ),
+		'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+	

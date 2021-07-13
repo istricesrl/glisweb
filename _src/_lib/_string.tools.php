@@ -100,9 +100,18 @@
      * @todo documentare
      *
      */
+    function numeric2null( $s ) {
+        return empty2null( $s, true );
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function empty2null( $s, $numeric = false ) {
 
-	if( $numeric === true && $s == 0 ) {
+	if( $numeric === true && is_numeric( $s ) ) {
 	    return $s;
 	} elseif( empty( $s ) ) {
 	    return NULL;

@@ -1,0 +1,1 @@
+ALTER TABLE menu DROP INDEX id_pagina_unico;
