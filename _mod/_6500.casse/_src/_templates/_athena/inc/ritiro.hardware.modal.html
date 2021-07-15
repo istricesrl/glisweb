@@ -23,6 +23,7 @@
 		var documento = $( '#id_doc' ).val();
 		var start = $( '#start' ).val();
 		window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_stampa.etichette.ritiro.hardware.pdf.php?__documento__='+documento+'&__start__='+start, '_blank');
+		$('#stampa_etichette').modal('hide')
 	}
 
     function genera_matricola( t ) {

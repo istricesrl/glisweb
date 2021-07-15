@@ -293,7 +293,9 @@
             );
 */
 //if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  ) {
+
     if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ) {
+
         pdfFormCellTitle( $pdf, $info, '3. diagnosi' );
 
         pdfFormLineRow( $pdf, $info, ( isset( $attivita ) && ! empty( $attivita['testo'] ) ? $attivita['testo'] : '' ), 45, 4 );
@@ -310,6 +312,7 @@
     } else {
         pdfSetRelativeY( $pdf, 51 );
     }
+
 
     if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 2 ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) )  ) {
 
@@ -402,7 +405,6 @@
         }
     
         if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 0 ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ){
-            
 
             $pdf->AddPage();
             pdfFormCellTitle( $pdf, $info, 'condizioni di servizio' );
@@ -461,6 +463,7 @@
             pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali [ ] per l\' esecuzione del contratto e le dovute operazioni di fatturazione [ ] per essere ricontattato ai fini di marketing e customer care [ ] per l\' iscrizione alla newsletter di Istrice srl.', 45, 0);
             pdfSetRelativeY( $pdf, 7 );
             pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). ( isset( $todo ) ? date( 'd/m/Y',$todo['timestamp_inserimento']) : '__/__/____' ) .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+
             pdfSetRelativeY( $pdf, 5 );
 
             pdfFormCellTitle( $pdf, $info, '9. customer care' );
