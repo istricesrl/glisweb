@@ -84,7 +84,7 @@
 	$pdf = pdfInit( $info );
 
 
-    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 0 ) || !isset( $_REQUEST['todo'] )  ) {
+    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 0 ) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) )  ) {
 
     // impostazione stili
     $info['style']['text']['default']           = array( 'font' => 'helvetica', 'size' => 8, 'weight' => '' );
@@ -293,7 +293,9 @@
             );
 */
 //if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  ) {
-    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  ) {
+
+    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ) {
+
         pdfFormCellTitle( $pdf, $info, '3. diagnosi' );
 
         pdfFormLineRow( $pdf, $info, ( isset( $attivita ) && ! empty( $attivita['testo'] ) ? $attivita['testo'] : '' ), 45, 4 );
@@ -311,7 +313,8 @@
         pdfSetRelativeY( $pdf, 51 );
     }
 
-    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 2 ) || !isset( $_REQUEST['todo'] )  ) {
+
+    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 2 ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) )  ) {
 
         pdfFormCellTitle( $pdf, $info, '5. esito e tempo di intervento' );
       
@@ -401,8 +404,7 @@
             pdfSetRelativeY( $pdf, 20 );
         }
     
-        if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 0 ) || !isset( $_REQUEST['todo'] ) ){
-            
+        if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 0 ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ){
 
             $pdf->AddPage();
             pdfFormCellTitle( $pdf, $info, 'condizioni di servizio' );
@@ -452,15 +454,16 @@
             pdfSetFontStyle( $pdf, $info['style']['text']['label'] );
 
             pdfSetRelativeY( $pdf, 182 );
-            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). ( isset( $todo ) ? date( 'd/m/Y',$todo['timestamp_inserimento']) : '__/__/____' ) .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
             pdfSetRelativeY( $pdf, 5 );
             pdfFormLineRow( $pdf, $info,'Ai sensi dell\'art. 1341 c.c. il Cliente approva specificamente gli artt. 3 (modalità di espletamento), 4 (durata del contratto), 5 (corrispettivo e condizioni di pagamento), 6 (garanzia), 8 (subappalto), 11 (clausola risolutiva espressa), 13 (esclusioni), 14 (risoluzione delle controversie).', 45, 0);
             pdfSetRelativeY( $pdf, 7 );
-            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, ').  ( isset( $todo ) ? date( 'd/m/Y',$todo['timestamp_inserimento']) : '__/__/____' ) .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
             pdfSetRelativeY( $pdf, 5 );
             pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali [ ] per l\' esecuzione del contratto e le dovute operazioni di fatturazione [ ] per essere ricontattato ai fini di marketing e customer care [ ] per l\' iscrizione alla newsletter di Istrice srl.', 45, 0);
             pdfSetRelativeY( $pdf, 7 );
-            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). date('d/m/Y') .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). ( isset( $todo ) ? date( 'd/m/Y',$todo['timestamp_inserimento']) : '__/__/____' ) .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+
             pdfSetRelativeY( $pdf, 5 );
 
             pdfFormCellTitle( $pdf, $info, '9. customer care' );
