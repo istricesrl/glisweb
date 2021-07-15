@@ -34,7 +34,7 @@
 	);
 
     if(file_exists(DIR_MOD.'4000.catalogo/src/api/print/manuale.barcode.pdf.php')  ){$file = $cf['site']['url'].'4000.catalogo/src/api/print/manuale.barcode.pdf.php';}
-    else {$file = $cf['site']['url'].'_4000.catalogo/_src/_api/_print/_manuale.barcode.pdf.php';  }
+    else {$file = $cf['site']['url'].'/_mod/_4000.catalogo/_src/_api/_print/_manuale.barcode.pdf.php';  }
 
 	$ct['page']['contents']['metro']['general'][] = array(
         'target' => '_blank' ,
@@ -45,6 +45,17 @@
 		'text' => 'stampa gli articoli con i relativi barcode'
 	    );
 
+    if( file_exists(DIR_MOD.'4100.prodotti/src/api/print/cartellini.grandi.articoli.pdf.php')  ){$file_cartellini =  $cf['site']['url'].'mod/4100.prodotti/src/api/print/cartellini.grandi.articoli.pdf.php';}
+    else {$file_cartellini = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_cartellini.grandi.articoli.pdf.php';  }
+
+	$ct['page']['contents']['metro']['general'][] = array(
+        'target' => '_blank' ,
+		'url' => $file_cartellini ,
+		'icon' => NULL,
+		'fa' => 'fa-file-pdf-o',
+		'title' => 'cartellini vetrina',
+		'text' => 'stampa l\'etichetta prezzo di tutti gli articoli in pdf'
+	    );
     // debug
 	// print_r( $_SESSION );
 	// echo DIRECTORY_CACHE . 'twig';
