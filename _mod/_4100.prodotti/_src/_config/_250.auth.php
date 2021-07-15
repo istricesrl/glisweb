@@ -34,9 +34,9 @@
             'prodotti_caratteristiche' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-//            'prodotti_stagioni' => array(
-//                CONTROL_FULL => array( 'roots' )
-//            ),
+            'articoli_caratteristiche' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             'tipologie_prodotti' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
