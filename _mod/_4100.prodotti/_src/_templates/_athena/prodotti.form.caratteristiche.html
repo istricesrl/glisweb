@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/prodotti.form.caratteristiche.sub.html' as sub %}
+{% import 'bin/default.form.caratteristiche.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -41,6 +41,18 @@
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+        {# SELETTORE LINGUA #}
+	    <fieldset>
+		<legend>lingua</legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12">
+				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
+		    </div>
+		</div>
+
+	    </fieldset>
 
 		{# SUBFORM CARATTERISTICHE DEL PRODOTTO #}
         {{ sub.caratteristiche( table, 'prodotti_caratteristiche', 'caratteristiche del prodotto', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
