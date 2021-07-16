@@ -127,7 +127,7 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.immagini.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.immagini.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff') ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 
@@ -140,7 +140,7 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.video.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.video.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 	
@@ -153,7 +153,7 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.file.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.file.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 
@@ -166,7 +166,7 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.audio.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.audio.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 
@@ -192,7 +192,7 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.metadati.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.metadati.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 	
@@ -317,7 +317,7 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.immagini.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.immagini.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 
@@ -330,7 +330,7 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.video.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.video.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' , 'staff') ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 	
@@ -343,7 +343,7 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.file.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.file.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' , 'staff') ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 
@@ -356,7 +356,7 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.audio.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.audio.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 
@@ -383,7 +383,7 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.metadati.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.metadati.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 	

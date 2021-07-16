@@ -148,7 +148,8 @@
 			CONTROL_FULL => array( 'roots' )
 	    ),
 	    'metadati' => array(
-		CONTROL_FULL => array( 'roots' )
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
 		),
 		'pianificazioni' => array(
 			CONTROL_FULL => array( 'roots' )

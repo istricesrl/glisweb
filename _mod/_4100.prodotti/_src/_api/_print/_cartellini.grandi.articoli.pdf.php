@@ -32,8 +32,10 @@
     if( count( $articoli ) > 0 ){
 
         foreach(  $articoli as &$a ){
-            $a['caratteristiche'] =  mysqlQuery( $cf['mysql']['connection'], 'SELECT caratteristica FROM articoli_caratteristiche_view  WHERE  id_articolo = ? UNION SELECT caratteristica FROM prodotti_caratteristiche_view WHERE id_prodotto = ?', array( array( 's' => $a['id'] ), array( 's' => $a['id_prodotto'] ) ) );
+            $a['caratteristiche'] =  mysqlQuery( $cf['mysql']['connection'], 'SELECT caratteristica, testo FROM articoli_caratteristiche_view  WHERE  id_articolo = ? UNION SELECT caratteristica, testo FROM prodotti_caratteristiche_view WHERE id_prodotto = ?', array( array( 's' => $a['id'] ), array( 's' => $a['id_prodotto'] ) ) );
  
+            $a['ric'] = mysqlSelectValue($cf['mysql']['connection'], 'SELECT metadati.testo FROM metadati WHERE id_articolo = ? AND nome = "ricondizionato"', array( array( 's' => $a['id'] ) ));
+
             $img = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT path FROM immagini '.
@@ -56,6 +58,7 @@
 
 
 
+    //die( print_r( empty($articoli[0]['ric']) , true ) );
     
 
     // creazione del PDF
@@ -65,8 +68,8 @@
 	$pdf->SetTitle($dobj.'.pdf');
 
     // tipografia
-	$w		= 297;								// altezza del foglio
-	$h		= 210;								// larghezza del foglio
+	$h		= 297;								// altezza del foglio
+	$w		= 210;								// larghezza del foglio
 	$ml		= 20;								// margine sinistro
 	$mt		= 40;								// margine superiore
 	$mr		= 20;								// margine destro
@@ -84,12 +87,15 @@
 	$rgb9		= array( 255, 255, 255 );					// il bianco
     $rgBlu      = array( 26, 99, 154 );
     $rgCel      = array( 0, 156, 204 ); 
-    $hBox       = $h;
-    $wBox       = $w / 2;
-    $bluSpace      = 55;
+    $hBox       = $w;
+    $wBox       = $h / 2;
+    $bluSpace      = 53;
 
-    $startX = 10;
-    $startY = 10;
+    $ml =  ($w-$wBox)/2;
+    $mr = $ml;
+    $mt = $h - $hBox;
+    $startX = $ml;
+    $startY = $ml;
     
     // bordi delle celle
 	$brdh		= array(
@@ -149,8 +155,7 @@
 	$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );					// fattore di conversione da pixel a millimetri
 
     // aggiunta di una pagina
-	$pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
-
+	
     $x = $startX;
     $y = $startY;
     
@@ -162,23 +167,25 @@
 //$pdf->SetFont($fontname, '', 14, '', false);
 
     for( $i = 0; $i < count($articoli); $i++){
+        $pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
 
-        $pdf->setXY( $ml + $wBox / 3 * 2 , $mt - $stdsp );
+        $pdf->setXY( $ml + $wBox / 3 * 2 , $mt - $stdsp  * 10);
         $pdf->StartTransform();
 
         $pdf->Rotate(180);
         
 
         $pdf->write1DBarcode($articoli[$i]['id'], 'C128', '', '', '', $fnts  ,0.17, $style);
-        $pdf -> setTextColor( 26, 99, 154 );
+       
         if( !empty($articoli[$i]['codice_produttore']) ){
-            $pdf->setXY($mr * 3 + 10, $pdf->getY() + $stdsp  );
-            $pdf-> Cell($wBox, '','codice produttore: '.$articoli[$i]['codice_produttore'],'',1, 'C' ); 
+            $pdf -> setTextColor( 26, 99, 154 );
+            $pdf->setXY(80, $pdf->getY() - $stdsp *3 );
+            $pdf-> Cell($wBox, '','codice produttore: '.$articoli[$i]['codice_produttore'],'','', 'C' ); 
         }
-
-        $pdf->setXY($mr * 3 + 7 , $pdf->getY() + $stdsp  );
+        $pdf -> setTextColor( 0, 0, 0 );
+        $pdf->setXY(70 ,  $stdsp *12 );
  //       $pdf->setXY(10 , 10 );
-        $pdf->SetFont( $fnt, 'B', 10 );	
+        $pdf->SetFont( $fnt, 'B', 7 );	
         $pdf-> Cell($wBox, '',date('d/m/Y H:i'),'',1, 'R' ); 
 
         // Stop Transformation
@@ -192,64 +199,82 @@
         $pdf->Line($ml + $wBox, $mt, $ml + $wBox, 0);
        // $pdf->Line($x , $y - $litsp , $x , $y - $stdsp);
         // rettangolo blu
-        $pdf-> Rect( $ml / 2, $mt, $wBox + $stdsp * 4 , $bluSpace, 'F', '',  array(26, 99, 154));
+        $pdf-> Rect( $ml - $stdsp*2, $mt, $wBox + $stdsp * 4 , $bluSpace, 'F', '',  array(26, 99, 154));
+
+
 
         $pdf->SetFont($fnt, 'B', $fntt);
   
-        $pdf -> setXY( $x + $ml, $mt + $startY );
+        $pdf -> setXY( $ml , $mt   );
         $pdf -> setTextColor( 255, 255, 255 );
-        $pdf-> MultiCell( ($wBox - $ml ), $fntt ,ltrim( rtrim( strtoupper ($articoli[$i]['meta']))), '', 'L', '' );
+       
+        $pdf-> MultiCell( $wBox - $stdsp * 4 , $fntt ,ltrim( rtrim( strtoupper ($articoli[$i]['meta']))), '', 'L', '', '', $ml + $stdsp*2, $pdf ->GetY()+$stdsp*2, true, 0, false, true,$fntt ,'M' );
         #MultiCell(w, h, txt, border = 0, align = 'J', fill = 0, ln = 1, x = '', y = '', reseth = true, stretch = 0, ishtml = false, autopadding = true, maxh = 0) ⇒ Object
+                                                                        #$pdf->MultiCell(20, 15, 'teszt', '1', 'C', false, 1, 1, true, 0, false, true, 15,  'M', true);
+        if( $articoli[ $i ]['ric'] != '' ){
+            // banda verde se ricondizionato
+            $pdf-> Rect( $ml - $stdsp*2, $mt + $bluSpace, $wBox + $stdsp * 4, $fnts - $litsp + 2 , 'F', '',  array(41, 133, 66));
+            $pdf -> setXY( $ml, $mt + $bluSpace + $litsp );
+            $pdf -> SetFont($fnt, 'B', $fntm + 4);
+            $pdf -> Cell( $wBox, '', 'RICONDIZIONATO! TUTELA  L\'AMBIENTE', '', '',  'C' );
 
-        $pdf -> setXY( $x + $ml, $pdf->getY() + $stdsp * 2  );
+            $pdf -> setXY( $ml + $stdsp - 1, $mt + $bluSpace  + $fnts + $litsp );
+        } else {
+
+            $pdf -> setXY( $ml + $stdsp - 1, $mt + $bluSpace  );
+        }
         $pdf -> setTextColor( 26, 99, 154 );
-        $pdf->SetFont($fnt, '', $fntm);
-        $pdf-> MultiCell( ($wBox - $ml ) / 2, '' ,ltrim( rtrim( strtoupper ($articoli[$i]['h1_prodotto'].' '. $articoli[$i]['h1'])))."\n".ltrim( rtrim( strip_tags( $articoli[$i]['testo_prodotto'].' '. $articoli[$i]['testo']))), '', 'L', '' );
+        $pdf -> SetFont($fnt, 'B', $fntm * 1.5);
+        $pdf -> MultiCell( $wBox - $stdsp-2, '' ,ltrim( rtrim( strtoupper ($articoli[$i]['h1_prodotto'].' '. $articoli[$i]['h1']))), '', 'L', '', 1 );
+        $pdf -> setX( $ml + $stdsp - 1);
+        $pdf -> SetFont($fnt, '', $fntm);
+        $pdf -> MultiCell( $wBox/ 2, '' ,ltrim( rtrim( strip_tags( $articoli[$i]['abstract_prodotto'].' '. $articoli[$i]['abstract']))), '', 'L', '' );
      
         $imgS = $wBox / 2;
-        $pdf->image( $articoli[$i]['immagine'], $ml + $stdsp*2 + ($wBox - $ml ) / 2, $bluSpace + $mt + $stdsp,  $imgS,  $imgS, NULL, NULL, 'T', false, 10, '', false, false, 0, true );		
+        $pdf->image( $articoli[$i]['immagine'], $w / 2 - $stdsp, $h/2 + $stdsp * 3 ,  $imgS,  $imgS, NULL, NULL, 'T', false, 10, '', false, false, 0, true );		
    
 
-        $pdf -> setXY( $x + $ml, $mt + $hBox / 2 + $litsp);
+        $pdf -> setXY( $ml + $stdsp, $mt + $hBox / 2 + $litsp);
         $pdf->SetFillColor(  26, 99, 154 );
 
-        $pdf -> setTextColor( 255, 255, 255 );
+    /*    $pdf -> setTextColor( 255, 255, 255 );
         $pdf->SetFont($fnt, 'B', $fnts);
         $pdf->setCellPadding( 1 );
         $pdf -> Cell( $wBox / 3 * 2, '', 'CARATTERISTICHE', '', 1,  'C',1 );
         #Cell(w, h = 0, txt = '', border = 0, ln = 0, align = '', fill = 0, link = nil, stretch = 0, ignore_min_height = false, calign = 'T', valign = 'M') 
-      
-        $pdf -> setXY( $x + $ml, $pdf -> getY() + $litsp  );
+      */
+        $pdf -> setXY( $ml + $stdsp, $pdf -> getY() + $litsp  );
         $pdf -> setTextColor( 26, 99, 154 );
-        $pdf->SetFont($fnt, '', $fntm);
+        $pdf-> SetFont($fnt, '', $fntm - 1);
 
         $pdf->setCellPadding( $litsp );
 
         $pdf->SetFillColor(  255, 255, 255 );
+        if( isset( $articoli[$i]['caratteristiche'] ) ){
         foreach( $articoli[$i]['caratteristiche'] as $meta ){
-            $pdf -> Cell( $wBox / 3 * 2, $fntm/2 + $litsp, strtoupper ($meta['caratteristica']), $brdb, 1,  'L', 1 );
-            $pdf -> setX( $x + $ml);
+            $pdf -> setTextColor( 255, 255, 255 );
+            $pdf->SetFillColor(  26, 99, 154 );
+            $pdf -> Cell( $wBox / 3, $fntm/2 + $litsp, $meta['caratteristica'], $brdb, 0,  'R', 1 );
+            $pdf->SetFillColor(  255, 255, 255 );
+            $pdf -> setTextColor( 26, 99, 154 );
+            $pdf -> Cell( $wBox / 3, $fntm/2 + $litsp, $meta['testo'], $brdb, 1,  'L', 1 );
+            $pdf -> setX( $ml + $stdsp);
         }
-
+    }
 
            // x, y, w, h, type, link, align, resize
        // if( ($i + 1) % 3 == 0){
 
-        $pdf -> setXY( $wBox/2 + $ml - $litsp, $hBox + $stdsp );
+        $pdf -> setXY( $ml, $h -  $stdsp*7 );
         $pdf-> SetFont( $fnt, '', $fnts );	
-        $pdf-> Cell($wBox /2, '','PREZZO PC STOP ','','', 'R' );
-        $pdf-> setXY( $wBox/2 + $ml - $litsp, $pdf -> getY() + $stdsp );
+        $pdf-> Cell($wBox - $stdsp, '','PREZZO PC STOP ','','', 'R' );
+        $pdf-> setXY( $ml , $pdf -> getY() + $stdsp );
         $pdf-> SetFont( $fnt, 'B', $fntt );	
-        $pdf-> Cell( $wBox /2 , '','€ '.number_format( ( $articoli[$i]['prezzo'] * ( 100 + $articoli[$i]['aliquota'] ) / 100 ), 2, ',', '.' ), '', '' ,'R' );
+        $pdf-> Cell( $wBox - $stdsp , '','€ '.number_format( ( $articoli[$i]['prezzo'] * ( 100 + $articoli[$i]['aliquota'] ) / 100 ), 2, ',', '.' ), '', '' ,'R' );
         $pdf-> SetFont( $fnt, '', $fntl );	
-        $pdf-> setXY( $wBox/2 + $ml - $litsp, $pdf -> getY() + $fnts + $stdsp  );
-        $pdf-> Cell($wBox /2, '','prezzo (compreso di '.$articoli[$i]['descrizione_iva'].')','',1, 'R' );
+        $pdf-> setXY( $ml, $pdf -> getY() + $fnts + $stdsp  );
+        $pdf-> Cell($wBox - $stdsp, '','inclusa '.$articoli[$i]['descrizione_iva'],'',1, 'R' );
 
-
-            $pdf -> AddPage();
-            $y = $startY ;
-            $x = $startX;
-        
 
 
        
