@@ -38,6 +38,10 @@
         if( !empty( $pause ) ){
 
             foreach( $pause as $p ){
+
+                $whr = array();
+				$par = array();
+                
                 $whr[] = 'id_progetto = ?';
                 $par[] = array( 's' => $_REQUEST['id'] );
 
