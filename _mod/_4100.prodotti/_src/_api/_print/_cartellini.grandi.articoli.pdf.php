@@ -192,7 +192,7 @@
        $pdf->StopTransform();
 
 
-        $pdf->SetLineStyle(array('width' => 0.000000015, 'color' => array(200, 200, 200)));
+        $pdf->SetLineStyle(array('width' => 0.6, 'color' => array(200, 200, 200)));
         // rettangolo guida
         $pdf-> Rect( $ml, $mt, $wBox, $hBox );	
         $pdf->Line($ml, $mt, $ml, 0);
