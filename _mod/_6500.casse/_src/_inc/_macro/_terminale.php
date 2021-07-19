@@ -26,6 +26,10 @@
         'modal' => array( 'id' => 'crea_attivita', 'include' => 'inc/creazione.attivita.modal.html' )
         );
 
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array( 'id' => 'carico_ore', 'include' => 'inc/carico.ore.mastro.todo.html' )
+        );
+
     // mastro di scarico [magazzino]
     $ct['etc']['mastro'] = NULL;
     // mastro di carico attivta[magazzino]
@@ -116,6 +120,19 @@
             //print_r('coupon');
         } elseif( $comando[0] == 'TODO' ){
             // la todo
+
+            // attività concluse della todo
+            $ct['etc']['attivita_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
+            
+            // apro il modal per la gestione mastri
+            echo '
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript">
+            $(document).ready(function(){
+                $("#todo_id").val('.$comando[1].');
+                $("#carico_ore").modal("show");
+
+            });
+        </script>';
             //print_r('coupon');
         } elseif( $comando[0] == 'DOC' ){
             // apro la pagina di gestione del documento
@@ -427,6 +444,13 @@ if( !isset( $_REQUEST['documenti']['scadenze'] ) && isset( $_REQUEST['documenti'
             'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE timestamp_chiusura IS NULL ORDER BY __label__' );
     
     }
+
+    $ct['etc']['select']['mastri_ore'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 3' );
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 

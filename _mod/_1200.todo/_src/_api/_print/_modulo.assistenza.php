@@ -37,7 +37,10 @@
 
             // attività di diagnosi
             $attivita = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita WHERE attivita.id_todo = ? AND id_tipologia = ? AND attivita.data_attivita IS NOT NULL ORDER BY attivita.id LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => '1') ));
-        //print_r($attivita);
+       
+            $soluzione = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita WHERE attivita.id_todo = ? AND id_tipologia = ? AND attivita.data_attivita IS NOT NULL ORDER BY attivita.id LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => '2') ));
+       
+            //print_r($attivita);
             // indirizzo completo dell'intervento se predente
             if( $attivita && !empty( $attivita['id_indirizzo'] ) ){
                 $indirizzo = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM indirizzi_view WHERE id = ?', array( array( 's' => $attivita['id_indirizzo'] ) ) ); 
@@ -84,7 +87,7 @@
 	$pdf = pdfInit( $info );
 
 
-    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 0 ) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) )  ) {
+    if( ( isset( $_REQUEST['part'] ) && ($_REQUEST['part'] == 0 || $_REQUEST['part'] == 3) ) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) )  ) {
 
     // impostazione stili
     $info['style']['text']['default']           = array( 'font' => 'helvetica', 'size' => 8, 'weight' => '' );
@@ -294,7 +297,7 @@
 */
 //if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  ) {
 
-    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ) {
+    if( ( isset( $_REQUEST['part'] ) && ($_REQUEST['part'] == 1 || $_REQUEST['part'] == 3 )) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ) {
 
         pdfFormCellTitle( $pdf, $info, '3. diagnosi' );
 
@@ -303,7 +306,7 @@
         $boxY = $pdf->GetY();
 
         pdfFormCellTitle( $pdf, $info, '4. soluzione proposta' );
-        pdfFormLineRow( $pdf, $info, '', 32, 3 );
+        pdfFormLineRow( $pdf, $info, ( isset( $soluzione ) && ! empty( $soluzione['testo'] ) ? $soluzione['testo'] : '' ), 32, 3 );
 
         //$pdf->Cell(60, 30, '', 1, 1);
         //pdfSetRelativeY( $pdf, 20 );
@@ -404,7 +407,7 @@
             pdfSetRelativeY( $pdf, 20 );
         }
     
-        if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 0 ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ){
+        if( ( isset( $_REQUEST['part'] ) && ($_REQUEST['part'] == 0 || $_REQUEST['part'] == 3 ) ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ){
 
             $pdf->AddPage();
             pdfFormCellTitle( $pdf, $info, 'condizioni di servizio' );

@@ -152,9 +152,9 @@
             // font, stile, dimensione
             foreach( $p['articoli'] as $articolo ) {
 
-                $trh = max( $pdf->GetStringHeight( $col * 4, $articolo['testo'], false, true, '', '' ) + 4,  $fnts + 8) ;					// 
+                $trh = max( $pdf->GetStringHeight( $col * 4, $articolo['testo'], false, true, '', '' ) + 4,  $fnts + 8, $pdf->GetStringHeight( $col * 2, $articolo['nome'], false, true, '', '' ) + 4) ;					// 
            
-                $pdf->Cell( $col * 2 , $trh, $articolo['nome'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->MultiCell( $col * 2 , $trh, $articolo['nome'], $brdc, 'C', false, 0,'','', true, 0, false, true, 0, 'M', false );				// larghezza, altezza, testo, bordo, newline, allineamento
                 $pdf->MultiCell( $col * 4,$trh , $articolo['testo'], $brdc, 'L', false, 0,'','', true, 0, false, true, 0, 'M', false );					// w, h, testo, bordo, allineamento, riempimento, newline
                 
 
