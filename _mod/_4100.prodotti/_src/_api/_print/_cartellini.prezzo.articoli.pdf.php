@@ -177,8 +177,8 @@
             $pdf-> Cell($wBox, '','codice produttore: '.$articoli[$i]['codice_produttore'],'',1, 'C' ); 
         }
 
-        $pdf->setXY($x + $wBox/2 + 13 , $y + $hBox - $litsp );
-        $pdf->SetFont( $fnt, 'B', 3 );	
+        $pdf->setXY($x + $wBox/2 + 11 , $y + $hBox - 3.5 );
+        $pdf->SetFont( $fnt, 'B', 4 );	
         $pdf-> Cell($wBox, '',date('d/m/Y H:i'),'',1, 'R' ); 
 
         // Stop Transformation
@@ -206,7 +206,7 @@
         $pdf-> Cell( $wBox , '','€ '.number_format( ( $articoli[$i]['prezzo'] * ( 100 + $articoli[$i]['aliquota'] ) / 100 ), 2, ',', '.' ), '', 1 ,'R' );
         $pdf-> SetFont( $fnt, '', 5 );	
         $pdf-> setX( $x );
-        $pdf-> Cell($wBox - $litsp, '','prezzo (compreso di '.$articoli[$i]['descrizione_iva'].')','',1, 'R' );
+        $pdf-> Cell($wBox - $litsp, '','inclusa '.$articoli[$i]['descrizione_iva'],'',1, 'R' );
       
         // logo
         //$pdf->setXY( $x - $litsp, $y + $hBox * 2 - 12);
