@@ -210,7 +210,7 @@
                 <legend>articoli frequenti</legend>
             <div class="box" style="height: 85vh;" >
                 {% for articolo in etc.articoli_frequenti %}
-                <a href="{{ cassa }}?documenti[id]={{ request.documenti.id  }}&__art__={{ articolo.id }}">
+                <a href="{{ cassa }}?__art__={{ articolo.id }}">
                 <div class="media">
                    
                     <div class="media-body p-3">

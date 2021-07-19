@@ -342,7 +342,7 @@
             foreach( $elenco_attivita as $a){
 
                 $pdf->Cell( $col * 2, $info['form']['bar']['height'], ( $a['data_attivita'] == NULL ? '' : date_format( date_create($a['data_attivita']) , 'd/m/Y') ) , ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->Cell( $col * 9, $info['form']['bar']['height'], $a['testo'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 9, $info['form']['bar']['height'], $a['nome'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
                 $pdf->Cell( $col, $info['form']['bar']['height'], $a['ore'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
                 $totore += $a['ore'];
                 $i++;

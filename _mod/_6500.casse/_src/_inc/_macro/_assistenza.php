@@ -30,9 +30,9 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
 
 
     $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
-    $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL', array( array( 's' => $todo) ));
-    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS  NULL', array( array( 's' => $todo) ));
-
+    $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $todo) ));
+    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS  NULL ORDER BY data_attivita', array( array( 's' => $todo) ));
+//print_r($ct['etc']['attivita_programmate']);
     // $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $todo) ));
     $ct['form']['table'] = 'todo';
     if( !isset( $_REQUEST['todo']  ) ){

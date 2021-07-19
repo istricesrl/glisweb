@@ -1,7 +1,7 @@
 {% import '_bin/_form.html' as frm %}
 
 {# DEFINIZIONI #}
-{% set table = 'attivita' %}
+{% set table = '' %}
 {% set ietf = localization.language.ietf %}
 
 {# ACCOUNT #}
@@ -21,16 +21,21 @@
 {% set activity = 'inserimento' %}
 {% endif %}
 <script>
-    function genera( t ) {
+    function aggiungi( t ) {
 
-		var marchio = $( '#{{ table }}_id_marchio' ).val();
-		var produttore = $( '#{{ table }}_id_produttore' ).val();
-		var serial = $( '#{{ table }}_serial_number' ).val();
-		var nome = $( '#{{ table }}_nome' ).val();
-		var testo = $( '#{{ table }}_testo' ).val();
-		var bar = $( '#{{ table }}_barcode' ).val();
-		var id_riga = $( '#id_riga' ).val();
+		var qta = $( '#_qta' ).val();
+		var ore = $( '#_ore_c' ).val();
+		var id_articolo = $( '#_id_articolo_inputbox' ).val();
+		var id_mastro = $( '#_mastro' ).val();
+        var id_cliente = '{{ etc.todo.id_cliente }}';
+        var id_todo = '{{ etc.todo.id }}';
+        var id_progetto = '{{ etc.todo.id_progetto }}';
 
+console.log(ore);
+console.log(id_mastro);
+console.log(qta);
+console.log(id_articolo);
+window.open('{{ cassa }}?__art__='+id_articolo+'&__qta__='+qta+'&__mastro__='+id_mastro+'&__ore__='+ore+'&__cliente__='+id_cliente+'&__todo__='+id_todo+'&__progetto__='+id_progetto,'_self')
 
     }
 </script>
@@ -47,14 +52,7 @@
 			<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 				{# CAMPI HIDDEN DI BASE #}
-				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-				<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-				<input type="hidden" id="id_todo" name="{{ table }}[id]" >
-                <input type="hidden" id="id_account_inserimento" name="{{ table }}[id_account_inserimento]" value="{{ account }}">
-				<input type="hidden" id="id_anagrafica" name="{{ table }}[id_anagrafica]" value="{{ anagrafica }}">	
-				<input type="hidden" id="id_mastro" name="{{ table }}[id_mastro_destinazione]" value="{{ etc.mastro_attivita }}">	
-                <input type="hidden" id="id_documenti_articoli" name="{{ table }}[id_documenti_articoli]" >	
-
+			
 		    <div class="form-group mt-0">
                 <legend>riepilogo todo</legend>
                 <div class="row">
@@ -81,25 +79,32 @@
                     </ul></div>
                 </div>
             </div>
-                <legend>stato mastri cliente</legend>
-
-                <legend>attribuzione</legend>
+                <legend>aggiungi in scontrino</legend>
                 <div class="form-group form-row">
                     <div class="col-2">
                         <span class="label-top">ore</span>
-                        {{ frm.input( table, '', '', ore, '', '', request, tot ) }}
+                        {{ frm.input( '', '', '', 'ore_c', '', '', request, tot ) }}
+                    </div>
+                    <div class="col-2" >
+                        <span class="label-top">mastro</span>
+                        {{ frm.select( '', '', '', 'mastro', '', etc.select.mastri_ore, request, etc.mastro_attivita ) }}
+                    </div>
+                    <div class="col-2">
+                        <span class="label-top">quantità</span>
+                        {{ frm.input( '', '', '', 'qta', '', '', request, tot ) }}
                     </div>
                     <div class="col">
-                        <span class="label-top">mastro</span>
-                        {{ frm.select( table, '', '', mastro, '', etc.select.mastri_ore, request ) }}
+                        <span class="label-top">articolo</span>
+                        {{ frm.selectBox( '', '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf ) }}
                     </div>
+
                 </div>
                 </div>
         
 	    <div class="modal-footer">
 		<!--button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button-->
-        <button id="elimina_articolo" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti_articoli&__delete__[id]={{ etc.id_riga }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}','_self');">elimina articolo</button>
-        <button type="submit" class="btn btn-secondary btn-sm" id="genera-btn" >crea</button>
+        <button id="elimina_articolo" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" >annulla</button>
+        <button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="aggiungi(this)">aggiungi</button>
 	    </div>
 		</div></form>
 	</div>
