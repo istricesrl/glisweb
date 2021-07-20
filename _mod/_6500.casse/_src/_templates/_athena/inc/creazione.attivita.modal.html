@@ -52,20 +52,24 @@
 				<input type="hidden" id="id" name="{{ table }}[id]" >
                 <input type="hidden" id="id_account_inserimento" name="{{ table }}[id_account_inserimento]" value="{{ account }}">
 				<input type="hidden" id="id_anagrafica" name="{{ table }}[id_anagrafica]" value="{{ anagrafica }}">	
-				<input type="hidden" id="id_mastro" name="{{ table }}[id_mastro_destinazione]" value="{{ etc.mastro_attivita }}">	
+				<!--input type="hidden" id="id_mastro" name="{{ table }}[id_mastro_destinazione]" value="{{ etc.mastro_attivita }}"-->	
                 <input type="hidden" id="id_documenti_articoli" name="{{ table }}[id_documenti_articoli]" >	
 
 		    <div class="form-row form-group">
 
             <legend>dati generali</legend>
-            <div class="col-10">
+            <div class="col-12">
 				<span class="label-top">nome</span>
 			    {{ frm.input( table, '', '', 'nome', '', '', request, 'carico ore da scontrino' ) }}
 			</div>
-            <div class="col-2">
+            <div class="col-4">
 				<span class="label-top">ore</span>
 			    {{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '', '0.5' ) }}
              </div>
+			 <div class="col" >
+				<span class="label-top">mastro</span>
+				{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri_ore, request, etc.mastro_attivita ) }}
+			</div>
 			<div class="col-12">
 				<span class="label-top">descrizione</span>
 			    {{ frm.textarea( table, '', '', 'testo', '', '3', request ) }}
@@ -89,7 +93,7 @@
 	    <div class="modal-footer">
 		<!--button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button-->
         <button id="elimina_articolo" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti_articoli&__delete__[id]={{ etc.id_riga }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}','_self');">elimina articolo</button>
-        <button type="submit" class="btn btn-secondary btn-sm" id="genera-btn" >crea</button>
+        <button type="submit" class="btn btn-secondary btn-sm" id="genera-btn"  >crea</button>
 	    </div>
 		</div></form>
 	</div>

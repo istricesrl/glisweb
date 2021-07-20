@@ -1,0 +1,112 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = '' %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account %}
+    {% set account = session.account.id %}
+    {% set anagrafica = session.account.id_anagrafica %}
+{% else %}
+    {% set account = '__null__' %}
+    {% set anagrafica = '__null__' %}
+{% endif %}
+
+{% if request.table.id %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% else %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% endif %}
+<script>
+    function aggiungi( t ) {
+
+		var qta = $( '#_qta' ).val();
+		var ore = $( '#_ore_c' ).val();
+		var id_articolo = $( '#_id_articolo_inputbox' ).val();
+		var id_mastro = $( '#_mastro' ).val();
+        var id_cliente = '{{ etc.todo.id_cliente }}';
+        var id_todo = '{{ etc.todo.id }}';
+        var id_progetto = '{{ etc.todo.id_progetto }}';
+
+console.log(ore);
+console.log(id_mastro);
+console.log(qta);
+console.log(id_articolo);
+window.open('{{ cassa }}?__art__='+id_articolo+'&__qta__='+qta+'&__mastro__='+id_mastro+'&__ore__='+ore+'&__cliente__='+id_cliente+'&__todo__='+id_todo+'&__progetto__='+id_progetto,'_self')
+
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="carico_ore">
+    <div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h3 class="modal-title">attività</h3>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+			<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+				{# CAMPI HIDDEN DI BASE #}
+			
+		    <div class="form-group mt-0">
+                <legend>riepilogo todo</legend>
+                <div class="row">
+                    <div class="col-2"><b>cliente:</b></div> 
+                    <div class="col">{{ etc.attivita_todo[0].cliente }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-2"><b>progetto:</b></div> 
+                    <div class="col">{{ etc.attivita_todo[0].progetto }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-2"><b>todo:</b></div> 
+                    <div class="col">{{ etc.attivita_todo[0].todo }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-2"><b>attività svolte:</b></div>
+                    <div class="col">
+                        <ul style="padding-left: 15px;" class="mt-0">
+                        {% set tot = 0 %}
+                        {% for a in etc.attivita_todo %}
+                        <li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.ore }} ore</li>
+                        {% set tot = tot + a.ore %}
+                        {% endfor %}
+                    </ul></div>
+                </div>
+            </div>
+                <legend>aggiungi in scontrino</legend>
+                <div class="form-group form-row">
+                    <div class="col-2">
+                        <span class="label-top">ore</span>
+                        {{ frm.input( '', '', '', 'ore_c', '', '', request, tot ) }}
+                    </div>
+                    <div class="col-2" >
+                        <span class="label-top">mastro</span>
+                        {{ frm.select( '', '', '', 'mastro', '', etc.select.mastri_ore, request, etc.mastro_attivita ) }}
+                    </div>
+                    <div class="col-2">
+                        <span class="label-top">quantità</span>
+                        {{ frm.input( '', '', '', 'qta', '', '', request, tot ) }}
+                    </div>
+                    <div class="col">
+                        <span class="label-top">articolo</span>
+                        {{ frm.selectBox( '', '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf ) }}
+                    </div>
+
+                </div>
+                </div>
+        
+	    <div class="modal-footer">
+		<!--button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button-->
+        <button id="elimina_articolo" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" >annulla</button>
+        <button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="aggiungi(this)">aggiungi</button>
+	    </div>
+		</div></form>
+	</div>
+    </div>
+</div>

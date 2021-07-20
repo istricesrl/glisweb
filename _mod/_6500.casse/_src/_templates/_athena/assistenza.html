@@ -294,6 +294,7 @@
         <input type="hidden" id="id_contatto" name="todo[id_contatto]" value="{{ session.contatto.id }}">
         <input type="hidden" id="nome" name="todo[nome]" value="assistenza in cassa del {{ 'now'|date('d/m/Y') }} alle {{ 'now'|date('H:i') }}">
         {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
+        {{ frm.input( 'todo', '', '', 'id_mastro_attivita_default', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
         {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }} 
         {{ frm.input( 'todo', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
         <div class="form-group col" style="padding: 0%;">
@@ -349,6 +350,7 @@
     <input type="hidden" id="method" name="attivita[__method__]" value="{{ method }}">
     {{ frm.input( 'attivita', '', '', 'id', '', '', request, '', 'hidden') }}
     {{ frm.input( 'attivita', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }}
+    {{ frm.input( 'attivita', '', '', 'id_mastro_attivita_default', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
     {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.assistenza.id_todo , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_tipologia', '', '', '', etc.tipologia_attivita, 'hidden' ) }}
@@ -427,7 +429,7 @@
             </div>
             {% if session.assistenza.id_attivita %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
-            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
+            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
             {% endif %}
             {% if session.assistenza.id_cliente and session.assistenza.id_progetto and ( not session.assistenza.id_attivita ) %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
@@ -478,7 +480,14 @@
         </div>
     </div>
     </div>
+
     <div class="col-12">
+        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa prima parte modulo assistenza</button>
+        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa diagnosi</button>
+        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=3', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa assistenza fino alla diagnosi</button>
+    </div>
+
+    <div class="form-row col-12">
         {% if etc.attivita_completate %}
         <legend>attività completate</legend>
             <ul>
@@ -487,10 +496,10 @@
             {% endfor %}
             </ul>
         {% endif %}
-        {% if etc.attivita_pianificate %}
+        {% if etc.attivita_programmate %}
         <legend>attività pianificate</legend>
             <ul>
-            {% for a in etc.attivita_pianificate %}
+            {% for a in etc.attivita_programmate %}
                 <li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.testo }}</li>
             {% endfor %}
             </ul>
@@ -533,8 +542,9 @@
                 <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
                     <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">{% if request.todo.timestamp_completamento %}inserisci nuovo{% else %}annulla{% endif %}</button>
                     {% if request.todo.timestamp_completamento %}
-                    <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa</button>
-                    {% endif %}
+                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=2', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa conclusione assistenza</button>
+                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza completo</button>
+                  {% endif %}
                     <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
 
                 </div>

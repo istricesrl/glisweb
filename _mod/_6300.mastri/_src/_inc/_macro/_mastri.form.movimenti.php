@@ -14,14 +14,10 @@
     // tabella gestita
     $ct['form']['table'] = 'mastri';
     
-    
+    // mastro quantitativo
+    if( $_REQUEST['mastri']['id_tipologia'] == 1 || $_REQUEST['mastri']['id_tipologia'] == 2 ){
     // tabella della vista
 	$ct['view']['table'] = '__report_mastri__';
-    $ct['view']['data']['__report_mode__'] = 1;
-
-    // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
-
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.articoli.form';
@@ -59,6 +55,59 @@
 	);
 
     $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
+    } 
+        
+    // mastro orario
+    if( $_REQUEST['mastri']['id_tipologia'] == 3 ){
+    
+        // tabella della vista
+    $ct['view']['table'] = '__report_mastri_orari__';
+
+         // pagina per la gestione degli oggetti esistenti
+	$ct['view']['open']['page'] = 'attivita.form';
+    $ct['view']['open']['table'] = 'attivita';
+    $ct['view']['open']['field'] = 'id_attivita';
+
+    // campi della vista
+	$ct['view']['cols'] = array(
+	    'id' => '#',
+        'data' => 'data',
+	    'progetto' => 'progetto',
+        'nome_attivita' => 'attività',
+        'ore' => 'ore',
+        'id_todo' => 'id_todo',
+        'id_attivita' => 'id_attivita',
+        'id_progetto' => 'id_progetto',
+        'id_cliente' => 'id_cliente',
+        'cliente' => 'cliente',
+        'id_tipologia' => 'id_tipologia'
+	);
+
+    // stili della vista
+	$ct['view']['class'] = array(
+	    'id' => 'd-none',
+        'id_attivita' => 'd-none',
+        'id_todo' => 'd-none',
+        'id_cliente' => 'd-none',
+        'id_tipologia' => 'd-none',
+        'data' => 'text-left',
+	    'nome_attivita' => 'text-left',
+        'id_progetto' => 'd-none',
+        'importo' => 'text-right',
+        'cliente' => 'text-left',
+
+	);
+
+    $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
+
+    } 
+
+    $ct['view']['data']['__report_mode__'] = 1;
+
+    // id della vista
+    $ct['view']['id'] = md5( $ct['view']['table'] );
+
+
 
         // tendina categoria
 	$ct['etc']['select']['tipologie_documenti'] = mysqlCachedQuery(
@@ -99,7 +148,7 @@
 	    'SELECT id, __label__ FROM listini_view'
 	);
 
-    // preset filtro custom progetti aperti
+    // preset filtro mastro corrente
 	$ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
   
     // gestione default

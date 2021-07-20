@@ -18,12 +18,18 @@
      * @file
      *
      */
+
+   
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array( 'id' => 'genera_matricola', 'include' => 'inc/ritiro.hardware.modal.html' )
         );
 
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array( 'id' => 'crea_attivita', 'include' => 'inc/creazione.attivita.modal.html' )
+        );
+
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array( 'id' => 'carico_ore', 'include' => 'inc/carico.ore.mastro.todo.html' )
         );
 
     // mastro di scarico [magazzino]
@@ -33,8 +39,6 @@
 
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
-
-
 
     $ct['etc']['default_reparto'] = '0';
     $ct['etc']['default_operazione'] = '1';
@@ -116,6 +120,20 @@
             //print_r('coupon');
         } elseif( $comando[0] == 'TODO' ){
             // la todo
+
+            $ct['etc']['todo'] =  mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ? ', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
+
+            // attività concluse della todo
+            $ct['etc']['attivita_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
+
+            $ct['etc']['mastro_attivita'] = mysqlSelectValue ( $cf['mysql']['connection'], 'SELECT id_mastro_attivita_default FROM todo WHERE id = ?', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
+
+            echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript">
+            $(document).ready(function(){
+                $("#todo_id").val('.$comando[1].');
+                $("#carico_ore").modal("show");
+             });</script>';
+
             //print_r('coupon');
         } elseif( $comando[0] == 'DOC' ){
             // apro la pagina di gestione del documento
@@ -248,11 +266,12 @@
 
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, 1, ?, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ? )",
                                 array( 
                                     array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                                     array( 's' => date("Y-m-d") ),
-                                    array( 's' => $articolo['prezzo'] ),
+                                    array( 's' => $articolo['prezzo']  ), 
+                                    array( 's' => ( isset( $_REQUEST['__qta__']) ?  $_REQUEST['__qta__'] : 1 ) ),
                                     array( 's' => $reparto ),
                                     array( 's' => $id_iva ),
                                     array( 's' => $articolo['id_udm'] ),
@@ -261,7 +280,7 @@
                 }
             }
 
-            if( $articolo['se_ore']  && isset( $insert ) && $insert > 0){
+            if( $articolo['se_ore']  && isset( $insert ) && $insert > 0 && !isset( $_REQUEST['__ore__'] ) ){
                 $ct['etc']['id_riga'] = $insert;
                 echo '
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script><script type="text/javascript">
@@ -277,6 +296,24 @@
                 });
             </script>';
             }
+
+            if(  isset( $insert ) && $insert > 0 && isset( $_REQUEST['__ore__'] ) ){
+                $insert = mysqlQuery( 
+                    $cf['mysql']['connection'], 
+                    "INSERT INTO attivita ( nome, data, ore, id_mastro_destinazione, id_documenti_articoli, id_cliente, id_todo, id_progetto )  VALUES ( ?,?,?,?, ?, ?, ?, ?)",
+                    array( 
+                        array( 's' => 'carico ore da scontrino '.$_REQUEST[ $ct['form']['table'] ]['id'] ),
+                        array( 's' => date("Y-m-d") ),
+                        array( 's' => $_REQUEST['__ore__'] ),
+                        array( 's' => $_REQUEST['__mastro__']),
+                        array( 's' => $insert ),
+                        array( 's' => $_REQUEST['__cliente__'] ),
+                        array( 's' => $_REQUEST['__todo__'] ),
+                        array( 's' => $_REQUEST['__progetto__'] )
+                    ) );
+
+            }
+
             if( $articolo['se_matricola'] && isset( $insert ) && $insert > 0){
                 $ct['etc']['id_riga'] = $insert;
                 echo '
@@ -328,6 +365,14 @@
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view'
+	);
+
+    // tendina  anagrafica
+	$ct['etc']['select']['id_articoli'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, id AS __label__ FROM articoli_view'
 	);
 
 
@@ -427,6 +472,13 @@ if( !isset( $_REQUEST['documenti']['scadenze'] ) && isset( $_REQUEST['documenti'
             'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE timestamp_chiusura IS NULL ORDER BY __label__' );
     
     }
+
+    $ct['etc']['select']['mastri_ore'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 3' );
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 

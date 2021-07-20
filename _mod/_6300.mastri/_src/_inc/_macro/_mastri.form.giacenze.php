@@ -13,35 +13,68 @@
 
     // tabella gestita
     $ct['form']['table'] = 'mastri';
-
-
-    // tabella della vista
-	$ct['view']['table'] = '__report_giacenza_mastri__';
     $ct['view']['data']['__report_mode__'] = 1;
 
-    // id della vista
+
+    // mastro quantitativo
+     if( $_REQUEST['mastri']['id_tipologia'] == 1 || $_REQUEST['mastri']['id_tipologia'] == 2 ){
+    
+        // tabella della vista
+        $ct['view']['table'] = '__report_giacenza_mastri__';
+
+
+            // pagina per la gestione degli oggetti esistenti
+        $ct['view']['open']['page'] = 'articoli.form';
+        $ct['view']['open']['table'] = 'articoli';
+        $ct['view']['open']['field'] = 'id_articolo'; 
+
+        // campi della vista
+        $ct['view']['cols'] = array(
+            'id' => '#',
+            'id_articolo' => 'articolo',
+            'quantita_totale' => 'quantità',
+            'importo_totale' => 'importo'
+        );
+
+        // stili della vista
+        $ct['view']['class'] = array(
+            'id' => 'd-none d-md-table-cell',
+            'id_riga' => 'd-none',
+            'descrizione' => 'text-left',
+            'importo' => 'text-right'
+        );
+    }
+      // mastro orario
+      if( $_REQUEST['mastri']['id_tipologia'] == 3 ){
+    
+        // tabella della vista
+         $ct['view']['table'] = '__report_giacenza_mastri_orari__';
+
+                     // pagina per la gestione degli oggetti esistenti
+        $ct['view']['open']['page'] = 'progetti.produzione.form';
+        $ct['view']['open']['table'] = 'progetti';
+        $ct['view']['open']['field'] = 'id_progetto'; 
+
+        // campi della vista
+        $ct['view']['cols'] = array(
+            'id' => '#',
+            'id_progetto' => 'progetto',
+            'ore' => 'ore',
+            'cliente' => 'cliente'
+        );
+
+        // stili della vista
+        $ct['view']['class'] = array(
+            'id' => 'd-none',
+            'id_progetto' => 'text-left',
+            'descrizione' => 'text-left',
+            'importo' => 'text-right'
+        );
+      }
+
+         // id della vista
     $ct['view']['id'] = md5( $ct['view']['table'] );
-
-        // pagina per la gestione degli oggetti esistenti
-/*	$ct['view']['open']['page'] = 'articoli.form';
-    $ct['view']['open']['table'] = 'articoli';
-    $ct['view']['open']['field'] = 'id_articolo'; */
-
-    // campi della vista
-	$ct['view']['cols'] = array(
-	    'id' => '#',
-        'id_articolo' => 'articolo',
-        'quantita_totale' => 'quantità',
-        'importo_totale' => 'importo'
-	);
-
-    // stili della vista
-	$ct['view']['class'] = array(
-	    'id' => 'd-none d-md-table-cell',
-        'id_riga' => 'd-none',
-	    'descrizione' => 'text-left',
-        'importo' => 'text-right'
-	);
+ 
 
     // preset filtro custom progetti aperti
 	$ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];

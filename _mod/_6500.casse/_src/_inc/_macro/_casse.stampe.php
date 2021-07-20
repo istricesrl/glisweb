@@ -33,8 +33,8 @@
 	    )
 	);
 
-    if(file_exists(DIR_MOD.'6500.casse/src/api/print/manuale.barcode.pdf.php')  ){$file = $cf['site']['url'].'6500.casse/src/api/print/comandi.cassa.pdf.php';}
-    else {$file = $cf['site']['url'].'_6500.casse/_src/_api/_print/_comandi.cassa.pdf.php';  }
+    if(file_exists(DIR_MOD.'6500.casse/src/api/print/manuale.barcode.pdf.php')  ){$file = $cf['site']['url'].'mod/6500.casse/src/api/print/comandi.cassa.pdf.php';}
+    else {$file = $cf['site']['url'].'_mod/_6500.casse/_src/_api/_print/_comandi.cassa.pdf.php';  }
 
 	$ct['page']['contents']['metro']['general'][] = array(
         'target' => '_blank' ,
