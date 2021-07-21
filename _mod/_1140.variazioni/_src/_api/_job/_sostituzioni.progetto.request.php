@@ -2,7 +2,7 @@
 
     /**
      * 
-     *  
+     *  job che 
      * 
      */
 
@@ -30,12 +30,41 @@
             // attività di avvio
             if( empty( $job['corrente'] ) ) {
 
+                // inizializzo gli array delle condizioni where e dei parametri
+                $whr = array();
+                $par = array();
+
+                // progetto
+                $whr[] = 'id_progetto = ?';
+                $par[] = array( 's' => $job['workspace']['id_progetto'] );
+
+
+                if( !empty( $job['workspace']['data_inizio'] ) && !empty( $job['workspace']['data_fine'] ) ){
+                    $whr[] = 'data_programmazione BETWEEN ? AND ?';
+                    $par[] = array( 's' => $job['workspace']['data_inizio'] );
+                    $par[] = array( 's' => $job['workspace']['data_fine'] );
+                }
+
+                if( !empty( $job['workspace']['ora_inizio'] ) && !empty( $job['workspace']['ora_fine'] ) ){
+                    $whr[] = 'ora_inizio_programmazione = ?';
+                    $whr[] = 'ora_fine_programmazione = ?';
+                    $par[] = array( 's' => $job['workspace']['ora_inizio'] );
+                    $par[] = array( 's' => $job['workspace']['ora_fine'] );
+                }
+
+                $q = 'SELECT id FROM attivita WHERE id_anagrafica IS NULL AND ('  . implode( ' AND ', $whr ) . ')';
+
+                $status['query'] = $q;
+                $status['parametri'] = $par;
+
+                // seleziono le attività coinvolte
                 $status['result'] = mysqlSelectColumn(
-				    'id',
+                    'id',
                     $cf['mysql']['connection'],
-                    'SELECT id FROM attivita WHERE id_progetto = ? AND id_anagrafica IS NULL',
-                    array( array( 's' => $job['workspace']['id_progetto'] ) )
+                    $q,
+                    $par
                 );
+                
 
                 // creo la lista dei progetti da lavorare
                 $job['workspace']['list'] = $status['result'];
@@ -130,6 +159,7 @@
 
             }
         }
+
     } else {
 
         // status
