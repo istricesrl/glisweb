@@ -350,7 +350,7 @@
     <input type="hidden" id="method" name="attivita[__method__]" value="{{ method }}">
     {{ frm.input( 'attivita', '', '', 'id', '', '', request, '', 'hidden') }}
     {{ frm.input( 'attivita', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }}
-    {{ frm.input( 'attivita', '', '', 'id_mastro_attivita_default', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
+    {{ frm.input( 'attivita', '', '', 'id_mastro_provenienza', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
     {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.assistenza.id_todo , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_tipologia', '', '', '', etc.tipologia_attivita, 'hidden' ) }}
