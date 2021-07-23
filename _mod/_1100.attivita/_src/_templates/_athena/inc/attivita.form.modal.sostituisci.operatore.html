@@ -1,0 +1,50 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+     function sostituisci() {
+		$('#btnsostituisci').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+		idsostituto = $('#attivita_id_sostituto').val();
+
+		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.request.php?id_attivita={{ request[table].id }}&id_anagrafica='+idsostituto+'&hard=1';
+
+		getws( call,'', function() {
+		    window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
+		});
+		
+	}
+
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="sostituisci-operatore">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		    <h5 class="modal-title">sostituisci operatore</h5>
+		    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+                <div class="col">
+                    questa procedura effettuerà la sostituzione diretta dell'operatore assente con quello specificato, tenendo traccia della sostituzione effettuata.
+                </div>
+		    </div>
+            <div class="form-row mt-2">
+                <div class="col">
+                    <span class="label-top">operatore sostituto</span>
+                    {{ frm.selectBox( table, '', '', 'id_sostituto', '', etc.select.id_anagrafica, request ) }}
+                </div>
+            </div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="btnsostituisci" type="button" class="btn btn-secondary btn-sm" onclick="sostituisci();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
