@@ -22,10 +22,6 @@
             'todo_categorie' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
-            ),
-            'todo' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);

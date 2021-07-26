@@ -350,7 +350,7 @@
     <input type="hidden" id="method" name="attivita[__method__]" value="{{ method }}">
     {{ frm.input( 'attivita', '', '', 'id', '', '', request, '', 'hidden') }}
     {{ frm.input( 'attivita', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }}
-    {{ frm.input( 'attivita', '', '', 'id_mastro_attivita_default', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
+    {{ frm.input( 'attivita', '', '', 'id_mastro_provenienza', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
     {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.assistenza.id_todo , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_tipologia', '', '', '', etc.tipologia_attivita, 'hidden' ) }}
@@ -523,7 +523,8 @@
     
             {# MODULO PRINCIPALE #}
             <fieldset>
-
+                <fieldset>
+                    <legend>completamento assistenza</legend>
             <div class="form-group form-row">
                 <div class="col-auto">
                     <span class="label-top">data</span> 
@@ -534,7 +535,39 @@
                     {{ frm.textarea( table, '', '', 'testo_completamento', '', '3', request ) }}
                 </div>
             </div>
-    
+                </fieldset>
+            <fieldset>
+				<legend>esecuzione</legend>
+                {{ frm.input( 'attivita', '', '', 'id', '', '', request, etc.attivita_collaudo, '') }}
+				<div class="form-group form-row">
+					<div class="col-6 col-md-auto">
+						<span class="label-top">data</span>
+                        {{ frm.date('attivita', '', '', 'data_attivita', '', '', request, 'now'|date('Y-m-d') ) }}
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora inizio</span>
+						{{ frm.time( 'attivita', '', '', 'ora_inizio', '', '', request, , 'now'|date('H:i')) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora fine</span>
+						{{ frm.time( 'attivita', '', '', 'ora_fine', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ore</span>
+						{{ frm.input( 'attivita', '', '', 'ore', '', '', request, '', 'number', '', '', '','0.25' ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">esecutore</span>
+						{{ frm.selectBox( 'attivita', '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+					</div>
+				</div-->
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">note cliente</span>
+					{{ frm.textarea( 'attivita', '', '', 'testo', '', 3, request ) }}
+					</div>
+				</div>
+			</fieldset>
     
             </fieldset>
     

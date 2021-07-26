@@ -32,6 +32,30 @@
 
     // array dei permessi
 	$cf['auth']['permissions'] = array(
+		'__acl_anagrafica__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_todo__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_progetti__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_progetti_produzione__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_documenti__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_documenti_articoli__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_scadenze__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_contatti__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
 	    'account' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
@@ -42,8 +66,7 @@
 		CONTROL_FULL => array( 'roots' )
 	    ),
 	    'anagrafica' => array(
-		CONTROL_FULL => array( 'roots' ),
-		CONTROL_FILTERED => array( 'staff' )
+		CONTROL_FULL => array( 'roots','staff' )
 	    ),
 	    'anagrafica_archiviati' => array(
 		CONTROL_FULL => array( 'roots' ),
@@ -152,9 +175,6 @@
 		CONTROL_FILTERED => array( 'staff' )
 		),
 		'pianificazioni' => array(
-			CONTROL_FULL => array( 'roots' )
-		),
-		'progetti' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
 		'progetti_anagrafica' => array(

@@ -56,6 +56,18 @@
 		'title' => 'cartellini vetrina',
 		'text' => 'stampa l\'etichetta prezzo di tutti gli articoli in pdf'
 	    );
+
+    if(file_exists(DIR_MOD.'4100.prodotti/src/api/print/cartellini.prezzo.articoli.pdf.php')  ){$file_prezzi =  $cf['site']['url'].'mod/4100.prodotti/src/api/print/cartellini.prezzo.articoli.pdf.php';}
+    else {$file_prezzi = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_cartellini.prezzo.articoli.pdf.php';  }
+
+	$ct['page']['contents']['metro']['general'][] = array(
+        'target' => '_blank' ,
+		'url' => $file_prezzi ,
+		'icon' => NULL,
+		'fa' => 'fa-file-pdf-o',
+		'title' => 'etichette prezzo',
+		'text' => 'stampa l\'etichetta prezzo di tutti gli articoli in pdf'
+	    );
     // debug
 	// print_r( $_SESSION );
 	// echo DIRECTORY_CACHE . 'twig';

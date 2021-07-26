@@ -19,6 +19,17 @@
      *
      */
 
+     if( isset( $_REQUEST['__close__'] ) && !empty($_REQUEST['__close__'] ) ){
+
+        $update = mysqlQuery( 
+            $cf['mysql']['connection'], 
+            'UPDATE documenti SET timestamp_chiusura = ? WHERE id = ?',
+            array( 
+                array( 's' => time() ), 
+                array( 's' => $_REQUEST['__close__'] ) ) );
+
+     }
+
    
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array( 'id' => 'genera_matricola', 'include' => 'inc/ritiro.hardware.modal.html' )
@@ -409,8 +420,8 @@
 
         foreach( $ct['etc']['righe'] as $r ){
             if( !isset($ct['etc']['totale_parziale'][ $r['id_iva'] ]) ){ $ct['etc']['totale_parziale'][ $r['id_iva'] ] = 0;}
-            $ct['etc']['totale_parziale'][ $r['id_iva'] ] += $r['importo_netto_totale'];
-            $ct['etc']['totale'] += $r['importo_netto_totale'];
+            $ct['etc']['totale_parziale'][ $r['id_iva'] ] += $r['importo_netto_totale'] * $r['quantita'];
+            $ct['etc']['totale'] += $r['importo_netto_totale'] * $r['quantita'];
         }
 
         $ct['etc']['totale_iva'] = 0;

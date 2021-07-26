@@ -265,7 +265,7 @@ $( document ).ready(function() {
        
        // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
        if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 1 || $("#documenti_scadenze_0_id_modalita_pagamento").val() == 5 ){ 
-       window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?documenti[id]={{ request.documenti.id }}", '_self' );
+       window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?__documenti__[id]={{ request.documenti.id }}", '_self' );
        
         } else {
            alert("devi selezionare un metodo di pagamento per poter stampare lo scontrino");

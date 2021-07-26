@@ -57,7 +57,8 @@
 				</div>
 				<div class="col-12 col-md-2">
 					<span class="label-top">conto ore</span>
-					{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, etc.id_mastro_provenienza ) }}
+					{% if not session.__latest__[ table ].id_mastro_provenienza %}{% set default = etc.id_mastro_provenienza %}{% else %}{% set default = session.__latest__[ table ].id_mastro_provenienza %}{% endif %}
+					{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, default ) }}
 				</div>
 				<div class="col">
 					<span class="label-top">descrizione</span>
@@ -67,8 +68,8 @@
 
 			<div class="form-group form-row">
 				<div class="col-12">
-				<span class="label-top">note</span>
-				{{ frm.textarea( table, '', '', 'testo', 'ad uso interno', 3, request ) }}
+				<span class="label-top">note interne</span>
+				{{ frm.textarea( table, '', '', 'note_interne', '', 3, request ) }}
 				</div>
 			</div>
 	
@@ -97,8 +98,7 @@
 				<div class="form-group form-row">
 					<div class="col-6 col-md-auto">
 						<span class="label-top">data</span>
-						{% if not session.__latest__[ table ].data_attivita %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data_attivita %}{% endif %}
-						{{ frm.date( table, '', '', 'data_attivita', '', '', request, default ) }}
+						{{ frm.date( table, '', '', 'data_attivita', '', '', request ) }}
 					</div>
 					<div class="col-2 col-md-1">
 						<span class="label-top">ora inizio</span>
@@ -118,6 +118,12 @@
 					</div>
 					<div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
+					</div>
+				</div>
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">note cliente</span>
+					{{ frm.textarea( table, '', '', 'testo', '', 3, request ) }}
 					</div>
 				</div>
 			</fieldset>

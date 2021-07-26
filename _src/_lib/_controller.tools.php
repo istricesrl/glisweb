@@ -622,7 +622,11 @@
 			// TODO il valore di ritorno di questo ramo dipende dall'esito delle operazioni sopra
 			    return $i['__status__'];
 
-		    }
+		    } else {
+
+				#gdl
+				logWrite( "diritti INSUFFICIENTI per ${t}/${a} - ".$d['id'], 'controller', LOG_DEBUG );
+			}
 
 	    }
 
