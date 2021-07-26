@@ -18,9 +18,7 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data_emissione' => 'data emissione',
-        'data_scadenza' => 'data scadenza',
-        'emittente' => 'emittente',
+        'tipologia' => 'tipologia',
         '__label__' => 'certificazione'
     );
 
@@ -39,12 +37,6 @@
 	    'SELECT id, __label__ FROM tipologie_certificazioni_view'
     );
 
-    // tendina anagrafica
-    $ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
-        $cf['memcache']['index'], 
-        $cf['memcache']['connection'], 
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_interno = 1 OR se_collaboratore = 1');
     
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
