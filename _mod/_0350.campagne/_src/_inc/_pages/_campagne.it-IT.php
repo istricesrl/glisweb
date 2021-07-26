@@ -3,7 +3,7 @@
     // modulo di questo file
 	$m = DIR_MOD . '_0350.campagne/';
 
-	// vista indirizzi
+	// vista campagne
 	$p['campagne.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'campagne' ),
@@ -17,7 +17,7 @@
 		'priority'	=> '050' ) ) )
 	);
 
-	// gestione indirizzi
+	// gestione campagne
 	$p['campagne.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
