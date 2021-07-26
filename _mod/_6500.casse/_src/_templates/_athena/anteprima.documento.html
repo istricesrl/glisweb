@@ -20,7 +20,7 @@
 <header class="fixed-top">
     <div class="row widget no-gutters">
         <div class="col text-left" id="annulla-scontrino">
-            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?documenti[id]={{ request.documenti.id }}&__open__=1', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?__open__=1', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
         </div>
         <!--div class="col text-left" id="home-terminale" hidden>
             <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
@@ -99,19 +99,22 @@
     <div class="col-12"><legend>conferma scontrino</legend></div>
 
     <div class="col-6 mt-3 cassa">
-        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?documenti[id]={{ request.documenti.id }}&__open__=1', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">modifica</button>
+        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?__open__=1', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">modifica</button>
     </div>
     {% if etc.documento.tipologia == 'scontrino' %}
     <div class="col-6 mt-3 cassa">
-        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="stampaScontrino()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
+        <button id="stampa" type="button" class="btn btn-secondary btn-sqr btn-block" onclick="stampaScontrino()" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
     </div>
     {% else %}
     <div class="col-6 mt-3 cassa">
         {% set pagina = "documenti.form.stampe" %}
-        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages[ pagina ].url[  ietf ] }}?documenti[id]={{ request.documenti.id }}', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
+        <button type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages[ pagina ].url[  ietf ] }}?documenti[id]={{ request.__documenti__.id }}', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">conferma e stampa</button>
     </div>
     {% endif %}
-</div>   
+</div>  
+<div class="row"  id="chiudi-scontrino" hidden>
+    <button  type="button" class="btn btn-secondary btn-sqr btn-block" onclick="window.open( '{{ pages.terminale.url[  ietf ] }}?__close__={{ request.__documenti__.id }}', '_self' )" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">chiudi scontrino</button>
+</div> 
 <div class="row" id="response" hidden>
     <div class="col-auto"style=" background-color: #999999; color: white; padding-top: 1%;  padding-right: 1%; padding-bottom: 1%; padding-left: 1%; margin-bottom: 1%;">
         <h3><i class="fa fa-check" aria-hidden="true"></i>&nbsp; errore</h3>
@@ -126,6 +129,7 @@
 
 <script>
 
+
  function stampaScontrino(){
     //var parsedJSON = JSON.parse('{{ etc.documento|json_encode|e('js') }}');
     
@@ -133,14 +137,18 @@
     //window.open( "{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php?__data__={{ etc.documento|json_encode|e('js') }}", '_blank');
     var document = '{{ etc.documento|json_encode|e('js') }}';
 
-    getws('{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php?__data__='+document, '',
+  // console.log('{{ site.url }}_mod/_6500.casse/_src/_api/_casse.php?__data__='+document);
+    getws('{{ site.url }}_mod/_6500.casse/_src/_api/_casse.php?__data__='+document, '',
                 function( data ){ 
-
-                   if( data[0] == 'OK' ){
-                    window.open( '{{ pages.terminale.url[  ietf ] }}', '_self' );
+                    console.log(data);
+                   if( data['result'] == 'OK' ){
+                       console.log("ok");
+                        $('#pulsanti').hide();
+                        $('#chiudi-scontrino').removeAttr('hidden');
                    } else{
                         $('#pulsanti').hide();
                         $('#response').removeAttr('hidden');
+                        console.log("ko");
                      //   $('#annulla-scontrino').hide();
                      //   $('#home-terminale').removeAttr('hidden');
                    }

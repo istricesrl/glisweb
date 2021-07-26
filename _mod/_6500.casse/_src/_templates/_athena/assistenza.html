@@ -536,19 +536,17 @@
                 </div>
             </div>
                 </fieldset>
-            <!--fieldset>
+            <fieldset>
 				<legend>esecuzione</legend>
                 {{ frm.input( 'attivita', '', '', 'id', '', '', request, etc.attivita_collaudo, '') }}
 				<div class="form-group form-row">
 					<div class="col-6 col-md-auto">
 						<span class="label-top">data</span>
-                        
-						{% if not session.__latest__[ table ].data_attivita %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data_attivita %}{% endif %}
-						{{ frm.date('attivita', '', '', 'data_attivita', '', '', request, default ) }}
+                        {{ frm.date('attivita', '', '', 'data_attivita', '', '', request, 'now'|date('Y-m-d') ) }}
 					</div>
 					<div class="col-2 col-md-1">
 						<span class="label-top">ora inizio</span>
-						{{ frm.time( 'attivita', '', '', 'ora_inizio', '', '', request) }} 
+						{{ frm.time( 'attivita', '', '', 'ora_inizio', '', '', request, , 'now'|date('H:i')) }} 
 					</div>
 					<div class="col-2 col-md-1">
 						<span class="label-top">ora fine</span>

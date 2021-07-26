@@ -21,8 +21,30 @@
         {% set target = pages.casse.url[ ietf ] %}
         <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
 </div>
-{% endblock %}
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+function collapse(a){
+	console.log(a);
+	if ($("#div-"+a).is(":visible")){
+		$('#div-'+a).hide();
+		$('#collaps-'+a).html('<i class="fa fa-angle-down" aria-hidden="true"></i>');
+	} else {
+		$('#div-'+a).show();
+		$('#collaps-'+a).html('<i class="fa fa-angle-up" aria-hidden="true"></i>');
+	}
+}
 
+</script>
+{% endblock %}
+{% block line %}
+{% if session.contatto  %}
+<div class="row d-flex align-items-center" style="color: white; background-color: #343A40; padding: 5px;padding-right: 15px;padding-left: 15px;">
+    <div class="col"><h3>{{ session.contatto.nome }}</h3></div>
+    <div class="col-auto text-right" ><button class="btn btn-light" onclick='window.open("{{ pages.contatti.url[ localization.language.ietf ] }}?__unset__", "_self")'>inserisci nuovo</button> </div>
+</div>
+{% endif %}
+{% endblock %}
 {% block main %}
 
 
@@ -54,8 +76,13 @@
         "12": "dicembre"
     }
 %}
+<div class="row">
+	<div class="col-12" style="background-color: #777777; color: white;">
+		<legend class="d-flex justify-content-between"><span>soluzioni</span><span id="collaps-soluzioni" onclick="collapse('soluzioni')">{% if etc.agenda_soluzioni|length <= 0 %} <i class="fa fa-angle-down" aria-hidden="true"></i>{% else  %}<i class="fa fa-angle-up" aria-hidden="true"></i>{% endif %}</span></legend>
+	</div>
+</div>
+<div id="div-soluzioni" {% if etc.agenda_soluzioni|length <= 0 %} hidden{% endif %}>
 
-<legend>soluzioni</legend>
 {% for data,eventi_per_data in etc.agenda_soluzioni %}
 
 <fieldset class="static-history">
@@ -72,7 +99,8 @@
 		<div class="col">
 		    <p>{{ e.tipologia }} &mdash; {{ e.anagrafica }} <i class="fa fa-comments-o" aria-hidden="true"></i> {{ e.mandante }} {{ e.referente }} </p>
 		    {% if e.id_cliente %}<p>cliente: <a href="{{ pages["anagrafica.form"].url[ localization.language.ietf ] }}?anagrafica[id]={{ e.id_cliente }}" target="_blank" > {{ e.cliente }}</a></p>{% endif %}
-		    <p>{{ e.nome }}</p>
+			{% if e.id_todo %}<p>todo: <a href="{{ pages["todo.form"].url[ localization.language.ietf ] }}?todo[id]={{ e.id_todo }}" target="_blank" > {{ e.todo }}</a></p>{% endif %}
+			<p>{{ e.nome }}</p>
 		    <p>{{ e.testo }}</p>
 		</div>
 
@@ -96,8 +124,13 @@
 
 </fieldset>
 {% endfor %}
-
-<legend>collaudi</legend>
+</div>
+<div class="row">
+	<div class="col-12" style="background-color: #777777; color: white;">
+		<legend class="d-flex justify-content-between"><span>collaudo</span><span id="collaps-collaudo" onclick="collapse('collaudo')">{% if etc.agenda_collaudo|length <= 0 %} <i class="fa fa-angle-down" aria-hidden="true"></i>{% else  %}<i class="fa fa-angle-up" aria-hidden="true"></i>{% endif %}</span></legend>
+	</div>
+</div>
+<div id="div-collaudo" {% if etc.agenda_collaudo|length <= 0 %} hidden{% endif %}>
 {% for data,eventi_per_data in etc.agenda_collaudo %}
 
 <fieldset class="static-history">
@@ -113,14 +146,15 @@
 	    <div class="form-row">
 		<div class="col">
 		    <p>{{ e.tipologia }} &mdash; {{ e.anagrafica }} <i class="fa fa-comments-o" aria-hidden="true"></i> {{ e.mandante }} {{ e.referente }} </p>
-		    {% if e.id_cliente %}<p>cliente: <a href="{{ pages.anagrafica_gestione.url[ localization.language.ietf ] }}?anagrafica[id]={{ e.id_cliente }}" target="_blank" > {{ e.cliente }}</a></p>{% endif %}
-		    <p>{{ e.nome }}</p>
+			{% if e.id_cliente %}<p>cliente: <a href="{{ pages["anagrafica.form"].url[ localization.language.ietf ] }}?anagrafica[id]={{ e.id_cliente }}" target="_blank" > {{ e.cliente }}</a></p>{% endif %}
+			{% if e.id_todo %}<p>todo: <a href="{{ pages["todo.form"].url[ localization.language.ietf ] }}?todo[id]={{ e.id_todo }}" target="_blank" > {{ e.todo }}</a></p>{% endif %}
+			<p>{{ e.nome }}</p>
 		    <p>{{ e.testo }}</p>
 		</div>
 
 		<div class="col-auto metro">
-		    <a onclick="window.open('{{ pages.agenda_gestione.url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}','_self');">
-			<div class="media">
+			<a onclick="window.open('{{ pages[ "attivita.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');">
+				<div class="media">
 			    <div class="media-body">
 				<h5 class="media-text">modifica / concludi attività</h5>
 			    </div>
@@ -138,8 +172,13 @@
 
 </fieldset>
 {% endfor %}
-
-<legend>feedback</legend>
+</div>
+<div class="row">
+	<div class="col-12" style="background-color: #777777; color: white;">
+		<legend class="d-flex justify-content-between"><span>customer care</span><span id="collaps-feed" onclick="collapse('feed')">{% if etc.agenda_feedback|length <= 0 %} <i class="fa fa-angle-down" aria-hidden="true"></i>{% else  %}<i class="fa fa-angle-up" aria-hidden="true"></i>{% endif %}</span></legend>
+	</div>
+</div>
+<div id="div-feed" {% if etc.agenda_feedback|length <= 0 %} hidden{% endif %}>
 {% for data,eventi_per_data in etc.agenda_feedback %}
 
 <fieldset class="static-history">
@@ -155,14 +194,15 @@
 	    <div class="form-row">
 		<div class="col">
 		    <p>{{ e.tipologia }} &mdash; {{ e.anagrafica }} <i class="fa fa-comments-o" aria-hidden="true"></i> {{ e.mandante }} {{ e.referente }} </p>
-		    {% if e.id_cliente %}<p>cliente: <a href="{{ pages.anagrafica_gestione.url[ localization.language.ietf ] }}?anagrafica[id]={{ e.id_cliente }}" target="_blank" > {{ e.cliente }}</a></p>{% endif %}
-		    <p>{{ e.nome }}</p>
+			{% if e.id_cliente %}<p>cliente: <a href="{{ pages["anagrafica.form"].url[ localization.language.ietf ] }}?anagrafica[id]={{ e.id_cliente }}" target="_blank" > {{ e.cliente }}</a></p>{% endif %}
+			{% if e.id_todo %}<p>todo: <a href="{{ pages["todo.form"].url[ localization.language.ietf ] }}?todo[id]={{ e.id_todo }}" target="_blank" > {{ e.todo }}</a></p>{% endif %}
+			<p>{{ e.nome }}</p>
 		    <p>{{ e.testo }}</p>
 		</div>
 
 		<div class="col-auto metro">
-		    <a onclick="window.open('{{ pages.agenda_gestione.url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}','_self');">
-			<div class="media">
+			<a onclick="window.open('{{ pages[ "attivita.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');">
+				<div class="media">
 			    <div class="media-body">
 				<h5 class="media-text">modifica / concludi attività</h5>
 			    </div>
@@ -180,5 +220,5 @@
 
 </fieldset>
 {% endfor %}
-
+</div>
 {% endblock %}
