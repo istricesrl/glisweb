@@ -137,8 +137,8 @@
     //window.open( "{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php?__data__={{ etc.documento|json_encode|e('js') }}", '_blank');
     var document = '{{ etc.documento|json_encode|e('js') }}';
 
-  // console.log('{{ site.url }}_mod/_6500.casse/_src/_api/_casse.php?__data__='+document);
-    getws('{{ site.url }}_mod/_6500.casse/_src/_api/_casse.php?__data__='+document, '',
+  console.log('{{ site.url }}_mod/_6500.casse/_src/_api/_casse.php?__data__='+document);
+    getws('http://localhost/_mod/_6500.casse/_src/_api/_casse.php?__data__='+document, '',
                 function( data ){ 
                     console.log(data);
                    if( data['result'] == 'OK' ){

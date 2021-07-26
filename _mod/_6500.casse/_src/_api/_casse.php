@@ -31,10 +31,10 @@ require '../../../../_src/_config.php';
 	$status = array();
 
     // connessione
-/*	$h = escpos_connect(
+	$h = escpos_connect(
 	    $cf['casse']['printer']['address'],
 	    $cf['casse']['printer']['port']
-	);*/
+	);
 
     // informazioni
 	$status['info'] = array(
@@ -51,7 +51,7 @@ require '../../../../_src/_config.php';
 //	$status = array();
 
     // connessione
-	$h = escpos_connect( '192.168.1.137' );
+//	$h = escpos_connect( '192.168.1.137' );
 
     // scrittura di test
 	// escpos_write( $h, '1H1R' );
