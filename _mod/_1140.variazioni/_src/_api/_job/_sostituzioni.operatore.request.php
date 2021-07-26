@@ -2,7 +2,12 @@
 
     /**
      * 
-     *  job che 
+     * job in foreground creato per sostituire tutte le attività lasciate scoperte da un operatore con un altro
+     * riceve in ingresso i parametri seguenti:
+     * - id_assente: id dell'operatore da sostituire
+     * - id_sostituto: id dell'operatore sostituto
+     * - data_inizio (facoltativa): data di inizio del periodo
+     * - data_fine (facoltativa): data di fine del periodo
      * 
      */
 
@@ -22,37 +27,30 @@
             $status['info'][] = 'iterazione a vuoto su job già completato';
 
         } 
-        elseif( !isset( $job['workspace']['id_progetto'] ) || !isset( $job['workspace']['id_anagrafica'] ) ){
-            $status['err'][] = 'id_progetto o id_anagrafica non settati';
+        elseif( !isset( $job['workspace']['id_assente'] ) || !isset( $job['workspace']['id_sostituto'] ) ){
+            $status['err'][] = 'id_assente o id_sostituto non settati';
         }
         else {
 
             // attività di avvio
             if( empty( $job['corrente'] ) ) {
 
-                // inizializzo gli array delle condizioni where e dei parametri
-                $whr = array();
-                $par = array();
+                // query da eseguire
+                $q = 'SELECT a.id FROM attivita as a INNER JOIN __report_attivita_assenze__ as r ON a.id = r.id_attivita AND r.id_anagrafica = ? AND a.id_anagrafica IS NULL';
+                
+                // array dei parametri
+                $par = array(
+                    array( 's' => $job['workspace']['id_assente'] )
+                );
 
-                // progetto
-                $whr[] = 'id_progetto = ?';
-                $par[] = array( 's' => $job['workspace']['id_progetto'] );
+                if( ! empty( $job['workspace']['data_inizio'] ) && ! empty( $job['workspace']['data_fine'] ) ){
+                    $status['data_inizio'] = $job['workspace']['data_inizio'];
+                    $status['data_fine'] = $job['workspace']['data_fine'];
 
-
-                if( !empty( $job['workspace']['data_inizio'] ) && !empty( $job['workspace']['data_fine'] ) ){
-                    $whr[] = 'data_programmazione BETWEEN ? AND ?';
+                    $q .= ' WHERE a.data_programmazione BETWEEN ? and ?';
                     $par[] = array( 's' => $job['workspace']['data_inizio'] );
                     $par[] = array( 's' => $job['workspace']['data_fine'] );
                 }
-
-                if( !empty( $job['workspace']['ora_inizio'] ) && !empty( $job['workspace']['ora_fine'] ) ){
-                    $whr[] = 'ora_inizio_programmazione = ?';
-                    $whr[] = 'ora_fine_programmazione = ?';
-                    $par[] = array( 's' => $job['workspace']['ora_inizio'] );
-                    $par[] = array( 's' => $job['workspace']['ora_fine'] );
-                }
-
-                $q = 'SELECT id FROM attivita WHERE id_anagrafica IS NULL AND ('  . implode( ' AND ', $whr ) . ')';
 
                 $status['query'] = $q;
                 $status['parametri'] = $par;
@@ -97,14 +95,16 @@
             // aggiusto l'indice di lavoro (gli array partono da zero)
             $widx = $job['corrente'] - 1;
 
-            // ricavo l'ID del progetto corrente
+            // ricavo l'ID dell'attività corrente
             $cid = $job['workspace']['list'][ $widx ];
-            $id_anagrafica =  $job['workspace']['id_anagrafica'];
+            $id_anagrafica =  $job['workspace']['id_sostituto'];
 
             // logiche di calcolo
             $copertura = coperturaAttivita( $id_anagrafica, $cid );
 
             if( $copertura == 1){
+
+                $status['info'][] = 'l\'operatore può coprire l\'attività ' . $cid;
                 
                 // verifico se ci sono già delle richieste di sostituzione
                 $richieste = mysqlSelectValue(
@@ -129,6 +129,9 @@
                         $url
                     );
                 }
+            }
+            else{
+                $status['info'][] = 'l\'operatore non può coprire l\'attività ' . $cid;
             }
 
             // status
@@ -159,6 +162,8 @@
 
             }
         }
+
+        appendToFile( print_r( $status, true ), 'var/log/sostituzioni_operatore/job_#'.$job['id'] . '.log' );
 
     } else {
 

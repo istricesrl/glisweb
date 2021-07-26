@@ -200,7 +200,13 @@
         );
     }*/
 
+    // modal per la conferma di sostituzione operatore
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'sostituisci-operatore', 'include' => 'inc/attivita.form.modal.sostituisci.operatore.html' )
+    );
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+    require DIR_SRC_INC_MACRO . '_default.tools.php';
 
  

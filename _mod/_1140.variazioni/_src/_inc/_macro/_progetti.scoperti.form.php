@@ -43,7 +43,9 @@
 
             $nome =  ( !isset( $_REQUEST['__sostituzione__']['hard'] ) ) ? 'richiesta ' : '';
             $nome .= 'sostituzione progetto ' . $_REQUEST[ $ct['form']['table'] ]['id'] . ' con anagrafica ' . $_REQUEST['__sostituzione__']['id_anagrafica'] . ' - ' . $anagrafica;
-            
+            $nome .=  ( isset( $_REQUEST['__sostituzione__']['data_inizio'] ) && isset( $_REQUEST['__sostituzione__']['data_fine'] ) ) ? ' dal ' . $_REQUEST['__sostituzione__']['data_inizio'] . ' al ' . $_REQUEST['__sostituzione__']['data_fine'] : '';
+            $nome .=  ( isset( $_REQUEST['__sostituzione__']['ora_inizio'] ) && isset( $_REQUEST['__sostituzione__']['ora_fine'] ) ) ? ' orario ' . $_REQUEST['__sostituzione__']['ora_inizio'] . '-' . $_REQUEST['__sostituzione__']['ora_fine'] : '';
+
             $job = mysqlQuery(
                 $cf['mysql']['connection'],
                 'INSERT INTO job ( nome, job, iterazioni, workspace, se_foreground, delay ) VALUES ( ?, ?, ?, ?, ?, ? )',
@@ -55,6 +57,10 @@
                         array(
                             'id_progetto' => $_REQUEST[ $ct['form']['table'] ]['id'],
                             'id_anagrafica' => $_REQUEST['__sostituzione__']['id_anagrafica'],
+                            'data_inizio' => isset( $_REQUEST['__sostituzione__']['data_inizio'] ) ? $_REQUEST['__sostituzione__']['data_inizio'] : NULL,
+                            'data_fine' => isset( $_REQUEST['__sostituzione__']['data_fine'] ) ? $_REQUEST['__sostituzione__']['data_fine'] : NULL,
+                            'ora_inizio' => isset( $_REQUEST['__sostituzione__']['ora_inizio'] ) ? $_REQUEST['__sostituzione__']['ora_inizio'] : NULL,
+                            'ora_fine' => isset( $_REQUEST['__sostituzione__']['ora_fine'] ) ? $_REQUEST['__sostituzione__']['ora_fine'] : NULL,
                             'hard' => ( isset( $_REQUEST['__sostituzione__']['hard'] ) ) ? $_REQUEST['__sostituzione__']['hard'] : NULL
                         )
                     ) ),
@@ -62,6 +68,7 @@
                     array( 's' => 3 )
                 )
             );
+            
         }
 
 
