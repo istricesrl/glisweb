@@ -53,6 +53,9 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
+		'anagrafica_certificazioni' => array(
+            CONTROL_FULL => array( 'roots' )
+        ),
 	    'anagrafica_cittadinanze' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
@@ -160,6 +163,9 @@
 		'progetti_anagrafica' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
+		'progetti_certificazioni' => array(
+            CONTROL_FULL => array( 'roots' )
+        ),
 	    'pubblicazione' => array(
 		CONTROL_FULL => array( 'roots' )
 		),

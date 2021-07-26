@@ -315,7 +315,8 @@
 
 			// debug
 			    // echo( print_r( mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) ), true ) ) . PHP_EOL;
-			    // echo $before . PHP_EOL;
+			    // print_r($d);
+				// echo $before . PHP_EOL;
 
 			// controller pre query (before)
 			    $cn = 'before.php';

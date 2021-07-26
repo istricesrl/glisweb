@@ -21,7 +21,7 @@
 	);
 
 	// vista archivio certificazioni
-	$p['certificazioni.archivio.view'] = array(
+/*	$p['certificazioni.archivio.view'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
 		'title'		=> array( $l		=> 'archivio' ),
@@ -32,6 +32,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['certificazioni.view']['etc']['tabs'] )
 	);
+*/
 
     // gestione certificazioni
 	$p['certificazioni.form'] = array(
@@ -41,12 +42,40 @@
 	    'parent'		=> array( 'id'		=> 'certificazioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'certificazioni.form.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_certificazioni.form.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'certificazioni.form', 'certificazioni.form.file', 'certificazioni.form.tools' ) ),
+		'etc'		=> array( 'tabs'	=> array( 
+											'certificazioni.form', 
+											/*'certificazioni.form.file',*/
+											'certificazioni.form.anagrafica',
+											'certificazioni.form.progetti',
+											'certificazioni.form.tools' 
+											) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
+	$p['certificazioni.form.anagrafica'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'anagrafica' ),
+		'h1'		=> array( $l		=> 'anagrafica' ),
+		'parent'		=> array( 'id'		=> 'certificazioni.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'certificazioni.form.anagrafica.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_certificazioni.form.anagrafica.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['certificazioni.form']['etc']['tabs'] )
+	);
+
+	$p['certificazioni.form.progetti'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'progetti' ),
+		'h1'		=> array( $l		=> 'progetti' ),
+		'parent'		=> array( 'id'		=> 'certificazioni.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'certificazioni.form.progetti.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_certificazioni.form.progetti.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['certificazioni.form']['etc']['tabs'] )
+	);
+
 	// form pagina file
-	$p['certificazioni.form.file'] = array(
+/*	$p['certificazioni.form.file'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
 		'title'		=> array( $l		=> 'file' ),
@@ -57,7 +86,8 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['certificazioni.form']['etc']['tabs'] )
 	);
-	
+*/
+
 	// gestione certificazioni tools
 	$p['certificazioni.form.tools'] = array(
 	    'sitemap'		=> false,
