@@ -74,6 +74,7 @@
 														'progetti.produzione.form.todo',
 														'progetti.produzione.form.attivita',
 														'progetti.produzione.form.pause',
+														'progetti.produzione.form.certificazioni',
 														'progetti.produzione.form.chiusura',
 														'progetti.produzione.form.pianificazioni',
 														'progetti.produzione.form.tools' ) )
@@ -111,6 +112,18 @@
 	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.attivita.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.attivita.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+	);
+
+	// gestione certificazioni progetti
+	$p['progetti.produzione.form.certificazioni'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'certificazioni' ),
+	    'h1'			=> array( $l		=> 'certificazioni' ),
+	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.certificazioni.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.certificazioni.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 	);
