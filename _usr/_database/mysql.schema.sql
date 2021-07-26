@@ -1981,6 +1981,7 @@ CREATE TABLE `articoli_caratteristiche` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_articolo` char(32) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `testo` text,
   `se_non_presente` int(1) DEFAULT NULL,
@@ -1989,6 +1990,7 @@ CREATE TABLE `articoli_caratteristiche` (
   KEY `ordine` (`ordine`),
   KEY `indice` (`id`,`id_articolo`,`id_caratteristica`,`ordine`),
   KEY `id_caratteristica` (`id_caratteristica`),
+  KEY `id_lingua` (`id_lingua`),
   CONSTRAINT `articoli_caratteristiche_ibfk_1` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `articoli_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2006,10 +2008,12 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `id_articolo` tinyint NOT NULL,
   `id_caratteristica` tinyint NOT NULL,
+  `id_lingua` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
   `se_non_presente` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
+  `__label__` tinyint NOT NULL,
+  `caratteristica` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -10226,6 +10230,7 @@ DROP TABLE IF EXISTS `prodotti_caratteristiche`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `prodotti_caratteristiche` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_lingua` int(11) DEFAULT NULL,
   `id_prodotto` char(32) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
@@ -10236,6 +10241,7 @@ CREATE TABLE `prodotti_caratteristiche` (
   KEY `ordine` (`ordine`),
   KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`),
   KEY `id_caratteristica` (`id_caratteristica`),
+  KEY `id_lingua` (`id_lingua`),
   CONSTRAINT `prodotti_caratteristiche_ibfk_1` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `prodotti_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -10251,12 +10257,14 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `prodotti_caratteristiche_view` (
   `id` tinyint NOT NULL,
+  `id_lingua` tinyint NOT NULL,
   `id_prodotto` tinyint NOT NULL,
   `id_caratteristica` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
   `se_non_presente` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
+  `__label__` tinyint NOT NULL,
+  `caratteristica` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -19836,7 +19844,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `articoli_caratteristiche_view` AS select `articoli_caratteristiche`.`id` AS `id`,`articoli_caratteristiche`.`id_articolo` AS `id_articolo`,`articoli_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`articoli_caratteristiche`.`ordine` AS `ordine`,`articoli_caratteristiche`.`testo` AS `testo`,`articoli_caratteristiche`.`se_non_presente` AS `se_non_presente`,`articoli_caratteristiche`.`id` AS `__label__` from `articoli_caratteristiche` */;
+/*!50001 VIEW `articoli_caratteristiche_view` AS select `articoli_caratteristiche`.`id` AS `id`,`articoli_caratteristiche`.`id_articolo` AS `id_articolo`,`articoli_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`articoli_caratteristiche`.`id_lingua` AS `id_lingua`,`articoli_caratteristiche`.`ordine` AS `ordine`,`articoli_caratteristiche`.`testo` AS `testo`,`articoli_caratteristiche`.`se_non_presente` AS `se_non_presente`,`articoli_caratteristiche`.`id` AS `__label__`,`caratteristiche_prodotti`.`nome` AS `caratteristica` from (`articoli_caratteristiche` left join `caratteristiche_prodotti` on((`caratteristiche_prodotti`.`id` = `articoli_caratteristiche`.`id_caratteristica`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -22453,12 +22461,12 @@ DELIMITER ;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `prodotti_caratteristiche_view` AS select `prodotti_caratteristiche`.`id` AS `id`,`prodotti_caratteristiche`.`id_prodotto` AS `id_prodotto`,`prodotti_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`prodotti_caratteristiche`.`ordine` AS `ordine`,`prodotti_caratteristiche`.`testo` AS `testo`,`prodotti_caratteristiche`.`se_non_presente` AS `se_non_presente`,`prodotti_caratteristiche`.`id` AS `__label__` from `prodotti_caratteristiche` */;
+/*!50001 VIEW `prodotti_caratteristiche_view` AS select `prodotti_caratteristiche`.`id` AS `id`,`prodotti_caratteristiche`.`id_lingua` AS `id_lingua`,`prodotti_caratteristiche`.`id_prodotto` AS `id_prodotto`,`prodotti_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`prodotti_caratteristiche`.`ordine` AS `ordine`,`prodotti_caratteristiche`.`testo` AS `testo`,`prodotti_caratteristiche`.`se_non_presente` AS `se_non_presente`,`prodotti_caratteristiche`.`id` AS `__label__`,`caratteristiche_prodotti`.`nome` AS `caratteristica` from (`prodotti_caratteristiche` left join `caratteristiche_prodotti` on((`caratteristiche_prodotti`.`id` = `prodotti_caratteristiche`.`id_caratteristica`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -24961,4 +24969,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-11 23:46:14
+-- Dump completed on 2021-07-18 23:46:05
