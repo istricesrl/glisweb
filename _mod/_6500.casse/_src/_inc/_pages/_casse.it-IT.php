@@ -98,11 +98,11 @@
 	);
 
 	// agenda
-	$p['agenda'] = array(
+	$p['agenda.cassa'] = array(
 	    'sitemap'	=> false,
 	    'title'		=> array( $l		=> 'agenda' ),
 	    'h1'		=> array( $l		=> 'agenda' ),
-	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.html' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.cassa.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
