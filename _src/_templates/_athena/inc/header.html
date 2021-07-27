@@ -28,6 +28,12 @@
                 {% endif %}
 -->
 
+                {% if pages.terminale %}
+                <div id="widget-slack" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ pages.terminale.url[\'it-IT\'] }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-money" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
                 <div id="widget-session" class="widget col-auto p-0 hidden">
                     <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="getws('/report/session.status?renew=1');$(this).parent().fadeOut();" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="sessione in scadenza"><i class="fa fa-clock-o" aria-hidden="true"></i></button>
                 </div>
