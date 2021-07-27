@@ -11,7 +11,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'archivio.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_archivio.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots','staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'archivio' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'archivio' ),
 		'priority'	=> '930' ) ) )
