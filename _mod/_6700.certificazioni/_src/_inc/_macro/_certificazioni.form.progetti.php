@@ -18,13 +18,18 @@
 	$ct['view']['table'] = 'progetti_certificazioni';
 
     // pagina per la gestione degli oggetti esistenti
-#	$ct['view']['open']['page'] = 'progetti.produzione.form';
-    
-    // campo per il preset di apertura
-#	$ct['view']['open']['preset']['field'] = 'id_progetto';
+	$ct['view']['open']['page'] = 'progetti.produzione.form';
+
+    $ct['view']['open']['table'] = 'progetti';
+
+    #print_r( $ct['view'] );
+
+    // campo per l'id di apertura
+	$ct['view']['open']['field'] = 'id_progetto';
 
     $ct['view']['cols'] = array(
 	    'id' => '#',
+        'id_progetto' => 'id progetto',
         'progetto' => 'progetto'
 	);
 
