@@ -15,11 +15,24 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'prodotti.view') ),
+	    'etc'		=> array( 'tabs'	=> array(	'prodotti.view', 'prodotti.stampe') ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'prodotti' ),
 									'priority'	=> '015' ) ) )	
 	);
 	
+	// gestione anagrafica stampe
+	$p['prodotti.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'prodotti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['prodotti.view']['etc']['tabs'] )
+	);
+
     // gestione prodotti
 	$p['prodotti.form'] = array(
 	    'sitemap'		=> false,
