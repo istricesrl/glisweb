@@ -54,7 +54,7 @@
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.tools.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['casse']['etc']['tabs'] )
 	);
 
@@ -68,7 +68,7 @@
 		'parser'	=> array( $m . '_src/_inc/_parser/_terminale.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
-		'etc'		=> array( 'sheets' => array( 'agenda', 'contatti', 'terminale' , 'assistenza', 'ritiro.hardware', 'consegna.hardware' ) ), 
+		'etc'		=> array( 'sheets' => array( 'agenda.cassa', 'contatti', 'terminale' , 'assistenza', 'ritiro.hardware', 'consegna.hardware' ) ), 
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'terminale' ),
 									'priority'	=> '100' ) ) )
 	);
@@ -98,11 +98,11 @@
 	);
 
 	// agenda
-	$p['agenda'] = array(
+	$p['agenda.cassa'] = array(
 	    'sitemap'	=> false,
 	    'title'		=> array( $l		=> 'agenda' ),
 	    'h1'		=> array( $l		=> 'agenda' ),
-	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.html' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.cassa.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),

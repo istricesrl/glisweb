@@ -9,8 +9,8 @@
 			$cf['mysql']['connection'],
 			'SELECT attivita_view_static.*, concat( todo.id_progetto, " " ,todo.nome ) AS todo FROM attivita_view_static '.
 			'LEFT JOIN todo ON todo.id = attivita_view_static.id_todo '.
-			'WHERE attivita_view_static.data_attivita IS NULL AND (attivita_view_static.id_tipologia = ? OR attivita_view_static.id_tipologia = ?  OR attivita_view_static.id_tipologia = ? ) AND attivita_view_static.id_anagrafica = ? ORDER BY attivita_view_static.data_programmazione, attivita_view_static.ora_inizio_programmazione',
-			array( array( 's' => '2' ),array( 's' => '5' ),  array( 's' => '3' ), array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+			'WHERE attivita_view_static.data_attivita IS NULL  AND attivita_view_static.id_anagrafica = ? ORDER BY attivita_view_static.data_programmazione, attivita_view_static.ora_inizio_programmazione',
+			array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 		);
 	
 
@@ -22,8 +22,7 @@
 			$cf['mysql']['connection'],
 			'SELECT attivita_view_static.*, concat( todo.id_progetto, " " ,todo.nome ) AS todo FROM attivita_view_static '.
 			'LEFT JOIN todo ON todo.id = attivita_view_static.id_todo '.
-			'WHERE attivita_view_static.data_attivita IS NULL AND (attivita_view_static.id_tipologia = ? OR attivita_view_static.id_tipologia = ?  OR attivita_view_static.id_tipologia = ? )  ORDER BY attivita_view_static.data_programmazione, attivita_view_static.ora_inizio_programmazione',
-			array( array( 's' => '2' ),array( 's' => '5' ),  array( 's' => '3' ) )
+			'WHERE attivita_view_static.data_attivita IS NULL   ORDER BY attivita_view_static.data_programmazione, attivita_view_static.ora_inizio_programmazione'
 		);
 	
 
