@@ -9,6 +9,22 @@ $ct['view']['cols'] = array(
     'id' => '#'
 );
 
+if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) && !isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){
+
+    $_SESSION['assistenza']['id_attivita_feedback'] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (id_tipologia, nome, data_programmazione, id_account_inserimento, timestamp_inserimento, id_todo, id_progetto, id_cliente ) '.
+    'VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
+    array(
+        array( 's' => '5' ),
+        array( 's' => 'customer care a seguito di assistenza' ),
+        array( 's' => date("Y-m-d" ,strtotime("+3 week")) ),
+        array( 's' => $_SESSION['account']['id'] ),
+        array( 's' => time() ),
+        array( 's' => $_REQUEST['todo']['id'] ),
+        array( 's' => $_REQUEST['todo']['id_progetto'] ),
+        array( 's' => $_REQUEST['todo']['id_cliente'] )
+    ) );
+}
+
 if( isset( $_SESSION['contatto']['id_anagrafica'] ) ){
 
     $_SESSION['assistenza']['id_cliente'] = $_SESSION['contatto']['id_anagrafica'];
@@ -46,6 +62,11 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
         
     
     }
+
+    if( !isset( $_REQUEST['attivita']) && !empty($ct['etc']['attivita_collaudo']) ){
+        $_REQUEST['attivita'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM attivita_view WHERE id = ?', array( array( 's' => $ct['etc']['attivita_collaudo']) ));
+      
+    }
   /*  if( !empty( $_REQUEST['todo']['timestamp_completamento'] ) ){
        // $_REQUEST['todo']['timestamp_completamento'] = strtotime( $_REQUEST['todo']['timestamp_completamento'] );
         print_r( $_REQUEST['todo']);
@@ -72,6 +93,7 @@ if( isset( $_REQUEST['__unset__'] ) ){
     
     } else{
     
+        unset( $_SESSION['assistenza']['id_attivita_feedback'] );
         unset( $_SESSION['assistenza']['riapri'] );
         unset( $_SESSION['assistenza']['id_cliente'] );
         unset( $_SESSION['assistenza']['id_progetto'] );
@@ -94,13 +116,13 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && !isset($ct['etc']['progett
 }
 
 if( isset( $_SESSION['assistenza']['id_progetto'] ) && !isset($ct['etc']['progetto']) ){
-    $ct['etc']['progetto'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM progetti_produzione_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_progetto']) ));
+    $ct['etc']['progetto'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM progetti_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_progetto']) ));
 }
 
 if( isset( $_REQUEST['__progetto__']['id'] )  ){
 
     $_SESSION['assistenza']['id_progetto'] = $_REQUEST['__progetto__']['id'];
-    $ct['etc']['progetto'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM progetti_produzione_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_progetto']) ));
+    $ct['etc']['progetto'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM progetti_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_progetto']) ));
 
 }
 

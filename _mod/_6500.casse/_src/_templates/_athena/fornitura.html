@@ -32,14 +32,14 @@
 {% endblock %}
 
 {% block main %}
-{% if not session.assistenza.id_assistenza %}
+{% if not session.fornitura.id_fornitura %}
 <form  {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 <div class="form-group">
-    {% if not session.assistenza.id_cliente %}
+    {% if not session.fornitura.id_cliente %}
     <div class="form-group form-row ">
         
             <div class="col-6  form-row">
-                <legend>nuova assistenza</legend>
+                <legend>nuova fornitura</legend>
                 <div class="col">
                     <span class="label-top">ricerca cliente</span>
                     <input id="nuova_anagrafica" type="text" class="form-control form-control-sm" name="__view__[clienti][__search__]"  value="{{ session.__view__.clienti.__search__ }}" onchange="$('#anagrafica_esistente').val(''); $('#pager').val('0');" >
@@ -53,10 +53,10 @@
             </div>
         </div>   
             <div class="col mt-2 form-group form-row">
-                <legend>ricerca assistenza</legend>
+                <legend>ricerca fornitura</legend>
                 <div class="col-6">
                     <span class="label-top">ricerca todo</span>
-                    <input type="text" class="form-control form-control-sm" name="__assistenza__" value="" autofocus>
+                    <input type="text" class="form-control form-control-sm" name="__fornitura__" value="" autofocus>
                 </div>
                 <div class="col-6">
                     <span class="label-top">ricerca cliente</span>
@@ -142,7 +142,7 @@
 {% endif %}
 
 <div class="form-group form-row">
-{% if session.assistenza.id_cliente and not( session.assistenza.riapri ) %}
+{% if session.fornitura.id_cliente and not( session.fornitura.riapri ) %}
 <div class="col-3">
     <legend>cliente</legend>
     <div class="form-group form-row">
@@ -153,14 +153,14 @@
         </div>
         <div class="col-auto" >
             {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
-            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&anagrafica[id]={{ session.assistenza.id_cliente }}','_self');"><i class="fa fa-pencil"></i></button>
-            {% if not session.assistenza.id_todo %} 
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&anagrafica[id]={{ session.fornitura.id_cliente }}','_self');"><i class="fa fa-pencil"></i></button>
+            {% if not session.fornitura.id_todo %} 
             <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__=cliente','_self');"><i class="fa fa-times"></i></button>
             {% endif %}
         </div>
     </div>   
 </div>  
-{% elseif session.assistenza.id_cliente %}
+{% elseif session.fornitura.id_cliente %}
 <div class="col-3">
     <legend>cliente</legend>
     <div class="form-group form-row">
@@ -171,8 +171,8 @@
         </div>
         <div class="col-auto" >
             {% set anagrafica = pages[ 'anagrafica.form' ].url[ localization.language.ietf ] %}
-            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&anagrafica[id]={{ session.assistenza.id_cliente }}','_self');"><i class="fa fa-pencil"></i></button>
-            {% if not session.assistenza.id_todo %} 
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ anagrafica }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&anagrafica[id]={{ session.fornitura.id_cliente }}','_self');"><i class="fa fa-pencil"></i></button>
+            {% if not session.fornitura.id_todo %} 
             <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__=cliente','_self');"><i class="fa fa-times"></i></button>
             {% endif %}
         </div>
@@ -217,13 +217,13 @@
 </div>
 
 {% endif %}
-{% if session.assistenza.id_cliente and not(session.assistenza.id_progetto)  and not( session.assistenza.riapri )%}
+{% if session.fornitura.id_cliente and not(session.fornitura.id_progetto)  and not( session.fornitura.riapri )%}
 <div class="col-3">
     <legend>progetto</legend>
         <div class="form-row">
             <div class="col">
                 {% set progetti = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
-                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetti }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&__preset__[progetti][id_cliente]={{ session.assistenza.id_cliente }}','_self');">crea un nuovo progetto per il cliente</i></button>
+                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetti }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&__preset__[progetti][id_cliente]={{ session.fornitura.id_cliente }}','_self');">crea un nuovo progetto per il cliente</i></button>
             </div>
         </div>
 </div>    
@@ -261,26 +261,26 @@
 </div>
 {% endif %}
 {% endif %}
-{% if session.assistenza.id_progetto and not( session.assistenza.riapri ) %}  
+{% if session.fornitura.id_progetto and not( session.fornitura.riapri ) %}  
 <div class="col-3">
     <legend>progetto</legend>
     <div class="form-group form-row">
         <div class="col">{{ etc.progetto.__label__ }}</div>
         <div class="col-auto">
             {% set progetto = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
-            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetto }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&progetti[id]={{ session.assistenza.id_progetto }}','_self');"><i class="fa fa-pencil"></i></button>
-            {% if not session.assistenza.id_todo  %}
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetto }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&progetti[id]={{ session.fornitura.id_progetto }}','_self');"><i class="fa fa-pencil"></i></button>
+            {% if not session.fornitura.id_todo  %}
             <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__=progetto','_self');"><i class="fa fa-times"></i></button>
             {% endif %}
         </div>
     </div>    
 </div>
 {% endif %}
-{% if session.assistenza.id_progetto and not( session.assistenza.riapri ) %}  
+{% if session.fornitura.id_progetto and not( session.fornitura.riapri ) %}  
 <div class="col form-group form-row">
   
         <legend>todo</legend>
-        {% if session.assistenza.id_todo %}
+        {% if session.fornitura.id_todo %}
             {% set method_t = 'update' %}
             {% set activity_t = 'aggiornamento' %}
         {% else %}
@@ -292,11 +292,11 @@
         <input type="hidden" id="timestamp" name="todo[timestamp_{{ activity_t }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="todo[id_account_{{ activity_t }}]" value="{{ account }}">
         <input type="hidden" id="id_contatto" name="todo[id_contatto]" value="{{ session.contatto.id }}">
-        <input type="hidden" id="nome" name="todo[nome]" value="assistenza in cassa del {{ 'now'|date('d/m/Y') }} alle {{ 'now'|date('H:i') }}">
+        <input type="hidden" id="nome" name="todo[nome]" value="fornitura in cassa del {{ 'now'|date('d/m/Y') }} alle {{ 'now'|date('H:i') }}">
         {{ frm.input( 'todo', '', '', 'id', '', '', request, '', 'hidden') }}
         {{ frm.input( 'todo', '', '', 'id_mastro_attivita_default', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
-        {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }} 
-        {{ frm.input( 'todo', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
+        {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.fornitura.id_progetto , 'hidden' ) }} 
+        {{ frm.input( 'todo', '', '', 'id_cliente', '', '', '', session.fornitura.id_cliente , 'hidden' ) }}
         <div class="form-group col" style="padding: 0%;">
             <!--div class="col-12 col-md">
                 <span class="label-top">nome</span>
@@ -307,11 +307,11 @@
                 {{ frm.textarea( 'todo', '', '', 'testo', '', 3, request ) }}
             </div>  
         </div> 
-        {% if session.assistenza.id_todo %}
+        {% if session.fornitura.id_todo %}
             <div class="col-auto ">
                 {% set todo = pages[ 'todo.form' ].url[ localization.language.ietf ] %}
-                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ todo }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&todo[id]={{ session.assistenza.id_todo }}','_self');"><i class="fa fa-pencil"></i></button>
-                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=todo&__delete__[id]={{ session.assistenza.id_todo }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__unset__=todo&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}?__unset__=todo','_self');"><i class="fa fa-trash"></i></button>
+                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ todo }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&todo[id]={{ session.fornitura.id_todo }}','_self');"><i class="fa fa-pencil"></i></button>
+                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=todo&__delete__[id]={{ session.fornitura.id_todo }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__unset__=todo&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}?__unset__=todo','_self');"><i class="fa fa-trash"></i></button>
             </div>    
         {% endif %}    
         </div>  
@@ -331,13 +331,13 @@
 
 
  
-{% if session.assistenza.id_todo and not( session.assistenza.riapri ) %}
+{% if session.fornitura.id_todo and not( session.fornitura.riapri ) %}
 
 </div>
 
     <fieldset>
     <legend>attivita</legend>
-    {% if session.assistenza.id_attivita %}
+    {% if session.fornitura.id_attivita %}
         {% set method = 'update' %}
         {% set activity = 'aggiornamento' %}
     {% else %}
@@ -349,10 +349,10 @@
     <input type="hidden" id="account" name="attivita[id_account_{{ activity }}]" value="{{ account }}">
     <input type="hidden" id="method" name="attivita[__method__]" value="{{ method }}">
     {{ frm.input( 'attivita', '', '', 'id', '', '', request, '', 'hidden') }}
-    {{ frm.input( 'attivita', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }}
+    {{ frm.input( 'attivita', '', '', 'id_progetto', '', '', '', session.fornitura.id_progetto , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_mastro_provenienza', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
-    {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
-    {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.assistenza.id_todo , 'hidden' ) }}
+    {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.fornitura.id_cliente , 'hidden' ) }}
+    {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.fornitura.id_todo , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_tipologia', '', '', '', etc.tipologia_attivita, 'hidden' ) }}
     <div class="form-group form-row">       
         <div class="form-group col">
@@ -362,12 +362,12 @@
                     {{ frm.inputRequired( 'attivita', '', '', 'nome', '', '', request ) }}
 				</div>
 			</div>
-			<!--div class="form-group form-row">
+			<div class="form-group form-row">
 				<div class="col-12 col-md mt-3">
 				<span class="label-top">note</span>
                 {{ frm.textarea( 'attivita', '', '', 'testo', '', 3, request ) }}
 				</div>
-			</div-->
+			</div>
 	
 
 				<!--legend>esecuzione</legend-->
@@ -377,38 +377,15 @@
                         {{ frm.selectBox( 'attivita', '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica,  '', '', '', '', '', '', '', '', page, pages, ietf ) }}
                     </div>
 				</div>
-                {% if session.assistenza.id_attivita %}
-				<legend>disponibilità</legend>
-
-                <legend>programmazione</legend>
-				<div class="form-group form-row">
-					<div class="col-6 col-md-auto mt-3">
-						<span class="label-top">data</span>
-						{{ frm.date( 'attivita', '', '', 'data_programmazione', '', '', request ) }}
-					</div>
-					<div class="col-2 col-md-1 mt-3">
-						<span class="label-top">ora inizio</span>
-						{{ frm.time( 'attivita', '', '', 'ora_inizio_programmazione', '', '', request) }}
-					</div>
-					<div class="col-2 col-md-1 mt-3">
-						<span class="label-top">ora fine</span>
-						{{ frm.time( 'attivita', '', '', 'ora_fine_programmazione', '', '', request) }}
-					</div>
-                    <div class="col-12 col-md mt-3">
-                        <span class="label-top">indirizzo</span>
-                        {{ frm.selectBox( 'attivita', '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','','','', '', page, pages, ietf ) }}
-                    </div>
-				</div>
-                {% endif %}
         </div>
 
 {% endif %}
-{% if session.assistenza.id_attivita %}
+{% if session.fornitura.id_attivita %}
 
     <div class="col-auto">
         {% set attivita = pages[ 'attivita.form' ].url[ localization.language.ietf ] %}
-        <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ attivita }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&attivita[id]={{ session.assistenza.id_attivita }}','_self');"><i class="fa fa-pencil"></i></button>
-        <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=attivita&__delete__[id]={{ session.assistenza.id_attivita }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
+        <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ attivita }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&attivita[id]={{ session.fornitura.id_attivita }}','_self');"><i class="fa fa-pencil"></i></button>
+        <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=attivita&__delete__[id]={{ session.fornitura.id_attivita }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
     </div>
 
 {% endif %}
@@ -416,22 +393,21 @@
     <fieldset class=" ">
         <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
             <div>
-            {% if  (session.assistenza.id_cliente or session.assistenza.id_profetto ) and not session.assistenza.id_todo %}
-            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"> {% if session.assistenza.id_attivita %}inserisci nuovo{% else %}annulla{% endif %}</button>
+            {% if  (session.fornitura.id_cliente or session.fornitura.id_profetto ) and not session.fornitura.id_todo %}
+            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"> {% if session.fornitura.id_attivita %}inserisci nuovo{% else %}annulla{% endif %}</button>
             {% endif  %}
-            {% if session.assistenza.id_attivita  %}
+            {% if session.fornitura.id_attivita  %}
             <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__delete_all__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">elimina</button>
-            {% if request.attivita.data_programmazione %}
             <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
-            {% endif  %}
+
 
             {% endif  %}
             </div>
-            {% if session.assistenza.id_attivita %}
+            {% if session.fornitura.id_attivita %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
-            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
+            <!--button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.fornitura.php?todo={{ session.fornitura.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo fornitura</button-->
             {% endif %}
-            {% if session.assistenza.id_cliente and session.assistenza.id_progetto and ( not session.assistenza.id_attivita ) %}
+            {% if session.fornitura.id_cliente and session.fornitura.id_progetto and ( not session.fornitura.id_attivita ) %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             {% endif %}
             
@@ -481,12 +457,6 @@
     </div>
     </div>
 
-    <div class="col-12">
-        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa prima parte modulo assistenza</button>
-        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa diagnosi</button>
-        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=3', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa assistenza fino alla diagnosi</button>
-    </div>
-
     <div class="form-row col-12">
         {% if etc.attivita_completate %}
         <legend>attività completate</legend>
@@ -524,10 +494,7 @@
             {# MODULO PRINCIPALE #}
             <fieldset>
                 <fieldset>
-                    <legend>completamento assistenza</legend>
-
-     
-
+                    <legend>completamento fornitura</legend>
             <div class="form-group form-row">
                 <div class="col-auto">
                     <span class="label-top">data</span> 
@@ -535,16 +502,13 @@
                 </div>
                 <div class="col">
                     <span class="label-top">testo completamento</span>
-                    {{ frm.textarea( table, '', '', 'testo_completamento', '', '2', request ) }}
+                    {{ frm.textarea( table, '', '', 'testo_completamento', '', '3', request ) }}
                 </div>
             </div>
                 </fieldset>
             <fieldset>
-				<legend>esecuzione</legend>            
-                <input type="hidden" id="method" name="attivita[__method__]" value="update">
-
-                {{ frm.input( 'attivita', '', '', 'id', '', '', request, etc.attivita_collaudo,  'hidden') }}
-                {{ frm.input( 'attivita', '', '', 'nome', '', '', request, request.attivita.nome,  'hidden') }}
+				<legend>esecuzione</legend>
+                {{ frm.input( 'attivita', '', '', 'id', '', '', request, etc.attivita_collaudo, '') }}
 				<div class="form-group form-row">
 					<div class="col-6 col-md-auto">
 						<span class="label-top">data</span>
@@ -566,18 +530,13 @@
 						<span class="label-top">esecutore</span>
 						{{ frm.selectBox( 'attivita', '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
-				</div>
+				</div-->
 				<div class="form-group form-row">
 					<div class="col-12">
 					<span class="label-top">note cliente</span>
-					{{ frm.textarea( 'attivita', '', '', 'testo', '', 2, request ) }}
+					{{ frm.textarea( 'attivita', '', '', 'testo', '', 3, request ) }}
 					</div>
 				</div>
-                 <div class="col-4 col-md-2 col-form-label">
-                    <div class="col-6">
-                        {{ frm.checkbox( table, '', '', '__se_consenso__', 'consenso feedback', '', request ) }} 
-                    </div>  
-                </div>
 			</fieldset>
     
             </fieldset>
@@ -585,10 +544,7 @@
             <fieldset class=" ">
                 <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
                     <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">{% if request.todo.timestamp_completamento %}inserisci nuovo{% else %}annulla{% endif %}</button>
-                    {% if request.todo.timestamp_completamento %}
-                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=2', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa conclusione assistenza</button>
-                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza completo</button>
-                  {% endif %}
+
                     <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
 
                 </div>

@@ -79,7 +79,7 @@
 		'parser'	=> array( $m . '_src/_inc/_parser/_terminale.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
-		'etc'		=> array( 'sheets' => array( 'agenda.cassa', 'contatti', 'terminale' , 'assistenza', 'ritiro.hardware', 'consegna.hardware' ) ), 
+		'etc'		=> array( 'sheets' => array( 'agenda.cassa', 'contatti', 'terminale' , 'assistenza', 'fornitura', 'ritiro.hardware', 'consegna.hardware' ) ), 
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'terminale' ),
 									'priority'	=> '100' ) ) )
 	);
@@ -103,6 +103,18 @@
 	    'h1'		=> array( $l		=> 'assistenza' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'assistenza.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_assistenza.php' ),
+	    'parent'	=> array( 'id'		=> 'casse' ),
+	    'auth'		=> array( 'groups'	=> array( 'roots', 'staff'  ) ),
+		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
+	);
+
+	// fornitura
+	$p['fornitura'] = array(
+	    'sitemap'	=> false,
+	    'title'		=> array( $l		=> 'fornitura' ),
+	    'h1'		=> array( $l		=> 'fornitura' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fornitura.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_fornitura.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array( 'roots', 'staff'  ) ),
 		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
