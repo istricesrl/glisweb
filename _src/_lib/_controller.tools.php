@@ -124,6 +124,13 @@
 
 			// inizializzo l'array per ricerca e filtri
 			    $whr = array();
+				
+				// NOTA BENE: questo foreach l'abbiamo spostato il 28-07-2021 prima del successivo IF per risolvere il problema dell'ordinamento parametri
+				// esempio chiamata postman https://glisweb.istricesrl.it/api/attivita?attivita[data_programmazione]=2021-07-27&attivita[id_anagrafica]=66 con utente glisweb (staff) loggato e acl su attività
+				// filtri per i campi
+				foreach( $ks as $fk ) {
+					$whr[] = "${fk} = ?";
+				}
 
 			// unisco la tabella di ACL se presente
 			    if( ! empty( $aclTb ) ) {
@@ -135,10 +142,7 @@
 				$i['__group__'] = array( $t . $rm . '.id' );
 			    }
 
-				// filtri per i campi
-			    foreach( $ks as $fk ) {
-					$whr[] = "${fk} = ?";
-				}
+				
 
 			// ricerca nella vista
 			    if( isset( $i['__fields__'] ) && isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
@@ -269,7 +273,7 @@
 
 			// debug
 			    // print_r( $i );
-			     // echo $q . PHP_EOL;
+			    //  echo $q . PHP_EOL;
 				// print_r($vs);
 
 			// eseguo la query
