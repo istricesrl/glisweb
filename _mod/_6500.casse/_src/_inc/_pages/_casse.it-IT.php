@@ -15,7 +15,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'casse', 'casse.documenti.view', 'casse.tools', 'casse.stampe' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'casse', 'casse.documenti.view', 'casse.contatti.view','casse.tools', 'casse.stampe' ) ),
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'casse' ),
 									'priority'	=> '650' ) ) )
 	);
@@ -39,8 +39,19 @@
 	    'title'		=> array( $l		=> 'documenti' ),
 	    'h1'		=> array( $l		=> 'documenti' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_casse.documenti.view.php' ),
-	    'parent'	=> array( 'id'		=> NULL ),
+	    'macro'		=> array( DIR_MOD . '_6200.documenti/_src/_inc/_macro/_documenti.view.php'  ),
+	    'parent'	=> array( 'id'		=> 'casse' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['casse']['etc']['tabs'] )
+	);
+
+	$p['casse.contatti.view'] = array(
+	    'sitemap'	=> false,
+	    'title'		=> array( $l		=> 'contatti' ),
+	    'h1'		=> array( $l		=> 'contatti' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( DIR_MOD . '_0300.contatti/_src/_inc/_macro/_contatti.view.php' ),
+	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['casse']['etc']['tabs'] )
 	);
@@ -112,7 +123,7 @@
 	// contatti
 	$p['contatti'] = array(
 	    'sitemap'	=> false,
-	    'title'		=> array( $l		=> 'contatti' ),
+	    'title'		=> array( $l		=> 'contatti_terminale' ),
 	    'h1'		=> array( $l		=> 'contatti' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contatti.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_contatti.php' ),
@@ -144,5 +155,8 @@
 	    'auth'		=> array( 'groups'	=> array('roots', 'staff'  ) ),
 		'etc'		=> array( 'sheets'	=>  $p['terminale']['etc']['sheets'] )
 	);
+
+
+
     // debug
 	// die( print_r( $p ) );
