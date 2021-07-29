@@ -26,7 +26,9 @@
 	    require '../../../../../_src/_config.php';
 	}
 */
-require '../../../../_src/_config.php';
+	header( 'Access-Control-Allow-Origin: *' );
+
+    require '../../../../_src/_config.php';
     // inizializzo l'array del risultato
 	$status = array();
 
