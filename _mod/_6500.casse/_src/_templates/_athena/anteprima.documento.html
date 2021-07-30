@@ -136,14 +136,15 @@
 //console.log(parsedJSON);
     //window.open( "{{ site.url }}/_mod/_6500.casse/_src/_api/_casse.php?__data__={{ etc.documento|json_encode|e('js') }}", '_blank');
     var document = '{{ etc.documento|json_encode|e('js') }}';
-
-  console.log('{{ site.url }}_mod/_6500.casse/_src/_api/_casse.php?__data__='+document);
+    $('#stampa').attr('disabled', true);
+  console.log('http://localhost/_mod/_6500.casse/_src/_api/_casse.php?__data__='+document);
     getws('http://localhost/_mod/_6500.casse/_src/_api/_casse.php?__data__='+document, '',
                 function( data ){ 
                     console.log(data);
                    if( data['result'] == 'OK' ){
                        console.log("ok");
                         $('#pulsanti').hide();
+                      
                         $('#chiudi-scontrino').removeAttr('hidden');
                    } else{
                         $('#pulsanti').hide();

@@ -34,7 +34,7 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-        'nome' => 'text-left'
+        '__label__' => 'text-left'
     );
 
     // macro di default

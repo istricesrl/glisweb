@@ -26,6 +26,7 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => 'codice',
+        'nome' => 'nome',
 	    'codice_produttore' => 'codice produttore',
 	    'categorie' => 'categorie'
 	);
@@ -33,7 +34,8 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'codice_produttore' => 'text-left',
-	    'categorie' => 'text-left'
+	    'categorie' => 'text-left',
+	    'nome' => 'text-left'
 	);
 
     // gestione default

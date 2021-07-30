@@ -26,16 +26,17 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-	    'nome' => 'nome',
+	    'nome_articolo' => 'nome',
         'codice_produttore' => 'ean',
 	    'id_prodotto' => 'prodotto'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'nome' => 'text-left',
-	    'categorie' => 'text-left',
-	    'pubblicazione' => 'text-left'
+	    'nome_articolo' => 'text-left',
+	    'id' => 'text-left',
+	    'codice_produttore' => 'text-left',
+        'id_prodotto' => 'text-left'
 	);
 
     // gestione default

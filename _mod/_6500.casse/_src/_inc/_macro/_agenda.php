@@ -34,7 +34,6 @@
 		$ct['etc']['agenda'][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][ $evento['id'] ] = $evento;
 	}
 
-
 	 // tendina tipologia attivita
 	 $ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_dashboard_agenda = 1 ORDER BY nome' );
 
