@@ -582,10 +582,15 @@
                         attività di feedback pianificata per {{ etc.data_attivita_feedback }}
 					</div>
                 {% else %}
-                <div class="col-4 col-md-2 col-form-label">
-                    <div class="col-6">
+                <div class="row col-12 col-form-label">
+                    <div class="col-auto">
                         {{ frm.checkbox( table, '', '', '__se_consenso__', 'consenso feedback', '', request ) }} 
                     </div>  
+                    <div class="col col-md">
+                        <span class="label-top"></span>
+                        {{ frm.selectBox( table, '', '', '__id_anagrafica__', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica,  '', '', '', '', '', '', '', '', page, pages, ietf ) }}
+                    </div>
+                    
                 </div>
                 {% endif %}
 			</fieldset>

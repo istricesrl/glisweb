@@ -20,9 +20,10 @@ if( isset( $_REQUEST['id_contatto'] ) ){
 
 if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) && !isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){
 
-    $_SESSION['assistenza']['id_attivita_feedback'] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (id_tipologia, nome, data_programmazione, id_account_inserimento, timestamp_inserimento, id_todo, id_progetto, id_cliente ) '.
-    'VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
+    $_SESSION['assistenza']['id_attivita_feedback'] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (id_anagrafica, id_tipologia, nome, data_programmazione, id_account_inserimento, timestamp_inserimento, id_todo, id_progetto, id_cliente ) '.
+    'VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )',
     array(
+        array( 's' => (isset($_REQUEST['todo']['__id_anagrafica__']) ? $_REQUEST['todo']['__id_anagrafica__'] : NULL) ),
         array( 's' => '5' ),
         array( 's' => 'customer care a seguito di assistenza' ),
         array( 's' => date("Y-m-d" ,strtotime("+3 week")) ),
