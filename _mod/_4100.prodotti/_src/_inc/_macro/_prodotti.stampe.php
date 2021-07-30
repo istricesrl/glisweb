@@ -61,8 +61,9 @@
     else {$file_prezzi = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_cartellini.prezzo.articoli.pdf.php';  }
 
 	$ct['page']['contents']['metro']['general'][] = array(
-        'target' => '_blank' ,
-		'url' => $file_prezzi ,
+  /*      'target' => '_blank' ,
+		'url' => $file_prezzi ,*/
+		'modal' => array('id' => 'stampa', 'include' => 'inc/prodotti.stampe.modal.html' ),
 		'icon' => NULL,
 		'fa' => 'fa-file-pdf-o',
 		'title' => 'etichette prezzo',

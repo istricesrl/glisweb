@@ -12,6 +12,10 @@ $ct['view']['cols'] = array(
 if( isset( $_REQUEST['id_contatto'] ) ){
     $_SESSION['contatto']['id'] = $_REQUEST['id_contatto'];
     $_SESSION['contatto']['nome'] = $_REQUEST['nome_contatto'];
+
+    if( !empty( $_REQUEST['id_anagrafica'] )  ){
+        $_SESSION['assistenza']['id_cliente'] = $_REQUEST['id_anagrafica'];
+    }
 }
 
 if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) && !isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){

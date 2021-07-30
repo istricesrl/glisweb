@@ -13,6 +13,9 @@ $ct['view']['cols'] = array(
 if( isset( $_REQUEST['id_contatto'] ) ){
     $_SESSION['contatto']['id'] = $_REQUEST['id_contatto'];
     $_SESSION['contatto']['nome'] = $_REQUEST['nome_contatto'];
+    if( !empty( $_REQUEST['id_anagrafica'] )  ){
+        $_SESSION['fornitura']['id_cliente'] = $_REQUEST['id_anagrafica'];
+    }
 }
 
 if( isset( $_SESSION['contatto']['id_anagrafica'] ) ){
