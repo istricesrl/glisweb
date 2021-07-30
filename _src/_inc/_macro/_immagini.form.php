@@ -12,55 +12,6 @@
     // tabella gestita
 	$ct['form']['table'] = 'immagini';
 
-    // tendina pagine
-	$ct['etc']['select']['pagine'] = mysqlCachedIndexedQuery( 
-        $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM pagine_view' 
-    );
-
-    // tendina eventi
-#	$ct['etc']['select']['id_evento'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM eventi_view' );
-
-    // tendina prodotti
-	$ct['etc']['select']['prodotti'] = mysqlCachedIndexedQuery( 
-        $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM prodotti_view' 
-    );
-
-    // tendina categorie prodotti
-	$ct['etc']['select']['categorie_prodotti'] = mysqlCachedIndexedQuery( 
-        $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM categorie_prodotti_view' 
-    );
-
-    // tendina ruoli
-	$ct['etc']['select']['ruoli'] = mysqlQuery( 
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM ruoli_immagini_view' 
-    );
-
-    // tendina anagrafica
-	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery( 
-        $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static' );
-
-    // tendina ruoli anagrafica
-	$ct['etc']['select']['ruoli_anagrafica'] = mysqlQuery( 
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM ruoli_immagini_anagrafica_view' 
-    );
-
-    // tendina delle lingue
-	$ct['etc']['select']['lingue'] = &$cf['localization']['languages'];
-
     // tendina dei tagli
 	$ct['etc']['select']['tagli'] = array(
 	    array( 'id' => 'START', '__label__' => 'peso iniziale' ),

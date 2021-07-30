@@ -110,8 +110,22 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> array( 
 												'immagini.form',
+												'immagini.form.associazioni',
 												'immagini.form.tools'
 												 ) )	
+	);
+
+
+	// gestione immagini associazioni
+	$p['immagini.form.associazioni'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'associazioni' ),
+		'h1'		=> array( $l		=> 'associazioni' ),
+		'parent'		=> array( 'id'		=> 'immagini.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immagini.form.associazioni.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_immagini.form.associazioni.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
 	);
 
 	// gestione immagini strumenti
