@@ -64,6 +64,8 @@
 <fieldset class="static-history">
 {% if data %}
 <legend>{{ trans_day_hash[data|date('l', "Europe/Rome")] }} {{ data|date('d') }} {{ trans_month_hash[data|date('m')] }} {{ data|date('Y') }}</legend>
+{% else  %}
+<legend>da fissare</legend>
 {% endif %}
     {% for ora,eventi_per_ora in eventi_per_data %}
     {% for e in eventi_per_ora %}

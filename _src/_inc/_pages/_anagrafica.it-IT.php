@@ -203,7 +203,7 @@
 	$p['anagrafica.form.stampe'] = array(
 	    'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
-	    'title'				=> array( $l		=> 'stampe' ),
+	    'title'				=> array( $l		=> 'stampe_anagrafica' ),
 	    'h1'				=> array( $l		=> 'stampe' ),
 	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),

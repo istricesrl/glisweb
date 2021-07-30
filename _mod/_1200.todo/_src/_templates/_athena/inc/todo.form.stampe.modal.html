@@ -1,0 +1,52 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function stampa( ) {
+        
+        var p = $('#parte').val();
+        var parte = '';
+        if( p == 0 ){ parte= '&part=0'; }
+        if( p == 1 ){ parte= '&part=1'; }
+        if( p == 2 ){ parte= '&part=2'; }
+        if( p == 3 ){ parte= '&part=3'; }
+
+	 	var call = '{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ request[table].id }}'+parte;
+
+		window.open(call, '_blank');
+	
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="stampa">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h3 class="modal-title">stampa modulo assistenza todo</h3>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+                <select class="form-control form-control-sm"  id="parte">
+                    <option value="10">completo</option>
+                    <option value="0">fino alla descrizione del problema</option>
+                    <option value="3">fino alla diagnosi</option>
+                    <option value="1">solo parte di diagnosi e soluzione</option>
+                    <option value="2">solo tempo di intervento, esito e completamento</option>
+                </select>
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="btnelimina" type="button" class="btn btn-secondary btn-sm" onclick="stampa();">stampa</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
