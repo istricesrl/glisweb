@@ -19,12 +19,7 @@
      *
      */
 
-    // tabella gestita
-	$ct['form']['table'] = 'anagrafica';
-
-
-
-    $base = DIR_MOD ;
+ 	    $base = DIR_MOD ;
 
     // NOTA la variabile $base causa problemi nel multi sito fatta in questo modo, per cui ho commentato tutto
 
@@ -40,15 +35,14 @@
 
 	$ct['page']['contents']['metro']['general'][] = array(
         'target' => '_blank' ,
-		'url' => $file.'?id='.$_REQUEST[ $ct['form']['table'] ]['id'] ,
+		'url' => $file ,
 		'icon' => NULL,
 		'fa' => 'fa-file-pdf-o',
 		'title' => 'etichette cartelle sospese',
 		'text' => 'stampa i trafiletti delle anagrafiche'
 	    );
 
-    // macro di default per l'entità anagrafica
-	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
+    
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
