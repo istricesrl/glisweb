@@ -33,8 +33,9 @@
 														'todo.form.attivita',
 														'todo.form.documenti',
 														'todo.form.pianificazioni',
-														'todo.form.tools',
-														'todo.form.stampe' ) )
+														'todo.form.archiviazione',
+														'todo.form.stampe',
+														'todo.form.tools' ) )
 	);
 
 	$p['todo.form.attivita'] = array(
@@ -103,11 +104,11 @@
 	$p['todo.form.archiviazione'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'archivio' ),
-	    'h1'		=> array( $l		=> 'archivio' ),
+	    'title'		=> array( $l		=> 'archiviazione' ),
+	    'h1'		=> array( $l		=> 'archiviazione' ),
 	    'parent'		=> array( 'id'		=> 'todo.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.archiviazione.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_todo.form.archivio.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_todo.form.archiviazione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 	);
