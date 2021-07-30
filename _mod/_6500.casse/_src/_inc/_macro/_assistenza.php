@@ -9,6 +9,11 @@ $ct['view']['cols'] = array(
     'id' => '#'
 );
 
+if( isset( $_REQUEST['id_contatto'] ) ){
+    $_SESSION['contatto']['id'] = $_REQUEST['id_contatto'];
+    $_SESSION['contatto']['nome'] = $_REQUEST['nome_contatto'];
+}
+
 if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) && !isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){
 
     $_SESSION['assistenza']['id_attivita_feedback'] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (id_tipologia, nome, data_programmazione, id_account_inserimento, timestamp_inserimento, id_todo, id_progetto, id_cliente ) '.
