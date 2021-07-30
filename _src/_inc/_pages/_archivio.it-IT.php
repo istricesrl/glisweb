@@ -85,3 +85,29 @@
 	);
 
 
+	// vista immagini
+	$p['immagini.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'immagini' ),
+		'h1'		=> array( $l		=> 'immagini' ),
+		'parent'		=> array( 'id'		=> 'archivio' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_immagini.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'immagini.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'immagini' ),
+		'priority'	=> '050' ) ) )
+	);
+
+	// gestione immagini
+	$p['immagini.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'immagini.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immagini.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_immagini.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'immagini.form' ) )
+		
+	);
