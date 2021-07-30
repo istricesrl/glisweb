@@ -32,3 +32,6 @@
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // macro di default per l'entità anagrafica
+	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';

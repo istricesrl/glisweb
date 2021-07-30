@@ -65,7 +65,7 @@
 //															'anagrafica.form.struttura',
 //															'anagrafica.form.attivita',
 //															'anagrafica.form.promemoria',
-															'anagrafica.form.certificazioni',
+//															'anagrafica.form.certificazioni',
 															'anagrafica.form.immagini',
 															'anagrafica.form.video',
 															'anagrafica.form.audio',
@@ -261,18 +261,6 @@
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.immagini.html' ),
 	    'macro'				=> array( '_src/_inc/_macro/_anagrafica.form.immagini.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
-	);
-
-	// gestione anagrafica certificazioni
-	$p['anagrafica.form.certificazioni'] = array(
-	    'sitemap'			=> false,
-	    'title'				=> array( $l		=> 'certificazioni' ),
-	    'h1'				=> array( $l		=> 'certificazioni' ),
-	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
-	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.certificazioni.html' ),
-	    'macro'				=> array( '_src/_inc/_macro/_anagrafica.form.certificazioni.php' ),
-	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 

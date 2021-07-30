@@ -127,3 +127,42 @@
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.certificazioni.form' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
 	);
+
+	// inserimento della tab 'progetti.produzione.form.certificazioni' nelle pagine di form produzione
+	arrayInsertSeq( 'progetti.produzione.form.pause', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.certificazioni' );
+	
+	foreach( $p['progetti.produzione.form']['etc']['tabs'] as $t ){
+		$p[ $t ]['etc']['tabs'] = $p['progetti.produzione.form']['etc']['tabs'];
+	}
+	
+	// gestione certificazioni progetti
+	$p['progetti.produzione.form.certificazioni'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'certificazioni' ),
+	    'h1'			=> array( $l		=> 'certificazioni' ),
+	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.certificazioni.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.certificazioni.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+	);
+
+
+	// inserimento della tab 'anagrafica.form.certificazioni' nelle pagine di form anagrafica
+	arrayInsertSeq( 'anagrafica.form.informazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.certificazioni' );
+	
+	foreach( $p['anagrafica.form']['etc']['tabs'] as $t ){
+		$p[ $t ]['etc']['tabs'] = $p['anagrafica.form']['etc']['tabs'];
+	}
+	
+	// gestione anagrafica certificazioni
+	$p['anagrafica.form.certificazioni'] = array(
+	    'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'certificazioni anagrafica' ),
+	    'h1'				=> array( $l		=> 'certificazioni' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.certificazioni.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.certificazioni.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);

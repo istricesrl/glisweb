@@ -36,11 +36,3 @@
             ['anagrafica.form.fornitore']
         );
     }
-
-    // tab delle certificazioni visibile solo se è attivo il modulo
-    if( !in_array( '6700.certificazioni', $cf['mods']['active']['array'] ) ){
-        $ct['page']['etc']['tabs'] = array_diff(
-            $ct['page']['etc']['tabs'],
-            ['anagrafica.form.certificazioni']
-        );
-    }
