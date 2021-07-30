@@ -25,6 +25,11 @@ if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) 
     ) );
 }
 
+if ( isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){
+    $ct['etc']['data_attivita_feedback'] =  date("d/m/Y" ,strtotime("+3 week")) ;
+    print_r( $ct['etc']['data_attivita_feedback']);
+}
+
 if( isset( $_SESSION['contatto']['id_anagrafica'] ) ){
 
     $_SESSION['assistenza']['id_cliente'] = $_SESSION['contatto']['id_anagrafica'];

@@ -34,6 +34,8 @@
         'anagrafica' => 'anagrafica',
         'segnalatore' => 'segnalatore',
         'campagna' => 'campagna',
+        'data_contatto' => 'data',
+        'ora_contatto' => 'ora',
         'note' => 'testo'
 	);
 

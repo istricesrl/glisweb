@@ -77,8 +77,15 @@
             <legend>dati contatto</legend>
            
           <div class="form-row">
-
-            <div class="col-12 col-md mt-2">
+                <div class="col-6 col-md-auto">
+                    <span class="label-top">data</span>
+                    {{ frm.date( table, '', '', 'data_contatto', '', '', request, "now"|date('Y-m-d') ) }}
+                </div>
+                <div class="col-2 col-md-1">
+                    <span class="label-top">ora</span>
+                    {{ frm.time( table, '', '', 'ora_contatto', '', '', request, "now"|date('H:i')) }} 
+                </div>
+            <div class="col-12 col-md">
                 <span class="label-top">cliente</span>
                 {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
             </div>

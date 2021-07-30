@@ -428,8 +428,8 @@
             {% endif  %}
             </div>
             {% if session.assistenza.id_attivita %}
-            <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
+            <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             {% endif %}
             {% if session.assistenza.id_cliente and session.assistenza.id_progetto and ( not session.assistenza.id_attivita ) %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
@@ -573,11 +573,18 @@
 					{{ frm.textarea( 'attivita', '', '', 'testo', '', 2, request ) }}
 					</div>
 				</div>
-                 <div class="col-4 col-md-2 col-form-label">
+
+                {% if session.assistenza.id_attivita_feedback %}
+                <div class="col-12">
+                        attività di feedback pianificata per {{ etc.data_attivita_feedback }}
+					</div>
+                {% else %}
+                <div class="col-4 col-md-2 col-form-label">
                     <div class="col-6">
                         {{ frm.checkbox( table, '', '', '__se_consenso__', 'consenso feedback', '', request ) }} 
                     </div>  
                 </div>
+                {% endif %}
 			</fieldset>
     
             </fieldset>
