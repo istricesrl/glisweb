@@ -108,6 +108,21 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immagini.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_immagini.form.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
-		'etc'		=> array( 'tabs'	=> array( 'immagini.form' ) )
-		
+		'etc'		=> array( 'tabs'	=> array( 
+												'immagini.form',
+												'immagini.form.tools'
+												 ) )	
+	);
+
+	// gestione immagini strumenti
+	$p['immagini.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni immagine' ),
+	    'h1'		=> array( $l		=> 'azioni immagine' ),
+	    'parent'		=> array( 'id'		=> 'immagini.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_immagini.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
 	);
