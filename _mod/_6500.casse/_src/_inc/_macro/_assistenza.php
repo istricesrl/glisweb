@@ -33,11 +33,21 @@ if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) 
         array( 's' => $_REQUEST['todo']['id_progetto'] ),
         array( 's' => $_REQUEST['todo']['id_cliente'] )
     ) );
+
+    if( !empty( $_SESSION['assistenza']['id_attivita_feedback'] ) && array_key_exists( 'attivita', $_SESSION['account']['id_gruppi_attribuzione'] ) && isset( $_SESSION['account']['id_gruppi_attribuzione']['attivita'][0] ) ){
+
+        $acl = mysqlQuery( 
+            $cf['mysql']['connection'], 
+            'INSERT INTO __acl_documenti_articoli__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, ? )', 
+            array( array( 's' => $_SESSION['assistenza']['id_attivita_feedback'] ), array( 's' => $_SESSION['account']['id_gruppi_attribuzione']['attivita'][0] ), array( 's' => 'FULL' )  ) );
+
+    } 
+
 }
 
 if ( isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){
     $ct['etc']['data_attivita_feedback'] =  date("d/m/Y" ,strtotime("+3 week")) ;
-    print_r( $ct['etc']['data_attivita_feedback']);
+   // print_r( $ct['etc']['data_attivita_feedback']);
 }
 
 if( isset( $_SESSION['contatto']['id_anagrafica'] ) ){

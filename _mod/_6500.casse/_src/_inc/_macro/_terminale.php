@@ -288,6 +288,16 @@
                                     array( 's' => $articolo['id_udm'] ),
                                     array( 's' => $ct['etc']['mastro'] )
                                 ) );
+
+
+                    if( !empty( $insert ) && array_key_exists( 'documenti_articoli', $_SESSION['account']['id_gruppi_attribuzione'] ) && isset( $_SESSION['account']['id_gruppi_attribuzione']['documenti_articoli'][0] ) ){
+
+                        $acl = mysqlQuery( 
+                            $cf['mysql']['connection'], 
+                            'INSERT INTO __acl_documenti_articoli__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, ? )', 
+                            array( array( 's' => $insert ), array( 's' => $_SESSION['account']['id_gruppi_attribuzione']['documenti_articoli'][0] ), array( 's' => 'FULL' )  ) );
+
+                    } 
                 }
             }
 

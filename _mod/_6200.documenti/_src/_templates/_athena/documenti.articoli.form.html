@@ -52,7 +52,7 @@
 		<div class="form-group form-row">
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">data</span>
-				{{ frm.date( table, '', '', 'data_lavorazione', 'data', '', request ) }}
+				{{ frm.date( table, '', '', 'data_lavorazione', 'data', '', request, '', '', 1 ) }}
 			</div>
 			<div class="col-md-auto col-4">
 				<span class="label-top">tipologia</span>
@@ -85,7 +85,7 @@
 			</div>
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">importo</span>
-				{{ frm.input( table, '', '', 'importo_netto_totale', 'importo', '', request ) }}
+				{{ frm.inputRequired( table, '', '', 'importo_netto_totale', 'importo', '', request ) }}
 			</div>
 			<!--div class="col-auto">
 				<span class="label-top remove-after-duplicate">valuta</span>
