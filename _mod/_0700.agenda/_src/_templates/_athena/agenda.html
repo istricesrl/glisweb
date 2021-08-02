@@ -64,12 +64,14 @@
 <fieldset class="static-history">
 {% if data %}
 <legend>{{ trans_day_hash[data|date('l', "Europe/Rome")] }} {{ data|date('d') }} {{ trans_month_hash[data|date('m')] }} {{ data|date('Y') }}</legend>
+{% else  %}
+<legend>da fissare</legend>
 {% endif %}
     {% for ora,eventi_per_ora in eventi_per_data %}
     {% for e in eventi_per_ora %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');">
 	<div class="col-1 lemma text-right">
-	    <p>{% if ora != ora_old %}{{ ora|date(' H:i') }}{% else %} da fissare {% endif %}</p>
+	    <p>{% if ora != ora_old %}{{ ora|date(' H:i') }}{% else %}&mdash;{% endif %}</p>
 	</div>
 	<div class="col">
 	    <div class="form-row">

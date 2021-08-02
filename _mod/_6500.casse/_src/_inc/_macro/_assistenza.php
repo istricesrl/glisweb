@@ -9,11 +9,21 @@ $ct['view']['cols'] = array(
     'id' => '#'
 );
 
+if( isset( $_REQUEST['id_contatto'] ) ){
+    $_SESSION['contatto']['id'] = $_REQUEST['id_contatto'];
+    $_SESSION['contatto']['nome'] = $_REQUEST['nome_contatto'];
+
+    if( !empty( $_REQUEST['id_anagrafica'] )  ){
+        $_SESSION['assistenza']['id_cliente'] = $_REQUEST['id_anagrafica'];
+    }
+}
+
 if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) && !isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){
 
-    $_SESSION['assistenza']['id_attivita_feedback'] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (id_tipologia, nome, data_programmazione, id_account_inserimento, timestamp_inserimento, id_todo, id_progetto, id_cliente ) '.
-    'VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
+    $_SESSION['assistenza']['id_attivita_feedback'] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (id_anagrafica, id_tipologia, nome, data_programmazione, id_account_inserimento, timestamp_inserimento, id_todo, id_progetto, id_cliente ) '.
+    'VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )',
     array(
+        array( 's' => (isset($_REQUEST['todo']['__id_anagrafica__']) ? $_REQUEST['todo']['__id_anagrafica__'] : NULL) ),
         array( 's' => '5' ),
         array( 's' => 'customer care a seguito di assistenza' ),
         array( 's' => date("Y-m-d" ,strtotime("+3 week")) ),
@@ -23,11 +33,21 @@ if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) 
         array( 's' => $_REQUEST['todo']['id_progetto'] ),
         array( 's' => $_REQUEST['todo']['id_cliente'] )
     ) );
+
+    if( !empty( $_SESSION['assistenza']['id_attivita_feedback'] ) && array_key_exists( 'attivita', $_SESSION['account']['id_gruppi_attribuzione'] ) && isset( $_SESSION['account']['id_gruppi_attribuzione']['attivita'][0] ) ){
+
+        $acl = mysqlQuery( 
+            $cf['mysql']['connection'], 
+            'INSERT INTO __acl_documenti_articoli__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, ? )', 
+            array( array( 's' => $_SESSION['assistenza']['id_attivita_feedback'] ), array( 's' => $_SESSION['account']['id_gruppi_attribuzione']['attivita'][0] ), array( 's' => 'FULL' )  ) );
+
+    } 
+
 }
 
 if ( isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){
     $ct['etc']['data_attivita_feedback'] =  date("d/m/Y" ,strtotime("+3 week")) ;
-    print_r( $ct['etc']['data_attivita_feedback']);
+   // print_r( $ct['etc']['data_attivita_feedback']);
 }
 
 if( isset( $_SESSION['contatto']['id_anagrafica'] ) ){

@@ -98,7 +98,42 @@
     </div>
 
         </fieldset>
-
+        {% if request[ table ].id %}
+        <legend>azioni</legend>
+        <fieldset>
+        <div class="form-row metro">
+        <div class="col-12 col-md-4">
+            
+            <a href="{{ pages.assistenza.url['it-IT'] }}?id_contatto={{ request[ table ].id }}&nome_contatto={{ request[ table ].nome}}&id_anagrafica={{ request[ table ].id_anagrafica}}" target="_self">
+                <div class="media">
+                <div class="media-left">
+                    <i class="fa fa-plus"></i>
+                </div>
+                <div class="media-body">
+                    <h5 class="media-title">crea assistenza in cassa</h5>
+                    <p class="media-text">crea un'assistenza legata al contatto</p>
+                </div>
+                </div>
+            </a>
+        </div>
+    
+        <div class="col-12 col-md-4">
+            
+            <a href="{{ pages.fornitura.url['it-IT'] }}?id_contatto={{ request[ table ].id }}&nome_contatto={{ request[ table ].nome}}&id_anagrafica={{ request[ table ].id_anagrafica}}" target="_self">
+                <div class="media">
+                <div class="media-left">
+                    <i class="fa fa-plus"></i>
+                </div>
+                <div class="media-body">
+                    <h5 class="media-title">crea fornitura in cassa</h5>
+                    <p class="media-text">crea una fornitura legata al contatto</p>
+                </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    </fieldset>
+        {% endif %}
      
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
@@ -106,7 +141,8 @@
 	    </fieldset>
 
 	</form>
-    </div>
+
+</div>
 </section>
 
 {% endblock %}

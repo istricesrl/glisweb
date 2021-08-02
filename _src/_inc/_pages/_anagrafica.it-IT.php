@@ -14,6 +14,7 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.view',
 															'anagrafica.archivio.view',
+															'anagrafica.stampe',
 															'anagrafica.tools' ) ),
 	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'anagrafica' ),
 																			'priority'	=> '050' ) ) )
@@ -28,6 +29,19 @@
 	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'				=> array( '_src/_inc/_macro/_anagrafica.archivio.view.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['anagrafica.view']['etc']['tabs'] )
+	);
+
+	// stampe anagrafica
+	$p['anagrafica.stampe'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+		'title'				=> array( $l		=> 'stampe' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( '_src/_inc/_macro/_anagrafica.stampe.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['anagrafica.view']['etc']['tabs'] )
 	);
@@ -189,7 +203,7 @@
 	$p['anagrafica.form.stampe'] = array(
 	    'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
-	    'title'				=> array( $l		=> 'stampe' ),
+	    'title'				=> array( $l		=> 'stampe_anagrafica' ),
 	    'h1'				=> array( $l		=> 'stampe' ),
 	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
