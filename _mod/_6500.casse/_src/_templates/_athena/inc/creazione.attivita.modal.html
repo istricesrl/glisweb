@@ -52,8 +52,9 @@
 				<input type="hidden" id="id" name="{{ table }}[id]" >
                 <input type="hidden" id="id_account_inserimento" name="{{ table }}[id_account_inserimento]" value="{{ account }}">
 				<input type="hidden" id="id_anagrafica" name="{{ table }}[id_anagrafica]" value="{{ anagrafica }}">	
-				<!--input type="hidden" id="id_mastro" name="{{ table }}[id_mastro_destinazione]" value="{{ etc.mastro_attivita }}"-->	
+				<input type="hidden" id="id_tipologia" name="{{ table }}[id_tipologia]" value="{{ etc.id_tipologia_carico }}">	
                 <input type="hidden" id="id_documenti_articoli" name="{{ table }}[id_documenti_articoli]" >	
+				<input type="hidden" id="data_attivita" name="{{ table }}[data_attivita]" value="{{ 'now'|date('Y-m-d') }}">	
 
 		    <div class="form-row form-group">
 
