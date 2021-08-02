@@ -111,6 +111,7 @@
 		'etc'		=> array( 'tabs'	=> array( 
 												'immagini.form',
 												'immagini.form.associazioni',
+												'immagini.form.anagrafica',
 												'immagini.form.tools'
 												 ) )	
 	);
@@ -124,6 +125,18 @@
 		'parent'		=> array( 'id'		=> 'immagini.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immagini.form.associazioni.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_immagini.form.associazioni.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
+	);
+
+	// gestione immagini anagrafica
+	$p['immagini.form.anagrafica'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'anagrafica' ),
+		'h1'		=> array( $l		=> 'anagrafica' ),
+		'parent'		=> array( 'id'		=> 'immagini.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immagini.form.anagrafica.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_immagini.form.anagrafica.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
 	);
