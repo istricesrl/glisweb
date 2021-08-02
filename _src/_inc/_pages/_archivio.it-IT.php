@@ -113,6 +113,7 @@
 												'immagini.form.associazioni',
 												'immagini.form.anagrafica',
 												'immagini.form.sem',
+												'immagini.form.testo',
 												'immagini.form.tools'
 												 ) )	
 	);
@@ -150,6 +151,18 @@
 	    'parent'		=> array( 'id'		=> 'immagini.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immagini.form.sem.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_immagini.form.sem.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
+	);
+
+	// gestione immagini testo
+	$p['immagini.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'immagini.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immagini.form.testo.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_immagini.form.testo.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
 	);
