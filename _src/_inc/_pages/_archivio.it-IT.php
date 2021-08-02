@@ -114,6 +114,7 @@
 												'immagini.form.anagrafica',
 												'immagini.form.sem',
 												'immagini.form.testo',
+												'immagini.form.metadati',
 												'immagini.form.tools'
 												 ) )	
 	);
@@ -165,6 +166,19 @@
 	    'macro'		=> array( '_src/_inc/_macro/_immagini.form.testo.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
+	);
+
+	// gestione immagini metadati
+	$p['immagini.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'immagini.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immagini.form.metadati.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_immagini.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
 	);
 
 	// gestione immagini strumenti
