@@ -26,7 +26,7 @@
 			{% endfor %}
 		</select>
 	</div>
-	<div class="col-12 col-md-auto">
+	<div class="col-12 col-md-2">
 		<span class="label-top">articolo</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_articolo][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_articolo.EQ == "" %}selected{% endif %}>tutti</option>

@@ -37,7 +37,7 @@
 	// gestione tools documenti
 	$p['documenti.form.righe'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'righe' ),
+	    'title'			=> array( $l		=> 'righe_documenti' ),
 	    'h1'			=> array( $l		=> 'righe' ),
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.righe.html' ),
@@ -89,7 +89,7 @@
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'righe' ),
 	    'h1'			=> array( $l		=> 'righe' ),
-	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_documenti.articoli.view.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
