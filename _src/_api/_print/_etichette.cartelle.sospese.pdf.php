@@ -19,7 +19,7 @@
     if( isset( $_REQUEST['id'] )  ){
         $anagrafiche = mysqlQuery( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $_REQUEST['id'] ) ) );
     } else {
-        $anagrafiche = mysqlQuery( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view ');
+        $anagrafiche = mysqlQuery( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_cliente = 1');
     }
     
     if( empty(  $anagrafiche  ) ){

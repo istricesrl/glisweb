@@ -38,9 +38,13 @@ if( $azienda ){
         'fontsize' => 6
     );
 
-
-// impostazione documento
-$info['doc']['title']                       = 'PDF ritiro hardware'.( isset( $todo ) ? ' todo #'.$todo['id'] : '' );
+if( $documento['tipologia'] == 'consegna' ){
+    // impostazione documento
+    $info['doc']['title']                       = 'PDF consegna hardware'.( isset( $todo ) ? ' todo #'.$todo['id'] : '' );
+} else {
+    // impostazione documento
+    $info['doc']['title']                       = 'PDF ritiro hardware'.( isset( $todo ) ? ' todo #'.$todo['id'] : '' );
+}
 
 // definizione colori
 $info['colors']['nero']                     = array( 0, 0, 0 );
@@ -79,14 +83,29 @@ if( isset( $logo ) ){
 $pdf->image( $logo, 15, 15, 10, 10, NULL, NULL, 'T', false, 10, '', false, false, 0, true );		// x, y, w, h, type, link, align, resize
 $x = $pdf -> getX() + 2;
 $pdf -> setX( $x );
-pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware', 15 );
+if( $documento['tipologia'] == 'consegna' ){
+    pdfFormCellPdfTitle( $pdf, $info, 'modulo di consegna hardware', 15 );
+} else {
+    pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware', 15 );
+}
 $pdf -> setX( $x );
-pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
+if( $documento['tipologia'] == 'consegna' ){
+    pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso alla riconsegna di materiale hardware');
+} else {
+    pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
+}
+
 
 } else {
 
-    pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware', 15 );
-    pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
+    if( $documento['tipologia'] == 'consegna' ){
+        pdfFormCellPdfTitle( $pdf, $info, 'modulo di consegna hardware', 15 );
+        pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso alla riconsegna di materiale hardware');
+    } else {
+        pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware', 15 );
+        pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
+    }
+
 }
 
 pdfSetRelativeY( $pdf, 5);
@@ -152,17 +171,25 @@ if( isset( $documento ) ){
 
 //pdfSetRelativeY( $pdf, 100);
 $pdf -> setY( 250 );
-pdfFormCellTitle( $pdf, $info, 'accettazione ritiro hardware' );
-        
+    if( $documento['tipologia'] == 'consegna' ){
+        pdfFormCellTitle( $pdf, $info, 'accettazione consegna hardware' );
+    } else {
+        pdfFormCellTitle( $pdf, $info, 'accettazione ritiro hardware' );
+    }      
         pdfSetRelativeY( $pdf, 5 );
 pdfSetRelativeY( $pdf, $info['form']['row']['spacing'] );
         $boxY = $pdf->GetY();
 
         pdfFormBox( $pdf, $info, "luogo e data", 12, 3, pdfFormCalcX( $info, 0 ), $boxY );
-        pdfFormBox( $pdf, $info, "timbro e firma accettazione ritiro", 21, 3, pdfFormCalcX( $info, 12), $boxY );
+        if( $documento['tipologia'] == 'consegna' ){
+            pdfFormBox( $pdf, $info, "timbro e firma accettazione consegna", 21, 3, pdfFormCalcX( $info, 12), $boxY );
+        } else {
+            pdfFormBox( $pdf, $info, "timbro e firma accettazione ritiro", 21, 3, pdfFormCalcX( $info, 12), $boxY );
+        }
+
         pdfFormBox( $pdf, $info, "firma del tecnico", 12, 3, pdfFormCalcX( $info, 33 ), $boxY );
 // aggiunta di una pagina
 //$pdf->AddPage();
 
 // output
-$pdf->Output( 'modulo ritiro hardware.pdf' );								// invia l'output al browser
+$pdf->Output($info['doc']['title'].'.pdf' );								// invia l'output al browser

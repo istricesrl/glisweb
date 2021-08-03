@@ -23,19 +23,32 @@
 <script>
     function aggiungi( t ) {
 
-		var qta = $( '#_qta' ).val();
-		var ore = $( '#_ore_c' ).val();
+		var qta = $( '#_qta' ).val().replace(",", ".");
+		var ore = $( '#_ore_c' ).val().replace(",", ".");
 		var id_articolo = $( '#_id_articolo_inputbox' ).val();
 		var id_mastro = $( '#_mastro' ).val();
         var id_cliente = '{{ etc.todo.id_cliente }}';
         var id_todo = '{{ etc.todo.id }}';
         var id_progetto = '{{ etc.todo.id_progetto }}';
 
-console.log(ore);
-console.log(id_mastro);
-console.log(qta);
-console.log(id_articolo);
-window.open('{{ cassa }}?__art__='+id_articolo+'&__qta__='+qta+'&__mastro__='+id_mastro+'&__ore__='+ore+'&__cliente__='+id_cliente+'&__todo__='+id_todo+'&__progetto__='+id_progetto,'_self')
+    if( qta != '' && ore != '' && id_articolo != '' && id_mastro != ''  ){
+
+
+        window.open('{{ cassa }}?__art__='+id_articolo+'&__qta__='+qta+'&__mastro__='+id_mastro+'&__ore__='+ore+'&__cliente__='+id_cliente+'&__todo__='+id_todo+'&__progetto__='+id_progetto,'_self');
+        
+    } 
+    
+    if(qta == ''){ document.getElementById("_qta").style.borderColor="#FF0000";
+    } else { document.getElementById("_qta").style.borderColor="#ced4da"; }
+    
+    if ( ore == '' ) { document.getElementById("_ore_c").style.borderColor="#FF0000";
+    } else { document.getElementById("_ore_c").style.borderColor="#ced4da"; }
+    
+    if ( id_articolo == '' ){ document.getElementById("_id_articolo_inputbox").style.borderColor="#FF0000";
+    } else { document.getElementById("_id_articolo_inputbox").style.borderColor="#ced4da"; }
+    
+    if ( id_mastro == '' ){ document.getElementById("_mastro").style.borderColor="#FF0000";
+    } else { document.getElementById("_mastro").style.borderColor="#ced4da"; }
 
     }
 </script>
