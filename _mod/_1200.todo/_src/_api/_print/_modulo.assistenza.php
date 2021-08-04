@@ -462,11 +462,11 @@
             pdfSetRelativeY( $pdf, 5 );
             pdfFormLineRow( $pdf, $info,'Ai sensi dell\'art. 1341 c.c. il Cliente approva specificamente gli artt. 3 (modalità di espletamento), 4 (durata del contratto), 5 (corrispettivo e condizioni di pagamento), 6 (garanzia), 8 (subappalto), 11 (clausola risolutiva espressa), 13 (esclusioni), 14 (risoluzione delle controversie).', 45, 0);
             pdfSetRelativeY( $pdf, 7 );
-            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, ').  ( isset( $todo ) ? date( 'd/m/Y',$todo['timestamp_inserimento']) : '__/__/____' ) .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, ').  ( isset( $todo ) ? date( 'd/m/Y',$todo['timestamp_inserimento']) : '__/__/____' ) .' timbro e firma per accettazione delle clausole ex art. 1341 c.c. _______________________', 45, 0);
             pdfSetRelativeY( $pdf, 6 );
             pdfFormLineRow( $pdf, $info,'Il cliente accetta il trattamento dei propri dati personali [ ] per l\' esecuzione del contratto e le dovute operazioni di fatturazione [ ] per essere ricontattato ai fini di marketing e customer care [ ] per l\' iscrizione alla newsletter di Istrice srl; per le suddette finalità [ ] autorizza la trasmissione dei propri dati a Istrice srl e agli altri membri della rete PC Stop.', 45, 0);
             pdfSetRelativeY( $pdf, 12 );
-            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). ( isset( $todo ) ? date( 'd/m/Y',$todo['timestamp_inserimento']) : '__/__/____' ) .' timbro e firma per accettazione delle condizioni di servizio _______________________', 45, 0);
+            pdfFormLineRow( $pdf, $info,'Luogo e data '.( isset( $sede['comune'] ) ? $sede['comune'].', ' : '__________________, '). ( isset( $todo ) ? date( 'd/m/Y',$todo['timestamp_inserimento']) : '__/__/____' ) .' timbro e firma per autorizzazione al trattamento dei dati personali _______________________', 45, 0);
 
             pdfSetRelativeY( $pdf, 6 );
 

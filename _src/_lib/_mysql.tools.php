@@ -583,14 +583,24 @@
     }
 
     /**
-     *
-     * @todo documentare
+	 * effettua la duplicazione ricorsiva di un oggetto e degli eventuali oggetti figli delle tabelle correlate
+	 * 
+     * @param	mysqli		$c		connessione mysqli
+	 * @param	string		$t		nome della tabella in cui si trova il record principale da duplicare
+	 * @param	string		$o		id dell'oggetto da duplicare
+	 * @param	string		$n		id dell'oggetto figlio ottenuto, passare NULL per autoincrement
+	 * @param	string		$x		puntatore ad un array contenente in chiave i nomi delle tabelle (principale e collegate) da coinvolgere nella duplicazione e in valore un array che a sua volta contiene in chiave l'elenco dei campi da modificare nell'oggetto duplicato e in valore il valore da utilizzare
+	 * 
+     * @todo finire di documentare
      *
      */
     function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array() ) {
 
 		// debug
-		// print_r( $x[ $t ] );
+	//	echo "stampo x" . PHP_EOL;
+	//	print_r($x);
+	//	echo "stampo x[t]" . PHP_EOL;
+	//	 print_r( $x[ $t ] );
 
 		// se non ho un ID di partenza
 		if( empty( $o ) ) {
@@ -625,10 +635,13 @@
 		);
 
 		// debug
+		//echo "tabelle collegate". PHP_EOL;
 		// print_r( $ks );
 
 		// per ogni relazione
 		foreach( $ks as $ksr ) {
+
+		//	echo "tabella " . $ksr['TABLE_NAME'] . PHP_EOL;
 
 			// aggiungo il campo di relazione alle sostituzioni
 			$x[ $ksr['TABLE_NAME'] ][ $ksr['COLUMN_NAME'] ] = $id;
@@ -640,14 +653,17 @@
 			$rls = mysqlQuery( $c, $q );
 
 			// debug
-			// var_dump( $q );
-			// print_r( $rls );
+		//	echo "query di ricerca relazioni" . PHP_EOL;
+		//	 var_dump( $q );
+
+		//	 echo "righe collegate" . PHP_EOL;
+		//	 print_r( $rls );
 
 			// per ogni riga della relazione
 			foreach( $rls as $rl ) {
 
 				// debug
-				// print_r( $rl );
+			//	 print_r( $rl );
 
 				// chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
 				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x );
@@ -659,7 +675,7 @@
 	}
 
     /**
-     *
+     * 
      * @todo documentare
      * $c	connessione
      * $t	nome tabella

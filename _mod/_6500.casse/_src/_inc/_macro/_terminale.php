@@ -56,6 +56,8 @@
     $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
                                     'SELECT id FROM tipologie_documenti WHERE nome = "scontrino"');
 
+    $ct['etc']['id_tipologia_carico'] = mysqlSelectValue(  $cf['mysql']['connection'],
+                                    'SELECT id FROM tipologie_attivita WHERE nome = "carico"');
     // eliminazione scontrino in sospeso
     if( isset( $_REQUEST['__delete__'] ) ){
 
@@ -288,6 +290,16 @@
                                     array( 's' => $articolo['id_udm'] ),
                                     array( 's' => $ct['etc']['mastro'] )
                                 ) );
+
+
+                    if( !empty( $insert ) && array_key_exists( 'documenti_articoli', $_SESSION['account']['id_gruppi_attribuzione'] ) && isset( $_SESSION['account']['id_gruppi_attribuzione']['documenti_articoli'][0] ) ){
+
+                        $acl = mysqlQuery( 
+                            $cf['mysql']['connection'], 
+                            'INSERT INTO __acl_documenti_articoli__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, ? )', 
+                            array( array( 's' => $insert ), array( 's' => $_SESSION['account']['id_gruppi_attribuzione']['documenti_articoli'][0] ), array( 's' => 'FULL' )  ) );
+
+                    } 
                 }
             }
 
@@ -309,9 +321,9 @@
             }
 
             if(  isset( $insert ) && $insert > 0 && isset( $_REQUEST['__ore__'] ) ){
-                $insert = mysqlQuery( 
+                $insert_a = mysqlQuery( 
                     $cf['mysql']['connection'], 
-                    "INSERT INTO attivita ( nome, data, ore, id_mastro_destinazione, id_documenti_articoli, id_cliente, id_todo, id_progetto )  VALUES ( ?,?,?,?, ?, ?, ?, ?)",
+                    "INSERT INTO attivita ( nome, data_attivita, ore, id_mastro_destinazione, id_documenti_articoli, id_cliente, id_todo, id_progetto, id_tipologia )  VALUES ( ?,?,?,?, ?, ?, ?, ?, ?)",
                     array( 
                         array( 's' => 'carico ore da scontrino '.$_REQUEST[ $ct['form']['table'] ]['id'] ),
                         array( 's' => date("Y-m-d") ),
@@ -320,8 +332,18 @@
                         array( 's' => $insert ),
                         array( 's' => $_REQUEST['__cliente__'] ),
                         array( 's' => $_REQUEST['__todo__'] ),
-                        array( 's' => $_REQUEST['__progetto__'] )
+                        array( 's' => $_REQUEST['__progetto__'] ),
+                        array( 's' => $ct['etc']['id_tipologia_carico'] )
                     ) );
+
+                    if( isset( $_SESSION['account']['id_gruppi_attribuzione']['attivita'] ) ){
+                        $acl = mysqlQuery( 
+                            $cf['mysql']['connection'], 
+                            'INSERT INTO __acl_attivita__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, ? )', 
+                            array( array( 's' => $insert_a ), array( 's' => $_SESSION['account']['id_gruppi_attribuzione']['attivita'][0] ), array( 's' => 'FULL' )  ) );
+    
+                    }
+                   
 
             }
 

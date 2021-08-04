@@ -32,8 +32,12 @@
         $ct['view']['cols'] = array(
             'id' => '#',
             'id_articolo' => 'articolo',
+            'descrizione' => 'descrizione',
+            'matricola' => 'matricola',
             'quantita_totale' => 'quantità',
-            'importo_totale' => 'importo'
+            'importo_totale' => 'importo',
+            'id_todo' => 'todo',
+            'id_progetto' => 'progetto'
         );
 
         // stili della vista

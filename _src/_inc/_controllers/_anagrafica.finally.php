@@ -15,7 +15,7 @@
      */
 
     // log
-	logWrite( "controller after per ${t}/${a}", 'controller' );
+	logWrite( "controller finally per ${t}/${a}", 'controller' );
 
     // elaborazioni di default dei dati
 	switch( strtoupper( $a ) ) {

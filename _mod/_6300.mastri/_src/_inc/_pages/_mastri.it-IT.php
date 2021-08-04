@@ -91,3 +91,27 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 	);
+	
+	// vista giacenze articoli
+	$p['articoli.form.giacenze'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'giacenze_articoli' ),
+	    'h1'		=> array( $l		=> 'giacenze' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.giacenze.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.giacenze.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+	// vista giacenze articoli
+	$p['articoli.form.movimenti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'movimenti_articoli' ),
+	    'h1'		=> array( $l		=> 'movimenti' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.movimenti.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.movimenti.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);

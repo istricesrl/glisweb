@@ -179,9 +179,8 @@
         $pdf->SetFont( $fnt, '', $fnts );		
         $pdf -> setXY( $x + $litsp, $pdf -> getY() );
 
-        $remSp = ( $x + $hBox ) - $pdf -> getY() - $hBarr*2;
-
-        $pdf->MultiCell( $wBox - $stdsp, '', $documnento['testo_todo'].'', '', 'L', '', 1,'','',true,'','','',  $remSp);
+        $remSp = ( $startX + $hBox ) - $pdf -> getY() - $hBarr*2.5;
+        $pdf->MultiCell( $wBox /2, '', $documnento['testo_todo'].'', '', 'L', '', 1,'','',true,'','','',  $remSp);
 // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
 
         $pdf -> setXY( $x, $pdf -> getY() + $litsp );

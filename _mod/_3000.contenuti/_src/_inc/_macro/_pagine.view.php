@@ -23,8 +23,14 @@
     // tabella della vista
 	$ct['view']['table'] = 'pagine';
 
+    // id della vista
+    $ct['view']['id'] = md5( $ct['view']['table'] );
+
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'pagine.form';
+
+    // tendina siti
+    $ct['etc']['select']['siti'] = $cf['sites'];
 
     // campi della vista
 	$ct['view']['cols'] = array(
@@ -44,6 +50,9 @@
 	    'schema_html' => 'text-left',
 	    'tema_css' => 'text-left'
 	);
+
+    // inclusione filtri speciali
+	$ct['etc']['include']['filters'] = 'inc/pagine.view.filters.html';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
