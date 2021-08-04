@@ -21,7 +21,7 @@
 
     // tabella gestita
 	$ct['form']['table'] = 'progetti';
-    
+
     // tendina clienti
 	$ct['etc']['select']['clienti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

@@ -29,22 +29,22 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'tipologia' => 'tipologia',
         'data_lavorazione' => 'data',
+        'documento' => 'documento',
+        'tipologia' => 'tipologia',
         'nome' => 'nome',
-        'specifiche' => 'specifiche',
+        'id_articolo' => 'articolo',
         'importo_netto_totale' => 'importo',
         'quantita' => 'quantità',
-        'documento' => 'documento',
-        'cliente' => 'cliente',
-        'emittente' => 'emittente', 
+        'mastro_carico' => 'carico',
+        'mastro_scarico' => 'scarico'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
-        'importo_netto_totale' => 'text-left',
-        'quantita' => 'text-left',
+        'importo_netto_totale' => 'text-right',
+        'quantita' => 'text-right',
         'documento' => 'text-left',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 

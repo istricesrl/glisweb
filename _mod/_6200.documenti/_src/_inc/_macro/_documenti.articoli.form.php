@@ -62,6 +62,14 @@
 	    'SELECT id, __label__ FROM valute_view '
 	);
 
+	// tendina reparti
+	$ct['etc']['select']['id_reparti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM reparti_view '
+	);
+
 	// tendina listini
 	$ct['etc']['select']['id_listini'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -84,6 +92,22 @@
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM progetti_view '
+	);
+
+	// tendina todo
+	$ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM todo_view '
+	);
+
+	// tendina matricole
+	$ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM matricole_view '
 	);
 
         // tendina tipologie anagrafica
