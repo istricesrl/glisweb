@@ -210,7 +210,14 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `__report_giacenza_mastri__` (
   `id` tinyint NOT NULL,
+  `mastro` tinyint NOT NULL,
   `id_articolo` tinyint NOT NULL,
+  `descrizione` tinyint NOT NULL,
+  `matricola` tinyint NOT NULL,
+  `id_matricola` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
+  `id_destinatario` tinyint NOT NULL,
   `quantita_totale` tinyint NOT NULL,
   `importo_totale` tinyint NOT NULL
 ) ENGINE=MyISAM */;
@@ -472,6 +479,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `__report_mastri__` (
   `id` tinyint NOT NULL,
+  `mastro` tinyint NOT NULL,
   `cliente` tinyint NOT NULL,
   `emittente` tinyint NOT NULL,
   `id_riga` tinyint NOT NULL,
@@ -484,7 +492,13 @@ SET character_set_client = utf8;
   `data_lavorazione` tinyint NOT NULL,
   `id_destinatario` tinyint NOT NULL,
   `id_emittente` tinyint NOT NULL,
-  `id_listino` tinyint NOT NULL
+  `id_listino` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
+  `id_matricola` tinyint NOT NULL,
+  `matricola` tinyint NOT NULL,
+  `todo` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -1048,6 +1062,7 @@ SET character_set_client = utf8;
   `utente` tinyint NOT NULL,
   `gruppi` tinyint NOT NULL,
   `id_gruppi` tinyint NOT NULL,
+  `gruppi_attribuzione` tinyint NOT NULL,
   `gruppo_sede` tinyint NOT NULL,
   `id_anagrafica_struttura` tinyint NOT NULL,
   `id_gruppi_attribuzione` tinyint NOT NULL,
@@ -2766,8 +2781,8 @@ CREATE TABLE `audio` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `codice_embed` (`codice_embed`),
-  UNIQUE KEY `path` (`path`),
+  UNIQUE KEY `pagina_unico_embed` (`id_pagina`,`codice_embed`),
+  UNIQUE KEY `pagina_unico_path` (`id_pagina`,`path`),
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   KEY `id_pagina` (`id_pagina`),
@@ -2783,6 +2798,8 @@ CREATE TABLE `audio` (
   KEY `id_notizia` (`id_notizia`),
   KEY `id_categoria_notizie` (`id_categoria_notizie`),
   KEY `id_risorsa` (`id_risorsa`),
+  KEY `codice_embed` (`codice_embed`),
+  KEY `path` (`path`),
   CONSTRAINT `audio_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `audio_ibfk_10` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `audio_ibfk_10_nofollow` FOREIGN KEY (`id_tipologia_embed`) REFERENCES `tipologie_embed` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -3701,7 +3718,8 @@ CREATE TABLE `categorie_progetti` (
 --
 
 DROP TABLE IF EXISTS `categorie_progetti_view`;
-/*!50001 DROP VIEW IF EXISTS `categorie_progetti_view`*/;
+/*!50001 DROP VIEW IF EXISTSmysqldump: Couldn't execute 'show create table `certificazioni_archiviati_view`': View '__glisweb__.certificazioni_archiviati_view' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them (1356)
+ `categorie_progetti_view`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `categorie_progetti_view` (
@@ -3716,8 +3734,7 @@ SET character_set_client = utf8;
   `timestamp_aggiornamento` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_climysqldump: Couldn't execute 'show create table `certificazioni_archiviati_view`': View '__glisweb__.certificazioni_archiviati_view' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them (1356)
-ent;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `categorie_risorse`
