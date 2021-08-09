@@ -1,0 +1,1 @@
+INSERT INTO  attivita_view_static select * from attivita_view;
