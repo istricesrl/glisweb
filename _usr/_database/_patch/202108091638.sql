@@ -1,0 +1,1 @@
+TRUNCATE attivita_view_static;
