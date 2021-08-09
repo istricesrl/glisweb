@@ -21,7 +21,7 @@
     $ct['view']['table'] = 'campagne';
     
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+  #  $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'campagne.form';

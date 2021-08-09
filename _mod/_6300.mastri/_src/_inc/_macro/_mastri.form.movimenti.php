@@ -108,7 +108,7 @@
     $ct['view']['data']['__report_mode__'] = 1;
 
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
 
 

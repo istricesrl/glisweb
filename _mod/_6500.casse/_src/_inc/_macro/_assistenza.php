@@ -169,7 +169,7 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && !isset( $_SESSION['assiste
 	$ct['view']['table'] = 'progetti';
 
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // campi della vista
 	$ct['view']['cols'] = array(
@@ -189,7 +189,7 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && !isset( $_SESSION['assiste
 	$ct['view']['table'] = 'todo';
 
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   $ct['view']['id'] = md5( $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']);
 
     // campi della vista
 	$ct['view']['cols'] = array(

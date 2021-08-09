@@ -77,7 +77,7 @@
       }
 
          // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
  
 
     // preset filtro custom progetti aperti

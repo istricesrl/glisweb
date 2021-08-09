@@ -22,7 +22,7 @@
     $ct['view']['table'] = 'variazioni_attivita';
     
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'variazioni.form';
