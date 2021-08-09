@@ -95,7 +95,7 @@ if( isset( $_REQUEST['__unset__'] ) ){
 
 
 // id della vista
-$ct['view']['id'] = md5( $ct['view']['table'] );
+$ct['view']['id'] = md5( $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__'] );
 
 if( isset( $_SESSION['fornitura']['id_cliente'] ) && !isset($ct['etc']['progetto'])  ){
     $ct['etc']['cliente'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $_SESSION['fornitura']['id_cliente']) ));

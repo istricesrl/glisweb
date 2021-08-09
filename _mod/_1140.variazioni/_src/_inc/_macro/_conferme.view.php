@@ -32,6 +32,8 @@
         'SELECT DISTINCT id_anagrafica as id, anagrafica as __label__ FROM sostituzioni_attivita_view'
     );
 
+    require DIR_SRC_INC_MACRO . '_default.view.php';
+
     if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && !empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) ) 
 	{
         $ct['etc']['sostituzioni'] = mysqlQuery(
@@ -46,6 +48,6 @@
 
     
     // macro di default
-#	require DIR_SRC_INC_MACRO . '_default.view.php';
+#	
 
    
