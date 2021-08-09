@@ -72,13 +72,13 @@
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">note interne</span>
-				{{ frm.textarea( table, '', '', 'note_interne', '', 3, request ) }}
+				{{ frm.textarea( table, '', '', 'note_interne', '', 2, request ) }}
 				</div>
 			</div>
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">note cliente</span>
-				{{ frm.textarea( table, '', '', 'testo', '', 3, request ) }}
+				{{ frm.textarea( table, '', '', 'testo', '', 2, request ) }}
 				</div>
 			</div>
 			</fieldset>
@@ -102,7 +102,7 @@
 				<div class="form-group form-row">
 					<div class="col-12">
 					<span class="label-top">note programmazione</span>
-					{{ frm.textarea( table, '', '', 'note_programmazione', '', 3, request ) }}
+					{{ frm.textarea( table, '', '', 'note_programmazione', '', 2, request ) }}
 					</div>
 				</div>
 			</fieldset>
@@ -130,9 +130,9 @@
 						<span class="label-top">esecutore</span>
 						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
-					<div class="col-auto">
+					<!--div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
-					</div>
+					</div-->
 				</div>
 
 			</fieldset>
