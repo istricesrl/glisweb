@@ -72,7 +72,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_lead = 1 OR se_cliente = 1 OR se_prospect = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static' );
 
     // tendina esiti
 	$ct['etc']['select']['id_esito'] = mysqlCachedIndexedQuery(
