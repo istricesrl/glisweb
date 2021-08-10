@@ -143,7 +143,7 @@
 
        
         // rettangolo guida
-        $pdf-> Rect( $x, $y, $wBox, $hBox );	
+        //$pdf-> Rect( $x, $y, $wBox, $hBox );	
         //$pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
         $pdf -> setXY( $x + $litsp, $y + $litsp );
         
