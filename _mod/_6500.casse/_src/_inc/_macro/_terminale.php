@@ -323,7 +323,7 @@
             if(  isset( $insert ) && $insert > 0 && isset( $_REQUEST['__ore__'] ) ){
                 $insert_a = mysqlQuery( 
                     $cf['mysql']['connection'], 
-                    "INSERT INTO attivita ( nome, data_attivita, ore, id_mastro_destinazione, id_documenti_articoli, id_cliente, id_todo, id_progetto, id_tipologia )  VALUES ( ?,?,?,?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO attivita ( nome, data_attivita, ore, id_mastro_provenienza, id_documenti_articoli, id_cliente, id_todo, id_progetto, id_tipologia )  VALUES ( ?,?,?,?, ?, ?, ?, ?, ?)",
                     array( 
                         array( 's' => 'carico ore da scontrino '.$_REQUEST[ $ct['form']['table'] ]['id'] ),
                         array( 's' => date("Y-m-d") ),

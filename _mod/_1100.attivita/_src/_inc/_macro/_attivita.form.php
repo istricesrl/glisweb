@@ -149,7 +149,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM mastri_view'
+	    'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 3'
     );
 
     // tendina matricole

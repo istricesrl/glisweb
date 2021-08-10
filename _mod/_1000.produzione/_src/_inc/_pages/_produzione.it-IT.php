@@ -134,6 +134,7 @@ $p['progetti.produzione.form.pianificazioni'] = array(
 // gestione progetti chiusura
 $p['progetti.produzione.form.chiusura'] = array(
 	'sitemap'		=> false,
+	'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
 	'title'			=> array( $l		=> 'chiusura' ),
 	'h1'			=> array( $l		=> 'chiusura' ),
 	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
