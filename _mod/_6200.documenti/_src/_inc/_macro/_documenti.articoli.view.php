@@ -36,8 +36,10 @@
         'id_articolo' => 'articolo',
         'importo_netto_totale' => 'importo',
         'quantita' => 'quantità',
+        'totale_riga' => 'totale',
         'mastro_carico' => 'carico',
-        'mastro_scarico' => 'scarico'
+        'mastro_scarico' => 'scarico',
+
 	);
 
     // stili della vista
@@ -45,7 +47,8 @@
         'nome' => 'text-left',
         'importo_netto_totale' => 'text-right',
         'quantita' => 'text-right',
-        'documento' => 'text-left',
+        'documento' => 'text-left',        
+        'totale_riga' => 'text-right',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data_lavorazione' => 'text-left', 

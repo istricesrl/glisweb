@@ -115,7 +115,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_documenti_articoli_view'
+	    'SELECT id, __label__ FROM tipologie_documenti_view'
 	);
 
     // tendina mittenti

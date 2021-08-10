@@ -26,6 +26,17 @@
 		'template'		=> array( 'path'	=>  '_src/_templates/_athena/', 'schema' => 'campagne.form.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_campagne.form.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
-		'etc'		=> array( 'tabs'	=> array( 'campagne.form' ) )
-		
+		'etc'		=> array( 'tabs'	=> array( 'campagne.form', 'campagne.form.contatti' ) )		
+	);
+
+	// subview contatti
+	$p['campagne.form.contatti'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'contatti_campagna' ),
+	    'h1'			=> array( $l		=> 'contatti' ),
+	    'parent'		=> array( 'id'		=> 'campagne.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'campagne.form.contatti.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_campagne.form.contatti.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['campagne.form']['etc']['tabs'] )
 	);
