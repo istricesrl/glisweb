@@ -28,7 +28,7 @@
     {{ frm.input( table, subtable, i, 'id_mastro_destinazione', '', '', request, mastro_carico, 'hidden', '', '', disabled  ) }}   
     {{ frm.input( table, subtable, i, 'id_emittente', '', '', request, etc.id_emittente, 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_destinatario', '', '', request, request.todo.id_cliente, 'hidden', '', '', disabled  ) }}
-    {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request, '1', 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request, '0', 'hidden', '', '', disabled  ) }}
 
 	{% if request[ table ][ 'data' ] %}
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, request[ table ][ 'data' ], 'hidden', '', '', disabled  ) }}

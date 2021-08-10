@@ -24,7 +24,7 @@
     $ct['view']['table'] = 'todo';
     
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'].'archivio' );
+   # $ct['view']['id'] = md5( $ct['view']['table'].'archivio' );
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'todo.form';
@@ -68,7 +68,10 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
-
+   
+	// macro di default
+    require DIR_SRC_INC_MACRO . '_default.view.php';
+    
     // preset filtro custom todo completati
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] = 2;
@@ -90,9 +93,6 @@
 		    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_responsabile']['NL'] = true;
 		}
 	}
-    
-    // macro di default
-    require DIR_SRC_INC_MACRO . '_default.view.php';
     
 	if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){

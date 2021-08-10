@@ -22,7 +22,7 @@
     $ct['view']['table'] = 'sostituzioni_attivita';
     
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
 
     // campi della vista

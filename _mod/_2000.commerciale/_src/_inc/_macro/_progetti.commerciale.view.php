@@ -22,7 +22,7 @@
 	$ct['view']['table'] = 'progetti_commerciale';
 
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+    # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // tabella per la gestione degli oggetti esistenti
 	$ct['view']['open']['table'] = 'progetti';

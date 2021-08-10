@@ -22,8 +22,10 @@
     $ct['view']['table'] = 'variazioni_attivita';
     
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
-
+    $ct['view']['id'] = md5(
+		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
+	    );
+        
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'variazioni.form';
 
@@ -47,11 +49,6 @@
     
     // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/variazioni.view.filters.html';
-
-     // preset filtro custom variazioni da approvare
-	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['approvata']['EQ'] ) ) {
-	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['approvata']['EQ'] = 0;
-    }
 
     // tendina operatori
 	$ct['etc']['select']['operatori'] = mysqlCachedQuery(
@@ -82,7 +79,11 @@
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
 	}
 */
+
+    // preset filtro custom variazioni da approvare
+	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['approvata']['EQ'] ) ) {
+	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['approvata']['EQ'] = 0;
+    }  
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
-
-   

@@ -143,7 +143,7 @@
 
        
         // rettangolo guida
-        //$pdf-> Rect( $x, $y, $wBox, $hBox );	
+        $pdf-> Rect( $x, $y, $wBox, $hBox );	
         //$pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
         $pdf -> setXY( $x + $litsp, $y + $litsp );
         
@@ -176,14 +176,14 @@
         $pdf -> setXY( $x + $litsp, $pdf -> getY() + $stdsp );
         $pdf->SetFont( $fnt, 'B', $fnts );		
         $pdf->MultiCell( $wBox - $stdsp, '', $documnento['nome_todo'], '', 'L', '', 1);
-        $pdf->SetFont( $fnt, '', $fnts );		
+        $pdf->SetFont( $fnt, '', $fnts-2 );		
         $pdf -> setXY( $x + $litsp, $pdf -> getY() );
 
         $remSp = ( $startX + $hBox ) - $pdf -> getY() - $hBarr*2.5;
-        $pdf->MultiCell( $wBox /2, '', $documnento['testo_todo'].'', '', 'L', '', 1,'','',true,'','','',  $remSp);
+        $pdf->MultiCell( $wBox - $stdsp, $remSp, $documnento['testo_todo'].'', '', 'L', '', 1,'','',true,'','','',  $remSp);
 // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
 
-        $pdf -> setXY( $x, $pdf -> getY() + $litsp );
+        $pdf -> setXY( $x, $y + $hBox - $hBarr - $stdsp);
         $pdf->write1DBarcode( 'TODO.'.str_pad( $documnento['id_todo'],10,"0", STR_PAD_LEFT), 'C128', '', '', '',$hBarr  ,0.285, $style, 'N');
 
        // if( ($i + 1) % 3 == 0){

@@ -108,7 +108,7 @@
     $ct['view']['data']['__report_mode__'] = 1;
 
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
 
 
@@ -132,7 +132,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static '
 	);
 
     // tendina articoli

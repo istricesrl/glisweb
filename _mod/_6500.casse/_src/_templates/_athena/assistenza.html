@@ -367,7 +367,7 @@
 			</div>
 			<div class="form-group form-row">
 				<div class="col-12 col-md mt-3">
-				<span class="label-top">note</span>
+				<span class="label-top">note interne</span>
                 {{ frm.textarea( 'attivita', '', '', 'note_interne', '', 3, request ) }}
 				</div>
 			</div>
@@ -402,6 +402,12 @@
                         {{ frm.selectBox( 'attivita', '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','','','', '', page, pages, ietf ) }}
                     </div>
 				</div>
+                <div class="form-group form-row">
+                    <div class="col-12 col-md mt-3">
+                    <span class="label-top">note programmazione</span>
+                    {{ frm.textarea( 'attivita', '', '', 'note_programmazione', '', 3, request ) }}
+                    </div>
+                </div>
                 {% endif %}
         </div>
 

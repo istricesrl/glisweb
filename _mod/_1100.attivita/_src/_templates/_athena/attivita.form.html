@@ -66,12 +66,7 @@
 				</div>
 			</div>
 
-			<div class="form-group form-row">
-				<div class="col-12">
-				<span class="label-top">note interne</span>
-				{{ frm.textarea( table, '', '', 'note_interne', '', 3, request ) }}
-				</div>
-			</div>
+
 	
 			</fieldset>
 
@@ -89,6 +84,12 @@
 					<div class="col-2 col-md-1">
 						<span class="label-top">ora fine</span>
 						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
+					</div>
+				</div>
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">note programmazione</span>
+					{{ frm.textarea( table, '', '', 'note_programmazione', '', 3, request ) }}
 					</div>
 				</div>
 			</fieldset>
@@ -119,6 +120,12 @@
 					<!--div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
 					</div-->
+				</div>
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">note interne</span>
+					{{ frm.textarea( table, '', '', 'note_interne', '', 3, request ) }}
+					</div>
 				</div>
 				<div class="form-group form-row">
 					<div class="col-12">

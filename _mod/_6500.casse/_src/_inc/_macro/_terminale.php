@@ -135,7 +135,7 @@
             // la todo
 
             $ct['etc']['todo'] =  mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ? ', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
-
+           
             // attività concluse della todo
             $ct['etc']['attivita_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
 
@@ -323,7 +323,7 @@
             if(  isset( $insert ) && $insert > 0 && isset( $_REQUEST['__ore__'] ) ){
                 $insert_a = mysqlQuery( 
                     $cf['mysql']['connection'], 
-                    "INSERT INTO attivita ( nome, data_attivita, ore, id_mastro_destinazione, id_documenti_articoli, id_cliente, id_todo, id_progetto, id_tipologia )  VALUES ( ?,?,?,?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO attivita ( nome, data_attivita, ore, id_mastro_provenienza, id_documenti_articoli, id_cliente, id_todo, id_progetto, id_tipologia )  VALUES ( ?,?,?,?, ?, ?, ?, ?, ?)",
                     array( 
                         array( 's' => 'carico ore da scontrino '.$_REQUEST[ $ct['form']['table'] ]['id'] ),
                         array( 's' => date("Y-m-d") ),
@@ -335,6 +335,12 @@
                         array( 's' => $_REQUEST['__progetto__'] ),
                         array( 's' => $ct['etc']['id_tipologia_carico'] )
                     ) );
+
+                    if( empty($_REQUEST['documenti']['id_destinatario']) && isset($_REQUEST['__cliente__']) && !empty($_REQUEST['__cliente__']) ){
+                        mysqlQuery($cf['mysql']['connection'], 'UPDATE documenti SET id_destinatario = ? WHERE id = ?',
+                        array( array( 's' => $_REQUEST['__cliente__']), array('s' => $_REQUEST['documenti']['id']) ) );
+                        $_REQUEST['documenti']['id_destinatario'] = $_REQUEST['__cliente__'];
+                    } 
 
                     if( isset( $_SESSION['account']['id_gruppi_attribuzione']['attivita'] ) ){
                         $acl = mysqlQuery( 
