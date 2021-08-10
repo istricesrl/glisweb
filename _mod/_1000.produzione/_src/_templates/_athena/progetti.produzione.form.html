@@ -71,8 +71,7 @@
 				{% if etc.select.indirizzi %}
 				<div class="col-12 col-md">
 					<span class="label-top">indirizzo</span>
-					{{ frm.select( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request ) }}
-				</div>
+					{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, '','','','','', 'indirizzi.form', 'indirizzi.form', 'indirizzi', 'id_indirizzo', page, pages, ietf, 'indirizzi' ) }}	</div>
 				{% else %}
 				<div class="col-auto">
 					<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="submitFormOkay = true; submit();">CALCOLA INDIRIZZI</button>
