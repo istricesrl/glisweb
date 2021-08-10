@@ -135,7 +135,7 @@
             // la todo
 
             $ct['etc']['todo'] =  mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ? ', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
-
+           
             // attività concluse della todo
             $ct['etc']['attivita_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
 
@@ -335,6 +335,12 @@
                         array( 's' => $_REQUEST['__progetto__'] ),
                         array( 's' => $ct['etc']['id_tipologia_carico'] )
                     ) );
+
+                    if( empty($_REQUEST['documenti']['id_destinatario']) && isset($_REQUEST['__cliente__']) && !empty($_REQUEST['__cliente__']) ){
+                        mysqlQuery($cf['mysql']['connection'], 'UPDATE documenti SET id_destinatario = ? WHERE id = ?',
+                        array( array( 's' => $_REQUEST['__cliente__']), array('s' => $_REQUEST['documenti']['id']) ) );
+                        $_REQUEST['documenti']['id_destinatario'] = $_REQUEST['__cliente__'];
+                    } 
 
                     if( isset( $_SESSION['account']['id_gruppi_attribuzione']['attivita'] ) ){
                         $acl = mysqlQuery( 
