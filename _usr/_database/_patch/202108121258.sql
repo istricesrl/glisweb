@@ -1,0 +1,1 @@
+ALTER TABLE `attivita` ADD INDEX(`id_anagrafica_feedback`);
