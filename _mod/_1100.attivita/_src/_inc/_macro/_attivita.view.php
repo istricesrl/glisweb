@@ -35,13 +35,14 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'data_attivita' => 'data',
-        'anagrafica' => 'persona',
+        'anagrafica' => 'operatore',
         'id_anagrafica' => 'id_anagrafica',
         'cliente' => 'cliente',
+        'tipologia' => 'tipologia',
         'nome' => 'attivita',
         'ore' => 'ore',
-        'tipologia_inps' => 'tipologia INPS',
-        '__label__' => 'tipologia'
+    //    'tipologia_inps' => 'tipologia INPS',
+        
 	);
 
     // stili della vista
@@ -53,6 +54,7 @@
         'data_attivita' => 'no-wrap',
         'ore' => 'text-right no-wrap',
         'nome' => 'text-left',
+        'tipologia' => 'text-left',
         '__label__' => 'text-left',
         'testo' => 'text-left no-wrap'
     );
@@ -104,9 +106,9 @@
 	//    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno']['EQ'] = date('d');
     }
 
-	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
+/*	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
-	} 
+	} */
 
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']) ){
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'ASC';

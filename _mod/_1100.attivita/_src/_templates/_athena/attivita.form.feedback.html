@@ -35,6 +35,7 @@
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+		<input type="hidden" id="nome" name="{{ table }}[nome]" value="{{ request[ table ].nome }}">
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
@@ -47,19 +48,28 @@
 			<fieldset>
 			<legend>feedback del cliente</legend>
 				<div class="form-row">
-					<div class="col-6 col-md-6">
+					<div class="col-12 col-md-auto">
+						<span class="label-top">data</span>
+						{{ frm.datetime( table, '', '', 'timestamp_feedback', '', '', request ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">operatore</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica_feedback', '', etc.select.anagrafica, request, session.account.id_anagrafica, '','','','','','','', '' , page, pages, ietf,'anagrafica' ) }}
+					</div>
+
+					<div class="col-6 col-md-1">
 						<span class="label-top">interesse</span>
 						{{ frm.select( table, '', '', 'id_tipologia_interesse', '', etc.select.id_interesse, request) }}
 					</div>
-					<div class="col-6 col-md-6 ">
-						<span class="label-top">soddisfazione</span>
+					<div class="col-6 col-md-1">
+						<span class="label-top">raccomandazione</span>
 						{{ frm.select( table, '', '', 'id_tipologia_soddisfazione', '', etc.select.id_soddisfazione, request) }}
 					</div>
 				</div>
 				<div class="form-group form-row">
 					<div class="col-12">
 					<span class="label-top">note</span>
-					{{ frm.textarea( table, '', '', 'note_feedback', 'note', 3, request ) }}
+					{{ frm.textarea( table, '', '', 'note_feedback', '', 3, request ) }}
 					</div>
 				</div>
 			</fieldset>

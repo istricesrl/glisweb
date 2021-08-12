@@ -117,13 +117,13 @@ if( isset( $_REQUEST['__unset__'] ) ){
         unset( $_SESSION['assistenza']['id_todo'] );
     
     } else{
-    
+        unset($_REQUEST['attivita']['id']);
+        unset( $_SESSION['assistenza']['id_attivita']  );
         unset( $_SESSION['assistenza']['id_attivita_feedback'] );
         unset( $_SESSION['assistenza']['riapri'] );
         unset( $_SESSION['assistenza']['id_cliente'] );
         unset( $_SESSION['assistenza']['id_progetto'] );
         unset( $_SESSION['assistenza']['id_todo']  );
-        unset( $_SESSION['assistenza']['id_attivita']  );
         unset( $_SESSION['assistenza']['id_assistenza']);
         unset( $_SESSION['__view__'][ 'clienti' ]['__search__'] );
         unset( $_REQUEST['todo']['id'] );
