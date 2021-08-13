@@ -55,13 +55,14 @@
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request, default ) }}
 				</div>
 				<div class="col-12 col-md-2">
-					<span class="label-top">tipologia INPS</span>
-					{{ frm.select( table, '', '', 'id_tipologia_inps', '', etc.select.id_tipologia_inps, request ) }}
-				</div>
-				<div class="col-12 col-md-2">
-					<span class="label-top">conto ore</span>
+					<span class="label-top">scarico</span>
 					{% if not session.__latest__[ table ].id_mastro_provenienza %}{% set default = etc.id_mastro_provenienza %}{% else %}{% set default = session.__latest__[ table ].id_mastro_provenienza %}{% endif %}
 					{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, default ) }}
+				</div>
+				<div class="col-12 col-md-2">
+					<span class="label-top">carico</span>
+					{% if not session.__latest__[ table ].id_mastro_destinazione %}{% set default = etc.id_mastro_destinazione %}{% else %}{% set default = session.__latest__[ table ].id_mastro_destinazione %}{% endif %}
+					{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default ) }}
 				</div>
 				<div class="col">
 					<span class="label-top">descrizione</span>

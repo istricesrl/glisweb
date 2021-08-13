@@ -14,7 +14,7 @@
 		foreach( $ct['etc']['todo_da_fare'] as &$todo ){
 
 			$todo['attivita'] = mysqlQuery(
-				$cf['mysql']['connection'], 'SELECT * FROM attivita_view WHERE id_todo = ?', array( array( 's' => $todo['id']) ) );
+				$cf['mysql']['connection'], 'SELECT * FROM attivita_view WHERE id_todo = ? AND id_anagrafica = ?', array( array( 's' => $todo['id']), array( 's' => $_SESSION['account']['id_anagrafica'] ) ) );
 
 		}
 		//print_r($ct['etc']['todo_da_fare']);
