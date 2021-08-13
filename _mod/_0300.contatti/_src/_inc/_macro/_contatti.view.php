@@ -42,6 +42,7 @@
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
         'note' => 'text-left',
+        'data_contatto' => 'no-wrap',
         'tipologia' => 'text-left no-wrap',
         'anagrafica' => 'text-left',
         'segnalatore' => 'text-left'

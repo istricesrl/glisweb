@@ -82,7 +82,7 @@
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['pianificazione'] = 'ASC';
     }
     
-    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) || $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] == '__me__' ) {
+/*    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) || $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] == '__me__' ) {
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] = '__me__';
 		if( isset( $_SESSION['account']['id_anagrafica'] ) ) {
 		    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_responsabile']['EQ'] = $_SESSION['account']['id_anagrafica'];
@@ -93,7 +93,10 @@
 		    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_responsabile']['NL'] = true;
 		}
 	}
-    
+  */  
+  if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) ){ 
+	$_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] = '__tutti__'; 
+}
 
 	if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){

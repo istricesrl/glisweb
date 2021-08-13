@@ -62,14 +62,14 @@
 				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
-					{{ frm.inputRequired( table, '', '', 'nome', 'nome della todo', '', request ) }}
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
 			</div>
 	
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">descrizione</span>
-				{{ frm.textarea( table, '', '', 'testo', 'testo della richiesta', 2, request ) }}
+				{{ frm.textarea( table, '', '', 'testo', '', 2, request ) }}
 				</div>
 			</div>
 	
@@ -81,7 +81,7 @@
 				<div class="form-group form-row">
 					<div class="col-12">
 						<span class="label-top">progetto</span>
-						{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', 1,'','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti' ) }}
+						{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetto, request, '', 1,'','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti' ) }}
 					</div>
 				</div>
 
@@ -90,7 +90,7 @@
 				<div class="form-group form-row">
 					<div class="col col-md-4">
 						<span class="label-top">cliente</span>
-						{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, etc.id_cliente, '','','','','anagrafica.form','','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
+						{{ frm.selectBox( table, '', '', 'id_cliente', '', etc.select.id_cliente, request, etc.id_cliente, '','','','','anagrafica.form','','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 					<div class="col-12 col-md-4">
 						<span class="label-top">responsabile</span>
@@ -102,12 +102,7 @@
 					</div>
 				</div>
 	
-				<div class="form-group form-row">
-					<div class="col-12 col-md">
-						<span class="label-top">note pianificazione</span>
-						{{ frm.textarea( table, '', '', 'testo_pianificazione', 'note di pianificazione', 2, request ) }}
-					</div>
-				</div>
+
 				{% endif %}
 			</fieldset>
 			
@@ -141,11 +136,16 @@
 						{{ frm.input( table, '', '', 'ore_previste', 'ore', '', request, '', 'number', '', '', '', '0.25' ) }}
 					</div>
 					<div class="col-12 col-md">
-						<span class="label-top">note</span>
-						{{ frm.input( table, '', '', 'testo_ore_previste', 'note di analisi', '', request ) }}
+						<span class="label-top">note di analisi</span>
+						{{ frm.input( table, '', '', 'testo_ore_previste', '', '', request ) }}
 					</div>
 				</div>
-
+				<div class="form-group form-row">
+					<div class="col-12 col-md">
+						<span class="label-top">note pianificazione</span>
+						{{ frm.textarea( table, '', '', 'testo_pianificazione', '', 2, request ) }}
+					</div>
+				</div>
 			</fieldset>
 
 			{# SUBFORM CATEGORIE #}
