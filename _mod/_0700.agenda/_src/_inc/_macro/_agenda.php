@@ -1,6 +1,5 @@
 <?php
 
-	$ct['form']['table'] = '';
 	
 	if( isset( $_SESSION['account']['id_anagrafica'] ) ){
 
@@ -41,5 +40,3 @@
 
 
 
-	// macro di default
-	require DIR_SRC_INC_MACRO . '_default.form.php';

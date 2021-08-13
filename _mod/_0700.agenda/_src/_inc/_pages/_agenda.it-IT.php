@@ -17,14 +17,14 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'agenda', 'agenda.todo', 'agenda.stampe' ) ),
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'agenda' ),
-									'priority'	=> '20' ) ) )	
+									'priority'	=> '040' ) ) )	
 	);
 
     // todo agenda
-	$p['agenda.todo'] = array(
+	$p[ 'agenda.todo'] = array(
 	    'sitemap'	=> false,
-	    'title'		=> array( $l		=> 'lavori' ),
-	    'h1'		=> array( $l		=> 'lavori' ),
+	    'title'		=> array( $l		=> 'todo_agenda' ),
+	    'h1'		=> array( $l		=> 'todo' ),
 	    'parent'	=> array( 'id'		=> 'agenda' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.todo.php' ),
@@ -36,7 +36,7 @@
 	$p['agenda.stampe'] = array(
 	    'sitemap'	=> false,
 		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'stampe' ),
+	    'title'		=> array( $l		=> 'stampe_agenda' ),
 	    'h1'		=> array( $l		=> 'stampe' ),
 	    'parent'	=> array( 'id'		=> 'agenda' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
@@ -54,5 +54,17 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_agenda.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'agenda.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'agenda.form', 'agenda.form.feedback' ) )
+	);
+
+	// gestione agenda - feedback
+	$p['agenda.form.feedback'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'feedback' ),
+	    'h1'			=> array( $l		=> 'feedback' ),
+	    'parent'		=> array( 'id'		=> 'agenda' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.form.feedback.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_agenda.form.feedback.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['agenda.form']['etc']['tabs'] )
 	);
