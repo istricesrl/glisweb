@@ -2293,6 +2293,7 @@ CREATE TABLE `attivita` (
   `data_programmazione` date DEFAULT NULL,
   `ora_inizio_programmazione` time DEFAULT NULL,
   `ora_fine_programmazione` time DEFAULT NULL,
+  `note_programmazione` text,
   `id_pratica` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_campagna` int(11) DEFAULT NULL,
@@ -2300,6 +2301,8 @@ CREATE TABLE `attivita` (
   `id_todo` int(11) DEFAULT NULL,
   `id_tipologia_interesse` int(11) DEFAULT NULL,
   `id_tipologia_soddisfazione` int(11) DEFAULT NULL,
+  `id_anagrafica_feedback` int(11) DEFAULT NULL,
+  `timestamp_feedback` int(11) DEFAULT NULL,
   `note_feedback` text,
   `id_immobile` int(11) DEFAULT NULL,
   `id_incarico` int(11) DEFAULT NULL,
@@ -2362,6 +2365,8 @@ CREATE TABLE `attivita` (
   KEY `id_documenti_articoli` (`id_documenti_articoli`),
   KEY `id_matricola` (`id_matricola`),
   KEY `se_master` (`se_master`),
+  KEY `id_anagrafica_feedback` (`id_anagrafica_feedback`),
+  CONSTRAINT `attivita_ibfk_24_nofollow` FOREIGN KEY (`id_anagrafica_feedback`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_10_nofollow` FOREIGN KEY (`id_incarico`) REFERENCES `incarichi_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_11_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_12_nofollow` FOREIGN KEY (`id_task`) REFERENCES `task` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -2380,9 +2385,7 @@ CREATE TABLE `attivita` (
   CONSTRAINT `attivita_ibfk_2_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_3` FOREIGN KEY (`id_esito`) REFERENCES `esiti_attivita` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_3_nofollow` FOREIGN KEY (`id_mandante`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `attivita_ibfk_4` FOREIGN KEY (`id_tipologia_interesse`) REFERENCES `tipologie_interesse` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_4_nofollow` FOREIGN KEY (`id_cliente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `attivita_ibfk_5` FOREIGN KEY (`id_tipologia_soddisfazione`) REFERENCES `tipologie_soddisfazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_5_nofollow` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_6` FOREIGN KEY (`id_incrocio_immobile`) REFERENCES `incroci_immobili` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_6_nofollow` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -2634,6 +2637,7 @@ SET character_set_client = utf8;
   `data_programmazione` tinyint NOT NULL,
   `ora_inizio_programmazione` tinyint NOT NULL,
   `ora_fine_programmazione` tinyint NOT NULL,
+  `note_programmazione` tinyint NOT NULL,
   `id_pianificazione` tinyint NOT NULL,
   `id_progetto` tinyint NOT NULL,
   `progetto` tinyint NOT NULL,
@@ -2698,6 +2702,7 @@ CREATE TABLE `attivita_view_static` (
   `data_programmazione` date DEFAULT NULL,
   `ora_inizio_programmazione` time DEFAULT NULL,
   `ora_fine_programmazione` time DEFAULT NULL,
+  `note_programmazione` text,
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `progetto` char(255) DEFAULT NULL,
@@ -2903,6 +2908,7 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `n_contatti` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -3714,12 +3720,12 @@ CREATE TABLE `categorie_progetti` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Temporary table structure for view `categorie_progetti_view`
+-- Temporary tabmysqldump: Couldn't execute 'show create table `certificazioni_archiviati_view`': View '__glisweb__.certificazioni_archiviati_view' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them (1356)
+le structure for view `categorie_progetti_view`
 --
 
 DROP TABLE IF EXISTS `categorie_progetti_view`;
-/*!50001 DROP VIEW IF EXISTSmysqldump: Couldn't execute 'show create table `certificazioni_archiviati_view`': View '__glisweb__.certificazioni_archiviati_view' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them (1356)
- `categorie_progetti_view`*/;
+/*!50001 DROP VIEW IF EXISTS `categorie_progetti_view`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `categorie_progetti_view` (
