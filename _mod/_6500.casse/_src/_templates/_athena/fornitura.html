@@ -300,6 +300,7 @@
         {{ frm.input( 'todo', '', '', 'id_mastro_attivita_default', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
         {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.fornitura.id_progetto , 'hidden' ) }} 
         {{ frm.input( 'todo', '', '', 'id_cliente', '', '', '', session.fornitura.id_cliente , 'hidden' ) }}
+        {{ frm.input( 'todo', '', '', 'id_responsabile', '', '', '', session.account.id_anagrafica , 'hidden' ) }}
         <div class="form-group col" style="padding: 0%;">
             <!--div class="col-12 col-md">
                 <span class="label-top">nome</span>
@@ -367,11 +368,16 @@
 			</div>
 			<div class="form-group form-row">
 				<div class="col-12 col-md mt-3">
-				<span class="label-top">note</span>
+				<span class="label-top">note cliente</span>
                 {{ frm.textarea( 'attivita', '', '', 'testo', '', 3, request ) }}
 				</div>
 			</div>
-	
+            <div class="form-group form-row">
+                <div class="col-12 col-md mt-3">
+                <span class="label-top">note programmazione</span>
+                {{ frm.textarea( 'attivita', '', '', 'note_programmazione', '', 3, request ) }}
+                </div>
+            </div>
 
 				<!--legend>esecuzione</legend-->
 				<div class="form-group form-row">

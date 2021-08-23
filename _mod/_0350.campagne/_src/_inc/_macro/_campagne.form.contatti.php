@@ -20,53 +20,49 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'documenti';
+	$ct['form']['table'] = 'campagne';
 
 
     // tabella della vista
-	$ct['view']['table'] = 'documenti_articoli';
+	$ct['view']['table'] = 'contatti';
 
     // id della vista
    # $ct['view']['id'] = md5( $ct['view']['table'] );
 
         // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'documenti.articoli.form';
-    $ct['view']['open']['table'] = 'documenti_articoli';
+	$ct['view']['open']['page'] = 'contatti.form';
+    $ct['view']['open']['table'] = 'contatti';
     $ct['view']['open']['field'] = 'id';
 
 	// pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'documenti.articoli.form';
+	$ct['view']['insert']['page'] = 'contatti.form';
 
     // campo per il preset di apertura
-	$ct['view']['open']['preset']['field'] = 'id_documento';
+	$ct['view']['open']['preset']['field'] = 'id_campagna';
 
 	$ct['view']['cols'] = array(
-        'id' => '#',
+        'id' => '#',        
+        'data_contatto' => 'data',
+        'ora_contatto' => 'ora',
         'tipologia' => 'tipologia',
-        'data_lavorazione' => 'data',
-        'nome' => 'nome',
-        'importo_netto_totale' => 'importo netto',
-        'quantita' => 'quantità',
-		'totale_riga' => 'totale',
-		'id_documento' => 'id_documento'
+        'anagrafica' => 'anagrafica',
+#        'segnalatore' => 'segnalatore',
+#        'campagna' => 'campagna',
+        'note' => 'testo'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
-        'importo_netto_totale' => 'text-right',
-        'quantita' => 'text-right',
-		'totale_riga' => 'text-right',
-        'id_documento' => 'd-none',
-        'cliente' => 'text-left',
-        'emittente' => 'text-left', 
-        'data_lavorazione' => 'text-left', 
-        'tipologia' => 'text-left'
+        'note' => 'text-left',
+        'tipologia' => 'text-left no-wrap',
+        'anagrafica' => 'text-left',
+        'segnalatore' => 'text-left'
     );
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		// preset filtro custom progetti aperti
-		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+		$ct['view']['__restrict__']['id_campagna']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
 
     // gestione default

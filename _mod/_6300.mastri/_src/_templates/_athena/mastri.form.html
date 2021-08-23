@@ -51,6 +51,10 @@
 					<span class="label-top">tipologia</span>
 					{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_mastri, request ) }}
 				</div>
+				<div class="col-md-3 col-auto">
+					<span class="label-top">genitore</span>
+					{{ frm.select( table, '', '', 'id_genitore', '', etc.select.genitori, request ) }}
+				</div>
 				<div class="col col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}

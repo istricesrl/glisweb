@@ -29,21 +29,15 @@
             'mastro' => 'mastro',
             'id_articolo' => 'articolo',
             'descrizione' => 'descrizione',
-            'matricola' => 'matricola',
             'quantita_totale' => 'quantità',
-            'importo_totale' => 'importo',
-            'id_todo' => 'todo',
-            'id_progetto' => 'progetto'
-        );
+           );
 
         // stili della vista
         $ct['view']['class'] = array(
             'id' => 'd-none',
-            'id_riga' => 'd-none',
             'id_articolo' => 'd-none',
             'descrizione' => 'text-left',
             'quantita_totale' => 'text-right',
-            'importo' => 'text-right',
             'mastro' => 'text-left'
         );
 

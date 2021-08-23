@@ -135,7 +135,7 @@
             // la todo
 
             $ct['etc']['todo'] =  mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ? ', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
-
+           
             // attività concluse della todo
             $ct['etc']['attivita_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
 
@@ -279,12 +279,14 @@
 
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo,id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                                 array( 
+                                    array( 's' => ( isset( $_REQUEST['__todo__']) && !empty($_REQUEST['__todo__'])  ?  $_REQUEST['__todo__'] : NULL ) ),
+                                    array( 's' => ( isset( $_REQUEST['__progetto__']) && !empty($_REQUEST['__progetto__'])  ?  $_REQUEST['__progetto__'] : NULL ) ),
                                     array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                                     array( 's' => date("Y-m-d") ),
                                     array( 's' => $articolo['prezzo']  ), 
-                                    array( 's' => ( isset( $_REQUEST['__qta__']) ?  $_REQUEST['__qta__'] : 1 ) ),
+                                    array( 's' => ( isset( $_REQUEST['__qta__']) ?  $_REQUEST['__qta__'] : 1 ) ), 
                                     array( 's' => $reparto ),
                                     array( 's' => $id_iva ),
                                     array( 's' => $articolo['id_udm'] ),
@@ -335,6 +337,12 @@
                         array( 's' => $_REQUEST['__progetto__'] ),
                         array( 's' => $ct['etc']['id_tipologia_carico'] )
                     ) );
+
+                    if( empty($_REQUEST['documenti']['id_destinatario']) && isset($_REQUEST['__cliente__']) && !empty($_REQUEST['__cliente__']) ){
+                        mysqlQuery($cf['mysql']['connection'], 'UPDATE documenti SET id_destinatario = ? WHERE id = ?',
+                        array( array( 's' => $_REQUEST['__cliente__']), array('s' => $_REQUEST['documenti']['id']) ) );
+                        $_REQUEST['documenti']['id_destinatario'] = $_REQUEST['__cliente__'];
+                    } 
 
                     if( isset( $_SESSION['account']['id_gruppi_attribuzione']['attivita'] ) ){
                         $acl = mysqlQuery( 
