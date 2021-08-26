@@ -40,11 +40,14 @@
 		</div>
 
         {% if r.id %}
+		<div class="col-auto p-0 pl-1">
+			<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.certificazioni.form'].url[ lang ]~'?anagrafica_certificazioni[id]='~r.id }}')"><i class="fa fa-pencil"></i></button>
+		</div>
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
-		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+			{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
 	    </div>
 	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
-		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
+			{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
 		</div>
 		{% else %}
 	    <div class="col-auto text-right d-print-none">
