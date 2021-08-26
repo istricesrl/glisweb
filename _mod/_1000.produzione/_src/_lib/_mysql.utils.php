@@ -316,9 +316,9 @@
         // estraggo i dati che mi occorrono per l'attività
         $a = mysqlSelectRow(
             $cf['mysql']['connection'],
-            "SELECT TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
-            ."TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, '00:00:01') ) as data_ora_fine FROM attivita "
-            ."WHERE id = ?",
+            'SELECT TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, '
+            .'TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, "00:00:01") ) as data_ora_fine FROM attivita '
+            .'WHERE id = ?',
             array(
                 array( 's' => $id_attivita )
             )
@@ -327,14 +327,18 @@
         // conteggio delle eventuali attività in collisione
         $collisioni = mysqlSelectValue(
             $cf['mysql']['connection'],
-                "SELECT count(*) FROM attivita WHERE id_anagrafica = ? "
-                ."AND ( "  
-                ."(TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) "
-                ."OR "
-                ."(TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, '00:00:01' ) ) between ? and ?) "     
-            .") ",
+                'SELECT count(*) FROM attivita WHERE id_anagrafica = ? '
+                .'AND ( ' 
+                    .'( (TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ?) '
+                    .'OR '
+                    .'(TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, "00:00:01" ) ) between ? and ?) ) ' 
+                    .'OR '
+                    .'( TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? AND TIMESTAMP( data_programmazione, ora_fine_programmazione) > ? ) '
+                .')',
             array(
                 array( 's' => $id_anagrafica ),
+                array( 's' => $a['data_ora_inizio'] ),
+                array( 's' => $a['data_ora_fine'] ),
                 array( 's' => $a['data_ora_inizio'] ),
                 array( 's' => $a['data_ora_fine'] ),
                 array( 's' => $a['data_ora_inizio'] ),
@@ -350,15 +354,19 @@
                 'SELECT count(*) FROM periodi_variazioni_attivita AS pv LEFT JOIN variazioni_attivita AS v '
                 .'ON pv.id_variazione = v.id WHERE v.id_anagrafica = ? AND v.data_approvazione IS NOT NULL '
                 .'AND ( '
-                .'( TIMESTAMP( pv.data_inizio, coalesce( pv.ora_inizio, "00:00:01" ) ) <= ? AND TIMESTAMP( pv.data_fine, coalesce( pv.ora_fine, "23:59:59" ) ) >= ? ) '
+                .'( (TIMESTAMP( pv.data_inizio, coalesce( pv.ora_inizio, "00:00:01" ) ) between ? and ?) '
                 .'OR '
-                .'( TIMESTAMP( pv.data_inizio, coalesce( pv.ora_inizio, "00:00:01" ) ) <= ? AND TIMESTAMP( pv.data_fine, coalesce( pv.ora_fine, "23:59:59" ) ) >= ? ) '
+                .'( TIMESTAMP( pv.data_fine, SUBTIME( coalesce( pv.ora_fine, "23:59:59" ), "00:00:01" ) ) between ? and ?) ) ' 
+                .'OR '
+                .'( TIMESTAMP( pv.data_inizio, coalesce( pv.ora_inizio, "00:00:01" ) ) < ? AND TIMESTAMP( pv.data_fine, coalesce( pv.ora_fine, "23:59:59" ) ) > ? ) '
                 .')',
                 array(
                     array( 's' => $id_anagrafica ),
                     array( 's' => $a['data_ora_inizio'] ),
+                    array( 's' => $a['data_ora_fine'] ),
                     array( 's' => $a['data_ora_inizio'] ),
-                    array( 's' => $a['data_ora_fine'] ),                   
+                    array( 's' => $a['data_ora_fine'] ),
+                    array( 's' => $a['data_ora_inizio'] ),
                     array( 's' => $a['data_ora_fine'] )
                 )
             );
@@ -397,9 +405,11 @@
             'SELECT c.id_anagrafica, max(ca.se_sostituto) as se_sostituto, max(ca.se_produzione) as se_produzione, '
             .'( SELECT count(*) FROM attivita WHERE id_anagrafica = c.id_anagrafica '
                 .'AND ( '
-                .'( TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ? ) '
+                .'( ( TIMESTAMP( data_programmazione, ora_inizio_programmazione) between ? and ? ) '
                 .'OR '
-                .'( TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, "00:00:01" ) ) between ? and ? ) '
+                .'( TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, "00:00:01" ) ) between ? and ? ) ) '
+                .'OR '
+                .'( TIMESTAMP( data_programmazione, ora_inizio_programmazione) < ? AND TIMESTAMP( data_programmazione, ora_fine_programmazione) > ? ) '
                 .') '
             .') AS collisioni '
             .'FROM contratti AS c '
@@ -412,6 +422,8 @@
             .'HAVING collisioni = 0 AND se_produzione = 1'
            ,
             array(
+                array( 's' => $a['data_ora_inizio'] ),
+                array( 's' => $a['data_ora_fine'] ),
                 array( 's' => $a['data_ora_inizio'] ),
                 array( 's' => $a['data_ora_fine'] ),
                 array( 's' => $a['data_ora_inizio'] ),
