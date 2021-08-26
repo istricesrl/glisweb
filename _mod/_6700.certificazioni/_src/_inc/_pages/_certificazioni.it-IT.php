@@ -166,3 +166,34 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
+
+
+	// vista anagrafica_certificazioni in archivio
+	$p['anagrafica.certificazioni.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'anagrafica certificazioni' ),
+		'h1'		=> array( $l		=> 'certificazioni anagrafica' ),
+		'parent'		=> array( 'id'		=> 'archivio' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_anagrafica.certificazioni.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'anagrafica.certificazioni.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'certificazioni' ),
+		'priority'	=> '110' ) ) )
+	);
+
+	// gestione anagrafica.certificazioni
+	$p['anagrafica.certificazioni.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'anagrafica.certificazioni.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.certificazioni.form.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_anagrafica.certificazioni.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 
+												'anagrafica.certificazioni.form'/*,
+												'anagrafica.certificazioni.form.immagini',
+												'anagrafica.certificazioni.form.file'*/
+												 ) )	
+	);
