@@ -14,7 +14,7 @@
     // tabella gestita
     $ct['form']['table'] = 'anagrafica_certificazioni';
 
-     // tendina anagrafica
+    // tendina anagrafica
 	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],

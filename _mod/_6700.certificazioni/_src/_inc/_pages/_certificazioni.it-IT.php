@@ -14,25 +14,23 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_certificazioni.view.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'certificazioni.view', 'certificazioni.archivio.view' ) ),
+	    'etc'		=> array( 'tabs'	=> array( 'certificazioni.view', 'certificazioni.scadenze.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'certificazioni' ),
 									'priority'	=> '210' ) ) )						
 	);
 
-	// vista archivio certificazioni
-/*	$p['certificazioni.archivio.view'] = array(
+	// vista scadenze certificazioni
+	$p['certificazioni.scadenze.view'] = array(
 	    'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
-		'title'		=> array( $l		=> 'archivio' ),
-	    'h1'		=> array( $l		=> 'archivio' ),
+		'title'		=> array( $l		=> 'scadenze' ),
+	    'h1'		=> array( $l		=> 'scadenze' ),
 	    'parent'		=> array( 'id'		=> 'certificazioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_certificazioni.archivio.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_certificazioni.scadenze.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['certificazioni.view']['etc']['tabs'] )
 	);
-*/
 
     // gestione certificazioni
 	$p['certificazioni.form'] = array(
@@ -44,7 +42,6 @@
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_certificazioni.form.php' ),
 		'etc'		=> array( 'tabs'	=> array( 
 											'certificazioni.form', 
-											/*'certificazioni.form.file',*/
 											'certificazioni.form.anagrafica',
 											'certificazioni.form.progetti',
 											'certificazioni.form.tools' 
@@ -74,19 +71,6 @@
 		'etc'		=> array( 'tabs'	=> $p['certificazioni.form']['etc']['tabs'] )
 	);
 
-	// form pagina file
-/*	$p['certificazioni.form.file'] = array(
-		'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
-		'title'		=> array( $l		=> 'file' ),
-		'h1'		=> array( $l		=> 'file' ),
-		'parent'		=> array( 'id'		=> 'certificazioni.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'certificazioni.form.file.html' ),
-		'macro'		=> array( $m . '_src/_inc/_macro/_certificazioni.form.file.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> $p['certificazioni.form']['etc']['tabs'] )
-	);
-*/
 
 	// gestione certificazioni tools
 	$p['certificazioni.form.tools'] = array(

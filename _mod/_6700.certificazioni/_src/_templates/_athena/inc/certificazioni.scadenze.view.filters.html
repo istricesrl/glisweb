@@ -1,0 +1,46 @@
+<div class="form-row view-filters d-print-none">
+    <div class="col-12 col-md-auto">
+		<span class="label-top">dal</span>
+		<input type="date" class="form-control form-control-sm" name="__view__[{{ view.id }}][__filters__][data_scadenza][GE]" value="{{ request.__view__[ view.id ].__filters__.data_scadenza.GE }}" onchange="$('#pager').val('0'); submit();" autofocus>
+    </div>
+	<div class="col-12 col-md-auto">
+		<span class="label-top">al</span>
+		<input type="date" class="form-control form-control-sm" name="__view__[{{ view.id }}][__filters__][data_scadenza][LE]" value="{{ request.__view__[ view.id ].__filters__.data_scadenza.LE }}" onchange="$('#pager').val('0'); submit();" autofocus>
+    </div>
+	<div class="col-6 col-md-auto">
+		<span class="label-top">anagrafica</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>tutti</option>
+		{% for anagrafica in etc.select.anagrafica %}
+			<option value="{{ anagrafica.id }}"   {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == anagrafica.id %}selected{% endif %}>{{ anagrafica.__label__ }}</option>
+		{% endfor %}
+		</select>
+	</div>
+	<div class="col-6 col-md-auto">
+		<span class="label-top">tipologia</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_tipologia_certificazione][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia_certificazione.EQ == "" %}selected{% endif %}>tutte</option>
+		{% for tipologia in etc.select.tipologie_certificazioni %}
+			<option value="{{ tipologia.id }}"   {% if request.__view__[ view.id ].__filters__.id_tipologia_certificazione.EQ == tipologia.id %}selected{% endif %}>{{ tipologia.__label__ }}</option>
+		{% endfor %}
+		</select>
+	</div>
+	<div class="col-6 col-md-auto">
+		<span class="label-top">certificazione</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_certificazione][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_certificazione.EQ == "" %}selected{% endif %}>tutte</option>
+		{% for certificazione in etc.select.certificazioni %}
+			<option value="{{ certificazione.id }}"   {% if request.__view__[ view.id ].__filters__.id_certificazione.EQ == certificazione.id %}selected{% endif %}>{{ certificazione.__label__ }}</option>
+		{% endfor %}
+		</select>
+	</div>
+    <div class="col">
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+    </div>
+    <div class="col-auto">
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		{% if view.insert.path %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		{% endif %}
+    </div>
+</div>
