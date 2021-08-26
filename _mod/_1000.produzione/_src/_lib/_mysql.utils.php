@@ -380,10 +380,12 @@
         // estraggo i dati che mi occorrono per l'attività
         $a = mysqlSelectRow(
             $cf['mysql']['connection'],
-            "SELECT id, id_progetto, data_programmazione, ora_inizio_programmazione, ora_fine_programmazione, "
-            ."TIMESTAMP( data_programmazione, ora_inizio_programmazione) as data_ora_inizio, "
-            ."TIMESTAMP( data_programmazione, SUBTIME( ora_fine_programmazione, '00:00:01') ) as data_ora_fine FROM attivita "
-            ."WHERE id = ?",
+            "SELECT a.id, a.id_progetto, a.data_programmazione, a.ora_inizio_programmazione, a.ora_fine_programmazione, "
+            ."TIMESTAMP( a.data_programmazione, a.ora_inizio_programmazione) as data_ora_inizio, "
+            ."TIMESTAMP( a.data_programmazione, SUBTIME( a.ora_fine_programmazione, '00:00:01') ) as data_ora_fine, "
+            ."count( pc.id ) AS certificazioni_progetto FROM attivita as a "
+            ."LEFT JOIN progetti_certificazioni as pc on a.id_progetto = pc.id_progetto "
+            ."WHERE a.id = ? GROUP BY a.id",
             array(
                 array( 's' => $id_attivita )
             )
@@ -421,6 +423,26 @@
 
         if( !empty( $operatori ) ){
             foreach( $operatori as $o ){
+
+                // se sono richieste certificazioni per il progetto, verifico che l'operatore le abbia e che siano valide alla data di programmazione dell'attività
+                if( $a['certificazioni_progetto'] > 0 ){
+                    $match = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT count( pc.id ) FROM progetti_certificazioni as pc INNER JOIN anagrafica_certificazioni as ac '
+                        .'ON pc.id_certificazione = ac.id_certificazione '
+                        .'WHERE pc.id_progetto = ? AND ac.id_anagrafica = ? AND ( ac.data_scadenza >= ? OR ac.data_scadenza IS NULL )',
+                        array(
+                            array( 's' => $a['id_progetto'] ),
+                            array( 's' => $o['id_anagrafica'] ),
+                            array( 's' => $a['data_programmazione'] )
+                        )
+                    );
+
+                    // se il numero di certificazioni valide non corrisponde a quelle richieste passo ad altro operatore
+                    if( $match != $a['certificazioni_progetto'] ){
+                        continue;
+                    }
+                }
                 
                 // calcolo i punteggi
                 $o['punteggio'] = 0;
@@ -477,8 +499,6 @@
                         array( 's' => ( $permessi > 0) ? 1 : NULL )
                     )
                 );
-               
-                
 
             } 
         }
