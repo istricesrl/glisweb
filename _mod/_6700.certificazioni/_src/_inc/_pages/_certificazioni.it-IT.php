@@ -192,8 +192,33 @@
 		'macro'		=> array(  $m . '_src/_inc/_macro/_anagrafica.certificazioni.form.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> array( 
-												'anagrafica.certificazioni.form'/*,
+												'anagrafica.certificazioni.form',
 												'anagrafica.certificazioni.form.immagini',
-												'anagrafica.certificazioni.form.file'*/
+												'anagrafica.certificazioni.form.file'
 												 ) )	
 	);
+
+	$p['anagrafica.certificazioni.form.immagini'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'immagini' ),
+		'h1'		=> array( $l		=> 'immagini' ),
+		'parent'		=> array( 'id'		=> 'anagrafica.certificazioni.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.certificazioni.form.immagini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_anagrafica.certificazioni.form.immagini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['anagrafica.certificazioni.form']['etc']['tabs'] )
+	);
+
+	$p['anagrafica.certificazioni.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'anagrafica.certificazioni.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.certificazioni.form.file.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_anagrafica.certificazioni.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['anagrafica.certificazioni.form']['etc']['tabs'] )
+	);
+	
