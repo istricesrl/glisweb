@@ -76,7 +76,15 @@
         if( !empty( $_REQUEST['__calcolo_sostituti__'] ) ){
 
             $nome = 'calcolo sostituti progetto ' . $_REQUEST[ $ct['form']['table'] ]['id'];
-            
+
+            $wks = array(
+                'id_progetto' => $_REQUEST[ $ct['form']['table'] ]['id']
+            );
+
+            if( isset( $_REQUEST['__calcolo_sostituti__']['hard'] ) ){
+                $wks['hard'] =   $_REQUEST['__calcolo_sostituti__']['hard'];
+            }
+           
             $job = mysqlQuery(
                 $cf['mysql']['connection'],
                 'INSERT INTO job ( nome, job, iterazioni, workspace, se_foreground, delay ) VALUES ( ?, ?, ?, ?, ?, ? )',
@@ -84,11 +92,7 @@
                     array( 's' => $nome ),
                     array( 's' => '_mod/_1140.variazioni/_src/_api/_job/_sostituzioni.progetto.calculate.php' ),
                     array( 's' => 10 ),
-                    array( 's' => json_encode(
-                        array(
-                            'id_progetto' => $_REQUEST[ $ct['form']['table'] ]['id']
-                        )
-                    ) ),
+                    array( 's' => json_encode( $wks ) ),
                     array( 's' => 1 ),
                     array( 's' => 3 )
                 )
@@ -110,6 +114,11 @@
     // modal per la conferma di avvio calcolo sostituti
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'calcola', 'include' => 'inc/progetti.scoperti.form.modal.calcola.html' )
+    );
+
+    // modal per la conferma di avvio ricalcolo sostituti
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'ricalcola', 'include' => 'inc/progetti.scoperti.form.modal.ricalcola.html' )
     );
 
 	// macro di default

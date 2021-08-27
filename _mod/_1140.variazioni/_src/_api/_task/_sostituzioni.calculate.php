@@ -3,9 +3,8 @@
     /**
      *
      * task che analizza le attività senza id_anagrafica e calcola i possibili sostituti
-     *      *
+     * se riceve in ingresso l'id di un'attività lavora su quella, altrimenti prende l'attività con timestamp_calcolo_sostituti più vecchia e che ha token = NULL per evitare collisioni con altri processi
      *
-     * @todo commentare
      *
      * @file
      *
