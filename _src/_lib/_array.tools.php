@@ -217,6 +217,18 @@
     }
 
     /**
+     * 
+     * funzione che inserisce un elemento in un array prima di un altro elemento specificato
+     * - $target: array in cui inserire l'elemento
+     * - $ref: elemento prima del quale inserire quello nuovo
+     * - $add: il nuovo elemento da inserire
+     * 
+     */
+    function arrayInsertBefore( $ref, &$target, $add ) {
+        array_splice( $target, ( array_search( $ref, $target ) ), 0, $add );
+    }
+
+    /**
      *
      * @todo documentare
      *

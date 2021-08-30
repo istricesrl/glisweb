@@ -1,8 +1,11 @@
 <?php
 
     /**
-     * job che forza il calcolo dei sostituti per le attività di un progetto
-     *  
+     * job che legge tutte le attività senza anagrafica e con token = NULL per un dato progetto e richiama la funzione sostitutiAttività che calcola i sostituti per ognuna
+     * nel workspace sono definiti i parametri seguenti:
+     * 
+     * @param	string	id_progetto		id del progetto su cui lavorare
+     * @param	int	    hard		    se settato a 1, significa che è richiesto un ricalcolo, quindi per prima cosa il job elimina dalla tabella 
      * 
      */
 
@@ -33,6 +36,17 @@
                 // chiave di lock
 	            $status['tk'] = getToken( __FILE__ );
 
+                // se è richiesto il ricalcolo, elimino i calcoli già effettuati dalla tabella __report_sostituti_attivita__
+                if( !empty( $job['workspace']['hard'] ) ){
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'DELETE r FROM `__report_sostituzioni_attivita__` AS r INNER JOIN attivita as a on r.id_attivita = a.id WHERE a.id_progetto = ?',
+                        array(
+                            array( 's' => $job['workspace']['id_progetto'] )
+                        )
+                    );
+                }
+                
                 // metto il lock sulle attività scoperte del progetto che non hanno già un token
                 mysqlQuery(
                     $cf['mysql']['connection'],

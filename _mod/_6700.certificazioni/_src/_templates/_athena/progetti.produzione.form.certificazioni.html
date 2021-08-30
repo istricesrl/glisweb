@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/certificazioni.form.sub.html' as sub %}
+{% import 'bin/progetti.produzione.form.certificazioni.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -42,28 +42,13 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-        {# MODULO PRINCIPALE #}
-        <fieldset>
-        <legend>dati generali <small>{{ legend }}</small></legend>
-    
-        <div class="form-group form-row">
-            <div class="col-12 col-md-2">
-                <span class="label-top">tipologia</span>
-                {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_certificazioni, request ) }}
-            </div>
-            <div class="col-12 col-md">
-                <span class="label-top">nome</span>
-                {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-            </div>
-        </div>
-       
-    </fieldset>
+        {# SUBFORM CERTIFICAZIONI #}
+        {{ sub.certificazioni( table, 'progetti_certificazioni', 'certificazioni', site, page, pages, ietf, etc, request, session ) }}
 
-
-    {# BOTTONI E COMANDI DEL MODULO #}
-    <fieldset class="form-controls mt-auto">
-        {{ def.controls( page, pages, ietf, session, table, request ) }}
-	</fieldset>
+        {# BOTTONI E COMANDI DEL MODULO #}
+        <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
+        </fieldset>
 	
 	</form>
     </div>

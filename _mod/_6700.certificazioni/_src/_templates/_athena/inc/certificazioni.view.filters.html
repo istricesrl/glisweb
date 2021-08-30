@@ -8,26 +8,6 @@
 			{% endfor %}
 		</select>
     </div>
-	<div class="col-6 col-md-auto">
-		<span class="label-top">anagrafica</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-			<option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>tutti</option>
-		{% for anagrafica  in etc.select.anagrafica %}
-			<option value="{{ anagrafica.id }}"   {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == anagrafica.id %}selected{% endif %}>{{ anagrafica.__label__ }}</option>
-		{% endfor %}
-		</select>
-	</div>
-	<!--
-	<div class="col-2">
-		<span class="label-top">emittente</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_emittente][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm selectpicker" data-live-search="true" >
-			<option value="" {% if request.__view__[ view.id ].__filters__.id_emittente == "" %}selected{% endif %}>tutti</option>
-			{% for emittente in etc.select.emittenti %}
-			<option value="{{ emittente.id }}" {% if request.__view__[ view.id ].__filters__.id_emittente.EQ == emittente.id %}selected{% endif %} >{{ emittente.__label__ }}</option>
-			{% endfor %}
-		</select>
-	</div>
-	-->
     <div class="col">
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>

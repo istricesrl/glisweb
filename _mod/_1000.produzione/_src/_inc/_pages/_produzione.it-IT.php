@@ -70,7 +70,7 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'progetti.produzione.form', 
-														'progetti.produzione.form.mastri',
+													/*	'progetti.produzione.form.mastri',*/
 														'progetti.produzione.form.todo',
 														'progetti.produzione.form.attivita',
 														'progetti.produzione.form.pause',
@@ -78,8 +78,6 @@
 														'progetti.produzione.form.pianificazioni',
 														'progetti.produzione.form.tools' ) )
 	);
-
-
 
 	// gestione todo progetti
 	$p['progetti.produzione.form.todo'] = array(
@@ -116,7 +114,6 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 	);
-
 
 // gestione progetti pianificazioni
 $p['progetti.produzione.form.pianificazioni'] = array(
@@ -182,5 +179,3 @@ $p['categorie.progetti.form'] = array(
 	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	'etc'			=> array( 'tabs'	=> array(	'categorie.progetti.form' ) )
 );
-	
-

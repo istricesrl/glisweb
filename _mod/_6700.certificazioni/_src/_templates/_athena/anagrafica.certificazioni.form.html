@@ -47,13 +47,34 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
-            <div class="col-12 col-md-2">
-                <span class="label-top">tipologia</span>
-                {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_certificazioni, request ) }}
+            <div class="col-12 col-md-6">
+                <span class="label-top">anagrafica</span>
+                {{ frm.selectRequired( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request ) }}
+            </div>
+            <div class="col-12 col-md-6">
+                <span class="label-top">certificazione</span>
+                {{ frm.selectRequired( table, '', '', 'id_certificazione', '', etc.select.certificazioni, request ) }}
+            </div>
+        </div>
+
+        <div class="form-group form-row">
+            <div class="col-12 col-md-6">
+                <span class="label-top">emittente</span>
+                {{ frm.selectRequired( table, '', '', 'id_emittente', '', etc.select.emittenti, request ) }}
             </div>
             <div class="col-12 col-md">
-                <span class="label-top">nome</span>
-                {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+                <span class="label-top">data emissione</span>
+                {{ frm.date( table, '', '', 'data_emissione', '', '', request, '', '', '', '', disabled ) }}
+            </div>
+            <div class="col-12 col-md">
+                <span class="label-top">data scadenza</span>
+                {{ frm.date( table, '', '', 'data_scadenza', '', '', request, '', '', '', '', disabled ) }}
+            </div>          
+        </div>
+        <div class="form-group form-row">
+            <div class="col-12 col-md">
+                <span class="label-top">note</span>
+                {{ frm.textarea( table, '', '', 'note', 'note', 3, request ) }}
             </div>
         </div>
        

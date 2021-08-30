@@ -79,6 +79,7 @@
 //															'anagrafica.form.struttura',
 //															'anagrafica.form.attivita',
 //															'anagrafica.form.promemoria',
+//															'anagrafica.form.certificazioni',
 															'anagrafica.form.immagini',
 															'anagrafica.form.video',
 															'anagrafica.form.audio',
