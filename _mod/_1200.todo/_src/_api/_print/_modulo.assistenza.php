@@ -296,7 +296,7 @@
 */
 //if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  ) {
 
-    if( ( isset( $_REQUEST['part'] ) && ($_REQUEST['part'] == 1 || $_REQUEST['part'] == 3 )) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ) {
+    if( ( isset( $_REQUEST['part'] ) && ($_REQUEST['part'] == 1 || $_REQUEST['part'] == 3 || $_REQUEST['part'] == 4 )) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ) {
 
         pdfFormCellTitle( $pdf, $info, '3. diagnosi' );
 
@@ -316,7 +316,7 @@
     }
 
 
-    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 2 ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) )  ) {
+    if( ( isset( $_REQUEST['part'] ) && ($_REQUEST['part'] == 2 || $_REQUEST['part'] == 4) ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) )  ) {
 
         pdfFormCellTitle( $pdf, $info, '5. tempo di intervento' );
       
@@ -341,7 +341,7 @@
             foreach( $elenco_attivita as $a){
 
                 $pdf->Cell( $col + 5, $info['form']['bar']['height'], ( $a['data_attivita'] == NULL ? '' : date_format( date_create($a['data_attivita']) , 'd/m/Y') ) , ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->Cell( $col * 10, $info['form']['bar']['height'], $a['testo'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 10, $info['form']['bar']['height'],( strlen( $a['testo']) > 115 ?  $a['nome'] : $a['testo']), ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
                 $pdf->Cell( $col - 5, $info['form']['bar']['height'], $a['ore'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
                 $totore += $a['ore'];
                 $i++;

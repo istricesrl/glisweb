@@ -358,9 +358,11 @@
     {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.assistenza.id_todo , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_tipologia', '', '', '', etc.tipologia_attivita, 'hidden' ) }}
+    {{ frm.input( 'attivita', '', '', 'nome', '', '', '', 'diagnosi', 'hidden' ) }}
+  
     <div class="form-group form-row">       
         <div class="form-group col">
-			<div class="form-group form-row">
+			<!--div class="form-group form-row">
 				<div class="col">
 					<span class="label-top">descrizione</span>
                     {{ frm.inputRequired( 'attivita', '', '', 'nome', '', '', request ) }}
@@ -371,45 +373,49 @@
 				<span class="label-top">note interne</span>
                 {{ frm.textarea( 'attivita', '', '', 'note_interne', '', 3, request ) }}
 				</div>
-			</div>
+			</div-->
 	
 
 				<!--legend>esecuzione</legend-->
-				<div class="form-group form-row">
-					<div class="col-12 col-md mt-3">
-						<span class="label-top">esecutore</span>
-                        {{ frm.selectBox( 'attivita', '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica,  '', '', '', '', '', '', '', '', page, pages, ietf ) }}
-                    </div>
-				</div>
-                {% if session.assistenza.id_attivita %}
-				<legend>disponibilità</legend>
+				<div class="form-group col">
 
-                <legend>programmazione</legend>
+				
+               
+				<legend>tecnico incaricato</legend>
+
+
 				<div class="form-group form-row">
-					<div class="col-6 col-md-auto mt-3">
+					<div class="col-6 col-md-auto">
 						<span class="label-top">data</span>
-						{{ frm.date( 'attivita', '', '', 'data_programmazione', '', '', request ) }}
+						{{ frm.date( 'attivita', '', '', 'data_programmazione', '', '', request, '', '', 1 ) }}
 					</div>
-					<div class="col-2 col-md-1 mt-3">
+					<div class="col-2 col-md-1">
 						<span class="label-top">ora inizio</span>
 						{{ frm.time( 'attivita', '', '', 'ora_inizio_programmazione', '', '', request) }}
 					</div>
-					<div class="col-2 col-md-1 mt-3">
-						<span class="label-top">ora fine</span>
-						{{ frm.time( 'attivita', '', '', 'ora_fine_programmazione', '', '', request) }}
+					<div class="col col-md ">
+						<span class="label-top">esecutore</span>
+                        {{ frm.selectBox( 'attivita', '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica,  '', '', '', '', '', '', '', '', page, pages, ietf ) }}
+                    </div>
+                    <div class="col-auto col-md-auto ">
+                        <button type="button" class="btn btn-sm btn-secondary" id="btncalcolo" onclick="calcola_disponibilita()">CALCOLA DISPONIBILITÀ</button>
 					</div>
-                    <div class="col-12 col-md mt-3">
+                    <div class="col-12 col-md">
                         <span class="label-top">indirizzo</span>
                         {{ frm.selectBox( 'attivita', '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','','','', '', page, pages, ietf ) }}
                     </div>
 				</div>
                 <div class="form-group form-row">
-                    <div class="col-12 col-md mt-3">
+                    <div class="col-12 col-md">
                     <span class="label-top">note programmazione</span>
                     {{ frm.textarea( 'attivita', '', '', 'note_programmazione', '', 3, request ) }}
                     </div>
                 </div>
-                {% endif %}
+                <section id="disponibilia" style="display: none;">
+                    <legend>disponibilità</legend>
+
+                </section>
+             </div>  
         </div>
 
 {% endif %}
@@ -438,7 +444,7 @@
             {% endif  %}
             </div>
             {% if session.assistenza.id_attivita %}
-            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
+            <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza (1 e 2)</button>
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             {% endif %}
             {% if session.assistenza.id_cliente and session.assistenza.id_progetto and ( not session.assistenza.id_attivita ) %}
@@ -492,9 +498,9 @@
     </div>
 
     <div class="col-12">
-        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa prima parte modulo assistenza</button>
-        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa diagnosi</button>
-        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=3', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa assistenza fino alla diagnosi</button>
+        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa prima parte modulo assistenza (1 e 2)</button>
+        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=1', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa diagnosi (3 e 4)</button>
+        <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=3', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa assistenza fino alla diagnosi (da 1 a 4)</button>
     </div>
 
     <div class="form-row col-12">
@@ -539,10 +545,7 @@
      
 
             <div class="form-group form-row">
-                <div class="col-auto">
-                    <span class="label-top">data</span> 
-                    {{ frm.datetime( table, '', '', 'timestamp_completamento', '', '', request ) }}
-                </div>
+                      <input type="hidden" id="timestamp_completamento" name="{{ table }}[timestamp_completamento]" value="{{ 'now'|date('U') }}">
                 <div class="col">
                     <span class="label-top">testo completamento</span>
                     {{ frm.textarea( table, '', '', 'testo_completamento', '', '1', request ) }}
@@ -551,7 +554,7 @@
                 </fieldset>
             <fieldset>
 				<legend>esecuzione</legend>            
-                <input type="hidden" id="method" name="attivita[__method__]" value="update">
+                <!--input type="hidden" id="method" name="attivita[__method__]" value="update">
 
                 {{ frm.input( 'attivita', '', '', 'id', '', '', request, etc.attivita_collaudo,  'hidden') }}
                 {{ frm.input( 'attivita', '', '', 'nome', '', '', request, request.attivita.nome,  'hidden') }}
@@ -582,7 +585,7 @@
 					<span class="label-top">esito assistenza</span>
 					{{ frm.textarea( 'attivita', '', '', 'testo', '', 2, request ) }}
 					</div>
-				</div>
+				</div-->
 
                 {% if session.assistenza.id_attivita_feedback %}
                 <div class="col-12">
@@ -608,8 +611,9 @@
                 <div class="col-12 mt-3 cassa fixed-bottom d-flex justify-content-between" style="margin-bottom: 1%;" >
                     <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">{% if request.todo.timestamp_completamento %}inserisci nuovo{% else %}annulla{% endif %}</button>
                     {% if request.todo.timestamp_completamento %}
-                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=2', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa conclusione assistenza</button>
-                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza completo</button>
+                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=4', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa diagnosi e conclusione (da 3 a 7)</button>
+                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=2', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa conclusione (da 5 a 7)</button>
+                    <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo completo</button>
                   {% endif %}
                     <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
 
@@ -628,4 +632,13 @@
 
 
 {% endif %}
+<script>
+    function calcola_disponibilita(){
+        $('#btncalcolo').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> CALCOLO DISPONIBILITÀ');
+        $('#disponibilia').show();
+    }
+    </script>
 {% endblock %}
+
+
+

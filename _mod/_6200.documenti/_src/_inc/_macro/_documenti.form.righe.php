@@ -45,6 +45,7 @@
         'tipologia' => 'tipologia',
         'data_lavorazione' => 'data',
         'nome' => 'nome',
+		'id_articolo' => 'articolo',
         'importo_netto_totale' => 'importo netto',
         'quantita' => 'quantità',
 		'totale_riga' => 'totale',
@@ -61,7 +62,8 @@
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data_lavorazione' => 'text-left', 
-        'tipologia' => 'text-left'
+        'tipologia' => 'text-left',
+		'id_articolo' => 'text-left'
     );
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){

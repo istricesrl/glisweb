@@ -18,7 +18,7 @@ if( isset( $_REQUEST['id_contatto'] ) ){
     }
 }
 
-if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) && !isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){
+if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) && $_REQUEST['todo']['__se_consenso__'] == 1 && !isset( $_SESSION['assistenza']['id_attivita_feedback'] ) ){
 
     $_SESSION['assistenza']['id_attivita_feedback'] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO attivita (id_anagrafica, id_tipologia, nome, data_programmazione, id_account_inserimento, timestamp_inserimento, id_todo, id_progetto, id_cliente ) '.
     'VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )',
@@ -75,10 +75,9 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
     $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $todo) ));
     $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS  NULL ORDER BY data_attivita', array( array( 's' => $todo) ));
 
-    $ct['etc']['attivita_collaudo'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM attivita_view_static WHERE tipologia = "collaudo" AND id_todo = ? ORDER BY id DESC LIMIT 1', array( array( 's' => $todo) ));
-    //print_r($ct['etc']['attivita_programmate']);
-    // $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $todo) ));
-    $ct['form']['table'] = 'todo';
+   // $ct['etc']['attivita_collaudo'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM attivita_view_static WHERE tipologia = "collaudo" AND id_todo = ? ORDER BY id DESC LIMIT 1', array( array( 's' => $todo) ));
+  
+     $ct['form']['table'] = 'todo';
     if( !isset( $_REQUEST['todo']  ) ){
         $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
         if( !empty( $_REQUEST['todo']['timestamp_completamento'] ) ){
@@ -87,15 +86,12 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
         
     
     }
-
+/*
     if( !isset( $_REQUEST['attivita']) && !empty($ct['etc']['attivita_collaudo']) ){
         $_REQUEST['attivita'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM attivita_view WHERE id = ?', array( array( 's' => $ct['etc']['attivita_collaudo']) ));
       
     }
-  /*  if( !empty( $_REQUEST['todo']['timestamp_completamento'] ) ){
-       // $_REQUEST['todo']['timestamp_completamento'] = strtotime( $_REQUEST['todo']['timestamp_completamento'] );
-        print_r( $_REQUEST['todo']);
-    }*/
+*/
 
 }
 
