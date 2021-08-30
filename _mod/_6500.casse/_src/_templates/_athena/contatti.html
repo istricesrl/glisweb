@@ -41,7 +41,7 @@
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-		<input type="hidden" id="id" name="{{ table }}[id]" value="{{ session.assistenza.id_documento_ritiro }}">
+		<input type="hidden" id="id" name="{{ table }}[id]" value="{{ session.contatto.id }}">
         <input type="hidden" id="nome" name="{{ table }}[nome]" value="contatto in cassa del {{ 'now'|date('d/m/Y') }} alle {{ 'now'|date('H:i') }}">
 
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
@@ -70,17 +70,24 @@
                 </div>
                 <div class="col-12 col-md-6 mt-2">
                     <span class="label-top">segnalatore</span>
-                    {{ frm.selectBox( table, '', '', 'id_segnalatore', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
+                    {{ frm.selectBox( table, '', '', 'id_segnalatore', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_segnalatore', page, pages, ietf, 'anagrafica' ) }}
                 </div>
             </div>
 
             <legend>dati contatto</legend>
            
           <div class="form-row">
-
-            <div class="col-12 col-md mt-2">
+                <div class="col-6 col-md-auto">
+                    <span class="label-top">data</span>
+                    {{ frm.date( table, '', '', 'data_contatto', '', '', request, "now"|date('Y-m-d') ) }}
+                </div>
+                <div class="col-2 col-md-1">
+                    <span class="label-top">ora</span>
+                    {{ frm.time( table, '', '', 'ora_contatto', '', '', request, "now"|date('H:i')) }} 
+                </div>
+            <div class="col-12 col-md">
                 <span class="label-top">cliente</span>
-                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
+                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
             </div>
         </div>
         <!--div class="form-row">
@@ -102,10 +109,12 @@
                 {% if not request[ table ].id %}<div>{% endif %}
                 {% if request[ table ].id %}
                 <div>
-                    <button type="button"  class="btn-lg btn-secondary" onclick="window.open('{{ pages.terminale.url[ localization.language.ietf ] }}?__contatto__={{ request[ table ].id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea scontrino</button>
-                    <button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ pages.assistenza.url[ localization.language.ietf ] }}?__contatto__={{request[ table ].id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea assistenza</button>	
+
                     {% set progetto = 'progetti.produzione.form' %}
                     <button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ pages[ progetto ].url[ localization.language.ietf ] }}?__preset__[progetti][id_cliente]={{request[ table ].id }}&__backurl__={{ page.backurl[ ietf ] }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea progetto</button>	
+                    <button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ pages.assistenza.url[ localization.language.ietf ] }}?__contatto__={{request[ table ].id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea assistenza</button>	
+                    <button type="button" class="btn-lg btn-secondary" onclick="window.open('{{ pages.fornitura.url[ localization.language.ietf ] }}?__contatto__={{request[ table ].id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea fornitura</button>	
+                    <button type="button"  class="btn-lg btn-secondary" onclick="window.open('{{ pages.terminale.url[ localization.language.ietf ] }}?__contatto__={{ request[ table ].id }}', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">crea scontrino</button>
                 </div>
                  <div class="group">
                     {% if session.contatto %}

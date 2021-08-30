@@ -21,13 +21,13 @@
 
     // tabella gestita
 	$ct['form']['table'] = 'progetti';
-    
+
     // tendina clienti
 	$ct['etc']['select']['clienti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static ' );
 
     // tendina anagrafica per referenti e operatori (TODO vedere se filtrare sui referenti del cliente)
     $ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
@@ -89,7 +89,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM mastri_view'
+	    'SELECT id, __label__ FROM WHERE id_tipologia = 3'
     );
 
     // tendina categorie progetti

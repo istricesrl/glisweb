@@ -21,19 +21,39 @@
 	// die();
 
     // inclusione del framework
-	require '../../../../_src/_config.php';
+/*	if( ! defined( 'CRON_RUNNING' ) ) {
+	    header( 'Access-Control-Allow-Origin: *' );
+	    require '../../../../../_src/_config.php';
+	}
+*/
+	header( 'Access-Control-Allow-Origin: *' );
 
+    require '../../../../_src/_config.php';
+    // inizializzo l'array del risultato
+	$status = array();
 
-    // print_r($_REQUEST['__data__']); 
-    //  echo("<br>");
+    // connessione
+	$h = escpos_connect(
+	    $cf['casse']['printer']['address'],
+	    $cf['casse']['printer']['port']
+	);
+
+    // informazioni
+	$status['info'] = array(
+	    $cf['casse']['printer']['address'],
+	    $cf['casse']['printer']['port']
+	);
+
+   // print_r($_REQUEST);
+
     $documento = json_decode($_REQUEST['__data__'], true, 4,JSON_OBJECT_AS_ARRAY);
     // print_r( $documento );
 
     // array di stato
-	$status = array();
+//	$status = array();
 
     // connessione
-	$h = escpos_connect( '192.168.1.137' );
+//	$h = escpos_connect( '192.168.1.137' );
 
     // scrittura di test
 	// escpos_write( $h, '1H1R' );
@@ -48,7 +68,7 @@
 
     foreach(  $documento['righe'] as $riga ){
 
-        $write_string = '"'.$riga['articolo'].'"'.str_replace('.00', '', $riga['quantita']).'*'.str_replace('.', '', $riga['importo_netto_totale']).'H'.$riga['id_reparto'].'R'.(  $riga['matricola'] ? '"'.$riga['label_matricola'].'"@' : '').(  $riga['ore'] ? '"+'.$riga['ore'].'h su '.$riga['id_progetto'].'"@' : '');
+        $write_string = '"'.$riga['articolo'].'"'.str_replace('.00', '', $riga['quantita']).'*'.str_replace('.', '', $riga['importo']).'H'.$riga['id_reparto'].'R'.(  $riga['matricola'] ? '"'.$riga['label_matricola'].'"@' : '').(  $riga['ore'] ? '"+'.$riga['ore'].'h su '.$riga['id_progetto'].'"@' : '');
         escpos_write( $h, $write_string);
 
     }
@@ -73,8 +93,8 @@
     // risposta con errore
 	http_response_code( 200 );
 
-    $status[] = 'OK';
-    $status[] = "stampate correttamente ".sizeof( $documento['righe'] )." righe di scontrino";
+    $status['result'] = 'OK';
+    $status['msg'] = "stampate correttamente ".sizeof( $documento['righe'] )." righe di scontrino";
 
     // output
 	buildJson( $status );

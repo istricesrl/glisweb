@@ -24,9 +24,12 @@
 
 {% block line %}
 {% if session.contatto  %}
-<div class="row d-flex align-items-center" style="color: white; background-color: #343A40; padding: 5px;padding-right: 15px;padding-left: 15px;">
+<div class="row d-flex align-items-center" style="color: white; background-color: #343A40; padding: 5px;padding-right: 30px;padding-left: 15px;">
     <div class="col"><h3>{{ session.contatto.nome }}</h3></div>
-    <div class="col-auto text-right" ><button class="btn btn-light" onclick='window.open("{{ pages.contatti.url[ localization.language.ietf ] }}?__unset__", "_self")'>inserisci nuovo</button> </div>
+    <div class="text-right" >
+        <button class="btn btn-light" onclick='window.open("{{ pages[ 'contatti.form' ].url[ localization.language.ietf ] }}?contatti[id]={{session.contatto.id }}&__backurl__={{page.backurl[ietf]}}", "_self")'>modifica</button> 
+        <button class="btn btn-light" onclick='window.open("{{ pages.contatti.url[ localization.language.ietf ] }}?__unset__", "_self")'>inserisci nuovo</button> 
+    </div>
 </div>
 {% endif %}
 {% endblock %}
@@ -297,6 +300,7 @@
         {{ frm.input( 'todo', '', '', 'id_mastro_attivita_default', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
         {{ frm.input( 'todo', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }} 
         {{ frm.input( 'todo', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
+        {{ frm.input( 'todo', '', '', 'id_responsabile', '', '', '', session.account.id_anagrafica , 'hidden' ) }}
         <div class="form-group col" style="padding: 0%;">
             <!--div class="col-12 col-md">
                 <span class="label-top">nome</span>
@@ -350,7 +354,7 @@
     <input type="hidden" id="method" name="attivita[__method__]" value="{{ method }}">
     {{ frm.input( 'attivita', '', '', 'id', '', '', request, '', 'hidden') }}
     {{ frm.input( 'attivita', '', '', 'id_progetto', '', '', '', session.assistenza.id_progetto , 'hidden' ) }}
-    {{ frm.input( 'attivita', '', '', 'id_mastro_attivita_default', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
+    {{ frm.input( 'attivita', '', '', 'id_mastro_provenienza', '', '', request, etc.progetto.id_mastro_attivita_default, 'hidden') }}
     {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.assistenza.id_todo , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_tipologia', '', '', '', etc.tipologia_attivita, 'hidden' ) }}
@@ -362,12 +366,12 @@
                     {{ frm.inputRequired( 'attivita', '', '', 'nome', '', '', request ) }}
 				</div>
 			</div>
-			<!--div class="form-group form-row">
+			<div class="form-group form-row">
 				<div class="col-12 col-md mt-3">
-				<span class="label-top">note</span>
-                {{ frm.textarea( 'attivita', '', '', 'testo', '', 3, request ) }}
+				<span class="label-top">note interne</span>
+                {{ frm.textarea( 'attivita', '', '', 'note_interne', '', 3, request ) }}
 				</div>
-			</div-->
+			</div>
 	
 
 				<!--legend>esecuzione</legend-->
@@ -399,6 +403,12 @@
                         {{ frm.selectBox( 'attivita', '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','','','', '', page, pages, ietf ) }}
                     </div>
 				</div>
+                <div class="form-group form-row">
+                    <div class="col-12 col-md mt-3">
+                    <span class="label-top">note programmazione</span>
+                    {{ frm.textarea( 'attivita', '', '', 'note_programmazione', '', 3, request ) }}
+                    </div>
+                </div>
                 {% endif %}
         </div>
 
@@ -428,8 +438,8 @@
             {% endif  %}
             </div>
             {% if session.assistenza.id_attivita %}
-            <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             <button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ session.assistenza.id_todo }}&part=0', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo assistenza</button>
+            <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
             {% endif %}
             {% if session.assistenza.id_cliente and session.assistenza.id_progetto and ( not session.assistenza.id_attivita ) %}
             <button type="submit" class="btn-lg btn-secondary "  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">salva</button>
@@ -523,6 +533,10 @@
     
             {# MODULO PRINCIPALE #}
             <fieldset>
+                <fieldset>
+                    <legend>completamento assistenza</legend>
+
+     
 
             <div class="form-group form-row">
                 <div class="col-auto">
@@ -531,10 +545,62 @@
                 </div>
                 <div class="col">
                     <span class="label-top">testo completamento</span>
-                    {{ frm.textarea( table, '', '', 'testo_completamento', '', '3', request ) }}
+                    {{ frm.textarea( table, '', '', 'testo_completamento', '', '1', request ) }}
                 </div>
             </div>
-    
+                </fieldset>
+            <fieldset>
+				<legend>esecuzione</legend>            
+                <input type="hidden" id="method" name="attivita[__method__]" value="update">
+
+                {{ frm.input( 'attivita', '', '', 'id', '', '', request, etc.attivita_collaudo,  'hidden') }}
+                {{ frm.input( 'attivita', '', '', 'nome', '', '', request, request.attivita.nome,  'hidden') }}
+				<div class="form-group form-row">
+					<div class="col-6 col-md-auto">
+						<span class="label-top">data</span>
+                        {{ frm.date('attivita', '', '', 'data_attivita', '', '', request, 'now'|date('Y-m-d') ) }}
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora inizio</span>
+						{{ frm.time( 'attivita', '', '', 'ora_inizio', '', '', request, 'now'|date('H:i')) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora fine</span>
+						{{ frm.time( 'attivita', '', '', 'ora_fine', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ore</span>
+						{{ frm.input( 'attivita', '', '', 'ore', '', '', request, '', 'number', '', '', '','0.25' ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">esecutore</span>
+						{{ frm.selectBox( 'attivita', '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+					</div>
+				</div>
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">esito assistenza</span>
+					{{ frm.textarea( 'attivita', '', '', 'testo', '', 2, request ) }}
+					</div>
+				</div>
+
+                {% if session.assistenza.id_attivita_feedback %}
+                <div class="col-12">
+                        attività di feedback pianificata per {{ etc.data_attivita_feedback }}
+					</div>
+                {% else %}
+                <div class="row col-12 col-form-label">
+                    <div class="col-auto">
+                        {{ frm.checkbox( table, '', '', '__se_consenso__', 'consenso feedback', '', request ) }} 
+                    </div>  
+                    <div class="col col-md">
+                        <span class="label-top">esecutore</span>
+                        {{ frm.selectBox( table, '', '', '__id_anagrafica__', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica,  '', '', '', '', '', '', '', '', page, pages, ietf ) }}
+                    </div>
+                    
+                </div>
+                {% endif %}
+			</fieldset>
     
             </fieldset>
     

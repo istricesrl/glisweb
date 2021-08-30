@@ -38,9 +38,12 @@
 
 {% block line %}
 {% if session.contatto  %}
-<div class="row d-flex align-items-center" style="color: white; background-color: #343A40; padding: 5px;padding-right: 15px;padding-left: 15px;">
+<div class="row d-flex align-items-center" style="color: white; background-color: #343A40; padding: 5px;padding-right: 30px;padding-left: 15px;">
     <div class="col"><h3>{{ session.contatto.nome }}</h3></div>
-    <div class="col-auto text-right" ><button class="btn btn-light" onclick='window.open("{{ pages.contatti.url[ localization.language.ietf ] }}?__unset__", "_self")'>inserisci nuovo</button> </div>
+    <div class="text-right" >
+        <button class="btn btn-light" onclick='window.open("{{ pages[ 'contatti.form' ].url[ localization.language.ietf ] }}?contatti[id]={{session.contatto.id }}&__backurl__={{page.backurl[ietf]}}", "_self")'>modifica</button> 
+        <button class="btn btn-light" onclick='window.open("{{ pages.contatti.url[ localization.language.ietf ] }}?__unset__", "_self")'>inserisci nuovo</button> 
+    </div>
 </div>
 {% endif %}
 {% endblock %}
@@ -265,7 +268,7 @@ $( document ).ready(function() {
        
        // console.log('{{ pages[anteprima.documento].url[ localization.language.ietf ] }}?id={{ request.documenti.id }}');
        if( $("#documenti_scadenze_0_id_modalita_pagamento").val() == 1 || $("#documenti_scadenze_0_id_modalita_pagamento").val() == 5 ){ 
-       window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?documenti[id]={{ request.documenti.id }}", '_self' );
+       window.open( "{{ pages['anteprima.documento'].url[  ietf ] }}?__documenti__[id]={{ request.documenti.id }}", '_self' );
        
         } else {
            alert("devi selezionare un metodo di pagamento per poter stampare lo scontrino");

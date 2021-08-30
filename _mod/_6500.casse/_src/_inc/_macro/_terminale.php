@@ -19,6 +19,17 @@
      *
      */
 
+     if( isset( $_REQUEST['__close__'] ) && !empty($_REQUEST['__close__'] ) ){
+
+        $update = mysqlQuery( 
+            $cf['mysql']['connection'], 
+            'UPDATE documenti SET timestamp_chiusura = ? WHERE id = ?',
+            array( 
+                array( 's' => time() ), 
+                array( 's' => $_REQUEST['__close__'] ) ) );
+
+     }
+
    
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array( 'id' => 'genera_matricola', 'include' => 'inc/ritiro.hardware.modal.html' )
@@ -45,6 +56,8 @@
     $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
                                     'SELECT id FROM tipologie_documenti WHERE nome = "scontrino"');
 
+    $ct['etc']['id_tipologia_carico'] = mysqlSelectValue(  $cf['mysql']['connection'],
+                                    'SELECT id FROM tipologie_attivita WHERE nome = "carico"');
     // eliminazione scontrino in sospeso
     if( isset( $_REQUEST['__delete__'] ) ){
 
@@ -122,7 +135,7 @@
             // la todo
 
             $ct['etc']['todo'] =  mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ? ', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
-
+           
             // attività concluse della todo
             $ct['etc']['attivita_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
 
@@ -266,17 +279,29 @@
 
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo,id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                                 array( 
+                                    array( 's' => ( isset( $_REQUEST['__todo__']) && !empty($_REQUEST['__todo__'])  ?  $_REQUEST['__todo__'] : NULL ) ),
+                                    array( 's' => ( isset( $_REQUEST['__progetto__']) && !empty($_REQUEST['__progetto__'])  ?  $_REQUEST['__progetto__'] : NULL ) ),
                                     array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                                     array( 's' => date("Y-m-d") ),
                                     array( 's' => $articolo['prezzo']  ), 
-                                    array( 's' => ( isset( $_REQUEST['__qta__']) ?  $_REQUEST['__qta__'] : 1 ) ),
+                                    array( 's' => ( isset( $_REQUEST['__qta__']) ?  $_REQUEST['__qta__'] : 1 ) ), 
                                     array( 's' => $reparto ),
                                     array( 's' => $id_iva ),
                                     array( 's' => $articolo['id_udm'] ),
                                     array( 's' => $ct['etc']['mastro'] )
                                 ) );
+
+
+                    if( !empty( $insert ) && array_key_exists( 'documenti_articoli', $_SESSION['account']['id_gruppi_attribuzione'] ) && isset( $_SESSION['account']['id_gruppi_attribuzione']['documenti_articoli'][0] ) ){
+
+                        $acl = mysqlQuery( 
+                            $cf['mysql']['connection'], 
+                            'INSERT INTO __acl_documenti_articoli__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, ? )', 
+                            array( array( 's' => $insert ), array( 's' => $_SESSION['account']['id_gruppi_attribuzione']['documenti_articoli'][0] ), array( 's' => 'FULL' )  ) );
+
+                    } 
                 }
             }
 
@@ -298,9 +323,9 @@
             }
 
             if(  isset( $insert ) && $insert > 0 && isset( $_REQUEST['__ore__'] ) ){
-                $insert = mysqlQuery( 
+                $insert_a = mysqlQuery( 
                     $cf['mysql']['connection'], 
-                    "INSERT INTO attivita ( nome, data, ore, id_mastro_destinazione, id_documenti_articoli, id_cliente, id_todo, id_progetto )  VALUES ( ?,?,?,?, ?, ?, ?, ?)",
+                    "INSERT INTO attivita ( nome, data_attivita, ore, id_mastro_destinazione, id_documenti_articoli, id_cliente, id_todo, id_progetto, id_tipologia )  VALUES ( ?,?,?,?, ?, ?, ?, ?, ?)",
                     array( 
                         array( 's' => 'carico ore da scontrino '.$_REQUEST[ $ct['form']['table'] ]['id'] ),
                         array( 's' => date("Y-m-d") ),
@@ -309,8 +334,24 @@
                         array( 's' => $insert ),
                         array( 's' => $_REQUEST['__cliente__'] ),
                         array( 's' => $_REQUEST['__todo__'] ),
-                        array( 's' => $_REQUEST['__progetto__'] )
+                        array( 's' => $_REQUEST['__progetto__'] ),
+                        array( 's' => $ct['etc']['id_tipologia_carico'] )
                     ) );
+
+                    if( empty($_REQUEST['documenti']['id_destinatario']) && isset($_REQUEST['__cliente__']) && !empty($_REQUEST['__cliente__']) ){
+                        mysqlQuery($cf['mysql']['connection'], 'UPDATE documenti SET id_destinatario = ? WHERE id = ?',
+                        array( array( 's' => $_REQUEST['__cliente__']), array('s' => $_REQUEST['documenti']['id']) ) );
+                        $_REQUEST['documenti']['id_destinatario'] = $_REQUEST['__cliente__'];
+                    } 
+
+                    if( isset( $_SESSION['account']['id_gruppi_attribuzione']['attivita'] ) ){
+                        $acl = mysqlQuery( 
+                            $cf['mysql']['connection'], 
+                            'INSERT INTO __acl_attivita__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, ? )', 
+                            array( array( 's' => $insert_a ), array( 's' => $_SESSION['account']['id_gruppi_attribuzione']['attivita'][0] ), array( 's' => 'FULL' )  ) );
+    
+                    }
+                   
 
             }
 
@@ -409,8 +450,8 @@
 
         foreach( $ct['etc']['righe'] as $r ){
             if( !isset($ct['etc']['totale_parziale'][ $r['id_iva'] ]) ){ $ct['etc']['totale_parziale'][ $r['id_iva'] ] = 0;}
-            $ct['etc']['totale_parziale'][ $r['id_iva'] ] += $r['importo_netto_totale'];
-            $ct['etc']['totale'] += $r['importo_netto_totale'];
+            $ct['etc']['totale_parziale'][ $r['id_iva'] ] += $r['importo_netto_totale'] * $r['quantita'];
+            $ct['etc']['totale'] += $r['importo_netto_totale'] * $r['quantita'];
         }
 
         $ct['etc']['totale_iva'] = 0;

@@ -1,0 +1,176 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/ritiro.hardware.sub.html' as sub %}
+
+{% extends 'ext/blank.html' %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{% block header %}
+<div class="text-left">
+        {% set target = pages.casse.url[ localization.language.ietf ] %}
+        <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ target }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i></button>
+</div>
+{% endblock %}
+{% block line %}
+{% if session.contatto  %}
+<div class="row d-flex align-items-center" style="color: white; background-color: #343A40; padding: 5px;padding-right: 30px;padding-left: 15px;">
+    <div class="col"><h3>{{ session.contatto.nome }}</h3></div>
+    <div class="text-right" >
+        <button class="btn btn-light" onclick='window.open("{{ pages[ 'contatti.form' ].url[ localization.language.ietf ] }}?contatti[id]={{session.contatto.id }}&__backurl__={{page.backurl[ietf]}}", "_self")'>modifica</button> 
+        <button class="btn btn-light" onclick='window.open("{{ pages.contatti.url[ localization.language.ietf ] }}?__unset__", "_self")'>inserisci nuovo</button> 
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block main %}
+
+
+{% set
+    trans_day_hash = {
+        "Monday": "lunedì", 
+        "Tuesday": "martedì", 
+        "Wednesday": "mercoledì", 
+        "Thursday": "giovedì", 
+        "Friday": "venerdì", 
+        "Saturday": "sabato", 
+        "Sunday": "domenica" 
+    }
+%}
+
+{% set
+    trans_month_hash = {
+        "01": "gennaio",
+        "02": "febbraio",
+        "03": "marzo",
+        "04": "aprile",
+        "05": "maggio",
+        "06": "giugno",
+        "07": "luglio",
+        "08": "agosto",
+        "09": "settembre",
+        "10": "ottobre",
+        "11": "novembre",
+        "12": "dicembre"
+    }
+%}
+{% if etc.todo_da_pianificare %}
+<legend>da pianificare</legend>
+{% for t in etc.todo_da_pianificare %}
+<div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
+	<div class="col">
+	    <div class="form-row">
+		    <div class="col">
+                <h3>{{ t.nome }}</h3>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-6">
+                {{ t.testo }}
+            </div>
+            <div class="col-6">
+               <b>cliente:</b> {{ t.cliente }}<br>
+               <b>progetto:</b> {{ t.progetto }}<br>
+               <b>responsabile:</b> {{ t.responsabile }}<br>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+{% endif %}
+
+{% if etc.todo_da_fare %}
+
+<fieldset class="">
+{% if session.account.id_anagrafica %}
+<legend>pianificati per te</legend>
+{% else %}
+<legend>pianificati</legend>
+{% endif %}
+{% for t in etc.todo_da_fare %}
+<div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
+	<div class="col">
+	    <div class="form-row">
+		    <div class="col">
+                <h3>{{ t.nome }}</h3>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-6">
+                {{ t.testo }}
+            </div>
+            <div class="col-6">
+               <b>cliente:</b> {{ t.cliente }}<br>
+               <b>progetto:</b> {{ t.progetto }}<br>
+               <b>responsabile:</b> {{ t.responsabile }}<br>
+            </div>
+        </div>
+        {% for a in t.attivita %}
+        <div class="form-row">
+            <div class="col-1 lemma text-right">
+                <p>{% if a.data_programmazione %}<b>{{ a.data_programmazione|date(' d/m/Y') }}</b>{% if a.ora_inizio_programmazione %}<b>{{ a.ora_inizio_programmazione|date(' H:i') }}</b>{% endif %} {% else %}&mdash;{% endif %}</p>
+            </div>
+            <div class="col">
+                <i>{{ a.tipologia }}</i> {% if not session.account.id_anagrafica %}pianificato per {{a.anagrafica}} {% endif %} <br><b>{{ a.nome }}:</b> {{ a.note_programmazione }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endfor %}
+</fieldset>
+{% endif %}
+
+{% if etc.todo_responsabile%}
+<fieldset class="">
+<legend>pianificati per altri</legend>
+{% for t in etc.todo_responsabile %}
+<div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
+	<div class="col">
+	    <div class="form-row">
+		    <div class="col">
+                <h3>{{ t.nome }}</h3>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-6">
+                {{ t.testo }}
+            </div>
+            <div class="col-6">
+               <b>cliente:</b> {{ t.cliente }}<br>
+               <b>progetto:</b> {{ t.progetto }}<br>
+               <b>responsabile:</b> {{ t.responsabile }}<br>
+            </div>
+        </div>
+        {% for a in t.attivita %}
+        <div class="form-row">
+            <div class="col-1 lemma text-right">
+                <p>{% if a.data_programmazione %}<b>{{ a.data_programmazione|date(' d/m/Y') }}</b>{% if a.ora_inizio_programmazione %}<b>{{ a.ora_inizio_programmazione|date(' H:i') }}</b>{% endif %} {% else %}&mdash;{% endif %}</p>
+            </div>
+            <div class="col">
+                <i>{{ a.tipologia }}</i> pianificato per {{a.anagrafica}}<br><b>{{ a.nome }}:</b> {{ a.note_programmazione }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endfor %}
+</fieldset>
+{% endif %}
+
+
+
+{% endblock %}

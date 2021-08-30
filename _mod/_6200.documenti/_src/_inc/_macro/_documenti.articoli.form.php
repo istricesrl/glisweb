@@ -62,6 +62,14 @@
 	    'SELECT id, __label__ FROM valute_view '
 	);
 
+	// tendina reparti
+	$ct['etc']['select']['id_reparti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM reparti_view '
+	);
+
 	// tendina listini
 	$ct['etc']['select']['id_listini'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -75,7 +83,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM mastri_view '
+	    'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 1'
 	);
 
 	// tendina progetti
@@ -86,12 +94,28 @@
 	    'SELECT id, __label__ FROM progetti_view '
 	);
 
+	// tendina todo
+	$ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM todo_view '
+	);
+
+	// tendina matricole
+	$ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM matricole_view '
+	);
+
         // tendina tipologie anagrafica
 	$ct['etc']['select']['tipologie_documenti_articoli'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_documenti_articoli_view'
+	    'SELECT id, __label__ FROM tipologie_documenti_view'
 	);
 
     // tendina mittenti
@@ -107,7 +131,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static '
 	);
 
 	$ct['etc']['select']['id_documenti'] = mysqlCachedIndexedQuery(

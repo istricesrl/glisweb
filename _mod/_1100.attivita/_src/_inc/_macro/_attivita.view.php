@@ -24,8 +24,10 @@
     $ct['view']['table'] = 'attivita';
     
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
-
+    $ct['view']['id'] = md5(
+		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
+	    );
+        
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'attivita.form';
 
@@ -33,13 +35,14 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'data_attivita' => 'data',
-        'anagrafica' => 'persona',
+        'anagrafica' => 'operatore',
         'id_anagrafica' => 'id_anagrafica',
         'cliente' => 'cliente',
+        'tipologia' => 'tipologia',
         'nome' => 'attivita',
         'ore' => 'ore',
-        'tipologia_inps' => 'tipologia INPS',
-        '__label__' => 'tipologia'
+    //    'tipologia_inps' => 'tipologia INPS',
+        
 	);
 
     // stili della vista
@@ -51,6 +54,7 @@
         'data_attivita' => 'no-wrap',
         'ore' => 'text-right no-wrap',
         'nome' => 'text-left',
+        'tipologia' => 'text-left',
         '__label__' => 'text-left',
         'testo' => 'text-left no-wrap'
     );
@@ -94,18 +98,21 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_inps_view ORDER BY id');
 
+
     // preset filtri custom
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno']['EQ'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] = date('m');
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] = date('Y');
-	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno']['EQ'] = date('d');
+	//    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno']['EQ'] = date('d');
     }
 
-	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
+/*	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
-	}
+	} */
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']) ){
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'ASC';
+    } 
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
-
-   

@@ -1,0 +1,21 @@
+<div class="form-row view-filters d-print-none">
+	<div class="col-4 col-md-auto">
+		<span class="label-top">sito</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_sito][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_sito.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for t in etc.select.siti %}
+			<option value="{{ t.id }}" {% if request.__view__[ view.id ].__filters__.id_sito.EQ == t.id %}selected{% endif %}>{{ t.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+    <div class="col">
+		<div class="label-top">ricerca per parola chiave</div>
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+		</div>
+		<div class="col-auto">
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		{% if view.insert.path %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		{% endif %}
+	</div>
+</div>

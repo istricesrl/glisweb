@@ -51,26 +51,33 @@
 					<span class="label-top">tipologia</span>
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
 				</div>
-				<div class="col-12 col-md-2">
+				<!--div class="col-12 col-md-2">
 					<span class="label-top">tipologia INPS</span>
 					{{ frm.select( table, '', '', 'id_tipologia_inps', '', etc.select.id_tipologia_inps, request ) }}
+				</div-->
+
+				<div class="col-12 col-md-2">
+					<span class="label-top">scarico</span>
+					{% if not request[table].id %}
+					{% if not session.__latest__[ table ].id_mastro_provenienza %}{% set default = etc.id_mastro_provenienza %}{% else %}{% set default = session.__latest__[ table ].id_mastro_provenienza %}{% endif %}
+					{% endif %}
+					{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, default ) }}
 				</div>
 				<div class="col-12 col-md-2">
-					<span class="label-top">conto ore</span>
-					{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, etc.id_mastro_provenienza ) }}
+					<span class="label-top">carico</span>
+					{% if not request[table].id %}
+					{% if not session.__latest__[ table ].id_mastro_destinazione %}{% set default = etc.id_mastro_destinazione %}{% else %}{% set default = session.__latest__[ table ].id_mastro_destinazione %}{% endif %}
+					{% endif %}
+					{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default ) }}
 				</div>
+			
 				<div class="col">
 					<span class="label-top">descrizione</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
 			</div>
 
-			<div class="form-group form-row">
-				<div class="col-12">
-				<span class="label-top">note</span>
-				{{ frm.textarea( table, '', '', 'testo', 'ad uso interno', 3, request ) }}
-				</div>
-			</div>
+
 	
 			</fieldset>
 
@@ -90,6 +97,12 @@
 						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
 					</div>
 				</div>
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">note programmazione</span>
+					{{ frm.textarea( table, '', '', 'note_programmazione', '', 3, request ) }}
+					</div>
+				</div>
 			</fieldset>
 
 			<fieldset>
@@ -97,8 +110,7 @@
 				<div class="form-group form-row">
 					<div class="col-6 col-md-auto">
 						<span class="label-top">data</span>
-						{% if not session.__latest__[ table ].data_attivita %}{% set default = 'now'|date('Y-m-d') %}{% else %}{% set default = session.__latest__[ table ].data_attivita %}{% endif %}
-						{{ frm.date( table, '', '', 'data_attivita', '', '', request, default ) }}
+						{{ frm.date( table, '', '', 'data_attivita', '', '', request ) }}
 					</div>
 					<div class="col-2 col-md-1">
 						<span class="label-top">ora inizio</span>
@@ -116,8 +128,18 @@
 						<span class="label-top">esecutore</span>
 						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
-					<div class="col-auto">
+					<!--div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
+					</div-->
+				</div>
+				<div class="form-group form-row">
+					<div class="col-6">
+					<span class="label-top">note interne</span>
+					{{ frm.textarea( table, '', '', 'note_interne', '', 3, request ) }}
+					</div>
+					<div class="col-6">
+					<span class="label-top">note cliente</span>
+					{{ frm.textarea( table, '', '', 'testo', '', 3, request ) }}
 					</div>
 				</div>
 			</fieldset>

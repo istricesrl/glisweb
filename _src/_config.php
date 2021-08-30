@@ -478,7 +478,7 @@
     // ricerca dei files di libreria
 	$arrayLibrerieBase			= glob( DIR_SRC_LIB . '_*.*.php' );
 	$arrayLibrerieModuli			= glob( DIR_MOD_ATTIVI_SRC_LIB . '_*.*.php', GLOB_BRACE );
-	$arrayLibrerie				= array_merge( $arrayLibrerieBase , $arrayLibrerieModuli );
+	$arrayLibrerie				= array_unique( array_merge( $arrayLibrerieBase , $arrayLibrerieModuli ) );
 
     /**
      *

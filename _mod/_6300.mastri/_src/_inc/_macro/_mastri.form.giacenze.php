@@ -32,8 +32,12 @@
         $ct['view']['cols'] = array(
             'id' => '#',
             'id_articolo' => 'articolo',
+            'descrizione' => 'descrizione',
+            'matricola' => 'matricola',
             'quantita_totale' => 'quantità',
-            'importo_totale' => 'importo'
+            'importo_totale' => 'importo',
+            'id_todo' => 'todo',
+            'id_progetto' => 'progetto'
         );
 
         // stili della vista
@@ -51,7 +55,7 @@
          $ct['view']['table'] = '__report_giacenza_mastri_orari__';
 
                      // pagina per la gestione degli oggetti esistenti
-        $ct['view']['open']['page'] = 'progetti.produzione.form';
+        $ct['view']['open']['page'] = 'progetti.produzione.form.attivita';
         $ct['view']['open']['table'] = 'progetti';
         $ct['view']['open']['field'] = 'id_progetto'; 
 
@@ -68,12 +72,12 @@
             'id' => 'd-none',
             'id_progetto' => 'text-left',
             'descrizione' => 'text-left',
-            'importo' => 'text-right'
+            'cliente' => 'text-left'
         );
       }
 
          // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
  
 
     // preset filtro custom progetti aperti

@@ -6,6 +6,8 @@
         unset( $_SESSION['contatto'] );
         unset( $_REQUEST[ $ct['form']['table'] ]['id'] );
 		unset( $_SESSION['assistenza']['id_cliente'] );
+		unset( $_SESSION['assistenza']['id_documento_ritiro'] );
+        unset( $_SESSION['assistenza']['id_todo_ritiro'] );
     }
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){

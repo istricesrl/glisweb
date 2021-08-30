@@ -22,6 +22,8 @@ if( isset( $_REQUEST[ 'documenti' ]['__comando__'] ) ){
     }
 
 }
+
+
 /*
 if( !isset( $_REQUEST['documenti']['scadenze'] ) && isset( $_REQUEST['documenti']['id']) ){
 

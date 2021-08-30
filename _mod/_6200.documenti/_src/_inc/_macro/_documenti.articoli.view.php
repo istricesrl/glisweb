@@ -21,7 +21,7 @@
     $ct['view']['table'] = 'documenti_articoli';
     
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.articoli.form';
@@ -29,23 +29,26 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'tipologia' => 'tipologia',
         'data_lavorazione' => 'data',
+        'documento' => 'documento',
+        'tipologia' => 'tipologia',
         'nome' => 'nome',
-        'specifiche' => 'specifiche',
+        'id_articolo' => 'articolo',
         'importo_netto_totale' => 'importo',
         'quantita' => 'quantità',
-        'documento' => 'documento',
-        'cliente' => 'cliente',
-        'emittente' => 'emittente', 
+        'totale_riga' => 'totale',
+        'mastro_carico' => 'carico',
+        'mastro_scarico' => 'scarico',
+
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
-        'importo_netto_totale' => 'text-left',
-        'quantita' => 'text-left',
-        'documento' => 'text-left',
+        'importo_netto_totale' => 'text-right',
+        'quantita' => 'text-right',
+        'documento' => 'text-left',        
+        'totale_riga' => 'text-right',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data_lavorazione' => 'text-left', 

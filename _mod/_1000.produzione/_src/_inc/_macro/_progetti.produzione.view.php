@@ -21,9 +21,10 @@
     // tabella della vista
 	$ct['view']['table'] = 'progetti_produzione';
 
-    // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
-
+    $ct['view']['id'] = md5(
+		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
+	    );
+        
     // tabella per la gestione degli oggetti esistenti
 	$ct['view']['open']['table'] = 'progetti';
 
@@ -62,13 +63,12 @@
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_progetti_view' );
 
+
+
     // preset filtro aperti
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['chiuso']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['chiuso']['EQ'] = 0;
     }
  
-
-    // macro di default
+       // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
-
-   

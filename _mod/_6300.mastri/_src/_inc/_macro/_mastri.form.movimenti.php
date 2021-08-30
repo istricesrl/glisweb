@@ -32,12 +32,14 @@
         'id_articolo' => 'articolo',
         'quantita' => 'quantità',
         'importo' => 'importo',
-        'listino' => 'listino',
         'id_listino' => 'id_listino',
         'id_riga' => 'id_riga',
         'cliente' => 'cliente',
-        'emittente' => 'emittente',
-        'id_tipologia' => 'id_tipologia'
+        'id_emittente' => 'emittente',
+        'id_tipologia' => 'id_tipologia',
+        'id_todo' => 'todo',
+        'progetto' => 'progetto',
+        'matricola' => 'matricola'
 	);
 
     // stili della vista
@@ -46,6 +48,7 @@
         'id_riga' => 'd-none',
         'id_listino' => 'd-none',
         'id_tipologia' => 'd-none',
+        'id_emittente' => 'd-none',
         'data_lavorazione' => 'text-left',
 	    'descrizione' => 'text-left',
         'id_articolo' => 'text-left',
@@ -105,7 +108,7 @@
     $ct['view']['data']['__report_mode__'] = 1;
 
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
 
 
@@ -129,7 +132,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static '
 	);
 
     // tendina articoli

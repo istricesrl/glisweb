@@ -18,6 +18,7 @@
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
     {{ frm.input( table, subtable, i, 'id_documento', '', '', '', '__parent_id__', 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_todo', '', '', '', request.todo.id, 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_progetto', '', '', '', request.todo.id_progetto, 'hidden', '', '', disabled  ) }}
 	{{ frm.input( table, subtable, i, 'id_account_' ~ action, '', '', '', account, 'hidden', '', '', disabled  ) }}
 	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_udm', '', '', request, '1', 'hidden', '', '', disabled  ) }}
@@ -25,18 +26,18 @@
     {{ frm.input( table, subtable, i, 'id_valuta', '', '', request, '1', 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_mastro_provenienza', '', '', request, mastro_scarico, 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_mastro_destinazione', '', '', request, mastro_carico, 'hidden', '', '', disabled  ) }}   
-    {{ frm.input( table, subtable, i, 'id_emittente', '', '', request, request[ table ][ 'id_emittente' ], 'hidden', '', '', disabled  ) }}
-    {{ frm.input( table, subtable, i, 'id_destinatario', '', '', request, request[ table ][ 'id_destinatario' ], 'hidden', '', '', disabled  ) }}
-    {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request, '1', 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_emittente', '', '', request, etc.id_emittente, 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'id_destinatario', '', '', request, request.todo.id_cliente, 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request, '0', 'hidden', '', '', disabled  ) }}
 
 	{% if request[ table ][ 'data' ] %}
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, request[ table ][ 'data' ], 'hidden', '', '', disabled  ) }}
     {% else %}
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, 'now'|date('Y-m-d'), 'hidden', '', '', disabled  ) }}
     {% endif %}    
-    {% if request[ table ][ 'id_tipologia' ] %}
-        {{ frm.input( table, subtable, i, 'id_tipologia', '', '', request, request[ table ][ 'id_tipologia' ], 'hidden', '', '', disabled  ) }}
-    {% endif %}
+
+    {{ frm.input( table, subtable, i, 'id_tipologia', '', '', request, etc.id_tipologia, 'hidden', '', '', disabled  ) }}   
+ 
 	<div class="form-group form-row">
         <div class="col">
             <span class="label-top">descrizione</span>
@@ -52,7 +53,7 @@
 
         {% else %}
             <div class="col-auto">
-                {{ frm.input( table, subtable, i, 'id_todo', '', '', '', r.matricola, 'hidden', '', '', disabled  ) }}
+                {{ frm.input( table, subtable, i, 'matricola', '', '', '', r.matricola, 'hidden', '', '', disabled  ) }}
                 <div class="justify-content-center align-self-center mt-1 text-right">MAT.{{ "%'-010.10s"|format(r.matricola) }}</div> 
             </div>
         {% endif %}

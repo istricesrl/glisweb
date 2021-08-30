@@ -27,8 +27,28 @@
         $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT articoli_view.*, contenuti_prodotto.h1 AS h1_prodotto, contenuti_prodotto.abstract AS abstract_prodotto,  contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva LEFT JOIN contenuti AS contenuti_prodotto ON contenuti_prodotto.id_prodotto = articoli_view.id_prodotto ');
     }
    
+    if( isset( $_REQUEST['start'] ) && isset( $_REQUEST['end'] )  ){
+        $q = 'SELECT articoli_view.*, contenuti_prodotto.h1 AS h1_prodotto, contenuti_prodotto.abstract AS abstract_prodotto,  contenuti.h1, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva LEFT JOIN contenuti AS contenuti_prodotto ON contenuti_prodotto.id_prodotto = articoli_view.id_prodotto LEFT JOIN prodotti ON prodotti.id = articoli_view.id_prodotto ';
+
+        if( !empty( $_REQUEST['start'] ) && !empty( $_REQUEST['end'] ) ){
+            $q .= ' WHERE (articoli_view.timestamp_inserimento >= ? OR articoli_view.timestamp_aggiornamento >= ? OR prodotti.timestamp_inserimento >= ? OR prodotti.timestamp_aggiornamento >= ?) AND '.
+                    ' (articoli_view.timestamp_inserimento <= ? OR articoli_view.timestamp_aggiornamento <= ? OR prodotti.timestamp_inserimento <= ? OR prodotti.timestamp_aggiornamento <= ?)  ';
+            $p = array(array( 's' => $_REQUEST['start'] ),array( 's' => $_REQUEST['start'] ), array( 's' => $_REQUEST['start'] ), array( 's' => $_REQUEST['start'] ),  array( 's' => $_REQUEST['end'] ),array( 's' => $_REQUEST['end'] ), array( 's' => $_REQUEST['end'] ), array( 's' => $_REQUEST['end'] )        );
+            $articoli  = mysqlQuery( $cf['mysql']['connection'], $q, $p);
+    
+        } elseif( !empty( $_REQUEST['start'] ) && empty( $_REQUEST['end'] ) ){
+            $q .= ' WHERE (articoli_view.timestamp_inserimento >= ? OR articoli_view.timestamp_aggiornamento >= ? OR prodotti.timestamp_inserimento >= ? OR prodotti.timestamp_aggiornamento >= ?)  ';
+            $p = array(array( 's' => $_REQUEST['start'] ),array( 's' => $_REQUEST['start'] ), array( 's' => $_REQUEST['start'] ), array( 's' => $_REQUEST['start'] )  );
+            $articoli  = mysqlQuery( $cf['mysql']['connection'], $q, $p);
+        } else {
+            $q .= ' WHERE (articoli_view.timestamp_inserimento <= ? OR articoli_view.timestamp_aggiornamento <= ? OR prodotti.timestamp_inserimento <= ? OR prodotti.timestamp_aggiornamento <= ?)  ';
+            $p = array( array( 's' => $_REQUEST['end'] ),array( 's' => $_REQUEST['end'] ), array( 's' => $_REQUEST['end'] ), array( 's' => $_REQUEST['end'] )        );
+            $articoli  = mysqlQuery( $cf['mysql']['connection'], $q, $p);
+        }
+       
+    }
   
-    //die(print_r($prodotti));
+  
 
     // creazione del PDF
 	$pdf = new TCPDF( 'L', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)

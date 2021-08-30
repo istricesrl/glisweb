@@ -208,9 +208,9 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	    <div class="row">
 			<div class="col">
 				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-				{% if page.metadati.jt_h1[ lang ] %}<h2>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
 				{% if page.metadati.jt_h1_href %}</a>{% endif %}
-				{% if page.metadati.jt_h2[ lang ] %}<h1>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
 			</div>
 	    </div>
 	    {% if page.metadati.jt_content[ lang ] %}
@@ -226,6 +226,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	    </div>
 	    {% endif %}
     </div>
+</div>
 </div>
 {% endif %}
 {% endmacro %}

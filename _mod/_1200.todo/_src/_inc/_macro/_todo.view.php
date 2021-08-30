@@ -24,7 +24,7 @@
     $ct['view']['table'] = 'todo';
     
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'todo.form';
@@ -68,7 +68,10 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
-
+		
+    // macro di default
+    require DIR_SRC_INC_MACRO . '_default.view.php';
+    
     // preset filtro custom todo completati
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] = 0;
@@ -79,7 +82,7 @@
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['pianificazione'] = 'ASC';
     }
     
-    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) || $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] == '__me__' ) {
+/*    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) || $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] == '__me__' ) {
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] = '__me__';
 		if( isset( $_SESSION['account']['id_anagrafica'] ) ) {
 		    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_responsabile']['EQ'] = $_SESSION['account']['id_anagrafica'];
@@ -90,10 +93,11 @@
 		    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_responsabile']['NL'] = true;
 		}
 	}
-    
-    // macro di default
-    require DIR_SRC_INC_MACRO . '_default.view.php';
-    
+  */  
+  if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) ){ 
+	$_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] = '__tutti__'; 
+}
+
 	if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
 			if( $row['completato'] == 2 ){ $row['completato']='completato';  }
