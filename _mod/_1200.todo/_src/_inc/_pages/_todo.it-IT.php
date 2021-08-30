@@ -33,6 +33,7 @@
 														'todo.form.attivita',
 														'todo.form.documenti',
 														'todo.form.pianificazioni',
+														'todo.form.feedback',
 														'todo.form.archiviazione',
 														'todo.form.stampe',
 														'todo.form.tools' ) )
@@ -111,6 +112,18 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_todo.form.archiviazione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
+	);
+
+	// gestione todo - feedback
+	$p['todo.form.feedback'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'feedback' ),
+	    'h1'			=> array( $l		=> 'feedback' ),
+	    'parent'		=> array( 'id'		=> 'todo.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.feedback.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.feedback.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 	);
 
     // vista archivio anagrafica
