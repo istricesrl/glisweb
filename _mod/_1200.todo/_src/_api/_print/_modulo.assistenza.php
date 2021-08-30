@@ -390,7 +390,7 @@
         );*/
             $pdf->SetY( 230 );
             pdfFormCellTitle( $pdf, $info, '6. esito dell\'intervento' );
-            pdfFormLineRow( $pdf, $info, ( isset( $attivita_collaudo ) && ! empty( $attivita_collaudo['testo'] ) ? $attivita_collaudo['testo'] : '' ), 45, 2 );
+            pdfFormLineRow( $pdf, $info, ( isset( $todo ) && ! empty( $todo['testo_completamento'] ) ? $todo['testo_completamento'] : '' ), 45, 2 );
            // $pdf->SetY( 250 );
 
             pdfFormCellTitle( $pdf, $info, '7. chiusura intervento' );
