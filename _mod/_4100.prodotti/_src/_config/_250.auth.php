@@ -40,7 +40,8 @@
                 CONTROL_FILTERED => array( 'staff' )
             ),
             'articoli_caratteristiche' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'tipologie_prodotti' => array(
                 CONTROL_FULL => array( 'roots' ),
