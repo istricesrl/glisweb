@@ -2,7 +2,7 @@
     <div class="col-12 col-md-auto">
 		<span class="label-top">tipologia</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_tipologia][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-			<option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == "" %}selected{% endif %}>tutti</option>
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == "" %}selected{% endif %}>tutte</option>
 			{% for tipologia in etc.select.tipologie_certificazioni %}
 			<option value="{{ tipologia.id }}" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == tipologia.id %}selected{% endif %}>{{ tipologia.__label__ }}</option>
 			{% endfor %}
