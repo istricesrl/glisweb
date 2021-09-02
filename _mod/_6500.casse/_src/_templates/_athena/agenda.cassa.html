@@ -92,12 +92,12 @@
 	</div>
 	<div class="col">
 	    <div class="form-row">
-		<div class="col">
-		    <p>{% if e.tipologia  %}{{ e.tipologia }}: {% endif %}<span style="font-weight:normal;">{{ e.nome }}</span> &mdash; {{ e.anagrafica }} <i class="fa fa-comments-o" aria-hidden="true"></i> {{ e.mandante }} {{ e.referente }} 
-		    {% if e.id_cliente %}{{ e.cliente }}</span><span style="font-weight:normal;">{% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %}</span> </p> {% endif %}
-			{% if e.id_todo %}<p><b>{{ e.todo }}</b></p><p>{{ e.testo_todo }}</p>{% endif %}
-
-		</div>
+            <div class="col">
+                {% if e.id_todo %}<p><b>{{ e.todo }}</b>{% endif %}
+                <p>{% if e.tipologia  %}<b>{{ e.tipologia }}</b>: {% endif %}<span >{{ e.nome }}</span> &mdash; <b>{{ e.anagrafica }}</b> <i class="fa fa-comments-o" aria-hidden="true"></i> {{ e.mandante }} {{ e.referente }} 
+                {% if e.id_cliente %}<b>{{ e.cliente }}</b></span><span style="font-weight:normal;">{% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %}</span> </p> {% endif %}
+                <p>{{ e.note_programmazione }}</p>
+            </div>
 
 
 

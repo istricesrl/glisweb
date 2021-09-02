@@ -13,6 +13,7 @@
         if( p == 1 ){ parte= '&part=1'; }
         if( p == 2 ){ parte= '&part=2'; }
         if( p == 3 ){ parte= '&part=3'; }
+		if( p == 4 ){ parte= '&part=4'; }
 
 	 	var call = '{{ site.url }}_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php?todo={{ request[table].id }}'+parte;
 
@@ -34,10 +35,11 @@
 			<div class="col">
                 <select class="form-control form-control-sm"  id="parte">
                     <option value="10">completo</option>
-                    <option value="0">fino alla descrizione del problema</option>
-                    <option value="3">fino alla diagnosi</option>
-                    <option value="1">solo parte di diagnosi e soluzione</option>
-                    <option value="2">solo tempo di intervento, esito e completamento</option>
+                    <option value="0">fino alla descrizione del problema (1 e 2)</option>
+                    <option value="3">fino alla diagnosi (da 1 a 4)</option>
+                    <option value="1">solo parte di diagnosi e soluzione (3 e 4)</option>
+                    <option value="2">solo tempo di intervento, esito e completamento (da 5 a 7)</option>
+					<option value="4">diagnosi, soluzione, tempo di intervento, esito e completamento (da 3 a 7)</option>
                 </select>
 			</div>
 		</div>

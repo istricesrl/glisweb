@@ -78,6 +78,33 @@
 
 			</fieldset>
 
+			{% if request[ table ].id_todo %}
+			<fieldset>
+				<legend>stato lavorazione</legend>
+				<div class="col">
+
+				
+				{{ etc.todo.nome }}
+				{% if etc.attivita_completate %}
+				<legend style="font-size: 90%;">attività completate</legend>
+					<ul>
+					{% for a in etc.attivita_completate %}
+						<li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.note_cliente }}</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+				{% if etc.attivita_programmate %}
+				<legend style="font-size: 90%;">attività pianificate</legend>
+					<ul>
+					{% for a in etc.attivita_programmate %}
+						<li>{{ a.data_programmazione|date('d/m/Y') }} {% if a.ora_inizio_programmazione %}{{ a.ora_inizio_programmazione|date('H:i') }}{% endif %}- {{ a.nome }}: {{ a.note_programmazione }}</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+				</div>
+			</fieldset>
+			{% endif %}
+
 			<fieldset>
 				<legend>programmazione</legend>
 				<div class="form-group form-row">
@@ -92,6 +119,14 @@
 					<div class="col-2 col-md-1">
 						<span class="label-top">ora fine</span>
 						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ore</span>
+						{{ frm.input( table, '', '', 'ore_programmazione', '', '', request, '', 'number', '', '', '','0.25' ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">esecutore</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 				</div>
 				<div class="form-group form-row">
@@ -121,22 +156,18 @@
 						<span class="label-top">ore</span>
 						{{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '','0.25' ) }}
 					</div>
-					<div class="col-12 col-md">
-						<span class="label-top">esecutore</span>
-						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
-					</div>
+
 					<!--div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
 					</div-->
 				</div>
 				<div class="form-group form-row">
-					<div class="col-12">
+					<div class="col-12 col-md-6">
 					<span class="label-top">note interne</span>
 					{{ frm.textarea( table, '', '', 'note_interne', '', 2, request ) }}
 					</div>
-				</div>
-				<div class="form-group form-row">
-					<div class="col-12">
+
+					<div class="col-12 col-md-6">
 					<span class="label-top">note cliente</span>
 					{{ frm.textarea( table, '', '', 'testo', '', 2, request ) }}
 					</div>

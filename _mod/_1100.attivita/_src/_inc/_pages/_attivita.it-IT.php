@@ -43,8 +43,7 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
 	    'parser'		=> array( $m . '_src/_inc/_parser/_attivita.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'attivita.form',
-														'attivita.form.feedback' ) )
+		'etc'			=> array( 'tabs'	=> array(	'attivita.form' ) )
 	);
 
 	// gestione attivita - feedback

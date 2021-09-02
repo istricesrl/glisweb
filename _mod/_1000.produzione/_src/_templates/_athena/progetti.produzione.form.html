@@ -58,7 +58,7 @@
 
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
-					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
 				</div>
 
         </div>
@@ -125,9 +125,9 @@
 <script>
 function nomeProgetto(){
 	var tipologia = $('#progetti_id_tipologia option:selected').text();
-	console.log(tipologia);
+
 	var cliente = $('#progetti_id_cliente_inputbox').val();
-	console.log(cliente);
+
 	var testo = ""+tipologia+" per "+cliente;
 	$('#progetti_nome').val(testo);
 }
