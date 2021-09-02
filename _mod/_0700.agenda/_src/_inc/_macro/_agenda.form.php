@@ -200,6 +200,13 @@
         );
     }*/
 
+    if( isset( $_REQUEST['attivita']['id_todo'] ) && ! empty( $_REQUEST['attivita']['id_todo'] )  ){
+        $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+        $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+        $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+    
+    }
+
     // tendina tipologia attivita
 	$ct['etc']['id_tipologia_attivita_new'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_dashboard_agenda = 1 ORDER BY nome' );
 

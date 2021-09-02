@@ -116,3 +116,9 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    if( !empty( $ct['view']['data'] ) ){
+		foreach ( $ct['view']['data'] as &$row ){
+             $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+          	}
+	}

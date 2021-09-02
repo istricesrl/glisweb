@@ -1,6 +1,7 @@
 <?php
 
 
+
 $ct['view']['table'] = '';
 $ct['form']['table'] = '';
 
@@ -8,6 +9,10 @@ $ct['form']['table'] = '';
 $ct['view']['cols'] = array(
     'id' => '#'
 );
+
+if( !isset( $_SESSION['assistenza']['id_progetto'] ) && isset( $_REQUEST['progetti']['id'] ) && !empty($_REQUEST['progetti']['id']) ){
+    $_SESSION['assistenza']['id_progetto'] = $_REQUEST['progetti']['id'];
+}
 
 if( isset( $_REQUEST['id_contatto'] ) ){
     $_SESSION['contatto']['id'] = $_REQUEST['id_contatto'];
@@ -38,7 +43,7 @@ if(  isset( $_REQUEST['todo']) && isset( $_REQUEST['todo']['__se_consenso__'] ) 
 
         $acl = mysqlQuery( 
             $cf['mysql']['connection'], 
-            'INSERT INTO __acl_documenti_articoli__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, ? )', 
+            'INSERT INTO __acl_attivita__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, ? )', 
             array( array( 's' => $_SESSION['assistenza']['id_attivita_feedback'] ), array( 's' => $_SESSION['account']['id_gruppi_attribuzione']['attivita'][0] ), array( 's' => 'FULL' )  ) );
 
     } 
@@ -73,8 +78,8 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
 
     $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
     $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $todo) ));
-    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS  NULL ORDER BY data_attivita', array( array( 's' => $todo) ));
-
+    $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $todo) ));
+    
    // $ct['etc']['attivita_collaudo'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM attivita_view_static WHERE tipologia = "collaudo" AND id_todo = ? ORDER BY id DESC LIMIT 1', array( array( 's' => $todo) ));
   
      $ct['form']['table'] = 'todo';
@@ -299,4 +304,4 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
 
-   
+    print_r($_REQUEST);

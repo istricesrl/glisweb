@@ -226,7 +226,7 @@
         <div class="form-row">
             <div class="col">
                 {% set progetti = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
-                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetti }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&__preset__[progetti][id_cliente]={{ session.assistenza.id_cliente }}','_self');">crea un nuovo progetto per il cliente</i></button>
+                <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetti }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&__preset__[progetti][id_cliente]={{ session.assistenza.id_cliente }}&__preset__[progetti][id_tipologia]=7&__preset__[progetti][nome]=servizio assistenza per {{ etc.cliente.__label__ }}&__preset__[progetti][data_accettazione]={{ now|date('Y-m-d') }}&__preset__[progetti][testo_accettazione]=richiesta in cassa','_self');">crea un nuovo progetto per il cliente</i></button>
             </div>
         </div>
 </div>    
@@ -358,9 +358,9 @@
     {{ frm.input( 'attivita', '', '', 'id_cliente', '', '', '', session.assistenza.id_cliente , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_todo', '', '', '', session.assistenza.id_todo , 'hidden' ) }}
     {{ frm.input( 'attivita', '', '', 'id_tipologia', '', '', '', etc.tipologia_attivita, 'hidden' ) }}
-    {{ frm.input( 'attivita', '', '', 'nome', '', '', '', 'diagnosi', 'hidden' ) }}
+
   
-    <div class="form-group form-row">       
+    <div class="form-group form-row col">       
         <div class="form-group col">
 			<!--div class="form-group form-row">
 				<div class="col">
@@ -377,22 +377,13 @@
 	
 
 				<!--legend>esecuzione</legend-->
-				<div class="form-group col">
-
-				
-               
-				<legend>tecnico incaricato</legend>
-
 
 				<div class="form-group form-row">
-					<div class="col-6 col-md-auto">
-						<span class="label-top">data</span>
-						{{ frm.date( 'attivita', '', '', 'data_programmazione', '', '', request, '', '', 1 ) }}
-					</div>
-					<div class="col-2 col-md-1">
-						<span class="label-top">ora inizio</span>
-						{{ frm.time( 'attivita', '', '', 'ora_inizio_programmazione', '', '', request) }}
-					</div>
+                    <div class="col-12 col-md-12">
+						<span class="label-top">descrizione</span>
+                        {{ frm.input( 'attivita', '', '', 'nome', '', '', '', 'diagnosi in sede' ) }}
+                        </div>
+					
 					<div class="col col-md ">
 						<span class="label-top">esecutore</span>
                         {{ frm.selectBox( 'attivita', '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica,  '', '', '', '', '', '', '', '', page, pages, ietf ) }}
@@ -400,23 +391,35 @@
                     <div class="col-auto col-md-auto ">
                         <button type="button" class="btn btn-sm btn-secondary" id="btncalcolo" onclick="calcola_disponibilita()">CALCOLA DISPONIBILITÀ</button>
 					</div>
+                    
                     <div class="col-12 col-md">
                         <span class="label-top">indirizzo</span>
                         {{ frm.selectBox( 'attivita', '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','','','', '', page, pages, ietf ) }}
                     </div>
-				</div>
+				
+                <div class="col-6 col-md-auto">
+                    <span class="label-top">data</span>
+                    {{ frm.date( 'attivita', '', '', 'data_programmazione', '', '', request, '', '', 1 ) }}
+                </div>
+                <div class="col-2 col-md-1">
+                    <span class="label-top">ora inizio</span>
+                    {{ frm.time( 'attivita', '', '', 'ora_inizio_programmazione', '', '', request) }}
+                </div>
+            </div>
+                <section id="disponibilia" style="display: none;">
+                    <div class="col">
+                        <legend style="font-size: 90%;">disponibilità</legend>
+                    </div>
+
+                </section>
                 <div class="form-group form-row">
                     <div class="col-12 col-md">
                     <span class="label-top">note programmazione</span>
                     {{ frm.textarea( 'attivita', '', '', 'note_programmazione', '', 3, request ) }}
                     </div>
                 </div>
-                <section id="disponibilia" style="display: none;">
-                    <legend>disponibilità</legend>
-
-                </section>
              </div>  
-        </div>
+       
 
 {% endif %}
 {% if session.assistenza.id_attivita %}
@@ -508,7 +511,7 @@
         <legend>attività completate</legend>
             <ul>
             {% for a in etc.attivita_completate %}
-                <li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.testo }}</li>
+                <li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.note_cliente }}</li>
             {% endfor %}
             </ul>
         {% endif %}
@@ -516,7 +519,7 @@
         <legend>attività pianificate</legend>
             <ul>
             {% for a in etc.attivita_programmate %}
-                <li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.testo }}</li>
+            <li>{{ a.data_programmazione|date('d/m/Y') }} {% if a.ora_inizio_programmazione %}{{ a.ora_inizio_programmazione|date('H:i') }}{% endif %}- {{ a.nome }}: {{ a.note_programmazione }}</li>
             {% endfor %}
             </ul>
         {% endif %}
@@ -548,7 +551,7 @@
                       <input type="hidden" id="timestamp_completamento" name="{{ table }}[timestamp_completamento]" value="{{ 'now'|date('U') }}">
                 <div class="col">
                     <span class="label-top">testo completamento</span>
-                    {{ frm.textarea( table, '', '', 'testo_completamento', '', '1', request ) }}
+                    {{ frm.textarea( table, '', '', 'testo_completamento', '', '2', request ) }}
                 </div>
             </div>
                 </fieldset>
