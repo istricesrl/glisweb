@@ -119,6 +119,6 @@
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-             $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+             if(!empty($row['data_attivita'])){$row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));}
           	}
 	}

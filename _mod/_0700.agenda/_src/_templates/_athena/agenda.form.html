@@ -120,6 +120,14 @@
 						<span class="label-top">ora fine</span>
 						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
 					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ore</span>
+						{{ frm.input( table, '', '', 'ore_programmazione', '', '', request, '', 'number', '', '', '','0.25' ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">esecutore</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+					</div>
 				</div>
 				<div class="form-group form-row">
 					<div class="col-12">
@@ -148,10 +156,7 @@
 						<span class="label-top">ore</span>
 						{{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '','0.25' ) }}
 					</div>
-					<div class="col-12 col-md">
-						<span class="label-top">esecutore</span>
-						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
-					</div>
+
 					<!--div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
 					</div-->

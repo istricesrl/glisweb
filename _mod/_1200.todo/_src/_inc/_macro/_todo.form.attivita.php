@@ -68,8 +68,9 @@
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-            $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));
-            $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+            if(!empty($row['data_programmazione'])){$row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));}
+
+            if(!empty($row['data_attivita'])){$row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));}
             $row['ora_inizio_programmazione'] = substr( $row['ora_inizio_programmazione'], 0, -3);
             $row['__label__'] = $row['note_interne'].( empty($row['note_interne']) ? '' : '; <br>').$row['testo'];
 		}

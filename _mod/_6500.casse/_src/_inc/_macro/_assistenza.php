@@ -302,6 +302,3 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
-
-
-    print_r($_REQUEST);
