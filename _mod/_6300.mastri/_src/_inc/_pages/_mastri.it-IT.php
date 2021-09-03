@@ -80,38 +80,60 @@
 	    'etc'		=> array( 'tabs'	=> $p['mastri.form']['etc']['tabs'] )
 	);
 
-	// gestione todo progetti
-	$p['progetti.produzione.form.mastri'] = array(
-	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'mastri' ),
-	    'h1'			=> array( $l		=> 'mastri' ),
-	    'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.mastri.html' ),
-	    'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.mastri.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
-	);
-	
-	// vista giacenze articoli
-	$p['articoli.form.giacenze'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'giacenze_articoli' ),
-	    'h1'		=> array( $l		=> 'giacenze' ),
-	    'parent'		=> array( 'id'		=> 'articoli.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.giacenze.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.giacenze.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
-	);
+	if( in_array( "1000.produzione", $cf['mods']['active']['array'] ) ){
 
-	// vista giacenze articoli
-	$p['articoli.form.movimenti'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'movimenti_articoli' ),
-	    'h1'		=> array( $l		=> 'movimenti' ),
-	    'parent'		=> array( 'id'		=> 'articoli.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.movimenti.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.movimenti.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
-	);
+		// inserimento della tab 'progetti.produzione.form.certificazioni' nelle pagine di form produzione
+		arrayInsertSeq( 'progetti.produzione.mastri', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.mastri' );
+		
+		foreach( $p['progetti.produzione.form']['etc']['tabs'] as $t ){
+			$p[ $t ]['etc']['tabs'] = $p['progetti.produzione.form']['etc']['tabs'];
+		}
+
+		// gestione todo progetti
+		$p['progetti.produzione.form.mastri'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'mastri' ),
+			'h1'			=> array( $l		=> 'mastri' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.mastri.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.mastri.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+	}
+
+	if( in_array( "4000.catalogo", $cf['mods']['active']['array'] ) ){
+
+		// inserimento della tab 'giacenze' e 'movimenti' nelle pagine di form articoli
+		arrayInsertSeq( 'articoli.form.prezzi', $p['articoli.form']['etc']['tabs'], 'articoli.form.giacenze' );
+		arrayInsertSeq( 'articoli.form.prezzi', $p['articoli.form']['etc']['tabs'], 'articoli.form.movimenti' );
+
+		foreach( $p['articoli.form']['etc']['tabs'] as $t ){
+			$p[ $t ]['etc']['tabs'] = $p['articoli.form']['etc']['tabs'];
+		}
+		
+		// vista giacenze articoli
+		$p['articoli.form.giacenze'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'giacenze_articoli' ),
+			'h1'		=> array( $l		=> 'giacenze' ),
+			'parent'		=> array( 'id'		=> 'articoli.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.giacenze.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.giacenze.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+		);
+
+		// vista giacenze articoli
+		$p['articoli.form.movimenti'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'movimenti_articoli' ),
+			'h1'		=> array( $l		=> 'movimenti' ),
+			'parent'		=> array( 'id'		=> 'articoli.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.movimenti.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.movimenti.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+		);
+
+	}

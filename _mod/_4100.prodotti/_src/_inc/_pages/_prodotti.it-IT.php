@@ -251,8 +251,6 @@
 													'articoli.form.sem',
 													'articoli.form.testo',
 													'articoli.form.prezzi',
-													'articoli.form.movimenti',
-													'articoli.form.giacenze',
 													'articoli.form.immagini',
 													'articoli.form.video',
 													'articoli.form.audio',
