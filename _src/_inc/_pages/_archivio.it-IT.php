@@ -96,7 +96,7 @@
 		'etc'		=> array( 'tabs'	=> array( 'immagini.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'immagini' ),
-		'priority'	=> '050' ) ) )
+		'priority'	=> '020' ) ) )
 	);
 
 	// gestione immagini
@@ -192,4 +192,61 @@
 	    'macro'		=> array( '_src/_inc/_macro/_immagini.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
+	);
+
+
+
+	// vista video
+	$p['video.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'video' ),
+		'h1'		=> array( $l		=> 'video' ),
+		'parent'		=> array( 'id'		=> 'archivio' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_video.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'video.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'video' ),
+		'priority'	=> '030' ) ) )
+	);
+
+
+	// gestione video
+	$p['video.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'video.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'video.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_video.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 
+												'video.form',
+												'video.form.associazioni',
+												'video.form.testo'
+												 ) )	
+	);
+
+	// gestione video testo
+	$p['video.form.testo'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'testo' ),
+		'h1'		=> array( $l		=> 'testo' ),
+		'parent'		=> array( 'id'		=> 'video.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'video.form.testo.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_video.form.testo.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['video.form']['etc']['tabs'] )
+	);
+
+	// gestione video associazioni
+	$p['video.form.associazioni'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'associazioni' ),
+		'h1'		=> array( $l		=> 'associazioni' ),
+		'parent'		=> array( 'id'		=> 'video.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'video.form.associazioni.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_video.form.associazioni.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> $p['video.form']['etc']['tabs'] )
 	);
