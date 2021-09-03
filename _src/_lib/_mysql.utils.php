@@ -131,6 +131,11 @@
                         'anno'              => $cn['anno']
                     ) );
                 break;
+                case 'video':
+                    $im = array_replace_recursive( $im, array(
+                        'codice_embed'            => $cn['codice_embed']
+                    ) );
+                break;
             }
             
             if( isset( $p['contents'][ $tk ][ $cn['ruolo'] ][ $cn['ordine'] ] ) ) {
