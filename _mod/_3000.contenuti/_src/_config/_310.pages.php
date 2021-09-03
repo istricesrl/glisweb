@@ -152,13 +152,6 @@
                         'id_pagina'
                     );
 
-                    // aggiungo le macro
-                    aggiungiMacro(
-                        $cf['contents']['pages'][ $pg['id'] ],
-                        $pg['id'],
-                        'id_pagina'
-                    );
-
 /*
                     // array dei metadati
                     $meta = mysqlQuery(
