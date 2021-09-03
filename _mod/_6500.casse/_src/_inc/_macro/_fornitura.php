@@ -9,6 +9,9 @@ $ct['view']['cols'] = array(
     'id' => '#'
 );
 
+if( !isset( $_SESSION['fornitura']['id_progetto'] ) && isset( $_REQUEST['progetti']['id'] ) && !empty($_REQUEST['progetti']['id']) ){
+    $_SESSION['fornitura']['id_progetto'] = $_REQUEST['progetti']['id'];
+}
 
 if( isset( $_REQUEST['id_contatto'] ) ){
     $_SESSION['contatto']['id'] = $_REQUEST['id_contatto'];
