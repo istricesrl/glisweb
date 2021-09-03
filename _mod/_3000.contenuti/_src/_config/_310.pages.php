@@ -145,12 +145,20 @@
                         array( 4, 16, 29, 14 )
                     );
 
-                    // TODO fare aggiungiMetadati()
+                    // aggiungo i metadati
                     aggiungiMetadati(
                         $cf['contents']['pages'][ $pg['id'] ],
                         $pg['id'],
                         'id_pagina'
                     );
+
+                    // aggiungo le macro
+                    aggiungiMacro(
+                        $cf['contents']['pages'][ $pg['id'] ],
+                        $pg['id'],
+                        'id_pagina'
+                    );
+
 /*
                     // array dei metadati
                     $meta = mysqlQuery(
