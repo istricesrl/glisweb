@@ -7,11 +7,7 @@
         "phpoffice/phpspreadsheet": "1.16.*",
         "phpoffice/phppresentation": "0.9.*",
         "html2text/html2text": "4.1.*",
-<<<<<<< HEAD
         "phpmailer/phpmailer": "6.5.*",
-=======
-        "phpmailer/phpmailer": "6.4.*",
->>>>>>> 136287ae020758bc30bc8ca6ae6eae278b66e9bb
         "tecnickcom/tcpdf": "6.2.*",
         "twig/twig": "2.*",
         "predis/predis": "*",
