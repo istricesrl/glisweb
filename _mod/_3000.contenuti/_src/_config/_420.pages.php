@@ -77,8 +77,8 @@
 
         // aggiungo le macro
         aggiungiMacro(
-            $cf['contents']['pages'][ $pg['id'] ],
-            $pg['id'],
+            $cf['contents']['page'],
+            $cf['contents']['page']['id'],
             'id_pagina'
         );
 
