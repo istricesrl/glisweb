@@ -48,12 +48,6 @@
 
     }
 
-    function aggiungiMacro( &$p, $id, $f, $r = null ) {
-
-        aggiungiDati( $p, $id, $f, 'macro', $r );
-
-    }
-
     function aggiungiDati( &$p, $id, $f, $t, $r = null ) {
 
         global $cf;
@@ -178,6 +172,22 @@
                 )
             );
         }
+
+    }
+
+    function aggiungiMacro( &$p, $id, $f ) {
+
+        global $cf;
+        
+        $p['macro'] = mysqlSelectColumn(
+            'macro',
+            $cf['mysql']['connection'],
+            'SELECT macro FROM macro '.
+            'WHERE ' . $f . ' = ?',
+            array(
+                array( 's' => $id )
+            )
+        );
 
     }
 
