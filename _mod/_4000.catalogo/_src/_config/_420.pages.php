@@ -19,7 +19,7 @@
      */
 
     // verifico se è presente una pagina
-	if( isset( $cf['contents']['page']['metadati']['id_categoria_prodotti'] ) && isset( $cf['localization']['language']['id'] ) ) {
+	if( isset( $cf['contents']['page']['id'] ) && isset( $cf['localization']['language']['id'] ) ) {
 
 	    // timer
 		timerCheck( $cf['speed'], '-> inizio preparazione contenuti specifici per pagina' );
@@ -79,7 +79,5 @@
 
         // timer
         timerCheck( $cf['speed'], '-> fine inserimento file' );
-
-
 
     }
