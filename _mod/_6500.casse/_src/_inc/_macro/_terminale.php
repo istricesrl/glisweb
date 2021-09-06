@@ -352,7 +352,8 @@
     
                     }
                    
-
+                    mysqlQuery( $cf['mysql']['connection'],  'CALL attivita_view_static( ? )', array( array( 's' => $insert_a  ) ) );
+                    logWrite( 'aggiornata view statica anagrafica per id #' .$insert_a , 'speed' );
             }
 
             if( $articolo['se_matricola'] && isset( $insert ) && $insert > 0){
@@ -436,7 +437,7 @@
    // righe del documento
 	$ct['etc']['righe'] = mysqlQuery(
 	    $cf['mysql']['connection'],
-	    'SELECT documenti_articoli_view.*, attivita.ore, progetti.nome AS progetto FROM documenti_articoli_view '.
+	    'SELECT documenti_articoli_view.*, attivita.id as id_attivita, attivita.ore, progetti.nome AS progetto FROM documenti_articoli_view '.
         'LEFT JOIN attivita ON attivita.id_documenti_articoli = documenti_articoli_view.id '.
         'LEFT JOIN progetti ON progetti.id = attivita.id_progetto '
         .'WHERE documenti_articoli_view.id_documento = ?',
