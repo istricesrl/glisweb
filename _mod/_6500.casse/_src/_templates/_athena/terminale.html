@@ -106,7 +106,7 @@
                                     <tbody class="col-12" >
                                         {% for riga in etc.righe %}
                                         <tr>
-                                        <td class="{{ view.class[key] }}"><span onclick="$('#documenti___comando__').val('{{riga.id_articolo}}')">{{ riga.id_articolo }}</span> {% if riga.matricola %}<br>{{ riga.label_matricola  }}{% endif %}{% if riga.ore %}<br>+{{ riga.ore }}h su {{ riga.progetto  }}{% endif %}</td>
+                                        <td class="{{ view.class[key] }}"><span onclick="$('#documenti___comando__').val('{{riga.id_articolo}}')">{{ riga.id_articolo }}</span> {% if riga.matricola %}<br>{{ riga.label_matricola  }}{% endif %}{% if riga.ore %}<br><a href="{{ pages[ 'attivita.form' ].url[ localization.language.ietf ] }}?attivita[id]={{ riga.id_attivita }}" target="_blank">+{{ riga.ore }}h su {{ riga.progetto  }}</a> <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=attivita&__delete__[id]={{riga.id_attivita }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');">elimina attività</button>{% endif %}</td>
                                         <td class="text-right">{{ riga.reparto }}</td>
                                         <td class="text-right">€ {{ riga.importo_netto_totale }}</td>
                                         <td class="text-right">{{ riga.quantita }}</td>
