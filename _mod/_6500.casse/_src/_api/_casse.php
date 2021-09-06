@@ -73,7 +73,12 @@
 
     }
 
-
+    escpos_write( $h, '"   Grazie per il tuo acquisto!"@40F'); 
+    escpos_write( $h, '"       Visita il sito"@40F');
+    escpos_write( $h, '"   www.pc-stop.eu/recensioni"@40F');
+    escpos_write( $h, '"   o inquadra il qrcode per"@40F');
+    escpos_write( $h, '"    lasciare una recensione"@40F'); 
+    
 
 
     if( $documento['id_modalita_pagamento'] == 1 ){
@@ -84,7 +89,9 @@
         escpos_write( $h, '3T' );
     }
     
- 
+    escpos_write( $h, '"WWW.PC-STOP.EU/RECENSIONI"6Z' );
+
+  //  escpos_write( $h, '"  "@'); 
 
 
     // chiusura
