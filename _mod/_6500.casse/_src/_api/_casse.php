@@ -74,7 +74,8 @@
     }
 
     escpos_write( $h, '"   Grazie per il tuo acquisto!"@40F'); 
-    escpos_write( $h, '"       Visita il sito"@40F');
+    escpos_write( $h, '"  Ci teniamo alla tua opinione, "@40F'); 
+    escpos_write( $h, '"     visita il sito"@40F');
     escpos_write( $h, '"    www.pc-stop.eu/recensioni"@40F');
     escpos_write( $h, '"    o inquadra il qrcode per"@40F');
     escpos_write( $h, '"    lasciare una recensione"@40F'); 
