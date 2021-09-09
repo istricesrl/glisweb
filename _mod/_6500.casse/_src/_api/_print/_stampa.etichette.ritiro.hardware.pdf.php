@@ -125,15 +125,12 @@
     
     // scalamento inzio stampa per rispario carta
     if( isset( $_REQUEST['__start__'] ) ){
-        for( $i = 0; $i < $_REQUEST['__start__']; $i++){
-             if( ( $x + $wBox * 2 ) > $w  ) {   
-                $y += $hBox + $litsp; 
-                $x = $startX;
-            } else {
-                $x +=  $wBox;
-            }   
-        }
+
+        $y = ( $_REQUEST['__start__'] % 2 == 0 ? $startY : $startY + $hBox + $litsp );
+        $x =   $_REQUEST['__start__'] / 2 * $wBox + $litsp ;
     } 
+
+
 
    // $pdf->SetLineStyle(array('width' => 0.000000015, 'color' => array(0, 0, 0)));
     foreach( $righe as $r){
@@ -187,6 +184,7 @@
         $pdf->write1DBarcode( 'TODO.'.str_pad( $documnento['id_todo'],10,"0", STR_PAD_LEFT), 'C128', '', '', '',$hBarr  ,0.285, $style, 'N');
 
        // if( ($i + 1) % 3 == 0){
+         /*  OLD OK
          if( ( $x + $wBox * 2 ) > $w  ) {   
             if( $y +  $hBox * 2  > $h) { 
                 $pdf -> AddPage();
@@ -198,7 +196,19 @@
         } else {
             $x +=  $wBox;
         }
-
+        */
+        
+         if( ( $y + $hBox * 2 ) > $h  ) {   
+           if( $x +  $wBox * 2  > $w) { 
+                $pdf -> AddPage();
+                $x = $startX ;
+            } else {
+                $x += $wBox + $litsp; 
+            }
+            $y = $startY;
+        } else {
+            $y +=  $hBox;
+        }
     }
 
       // output
