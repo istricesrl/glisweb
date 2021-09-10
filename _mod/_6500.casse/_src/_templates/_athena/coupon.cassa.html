@@ -6,7 +6,7 @@
 {% extends 'ext/blank.html' %}
 
 {# DEFINIZIONI #}
-{% set table = form.table %}
+
 {% set ietf = localization.language.ietf %}
 
 {# ACCOUNT #}
@@ -34,13 +34,69 @@
 {% endif %}
 {% endblock %}
 {% block main %}
+<form  {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
 
 <section>
+
     <legend>genera coupon</legend>
+    {% set table = 'coupon' %}
+    <div class="form-group form-row">
+        <div class="col-12 col-md-2">
+            <span class="label-top">coupon</span>
+            {{ frm.inputRequired( table, '', '', 'id', '', '', request, 'CPON.'~now|date('U') ) }}
+        </div>
+        <div class="col-12 col-md">
+            <span class="label-top">nome</span>
+            {{ frm.inputRequired( table, '', '', 'nome', '', '', request, 'coupon generato in cassa il '~now|date('d/m/Y') ~ ' alle ' ~now|date('H:i') ) }}
+        </div>
+            {{ frm.input( table, '', '', 'timestamp_inizio', '', '', request, 'now'|date('U'), '', '', 'hidden' ) }}
+    </div>	
+        
+    
 
-</section>
-<section>
-    <legend>reso</legend>
+    <div class="form-group form-row">
+
+        <div class="col-12 col-md-2">
+            <span class="label-top">sconto %</span>
+            {{ frm.input( table, '', '', 'sconto_percentuale', '', '', request ) }}
+        </div>
+        
+        <div class="col-12 col-md-2">
+            <span class="label-top">sconto &euro;</span>
+            {{ frm.input( table, '', '', 'sconto_fisso', '', '', request ) }}
+        </div>
+        
+
+        <div class="col-auto col-form-label">
+            
+            <div class="form-check">
+                {{ frm.checkbox( table, '', '', 'se_globale', 'globale', '', request, 1 ) }}
+            </div>
+        </div>
+
+    </div>
+
+
+
+<div class="form-group form-row">
+ <div class="col-12 col-md">
+            <span class="label-top">note</span>
+            {{ frm.textarea( table, '', '', 'note','', 2, request ) }}
+        </div>
+    </div>
+</fieldset>
+<button class="btn btn-lg btn-secondary">salva</button>
+{% if request[table].id %}
+<button type="button" class="btn btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_4100.prodotti/_src/_api/_print/_stampa.coupon.pdf.php?id={{ request[table].id }}', '_blank')">stampa</button>
+{% endif %}
+<!--
+<legend>reso</legend>
+{# SUBFORM GRUPPI #}
+{{ sub.righe( 'documenti', 'documenti_articoli', 'articoli reso', site, page, pages, ietf, etc, request, session, '', etc.mastro ) }}
+-->
+</form>
+
+  
 
 </section>
 {% endblock %}
