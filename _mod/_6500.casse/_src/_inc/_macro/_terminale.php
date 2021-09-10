@@ -51,6 +51,7 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
+    $ct['etc']['default_listino'] = 1;
     $ct['etc']['default_reparto'] = '0';
     $ct['etc']['default_operazione'] = '1';
     $ct['etc']['default_tipologia'] = mysqlSelectValue(  $cf['mysql']['connection'],
@@ -88,6 +89,42 @@
         
     }
 
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] )  ){
+        // righe del documento
+         $ct['etc']['righe'] = mysqlQuery(
+             $cf['mysql']['connection'],
+             'SELECT documenti_articoli_view.*, attivita.id as id_attivita, attivita.ore, progetti.nome AS progetto FROM documenti_articoli_view '.
+             'LEFT JOIN attivita ON attivita.id_documenti_articoli = documenti_articoli_view.id '.
+             'LEFT JOIN progetti ON progetti.id = attivita.id_progetto '
+             .'WHERE documenti_articoli_view.id_documento = ?',
+             array( array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) 
+         );
+     
+         if( sizeof( $ct['etc']['righe'] ) > 0 ){
+     
+             $ct['etc']['totale_parziale'] = array();
+             $ct['etc']['totale'] = 0;
+     
+             foreach( $ct['etc']['righe'] as $r ){
+                 if( !isset($ct['etc']['totale_parziale'][ $r['id_iva'] ]) ){ $ct['etc']['totale_parziale'][ $r['id_iva'] ] = 0;}
+                 $ct['etc']['totale_parziale'][ $r['id_iva'] ] += $r['importo_netto_totale'] * $r['quantita'];
+                 $ct['etc']['totale'] += $r['importo_netto_totale'] * $r['quantita'];
+             }
+     
+             $ct['etc']['totale_iva'] = 0;
+     
+             foreach( $ct['etc']['totale_parziale'] as $iva => $tot){
+     
+                     // tendina  iva
+                     $ct['etc']['select']['iva'] = mysqlSelectValue(
+                         $cf['mysql']['connection'],
+                         'SELECT aliquota FROM iva_view WHERE id = ?', array( array( 's' => $iva  ) )
+                     );
+                 $ct['etc']['totale_iva'] += $ct['etc']['select']['iva'] * $tot /100;
+             }
+         }
+     
+     }
 
     // tendina  reparti
 	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
@@ -130,6 +167,20 @@
             //print_r('tracking');
         } elseif( $comando[0] == 'CPON'){
             // gestisco il coupon
+            $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = $ct['etc']['righe'];
+            $_REQUEST[ $ct['form']['table'] ]['coupon'] = $_REQUEST[ $ct['form']['table'] ]['__comando__']; 
+            // controllo validità e valore coupon
+
+
+            //print_r($_REQUEST[ $ct['form']['table'] ]);
+            //
+            $ct['etc']['sconto'] = calcolaCoupon( $cf['mysql']['connection'], array(),   $_REQUEST[ $ct['form']['table'] ] );
+            if( !empty($ct['etc']['sconto']) && $ct['etc']['sconto'] > 0 ){
+
+                mysqlQuery($cf['mysql']['connection'], 'UPDATE documenti SET coupon = ? WHERE id = ?',
+                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['coupon']), array('s' => $_REQUEST['documenti']['id']) ) );
+            }
+
             //print_r('coupon');
         } elseif( $comando[0] == 'TODO' ){
             // la todo
@@ -216,15 +267,16 @@
             // verifico se esiste l'atricolo e se ha un prezzo associato
             $articolo = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = 1 WHERE articoli_view.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
-                );
+                "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = ? WHERE articoli_view.id = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
+                , array( array('s' => $ct['etc']['default_listino'])  ) );
 
             if( empty( $articolo )){
                 // verifico se esiste l'atricolo associato all'ean  e se ha un prezzo associato
                 $articolo = mysqlSelectRow(
                     $cf['mysql']['connection'],
-                    "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = 1 WHERE articoli_view.codice_produttore = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
-                    );
+                    "SELECT articoli_view.*, prezzi.prezzo FROM articoli_view LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id AND prezzi.id_listino = ? WHERE articoli_view.codice_produttore = \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\" LIMIT 1"
+                    , array( array('s' => $ct['etc']['default_listino'])  ) );
+
                 
                     $_REQUEST[ $ct['form']['table'] ]['__comando__'] = $articolo['id'];
 
@@ -279,8 +331,9 @@
 
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo,id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo, id_listino, id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                                 array( 
+                                    array( 's' => $ct['etc']['default_listino'] ),
                                     array( 's' => ( isset( $_REQUEST['__todo__']) && !empty($_REQUEST['__todo__'])  ?  $_REQUEST['__todo__'] : NULL ) ),
                                     array( 's' => ( isset( $_REQUEST['__progetto__']) && !empty($_REQUEST['__progetto__'])  ?  $_REQUEST['__progetto__'] : NULL ) ),
                                     array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
@@ -433,42 +486,7 @@
 	    'SELECT id FROM anagrafica_view WHERE se_azienda_gestita = 1 LIMIT 1'
 	);
     
-    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] )  ){
-   // righe del documento
-	$ct['etc']['righe'] = mysqlQuery(
-	    $cf['mysql']['connection'],
-	    'SELECT documenti_articoli_view.*, attivita.id as id_attivita, attivita.ore, progetti.nome AS progetto FROM documenti_articoli_view '.
-        'LEFT JOIN attivita ON attivita.id_documenti_articoli = documenti_articoli_view.id '.
-        'LEFT JOIN progetti ON progetti.id = attivita.id_progetto '
-        .'WHERE documenti_articoli_view.id_documento = ?',
-        array( array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) 
-	);
 
-    if( sizeof( $ct['etc']['righe'] ) > 0 ){
-
-        $ct['etc']['totale_parziale'] = array();
-        $ct['etc']['totale'] = 0;
-
-        foreach( $ct['etc']['righe'] as $r ){
-            if( !isset($ct['etc']['totale_parziale'][ $r['id_iva'] ]) ){ $ct['etc']['totale_parziale'][ $r['id_iva'] ] = 0;}
-            $ct['etc']['totale_parziale'][ $r['id_iva'] ] += $r['importo_netto_totale'] * $r['quantita'];
-            $ct['etc']['totale'] += $r['importo_netto_totale'] * $r['quantita'];
-        }
-
-        $ct['etc']['totale_iva'] = 0;
-
-        foreach( $ct['etc']['totale_parziale'] as $iva => $tot){
-
-                // tendina  iva
-                $ct['etc']['select']['iva'] = mysqlSelectValue(
-                    $cf['mysql']['connection'],
-                    'SELECT aliquota FROM iva_view WHERE id = ?', array( array( 's' => $iva  ) )
-                );
-            $ct['etc']['totale_iva'] += $ct['etc']['select']['iva'] * $tot /100;
-        }
-    }
-
-}
 
 if( !isset( $_REQUEST['documenti']['scadenze'] ) && isset( $_REQUEST['documenti']['id']) ){
 

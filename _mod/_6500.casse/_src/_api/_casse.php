@@ -66,14 +66,16 @@
     // barcode documento
    escpos_write( $h, '"{BDOC.'.$barcode.'"4Z' );
 
-    foreach(  $documento['righe'] as $riga ){
+    foreach(  $documento['documenti_articoli'] as $riga ){
 
         $write_string = '"'.$riga['articolo'].'"'.str_replace('.00', '', $riga['quantita']).'*'.str_replace('.', '', $riga['importo']).'H'.$riga['id_reparto'].'R'.(  $riga['matricola'] ? '"'.$riga['label_matricola'].'"@' : '').(  $riga['ore'] ? '"+'.$riga['ore'].'h su '.$riga['id_progetto'].'"@' : '');
         escpos_write( $h, $write_string);
 
     }
 
-
+    if( isset( $documento['sconto'] ) && !empty( $documento['sconto'] ) ){
+        escpos_write( $h, "=".str_replace('.', '', $documento['sconto'])."H4M" );
+    }
 
 
     if( $documento['id_modalita_pagamento'] == 1 ){
@@ -94,7 +96,7 @@
 	http_response_code( 200 );
 
     $status['result'] = 'OK';
-    $status['msg'] = "stampate correttamente ".sizeof( $documento['righe'] )." righe di scontrino";
+    $status['msg'] = "stampate correttamente ".sizeof( $documento['documenti_articoli'] )." righe di scontrino";
 
     // output
 	buildJson( $status );

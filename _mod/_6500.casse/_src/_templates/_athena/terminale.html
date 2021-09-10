@@ -141,6 +141,22 @@
                                                 <td class="text-right"><h3>Totale</h3></td>
                                                 <td class="text-right"><h3>€ {{ (etc.totale + etc.totale_iva )|number_format(2, ',', '.')  }}</h3></td>
                                             </tr>
+                                            {% if request[table].coupon %}
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td class="text-right"><h3>Sconto</h3></td>
+                                                <td class="text-right"><h3>€ {{ etc.sconto|number_format(2, ',', '.')  }}</h3></td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td class="text-right"><h3>Totale scontato</h3></td>
+                                                <td class="text-right"><h3>€ {{ (etc.totale + etc.totale_iva - etc.sconto)|number_format(2, ',', '.')  }}</h3></td>
+                                            </tr> 
+                                            {% endif %}                                        
                                     {% endif %}
                                         </table>
 
