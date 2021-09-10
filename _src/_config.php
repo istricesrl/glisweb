@@ -236,7 +236,7 @@
      *
      */
 	function path2custom( $p ) {
-	    return str_replace( '_', NULL, $p );
+        return $_SERVER['DOCUMENT_ROOT'] . str_replace( '_', NULL, str_replace( $_SERVER['DOCUMENT_ROOT'], NULL, $p ) );
 	}
 
     /**
@@ -245,7 +245,7 @@
      *
      */
 	function glob2custom( $p ) {
-	    return str_replace( '_', '{,_}', $p );
+	    return $_SERVER['DOCUMENT_ROOT'] . str_replace( '_', '{,_}', str_replace( $_SERVER['DOCUMENT_ROOT'], NULL, $p ) );
 	}
 
     /**
