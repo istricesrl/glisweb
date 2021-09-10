@@ -3,12 +3,12 @@
 -- questo file contiene le query per la creazione delle stored procedure e delle stored function
 --
 
---| 000007000400
+--| 070000000400
 
 -- anagrafica_view_static
 DROP PROCEDURE IF EXISTS `anagrafica_view_static`;
 
---| 000007000401
+--| 070000000401
 
 -- anagrafica_view_static
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -37,12 +37,12 @@ CREATE
 
     END;
 
---| 000007001100
+--| 070000001100
 
 -- anagrafica_ruoli_path
 DROP FUNCTION IF EXISTS `anagrafica_ruoli_path`;
 
---| 000007001101
+--| 070000001101
 
 -- anagrafica_ruoli_path
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -95,12 +95,12 @@ CREATE
 
 END;
 
---| 000007001110
+--| 070000001110
 
 -- anagrafica_ruoli_path_check
 DROP FUNCTION IF EXISTS `anagrafica_ruoli_path_check`;
 
---| 000007001111
+--| 070000001111
 
 -- anagrafica_ruoli_path_check
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -140,12 +140,12 @@ CREATE
 
 END;
 
---| 000007001120
+--| 070000001120
 
 -- anagrafica_ruoli_path_find_ancestor
 DROP FUNCTION IF EXISTS `anagrafica_ruoli_path_find_ancestor`;
 
---| 000007001121
+--| 070000001121
 
 -- anagrafica_ruoli_path_find_ancestor
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -183,12 +183,12 @@ CREATE
 
 END;
 
---| 000007003300
+--| 070000003300
 
 -- categorie_diritto_path
 DROP FUNCTION IF EXISTS `categorie_diritto_path`;
 
---| 000007003301
+--| 070000003301
 
 -- categorie_diritto_path
 -- verifica: 2021-06-01 11:06 Fabio Mosti
@@ -236,12 +236,12 @@ CREATE
 
 END;
 
---| 000007003310
+--| 070000003310
 
 -- categorie_diritto_path_check
 DROP FUNCTION IF EXISTS `categorie_diritto_path_check`;
 
---| 000007003311
+--| 070000003311
 
 -- categorie_diritto_path_check
 -- verifica: 2021-06-01 11:08 Fabio Mosti
@@ -281,12 +281,12 @@ CREATE
 
 END;
 
---| 000007003320
+--| 070000003320
 
 -- categorie_diritto_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_diritto_path_find_ancestor`;
 
---| 000007003321
+--| 070000003321
 
 -- categorie_diritto_path_find_ancestor
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -324,12 +324,12 @@ CREATE
 
 END;
 
---| 000007003500
+--| 070000003500
 
 -- categorie_eventi_path
 DROP FUNCTION IF EXISTS `categorie_eventi_path`;
 
---| 000007003501
+--| 070000003501
 
 -- categorie_eventi_path
 -- verifica: 2021-06-01 17:51 Fabio Mosti
@@ -377,12 +377,12 @@ CREATE
 
 END;
 
---| 000007003510
+--| 070000003510
 
 -- categorie_eventi_path_check
 DROP FUNCTION IF EXISTS `categorie_eventi_path_check`;
 
---| 000007003511
+--| 070000003511
 
 -- categorie_eventi_path_check
 -- verifica: 2021-06-01 17:52 Fabio Mosti
@@ -422,12 +422,12 @@ CREATE
 
 END;
 
---| 000007003520
+--| 070000003520
 
 -- categorie_eventi_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_eventi_path_find_ancestor`;
 
---| 000007003521
+--| 070000003521
 
 -- categorie_eventi_path_find_ancestor
 -- verifica: 2021-05-23 17:52 Fabio Mosti
@@ -465,12 +465,12 @@ CREATE
 
 END;
 
---| 000007003700
+--| 070000003700
 
 -- categorie_notizie_path
 DROP FUNCTION IF EXISTS `categorie_notizie_path`;
 
---| 000007003701
+--| 070000003701
 
 -- categorie_notizie_path
 -- verifica: 2021-06-01 18:34 Fabio Mosti
@@ -518,12 +518,12 @@ CREATE
 
 END;
 
---| 000007003710
+--| 070000003710
 
 -- categorie_notizie_path_check
 DROP FUNCTION IF EXISTS `categorie_notizie_path_check`;
 
---| 000007003711
+--| 070000003711
 
 -- categorie_notizie_path_check
 -- verifica: 2021-06-01 18:35 Fabio Mosti
@@ -563,12 +563,12 @@ CREATE
 
 END;
 
---| 000007003720
+--| 070000003720
 
 -- categorie_notizie_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_notizie_path_find_ancestor`;
 
---| 000007003721
+--| 070000003721
 
 -- categorie_notizie_path_find_ancestor
 -- verifica: 2021-05-23 18:35 Fabio Mosti
@@ -606,12 +606,12 @@ CREATE
 
 END;
 
---| 000007003900
+--| 070000003900
 
 -- categorie_prodotti_path
 DROP FUNCTION IF EXISTS `categorie_prodotti_path`;
 
---| 000007003901
+--| 070000003901
 
 -- categorie_prodotti_path
 -- verifica: 2021-06-01 19:58 Fabio Mosti
@@ -659,12 +659,12 @@ CREATE
 
 END;
 
---| 000007003910
+--| 070000003910
 
 -- categorie_prodotti_path_check
 DROP FUNCTION IF EXISTS `categorie_prodotti_path_check`;
 
---| 000007003911
+--| 070000003911
 
 -- categorie_prodotti_path_check
 -- verifica: 2021-06-01 18:35 Fabio Mosti
@@ -704,12 +704,12 @@ CREATE
 
 END;
 
---| 000007003920
+--| 070000003920
 
 -- categorie_prodotti_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_prodotti_path_find_ancestor`;
 
---| 000007003921
+--| 070000003921
 
 -- categorie_prodotti_path_find_ancestor
 -- verifica: 2021-05-23 19:59 Fabio Mosti
@@ -747,12 +747,12 @@ CREATE
 
 END;
 
---| 000007004300
+--| 070000004300
 
 -- categorie_progetti_path
 DROP FUNCTION IF EXISTS `categorie_progetti_path`;
 
---| 000007004301
+--| 070000004301
 
 -- categorie_progetti_path
 -- verifica: 2021-06-02 19:52 Fabio Mosti
@@ -800,12 +800,12 @@ CREATE
 
 END;
 
---| 000007004310
+--| 070000004310
 
 -- categorie_progetti_path_check
 DROP FUNCTION IF EXISTS `categorie_progetti_path_check`;
 
---| 000007004311
+--| 070000004311
 
 -- categorie_progetti_path_check
 -- verifica: 2021-06-02 19:55 Fabio Mosti
@@ -845,12 +845,12 @@ CREATE
 
 END;
 
---| 000007004320
+--| 070000004320
 
 -- categorie_progetti_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_progetti_path_find_ancestor`;
 
---| 000007004321
+--| 070000004321
 
 -- categorie_progetti_path_find_ancestor
 -- verifica: 2021-06-02 19:56 Fabio Mosti
@@ -888,12 +888,12 @@ CREATE
 
 END;
 
---| 000007004500
+--| 070000004500
 
 -- categorie_risorse_path
 DROP FUNCTION IF EXISTS `categorie_risorse_path`;
 
---| 000007004501
+--| 070000004501
 
 -- categorie_risorse_path
 -- verifica: 2021-06-02 20:22 Fabio Mosti
@@ -941,12 +941,12 @@ CREATE
 
 END;
 
---| 000007004510
+--| 070000004510
 
 -- categorie_risorse_path_check
 DROP FUNCTION IF EXISTS `categorie_risorse_path_check`;
 
---| 000007004511
+--| 070000004511
 
 -- categorie_risorse_path_check
 -- verifica: 2021-06-02 20:22 Fabio Mosti
@@ -986,12 +986,12 @@ CREATE
 
 END;
 
---| 000007004520
+--| 070000004520
 
 -- categorie_risorse_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_risorse_path_find_ancestor`;
 
---| 000007004521
+--| 070000004521
 
 -- categorie_risorse_path_find_ancestor
 -- verifica: 2021-06-02 19:56 Fabio Mosti
@@ -1029,12 +1029,12 @@ CREATE
 
 END;
 
---| 000007005100
+--| 070000005100
 
 -- colori_path
 DROP FUNCTION IF EXISTS `colori_path`;
 
---| 000007005101
+--| 070000005101
 
 -- colori_path
 -- verifica: 2021-06-03 15:19 Fabio Mosti
@@ -1082,12 +1082,12 @@ CREATE
 
 END;
 
---| 000007005110
+--| 070000005110
 
 -- colori_path_check
 DROP FUNCTION IF EXISTS `colori_path_check`;
 
---| 000007005111
+--| 070000005111
 
 -- colori_path_check
 -- verifica: 2021-06-03 15:25 Fabio Mosti
@@ -1127,12 +1127,12 @@ CREATE
 
 END;
 
---| 000007005120
+--| 070000005120
 
 -- colori_path_find_ancestor
 DROP FUNCTION IF EXISTS `colori_path_find_ancestor`;
 
---| 000007005121
+--| 070000005121
 
 -- colori_path_find_ancestor
 -- verifica: 2021-06-02 19:56 Fabio Mosti
@@ -1162,6 +1162,147 @@ CREATE
 				colori.id
 			FROM colori
 			WHERE colori.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+--| 070000015200
+
+-- gruppi_path
+DROP FUNCTION IF EXISTS `gruppi_path`;
+
+--| 070000015201
+
+-- gruppi_path
+-- verifica: 2021-09-10 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `gruppi_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT gruppi_path( <id> ) AS path
+
+		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+		DECLARE righe int( 11 ) DEFAULT 0;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				gruppi.id_genitore,
+				gruppi.nome,
+				count( gruppi.id )
+			FROM gruppi
+			WHERE gruppi.id = p1
+			INTO p1, step, righe;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 070000015210
+
+-- gruppi_path_check
+DROP FUNCTION IF EXISTS `gruppi_path_check`;
+
+--| 070000015211
+
+-- gruppi_path_check
+-- verifica: 2021-09-10 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `gruppi_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT gruppi_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				gruppi.id_genitore
+			FROM gruppi
+			WHERE gruppi.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 070000015220
+
+-- gruppi_path_find_ancestor
+DROP FUNCTION IF EXISTS `gruppi_path_find_ancestor`;
+
+--| 070000015221
+
+-- gruppi_path_find_ancestor
+-- verifica: 2021-09-10 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `gruppi_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT gruppi_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				gruppi.id_genitore,
+				gruppi.id
+			FROM gruppi
+			WHERE gruppi.id = p1
 			INTO p1, p2;
 
 		END WHILE;

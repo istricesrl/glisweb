@@ -7,80 +7,73 @@
     le tabelle del database di supporto FA - FZ
     ===========================================
     
-    fatturati
-    ---------------
-    Questa tabella *gestita* ...
-
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    fatturati.id                      | l'ID del fatturato
-    fatturati.nome                    | nome fattura
-    fatturati.id_emittente            | l'ID dell'emittente fattura
-    fatturati.id_cliente              | l'ID del cliente della fattura
-    fatturati.id_agente               | l'ID dell'agente della fattura
-    fatturati.id_mandante             | l'ID del mandante della fattura
-    fatturati.id_categoria_prodotti   | l'ID della categoria di prodotto fatturata
-    fatturati.id_tipologia            | l'ID della tipologia fatturata
-    fatturati.mese                    | mese della fattura
-    fatturati.anno                    | l'anno della fattura
-    fatturati.importo                 | importo fatturato
-    fatturati.id_account_inserimento  |
-    fatturati.timestamp_inserimento   |
-    fatturati.id_account_aggiornamento|
-    fatturati.timestamp_aggiornamento |
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista *fatturati_view* relativa alla tabella *fatturati* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
-    
     file
-    -----
-    Questa tabella *gestita* ...
+    ----
+    Questa tabella *gestita* contiene i riferimenti ai file caricati e le loro relazioni con le altre entità del framework.
 
     colonna                      | descrizione
     -----------------------------|---------------------------------------------------------------------------------------
     file.id                      | l'ID del file
-    file.id_anagrafica           | l'ID dell'anagrafica collegata al file
-    file.id_prodotto             | l'ID del prodotto collegato al file
-    file.id_categoria_prodotti   | l'ID della categoria prodotto di cui il fil si riferisce
-    file.id_pagina               | l'ID del file della pagina
-    file.id_task                 | 
-    file.id_todo                 | 
-    file.id_rassegna_stampa      | l'ID del filedelle principale notizie 
-    file.id_evento               | l'ID del file dell'evento 
-    file.id_categoria_eventi     | l'ID del file della categoria dell'evento 
-    file.id_template_mail        | l'ID del file template mail
-    file.id_mailing              | l'ID del file mailing
-    file.id_notizia              | l'ID del file della notizia
-    file.id_categoria_notizie    | l'ID del file della categoria della notizia
-    file.id_pratica              | l'ID del file riferito alla pratica 
-    file.id_risorsa              | l'ID del file riferito alla risorsa
-    file.id_categoria_risorse    | l'ID del file riferito alla categoria della risorsa
-    file.id_lingua               | l'ID del file della lingua utilizzata
-    file.path                    | 
-    file.url                     | 
-    file.nome                    | nome file
-    file.id_ruolo                | l'ID del file del ruolo
-    file.ordine                  | l'ID del file dell'ordine
-    file.id_account_inserimento  |
-    file.timestamp_inserimento   |
-    file.id_account_aggiornamento|
-    file.timestamp_aggiornamento |
+    file.ordine                  | campo di ordinamento
+    file.id_ruolo                | l'ID del ruolo del file rispetto all'entità collegata
+    file.id_anagrafica           | l'ID dell'anagrafica cui si riferisce al file
+    file.id_prodotto             | l'ID del prodotto cui si riferisce al file
+    file.id_articolo             | l'ID dell'articolo cui si riferisce al file
+    file.id_categoria_prodotti   | l'ID della categoria prodotti cui si riferisce al file
+    file.id_todo                 | l'ID della todo cui si riferisce al file
+    file.id_pagina               | l'ID della pagina cui si riferisce al file
+    file.id_template_mail        | l'ID del template mail cui si riferisce al file
+    file.id_notizia              | l'ID della notizia cui si riferisce al file
+    file.id_categoria_notizie    | l'ID della categoria di notizie cui si riferisce al file
+    file.id_risorsa              | l'ID della risorsa cui si riferisce al file
+    file.id_categoria_risorse    | l'ID della categoria di risorse cui si riferisce al file
+    file.id_lingua               | l'ID della lingua del file
+    file.path                    | il percorso del file relativo alla document root per i file locali
+    file.url                     | l'URL per i file esterni
+    file.nome                    | il nome del file
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                          | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------|---------------------------|-------------------------------|----------------------
+    file_ibfk_01_nofollow           | id_ruolo                  | ruoli_file.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    file_ibfk_02                    | id_anagrafica             | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_03                    | id_prodotto               | prodotti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_04                    | id_articolo               | articoli.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_05                    | id_categoria_prodotti     | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_06                    | id_todo                   | todo.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_07                    | id_pagina                 | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_08                    | id_template_mail          | template_mail.id              | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_09                    | id_notizia                | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_10                    | id_categoria_notizie      | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_11                    | id_risorsa                | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_12                    | id_categoria_risorse      | categorie_risorse.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_13_nofollow           | id_lingua                 | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *file_view* relativa alla tabella *file* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    file_view.id                        | -
+    file_view.ordine                    | -
+    file_view.id_ruolo                  | -
+    file_view.ruolo                     | il ruolo del file rispetto all'entità collegata
+    file_view.id_anagrafica             | -
+    file_view.id_prodotto               | -
+    file_view.id_articolo               | -
+    file_view.id_categoria_prodotti     | -
+    file_view.id_todo                   | -
+    file_view.id_pagina                 | -
+    file_view.id_template_mail          | -
+    file_view.id_notizia                | -
+    file_view.id_categoria_notizie      | -
+    file_view.id_risorsa                | -
+    file_view.id_categoria_risorse      | -
+    file_view.id_lingua                 | -
+    file_view.lingua                    | la lingua del file
+    file_view.path                      | -
+    file_view.url                       | -
+    file_view.nome                      | -
+    file_view.__label__                 | etichetta descrittiva del file
+
+*/

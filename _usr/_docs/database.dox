@@ -46,6 +46,33 @@
     le tabelle di lavoro
     --------------------
 
+    modelli di tabelle
+    ==================
+
+    tabelle base
+    ------------
+
+    tabelle ricorsive
+    -----------------
+
+    gruppi di tabelle
+    =================
+
+    tabelle principali
+    ------------------
+
+    tabelle per le categorie
+    ------------------------
+
+    tabelle per le tipologie
+    ------------------------
+
+    tabelle per i ruoli
+    -------------------
+
+    tabelle per le associazioni molti a molti
+    -----------------------------------------
+
     tabelle e view
     ==============
     Normalmente il framework prevede che le tabelle abbiano una vista corrispondente, identificata dallo stesso

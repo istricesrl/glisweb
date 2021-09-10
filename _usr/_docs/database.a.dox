@@ -267,7 +267,7 @@
     anagrafica_archiviati
     ---------------------
     Questa tabella *virtuale* contiene le anagrafiche cessate, individuate in base al fatto che il campo data_cessazione non è NULL.
-    La relativa vista *anagrafica_archiviati_view* Ha il campo data_cessazione in più oltre agli stessi campi dell'*anagrafica_view*.
+    La relativa vista *anagrafica_archiviati_view* ha il campo data_cessazione in più oltre agli stessi campi dell'*anagrafica_view*.
 
     anagrafica_categorie
     --------------------
@@ -592,46 +592,6 @@
     articoli_caratteristiche_view.se_assente               | -
     articoli_caratteristiche_view.__label__                | etichetta descrittiva dell'associazione fra articolo e caratteristica
  
-    articoli_correlati
-    ------------------
-    Questa tabella *gestita* mette in relazione gli articoli con altri *articoli* o con *prodotti* per indicare correlazioni tecniche come
-    ricambi, consumabili, accessori oppure commerciali come prodotti consigliati eccetera.
-
-    colonna                                     | descrizione
-    --------------------------------------------|---------------------------------------------------------------------------------------
-    articoli_correlati.id                       | l'ID della correlazione
-    articoli_correlati.id_tipologia             | l'ID della tipologia di correlazione
-    articoli_correlati.id_articolo              | l'ID dell'articolo del quale si indica la correlazione
-    articoli_correlati.id_prodotto_correlato    | l'ID del prodotto a cui l'articolo è correlato
-    articoli_correlati.id_articolo_correlato    | l'ID dell'articolo a cui l'articolo è correlato
-    articoli_correlati.ordine                   | campo di ordinamento
-    articoli_correlati.se_upselling             | flag che indica se la correlazione rappresenta un upselling
-    articoli_correlati.se_crosselling           | flag che indica se la correlazione rappresenta un crosselling
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                              | campo                     | tabella e campo collegati                 | comportamento
-    ------------------------------------|---------------------------|-------------------------------------------|----------------------
-    articoli_correlati_ibfk_01          | id_tipologia              | tipologie_correlazioni_articoli.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
-    articoli_correlati_ibfk_02          | id_articolo               | articoli.id                               | ON DELETE CASCADE ON UPDATE CASCADE
-    articoli_correlati_ibfk_03          | id_prodotto_correlato     | prodotti.id                               | ON DELETE CASCADE ON UPDATE CASCADE
-    articoli_correlati_ibfk_04          | id_articolo_correlato     | articoli.id                               | ON DELETE CASCADE ON UPDATE CASCADE
-
-    La vista *articoli_correlati_view* relativa alla tabella *articoli_correlati* presenta le seguenti colonne:
-
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
-    articoli_correlati_view.id                          | -
-    articoli_correlati_view.id_tipologia                | -
-    articoli_correlati_view.tipologia                   | -
-    articoli_correlati_view.id_articolo                 | -
-    articoli_correlati_view.id_prodotto_correlato       | -
-    articoli_correlati_view.id_articolo_correlato       | -
-    articoli_correlati_view.ordine                      | -
-    articoli_correlati_view.se_upselling                | -
-    articoli_correlati_view.se_crosselling              | -
-    articoli_correlati_view.__label__                   | etichetta descrittiva della correlazione
-
     attivita
     --------
     Questa tabella *gestita* descrive le attività intese come eventi significativi relativi ad altre entità oppure in sé stessi.
@@ -680,7 +640,7 @@
     chiave                          | campo                         | tabella e campo collegati     | comportamento
     --------------------------------|-------------------------------|-------------------------------|----------------------
     attivita_ibfk_01_nofollow       | id_tipologia                  | tipologie_attivita.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_02_nofollow       | id_tipologia_inps             | tipologie_attivita_inps.id    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_02_nofollow       | id_tipologia_inps             | tipologie_inps_attivita.id    | ON DELETE NO ACTION ON UPDATE NO ACTION
     attivita_ibfk_03_nofollow       | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
     attivita_ibfk_04_nofollow       | id_cliente                    | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
     attivita_ibfk_05_nofollow       | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL

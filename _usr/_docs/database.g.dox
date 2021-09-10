@@ -7,67 +7,16 @@
     le tabelle del database di supporto GA - GZ
     ===========================================
     
-    garanzie_carrelli
-    -----------------
-    Questa tabella *gestita*...
-
-    colonna                                         | descrizione
-    ------------------------------------------------|---------------------------------------------------------------------------------------
-    garanzie_carrelli.id                            | l'ID della garanzia carrelli
-    garanzie_carrelli.nome                          | il nome della garanzia carrelli
-    garanzie_carrelli.suggerimento                  | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista garanzie_carrelli_view relativa alla tabella garanzie_carrelli presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    garanzie_carrelli_prezzi
-    ------------------------
-    Questa tabella *gestita*...
-
-    colonna                                         | descrizione
-    ------------------------------------------------|---------------------------------------------------------------------------------------
-    garanzie_carrelli_prezzi.id                     | l'ID del prezzo garanzia carrelli
-    garanzie_carrelli_prezzi.id_garanzia            | 
-    garanzie_carrelli_prezzi.id_zona                | l'ID della zona prezzo garanzia carrelli
-    garanzie_carrelli_prezzi.id_categoria_prodotti  | l'ID della categoria prodotto per il prezzo garanzia carrelli
-    garanzie_carrelli_prezzi.prezzo                 | 
-    garanzie_carrelli_prezzi.prezzo_relativo        | 
-    garanzie_carrelli_prezzi.id_listino             | l'ID del listino prezzo della garanzia carrelli
-    garanzie_carrelli_prezzi.id_valuta              | l'ID della valuta prezzo della garanzia carrelli
-    garanzie_carrelli_prezzi.id_iva                 | l'ID dell'iva prezzo della garanzia carrelli
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista garanzie_carrelli_prezzi_view relativa alla tabella garanzie_carrelli_prezzi presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    
     gruppi
     ------
-    Questa tabella contiene i gruppi presenti nel deploy corrente.
+    Questa tabella *assistita* contiene i gruppi presenti nel deploy corrente.
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     gruppi.id                            | l'ID del gruppo
+    gruppi.id_genitore                   | l'ID del gruppo genitore
+    gruppi.id_struttura                  | l'ID del nodo di struttura associato al gruppo
     gruppi.nome                          | il nome del gruppo
-    gruppi.id_genitore                   | l'ID del gruppo genitore (referenzia ricorsivamente la tabella gruppi)
-    gruppi.id_struttura                  | -
-    gruppi.id_account_inserimento        | 
-    gruppi.timestamp_inserimento         | 
-    gruppi.id_account_aggiornamento      | 
-    gruppi.timestamp_aggiornamento       |
     
     Per inserire rapidamente un gruppo si può utilizzare il seguente codice SQL sostituendo <nome> con il valore desiderato:
 
@@ -77,18 +26,19 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-    gruppi_ibfk_1                                 | id_struttura                 | anagrafica_ruoli.id
-    gruppi_ibfk_2_nofollow                        | id_genitore                  | gruppi.id
-    gruppi_ibfk_3_nofollow                        | id_account_inserimento       | account.id
-    gruppi_ibfk_4_nofollow                        | id_account_aggiornamento     | account.id
+    chiave                      | campo                        | tabella e campo collegati  | comportamento
+    ----------------------------|------------------------------|----------------------------|-------------------------
+    gruppi_ibfk_01_nofollow     | id_genitore                  | gruppi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    gruppi_ibfk_02              | id_struttura                 | anagrafica_ruoli.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista gruppi_view relativa alla tabella gruppi presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    gruppi_view.id                       | vedi campo corrispondente sulla tabella relativa
-    gruppi_view.nome                     | vedi campo corrispondente sulla tabella relativa
-    gruppi_view.__label__                | -
+    gruppi_view.id                       | -
+    gruppi_view.id_genitore              | -
+    gruppi_view.id_struttura             | -
+    gruppi_view.nome                     | -
+    gruppi_view.__label__                | etichetta descrittiva del gruppo
+
 */

@@ -186,7 +186,7 @@
 		
 					foreach( $rows as $row ) {
 	
-						if( substr( $row, 0, 3 ) == '--|' ) {
+						if( substr( trim( $row ), 0, 3 ) == '--|' ) {
 	
 							if( ! empty( trim( $pQuery ) ) ) {
 	
@@ -217,7 +217,7 @@
 
 							echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
 							
-						} elseif( substr( $row, 0, 3 ) !== '-- ' ) {
+						} elseif( substr( trim( $row ), 0, 2 ) !== '--' ) {
 	
 							$pQuery .= $row;
 

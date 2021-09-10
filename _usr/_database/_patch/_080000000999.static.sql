@@ -7,7 +7,7 @@
 -- - le colonne rispecchiano esattamente in ordine le colonne della relativa view
 --
 
---| 000008000400
+--| 080000000400
 
 -- tabella anagrafica_view_static
 -- tipologia: tabella gestita

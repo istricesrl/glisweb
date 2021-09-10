@@ -607,8 +607,10 @@
     contenuti.id_categoria_prodotti        | l'ID della categoria di prodotti cui si riferisce la riga (NULL se non presente)
     contenuti.id_caratteristica_prodotti   | l'ID della caratteristica dei prodotti cui si riferisce la riga (NULL se non presente)
     contenuti.id_marchio                   | l'ID del marchio cui si riferisce la riga (NULL se non presente)
-    contenuti.id_immagine                  | l'ID dell'immagine cui si riferisce la riga (NULL se non presente)
     contenuti.id_file                      | l'ID del file cui si riferisce la riga (NULL se non presente)
+    contenuti.id_immagine                  | l'ID dell'immagine cui si riferisce la riga (NULL se non presente)
+    contenuti.id_video                     | l'ID del video cui si riferisce la riga (NULL se non presente)
+    contenuti.id_audio                     | l'ID dell'audio cui si riferisce la riga (NULL se non presente)
     contenuti.id_risorsa                   | l'ID della risorsa cui si riferisce la riga (NULL se non presente)
     contenuti.id_categoria_risorse         | l'ID della categoria di risorse cui si riferisce la riga (NULL se non presente)
     contenuti.id_pagina                    | l'ID della pagina cui si riferisce la riga (NULL se non presente)
@@ -621,15 +623,13 @@
     contenuti.id_categoria_eventi          | l'ID della categoria di eventi cui si riferisce la riga (NULL se non presente)
     contenuti.id_notizia                   | l'ID della notizia cui si riferisce la riga (NULL se non presente)
     contenuti.id_categoria_notizie         | l'ID della categoria di notizie cui si riferisce la riga (NULL se non presente)
-    contenuti.id_video                     | l'ID del video cui si riferisce la riga (NULL se non presente)
-    contenuti.id_audio                     | l'ID dell'audio cui si riferisce la riga (NULL se non presente)
     contenuti.id_data                      | l'ID della data cui si riferisce la riga (NULL se non presente)
     contenuti.id_template_mail             | l'ID del template delle mail cui si riferisce la riga (NULL se non presente)
     contenuti.id_mailing                   | l'ID della campagna di mailing cui si riferisce la riga (NULL se non presente)
     contenuti.id_colore                    | l'ID del colore cui si riferisce la riga (NULL se non presente)
-    contenuti.path_custom                  | -
-    contenuti.url_custom                   | -
-    contenuti.rewrite_custom               | -
+    contenuti.path_custom                  | alias non canonico della pagina (deve iniziare con slash)
+    contenuti.url_custom                   | URL custom a cui far puntare la voce di menù (per i link interni deve iniziare con slash)
+    contenuti.rewrite_custom               | valore che sostituisce quello del tag title ai fini della composizione dell'URL
     contenuti.title                        | valore del tag title
     contenuti.keywords                     | valore del meta tag keywords
     contenuti.description                  | valore del meta tag description
@@ -661,14 +661,71 @@
    
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------------------|-------------------------------|-----------------------------------|------------------
+    contenuti_ibfk_01_nofollow                  | id_lingua                     | lingue.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contenuti_ibfk_02                           | id_anagrafica                 | anagrafica.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_03                           | id_prodotto                   | prodotti.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_04                           | id_articolo                   | articoli.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_05                           | id_categoria_prodotti         | categorie_prodotti.id             | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_06                           | id_caratteristica_prodotti    | caratteristiche_prodotti.id       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_07                           | id_marchio                    | marchi.id                         | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_08                           | id_file                       | file.id                           | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_09                           | id_immagine                   | immagini.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_10                           | id_video                      | video.id                          | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_11                           | id_audio                      | audio.id                          | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_12                           | id_risorsa                    | risorse.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_13                           | id_categoria_risorse          | categorie_risorse.id              | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_14                           | id_pagina                     | pagine.id                         | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_15                           | id_popup                      | popup.id                          | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_16                           | id_immobile                   | immobili.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_17                           | id_indirizzo                  | indirizzi.id                      | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_18                           | id_zona                       | zone.id                           | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_19                           | id_rassegna_stampa            | rassegna_stampa.id                | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_20                           | id_evento                     | eventi.id                         | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_21                           | id_categoria_eventi           | categorie_eventi.id               | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_22                           | id_notizia                    | notizie.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_23                           | id_categoria_notizie          | categorie_notizie.id              | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_24                           | id_data                       | date.id                           | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_25                           | id_template_mail              | template_mail.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_26                           | id_mailing                    | mailing.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_27                           | id_colore                     | colori.id                         | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *contenuti_view* relativa alla tabella *contenuti* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    contenuti_view.id                           | -
+    contenuti_view.id_lingua                    | -
+    contenuti_view.id_anagrafica                | -
+    contenuti_view.id_prodotto                  | -
+    contenuti_view.id_articolo                  | -
+    contenuti_view.id_categoria_prodotti        | -
+    contenuti_view.id_caratteristica_prodotti   | -
+    contenuti_view.id_marchio                   | -
+    contenuti_view.id_file                      | -
+    contenuti_view.id_immagine                  | -
+    contenuti_view.id_video                     | -
+    contenuti_view.id_audio                     | -
+    contenuti_view.id_risorsa                   | -
+    contenuti_view.id_categoria_risorse         | -
+    contenuti_view.id_pagina                    | -
+    contenuti_view.id_popup                     | -
+    contenuti_view.id_immobile                  | -
+    contenuti_view.id_indirizzo                 | -
+    contenuti_view.id_zona                      | -
+    contenuti_view.id_rassegna_stampa           | -
+    contenuti_view.id_evento                    | -
+    contenuti_view.id_categoria_eventi          | -
+    contenuti_view.id_notizia                   | -
+    contenuti_view.id_categoria_notizie         | -
+    contenuti_view.id_data                      | -
+    contenuti_view.id_template_mail             | -
+    contenuti_view.id_mailing                   | -
+    contenuti_view.id_colore                    | -
+    contenuti_view.h1                           | -
+    contenuti_view.__label__                    | etichetta descrittiva del contenuto
+
     continenti
     ----------
     Questa tabella di *supporto* contiene l'entità principale *continenti* che è l'elemento radice della struttura dati utilizzata dal framework
@@ -685,72 +742,159 @@
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
     continenti.id                         | l'ID del continente
-    continenti.codice                     | -
+    continenti.codice                     | codice del continente
     continenti.nome                       | nome del continente
     
-    Si noti che la tabella riporta i nomi dei continenti ad uso interno in italiano. La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    Si noti che la tabella riporta i nomi dei continenti ad uso interno in italiano. La tabella non ha chiavi esterne.
 
     La vista *continenti_view* relativa alla tabella *continenti* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    continenti_view.id                         | -
+    continenti_view.codice                     | -
+    continenti_view.nome                       | -
+    continenti_view.__label__                  | l'etichetta descrittiva del continente
     
     contratti
-    ----------
+    ---------
     Questa tabella *gestita* contiene i contratti di lavoro.
 
-    colonna                               | descrizione
-    --------------------------------------|---------------------------------------------------------------------------------------
-    contratti.id                          | l'ID del contratto
-    contratti.id_tipologia                | l'ID della tipologia del contratto
-    contratti.id_anagrafica               | l'ID dell'anagrafica del dipendente
-    contratti.id_agenzia                  | l'ID dell'agenzia interinale cui fa riferimento il contratto
-    contratti.data_inizio                 | -
-    contratti.data_fine                   | -
-    contratti.data_inizio_rapporto        | -
-    contratti.data_fine_rapporto          | -
-    contratti.livello                     | -
-    contratti.id_tipologia_qualifica      | -
-    contratti.id_tipologia_durata         | -
-    contratti.id_tipologia_orario         | -
-    contratti.ore_settimanali             | -
-    contratti.note                        | -
-    contratti.percentuale_part_time       | -
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    contratti.id                               | l'ID del contratto
+    contratti.id_tipologia                     | l'ID della tipologia del contratto
+    contratti.id_anagrafica                    | l'ID dell'anagrafica del collaboratore
+    contratti.id_azienda                       | l'ID dell'azienda titolare del contratto
+    contratti.id_agenzia                       | l'ID dell'agenzia interinale cui fa riferimento il contratto
+    contratti.data_stipula                     | la data di stipula del contratto
+    contratti.data_inizio                      | la data di inizio validità del contratto
+    contratti.data_fine                        | la data di fine validità del contratto
+    contratti.data_inizio_rapporto             | la data di inizio dell'operatività del contratto
+    contratti.data_fine_rapporto               | la data di fine dell'operatività del contratto
+    contratti.id_livello                       | l'ID del livello di anzianità del contratto
+    contratti.id_qualifica                     | l'ID della qualifica collegata al contratto
+    contratti.id_tipologia_durata              | l'ID della tipologia di durata del contratto
+    contratti.id_tipologia_orario              | l'ID della tipologia di orario del contratto
+    contratti.ore_settimanali                  | il numero di ore di lavoro per settimana
+    contratti.note                             | note relative al contratto
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                     | tabella e campo collegati         | comportamento
+    ------------------------------------|---------------------------|-----------------------------------|------------------
+    contratti_ibfk_01_nofollow          | id_tipologia              | tipologie_contratti.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_02_nofollow          | id_anagrafica             | anagrafica.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_03_nofollow          | id_azienda                | anagrafica.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_04_nofollow          | id_agenzia                | anagrafica.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_05_nofollow          | id_livello                | livelli_contratti.id              | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_06_nofollow          | id_qualifica              | qualifiche_contratti.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_07_nofollow          | id_tipologia_durata       | tipologie_durate_contratti.id     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_08_nofollow          | id_tipologia_orario       | tipologie_orari_contratti.id      | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *contratti_view* relativa alla tabella *contratti* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-        
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    contratti_view.id                               | -
+    contratti_view.id_tipologia                     | -
+    contratti_view.tipologia                        | la tipologia del contratto
+    contratti_view.id_anagrafica                    | -
+    contratti_view.anagrafica                       | l'anagrafica del collaboratore
+    contratti_view.id_azienda                       | -
+    contratti_view.azienda                          | l'azienda titolare del contratto
+    contratti_view.id_agenzia                       | -
+    contratti_view.agenzia                          | l'agenzia interinale cui fa riferimento il contratto
+    contratti_view.data_stipula                     | -
+    contratti_view.data_inizio                      | -
+    contratti_view.data_fine                        | -
+    contratti_view.data_inizio_rapporto             | -
+    contratti_view.data_fine_rapporto               | -
+    contratti_view.id_livello                       | -
+    contratti_view.livello                          | il livello di anzianità del contratto
+    contratti_view.id_qualifica                     | -
+    contratti_view.qualifica                        | la qualifica collegata al contratto
+    contratti_view.id_tipologia_durata              | -
+    contratti_view.tipologia_durata                 | la tipologia di durata del contratto
+    contratti_view.id_tipologia_orario              | -
+    contratti_view.tipologia_orario                 | la tipologia di orario del contratto
+    contratti_view.ore_settimanali                  | -
+    contratti_view.__label__                        | l'etichetta descrittiva del contratto
+
+    contratti_archiviati
+    --------------------
+    Questa tabella *virtuale* contiene i contratti cessati, individuati in base ai campi data_fine e data_fine_rapporto.
+    La relativa vista *contratti_archiviati_view* possiede gli stessi campi della *contratti_view*.
+
+    correlazioni_articoli
+    ------------------
+    Questa tabella *gestita* mette in relazione gli articoli con altri *articoli* o con *prodotti* per indicare correlazioni tecniche come
+    ricambi, consumabili, accessori oppure commerciali come prodotti consigliati eccetera.
+
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    correlazioni_articoli.id                       | l'ID della correlazione
+    correlazioni_articoli.id_tipologia             | l'ID della tipologia di correlazione
+    correlazioni_articoli.id_articolo              | l'ID dell'articolo del quale si indica la correlazione
+    correlazioni_articoli.id_prodotto_correlato    | l'ID del prodotto a cui l'articolo è correlato
+    correlazioni_articoli.id_articolo_correlato    | l'ID dell'articolo a cui l'articolo è correlato
+    correlazioni_articoli.ordine                   | campo di ordinamento
+    correlazioni_articoli.se_upselling             | flag che indica se la correlazione rappresenta un upselling
+    correlazioni_articoli.se_crosselling           | flag che indica se la correlazione rappresenta un crosselling
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                     | tabella e campo collegati                 | comportamento
+    ------------------------------------|---------------------------|-------------------------------------------|----------------------
+    correlazioni_articoli_ibfk_01       | id_tipologia              | tipologie_correlazioni_articoli.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    correlazioni_articoli_ibfk_02       | id_articolo               | articoli.id                               | ON DELETE CASCADE ON UPDATE CASCADE
+    correlazioni_articoli_ibfk_03       | id_prodotto_correlato     | prodotti.id                               | ON DELETE CASCADE ON UPDATE CASCADE
+    correlazioni_articoli_ibfk_04       | id_articolo_correlato     | articoli.id                               | ON DELETE CASCADE ON UPDATE CASCADE
+
+    La vista *correlazioni_articoli_view* relativa alla tabella *correlazioni_articoli* presenta le seguenti colonne:
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    correlazioni_articoli_view.id                       | -
+    correlazioni_articoli_view.id_tipologia             | -
+    correlazioni_articoli_view.tipologia                | -
+    correlazioni_articoli_view.id_articolo              | -
+    correlazioni_articoli_view.id_prodotto_correlato    | -
+    correlazioni_articoli_view.id_articolo_correlato    | -
+    correlazioni_articoli_view.ordine                   | -
+    correlazioni_articoli_view.se_upselling             | -
+    correlazioni_articoli_view.se_crosselling           | -
+    correlazioni_articoli_view.__label__                | etichetta descrittiva della correlazione
+
     costi_contratti
     ---------------
     Questa tabella *gestita* descrive i costi collegati all'entità principale *contratti*.
 
-    colonna                               | descrizione
-    --------------------------------------|---------------------------------------------------------------------------------------
-    costi_contratti.id                    | l'ID del costo collegato al contratto
-    costi_contratti.id_contratto          | l'ID del contratto
-    costi_contratti.id_tipologia          | l'ID della tipologia
-    costi_contratti.costo_orario          | -
-    costi_contratti.note                  | -
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    costi_contratti.id                                  | l'ID del costo
+    costi_contratti.id_contratto                        | l'ID del contratto cui si riferisce il costo
+    costi_contratti.id_tipologia_inps_attivita          | l'ID della tipologia di attività INPS cui si riferisce il costo
+    costi_contratti.costo_orario                        | il costo orario in euro per il contratto e la tipologia INPS indicata
+    costi_contratti.note                                | note relative al costo
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                         | tabella e campo collegati         | comportamento
+    ------------------------------------|-------------------------------|-----------------------------------|------------------
+    costi_contratti_ibfk_01             | id_contratto                  | contratti.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    costi_contratti_ibfk_02             | id_tipologia_inps_attivita    | tipologie_inps_attivita.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *costi_contratti_view* relativa alla tabella *costi_contratti* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    costi_contratti_view.id                                | -
+    costi_contratti_view.id_contratto                      | -
+    costi_contratti_view.id_tipologia_inps_attivita        | -
+    costi_contratti_view.tipologia_inps_attivita           | la tipologia INPS dell'attività cui si riferisce il costo
+    costi_contratti_view.costo_orario                      | -
+    costi_contratti_view.__label__                         | l'etichetta descrittiva del costo
     
     coupon
     ------
@@ -760,113 +904,148 @@
     colonna                               | descrizione
     --------------------------------------|---------------------------------------------------------------------------------------
     coupon.id                             | l'ID del coupon
-    coupon.nome                           | -
-    coupon.note                           | -
+    coupon.nome                           | il nome del coupon
+    coupon.note                           | note relative al coupon
     coupon.timestamp_inizio               | la timestamp di inizio della validità del coupon
     coupon.timestamp_fine                 | la timestamp di fine della validità del coupon
-    coupon.sconto_percentuale             | -
-    coupon.sconto_fisso                   | -
-    coupon.se_multiuso                    | -
+    coupon.sconto_percentuale             | lo sconto percentuale da applicare
+    coupon.sconto_fisso                   | lo sconto in valore da applicare
+    coupon.se_multiuso                    | flag che determina se lo stesso coupon può essere utilizzato più volte
     coupon.se_globale                     | -
-        
-    La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    In linea di principio il coupon andrebbe applicato al documento se la variazione riguarda tutte le righe, oppure alle specifiche righe
+    interessate nel caso di coupon che interessano soltanto una o più righe.
+
+    La tabella non ha chiavi esterne.
 
     La vista *coupon_view* relativa alla tabella *coupon* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_view.id                             | -
+    coupon_view.nome                           | -
+    coupon_view.note                           | -
+    coupon_view.timestamp_inizio               | -
+    coupon_view.data_ora_inizio                | la data e ora di inizio della validità del coupon
+    coupon_view.timestamp_fine                 | -
+    coupon_view.data_ora_fine                  | la data e ora di fine della validità del coupon
+    coupon_view.sconto_percentuale             | -
+    coupon_view.sconto_fisso                   | -
+    coupon_view.se_multiuso                    | -
+    coupon_view.se_globale                     | -
+    coupon_view.__label__                      | etichetta descrittiva del coupon
 
     coupon_categorie_prodotti
     -------------------------
-    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *categorie_prodotti* per specificare l'ambito di
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *coupon* con l'entità secondaria *categorie_prodotti* per specificare l'ambito di
     validità del coupon.
 
     colonna                                             | descrizione
     ----------------------------------------------------|---------------------------------------------------------------------------------------
-    coupon_categorie_prodotti.id                        | l'ID dell'associazione fra il coupon e la categoria prodotti
+    coupon_categorie_prodotti.id                        | l'ID dell'associazione fra coupon e categoria prodotti
     coupon_categorie_prodotti.id_coupon                 | l'ID del coupon
-    coupon_categorie_prodotti.id_categoria_prodotti     | l'ID della categoria prodotti
+    coupon_categorie_prodotti.id_categoria              | l'ID della categoria prodotti
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                 | tabella e campo collegati         | comportamento
+    --------------------------------------------|-----------------------|-----------------------------------|------------------
+    coupon_categorie_prodotti_ibfk_01           | id_coupon             | coupon.id                         | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_categorie_prodotti_ibfk_02           | id_categoria          | categorie_prodotti.id             | ON DELETE CASCADE ON UPDATE CASCADE
 
     La vista *coupon_categorie_prodotti_view* relativa alla tabella *coupon_categorie_prodotti* presenta le seguenti colonne:
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_categorie_prodotti_view.id                      | -
+    coupon_categorie_prodotti_view.id_coupon               | -
+    coupon_categorie_prodotti_view.id_categoria            | -
+    coupon_categorie_prodotti_view.__label__               | l'etichetta descrittiva della relazione fra coupon e categoria prodotti
     
     coupon_listini
     --------------
-    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *listini* per specificare l'ambito di
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *coupon* con l'entità secondaria *listini* per specificare l'ambito di
     validità del coupon.
 
     colonna                                  | descrizione
     -----------------------------------------|---------------------------------------------------------------------------------------
-    coupon_listini.id                        | l'ID dell'associazione fra il coupon e il listino
+    coupon_listini.id                        | l'ID dell'associazione fra coupon e listino
     coupon_listini.id_coupon                 | l'ID del coupon
     coupon_listini.id_listino                | l'ID del listino
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo             | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------|-------------------------------|----------------------
+    coupon_listini_ibfk_01              | id_coupon         | coupon.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_listini_ibfk_02              | id_listino        | listini.id                    | ON DELETE CASCADE ON UPDATE CASCADE
 
     La vista *coupon_listini_view* relativa alla tabella *coupon_listini* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                       | descrizione
+    ----------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_listini_view.id                        | -
+    coupon_listini_view.id_coupon                 | -
+    coupon_listini_view.id_listino                | -
+    coupon_listini_view.__label__                 | etichetta descrittiva dell'associazione fra coupon e listino
   
     coupon_marchi
     -------------
-    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *marchi* per specificare l'ambito di
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *coupon* con l'entità secondaria *marchi* per specificare l'ambito di
     validità del coupon.
-
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    coupon_marchi.id                        | l'ID dell'associazione fra il coupon e il marchio
+    coupon_marchi.id                        | l'ID dell'associazione fra coupon e marchio
     coupon_marchi.id_coupon                 | l'ID del coupon
     coupon_marchi.id_marchio                | l'ID del marchio
         
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                          | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------|-----------------------|-------------------------------|----------------------
+    coupon_marchi_ibfk_01           | id_coupon             | coupon.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_marchi_ibfk_02           | id_marchio            | marchi.id                     | ON DELETE CASCADE ON UPDATE CASCADE
 
     La vista *coupon_marchi_view* relativa alla tabella *coupon_marchi* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-  
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_marchi_view.id                        | -
+    coupon_marchi_view.id_coupon                 | -
+    coupon_marchi_view.id_marchio                | -
+    coupon_marchi_view.__label__                 | etichetta descrittiva dell'associazione fra coupon e marchio
+
     coupon_prodotti
     ---------------
-    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *prodotti* per specificare l'ambito di
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *coupon* con l'entità secondaria *prodotti* per specificare l'ambito di
     validità del coupon.
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    coupon_prodotti.id                      | l'ID dell'associazione fra il coupon e il prodotto
+    coupon_prodotti.id                      | l'ID dell'associazione fra coupon e prodotto
     coupon_prodotti.id_coupon               | l'ID del coupon
     coupon_prodotti.id_prodotto             | l'ID del prodotto
         
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                          | campo             | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------|-------------------------------|----------------------
+    coupon_prodotti_ibfk_01         | id_coupon         | coupon.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_prodotti_ibfk_02         | id_prodotto       | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
 
     La vista *coupon_prodotti_view* relativa alla tabella *coupon_prodotti* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    coupon_prodotti.id                      | -
+    coupon_prodotti.id_coupon               | -
+    coupon_prodotti.id_prodotto             | -
+    coupon_prodotti.__label__               | l'etichetta descrittiva dell'associazione fra coupon e prodotto
   
     coupon_stagioni
     ---------------
-    Questa tabella *gestita* associa l'entità principale *coupon* all'entità secondaria *stagioni* per specificare l'ambito di
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *coupon* con l'entità secondaria *stagioni* per specificare l'ambito di
     validità del coupon.
 
     colonna                                 | descrizione
@@ -877,12 +1056,61 @@
         
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                 | tabella e campo collegati         | comportamento
+    ------------------------------------|-----------------------|-----------------------------------|------------------
+    coupon_stagioni_ibfk_01             | id_coupon             | coupon.id                         | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_stagioni_ibfk_02             | id_stagione           | stagioni.id                       | ON DELETE CASCADE ON UPDATE CASCADE
 
     La vista *coupon_stagioni_view* relativa alla tabella *coupon_stagioni* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_stagioni_view.id                      | -
+    coupon_stagioni_view.id_coupon               | -
+    coupon_stagioni_view.id_stagione             | -
+    coupon_stagioni_view.__label__               | l'etichetta descrittiva dell'associazione fra coupon e stagione
+
+    cron
+    ----
+    Questa tabella *assistita* contiene la tavola di pianificazione del framework, in base alla quale vengono eseguite
+    le operazioni pianificate (task); per ulteriori informazioni sull'esecuzione pianificata di operazioni nel framework si veda
+    il \ref crontab "relativo capitolo" nella documentazione.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    cron.id                                 | l'ID della pianificazione
+    cron.minuto                             | il minuto della pianificazione (lasciare NULL per tutti i minuti)
+    cron.ora                                | l'ora della pianificazione (lasciare NULL per tutte le ore)
+    cron.giorno_del_mese                    | il giorno del mese della pianificazione (lasciare NULL per tutti i giorni)
+    cron.mese                               | il mese della pianificazione (lasciare NULL per tutti i mesi)
+    cron.giorno_della_settimana             | il giorno della settimana della pianificazione (lasciare NULL per tutti i giorni della settimana)
+    cron.settimana                          | il numero di settimana della pianificazione (lasciare NULL per tutte le settimane)
+    cron.task                               | il percorso relativo del task da eseguire
+    cron.iterazioni                         | il numero di volte per cui il task va eseguito ad ogni chiamata
+    cron.delay                              | il ritardo in secondi fra le esecuzioni del task nella stessa chiamata
+    cron.token                              | token per il lock della riga
+    cron.timestamp_esecuzione               | timestamp dell'ultima esecuzione della riga
+
+    Per l'indicazione del tempo in cui il task va eseguito, il framework rispetta la sintassi del file crontab di Linux (https://crontab.guru/).
+
+    La tabella non ha chiavi esterne.
+
+    La vista *cron_view* relativa alla tabella *cron* presenta le seguenti colonne:
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    cron_view.id                                 | -
+    cron_view.minuto                             | -
+    cron_view.ora                                | -
+    cron_view.giorno_del_mese                    | -
+    cron_view.mese                               | -
+    cron_view.giorno_della_settimana             | -
+    cron_view.settimana                          | -
+    cron_view.task                               | -
+    cron_view.iterazioni                         | -
+    cron_view.delay                              | -
+    cron_view.token                              | -
+    cron_view.timestamp_esecuzione               | -
+    cron_view.__label__                          | etichetta descrittiva della pianificazione
 
 */

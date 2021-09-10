@@ -12,13 +12,13 @@
 -- - le colonne sono correttamente documentate, in ordine, nel relativo file dox
 --
 
---| 000009000100
+--| 090000000100
 
 -- account_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `account_view`;
 
---| 000009000101
+--| 090000000101
 
 -- account_view
 -- tipologia: tabella gestita
@@ -54,13 +54,13 @@ CREATE OR REPLACE DEFINER = CURRENT_USER() VIEW account_view AS
 	GROUP BY account.id
 ;
 
---| 000009000200
+--| 090000000200
 
 -- account_gruppi_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `account_gruppi_view`;
 
---| 000009000201
+--| 090000000201
 
 -- account_gruppi_view
 -- tipologia: tabella gestita
@@ -81,13 +81,13 @@ CREATE OR REPLACE VIEW account_gruppi_view AS
 		INNER JOIN gruppi ON gruppi.id = account_gruppi.id_gruppo
 ;
 
---| 000009000300
+--| 090000000300
 
 -- account_gruppi_attribuzione_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `account_gruppi_attribuzione_view`;
 
---| 000009000301
+--| 090000000301
 
 -- account_gruppi_attribuzione_view
 -- tipologia: tabella gestita
@@ -110,13 +110,13 @@ CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 		INNER JOIN gruppi ON gruppi.id = account_gruppi_attribuzione.id_gruppo
 ;
 
---| 000009000400
+--| 090000000400
 
 -- anagrafica_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_view`;
 
---| 000009000401
+--| 090000000401
 
 -- anagrafica_view
 -- tipologia: tabella gestita
@@ -182,13 +182,13 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 	GROUP BY anagrafica.id
 ;
 
---| 000009000410
+--| 090000000410
 
 -- anagrafica_archiviati_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_archiviati_view`;
 
---| 000009000411
+--| 090000000411
 
 -- anagrafica_archiviati_view
 -- tipologia: tabella gestita
@@ -255,13 +255,13 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 	GROUP BY anagrafica.id
 ;
 
---| 000009000500
+--| 090000000500
 
 -- anagrafica_categorie_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_categorie_view`;
 
---| 000009000501
+--| 090000000501
 
 -- anagrafica_categorie_view
 -- tipologia: tabella gestita
@@ -283,13 +283,13 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 
 -- NOTA non dovrebbe esserci il path qui?
 
---| 000009000600
+--| 090000000600
 
 -- anagrafica_categorie_diritto_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_categorie_diritto_view`;
 
---| 000009000601
+--| 090000000601
 
 -- anagrafica_categorie_diritto_view
 -- tipologia: tabella gestita
@@ -310,13 +310,13 @@ CREATE OR REPLACE VIEW anagrafica_categorie_diritto_view AS
 		INNER JOIN categorie_diritto ON categorie_diritto.id = anagrafica_categorie_diritto.id_categoria
 ;
 
---| 000009000700
+--| 090000000700
 
 -- anagrafica_cittadinanze_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_cittadinanze_view`;
 
---| 000009000701
+--| 090000000701
 
 -- anagrafica_cittadinanze_view
 -- tipologia: tabella gestita
@@ -338,13 +338,13 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 		INNER JOIN stati ON stati.id = anagrafica_cittadinanze.id_stato
 ;
 
---| 000009000800
+--| 090000000800
 
 -- anagrafica_condizioni_pagamento_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_condizioni_pagamento_view`;
 
---| 000009000801
+--| 090000000801
 
 -- anagrafica_condizioni_pagamento_view
 -- tipologia: tabella gestita
@@ -365,13 +365,13 @@ CREATE OR REPLACE VIEW `anagrafica_condizioni_pagamento_view` AS
 		INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = anagrafica_condizioni_pagamento.id_condizione
 ;
 
---| 000009000900
+--| 090000000900
 
 -- anagrafica_indirizzi_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_indirizzi_view`;
 
---| 000009000901
+--| 090000000901
 
 -- anagrafica_indirizzi_view
 -- tipologia: tabella gestita
@@ -391,13 +391,13 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
 ;
 
---| 000009001000
+--| 090000001000
 
 -- anagrafica_modalita_pagamento_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_modalita_pagamento_view`;
 
---| 000009001001
+--| 090000001001
 
 -- anagrafica_modalita_pagamento_view
 -- tipologia: tabella gestita
@@ -418,14 +418,14 @@ CREATE OR REPLACE VIEW `anagrafica_modalita_pagamento_view` AS
 		INNER JOIN modalita_pagamento ON modalita_pagamento.id = modalita_pagamento_pagamento.id_modalita
 ;
 
---| 000009001100
+--| 090000001100
 
 -- anagrafica_ruoli_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-23 15:35 Fabio Mosti
 DROP TABLE IF EXISTS `anagrafica_ruoli_view`;
 
---| 000009001101
+--| 090000001101
 
 -- anagrafica_ruoli_view
 -- tipologia: tabella gestita
@@ -447,14 +447,14 @@ CREATE OR REPLACE VIEW anagrafica_ruoli_view AS
 		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_ruoli.id_anagrafica
 ;
 
---| 000009001200
+--| 090000001200
 
 -- anagrafica_settori_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-23 15:35 Fabio Mosti
 DROP TABLE IF EXISTS `anagrafica_settori_view`;
 
---| 000009001201
+--| 090000001201
 
 -- anagrafica_settori_view
 -- tipologia: tabella gestita
@@ -477,13 +477,13 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 
 -- NOTA per il nome del settore usare settori_path?
 
---| 000009001300
+--| 090000001300
 
 -- articoli_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `articoli_view`;
 
---| 000009001301
+--| 090000001301
 
 -- articoli_view
 -- tipologia: tabella gestita
@@ -515,13 +515,13 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 	FROM articoli
 ;
 
---| 000009001600
+--| 090000001600
 
 -- articoli_caratteristiche_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `articoli_caratteristiche_view`;
 
---| 000009001601
+--| 090000001601
 
 -- articoli_caratteristiche_view
 -- tipologia: tabella gestita
@@ -548,49 +548,13 @@ CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 		LEFT JOIN tipologie_caratteristiche_prodotti ON tipologie_caratteristiche_prodotti.id = caratteristiche_prodotti.id_tipologia
 ;
 
---| 000009001700
-
--- articoli_correlati_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `articoli_correlati_view`;
-
---| 000009001701
-
--- articoli_correlati_view
--- tipologia: tabella gestita
--- verifica: 2021-05-26 12:08 Fabio Mosti
-CREATE OR REPLACE VIEW `articoli_correlati_view` AS
-	SELECT
-		articoli_correlati.id,
-		articoli_correlati.id_tipologia,
-		tipologie_correlazioni_articoli.nome AS tipologia,
-		articoli_correlati.id_articolo,
-		articoli_correlati.id_prodotto_correlato,
-		articoli_correlati.id_articolo_correlato,
-		articoli_correlati.ordine,
-		articoli_correlati.se_upselling,
-		articoli_correlati.se_crosselling,
-		concat(
-			articoli_correlati.id_articolo,
-			' / ',
-			tipologie_correlazioni_articoli.nome,
-			' / ',
-			coalesce(
-				articoli_correlati.id_prodotto_correlato,
-				articoli_correlati.id_articolo_correlato
-			)
-		) AS __label__
-	FROM articoli_correlati
-		LEFT JOIN tipologie_correlazioni_articoli ON tipologie_correlazioni_articoli.id = articoli_correlati.id_tipologia
-;
-
---| 000009001800
+--| 090000001800
 
 -- attivita_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `attivita_view`;
 
---| 000009001801
+--| 090000001801
 
 -- attivita_view
 -- tipologia: tabella gestita
@@ -665,13 +629,13 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
 ;
 
---| 000009002100
+--| 090000002100
 
 -- audio_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `audio_view`;
 
---| 000009002101
+--| 090000002101
 
 -- audio_view
 -- tipologia: tabella gestita
@@ -711,13 +675,13 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		LEFT JOIN tipologie_embed ON tipologie_embed.id = audio.id_tipologia_embed
 ;
 
---| 000009002500
+--| 090000002500
 
 -- campagne_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `campagne_view`;
 
---| 000009002501
+--| 090000002501
 
 -- campagne_view
 -- tipologia: tabella gestita
@@ -732,13 +696,13 @@ CREATE OR REPLACE VIEW `campagne_view` AS
 	FROM campagne
 ;
 
---| 000009002700
+--| 090000002700
 
 -- caratteristiche_immobili_view
 -- tipologia: tabella di supporto
 DROP TABLE IF EXISTS `caratteristiche_immobili_view`;
 
---| 000009002701
+--| 090000002701
 
 -- caratteristiche_immobili_view
 -- tipologia: tabella di supporto
@@ -762,13 +726,13 @@ CREATE OR REPLACE VIEW `caratteristiche_immobili_view` AS
 		LEFT JOIN tipologie_caratteristiche_immobili ON tipologie_caratteristiche_immobili.id = caratteristiche_immobili.id_tipologia
 ;
 
---| 000009002900
+--| 090000002900
 
 -- caratteristiche_prodotti_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `caratteristiche_prodotti_view`;
 
---| 000009002901
+--| 090000002901
 
 -- caratteristiche_prodotti_view
 -- tipologia: tabella gestita
@@ -793,13 +757,13 @@ CREATE OR REPLACE VIEW caratteristiche_prodotti_view AS
 		LEFT JOIN tipologie_caratteristiche_prodotti ON tipologie_caratteristiche_prodotti.id = caratteristiche_prodotti.id_tipologia
 ;
 
---| 000009003100
+--| 090000003100
 
 -- categorie_anagrafica_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `categorie_anagrafica_view`;
 
---| 000009003101
+--| 090000003101
 
 -- categorie_anagrafica_view
 -- tipologia: tabella gestita
@@ -844,13 +808,13 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 	GROUP BY categorie_anagrafica.id
 ;
 
---| 000009003300
+--| 090000003300
 
 -- categorie_diritto_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `categorie_diritto_view`;
 
---| 000009003301
+--| 090000003301
 
 -- categorie_diritto_view
 -- tipologia: tabella assistita
@@ -874,13 +838,13 @@ CREATE OR REPLACE VIEW categorie_diritto_view AS
 	GROUP BY categorie_diritto.id
 ;
 
---| 000009003500
+--| 090000003500
 
 -- categorie_eventi_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `categorie_eventi_view`;
 
---| 000009003501
+--| 090000003501
 
 -- categorie_eventi_view
 -- tipologia: tabella assistita
@@ -904,13 +868,13 @@ CREATE OR REPLACE VIEW categorie_eventi_view AS
 	GROUP BY categorie_eventi.id
 ;
 
---| 000009003700
+--| 090000003700
 
 -- categorie_notizie_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `categorie_notizie_view`;
 
---| 000009003701
+--| 090000003701
 
 -- categorie_notizie_view
 -- tipologia: tabella assistita
@@ -934,13 +898,13 @@ CREATE OR REPLACE VIEW categorie_notizie_view AS
 	GROUP BY categorie_notizie.id
 ;
 
---| 000009003900
+--| 090000003900
 
 -- categorie_prodotti_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `categorie_prodotti_view`;
 
---| 000009003901
+--| 090000003901
 
 -- categorie_prodotti_view
 -- tipologia: tabella assistita
@@ -964,13 +928,13 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 	GROUP BY categorie_prodotti.id
 ;
 
---| 000009004100
+--| 090000004100
 
 -- categorie_prodotti_caratteristiche_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `categorie_prodotti_caratteristiche_view`;
 
---| 000009004101
+--| 090000004101
 
 -- categorie_prodotti_caratteristiche_view
 -- tipologia: tabella assistita
@@ -995,13 +959,13 @@ CREATE OR REPLACE VIEW categorie_prodotti_caratteristiche_view AS
 	GROUP BY categorie_prodotti.id
 ;
 
---| 000009004300
+--| 090000004300
 
 -- categorie_progetti_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `categorie_progetti_view`;
 
---| 000009004301
+--| 090000004301
 
 -- categorie_progetti_view
 -- tipologia: tabella assistita
@@ -1023,13 +987,13 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 	GROUP BY categorie_progetti.id
 ;
 
---| 000009004500
+--| 090000004500
 
 -- categorie_risorse_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `categorie_risorse_view`;
 
---| 000009004501
+--| 090000004501
 
 -- categorie_risorse_view
 -- tipologia: tabella assistita
@@ -1049,13 +1013,13 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 	GROUP BY categorie_risorse.id
 ;
 
---| 000009004700
+--| 090000004700
 
 -- classi_energetiche_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `classi_energetiche_view`;
 
---| 000009004701
+--| 090000004701
 
 -- classi_energetiche_view
 -- tipologia: tabella assistita
@@ -1079,13 +1043,13 @@ CREATE OR REPLACE VIEW classi_energetiche_view AS
 		LEFT JOIN colori ON colori.id = classi_energetiche.id_colore
 ;
 
---| 000009005100
+--| 090000005100
 
 -- colori_view
 -- tipologia: tabella di supporto
 DROP TABLE IF EXISTS `colori_view`;
 
---| 000009005101
+--| 090000005101
 
 -- colori_view
 -- tipologia: tabella di supporto
@@ -1109,13 +1073,13 @@ CREATE OR REPLACE VIEW colori_view AS
 	FROM colori
 ;
 
---| 000009005300
+--| 090000005300
 
 -- comuni_view
 -- tipologia: tabella di supporto
 DROP TABLE IF EXISTS `comuni_view`;
 
---| 000009005301
+--| 090000005301
 
 -- comuni_view
 -- tipologia: tabella di supporto
@@ -1145,13 +1109,13 @@ CREATE OR REPLACE VIEW comuni_view AS
 	ORDER BY __label__
 ;
 
---| 000009006700
+--| 090000006700
 
 -- contatti_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `contatti_view`;
 
---| 000009006701
+--| 090000006701
 
 -- contatti_view
 -- tipologia: tabella gestita
@@ -1179,6 +1143,695 @@ CREATE OR REPLACE VIEW contatti_view AS
 		LEFT JOIN campagne ON campagne.id = contatti.id_campagna
 		LEFT JOIN anagrafica AS a1 ON a1.id = contatti.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = contatti.id_inviante
+;
+
+--| 090000006900
+
+-- contenuti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `contenuti_view`;
+
+--| 090000006901
+
+-- contenuti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-09 10:46 Fabio Mosti
+CREATE OR REPLACE VIEW contenuti_view AS
+	SELECT
+		contenuti.id,
+		contenuti.id_lingua,
+		contenuti.id_anagrafica,
+		contenuti.id_prodotto,
+		contenuti.id_articolo,
+		contenuti.id_categoria_prodotti,
+		contenuti.id_caratteristica_prodotti,
+		contenuti.id_marchio,
+		contenuti.id_file,
+		contenuti.id_immagine,
+		contenuti.id_video,
+		contenuti.id_audio,
+		contenuti.id_risorsa,
+		contenuti.id_categoria_risorse,
+		contenuti.id_pagina,
+		contenuti.id_popup,
+		contenuti.id_immobile,
+		contenuti.id_indirizzo,
+		contenuti.id_zona,
+		contenuti.id_rassegna_stampa,
+		contenuti.id_evento,
+		contenuti.id_categoria_eventi,
+		contenuti.id_notizia,
+		contenuti.id_categoria_notizie,
+		contenuti.id_data,
+		contenuti.id_template_mail,
+		contenuti.id_mailing,
+		contenuti.id_colore,
+		contenuti.title,
+		contenuti.h1,
+		concat(
+			contenuti.h1,
+			' / ',
+			lingue.nome
+		) AS __label__
+	FROM contenuti
+		INNER JOIN lingue ON lingue.id = contenuti.id_lingua
+;
+
+--| 090000007100
+
+-- continenti_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `continenti_view`;
+
+--| 090000007101
+
+-- continenti_view
+-- tipologia: tabella di supporto
+CREATE OR REPLACE VIEW continenti_view AS
+	SELECT
+		continenti.id,
+		continenti.codice,
+		continenti.nome,
+		continenti.nome AS __label__
+	FROM continenti
+;
+
+--| 090000007600
+
+-- contratti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `contratti_view`;
+
+--| 090000007601
+
+-- contratti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-09 13:37 Fabio Mosti
+CREATE OR REPLACE VIEW `contratti_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+		tipologie_contratti.nome AS tipologia,
+		contratti.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		contratti.id_azienda,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS azienda,
+		contratti.id_agenzia,
+		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS agenzia,
+		contratti.data_stipula,
+		contratti.data_inizio,
+		contratti.data_fine,
+		contratti.data_inizio_rapporto,
+		contratti.data_fine_rapporto,
+		contratti.id_livello,
+		livelli_contratti.nome AS livello,
+		contratti.id_qualifica,
+		qualifiche_contratti.nome AS qualifica,
+		contratti.id_tipologia_durata,
+		tipologie_durate_contratti.nome AS tipologia_durata,
+		contratti.id_tipologia_orario,
+		tipologie_orari_contratti.nome AS tipologia_orario,
+		contratti.ore_settimanali,
+		concat(
+			tipologie_contratti.nome, 
+			' / ', 
+			coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ),
+			' / ', 
+			coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' )
+		) as __label__
+	FROM contratti 
+		LEFT JOIN anagrafica AS a1 ON contratti.id_anagrafica = a1.id
+		LEFT JOIN anagrafica AS a2 ON contratti.id_azienda = a2.id
+		LEFT JOIN anagrafica AS a3 ON contratti.id_agenzia = a3.id
+		LEFT JOIN tipologie_contratti ON contratti.id_tipologia = tipologie_contratti.id
+		LEFT JOIN qualifiche_contratti ON contratti.id_qualifica = qualifiche_contratti.id
+		LEFT JOIN tipologie_durate_contratti ON contratti.id_tipologia_durata = tipologie_durate_contratti.id
+		LEFT JOIN tipologie_orari_contratti ON contratti.id_tipologia_orario = tipologie_orari_contratti.id
+	WHERE data_fine_rapporto IS NULL AND (
+		( data_fine IS NULL )
+		OR
+		( data_fine IS NOT NULL and data_fine >= CURDATE() )
+	)
+;
+
+--| 090000007602
+
+-- contratti_archiviati_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `contratti_archiviati_view`;
+
+--| 090000007603
+
+-- contratti_archiviati_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-09 14:23 Fabio Mosti
+CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+		tipologie_contratti.nome AS tipologia,
+		contratti.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		contratti.id_azienda,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS azienda,
+		contratti.id_agenzia,
+		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS agenzia,
+		contratti.data_stipula,
+		contratti.data_inizio,
+		contratti.data_fine,
+		contratti.data_inizio_rapporto,
+		contratti.data_fine_rapporto,
+		contratti.id_livello,
+		livelli_contratti.nome AS livello,
+		contratti.id_qualifica,
+		qualifiche_contratti.nome AS qualifica,
+		contratti.id_tipologia_durata,
+		tipologie_durate_contratti.nome AS tipologia_durata,
+		contratti.id_tipologia_orario,
+		tipologie_orari_contratti.nome AS tipologia_orario,
+		contratti.ore_settimanali,
+		concat(
+			tipologie_contratti.nome, 
+			' / ', 
+			coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ),
+			' / ', 
+			coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' )
+		) as __label__
+	FROM contratti 
+		LEFT JOIN anagrafica AS a1 ON contratti.id_anagrafica = a1.id
+		LEFT JOIN anagrafica AS a2 ON contratti.id_azienda = a2.id
+		LEFT JOIN anagrafica AS a3 ON contratti.id_agenzia = a3.id
+		LEFT JOIN tipologie_contratti ON contratti.id_tipologia = tipologie_contratti.id
+		LEFT JOIN qualifiche_contratti ON contratti.id_qualifica = qualifiche_contratti.id
+		LEFT JOIN tipologie_durate_contratti ON contratti.id_tipologia_durata = tipologie_durate_contratti.id
+		LEFT JOIN tipologie_orari_contratti ON contratti.id_tipologia_orario = tipologie_orari_contratti.id
+	WHERE data_fine_rapporto IS NOT NULL AND (
+		( data_fine IS NOT NULL )
+		OR
+		( data_fine IS NOT NULL AND data_fine < CURDATE() )
+	)
+;
+
+--| 090000007700
+
+-- correlazioni_articoli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `correlazioni_articoli_view`;
+
+--| 090000007701
+
+-- correlazioni_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-26 12:08 Fabio Mosti
+CREATE OR REPLACE VIEW `correlazioni_articoli_view` AS
+	SELECT
+		correlazioni_articoli.id,
+		correlazioni_articoli.id_tipologia,
+		tipologie_correlazioni_articoli.nome AS tipologia,
+		correlazioni_articoli.id_articolo,
+		correlazioni_articoli.id_prodotto_correlato,
+		correlazioni_articoli.id_articolo_correlato,
+		correlazioni_articoli.ordine,
+		correlazioni_articoli.se_upselling,
+		correlazioni_articoli.se_crosselling,
+		concat(
+			correlazioni_articoli.id_articolo,
+			' / ',
+			tipologie_correlazioni_articoli.nome,
+			' / ',
+			coalesce(
+				correlazioni_articoli.id_prodotto_correlato,
+				correlazioni_articoli.id_articolo_correlato
+			)
+		) AS __label__
+	FROM correlazioni_articoli
+		LEFT JOIN tipologie_correlazioni_articoli ON tipologie_correlazioni_articoli.id = correlazioni_articoli.id_tipologia
+;
+
+--| 090000007800
+
+-- costi_contratti
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `costi_contratti_view`;
+
+--| 090000007801
+
+-- costi_contratti
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 15:55 Fabio Mosti
+CREATE OR REPLACE VIEW `costi_contratti_view` AS
+	SELECT
+		costi_contratti.id,
+		costi_contratti.id_contratto,
+		costi_contratti.id_tipologia_inps_attivita,
+		tipologie_inps_attivita.nome AS tipologia_inps_attivita,
+		costi_contratti.costo_orario,
+		CONCAT( 
+			costi_contratti.id_contratto,
+			' / ',
+			tipologie_inps_attivita.nome,
+			' / ',
+			costi_contratti.costo_orario
+		) AS __label__
+	FROM costi_contratti
+		LEFT JOIN tipologie_inps_attivita ON tipologie_inps_attivita.id = costi_contratti.id_tipologia_inps_attivita
+;
+
+--| 090000008000
+
+-- coupon_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `coupon_view`;
+
+--| 090000008001
+
+-- coupon_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 15:55 Fabio Mosti
+CREATE OR REPLACE VIEW `coupon_view` AS
+	SELECT
+		coupon.id,
+		coupon.nome,
+		coupon.timestamp_inizio,
+		from_unixtime( coupon.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
+		coupon.timestamp_fine,
+		from_unixtime( coupon.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
+		coupon.sconto_percentuale,
+		coupon.sconto_fisso,
+		coupon.se_multiuso,
+		coupon.se_globale,
+		coupon.nome AS __label__
+	FROM coupon
+;
+
+--| 090000008200
+
+-- coupon_categorie_prodotti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `coupon_categorie_prodotti_view`;
+
+--| 090000008201
+
+-- coupon_categorie_prodotti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 16:12 Fabio Mosti
+CREATE OR REPLACE VIEW `coupon_categorie_prodotti_view` AS
+	SELECT
+		coupon_categorie_prodotti.id,
+		coupon_categorie_prodotti.id_coupon,
+		coupon_categorie_prodotti.id_categoria,
+		categorie_prodotti.nome AS categoria,
+		CONCAT(
+			coupon.nome,
+			' / ',
+			categorie_prodotti.nome
+		) AS __label__
+	FROM coupon_categorie_prodotti
+		LEFT JOIN coupon ON coupon_categorie_prodotti.id_coupon = coupon.id
+		LEFT JOIN categorie_prodotti ON categorie_prodotti.id = coupon_categorie_prodotti.id_categoria
+;
+
+--| 090000008400
+
+-- coupon_listini_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `coupon_listini_view`;
+
+--| 090000008401
+
+-- coupon_listini_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 16:40 Fabio Mosti
+CREATE OR REPLACE VIEW `coupon_listini_view` AS
+	SELECT
+		coupon_listini.id,
+		coupon_listini.id_coupon,
+		coupon_listini.id_listino,
+		listini.nome AS listino,
+		CONCAT(
+			coupon.nome,
+			' / ',
+			listini.nome
+		) AS __label__
+	FROM coupon_listini
+		LEFT JOIN coupon ON coupon_categorie_prodotti.id_coupon = coupon.id
+		LEFT JOIN listini ON listini.id = coupon_listini.id_listino
+;
+
+--| 090000008600
+
+-- coupon_marchi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `coupon_marchi_view`;
+
+--| 090000008601
+
+-- coupon_marchi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 16:40 Fabio Mosti
+CREATE OR REPLACE VIEW `coupon_marchi_view` AS
+	SELECT
+		coupon_marchi.id,
+		coupon_marchi.id_coupon,
+		coupon_marchi.id_marchio,
+		marchi.nome AS marchio,
+		CONCAT(
+			coupon.nome,
+			' / ',
+			marchi.nome
+		) AS __label__
+	FROM coupon_listini
+		LEFT JOIN coupon ON coupon_categorie_prodotti.id_coupon = coupon.id
+		LEFT JOIN marchi ON marchi.id = coupon_marchi.id_marchio
+;
+
+--| 090000008800
+
+-- coupon_prodotti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `coupon_prodotti_view`;
+
+--| 090000008801
+
+-- coupon_prodotti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 17:00 Fabio Mosti
+CREATE OR REPLACE VIEW `coupon_prodotti_view` AS
+	SELECT
+		coupon_prodotti.id,
+		coupon_prodotti.id_coupon,
+		coupon_prodotti.id_prodotto,
+		prodotti.nome AS prodotto,
+		CONCAT(
+			coupon.nome,
+			' / ',
+			prodotti.nome
+		) AS __label__
+	FROM coupon_listini
+		LEFT JOIN coupon ON coupon_categorie_prodotti.id_coupon = coupon.id
+		LEFT JOIN prodotti ON prodotti.id = coupon_prodotti.id_prodotto
+;
+
+--| 090000009000
+
+-- coupon_stagioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `coupon_stagioni_view`;
+
+--| 090000009001
+
+-- coupon_stagioni_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 17:06 Fabio Mosti
+CREATE OR REPLACE VIEW `coupon_stagioni_view` AS
+	SELECT
+		coupon_stagioni.id,
+		coupon_stagioni.id_coupon,
+		coupon_stagioni.id_stagione,
+		stagioni.nome AS stagione,
+		CONCAT(
+			coupon.nome,
+			' / ',
+			stagioni.nome
+		) AS __label__
+	FROM coupon_listini
+		LEFT JOIN coupon ON coupon_categorie_prodotti.id_coupon = coupon.id
+		LEFT JOIN stagioni ON stagioni.id = coupon_stagioni.id_stagione
+;
+
+--| 090000009200
+
+-- cron_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `cron_view`;
+
+--| 090000009201
+
+-- cron_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-30 11:57 Fabio Mosti
+CREATE OR REPLACE VIEW cron_view AS
+	SELECT
+		cron.id,
+		cron.minuto,
+		cron.ora,
+		cron.giorno_del_mese,
+		cron.mese,
+		cron.giorno_della_settimana,
+		cron.settimana,
+		cron.task,
+		cron.iterazioni,
+		cron.delay,
+		cron.token,
+		cron.timestamp_esecuzione,
+		CONCAT(
+			' / ',
+			coalesce( cron.minuto, '*' ),
+			' / ',
+			coalesce( cron.ora, '*' ),
+			' / ',
+			coalesce( cron.giorno_del_mese, '*' ),
+			' / ',
+			coalesce( cron.mese, '*' ),
+			' / ',
+			coalesce( cron.giorno_della_settimana, '*' ),
+			' / ',
+			coalesce( cron.settimana, '*' ),
+			' / ',
+			cron.task
+		) AS __label__
+	FROM cron
+;
+
+--| 090000009400
+
+-- date_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `date_view`;
+
+--| 090000009401
+
+-- date_view
+-- tipologia: tabella gestita
+-- verifica: 2021-07-01 08:40 Fabio Mosti
+CREATE OR REPLACE VIEW date_view AS
+	SELECT
+		date.id,
+		date.id_tipologia,
+		tipologie_date.nome AS tipologia,
+		date.id_evento,
+		eventi.nome AS evento,
+		date.id_luogo,
+		luoghi.nome AS luogo,
+		date.nome,
+		date.timestamp_inizio,
+		from_unixtime( date.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
+		date.timestamp_fine,
+		from_unixtime( date.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
+		CONCAT(
+			eventi.nome,
+			' / ',
+			luoghi.nome,
+			' / ',
+			date.nome,
+			' / ',
+			from_unixtime( date.timestamp_inizio, '%Y-%m-%d' ),
+			' / ',
+			from_unixtime( date.timestamp_fine, '%Y-%m-%d' )
+		) AS __label__
+	FROM date
+		LEFT JOIN tipologie_date ON tipologie_date.id = date.id_tipologia
+		LEFT JOIN eventi ON eventi.id = date.id_evento
+		LEFT JOIN luoghi ON luoghi.id = date.id_luogo
+;
+
+--| 090000009800
+
+-- documenti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `documenti_view`;
+
+--| 090000009801
+
+-- documenti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `documenti_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		concat(
+			tipologie.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+;
+
+--| 090000010000
+
+-- documenti_articoli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `documenti_articoli_view`;
+
+--| 090000010001
+
+-- documenti_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-10 16:54 Fabio Mosti
+CREATE OR REPLACE VIEW `documenti_articoli_view` AS
+    SELECT
+		documenti_articoli.id,
+		documenti_articoli.id_genitore,
+		documenti_articoli.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti_articoli.ordine,
+		documenti_articoli.id_documento,
+		documenti_articoli.data,
+		documenti_articoli.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti_articoli.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti_articoli.id_reparto,
+		documenti_articoli.id_progetto,
+		documenti_articoli.id_todo,
+		documenti_articoli.id_attivita,
+		documenti_articoli.id_articolo,
+		documenti_articoli.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti_articoli.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti_articoli.id_udm,
+		documenti_articoli.quantita,
+		documenti_articoli.id_listino,
+		documenti_articoli.id_valuta,
+		valute.utf8 AS valuta,
+		documenti_articoli.importo_netto_totale,
+		documenti_articoli.id_iva,
+		iva.nome AS iva,
+		documenti_articoli.nome,
+		concat(
+			documenti_articoli.data,
+			' / ',
+			tipologie_documenti.nome,
+			' / ',
+			documenti_articoli.quantita,
+			' x ',
+			documenti_articoli.id_articolo,
+			' / ',
+			documenti_articoli.nome,
+			' / ',
+			documenti_articoli.importo_netto_totale,
+			' ',
+			valute.utf8
+			' +IVA ',
+			iva.aliquota,
+			' % '
+		) AS __label__
+	FROM
+		documenti_articoli
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
+		LEFT JOIN iva ON iva.id = documenti_articoli.id_iva
+;
+
+--| 090000015000
+
+-- file_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `file_view`;
+
+--| 090000015001
+
+-- file_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-10 16:54 Fabio Mosti
+CREATE OR REPLACE VIEW `file_view` AS
+	SELECT
+		file.id,
+		file.ordine,
+		file.id_ruolo,
+		ruoli_file.nome AS ruolo,
+		file.id_anagrafica,
+		file.id_prodotto,
+		file.id_articolo,
+		file.id_categoria_prodotti,
+		file.id_todo,
+		file.id_pagina,
+		file.id_template_mail,
+		file.id_notizia,
+		file.id_categoria_notizie,
+		file.id_risorsa,
+		file.id_categoria_risorse,
+		file.id_lingua,
+		lingue.iso31661alpha3 AS lingua,
+		file.path,
+		file.url,
+		file.nome,
+		concat(
+			ruoli_file.nome,
+			' # ',
+			file.ordine,
+			' / ',
+			file.nome,
+			' / ',
+			coalesce(
+				file.path,
+				file.url
+			)
+		) AS __label__
+	FROM file
+		LEFT JOIN ruoli_file ON ruoli_file.id = file.id_ruolo
+;
+
+--| 090000015200
+
+-- gruppi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `gruppi_view`;
+
+--| 090000015201
+
+-- gruppi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-10 18:07 Fabio Mosti
+CREATE OR REPLACE VIEW `gruppi_view` AS
+	SELECT
+		gruppi.id,
+		gruppi.id_genitore,
+		gruppi.id_struttura,
+		gruppi.nome,
+		gruppi_path( gruppi.id ) AS __label__
+	FROM gruppi
 ;
 
 --| FINE FILE
