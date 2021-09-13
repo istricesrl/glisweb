@@ -466,3 +466,29 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'reparti.form' ) )
 	);
+
+		// vista coupon
+	$p['coupon.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'coupon' ),
+	    'h1'			=> array( $l		=> 'coupon' ),
+	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_coupon.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'coupon.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'coupon' ),
+								'priority'	=> '025' ) ) )
+	);
+
+	// gestione listini
+	$p['coupon.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'coupon.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'coupon.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'coupon.form'		) )
+	);

@@ -1,8 +1,12 @@
-{% macro righe( table, subtable, legend, site, page, pages, lang, etc, request, session, mastro_scarico, mastro_carico ) %}
+{% macro righe( table, subtable, legend, site, page, pages, lang, etc, request, session, mastro_scarico, mastro_carico, req, articolo ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
-	{% set require = 0 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {% if req %}
+    {% set require = req %}
+    {% else %}
+	{% set require = 0 %}
+    {% endif %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
     {{ frm.subformLegend( subtable, legend ) }}
     {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
@@ -28,7 +32,8 @@
     {{ frm.input( table, subtable, i, 'id_mastro_destinazione', '', '', request, mastro_carico, 'hidden', '', '', disabled  ) }}   
     {{ frm.input( table, subtable, i, 'id_emittente', '', '', request, etc.id_emittente, 'hidden', '', '', disabled  ) }}
     {{ frm.input( table, subtable, i, 'id_destinatario', '', '', request, request.todo.id_cliente, 'hidden', '', '', disabled  ) }}
-    {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request, '0', 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request, '1', 'hidden', '', '', disabled  ) }}
+    {{ frm.input( table, subtable, i, 'quantita', '', '', request, '1', 'hidden', '', disabled ) }}
 
 	{% if request[ table ][ 'data' ] %}
     {{ frm.input( table, subtable, i, 'data_lavorazione', '', '', request, request[ table ][ 'data' ], 'hidden', '', '', disabled  ) }}
@@ -43,12 +48,17 @@
             <span class="label-top">descrizione</span>
             {{ frm.inputRequired( table, subtable, i, 'nome', '', '', request, '', '', '', disabled ) }}
         </div>
-        
+        {% if articolo %}
+        <div class="col-4">
+            <span class="label-top">articolo</span>
+            {{ frm.selectBox( table, subtable, i, 'id_articolo', '', etc.select.articoli, request, '', '', '', '', '', '', '', '', '', page, pages, ietf, 'articoli', disabled ) }}
+        </div>  
+         {% endif %}   
         {% if not r.matricola %}
             <div class="col-2">
             <span class="label-top">matricola</span>
 
-                 {{ frm.selectBox( table, subtable, i, 'matricola', '', etc.select.matricole, request, '', '', '', '', '', '', '', '', '', page, pages, ietf, 'matricole', disabled ) }}
+                 {{ frm.selectBox( table, subtable, i, 'matricola', '', etc.select.articoli, request, '', '', '', '', '', '', '', '', '', page, pages, ietf, 'matricole', disabled ) }}
             </div>
 
         {% else %}
@@ -63,10 +73,8 @@
              <button id="{{ i }}" type="button" onclick="$('#genitore').val( $( this ).parent().parent().parent().attr('id'))" class=" btn-secondary btn" data-toggle="modal" data-target="#genera_matricola">genera matricola</button>
         </div>
         {% endif %}
-	    <div class="col-1">
-		    <span class="label-top">quantità</span>
-		    {{ frm.inputRequired( table, subtable, i, 'quantita', '', '', request, '1', 'number', '', disabled, '1' ) }}
-	    </div>
+
+		  
 		<div class="w-100 d-block d-md-none m-0"></div>
 		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
