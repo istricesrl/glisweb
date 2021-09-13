@@ -70,6 +70,11 @@
             $ct['etc']['totale_iva'] += $ct['etc']['select']['iva'] * $tot /100;
         }
     }
+        if( ( $ct['etc']['totale'] +  $ct['etc']['totale_iva']  ) <  $ct['etc']['sconto'] ){
+            $ct['etc']['sconto'] = $ct['etc']['totale'] +  $ct['etc']['totale_iva'] ;
+            $ct['etc']['documento']['sconto'] = $ct['etc']['sconto'];
+        }
+
     }
 
 	// macro di default

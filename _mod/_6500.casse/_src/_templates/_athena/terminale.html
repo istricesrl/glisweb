@@ -154,7 +154,7 @@
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td class="text-right"><h3>Totale scontato</h3></td>
-                                                <td class="text-right"><h3>€ {{ (etc.totale + etc.totale_iva - etc.sconto)|number_format(2, ',', '.')  }}</h3></td>
+                                                <td class="text-right"><h3>€ {% if (etc.totale + etc.totale_iva - etc.sconto) > 0 %}{{ (etc.totale + etc.totale_iva - etc.sconto)|number_format(2, ',', '.')  }}{% else %} 0,00{% endif %}</h3></td>
                                             </tr> 
                                             {% endif %}                                        
                                     {% endif %}
