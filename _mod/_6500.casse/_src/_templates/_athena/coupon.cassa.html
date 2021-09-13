@@ -8,7 +8,7 @@
 {# DEFINIZIONI #}
 
 {% set ietf = localization.language.ietf %}
-{% set table = form.table %}
+{% set table = 'coupon' %}
 {# ACCOUNT #}
 {% if session.account.id %}
     {% set account = session.account.id %}
@@ -158,8 +158,11 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
+        <div class="col">
+            <h3>{{ request.documenti.__label__ }}</h3>
+        </div>
 		{# SUBFORM GRUPPI #}
-	    {{ sub.righe( table, 'documenti_articoli', 'articoli reso', site, page, pages, ietf, etc, request, session, '' , etc.mastro ) }}
+	    {{ sub.righe( table, 'documenti_articoli', 'articoli reso', site, page, pages, ietf, etc, request, session, '' , etc.mastro, -1, 1 ) }}
 	
 
         <div class="col mt-3 cassa d-flex justify-content-between" style="margin-bottom: 1%;" >   
@@ -174,7 +177,7 @@
             {% endif %}
         </div>
         <div>
-            <button class="btn btn-lg btn-secondary">salva</button>
+            <button class="btn btn-lg btn-secondary" onclick="submitFormOkay = true;">salva</button>
         </div>
     </div>
     <!--
