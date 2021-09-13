@@ -8,12 +8,23 @@
 {# DEFINIZIONI #}
 
 {% set ietf = localization.language.ietf %}
-
+{% set table = form.table %}
 {# ACCOUNT #}
 {% if session.account.id %}
     {% set account = session.account.id %}
 {% else %}
     {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id or session.coupon %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
 {% endif %}
 
 {% block header %}
@@ -35,11 +46,14 @@
 {% endblock %}
 {% block main %}
 <form  {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
-
+    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+   
 <section>
 
     <legend>genera coupon</legend>
-    {% set table = 'coupon' %}
+   
     <div class="form-group form-row">
         <div class="col-12 col-md-2">
             <span class="label-top">coupon</span>
@@ -67,12 +81,8 @@
         </div>
         
 
-        <div class="col-auto col-form-label">
-            
-            <div class="form-check">
-                {{ frm.checkbox( table, '', '', 'se_globale', 'globale', '', request, 1 ) }}
-            </div>
-        </div>
+
+                {{ frm.checkbox( table, '', '', 'se_globale', '', '', request, 1, '', '', 'hidden'  ) }}
 
     </div>
 
@@ -85,10 +95,25 @@
         </div>
     </div>
 </fieldset>
-<button class="btn btn-lg btn-secondary">salva</button>
-{% if request[table].id %}
-<button type="button" class="btn btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_4100.prodotti/_src/_api/_print/_stampa.coupon.pdf.php?id={{ request[table].id }}', '_blank')">stampa</button>
-{% endif %}
+<div class="col mt-3 cassa d-flex justify-content-between" style="margin-bottom: 1%;" >
+     
+
+    
+    <div>
+        {% if request[table].id %}
+        <button type="button" class="btn btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
+        <button type="button" class="btn btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_4100.prodotti/_src/_api/_print/_stampa.coupon.pdf.php?id={{ request[table].id }}', '_blank')">stampa</button>
+        {% endif %}
+    </div>
+    <div>
+        {% if request[table].id %}
+        <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=coupon&__delete__[id]={{ session.coupon }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
+        {% endif %}
+    </div>
+    <div>
+        <button class="btn btn-lg btn-secondary">salva</button>
+    </div>
+</div>
 <!--
 <legend>reso</legend>
 {# SUBFORM GRUPPI #}
@@ -98,5 +123,66 @@
 
   
 
+</section>
+
+<section>
+<legend>reso articoli</legend>
+
+    {% set table = 'documenti' %}
+
+    {# TIPO DI METODO E ATTIVITA' SVOLTA #}
+    {% if request[ table ].id  %}
+        {% set method = 'update' %}
+        {% set activity = 'aggiornamento' %}
+        {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+    {% else %}
+        {% set method = 'post' %}
+        {% set activity = 'inserimento' %}
+        {% set legend = 'inserimento nuovo oggetto' %}
+    {% endif %}
+    <form  {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-reso" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+        {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+		<input type="hidden" id="id" name="{{ table }}[id]" value="{{request.documenti.id}}">
+		<input type="hidden" id="id_todo" name="{{ table }}[id_todo]" value="{{ request.todo.id }}">
+		<input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ etc.numero }}">
+		<input type="hidden" id="id_tipologia" name="{{ table }}[id_tipologia]" value="{{ etc.id_tipologia }}">
+		<input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ etc.id_emittente }}">
+		<input type="hidden" id="id_contatto" name="{{ table }}[id_contatto]" value="{{ session.contatto.id }}">
+		<input type="hidden" id="id_destinatario" name="{{ table }}[id_destinatario]" value="{{ request.todo.id_cliente }}">
+		<input type="hidden" id="data" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d')}}">
+		
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		{# SUBFORM GRUPPI #}
+	    {{ sub.righe( table, 'documenti_articoli', 'articoli reso', site, page, pages, ietf, etc, request, session, '' , etc.mastro ) }}
+	
+
+        <div class="col mt-3 cassa d-flex justify-content-between" style="margin-bottom: 1%;" >   
+        <div>
+            {% if request[table].id %}
+            <button type="button" class="btn btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset_reso__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
+             {% endif %}
+        </div>
+        <div>
+            {% if request[table].id %}
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{ request[table].id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
+            {% endif %}
+        </div>
+        <div>
+            <button class="btn btn-lg btn-secondary">salva</button>
+        </div>
+    </div>
+    <!--
+    <legend>reso</legend>
+    {# SUBFORM GRUPPI #}
+    {{ sub.righe( 'documenti', 'documenti_articoli', 'articoli reso', site, page, pages, ietf, etc, request, session, '', etc.mastro ) }}
+    -->
+    </form>
+    
 </section>
 {% endblock %}

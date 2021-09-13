@@ -18,7 +18,6 @@
      * @file
      *
      */
-
      if( isset( $_REQUEST['__close__'] ) && !empty($_REQUEST['__close__'] ) ){
 
         $update = mysqlQuery( 
@@ -29,6 +28,7 @@
                 array( 's' => $_REQUEST['__close__'] ) ) );
 
      }
+
 
    
     $ct['page']['contents']['metro'][NULL][] = array(
@@ -71,6 +71,8 @@
         array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
 
+
+
     // riapertura scontrino prima della stampa
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__open__'] ) ){
         $update = mysqlQuery( 
@@ -89,42 +91,7 @@
         
     }
 
-    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] )  ){
-        // righe del documento
-         $ct['etc']['righe'] = mysqlQuery(
-             $cf['mysql']['connection'],
-             'SELECT documenti_articoli_view.*, attivita.id as id_attivita, attivita.ore, progetti.nome AS progetto FROM documenti_articoli_view '.
-             'LEFT JOIN attivita ON attivita.id_documenti_articoli = documenti_articoli_view.id '.
-             'LEFT JOIN progetti ON progetti.id = attivita.id_progetto '
-             .'WHERE documenti_articoli_view.id_documento = ?',
-             array( array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) 
-         );
-     
-         if( sizeof( $ct['etc']['righe'] ) > 0 ){
-     
-             $ct['etc']['totale_parziale'] = array();
-             $ct['etc']['totale'] = 0;
-     
-             foreach( $ct['etc']['righe'] as $r ){
-                 if( !isset($ct['etc']['totale_parziale'][ $r['id_iva'] ]) ){ $ct['etc']['totale_parziale'][ $r['id_iva'] ] = 0;}
-                 $ct['etc']['totale_parziale'][ $r['id_iva'] ] += $r['importo_netto_totale'] * $r['quantita'];
-                 $ct['etc']['totale'] += $r['importo_netto_totale'] * $r['quantita'];
-             }
-     
-             $ct['etc']['totale_iva'] = 0;
-     
-             foreach( $ct['etc']['totale_parziale'] as $iva => $tot){
-     
-                     // tendina  iva
-                     $ct['etc']['select']['iva'] = mysqlSelectValue(
-                         $cf['mysql']['connection'],
-                         'SELECT aliquota FROM iva_view WHERE id = ?', array( array( 's' => $iva  ) )
-                     );
-                 $ct['etc']['totale_iva'] += $ct['etc']['select']['iva'] * $tot /100;
-             }
-         }
-     
-     }
+
 
     // tendina  reparti
 	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
@@ -149,6 +116,13 @@
         $_REQUEST[ $ct['form']['table'] ]['__reparto__'] = 0;
     }
 
+    if(  isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST['__cpon__'] ) && !empty( $_REQUEST['__cpon__'] ) ){
+        
+        $_REQUEST[ $ct['form']['table'] ]['__comando__']  = $_REQUEST['__cpon__'];
+        $_REQUEST[ $ct['form']['table'] ]['__operazione__'] = 1;
+        $_REQUEST[ $ct['form']['table'] ]['__reparto__'] = 0;
+    }
+
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['__comando__'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['__comando__']  ) ){
 
         $comando = explode( '.', $_REQUEST[ $ct['form']['table'] ]['__comando__'] );
@@ -167,7 +141,12 @@
             //print_r('tracking');
         } elseif( $comando[0] == 'CPON'){
             // gestisco il coupon
-            $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = $ct['etc']['righe'];
+            $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT * FROM documenti_articoli_view WHERE documenti_articoli_view.id_documento = ?',
+                array( array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) 
+            );
+        
             $_REQUEST[ $ct['form']['table'] ]['coupon'] = $_REQUEST[ $ct['form']['table'] ]['__comando__']; 
             // controllo validità e valore coupon
 
@@ -175,11 +154,10 @@
             //print_r($_REQUEST[ $ct['form']['table'] ]);
             //
             $ct['etc']['sconto'] = calcolaCoupon( $cf['mysql']['connection'], array(),   $_REQUEST[ $ct['form']['table'] ] );
-            if( !empty($ct['etc']['sconto']) && $ct['etc']['sconto'] > 0 ){
 
                 mysqlQuery($cf['mysql']['connection'], 'UPDATE documenti SET coupon = ? WHERE id = ?',
                 array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['coupon']), array('s' => $_REQUEST['documenti']['id']) ) );
-            }
+
 
             //print_r('coupon');
         } elseif( $comando[0] == 'TODO' ){
@@ -439,6 +417,65 @@
 
     }
 
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] )  ){
+
+        if( isset( $_REQUEST['__del_cpon__'] ) ){
+            $update = mysqlQuery( 
+                $cf['mysql']['connection'], 
+                'UPDATE documenti SET coupon = NULL WHERE id = ?',
+                array( 
+                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
+
+        $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
+        'SELECT * FROM documenti WHERE id = ? ',
+        array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
+
+                 
+         }
+        // righe del documento
+         $ct['etc']['righe'] = mysqlQuery(
+             $cf['mysql']['connection'],
+             'SELECT documenti_articoli_view.*, attivita.id as id_attivita, attivita.ore, progetti.nome AS progetto FROM documenti_articoli_view '.
+             'LEFT JOIN attivita ON attivita.id_documenti_articoli = documenti_articoli_view.id '.
+             'LEFT JOIN progetti ON progetti.id = attivita.id_progetto '
+             .'WHERE documenti_articoli_view.id_documento = ?',
+             array( array( 's' =>  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) 
+         );
+     
+
+
+         if( sizeof( $ct['etc']['righe'] ) > 0 ){
+     
+             $ct['etc']['totale_parziale'] = array();
+             $ct['etc']['totale'] = 0;
+     
+             foreach( $ct['etc']['righe'] as $r ){
+                 if( !isset($ct['etc']['totale_parziale'][ $r['id_iva'] ]) ){ $ct['etc']['totale_parziale'][ $r['id_iva'] ] = 0;}
+                 $ct['etc']['totale_parziale'][ $r['id_iva'] ] += $r['importo_netto_totale'] * $r['quantita'];
+                 $ct['etc']['totale'] += $r['importo_netto_totale'] * $r['quantita'];
+             }
+     
+             $ct['etc']['totale_iva'] = 0;
+     
+             foreach( $ct['etc']['totale_parziale'] as $iva => $tot){
+     
+                     // tendina  iva
+                     $ct['etc']['select']['iva'] = mysqlSelectValue(
+                         $cf['mysql']['connection'],
+                         'SELECT aliquota FROM iva_view WHERE id = ?', array( array( 's' => $iva  ) )
+                     );
+                 $ct['etc']['totale_iva'] += $ct['etc']['select']['iva'] * $tot /100;
+             }
+         }
+     
+     }
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['coupon'] ) && (!isset($ct['etc']['sconto']) || empty($ct['etc']['sconto']))  ){
+        
+        $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = $ct['etc']['righe'];
+        $ct['etc']['sconto'] = calcolaCoupon( $cf['mysql']['connection'], array(),   $_REQUEST[ $ct['form']['table'] ] );
+       
+     }
+
     // tendina tipologie documenti
 	$ct['etc']['select']['tipologie_documenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -544,3 +581,4 @@ if( !isset( $_REQUEST['documenti']['scadenze'] ) && isset( $_REQUEST['documenti'
 
     // macro per l'apertura dei modal
     require DIR_SRC_INC_MACRO . '_default.tools.php';
+
