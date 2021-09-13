@@ -10,6 +10,10 @@
         unset( $_SESSION['assistenza']['id_todo_ritiro'] );
     }
 
+	if( isset( $_REQUEST['anagrafica'] )  ){
+
+	}
+
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
         $_SESSION['contatto'] = $_REQUEST[ $ct['form']['table'] ];
     }
@@ -43,6 +47,6 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_contatti_view '
 	);
-
+	
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

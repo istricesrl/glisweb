@@ -297,6 +297,7 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
     $ct['etc']['tipologia_attivita'] = mysqlSelectValue(  $cf['mysql']['connection'],
         'SELECT id FROM tipologie_attivita WHERE nome = "diagnosi"');
 
+
    // macro di default
    require DIR_SRC_INC_MACRO . '_default.view.php';
 
