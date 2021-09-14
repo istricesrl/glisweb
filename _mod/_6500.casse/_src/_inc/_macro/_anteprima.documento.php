@@ -24,7 +24,7 @@
 
 
 
-    $ct['etc']['documento']['righe'] = mysqlQuery(
+    $ct['etc']['documento']['documenti_articoli'] = mysqlQuery(
 	    $cf['mysql']['connection'],
 	    'SELECT documenti_articoli_view.*, attivita.ore, attivita.id_progetto, progetti.nome AS progetto FROM documenti_articoli_view '.
         'LEFT JOIN attivita ON attivita.id_documenti_articoli = documenti_articoli_view.id '.
@@ -33,15 +33,25 @@
         array( array( 's' =>  $_REQUEST['__documenti__']['id'] ) ) 
 	);
 
+    if( !empty($ct['etc']['documento']['coupon']) ){
+        $ct['etc']['sconto'] = calcolaCoupon( $cf['mysql']['connection'], array(), $ct['etc']['documento'] );
+        if( !empty( $ct['etc']['sconto'] ) && $ct['etc']['sconto'] > 0  )  {
+            $ct['etc']['documento']['sconto'] = $ct['etc']['sconto'];
+        }
+       
+    
+    
+    }
+
    // $barcode = str_pad( $ct['etc']['documento']['id'] ,8,"0", STR_PAD_LEFT);
 
 
-    if( sizeof(  $ct['etc']['documento']['righe'] ) > 0 ){
+    if( sizeof(  $ct['etc']['documento']['documenti_articoli'] ) > 0 ){
 
         $ct['etc']['totale_parziale'] = array();
         $ct['etc']['totale'] = 0;
 
-        foreach(  $ct['etc']['documento']['righe']  as &$r ){
+        foreach(  $ct['etc']['documento']['documenti_articoli']  as &$r ){
             if( !isset($ct['etc']['totale_parziale'][ $r['id_iva'] ]) ){ $ct['etc']['totale_parziale'][ $r['id_iva'] ] = 0;}
             $ct['etc']['totale_parziale'][ $r['id_iva'] ] += $r['importo_netto_totale'] * $r['quantita'];
             $ct['etc']['totale'] += $r['importo_netto_totale'] * $r['quantita'];
@@ -60,6 +70,11 @@
             $ct['etc']['totale_iva'] += $ct['etc']['select']['iva'] * $tot /100;
         }
     }
+        if(  isset($ct['etc']['sconto']) && ( $ct['etc']['totale'] +  $ct['etc']['totale_iva']  ) <  $ct['etc']['sconto'] ){
+            $ct['etc']['sconto'] = $ct['etc']['totale'] +  $ct['etc']['totale_iva'] ;
+            $ct['etc']['documento']['sconto'] = $ct['etc']['sconto'];
+        }
+
     }
 
 	// macro di default

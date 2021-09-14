@@ -34,9 +34,9 @@
 {% block main %}
 
 <h1> {{ etc.documento.__label__ }} </h1>
-{% if etc.documento.righe %}
+{% if etc.documento.documenti_articoli %}
     <div class="col-12">
-        {% if etc.documento.righe %}
+        {% if etc.documento.documenti_articoli %}
         <div id="bot" class=" table-responsive box">
             <table class="view-table">
                 <thead>
@@ -49,7 +49,7 @@
                     </tr>
                 </thead>
                 <tbody class="col-12" >
-                    {% for riga in etc.documento.righe %}
+                    {% for riga in etc.documento.documenti_articoli %}
                     <tr>
                     <td class="text-left">{{ riga.id_articolo }} {% if riga.matricola %} <br>{{ riga.label_matricola  }}{% endif %}{% if riga.ore %} <br>+{{ riga.ore }}h su {{ riga.progetto  }}{% endif %}</td>
                     <td class="text-right">{{ riga.reparto }}</td>
@@ -83,6 +83,22 @@
                                 <td class="text-right"><h3>Totale</h3></td>
                                 <td class="text-right"><h3>{{ (etc.totale + etc.totale_iva )|number_format(2, ',', '.')  }}</h3></td>
                             </tr>
+                            {% if etc.documento.coupon %}
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="text-right"><h3>Sconto</h3></td>
+                                <td class="text-right"><h3>€ {{ etc.sconto|number_format(2, ',', '.')  }}</h3></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td class="text-right"><h3>Totale scontato</h3></td>
+                                <td class="text-right"><h3>€ {{ (etc.totale + etc.totale_iva - etc.sconto)|number_format(2, ',', '.')  }}</h3></td>
+                            </tr> 
+                            {% endif %}      
                             <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>

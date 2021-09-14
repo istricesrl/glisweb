@@ -181,7 +181,8 @@
 			CONTROL_FULL => array( 'roots' )
 		),
 		'progetti_anagrafica' => array(
-			CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
 		),
 		'progetti_certificazioni' => array(
             CONTROL_FULL => array( 'roots' )
@@ -237,6 +238,7 @@
 			CONTROL_FULL => array( 'roots' )
 		),
 	    'video' => array(
-			CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
 		)
 	);

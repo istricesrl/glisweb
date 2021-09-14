@@ -78,7 +78,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_contatti.php' ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
-		'etc'		=> array( 'sheets' => array( 'agenda.cassa', 'todo.cassa','contatti', 'terminale' , 'assistenza', 'fornitura', 'ritiro.hardware', 'consegna.hardware' ) ), 
+		'etc'		=> array( 'sheets' => array( 'agenda.cassa', 'todo.cassa','contatti', 'terminale' , 'assistenza', 'fornitura', 'ritiro.hardware', 'consegna.hardware', 'coupon.cassa' ) ), 
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'terminale' ),
 									'priority'	=> '100' ) ) )
 	);
@@ -181,7 +181,17 @@
 		'etc'		=> array( 'sheets'	=>  $p['contatti']['etc']['sheets'] )
 	);
 
-
+	// ritiro hardware
+	$p['coupon.cassa'] = array(
+	    'sitemap'	=> false,
+	    'title'		=> array( $l		=> 'coupon' ),
+	    'h1'		=> array( $l		=> 'coupon' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'coupon.cassa.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_coupon.cassa.php' ),
+	    'parent'	=> array( 'id'		=> 'casse' ),
+	    'auth'		=> array( 'groups'	=> array('roots', 'staff'  ) ),
+		'etc'		=> array( 'sheets'	=>  $p['contatti']['etc']['sheets'] )
+	);
 
     // debug
 	// die( print_r( $p ) );
