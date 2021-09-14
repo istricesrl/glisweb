@@ -14,7 +14,7 @@
     // tabella gestita
     $ct['form']['table'] = 'articoli';
     
-    $ct['view']['table'] = '__report_giacenza_mastri__';
+    $ct['view']['table'] = '__report_giacenze_mastri_quantitativi_gerarchico__';
 
     $ct['view']['data']['__report_mode__'] = 1;
 
@@ -29,7 +29,7 @@
             'mastro' => 'mastro',
             'id_articolo' => 'articolo',
             'descrizione' => 'descrizione',
-            'quantita_totale' => 'quantità',
+            'totale' => 'quantità',
            );
 
         // stili della vista
