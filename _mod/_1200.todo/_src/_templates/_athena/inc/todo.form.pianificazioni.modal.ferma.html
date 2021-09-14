@@ -5,6 +5,7 @@
 
 <script>
     function fermaPianificazione( t ) {
+		$('#btnferma').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var form = $( t ).closest('.modal');
 		if( $('#todo_pianificazioni_0_id').val() ){
 			var id = $('#todo_pianificazioni_0_id').val();
@@ -48,7 +49,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="fermaPianificazione(this);">ferma</button>
+		<button type="button" id="btnferma" class="btn btn-secondary btn-sm" onclick="fermaPianificazione(this);">ferma</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>
