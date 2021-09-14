@@ -235,9 +235,12 @@
      * @todo documentare
      *
      */
-	function path2custom( $p ) {
-        return $_SERVER['DOCUMENT_ROOT'] . str_replace( '_', NULL, str_replace( $_SERVER['DOCUMENT_ROOT'], NULL, $p ) );
-	}
+    function path2custom( $p, $s = NULL ) {
+        $p = str_replace( $_SERVER['DOCUMENT_ROOT'], '§', $p );
+        $p = str_replace(  '_', $s, $p );
+        $p = str_replace( '§', $_SERVER['DOCUMENT_ROOT'], $p );
+        return $p;
+    }
 
     /**
      *
@@ -245,7 +248,7 @@
      *
      */
 	function glob2custom( $p ) {
-	    return $_SERVER['DOCUMENT_ROOT'] . str_replace( '_', '{,_}', str_replace( $_SERVER['DOCUMENT_ROOT'], NULL, $p ) );
+        return path2custom( $p, '{,_}' );
 	}
 
     /**
