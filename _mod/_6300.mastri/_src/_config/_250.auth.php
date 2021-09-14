@@ -34,6 +34,18 @@
         '__report_giacenza_mastri_orari__' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
+        ),
+        '__report_mastri_quantitativi_gerarchico__' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        '__report_giacenze_mastri_quantitativi_gerarchico__' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ) ,
+        '__report_mastri_articoli__' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         )
         )
 	);
