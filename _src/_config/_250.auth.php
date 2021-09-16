@@ -234,6 +234,14 @@
 			CONTROL_FULL => array( 'roots' ),
 			CONTROL_FILTERED => array( 'staff' )
 		),
+		'todo_archivio' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
+		'todo_completa' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
 		'turni' => array(
 			CONTROL_FULL => array( 'roots' )
 		),

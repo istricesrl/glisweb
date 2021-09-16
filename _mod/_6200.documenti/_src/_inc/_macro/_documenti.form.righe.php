@@ -46,6 +46,8 @@
         'data_lavorazione' => 'data',
         'nome' => 'nome',
 		'id_articolo' => 'articolo',
+		'mastro_scarico' => 'scarico',
+		'mastro_carico' => 'carico',
         'importo_netto_totale' => 'importo netto',
         'quantita' => 'quantità',
 		'totale_riga' => 'totale',

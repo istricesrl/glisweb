@@ -99,7 +99,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM todo_view '
+	    'SELECT id, __label__ FROM todo_completa_view '
 	);
 
 	// tendina matricole

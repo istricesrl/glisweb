@@ -72,7 +72,7 @@
 
             }     
             
-           // inserisco una richiesta di ripopolamento per attivita_view_static e todo_view_static
+           // inserisco una richiesta di ripopolamento per attivita_view_static e todo_completa_view
            mysqlQuery(
                 $cf['mysql']['connection'],
                 'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',

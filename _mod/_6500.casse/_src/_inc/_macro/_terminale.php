@@ -43,8 +43,9 @@
         'modal' => array( 'id' => 'carico_ore', 'include' => 'inc/carico.ore.mastro.todo.html' )
         );
 
-    // mastro di scarico [magazzino]
-    $ct['etc']['mastro'] = NULL;
+    // mastro di carico [magazzino]
+    $ct['etc']['mastro'] =  mysqlSelectValue(  $cf['mysql']['connection'],
+    'SELECT id FROM mastri WHERE nome = "magazzino a vista"');
     // mastro di carico attivta[magazzino]
     $ct['etc']['mastro_attivita'] = NULL;
 
@@ -163,7 +164,7 @@
         } elseif( $comando[0] == 'TODO' ){
             // la todo
 
-            $ct['etc']['todo'] =  mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ? ', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
+            $ct['etc']['todo'] =  mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ? ', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
            
             // attività concluse della todo
             $ct['etc']['attivita_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
