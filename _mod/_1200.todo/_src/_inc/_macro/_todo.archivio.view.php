@@ -21,7 +21,7 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-    $ct['view']['table'] = 'todo';
+    $ct['view']['table'] = 'todo_archivio';
     
     // id della vista
    # $ct['view']['id'] = md5( $ct['view']['table'].'archivio' );
@@ -32,9 +32,9 @@
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'data_programmazione' => 'pianificato',
-	    'priorita' => 'priorità',
-	    'nome' => 'attività',
+#	    'data_programmazione' => 'pianificato',
+#	    'priorita' => 'priorità',
+	    'nome' => 'titolo',
 	    'cliente' => 'da fare per',
 	    'responsabile' => 'assegnato a',
 	    'progresso' => 'ore',
@@ -46,12 +46,12 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    'id_priorita' => 'd-none',
+		'completato' => 'd-none',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
 	    'priorita' => 'text-left',
 	    'responsabile' => 'text-left no-wrap d-none d-sm-table-cell',
-	    'progresso' => 'text-right no-wrap d-none d-sm-table-cell',
-	    'completato' => 'text-left'
+	    'progresso' => 'text-right no-wrap d-none d-sm-table-cell'
 	);
 
     // inclusione filtri speciali

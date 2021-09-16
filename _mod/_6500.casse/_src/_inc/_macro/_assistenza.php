@@ -76,7 +76,7 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
 
    
 
-    $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
+    $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $todo) ));
     $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $todo) ));
     $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $todo) ));
     
@@ -84,7 +84,7 @@ if( (isset($_REQUEST['__assistenza__']) && explode( '.', $_REQUEST['__assistenza
   
      $ct['form']['table'] = 'todo';
     if( !isset( $_REQUEST['todo']  ) ){
-        $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
+        $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $todo) ));
         if( !empty( $_REQUEST['todo']['timestamp_completamento'] ) ){
             $_REQUEST['todo']['timestamp_completamento'] = date( 'Y-m-d\TH:i', $_REQUEST['todo']['timestamp_completamento']) ;
         }    
@@ -258,14 +258,14 @@ if( isset( $_SESSION['assistenza']['id_cliente'] ) && isset( $_SESSION['assisten
 
         $_SESSION['assistenza']['id_todo'] = $_REQUEST['todo']['id'];
  //       $ct['form']['table'] = 'attivita';
-   //     $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo']) ));
+   //     $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo']) ));
     }
 
     if( isset( $_SESSION['assistenza']['id_todo'] ) && !isset($_SESSION['assistenza']['id_assistenza']) ){
 
      //   $_SESSION['assistenza']['id_todo'] = $_REQUEST['todo']['id'];
         $ct['form']['table'] = 'attivita';
-        $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo']) ));
+        $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo']) ));
        // if( !$_REQUEST['todo'] ){ unset( $_SESSION['assistenza']['id_todo'] ); }
 
     }
