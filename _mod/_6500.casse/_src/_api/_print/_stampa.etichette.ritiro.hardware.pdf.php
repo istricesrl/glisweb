@@ -21,7 +21,7 @@
     // elenco dei prodotti
     if( isset( $_REQUEST['__documento__'] ) ){
         $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
-        $documnento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_completa_view.nome AS nome_todo, todo_completa_view.testo AS testo_todo, todo_completa_view.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_completa_view ON todo_completa_view.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
+        $documento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_completa_view.nome AS nome_todo, todo_completa_view.testo AS testo_todo, todo_completa_view.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_completa_view ON todo_completa_view.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
 
     
         if( empty( $righe ) ){
@@ -146,16 +146,13 @@
         
         // carattere di base
 	    $pdf->SetFont( $fnt, 'B', $fntt );						// font, stile, dimensione
-        $pdf->MultiCell( $wBox - $stdsp, '', $documnento['cliente'], '', 'L', '', '1', '', '', true);
+        $pdf->MultiCell( $wBox - $stdsp, '', $documento['cliente'], '', 'L', '', '1', '', '', true);
 
-        // carattere di base
-	   /* $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
-        $pdf -> setXY( $x + $litsp, $pdf -> getY()  );
-        $pdf-> Cell($wBox, '',$documnento['progetto_todo'] ,'',1, 'L' ); */
+
     
         $pdf->SetFont( $fnt, '', $fntt / 2);		
         $pdf -> setXY( $x + $litsp, $pdf -> getY()  );
-        $pdf-> Cell($wBox, '','ritirato il '.date('d/m/Y', $documnento['timestamp_inserimento'] ),'',1, 'L' ); 
+        $pdf-> Cell($wBox, '','ritirato il '.date('d/m/Y', $documento['timestamp_inserimento'] ),'',1, 'L' ); 
     
         $pdf -> Line( $x + $litsp, $pdf -> getY() + $litsp, $x + $wBox - $litsp , $pdf -> getY() + $litsp );
 
@@ -172,16 +169,16 @@
 
         $pdf -> setXY( $x + $litsp, $pdf -> getY() + $stdsp );
         $pdf->SetFont( $fnt, 'B', $fnts );		
-        $pdf->MultiCell( $wBox - $stdsp, '', $documnento['nome_todo'], '', 'L', '', 1);
+        $pdf->MultiCell( $wBox - $stdsp, '', $documento['nome_todo'], '', 'L', '', 1);
         $pdf->SetFont( $fnt, '', $fnts-2 );		
         $pdf -> setXY( $x + $litsp, $pdf -> getY() );
 
         $remSp = ( $startX + $hBox ) - $pdf -> getY() - $hBarr*2.5;
-        $pdf->MultiCell( $wBox - $stdsp, $remSp, $documnento['testo_todo'].'', '', 'L', '', 1,'','',true,'','','',  $remSp);
+        $pdf->MultiCell( $wBox - $stdsp, $remSp, $documento['testo_todo'].'', '', 'L', '', 1,'','',true,'','','',  $remSp);
 // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
 
         $pdf -> setXY( $x, $y + $hBox - $hBarr - $stdsp);
-        $pdf->write1DBarcode( 'TODO.'.str_pad( $documnento['id_todo'],10,"0", STR_PAD_LEFT), 'C128', '', '', '',$hBarr  ,0.285, $style, 'N');
+        $pdf->write1DBarcode( 'TODO.'.str_pad( $documento['id_todo'],10,"0", STR_PAD_LEFT), 'C128', '', '', '',$hBarr  ,0.285, $style, 'N');
 
        // if( ($i + 1) % 3 == 0){
          /*  OLD OK
