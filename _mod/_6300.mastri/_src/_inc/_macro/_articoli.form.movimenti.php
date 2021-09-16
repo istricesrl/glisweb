@@ -14,7 +14,7 @@
     // tabella gestita
     $ct['form']['table'] = 'articoli';
     
-    $ct['view']['table'] = '__report_mastri__';
+    $ct['view']['table'] = '__report_mastri_articoli__';
 
     $ct['view']['data']['__report_mode__'] = 1;
 
@@ -23,15 +23,21 @@
     $ct['view']['open']['table'] = 'documenti_articoli';
     $ct['view']['open']['field'] = 'id_riga';
 
+
+    /*
+    	mastri.id AS id_scarico,
+	mastri.nome AS mastro_scarico,
+	NULL  AS id_carico,
+	NULL AS mastro_carico,
+    */
     // campi della vista
 	$ct['view']['cols'] = array(
-	    'id' => '#',
-        'mastro' => 'mastro',
+        'mastro_scarico' => 'scarico',
+        'mastro_carico' => 'carico',
         'data_lavorazione' => 'data',
 	    'descrizione' => 'riga',
         'id_articolo' => 'articolo',
         'quantita' => 'quantità',
-        'importo' => 'importo',
         'id_listino' => 'id_listino',
         'id_riga' => 'id_riga',
         'cliente' => 'cliente',
