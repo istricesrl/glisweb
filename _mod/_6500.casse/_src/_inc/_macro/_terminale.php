@@ -263,7 +263,10 @@
 
             if( !empty($articolo) ){    
 
-
+                if( $articolo['se_servizio'] == 1 ){
+                    $ct['etc']['mastro'] =  mysqlSelectValue(  $cf['mysql']['connection'],
+                    'SELECT id FROM mastri WHERE nome = "codici da lavorare"');
+                } 
 
 
                 if( $_REQUEST[ $ct['form']['table'] ]['__reparto__'] == 0 ){ $reparto = $articolo['id_reparto']; }
