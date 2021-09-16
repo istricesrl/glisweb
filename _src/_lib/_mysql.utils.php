@@ -179,14 +179,17 @@
 
         global $cf;
         
-        $p['macro'] = mysqlSelectColumn(
-            'macro',
-            $cf['mysql']['connection'],
-            'SELECT macro FROM macro '.
-            'WHERE ' . $f . ' = ?',
-            array(
-                array( 's' => $id )
-            )
+        $p['macro'] = array_merge(
+            mysqlSelectColumn(
+                'macro',
+                $cf['mysql']['connection'],
+                'SELECT macro FROM macro '.
+                'WHERE ' . $f . ' = ?',
+                array(
+                    array( 's' => $id )
+                )
+            ),
+            ( ( isset( $p['macro'] ) ) ?  $p['macro'] : array() )
         );
 
     }

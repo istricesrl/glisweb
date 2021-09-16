@@ -75,9 +75,9 @@
         );
 */
 
-        // aggiungo le macro
-        aggiungiMacro(
-            $cf['page'],
+         // aggiungo le macro
+         aggiungiMacro(
+            $ct['page'],
             $cf['contents']['page']['id'],
             'id_pagina'
         );
