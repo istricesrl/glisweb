@@ -42,7 +42,7 @@
     // tipografia
 	$w		    = 297;								// altezza del foglio
 	$h		    = 210;								// larghezza del foglio
-	$ml		    = 25;								// margine sinistro
+	$ml		    = 21;								// margine sinistro
 	$mt		    = 8;								// margine superiore
 	$mr		    = 21;								// margine destro
 	$fnt		= 'helvetica';							// font base
@@ -124,10 +124,18 @@
     $y = $startY;
     
     // scalamento inzio stampa per rispario carta
-    if( isset( $_REQUEST['__start__'] ) ){
+    if( isset( $_REQUEST['__start__'] ) && $_REQUEST['__start__'] > 0 ){
 
-        $y = ( $_REQUEST['__start__'] % 2 == 0 ? $startY : $startY + $hBox + $litsp );
-        $x =   $_REQUEST['__start__'] / 2 * $wBox + $litsp ;
+       // $y = ( $_REQUEST['__start__'] % 2 == 0 ? $startY : $startY + $hBox  );
+        //$x =  $_REQUEST['__start__']/2  * $wBox;
+
+        if( $_REQUEST['__start__'] % 2 == 0 ){
+            $y = $startY;
+            $x +=  $_REQUEST['__start__']/2  * $wBox;
+        } else {
+            $y = $startY + $hBox;
+            $x =  $_REQUEST['__start__']/2  * $wBox;
+        }
     } 
 
 
@@ -140,13 +148,15 @@
 
        
         // rettangolo guida
-        //$pdf-> Rect( $x, $y, $wBox, $hBox );	
+        $pdf-> Rect( $x, $y, $wBox, $hBox );	
         //$pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
         $pdf -> setXY( $x + $litsp, $y + $litsp );
         
         // carattere di base
 	    $pdf->SetFont( $fnt, 'B', $fntt );						// font, stile, dimensione
         $pdf->MultiCell( $wBox - $stdsp, '', $documento['cliente'], '', 'L', '', '1', '', '', true);
+
+
     
         $pdf->SetFont( $fnt, '', $fntt / 2);		
         $pdf -> setXY( $x + $litsp, $pdf -> getY()  );
@@ -198,7 +208,7 @@
                 $pdf -> AddPage();
                 $x = $startX ;
             } else {
-                $x += $wBox + $litsp; 
+                $x += $wBox ; 
             }
             $y = $startY;
         } else {

@@ -203,6 +203,13 @@
 					{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
 				</div>
 				{% endif %}
+				{% if '6200.documenti' in mods.active.array %}
+				<div class="col-12 col-md-6">
+					<span class="label-top">riga</span>
+					{{ frm.selectBox( table, '', '', 'id_documenti_articoli', '', etc.select.id_documenti_articoli, request, '', '','','','','documenti.articoli.form','documenti.articoli.form','documenti_articoli', 'id_documenti_articoli' , page, pages, ietf,'documenti_articoli' ) }}
+				</div>
+				{% endif %}
+				
 			</div>
 			</fieldset>
 

@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'todo';
+    $ct['form']['table'] = 'documenti_articoli';
     
     // tabella della vista
 	$ct['view']['table'] = 'attivita';
@@ -53,11 +53,11 @@
 	$ct['view']['insert']['page'] = 'attivita.form';
 
     // campo per il preset di apertura
-	$ct['view']['open']['preset']['field'] = 'id_todo';
+	$ct['view']['open']['preset']['field'] = 'id_documenti_articoli';
 
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
         // preset filtro custom progetti aperti
-	    $ct['view']['__restrict__']['id_todo']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+	    $ct['view']['__restrict__']['id_documenti_articoli']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
 
     // gestione default

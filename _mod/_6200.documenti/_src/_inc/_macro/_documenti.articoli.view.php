@@ -46,14 +46,15 @@
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
         'importo_netto_totale' => 'text-right',
-        'quantita' => 'text-right',
-        'documento' => 'text-left',        
+        'quantita' => 'text-right',     
         'totale_riga' => 'text-right',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data_lavorazione' => 'text-left', 
         'tipologia' => 'text-left',
-        'specifiche' => 'text-left'
+        'specifiche' => 'text-left',
+        'data_lavorazione' => 'no-wrap',
+        'documento' => 'text-left no-wrap'
     );
 
       // inclusione filtri speciali

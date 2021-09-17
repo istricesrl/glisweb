@@ -5,7 +5,7 @@
     {% if req %}
     {% set require = req %}
     {% else %}
-	{% set require = 0 %}
+	{% set require = -1 %}
     {% endif %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
     {{ frm.subformLegend( subtable, legend ) }}
     {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}

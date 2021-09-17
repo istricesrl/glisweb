@@ -21,8 +21,8 @@
 		// todo pianificate per altri
 		$ct['etc']['todo_da_fare_per_altri'] = mysqlQuery(
 			$cf['mysql']['connection'],
-			'SELECT todo_completa_view.* FROM todo_completa_view INNER JOIN attivita ON attivita.id_todo = todo_completa_view.id ANd attivita.data_attivita IS NULL and attivita.id_anagrafica <> ? GROUP BY todo_completa_view.id',
-			array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+			'SELECT todo_completa_view.* FROM todo_completa_view INNER JOIN attivita ON attivita.id_todo = todo_completa_view.id ANd attivita.data_attivita IS NULL and attivita.id_anagrafica <> ? AND todo_completa_view.id_responsabile <> ? GROUP BY todo_completa_view.id',
+			array( array( 's' => $_SESSION['account']['id_anagrafica'] ),array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 		);
 
 		foreach( $ct['etc']['todo_da_fare_per_altri'] as &$todo ){
