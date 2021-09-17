@@ -2,8 +2,15 @@
 
     /**
      * 
-     *  job che 
+     *  job che crea le richieste di sostituzione per le attività scoperte di un dato progetto con una determinata anagrafica, se questa può coprirle
+     *  
+     *  riceve in ingresso nel workspace i parametri seguenti:
      * 
+     *  @param id_progetto              id del progetto
+     *  @param id_anagrafica            id dell'anagrafica
+     *  @param data_inizio,data_fine    se settati, il job analizza solo le attività con data_programmazione compresa in tale range
+     *  @param ora_inizio,ora_fine      se settati, il job analizza solo le attività con ora_inizio_programmazione e ora_fine_programmazione pari a tali valori
+     *  @param hard                     se settato, il job forza la sostituzione settando la richiesta come accettata
      */
 
     // inizializzo l'array del risultato
@@ -65,11 +72,10 @@
                     $par
                 );
                 
-
-                // creo la lista dei progetti da lavorare
+                // creo la lista delle attività da lavorare
                 $job['workspace']['list'] = $status['result'];
 
-                // segno il totale dei progetti da lavorare
+                // segno il totale delle attività da lavorare
                 $job['totale'] = count( $job['workspace']['list'] );
 
                 // avvio il contatore
@@ -97,7 +103,7 @@
             // aggiusto l'indice di lavoro (gli array partono da zero)
             $widx = $job['corrente'] - 1;
 
-            // ricavo l'ID del progetto corrente
+            // ricavo l'ID dell'attività corrente
             $cid = $job['workspace']['list'][ $widx ];
             $id_anagrafica =  $job['workspace']['id_anagrafica'];
 

@@ -40,7 +40,8 @@
         'ora_fine_programmazione' => 'ora fine',
         'assente' => 'da sostituire',
         'cliente' => 'cliente',
-        'progetto' => 'progetto'
+        'progetto' => 'progetto',
+        'richieste' => 'richieste'
 	);
 
     // stili della vista
