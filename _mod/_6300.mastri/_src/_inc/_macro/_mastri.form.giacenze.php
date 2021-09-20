@@ -84,7 +84,7 @@
 
 
             // pagina per la gestione degli oggetti esistenti
-        $ct['view']['open']['page'] = 'articoli.form';
+        $ct['view']['open']['page'] = 'articoli.form.movimenti';
         $ct['view']['open']['table'] = 'articoli';
         $ct['view']['open']['field'] = 'id_articolo'; 
 
