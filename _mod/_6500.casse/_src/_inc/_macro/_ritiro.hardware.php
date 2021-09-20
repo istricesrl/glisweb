@@ -21,15 +21,16 @@
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['__method__'] ) && $_REQUEST[ $ct['form']['table'] ]['__method__'] == 'post'  ){
         $_SESSION['assistenza']['id_documento_ritiro'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+        
     }
     
+
     if( isset( $_SESSION['assistenza']['id_documento_ritiro'] ) ){
-        $_REQUEST[ $ct['form']['table'] ]['id'] = $_SESSION['assistenza']['id_documento_ritiro'];
-    } else {
-        $_REQUEST[ $ct['form']['table'] ]['id'] = NULL;
+        $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM documenti_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_documento_ritiro'] ) ));
+
+        $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = mysqlQuery($cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE id_documento = ?', array( array( 's' => $_SESSION['assistenza']['id_documento_ritiro'] ) ));
+
     }
-
-
 
 
     if( isset( $_REQUEST['__todo__'] ) && explode( '.', $_REQUEST['__todo__'] )[0] == 'TODO'){
@@ -68,13 +69,18 @@
     }
 
     if( isset( $_REQUEST[ $ct['form']['table'] ] ) && !isset( $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] ) && isset($_SESSION['assistenza']['id_documento_ritiro']) ){
-        $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = mysqlQuery($cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE id_documento = ?', array( array( 's' => $_SESSION['assistenza']['id_documento_ritiro'] ) ));
+    //    $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = mysqlQuery($cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE id_documento = ?', array( array( 's' => $_SESSION['assistenza']['id_documento_ritiro'] ) ));
 
     }
 
+    if( isset( $_SESSION['assistenza']['id_documento_ritiro'] ) && !isset( $_REQUEST[ $ct['form']['table'] ]['id']) ){
+        $_REQUEST[ $ct['form']['table'] ]['id'] = $_SESSION['assistenza']['id_documento_ritiro'];
+    }/* else {
+        $_REQUEST[ $ct['form']['table'] ]['id'] = NULL;
+    }*/
 
     //print_r( $_SESSION['assistenza'] );
-    //print_r( $_REQUEST );
+   // print_r( $_REQUEST );
     $ct['page']['contents']['metro'][NULL][] = array(
 		'modal' => array( 'id' => 'genera_matricola', 'include' => 'inc/ritiro.hardware.modal.html' )
 	    );
@@ -97,6 +103,8 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view WHERE se_produttore = 1' );
 
+
+       
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
