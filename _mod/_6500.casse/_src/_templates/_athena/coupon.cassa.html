@@ -45,7 +45,7 @@
 {% endif %}
 {% endblock %}
 {% block main %}
-<form  {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+<form  {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-filtro" class="form-main form-horizontal " action="{{ page.path[ localization.language.ietf ] }}" method="post">
     <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
@@ -79,11 +79,7 @@
             <span class="label-top">sconto &euro;</span>
             {{ frm.input( table, '', '', 'sconto_fisso', '', '', request ) }}
         </div>
-        
-
-
-                {{ frm.checkbox( table, '', '', 'se_globale', '', '', request, 1, '', '', 'hidden'  ) }}
-
+        {{ frm.checkbox( table, '', '', 'se_globale', '', '', request, 1,  'hidden'  ) }}
     </div>
 
 
@@ -140,7 +136,7 @@
         {% set activity = 'inserimento' %}
         {% set legend = 'inserimento nuovo oggetto' %}
     {% endif %}
-    <form  {% if session.contatto %}style="margin-top: 45px;"{% endif %} id="form-reso" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+    <form  style="margin-top: 10px;" id="form-reso" class="form-main form-horizontal " action="{{ page.path[ localization.language.ietf ] }}" method="post">
         {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
@@ -153,14 +149,21 @@
 		<input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ etc.id_emittente }}">
 		<input type="hidden" id="id_contatto" name="{{ table }}[id_contatto]" value="{{ session.contatto.id }}">
 		<input type="hidden" id="id_destinatario" name="{{ table }}[id_destinatario]" value="{{ request.todo.id_cliente }}">
+	    <input type="hidden" id="coupon" name="{{ table }}[coupon]" value="{{ session.coupon }}">
 		<input type="hidden" id="data" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d')}}">
 		
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
-
-        <div class="col">
+        {% if not request.documenti.id %}
+        <div class="col-12 col-md mb-3">
+            <span class="label-top">cliente</span>
+            {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
+        </div>
+        {% else %}
+        <div class="form-group form-row col">
             <h3>{{ request.documenti.__label__ }}</h3>
         </div>
+        {% endif %}
 		{# SUBFORM GRUPPI #}
 	    {{ sub.righe( table, 'documenti_articoli', 'articoli reso', site, page, pages, ietf, etc, request, session, '' , etc.mastro, -1, 1 ) }}
 	
@@ -173,7 +176,7 @@
         </div>
         <div>
             {% if request[table].id %}
-            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{ request[table].id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
+            <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{ request[table].id }}&__delete__[target]={{ page.path[ localization.language.ietf ]~'?__unset_reso__'|url_encode }}&__delete__[rollback]={{ page.path[ localization.language.ietf ]~'?__unset_reso__'|url_encode}}','_self');"><i class="fa fa-trash"></i></button>
             {% endif %}
         </div>
         <div>

@@ -92,13 +92,15 @@
         $ct['view']['cols'] = array(
             'id' => '#',
             'id_articolo' => 'articolo',
+            'articolo' => 'descrizione',
             'totale' => 'totale'
         );
 
         // stili della vista
         $ct['view']['class'] = array(
             'id' => 'd-none d-md-table-cell',
-            'id_articolo' => 'text-left'
+            'id_articolo' => 'text-left',
+            'articolo' => 'text-left'
         );
     }
 
