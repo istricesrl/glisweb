@@ -151,18 +151,25 @@
 
 		<legend>attribuzione</legend>
 		<div class="form-group form-row">
-			<div class="col-md-4 col">
-				<span class="label-top remove-after-duplicate">progetto</span>
-				{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetti, request, '', '', '', '', 'font-awesome', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
-			</div>
-			<div class="col-md-4 col">
-				<span class="label-top remove-after-duplicate">todo</span>
-				{{ frm.selectBox( table, '', '', 'id_todo', '', etc.select.id_todo, request, '', '', '', '', 'font-awesome', 'todo.form', 'todo.form', 'todo', 'id_todo', page, pages, ietf, 'todo' ) }}
-			</div>
-			{% if  session.__latest__[ table ].id_mastro_provenienza %}
-				{% set default_mp = session.__latest__[ table ].id_mastro_provenienza %}
+			{% if  session.__latest__[ table ].id_progetto %}
+				{% set default_p = session.__latest__[ table ].id_progetto %}
 			{% endif %}
+			<div class="col-md-6 col">
+				<span class="label-top remove-after-duplicate">progetto</span>
+				{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetti, request, default_p, '', '', '', 'font-awesome', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
+			</div>
+			{% if  session.__latest__[ table ].id_todo %}
+				{% set default_todo = session.__latest__[ table ].id_todo %}
+			{% endif %}
+			<div class="col-md-6 col">
+				<span class="label-top remove-after-duplicate">todo</span>
+				{{ frm.selectBox( table, '', '', 'id_todo', '', etc.select.id_todo, request, default_todo, '', '', '', 'font-awesome', 'todo.form', 'todo.form', 'todo', 'id_todo', page, pages, ietf, 'todo' ) }}
+			</div>
 		</div>	
+		<legend>magazzino</legend>
+		{% if  session.__latest__[ table ].id_mastro_provenienza %}
+			{% set default_mp = session.__latest__[ table ].id_mastro_provenienza %}
+		{% endif %}
 		<div class="form-group form-row">
 			<div class="col-md-6 col">
 				<span class="label-top remove-after-duplicate">scarico</span>

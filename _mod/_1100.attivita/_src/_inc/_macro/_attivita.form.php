@@ -160,6 +160,15 @@
 	    'SELECT id, __label__ FROM matricole_view'
     );
 
+    // tendina documenti_articoli
+	$ct['etc']['select']['id_documenti_articoli'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM documenti_articoli_view'
+    );
+    
+
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
 	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );

@@ -20,7 +20,7 @@
 
     // elenco dei prodotti
     if( isset( $_REQUEST['__documento__'] ) ){
-        $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
+        $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT documenti_articoli_view.*, matricole.serial_number, matricole.nome AS matricola FROM documenti_articoli_view LEFT JOIN matricole ON matricole.id = documenti_articoli_view.matricola WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
         $documento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_completa_view.nome AS nome_todo, todo_completa_view.testo AS testo_todo, todo_completa_view.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_completa_view ON todo_completa_view.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
 
     
@@ -32,17 +32,40 @@
 
   
  //   die(print_r($righe));
+// definizione colori
+$info['colors']['nero']                     = array( 0, 0, 0 );
+$info['colors']['grigio']                   = array( 128, 128, 128 );
+$info['colors']['bianco']                   = array( 255, 255, 255 );
 
+// impostazione stili
+$info['style']['page']                      = array( 'w' => 210, 'h' => 297, 'mt' => 10, 'ml' => 15, 'mr' => 15 );
+$info['style']['text']['title']             = array( 'font' => 'helvetica', 'size' => 10, 'weight' => 'B' );
+$info['style']['text']['label']             = array( 'font' => 'helvetica', 'size' => 7, 'weight' => '' );
+$info['style']['text']['small']             = array( 'font' => 'helvetica', 'size' => 6, 'weight' => '' );
+$info['style']['text']['small_bold']        = array( 'font' => 'helvetica', 'size' => 8, 'weight' => 'B' );
+
+// impostazione linee
+$info['lines']['thick']                     = array( 'thickness' => .3, 'color' => $info['colors']['nero'] );
+$info['lines']['thin']                      = array( 'thickness' => .15, 'color' => $info['colors']['grigio'] );
+
+// impostazione form
+$info['form']['columns']                    = 45;
+$info['form']['row']['height']              = 9;
+$info['style']['page']['orentation'] = 'L';
+// prelievo dati dal database
+$info['doc']['title'] = $dobj;
+// creazione del PDF
+$pdf = pdfInit( $info );
     // creazione del PDF
-	$pdf = new TCPDF( 'L', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
+	//$pdf = new TCPDF( 'L', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
 
     // inizializzazione del nome del file
-	$pdf->SetTitle($dobj.'.pdf');
+
 
     // tipografia
 	$w		    = 297;								// altezza del foglio
 	$h		    = 210;								// larghezza del foglio
-	$ml		    = 25;								// margine sinistro
+	$ml		    = 21;								// margine sinistro
 	$mt		    = 8;								// margine superiore
 	$mr		    = 21;								// margine destro
 	$fnt		= 'helvetica';							// font base
@@ -118,16 +141,24 @@
 	$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );					// fattore di conversione da pixel a millimetri
 
     // aggiunta di una pagina
-	$pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
+//	$pdf->AddPage('L');								// richiesto perché si è disattivato l'automatismo
 
     $x = $startX;
     $y = $startY;
     
     // scalamento inzio stampa per rispario carta
-    if( isset( $_REQUEST['__start__'] ) ){
+    if( isset( $_REQUEST['__start__'] ) && $_REQUEST['__start__'] > 0 ){
 
-        $y = ( $_REQUEST['__start__'] % 2 == 0 ? $startY : $startY + $hBox + $litsp );
-        $x =   $_REQUEST['__start__'] / 2 * $wBox + $litsp ;
+       // $y = ( $_REQUEST['__start__'] % 2 == 0 ? $startY : $startY + $hBox  );
+        //$x =  $_REQUEST['__start__']/2  * $wBox;
+
+        if( $_REQUEST['__start__'] % 2 == 0 ){
+            $y = $startY;
+            $x +=  $_REQUEST['__start__']/2  * $wBox;
+        } else {
+            $y = $startY + $hBox;
+            $x =  $_REQUEST['__start__']/2  * $wBox;
+        }
     } 
 
 
@@ -158,6 +189,12 @@
 
         $pdf->SetFont( $fnt, '', $fnts );				
         $pdf -> setXY( $x + $litsp, $pdf -> getY() + $stdsp );
+        $pdf->MultiCell( $wBox - $stdsp, '', $r['serial_number'], '', 'L', '');
+        $pdf -> setXY( $x + $litsp, $pdf -> getY() );
+        $pdf->SetFont( $fnt, 'B', $fnts );
+        $pdf->MultiCell( $wBox - $stdsp, '', $r['matricola'], '', 'L', '');
+        $pdf -> setXY( $x + $litsp, $pdf -> getY() );
+        $pdf->SetFont( $fnt, '', $fnts );
         $pdf->MultiCell( $wBox - $stdsp, '', $r['nome'], '', 'L', '', 1);
 
         if( !empty($r['label_matricola']) ){
@@ -197,10 +234,10 @@
         
          if( ( $y + $hBox * 2 ) > $h  ) {   
            if( $x +  $wBox * 2  > $w) { 
-                $pdf -> AddPage();
+                $pdf -> AddPage('L');
                 $x = $startX ;
             } else {
-                $x += $wBox + $litsp; 
+                $x += $wBox ; 
             }
             $y = $startY;
         } else {
@@ -208,8 +245,283 @@
         }
     }
 
+
+
+
+    if( isset( $_REQUEST['__all__'] ) &&  $_REQUEST['__all__'] == 1 ){
+        $pdf->AddPage('P');					// portrait, millimetri, A4 (x->210 y->297)
+
+        $azienda = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_azienda_gestita = 1');
+
+        if( $azienda ){ 
+            $logo = anagraficaGetLogo( $azienda['id'] );  
+            $sede = anagraficaGetSedeLegale( $azienda['id']  );
+        }
+        
+            // stiel del barcode
+            $style = array(
+                'position' => '',
+                'align' => 'C',
+                'stretch' => false,
+                'fitwidth' => true,
+                'cellfitalign' => 'L',
+                'border' => false,
+                'hpadding' => 'auto',
+                'vpadding' => 'auto',
+                'fgcolor' => array(0,0,0),
+                'bgcolor' => false, //array(255,255,255),
+                'text' => true,
+                'font' => 'helvetica',
+                'fontsize' => 6
+            );
+        
+        
+
+if( isset( $logo ) ){
+    // inserisco il logo in alto a sinistra
+    $pdf->image( $logo, 15, 15, 10, 10, NULL, NULL, 'T', false, 10, '', false, false, 0, true );		// x, y, w, h, type, link, align, resize
+    $x = $pdf -> getX() + 2;
+    $pdf -> setX( $x );
+    if( $documento['tipologia'] == 'consegna' ){
+        pdfFormCellPdfTitle( $pdf, $info, 'modulo di consegna hardware - copia cliente', 15 );
+    } else {
+        pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware - copia cliente', 15 );
+    }
+    $pdf -> setX( $x );
+    if( $documento['tipologia'] == 'consegna' ){
+        pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso alla riconsegna di materiale hardware');
+    } else {
+        pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
+    }
+    
+    
+    } else {
+    
+        if( $documento['tipologia'] == 'consegna' ){
+            pdfFormCellPdfTitle( $pdf, $info, 'modulo di consegna hardware - copia cliente', 15 );
+            pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso alla riconsegna di materiale hardware');
+        } else {
+            pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware - copia cliente', 15 );
+            pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
+        }
+    
+    }
+    
+    pdfSetRelativeY( $pdf, 10);
+    pdfSetRelativeX( $pdf, 15);
+    pdfFormCellTitle( $pdf, $info, 'dati dell\'assistenza' );
+    pdfSetRelativeY( $pdf, 1);
+    
+    if( isset( $documento ) ){
+        pdfSetRelativeX( $pdf, 15);
+        pdfFormCellLabel( $pdf, $info, $documento['cliente'] );
+        pdfSetRelativeY( $pdf, 5);
+        pdfSetRelativeX( $pdf, 15);
+        pdfFormCellLabel( $pdf, $info, $documento['progetto_todo'] );
+        pdfSetRelativeY( $pdf, 5);
+        pdfSetRelativeX( $pdf, 15);
+        $pdf->write1DBarcode('TODO.'.str_pad( $documento['id_todo'] ,11,"0", STR_PAD_LEFT), 'C128', '', '', '', 15 ,0.17, $style);
+        pdfSetRelativeY( $pdf, 10);
+    
+    }
+    
+        // tabella attivita
+        $margin = 15;
+        $w = $pdf->getPageWidth();
+        $col = ( $w - 30 )/12;
+        pdfSetRelativeX( $pdf, 15);
+        pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
+            // intestazione tabella di dettaglio
+        //$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+        $pdf->Cell( $col * 6, $info['form']['bar']['height'], 'descrizione',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 5, $info['form']['bar']['height'], 'matricola',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col, $info['form']['bar']['height'], 'quantità',  $info['cell']['thick'], 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
+        
+        
+        $i = 1;
+    
+        if( isset( $righe ) && count( $righe) > 0 ){
+    
+            foreach( $righe as $r){
+                pdfSetRelativeX( $pdf, 15);
+                $pdf->Cell( $col * 6, $info['form']['bar']['height'], $r['nome'], $info['cell']['thin'] , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 5, $info['form']['bar']['height'], $r['label_matricola'], $info['cell']['thin'] , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, $info['form']['bar']['height'], $r['quantita'], $info['cell']['thin'] , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    
+            }
+    
+            
+        } else {
+    
+            for( $i = 1; $i <= 20; $i++){
+    
+                $pdf->Cell( $col * 6, $info['form']['bar']['height'], '' , ( $i == 20 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 5, $info['form']['bar']['height'], '', ( $i == 20 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, $info['form']['bar']['height'], '', ( $i == 20  ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        
+            }
+    
+        }
+    
+        
+        
+    
+    
+    
+    
+    
+    
+    //pdfSetRelativeY( $pdf, 100);
+    $pdf -> setY( 250 );
+    pdfSetRelativeX( $pdf, 15);
+        if( $documento['tipologia'] == 'consegna' ){
+            pdfFormCellTitle( $pdf, $info, 'accettazione consegna hardware' );
+        } else {
+            pdfFormCellTitle( $pdf, $info, 'accettazione ritiro hardware' );
+        }      
+            pdfSetRelativeY( $pdf, 5 );
+    pdfSetRelativeY( $pdf, $info['form']['row']['spacing'] );
+            $boxY = $pdf->GetY();
+    
+            pdfFormBox( $pdf, $info, "luogo e data", 12, 3, pdfFormCalcX( $info, 0 ), $boxY );
+            if( $documento['tipologia'] == 'consegna' ){
+                pdfFormBox( $pdf, $info, "timbro e firma accettazione consegna", 21, 3, pdfFormCalcX( $info, 12), $boxY );
+            } else {
+                pdfFormBox( $pdf, $info, "timbro e firma accettazione ritiro", 21, 3, pdfFormCalcX( $info, 12), $boxY );
+            }
+    
+            pdfFormBox( $pdf, $info, "firma del tecnico", 12, 3, pdfFormCalcX( $info, 33 ), $boxY );
+    // aggiunta di una pagina
+    $pdf->AddPage('P');
+    
+    
+    
+    // impostazione stili
+    $info['style']['text']['default']           = array( 'font' => 'helvetica', 'size' => 8, 'weight' => '' );
+    
+    
+    
+    
+    if( isset( $logo ) ){
+    // inserisco il logo in alto a sinistra
+    $pdf->image( $logo, 15, 15, 10, 10, NULL, NULL, 'T', false, 10, '', false, false, 0, true );		// x, y, w, h, type, link, align, resize
+    $x = $pdf -> getX() + 2;
+    $pdf -> setX( $x );
+    if( $documento['tipologia'] == 'consegna' ){
+        pdfFormCellPdfTitle( $pdf, $info, 'modulo di consegna hardware - copia negozio', 15 );
+    } else {
+        pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware - copia negozio', 15 );
+    }
+    $pdf -> setX( $x );
+    if( $documento['tipologia'] == 'consegna' ){
+        pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso alla riconsegna di materiale hardware');
+    } else {
+        pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
+    }
+    
+    
+    } else {
+    
+        if( $documento['tipologia'] == 'consegna' ){
+            pdfFormCellPdfTitle( $pdf, $info, 'modulo di consegna hardware - copia negozio', 15 );
+            pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso alla riconsegna di materiale hardware');
+        } else {
+            pdfFormCellPdfTitle( $pdf, $info, 'modulo di ritiro hardware - copia negozio', 15 );
+            pdfFormCellLabel( $pdf, $info, 'modulo per la raccolta del consenso al ritiro di materiale hardware');
+        }
+    
+    }
+    
+    pdfSetRelativeY( $pdf, 10);
+    pdfSetRelativeX( $pdf, 15);
+    pdfFormCellTitle( $pdf, $info, 'dati dell\'assistenza' );
+    pdfSetRelativeY( $pdf, 1);
+    
+    if( isset( $documento ) ){
+        pdfSetRelativeX( $pdf, 15);
+        pdfFormCellLabel( $pdf, $info, $documento['cliente'] );
+        pdfSetRelativeY( $pdf, 5);
+        pdfSetRelativeX( $pdf, 15);
+        pdfFormCellLabel( $pdf, $info, $documento['progetto_todo'] );
+        pdfSetRelativeY( $pdf, 5);
+        pdfSetRelativeX( $pdf, 15);
+        $pdf->write1DBarcode('TODO.'.str_pad( $documento['id_todo'] ,11,"0", STR_PAD_LEFT), 'C128', '', '', '', 15 ,0.17, $style);
+        pdfSetRelativeY( $pdf, 10);
+    
+    }
+    
+        // tabella attivita
+        $margin = 15;
+        $w = $pdf->getPageWidth();
+        $col = ( $w - 30 )/12;
+        pdfSetRelativeX( $pdf, 15);
+        pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
+            // intestazione tabella di dettaglio
+        //$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+        $pdf->Cell( $col * 6, $info['form']['bar']['height'], 'descrizione',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 5, $info['form']['bar']['height'], 'matricola',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col, $info['form']['bar']['height'], 'quantità',  $info['cell']['thick'], 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
+        
+        
+        $i = 1;
+    
+        if( isset( $righe ) && count( $righe) > 0 ){
+    
+            foreach( $righe as $r){
+                pdfSetRelativeX( $pdf, 15);
+                $pdf->Cell( $col * 6, $info['form']['bar']['height'], $r['nome'], $info['cell']['thin'] , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 5, $info['form']['bar']['height'], $r['label_matricola'], $info['cell']['thin'] , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, $info['form']['bar']['height'], $r['quantita'], $info['cell']['thin'] , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    
+            }
+    
+            
+        } else {
+    
+            for( $i = 1; $i <= 20; $i++){
+    
+                $pdf->Cell( $col * 6, $info['form']['bar']['height'], '' , ( $i == 20 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 5, $info['form']['bar']['height'], '', ( $i == 20 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col, $info['form']['bar']['height'], '', ( $i == 20  ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+        
+            }
+    
+        }
+    
+        
+        
+    
+    
+    
+    
+    
+    
+    //pdfSetRelativeY( $pdf, 100);
+    $pdf -> setY( 250 );
+    pdfSetRelativeX( $pdf, 15);
+        if( $documento['tipologia'] == 'consegna' ){
+            pdfFormCellTitle( $pdf, $info, 'accettazione consegna hardware' );
+        } else {
+            pdfFormCellTitle( $pdf, $info, 'accettazione ritiro hardware' );
+        }      
+            pdfSetRelativeY( $pdf, 5 );
+            pdfSetRelativeY( $pdf, $info['form']['row']['spacing'] );
+            $boxY = $pdf->GetY();
+    
+            pdfFormBox( $pdf, $info, "luogo e data", 12, 3, pdfFormCalcX( $info, 0 ), $boxY );
+            if( $documento['tipologia'] == 'consegna' ){
+                pdfFormBox( $pdf, $info, "timbro e firma accettazione consegna", 21, 3, pdfFormCalcX( $info, 12), $boxY );
+            } else {
+                pdfFormBox( $pdf, $info, "timbro e firma accettazione ritiro", 21, 3, pdfFormCalcX( $info, 12), $boxY );
+            }
+    
+            pdfFormBox( $pdf, $info, "firma del tecnico", 12, 3, pdfFormCalcX( $info, 33 ), $boxY );   
+    }
+
       // output
-	if( isset( $_REQUEST['d'] ) ) {
+/*	if( isset( $_REQUEST['d'] ) ) {
 	    $pdf->Output($dobj.'.pdf' , 'D' );					// invia l'output al browser per il download diretto
 	} elseif( isset( $_REQUEST['f'] ) ) {
 	    $pdf->Output( $dobj.'.pdf', 'I' );				// salva il file localmente
@@ -218,4 +530,6 @@
 	} else {
 	    $pdf->Output($dobj.'.pdf');								// invia l'output al browser
 	}
-
+*/
+ // output
+ $pdf->Output($info['doc']['title'].'.pdf' );								// invia l'output al browser
