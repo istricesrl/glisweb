@@ -20,7 +20,7 @@
 
     // elenco dei prodotti
     if( isset( $_REQUEST['__documento__'] ) ){
-        $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
+        $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT documenti_articoli_view.*, matricole.serial_number, matricole.nome AS matricola FROM documenti_articoli_view LEFT JOIN matricole ON matricole.id = documenti_articoli_view.matricola WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
         $documento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_completa_view.nome AS nome_todo, todo_completa_view.testo AS testo_todo, todo_completa_view.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_completa_view ON todo_completa_view.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
 
     
@@ -148,7 +148,7 @@
 
        
         // rettangolo guida
-        // $pdf-> Rect( $x, $y, $wBox, $hBox );	
+        //$pdf-> Rect( $x, $y, $wBox, $hBox );	
         //$pdf-> Rect( $x , $y + $hBox , $wBox, $hBox );
         $pdf -> setXY( $x + $litsp, $y + $litsp );
         
@@ -166,6 +166,12 @@
 
         $pdf->SetFont( $fnt, '', $fnts );				
         $pdf -> setXY( $x + $litsp, $pdf -> getY() + $stdsp );
+        $pdf->MultiCell( $wBox - $stdsp, '', $r['serial_number'], '', 'L', '');
+        $pdf -> setXY( $x + $litsp, $pdf -> getY() );
+        $pdf->SetFont( $fnt, 'B', $fnts );
+        $pdf->MultiCell( $wBox - $stdsp, '', $r['matricola'], '', 'L', '');
+        $pdf -> setXY( $x + $litsp, $pdf -> getY() );
+        $pdf->SetFont( $fnt, '', $fnts );
         $pdf->MultiCell( $wBox - $stdsp, '', $r['nome'], '', 'L', '', 1);
 
         if( !empty($r['label_matricola']) ){
