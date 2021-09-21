@@ -134,18 +134,6 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000600
-
--- anagrafica_categorie_diritto
--- tipologia: tabella gestita
--- verifica: 2021-05-20 19:30 Fabio Mosti
-CREATE TABLE IF NOT EXISTS `anagrafica_categorie_diritto` (
-  `id` int(11) NOT NULL,
-  `id_anagrafica` int(11) NOT NULL,
-  `id_categoria` int(11) NOT NULL,
-  `se_specialita` int(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 --| 010000000700
 
 -- anagrafica_cittadinanze
@@ -164,6 +152,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
 -- anagrafica_condizioni_pagamento
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 21:59 Fabio Mosti
+-- nota: questa tabella è in attesa di revisione
 CREATE TABLE IF NOT EXISTS `anagrafica_condizioni_pagamento` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,

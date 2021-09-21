@@ -266,6 +266,7 @@ DROP TABLE IF EXISTS `anagrafica_categorie_view`;
 -- anagrafica_categorie_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 19:15 Fabio Mosti
+-- nota: non dovrebbe esserci il path qui?
 CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 	SELECT
 		anagrafica_categorie.id,
@@ -279,35 +280,6 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 	FROM anagrafica_categorie
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_categorie.id_anagrafica
 		INNER JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
-;
-
--- NOTA non dovrebbe esserci il path qui?
-
---| 090000000600
-
--- anagrafica_categorie_diritto_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `anagrafica_categorie_diritto_view`;
-
---| 090000000601
-
--- anagrafica_categorie_diritto_view
--- tipologia: tabella gestita
--- verifica: 2021-05-20 19:40 Fabio Mosti
-CREATE OR REPLACE VIEW anagrafica_categorie_diritto_view AS
-	SELECT
-		anagrafica_categorie_diritto.id,
-		anagrafica_categorie_diritto.id_anagrafica,
-		anagrafica_categorie_diritto.id_categoria,
-		anagrafica_categorie_diritto.se_specialita,
-		concat(
-			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
-			categorie_anagrafica.nome
-		) AS __label__
-	FROM anagrafica_categorie_diritto
-		INNER JOIN anagrafica ON anagrafica.id = anagrafica_categorie_diritto.id_anagrafica
-		INNER JOIN categorie_diritto ON categorie_diritto.id = anagrafica_categorie_diritto.id_categoria
 ;
 
 --| 090000000700

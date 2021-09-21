@@ -125,25 +125,6 @@ ALTER TABLE `anagrafica_categorie`
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000000600
-
--- anagrafica_categorie_diritto
--- tipologia: tabella gestita
--- verifica: 2021-05-20 19:33 Fabio Mosti
-ALTER TABLE `anagrafica_categorie_diritto`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_diritto`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_diritto` (`id_diritto`),
-	ADD KEY `se_specialita` (`se_specialita`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`id_diritto`,`se_specialita`);
-
---| 030000000601
-
--- anagrafica_categorie_diritto
--- tipologia: tabella gestita
-ALTER TABLE `anagrafica_categorie_diritto` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --| 030000000700
 
 -- anagrafica_cittadinanze

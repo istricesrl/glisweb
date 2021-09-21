@@ -70,16 +70,6 @@ ALTER TABLE `anagrafica_categorie`
     ADD CONSTRAINT `anagrafica_categorie_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_categorie_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000000600
-
--- anagrafica_categorie_diritto
--- tipologia: tabella gestita
--- verifica: 2021-05-20 19:35 Fabio Mosti
-ALTER TABLE `anagrafica_categorie_diritto`
-    ADD CONSTRAINT `anagrafica_categorie_diritto_ibfk_01`           FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `anagrafica_categorie_diritto_ibfk_02_nofollow`  FOREIGN KEY (`id_diritto`) REFERENCES `categorie_diritto` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-
 --| 060000000700
 
 -- anagrafica_cittadinanze
