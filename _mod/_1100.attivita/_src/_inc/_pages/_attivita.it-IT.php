@@ -43,7 +43,20 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
 	    'parser'		=> array( $m . '_src/_inc/_parser/_attivita.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'attivita.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'attivita.form', 'attivita.form.tools' ) )
+	);
+
+	// tools form attività
+	$p['attivita.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni_attivita' ),
+	    'h1'		=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'attivita.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_attivita.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
 
 	// gestione attivita - feedback

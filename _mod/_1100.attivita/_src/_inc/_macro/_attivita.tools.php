@@ -12,7 +12,7 @@
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
 	    'esportazioni' => array(
-		'label' => 'esportazioni'
+		    'label' => 'esportazioni'
 	    )
 	);
 
