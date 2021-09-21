@@ -21,7 +21,7 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-    $ct['view']['table'] = 'todo';
+    $ct['view']['table'] = 'todo_lavoro';
     
     // id della vista
    # $ct['view']['id'] = md5( $ct['view']['table'] );

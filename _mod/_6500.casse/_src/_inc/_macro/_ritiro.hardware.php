@@ -37,12 +37,12 @@
 
         $todo =  ltrim(explode( '.', $_REQUEST['__todo__'] )[1], "0"); 
         $_SESSION['assistenza']['id_todo_ritiro'] = $todo;
-        $_REQUEST['todo'] =  mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $todo) ));
+        $_REQUEST['todo'] =  mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $todo) ));
 
     }
 
     if( !isset( $_REQUEST['todo'] ) && isset( $_SESSION['assistenza']['id_todo_ritiro'] ) ){
-        $_REQUEST['todo'] =  mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo_ritiro'] ) ));
+        $_REQUEST['todo'] =  mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_todo_ritiro'] ) ));
     }
 
     if( isset( $_REQUEST['todo'] ) ){

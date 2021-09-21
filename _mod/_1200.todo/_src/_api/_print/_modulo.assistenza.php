@@ -27,7 +27,7 @@
         // dati todo
         $todo = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT todo_completa_view.*, account_view.utente FROM todo_completa_view LEFT JOIN account_view ON account_view.id = todo_completa_view.id_account_inserimento WHERE todo_completa_view.id = ? ',
+            'SELECT todo_view_static.*, account_view.utente FROM todo_view_static LEFT JOIN account_view ON account_view.id = todo_view_static.id_account_inserimento WHERE todo_view_static.id = ? ',
             array( array( 's' => $_REQUEST['todo'] ) )
         );
 
@@ -36,7 +36,7 @@
             $cliente =  mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $todo['id_cliente'] ) ));
 
             // attività di diagnosi
-            $attivita = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita WHERE attivita.id_todo = ? AND id_tipologia = ? AND attivita.data_attivita IS NOT NULL ORDER BY attivita.id LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => '1') ));
+            $attivita = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita WHERE attivita.id_todo = ? AND id_tipologia = ? ORDER BY attivita.id LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => '1') ));
             $attivita_collaudo = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita WHERE attivita.id_todo = ? AND id_tipologia = ?  ORDER BY attivita.id DESC LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => '3') ));
        
             $soluzione = mysqlSelectRow( $cf['mysql']['connection'],'SELECT attivita.* FROM attivita WHERE attivita.id_todo = ? AND id_tipologia = ? AND attivita.data_attivita IS NOT NULL ORDER BY attivita.id LIMIT 1', array( array( 's' => $todo['id'] ), array( 's' => '2') ));
@@ -192,12 +192,12 @@
                 array(
                     'width' => 13,
                     'label' => array( 'text' => 'telefono' ),
-                    'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['telefoni'] ) ? $cliente['telefoni'] : '' ) )
+                    'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['telefoni'] ) ? explode( ' | ', $cliente['telefoni'])[0] : '' ) )
                 ),
                 array(
                     'width' => 31,
                     'label' => array( 'text' => 'email o PEC' ),
-                    'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['mail'] ) ? $cliente['mail'] : '' ) )
+                    'bar' => array( 'text' => ( isset( $cliente ) && ! empty( $cliente['mail'] ) ? explode( ' | ', $cliente['mail'])[0] : '' ) )
                 )
 
                 )

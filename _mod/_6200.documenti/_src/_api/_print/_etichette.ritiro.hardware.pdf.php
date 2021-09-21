@@ -21,7 +21,7 @@
     // elenco dei prodotti
     if( isset( $_REQUEST['__documento__'] ) ){
         $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT documenti_articoli_view.*, matricole.serial_number, matricole.nome AS matricola FROM documenti_articoli_view LEFT JOIN matricole ON matricole.id = documenti_articoli_view.matricola WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
-        $documento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_completa_view.nome AS nome_todo, todo_completa_view.testo AS testo_todo, todo_completa_view.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_completa_view ON todo_completa_view.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
+        $documento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_view_static.nome AS nome_todo, todo_view_static.testo AS testo_todo, todo_view_static.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_view_static ON todo_view_static.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
 
     
         if( empty( $righe ) ){

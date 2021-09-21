@@ -6,7 +6,7 @@ require '../../../../../_src/_config.php';
 // dati
 if(  isset( $_REQUEST['__documento__'] ) ){
 
-    $documento = mysqlSelectRow(  $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_completa_view.progetto FROM documenti_view LEFT JOIN todo_completa_view ON documenti_view.id_todo = todo_completa_view.id WHERE documenti_view.id = ?', 
+    $documento = mysqlSelectRow(  $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_view_static.progetto FROM documenti_view LEFT JOIN todo_view_static ON documenti_view.id_todo = todo_view_static.id WHERE documenti_view.id = ?', 
     array( 
         array( 's' => $_REQUEST['__documento__'] ) ) 
         );
