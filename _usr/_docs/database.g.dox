@@ -15,7 +15,7 @@
     -------------------------------------|---------------------------------------------------------------------------------------
     gruppi.id                            | l'ID del gruppo
     gruppi.id_genitore                   | l'ID del gruppo genitore
-    gruppi.id_struttura                  | l'ID del nodo di struttura associato al gruppo
+    gruppi.id_organizzazione             | l'ID del nodo di organizzazione associato al gruppo
     gruppi.nome                          | il nome del gruppo
     
     Per inserire rapidamente un gruppo si può utilizzare il seguente codice SQL sostituendo <nome> con il valore desiderato:
@@ -29,7 +29,7 @@
     chiave                      | campo                        | tabella e campo collegati  | comportamento
     ----------------------------|------------------------------|----------------------------|-------------------------
     gruppi_ibfk_01_nofollow     | id_genitore                  | gruppi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
-    gruppi_ibfk_02              | id_struttura                 | anagrafica_ruoli.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    gruppi_ibfk_02              | id_organizzazione            | organizzazioni.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista gruppi_view relativa alla tabella gruppi presenta le seguenti colonne:
 
@@ -37,7 +37,7 @@
     -------------------------------------|---------------------------------------------------------------------------------------
     gruppi_view.id                       | -
     gruppi_view.id_genitore              | -
-    gruppi_view.id_struttura             | -
+    gruppi_view.id_organizzazione        | -
     gruppi_view.nome                     | -
     gruppi_view.__label__                | etichetta descrittiva del gruppo
 

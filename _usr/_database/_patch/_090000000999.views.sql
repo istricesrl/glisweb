@@ -163,6 +163,7 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' / ' ) AS categorie,
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' / ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' / ' ) AS mail,
+		anagrafica.data_archiviazione,
 		coalesce(
 			anagrafica.soprannome,
 			anagrafica.denominazione,
@@ -178,22 +179,22 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id
 		LEFT JOIN mail ON mail.id_anagrafica = anagrafica.id
 		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
-	WHERE anagrafica.data_cessazione IS NULL
+	WHERE anagrafica.data_archiviazione IS NULL
 	GROUP BY anagrafica.id
 ;
 
 --| 090000000410
 
--- anagrafica_archiviati_view
+-- anagrafica_archivio_view
 -- tipologia: tabella gestita
-DROP TABLE IF EXISTS `anagrafica_archiviati_view`;
+DROP TABLE IF EXISTS `anagrafica_archivio_view`;
 
 --| 090000000411
 
--- anagrafica_archiviati_view
+-- anagrafica_archivio_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 19:15 Fabio Mosti
-CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
+CREATE OR REPLACE VIEW anagrafica_archivio_view AS
 	SELECT
 		anagrafica.id,
 		anagrafica.codice,
@@ -235,7 +236,7 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' / ' ) AS categorie,
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' / ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' / ' ) AS mail,
-		anagrafica.data_cessazione,
+		anagrafica.data_archiviazione,
 		coalesce(
 			anagrafica.soprannome,
 			anagrafica.denominazione,
@@ -251,7 +252,80 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id
 		LEFT JOIN mail ON mail.id_anagrafica = anagrafica.id
 		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
-	WHERE anagrafica.data_cessazione IS NOT NULL
+	WHERE anagrafica.data_archiviazione IS NOT NULL
+	GROUP BY anagrafica.id
+;
+
+--| 090000000412
+
+-- anagrafica_corrente_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_corrente_view`;
+
+--| 090000000413
+
+-- anagrafica_corrente_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-20 19:15 Fabio Mosti
+CREATE OR REPLACE VIEW anagrafica_corrente_view AS
+	SELECT
+		anagrafica.id,
+		anagrafica.codice,
+		anagrafica.riferimento,
+		tipologie_anagrafica.nome AS tipologia,
+		anagrafica.nome,
+		anagrafica.cognome,
+		anagrafica.denominazione,
+		anagrafica.soprannome,
+		anagrafica.sesso,
+		anagrafica.codice_fiscale,
+		anagrafica.partita_iva,
+		tipologie_crm.nome AS tipologia_crm,
+		anagrafica.recapiti,
+		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
+		max( categorie_anagrafica.se_dipendente ) AS se_dipendente,
+		max( categorie_anagrafica.se_interinale ) AS se_interinale,
+		max( categorie_anagrafica.se_cliente ) AS se_cliente,
+		max( categorie_anagrafica.se_lead ) AS se_lead,
+		max( categorie_anagrafica.se_prospect ) AS se_prospect,
+		max( categorie_anagrafica.se_mandante ) AS se_mandante,
+		max( categorie_anagrafica.se_fornitore ) AS se_fornitore,
+		max( categorie_anagrafica.se_produttore ) AS se_produttore,
+		max( categorie_anagrafica.se_agente ) AS se_agente,
+		max( categorie_anagrafica.se_interno ) AS se_interno,
+		max( categorie_anagrafica.se_esterno ) AS se_esterno,
+		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
+		max( categorie_anagrafica.se_produzione ) AS se_produzione,
+		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
+		max( categorie_anagrafica.se_tutor ) AS se_tutor,
+		max( categorie_anagrafica.se_classe ) AS se_classe,
+		max( categorie_anagrafica.se_docente ) AS se_docente,
+		max( categorie_anagrafica.se_allievo ) AS se_allievo,
+		max( categorie_anagrafica.se_agenzia_interinale ) AS se_agenzia_interinale,
+		max( categorie_anagrafica.se_referente ) AS se_referente,
+		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
+		max( categorie_anagrafica.se_squadra ) AS se_squadra,
+		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' / ' ) AS categorie,
+		group_concat( DISTINCT telefoni.numero SEPARATOR ' / ' ) AS telefoni,
+		group_concat( DISTINCT mail.indirizzo SEPARATOR ' / ' ) AS mail,
+		anagrafica.data_archiviazione,
+		coalesce(
+			anagrafica.soprannome,
+			anagrafica.denominazione,
+			concat_ws(' ', coalesce(anagrafica.cognome, ''),
+			coalesce(anagrafica.nome, '') ),
+			''
+		) AS __label__
+	FROM anagrafica
+		LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia
+		LEFT JOIN tipologie_crm ON tipologie_crm.id = anagrafica.id_tipologia_crm
+		LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id
+		LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
+		LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id
+		LEFT JOIN mail ON mail.id_anagrafica = anagrafica.id
+		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
+	WHERE anagrafica.data_archiviazione IS NULL
 	GROUP BY anagrafica.id
 ;
 
@@ -310,33 +384,6 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 		INNER JOIN stati ON stati.id = anagrafica_cittadinanze.id_stato
 ;
 
---| 090000000800
-
--- anagrafica_condizioni_pagamento_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `anagrafica_condizioni_pagamento_view`;
-
---| 090000000801
-
--- anagrafica_condizioni_pagamento_view
--- tipologia: tabella gestita
--- verifica: 2021-05-20 22:04 Fabio Mosti
-CREATE OR REPLACE VIEW `anagrafica_condizioni_pagamento_view` AS
-	SELECT
-		anagrafica_condizioni_pagamento.id,
-		anagrafica_condizioni_pagamento.id_anagrafica,
-		anagrafica_condizioni_pagamento.id_condizione,
-		condizioni_pagamento.nome AS condizione,
-		concat(
-			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
-			condizioni_pagamento.nome
-		) AS __label__
-	FROM anagrafica_condizioni_pagamento
-		INNER JOIN anagrafica ON anagrafica.id = anagrafica_condizioni_pagamento.id_anagrafica
-		INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = anagrafica_condizioni_pagamento.id_condizione
-;
-
 --| 090000000900
 
 -- anagrafica_indirizzi_view
@@ -361,33 +408,6 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		) AS __label__
 	FROM anagrafica_indirizzi
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
-;
-
---| 090000001000
-
--- anagrafica_modalita_pagamento_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `anagrafica_modalita_pagamento_view`;
-
---| 090000001001
-
--- anagrafica_modalita_pagamento_view
--- tipologia: tabella gestita
--- verifica: 2021-05-22 16:28 Fabio Mosti
-CREATE OR REPLACE VIEW `anagrafica_modalita_pagamento_view` AS
-	SELECT
-		anagrafica_modalita_pagamento.id,
-		anagrafica_modalita_pagamento.id_anagrafica,
-		anagrafica_modalita_pagamento.id_modalita,
-		modalita_pagamento.nome AS modalita,
-		concat(
-			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
-			modalita_pagamento.nome
-		) AS __label__
-	FROM anagrafica_modalita_pagamento
-		INNER JOIN anagrafica ON anagrafica.id = anagrafica_modalita_pagamento.id_anagrafica
-		INNER JOIN modalita_pagamento ON modalita_pagamento.id = modalita_pagamento_pagamento.id_modalita
 ;
 
 --| 090000001100
@@ -437,6 +457,7 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 		anagrafica_settori.id_anagrafica,
 		anagrafica_settori.id_settore,
 		settori.nome AS settore,
+		anagrafica_settori.ordine,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
@@ -668,36 +689,6 @@ CREATE OR REPLACE VIEW `campagne_view` AS
 	FROM campagne
 ;
 
---| 090000002700
-
--- caratteristiche_immobili_view
--- tipologia: tabella di supporto
-DROP TABLE IF EXISTS `caratteristiche_immobili_view`;
-
---| 090000002701
-
--- caratteristiche_immobili_view
--- tipologia: tabella di supporto
--- verifica: 2021-05-28 18:51 Fabio Mosti
-CREATE OR REPLACE VIEW `caratteristiche_immobili_view` AS
-	SELECT
-		caratteristiche_immobili.id,
-		caratteristiche_immobili.id_tipologia,
-		tipologie_caratteristiche_immobili.nome AS tipologia,
-		caratteristiche_immobili.nome,
-		caratteristiche_immobili.html_entity,
-		caratteristiche_immobili.font_awesome,
-		caratteristiche_immobili.se_indirizzo,
-		caratteristiche_immobili.se_immobile,
-		concat(
-			tipologie_caratteristiche_immobili.nome,
-			' / ',
-			caratteristiche_immobili.nome
-		) AS __label__
-	FROM caratteristiche_immobili
-		LEFT JOIN tipologie_caratteristiche_immobili ON tipologie_caratteristiche_immobili.id = caratteristiche_immobili.id_tipologia
-;
-
 --| 090000002900
 
 -- caratteristiche_prodotti_view
@@ -780,66 +771,6 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 	GROUP BY categorie_anagrafica.id
 ;
 
---| 090000003300
-
--- categorie_diritto_view
--- tipologia: tabella assistita
-DROP TABLE IF EXISTS `categorie_diritto_view`;
-
---| 090000003301
-
--- categorie_diritto_view
--- tipologia: tabella assistita
--- verifica: 2021-06-01 10:56 Fabio Mosti
-CREATE OR REPLACE VIEW categorie_diritto_view AS
-	SELECT
-		categorie_diritto.id,
-		categorie_diritto.id_genitore,
-		categorie_diritto.ordine,
-		categorie_diritto.nome,
-		categorie_diritto.template,
-		categorie_diritto.schema_html.
-		categorie_diritto.tema_css,
-		categorie_diritto.id_pagina,
-		count( c1.id ) AS figli,
-		count( anagrafica_categorie_diritto.id ) AS membri,
-		categorie_diritto_path( categorie_diritto.id ) AS __label__
-	FROM categorie_diritto
-		LEFT JOIN categorie_diritto AS c1 ON c1.id_genitore = categorie_diritto.id
-		LEFT JOIN anagrafica_categorie_diritto ON anagrafica_categorie_diritto.id_categoria = categorie_diritto.id
-	GROUP BY categorie_diritto.id
-;
-
---| 090000003500
-
--- categorie_eventi_view
--- tipologia: tabella assistita
-DROP TABLE IF EXISTS `categorie_eventi_view`;
-
---| 090000003501
-
--- categorie_eventi_view
--- tipologia: tabella assistita
--- verifica: 2021-06-01 10:56 Fabio Mosti
-CREATE OR REPLACE VIEW categorie_eventi_view AS
-	SELECT
-		categorie_eventi.id,
-		categorie_eventi.id_genitore,
-		categorie_eventi.ordine,
-		categorie_eventi.nome,
-		categorie_eventi.template,
-		categorie_eventi.schema_html.
-		categorie_eventi.tema_css,
-		categorie_eventi.id_pagina,
-		count( c1.id ) AS figli,
-		count( eventi_categorie.id ) AS membri,
-		categorie_eventi_path( categorie_eventi.id ) AS __label__
-	FROM categorie_eventi
-		LEFT JOIN categorie_eventi AS c1 ON c1.id_genitore = categorie_eventi.id
-		LEFT JOIN eventi_categorie ON eventi_categorie.id_categoria = categorie_eventi.id
-	GROUP BY categorie_eventi.id
-;
-
 --| 090000003700
 
 -- categorie_notizie_view
@@ -897,37 +828,6 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 	FROM categorie_prodotti
 		LEFT JOIN categorie_prodotti AS c1 ON c1.id_genitore = categorie_prodotti.id
 		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_categoria = categorie_prodotti.id
-	GROUP BY categorie_prodotti.id
-;
-
---| 090000004100
-
--- categorie_prodotti_caratteristiche_view
--- tipologia: tabella assistita
-DROP TABLE IF EXISTS `categorie_prodotti_caratteristiche_view`;
-
---| 090000004101
-
--- categorie_prodotti_caratteristiche_view
--- tipologia: tabella assistita
--- verifica: 2021-06-02 19:29 Fabio Mosti
-CREATE OR REPLACE VIEW categorie_prodotti_caratteristiche_view AS
-	SELECT
-		categorie_prodotti_caratteristiche.id,
-		categorie_prodotti_caratteristiche.id_categoria,
-		categorie_prodotti_caratteristiche.id_caratteristica,
-		categorie_prodotti_caratteristiche.ordine,
-		categorie_prodotti_caratteristiche.se_assente,
-		categorie_prodotti_caratteristiche.se_visibile,
-		count( prodotti_categorie.id ) AS membri,
-		concat(
-			categorie_prodotti.nome,
-			' / ',
-			caratteristiche_prodotti.nome
-		) AS __label__
-	FROM categorie_prodotti
-		LEFT JOIN categorie_prodotti ON categorie_prodotti.id = categorie_prodotti_caratteristiche.id_categoria
-		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = categorie_prodotti_caratteristiche.id_caratteristica
 	GROUP BY categorie_prodotti.id
 ;
 
@@ -1004,7 +904,6 @@ CREATE OR REPLACE VIEW classi_energetiche_view AS
 		classi_energetiche.ep_max,
 		classi_energetiche.id_colore,
 		colori.hex,
-		classi_energetiche.se_immobili,
 		classi_energetiche.se_prodotti,
 		concat(
 			classi_energetiche.nome,
@@ -1146,17 +1045,11 @@ CREATE OR REPLACE VIEW contenuti_view AS
 		contenuti.id_categoria_risorse,
 		contenuti.id_pagina,
 		contenuti.id_popup,
-		contenuti.id_immobile,
 		contenuti.id_indirizzo,
-		contenuti.id_zona,
-		contenuti.id_rassegna_stampa,
-		contenuti.id_evento,
-		contenuti.id_categoria_eventi,
 		contenuti.id_notizia,
 		contenuti.id_categoria_notizie,
 		contenuti.id_data,
 		contenuti.id_template_mail,
-		contenuti.id_mailing,
 		contenuti.id_colore,
 		contenuti.title,
 		contenuti.h1,
@@ -1219,10 +1112,6 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		livelli_contratti.nome AS livello,
 		contratti.id_qualifica,
 		qualifiche_contratti.nome AS qualifica,
-		contratti.id_tipologia_durata,
-		tipologie_durate_contratti.nome AS tipologia_durata,
-		contratti.id_tipologia_orario,
-		tipologie_orari_contratti.nome AS tipologia_orario,
 		contratti.ore_settimanali,
 		concat(
 			tipologie_contratti.nome, 
@@ -1237,8 +1126,6 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		LEFT JOIN anagrafica AS a3 ON contratti.id_agenzia = a3.id
 		LEFT JOIN tipologie_contratti ON contratti.id_tipologia = tipologie_contratti.id
 		LEFT JOIN qualifiche_contratti ON contratti.id_qualifica = qualifiche_contratti.id
-		LEFT JOIN tipologie_durate_contratti ON contratti.id_tipologia_durata = tipologie_durate_contratti.id
-		LEFT JOIN tipologie_orari_contratti ON contratti.id_tipologia_orario = tipologie_orari_contratti.id
 	WHERE data_fine_rapporto IS NULL AND (
 		( data_fine IS NULL )
 		OR
@@ -1246,18 +1133,18 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 	)
 ;
 
---| 090000007602
+--| 090000007610
 
--- contratti_archiviati_view
+-- contratti_archivio_view
 -- tipologia: tabella gestita
-DROP TABLE IF EXISTS `contratti_archiviati_view`;
+DROP TABLE IF EXISTS `contratti_archivio_view`;
 
---| 090000007603
+--| 090000007611
 
--- contratti_archiviati_view
+-- contratti_archivio_view
 -- tipologia: tabella gestita
 -- verifica: 2021-06-09 14:23 Fabio Mosti
-CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
+CREATE OR REPLACE VIEW `contratti_archivio_view` AS
 	SELECT
 		contratti.id,
 		contratti.id_tipologia,
@@ -1301,6 +1188,64 @@ CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
 		( data_fine IS NOT NULL )
 		OR
 		( data_fine IS NOT NULL AND data_fine < CURDATE() )
+	)
+;
+
+--| 090000007612
+
+-- contratti_corrente_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `contratti_corrente_view`;
+
+--| 090000007613
+
+-- contratti_corrente_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-09 14:23 Fabio Mosti
+CREATE OR REPLACE VIEW `contratti_corrente_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+		tipologie_contratti.nome AS tipologia,
+		contratti.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		contratti.id_azienda,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS azienda,
+		contratti.id_agenzia,
+		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS agenzia,
+		contratti.data_stipula,
+		contratti.data_inizio,
+		contratti.data_fine,
+		contratti.data_inizio_rapporto,
+		contratti.data_fine_rapporto,
+		contratti.id_livello,
+		livelli_contratti.nome AS livello,
+		contratti.id_qualifica,
+		qualifiche_contratti.nome AS qualifica,
+		contratti.id_tipologia_durata,
+		tipologie_durate_contratti.nome AS tipologia_durata,
+		contratti.id_tipologia_orario,
+		tipologie_orari_contratti.nome AS tipologia_orario,
+		contratti.ore_settimanali,
+		concat(
+			tipologie_contratti.nome, 
+			' / ', 
+			coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ),
+			' / ', 
+			coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' )
+		) as __label__
+	FROM contratti 
+		LEFT JOIN anagrafica AS a1 ON contratti.id_anagrafica = a1.id
+		LEFT JOIN anagrafica AS a2 ON contratti.id_azienda = a2.id
+		LEFT JOIN anagrafica AS a3 ON contratti.id_agenzia = a3.id
+		LEFT JOIN tipologie_contratti ON contratti.id_tipologia = tipologie_contratti.id
+		LEFT JOIN qualifiche_contratti ON contratti.id_qualifica = qualifiche_contratti.id
+		LEFT JOIN tipologie_durate_contratti ON contratti.id_tipologia_durata = tipologie_durate_contratti.id
+		LEFT JOIN tipologie_orari_contratti ON contratti.id_tipologia_orario = tipologie_orari_contratti.id
+	WHERE data_fine_rapporto IS NULL AND (
+		( data_fine IS NULL )
+		OR
+		( data_fine IS NULL OR data_fine >= CURDATE() )
 	)
 ;
 
@@ -1355,8 +1300,6 @@ CREATE OR REPLACE VIEW `costi_contratti_view` AS
 	SELECT
 		costi_contratti.id,
 		costi_contratti.id_contratto,
-		costi_contratti.id_tipologia_inps_attivita,
-		tipologie_inps_attivita.nome AS tipologia_inps_attivita,
 		costi_contratti.costo_orario,
 		CONCAT( 
 			costi_contratti.id_contratto,
@@ -1366,7 +1309,6 @@ CREATE OR REPLACE VIEW `costi_contratti_view` AS
 			costi_contratti.costo_orario
 		) AS __label__
 	FROM costi_contratti
-		LEFT JOIN tipologie_inps_attivita ON tipologie_inps_attivita.id = costi_contratti.id_tipologia_inps_attivita
 ;
 
 --| 090000008000
@@ -1529,50 +1471,6 @@ CREATE OR REPLACE VIEW `coupon_stagioni_view` AS
 	FROM coupon_listini
 		LEFT JOIN coupon ON coupon_categorie_prodotti.id_coupon = coupon.id
 		LEFT JOIN stagioni ON stagioni.id = coupon_stagioni.id_stagione
-;
-
---| 090000009200
-
--- cron_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `cron_view`;
-
---| 090000009201
-
--- cron_view
--- tipologia: tabella gestita
--- verifica: 2021-06-30 11:57 Fabio Mosti
-CREATE OR REPLACE VIEW cron_view AS
-	SELECT
-		cron.id,
-		cron.minuto,
-		cron.ora,
-		cron.giorno_del_mese,
-		cron.mese,
-		cron.giorno_della_settimana,
-		cron.settimana,
-		cron.task,
-		cron.iterazioni,
-		cron.delay,
-		cron.token,
-		cron.timestamp_esecuzione,
-		CONCAT(
-			' / ',
-			coalesce( cron.minuto, '*' ),
-			' / ',
-			coalesce( cron.ora, '*' ),
-			' / ',
-			coalesce( cron.giorno_del_mese, '*' ),
-			' / ',
-			coalesce( cron.mese, '*' ),
-			' / ',
-			coalesce( cron.giorno_della_settimana, '*' ),
-			' / ',
-			coalesce( cron.settimana, '*' ),
-			' / ',
-			cron.task
-		) AS __label__
-	FROM cron
 ;
 
 --| 090000009400
@@ -1800,10 +1698,87 @@ CREATE OR REPLACE VIEW `gruppi_view` AS
 	SELECT
 		gruppi.id,
 		gruppi.id_genitore,
-		gruppi.id_struttura,
+		gruppi.id_organizzazione,
 		gruppi.nome,
 		gruppi_path( gruppi.id ) AS __label__
 	FROM gruppi
 ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--| 090000009200
+
+-- task_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `task_view`;
+
+--| 090000009201
+
+-- task_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-30 11:57 Fabio Mosti
+CREATE OR REPLACE VIEW task_view AS
+	SELECT
+		task.id,
+		task.minuto,
+		task.ora,
+		task.giorno_del_mese,
+		task.mese,
+		task.giorno_della_settimana,
+		task.settimana,
+		task.task,
+		task.iterazioni,
+		task.delay,
+		task.token,
+		task.timestamp_esecuzione,
+		CONCAT(
+			' / ',
+			coalesce( task.minuto, '*' ),
+			' / ',
+			coalesce( task.ora, '*' ),
+			' / ',
+			coalesce( task.giorno_del_mese, '*' ),
+			' / ',
+			coalesce( task.mese, '*' ),
+			' / ',
+			coalesce( task.giorno_della_settimana, '*' ),
+			' / ',
+			coalesce( task.settimana, '*' ),
+			' / ',
+			task.task
+		) AS __label__
+	FROM task
+;
+
+
+
+
 
 --| FINE FILE

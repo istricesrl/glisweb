@@ -32,32 +32,6 @@
     campagne_view.timestamp_chiusura                | -
     campagne_view.__label__                         | l'etichetta descrittiva della campagna
 
-    caratteristiche_immobili
-    ------------------------
-    Questa tabella *gestita* descrive le caratteristiche relative agli immobili e agli indirizzi; è messa in relazione molti a molti con l'entità principale
-    *immobili* dalla tabella di relazione *immobili_caratteristiche* e all'entità principale *indirizzi* dalla tabella di relazione *indirizzi_caratteristiche*.
-
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    caratteristiche_immobili.id                  | l'ID della caratteristica
-    caratteristiche_immobili.id_tipologia        | l'ID della tipologia
-    caratteristiche_immobili.nome                | il nome della caratteristica
-    caratteristiche_immobili.html_entity         | -
-    caratteristiche_immobili.font_awesome        | -
-    caratteristiche_immobili.se_indirizzo        | flag che indica se la caratteristica si applica agli stabili (indirizzi)
-    caratteristiche_immobili.se_immobile         | flag che indica se la caratteristica si applica agli interni (immobili)
-
-    I flag *se_immobile* e *se_indirizzo* definiscono il contesto a cui la caratteristica è applicabile. La tabella ha le seguenti chiavi esterne:
-
-    chiave                                          | campo                     | tabella e campo collegati                 | comportamento
-    ------------------------------------------------|---------------------------|-------------------------------------------|----------
-    caratteristiche_immobili_ibfk_01_nofollow       | id_tipologia              | tipologie_caratteristiche_immobili.id     | ON DELETE NO ACTION ON UPDATE NO ACTION
-
-    La vista *caratteristiche_immobili_view* relativa alla tabella *caratteristiche_immobili* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-
     caratteristiche_prodotti
     ------------------------
     Questa tabella *gestita* descrive le caratteristiche relative ai prodotti, agli articoli e alle categorie di prodotti; è messa in relazione molti a molti
@@ -167,82 +141,6 @@
     categorie_anagrafica_view.membri                        | il numero di anagrafiche collegate a questa categoria
     categorie_anagrafica_view.__label__                     | l'etichetta descrittiva della categoria
 
-    categorie_diritto
-    -----------------
-    Questa tabella *assistita* contiene le categorie del diritto, organizzate ad albero tramite il campo *id_genitore*.
-
-    colonna                                           | descrizione
-    --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_diritto.id                              | l'ID della categoria attività
-    categorie_diritto.id_genitore                     | l'ID della categoria genitore
-    categorie_diritto.ordine                          | campo di ordinamento
-    categorie_diritto.nome                            | il nome della categoria
-    categorie_diritto.template                        | il template da applicare alla categoria per la pubblicazione sul web
-    categorie_diritto.schema_html                     | lo schema da applicare alla categoria per la pubblicazione sul web
-    categorie_diritto.tema_css                        | il tema da applicare alla categoria per la pubblicazione sul web
-    categorie_diritto.id_pagina                       | l'ID della pagina genitore della categoria per la pubblicazione sul web
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                      | campo                 | tabella e campo collegati     | comportamento
-    --------------------------------------------|-----------------------|-------------------------------|----------------------
-    categorie_diritto_ibfk_01_nofollow          | id_genitore           | categorie_diritto.id          | ON DELETE SET NULL ON UPDATE SET NULL
-    categorie_diritto_ibfk_02_nofollow          | id_pagina             | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
-
-    La vista *categorie_diritto_view* relativa alla tabella *categorie_diritto* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_diritto_view.id                              | -
-    categorie_diritto_view.id_genitore                     | -
-    categorie_diritto_view.ordine                          | -
-    categorie_diritto_view.nome                            | -
-    categorie_diritto_view.template                        | -
-    categorie_diritto_view.schema_html                     | -
-    categorie_diritto_view.tema_css                        | -
-    categorie_diritto_view.id_pagina                       | -
-    categorie_diritto_view.figli                           | il numero di categorie figlie di questa categoria
-    categorie_diritto_view.membri                          | il numero di anagrafiche collegate a questa categoria
-    categorie_diritto_view.__label__                       | l'etichetta descrittiva della categoria
-    
-    categorie_eventi
-    ----------------
-    Questa tabella *gestita* contiene le categorie degli eventi, organizzate ad albero tramite il campo *id_genitore*.
-
-    colonna                                           | descrizione
-    --------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_eventi.id                               | l'ID della categoria di eventi
-    categorie_eventi.id_genitore                      | l'ID della categoria genitore
-    categorie_eventi.ordine                           | campo di ordinamento
-    categorie_eventi.nome                             | il nome della categoria
-    categorie_eventi.template                         | il template da applicare alla categoria per la pubblicazione sul web
-    categorie_eventi.schema_html                      | lo schema da applicare alla categoria per la pubblicazione sul web
-    categorie_eventi.tema_css                         | il tema da applicare alla categoria per la pubblicazione sul web
-    categorie_eventi.id_pagina                        | l'ID della pagina genitore della categoria per la pubblicazione sul web
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                      | campo                     | tabella e campo collegati     | comportamento
-    --------------------------------------------|---------------------------|-------------------------------|----------------------
-    categorie_eventi_ibfk_01_nofollow           | id_genitore               | categorie_eventi.id           | ON DELETE SET NULL ON UPDATE SET NULL
-    categorie_eventi_ibfk_02_nofollow           | id_pagina                 | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
-
-    La vista *categorie_eventi_view* relativa alla tabella *categorie_eventi* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_eventi_view.id                               | -
-    categorie_eventi_view.id_genitore                      | -
-    categorie_eventi_view.ordine                           | -
-    categorie_eventi_view.nome                             | -
-    categorie_eventi_view.template                         | -
-    categorie_eventi_view.schema_html                      | -
-    categorie_eventi_view.tema_css                         | -
-    categorie_eventi_view.id_pagina                        | -
-    categorie_eventi_view.figli                            | il numero di categorie figlie di questa categoria
-    categorie_eventi_view.membri                           | il numero di eventi collegati a questa categoria
-    categorie_eventi_view.__label__                        | l'etichetta descrittiva della categoria
- 
     categorie_notizie
     -----------------
     Questa tabella *gestita* contiene le categorie delle notizie, organizzate ad albero tramite il campo *id_genitore*.
@@ -318,33 +216,7 @@
     categorie_prodotti_view.figli                          | il numero di categorie figlie di questa categoria
     categorie_prodotti_view.membri                         | il numero di eventi collegati a questa categoria
     categorie_prodotti_view.__label__                      | l'etichetta descrittiva della categoria
-    
-    categorie_prodotti_caratteristiche
-    ----------------------------------
-    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *categorie_prodotti* con l'entità secondaria *caratteristiche_prodotti*.
 
-    colonna                                                 | descrizione
-    --------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_prodotti_caratteristiche.id                   | l'ID dell'associazione fra categoria e caratteristica
-    categorie_prodotti_caratteristiche.id_categoria         | l'ID della categoria
-    categorie_prodotti_caratteristiche.id_caratteristica    | l'ID della caratteristica
-    categorie_prodotti_caratteristiche.ordine               | campo di ordinamento
-    categorie_prodotti_caratteristiche.note                 | note relative all'associazione fra categoria e caratteristica
-    categorie_prodotti_caratteristiche.se_assente           | flag che indica se la caratteristica è da considerare presente (NULL) o assente (NOT NULL)
-    categorie_prodotti_caratteristiche.se_visibile          | flag che indica se la caratteristica è visibile sul web
-    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                          | campo                     | tabella e campo collegati         | comportamento
-    ------------------------------------------------|---------------------------|-----------------------------------|------------------
-    categorie_prodotti_caratteristiche_ibfk_01      | id_categoria              | categorie_prodotti.id             | ON DELETE CASCADE ON UPDATE CASCADE
-    categorie_prodotti_caratteristiche_ibfk_02      | id_caratteristica         | caratteristiche_prodotti.id       | ON DELETE NO ACTION ON UPDATE NO ACTION
-
-    La vista *categorie_prodotti_caratteristiche_view* relativa alla tabella *categorie_prodotti_caratteristiche* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
     categorie_progetti
     ------------------
     Questa tabella *gestita* contiene le categorie dei progetti, organizzate ad albero tramite il campo *id_genitore*
@@ -423,7 +295,6 @@
     classi_energetiche.ep_min        | -
     classi_energetiche.ep_max        | -
     classi_energetiche.id_colore     | l'ID del colore associato alla classe energetica
-    classi_energetiche.se_immobili   | flag che indica se la classe energetica è applicabile agli immobili
     classi_energetiche.se_prodotti   | flag che indica se la classe energetica è applicabile ai prodotti e agli articoli
     
     La tabella ha le seguenti chiavi esterne:
@@ -546,9 +417,6 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
-    condizioni_pagamento
-    --------------------
-
     contatti
     --------
     Questa tabella *gestita* contiene l'entità principale *contatti*, che rappresenta gli eventi di contatto effettuate da potenziali
@@ -615,17 +483,11 @@
     contenuti.id_categoria_risorse         | l'ID della categoria di risorse cui si riferisce la riga (NULL se non presente)
     contenuti.id_pagina                    | l'ID della pagina cui si riferisce la riga (NULL se non presente)
     contenuti.id_popup                     | l'ID del popup cui si riferisce la riga (NULL se non presente)
-    contenuti.id_immobile                  | l'ID dell'immobile cui si riferisce la riga (NULL se non presente)
     contenuti.id_indirizzo                 | l'ID dell'indirizzo cui si riferisce la riga (NULL se non presente)
-    contenuti.id_zona                      | l'ID della zona cui si riferisce la riga (NULL se non presente)
-    contenuti.id_rassegna_stampa           | l'ID dell'oggetto di rassegna stampa cui si riferisce la riga (NULL se non presente)
-    contenuti.id_evento                    | l'ID dell'evento cui si riferisce la riga (NULL se non presente)
-    contenuti.id_categoria_eventi          | l'ID della categoria di eventi cui si riferisce la riga (NULL se non presente)
     contenuti.id_notizia                   | l'ID della notizia cui si riferisce la riga (NULL se non presente)
     contenuti.id_categoria_notizie         | l'ID della categoria di notizie cui si riferisce la riga (NULL se non presente)
     contenuti.id_data                      | l'ID della data cui si riferisce la riga (NULL se non presente)
     contenuti.id_template_mail             | l'ID del template delle mail cui si riferisce la riga (NULL se non presente)
-    contenuti.id_mailing                   | l'ID della campagna di mailing cui si riferisce la riga (NULL se non presente)
     contenuti.id_colore                    | l'ID del colore cui si riferisce la riga (NULL se non presente)
     contenuti.path_custom                  | alias non canonico della pagina (deve iniziare con slash)
     contenuti.url_custom                   | URL custom a cui far puntare la voce di menù (per i link interni deve iniziare con slash)
@@ -711,17 +573,11 @@
     contenuti_view.id_categoria_risorse         | -
     contenuti_view.id_pagina                    | -
     contenuti_view.id_popup                     | -
-    contenuti_view.id_immobile                  | -
     contenuti_view.id_indirizzo                 | -
-    contenuti_view.id_zona                      | -
-    contenuti_view.id_rassegna_stampa           | -
-    contenuti_view.id_evento                    | -
-    contenuti_view.id_categoria_eventi          | -
     contenuti_view.id_notizia                   | -
     contenuti_view.id_categoria_notizie         | -
     contenuti_view.id_data                      | -
     contenuti_view.id_template_mail             | -
-    contenuti_view.id_mailing                   | -
     contenuti_view.id_colore                    | -
     contenuti_view.h1                           | -
     contenuti_view.__label__                    | etichetta descrittiva del contenuto
@@ -774,8 +630,6 @@
     contratti.data_fine_rapporto               | la data di fine dell'operatività del contratto
     contratti.id_livello                       | l'ID del livello di anzianità del contratto
     contratti.id_qualifica                     | l'ID della qualifica collegata al contratto
-    contratti.id_tipologia_durata              | l'ID della tipologia di durata del contratto
-    contratti.id_tipologia_orario              | l'ID della tipologia di orario del contratto
     contratti.ore_settimanali                  | il numero di ore di lavoro per settimana
     contratti.note                             | note relative al contratto
     
@@ -789,8 +643,6 @@
     contratti_ibfk_04_nofollow          | id_agenzia                | anagrafica.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     contratti_ibfk_05_nofollow          | id_livello                | livelli_contratti.id              | ON DELETE NO ACTION ON UPDATE NO ACTION
     contratti_ibfk_06_nofollow          | id_qualifica              | qualifiche_contratti.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
-    contratti_ibfk_07_nofollow          | id_tipologia_durata       | tipologie_durate_contratti.id     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    contratti_ibfk_08_nofollow          | id_tipologia_orario       | tipologie_orari_contratti.id      | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *contratti_view* relativa alla tabella *contratti* presenta le seguenti colonne:
 
@@ -814,20 +666,19 @@
     contratti_view.livello                          | il livello di anzianità del contratto
     contratti_view.id_qualifica                     | -
     contratti_view.qualifica                        | la qualifica collegata al contratto
-    contratti_view.id_tipologia_durata              | -
-    contratti_view.tipologia_durata                 | la tipologia di durata del contratto
-    contratti_view.id_tipologia_orario              | -
-    contratti_view.tipologia_orario                 | la tipologia di orario del contratto
     contratti_view.ore_settimanali                  | -
     contratti_view.__label__                        | l'etichetta descrittiva del contratto
 
-    contratti_archiviati
-    --------------------
+    contratti_archivio
+    ------------------
     Questa tabella *virtuale* contiene i contratti cessati, individuati in base ai campi data_fine e data_fine_rapporto.
-    La relativa vista *contratti_archiviati_view* possiede gli stessi campi della *contratti_view*.
+
+    contratti_corrente
+    ------------------
+    Questa tabella *virtuale* contiene i contratti non cessati, individuati in base ai campi data_fine e data_fine_rapporto.
 
     correlazioni_articoli
-    ------------------
+    ---------------------
     Questa tabella *gestita* mette in relazione gli articoli con altri *articoli* o con *prodotti* per indicare correlazioni tecniche come
     ricambi, consumabili, accessori oppure commerciali come prodotti consigliati eccetera.
 
@@ -874,7 +725,6 @@
     ----------------------------------------------------|---------------------------------------------------------------------------------------
     costi_contratti.id                                  | l'ID del costo
     costi_contratti.id_contratto                        | l'ID del contratto cui si riferisce il costo
-    costi_contratti.id_tipologia_inps_attivita          | l'ID della tipologia di attività INPS cui si riferisce il costo
     costi_contratti.costo_orario                        | il costo orario in euro per il contratto e la tipologia INPS indicata
     costi_contratti.note                                | note relative al costo
     
@@ -883,7 +733,6 @@
     chiave                              | campo                         | tabella e campo collegati         | comportamento
     ------------------------------------|-------------------------------|-----------------------------------|------------------
     costi_contratti_ibfk_01             | id_contratto                  | contratti.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
-    costi_contratti_ibfk_02             | id_tipologia_inps_attivita    | tipologie_inps_attivita.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *costi_contratti_view* relativa alla tabella *costi_contratti* presenta le seguenti colonne:
 
@@ -891,8 +740,6 @@
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     costi_contratti_view.id                                | -
     costi_contratti_view.id_contratto                      | -
-    costi_contratti_view.id_tipologia_inps_attivita        | -
-    costi_contratti_view.tipologia_inps_attivita           | la tipologia INPS dell'attività cui si riferisce il costo
     costi_contratti_view.costo_orario                      | -
     costi_contratti_view.__label__                         | l'etichetta descrittiva del costo
     
@@ -1069,48 +916,5 @@
     coupon_stagioni_view.id_coupon               | -
     coupon_stagioni_view.id_stagione             | -
     coupon_stagioni_view.__label__               | l'etichetta descrittiva dell'associazione fra coupon e stagione
-
-    cron
-    ----
-    Questa tabella *assistita* contiene la tavola di pianificazione del framework, in base alla quale vengono eseguite
-    le operazioni pianificate (task); per ulteriori informazioni sull'esecuzione pianificata di operazioni nel framework si veda
-    il \ref crontab "relativo capitolo" nella documentazione.
-
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    cron.id                                 | l'ID della pianificazione
-    cron.minuto                             | il minuto della pianificazione (lasciare NULL per tutti i minuti)
-    cron.ora                                | l'ora della pianificazione (lasciare NULL per tutte le ore)
-    cron.giorno_del_mese                    | il giorno del mese della pianificazione (lasciare NULL per tutti i giorni)
-    cron.mese                               | il mese della pianificazione (lasciare NULL per tutti i mesi)
-    cron.giorno_della_settimana             | il giorno della settimana della pianificazione (lasciare NULL per tutti i giorni della settimana)
-    cron.settimana                          | il numero di settimana della pianificazione (lasciare NULL per tutte le settimane)
-    cron.task                               | il percorso relativo del task da eseguire
-    cron.iterazioni                         | il numero di volte per cui il task va eseguito ad ogni chiamata
-    cron.delay                              | il ritardo in secondi fra le esecuzioni del task nella stessa chiamata
-    cron.token                              | token per il lock della riga
-    cron.timestamp_esecuzione               | timestamp dell'ultima esecuzione della riga
-
-    Per l'indicazione del tempo in cui il task va eseguito, il framework rispetta la sintassi del file crontab di Linux (https://crontab.guru/).
-
-    La tabella non ha chiavi esterne.
-
-    La vista *cron_view* relativa alla tabella *cron* presenta le seguenti colonne:
-
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    cron_view.id                                 | -
-    cron_view.minuto                             | -
-    cron_view.ora                                | -
-    cron_view.giorno_del_mese                    | -
-    cron_view.mese                               | -
-    cron_view.giorno_della_settimana             | -
-    cron_view.settimana                          | -
-    cron_view.task                               | -
-    cron_view.iterazioni                         | -
-    cron_view.delay                              | -
-    cron_view.token                              | -
-    cron_view.timestamp_esecuzione               | -
-    cron_view.__label__                          | etichetta descrittiva della pianificazione
 
 */

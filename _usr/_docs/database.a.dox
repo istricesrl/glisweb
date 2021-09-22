@@ -184,8 +184,8 @@
     anagrafica.condizioni_vendita                   | le condizioni di vendita relative all'anagrafica
     anagrafica.condizioni_acquisto                  | le condizioni di acquisto relative all'anagrafica
     anagrafica.note                                 | le note relative all'anagrafica
-    anagrafica.data_cessazione                      | la data di cessazione dell'anagrafica
-    anagrafica.note_cessazione                      | le note relative alla cessazione dell'anagrafica
+    anagrafica.data_archiviazione                   | la data di archiviazione dell'anagrafica
+    anagrafica.note_archiviazione                   | le note relative all'archiviazione dell'anagrafica
     anagrafica.recapiti                             | recapiti dell'anagrafica
     anagrafica.se_importata                         | flag che indica se l'anagrafica è stata importata
     anagrafica.se_stampa_privacy                    | flag che indica se è stata stampata l'informativa privacy per l'anagrafica
@@ -247,6 +247,7 @@
     anagrafica_view.categorie                              | -
     anagrafica_view.telefoni                               | -
     anagrafica_view.mail                                   | -
+    anagrafica_view.data_archiviazione                     | -
     anagrafica_view.__label__                              | l'etichetta che descrive l'anagrafica
 
     La vista *anagrafica_view* contiene molti campi booleani che qualificano i contatti in base alle categorie cui appartengono; questo è utile per la popolazione
@@ -264,10 +265,13 @@
 
     La tabella *anagrafica* è vincolata dalle ACL memorizzate sulla tabella *__acl_anagrafica__*.
 
-    anagrafica_archiviati
-    ---------------------
-    Questa tabella *virtuale* contiene le anagrafiche cessate, individuate in base al fatto che il campo data_cessazione non è NULL.
-    La relativa vista *anagrafica_archiviati_view* ha il campo data_cessazione in più oltre agli stessi campi dell'*anagrafica_view*.
+    anagrafica_archivio
+    -------------------
+    Questa tabella *virtuale* contiene le anagrafiche archiviate, individuate in base al fatto che il campo data_archiviazione non è NULL.
+
+    anagrafica_corrente
+    -------------------
+    Questa tabella *virtuale* contiene le anagrafiche non archiviate, individuate in base al fatto che il campo data_archiviazione è NULL.
 
     anagrafica_categorie
     --------------------
@@ -325,35 +329,6 @@
     anagrafica_cittadinanze_view.data_inizio               | -
     anagrafica_cittadinanze_view.data_fine                 | -
     anagrafica_cittadinanze_view.__label__                 | l'etichetta che descrive la cittadinanza
-
-    anagrafica_condizioni_pagamento
-    -------------------------------
-    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità *condizioni_pagamento*, per specificare quali
-    condizioni sono valide per ogni contatto.
-
-    colonna                                            | descrizione
-    ---------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_condizioni_pagamento.id                 | l'ID dell'associazione fra anagrafica e condizione di pagamento
-    anagrafica_condizioni_pagamento.id_anagrafica      | l'ID dell'anagrafica
-    anagrafica_condizioni_pagamento.id_condizione      | l'ID della condizione di pagamento
-    anagrafica_condizioni_pagamento.note               | note sull'associazione con la condizione di pagamento
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                              | campo                         | tabella e campo collegati     | comportamento
-    ----------------------------------------------------|-------------------------------|-------------------------------|----------------------
-    anagrafica_condizioni_pagamento_ibfk_01             | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
-    anagrafica_condizioni_pagamento_ibfk_02_nofollow    | id_condizione                 | condizioni_pagamento.id       | ON DELETE CASCADE ON UPDATE CASCADE
-
-    La vista *anagrafica_condizioni_pagamento_view* relativa alla tabella *anagrafica_condizioni_pagamento* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_condizioni_pagamento_view.id                | -
-    anagrafica_condizioni_pagamento_view.id_anagrafica     | -
-    anagrafica_condizioni_pagamento_view.id_condizione     | -
-    anagrafica_condizioni_pagamento_view.condizione        | il nome della condizione di pagamento
-    anagrafica_condizioni_pagamento_view.__label__         | etichetta descrittiva dell'associazione con la condizione di pagamento
 
     anagrafica_indirizzi
     --------------------
@@ -415,41 +390,6 @@
     anagrafica_modalita_pagamento_view.modalita                | il nome della modalità di pagamento
     anagrafica_modalita_pagamento_view.__label__               | l'etichetta descrittiva dell'associazione fra anagrafica e modalità di pagamento
 
-    anagrafica_ruoli
-    ----------------
-    Questa tabella *gestita* mette in relazione ad albero i ruoli ricoperti dalle entità anagrafiche specificandone i rapporti e le organizzazioni.
-
-    colonna                                               | descrizione
-    ------------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_ruoli.id                                   | l'ID del nodo nell'albero dell'organizzazione
-    anagrafica_ruoli.id_genitore                          | l'ID del nodo genitore nell'albero dell'organizzazione
-    anagrafica_ruoli.ordine                               | campo di ordinamento
-    anagrafica_ruoli.id_anagrafica                        | l'ID dell'anagrafica collegata al nodo
-    anagrafica_ruoli.id_ruolo                             | l'ID del ruolo ricoperto dall'anagrafica nel nodo
-    anagrafica_ruoli.nome                                 | nome del nodo dell'organizzazione
-    anagrafica_ruoli.note                                 | note sul nodo dell'organizzazione
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                          | campo                         | tabella e campo collegati     | comportamento
-    ------------------------------------------------|-------------------------------|-------------------------------|----------------------
-    anagrafica_ruoli_ibfk_01_nofollow               | id_genitore                   | anagrafica_ruoli.id           | ON DELETE CASCADE ON UPDATE CASCADE
-    anagrafica_ruoli_ibfk_02                        | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
-    anagrafica_ruoli_ibfk_03_nofollow               | id_ruolo                      | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
-
-    La vista *anagrafica_ruoli_view* relativa alla tabella *anagrafica_ruoli* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    anagrafica_ruoli_view.id                               | -
-    anagrafica_ruoli_view.id_genitore                      | -
-    anagrafica_ruoli_view.ordine                           | -
-    anagrafica_ruoli_view.id_anagrafica                    | -
-    anagrafica_ruoli_view.id_ruolo                         | -
-    anagrafica_ruoli_view.ruolo                            | il nome del ruolo ricoperto dall'anagrafica nel nodo
-    anagrafica_ruoli_view.nome                             | -
-    anagrafica_ruoli_view.__label__                        | etichetta descrittiva del nodo dell'organizzazione
-
     anagrafica_settori
     ------------------
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità secondaria *settori* che rappresentano i settori
@@ -459,6 +399,7 @@
     ------------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica_settori.id                                 | l'ID dell'associazione fra anagrafica e settore
     anagrafica_settori.id_anagrafica                      | l'ID dell'anagrafica        
+    anagrafica_settori.ordine                             | campo di ordinamento        
     anagrafica_settori.id_settore                         | l'ID del settore
 
     La tabella ha le seguenti chiavi esterne:
@@ -476,6 +417,7 @@
     anagrafica_settori_view.id_anagrafica                 | -
     anagrafica_settori_view.id_settore                    | -
     anagrafica_settori_view.settore                       | il nome del settore
+    anagrafica_settori_view.ordine                        | -
     anagrafica_settori_view.__label__                     | l'etichetta descrittiva dell'associazione fra anagrafica e settore
 
     articoli

@@ -80,32 +80,46 @@
 
     task
     ----
-    Questa tabella *gestita* descrive le operazioni pianificate del framework; viene consultata da _src/_api/_cron.php per eseguire task e job
-    secondo la pianificazione prevista. Per maggiori dettagli si veda \ref crontab "la pagina della documentazione relativa alle operazioni pianificate".
+    Questa tabella *assistita* contiene la tavola di pianificazione del framework, in base alla quale vengono eseguite
+    le operazioni pianificate (task); per ulteriori informazioni sull'esecuzione pianificata di operazioni nel framework si veda
+    il \ref crontab "relativo capitolo" nella documentazione.
 
-    colonna                         | descrizione
-    --------------------------------|---------------------------------------------------------------------------------------
-    task.id                         | l'ID dell'operazione pianificata
-    task.minuto                     | il minuto pianificato per l'esecuzione (NULL sta per qualsiasi valore)
-    task.ora                        | l'ora pianificata per l'esecuzione (NULL sta per qualsiasi valore)
-    task.giorno_del_mese            | il giorno del mese pianificato per l'esecuzione (NULL sta per qualsiasi valore)
-    task.mese                       | il mese pianificato per l'esecuzione (NULL sta per qualsiasi valore)
-    task.giorno_della_settimana     | il giorno della settimana pianificato per l'esecuzione (NULL sta per qualsiasi valore)
-    task.settimana                  | il numero della settimana pianificata per l'esecuzione (NULL sta per qualsiasi valore)
-    task.task                       | il percorso per il task da eseguire al momento specificato
-    task.iterazioni                 | il numero di esecuzioni da compiere (minimo una)
-    task.delay                      | il tempo di attesa in secondi fra un'esecuzione e la successiva dello stesso task
-    task.timestamp_esecuzione       | la timestamp di ultima esecuzione della pianificazione
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    task.id                                 | l'ID della pianificazione
+    task.minuto                             | il minuto della pianificazione (lasciare NULL per tutti i minuti)
+    task.ora                                | l'ora della pianificazione (lasciare NULL per tutte le ore)
+    task.giorno_del_mese                    | il giorno del mese della pianificazione (lasciare NULL per tutti i giorni)
+    task.mese                               | il mese della pianificazione (lasciare NULL per tutti i mesi)
+    task.giorno_della_settimana             | il giorno della settimana della pianificazione (lasciare NULL per tutti i giorni della settimana)
+    task.settimana                          | il numero di settimana della pianificazione (lasciare NULL per tutte le settimane)
+    task.task                               | il percorso relativo del task da eseguire
+    task.iterazioni                         | il numero di volte per cui il task va eseguito ad ogni chiamata
+    task.delay                              | il ritardo in secondi fra le esecuzioni del task nella stessa chiamata
+    task.token                              | token per il lock della riga
+    task.timestamp_esecuzione               | timestamp dell'ultima esecuzione della riga
 
-    La tabella ha le seguenti chiavi esterne:
+    Per l'indicazione del tempo in cui il task va eseguito, il framework rispetta la sintassi del file crontab di Linux (https://crontab.guru/).
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    La tabella non ha chiavi esterne.
 
     La vista *task_view* relativa alla tabella *task* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    task_view.id                                 | -
+    task_view.minuto                             | -
+    task_view.ora                                | -
+    task_view.giorno_del_mese                    | -
+    task_view.mese                               | -
+    task_view.giorno_della_settimana             | -
+    task_view.settimana                          | -
+    task_view.task                               | -
+    task_view.iterazioni                         | -
+    task_view.delay                              | -
+    task_view.token                              | -
+    task_view.timestamp_esecuzione               | -
+    task_view.__label__                          | etichetta descrittiva della pianificazione
 
     telefoni
     --------

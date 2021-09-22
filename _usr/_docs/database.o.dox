@@ -7,50 +7,39 @@
     le tabelle del database di supporto OA - OZ
     ===========================================
     
-    orari_contratti
-    ---------------
-    
-    Questa tabella *gestita*...
+    organizzazioni
+    --------------
+    Questa tabella *gestita* mette in relazione ad albero i ruoli ricoperti dalle entità anagrafiche specificandone i rapporti e le organizzazioni.
 
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    orari_contratti.id                        | l'ID dell'orario contratti
-    orari_contratti.id_contratto              | l'ID del contratto
-    orari_contratti.turno                     | 
-    orari_contratti.id_giorno                 | 
-    orari_contratti.ora_inizio                | 
-    orari_contratti.ora_fine                  | 
-    orari_contratti.id_costo                  | 
-    orari_contratti.se_lavoro                 | 
-    orari_contratti.se_disponibile            | 
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    organizzazioni.id                                   | l'ID del nodo nell'albero dell'organizzazione
+    organizzazioni.id_genitore                          | l'ID del nodo genitore nell'albero dell'organizzazione
+    organizzazioni.ordine                               | campo di ordinamento
+    organizzazioni.id_anagrafica                        | l'ID dell'anagrafica collegata al nodo
+    organizzazioni.id_ruolo                             | l'ID del ruolo ricoperto dall'anagrafica nel nodo
+    organizzazioni.nome                                 | nome del nodo dell'organizzazione
+    organizzazioni.note                                 | note sul nodo dell'organizzazione
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                        | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------------------|-------------------------------|-------------------------------|----------------------
+    organizzazioni_ibfk_01_nofollow               | id_genitore                   | organizzazioni.id           | ON DELETE CASCADE ON UPDATE CASCADE
+    organizzazioni_ibfk_02                        | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    organizzazioni_ibfk_03_nofollow               | id_ruolo                      | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista orari_contratti_view relativa alla tabella orari_contratti presenta le seguenti colonne:
+    La vista *organizzazioni_view* relativa alla tabella *organizzazioni* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    orientamenti_sessuali
-    ---------------------
-    
-    Questa tabella di *supporto*...
+    colonna                                              | descrizione
+    -----------------------------------------------------|---------------------------------------------------------------------------------------
+    organizzazioni_view.id                               | -
+    organizzazioni_view.id_genitore                      | -
+    organizzazioni_view.ordine                           | -
+    organizzazioni_view.id_anagrafica                    | -
+    organizzazioni_view.id_ruolo                         | -
+    organizzazioni_view.ruolo                            | il nome del ruolo ricoperto dall'anagrafica nel nodo
+    organizzazioni_view.nome                             | -
+    organizzazioni_view.__label__                        | etichetta descrittiva del nodo dell'organizzazione
 
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    orientamenti_sessuali.id          | l'ID dell'orientamento sessuale
-    orientamenti_sessuali.nome        | il nome commune dell'orientamento sessuale
-   
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista orientamenti_sessuali_view relativa alla tabella orientamenti_sessuali presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    */
+*/

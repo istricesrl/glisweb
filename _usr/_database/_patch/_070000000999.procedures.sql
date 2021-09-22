@@ -37,434 +37,6 @@ CREATE
 
     END;
 
---| 070000001100
-
--- anagrafica_ruoli_path
-DROP FUNCTION IF EXISTS `anagrafica_ruoli_path`;
-
---| 070000001101
-
--- anagrafica_ruoli_path
--- verifica: 2021-05-23 15:24 Fabio Mosti
-CREATE
-	DEFINER = CURRENT_USER()
-	FUNCTION `anagrafica_ruoli_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
-	NOT DETERMINISTIC
-	READS SQL DATA
-	SQL SECURITY DEFINER
-	BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_anagrafica_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				anagrafica_ruoli.id_genitore,
-				coalesce(
-					anagrafica.soprannome,
-					anagrafica.denominazione,
-					concat( anagrafica.cognome, ' ', anagrafica.nome ),
-					'' ),
-				count( anagrafica_ruoli.id )
-			FROM anagrafica_ruoli
-			LEFT JOIN anagrafica ON anagrafica.id = anagrafica_ruoli.id_anagrafica
-			WHERE anagrafica_ruoli.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END;
-
---| 070000001110
-
--- anagrafica_ruoli_path_check
-DROP FUNCTION IF EXISTS `anagrafica_ruoli_path_check`;
-
---| 070000001111
-
--- anagrafica_ruoli_path_check
--- verifica: 2021-05-23 15:24 Fabio Mosti
-CREATE
-	DEFINER = CURRENT_USER()
-	FUNCTION `anagrafica_ruoli_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
-	NOT DETERMINISTIC
-	READS SQL DATA
-	SQL SECURITY DEFINER
-	BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT anagrafica_ruoli_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				anagrafica_ruoli.id_genitore
-			FROM anagrafica_ruoli
-			WHERE anagrafica_ruoli.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END;
-
---| 070000001120
-
--- anagrafica_ruoli_path_find_ancestor
-DROP FUNCTION IF EXISTS `anagrafica_ruoli_path_find_ancestor`;
-
---| 070000001121
-
--- anagrafica_ruoli_path_find_ancestor
--- verifica: 2021-05-23 15:24 Fabio Mosti
-CREATE
-	DEFINER = CURRENT_USER()
-	FUNCTION `anagrafica_ruoli_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
-	NOT DETERMINISTIC
-	READS SQL DATA
-	SQL SECURITY DEFINER
-	BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT anagrafica_ruoli_path_find_ancestor( <id1> ) AS check
-
-		DECLARE p2 int( 11 ) DEFAULT NULL;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				anagrafica_ruoli.id_genitore,
-				anagrafica_ruoli.id
-			FROM anagrafica_ruoli
-			WHERE anagrafica_ruoli.id = p1
-			INTO p1, p2;
-
-		END WHILE;
-
-		RETURN p2;
-
-END;
-
---| 070000003300
-
--- categorie_diritto_path
-DROP FUNCTION IF EXISTS `categorie_diritto_path`;
-
---| 070000003301
-
--- categorie_diritto_path
--- verifica: 2021-06-01 11:06 Fabio Mosti
-CREATE
-	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_diritto_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
-	NOT DETERMINISTIC
-	READS SQL DATA
-	SQL SECURITY DEFINER
-	BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_diritto_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				categorie_diritto.id_genitore,
-				categorie_diritto.nome,
-				count( categorie_diritto.id )
-			FROM categorie_diritto
-			WHERE categorie_diritto.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END;
-
---| 070000003310
-
--- categorie_diritto_path_check
-DROP FUNCTION IF EXISTS `categorie_diritto_path_check`;
-
---| 070000003311
-
--- categorie_diritto_path_check
--- verifica: 2021-06-01 11:08 Fabio Mosti
-CREATE
-	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_diritto_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
-	NOT DETERMINISTIC
-	READS SQL DATA
-	SQL SECURITY DEFINER
-	BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_diritto_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				categorie_diritto.id_genitore
-			FROM categorie_diritto
-			WHERE categorie_diritto.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END;
-
---| 070000003320
-
--- categorie_diritto_path_find_ancestor
-DROP FUNCTION IF EXISTS `categorie_diritto_path_find_ancestor`;
-
---| 070000003321
-
--- categorie_diritto_path_find_ancestor
--- verifica: 2021-05-23 15:24 Fabio Mosti
-CREATE
-	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_diritto_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
-	NOT DETERMINISTIC
-	READS SQL DATA
-	SQL SECURITY DEFINER
-	BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_diritto_path_find_ancestor( <id1> ) AS check
-
-		DECLARE p2 int( 11 ) DEFAULT NULL;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				categorie_diritto.id_genitore,
-				categorie_diritto.id
-			FROM categorie_diritto
-			WHERE categorie_diritto.id = p1
-			INTO p1, p2;
-
-		END WHILE;
-
-		RETURN p2;
-
-END;
-
---| 070000003500
-
--- categorie_eventi_path
-DROP FUNCTION IF EXISTS `categorie_eventi_path`;
-
---| 070000003501
-
--- categorie_eventi_path
--- verifica: 2021-06-01 17:51 Fabio Mosti
-CREATE
-	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_eventi_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
-	NOT DETERMINISTIC
-	READS SQL DATA
-	SQL SECURITY DEFINER
-	BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_eventi_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				categorie_eventi.id_genitore,
-				categorie_eventi.nome,
-				count( categorie_eventi.id )
-			FROM categorie_eventi
-			WHERE categorie_eventi.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END;
-
---| 070000003510
-
--- categorie_eventi_path_check
-DROP FUNCTION IF EXISTS `categorie_eventi_path_check`;
-
---| 070000003511
-
--- categorie_eventi_path_check
--- verifica: 2021-06-01 17:52 Fabio Mosti
-CREATE
-	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_eventi_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
-	NOT DETERMINISTIC
-	READS SQL DATA
-	SQL SECURITY DEFINER
-	BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_eventi_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				categorie_eventi.id_genitore
-			FROM categorie_eventi
-			WHERE categorie_eventi.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END;
-
---| 070000003520
-
--- categorie_eventi_path_find_ancestor
-DROP FUNCTION IF EXISTS `categorie_eventi_path_find_ancestor`;
-
---| 070000003521
-
--- categorie_eventi_path_find_ancestor
--- verifica: 2021-05-23 17:52 Fabio Mosti
-CREATE
-	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_eventi_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
-	NOT DETERMINISTIC
-	READS SQL DATA
-	SQL SECURITY DEFINER
-	BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_eventi_path_find_ancestor( <id1> ) AS check
-
-		DECLARE p2 int( 11 ) DEFAULT NULL;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				categorie_eventi.id_genitore,
-				categorie_eventi.id
-			FROM categorie_eventi
-			WHERE categorie_eventi.id = p1
-			INTO p1, p2;
-
-		END WHILE;
-
-		RETURN p2;
-
-END;
-
 --| 070000003700
 
 -- categorie_notizie_path
@@ -1310,5 +882,216 @@ CREATE
 		RETURN p2;
 
 END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--| 070000001100
+
+-- organizzazioni_path
+DROP FUNCTION IF EXISTS `organizzazioni_path`;
+
+--| 070000001101
+
+-- organizzazioni_path
+-- verifica: 2021-05-23 15:24 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `organizzazioni_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_anagrafica_path( <id> ) AS path
+
+		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+		DECLARE righe int( 11 ) DEFAULT 0;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				organizzazioni.id_genitore,
+				coalesce(
+					anagrafica.soprannome,
+					anagrafica.denominazione,
+					concat( anagrafica.cognome, ' ', anagrafica.nome ),
+					'' ),
+				count( organizzazioni.id )
+			FROM organizzazioni
+			LEFT JOIN anagrafica ON anagrafica.id = organizzazioni.id_anagrafica
+			WHERE organizzazioni.id = p1
+			INTO p1, step, righe;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 070000001110
+
+-- organizzazioni_path_check
+DROP FUNCTION IF EXISTS `organizzazioni_path_check`;
+
+--| 070000001111
+
+-- organizzazioni_path_check
+-- verifica: 2021-05-23 15:24 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `organizzazioni_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT organizzazioni_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				organizzazioni.id_genitore
+			FROM organizzazioni
+			WHERE organizzazioni.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 070000001120
+
+-- organizzazioni_path_find_ancestor
+DROP FUNCTION IF EXISTS `organizzazioni_path_find_ancestor`;
+
+--| 070000001121
+
+-- organizzazioni_path_find_ancestor
+-- verifica: 2021-05-23 15:24 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `organizzazioni_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT organizzazioni_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				organizzazioni.id_genitore,
+				organizzazioni.id
+			FROM organizzazioni
+			WHERE organizzazioni.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 --| FINE FILE
