@@ -9,9 +9,9 @@
 
 
 			$('#_destinatario').val( '{{ etc.mail_cliente }}' ); 
-			$('#_oggetto').val('richiesta di conferma a procedere'); 
+			$('#_oggetto').val('richiesta di autorizzazione a procedere'); 
 			$('#_mittente').val('{{ etc.mail_emittente}}'); 
-			var corpo = '<p>Gentile {{ etc.cliente.__label__ }},</p><p>a seguito della sua richiesta di assistenza le proponiamo la seguente soluzione: </p><p>{{request.attivita.testo}}.</p><p>Il tempo stimato per l\'intervento e\' di '+o+' ore per un costo stimato di € '+c+'</p><div class=\"d-flex justify-content-center\"><div class=\"col-12 d-flex justify-content-center\"><button onclic=\"window.open(\'{{site.url}}acconsenti.html?__a__={{ request.attivita.id }}\',\'_blank\')\" style=\'margin: auto;  width: 50%; border-left: 20px;  padding: 10px;background-color: #1a639a; color: white; border-color: white;\' type=\'button\' class=\'btn btn-success\'>acconsenti a procedere</button></div><div><span style=\"margin: auto;  width: 100%;  border: 0px solid;  padding: 65px; color:#1a639a;\"><span style=\"font-size:10px;\">fai click qui per rifiutare l\'assistenza</span></span></div></div><p>Cordiali saluti,<br>{{ etc.azienda.__label__ }}</p>';;
+			var corpo = '<p>Gentile {{ etc.cliente.__label__ }},</p><p>a seguito della sua richiesta di assistenza le proponiamo la seguente soluzione: </p><p>{{request.attivita.testo}}.</p><p>Il tempo stimato per l\'intervento e\' di '+o+' ore per un costo stimato di € '+c+' che comprende la diagnosi già effettuata.<br>Se non intendi procedere con la soluzione ti verrà addebitata la sola diagnosi.</p><div class=\"d-flex justify-content-center\"><div class=\"col-12 d-flex justify-content-center\"><button onclic=\"window.open(\'{{site.url}}acconsenti.html?__a__={{ request.attivita.id }}\',\'_blank\')\" style=\'margin: auto;  width: 50%; border-left: 20px;  padding: 10px;background-color: #1a639a; color: white; border-color: white;\' type=\'button\' class=\'btn btn-success\'>autorizza a procedere</button></div><div><span style=\"margin: auto;  width: 100%;  border: 0px solid;  padding: 55px; color:#1a639a;\"><span style=\"font-size:10px;\">se invece vuoi rifiutare l\'assistenza fai clic qui</span></span></div></div><p>Cordiali saluti,<br>{{ etc.azienda.__label__ }}</p>';;
 
 			CKEDITOR.instances['_testo'].setData( corpo );
 			$('#dettaglio').modal('toggle');
