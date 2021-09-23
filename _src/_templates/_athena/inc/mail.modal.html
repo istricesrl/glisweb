@@ -20,7 +20,7 @@
 //console.log(t);
 //console.log(t1);
 	$('#send-btn').html('<i class="fa fa-spinner fa-spin fa-fw"></i>');
-	getws("/src/api/task/send.mail.php","__og__="+og+"&__id__="+id+"&__from__="+from+"&__to__="+to+"&__t__='"+t+"'",  window.open("{{ session.backurls[page.backurl[localization.language.ietf]]}}?&__send__=1", '_self') );
+	getws("/_src/_api/_task/_mail.send.php","__og__="+og+"&__id__="+id+"&__from__="+from+"&__to__="+to+"&__t__='"+t+"'",  window.open("{{ session.backurls[page.backurl[localization.language.ietf]]}}?&__send__=1", '_self') );
 	}
 
 	// evidezio i campi obbligatori non compilati
@@ -80,7 +80,7 @@
 		    <div class="form-row">
 			    <label class="d-none d-md-block col-md-2 col-form-label">Testo</label><!--Buongiorno,<p></p><p>Cordiali saluti<br>'~session.account.utente -->
 			    <div class="col-10">
-			     <textarea id="_testo" name="w3review" rows="7" class="ckeditor">Buongiorno,<p></p><p>Cordiali saluti<br>{{session.account.utente}}</textarea>
+			     <textarea id="_testo" name="w3review" rows="7" class="ckEditor form-control form-control-sm">Buongiorno,<p></p><p>Cordiali saluti<br>{{session.account.utente}}</textarea>
 			</div>
 		</div>
 	    

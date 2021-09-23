@@ -1,0 +1,70 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function generamail( t ) {
+		var o = $('#_ore').val();
+		var c = $('#_costo').val();
+		
+        if( o != '' && c != '' ){
+
+
+			$('#_destinatario').val( '{{ etc.mail_cliente }}' ); 
+			$('#_oggetto').val('richiesta di conferma a procedere'); 
+			$('#_mittente').val('{{ etc.mail_emittente}}'); 
+			var corpo = '<p>Gentile {{ etc.cliente.__label__ }},</p><p>a seguito della sua richiesta di assistenza le proponiamo la seguente soluzione: </p><p>{{request.attivita.testo}}.</p><p>Il tempo stimato per l\'intervento e\' di '+o+' ore per un costo stimato di € '+c+'</p><div class=\"d-flex justify-content-center\"><div class=\"col-12 d-flex justify-content-center\"><button onclic=\"window.open(\'{{site.url}}acconsenti.html?__a__={{ request.attivita.id }}\',\'_blank\')\" style=\'margin: auto;  width: 50%; border-left: 20px;  padding: 10px;background-color: #1a639a; color: white; border-color: white;\' type=\'button\' class=\'btn btn-success\'>acconsenti a procedere</button></div><div><span style=\"margin: auto;  width: 100%;  border: 0px solid;  padding: 65px; color:#1a639a;\"><span style=\"font-size:10px;\">fai click qui per rifiutare l\'assistenza</span></span></div></div><p>Cordiali saluti,<br>{{ etc.azienda.__label__ }}</p>';;
+
+			CKEDITOR.instances['_testo'].setData( corpo );
+			$('#dettaglio').modal('toggle');
+			$('#send').modal('toggle');
+		}	
+
+	if(c == ''){
+	    document.getElementById("_costo").style.borderColor="#FF0000";
+	}else{
+	    document.getElementById("_costo").style.borderColor = "#ced4da";
+	}
+	if(o == ''){
+	    document.getElementById("_ore").style.borderColor="#FF0000";
+	}else{
+	    document.getElementById("_ore").style.borderColor = "#ced4da";
+	}	
+
+	
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="dettaglio">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h3 class="modal-title">conferma soluzione attività</h3>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+			<div class="form-row">
+				<label class="d-none d-md-block col-md-auto col-form-label">soluzione</label>
+					<div class="col col-md">
+					{{ frm.textarea(table, '', '', 'ore', '', '', request, request.attivita.testo, '','','','','disabled' ) }}
+				</div>
+			</div>
+            <div class="form-row">
+			<label class="d-none d-md-block col-md-auto col-form-label">ore previste</label>
+				<div class="col-3">
+					{{ frm.input(table, '', '', 'ore', '', '', request ) }}
+				</div>
+			<label class="d-none d-md-block col-md-auto col-form-label">costo stimato</label>
+				<div class="col-3">
+					{{ frm.input(table, '', '', 'costo', '', '', request ) }}
+				</div>
+		    </div>
+
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" onclick="generamail(this);">crea mail</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
