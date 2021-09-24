@@ -63,7 +63,7 @@
         'id_documento' => 'd-none',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
-        'data_lavorazione' => 'text-left', 
+        'data_lavorazione' => 'text-left no-wrap', 
         'tipologia' => 'text-left',
 		'id_articolo' => 'text-left'
     );

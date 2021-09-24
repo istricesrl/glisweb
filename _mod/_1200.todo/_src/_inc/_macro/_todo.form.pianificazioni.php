@@ -71,7 +71,10 @@
             'metadati' => array(
                 'pause' => array(
                     'tabella' => 'pause_progetti',
-                    'campo' => 'id_progetto'
+                    'campo' => 'id_progetto',
+                    'strategia' => array(
+                        'duplica' => false
+                    )
                 )
             ),
             'sostituzioni' => array(
@@ -83,9 +86,7 @@
                     'data_programmazione' => '§data§',
                     'data_attivita' => '§data§'
                 )
-                /*
-                'todo_categorie' => array(),
-                'attivita_categorie' => array()*/            )
+          )
         );
 
         $ct['etc']['wks'] = json_encode( $wks, JSON_UNESCAPED_UNICODE );

@@ -20,7 +20,7 @@
     $ct['etc']['mastro'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM mastri WHERE nome = "magazzino resi"' ) ;
 
    
-        $ct['etc']['id_tipologia'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM tipologie_documenti WHERE nome = "documento di ritiro"');
+        $ct['etc']['id_tipologia'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM tipologie_documenti WHERE nome = "documento di reso"');
     
     if(!isset( $_REQUEST['documenti'] )){
         $ct['etc']['id_emittente'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM anagrafica_view WHERE se_azienda_gestita = 1 LIMIT 1');
@@ -60,10 +60,10 @@
         print_r('miaoooo');
     }*/
 
-    if( isset( $_SESSION['id_reso'] ) && !isset( $_REQUEST['documenti'] ) ){
+    if( isset( $_SESSION['id_reso'] ) && !isset( $_REQUEST['documenti']['id'] ) ){
         $_REQUEST['documenti'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM documenti_view  WHERE id = ?', array( array( 's' =>  $_SESSION['id_reso'] ) ) );
         $_REQUEST['documenti']['documenti_articoli'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli  WHERE id_documento = ?', array( array( 's' =>  $_SESSION['id_reso'] ) ) );
-        
+
     }
 
     

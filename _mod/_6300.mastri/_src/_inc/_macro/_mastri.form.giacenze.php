@@ -84,7 +84,7 @@
 
 
             // pagina per la gestione degli oggetti esistenti
-        $ct['view']['open']['page'] = 'articoli.form';
+        $ct['view']['open']['page'] = 'articoli.form.movimenti';
         $ct['view']['open']['table'] = 'articoli';
         $ct['view']['open']['field'] = 'id_articolo'; 
 
@@ -92,13 +92,15 @@
         $ct['view']['cols'] = array(
             'id' => '#',
             'id_articolo' => 'articolo',
+            'articolo' => 'descrizione',
             'totale' => 'totale'
         );
 
         // stili della vista
         $ct['view']['class'] = array(
             'id' => 'd-none d-md-table-cell',
-            'id_articolo' => 'text-left'
+            'id_articolo' => 'text-left',
+            'articolo' => 'text-left'
         );
     }
 

@@ -20,7 +20,7 @@
 
     // elenco dei prodotti
     if( isset( $_REQUEST['__documento__'] ) ){
-        $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
+        $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT documenti_articoli_view.*, matricole.serial_number, matricole.nome AS matricola FROM documenti_articoli_view LEFT JOIN matricole ON matricole.id = documenti_articoli_view.matricola WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
         $documento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_completa_view.nome AS nome_todo, todo_completa_view.testo AS testo_todo, todo_completa_view.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_completa_view ON todo_completa_view.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
 
     
@@ -42,7 +42,7 @@
     // tipografia
 	$w		    = 297;								// altezza del foglio
 	$h		    = 210;								// larghezza del foglio
-	$ml		    = 25;								// margine sinistro
+	$ml		    = 21;								// margine sinistro
 	$mt		    = 8;								// margine superiore
 	$mr		    = 21;								// margine destro
 	$fnt		= 'helvetica';							// font base
@@ -124,10 +124,18 @@
     $y = $startY;
     
     // scalamento inzio stampa per rispario carta
-    if( isset( $_REQUEST['__start__'] ) ){
+    if( isset( $_REQUEST['__start__'] ) && $_REQUEST['__start__'] > 0 ){
 
-        $y = ( $_REQUEST['__start__'] % 2 == 0 ? $startY : $startY + $hBox + $litsp );
-        $x =   $_REQUEST['__start__'] / 2 * $wBox + $litsp ;
+       // $y = ( $_REQUEST['__start__'] % 2 == 0 ? $startY : $startY + $hBox  );
+        //$x =  $_REQUEST['__start__']/2  * $wBox;
+
+        if( $_REQUEST['__start__'] % 2 == 0 ){
+            $y = $startY;
+            $x +=  $_REQUEST['__start__']/2  * $wBox;
+        } else {
+            $y = $startY + $hBox;
+            $x =  $_REQUEST['__start__']/2  * $wBox;
+        }
     } 
 
 
@@ -147,6 +155,8 @@
         // carattere di base
 	    $pdf->SetFont( $fnt, 'B', $fntt );						// font, stile, dimensione
         $pdf->MultiCell( $wBox - $stdsp, '', $documento['cliente'], '', 'L', '', '1', '', '', true);
+
+
     
         $pdf->SetFont( $fnt, '', $fntt / 2);		
         $pdf -> setXY( $x + $litsp, $pdf -> getY()  );
@@ -156,6 +166,12 @@
 
         $pdf->SetFont( $fnt, '', $fnts );				
         $pdf -> setXY( $x + $litsp, $pdf -> getY() + $stdsp );
+        $pdf->MultiCell( $wBox - $stdsp, '', $r['serial_number'], '', 'L', '');
+        $pdf -> setXY( $x + $litsp, $pdf -> getY() );
+        $pdf->SetFont( $fnt, 'B', $fnts );
+        $pdf->MultiCell( $wBox - $stdsp, '', $r['matricola'], '', 'L', '');
+        $pdf -> setXY( $x + $litsp, $pdf -> getY() );
+        $pdf->SetFont( $fnt, '', $fnts );
         $pdf->MultiCell( $wBox - $stdsp, '', $r['nome'], '', 'L', '', 1);
 
         if( !empty($r['label_matricola']) ){
@@ -198,7 +214,7 @@
                 $pdf -> AddPage();
                 $x = $startX ;
             } else {
-                $x += $wBox + $litsp; 
+                $x += $wBox ; 
             }
             $y = $startY;
         } else {
