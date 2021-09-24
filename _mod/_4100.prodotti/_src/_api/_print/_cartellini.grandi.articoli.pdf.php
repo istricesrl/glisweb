@@ -14,14 +14,16 @@
     require '../../../../../_src/_config.php';
 
     // oggetto del documento
-	$dobj = 'cartellini articoli';
+	$dobj = 'cartellini articoli '.date('d/m/Y H:i');
 
    // $logo = anagraficaGetLogo(2);
 
     // elenco dei prodotti
     if( isset( $_REQUEST['prodotto'] ) ){
+        $dobj = 'cartellini articoli prodotto '.$_REQUEST['prodotto'].' '.date('d/m/Y H:i');
         $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT metadati.testo AS meta, articoli_view.*, contenuti_prodotto.h1 AS h1_prodotto, contenuti_prodotto.abstract AS abstract_prodotto, contenuti_prodotto.testo AS testo_prodotto,  contenuti.h1, contenuti.testo, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva LEFT JOIN contenuti AS contenuti_prodotto ON contenuti_prodotto.id_prodotto = articoli_view.id_prodotto LEFT JOIN metadati ON metadati.id_articolo = articoli_view.id AND metadati.id_lingua = 1 AND metadati.nome = "utilizzo" WHERE articoli_view.id_prodotto = ?', array( array( 's' => $_REQUEST['prodotto'] ) ) );
     } elseif( isset( $_REQUEST['articolo'] ) ){
+        $dobj = 'cartellino articolo '.$_REQUEST['articolo'].' '.date('d/m/Y H:i');
         $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT metadati.testo AS meta, articoli_view.*, contenuti_prodotto.h1 AS h1_prodotto, contenuti_prodotto.abstract AS abstract_prodotto, contenuti_prodotto.testo AS testo_prodotto,  contenuti.h1, contenuti.testo, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva LEFT JOIN contenuti AS contenuti_prodotto ON contenuti_prodotto.id_prodotto = articoli_view.id_prodotto  LEFT JOIN metadati ON metadati.id_articolo = articoli_view.id AND metadati.id_lingua = 1 AND metadati.nome = "utilizzo" WHERE articoli_view.id = ?', array( array( 's' => $_REQUEST['articolo'] ) ) );
     } else {
         $articoli  = mysqlQuery( $cf['mysql']['connection'], 'SELECT metadati.testo AS meta, articoli_view.*, contenuti_prodotto.h1 AS h1_prodotto, contenuti_prodotto.abstract AS abstract_prodotto,  contenuti_prodotto.testo AS testo_prodotto, contenuti.h1, contenuti.testo, contenuti.abstract, prezzi.prezzo, iva.aliquota, iva.descrizione AS descrizione_iva FROM articoli_view LEFT JOIN contenuti ON contenuti.id_articolo = articoli_view.id AND contenuti.id_lingua = 1 LEFT JOIN prezzi ON prezzi.id_articolo = articoli_view.id LEFT JOIN iva ON iva.id = prezzi.id_iva LEFT JOIN contenuti AS contenuti_prodotto ON contenuti_prodotto.id_prodotto = articoli_view.id_prodotto  LEFT JOIN metadati ON metadati.id_articolo = articoli_view.id AND metadati.id_lingua = 1 AND metadati.nome = "utilizzo"');
@@ -32,7 +34,7 @@
     if( count( $articoli ) > 0 ){
 
         foreach(  $articoli as &$a ){
-            $a['caratteristiche'] =  mysqlQuery( $cf['mysql']['connection'], 'SELECT caratteristica, testo FROM articoli_caratteristiche_view  WHERE  id_articolo = ? UNION SELECT caratteristica, testo FROM prodotti_caratteristiche_view WHERE id_prodotto = ?', array( array( 's' => $a['id'] ), array( 's' => $a['id_prodotto'] ) ) );
+            $a['caratteristiche'] =  mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM( SELECT caratteristica, testo, ordine FROM articoli_caratteristiche_view  WHERE se_non_presente IS NULL AND id_articolo = ?  UNION SELECT caratteristica, testo, ordine FROM prodotti_caratteristiche_view WHERE se_non_presente IS NULL AND id_prodotto = ? ) AS t ORDER BY ordine LIMIT 8', array( array( 's' => $a['id'] ), array( 's' => $a['id_prodotto'] ) ) );
  
             $a['ric'] = mysqlSelectValue($cf['mysql']['connection'], 'SELECT metadati.testo FROM metadati WHERE id_articolo = ? AND nome = "ricondizionato"', array( array( 's' => $a['id'] ) ));
 
@@ -265,14 +267,14 @@
            // x, y, w, h, type, link, align, resize
        // if( ($i + 1) % 3 == 0){
 
-        $pdf -> setXY( $ml, $h -  $stdsp*7 );
+        $pdf -> setXY( $ml, $h -  $stdsp*5.4 );
         $pdf-> SetFont( $fnt, '', $fnts );	
         $pdf-> Cell($wBox - $stdsp, '','PREZZO PC STOP ','','', 'R' );
-        $pdf-> setXY( $ml , $pdf -> getY() + $stdsp );
+        $pdf-> setXY( $ml , $pdf -> getY() + $litsp );
         $pdf-> SetFont( $fnt, 'B', $fntt );	
         $pdf-> Cell( $wBox - $stdsp , '','€ '.number_format( ( $articoli[$i]['prezzo'] * ( 100 + $articoli[$i]['aliquota'] ) / 100 ), 2, ',', '.' ), '', '' ,'R' );
         $pdf-> SetFont( $fnt, '', $fntl );	
-        $pdf-> setXY( $ml, $pdf -> getY() + $fnts + $stdsp  );
+        $pdf-> setXY( $ml, $pdf -> getY() + $fnts + $litsp*2  );
         $pdf-> Cell($wBox - $stdsp, '','inclusa '.$articoli[$i]['descrizione_iva'],'',1, 'R' );
 
 
