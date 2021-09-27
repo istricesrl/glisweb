@@ -187,3 +187,117 @@
 													'categorie.notizie.form.metadati'
 												) )
 	);
+
+
+	// form notizie SEM/SMM
+	$p['categorie.notizie.form.sem'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'SEM/SMM' ),
+	    'h1'		=> array( $l		=> 'SEM/SMM' ),
+	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.sem.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.sem.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
+
+	// form notizie testo
+	$p['categorie.notizie.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.testo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
+
+	$p['categorie.notizie.form.contenuti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.contenuti.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.php', $m . '_src/_inc/_macro/_categorie.notizie.form.contenuti.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
+
+	$p['categorie.notizie.form.immagini'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'immagini' ),
+		'h1'		=> array( $l		=> 'immagini' ),
+		'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.immagini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.immagini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
+
+	// form notizie video
+	$p['categorie.notizie.form.video'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'video' ),
+		'h1'		=> array( $l		=> 'video' ),
+		'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.video.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.video.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
+	
+	// form notizie file
+	$p['categorie.notizie.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.file.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
+
+	// form notizie audio
+	$p['categorie.notizie.form.audio'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'audio' ),
+		'h1'		=> array( $l		=> 'audio' ),
+		'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.audio.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.audio.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
+
+	// form notizie metadati
+	$p['categorie.notizie.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
+	
+	// form azioni notizie
+	$p['categorie.notizie.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni categoria notizia' ),
+	    'h1'		=> array( $l		=> 'azioni categoria notizia' ),
+	    'parent'		=> array( 'id'		=> 'notizie.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
+	
