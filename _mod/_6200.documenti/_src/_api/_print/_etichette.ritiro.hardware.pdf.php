@@ -126,17 +126,17 @@
     // scalamento inzio stampa per rispario carta
     if( isset( $_REQUEST['__start__'] ) && $_REQUEST['__start__'] > 0 ){
 
-       // $y = ( $_REQUEST['__start__'] % 2 == 0 ? $startY : $startY + $hBox  );
-        //$x =  $_REQUEST['__start__']/2  * $wBox;
-
-        if( $_REQUEST['__start__'] % 2 == 0 ){
-            $y = $startY;
-            $x +=  $_REQUEST['__start__']/2  * $wBox;
-        } else {
-            $y = $startY + $hBox;
-            $x =  $_REQUEST['__start__']/2  * $wBox;
-        }
-    } 
+        // $y = ( $_REQUEST['__start__'] % 2 == 0 ? $startY : $startY + $hBox  );
+         //$x =  $_REQUEST['__start__']/2  * $wBox;
+ 
+         if( $_REQUEST['__start__'] % 2 == 0 ){
+             $y = $startY;
+             $x +=  $_REQUEST['__start__']/2  * $wBox;
+         } else {
+             $y = $startY + $hBox;
+             $x = $startX +  ($_REQUEST['__start__'] - 1)/2  * $wBox;
+         }
+     } 
 
 
 
@@ -187,7 +187,7 @@
         $pdf->SetFont( $fnt, '', $fnts-2 );		
         $pdf -> setXY( $x + $litsp, $pdf -> getY() );
 
-        $remSp = ( $startX + $hBox ) - $pdf -> getY() - $hBarr*2.5;
+        $remSp = ( $y + $hBox )- (   $pdf -> getY() ) - $hBarr - $litsp ;
         $pdf->MultiCell( $wBox - $stdsp, $remSp, $documento['testo_todo'].'', '', 'L', '', 1,'','',true,'','','',  $remSp);
 // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
 

@@ -21,7 +21,7 @@
     // elenco dei prodotti
     if( isset( $_REQUEST['__documento__'] ) ){
         $righe = mysqlQuery( $cf['mysql']['connection'], 'SELECT documenti_articoli_view.*, matricole.serial_number, matricole.nome AS matricola FROM documenti_articoli_view LEFT JOIN matricole ON matricole.id = documenti_articoli_view.matricola WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
-        $documento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_view_static.nome AS nome_todo, todo_view_static.testo AS testo_todo, todo_view_static.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_view_static ON todo_view_static.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
+        $documento = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT documenti_view.*, todo_completa_view.nome AS nome_todo, todo_completa_view.testo AS testo_todo, todo_completa_view.progetto AS progetto_todo FROM documenti_view LEFT JOIN todo_completa_view ON todo_completa_view.id = documenti_view.id_todo WHERE documenti_view.id = ? ', array( array( 's' => $_REQUEST['__documento__']  ) ) );
 
     
         if( empty( $righe ) ){
@@ -157,7 +157,7 @@ $pdf = pdfInit( $info );
             $x +=  $_REQUEST['__start__']/2  * $wBox;
         } else {
             $y = $startY + $hBox;
-            $x =  $_REQUEST['__start__']/2  * $wBox;
+            $x = $startX +  ($_REQUEST['__start__'] - 1)/2  * $wBox;
         }
     } 
 
@@ -210,7 +210,7 @@ $pdf = pdfInit( $info );
         $pdf->SetFont( $fnt, '', $fnts-2 );		
         $pdf -> setXY( $x + $litsp, $pdf -> getY() );
 
-        $remSp = ( $startX + $hBox ) - $pdf -> getY() - $hBarr*2.5;
+        $remSp = ( $y + $hBox )- (   $pdf -> getY() ) - $hBarr - $litsp ;
         $pdf->MultiCell( $wBox - $stdsp, $remSp, $documento['testo_todo'].'', '', 'L', '', 1,'','',true,'','','',  $remSp);
 // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
 
