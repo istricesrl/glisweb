@@ -23,18 +23,20 @@
 
         // log
         if( ! empty( $cf['memcache']['connection'] ) ) {
-            logWrite( 'struttura delle categorie catalogo NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR );
+            logWrite( 'struttura dei prodotti NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR );
         }
 
 	    // recupero le pagine dal database
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT categorie_prodotti.* FROM categorie_prodotti '.
-            'INNER JOIN pubblicazione ON pubblicazione.id_categoria_prodotti = categorie_prodotti.id '.
+            'SELECT prodotti.* FROM prodotti '.
+            'LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id '.
+            'LEFT JOIN categorie_prodotti ON categorie_prodotti.id = prodotti_categorie.id_categoria '.
+            'INNER JOIN pubblicazione ON pubblicazione.id_prodotto = prodotti.id '.
             'WHERE categorie_prodotti.id_sito = ? '.
             'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) '.
             'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) '.
-            'GROUP BY categorie_prodotti.id ',
+            'GROUP BY prodotti.id ',
             array(
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),
@@ -43,7 +45,7 @@
         );
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine recupero categorie catalogo dal database' );
+		timerCheck( $cf['speed'], ' -> fine recupero prodotti dal database' );
 
 	    // se ci sono pagine trovate le inserisco nell'array principale
 		if( is_array( $pgs ) ) {
@@ -52,8 +54,8 @@
 			foreach( $pgs as $pg ) {
 
                 // ID della pagina
-                $pid = PREFX_CATEGORIE_PRODOTTI . $pg['id'];
-                $pip = PREFX_CATEGORIE_PRODOTTI . $pg['id_genitore'];
+                $pid = PREFX_PRODOTTI . $pg['id'];
+                //$pip = PREFX_PRODOTTI . $pg['id_genitore'];
 
                 if( empty( $pip ) ) {
                     $pip = $pg['id_pagina'];
@@ -73,11 +75,11 @@
 
                     // blocco dati principale
                     $cf['contents']['pages'][ $pid ] = array(
-                        'sitemap'		=> ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
-                        'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
+                       # 'sitemap'		=> ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
+                       # 'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                         'parent'		=> array( 'id'		=> $pip ),
-                        'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] ),
-                        'metadata'      => array( 'id_categoria_prodotti' => $pg['id'] )
+                       # 'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] ),
+                        'metadata'      => array( 'id_prodotto' => $pg['id'] )
                     );
 
                     aggiungiGruppi(
@@ -88,32 +90,32 @@
                     aggiungiContenuti(
                         $cf['contents']['pages'][ $pid ],
                         $pg['id'],
-                        'id_categoria_prodotti'
+                        'id_prodotto'
                     );
 
                     aggiungiContenuti(
                         $cf['contents']['pages'][ $pid ],
                         $pg['id'],
-                        'id_categoria_prodotti'
+                        'id_prodotto'
                     );
 
                     aggiungiImmagini(
                         $cf['contents']['pages'][ $pid ],
                         $pg['id'],
-                        'id_categoria_prodotti',
+                        'id_prodotto',
                         array( 4, 16, 29, 14 )
                     );
 
                     aggiungiMetadati(
                         $cf['contents']['pages'][ $pid ],
                         $pg['id'],
-                        'id_categoria_prodotti'
+                        'id_prodotto'
                     );
 
                     aggiungiMenu(
                         $cf['contents']['pages'][ $pid ],
                         $pg['id'],
-                        'id_categoria_prodotti'
+                        'id_prodotto'
                     );
 
                     // scrivo la pagina in cache
@@ -130,15 +132,17 @@
         }
 
 	    // timer
-		timerCheck( $cf['speed'], ' -> fine elaborazione categorie catalogo prelevate dal database' );
+		timerCheck( $cf['speed'], ' -> fine elaborazione prodotti prelevati dal database' );
 
     } else {
         
 	    // recupero la timestamp di aggiornamento più recente
 		$cf['contents']['updated'] = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT max( categorie_prodotti.timestamp_aggiornamento ) AS updated FROM categorie_prodotti '.
-            'INNER JOIN pubblicazione ON pubblicazione.id_categoria_prodotti = categorie_prodotti.id '.
+            'SELECT max( prodotti.timestamp_aggiornamento ) AS updated FROM prodotti '.
+            'LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id '.
+            'LEFT JOIN categorie_prodotti ON categorie_prodotti.id = prodotti_categorie.id_categoria '.
+            'INNER JOIN pubblicazione ON pubblicazione.id_prodotto = prodotti.id '.
             'WHERE categorie_prodotti.id_sito = ? '.
             'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) '.
             'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) ',
