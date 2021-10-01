@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
 -- verifica: 2021-05-21 16:30 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `id` int(11) NOT NULL,
-  `id_tipologia` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `id_indirizzo` int(11) NOT NULL,
   `interno` char(8) DEFAULT NULL,
@@ -224,7 +224,6 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
 CREATE TABLE IF NOT EXISTS `attivita` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `id_tipologia_inps` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
   `referenti` char(255) DEFAULT NULL,
@@ -842,12 +841,13 @@ CREATE TABLE IF NOT EXISTS `gruppi` (
 -- NOTE
 -- questa tabella contiene i gruppi aggiuntivi del framework
 
---| 010000000077
+--| 010000015400
 
 -- iban
 -- tipologia: tabella gestita
+-- verifica: 2021-09-22 11:55 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `iban` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
   `intestazione` char(255) DEFAULT NULL,
   `iban` char(27) NOT NULL,
@@ -858,12 +858,13 @@ CREATE TABLE IF NOT EXISTS `iban` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000078
+--| 010000015600
 
 -- immagini
 -- tipologia: tabella gestita
+-- verifica: 2021-09-22 12:20 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `immagini` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_file` int(11) DEFAULT NULL,
@@ -872,23 +873,17 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
-  `id_evento` int(11) DEFAULT NULL,
-  `id_categoria_eventi` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
-  `id_immobile` int(11) DEFAULT NULL,
-  `id_testata` int(11) DEFAULT NULL,
-  `id_zona` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
-  `orientamento` enum('L','P') DEFAULT NULL,
-  `path` char(255) NOT NULL,
-  `path_alternativo` char(255) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `anno` year(4) DEFAULT NULL,
+  `orientamento` enum('L','P') DEFAULT NULL,
   `taglio` char(64) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `path` char(255) NOT NULL,
+  `path_alternativo` char(255) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
   `timestamp_scalamento` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -897,55 +892,50 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000085
+--| 010000015800
 
 -- indirizzi
 -- tipologia: tabella gestita
+-- verifica: 2021-09-23 15:21 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `indirizzi` (
-`id` int(11) NOT NULL,
-  `id_anagrafica` int(11) DEFAULT NULL,
-  `id_tipologia` int(11) DEFAULT NULL,
-  `id_tipologia_edificio` int(11) DEFAULT NULL,
-  `id_condizione` int(11) DEFAULT NULL,
-  `id_agente` int(11) DEFAULT NULL,
-  `piani` int(11) DEFAULT NULL,
-  `descrizione` char(128) CHARACTER SET utf8 DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `id_comune` int(11) NOT NULL,
+  `localita` char(128) CHARACTER SET utf8 DEFAULT NULL,
   `indirizzo` char(128) CHARACTER SET utf8 NOT NULL,
   `civico` char(16) CHARACTER SET utf8 DEFAULT NULL,
   `cap` char(11) CHARACTER SET utf8 DEFAULT NULL,
-  `localita` char(128) CHARACTER SET utf8 DEFAULT NULL,
-  `id_comune` int(11) NOT NULL,
+  `note` text CHARACTER SET utf8,
   `latitudine` decimal(11,7) DEFAULT NULL,
   `longitudine` decimal(11,7) DEFAULT NULL,
-  `timestamp_geocode` int(11) DEFAULT NULL,
-  `id_zona` int(11) DEFAULT NULL,
-  `note` text CHARACTER SET utf8,
-  `id_account_editor` int(11) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `timestamp_geolocalizzazione` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000087
+--| 010000016000
 
 -- iva
 -- tipologia: tabella di supporto
+-- verifica: 2021-09-23 16:52 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `iva` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `aliquota` decimal(5,2) NOT NULL,
   `nome` char(64) NOT NULL,
   `descrizione` text,
   `codice` char(8) DEFAULT NULL,
-  `se_ecommerce` int(1) DEFAULT NULL
+  `timestamp_archiviazione` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000088
+--| 010000016200
 
 -- job
 -- tipologia: tabella gestita
+-- verifica: 2021-09-24 17:41 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `job` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `job` char(255) NOT NULL,
   `timestamp_apertura` int(11) DEFAULT NULL,
@@ -954,6 +944,8 @@ CREATE TABLE IF NOT EXISTS `job` (
   `iterazioni` int(11) DEFAULT NULL,
   `delay` int(11) DEFAULT NULL,
   `workspace` text,
+  `token` char(254) DEFAULT NULL,
+  `se_foreground` int(1) DEFAULT NULL,
   `timestamp_esecuzione` int(11) DEFAULT NULL,
   `timestamp_completamento` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -962,12 +954,13 @@ CREATE TABLE IF NOT EXISTS `job` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000089
+--| 010000016800
 
 -- lingue
 -- tipologia: tabella di supporto
+-- verifica: 2021-09-24 17:41 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `lingue` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `nome` char(128) COLLATE utf8_general_ci NOT NULL,
   `note` char(128) COLLATE utf8_general_ci DEFAULT NULL,
   `iso6391alpha2` char(36) COLLATE utf8_general_ci DEFAULT NULL,
@@ -975,76 +968,92 @@ CREATE TABLE IF NOT EXISTS `lingue` (
   `ietf` char(36) COLLATE utf8_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000091
+--| 010000017200
 
 -- listini
 -- tipologia: tabella assistita
+-- verifica: 2021-09-24 17:49 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `listini` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_valuta` int(11) NOT NULL,
   `nome` char(64) COLLATE utf8_general_ci NOT NULL,
-  `id_valuta` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 010000000092
-
--- listini_clienti
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `listini_clienti` (
-`id` int(11) NOT NULL,
-  `id_listino` int(11) NOT NULL,
-  `id_cliente` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 010000000093
-
--- luoghi
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `luoghi` (
-`id` int(11) NOT NULL,
-  `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(255) COLLATE utf8_general_ci NOT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000094
+--| 010000017400
+
+-- listini_clienti
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 18:12 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `listini_clienti` (
+  `id` int(11) NOT NULL,
+  `id_listino` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000018000
+
+-- luoghi
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 18:39 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `luoghi` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `nome` char(255) COLLATE utf8_general_ci NOT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000018200
 
 -- macro
 -- tipologia: tabella gestita
+-- verifica: 2021-09-24 18:55 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `macro` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_pagina` int(11) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
   `macro` char(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000095
+--| 010000018600
 
 -- mail
 -- tipologia: tabella gestita
+-- verifica: 2021-09-27 18:31 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `mail` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
+  `indirizzo` char(128) NOT NULL,
+  `note` char(128) DEFAULT NULL,
   `se_notifiche` tinyint(1) DEFAULT NULL,
   `se_pec` tinyint(1) DEFAULT NULL,
-  `indirizzo` char(128) NOT NULL,
-  `descrizione` char(128) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000097
+--| 010000018800
 
 -- mail_out
 -- tipolgia: tabella gestita
+-- verifica: 2021-09-28 15:10 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `mail_out` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_mail` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `timestamp_composizione` int(11) NOT NULL,
-  `timestamp_invio` int(11) DEFAULT NULL,
-  `server` char(128) DEFAULT NULL,
   `mittente` char(254) NOT NULL,
   `destinatari` text NOT NULL,
   `destinatari_cc` text,
@@ -1053,30 +1062,31 @@ CREATE TABLE IF NOT EXISTS `mail_out` (
   `corpo` text NOT NULL,
   `allegati` text,
   `headers` text,
+  `server` char(128) DEFAULT NULL,
   `host` char(254) DEFAULT NULL,
   `port` char(6) DEFAULT NULL,
   `user` char(254) DEFAULT NULL,
   `password` char(254) DEFAULT NULL,
-  `id_newsletter` int(11) DEFAULT NULL,
-  `id_email` int(11) DEFAULT NULL,
-  `tentativi` int(11) DEFAULT '0',
   `token` char(128) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT '0',
+  `timestamp_invio` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000098
+--| 010000018900
 
 -- mail_sent
 -- tipolgia: tabella gestita
+-- verifica: 2021-09-28 15:47 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `mail_sent` (
   `id` int(11) NOT NULL,
+  `id_mail` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `timestamp_composizione` int(11) NOT NULL,
-  `timestamp_invio` int(11) DEFAULT NULL,
-  `server` char(128) DEFAULT NULL,
   `mittente` char(254) NOT NULL,
   `destinatari` text NOT NULL,
   `destinatari_cc` text,
@@ -1085,58 +1095,79 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
   `corpo` text NOT NULL,
   `allegati` text,
   `headers` text,
+  `server` char(128) DEFAULT NULL,
   `host` char(254) DEFAULT NULL,
   `port` char(6) DEFAULT NULL,
   `user` char(254) DEFAULT NULL,
   `password` char(254) DEFAULT NULL,
-  `id_newsletter` int(11) DEFAULT NULL,
-  `id_email` int(11) DEFAULT NULL,
-  `tentativi` int(11) DEFAULT '0',
   `token` char(128) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
+  `tentativi` int(11) DEFAULT '0',
+  `timestamp_invio` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000102
+--| 010000019200
 
--- mastri
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `mastri` (
-`id` int(11) NOT NULL,
-  `nome` char(64) NOT NULL,
-  `id_tipologia` int(11) NOT NULL,
+-- mailing
+-- tipolgia: tabella gestita
+-- verifica: 2021-09-28 16:10 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `mailing` (
+  `id` int(11) NOT NULL,
+  `id_job` int(11) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
   `note` text,
-  `se_commerciale` int(1) DEFAULT NULL,
-  `se_produzione` int(1) DEFAULT NULL,
-  `se_amministrazione` int(1) DEFAULT NULL,
+  `timestamp_invio` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000103
+--| 010000020200
 
 -- marchi
 -- tipologia: tabella gestita
+-- verifica: 2021-09-28 17:59 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `marchi` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000104
+--| 010000020600
+
+-- mastri
+-- tipologia: tabella gestita
+-- verifica: 2021-09-29 11:33 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `mastri` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000021200
 
 -- matricole
 -- tipologia: tabella gestita
+-- verifica: 2021-09-29 15:39 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `matricole` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `numero` char(255) NOT NULL,
+  `id_marchio` int(11) DEFAULT NULL,
+  `id_produttore` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `testo` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1145,26 +1176,30 @@ CREATE TABLE IF NOT EXISTS `matricole` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000105
+--| 010000021600
 
 -- menu
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 09:32 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `menu` (
-`id` int(11) NOT NULL,
-  `id_pagina` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_lingua` int(11) NOT NULL,
+  `id_pagina` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `menu` char(32) NOT NULL,
   `nome` char(128) NOT NULL,
   `target` char(16) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
   `sottopagine` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000106
+--| 010000021800
 
 -- metadati
 -- tipologia: tabella gestita
+-- verifica: 2021-10-01 10:02 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `metadati` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
@@ -1173,26 +1208,24 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_immagine` int(11) DEFAULT NULL,
   `id_video` int(11) DEFAULT NULL,
+  `id_audio` int(11) DEFAULT NULL,
   `id_file` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
-  `id_evento` int(11) DEFAULT NULL,
-  `id_categoria_eventi` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_mailing` int(11) DEFAULT NULL,
-  `id_lingua` int(11) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `testo` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000114
+--| 010000022000
 
 -- notizie
 -- tipologia: tabella gestita
+-- verifica: 2021-10-01 12:06 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `notizie` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_tipologia` int(11) NOT NULL,
-  `id_sito` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1201,28 +1234,19 @@ CREATE TABLE IF NOT EXISTS `notizie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000115
+--| 010000022200
 
 -- notizie_categorie
 -- tipologia: tabella gestita
+-- verifica: 2021-10-01 12:32 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `notizie_categorie` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_notizia` int(11) NOT NULL,
   `id_categoria` int(11) NOT NULL,
   `ordine` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000116
-
--- notizie_categorie_prodotti
--- tipologia: tabella gestita
-CREATE TABLE IF NOT EXISTS `notizie_categorie_prodotti` (
-`id` int(11) NOT NULL,
-  `id_notizia` int(11) NOT NULL,
-  `id_categoria_prodotti` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---| 010000001100
+--| 010000022800
 
 -- organizzazioni
 -- tipologia: tabella gestita

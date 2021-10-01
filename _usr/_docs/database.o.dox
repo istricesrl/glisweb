@@ -25,8 +25,8 @@
 
     chiave                                        | campo                         | tabella e campo collegati     | comportamento
     ----------------------------------------------|-------------------------------|-------------------------------|----------------------
-    organizzazioni_ibfk_01_nofollow               | id_genitore                   | organizzazioni.id           | ON DELETE CASCADE ON UPDATE CASCADE
-    organizzazioni_ibfk_02                        | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    organizzazioni_ibfk_01_nofollow               | id_genitore                   | organizzazioni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    organizzazioni_ibfk_02                        | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
     organizzazioni_ibfk_03_nofollow               | id_ruolo                      | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *organizzazioni_view* relativa alla tabella *organizzazioni* presenta le seguenti colonne:
@@ -37,8 +37,9 @@
     organizzazioni_view.id_genitore                      | -
     organizzazioni_view.ordine                           | -
     organizzazioni_view.id_anagrafica                    | -
+    organizzazioni_view.anagrafica                       | l'anagrafica collegata al nodo dell'organizzazione
     organizzazioni_view.id_ruolo                         | -
-    organizzazioni_view.ruolo                            | il nome del ruolo ricoperto dall'anagrafica nel nodo
+    organizzazioni_view.ruolo                            | il ruolo ricoperto dall'anagrafica nel nodo
     organizzazioni_view.nome                             | -
     organizzazioni_view.__label__                        | etichetta descrittiva del nodo dell'organizzazione
 

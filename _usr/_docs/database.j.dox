@@ -9,32 +9,46 @@
     
     job
     ----
-    Questa tabella *gestita*...
+    Questa tabella *gestita* contiene i job in lavorazione; per maggiori informazioni sui job si veda
+    \ref crontab "la pagina relativa alla gestione delle operazioni pianificate".
 
     colonna                        | descrizione
     -------------------------------|---------------------------------------------------------------------------------------
     job.id                         | l'ID del job
-    job.nome                       | 
-    job.timestamp_apertura         | 
-    job.totale                     | 
-    job.corrente                   | 
-    job.iterazioni                 | 
-    job.delay                      | 
-    job.workspace                  | 
-    job.timestamp_esecuzione       | 
-    job.timestamp_completamento    | 
-    job.id_account_inserimento     | 
-    job.timestamp_inserimento      | 
-    job.id_account_aggiornamento   |
-    job.timestamp_aggiornamento    | 
+    job.nome                       | il nome del job
+    job.job                        | il percorso del file del job
+    job.totale                     | il numero totale di elementi da elaborare
+    job.corrente                   | il numero corrente di elementi elaborati
+    job.iterazioni                 | il numero di iterazioni da svolgere per ogni ciclo di elaborazione
+    job.delay                      | il numero di secondi da aspettare fra un'iterazione e l'altra
+    job.workspace                  | la memoria di lavoro del job in formato JSON
+    job.token                      | token per il lock software della riga nelle elaborazioni automatiche
+    job.se_foreground              | flag che indica se il job dev'essere eseguito in foreground
+    job.timestamp_apertura         | la timestamp di avvio del job
+    job.timestamp_esecuzione       | la timestamp di ultima esecuzione del job
+    job.timestamp_completamento    | la timestamp di completamento del job
 
-    La tabella ha le seguenti chiavi esterne:
+    La tabella non ha chiavi esterne.
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista job_view relativa alla tabella job presenta le seguenti colonne:
+    La vista *job_view* relativa alla tabella *job* presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
+    job_view.id                          | -
+    job_view.nome                        | -
+    job_view.job                         | -
+    job_view.totale                      | -
+    job_view.corrente                    | -
+    job_view.iterazioni                  | -
+    job_view.delay                       | -
+    job_view.token                       | -
+    job_view.se_foreground               | -
+    job_view.timestamp_apertura          | -
+    job_view.data_ora_apertura           | la data e ora di avvio del job
+    job_view.timestamp_esecuzione        | -
+    job_view.data_ora_esecuzione         | la data e ora di ultima esecuzione del job
+    job_view.timestamp_completamento     | -
+    job_view.data_ora_completamento      | la data e ora di completamento del job
+    job_view.__label__                   | etichetta descrittiva del job
     
+*/

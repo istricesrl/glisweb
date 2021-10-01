@@ -883,51 +883,294 @@ CREATE
 
 END;
 
+--| 070000018000
 
+-- luoghi_path
+DROP FUNCTION IF EXISTS `luoghi_path`;
 
+--| 070000018001
 
+-- luoghi_path
+-- verifica: 2021-09-10 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `luoghi_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
 
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
 
+		-- DIPENDENZE
+		-- nessuna
 
+		-- TEST
+		-- SELECT luoghi_path( <id> ) AS path
 
+		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+		DECLARE righe int( 11 ) DEFAULT 0;
 
+		WHILE ( p1 IS NOT NULL ) DO
 
+			SELECT
+				luoghi.id_genitore,
+				luoghi.nome,
+				count( luoghi.id )
+			FROM luoghi
+			WHERE luoghi.id = p1
+			INTO p1, step, righe;
 
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
 
+			SET path = concat( separatore, step, path );
 
+		END WHILE;
 
+		RETURN path;
 
+END;
 
+--| 070000018010
 
+-- luoghi_path_check
+DROP FUNCTION IF EXISTS `luoghi_path_check`;
 
+--| 070000018011
 
+-- luoghi_path_check
+-- verifica: 2021-09-10 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `luoghi_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
 
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
 
+		-- DIPENDENZE
+		-- nessuna
 
+		-- TEST
+		-- SELECT luoghi_path_check( <id1>, <id2> ) AS check
 
+		WHILE ( p1 IS NOT NULL ) DO
 
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
 
+			SELECT
+				luoghi.id_genitore
+			FROM luoghi
+			WHERE luoghi.id = p1
+			INTO p1;
 
+		END WHILE;
 
+		RETURN 0;
 
+END;
 
+--| 070000018020
 
+-- luoghi_path_find_ancestor
+DROP FUNCTION IF EXISTS `luoghi_path_find_ancestor`;
 
+--| 070000018021
 
+-- luoghi_path_find_ancestor
+-- verifica: 2021-09-10 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `luoghi_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
 
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
 
+		-- DIPENDENZE
+		-- nessuna
 
+		-- TEST
+		-- SELECT luoghi_path_find_ancestor( <id1> ) AS check
 
+		DECLARE p2 int( 11 ) DEFAULT NULL;
 
+		WHILE ( p1 IS NOT NULL ) DO
 
+			SELECT
+				luoghi.id_genitore,
+				luoghi.id
+			FROM luoghi
+			WHERE luoghi.id = p1
+			INTO p1, p2;
 
+		END WHILE;
 
---| 070000001100
+		RETURN p2;
+
+END;
+
+--| 070000020600
+
+-- mastri_path
+DROP FUNCTION IF EXISTS `mastri_path`;
+
+--| 070000020601
+
+-- mastri_path
+-- verifica: 2021-09-28 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `mastri_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT mastri_path( <id> ) AS path
+
+		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+		DECLARE righe int( 11 ) DEFAULT 0;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				mastri.id_genitore,
+				mastri.nome,
+				count( mastri.id )
+			FROM mastri
+			WHERE mastri.id = p1
+			INTO p1, step, righe;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 070000020610
+
+-- mastri_path_check
+DROP FUNCTION IF EXISTS `mastri_path_check`;
+
+--| 070000020611
+
+-- mastri_path_check
+-- verifica: 2021-09-28 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `mastri_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT mastri_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				mastri.id_genitore
+			FROM mastri
+			WHERE mastri.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 070000020620
+
+-- mastri_path_find_ancestor
+DROP FUNCTION IF EXISTS `mastri_path_find_ancestor`;
+
+--| 070000020621
+
+-- mastri_path_find_ancestor
+-- verifica: 2021-09-28 18:10 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `mastri_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT mastri_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				mastri.id_genitore,
+				mastri.id
+			FROM mastri
+			WHERE mastri.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+--| 070000022800
 
 -- organizzazioni_path
 DROP FUNCTION IF EXISTS `organizzazioni_path`;
 
---| 070000001101
+--| 070000022801
 
 -- organizzazioni_path
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -980,12 +1223,12 @@ CREATE
 
 END;
 
---| 070000001110
+--| 070000022810
 
 -- organizzazioni_path_check
 DROP FUNCTION IF EXISTS `organizzazioni_path_check`;
 
---| 070000001111
+--| 070000022811
 
 -- organizzazioni_path_check
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -1025,12 +1268,12 @@ CREATE
 
 END;
 
---| 070000001120
+--| 070000022820
 
 -- organizzazioni_path_find_ancestor
 DROP FUNCTION IF EXISTS `organizzazioni_path_find_ancestor`;
 
---| 070000001121
+--| 070000022821
 
 -- organizzazioni_path_find_ancestor
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -1067,31 +1310,5 @@ CREATE
 		RETURN p2;
 
 END;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 --| FINE FILE

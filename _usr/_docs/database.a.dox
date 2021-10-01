@@ -514,7 +514,6 @@
     -----------------------------------------------------|---------------------------------------------------------------------------------------
     attivita.id                                          | l'ID dell'attività
     attivita.id_tipologia                                | l'ID della tipologia
-    attivita.id_tipologia_inps                           | l'ID della tipologia INPS
     attivita.id_anagrafica                               | l'ID dell'anagrafica che svolge l'attività
     attivita.id_cliente                                  | l'ID del cliente a cui è riferita l'attività
     attivita.referenti                                   | testo descrittivo del referente (lato cliente) per l'attività
@@ -554,19 +553,18 @@
     chiave                          | campo                         | tabella e campo collegati     | comportamento
     --------------------------------|-------------------------------|-------------------------------|----------------------
     attivita_ibfk_01_nofollow       | id_tipologia                  | tipologie_attivita.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_02_nofollow       | id_tipologia_inps             | tipologie_inps_attivita.id    | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_03_nofollow       | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
-    attivita_ibfk_04_nofollow       | id_cliente                    | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_05_nofollow       | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
-    attivita_ibfk_06_nofollow       | id_luogo                      | luoghi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
-    attivita_ibfk_07_nofollow       | id_progetto                   | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_08_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_09_nofollow       | id_campagna                   | campagne.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_10_nofollow       | id_immobile                   | immobili.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_11_nofollow       | id_richiesta                  | richieste_immobili.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_12_nofollow       | id_todo_articoli              | todo_articoli.id              | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_13_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_14_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_02_nofollow       | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_03_nofollow       | id_cliente                    | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_04_nofollow       | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_05_nofollow       | id_luogo                      | luoghi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_06_nofollow       | id_progetto                   | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_07_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_08_nofollow       | id_campagna                   | campagne.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_09_nofollow       | id_immobile                   | immobili.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_10_nofollow       | id_richiesta                  | richieste_immobili.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_11_nofollow       | id_todo_articoli              | todo_articoli.id              | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_12_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_13_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista *attivita_view* relativa alla tabella *attivita* presenta le seguenti colonne:
 
@@ -575,8 +573,6 @@
     attivita_view.id                                | -
     attivita_view.id_tipologia                      | -
     attivita_view.tipologia                         | -
-    attivita_view.id_tipologia_inps                 | -
-    attivita_view.tipologia_inps                    | il nome della tipologia INPS dell'attività
     attivita_view.id_anagrafica                     | -
     attivita_view.anagrafica                        | l'anagrafica che esegue l'attività
     attivita_view.id_cliente                        | -

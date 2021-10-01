@@ -8,118 +8,64 @@
     ===========================================
     
     notizie
-    -----
-    Questa tabella *gestita*...
+    -------
+    Questa tabella *gestita* contiene le notizie intese come contenuti collocati e delimitati nel tempo di pubblicazione.
+    Questa entità descrive non soltanto le notizie propriamente intese ma tutti i contenuti a tempo in generale, quindi anche
+    post di blog, annunci, e simili.
 
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
     notizie.id                        | l'ID della notizia
-    notizie.id_tipologia              | 
-    notizie.id_sito                   | 
-    notizie.nome                      | 
-    notizie.note                      | 
-    notizie.id_account_inserimento    | 
-    notizie.timestamp_inserimento     | 
-    notizie.id_account_aggiornamento  | 
-    notizie.timestamp_aggiornamento   | 
+    notizie.id_tipologia              | l'ID della tipologia della notizia
+    notizie.nome                      | il titolo della notizia
+    notizie.note                      | note aggiuntive sulla notizia
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|----------------------
+    notizie_ibfk_01_nofollow            | id_tipologia          | tipologie_notizie.id          | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista notizie_view relativa alla tabella notizie presenta le seguenti colonne:
+    La vista *notizie_view* relativa alla tabella *notizie* presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
+    notizie_view.id                      | -
+    notizie_view.id_tipologia            | -
+    notizie_view.tipologia               | la tipologia della notizia
+    notizie_view.nome                    | -
+    notizie_view.categorie               | le categorie cui appartiene la notizia
+    notizie_view.__label__               | l'etichetta descrittiva della notizia
     
     notizie_categorie
     -----------------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *notizie* con l'entità subordinata
+    *categorie_notizie*.
 
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    notizie_categorie.id                        | l'ID che fa l'associazione fra la tipologia e la categoria
-    notizie_categorie.id_tipologia              | l'ID tipologia
-    notizie_categorie.id_categoria              | l'ID categoria
-    notizie_categorie.ordine                    | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista notizie_categorie_view relativa alla tabella notizie_categorie presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    notizie_categorie_prodotti
-    --------------------------
-    Questa tabella *gestita*...
-
-    colonna                                          | descrizione
-    -------------------------------------------------|-----------------------------------------------------------------------------------
-    notizie_categorie_prodotti.id                    | l'ID che fa l'associazione fra la notizia e la categoria prodotto
-    notizie_categorie_prodotti.id_notizia            | l'ID notizia
-    notizie_categorie_prodotti.id_categoria_prodotti | l'ID categoria prodotto
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    notizie_categorie.id                        | l'ID dell'associazione fra notizia e categoria
+    notizie_categorie.id_notizia                | l'ID della notizia
+    notizie_categorie.id_categoria              | l'ID della categoria
+    notizie_categorie.ordine                    | campo di ordinamento
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|----------------------
+    notizie_categorie_ibfk_01           | id_notizia            | notizie.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    notizie_categorie_ibfk_02           | id_categoria          | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
 
-    La vista notizie_categorie_prodotti_view relativa alla tabella notizie_categorie_prodotti presenta le seguenti colonne:
+    La vista *notizie_categorie_view* relativa alla tabella *notizie_categorie* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    notizie_immobili
-    ----------------
-    Questa tabella *gestita*...
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    notizie_categorie_view.id               | -
+    notizie_categorie_view.id_notizia       | -
+    notizie_categorie_view.id_notizia       | la notizia
+    notizie_categorie_view.id_categoria     | -
+    notizie_categorie_view.id_categoria     | la categoria
+    notizie_categorie_view.ordine           | -
+    notizie_categorie_view.ordine           | etichetta descrittiva dell'associazione fra notizia e categoria
 
-    colonna                                          | descrizione
-    -------------------------------------------------|-----------------------------------------------------------------------------------
-    notizie_immobili.id                              | l'ID che fa l'associazione fra l'ID dell'immobile, dell'agenzia e dell'agente
-    notizie_immobili.id_immobile                     | l'ID dell'immobile
-    notizie_immobili.id_agenzia                      | l'ID dell'agenzia
-    notizie_immobili.id_agente                       | l'ID dell'agente
-    notizie_immobili.data_notizia                    |
-    notizie_immobili.data_alert                      |
-    notizie_immobili.testo                           |
-    notizie_immobili.id_esito                        |
-    notizie_immobili.id_account_inserimento          |
-    notizie_immobili.timestamp_inserimento           |
-    notizie_immobili.id_account_aggiornamento        |
-    notizie_immobili.timestamp_aggiornamento         |
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista notizie_immobili_view relativa alla tabella notizie_immobili presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    notizie_prodotti
-    ----------------
-    Questa tabella *gestita*...
-
-    colonna                                          | descrizione
-    -------------------------------------------------|-----------------------------------------------------------------------------------
-    notizie_prodotti.id                    | l'ID che fa l'associazione fra la notizia e il prodotto
-    notizie_prodotti.id_notizia            | l'ID notizia
-    notizie_prodotti.id_prodotto           | l'ID del prodotto
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista notizie_prodotti_view relativa alla tabella notizie_prodotti presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-  
  */

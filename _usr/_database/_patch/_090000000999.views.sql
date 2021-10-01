@@ -160,9 +160,9 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		max( categorie_anagrafica.se_referente ) AS se_referente,
 		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
 		max( categorie_anagrafica.se_squadra ) AS se_squadra,
-		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' / ' ) AS categorie,
-		group_concat( DISTINCT telefoni.numero SEPARATOR ' / ' ) AS telefoni,
-		group_concat( DISTINCT mail.indirizzo SEPARATOR ' / ' ) AS mail,
+		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
+		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
 		anagrafica.data_archiviazione,
 		coalesce(
 			anagrafica.soprannome,
@@ -233,9 +233,9 @@ CREATE OR REPLACE VIEW anagrafica_archivio_view AS
 		max( categorie_anagrafica.se_referente ) AS se_referente,
 		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
 		max( categorie_anagrafica.se_squadra ) AS se_squadra,
-		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' / ' ) AS categorie,
-		group_concat( DISTINCT telefoni.numero SEPARATOR ' / ' ) AS telefoni,
-		group_concat( DISTINCT mail.indirizzo SEPARATOR ' / ' ) AS mail,
+		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
+		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
 		anagrafica.data_archiviazione,
 		coalesce(
 			anagrafica.soprannome,
@@ -306,9 +306,9 @@ CREATE OR REPLACE VIEW anagrafica_corrente_view AS
 		max( categorie_anagrafica.se_referente ) AS se_referente,
 		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
 		max( categorie_anagrafica.se_squadra ) AS se_squadra,
-		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' / ' ) AS categorie,
-		group_concat( DISTINCT telefoni.numero SEPARATOR ' / ' ) AS telefoni,
-		group_concat( DISTINCT mail.indirizzo SEPARATOR ' / ' ) AS mail,
+		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
+		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
 		anagrafica.data_archiviazione,
 		coalesce(
 			anagrafica.soprannome,
@@ -397,8 +397,8 @@ DROP TABLE IF EXISTS `anagrafica_indirizzi_view`;
 CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 	SELECT
 		anagrafica_indirizzi.id,
-		anagrafica_indirizzi.id_tipologia,
-		tipologie_indirizzi.nome AS tipologia,
+		anagrafica_indirizzi.id_ruolo,
+		ruoli_indirizzi.nome AS ruolo,
 		anagrafica_indirizzi.id_anagrafica,
 		anagrafica_indirizzi.id_indirizzo,
 		concat(
@@ -408,6 +408,7 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		) AS __label__
 	FROM anagrafica_indirizzi
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
+		LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo
 ;
 
 --| 090000001100
@@ -557,8 +558,6 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.id,
 		attivita.id_tipologia,
 		tipologie_attivita.nome AS tipologia,
-		attivita.id_tipologia_inps,
-		tipologie_attivita.nome AS tipologia_inps,
 		attivita.id_anagrafica,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		attivita.id_cliente,
@@ -610,7 +609,6 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		) AS __label__
 	FROM attivita
 		LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia
-		LEFT JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = attivita.id_tipologia_inps
 		LEFT JOIN anagrafica AS a1 ON a1.id = attivita.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = attivita.id_cliente
 		LEFT JOIN progetti_referenti_view_static ON progetti_referenti_view_static.id_progetto = attivita.id_progetto
@@ -1704,28 +1702,700 @@ CREATE OR REPLACE VIEW `gruppi_view` AS
 	FROM gruppi
 ;
 
+--| 090000015400
 
+-- iban_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `iban_view`;
 
+--| 090000015401
 
+-- iban_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-22 12:01 Fabio Mosti
+CREATE OR REPLACE VIEW `iban_view` AS
+	SELECT
+		iban.id,
+		iban.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		iban.intestazione,
+		iban.iban,
+		concat(
+			iban.iban,
+			coalesce(
+				a1.denominazione,
+				concat(
+					a1.cognome,
+					' ',
+					a1.nome
+				),
+				''
+			)
+		) AS __label__
+	FROM iban
+		LEFT JOIN anagrafica AS a1 ON a1.id = iban.id_anagrafica
+;
 
+--| 090000015600
 
+-- immagini_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `immagini_view`;
 
+--| 090000015601
 
+-- immagini_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-22 12:45 Fabio Mosti
+CREATE OR REPLACE VIEW `immagini_view` AS
+	SELECT
+		immagini.id,
+		immagini.id_anagrafica,
+		immagini.id_pagina,
+		immagini.id_file,
+		immagini.id_prodotto,
+		immagini.id_articolo,
+		immagini.id_categoria_prodotti,
+		immagini.id_risorsa,
+		immagini.id_categoria_risorse,
+		immagini.id_notizia,
+		immagini.id_categoria_notizie,
+		immagini.id_indirizzo,
+		immagini.id_lingua,
+		lingue.nome AS lingua,
+		immagini.id_ruolo,
+		ruoli_immagini.nome AS ruolo,
+		immagini.ordine,
+		immagini.orientamento,
+		immagini.taglio,
+		immagini.nome,
+		immagini.path,
+		immagini.path_alternativo,
+		immagini.token,
+		immagini.timestamp_scalamento,
+		concat(
+			ruoli_immagini.nome,
+			' # ',
+			immagini.ordine,
+			' / ',
+			immagini.nome,
+			' / ',
+			immagini.path
+		) AS __label__
+	FROM immagini
+		LEFT JOIN lingue ON lingue.id = immagini.id_lingua
+		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
+;
 
+--| 090000015800
 
+-- indirizzi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS indirizzi_view;
 
+--| 090000015801
 
+-- indirizzi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-23 16:08 Fabio Mosti
+CREATE OR REPLACE VIEW indirizzi_view AS
+	SELECT
+		indirizzi.id,
+		indirizzi.id_comune,
+		comuni.nome AS comune,
+		comuni.id_provincia,
+		provincie.nome AS provincia,
+		provincie.id_regione,
+		regioni.nome AS regione,
+		regioni.id_stato,
+		stati.nome AS stato,
+		indirizzi.localita,
+		indirizzi.indirizzo,
+		indirizzi.civico,
+		indirizzi.cap,
+		indirizzi.latitudine,
+		indirizzi.longitudine,
+		indirizzi.token,
+		indirizzi.timestamp_geolocalizzazione,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS __label__
+	FROM indirizzi
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN regioni ON regioni.id = provincie.id_regione
+		LEFT JOIN stati ON stati.id = regioni.id_stato
+;
 
+--| 090000016000
 
+-- iva_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `iva_view`;
 
+--| 090000016001
 
+-- iva_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-09-23 16:56 Fabio Mosti
+CREATE OR REPLACE VIEW iva_view AS
+	SELECT
+		iva.id,
+		iva.aliquota,
+		iva.nome,
+		iva.codice,
+		iva.timestamp_archiviazione,
+		iva.nome AS __label__
+	FROM
+		iva
+;
 
+--| 090000016200
 
+-- job_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `job_view`;
 
+--| 090000016201
 
+-- job_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 17:19 Fabio Mosti
+CREATE OR REPLACE VIEW job_view AS
+	SELECT
+		job.id,
+		job.nome,
+		job.job,
+		job.totale,
+		job.corrente,
+		job.iterazioni,
+		job.delay,
+		job.token,
+		job.se_foreground,
+		job.timestamp_apertura,
+		from_unixtime( job.timestamp_apertura, '%Y-%m-%d %H:%i' ) AS data_ora_apertura,
+		job.timestamp_esecuzione,
+		from_unixtime( job.timestamp_esecuzione, '%Y-%m-%d %H:%i' ) AS data_ora_esecuzione,
+		job.timestamp_completamento,
+		from_unixtime( job.timestamp_completamento, '%Y-%m-%d %H:%i' ) AS data_ora_completamento,
+		concat(
+			job.nome,
+			' ',
+			coalesce(
+				concat( job.corrente, ' su ', job.totale, ' fatto' ),
+				'non ancora avviato'
+			),
+			' ',
+			job.job
+		) AS __label__
+	FROM job
+;
 
+--| 090000016800
 
+-- lingue_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `lingue_view`;
 
+--| 090000016801
+
+-- lingue_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-09-24 17:45 Fabio Mosti
+CREATE OR REPLACE VIEW lingue_view AS
+	SELECT
+		lingue.id,
+		lingue.nome,
+		lingue.iso6391alpha2,
+		lingue.iso6393alpha3,
+		lingue.ietf,
+		lingue.nome AS __label__
+	FROM lingue
+;
+
+--| 090000017200
+
+-- listini_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `listini_view`;
+
+--| 090000017201
+
+-- listini_view
+-- tipologia: tabella assistita
+-- verifica: 2021-09-24 17:59 Fabio Mosti
+CREATE OR REPLACE VIEW `listini_view` AS
+	SELECT
+		listini.id,
+		listini.id_valuta,
+		valute.iso4217 AS valuta,
+		listini.nome,
+		concat(
+			listini.nome,
+			' ',
+			valute.iso4217
+		) AS __label__
+	FROM listini
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+;
+
+--| 090000017400
+
+-- listini_clienti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `listini_clienti_view`;
+
+--| 090000017401
+
+-- listini_clienti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 18:20 Fabio Mosti
+CREATE OR REPLACE VIEW `listini_view` AS
+	SELECT
+		listini_clienti.id,
+		listini_clienti.id_listino,
+		concat( listini.nome, ' ', valute.iso4217 ) AS listino,
+		listini_clienti.id_cliente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		concat(
+			listini.nome,
+			' ',
+			valute.iso4217,
+			' / ',
+			coalesce(
+				a1.denominazione,
+				concat(
+					a1.cognome,
+					' ',
+					a1.nome
+				), ''
+			)
+		) AS __label__
+	FROM listini_clienti
+		LEFT JOIN listini ON listini.id = listini_clienti.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN anagrafica AS a1 ON a1.id = listini_clienti.id_cliente
+;
+
+--| 090000018000
+
+-- luoghi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `luoghi_view`;
+
+--| 090000018001
+
+-- luoghi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 18:49 Fabio Mosti
+CREATE OR REPLACE VIEW `luoghi_view` AS
+	SELECT
+		luoghi.id,
+		luoghi.id_genitore,
+		luoghi.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		luoghi.nome,
+		luoghi_path( luoghi.id ) AS __label__
+	FROM luoghi
+		LEFT JOIN indirizzi ON indirizzi.id = luoghi.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+;
+
+--| 090000018200
+
+-- macro_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `macro_view`;
+
+--| 090000018201
+
+-- macro_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 19:40 Fabio Mosti
+CREATE OR REPLACE VIEW `macro_view` AS
+	SELECT
+		macro.id,
+		macro.id_pagina,
+		macro.id_prodotto,
+		macro.id_articolo,
+		macro.id_categoria_prodotti,
+		macro.macro,
+		macro.macro AS __label__
+	FROM macro
+;
+
+--| 090000018600
+
+-- mail_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `mail_view`;
+
+--| 090000018601
+
+-- mail_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-28 14:51 Fabio Mosti
+CREATE OR REPLACE VIEW `mail_view` AS
+	SELECT
+		mail.id,
+		mail.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		mail.indirizzo,
+		mail.se_notifiche,
+		mail.se_pec,
+		concat(
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
+			' ',
+			mail.indirizzo
+		) AS __label__
+	FROM mail
+		LEFT JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
+;
+
+--| 090000018800
+
+-- mail_out_view
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `mail_out_view`;
+
+--| 090000018801
+
+-- mail_out_view
+-- tipolgia: tabella gestita
+-- verifica: 2021-09-28 15:35 Fabio Mosti
+CREATE OR REPLACE VIEW `mail_out_view` AS
+	SELECT
+		mail_out.id,
+		mail_out.id_mail,
+		mail_out.id_mailing,
+		mail_out.ordine,
+		mail_out.timestamp_composizione,
+		mail_out.mittente,
+		mail_out.destinatari,
+		mail_out.destinatari_cc,
+		mail_out.destinatari_bcc,
+		mail_out.oggetto,
+		mail_out.allegati,
+		mail_out.headers,
+		mail_out.server,
+		mail_out.host,
+		mail_out.port,
+		mail_out.user,
+		mail_out.password,
+		mail_out.token,
+		mail_out.tentativi,
+		mail_out.timestamp_invio,
+		concat(
+			mail_out.destinatari,
+			' / '
+			mail_out.oggetto
+		) AS __label__
+	FROM mail_out
+;
+
+--| 090000018900
+
+-- mail_sent_view
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `mail_sent_view`;
+
+--| 090000018901
+
+-- mail_sent_view
+-- tipolgia: tabella gestita
+-- verifica: 2021-09-28 15:35 Fabio Mosti
+CREATE OR REPLACE VIEW `mail_sent_view` AS
+	SELECT
+		mail_sent.id,
+		mail_sent.id_mail,
+		mail_sent.id_mailing,
+		mail_sent.ordine,
+		mail_sent.timestamp_composizione,
+		mail_sent.mittente,
+		mail_sent.destinatari,
+		mail_sent.destinatari_cc,
+		mail_sent.destinatari_bcc,
+		mail_sent.oggetto,
+		mail_sent.allegati,
+		mail_sent.headers,
+		mail_sent.server,
+		mail_sent.host,
+		mail_sent.port,
+		mail_sent.user,
+		mail_sent.password,
+		mail_sent.token,
+		mail_sent.tentativi,
+		mail_sent.timestamp_invio,
+		concat(
+			mail_sent.destinatari,
+			' / '
+			mail_sent.oggetto
+		) AS __label__
+	FROM mail_sent
+;
+
+--| 090000019200
+
+-- mailing_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `mailing_view`;
+
+--| 090000019201
+
+-- mailing_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-28 15:35 Fabio Mosti
+CREATE OR REPLACE VIEW `mailing_view` AS
+	SELECT
+		mailing.id,
+		mailing.id_job,
+		mailing.nome,
+		mailing.timestamp_invio,
+		mailing.nome AS __label__
+	FROM mailing
+;
+
+--| 090000020200
+
+-- marchi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `marchi_view`;
+
+--| 090000020201
+
+-- marchi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-28 16:57 Fabio Mosti
+CREATE OR REPLACE VIEW `marchi_view` AS
+	SELECT
+		marchi.id,
+		marchi.nome,
+		marchi.nome AS __label__
+	FROM marchi
+;
+
+--| 090000020600
+
+-- mastri_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `mastri_view`;
+
+--| 090000020601
+
+-- mastri_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-29 11:43 Fabio Mosti
+CREATE OR REPLACE VIEW `mastri_view` AS
+	SELECT
+		mastri.id,
+		mastri.id_tipologia,
+		tipologie_mastri.nome AS tipologia,
+		mastri.nome,
+		mastri_path( mastri.id ) AS __label__
+	FROM mastri
+		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
+;
+
+--| 090000021200
+
+-- matricole_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `matricole_view`;
+
+--| 090000021201
+
+-- matricole_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-29 16:03 Fabio Mosti
+CREATE OR REPLACE VIEW `matricole_view` AS
+	SELECT
+		matricole.id,
+		concat( 'MTR.', lpad( matricole.id, 16, '0' ) ) AS code128,
+		matricole.numero,
+		matricole.id_marchio,
+		marchi.nome AS marchio,
+		matricole.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		matricole.nome,
+		concat_ws(
+			' ',
+			matricole.id,
+			matricole.nome,
+			matricole.numero,
+		) AS __label__
+	FROM matricole
+		LEFT JOIN marchi ON marchi.id = matricole.id_marchio
+		LEFT JOIN anagrafica AS a1 ON a1.id = matricole.id_produttore
+;
+
+--| 090000021600
+
+-- menu_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `menu_view`;
+
+--| 090000021601
+
+-- menu_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 10:01 Fabio Mosti
+CREATE OR REPLACE VIEW `menu_view` AS
+    SELECT
+		menu.id,
+		menu.id_lingua,
+		menu.id_pagina,
+		menu.ordine,
+		menu.menu,
+		menu.nome,
+		menu.target,
+		menu.sottopagine,
+		concat_ws(
+			' / ',
+			menu.menu,
+			menu.ordine,
+			lingue.ietf,
+			menu.nome
+		) AS __label__
+    FROM menu
+		INNER JOIN lingue ON lingue.id = menu.id_lingua
+;
+
+--| 090000021800
+
+-- metadati_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `metadati_view`;
+
+--| 090000021801
+
+-- metadati_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 10:49 Fabio Mosti
+CREATE OR REPLACE VIEW `metadati_view` AS
+	SELECT
+		metadati.id,
+		metadati.id_lingua,
+		lingue.ietf,
+		metadati.id_anagrafica,
+		metadati.id_prodotto,
+		metadati.id_articolo,
+		metadati.id_categoria_prodotti,
+		metadati.id_risorsa,
+		metadati.id_categoria_risorse,
+		metadati.id_immagine,
+		metadati.id_video,
+		metadati.id_audio,
+		metadati.id_file,
+		metadati.id_pagina,
+		metadati.id_notizia,
+		metadati.id_categoria_notizie,
+		metadati.id_mailing,
+		concat(
+			metadati.nome,
+			':',
+			metadati.testo
+		) AS __label__
+	FROM metadati
+		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+;
+
+--| 090000022000
+
+-- notizie_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `notizie_view`;
+
+--| 090000022001
+
+-- notizie_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 10:49 Fabio Mosti
+CREATE OR REPLACE VIEW `notizie_view` AS
+	SELECT
+		notizie.id,
+		notizie.id_tipologia,
+		tipologie_notizie.nome AS tipologia,
+		notizie.nome,
+		group_concat( categorie_notizie.nome SEPARATOR '|' ) AS categorie,
+		notizie.nome AS __label__
+	FROM notizie
+		LEFT JOIN notizie_categorie ON notizie_categorie.id_notizia = notizie.id
+		LEFT JOIN categorie_notizie ON categorie_notizie.id = notizie_categorie.id_categoria
+	GROUP BY notizie.id
+;
+
+--| 090000022200
+
+-- notizie_categorie_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `notizie_categorie_view`;
+
+--| 090000022201
+
+-- notizie_categorie_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 12:39 Fabio Mosti
+CREATE OR REPLACE VIEW `notizie_categorie_view` AS
+	SELECT
+		notizie_categorie.id,
+		notizie_categorie.id_notizia,
+		notizie.nome AS notizia,
+		notizie_categorie.id_categoria,
+		categorie_notizie_path( categorie_notizie.id ) AS categoria,
+		notizie_categorie.ordine,
+		concat(
+			notizie.nome,
+			' / ',
+			categorie_notizie_path( categorie_notizie.id )
+		) AS __label__
+	FROM notizie_categorie
+;
+
+--| 090000022800
+
+-- organizzazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `organizzazioni_view`;
+
+--| 090000022801
+
+-- organizzazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 13:10 Fabio Mosti
+CREATE OR REPLACE VIEW `organizzazioni_view` AS
+	SELECT
+		organizzazioni.id,
+		organizzazioni.id_genitore,
+		organizzazioni.ordine,
+		organizzazioni.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		organizzazioni.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		concat_ws(
+			' ',
+			organizzazioni_path( organizzazioni.id ),
+			ruoli_anagrafica.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM organizzazioni
+		LEFT JOIN anagrafica AS a1 ON a1.id = organizzazioni.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = organizzazioni.id_ruolo
+;
 
 
 
