@@ -101,7 +101,8 @@
                 'id'                => $cn['id'],
                 'nome'              => $cn['nome'],
                 'path'              => ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ),
-                'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ) ),
+            #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ) ),     // commentata questa riga, sostituita con la seguente
+                'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path'] ) : array( $cn['main_ietf'] => findFileType( $cn['path'] ) ),      // vedere issue #419
                 'title'		        => array( $cn['ietf']	=> $cn['title'] ),
                 'h1'		        => array( $cn['ietf']	=> $cn['h1'] ),
                 'h2'		        => array( $cn['ietf']	=> $cn['h2'] ),
@@ -120,7 +121,8 @@
                     $im = array_replace_recursive( $im, array(
                         'taglio'            => $cn['taglio'],
                         'path_alternativo'  => ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ),
-                        'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),
+                    #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),     // commentata questa riga, sostituita con la seguente
+                        'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path_alternativo'] ) : array( $cn['main_ietf'] => findFileType( $cn['path_alternativo'] ) ),      // vedere issue #419
                         'orientamento'      => $cn['orientamento'],
                         'anno'              => $cn['anno']
                     ) );
