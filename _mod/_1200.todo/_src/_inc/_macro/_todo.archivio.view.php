@@ -28,7 +28,7 @@
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'todo.form';
-
+	$ct['view']['open']['table'] = 'todo';
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
