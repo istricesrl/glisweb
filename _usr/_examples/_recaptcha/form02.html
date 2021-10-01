@@ -1,9 +1,14 @@
 <html>
 <head>
+    <style>
+    .grecaptcha-badge { 
+	bottom:65px !important; 
+    }
+    </style>
 </head>
 <body>
 
-<form action="_backend01.php" method="post" id="demo-form">
+<form action="backend01.php" method="post" id="demo-form">
 
     <fieldset>
     
@@ -47,7 +52,10 @@
     <div class="form-row justify-content-center justify-content-center">
         <div class="form-group col-12 mt-4 mb-5" >
             
-            <button type="button" onclick="submitDemo();">SUBMIT</button>
+            <button class="g-recaptcha"
+            data-sitekey="6Le10m4cAAAAAEvsAqtzLHama3RuLNtR64BamjzY"
+            data-callback='submitDemo'
+            data-action='submit'>Submit</button>
         </div>
     </div>
     </fieldset>
