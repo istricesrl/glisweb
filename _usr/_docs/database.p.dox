@@ -56,29 +56,7 @@
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    
-    patrocini_pratiche
-    ------------------
-    Questa tabella *gestita*...
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    patrocini_pratiche.id             | l'ID del patrocini della pratica
-    patrocini_pratiche.id_pratica     |
-    patrocini_pratiche.numero         | 
-    patrocini_pratiche.nome           | 
-    patrocini_pratiche.se_liquidato   |   
-    patrocini_pratiche.se_fatturato   | 
- 
-    La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista patrocini_pratiche_view relativa alla tabella patrocini_pratiche presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
     pause_progetti
     --------------
     Questa tabella *gestita*...
