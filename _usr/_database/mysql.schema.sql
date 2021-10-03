@@ -3485,6 +3485,13 @@ CREATE TABLE `categorie_notizie` (
   `menu` char(64) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(32) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
+  `note` text,
   `id_tipologia_pubblicazione` int(11) NOT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -3497,6 +3504,7 @@ CREATE TABLE `categorie_notizie` (
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+  KEY `id_sito` (`id_sito`),
   CONSTRAINT `categorie_notizie_ibfk_1` FOREIGN KEY (`id_genitore`) REFERENCES `categorie_notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_notizie_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_notizie_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -11016,6 +11024,7 @@ CREATE TABLE `pubblicazione` (
   `id_articolo` char(32) DEFAULT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `id_popup` int(11) DEFAULT NULL,
+  `id_categoria_notizia` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `template` char(32) DEFAULT NULL,
   `schema_html` char(32) DEFAULT NULL,
@@ -11035,14 +11044,16 @@ CREATE TABLE `pubblicazione` (
   KEY `id_prodotto` (`id_prodotto`),
   KEY `id_articolo` (`id_articolo`),
   KEY `id_notizia` (`id_notizia`),
-  CONSTRAINT `pubblicazione_ibfk_9` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`),
+  KEY `id_categoria_notizia` (`id_categoria_notizia`),
+  CONSTRAINT `pubblicazione_ibfk_10` FOREIGN KEY (`id_categoria_notizia`) REFERENCES `categorie_notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pubblicazione_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `pubblicazione_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `pubblicazione` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `pubblicazione_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pubblicazione_ibfk_3` FOREIGN KEY (`id_popup`) REFERENCES `popup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pubblicazione_ibfk_4` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pubblicazione_ibfk_5` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `pubblicazione_ibfk_6` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `pubblicazione_ibfk_6` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pubblicazione_ibfk_9` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -25349,4 +25360,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-26 23:46:11
+-- Dump completed on 2021-10-03 23:46:14
