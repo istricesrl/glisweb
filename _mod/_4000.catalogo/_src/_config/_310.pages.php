@@ -77,8 +77,22 @@
                         'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                         'parent'		=> array( 'id'		=> $pip ),
                         'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] ),
-                        'metadata'      => array( 'id_categoria_prodotti' => $pg['id'] )
+                        'metadata'      => array( 'id_categoria_prodotti' => $pg['id'] ),
+                        'macro'		    => $cf['catalogo']['pages']['elenco']['macro'] 
                     );
+
+                                        // macro aggiuntiva per i prodotti
+                    if( in_array( '4100.prodotti', $cf['mods']['active']['array'] ) ) {
+                        $cf['contents']['pages'][ $pid ]['macro'] = array_merge(
+                        $cf['contents']['pages'][ $pid ]['macro'],
+                        array( '_mod/_4100.prodotti/_src/_inc/_macro/_prodotti.elenco.php' )
+                        );
+            #		    $cf['contents']['pages'][ $id ]['contents']['prodotti'] = mysqlQuery(
+            #			$cf['mysql']['connection'],
+            #			'SELECT id_prodotto AS id FROM prodotti_categorie WHERE id_categoria = ?',
+            #			array( array( 's' => $pg['id'] ) )
+            #		    );
+                    }
 
                     aggiungiGruppi(
                         $cf['contents']['pages'][ $pid ],
