@@ -18,4 +18,4 @@
      *
      */
 
-/* aggiungere che se sono in una categoria di prodotto devo caricare i prodotti di quella categoria e informazioni basi degli articoli di quei prodotti */ 
+/* aggiungere che se sono in un prodotto devo caricare gli articoli di quel prodotto con tutti i dettagli */ 

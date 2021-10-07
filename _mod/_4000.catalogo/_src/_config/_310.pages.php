@@ -69,18 +69,7 @@
                 $pgc = memcacheRead( $cf['memcache']['connection'], $pid );
 
                 // valuto se i dati in cache sono ancora validi
-				if( $pg['timestamp_aggiornamento'] > $age || empty( $pgc ) ) {
-
-                    // dati del modulo
-                    $cf['catalogo']['categorie'][ $pg['id'] ] = array(
-                        'id' => $pg['id'],
-                        'parent' => $pg['id_genitore'],
-                        'nome' => $pg['nome'],
-                        'page' => $id,
-                        'tree' => array( $pg['id'] => array() ),
-                        'children' => mysqlSelectColumn( 'id', $cf['mysql']['connection'], 'SELECT id FROM categorie_prodotti_view WHERE id_genitore = ? ORDER BY ordine ASC', array( array( 's' => $pg['id'] ) ) ),
-                        'url' => NULL
-                    );	            
+				if( $pg['timestamp_aggiornamento'] > $age || empty( $pgc ) ) {        
 
                     // blocco dati principale
                     $cf['contents']['pages'][ $pid ] = array(

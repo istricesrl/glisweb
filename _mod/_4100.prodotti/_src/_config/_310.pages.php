@@ -76,19 +76,6 @@
 
                 // valuto se i dati in cache sono ancora validi
 				if( $pg['timestamp_aggiornamento'] > $age || empty( $pgc ) ) {
-
-                    // blocco dati del modulo
-                    $cf['catalogo']['prodotti'][ $pg['id'] ] = array(
-                        'id' => $pg['id'],
-                        'id_ingombro' => $pg['id_ingombro'],
-                        'ingombro_proporzionale' => $pg['ingombro_proporzionale'],
-                        'se_disponibile' => $pg['se_disponibile'],
-                        'nome' => $pg['nome'],
-                        'codice_produttore' => $pg['codice_produttore'],
-                        'id_marchio' => $pg['id_marchio'],
-                        'page' => NULL,
-                        'url' => NULL
-                    );
                     
                     // blocco dati principale
                     $cf['contents']['pages'][ $pid ] = array(
@@ -136,59 +123,8 @@
                         'id_prodotto'
                     );
 
-                    $cat = mysqlCachedQuery( $cf['memcache']['connection'],
-                            $cf['mysql']['connection'],
-                            'SELECT categorie_prodotti.*, prodotti_categorie.ordine, contenuti.h1 FROM prodotti_categorie '
-                            .'INNER JOIN categorie_prodotti ON categorie_prodotti.id = prodotti_categorie.id_categoria '
-                            .'INNER JOIN contenuti ON contenuti.id_categoria_prodotti = categorie_prodotti.id '
-                            .'WHERE prodotti_categorie.id_prodotto = ? AND contenuti.id_lingua = ? '
-                            .'ORDER BY prodotti_categorie.ordine',
-                            array( array( 's' => $pg['id'] ), array( 's' => $cf['localization']['language']['id'] ) ) );
-                    
-                   // ciclo per le categorie
-                    foreach( $cat as $ca ) {
-                          $cf['catalogo']['prodotti'][ $pg['id'] ]['categorie'][ sprintf( '%02d', $ca['ordine'] ) ] = $ca;
-                    }
-                    
-                    // array degli articoli 	
-                    $articoli = mysqlQuery( $cf['mysql']['connection'],
-                                'SELECT contenuti_view.id_articolo AS id, contenuti_view.h1, contenuti_view.cappello, '
-                                .'contenuti_view.title, articoli_view.id_taglia, articoli_view.id_colore, articoli_view.se_disponibile, articoli_view.ordine, '
-                                .'lingue_view.ietf FROM contenuti_view '
-                                .'INNER JOIN articoli_view ON articoli_view.id = contenuti_view.id_articolo '
-                                .'INNER JOIN lingue_view ON lingue_view.id = contenuti_view.id_lingua '
-                                .'WHERE articoli_view.id_prodotto = ? AND contenuti_view.id_lingua = ? '
-                                .'GROUP BY articoli_view.id ',
-                                array(
-                                    array( 's' => $pg['id'] ),
-                                    array( 's' => $cf['localization']['language']['id'] )
-                                    )
-                                );
-                    
-                    foreach( $articoli as $art ) {
-                            $cf['contents']['pages'][ $pid ]['contents']['articoli'][ $art['id'] ] = $art;
-                            }
-
-                    		    // se questa è la pagina canonica...
-			if( $canon == NULL ) {
-
-			    // blocco dati del modulo
-				$cf['catalogo']['prodotti'][ $pg['id'] ]['page'] = $pid;
-
-			    // collegamento con l'array dei prodotti
-			    // NOTA i link simbolici non vengono salvati in memcache
-				$cf['catalogo']['prodotti'][ $pg['id'] ]['h1'] = &$cf['contents']['pages'][ $pid ]['h1'];
-				$cf['catalogo']['prodotti'][ $pg['id'] ]['h2'] = &$cf['contents']['pages'][ $pid ]['h2'];
-				$cf['catalogo']['prodotti'][ $pg['id'] ]['title'] = &$cf['contents']['pages'][ $pid ]['title'];
-				$cf['catalogo']['prodotti'][ $pg['id'] ]['cappello'] = &$cf['contents']['pages'][ $pid ]['cappello'];
-				$cf['catalogo']['prodotti'][ $pg['id'] ]['url'] = &$cf['contents']['pages'][ $pid ]['url'];
-				$cf['catalogo']['prodotti'][ $pg['id'] ]['path'] = &$cf['contents']['pages'][ $pid ]['path'];
-				$cf['catalogo']['prodotti'][ $pg['id'] ]['contents'] = &$cf['contents']['pages'][ $pid ]['contents'];
-
-			}
-
-		    // canonical
-			$canon = $pid;
+                    // canonical
+                    $canon = $pid;
 
                     // scrivo la pagina in cache
                     memcacheWrite( $cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][  $pid ] );
