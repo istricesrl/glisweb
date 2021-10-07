@@ -28,7 +28,7 @@
 		);
 
 	    // debug
-		 print_r( $ct['page']['contents']['categorie_prodotti'] );
+		 //print_r( $ct['page']['contents']['categorie_prodotti'] );
 		// print_r( $ct['catalogo']['categorie'][ $ct['page']['metadati']['id_categoria_prodotti'] ] );
 
 	}
