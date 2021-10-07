@@ -11,7 +11,7 @@ if(  isset( $_REQUEST['__documento__'] ) ){
         array( 's' => $_REQUEST['__documento__'] ) ) 
         );
 
-    $documento['righe'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
+    $documento['righe'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT documenti_articoli_view.*, matricole.serial_number, matricole.nome AS matricola FROM documenti_articoli_view LEFT JOIN matricole ON matricole.id = documenti_articoli_view.matricola WHERE documenti_articoli_view.id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
 
 }
 $azienda = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_azienda_gestita = 1');
@@ -130,8 +130,8 @@ if( isset( $documento ) ){
     pdfSetFontStyle( $pdf, $info['style']['text']['small_bold'] );
         // intestazione tabella di dettaglio
     //$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-    $pdf->Cell( $col * 6, $info['form']['bar']['height'], 'descrizione',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col * 5, $info['form']['bar']['height'], 'matricola',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 9, $info['form']['bar']['height'], 'descrizione',  $info['cell']['thick'], 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 2, $info['form']['bar']['height'], 'matricola',  $info['cell']['thick'], 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
     $pdf->Cell( $col, $info['form']['bar']['height'], 'quantità',  $info['cell']['thick'], 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
     pdfSetFontStyle( $pdf, $info['style']['text']['default'] );
     
@@ -142,8 +142,8 @@ if( isset( $documento ) ){
 
         foreach( $documento['righe'] as $r){
 
-            $pdf->Cell( $col * 6, $info['form']['bar']['height'], $r['nome'], $info['cell']['thin'] , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 5, $info['form']['bar']['height'], $r['label_matricola'], $info['cell']['thin'] , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 9, $info['form']['bar']['height'], $r['matricola'].' '.$r['nome'], $info['cell']['thin'] , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 2, $info['form']['bar']['height'], $r['label_matricola'], $info['cell']['thin'] , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
             $pdf->Cell( $col, $info['form']['bar']['height'], $r['quantita'], $info['cell']['thin'] , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
         }
@@ -153,8 +153,8 @@ if( isset( $documento ) ){
 
         for( $i = 1; $i <= 20; $i++){
 
-            $pdf->Cell( $col * 6, $info['form']['bar']['height'], '' , ( $i == 20 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 5, $info['form']['bar']['height'], '', ( $i == 20 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 9, $info['form']['bar']['height'], '' , ( $i == 20 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 2, $info['form']['bar']['height'], '', ( $i == 20 ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
             $pdf->Cell( $col, $info['form']['bar']['height'], '', ( $i == 20  ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
     
         }
