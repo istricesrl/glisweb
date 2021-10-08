@@ -179,22 +179,21 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id
 		LEFT JOIN mail ON mail.id_anagrafica = anagrafica.id
 		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
-	WHERE anagrafica.data_archiviazione IS NULL
 	GROUP BY anagrafica.id
 ;
 
 --| 090000000410
 
--- anagrafica_archivio_view
+-- anagrafica_archiviati_view
 -- tipologia: tabella gestita
-DROP TABLE IF EXISTS `anagrafica_archivio_view`;
+DROP TABLE IF EXISTS `anagrafica_archiviati_view`;
 
 --| 090000000411
 
--- anagrafica_archivio_view
+-- anagrafica_archiviati_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 19:15 Fabio Mosti
-CREATE OR REPLACE VIEW anagrafica_archivio_view AS
+CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 	SELECT
 		anagrafica.id,
 		anagrafica.codice,
@@ -258,16 +257,16 @@ CREATE OR REPLACE VIEW anagrafica_archivio_view AS
 
 --| 090000000412
 
--- anagrafica_corrente_view
+-- anagrafica_attivi_view
 -- tipologia: tabella gestita
-DROP TABLE IF EXISTS `anagrafica_corrente_view`;
+DROP TABLE IF EXISTS `anagrafica_attivi_view`;
 
 --| 090000000413
 
--- anagrafica_corrente_view
+-- anagrafica_attivi_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 19:15 Fabio Mosti
-CREATE OR REPLACE VIEW anagrafica_corrente_view AS
+CREATE OR REPLACE VIEW anagrafica_attivi_view AS
 	SELECT
 		anagrafica.id,
 		anagrafica.codice,
@@ -963,9 +962,9 @@ CREATE OR REPLACE VIEW comuni_view AS
 		regioni.nome AS regione
 		regioni.id_stato,
 		stati.nome AS stato,
-		provincie.nome,
-		provincie.codice_istat,
-		provincie.codice_catasto,
+		comuni.nome,
+		comuni.codice_istat,
+		comuni.codice_catasto,
 		concat(
 			comuni.nome, ' ',
 			coalesce( concat( '(', provincie.sigla, ') '), ' ' ),
@@ -2397,17 +2396,780 @@ CREATE OR REPLACE VIEW `organizzazioni_view` AS
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = organizzazioni.id_ruolo
 ;
 
+--| 090000023200
 
+-- pagine_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `pagine_view`;
 
+--| 090000023201
 
-
-
+-- pagine_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-04 11:43 Fabio Mosti
+CREATE OR REPLACE VIEW `pagine_view` AS
+	SELECT
+		pagine.id,
+		pagine.id_genitore,
+		pagine.id_sito,
+		pagine.nome,
+		pagine.template,
+		pagine.schema_html,
+		pagine.tema_css,
+		pagine.id_contenuti,
+		pagine.se_sitemap,
+		pagine.se_cacheable,
+		pagine_path( pagine.id ) AS __label__
+	FROM pagine
+;
 
 --| 090000009200
 
 -- task_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `task_view`;
+
+--| 090000023600
+
+-- pianificazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `pianificazioni_view`;
+
+--| 090000023601
+
+-- pianificazioni_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW `pianificazioni_view` AS
+	SELECT
+		pianificazioni.id,
+		pianificazioni.id_progetto,
+		pianificazioni.id_todo,
+		pianificazioni.id_attivita,
+		pianificazioni.nome,
+		pianificazioni.id_periodicita,
+		periodicita.nome AS periodicita,
+		pianificazioni.cadenza,
+		pianificazioni.se_lunedi,
+		pianificazioni.se_martedi,
+		pianificazioni.se_mercoledi,
+		pianificazioni.se_giovedi,
+		pianificazioni.se_venerdi,
+		pianificazioni.se_sabato,
+		pianificazioni.se_domenica,
+		pianificazioni.schema_ripetizione,
+		pianificazioni.data_elaborazione,
+		pianificazioni.giorni_estensione,
+		pianificazioni.data_fine,
+		pianificazioni.workspace,
+		pianificazioni.token
+		concat_ws(
+			' ',
+			pianificazioni.nome,
+			periodicita.nome,
+			pianificazioni.cadenza
+		) as __label__
+	FROM pianificazioni
+		LEFT JOIN periodicita ON periodicita.id = pianificazioni.id_periodicita
+;
+
+--| 090000023800
+
+-- periodicita_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `periodicita_view`;
+
+--| 090000023801
+
+-- periodicita_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-05 18:00 Fabio Mosti
+CREATE OR REPLACE VIEW `popup_view` AS
+	SELECT
+		periodicita.id,
+		periodicita.nome,
+		periodicita.nome AS __label__
+	FROM periodicita
+;
+
+--| 090000024000
+
+-- popup_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `popup_view`;
+
+--| 090000024001
+
+-- popup_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-04 17:02 Fabio Mosti
+CREATE OR REPLACE VIEW `popup_view` AS
+	SELECT
+		popup.id,
+		popup.id_tipologia,
+		tipologie_popup.nome AS tipologia,
+		popup.id_sito,
+		popup.nome,
+		popup.id_html,
+		popup.classi_html,
+		popup.classe_attivazione,
+		popup.n_scroll,
+		popup.n_secondi,
+		popup.template,
+		popup.schema_html,
+		popup.se_ovunque,
+		popup.nome AS __label__
+	FROM popup
+		LEFT JOIN tipologie_popup ON tipologie_popup.id = popup.id_tipologia
+;
+
+--| 090000024200
+
+-- popup_pagine_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `popup_pagine_view`;
+
+--| 090000024201
+
+-- popup_pagine_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-04 17:02 Fabio Mosti
+CREATE OR REPLACE VIEW `popup_pagine_view` AS
+	SELECT
+		popup_pagine.id,
+		popup_pagine.id_popup,
+		popup_pagine.id_pagina,
+		popup_pagine.se_presente,
+		concat(
+			popup.nome,
+			' / ',
+			pagine_path( popup_pagine.id_pagina )
+			' / ',
+			coalesce( popup_pagine.se_presente, 0 )
+		) AS __label__
+	FROM popup_pagine
+;
+
+--| 090000025000
+
+-- prezzi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `prezzi_view`;
+
+--| 090000025001
+
+-- prezzi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-04 17:02 Fabio Mosti
+CREATE OR REPLACE VIEW `prezzi_view` AS
+	SELECT
+		prezzi.id,
+		prezzi.id_prodotto,
+		prezzi.id_articolo,
+		prezzi.prezzo,
+		prezzi.id_listino,
+		listini.nome AS listino,
+		valute.iso4217 AS valuta,
+		prezzi.id_iva,
+		iva.descrizione AS iva,
+		concat_ws(
+			' ',
+			prezzi.id_prodotto,
+			prezzi.id_articolo,
+			prezzi.prezzo,
+			listini.nome,
+			valute.iso4217,
+			iva.descrizione
+		) AS __label__
+	FROM prezzi
+		LEFT JOIN listini ON listini.id = prezzi.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN iva ON iva.id = prezzi.id_iva
+;
+
+--| 090000026000
+
+-- prodotti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `prodotti_view`;
+
+--| 090000026001
+
+-- prodotti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-04 18:56 Fabio Mosti
+CREATE OR REPLACE VIEW `prodotti_view` AS
+	SELECT
+		prodotti.id,
+		prodotti.id_tipologia,
+		tipologie_prodotti.nome AS tipologia,
+		tipologie_prodotti.se_prodotto,
+		tipologie_prodotti.se_servizio,
+		prodotti.nome,
+		prodotti.id_marchio,
+		marchi.nome AS marchio,
+		prodotti.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		prodotti.codice_produttore,
+		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		concat_ws(
+			' ',
+			prodotti.id,
+			prodotti.nome
+		) AS __label__
+	FROM prodotti
+		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = prodotti.id_tipologia
+		LEFT JOIN marchi ON marchi.id = prodotti.id_marchio
+		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
+		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
+	GROUP BY prodotti.id
+;
+
+--| 090000026200
+
+-- prodotti_caratteristiche_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `prodotti_caratteristiche_view`;
+
+--| 090000026201
+
+-- prodotti_caratteristiche_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-04 19:40 Fabio Mosti
+CREATE OR REPLACE VIEW `prodotti_caratteristiche_view` AS
+	SELECT
+		prodotti_caratteristiche.id,
+		prodotti_caratteristiche.id_prodotto,
+		prodotti_caratteristiche.id_caratteristica,
+		caratteristiche_prodotti.nome AS caratteristica,
+		prodotti_caratteristiche.ordine,
+		prodotti_caratteristiche.se_assente,
+		concat(
+			prodotti_caratteristiche.id_prodotto,
+			' / ',
+			caratteristiche_prodotti.nome,
+			' / ',
+			coalesce( caratteristiche_prodotti.se_assente, 0 )
+		) AS __label__
+	FROM prodotti_caratteristiche
+		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = prodotti_caratteristiche.id_caratteristica
+;
+
+--| 090000026400
+
+-- prodotti_categorie_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `prodotti_categorie_view`;
+
+--| 090000026401
+
+-- prodotti_categorie_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-04 19:45 Fabio Mosti
+CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
+	SELECT
+		prodotti_categorie.id,
+		prodotti_categorie.id_prodotto,
+		prodotti_categorie.id_categoria,
+		categorie_prodotti_path( prodotti_categorie.id_categoria ) AS categoria,
+		prodotti_categorie.id_ruolo,
+		ruoli_prodotti.nome AS ruolo,
+		prodotti_categorie.ordine,
+		concat_ws(
+			' ',
+			prodotti_categorie.id_prodotto,
+			ruoli_prodotti.nome,
+			categorie_prodotti_path( prodotti_categorie.id_categoria ) AS categoria
+		) AS __label__
+	FROM prodotti_categorie
+		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = prodotti_categorie.id_ruolo
+;
+
+--| 090000027000
+
+-- progetti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_view`;
+
+--| 090000027001
+
+-- progetti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 14:14 Fabio Mosti
+CREATE OR REPLACE VIEW `progetti_view` AS
+	SELECT
+		progetti.id,
+		progetti.id_tipologia,
+		tipologie_progetti.nome AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.nome,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+	GROUP BY progetti.id
+;
+
+--| 090000027010
+
+-- progetti_produzione_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_produzione_view`;
+
+--| 090000027011
+
+-- progetti_produzione_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 14:14 Fabio Mosti
+CREATE OR REPLACE VIEW `progetti_produzione_view` AS
+	SELECT
+		progetti.id,
+		progetti.id_tipologia,
+		tipologie_progetti.nome AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.nome,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+	WHERE progetti.data_accettazione IS NULL
+		AND progetti.data_chiusura IS NULL
+		AND progetti.data_archiviazione IS NULL
+	GROUP BY progetti.id
+;
+
+--| 090000027012
+
+-- progetti_commerciale_archivio_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_commerciale_archivio_view`;
+
+--| 090000027013
+
+-- progetti_commerciale_archivio_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 14:14 Fabio Mosti
+CREATE OR REPLACE VIEW `progetti_commerciale_archivio_view` AS
+	SELECT
+		progetti.id,
+		progetti.id_tipologia,
+		tipologie_progetti.nome AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.nome,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+	WHERE progetti.data_accettazione IS NULL
+		AND progetti.data_chiusura IS NULL
+		AND progetti.data_archiviazione IS NOT NULL
+	GROUP BY progetti.id
+;
+
+--| 090000027020
+
+-- progetti_produzione_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_produzione_view`;
+
+--| 090000027021
+
+-- progetti_produzione_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 14:14 Fabio Mosti
+CREATE OR REPLACE VIEW `progetti_produzione_view` AS
+	SELECT
+		progetti.id,
+		progetti.id_tipologia,
+		tipologie_progetti.nome AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.nome,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+	WHERE progetti.data_accettazione IS NOT NULL
+		AND progetti.data_chiusura IS NULL
+		AND progetti.data_archiviazione IS NULL
+	GROUP BY progetti.id
+;
+
+--| 090000027022
+
+-- progetti_produzione_archivio_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_produzione_archivio_view`;
+
+--| 090000027023
+
+-- progetti_produzione_archivio_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 14:14 Fabio Mosti
+CREATE OR REPLACE VIEW `progetti_produzione_archivio_view` AS
+	SELECT
+		progetti.id,
+		progetti.id_tipologia,
+		tipologie_progetti.nome AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.nome,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+	WHERE progetti.data_accettazione IS NOT NULL
+		AND progetti.data_chiusura IS NULL
+		AND progetti.data_archiviazione IS NOT NULL
+	GROUP BY progetti.id
+;
+
+--| 090000027030
+
+-- progetti_amministrazione_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_amministrazione_view`;
+
+--| 090000027031
+
+-- progetti_amministrazione_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 14:14 Fabio Mosti
+CREATE OR REPLACE VIEW `progetti_amministrazione_view` AS
+	SELECT
+		progetti.id,
+		progetti.id_tipologia,
+		tipologie_progetti.nome AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.nome,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+	WHERE progetti.data_accettazione IS NOT NULL
+		AND progetti.data_chiusura IS NOT NULL
+		AND progetti.data_archiviazione IS NULL
+	GROUP BY progetti.id
+;
+
+--| 090000027032
+
+-- progetti_amministrazione_archivio_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_amministrazione_archivio_view`;
+
+--| 090000027033
+
+-- progetti_amministrazione_archivio_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 14:14 Fabio Mosti
+CREATE OR REPLACE VIEW `progetti_amministrazione_archivio_view` AS
+	SELECT
+		progetti.id,
+		progetti.id_tipologia,
+		tipologie_progetti.nome AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.nome,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+	WHERE progetti.data_accettazione IS NOT NULL
+		AND progetti.data_chiusura IS NOT NULL
+		AND progetti.data_archiviazione IS NOT NULL
+	GROUP BY progetti.id
+;
+
+--| 090000027200
+
+-- progetti_anagrafica_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_anagrafica_view`;
+
+--| 090000027201
+
+-- progetti_anagrafica_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 15:07 Fabio Mosti
+CREATE OR REPLACE VIEW progetti_anagrafica_view AS
+	SELECT
+		progetti_anagrafica.id,
+		progetti_anagrafica.id_progetto,
+		progetti.nome AS progetto,
+		progetti_anagrafica.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		progetti_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome as ruolo,
+		progetti_anagrafica.ordine,
+ 		concat_ws(
+			' ',
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+			ruoli_progetti.nome
+		) AS __label__
+	FROM progetti_anagrafica
+		LEFT JOIN progetti ON progetti.id = progetti_anagrafica.id_progetto
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti_anagrafica.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = progetti_anagrafica.id_ruolo
+;
+
+--| 090000027400
+
+-- progetti_categorie_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_categorie_view`;
+
+--| 090000027401
+
+-- progetti_categorie_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 15:07 Fabio Mosti
+CREATE OR REPLACE VIEW progetti_categorie_view AS
+	SELECT
+		progetti_categorie.id,
+		progetti_categorie.id_progetto,
+		progetti.nome AS progetto,
+		progetti_categorie.id_categoria,
+		categorie_progetti_path( progetti_categorie.id_categoria ) AS categoria,
+		progetti_categorie.ordine,
+ 		concat_ws(
+			' ',
+			progetti.nome,
+			categorie_progetti_path( progetti_categorie.id_categoria )
+		) AS __label__
+	FROM progetti_anagrafica
+		LEFT JOIN progetti ON progetti.id = progetti_anagrafica.id_progetto
+;
+
+--| 090000028000
+
+-- provincie_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `provincie_view`;
+
+--| 090000028001
+
+-- provincie_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-08 15:07 Fabio Mosti
+CREATE OR REPLACE VIEW provincie_view AS
+	SELECT
+		provincie.id,
+		provincie.id_regione,
+		regioni.nome AS regione,
+		regioni.id_stato,
+		stati.nome AS stato,
+		provincie.nome,
+		provincie.sigla,
+		provincie.codice_istat,
+		concat_ws(
+			' ',
+			provincie.nome,
+			concat( '(', provincie.sigla, ')' ),
+			stati.nome
+		) AS __label__
+	FROM provincie
+		INNER JOIN regioni ON regioni.id = provincie.id_regione
+		INNER JOIN stati ON stati.id = regioni.id_stato
+;
+
+--| 090000028400
+
+-- pubblicazione_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `pubblicazione_view`;
+
+--| 090000028401
+
+-- pubblicazione_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 17:17 Fabio Mosti
+CREATE OR REPLACE VIEW `pubblicazione_view` AS
+    SELECT
+		pubblicazione.id,
+		pubblicazione.id_tipologia,
+		tipologie_pubblicazione.nome AS tipologia,
+		pubblicazione.ordine,
+		pubblicazione.id_prodotto,
+		pubblicazione.id_categoria_prodotti,
+		pubblicazione.id_notizia,
+		pubblicazione.id_categoria_notizie,
+		pubblicazione.id_pagina,
+		pubblicazione.id_popup,
+		pubblicazione.timestamp_inizio,
+		pubblicazione.timestamp_fine,
+		concat_ws(
+			' ',
+			tipologie_pubblicazione.nome,
+			pubblicazione.timestamp_inizio,
+			pubblicazione.timestamp_fine
+		) AS __label__
+    FROM pubblicazione
+;
+
+--| 090000028800
+
+-- recensioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `recensioni_view`;
+
+--| 090000028801
+
+-- recensioni_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 17:17 Fabio Mosti
+CREATE OR REPLACE VIEW recensioni_view AS
+    SELECT
+		recensioni.id,
+		recensioni.id_lingua,
+		recensioni.id_prodotto,
+		recensioni.id_articolo,
+		recensioni.timestamp_recensione,
+		recensioni.valutazione,
+		recensioni.autore,
+		recensioni.titolo,
+		recensioni.testo,
+		recensioni.se_approvata,
+		concat_ws(
+			' ',
+			recensioni.id_prodotto,
+			recensioni.id_articolo,
+			recensioni.valutazione,
+			recensioni.autore,
+			recensioni.titolo
+		) AS __label__
+    FROM recensioni
+;
 
 --| 090000009201
 

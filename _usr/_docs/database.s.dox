@@ -107,66 +107,7 @@
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    
-    sostituzioni_attivita
-    ---------------------
-    Questa tabella *gestita* ...
 
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
-    sostituzioni_attivita.id                            | l'ID che fa l'associazione fra l'attività e l'anagrafica
-    sostituzioni_attivita.id_attivita                   | l'ID dell'attività
-    sostituzioni_attivita.id_anagrafica                 | l'ID dell'anagrafica
-    sostituzioni_attivita.data_richiesta                | 
-    sostituzioni_attivita.data_accettazione             | 
-    sostituzioni_attivita.data_rifiuto                  |
-    sostituzioni_attivita.data_scarto                   | 
-    sostituzioni_attivita.id_account_inserimento        | 
-    sostituzioni_attivita.timestamp_inserimento         | 
-    sostituzioni_attivita.id_account_aggiornamento      | 
-    sostituzioni_attivita.timestamp_aggiornamento       | 
-    
-    La vista sostituzioni_attivita_view relativa alla tabella sostituzioni_attivita presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-       
-    sostituzioni_progetti
-    ---------------------
-    Questa tabella *gestita* ...
-
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
-    sostituzioni_progetti.id                            | l'ID che fa l'associazione fra il progetto e l'anagrafica
-    sostituzioni_progetti.id_progetto                   | l'ID del progetto
-    sostituzioni_progetti.id_anagrafica                 | l'ID dell'anagrafica
-    sostituzioni_progetti.data_scopertura               | 
-    sostituzioni_progetti.data_scarto                   | 
-    sostituzioni_progetti.id_account_inserimento        | 
-    sostituzioni_progetti.timestamp_inserimento         | 
-    sostituzioni_progetti.id_account_aggiornamento      | 
-    sostituzioni_progetti.timestamp_aggiornamento       | 
-    
-    La vista sostituzioni_progetti_view relativa alla tabella sostituzioni_progetti presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    stagioni_prodotti
-    -----------------
-    Questa tabella di *supporto* ...
-
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
-    stagioni_prodotti.id                                | l'ID della stagione associata al prodotto
-    stagioni_prodotti.nome                              | nome comune della stagione associata al prodotto
-    stagioni_prodotti.new                               | 
-    
-    La vista stagioni_prodotti_view relativa alla tabella stagioni_prodotti presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
     stati
     -----
     Questa tabella *gestita* ...
@@ -188,7 +129,7 @@
     -------------------------------------|---------------------------------------------------------------------------------------
        
     stati_lingue
-    -----------------
+    ------------
     Questa tabella di *supporto* non ha una colonna 'id' perché non viene gestita in nessun caso dal CMS
 
     colonna                               | descrizione
@@ -196,9 +137,9 @@
     stati_lingue.id_stato                 | l'ID del paese della lingua
     stati_lingue.id_lingua                | l'ID della lingua 
  
-  
     La vista stati_lingue_view relativa alla tabella stati_lingue presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
      
+*/

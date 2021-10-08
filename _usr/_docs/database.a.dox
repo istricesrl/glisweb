@@ -265,13 +265,13 @@
 
     La tabella *anagrafica* è vincolata dalle ACL memorizzate sulla tabella *__acl_anagrafica__*.
 
-    anagrafica_archivio
-    -------------------
-    Questa tabella *virtuale* contiene le anagrafiche archiviate, individuate in base al fatto che il campo data_archiviazione non è NULL.
+    anagrafica_attivi
+    -----------------
+    Questa tabella *virtuale* contiene le anagrafiche non archiviate, individuate in base al fatto che il campo *data_archiviazione* è NULL.
 
-    anagrafica_corrente
-    -------------------
-    Questa tabella *virtuale* contiene le anagrafiche non archiviate, individuate in base al fatto che il campo data_archiviazione è NULL.
+    anagrafica_archiviati
+    ---------------------
+    Questa tabella *virtuale* contiene le anagrafiche archiviate, individuate in base al fatto che il campo data_archiviazione è NOT NULL.
 
     anagrafica_categorie
     --------------------

@@ -9,631 +9,660 @@
     
     pagine
     ------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* contiene le pagine pubblicate sul web tramite il framework e costituisce il cuore
+    del CMS. Le pagine sono organizzate in una struttura ad albero che ha come radice la pagina NULL.
+
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
-    pagine.id                         | l'ID della pagine
-    pagine.id_genitore                | l'ID parente
-    pagine.id_sito                    | l'ID del sito al quale la pagina fa riferimento
-    pagine.nome                       | 
-    pagine.template                   |   
-    pagine.schema_html                | 
-    pagine.tema_css                   | 
-    pagine.id_contenuti               | 
-    pagine.id_tipologia_pubblicazione | 
-    pagine.se_sitemap                 | 
-    pagine.se_cacheable               | 
-    pagine.timestamp_inserimento      | 
-    pagine.id_account_inserimento     | 
-    pagine.timestamp_aggiornamento    | 
-    pagine.id_account_aggiornamento   | 
+    pagine.id                         | l'ID della pagina
+    pagine.id_genitore                | l'ID della pagina genitore
+    pagine.id_sito                    | l'ID del sito cui è collegata la pagina
+    pagine.nome                       | il titolo della pagina
+    pagine.note                       | note aggiuntive sulla pagina
+    pagine.template                   | il template da utilizzare per renderizzare la pagina
+    pagine.schema_html                | lo schema da utilizzare per renderizzare la pagina
+    pagine.tema_css                   | il tema CSS da utilizzare per renderizzare la pagina
+    pagine.id_contenuti               | l'ID del testo della pagina
+    pagine.se_sitemap                 | flag che indica se la pagina va inclusa o no nella sitemap
+    pagine.se_cacheable               | flag che indica se la pagina può essere salvata nella cache statica
+
+    Il campo *id_contenuti* consente di collegare a una pagina una specifica riga della tabella *contenuti*, in modo
+    da non dover duplicare manualmente un testo che si ripete uguale per diverse pagine (si pensi ad esempio la pagina contatti
+    in uno scenario multisito, in cui ogni sito ha le stesse informazioni di contatto).
+
+    La pubblicazione delle pagine è gestita da un lato tramite la tabella *pubblicazione*, dall'altro tramite le regole
+    delle ACL in base alla tabella *__acl_pagine__*. Per sapere quali sono gli stati correnti di pubblicazione delle pagine si può usare
+    la query:
+
+    \code{.sql}
+    SELECT
+        pagine.id,
+        tipologie_pubblicazione.se_pubblicato,
+        pagine_path( pagine.id ) AS __label__
+    FROM pagine
+    LEFT JOIN pubblicazione ON (
+		pubblicazione.id = pagine.id
+		AND
+		pubblicazione.timestamp_pubblicazione <= UNIX_TIMESTAMP()
+		AND (
+			pubblicazione.timestamp_archiviazione > UNIX_TIMESTAMP()
+			OR
+			pubblicazione.timestamp_accettazione IS NULL
+		)
+		LEFT JOIN tipologie_pubblicazione ON tipologie_pubblicazione.id = pubblicazione.id_tipologia;
+    \endcode
+
+    Per sapere invece quali gruppi possono visualizzare le varie pagine:
+
+    \code{.sql}
+	SELECT
+		pagine.id,
+		group_concat(
+            DISTINCT __acl_pagine__.id_gruppo SEPARATOR ' | '
+        ) AS gruppi,
+		pagine_path( pagine.id ) AS __label__
+	FROM pagine
+		LEFT JOIN __acl_pagine__ ON pagine.id = __acl_pagine__.id_pagina
+    GROUP BY pagine.id;
+    \endcode
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------|-------------------------------|----------------------
+    pagine_ibfk_01_nofollow                     | id_genitore           | pagine.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagine_ibfk_02_nofollow                     | id_contenuti          | contenuti.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista pagine_view relativa alla tabella pagine presenta le seguenti colonne:
+    La vista *pagine_view* relativa alla tabella *pagine* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    pagine_gruppi
-    -------------
-    Questa tabella *gestita*...
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    pagine_gruppi.id                  | l'ID dell'associazione fra la pagina e il gruppo
-    pagine_gruppi.id_pagina           | l'ID della pagina
-    pagine_gruppi.id_gruppo           | l'ID del gruppo
-    
-    La tabella ha le seguenti chiavi esterne:
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    pagine_view.id                      | -
+    pagine_view.id_genitore             | -
+    pagine_view.id_sito                 | -
+    pagine_view.nome                    | -
+    pagine_view.template                | -
+    pagine_view.schema_html             | -
+    pagine_view.tema_css                | -
+    pagine_view.id_contenuti            | -
+    pagine_view.se_sitemap              | -
+    pagine_view.se_cacheable            | -
+    pagine_view.__label__               | l'etichetta descrittiva della pagina
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista pagine_gruppi_view relativa alla tabella pagine_gruppi presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-
-    pause_progetti
-    --------------
-    Questa tabella *gestita*...
-    
-    colonna                                 | descrizione
-    ----------------------------------------|--------------------------------------------------------------------------------------------
-    pause_progetti.id                       | l'ID della pausa del progetto
-    pause_progetti.id_progetto              | l'ID del progetto
-    pause_progetti.data_inizio              |   
-    pause_progetti.data_fine                |    
-    pause_progetti.timestamp_inserimento    | 
-    pause_progetti.id_account_inserimento   | 
-    pause_progetti.timestamp_aggiornamento  | 
-    pause_progetti.id_account_aggiornamento | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista pause_progetti_view relativa alla tabella pause_progetti presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    periodi_variazioni_attivita
-    ---------------------------
-    Questa tabella *gestita*...
-    
-    colonna                                              | descrizione
-    -----------------------------------------------------|--------------------------------------------------------------------------------------------
-    periodi_variazioni_attivita.id                       | l'ID del periodo di variazione
-    periodi_variazioni_attivita.id_variazione            | l'ID della variazione
-    periodi_variazioni_attivita.data_inizio              |   
-    periodi_variazioni_attivita.data_fine                |    
-    periodi_variazioni_attivita.ora_inizio               |  
-    periodi_variazioni_attivita.ora_fine                 | 
-    periodi_variazioni_attivita.timestamp_elaborazione   |             
-    periodi_variazioni_attivita.timestamp_inserimento    | 
-    periodi_variazioni_attivita.id_account_inserimento   | 
-    periodi_variazioni_attivita.timestamp_aggiornamento  | 
-    periodi_variazioni_attivita.id_account_aggiornamento | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista periodi_variazioni_attivita_view relativa alla tabella periodi_variazioni_attivita presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-  
     pianificazioni
     --------------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* contiene le pianificazioni collegate a diverse entità principali. Il concetto di pianificazione nel
+    framework indica la ripetizione di una determinata entità nel tempo; quindi in pratica il meccanismo delle pianificazioni è un
+    meccanismo di duplicazione delle entità secondo uno schema regolare nel tempo, date una serie di regole per l'applicazione di
+    modifiche all'entità sorgente della copia tali per cui l'entità destinazione della copia sia spostata in avanti nel tempo e
+    pronta per essere utilizzata al momento opportuno. Per maggiori informazioni sulla pianificazione delle entità si vedano il
+    codice e i commenti della libreria _mod/_0750.pianificazioni/_src/_lib/_mysql.utils.add.php e in generale del modulo
+    pianificazioni.
+
     colonna                                    | descrizione
     -------------------------------------------|---------------------------------------------------------------------------------------
     pianificazioni.id                          | l'ID della pianificazione
-    pianificazioni.entita                      | 
-    pianificazioni.nome                        | 
-    pianificazioni.id_todo                     | 
-    pianificazioni.id_turno                    |   
-    pianificazioni.id_progetto                 |
-    pianificazioni.periodicita                 | 
-    pianificazioni.cadenza                     | 
-    pianificazioni.se_lunedi                   | 
-    pianificazioni.se_martedi                  | 
-    pianificazioni.se_mercoledi                | 
-    pianificazioni.se_giovedi                  | 
-    pianificazioni.se_venerdi                  | 
-    pianificazioni.se_sabato                   | 
-    pianificazioni.se_domenica                 | 
-    pianificazioni.ripetizione_mese            | 
-    pianificazioni.ripetizione_anno            | 
-    pianificazioni.data_fine                   | 
-    pianificazioni.data_ultimo_oggetto         | 
-    pianificazioni.giorni_rinnovo              | 
-    pianificazioni.note                        | 
-    pianificazioni.workspace                   | 
-    pianificazioni.token                       | 
-    pianificazioni.timestamp_inserimento       | 
-    pianificazioni.id_account_inserimento      | 
-    pianificazioni.timestamp_aggiornamento     | 
-    pianificazioni.id_account_aggiornamento    | 
+    pianificazioni.id_progetto                 | l'ID del progetto cui si riferisce la pianificazione
+    pianificazioni.id_todo                     | l'ID della todo cui si riferisce la pianificazione
+    pianificazioni.id_attivita                 | l'ID dell'attività cui si riferisce la pianificazione
+    pianificazioni.nome                        | nome della pianificazione
+    pianificazioni.note                        | note aggiuntive sulla pianificazione
+    pianificazioni.id_periodicita              | l'ID della periodicità di ripetizione
+    pianificazioni.cadenza                     | intero che definisce la quantità relativa alla periodicità
+    pianificazioni.se_lunedi                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il lunedì
+    pianificazioni.se_martedi                  | flag che indica se nella periodicità settimanale dev'essere utilizzato il martedì
+    pianificazioni.se_mercoledi                | flag che indica se nella periodicità settimanale dev'essere utilizzato il mercoledì
+    pianificazioni.se_giovedi                  | flag che indica se nella periodicità settimanale dev'essere utilizzato il giovedì
+    pianificazioni.se_venerdi                  | flag che indica se nella periodicità settimanale dev'essere utilizzato il venerdì
+    pianificazioni.se_sabato                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il sabato
+    pianificazioni.se_domenica                 | flag che indica se nella periodicità settimanale dev'essere utilizzata la domenica
+    pianificazioni.schema_ripetizione          | valore che indica la strategia di ripetizione per le periodicità mensili e annuali
+    pianificazioni.data_elaborazione           | data dell'ultima attività di creazione delle entità pianificate
+    pianificazioni.giorni_estensione           | numero di giorni per cui va spostata in avanti la data di fine quando la pianificazione viene allungata.
+    pianificazioni.data_fine                   | data fino alla quale vengono create le entità pianificate
+    pianificazioni.workspace                   | memoria di lavoro della pianificazione in formato JSON
+    pianificazioni.token                       | token per il lock software della riga nelle elaborazioni automatiche
+
+    La relazione fra i campi *id_periodicita* e *cadenza* è che il secondo indica ogni quante unità di tempo specificate
+    dal primo dev'essere replicata l'entità sorgente. Se ad esempio è indicata una periodicità giornaliera con cadenza tre,
+    l'entità sorgente verrà replicata ogni tre giorni.
+
+    Il campo *schema_ripetizione* ammette i seguenti valori:
+
+    costante                     | valore           | descrizione
+    -----------------------------|------------------|--------------------------------------------------------------------------------
+    RIPETI_GIORNO_ESATTO         | 1                | ripete in base al giorno di calendario (ad es. "il cinque del mese")
+    RIPETI_GIORNO_POSIZIONE      | 2                | ripete in base alla posizione del giorno nel periodo (ad es. "il primo lunedì del mese")
+
+    Il campo *data_elaborazione* viene valorizzato dal task che crea gli oggetti alla data dell'ultimo oggetto creato. Per ulteriori informazioni
+    si vedano i commenti al file _mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php.
+
+    Per ulteriori informazioni sul processo di allungamento delle pianificazioni si veda il codice del file
+    _mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.extend.php.
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                        | campo                        | tabella e campo collegati
     ----------------------------------------------|------------------------------|-----------------------------------------------------
+    ADD CONSTRAINT `pianificazioni_ibfk_01`             FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `pianificazioni_ibfk_02`             FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `pianificazioni_ibfk_03`             FOREIGN KEY (`id_attivita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `pianificazioni_ibfk_04_nofollow`    FOREIGN KEY (`id_periodicita`) REFERENCES `periodicita` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
     La vista pianificazioni_view relativa alla tabella pianificazioni presenta le seguenti colonne:
 
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    pianificazioni_view.id                          | -
+    pianificazioni_view.id_progetto                 | -
+    pianificazioni_view.id_todo                     | -
+    pianificazioni_view.id_attivita                 | -
+    pianificazioni_view.nome                        | -
+    pianificazioni_view.id_periodicita              | -
+    pianificazioni_view.periodicita                 | la periodicità della pianificazione
+    pianificazioni_view.cadenza                     | -
+    pianificazioni_view.se_lunedi                   | -
+    pianificazioni_view.se_martedi                  | -
+    pianificazioni_view.se_mercoledi                | -
+    pianificazioni_view.se_giovedi                  | -
+    pianificazioni_view.se_venerdi                  | -
+    pianificazioni_view.se_sabato                   | -
+    pianificazioni_view.se_domenica                 | -
+    pianificazioni_view.schema_ripetizione          | -
+    pianificazioni_view.data_elaborazione           | -
+    pianificazioni_view.giorni_estensione           | -
+    pianificazioni_view.data_fine                   | -
+    pianificazioni_view.workspace                   | -
+    pianificazioni_view.token                       | -
+    pianificazioni_view.__label__                   | etichetta descrittiva della pianificazione
+
+    periodicita
+    -----------
+    Questa tabella *di supporto* contiene le periodicità con cui si possono applicare le pianificazioni.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    periodicita.id                          | l'ID della periodicità
+    periodicita.nome                        | il nome della periodicità
+
+    La tabella non ha chiavi esterne.
+
+    La vista *periodicita_view* relativa alla tabella *periodicita* presenta le seguenti colonne:
+
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    
+    periodicita_view.id                  | -
+    periodicita_view.nome                | -
+    periodicita_view.__label__           | l'etichetta descrittiva della periodicità
+
     popup
     -----
-    Questa tabella *gestita*...
+    Questa tabella *gestita* contiene i popup attivi sui vari siti. Per maggiori informazioni si veda la documentazione
+    relativa al modulo _mod/_3400.popup/.
+
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
     popup.id                          | l'ID del popup
-    popup.nome                        | 
-    popup.id_html                     | l'ID dell'html del popup
-    popup.classi_html                 | l'ID della classe html del popup
-    popup.note                        |
     popup.id_tipologia                | l'ID della tipologia del popup
-    popup.id_tipologia_pubblicazione  | l'ID della tipologia di pubblicazione nel popup
-    popup.n_scroll                    | 
-    popup.n_secondi                   | 
-    popup.template                    | 
-    popup.schema_html                 | 
-    popup.classe_attivazione          | 
-    popup.se_ovunque                  | 
-    popup.timestamp_inserimento       | 
-    popup.id_account_inserimento      | 
-    popup.timestamp_aggiornamento     | 
-    popup.id_account_aggiornamento    | 
+    popup.id_sito                     | l'ID del sito cui è collegato il popup (NULL per tutti i siti)
+    popup.nome                        | il nome del popup
+    popup.note                        | note aggiuntive sul popup
+    popup.id_html                     | il valore dell'attributo ID del tag contenitore del popup
+    popup.classi_html                 | il valore dell'attributo CLASS del tag contenitore del popup
+    popup.classe_attivazione          | -
+    popup.n_scroll                    | valore di scroll dopo cui appare il popup (zero per immediatamente, NULL per non collegare il popup a un evento di scroll)
+    popup.n_secondi                   | valore in secondi dopo cui appare il popup (zero per immediatamente, NULL per non collegare il popup a un evento di timer)
+    popup.template                    | -
+    popup.schema_html                 | -
+    popup.se_ovunque                  | flag che indica se il popup deve apparire su tutte le pagine
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                          | campo             | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------|-------------------------------|----------------------
+    popup_ibfk_01_nofollow          | id_tipologia      | tipologie_popup.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista popup_view relativa alla tabella popup presenta le seguenti colonne:
+    La vista *popup_view* relativa alla tabella *popup* presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
+    popup_view.id                        | -
+    popup_view.id_tipologia              | -
+    popup_view.tipologia                 | la tipologia del popup
+    popup_view.id_sito                   | -
+    popup_view.nome                      | -
+    popup_view.id_html                   | -
+    popup_view.classi_html               | -
+    popup_view.classe_attivazione        | -
+    popup_view.n_scroll                  | -
+    popup_view.n_secondi                 | -
+    popup_view.template                  | -
+    popup_view.schema_html               | -
+    popup_view.se_ovunque                | -
+    popup_view.__label__                 | etichetta descrittiva del popup
     
     popup_pagine
     ------------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *popup* a quella subordinata *pagine*.
+
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
-    popup_pagine.id                   | l'ID dell'associazione fra l'ID della pagina e l'ID popup
-    popup_pagine.id_pagina            | l'ID della pagina
+    popup_pagine.id                   | l'ID dell'associazione fra popup e pagina
     popup_pagine.id_popup             | l'ID del popup
-    popup_pagine.se_presente          |   
+    popup_pagine.id_pagina            | l'ID della pagina
+    popup_pagine.se_presente          | flag che indica se il popup è presente nella pagina indicata
+
+    Il flag *se_presente* è utile per creare scenari in cui un popup è collegato alla maggior parte delle pagine di un sito; in
+    questo caso è possibile attivare il flag *se_ovunque* sulla tabella *popup* e poi indicare manualmente le pagine su cui
+    il popup in questione non è presente, settando a NULL il flag *se_presente* sulla tabella *popup_pagine* per
+    quelle pagine.
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                      | campo             | tabella e campo collegati     | comportamento
+    ----------------------------|-------------------|-------------------------------|----------------------
+    popup_pagine_ibfk_01        | id_popup          | popup.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    popup_pagine_ibfk_02        | id_pagina         | pagine.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista popup_pagine_view relativa alla tabella popup_pagine presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    pratiche
-    --------
-    Questa tabella *gestita*...
-    colonna                            | descrizione
-    -----------------------------------|---------------------------------------------------------------------------------------
-    pratiche.id                        | l'ID della pratica
-    pratiche.numero                    | il numero della pratica
-    pratiche.numero_ruolo              | 
-    pratiche.data_apertura             | la data in cui è stata aperta la pratica
-    pratiche.data_chiusura             | la data di chiusura della pratica 
-    pratiche.id_sede_apertura          | 
-    pratiche.id_categoria_diritto      | 
-    pratiche.id_provenienza            | l'ID di provenienza della pratica
-    pratiche.note_segnalazione         |
-    pratiche.descrizione               | 
-    pratiche.controparte               | 
-    pratiche.se_patrocinio             |   
-    pratiche.se_accompagnamento        | 
-    pratiche.note_chiusura             | 
-    pratiche.ore_stimate               |   
-    pratiche.id_esito                  | l'ID dell'esito della pratica
-    pratiche.se_richiesta_liquidazione | 
-    pratiche.se_richiesto_rimborso     | 
-    pratiche.id_account_editor         |   
-    pratiche.timestamp_inserimento     | 
-    pratiche.id_account_inserimento    | 
-    pratiche.timestamp_aggiornamento   | 
-    pratiche.id_account_aggiornamento  | 
-    pratiche.se_importata              | 
-    pratiche.id_account_chiusura       | 
-    pratiche.timestamp_chiusura        | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista pratiche_view relativa alla tabella pratiche presenta le seguenti colonne:
+    La vista *popup_pagine_view* relativa alla tabella *popup_pagine* presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    
-    pratiche_assistiti
-    ------------------
-    Questa tabella *gestita*...
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    pratiche_assistiti.id                        | l'ID che fa l'associazione tra l'anagrafica e la pratica assistita
-    pratiche_assistiti.id_anagrafica             | l'ID anagrafica della pratica assistita
-    pratiche_assistiti.id_pratica                | l'ID della pratica assistita
+    popup_pagine_view.id                 | -
+    popup_pagine_view.id_popup           | -
+    popup_pagine_view.id_pagina          | -
+    popup_pagine_view.se_presente        | -
+    popup_pagine_view.__label__          | etichetta descrittiva dell'associazione fra popup e pagina
 
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista pratiche_assistiti_view relativa alla tabella pratiche_assistiti presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    pratiche_avvocati
-    -----------------
-    Questa tabella *gestita*...
-    colonna                                     | descrizione
-    --------------------------------------------|---------------------------------------------------------------------------------------
-    pratiche_avvocati.id                        | l'ID che fa l'associazione tra l'anagrafica e la pratica avvocata
-    pratiche_avvocati.id_anagrafica             | l'ID anagrafica della pratica avvocata
-    pratiche_avvocati.id_pratica                | l'ID della pratica aavvocata
-    pratiche_avvocati.se_responsabile           | 
-    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista pratiche_avvocati_view relativa alla tabella pratiche_avvocati presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    pratiche_servizi_contatto
-    -------------------------
-    Questa tabella *gestita*...
-    colonna                                        | descrizione
-    -----------------------------------------------|---------------------------------------------------------------------------------------
-    pratiche_servizi_contatto.id                   | l'ID che fa l'associazione tra la pratica e il servizio contatto
-    pratiche_servizi_contatto.id_pratica           | l'ID della pratica 
-    pratiche_servizi_contatto.id_servizio_contatto | l'ID del servizio contatto
-    pratiche_servizi_contatto.testo                | 
-    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista pratiche_servizi_contatto_view relativa alla tabella pratiche_servizi_contatto presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
     prezzi
     ------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* contiene i prezzi collegati a varie entità principali, soprattutto *prodotti* e *articoli*.
+    Nel framework i prezzi sono raggruppati in *listini* che ne determinano, fra le altre cose, la *valuta*. Gli importi
+    registrati nella tabella *prezzi* si intendono sempre netti, e la relativa aliquota IVA è indicata tramite la
+    relazione con la tabella *iva* tramite il campo *id_iva*.
+
     colonna                     | descrizione
     ----------------------------|---------------------------------------------------------------------------------------
     prezzi.id                   | l'ID del prezzo
-    prezzi.id_prodotto          | l'ID del prodotto a cui si riferisce il prezzo
-    prezzi.id_articolo          | l'ID dell'articolo a cui si riferisce il prezzo
-    prezzi.prezzo               | il prezzo, in decimale, arrotondato a una ciffra dopo la virgola
-    prezzi.id_listino           | l'ID del listino del prezzo
-    prezzi.id_valuta            | l'ID della valuta del prezzo
-    prezzi.id_iva               | l'ID dell'iva del prezzo
-    prezzi.id_udm               | l'ID dell'unità di misura 
+    prezzi.id_prodotto          | l'ID del prodotto cui si riferisce il prezzo
+    prezzi.id_articolo          | l'ID dell'articolo cui si riferisce il prezzo
+    prezzi.prezzo               | il prezzo, in decimale
+    prezzi.id_listino           | l'ID del listino cui appartiene il prezzo
+    prezzi.id_iva               | l'ID dell'aliquota IVA relativa al prezzo
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                          | campo             | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------|-------------------------------|----------------------
+    prezzi_ibfk_01                  | id_prodotto       | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    prezzi_ibfk_02                  | id_articolo       | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    prezzi_ibfk_03_nofollow         | id_listino        | listini.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    prezzi_ibfk_04_nofollow         | id_iva            | iva.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista prezzi_view relativa alla tabella prezzi presenta le seguenti colonne:
+    La vista *prezzi_view* relativa alla tabella *prezzi* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    priorita
-    --------
-    Questa tabella *gestita*...
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    priorita.id                             | 
-    priorita.nome                           | 
-    priorita.ordine                         | 
-    
-    La tabella ha le seguenti chiavi esterne:
+    colonna                          | descrizione
+    ---------------------------------|---------------------------------------------------------------------------------------
+    prezzi_view.id                   | -
+    prezzi_view.id_prodotto          | -
+    prezzi_view.id_articolo          | -
+    prezzi_view.prezzo               | -
+    prezzi_view.id_listino           | -
+    prezzi_view.listino              | il listino cui appartiene il prezzo
+    prezzi_view.valuta               | la valuta del listino cui appartiene il prezzo
+    prezzi_view.id_iva               | -
+    prezzi_view.iva                  | l'aliquota IVA del prezzo
+    prezzi_view.__label__            | etichetta descrittiva del prezzo
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista priorita_view relativa alla tabella priorita presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
     prodotti
     --------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* contiene i prodotti, intesi come elemento aggregatore degli articoli. Nel framework i prodotti sono
+    intesi come oggetti teorici che raggruppano uno o più articoli che hanno le stesse caratteristiche di base; fungono anche da
+    collegamento fra gli articoli e il catalogo inteso come albero delle categorie dei prodotti.
+
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     prodotti.id                          | l'ID del prodotto
     prodotti.id_tipologia                | l'ID della tipologia del prodotto
-    prodotti.nome                        | nome comune del prodotto
-    prodotti.descrizione                 | descrizione del prodotto
-    prodotti.ordine                      | 
-    prodotti.codifica                    | 
-    prodotti.id_udm                      | l'ID dell'unità di misura del prodotto 
-    prodotti.id_ingombro                 | l'ID dell'ingombro del prodotto
-    prodotti.ingombro_proporzionale      |
-    prodotti.larghezza_prodotto          | la misura del prodotto : in larghezza
-    prodotti.lunghezza_prodotto          | la misura del prodotto : in lunghezza
-    prodotti.altezza_prodotto            | l'altezza del prodotto
-    prodotti.id_produttore               | l'ID del produttore del prodotto
-    prodotti.codice_produttore           | 
-    prodotti.id_fornitore                | l'ID del fornitore del prodotto  
+    prodotti.nome                        | il nome del prodotto
+    prodotti.note                        | note aggiuntive sul prodotto
+    prodotti.note_codifica               | note aggiuntive sulla codifica del prodotto
     prodotti.id_marchio                  | l'ID del marchio del prodotto
-    prodotti.id_tipologia_pubblicazione  | 
-    prodotti.se_disponibile              | 
-    prodotti.se_importata                | 
-    prodotti.timestamp_pubblicazione     | 
-    prodotti.timestamp_archiviazione     | 
-    prodotti.timestamp_inserimento       | 
-    prodotti.id_account_inserimento      | 
-    prodotti.timestamp_aggiornamento     | 
-    prodotti.id_account_aggiornamento    | 
+    prodotti.id_produttore               | l'ID del produttore del prodotto
+    prodotti.codice_produttore           | il codice assegnato dal produttore al prodotto
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                          | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------|-----------------------|-------------------------------|----------------------
+    prodotti_ibfk_01_nofollow       | id_tipologia          | tipologie_prodotti.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    prodotti_ibfk_02_nofollow       | id_marchio            | marchi.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    prodotti_ibfk_03_nofollow       | id_produttore         | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista prodotti_view relativa alla tabella prodotti presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    prodotti_categorie
-    ------------------
-    Questa tabella *gestita*...
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    prodotti_categorie.id                   | l'ID che fa l'associazione fra il prodotto, la categoria e il ruolo
-    prodotti_categorie.id_prodotto          | l'ID del prodotto
-    prodotti_categorie.id_categoria         | l'ID della categoria a cui si riferisce il prodotto
-    prodotti_categorie.id_ruolo             | l'ID del ruolo
-    prodotti_categorie.ordine               | 
-    prodotti_categorie.se_principale        |    
-    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista prodotti_categorie_view relativa alla tabella prodotti_categorie presenta le seguenti colonne:
+    La vista *prodotti_view* relativa alla tabella *prodotti* presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    
-    prodotti_modalita_spedizione
-    ----------------------------
-    Questa tabella *gestita*...
-    colonna                                     | descrizione
-    --------------------------------------------|---------------------------------------------------------------------------------------
-    prodotti_modalita_spedizione.id             | l'ID che fa l'associazione fra il prodotto e la modalità di spedizione
-    prodotti_modalita_spedizione.id_prodotto    | l'ID del prodotto 
-    prodotti_modalita_spedizione.id_modalita    | l'ID della modalità di spedizione del prodotto
-    
-    La tabella ha le seguenti chiavi esterne:
+    prodotti_view.id                     | -
+    prodotti_view.id_tipologia           | -
+    prodotti_view.tipologia              | la tipologia del prodotto
+    prodotti_view.se_prodotto            | flag che indica se il prodotto rappresenta un bene materiale
+    prodotti_view.se_servizio            | flag che indica se il prodotto rappresenta un servizio
+    prodotti_view.nome                   | -
+    prodotti_view.id_marchio             | -
+    prodotti_view.marchio                | il marchio del prodotto
+    prodotti_view.id_produttore          | -
+    prodotti_view.produttore             | il produttore del prodotto
+    prodotti_view.codice_produttore      | -
+    prodotti_view.categorie              | le categorie cui appartiene il prodotto
+    prodotti_view.__label__              | etichetta descrittiva del prodotto
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista prodotti_modalita_spedizione_view relativa alla tabella prodotti_modalita_spedizione presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
     prodotti_caratteristiche
     ------------------------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *prodotti* con l'entità subordinata
+    *caratteristiche_prodotti*; si noti che questa relazione è altresì referenziata dalla tabella *contenuti* per
+    la pubblicazione delle caratteristiche dei prodotti sui siti.
+
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    prodotti_caratteristiche.id                       | l'ID che fa l'associazione fra il prodotto e la caratteristica
-    prodotti_caratteristiche.id_prodotto              | l'ID del prodotto a cui si riferisce la caratteristica
+    prodotti_caratteristiche.id                       | l'ID dell'associazione fra prodotto e caratteristica
+    prodotti_caratteristiche.id_prodotto              | l'ID del prodotto
     prodotti_caratteristiche.id_caratteristica        | l'ID della caratteristica 
-    prodotti_caratteristiche.ordine                   | 
-    prodotti_caratteristiche.testo                    | 
-    prodotti_caratteristiche.se_non_presente          |    
+    prodotti_caratteristiche.ordine                   | campo di ordinamento
+    prodotti_caratteristiche.note                     | note aggiuntive sull'associazione fra prodotto e caratteristica
+    prodotti_caratteristiche.se_assente               | flag che indica se la caratteristica è assente dal prodotto
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------|-------------------------------|----------------------
+    prodotti_caratteristiche_ibfk_01            | id_prodotto           | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    prodotti_caratteristiche_ibfk_02_nofollow   | id_caratteristica     | caratteristiche_prodotti.id   | ON DELETE CASCADE ON UPDATE CASCADE
 
-    La vista prodotti_caratteristiche_view relativa alla tabella prodotti_caratteristiche presenta le seguenti colonne:
+    La vista *prodotti_caratteristiche_view* relativa alla tabella *prodotti_caratteristiche* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    prodotti_stagioni
-    -----------------
-    Questa tabella *gestita*...
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_caratteristiche_view.id                       | -
+    prodotti_caratteristiche_view.id_prodotto              | -
+    prodotti_caratteristiche_view.id_caratteristica        | -
+    prodotti_caratteristiche_view.caratteristica           | il nome della caratteristica
+    prodotti_caratteristiche_view.ordine                   | -
+    prodotti_caratteristiche_view.se_assente               | -
+    prodotti_caratteristiche_view.__label__                | -
+
+    prodotti_categorie
+    ------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *prodotti* con l'entità
+    secondaria *categorie_prodotti*.
+
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    prodotti_stagioni.id                    | l'ID che fa l'associazione fra il prodotto e la stagione
-    prodotti_stagioni.id_prodotto           | l'ID del prodotto
-    prodotti_stagioni.id_stagione           | l'ID della stagione
+    prodotti_categorie.id                   | l'ID dell'associazione fra prodotto e categoria
+    prodotti_categorie.id_prodotto          | l'ID del prodotto
+    prodotti_categorie.id_categoria         | l'ID della categoria
+    prodotti_categorie.id_ruolo             | l'ID del ruolo svolto dal prodotto nella categoria
+    prodotti_categorie.ordine               | campo di ordinamento
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|----------------------
+    prodotti_categorie_ibfk_01              | id_prodotto           | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    prodotti_categorie_ibfk_02_nofollow     | id_categoria          | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    prodotti_categorie_ibfk_03_nofollow     | id_ruolo              | ruoli_prodotti.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista prodotti_stagioni_view relativa alla tabella prodotti_stagioni a presenta le seguenti colonne:
+    La vista *prodotti_categorie_view* relativa alla tabella *prodotti_categorie* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_categorie_view.id                   | -
+    prodotti_categorie_view.id_prodotto          | -
+    prodotti_categorie_view.id_categoria         | -
+    prodotti_categorie_view.categoria            | òa categoria cui appartiene il prodotto
+    prodotti_categorie_view.id_ruolo             | -
+    prodotti_categorie_view.ruolo                | il ruolo svolto dal prodotto nella categoria
+    prodotti_categorie_view.ordine               | -
+    prodotti_categorie_view.__label__            | etichetta descrittiva dell'associazione fra prodotto e categoria
+
     progetti
     --------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* contiene i progetti, intesi come aggregatori di cose da fare, contenute nella tabella
+    *todo*, e attività, contenute appunto nella tabella *attivita*.
+
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     progetti.id                          | l'ID del progetto
     progetti.id_tipologia                | l'ID della tipologia del progetto
+    progetti.id_pianificazione           | l'ID della pianificazione cui appartiene il progetto
     progetti.id_cliente                  | l'ID del cliente del progetto
     progetti.id_indirizzo                | l'ID dell'indirizzo del progetto
-    progetti.nome                        | 
-    progetti.testo                       | 
-    progetti.id_pianificazione           | 
-    progetti.ranking                     | 
-    progetti.id_account_accettazione     |
-    progetti.data_accettazione           | 
-    progetti.timestamp_accettazione      | 
-    progetti.fatturato_accettazione      | 
-    progetti.testo_accettazione          | 
-    progetti.fatturato_previsto          | 
-    progetti.ore_previste                | 
-    progetti.costi_previsti              | 
-    progetti.testo_previsioni            | 
-    progetti.id_account_chiusura         | 
-    progetti.timestamp_chiusura          | 
-    progetti.testo_chiusura              | 
-    progetti.timestamp_inserimento       | 
-    progetti.id_account_inserimento      | 
-    progetti.timestamp_aggiornamento     | 
-    progetti.id_account_aggiornamento    | 
-    progetti.se_lavoro_festivo           | 
-    progetti.se_lavoro_weekend           | 
+    progetti.nome                        | il nome del progetto
+    progetti.note                        | note aggiuntive sul progetto
+    progetti.entrate_previste            | l'importo degli incassi previsti
+    progetti.ore_previste                | il numero di ore previste per il progetto
+    progetti.costi_previsti              | l'importo dei costi previsti per il progetto
+    progetti.note_previsioni             | note aggiuntive sulle previsioni per il progetto
+    progetti.entrate_accettazione        | l'importo degli incassi accettati per il progetto da parte del cliente
+    progetti.data_accettazione           | data dell'accettazione del progetto da parte del cliente
+    progetti.note_accettazione           | note aggiuntive sull'accettazione del progetto
+    progetti.data_chiusura               | data di chiusura dei lavori del progetto
+    progetti.note_chiusura               | note aggiuntive sulla chiusura dei lavori del progetto
+    progetti.entrate_totali              | entrate totali per il progetto
+    progetti.ore_totali                  | ore totali impiegate per il progetto
+    progetti.uscite_totali               | uscite totali per il progetto
+    progetti.note_totali                 | note sui totali per il progetto
+    progetti.data_archiviazione          | data di archiviazione del progetto
+    progetti.note_archiviazione          | note aggiuntive sull'archiviazione del progetto
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------------|-------------------------------|----------------------
+    progetti_ibfk_01_nofollow           | id_tipologia                  | tipologie_progetti.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    progetti_ibfk_02_nofollow           | id_pianificazione             | pianificazioni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    progetti_ibfk_03_nofollow           | id_cliente                    | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    progetti_ibfk_04_nofollow           | id_indirizzo                  | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista progetti_view relativa alla tabella progetti presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_view.id                          | -
+    progetti_view.id_tipologia                | -
+    progetti_view.tipologia                   | la tipologia del progetto
+    progetti_view.id_pianificazione           | -
+    progetti_view.id_cliente                  | -
+    progetti_view.cliente                     | il cliente del progetto
+    progetti_view.id_indirizzo                | -
+    progetti_view.nome                        | -
+    progetti_view.entrate_previste            | -
+    progetti_view.ore_previste                | -
+    progetti_view.costi_previsti              | -
+    progetti_view.entrate_accettazione        | -
+    progetti_view.data_accettazione           | -
+    progetti_view.data_chiusura               | -
+    progetti_view.entrate_totali              | -
+    progetti_view.ore_totali                  | -
+    progetti_view.uscite_totali               | -
+    progetti_view.data_archiviazione          | -
+    progetti_view.categorie                   | le categorie cui appartiene il progetto
+    progetti_view.__label__                   | etichetta descrittiva del progetto
+
+    progetti_commerciale
+    --------------------
+    Questa tabella *virtuale* contiene i progetti non ancora accettati né archiviati, individuati in base al fatto che i campi
+    *data_accettazione* e *data_archiviazione* sono entrambi NULL.
+
+    progetti_commerciale_archiviati
+    -------------------------------
+    Questa tabella *virtuale* contiene i progetti non accettati e archiviati, individuati in base al fatto che il campo
+    *data_accettazione* è NULL e il campo *data_archiviazione* è NOT NULL.
+
+    progetti_produzione
+    -------------------
+    Questa tabella *virtuale* contiene i progetti in lavorazione, individuati in base al fatto che il campo
+    *data_accettazione* è NOT NULL, campo *data_chiusura* è NOT NULL e il campo *data_archiviazione* è NULL.
+
+    progetti_produzione_archiviati
+    ------------------------------
+    Questa tabella *virtuale* contiene i progetti in lavorazione archiviati, individuati in base al fatto che il campo
+    *data_accettazione* è NOT NULL, campo *data_chiusura* è NOT NULL e il campo *data_archiviazione* è NOT NULL.
+
+    progetti_amministrazione
+    ------------------------
+    Questa tabella *virtuale* contiene i progetti in amministrazione non archiviati, individuati in base al fatto che il campo
+    *data_chiusura* è NOT NULL e il campo *data_archiviazione* è NULL.
+
+    progetti_amministrazione_archiviati
+    -----------------------------------
+    Questa tabella *virtuale* contiene i progetti in amministrazione archiviati, individuati in base al fatto che il campo
+    *data_chiusura* è NOT NULL e il campo *data_archiviazione* è NOT NULL.
+
     progetti_anagrafica
-    ------------------
-    Questa tabella *gestita*...
+    -------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *progetti* con l'attività secondaria
+    *anagrafica*.
     
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
-    progetti_anagrafica.id                       | l'ID che fa l'associazione fra il progetto, l'anagrafica e il ruolo
+    progetti_anagrafica.id                       | l'ID dell'associazione fra progetto e anagrafica
     progetti_anagrafica.id_progetto              | l'ID del progetto
     progetti_anagrafica.id_anagrafica            | l'ID dell'anagrafica
-    progetti_anagrafica.id_ruolo                 | l'ID del ruolo
-    progetti_anagrafica.se_sostituto             | 
+    progetti_anagrafica.id_ruolo                 | l'ID del ruolo svolto dall'anagrafica nel progetto
+    progetti_anagrafica.ordine                   | campo di ordinamento
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------------------|---------------------------|-------------------------------|----------------------
+    progetti_anagrafica_ibfk_01                 | id_progetto               | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_anagrafica_ibfk_02_nofollow        | id_anagrafica             | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_anagrafica_ibfk_03_nofollow        | id_ruolo                  | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista progetti_anagrafica_view relativa alla tabella progetti_anagrafica presenta le seguenti colonne:
+    La vista *progetti_anagrafica_view* relativa alla tabella *progetti_anagrafica* presenta le seguenti colonne:
     
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_anagrafica_view.id                       | -
+    progetti_anagrafica_view.id_progetto              | -
+    progetti_anagrafica_view.progetto                 | il progetto
+    progetti_anagrafica_view.id_anagrafica            | -
+    progetti_anagrafica_view.anagrafica               | l'anagrafica
+    progetti_anagrafica_view.id_ruolo                 | -
+    progetti_anagrafica_view.ruolo                    | il ruolo dell'anagrafica nel progetto
+    progetti_anagrafica_view.ordine                   | -
+    progetti_anagrafica_view.__label__                | etichetta descrittiva dell'associazione fra progetto e anagrafica
+
     progetti_categorie
     ------------------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *progetti* con l'entità secondaria *categorie_progetti*.
     
     colonna                                       | descrizione
     ----------------------------------------------|---------------------------------------------------------------------------------------
-    progetti_categorie.id                         | l'ID che fa l'associazione fra il progetto e la categoria
+    progetti_categorie.id                         | l'ID dell'associazione fra progetto e categoria
     progetti_categorie.id_progetto                | l'ID del progetto
     progetti_categorie.id_categoria               | l'ID della categoria
-    progetti_categorie.id_account_inserimento     | 
-    progetti_categorie.timestamp_inserimento      | 
-    progetti_categorie.id_account_aggiornamento   | 
-    progetti_categorie.timestamp_aggiornamento    | 
+    progetti_categorie.ordine                     | campo di ordinamento
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------------------|---------------------------|-------------------------------|----------------------
+    progetti_categorie_ibfk_01                  | id_progetto               | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_categorie_ibfk_02_nofollow         | id_categoria              | categorie_progetti.id         | ON DELETE CASCADE ON UPDATE CASCADE
 
-    La vista progetti_anagrafica_view relativa alla tabella progetti_anagrafica presenta le seguenti colonne:
+    La vista *progetti_categorie_view* relativa alla tabella *progetti_categorie* presenta le seguenti colonne:
     
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    provenienze_contatti
-    --------------------
-    Questa tabella *gestita*...
-    
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
-    provenienze_contatti.id                | l'ID della provenienza del contatto
-    provenienze_contatti.nome              |
-    provenienze_contatti.se_contatto       |
-    provenienze_contatti.se_segnalato      |
-    
-    La tabella ha le seguenti chiavi esterne:
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    progetti_categorie_view.id              | -
+    progetti_categorie_view.id_progetto     | -
+    progetti_categorie_view.progetto        | il progetto
+    progetti_categorie_view.id_categoria    | -
+    progetti_categorie_view.categoria       | la categoria
+    progetti_categorie_view.ordine          | -
+    progetti_categorie_view.__label__       | etichetta descrittiva dell'associazione fra progetto e categoria
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-
-    La vista provenienze_contatti_view relativa alla tabella provenienze_contatti presenta le seguenti colonne:
-    
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
     provincie
     ---------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* contiene le provincie, intese come entità amministrativa intermedia fra *comuni* e *regioni*.
     
     colonna                     | descrizione
     ----------------------------|---------------------------------------------------------------------------------------
     provincie.id                | l'ID della provincia
-    provincie.id_regione        | l'ID della regione della provincia
-    provincie.nome              | nome commune della provincia
+    provincie.id_regione        | l'ID della regione cui appartiene provincia
+    provincie.nome              | nome della provincia
     provincie.sigla             | sigla della provincia
-    provincie.codice_istat      | Codice ISTAT identificativo della provincia : prime tre ciffre del codice attribuito ad ogni comune dall'Istituto nazionale di statistica.
+    provincie.codice_istat      | codice ISTAT della provincia
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|----------------------
+    provincie_ibfk_01_nofollow          | id_regione                | regioni.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista provincie_view relativa alla tabella provincie presenta le seguenti colonne:
+    La vista *provincie_view* relativa alla tabella *provincie* presenta le seguenti colonne:
     
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                          | descrizione
+    ---------------------------------|---------------------------------------------------------------------------------------
+    provincie_view.id                | -
+    provincie_view.id_regione        | -
+    provincie_view.regione           | la regione cui appartiene la provincia
+    provincie_view.stato             | lo stato cui appartiene la provincia
+    provincie_view.nome              | -
+    provincie_view.sigla             | -
+    provincie_view.codice_istat      | -
+    provincie_view.__label__         | etichetta descrittiva della provincia
     
     pubblicazione
     -------------
-    Questa tabella *gestita*...
+    Questa tabella *gestita* contiene le informazioni di pubblicazione sul web relative a numerose
+    entità principali.
+
     colonna                                   | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
     pubblicazione.id                          | l'ID della publicazione
-    pubblicazione.id_sito                     | 
-    pubblicazione.id_tipologia                | l'ID della tipologia del progetto
-    pubblicazione.ordine                      | 
-    pubblicazione.id_pagina                   | 
-    pubblicazione.id_categoria_prodotti       |
-    pubblicazione.id_prodotto                 | 
-    pubblicazione.id_genitore                 | 
-    pubblicazione.id_popup                    | 
-    pubblicazione.template                    | 
-    pubblicazione.schema_html                 | 
-    pubblicazione.tema_css                    | 
-    pubblicazione.se_sitemap                  | 
-    pubblicazione.se_cacheable                | 
-    pubblicazione.note                        | 
-    pubblicazione.timestamp_pubblicazione     | 
-    pubblicazione.timestamp_archiviazione     | 
+    pubblicazione.id_tipologia                | l'ID della tipologia di pubblicazione
+    pubblicazione.ordine                      | campo di ordinamento
+    pubblicazione.id_prodotto                 | l'ID del prodotto cui si riferisce la pubblicazione
+    pubblicazione.id_categoria_prodotti       | l'ID della categoria di prodotti cui si riferisce la pubblicazione
+    pubblicazione.id_notizia                  | l'ID della notizia cui si riferisce la pubblicazione
+    pubblicazione.id_categoria_notizie        | l'ID della categoria di notizie cui si riferisce la pubblicazione
+    pubblicazione.id_pagina                   | l'ID della pagina cui si riferisce la pubblicazione
+    pubblicazione.id_popup                    | l'ID del popup cui si riferisce la pubblicazione
+    pubblicazione.note                        | note aggiuntive sulla pubblicazione
+    pubblicazione.timestamp_inizio            | timestamp di inizio della pubblicazione
+    pubblicazione.timestamp_fine              | timestamp di fine della pubblicazione
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo                     | tabella e campo collegati         | comportamento
+    --------------------------------------------|---------------------------|-----------------------------------|------------------
+    pubblicazione_ibfk_01_nofollow              | id_tipologia              | tipologie_pubblicazione.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pubblicazione_ibfk_02                       | id_prodotto               | prodotti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazione_ibfk_03                       | id_categoria_prodotti     | categorie_prodotti.id             | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazione_ibfk_04                       | id_notizia                | notizie.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazione_ibfk_05                       | id_categoria_notizie      | categorie_notizie.id              | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazione_ibfk_06                       | id_pagina                 | pagine.id                         | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazione_ibfk_07                       | id_popup                  | popup.id                          | ON DELETE CASCADE ON UPDATE CASCADE
 
-    La vista pubblicazione_view relativa alla tabella pubblicazione presenta le seguenti colonne:
+    La vista *pubblicazione_view* relativa alla tabella *pubblicazione* presenta le seguenti colonne:
     
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    pubblicazione_view.id                          | -
+    pubblicazione_view.id_tipologia                | -
+    pubblicazione_view.tipologia                   | la tipologia della pubblicazione
+    pubblicazione_view.ordine                      | -
+    pubblicazione_view.id_prodotto                 | -
+    pubblicazione_view.id_categoria_prodotti       | -
+    pubblicazione_view.id_notizia                  | -
+    pubblicazione_view.id_categoria_notizie        | -
+    pubblicazione_view.id_pagina                   | -
+    pubblicazione_view.id_popup                    | -
+    pubblicazione_view.timestamp_inizio            | -
+    pubblicazione_view.timestamp_fine              | -
+    pubblicazione_view.__label__                   | etichetta descrittiva della pubblicazione
     
     */

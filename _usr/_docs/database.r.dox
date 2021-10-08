@@ -7,85 +7,45 @@
     le tabelle del database di supporto RA - RZ
     ===========================================
 
-    rassegna_stampa
-    ---------------
-    Questa tabella *gestita* ...
-
-    colonna                                     | descrizione
-    --------------------------------------------|---------------------------------------------------------------------------------------
-    rassegna_stampa.id                          | l'ID della rassegna stampa
-    rassegna_stampa.data                        | la data della rassegna stampa
-    rassegna_stampa.id_testata                  | l'ID della testata della rassegna stampa
-    rassegna_stampa.id_tipologia                | l'ID della tipologie della rassegna stampa
-    rassegna_stampa.nome                        | il nome assegnato alla rassegna stampa
-    rassegna_stampa.testo                       | il corpo del testo
-    rassegna_stampa.id_account_inserimento      | 
-    rassegna_stampa.timestamp_inserimento       | 
-    rassegna_stampa.id_account_aggiornamento    | 
-    rassegna_stampa.timestamp_aggiornamento     | 
-    
-
-    La vista rassegna_stampa_view relativa alla tabella rassegna_stampa presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    rassegna_stampa_anagrafica
-    --------------------------
-    Questa tabella *gestita* ...
-
-    colonna                                         | descrizione
-    ------------------------------------------------|---------------------------------------------------------------------------------------
-    rassegna_stampa_anagrafica.id                   | l'ID che fa l'associazione fra la rassegna stampa, l'anagrafica e il ruolo
-    rassegna_stampa_anagrafica.id_rassegna_stampa   | l'ID della rassegna stampa di riferimento
-    rassegna_stampa_anagrafica.id_anagrafica        | l'ID dell'anagrafica 
-    rassegna_stampa_anagrafica.id_ruolo             | l'ID del ruolo 
-
-    La vista rassegna_stampa_anagrafica_view relativa alla tabella rassegna_stampa_anagrafica presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    rassegna_stampa_eventi
-    ----------------------
-    Questa tabella *gestita* ...
-
-    colonna                                     | descrizione
-    --------------------------------------------|---------------------------------------------------------------------------------------
-    rassegna_stampa_eventi.id                   | l'ID che fa l'associazione fra la rassegna stampa e l'evento
-    rassegna_stampa_eventi.id_rassegna_stampa   | l'ID della rassegna stampa di riferimento
-    rassegna_stampa_eventi.id_evento            | l'ID dell'evento
-
-    La vista rassegna_stampa_eventi_view relativa alla tabella rassegna_stampa_eventi presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
     recensioni
     ----------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene le recensioni collegate a varie entità principali del framework.
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
     recensioni.id                          | l'ID della recensione
     recensioni.id_lingua                   | l'ID della lingua della recensione
-    recensioni.id_prodotto                 | l'ID del prodotto al quale è riferita la recensione
-    recensioni.id_pagina                   | l'ID della pagina della recensione
-    recensioni.autore                      | l'autore della recensione
+    recensioni.id_prodotto                 | l'ID del prodotto cui si riferisce la recensione
+    recensioni.id_articolo                 | l'ID dell'articolo cui si riferisce la recensione
+    recensioni.timestamp_recensione        | la timestamp della recensione
     recensioni.valutazione                 | la valutazione della recensione
+    recensioni.autore                      | l'autore della recensione
     recensioni.titolo                      | il titolo della recensione
-    recensioni.testo                       | 
-    recensioni.se_approvata                | 
-    recensioni.id_account_inserimento      | 
-    recensioni.timestamp_inserimento       | 
-    recensioni.id_account_aggiornamento    | 
-    recensioni.timestamp_aggiornamento     | 
-    
-    La vista recensioni_view relativa alla tabella recensioni presenta le seguenti colonne:
+    recensioni.testo                       | il testo della recensione
+    recensioni.se_approvata                | flag che indica se la recensione è approvata
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|------------------
+    recensioni_ibfk_01_nofollow         | id_prodotto           | prodotti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    recensioni_ibfk_02_nofollow         | id_lingua             | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+
+    La vista *recensioni_view* relativa alla tabella *recensioni* presenta le seguenti colonne:
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    recensioni_view.id                          | -
+    recensioni_view.id_lingua                   | -
+    recensioni_view.id_prodotto                 | -
+    recensioni_view.id_articolo                 | -
+    recensioni_view.timestamp_recensione        | -
+    recensioni_view.valutazione                 | -
+    recensioni_view.autore                      | -
+    recensioni_view.titolo                      | -
+    recensioni_view.se_approvata                | -
+    recensioni_view.__label__                   | etichetta descrittiva della recensione
+
     redirect
     --------
     Questa tabella *gestita* contiene i redirect presenti nel deploy corrente.
@@ -101,15 +61,17 @@
     INSERT INTO `redirect` (`id`, `codice`, `sorgente`, `destinazione`) VALUES (NULL, '<code>', '<source>', '<target>');
     \endcode
 
-    La vista redirect_view relativa alla tabella redirect presenta le seguenti colonne:
+    La tabella non ha chiavi esterne.
+
+    La vista *redirect_view* relativa alla tabella *redirect* presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    redirect.id                          | vedi campo corrispondente sulla tabella relativa
-    redirect.codice                      | vedi campo corrispondente sulla tabella relativa
-    redirect.sorgente                    | vedi campo corrispondente sulla tabella relativa
-    redirect.destinazione                | vedi campo corrispondente sulla tabella relativa
-    redirect.__label__                   | -
+    redirect.id                          | -
+    redirect.codice                      | -
+    redirect.sorgente                    | -
+    redirect.destinazione                | -
+    redirect.__label__                   | etichetta descrittiva del redirect
     
     regimi_fiscali
     --------------
@@ -158,262 +120,7 @@
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    
-    richieste_immobili
-    ---------------
-    Questa tabella *gestita* ...
 
-    colonna                                        | descrizione
-    -----------------------------------------------|---------------------------------------------------------------------------------------
-    richieste_immobili.id                          | l'ID della rischiesta immobile
-    richieste_immobili.id_cliente                  | l'ID del cliente che ha fatto la richiesta immobile
-    richieste_immobili.id_agente                   | l'ID dell'agente in carico della pratica
-    richieste_immobili.piano_min                   | 
-    richieste_immobili.piano_max                   | 
-    richieste_immobili.mq_min                      | 
-    richieste_immobili.mq_max                      | 
-    richieste_immobili.cucine_min                  | 
-    richieste_immobili.cucine_max                  | 
-    richieste_immobili.bagni_min                   | 
-    richieste_immobili.bagni_max                   | 
-    richieste_immobili.camere_min                  | 
-    richieste_immobili.camere_max                  | 
-    richieste_immobili.spese_min                   | 
-    richieste_immobili.spese_max                   | 
-    richieste_immobili.note_richiesta              | 
-    richieste_immobili.note_interne                | 
-    richieste_immobili.timestamp_incrocio          | 
-    richieste_immobili.id_esito                    | 
-    richieste_immobili.timestamp_archiviazione     | 
-    richieste_immobili.note_archiviazione          | 
-    richieste_immobili.id_account_editor           | 
-    richieste_immobili.id_account_inserimento      | 
-    richieste_immobili.timestamp_inserimento       | 
-    richieste_immobili.id_account_aggiornamento    | 
-    richieste_immobili.timestamp_aggiornamento     | 
- 
-    La vista richieste_immobili_view relativa alla tabella richieste_immobili presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    richieste_immobili_caratteristiche
-    ----------------------------------
-    Questa tabella *gestita* ...
-
-    colonna                                                        | descrizione
-    ---------------------------------------------------------------|---------------------------------------------------------------------------------------
-    richieste_immobili_caratteristiche.id                          | l'ID che fa l'associazione fra la richiesta e la caratteristica
-    richieste_immobili_caratteristiche.id_richiesta                | l'ID della richiesta
-    richieste_immobili_caratteristiche.id_caratteristica           | l'ID della caratteristica
-    richieste_immobili_caratteristiche.specifiche                  | 
-    richieste_immobili_caratteristiche.se_non_desiderata           | 
-    richieste_immobili_caratteristiche.id_account_inserimento      | 
-    richieste_immobili_caratteristiche.timestamp_inserimento       | 
-    richieste_immobili_caratteristiche.id_account_aggiornamento    | 
-    richieste_immobili_caratteristiche.timestamp_aggiornamento     | 
-    
-    La vista richieste_immobili_caratteristiche_view relativa alla tabella richieste_immobili_caratteristiche presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    richieste_immobili_classi_energetiche
-    -------------------------------------
-    Questa tabella *gestita* ...
-
-    colonna                                                           | descrizione
-    ------------------------------------------------------------------|---------------------------------------------------------------------------------------
-    richieste_immobili_classi_energetiche.id                          | l'ID che fa l'associazione fra la richiesta e la classe energetica dell'immobile
-    richieste_immobili_classi_energetiche.id_richiesta                | l'ID della richiesta
-    richieste_immobili_classi_energetiche.id_classe                   | l'ID della classe energetica dell'immobile
-    richieste_immobili_classi_energetiche.se_non_desiderata           | 
-    richieste_immobili_classi_energetiche.id_account_inserimento      | 
-    richieste_immobili_classi_energetiche.timestamp_inserimento       | 
-    richieste_immobili_classi_energetiche.id_account_aggiornamento    | 
-    richieste_immobili_classi_energetiche.timestamp_aggiornamento     | 
-    
-    La vista richieste_immobili_classi_energetiche_view relativa alla tabella richieste_immobili_classi_energetiche presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    richieste_immobili_disponibilita
-    -----------------------------
-    Questa tabella *gestita* ...
-
-    colonna                                                      | descrizione
-    -------------------------------------------------------------|---------------------------------------------------------------------------------------
-    richieste_immobili_disponibilita.id                          | l'ID che fa l'associazione fra la richiesta e la disponibilità dell'immobile
-    richieste_immobili_disponibilita.id_richiesta                | l'ID della richiesta
-    richieste_immobili_disponibilita.id_disponibilita            | l'ID della disponibilità dell'immobile
-    richieste_immobili_disponibilita.se_non_desiderata           | 
-    richieste_immobili_disponibilita.id_account_inserimento      | 
-    richieste_immobili_disponibilita.timestamp_inserimento       | 
-    richieste_immobili_disponibilita.id_account_aggiornamento    | 
-    richieste_immobili_disponibilita.timestamp_aggiornamento     | 
-    
-    La vista richieste_immobili_disponibilita_view relativa alla tabella richieste_immobili_disponibilita presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
- 
-    richieste_immobili_tipologie
-    -----------------------------
-    Questa tabella *gestita* ...
-
-    colonna                                                  | descrizione
-    ---------------------------------------------------------|---------------------------------------------------------------------------------------
-    richieste_immobili_tipologie.id                          | l'ID che fa l'associazione fra la richiesta e la tipologia dell'immobile
-    richieste_immobili_tipologie.id_richiesta                | l'ID della richiesta
-    richieste_immobili_tipologie.id_tipologia                | l'ID della tipologia dell'immobile
-    richieste_immobili_tipologie.se_non_desiderata           | 
-    richieste_immobili_tipologie.id_account_inserimento      | 
-    richieste_immobili_tipologie.timestamp_inserimento       | 
-    richieste_immobili_tipologie.id_account_aggiornamento    | 
-    richieste_immobili_tipologie.timestamp_aggiornamento     | 
-    
-    La vista richieste_immobili_tipologie_view relativa alla tabella richieste_immobili_tipologie presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-   
-    richieste_immobili_tipologie_edifici
-    ------------------------------------
-    Questa tabella *gestita* ...
-
-    colonna                                                          | descrizione
-    -----------------------------------------------------------------|---------------------------------------------------------------------------------------
-    richieste_immobili_tipologie_edifici.id                          | l'ID che fa l'associazione fra la richiesta e la tipologia dell'edificio
-    richieste_immobili_tipologie_edifici.id_richiesta                | l'ID della richiesta
-    richieste_immobili_tipologie_edifici.id_tipologia                | l'ID della tipologia dell'edificio
-    richieste_immobili_tipologie_edifici.se_non_desiderata           | 
-    richieste_immobili_tipologie_edifici.id_account_inserimento      | 
-    richieste_immobili_tipologie_edifici.timestamp_inserimento       | 
-    richieste_immobili_tipologie_edifici.id_account_aggiornamento    | 
-    richieste_immobili_tipologie_edifici.timestamp_aggiornamento     | 
-    
-    La vista richieste_immobili_tipologie_edifici_view relativa alla tabella richieste_immobili_tipologie_edifici presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|--------------------------------------------------------------------------------------- 
-    
-    richieste_immobili_tipologie_incarichi
-    ------------------------------------
-    Questa tabella *gestita* ...
-
-    colonna                                                            | descrizione
-    -------------------------------------------------------------------|---------------------------------------------------------------------------------------
-    richieste_immobili_tipologie_incarichi.id                          | 
-    richieste_immobili_tipologie_incarichi.id_richiesta                | l'ID della richiesta
-    richieste_immobili_tipologie_incarichi.id_tipologia                | 
-    richieste_immobili_tipologie_incarichi.id_tipologia_founding       | 
-    richieste_immobili_tipologie_incarichi.prezzo_min                  | 
-    richieste_immobili_tipologie_incarichi.prezzo_max                  | 
-    richieste_immobili_tipologie_incarichi.id_account_inserimento      | 
-    richieste_immobili_tipologie_incarichi.timestamp_inserimento       | 
-    richieste_immobili_tipologie_incarichi.id_account_aggiornamento    | 
-    richieste_immobili_tipologie_incarichi.timestamp_aggiornamento     | 
-    
-    La vista richieste_immobili_tipologie_incarichi_view relativa alla tabella richieste_immobili_tipologie_incarichi presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    richieste_immobili_zone
-    -----------------------
-    Questa tabella *gestita* ...
-
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
-    richieste_immobili_zone.id                          | l'ID che fa l'associazione fra la richiesta e la zona dell'immobile
-    richieste_immobili_zone.id_richiesta                | l'ID della richiesta
-    richieste_immobili_zone.id_zona                     | l'ID della zone dell'immobile richiesto
-    richieste_immobili_zone.se_non_desiderata           | 
-    richieste_immobili_zone.id_account_inserimento      | 
-    richieste_immobili_zone.timestamp_inserimento       | 
-    richieste_immobili_zone.id_account_aggiornamento    | 
-    richieste_immobili_zone.timestamp_aggiornamento     | 
-    
-    La vista richieste_immobili_zone_view relativa alla tabella richieste_immobili_zone presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|--------------------------------------------------------------------------------------- 
-   
-    righe_documenti_amministrativi
-    ------------------------------
-    Questa tabella *gestita* ...
-
-    colonna                                                             | descrizione
-    --------------------------------------------------------------------|---------------------------------------------------------------------------------------
-    righe_documenti_amministrativi.id                                   | l'ID che fa l'associazione fra la tipologia, il documento, il cliente, l'emittente, il progetto ecc
-    righe_documenti_amministrativi.id_tipologia                         | l'ID della tipologia 
-    righe_documenti_amministrativi.id_documento                         | l'ID del documento
-    righe_documenti_amministrativi.id_cliente                           | l'ID del cliente
-    righe_documenti_amministrativi.id_emittente                         | l'ID dell'emittente
-    righe_documenti_amministrativi.id_genitore                          | 
-    righe_documenti_amministrativi.id_riferimento                       | l'ID di riferimento associato alla riga documento amministrativo
-    righe_documenti_amministrativi.id_progetto                          | l'ID del progetto
-    righe_documenti_amministrativi.id_pratica                           | l'ID della pratica
-    righe_documenti_amministrativi.id_task                              | l'ID del compito
-    righe_documenti_amministrativi.id_todo                              | l'ID del compito da svolgere
-    righe_documenti_amministrativi.id_attivita                          | l'ID dell'attività di referenza
-    righe_documenti_amministrativi.id_articolo                          | l'ID dell'articolo 
-    righe_documenti_amministrativi.id_udm                               | l'ID dell'unità di misura
-    righe_documenti_amministrativi.ordine                               | l'ordine di riferimento
-    righe_documenti_amministrativi.quantita                             | 
-    righe_documenti_amministrativi.data_lavorazione                     | 
-    righe_documenti_amministrativi.data_fatturabile                     | 
-    righe_documenti_amministrativi.data_scadenza                        | 
-    righe_documenti_amministrativi.id_listino                           | l'ID del listino utilizzato
-    righe_documenti_amministrativi.id_valuta                            | l'ID della valuta utilizzata
-    righe_documenti_amministrativi.id_modalita_pagamento                | 
-    righe_documenti_amministrativi.importo_netto_totale                 | 
-    righe_documenti_amministrativi.importo_netto_totale_non_scontato    | 
-    righe_documenti_amministrativi.id_iva                               | l'ID dell'iva di riferimento della riga documento amministrativo
-    righe_documenti_amministrativi.nome                                 | il nome associato alla riga del documento amministrativo
-    righe_documenti_amministrativi.testo                                | la descrizione aggiuntiva della riga del documento amministrativo
-    righe_documenti_amministrativi.path                                 | 
-    righe_documenti_amministrativi.se_rimborso                          | 
-    righe_documenti_amministrativi.id_account_inserimento               | 
-    righe_documenti_amministrativi.timestamp_inserimento                | 
-    righe_documenti_amministrativi.id_account_aggiornamento             | 
-    righe_documenti_amministrativi.timestamp_aggiornamento              | 
- 
-    La vista righe_documenti_amministrativi_view relativa alla tabella righe_documenti_amministrativi presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
- 
-    righe_fatturati
-    ---------------
-    Questa tabella *gestita* ...
-
-    colonna                                              | descrizione
-    -----------------------------------------------------|---------------------------------------------------------------------------------------
-    righe_fatturati.id                                   | l'ID che fa l'associazione fra il fatturato, l'emittente, il cliente, l'agente e il mandante
-    righe_fatturati.id_fatturato                         | l'ID del fatturato
-    righe_fatturati.id_emittente                         | l'ID dell'emittente
-    righe_fatturati.id_cliente                           | l'ID del cliente
-    righe_fatturati.id_agente                            | l'ID dell'agente in carico
-    righe_fatturati.id_mandante                          | l'ID del mandante
-    righe_fatturati.mese                                 | 
-    righe_fatturati.anno                                 | 
-    righe_fatturati.riferimento_fattura                  | 
-    righe_fatturati.imponibile                           | 
-    righe_fatturati.imponibile_provvigionale             | 
-    righe_fatturati.provvigione_azienda                  | 
-    righe_fatturati.provvigione_agente                   | 
-    righe_fatturati.id_account_inserimento               | 
-    righe_fatturati.timestamp_inserimento                | 
-    righe_fatturati.id_account_aggiornamento             | 
-    righe_fatturati.timestamp_aggiornamento              | 
- 
-    La vista righe_fatturati_view relativa alla tabella righe_fatturati presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
- 
     risorse
     -------
     Questa tabella *gestita* ...
@@ -496,21 +203,6 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     
-    ruoli_eventi
-    ------------
-    Questa tabella di *supporto* ...
-
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_eventi.id                        | l'ID del ruolo evento
-    ruoli_eventi.nome                      | 
-    ruoli_eventi.locandina                 | 
-    
-    La vista ruoli_eventi_view relativa alla tabella ruoli_eventi presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
- 
     ruoli_file
     ----------
     Questa tabella di *supporto* ...
@@ -542,89 +234,6 @@
     ruoli_immagini.ordine_scalamento    | 
     
     La vista ruoli_immagini_view relativa alla tabella ruoli_immagini presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    ruoli_immagini_anagrafica
-    -------------------------
-    Questa tabella di *supporto* ...
-
-    colonna                             | descrizione
-    ------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_immagini_anagrafica.id        | l'ID dell'immagine anagrafica
-    ruoli_immagini_anagrafica.nome      | 
-  
-    La vista ruoli_immagini_anagrafica_view relativa alla tabella ruoli_immagini_anagrafica presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    ruoli_immobili_anagrafica
-    -------------------------
-    Questa tabella di *supporto* ...
-
-    colonna                             | descrizione
-    ------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_immobili_anagrafica.id        | l'ID dell'anagrafica immobile
-    ruoli_immobili_anagrafica.nome      | 
-  
-    La vista ruoli_immobili_anagrafica_view relativa alla tabella ruoli_immobili_anagrafica presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    ruoli_progetti
-    -------
-    Questa tabella *assistita* ...
-
-    colonna                                       | descrizione
-    ----------------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_progetti.id                             | l'ID del ruolo progetto
-    ruoli_progetti.id_genitore                    | l'ID parente
-    ruoli_progetti.nome                           | 
-    ruoli_progetti.se_responsabile_qualita        | 
-    ruoli_progetti.se_responsabile_acquisti       | 
-    ruoli_progetti.se_coordinatore                | 
-    ruoli_progetti.se_responsabile_amministrativo | 
-    ruoli_progetti.se_responsabile_servizi        | 
-    ruoli_progetti.se_operativo                   | 
-    ruoli_progetti.id_account_inserimento         | 
-    ruoli_progetti.timestamp_inserimento          | 
-    ruoli_progetti.id_account_aggiornamento       | 
-    ruoli_progetti.timestamp_aggiornamento        | 
- 
-    La vista ruoli_progetti_view relativa alla tabella ruoli_progetti presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    ruoli_prodotti_categorie
-    -------------------------
-    Questa tabella di *supporto* ...
-
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_prodotti_categorie.id             | l'ID del ruolo della categoria prodotto 
-    ruoli_prodotti_categorie.nome           | 
-    ruoli_prodotti_categorie.se_bestseller  | 
-  
-    La vista ruoli_prodotti_categorie_view relativa alla tabella ruoli_prodotti_categorie presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
-    ruoli_rassegna_stampa
-    ---------------------
-    Questa tabella di *supporto* ...
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_rassegna_stampa.id             | l'ID del ruolo della rassegna stampa
-    ruoli_rassegna_stampa.nome           | 
-   
-  
-    La vista ruoli_rassegna_stampa_view relativa alla tabella ruoli_rassegna_stampa presenta le seguenti colonne:
  
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------

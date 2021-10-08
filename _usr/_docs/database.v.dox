@@ -9,7 +9,7 @@
     ===========================================
     
     valute
-    ----
+    ------
     Questa tabella di *supporto* ...
 
     colonna                        | descrizione
@@ -28,65 +28,7 @@
 
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
-    vani_immobili
-    -------------
-    Questa tabbella *gestita*
-    
-    colonna                                       | descrizione
-    ----------------------------------------------|---------------------------------------------------------------------------------------
-    vani_immobili.id                              | l'ID del vano immobile
-    vani_immobili.id_immobile                     | l'ID dell'immobile 
-    vani_immobili.id_tipologia                    | l'ID della tipologia a cui si riferisce il vano immobile
-    vani_immobili.nome                            | 
-    vani_immobili.larghezza                       | 
-    vani_immobili.lunghezza                       |
-    vani_immobili.altezza                         | 
-    vani_immobili.percentuale_commerciale_custom  | 
-    vani_immobili.mq_commerciali                  | 
-    vani_immobili.mq_calpestabili                 | 
-    vani_immobili.mq_modificatore                 | 
-    vani_immobili.id_account_inserimento          | 
-    vani_immobili.timestamp_inserimento           | 
-    vani_immobili.id_account_aggiornamento        | 
-    vani_immobili.timestamp_aggiornamento         | 
 
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
-    La vista *vani_immobili_view* relativa alla tabella *vani_immobili* presenta le seguenti colonne:
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
-    variazioni_attivita
-    -------------------
-    Questa tabbella *gestita*
-    
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
-    variazioni_attivita.id                              | l'ID che fa l'associazione fra la variazione attività, la tipologia, la tipologia inps e l'anagrafica
-    variazioni_attivita.id_tipologia                    | 
-    variazioni_attivita.id_tipologia_inps               | 
-    variazioni_attivita.id_anagrafica                   | 
-    variazioni_attivita.data_richiesta                  | 
-    variazioni_attivita.data_approvazione               |
-    variazioni_attivita.data_rifiuto                    |
-    variazioni_attivita.id_account_inserimento          | 
-    variazioni_attivita.timestamp_inserimento           | 
-    variazioni_attivita.id_account_aggiornamento        | 
-    variazioni_attivita.timestamp_aggiornamento         | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
-    La vista *variazioni_attivita_view* relativa alla tabella *variazioni_attivita* presenta le seguenti colonne:
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
     variazioni_prezzi
     -----------------
     Questa tabbella *gestita*
@@ -233,6 +175,8 @@
     ---------------------------------|------------------------------|-----------------------------------------------------
  
     La vista *video_view* relativa alla tabella *video* presenta le seguenti colonne:
+
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+
 */
