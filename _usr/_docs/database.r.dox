@@ -7,6 +7,23 @@
     le tabelle del database di supporto RA - RZ
     ===========================================
 
+    ranking
+    -------
+    Questa tabella *gestita* ...
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|------------------
+
+    La vista *ranking_view* relativa alla tabella *ranking* presenta le seguenti colonne:
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+
     recensioni
     ----------
     Questa tabella *gestita* contiene le recensioni collegate a varie entità principali del framework.
@@ -53,6 +70,7 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     redirect.id                          | l'ID del redirect
+    redirect.id_sito                     | l'ID del sito cui si applica il redirect (NULL per tutti i siti)
     redirect.codice                      | il codice HTTP da lanciare con il redirect
     redirect.sorgente                    | l'URL che innesca il redirect
     redirect.destinazione                | l'URL di destinazione del redirect
@@ -61,6 +79,9 @@
     INSERT INTO `redirect` (`id`, `codice`, `sorgente`, `destinazione`) VALUES (NULL, '<code>', '<source>', '<target>');
     \endcode
 
+    Si noti che il campo *id_sito* serve a discriminare i casi cui si applica il redirect in caso di sorgenti
+    con lo stesso nome che si trovano in siti diversi.
+
     La tabella non ha chiavi esterne.
 
     La vista *redirect_view* relativa alla tabella *redirect* presenta le seguenti colonne:
@@ -68,140 +89,270 @@
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
     redirect.id                          | -
+    redirect.id_sito                     | -
     redirect.codice                      | -
     redirect.sorgente                    | -
     redirect.destinazione                | -
     redirect.__label__                   | etichetta descrittiva del redirect
     
-    regimi_fiscali
-    --------------
-    Questa tabella *gestita* ...
+    regimi
+    ------
+    Questa tabella *di supporto* contiene i regimi fiscali che possono essere applicati all'entità principale anagrafica.
 
-    colonna                               | descrizione
-    --------------------------------------|---------------------------------------------------------------------------------------
-    regimi_fiscali.id                     | l'ID del regime fiscale
-    regimi_fiscali.nome                   | 
-    regimi_fiscali.codice                 | 
-    
-    La vista regimi_fiscali_view relativa alla tabella regimi_fiscali presenta le seguenti colonne:
+    colonna                       | descrizione
+    ------------------------------|---------------------------------------------------------------------------------------
+    regimi.id                     | l'ID del regime fiscale
+    regimi.nome                   | il nome del regime fiscale
+    regimi.codice                 | il codice del regime fiscale
+
+    La tabella non ha chiavi esterne.
+
+    La vista *regimi_view* relativa alla tabella *regimi* presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
+    regimi_view.id                       | -
+    regimi_view.nome                     | -
+    regimi_view.codice                   | -
+    regimi_view.__label__                | etichetta descrittiva del regime fiscale
     
     regioni
     -------
-    Questa tabella di *supporto* ...
+    Questa tabella *di supporto* contiene le regioni, intese come entità di collegamento fra *provincie* e *stati*.
 
     colonna                        | descrizione
     -------------------------------|---------------------------------------------------------------------------------------
     regioni.id                     | l'ID della regione
-    regioni.id_stato               | l'ID della stato della regione
-    regioni.nome                   | il nome comune della regione
-    regioni.codice_istat           | codice della regione attribuito dall'ISTAT
-    
-    La vista regioni_view relativa alla tabella regioni presenta le seguenti colonne:
+    regioni.id_stato               | l'ID dello stato cui appartiene la regione
+    regioni.nome                   | il nome della regione
+    regioni.codice_istat           | codice ISTAT della regione
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|------------------
+    regioni_ibfk_01_nofollow            | id_stato              | stati.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+
+    La vista *regioni_view* relativa alla tabella *regioni* presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
+    regioni_view.id                      | -
+    regioni_view.id_stato                | -
+    regioni_view.stato                   | lo stato cui appartiene la regione
+    regioni_view.nome                    | -
+    regioni_view.codice_istat            | -
+    regioni_view.__label__               | -
     
     reparti
     -------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene i reparti intesi come divisioni contabili.
 
     colonna                | descrizione
     -----------------------|---------------------------------------------------------------------------------------
-    reparti.id             | l'ID che fa l'associazione fra l'iva e il settore del reparto
-    reparti.id_iva         | l'ID dell'iva
-    reparti.id_settore     | l'ID del settore
-    reparti.nome           |
-    reparti.note           |
-     
-    La vista reparti_view relativa alla tabella reparti presenta le seguenti colonne:
+    reparti.id             | l'ID del reparto
+    reparti.id_iva         | l'ID dell'aliquota IVA associata al reparto
+    reparti.id_settore     | l'ID del settore cui si riferisce il reparto
+    reparti.nome           | il nome del reparto
+    reparti.note           | note aggiuntive sul reparto
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|------------------
+    reparti_ibfk_01_nofollow            | id_iva                | iva.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    reparti_ibfk_02_nofollow            | id_settore            | settori.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+
+    La vista *reparti_view* relativa alla tabella *reparti* presenta le seguenti colonne:
+
+    colonna                     | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+    reparti_view.id             | -
+    reparti_view.id_iva         | -
+    reparti_view.iva            | l'aliquota IVA associata al reparto
+    reparti_view.id_settore     | -
+    reparti_view.settore        | il settore cui si riferisce il reparto
+    reparti_view.nome           | -
+    reparti_view.__label__      | etichetta descrittiva del reparto
 
     risorse
     -------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene le risorse documentali, intese come documenti o parti di documenti di varia natura
+    (testi, audio, multimedia, eccetera) catalogati e individualmente identificabili.
 
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
     risorse.id                                   | l'ID della risorsa
-    risorse.codice                               | il codice parlante della risorsa
-    risorse.data_pubblicazione                   | 
-    risorse.id_testata                           | l'ID della testata della risorsa
-    risorse.id_categoria                         | l'ID della categoria della risorsa
     risorse.id_tipologia                         | l'ID della tipologia della risorsa
-    risorse.timestamp_inserimento                | 
-    risorse.id_account_inserimento               | 
-    risorse.timestamp_aggiornamento              | 
-    risorse.id_account_aggiornamento             | 
- 
-    La vista risorse_view relativa alla tabella risorse presenta le seguenti colonne:
+    risorse.codice                               | il codice della risorsa
+    risorse.nome                                 | il nome della risorsa
+    risorse.note                                 | note aggiuntive sulla risorsa
+    risorse.id_testata                           | l'ID della testata su cui è stata pubblicata la risorsa
+    risorse.giorno_pubblicazione                 | il giorno di pubblicazione della risorsa
+    risorse.mese_pubblicazione                   | il mese di pubblicazione della risorsa
+    risorse.anno_pubblicazione                   | l'anno di pubblicazione della risorsa
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|------------------
+    risorse_ibfk_01_nofollow            | id_tipologia          | tipologie_risorse.id          | ON DELETE NO ACTION ON UPDATE NO ACTION
+    risorse_ibfk_02_nofollow            | id_testata            | testate.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+
+    La vista *risorse_view* relativa alla tabella *risorse* presenta le seguenti colonne:
  
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
+    risorse_view.id                      | -
+    risorse_view.id_tipologia            | -
+    risorse_view.tipologia               | la tipologia della risorsa
+    risorse_view.codice                  | -
+    risorse_view.nome                    | -
+    risorse_view.id_testata              | -
+    risorse_view.testata                 | la testata su cui è stata pubblicata la risorsa
+    risorse_view.giorno_pubblicazione    | -
+    risorse_view.mese_pubblicazione      | -
+    risorse_view.anno_pubblicazione      | -
+    risorse_view.__label__               | etichetta descrittiva della risorsa
     
     risorse_anagrafica
     ------------------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* mette in relazione molti a molti l'entità principale *risorse* con l'entità secondaria *anagrafica*.
 
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
-    risorse_anagrafica.id                        | l'ID che fa l'associazione fra la risorsa e l'anagrafica
-    risorse_anagrafica.id_risorsa                | l'ID della risorsa associata all'anagrafica
-    risorse_anagrafica.id_anagrafica             | l'ID dell'anagrafica associata alla risorsa
+    risorse_anagrafica.id                        | l'ID dell'associazione fra risorsa e anagrafica
+    risorse_anagrafica.id_risorsa                | l'ID della risorsa
+    risorse_anagrafica.id_anagrafica             | l'ID dell'anagrafica
+    risorse_anagrafica.id_ruolo                  | l'ID del ruolo svolto dall'anagrafica relativamente alla risorsa
+    risorse_anagrafica.ordine                    | campo di ordinamento
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+    risorse_anagrafica_ibfk_01              | id_risorsa            | risorse.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    risorse_anagrafica_ibfk_02_nofollow     | id_anagrafica         | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    risorse_anagrafica_ibfk_03_nofollow     | id_ruolo              | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
+
+    La vista *risorse_anagrafica_view* relativa alla tabella *risorse_anagrafica* presenta le seguenti colonne:
  
-    La vista risorse_anagrafica_view relativa alla tabella risorse_anagrafica presenta le seguenti colonne:
- 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    risorse_anagrafica_view.id                        | -
+    risorse_anagrafica_view.id_risorsa                | -
+    risorse_anagrafica_view.risorsa                   | la risorsa
+    risorse_anagrafica_view.id_anagrafica             | -
+    risorse_anagrafica_view.anagrafica                | l'anagrafica
+    risorse_anagrafica_view.id_ruolo                  | -
+    risorse_anagrafica_view.ruolo                     | il ruolo svolto dall'anagrafica relativamente alla risorsa
+    risorse_anagrafica_view.ordine                    | -
+    risorse_anagrafica_view.__label__                 | etichetta descrittiva dell'associazione fra risorsa e anagrafica
     
     risorse_categorie
-    ------------------
-    Questa tabella di *supporto* ...
+    -----------------
+    Questa tabella di *supporto* mette in relazione molti a molti l'entità principale *risorse* con l'entità subordinata *categorie_risorse*.
+
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
-    risorse_categorie.id                    | l'ID che fa l'associazione fra la risorsa e la categoria
-    risorse_categorie.id_categoria          | l'ID della categoria associata alla risorsa
-    risorse_categorie.id_risorsa            | l'ID della risorsa associata alla categoria
+    risorse_categorie.id                    | l'ID dell'associazione fra risorsa e categoria
+    risorse_categorie.id_risorsa            | l'ID della risorsa
+    risorse_categorie.id_categoria          | l'ID della categoria
     risorse_categorie.ordine                | 
-    
-    La vista risorse_categorie_view relativa alla tabella risorse_categorie presenta le seguenti colonne:
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+    risorse_categorie_ibfk_01               | id_risorsa            | risorse.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    risorse_categorie_ibfk_02               | id_categoria          | categorie_risorse.id          | ON DELETE CASCADE ON UPDATE CASCADE
+
+    La vista *risorse_categorie_view* relativa alla tabella *risorse_categorie* presenta le seguenti colonne:
  
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    risorse_categorie_view.id                    | -
+    risorse_categorie_view.id_risorsa            | -
+    risorse_categorie_view.risorsa               | la risorsa
+    risorse_categorie_view.id_categoria          | -
+    risorse_categorie_view.categoria             | la categoria
+    risorse_categorie_view.ordine                | -
+    risorse_categorie_view.__label__             | etichetta descrittiva dell'associazione fra risorsa e categoria
     
     ruoli_anagrafica
     ----------------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* contiene i ruoli che l'entità *anagrafica* può svolgere in relazione a diverse
+    entità principali.
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_anagrafica.id                    | l'ID del ruolo anagrafica
-    ruoli_anagrafica.id_genitore           | 
-    ruoli_anagrafica.nome                  | la colonne nome contiene il nome del ruolo
-    
-    La vista ruoli_anagrafica_view relativa alla tabella ruoli_anagrafica presenta le seguenti colonne:
+    ruoli_anagrafica.id                    | l'ID del ruolo
+    ruoli_anagrafica.id_genitore           | l'ID del ruolo genitore
+    ruoli_anagrafica.nome                  | il nome del ruolo
+    ruoli_anagrafica.se_organizzazioni     | flag che indica se il ruolo è pertinente alle organizzazioni
+    ruoli_anagrafica.se_risorse            | flag che indica se il ruolo è pertinente alle risorse
+    ruoli_anagrafica.se_progetti           | flag che indica se il ruolo è pertinente ai progetti
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+    ruoli_anagrafica_ibfk_01                | id_genitore           | ruoli_anagrafica.id           | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_anagrafica_view* relativa alla tabella *ruoli_anagrafica* presenta le seguenti colonne:
  
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_anagrafica_view.id                    | -
+    ruoli_anagrafica_view.id_genitore           | -
+    ruoli_anagrafica_view.nome                  | -
+    ruoli_anagrafica_view.se_organizzazioni     | -
+    ruoli_anagrafica_view.se_risorse            | -
+    ruoli_anagrafica_view.se_progetti           | -
+    ruoli_anagrafica_view.__label__             | etichetta descrittiva del ruolo
     
     ruoli_audio
     -----------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* contiene i ruoli che l'entità *audio* può svolgere relativamente a diverse entità principali.
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_audio.id                         | l'ID del ruolo audio
-    ruoli_audio.nome                       | 
-    ruoli_audio.se_anagrafica              | 
-    
-    La vista ruoli_audio_view relativa alla tabella ruoli_audio presenta le seguenti colonne:
+    ruoli_audio.id                         | l'ID del ruolo
+    ruoli_audio.id_genitore                | l'ID del ruolo genitore
+    ruoli_audio.nome                       | il nome del ruolo
+    ruoli_audio.se_anagrafica              | flag che indica se il ruolo è pertinente all'anagrafica
+    ruoli_audio.se_prodotti                | flag che indica se il ruolo è pertinente ai prodotti
+    ruoli_audio.se_articoli                | flag che indica se il ruolo è pertinente agli articoli
+    ruoli_audio.se_categorie_prodotti      | flag che indica se il ruolo è pertinente alle categorie di prodotti
+    ruoli_audio.se_risorse                 | flag che indica se il ruolo è pertinente alle risorse
+    ruoli_audio.se_categorie_risorse       | flag che indica se il ruolo è pertinente alle categorie di risorse
+    ruoli_audio.se_progetti                | flag che indica se il ruolo è pertinente ai progetti
+    ruoli_audio.se_categorie_progetti      | flag che indica se il ruolo è pertinente alle categorie di progetti
+    ruoli_audio.se_pagine                  | flag che indica se il ruolo è pertinente alle pagine
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+    ruoli_audio_ibfk_01                     | id_genitore           | ruoli_audio.id                | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_audio_view* relativa alla tabella *ruoli_audio* presenta le seguenti colonne:
  
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_audio_view.id                         | -
+    ruoli_audio_view.id_genitore                | -
+    ruoli_audio_view.nome                       | -
+    ruoli_audio_view.se_anagrafica              | -
+    ruoli_audio_view.se_prodotti                | -
+    ruoli_audio_view.se_articoli                | -
+    ruoli_audio_view.se_categorie_prodotti      | -
+    ruoli_audio_view.se_risorse                 | -
+    ruoli_audio_view.se_categorie_risorse       | -
+    ruoli_audio_view.se_progetti                | -
+    ruoli_audio_view.se_categorie_progetti      | -
+    ruoli_audio_view.se_pagine                  | -
+    ruoli_audio_view.__label__                  | etichetta descrittiva del ruolo
     
     ruoli_file
     ----------

@@ -1718,12 +1718,186 @@ ALTER TABLE `recensioni`
 	ADD KEY `se_approvata` (`se_approvata`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_lingua`,`id_prodotto`,`id_articolo`,`autore`,`titolo`,`valutazione`,`se_approvata`), 
+	ADD KEY `indice` (`id`,`id_lingua`,`id_prodotto`,`id_articolo`,`autore`,`titolo`,`valutazione`,`se_approvata`);
 
 --| 030000028801
 
 -- recensioni
 -- tipologia: tabella gestita
 ALTER TABLE `recensioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000029400
+
+-- redirect
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 14:43 Fabio Mosti
+ALTER TABLE `redirect`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_sito`,`sorgente`);
+	ADD KEY `id_sito` (`id_sito`), 
+	ADD KEY `indice` (`id`,`codice`,`sorgente`,`destinazione`); 
+
+--| 030000029401
+
+-- redirect
+-- tipologia: tabella gestita
+ALTER TABLE `redirect` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000029800
+
+-- regimi
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 15:04 Fabio Mosti
+ALTER TABLE `redirect`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`);
+	ADD KEY `indice` (`id`,`nome`,`codice`); 
+
+--| 030000029801
+
+-- regimi
+-- tipologia: tabella di supporto
+ALTER TABLE `regimi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000030200
+
+-- regioni
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 15:24 Fabio Mosti
+ALTER TABLE `regioni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`codice_istat`),
+	ADD KEY `id_stato` (`id_stato`),
+	ADD KEY `indice` (`id`,`id_stato`,`nome`,`codice_istat`);
+
+--| 030000030201
+
+-- regioni
+-- tipologia: tabella di supporto
+ALTER TABLE `regioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000030800
+
+-- reparti
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 15:36 Fabio Mosti
+ALTER TABLE `reparti` 
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_iva` (`id_iva`), 
+	ADD KEY `id_settore` (`id_settore`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`id_iva`,`id_settore`,`nome`);
+
+--| 030000030801
+
+-- reparti
+-- tipologia: tabella gestita
+ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000032000
+
+-- risorse
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 16:08 Fabio Mosti
+ALTER TABLE `risorse`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_testata` (`id_testata`),
+	ADD KEY `giorno_pubblicazione` (`giorno_pubblicazione`),
+	ADD KEY `mese_pubblicazione` (`mese_pubblicazione`),
+	ADD KEY `anno_pubblicazione` (`anno_pubblicazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_testata`,`giorno_pubblicazione`,`mese_pubblicazione`,`anno_pubblicazione`);
+
+--| 030000032001
+
+-- risorse
+-- tipologia: tabella gestita
+ALTER TABLE `risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
+
+--| 030000032200
+
+-- risorse_anagrafica
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 16:08 Fabio Mosti
+ALTER TABLE `risorse_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_risorsa`,`id_anagrafica`,`id_ruolo`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `indice` (`id`,`id_risorsa`,`id_anagrafica`,`id_ruolo`,`ordine`);
+
+--| 030000032201
+
+-- risorse_anagrafica
+-- tipologia: tabella di supporto
+ALTER TABLE `risorse_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000032400
+
+-- risorse_categorie
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 17:48 Fabio Mosti
+ALTER TABLE `risorse_categorie`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_risorsa` (`id_risorsa`);
+	ADD KEY `id_categoria` (`id_categoria`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `indice` (`id`,`id_risorsa`,`id_categoria`,`ordine`);
+
+--| 030000032401
+
+-- risorse_categorie
+-- tipologia: tabella di supporto
+ALTER TABLE `risorse_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000034000
+
+-- ruoli_anagrafica
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:11 Fabio Mosti
+ALTER TABLE `ruoli_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_organizzazioni` (`se_organizzazioni`), 
+	ADD KEY `se_risorse` (`se_risorse`), 
+	ADD KEY `se_progetti` (`se_progetti`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_organizzazioni`,`se_risorse`,`se_progetti`);
+
+--| 030000034001
+
+-- ruoli_anagrafica
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000034200
+
+-- ruoli_audio
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:28 Fabio Mosti
+ALTER TABLE `ruoli_audio`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_anagrafica` (`se_anagrafica`), 
+	ADD KEY `se_prodotti` (`se_prodotti`), 
+	ADD KEY `se_articoli` (`se_articoli`), 
+	ADD KEY `se_categorie_prodotti` (`se_categorie_prodotti`), 
+	ADD KEY `se_risorse` (`se_risorse`), 
+	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
+	ADD KEY `se_progetti` (`se_progetti`), 
+	ADD KEY `se_categorie_progetti` (`se_categorie_progetti`), 
+	ADD KEY `se_pagine` (`se_pagine`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_anagrafica`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_risorse`,`se_categorie_risorse`,`se_progetti`,`se_categorie_progetti`,`se_pagine`);
+
+--| 030000034201
+
+-- ruoli_audio
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| FINE FILE

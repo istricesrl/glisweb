@@ -3171,6 +3171,251 @@ CREATE OR REPLACE VIEW recensioni_view AS
     FROM recensioni
 ;
 
+--| 090000029400
+
+-- redirect_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `redirect_view`;
+
+--| 090000029401
+
+-- redirect_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 14:44 Fabio Mosti
+CREATE OR REPLACE VIEW redirect_view AS
+	SELECT
+		redirect.id,
+		redirect.id_sito,
+		redirect.codice,
+		redirect.sorgente,
+		redirect.destinazione,
+		concat_ws(
+			' ',
+			redirect.sorgente,
+			redirect.codice,
+			redirect.destinazione
+		) AS __label__
+	FROM redirect
+;
+
+--| 090000029800
+
+-- regimi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `regimi_view`;
+
+--| 090000029801
+
+-- regimi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 15:09 Fabio Mosti
+CREATE OR REPLACE VIEW regimi_view AS
+	SELECT
+		regimi.id,
+		regimi.nome,
+		regimi.codice,
+		concat_ws(
+			' ',
+			regimi.nome,
+			regimi.codice
+		) AS __label__
+	FROM regimi
+;
+
+--| 090000030200
+
+-- regioni_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `regioni_view`;
+
+--| 090000030201
+
+-- regioni_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 15:40 Fabio Mosti
+CREATE OR REPLACE VIEW regioni_view AS
+	SELECT
+		regioni.id,
+		regioni.id_stato,
+		stati.nome AS stato,
+		regioni.codice_istat,
+		concat_ws(
+			' ',
+			regioni.nome,
+			stati.nome
+		) AS __label__
+	FROM regioni
+		LEFT JOIN stati_view ON stati_view.id = regioni.id_stato
+;
+
+--| 090000030800
+
+-- reparti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS reparti_view;
+
+--| 090000030801
+
+-- reparti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 15:40 Fabio Mosti
+CREATE OR REPLACE VIEW reparti_view AS
+	SELECT
+		reparti.id,
+		reparti.id_iva,
+		iva.aliquota AS iva,
+		reparti.id_settore,
+		settori_path( reparti.id_settore ) AS settore,
+		reparti.nome,
+		reparti.nome AS __label__
+	FROM reparti
+		LEFT JOIN iva ON iva.id = reparti.id_iva
+;
+
+--| 090000032000
+
+-- risorse_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `risorse_view`;
+
+--| 090000032001
+
+-- risorse_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 16:02 Fabio Mosti
+CREATE OR REPLACE VIEW `risorse_view` AS
+	SELECT
+		risorse.id, 
+		risorse.id_tipologia,
+		tipologie_risorse.nome AS tipologia,
+		risorse.codice, 
+		risorse.nome, 
+		risorse.id_testata, 
+		testate.nome AS testata,
+		risorse.giorno_pubblicazione,
+		risorse.mese_pubblicazione,
+		risorse.anno_pubblicazione,
+		concat_ws(
+			' ',
+			risorse.codice,
+			risorse.nome
+		) AS __label__
+	FROM risorse
+		LEFT JOIN tipologie_risorse ON tipologie_risorse.id = risorse.id_tipologia
+		LEFT JOIN testate ON testate.id = risorse.id_testata
+;
+
+--| 090000032200
+
+-- risorse_anagrafica_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `risorse_anagrafica_view`;
+
+--| 090000032201
+
+-- risorse_anagrafica_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 16:18 Fabio Mosti
+CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
+	SELECT
+		risorse_anagrafica.id,
+		risorse_anagrafica.id_risorsa,
+		risorse.nome AS risorsa,
+		risorse_anagrafica.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		risorse_anagrafica.id_ruolo,
+		ruoli_anagrafica_path( risorse_anagrafica.id_ruolo ) AS ruolo
+		risorse_anagrafica.ordine,
+		concat_ws(
+			' ',
+			risorse.nome,
+			ruoli_anagrafica_path( risorse_anagrafica.id_ruolo ),
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM risorse_anagrafica
+		LEFT JOIN risorse ON risorse.id = risorse_anagrafica.id_risorsa
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti_anagrafica.id_anagrafica
+;
+
+--| 090000032400
+
+-- risorse_categorie_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `risorse_categorie_view`;
+
+--| 090000032400
+
+-- risorse_categorie_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:03 Fabio Mosti
+CREATE OR REPLACE VIEW `risorse_categorie_view` AS
+	SELECT
+		risorse_categorie.id,
+		risorse_categorie.id_risorsa,
+		risorse.nome AS risorsa,
+		risorse_categorie.id_categoria,
+		categorie_risorse_path( risorse_categorie.id_categoria ),
+		concat_ws(
+			' ',
+			risorse.nome,
+			categorie_risorse_path( risorse_categorie.id_categoria )
+		) AS __label__
+	FROM risorse_categorie
+		LEFT JOIN risorse ON risorse.id = risorse_categorie.id_risorsa
+;
+
+--| 090000034000
+
+-- ruoli_anagrafica_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_anagrafica_view`;
+
+--| 090000034001
+
+-- ruoli_anagrafica_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:17 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
+	SELECT
+		ruoli_anagrafica.id,
+		ruoli_anagrafica.id_genitore,
+		ruoli_anagrafica.nome,
+		ruoli_anagrafica.se_organizzazioni,
+		ruoli_anagrafica.se_risorse,
+		ruoli_anagrafica.se_progetti,
+	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
+	FROM ruoli_anagrafica
+;
+
+--| 090000034200
+
+-- ruoli_audio_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_audio_view`;
+
+--| 090000034201
+
+-- ruoli_audio_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:41 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_audio_view AS
+	SELECT
+		ruoli_audio.id,
+		ruoli_audio.id_genitore,
+		ruoli_audio.nome,
+		ruoli_audio.se_anagrafica,
+		ruoli_audio.se_prodotti,
+		ruoli_audio.se_articoli,
+		ruoli_audio.se_categorie_prodotti
+		ruoli_audio.se_risorse,
+		ruoli_audio.se_categoria_risorse,
+		ruoli_audio.se_progetti,
+		ruoli_audio.se_categorie_progetti,
+		ruoli_audio.se_pagine,
+	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
+	FROM ruoli_audio
+;
+
 --| 090000009201
 
 -- task_view

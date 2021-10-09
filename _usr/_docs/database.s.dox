@@ -1,6 +1,6 @@
 /*!
 
-    \page database_r database del framework, tabelle con la lettera S
+    \page database_s database del framework, tabelle con la lettera S
 
     Dettagli delle tabelle del database del framework che iniziano con la lettera S.
 
@@ -26,6 +26,10 @@
     scadenze.id_account_aggiornamento    | 
     scadenze.timestamp_aggiornamento     | 
     
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
 
     La vista scadenze_view relativa alla tabella scadenze presenta le seguenti colonne:
 
@@ -44,6 +48,11 @@
     settori.ateco                       | 
     settori.nome                        | 
     settori.soprannome                  |
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
 
     La vista settori_view relativa alla tabella settori presenta le seguenti colonne:
 
@@ -73,7 +82,12 @@
     sms_out.timestamp_inserimento       | 
     sms_out.id_account_aggiornamento    | 
     sms_out.timestamp_aggiornamento     | 
-    
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+
     La vista sms_out_view relativa alla tabella sms_out presenta le seguenti colonne:
 
     colonna                              | descrizione
@@ -102,7 +116,12 @@
     sms_sent.timestamp_inserimento       | 
     sms_sent.id_account_aggiornamento    | 
     sms_out.timestamp_aggiornamento      | 
-    
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+
     La vista sms_sent_view relativa alla tabella sms_sent presenta le seguenti colonne:
 
     colonna                              | descrizione
@@ -122,7 +141,12 @@
     stati.note                 | la colonna 'note' contiene il nome ufficiale del paese, in italiano
     stati.codice_istat         | la colonna 'istat' contiene il codice ISTAT del paese
     stati.data_cessazione      | 
-    
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+
     La vista stati_view relativa alla tabella stati presenta le seguenti colonne:
 
     colonna                              | descrizione
@@ -136,7 +160,12 @@
     --------------------------------------|---------------------------------------------------------------------------------------
     stati_lingue.id_stato                 | l'ID del paese della lingua
     stati_lingue.id_lingua                | l'ID della lingua 
- 
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+
     La vista stati_lingue_view relativa alla tabella stati_lingue presenta le seguenti colonne:
 
     colonna                              | descrizione

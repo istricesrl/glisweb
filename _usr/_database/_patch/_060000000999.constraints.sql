@@ -857,4 +857,75 @@ ALTER TABLE `recensioni`
     ADD CONSTRAINT `recensioni_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `recensioni_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+--| 060000029400
+
+-- redirect
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 14:43 Fabio Mosti
+ALTER TABLE `redirect`
+    ADD CONSTRAINT `redirect_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `redirect_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 060000030200
+
+-- regioni
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 15:26 Fabio Mosti
+ALTER TABLE `regioni`
+    ADD CONSTRAINT `regioni_ibfk_01_nofollow`   FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 060000030800
+
+-- reparti
+-- tipologia: tabella gestita
+ALTER TABLE `reparti`
+    ADD CONSTRAINT `reparti_ibfk_01_nofollow`   FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `reparti_ibfk_02_nofollow`   FOREIGN KEY (`id_settore`) REFERENCES `settori` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 060000032000
+
+-- risorse
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 15:57 Fabio Mosti
+ALTER TABLE `risorse`
+    ADD CONSTRAINT `risorse_ibfk_01_nofollow`   FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_risorse` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `risorse_ibfk_02_nofollow`   FOREIGN KEY (`id_testata`) REFERENCES `testate` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `risorse_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `risorse_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 060000032200
+
+-- risorse_anagrafica
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 16:10 Fabio Mosti
+ALTER TABLE `risorse_anagrafica`
+    ADD CONSTRAINT `risorse_anagrafica_ibfk_01`             FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `risorse_anagrafica_ibfk_02_nofollow`    FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `risorse_anagrafica_ibfk_03_nofollow`    FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 060000032400
+
+-- risorse_categorie
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 17:59 Fabio Mosti
+ALTER TABLE `risorse_categorie`
+    ADD CONSTRAINT `risorse_categorie_ibfk_01`  FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `risorse_categorie_ibfk_02`  FOREIGN KEY (`id_categoria`) REFERENCES `categorie_risorse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 060000034000
+
+-- ruoli_anagrafica
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:14 Fabio Mosti
+ALTER TABLE `ruoli_anagrafica`
+    ADD CONSTRAINT `ruoli_anagrafica_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 060000034200
+
+-- ruoli_audio
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:36 Fabio Mosti
+ALTER TABLE `ruoli_audio`
+    ADD CONSTRAINT `ruoli_audio_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_audio` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 --| FINE FILE

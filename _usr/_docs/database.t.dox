@@ -156,30 +156,6 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
-    tipologie_crm
-    -------------
-    Questa tabbella *gestita*
-    
-    colonna                                    | descrizione
-    -------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_crm.id                           | l'ID della tipologia di CRM
-    tipologie_crm.nome                         | 
-    tipologie_crm.ordine                       | 
-    tipologie_crm.id_account_inserimento       | 
-    tipologie_crm.timestamp_inserimento        | 
-    tipologie_crm.id_account_aggiornamento     | 
-    tipologie_crm.timestamp_aggiornamento      | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
-    La vista *tipologie_crm_view* relativa alla tabella *tipologie_crm* presenta le seguenti colonne:
-    
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    
     tipologie_contatti
     ------------------
     Questa tabbella *gestita*
@@ -248,27 +224,6 @@
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
 
-    tipologie_embed
-    -------------------
-    Questa tabbella di *supporto*
-    
-    colonna                                     | descrizione
-    --------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_embed.id                          | l'ID della tipologia embed
-    tipologie_embed.nome                        |
-    tipologie_embed.se_video                    |
-    tipologie_embed.se_audio                    |
-    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
-    La vista *tipologie_embed_view* relativa alla tabella *tipologie_embed* presenta le seguenti colonne:
-    
-    colonna                                                | descrizione
-    -------------------------------------------------------|--------------------------------------------------------------------------
-
     tipologie_indirizzi
     -------------------
     Questa tabbella di *supporto*
@@ -313,7 +268,7 @@
     -------------------------------------------------------|--------------------------------------------------------------------------
 
     tipologie_notizie
-    --------------------------
+    -----------------
     Questa tabbella di *supporto*
     
     colonna                                             | descrizione
@@ -398,36 +353,36 @@
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
   
-    tipologie_pubblicazione
-    ------------------
+    tipologie_pubblicazioni
+    -----------------------
     Questa tabbella di *supporto*
     
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_pubblicazione.id                        | l'ID della tipologia di publicazione
-    tipologie_pubblicazione.nome                      |
-    tipologie_pubblicazione.ordine                    | 
-    tipologie_pubblicazione.se_bozza                  |
-    tipologie_pubblicazione.se_pubblicato             |
-    tipologie_pubblicazione.se_evidenza               |
-    tipologie_pubblicazione.se_newsletter             |
-    tipologie_pubblicazione.se_secondario             |
-    tipologie_pubblicazione.se_incroci                |
-    tipologie_pubblicazione.se_contratto              |
-    tipologie_pubblicazione.se_suggerito              |
+    tipologie_pubblicazioni.id                        | l'ID della tipologia di publicazione
+    tipologie_pubblicazioni.nome                      |
+    tipologie_pubblicazioni.ordine                    | 
+    tipologie_pubblicazioni.se_bozza                  |
+    tipologie_pubblicazioni.se_pubblicato             |
+    tipologie_pubblicazioni.se_evidenza               |
+    tipologie_pubblicazioni.se_newsletter             |
+    tipologie_pubblicazioni.se_secondario             |
+    tipologie_pubblicazioni.se_incroci                |
+    tipologie_pubblicazioni.se_contratto              |
+    tipologie_pubblicazioni.se_suggerito              |
     
     La tabella ha le seguenti chiavi esterne:
 
     chiave                           | campo                        | tabella e campo collegati
     ---------------------------------|------------------------------|-----------------------------------------------------
  
-    La vista *tipologie_pubblicazione_view* relativa alla tabella *tipologie_pubblicazione* presenta le seguenti colonne:
+    La vista *tipologie_pubblicazioni_view* relativa alla tabella *tipologie_pubblicazioni* presenta le seguenti colonne:
     
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
 
     tipologie_risorse
-    ------------------
+    -----------------
     Questa tabbella di *supporto*
     
     colonna                                          | descrizione
@@ -466,7 +421,7 @@
     -------------------------------------------------------|--------------------------------------------------------------------------
     
     tipologie_todo
-    ---------------
+    --------------
     Questa tabbella *gestita*
     
     colonna                                     | descrizione

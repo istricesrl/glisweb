@@ -21,8 +21,21 @@
     tipologie di tabelle
     ====================
 
-    le tabelle di supporto
-    ----------------------
+    le tabelle gestite
+    ------------------
+
+    tabella                     | codice base           | descrizione
+    ----------------------------|-----------------------|------------------------------
+    account                     | 000100                | contiene gli account che possono fare il login nel framework
+
+    le tabelle assistite
+    --------------------
+
+    tabella                     | codice base           | descrizione
+    ----------------------------|-----------------------|------------------------------
+
+    le tabelle standard
+    -------------------
     Il database di supporto contiene dati strutturali come lingue, geografia, fusi orari, unità di misura,
     valute, e così via; anche se non è indispensabile dal momento che il framework può funzionare anche senza,
     svolge comunque un ruolo importante e se è possibile si consiglia sempre di installarlo. Il database di
@@ -40,11 +53,8 @@
     esattamente a quella degli array del framework, ma si è cercato di tenerle il più simili possibile per
     semplificarne la lettura e la gestione e a tendere si cercherà di farle convergere con gli aggiornamenti.
 
-    le tabelle assistite
-    --------------------
-
-    le tabelle di lavoro
-    --------------------
+    tabella                     | codice base           | descrizione
+    ----------------------------|-----------------------|------------------------------
 
     modelli di tabelle
     ==================
@@ -110,8 +120,8 @@
 
 
 
-    campi di servizio per inserimento e aggiornamento
-    -------------------------------------------------
+    campi di servizio
+    -----------------
 
 
 
@@ -153,13 +163,5 @@
     ====================
 
 
-
-    le tabelle del database di supporto
-    ===================================
-    In questa sezione descriviamo tabella per tabella l'intero database di supporto del framework.
-
-    tabella                         | descrizione
-    --------------------------------|---------------------------------------------------------------------------------------
-    account                         | contiene gli account che possono fare il login nel framework
 
 */

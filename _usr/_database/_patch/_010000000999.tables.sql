@@ -1546,6 +1546,7 @@ CREATE TABLE IF NOT EXISTS `recensioni` (
 -- verifica: 2021-10-08 18:00 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `redirect` (
   `id` int(11) NOT NULL,
+  `id_sito` int(11) DEFAULT NULL,
   `codice` int(11) NOT NULL,
   `sorgente` char(255) NOT NULL,
   `destinazione` char(255) NOT NULL,
@@ -1555,28 +1556,57 @@ CREATE TABLE IF NOT EXISTS `redirect` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000029800
+
+-- regimi
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 15:02 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `regimi` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) NOT NULL,
+  `codice` char(8) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000030200
 
 -- regioni
 -- tipologia: tabella di supporto
+-- verifica: 2021-10-09 15:22 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `regioni` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_stato` int(11) NOT NULL,
   `nome` char(32) NOT NULL,
   `codice_istat` char(2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000030800
+
+-- reparti
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 15:34 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `reparti` (
+  `id` int(11) NOT NULL,
+  `id_iva` int(11) NOT NULL,
+  `id_settore` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000032000
 
 -- risorse
 -- tipologia: tabella gestita
+-- verifica: 2021-10-09 15:49 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `risorse` (
-`id` int(11) NOT NULL,
-  `codice` char(6) DEFAULT NULL,
-  `data_pubblicazione` date DEFAULT NULL,
-  `id_testata` int(11) DEFAULT NULL,
-  `id_categoria` int(11) DEFAULT NULL,
+  `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `codice` char(6) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `note` text,
+  `id_testata` int(11) DEFAULT NULL,
+  `giorno_pubblicazione` int(2) DEFAULT NULL,
+  `mese_pubblicazione` int(2) DEFAULT NULL,
+  `anno_pubblicazione` int(4) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
@@ -1587,21 +1617,24 @@ CREATE TABLE IF NOT EXISTS `risorse` (
 
 -- risorse_anagrafica
 -- tipologia: tabella di supporto
+-- verifica: 2021-10-09 16:07 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `risorse_anagrafica` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_risorsa` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
-  `id_ruolo` int(11) NOT NULL
+  `id_ruolo` int(11) NOT NULL,
+  `ordine` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000032400
 
 -- risorse_categorie
 -- tipologia: tabella di supporto
+-- verifica: 2021-10-09 17:46 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `risorse_categorie` (
-`id` int(11) NOT NULL,
-  `id_categoria` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_risorsa` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
   `ordine` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1609,17 +1642,11 @@ CREATE TABLE IF NOT EXISTS `risorse_categorie` (
 
 -- ruoli_anagrafica
 -- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:21 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `id` int(11) NOT NULL,
-  `id_organizzazione` int(11) DEFAULT NULL,
-  `id_progetto` int(11) DEFAULT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `nome` char(128) COLLATE utf8_general_ci NOT NULL,
-  `se_responsabile_qualita` int(1) DEFAULT NULL,
-  `se_responsabile_acquisti` int(1) DEFAULT NULL,
-  `se_coordinatore` int(1) DEFAULT NULL,
-  `se_responsabile_amministrativo` int(1) DEFAULT NULL,
-  `se_responsabile_servizi` int(1) DEFAULT NULL,
-  `se_operativo` int(1) DEFAULT NULL,
   `se_organizzazioni` int(1) DEFAULT NULL,
   `se_risorse` int(1) DEFAULT NULL,
   `se_progetti` int(1) DEFAULT NULL
@@ -1629,10 +1656,20 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
 
 -- ruoli_audio
 -- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:26 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ruoli_audio` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `nome` char(64) NOT NULL,
-  `se_anagrafica` int(1) DEFAULT NULL
+  `se_anagrafica` int(1) DEFAULT NULL,
+  `se_prodotti` int(1) DEFAULT NULL,
+  `se_articoli` int(1) DEFAULT NULL,
+  `se_categorie_prodotti` int(1) DEFAULT NULL,
+  `se_risorse` int(1) DEFAULT NULL,
+  `se_categorie_risorse` int(1) DEFAULT NULL,
+  `se_progetti` int(1) DEFAULT NULL,
+  `se_categorie_progetti` int(1) DEFAULT NULL,
+  `se_pagine` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034400
