@@ -1,0 +1,1 @@
+ALTER TABLE `contatti` ADD `data_contatto` DATE NULL DEFAULT NULL AFTER `nome`, ADD `ora_contatto` TIME NULL DEFAULT NULL AFTER `data_contatto`;

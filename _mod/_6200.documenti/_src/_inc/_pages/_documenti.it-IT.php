@@ -105,7 +105,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form', 'documenti.articoli.form.tools' ) )
+		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form','documenti.articoli.form.attivita', 'documenti.articoli.form.tools' ) )
+	);
+
+	// gestione tools documenti_articoli - attivita
+	$p['documenti.articoli.form.attivita'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'attivita' ),
+		'h1'			=> array( $l		=> 'attivita' ),
+		'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.attivita.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.attivita.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
 	);
 
 	// gestione tools documenti_articoli

@@ -2,6 +2,10 @@
 
     $ct['form']['table'] = 'contatti';
 
+	if(  isset( $_REQUEST['anagrafica']['id'] ) && !empty($_REQUEST['anagrafica']['id']) ){
+		$ct['etc']['id_cliente'] = $_REQUEST['anagrafica']['id'];
+	}
+
     if( isset( $_REQUEST['__unset__'] ) ){
         unset( $_SESSION['contatto'] );
         unset( $_REQUEST[ $ct['form']['table'] ]['id'] );
@@ -44,5 +48,8 @@
 	    'SELECT id, __label__ FROM tipologie_contatti_view '
 	);
 
+
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+

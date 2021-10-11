@@ -5,6 +5,7 @@
 
 <script>
     function pulisciPianificazione( t ) {
+		$('#btnpulisci').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var form = $( t ).closest('.modal');
 		var id = $('#todo_pianificazioni_0_id').val();
         var data = form.find('#_data_inizio_pulizia').val();
@@ -40,7 +41,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="pulisciPianificazione(this);">rimuovi</button>
+		<button type="button" id="btnpulisci" class="btn btn-secondary btn-sm" onclick="pulisciPianificazione(this);">rimuovi</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

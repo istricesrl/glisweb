@@ -92,6 +92,7 @@
 
         }
 
+/*
         // prelevo e assegno le macro
         arrayReplaceRecursive(
             $cf['contents']['page']['macro'],
@@ -103,6 +104,14 @@
                     array( 's' => $cf['contents']['page']['id'] )
                 )
             )
+        );
+*/
+
+         // aggiungo le macro
+         aggiungiMacro(
+            $ct['page'],
+            $cf['contents']['page']['id'],
+            'id_pagina'
         );
 
         // aggiungo le immagini

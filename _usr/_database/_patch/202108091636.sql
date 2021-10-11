@@ -1,0 +1,1 @@
+ALTER TABLE `attivita_view_static` ADD `note_programmazione` TEXT NULL DEFAULT NULL AFTER `ora_fine_programmazione`;

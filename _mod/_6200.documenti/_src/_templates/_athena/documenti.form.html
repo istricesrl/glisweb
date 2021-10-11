@@ -55,6 +55,10 @@
 					<span class="label-top">numero</span>
 					{{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
 				</div>
+				<div class="col-4 col-md-2">
+					<span class="label-top">sezionale</span>
+					{{ frm.input( table, '', '', 'sezionale', '', '', request ) }}
+				</div>
 				<div class="col-md-auto col-4">
 					<span class="label-top">tipologia</span>
 					{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request ) }}
@@ -62,6 +66,12 @@
 				<div class="col-4 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				</div>
+			</div>
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
+					<span class="label-top">coupon {% if request[table].tipologia == 'documento di reso' %} reso{% else %}sconto{% endif %}</span>
+					{{ frm.selectBox( table, '', '', 'coupon', '', etc.select.coupon, request, '', '','','','','coupon.form','coupon.form','coupon', 'coupon' , page, pages, ietf,'coupon' ) }}
 				</div>
 			</div>
 			<div class="form-group form-row">

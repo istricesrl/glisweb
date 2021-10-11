@@ -49,7 +49,7 @@
    );
    
    // tendina per le tipologie di certificazioni
-   $ct['etc']['select']['certificazioni'] = mysqlCachedIndexedQuery(
+   $ct['etc']['select']['tipologie_certificazioni'] = mysqlCachedIndexedQuery(
       $cf['memcache']['index'],
       $cf['memcache']['connection'],
       $cf['mysql']['connection'],

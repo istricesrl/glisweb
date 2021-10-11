@@ -9,6 +9,9 @@ $ct['view']['cols'] = array(
     'id' => '#'
 );
 
+if( !isset( $_SESSION['fornitura']['id_progetto'] ) && isset( $_REQUEST['progetti']['id'] ) && !empty($_REQUEST['progetti']['id']) ){
+    $_SESSION['fornitura']['id_progetto'] = $_REQUEST['progetti']['id'];
+}
 
 if( isset( $_REQUEST['id_contatto'] ) ){
     $_SESSION['contatto']['id'] = $_REQUEST['id_contatto'];
@@ -39,16 +42,16 @@ if( (isset($_REQUEST['__fornitura__']) && explode( '.', $_REQUEST['__fornitura__
 
    
 
-    $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
+    $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $todo) ));
     $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $todo) ));
     $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS  NULL ORDER BY data_attivita', array( array( 's' => $todo) ));
 
     $ct['etc']['attivita_collaudo'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM attivita_view_static WHERE tipologia = "collaudo" AND id_todo = ? ORDER BY id DESC LIMIT 1', array( array( 's' => $todo) ));
     //print_r($ct['etc']['attivita_programmate']);
-    // $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $todo) ));
+    // $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $todo) ));
     $ct['form']['table'] = 'todo';
     if( !isset( $_REQUEST['todo']  ) ){
-        $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $todo) ));
+        $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $todo) ));
         if( !empty( $_REQUEST['todo']['timestamp_completamento'] ) ){
             $_REQUEST['todo']['timestamp_completamento'] = date( 'Y-m-d\TH:i', $_REQUEST['todo']['timestamp_completamento']) ;
         }    
@@ -219,14 +222,14 @@ if( isset( $_SESSION['fornitura']['id_cliente'] ) && isset( $_SESSION['fornitura
 
         $_SESSION['fornitura']['id_todo'] = $_REQUEST['todo']['id'];
  //       $ct['form']['table'] = 'attivita';
-   //     $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', array( array( 's' => $_SESSION['fornitura']['id_todo']) ));
+   //     $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $_SESSION['fornitura']['id_todo']) ));
     }
 
     if( isset( $_SESSION['fornitura']['id_todo'] ) && !isset($_SESSION['fornitura']['id_fornitura']) ){
 
      //   $_SESSION['fornitura']['id_todo'] = $_REQUEST['todo']['id'];
         $ct['form']['table'] = 'attivita';
-        $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_SESSION['fornitura']['id_todo']) ));
+        $_REQUEST['todo'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $_SESSION['fornitura']['id_todo']) ));
        // if( !$_REQUEST['todo'] ){ unset( $_SESSION['fornitura']['id_todo'] ); }
 
     }

@@ -1,0 +1,1 @@
+ALTER TABLE `documenti` ADD `sezionale` CHAR(6) NULL DEFAULT NULL AFTER `numero`, ADD INDEX `sezionale` (`sezionale`) ;

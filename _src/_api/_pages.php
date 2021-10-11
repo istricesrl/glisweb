@@ -48,10 +48,16 @@
 
     // includo il file di configurazione del template
 	if( file_exists( $ct['page']['template']['ini'] ) ) {
+		// sostituisco il file di configurazione del template con la controparte custom se presente
+		if( file_exists( path2custom( $ct['page']['template']['ini'] ) ) ) {
+			$ct['page']['template']['ini'] = path2custom( $ct['page']['template']['ini'] );
+		}
+		// unisco le direttive di configurazione del file a quelle già esistenti
 	    $ct['page'] = array_merge_recursive(
 			$ct['page'],
 			parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
 	    );
+		// includo i file di configurazione aggiuntivi del template
 		foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
 			$ct['page'] = array_merge_recursive(
 				$ct['page'],

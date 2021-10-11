@@ -1,0 +1,1 @@
+ALTER TABLE `contatti` DROP FOREIGN KEY `contatti_ibfk_4`;

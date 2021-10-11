@@ -144,12 +144,16 @@
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
     {% set ks = request[ table ][ subtable ]|keys %}
     {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
+    {% if not vl  %}{% set vl = default %}{% endif %}
 {% else %}
     {% set nm = table ~ '[' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ field %}
     {% set vl = request[ table ][ field ] %}
+    {% if not request[ table ][ field ] %}
+        {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}{% else %}{% set vl = default %}{% endif %}
+    {% endif %}
 {% endif %}
-{% if vl is empty %}{% set vl = default %}{% endif %}
+
 <input type="{% if type %}{{ type }}{% else %}text{% endif %}" {% if default %} default="{{ default }}"{% endif %} {% if step %}step={{ step }} {% endif %} {% if disabled %}disabled{% endif %} name="{{ nm }}" id="{{ id }}" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" value="{{ vl }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %} {% if type == 'password' %}autocomplete="new-password" {% endif %}>
 {% endmacro %}
 
@@ -177,7 +181,7 @@
     {% set df = request[ table ].id %}
 {% endif %}
 <input type="hidden" name="{{ nm }}" id="{{ id }}" class="" {% if default %} default="{{ default }}" {% endif %} value="{% if vl or ( default and not df ) %}1{% else %}0{% endif %}">
-<input type="checkbox" class="form-check-input" {% if vl or ( default and not df ) %}checked{% endif %}>
+<input type="checkbox" class="form-check-input {{ class }}" {% if vl or ( default and not df ) %}checked{% endif %}>
 {% if placeholder %}
 <label class="form-check-label text-left" for="{{ id }}">{{ placeholder }}</label>
 {% endif %}

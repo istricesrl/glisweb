@@ -17,8 +17,11 @@
         // impostazione stili
         $info['style']['text']['default'] = array( 'font' => 'helvetica', 'size' => 10, 'weight' => '' );
 
+        if( !isset( $info['style']['page']['orentation'] ) ){
+            $info['style']['page']['orentation'] = 'P';
+        }
         // creo il PDF (portrait, millimetri, A4 x->210 y->297)
-        $pdf = new TCPDF( 'P', 'mm', 'A4' );
+        $pdf = new TCPDF( $info['style']['page']['orentation'], 'mm', 'A4' );
 
         // tipografia derivata
         $info['style']['page']['viewport'] = $info['style']['page']['w'] - ( $info['style']['page']['ml'] + $info['style']['page']['mr'] );

@@ -17,7 +17,7 @@
 
 
     // mastro quantitativo
-     if( $_REQUEST['mastri']['id_tipologia'] == 1 || $_REQUEST['mastri']['id_tipologia'] == 2 ){
+     if( $_REQUEST['mastri']['id_tipologia'] == 4 || $_REQUEST['mastri']['id_tipologia'] == 2 ){
     
         // tabella della vista
         $ct['view']['table'] = '__report_giacenza_mastri__';
@@ -75,6 +75,34 @@
             'cliente' => 'text-left'
         );
       }
+
+    // mastro quantitativo
+    if( $_REQUEST['mastri']['id_tipologia'] == 1 ){
+    
+        // tabella della vista
+        $ct['view']['table'] = '__report_giacenze_mastri_quantitativi_gerarchico__';
+
+
+            // pagina per la gestione degli oggetti esistenti
+        $ct['view']['open']['page'] = 'articoli.form.movimenti';
+        $ct['view']['open']['table'] = 'articoli';
+        $ct['view']['open']['field'] = 'id_articolo'; 
+
+        // campi della vista
+        $ct['view']['cols'] = array(
+            'id' => '#',
+            'id_articolo' => 'articolo',
+            'articolo' => 'descrizione',
+            'totale' => 'totale'
+        );
+
+        // stili della vista
+        $ct['view']['class'] = array(
+            'id' => 'd-none d-md-table-cell',
+            'id_articolo' => 'text-left',
+            'articolo' => 'text-left'
+        );
+    }
 
          // id della vista
    # $ct['view']['id'] = md5( $ct['view']['table'] );

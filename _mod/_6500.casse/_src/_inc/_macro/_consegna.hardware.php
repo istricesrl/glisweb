@@ -74,7 +74,7 @@
 
     if( isset( $_SESSION['assistenza']['id_todo_consegna'] )  ){
 
-        $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' =>  $_SESSION['assistenza']['id_todo_consegna'] ) ));
+        $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' =>  $_SESSION['assistenza']['id_todo_consegna'] ) ));
   
     }
 
@@ -82,7 +82,7 @@
 
         $_REQUEST['documenti'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM documenti_view WHERE id = ?', array( array( 's' => $_SESSION['assistenza']['id_documento_consegna'] ) ));
         $_REQUEST['documenti']['documenti_articoli'] = mysqlQuery(    $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE id_documento = ? ',   array(  array( 's' => $_SESSION['assistenza']['id_documento_consegna'] )) );
-        $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_REQUEST['documenti']['id_todo']) ));
+        $_REQUEST['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $_REQUEST['documenti']['id_todo']) ));
     }
 
 

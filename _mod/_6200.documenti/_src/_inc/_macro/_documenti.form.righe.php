@@ -45,6 +45,9 @@
         'tipologia' => 'tipologia',
         'data_lavorazione' => 'data',
         'nome' => 'nome',
+		'id_articolo' => 'articolo',
+		'mastro_scarico' => 'scarico',
+		'mastro_carico' => 'carico',
         'importo_netto_totale' => 'importo netto',
         'quantita' => 'quantità',
 		'totale_riga' => 'totale',
@@ -60,8 +63,9 @@
         'id_documento' => 'd-none',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
-        'data_lavorazione' => 'text-left', 
-        'tipologia' => 'text-left'
+        'data_lavorazione' => 'text-left no-wrap', 
+        'tipologia' => 'text-left',
+		'id_articolo' => 'text-left'
     );
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){

@@ -33,11 +33,11 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
 	    'data_programmazione' => 'pianificato',
-	    'priorita' => 'priorità',
-	    'nome' => 'attività',
+#	    'priorita' => 'priorità',
+	    'nome' => 'titolo',
 	    'cliente' => 'da fare per',
 	    'responsabile' => 'assegnato a',
-	    'progresso' => 'ore',
+#	    'progresso' => 'ore',
 	    'completato' => 'stato',
 	    'id_priorita' => 'id_priorita'
 	);
@@ -46,6 +46,7 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    'id_priorita' => 'd-none',
+		'completato' => 'd-none',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
 	    'priorita' => 'text-left',

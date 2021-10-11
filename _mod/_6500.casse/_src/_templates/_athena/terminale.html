@@ -106,7 +106,7 @@
                                     <tbody class="col-12" >
                                         {% for riga in etc.righe %}
                                         <tr>
-                                        <td class="{{ view.class[key] }}"><span onclick="$('#documenti___comando__').val('{{riga.id_articolo}}')">{{ riga.id_articolo }}</span> {% if riga.matricola %}<br>{{ riga.label_matricola  }}{% endif %}{% if riga.ore %}<br>+{{ riga.ore }}h su {{ riga.progetto  }}{% endif %}</td>
+                                        <td class="{{ view.class[key] }}"><span onclick="$('#documenti___comando__').val('{{riga.id_articolo}}')">{{ riga.id_articolo }}</span> {% if riga.matricola %}<br>{{ riga.label_matricola  }}{% endif %}{% if riga.ore %}<br><a href="{{ pages[ 'attivita.form' ].url[ localization.language.ietf ] }}?attivita[id]={{ riga.id_attivita }}" target="_blank">+{{ riga.ore }}h su {{ riga.progetto  }}</a> <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=attivita&__delete__[id]={{riga.id_attivita }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');">elimina attività</button>{% endif %}</td>
                                         <td class="text-right">{{ riga.reparto }}</td>
                                         <td class="text-right">€ {{ riga.importo_netto_totale }}</td>
                                         <td class="text-right">{{ riga.quantita }}</td>
@@ -141,6 +141,22 @@
                                                 <td class="text-right"><h3>Totale</h3></td>
                                                 <td class="text-right"><h3>€ {{ (etc.totale + etc.totale_iva )|number_format(2, ',', '.')  }}</h3></td>
                                             </tr>
+                                            {% if request[table].coupon %}
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td class="text-right"><h3>Sconto</h3></td>
+                                                <td class="text-right"><h3>€ {{ etc.sconto|number_format(2, ',', '.')  }}</h3></td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                                <td class="text-right"><h3>Totale scontato</h3></td>
+                                                <td class="text-right"><h3>€ {% if (etc.totale + etc.totale_iva - etc.sconto) > 0 %}{{ (etc.totale + etc.totale_iva - etc.sconto)|number_format(2, ',', '.')  }}{% else %} 0,00{% endif %}</h3></td>
+                                            </tr> 
+                                            {% endif %}                                        
                                     {% endif %}
                                         </table>
 
@@ -165,6 +181,26 @@
                                     <button type="submit" class="btn btn-secondary" data-placement="bottom" data-delay="1000" title="invio">esegui</button>
                                 </div>
                     </div>
+                    {% if session.coupon and not request[table].coupon %}
+                    <div class="form-row row">
+                        <div class="form-row media-body p-3" onclick="window.open('{{ cassa }}?__cpon__={{session.coupon}}','_self' )">
+                            <div class="col-auto"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                            <div class="col">
+                            <h3>è presente un coupo in sessione, fai clic qui per aggiungerlo allo scontrino</h3>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if request[table].coupon %}
+                    <div class="form-row row">
+                        <div class="form-row media-body p-3" onclick="window.open('{{ cassa }}?__del_cpon__={{session.coupon}}','_self' )">
+                        <div class="col-auto"><i class="fa fa-trash" aria-hidden="true"></i></div>
+                        <div class="col">
+                            <h3>elimina coupon dallo scontrino</h3>
+                        </div>
+                        </div>
+                    </div>
+                    {% endif %}
                     <div class="form-row row">
                       
                         <!--div class="col-6 mt-3 cassa">

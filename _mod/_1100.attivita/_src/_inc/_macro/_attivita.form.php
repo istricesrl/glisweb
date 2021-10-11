@@ -124,7 +124,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view_static WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
+            'SELECT id, __label__ FROM todo_completa_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ), 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) 
@@ -134,7 +134,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view_static' );
+            'SELECT id, __label__ FROM todo_completa_view' );
 	}
 
     // tendina indirizzi
@@ -160,8 +160,17 @@
 	    'SELECT id, __label__ FROM matricole_view'
     );
 
+    // tendina documenti_articoli
+	$ct['etc']['select']['id_documenti_articoli'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM documenti_articoli_view'
+    );
+    
+
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
-	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ?', 
+	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
         
         if( ! empty($todo['id_cliente']) ){
@@ -204,7 +213,13 @@
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'sostituisci-operatore', 'include' => 'inc/attivita.form.modal.sostituisci.operatore.html' )
     );
-
+    
+    if( isset( $_REQUEST['attivita']['id_todo'] ) && ! empty( $_REQUEST['attivita']['id_todo'] )  ){
+        $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+        $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+        $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+    
+    }
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
     require DIR_SRC_INC_MACRO . '_default.tools.php';

@@ -27,7 +27,7 @@
         // dati todo
         $todo = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT todo_view.*, account_view.utente FROM todo_view LEFT JOIN account_view ON account_view.id = todo_view.id_account_inserimento WHERE todo_view.id = ? ',
+            'SELECT todo_completa_view.*, account_view.utente FROM todo_completa_view LEFT JOIN account_view ON account_view.id = todo_completa_view.id_account_inserimento WHERE todo_completa_view.id = ? ',
             array( array( 's' => $_REQUEST['todo'] ) )
         );
 
@@ -228,7 +228,7 @@
 
 //        pdfFormBox( $pdf, $info, 'firma del cliente\nper accettazione', 8, 4, $boxX, pdfFormCalcY( $info, 27 ) );
 //            pdfFormBox( $pdf, $info, "firma del cliente\nper accettazione", 8, 4, 130, 130 );
-        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con le attività di diagnosi", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
+        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a svolgere e addebitare le attività di diagnosi", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
         } else {
             pdfSetRelativeY( $pdf, 120 );
         }
@@ -296,7 +296,7 @@
 */
 //if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 1 ) || !isset( $_REQUEST['todo'] )  ) {
 
-    if( ( isset( $_REQUEST['part'] ) && ($_REQUEST['part'] == 1 || $_REQUEST['part'] == 3 )) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ) {
+    if( ( isset( $_REQUEST['part'] ) && ($_REQUEST['part'] == 1 || $_REQUEST['part'] == 3 || $_REQUEST['part'] == 4 )) || !isset( $_REQUEST['todo'] )  || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) ) ) {
 
         pdfFormCellTitle( $pdf, $info, '3. diagnosi' );
 
@@ -310,13 +310,13 @@
         //$pdf->Cell(60, 30, '', 1, 1);
         //pdfSetRelativeY( $pdf, 20 );
 
-        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con la soluzione proposta", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
+        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione ad applicare e addebitare la soluzione proposta", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
     } else {
         pdfSetRelativeY( $pdf, 51 );
     }
 
 
-    if( ( isset( $_REQUEST['part'] ) && $_REQUEST['part'] == 2 ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) )  ) {
+    if( ( isset( $_REQUEST['part'] ) && ($_REQUEST['part'] == 2 || $_REQUEST['part'] == 4) ) || !isset( $_REQUEST['todo'] ) || ( !isset( $_REQUEST['part']) && isset( $_REQUEST['todo'] ) )  ) {
 
         pdfFormCellTitle( $pdf, $info, '5. tempo di intervento' );
       
@@ -341,7 +341,7 @@
             foreach( $elenco_attivita as $a){
 
                 $pdf->Cell( $col + 5, $info['form']['bar']['height'], ( $a['data_attivita'] == NULL ? '' : date_format( date_create($a['data_attivita']) , 'd/m/Y') ) , ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                $pdf->Cell( $col * 10, $info['form']['bar']['height'], $a['testo'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 10, $info['form']['bar']['height'],( strlen( $a['testo']) > 115 ?  $a['nome'] : $a['testo']), ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
                 $pdf->Cell( $col - 5, $info['form']['bar']['height'], $a['ore'], ( $i == count( $elenco_attivita ) ? $info['cell']['thick'] : $info['cell']['thin']) , 1, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
                 $totore += $a['ore'];
                 $i++;
@@ -390,11 +390,11 @@
         );*/
             $pdf->SetY( 230 );
             pdfFormCellTitle( $pdf, $info, '6. esito dell\'intervento' );
-            pdfFormLineRow( $pdf, $info, ( isset( $attivita_collaudo ) && ! empty( $attivita_collaudo['testo'] ) ? $attivita_collaudo['testo'] : '' ), 45, 2 );
+            pdfFormLineRow( $pdf, $info, ( isset( $todo ) && ! empty( $todo['testo_completamento'] ) ? $todo['testo_completamento'] : '' ), 45, 2 );
            // $pdf->SetY( 250 );
 
             pdfFormCellTitle( $pdf, $info, '7. chiusura intervento' );
-            pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione del dovuto.', 45, 0);
+            pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e la sua conformità a quanto indicato nel presente rapporto; mi impegno altresì a pagare quanto dovuto.', 45, 0);
             pdfSetRelativeY( $pdf, 12);
 
             pdfSetRelativeY( $pdf, $info['form']['row']['spacing'] );

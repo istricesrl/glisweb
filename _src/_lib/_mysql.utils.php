@@ -147,6 +147,25 @@
     }
     
 
+    function aggiungiMacro( &$p, $id, $f ) {
+
+        global $cf;
+        
+        $p['macro'] = array_merge(
+            mysqlSelectColumn(
+                'macro',
+                $cf['mysql']['connection'],
+                'SELECT macro FROM macro '.
+                'WHERE ' . $f . ' = ?',
+                array(
+                    array( 's' => $id )
+                )
+            ),
+            ( ( isset( $p['macro'] ) ) ?  $p['macro'] : array() )
+        );
+
+    }
+
     function aggiungiMetadati( &$p, $id, $f ) {
 
         global $cf;

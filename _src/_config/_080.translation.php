@@ -29,7 +29,7 @@
 	foreach( $arrayDizionari as $d ) {
 	    $cf['tr'] = array_replace_recursive( $cf['tr'], parse_ini_file( $d, true ) );
 	    if( file_exists( path2custom( $d ) ) ) {
-		$cf['tr'] = array_replace_recursive( $cf['tr'], parse_ini_file( path2local( $d ), true ) );
+		$cf['tr'] = array_replace_recursive( $cf['tr'], parse_ini_file( path2custom( $d ), true ) );
 	    }
 	}
 

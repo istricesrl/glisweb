@@ -1,0 +1,1 @@
+ALTER TABLE `documenti` ADD `coupon` CHAR(32) NULL DEFAULT NULL AFTER `id_todo`, ADD INDEX `coupon` (`coupon`) ;

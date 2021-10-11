@@ -15,7 +15,7 @@
     $ct['form']['table'] = 'mastri';
     
     // mastro quantitativo
-    if( $_REQUEST['mastri']['id_tipologia'] == 1 || $_REQUEST['mastri']['id_tipologia'] == 2 ){
+    if( $_REQUEST['mastri']['id_tipologia'] == 4 || $_REQUEST['mastri']['id_tipologia'] == 2 ){
     // tabella della vista
 	$ct['view']['table'] = '__report_mastri__';
 
@@ -104,6 +104,51 @@
     $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
 
     } 
+
+    // mastro quantitativo
+     if(  $_REQUEST['mastri']['id_tipologia'] == 1 ){
+            // tabella della vista
+            $ct['view']['table'] = '__report_mastri_quantitativi_gerarchico__';
+        
+            // pagina per la gestione degli oggetti esistenti
+            $ct['view']['open']['page'] = 'documenti.articoli.form';
+            $ct['view']['open']['table'] = 'documenti_articoli';
+            $ct['view']['open']['field'] = 'id_riga';
+        
+            // campi della vista
+            $ct['view']['cols'] = array(
+                'id' => '#',
+                'data_lavorazione' => 'data',
+                'descrizione' => 'riga',
+                'id_articolo' => 'articolo',
+                'articolo' => 'descrizione',
+                'quantita' => 'quantità',
+                'id_riga' => 'id_riga',
+                'cliente' => 'cliente',
+                'id_emittente' => 'emittente',
+                'id_tipologia' => 'id_tipologia',
+                'id_todo' => 'todo',
+                'progetto' => 'progetto',
+                'matricola' => 'matricola',
+                'mastro_provenienza' => 'mastro'
+            );
+        
+            // stili della vista
+            $ct['view']['class'] = array(
+                'id' => 'd-none',
+                'id_riga' => 'd-none',
+                'id_listino' => 'd-none',
+                'id_tipologia' => 'd-none',
+                'id_emittente' => 'd-none',
+                'data_lavorazione' => 'text-left',
+                'descrizione' => 'text-left',
+                'id_articolo' => 'text-left',
+                'importo' => 'text-right',
+                'cliente' => 'text-left',
+                'emittente' => 'text-left',
+                'articolo' => 'text-left'
+            );
+        }
 
     $ct['view']['data']['__report_mode__'] = 1;
 

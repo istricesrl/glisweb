@@ -19,7 +19,7 @@
      *
      */
 
-    // tabella gestita
+     // tabella gestita
 	$ct['form']['table'] = 'progetti';
 
     // tendina clienti
@@ -89,7 +89,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM WHERE id_tipologia = 3'
+	    'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 3'
     );
 
     // tendina categorie progetti
