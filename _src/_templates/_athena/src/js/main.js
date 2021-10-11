@@ -43,6 +43,8 @@
 		    $( obj ).removeAttr('disabled');
 		});
 
+
+
 		$( base ).find('.show-on-duplicate').each( function( i, obj ) {
 		    $( obj ).show();
 		    $( obj ).removeClass('hidden');
@@ -52,6 +54,7 @@
 		$( base ).removeClass('hidden');
 
 		$( base ).find( 'input, textarea, select, button' ).each( function( i, obj ) {
+			
 		    if( typeof( obj.attributes['default'] ) !== 'undefined' ) {
 			empty = obj.attributes['default'].value;
 		    } else {

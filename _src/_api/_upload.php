@@ -82,6 +82,7 @@
 
 	    // scrittura dati
 		while( $data = fread( $input, 1024 ) ) {
+
 		    fwrite( $output, $data );
 		}
 
@@ -129,7 +130,6 @@
 		$reply['writtenData']			= $writeData;
 		$reply['fileUrl']			= $cf['site']['url'].$targetFileAbsolutePath;
 		$reply['filePath']			= $targetFileAbsolutePath;
-
 
 	}
 
