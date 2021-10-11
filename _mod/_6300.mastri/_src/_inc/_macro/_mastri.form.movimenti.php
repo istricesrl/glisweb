@@ -121,6 +121,7 @@
                 'data_lavorazione' => 'data',
                 'descrizione' => 'riga',
                 'id_articolo' => 'articolo',
+                'articolo' => 'descrizione',
                 'quantita' => 'quantità',
                 'id_riga' => 'id_riga',
                 'cliente' => 'cliente',
@@ -144,7 +145,8 @@
                 'id_articolo' => 'text-left',
                 'importo' => 'text-right',
                 'cliente' => 'text-left',
-                'emittente' => 'text-left'
+                'emittente' => 'text-left',
+                'articolo' => 'text-left'
             );
         }
 

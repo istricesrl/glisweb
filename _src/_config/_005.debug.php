@@ -24,17 +24,17 @@
      */
 
     // directory da controllare
-	$cf['debug']['fs']['folders'] = array( DIR_ETC_SITEMAP, DIR_VAR, DIR_VAR_LOG, DIR_TMP );
-    $cf['debug']['fs']['files'] = array( path2custom( FILE_MYSQL_PATCH ) );
+	$cf['debug']['fs']['folders'] = array_fill_keys( array( DIR_ETC_SITEMAP, DIR_VAR, DIR_VAR_LOG, DIR_TMP ), false );
+    $cf['debug']['fs']['files'] = array_fill_keys( array( path2custom( FILE_MYSQL_PATCH ) ), false );
 
     // verifico le cartelle
-    foreach( $cf['debug']['fs']['folders'] as $folder ) {
-	    checkFolder( $folder ) or die( 'cartella ' . $folder . ' non scrivibile' );
+    foreach( $cf['debug']['fs']['folders'] as $folder => $status ) {
+	    $cf['debug']['fs']['folders'][ $folder ] = checkFolder( $folder );
     }
 
     // verifico i file
-    foreach( $cf['debug']['fs']['files'] as $file ) {
-	    checkFile( $file ) or die( 'file ' . $file . ' non scrivibile' );
+    foreach( $cf['debug']['fs']['files'] as $file => $status ) {
+	    $cf['debug']['fs']['files'][ $file ] = checkFile( $file );
     }
 
     // debug

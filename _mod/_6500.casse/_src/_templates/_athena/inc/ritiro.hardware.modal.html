@@ -21,8 +21,9 @@
 <script>
 	function stampa_etichette( t ){
 		var documento = $( '#id_doc' ).val();
+		var all = $( '#all' ).val();
 		var start = $( '#start' ).val();
-		window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_stampa.etichette.ritiro.hardware.pdf.php?__documento__='+documento+'&__start__='+start, '_blank');
+		window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_stampa.etichette.ritiro.hardware.pdf.php?__documento__='+documento+'&__start__='+start+'&__all__='+all, '_blank');
 		$('#stampa_etichette').modal('hide')
 	}
 
@@ -147,13 +148,13 @@
 			    {{ frm.input( table, '', '', 'serial_number', '', '', request ) }}
 			</div>
 			<div class="col-12">
-				<span class="label-top">nome</span>
+				<span class="label-top">oggetto</span>
 			    {{ frm.input( table, '', '', 'nome', '', '', request ) }}
 			</div>
-			<div class="col-12">
+			<!--div class="col-12">
 				<span class="label-top">descrizione</span>
 			    {{ frm.textarea( table, '', '', 'testo', '', '3', request ) }}
-			</div>
+			</div-->
 		</div>
 	    </div>
 	    </div>
@@ -181,6 +182,7 @@
 
 				{# CAMPI HIDDEN DI BASE #}
 				<input type="hidden" id="id_doc" value="">
+				<input type="hidden" id="all" value="">
 					
 				
 		    <div class="form-row form-group">

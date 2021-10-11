@@ -3,11 +3,10 @@
     /**
      * 
      * job in foreground creato per sostituire tutte le attività lasciate scoperte da un operatore con un altro
-     * riceve in ingresso i parametri seguenti:
-     * - id_assente: id dell'operatore da sostituire
-     * - id_sostituto: id dell'operatore sostituto
-     * - data_inizio (facoltativa): data di inizio del periodo
-     * - data_fine (facoltativa): data di fine del periodo
+     * riceve in ingresso nel workspace i parametri seguenti:
+     *  @param id_assente                 id dell'operatore da sostituire
+     *  @param id_sostituto               id dell'operatore sostituto
+     *  @param data_inizio,data_fine      se settati, il job analizza solo le attività con data_programmazione compresa in tale range
      * 
      */
 
@@ -120,7 +119,7 @@
                 if( empty( $richieste ) ){
                     $url = $cf['site']['url'] . '_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.request.php?id_attivita=' . $cid . '&id_anagrafica=' . $id_anagrafica;
                     
-                    // se la richiesta arriva in modalità hard aggiungo il parametro per creare le attività
+                    // se la richiesta arriva in modalità hard aggiungo il parametro per aggiornare l'attività e settare la sostituzione
                     if( !empty( $job['workspace']['hard'] ) ){
                         $status['hard'] =  $job['workspace']['hard'];
                         $url .= '&hard=1';

@@ -27,7 +27,7 @@
         // dati todo
         $todo = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT todo_view.*, account_view.utente FROM todo_view LEFT JOIN account_view ON account_view.id = todo_view.id_account_inserimento WHERE todo_view.id = ? ',
+            'SELECT todo_completa_view.*, account_view.utente FROM todo_completa_view LEFT JOIN account_view ON account_view.id = todo_completa_view.id_account_inserimento WHERE todo_completa_view.id = ? ',
             array( array( 's' => $_REQUEST['todo'] ) )
         );
 
@@ -228,7 +228,7 @@
 
 //        pdfFormBox( $pdf, $info, 'firma del cliente\nper accettazione', 8, 4, $boxX, pdfFormCalcY( $info, 27 ) );
 //            pdfFormBox( $pdf, $info, "firma del cliente\nper accettazione", 8, 4, 130, 130 );
-        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con le attività di diagnosi", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
+        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a svolgere e addebitare le attività di diagnosi", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
         } else {
             pdfSetRelativeY( $pdf, 120 );
         }
@@ -310,7 +310,7 @@
         //$pdf->Cell(60, 30, '', 1, 1);
         //pdfSetRelativeY( $pdf, 20 );
 
-        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione a procedere con la soluzione proposta", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
+        pdfFormBox( $pdf, $info, "firma del cliente per autorizzazione ad applicare e addebitare la soluzione proposta", 12, 4, pdfFormCalcX( $info, 33 ), $boxY );
     } else {
         pdfSetRelativeY( $pdf, 51 );
     }
@@ -394,7 +394,7 @@
            // $pdf->SetY( 250 );
 
             pdfFormCellTitle( $pdf, $info, '7. chiusura intervento' );
-            pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e la sua conformità a quanto indicato nel presente rapporto; autorizzo altresì a procedere con la fatturazione del dovuto.', 45, 0);
+            pdfFormLineRow( $pdf, $info, 'Io sottoscritto '. ( isset( $cliente ) && ! empty( $cliente['cognome'] ) ? $cliente['nome'].' '.$cliente['cognome'] : '_______________________' ).' dichiaro di aver letto, compreso e approvato il contenuto del presente modulo; dichiaro di aver verificato l\'esito dell\'intervento e la sua conformità a quanto indicato nel presente rapporto; mi impegno altresì a pagare quanto dovuto.', 45, 0);
             pdfSetRelativeY( $pdf, 12);
 
             pdfSetRelativeY( $pdf, $info['form']['row']['spacing'] );

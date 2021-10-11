@@ -51,7 +51,7 @@
     function aggiungiDati( &$p, $id, $f, $t, $r = null ) {
 
         global $cf;
-
+    
         switch( $t ) {
             case 'immagini':
                 $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
@@ -75,7 +75,7 @@
                 $tk = 'files';
             break;
         }
-
+    
         $cnt = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT contenuti.title, contenuti.h1, contenuti.h2, contenuti.h3, '.
@@ -94,9 +94,9 @@
                 array( 's' => $id )
             )
         );
-
+    
         foreach( $cnt as $cn ) {
-
+    
             $im = array(
                 'id'                => $cn['id'],
                 'nome'              => $cn['nome'],
@@ -115,7 +115,7 @@
                     array( $cn['meta_nome'] => array( $cn['meta_ietf'] => $cn['meta_testo'] ) )
                 )
             );
-
+    
             switch( $t ) {
                 case 'immagini':
                     $im = array_replace_recursive( $im, array(
@@ -129,7 +129,8 @@
                 break;
                 case 'video':
                     $im = array_replace_recursive( $im, array(
-                        'codice_embed'            => $cn['codice_embed']
+                    'codice_embed'            => $cn['codice_embed'],
+                    'id_tipologia_embed'      => $cn['id_tipologia_embed']
                     ) );
                 break;
             }
@@ -142,40 +143,9 @@
                 $p['contents'][ $tk ][ $cn['ruolo'] ][ $cn['ordine'] ] = $im;
             }
         }
-
+    
     }
-
-    function aggiungiMenu(  &$p, $id, $f  ) {
-
-        global $cf;
-        
-        $mnu = mysqlQuery(
-            $cf['mysql']['connection'],
-            'SELECT menu.*, lingue.ietf FROM menu '.
-            'INNER JOIN lingue ON lingue.id = menu.id_lingua '.
-            'WHERE ' . $f . ' = ?',
-            array(
-                array( 's' => $id )
-            )
-        );
-        
-        foreach( $mnu as $mn ) {
-            $p = array_replace_recursive( $p,
-                array(
-                    'menu'	=> array( $mn['menu']	=> array(
-                        $mn['ancora'] => array(
-                            'label'		=> array( $mn['ietf'] => $mn['nome'] ),
-                            'subpages'	=> $mn['sottopagine'],
-                            'ancora'    => ( isset( $mn['ancora'] ) ) ? $mn['ancora'] : NULL,
-                            'target'	=> ( isset( $mn['target'] ) ) ? $mn['target'] : NULL,
-                            'priority'	=> $mn['ordine'] )
-                        )
-                    )
-                )
-            );
-        }
-
-    }
+    
 
     function aggiungiMacro( &$p, $id, $f ) {
 
@@ -194,6 +164,40 @@
             ( ( isset( $p['macro'] ) ) ?  $p['macro'] : array() )
         );
 
+    }
+
+    function aggiungiMenu(&$p, $id, $f){
+
+        global $cf;
+
+        $mnu = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT menu.*, lingue.ietf FROM menu ' .
+                'INNER JOIN lingue ON lingue.id = menu.id_lingua ' .
+                'WHERE ' . $f . ' = ?',
+            array(
+                array('s' => $id)
+            )
+        );
+
+        foreach ($mnu as $mn) {
+            $p = array_replace_recursive(
+                $p,
+                array(
+                    'menu'    => array(
+                        $mn['menu']    => array(
+                            $mn['ancora'] => array(
+                                'label'        => array($mn['ietf'] => $mn['nome']),
+                                'subpages'    => $mn['sottopagine'],
+                                'ancora'    => (isset($mn['ancora'])) ? $mn['ancora'] : NULL,
+                                'target'    => (isset($mn['target'])) ? $mn['target'] : NULL,
+                                'priority'    => $mn['ordine']
+                            )
+                        )
+                    )
+                )
+            );
+        }
     }
 
     function aggiungiMetadati( &$p, $id, $f ) {

@@ -71,7 +71,6 @@
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
 		<input type="hidden" id="id" name="{{ table }}[id]" value="{{ session.assistenza.id_documento_ritiro }}">
@@ -95,6 +94,7 @@
 					<div>
 						<button type="submit" class="btn-lg btn-secondary" onclick="window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_ritiro.hardware.pdf.php?__documento__={{request[ table ].id }}', '_blank')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa modulo ritiro</button>
 						<button type="button" class="btn-lg btn-secondary" onclick="$('#stampa_etichette').modal('show'); $('#id_doc').val({{ request[ table ].id  }})"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa etichette</button>			
+						<button type="button" class="btn-lg btn-secondary" onclick="$('#stampa_etichette').modal('show'); $('#all').val(1); $('#id_doc').val({{ request[ table ].id  }})"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">stampa etichette e modulo</button>			
 					</div>
 					<button type="button" class="btn-lg btn-secondary " onclick="window.open('{{ page.path[ localization.language.ietf ] }}?__unset__', '_self')"  data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">inserisci nuovo</button>
                 

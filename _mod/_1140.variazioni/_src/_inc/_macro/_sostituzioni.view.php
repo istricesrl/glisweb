@@ -20,10 +20,6 @@
 
     // tabella della vista
     $ct['view']['table'] = 'sostituzioni_attivita';
-    
-    // id della vista
-   # $ct['view']['id'] = md5( $ct['view']['table'] );
-
 
     // campi della vista
 	$ct['view']['cols'] = array(

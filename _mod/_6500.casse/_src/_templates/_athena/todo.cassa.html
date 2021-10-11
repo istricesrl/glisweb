@@ -67,22 +67,16 @@
 {% if etc.todo_da_pianificare %}
 <legend>da pianificare</legend>
 {% for t in etc.todo_da_pianificare %}
-<div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
+<div class="form-row agenda-row mt-1" onclick="window.open('{{ pages[ "todo.form.attivita" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
 	<div class="col">
 	    <div class="form-row">
 		    <div class="col">
-                <h3>{{ t.nome }}</h3>
+                <b>{{ t.nome }}</b> | <b>cliente:</b> {{ t.cliente }} | <b>progetto:</b> {{ t.progetto }} | <b>responsabile:</b> {{ t.responsabile }}<br>
             </div>
         </div>
         <div class="form-row">
-            <div class="col-6">
-                {{ t.testo }}
-            </div>
-            <div class="col-6">
-               <b>cliente:</b> {{ t.cliente }}<br>
-               <b>progetto:</b> {{ t.progetto }}<br>
-               <b>responsabile:</b> {{ t.responsabile }}<br>
-            </div>
+            <div class="col">
+                {{ t.testo }}  </div>
         </div>
     </div>
 </div>
@@ -92,29 +86,25 @@
 
 {% if etc.todo_da_fare %}
 
-<fieldset class="">
+<fieldset class="mt-3">
 {% if session.account.id_anagrafica %}
 <legend>pianificati per te</legend>
 {% else %}
 <legend>pianificati</legend>
 {% endif %}
 {% for t in etc.todo_da_fare %}
-<div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
+<div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form.attivita" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
 	<div class="col">
 	    <div class="form-row">
 		    <div class="col">
-                <h3>{{ t.nome }}</h3>
+                <b>{{ t.nome }}</b> | <b>cliente:</b> {{ t.cliente }} | <b>progetto:</b> {{ t.progetto }} | <b>responsabile:</b> {{ t.responsabile }}<br>
             </div>
         </div>
         <div class="form-row">
-            <div class="col-6">
+            <div class="col-12">
                 {{ t.testo }}
             </div>
-            <div class="col-6">
-               <b>cliente:</b> {{ t.cliente }}<br>
-               <b>progetto:</b> {{ t.progetto }}<br>
-               <b>responsabile:</b> {{ t.responsabile }}<br>
-            </div>
+
         </div>
         {% for a in t.attivita %}
         <div class="form-row">
@@ -122,7 +112,7 @@
                 <p>{% if a.data_programmazione %}<b>{{ a.data_programmazione|date(' d/m/Y') }}</b>{% if a.ora_inizio_programmazione %}<b>{{ a.ora_inizio_programmazione|date(' H:i') }}</b>{% endif %} {% else %}&mdash;{% endif %}</p>
             </div>
             <div class="col">
-                <i>{{ a.tipologia }}</i> {% if not session.account.id_anagrafica %}pianificato per {{a.anagrafica}} {% endif %} <br><b>{{ a.nome }}:</b> {{ a.note_programmazione }}
+                <i>{{ a.tipologia }}</i> {% if not session.account.id_anagrafica %}pianificato per {{a.anagrafica}} {% endif %} - <b>{{ a.nome }}:</b> {{ a.note_programmazione }}
             </div>
         </div>
         {% endfor %}
@@ -134,33 +124,28 @@
 {% endif %}
 
 {% if etc.todo_responsabile%}
-<fieldset class="">
-<legend>pianificati per altri</legend>
+<fieldset class="mt-3">
+<legend>todo di cui sei responsabile con attività pianificate per altri </legend>
 {% for t in etc.todo_responsabile %}
-<div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
+<div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form.attivita" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
 	<div class="col">
 	    <div class="form-row">
 		    <div class="col">
-                <h3>{{ t.nome }}</h3>
-            </div>
+                <b>{{ t.nome }}</b> | <b>cliente:</b> {{ t.cliente }} | <b>progetto:</b> {{ t.progetto }} | <b>responsabile:</b> {{ t.responsabile }}<br>
+           </div>
         </div>
         <div class="form-row">
-            <div class="col-6">
+            <div class="col-12">
                 {{ t.testo }}
-            </div>
-            <div class="col-6">
-               <b>cliente:</b> {{ t.cliente }}<br>
-               <b>progetto:</b> {{ t.progetto }}<br>
-               <b>responsabile:</b> {{ t.responsabile }}<br>
             </div>
         </div>
         {% for a in t.attivita %}
         <div class="form-row">
             <div class="col-1 lemma text-right">
-                <p>{% if a.data_programmazione %}<b>{{ a.data_programmazione|date(' d/m/Y') }}</b>{% if a.ora_inizio_programmazione %}<b>{{ a.ora_inizio_programmazione|date(' H:i') }}</b>{% endif %} {% else %}&mdash;{% endif %}</p>
+                <p>{% if a.data_programmazione %}<b>{{ a.data_programmazione|date(' d/m/Y') }}</b>{% if a.ora_inizio_programmazione %}<b> - {{ a.ora_inizio_programmazione|date(' H:i') }}</b>{% endif %} {% else %}&mdash;{% endif %}</p>
             </div>
             <div class="col">
-                <i>{{ a.tipologia }}</i> pianificato per {{a.anagrafica}}<br><b>{{ a.nome }}:</b> {{ a.note_programmazione }}
+                <i>{{ a.tipologia }}</i> pianificato per {{a.anagrafica}}<b> - {{ a.nome }}:</b> {{ a.note_programmazione }}
             </div>
         </div>
         {% endfor %}
@@ -172,5 +157,37 @@
 {% endif %}
 
 
+{% if etc.todo_da_fare_per_altri and session.account.id_anagrafica  %}
+<fieldset class="mt-3">
+<legend>pianificati per altri</legend>
+{% for t in etc.todo_da_fare_per_altri %}
+<div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form.attivita" ].url[ localization.language.ietf ] }}?todo[id]={{ t.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}','_self');" style="cursor: pointer; padding-left: 1.5%;">
+	<div class="col">
+	    <div class="form-row">
+		    <div class="col">
+                <b>{{ t.nome }}</b> | <b>cliente:</b> {{ t.cliente }} | <b>progetto:</b> {{ t.progetto }} | <b>responsabile:</b> {{ t.responsabile }}<br>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-12">
+                {{ t.testo }}
+            </div>
+        </div>
+        {% for a in t.attivita %}
+        <div class="form-row">
+            <div class="col-1 lemma text-right">
+                <p>{% if a.data_programmazione %}<b>{{ a.data_programmazione|date(' d/m/Y') }}</b>{% if a.ora_inizio_programmazione %}<b> - {{ a.ora_inizio_programmazione|date(' H:i') }}</b>{% endif %} {% else %}&mdash;{% endif %}</p>
+            </div>
+            <div class="col">
+                <i>{{ a.tipologia }}</i>{% if not session.account.id_anagrafica %}pianificato per {{a.anagrafica}}{% endif %} - <b>{{ a.nome }}:</b> {{ a.note_programmazione }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endfor %}
+</fieldset>
+{% endif %}
 
 {% endblock %}

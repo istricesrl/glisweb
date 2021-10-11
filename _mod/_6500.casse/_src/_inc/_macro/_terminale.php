@@ -43,8 +43,9 @@
         'modal' => array( 'id' => 'carico_ore', 'include' => 'inc/carico.ore.mastro.todo.html' )
         );
 
-    // mastro di scarico [magazzino]
-    $ct['etc']['mastro'] = NULL;
+    // mastro di carico [magazzino]
+    $ct['etc']['mastro'] =  mysqlSelectValue(  $cf['mysql']['connection'],
+    'SELECT id FROM mastri WHERE nome = "area espositiva"');
     // mastro di carico attivta[magazzino]
     $ct['etc']['mastro_attivita'] = NULL;
 
@@ -163,7 +164,7 @@
         } elseif( $comando[0] == 'TODO' ){
             // la todo
 
-            $ct['etc']['todo'] =  mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view_static WHERE id = ? ', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
+            $ct['etc']['todo'] =  mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ? ', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
            
             // attività concluse della todo
             $ct['etc']['attivita_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => str_replace('0', '', $comando[1]) ) ));
@@ -262,7 +263,10 @@
 
             if( !empty($articolo) ){    
 
-
+                if( $articolo['se_servizio'] == 1 ){
+                    $ct['etc']['mastro'] =  mysqlSelectValue(  $cf['mysql']['connection'],
+                    'SELECT id FROM mastri WHERE nome = "codici da lavorare"');
+                } 
 
 
                 if( $_REQUEST[ $ct['form']['table'] ]['__reparto__'] == 0 ){ $reparto = $articolo['id_reparto']; }
@@ -309,7 +313,7 @@
 
                     $insert = mysqlQuery( 
                                 $cf['mysql']['connection'], 
-                                "INSERT INTO documenti_articoli ( id_articolo, id_listino, id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+                                "INSERT INTO documenti_articoli ( id_articolo, id_listino, id_todo, id_progetto, id_documento, data_lavorazione, importo_netto_totale, quantita, id_reparto, id_iva, id_udm, id_mastro_provenienza, id_tipologia )  VALUES ( \"".$_REQUEST[ $ct['form']['table'] ]['__comando__']."\", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
                                 array( 
                                     array( 's' => $ct['etc']['default_listino'] ),
                                     array( 's' => ( isset( $_REQUEST['__todo__']) && !empty($_REQUEST['__todo__'])  ?  $_REQUEST['__todo__'] : NULL ) ),
@@ -321,7 +325,8 @@
                                     array( 's' => $reparto ),
                                     array( 's' => $id_iva ),
                                     array( 's' => $articolo['id_udm'] ),
-                                    array( 's' => $ct['etc']['mastro'] )
+                                    array( 's' => $ct['etc']['mastro'] ),
+                                    array( 's' => $ct['etc']['default_tipologia'] )
                                 ) );
 
 

@@ -226,8 +226,20 @@
         <div class="form-row">
             <div class="col">
                 {% set progetti = pages[ 'progetti.produzione.form' ].url[ localization.language.ietf ] %}
-                 <button type="button" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetti }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&__preset__[progetti][id_cliente]={{ session.fornitura.id_cliente }}&__preset__[progetti][id_tipologia]=6&__preset__[progetti][nome]=fornitura per {{ etc.cliente.__label__ }}&__preset__[progetti][data_accettazione]={{ now|date('Y-m-d') }}&__preset__[progetti][testo_accettazione]=richiesta in cassa','_self');">crea un nuovo progetto per il cliente</i></button>
+                <form method="post">
+
+                    {%  set table = 'progetti' %}
+                    {{ frm.input( table, '', '', 'id', '', '', request,  'now'|date('YmdHi'), 'hidden' ) }}
+                    {{ frm.input( table, '', '', 'id_tipologia', '', '', request, 6, 'hidden' ) }}
+                    {{ frm.input( table, '', '', 'nome', '', '', request, 'fornitura per '~etc.cliente.__label__ , 'hidden') }}
+                    {{ frm.input( table, '', '', 'id_cliente', '', '', request, session.assistenza.id_cliente, 'hidden' ) }}
+                    {{ frm.input( table, '', '', 'data_accettazione', '', '', request, now|date('Y-m-d'), 'hidden' ) }}
+                    <!--button type="submit" class="btn btn-secondary btn-lg" onclick="window.open('{{ progetti }}?__backurl__={{ page.backurl[ localization.language.ietf ] }}&__preset__[progetti][id_cliente]={{ session.assistenza.id_cliente }}&__preset__[progetti][id_tipologia]=7&__preset__[progetti][nome]=servizio assistenza per {{ etc.cliente.__label__ }}&__preset__[progetti][data_accettazione]={{ now|date('Y-m-d') }}&__preset__[progetti][testo_accettazione]=richiesta in cassa','_self');">crea un nuovo progetto per il cliente</i></button-->
+                    {{ frm.input( table, '', '', 'testo_accettazione', '', '', request, 'richiesta in cassa', 'hidden' ) }}
+                    <button type="submit" class="btn btn-secondary btn-lg" >crea un nuovo progetto per il cliente</i></button>
     
+        </form> 
+              
             </div>
         </div>
 </div>    

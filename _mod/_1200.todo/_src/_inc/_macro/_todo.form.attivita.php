@@ -23,9 +23,9 @@
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-        'data_programmazione' => 'data programmazione',
+        'data_programmazione' => 'programmata',
         'ora_inizio_programmazione' => 'ora',
-        'note_programmazione' => 'note',
+        'note_programmazione' => 'compito',
         'data_attivita' => 'esecuzione',
 	    '__label__' => 'attività',
 	    'anagrafica' => 'svolta da',
