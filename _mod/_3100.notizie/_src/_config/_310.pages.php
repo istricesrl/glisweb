@@ -26,7 +26,7 @@
             logWrite( 'struttura delle categorie notizie NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR );
         }
 
-	    // recupero le pagine dal database
+	    // recupero le categorie notizie dal database
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT categorie_notizie.* FROM categorie_notizie '.
@@ -52,8 +52,8 @@
 			foreach( $pgs as $pg ) {
 
                 // ID della pagina
-                $pid = PREFX_CATEGORIE_PRODOTTI . $pg['id'];
-                $pip = PREFX_CATEGORIE_PRODOTTI . $pg['id_genitore'];
+                $pid = PREFX_CATEGORIE_NOTIZIE . $pg['id'];
+                $pip = PREFX_CATEGORIE_NOTIZIE . $pg['id_genitore'];
 
 			    // aggiornamento delle pagine
 				if( $pg['timestamp_aggiornamento'] > $cf['contents']['updated'] ) {
@@ -85,6 +85,33 @@
 
 	    // timer
 		timerCheck( $cf['speed'], ' -> fine elaborazione categorie notizie prelevate dal database' );
+
+        // recupero le notizie dal database
+		$pgs = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT notizie.* FROM notizie '.
+            'INNER JOIN pubblicazione ON pubblicazione.id_notizia = notizie.id '.
+            'WHERE notizie.id_sito = ? '.
+            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) '.
+            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) '.
+            'GROUP BY notizie.id ',
+            array(
+                array( 's' => SITE_CURRENT ),
+                array( 's' => time() ),
+                array( 's' => time() )
+            )
+        );
+
+	    // timer
+		timerCheck( $cf['speed'], ' -> fine recupero notizie dal database' );
+
+	    // se ci sono pagine trovate le inserisco nell'array principale
+		if( is_array( $pgs ) ) {
+
+        }
+
+        	    // timer
+		timerCheck( $cf['speed'], ' -> fine elaborazione notizie prelevate dal database' );
 
     } else {
         
