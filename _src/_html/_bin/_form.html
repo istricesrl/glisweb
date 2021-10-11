@@ -334,11 +334,11 @@
     <div class="col-auto text-left {{ class }}">
 	{% if vl %}
 	<button title="apri il file in una nuova pagina" class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ site.root }}{{ vl }}','_blank');"><i class="fa fa-external-link"></i></button>
-	{% endif %}
-	{% if not hidden %}
-	{% if edit and pk %}
+	{% if edit %}
 	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ pages[ edit ].path[ lang ] }}?{{ subtable }}[id]={{ pk }}','_blank');"><i class="fa fa-pencil"></i></button>
 	{% endif %}
+    {% endif %}
+	{% if not hidden %}
 	<input type="file" style="display: none;" class="form-control-file-sm form-control-sm ajax-uploader" name="__{{ id }}_uploader__" id="{{ id }}_uploader" placeholder="{{ label }}" uploader-folder="{{ folder }}" uploader-field="{{ id }}" small>
 	<button title="seleziona il file"  class="btn btn-secondary btn-sm btn-sqr show-on-duplicate" type="button" onclick="$(this).prev('input').trigger('click');"><i class="fa fa-folder-open"></i></button>
     <button class="btn btn-sm btn-secondary btn-sqr btn-spin hide-on-duplicate" style="display:none;" disabled=""><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></button>
