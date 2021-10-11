@@ -51,7 +51,7 @@
     function aggiungiDati( &$p, $id, $f, $t, $r = null ) {
 
         global $cf;
-
+    
         switch( $t ) {
             case 'immagini':
                 $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
@@ -75,7 +75,7 @@
                 $tk = 'files';
             break;
         }
-
+    
         $cnt = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT contenuti.title, contenuti.h1, contenuti.h2, contenuti.h3, '.
@@ -94,14 +94,15 @@
                 array( 's' => $id )
             )
         );
-
+    
         foreach( $cnt as $cn ) {
-
+    
             $im = array(
                 'id'                => $cn['id'],
                 'nome'              => $cn['nome'],
                 'path'              => ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ),
-                'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ) ),
+            #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ) ),     // commentata questa riga, sostituita con la seguente
+                'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path'] ) : array( $cn['main_ietf'] => findFileType( $cn['path'] ) ),      // vedere issue #419
                 'title'		        => array( $cn['ietf']	=> $cn['title'] ),
                 'h1'		        => array( $cn['ietf']	=> $cn['h1'] ),
                 'h2'		        => array( $cn['ietf']	=> $cn['h2'] ),
@@ -114,21 +115,22 @@
                     array( $cn['meta_nome'] => array( $cn['meta_ietf'] => $cn['meta_testo'] ) )
                 )
             );
-
+    
             switch( $t ) {
                 case 'immagini':
                     $im = array_replace_recursive( $im, array(
                         'taglio'            => $cn['taglio'],
                         'path_alternativo'  => ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ),
-                        'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),
+                    #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),     // commentata questa riga, sostituita con la seguente
+                        'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path_alternativo'] ) : array( $cn['main_ietf'] => findFileType( $cn['path_alternativo'] ) ),      // vedere issue #419
                         'orientamento'      => $cn['orientamento'],
                         'anno'              => $cn['anno']
                     ) );
                 break;
                 case 'video':
                     $im = array_replace_recursive( $im, array(
-                        'codice_embed'            => $cn['codice_embed'],
-                        'id_tipologia_embed'      => $cn['id_tipologia_embed']
+                    'codice_embed'            => $cn['codice_embed'],
+                    'id_tipologia_embed'      => $cn['id_tipologia_embed']
                     ) );
                 break;
             }
@@ -141,40 +143,9 @@
                 $p['contents'][ $tk ][ $cn['ruolo'] ][ $cn['ordine'] ] = $im;
             }
         }
-
+    
     }
-
-    function aggiungiMenu(  &$p, $id, $f  ) {
-
-        global $cf;
-        
-        $mnu = mysqlQuery(
-            $cf['mysql']['connection'],
-            'SELECT menu.*, lingue.ietf FROM menu '.
-            'INNER JOIN lingue ON lingue.id = menu.id_lingua '.
-            'WHERE ' . $f . ' = ?',
-            array(
-                array( 's' => $id )
-            )
-        );
-        
-        foreach( $mnu as $mn ) {
-            $p = array_replace_recursive( $p,
-                array(
-                    'menu'	=> array( $mn['menu']	=> array(
-                        $mn['ancora'] => array(
-                            'label'		=> array( $mn['ietf'] => $mn['nome'] ),
-                            'subpages'	=> $mn['sottopagine'],
-                            'ancora'    => ( isset( $mn['ancora'] ) ) ? $mn['ancora'] : NULL,
-                            'target'	=> ( isset( $mn['target'] ) ) ? $mn['target'] : NULL,
-                            'priority'	=> $mn['ordine'] )
-                        )
-                    )
-                )
-            );
-        }
-
-    }
+    
 
     function aggiungiMetadati( &$p, $id, $f ) {
 
