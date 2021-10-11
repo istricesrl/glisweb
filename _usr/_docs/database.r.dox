@@ -9,20 +9,25 @@
 
     ranking
     -------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene i livelli di ranking in cui è possibile raggruppare le anagrafiche.
+    Questa suddivisione è soprattutto utilizzata nelle applicazioni del framework agli scenari di CRM.
 
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    ranking.id                              | l'ID del ranking
+    ranking.nome                            | il nome del ranking
+    ranking.ordine                          | campo di ordinamento
 
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                              | campo                 | tabella e campo collegati     | comportamento
-    ------------------------------------|-----------------------|-------------------------------|------------------
+    La tabella non ha chiavi esterne.
 
     La vista *ranking_view* relativa alla tabella *ranking* presenta le seguenti colonne:
 
     colonna                                     | descrizione
     --------------------------------------------|---------------------------------------------------------------------------------------
+    ranking_view.id                             | -
+    ranking_view.nome                           | -
+    ranking_view.ordine                         | -
+    ranking_view.__label__                      | etichetta descrittiva del ranking
 
     recensioni
     ----------
@@ -356,18 +361,46 @@
     
     ruoli_file
     ----------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* contiene i ruoli che l'entità *file* può svolgere relativamente a diverse entità principali.
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_file.id                          | l'ID del ruolo file
-    ruoli_file.nome                        | 
-    ruoli_file.se_anagrafica               | 
-    
-    La vista ruoli_file_view relativa alla tabella ruoli_file presenta le seguenti colonne:
+    ruoli_file.id                          | l'ID del ruolo
+    ruoli_file.id_genitore                 | l'ID del ruolo genitore
+    ruoli_file.nome                        | il nome del ruolo
+    ruoli_file.se_anagrafica               | flag che indica se il ruolo è pertinente all'anagrafica
+    ruoli_file.se_prodotti                 | flag che indica se il ruolo è pertinente ai prodotti
+    ruoli_file.se_articoli                 | flag che indica se il ruolo è pertinente agli articoli
+    ruoli_file.se_categorie_prodotti       | flag che indica se il ruolo è pertinente alle categorie di prodotti
+    ruoli_file.se_risorse                  | flag che indica se il ruolo è pertinente alle risorse
+    ruoli_file.se_categorie_risorse        | flag che indica se il ruolo è pertinente alle categorie di risorse
+    ruoli_file.se_progetti                 | flag che indica se il ruolo è pertinente ai progetti
+    ruoli_file.se_categorie_progetti       | flag che indica se il ruolo è pertinente alle categorie di progetti
+    ruoli_file.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+    ruoli_file_ibfk_01                      | id_genitore           | ruoli_file.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_file_view* relativa alla tabella *ruoli_file* presenta le seguenti colonne:
  
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_file_view.id                         | -
+    ruoli_file_view.id_genitore                | -
+    ruoli_file_view.nome                       | -
+    ruoli_file_view.se_anagrafica              | -
+    ruoli_file_view.se_prodotti                | -
+    ruoli_file_view.se_articoli                | -
+    ruoli_file_view.se_categorie_prodotti      | -
+    ruoli_file_view.se_risorse                 | -
+    ruoli_file_view.se_categorie_risorse       | -
+    ruoli_file_view.se_progetti                | -
+    ruoli_file_view.se_categorie_progetti      | -
+    ruoli_file_view.se_pagine                  | -
+    ruoli_file_view.__label__                  | etichetta descrittiva del ruolo
     
     ruoli_immagini
     --------------

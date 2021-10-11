@@ -1703,6 +1703,27 @@ ALTER TABLE `pubblicazione`
 -- tipologia: tabella gestita
 ALTER TABLE `pubblicazione` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000028600
+
+-- ranking
+-- tipologia: tabella assistita
+-- verifica: 2021-10-11 17:48 Fabio Mosti
+ALTER TABLE `recensioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`nome`,`ordine`);
+
+--| 030000028601
+
+-- ranking
+-- tipologia: tabella assistita
+-- verifica: 2021-10-11 17:48 Fabio Mosti
+ALTER TABLE `ranking` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000028800
 
 -- recensioni
@@ -1899,5 +1920,31 @@ ALTER TABLE `ruoli_audio`
 -- ruoli_audio
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000034400
+
+-- ruoli_file
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-11 18:14 Fabio Mosti
+ALTER TABLE `ruoli_file`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_anagrafica` (`se_anagrafica`), 
+	ADD KEY `se_prodotti` (`se_prodotti`), 
+	ADD KEY `se_articoli` (`se_articoli`), 
+	ADD KEY `se_categorie_prodotti` (`se_categorie_prodotti`), 
+	ADD KEY `se_risorse` (`se_risorse`), 
+	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
+	ADD KEY `se_progetti` (`se_progetti`), 
+	ADD KEY `se_categorie_progetti` (`se_categorie_progetti`), 
+	ADD KEY `se_pagine` (`se_pagine`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_anagrafica`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_risorse`,`se_categorie_risorse`,`se_progetti`,`se_categorie_progetti`,`se_pagine`);
+
+--| 030000034401
+
+-- ruoli_file
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| FINE FILE

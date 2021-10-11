@@ -1517,6 +1517,21 @@ CREATE TABLE IF NOT EXISTS `pubblicazione` (
   `timestamp_fine` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000028600
+
+-- ranking
+-- tipologia: tabella assistita
+-- verifica: 2021-10-12 12:12 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `provincie` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(254) NOT NULL,
+  `ordine` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000028800
 
 -- recensioni
@@ -1676,10 +1691,20 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
 
 -- ruoli_file
 -- tipologia: tabella di supporto
+-- verifica: 2021-10-11 18:13 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ruoli_file` (
-`id` int(11) NOT NULL,
-  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
-  `se_anagrafica` int(1) DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `se_anagrafica` int(1) DEFAULT NULL,
+  `se_prodotti` int(1) DEFAULT NULL,
+  `se_articoli` int(1) DEFAULT NULL,
+  `se_categorie_prodotti` int(1) DEFAULT NULL,
+  `se_risorse` int(1) DEFAULT NULL,
+  `se_categorie_risorse` int(1) DEFAULT NULL,
+  `se_progetti` int(1) DEFAULT NULL,
+  `se_categorie_progetti` int(1) DEFAULT NULL,
+  `se_pagine` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034600
@@ -1698,6 +1723,10 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034800
+
+-- ruoli_indirizzi
+
+--| 010000035000
 
 -- ruoli_prodotti
 -- tipologia: tabella di supporto

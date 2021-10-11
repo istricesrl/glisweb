@@ -3137,6 +3137,26 @@ CREATE OR REPLACE VIEW `pubblicazione_view` AS
     FROM pubblicazione
 ;
 
+--| 090000028600
+
+-- ranking_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `ranking_view`;
+
+--| 090000028601
+
+-- ranking_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-11 17:55 Fabio Mosti
+CREATE OR REPLACE VIEW `ranking_view` AS
+    SELECT
+		ranking.id,
+		ranking.nome,
+		ranking.ordine,
+		ranking.nome AS __label__
+    FROM ranking
+;
+
 --| 090000028800
 
 -- recensioni_view
@@ -3414,6 +3434,35 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.se_pagine,
 	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
 	FROM ruoli_audio
+;
+
+--| 090000034400
+
+-- ruoli_file_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_file_view`;
+
+--| 090000034401
+
+-- ruoli_file_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-11 18:26 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_file_view AS
+	SELECT
+		ruoli_file.id,
+		ruoli_file.id_genitore,
+		ruoli_file.nome,
+		ruoli_file.se_anagrafica,
+		ruoli_file.se_prodotti,
+		ruoli_file.se_articoli,
+		ruoli_file.se_categorie_prodotti
+		ruoli_file.se_risorse,
+		ruoli_file.se_categoria_risorse,
+		ruoli_file.se_progetti,
+		ruoli_file.se_categorie_progetti,
+		ruoli_file.se_pagine,
+	 	ruoli_file_path( ruoli_file.id ) AS __label__
+	FROM ruoli_file
 ;
 
 --| 090000009201

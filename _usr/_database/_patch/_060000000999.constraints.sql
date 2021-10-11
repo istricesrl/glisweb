@@ -845,6 +845,15 @@ ALTER TABLE `pubblicazione`
     ADD CONSTRAINT `pubblicazione_ibfk_06`              FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `pubblicazione_ibfk_07`              FOREIGN KEY (`id_popup`) REFERENCES `popup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--| 060000028600
+
+-- ranking
+-- tipologia: tabella assistita
+-- verifica: 2021-10-11 17:53 Fabio Mosti
+ALTER TABLE `ranking`
+    ADD CONSTRAINT `ranking_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `ranking_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 --| 060000028800
 
 -- recensioni
@@ -927,5 +936,13 @@ ALTER TABLE `ruoli_anagrafica`
 -- verifica: 2021-10-09 18:36 Fabio Mosti
 ALTER TABLE `ruoli_audio`
     ADD CONSTRAINT `ruoli_audio_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_audio` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 060000034400
+
+-- ruoli_file
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-11 18:25 Fabio Mosti
+ALTER TABLE `ruoli_file`
+    ADD CONSTRAINT `ruoli_file_ibfk_01`     FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_audio` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| FINE FILE
