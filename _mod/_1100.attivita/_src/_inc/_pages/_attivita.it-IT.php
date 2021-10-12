@@ -128,8 +128,8 @@
 	);
 
 
-	// vista categorie attività - rimosso provvisoriamente
-/*	$p['categorie.attivita.view'] = array(
+	// vista categorie attività - ripristinato solo per todo
+	$p['categorie.attivita.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'categorie' ),
 		'h1'		=> array( $l		=> 'categorie' ),
@@ -138,11 +138,11 @@
 		'macro'		=> array(  $m . '_src/_inc/_macro/_categorie.attivita.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'categorie.attivita.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
-									'priority'	=> '115' ) )
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'categorie' ),
+		'priority'	=> '115' ) ) )
 	);
 
-	// gestione categorie attività - rimosso provvisoriamente
+	// gestione categorie attività - ripristinato solo per todo
 	$p['categorie.attivita.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
@@ -153,7 +153,7 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'categorie.attivita.form' ) )
 	);
-*/
+
 
 	$p['tipologie.attivita.view'] = array(
 		'sitemap'		=> false,
@@ -165,7 +165,7 @@
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.attivita.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
-																		'priority'	=> '115' ) ) )	
+																		'priority'	=> '120' ) ) )	
 	);
 
 	// gestione categorie attività
