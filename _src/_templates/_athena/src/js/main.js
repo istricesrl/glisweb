@@ -43,8 +43,6 @@
 		    $( obj ).removeAttr('disabled');
 		});
 
-
-
 		$( base ).find('.show-on-duplicate').each( function( i, obj ) {
 		    $( obj ).show();
 		    $( obj ).removeClass('hidden');
