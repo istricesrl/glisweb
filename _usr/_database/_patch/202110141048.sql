@@ -1,0 +1,1 @@
+ALTER TABLE `menu` ADD CONSTRAINT `menu_ibfk_6` FOREIGN KEY (`id_notizia`) REFERENCES `notizie`(`id`) ON DELETE CASCADE ON UPDATE CASCADE; ALTER TABLE `menu` ADD CONSTRAINT `menu_ibfk_7` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
