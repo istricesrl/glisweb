@@ -303,3 +303,18 @@
 			'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = NULL'
 		);
     }
+
+    function trovaTabellaDestinazioneConstraint( $t, $f ) {
+
+        global $cf;
+
+        return mysqlSelectCachedValue(
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+            'SELECT referenced_table_name '.
+            'FROM information_schema.key_column_usage '.
+            'WHERE table_name = ' . $t . ' AND table_schema = database() '.
+            'AND referenced_table_name IS NOT NULL AND column_name = ' . $f
+        );
+
+    }
