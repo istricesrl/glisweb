@@ -10,17 +10,24 @@
 <body>
 
 <form action="backend01.php" method="post" id="demo-form">
-    <input type="text" name="test" />
+    <input type="text" required name="test" />
     <button class="g-recaptcha"
         data-sitekey="6Le10m4cAAAAAEvsAqtzLHama3RuLNtR64BamjzY"
         data-callback='onSubmit'
         data-action='submit'>Submit</button>
 </form>
 
-<script>
+<script defer src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script defer src="/_src/_js/_lib/_form.js"></script>
+
+<script defer type="text/javascript">
+
    function onSubmit(token) {
-       // qui validare il form
-        document.getElementById("demo-form").submit();
+       // validazione del form
+       if( checkForm( 'demo-form' ) === true ){
+            document.getElementById("demo-form").submit();
+       }       
    }
 </script>
 </body>
