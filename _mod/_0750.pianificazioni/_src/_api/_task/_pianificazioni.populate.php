@@ -71,7 +71,9 @@
         'WHERE token = ? ',
         array( array( 's' => $status['token'] ) )
     );
-	
+
+    // TODO
+    // $current['entita'] = pianificazioniGetMatchEntityName( $current['id'] );
 
     // se c'è almeno una riga da inviare
     if( ! empty( $current ) ) {
