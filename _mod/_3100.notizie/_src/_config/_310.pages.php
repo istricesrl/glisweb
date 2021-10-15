@@ -256,7 +256,7 @@
             }
         }
 
-        	    // timer
+        // timer
 		timerCheck( $cf['speed'], ' -> fine elaborazione notizie prelevate dal database' );
 
     } else {
