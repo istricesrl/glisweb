@@ -48,16 +48,13 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
+			<div class="col-auto col-md-auto">
+				<span class="label-top">tipologia</span>
+			{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+		    </div>
 		    <div class="col">
 				<span class="label-top">etichetta</span>
 			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-		    </div>
-		</div>
-
-		<div class="form-group form-row">
-		    <div class="col">
-				<span class="label-top">tipologia</span>
-			{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
 		    </div>
 		</div>
 
@@ -69,6 +66,26 @@
 		</div>
 
 	    </fieldset>
+
+		<fieldset>
+			<legend>aspetto</legend>
+	
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
+					<span class="label-top">template</span>
+					{{ frm.selectAuto( table, '', '', 'template', '', etc.select.templates, request ) }}
+				</div>  
+				<div class="col-12 col-md">
+					<span class="label-top">schema</span>
+					{{ frm.select( table, '', '', 'schema_html', '', etc.select.schemi, request ) }}
+				</div>  
+				<div class="col-12 col-md">
+					<span class="label-top">tema</span>
+					{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
+				</div>  
+			</div>  
+	
+		</fieldset>
 
 		{# SUBFORM CATEGORIE #}
 		{{ sub_notizie.categorie( table, 'notizie_categorie', 'categorie',site, page, pages, localization.language.ietf, etc, request, session, 'id_notizia' ) }}

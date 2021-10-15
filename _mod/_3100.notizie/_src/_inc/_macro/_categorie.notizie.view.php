@@ -26,7 +26,7 @@
 	);
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'notizie.form';
+	$ct['view']['open']['page'] = 'categorie.notizie.form';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

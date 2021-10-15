@@ -72,7 +72,7 @@
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'notizie.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'notizie.form.contenuti.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.php', $m . '_src/_inc/_macro/_notizie.form.contenuti.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
@@ -180,6 +180,7 @@
 	    'etc'		=> array( 'tabs'	=> array(	'categorie.notizie.form',
 													'categorie.notizie.form.sem',
 													'categorie.notizie.form.testo',
+													'categorie.notizie.form.menu',
 													'categorie.notizie.form.immagini',
 													'categorie.notizie.form.video',
 													'categorie.notizie.form.audio',
@@ -213,17 +214,19 @@
 	    'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
 	);
 
-	$p['categorie.notizie.form.contenuti'] = array(
+	// form categorie notizie menu
+	$p['categorie.notizie.form.menu'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'testo' ),
-	    'h1'		=> array( $l		=> 'testo' ),
+	    'title'		=> array( $l		=> 'menu' ),
+	    'h1'		=> array( $l		=> 'menu' ),
 	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.contenuti.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.php', $m . '_src/_inc/_macro/_categorie.notizie.form.contenuti.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.menu.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.menu.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
 	);
 
+	// form categorie notizie immagini
 	$p['categorie.notizie.form.immagini'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
