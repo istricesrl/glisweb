@@ -94,7 +94,7 @@
 			    progress = Math.round( ( window.uploadcounter / window.uploadfilearray.length ) * 100 );
 //			    console.log('progresso: ' + progress );
 			} else {
-//			    console.log('path: ' + obj.filePath );
+			    //console.log('path: ' + obj.filePath );
 			    $( '#' + field ).val( obj.filePath );
 			    // parent.addClass('col-form-label');
 			    // TODO sarebbe bello poter usare questo anziché html() in modo da

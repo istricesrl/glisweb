@@ -4,6 +4,13 @@
 
         global $cf;
 
+    // TODO
+    // foreach( $cf['pianificazioni']['chiavi'] AS $chiave ) {
+    // if( ! emtpy( $current[ $chiave ] ) ) {
+    // $current['entita'] = trovaTabellaDestinazioneConstraint( 'pianificazioni', $chiave );
+    // }
+    // }
+
         return mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT entita FROM pianificazioni WHERE id = ?',

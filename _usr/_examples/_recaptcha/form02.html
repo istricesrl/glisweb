@@ -1,0 +1,86 @@
+<html>
+<head>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <style>
+    .grecaptcha-badge { 
+	bottom:65px !important; 
+    }
+    </style>
+</head>
+<body>
+
+<form action="backend01.php" method="post" id="demo-form">
+
+    <fieldset>
+    
+    <div class="form-row">
+        <div class="form-group col-12 col-md-4">
+            <input name="__contatti__[default][nome]" required type="text" value="" class="form-control" id="nome" placeholder="nome">
+        </div>
+
+        <div class="form-group col-12 col-md-4">
+            <input name="__contatti__[default][cognome]" required type="text" value="" class="form-control" id="cognome" placeholder="cognome">
+        </div>
+        
+        <div class="form-group col-12 col-md-4">
+            <input name="__contatti__[default][email]" required type="email" value="" class="form-control" id="email" placeholder="email">
+        </div>
+
+        <div class="form-group col-12 col-md-4">
+            <input name="__contatti__[default][telefono]" required type="tel" value="" class="form-control" id="telefono" placeholder="telefono">
+        </div>
+
+        <div class="form-group col-12 col-md-4">
+            <select name="__contatti__[default][sesso]" required id="sesso" class="form-control">
+                <option value="">sesso</option>
+                <option value="1">Maschio</option>
+                <option value="2">Femmina</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-12">
+            <div class="form-check d-flex align-items-center justify-content-center">
+                <input type="checkbox" id="privacy" required style="margin-right: 5px"  name="__contatti__[default][privacy]">
+                <label class="form-check-label privacy">accetto la privacy policy</label>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <div class="form-row justify-content-center justify-content-center">
+        <div class="form-group col-12 mt-4 mb-5" >
+            
+            <button class="g-recaptcha"
+            data-sitekey="6Le10m4cAAAAAEvsAqtzLHama3RuLNtR64BamjzY"
+            data-callback='submitDemo'
+            data-action='submit'>Submit</button>
+        </div>
+    </div>
+    </fieldset>
+
+   
+</form>
+
+
+<script defer src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script defer src="/_src/_js/_lib/_form.js"></script>
+<script defer type="text/javascript">
+
+    // funzione specifica per il form di cui sopra che ne effettua la validazione
+    // se ci sono più form nella pagina sarà necessario creare una funzione come la seguente per ciascuno
+    function submitDemo(token) {
+
+        if( checkForm('demo-form') === true ){
+            document.getElementById("demo-form").submit();
+        }
+
+    }
+
+
+</script>
+</body>
+</html>
