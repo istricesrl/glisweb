@@ -67,6 +67,10 @@
                 // valuto se i dati in cache sono ancora validi
 				if( $pg['timestamp_aggiornamento'] > $age || empty( $pgc ) ) {
 
+                    if( empty( $pg['template'] ) ){ $pg['template'] = $cf['notizie']['pages']['elenco']['template']; }
+                    if( empty( $pg['schema_html'] ) ){ $pg['schema_html'] = $cf['notizie']['pages']['elenco']['schema']; }
+                    if( empty( $pg['tema_css'] ) ){ $pg['tema_css'] = $cf['notizie']['pages']['elenco']['css']; }
+
                     // blocco dati principale
                     $cf['contents']['pages'][ $pid ] = array(
                         'sitemap'		=> ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
@@ -76,13 +80,6 @@
                         'metadata'      => array('id_categoria_notizie' => $pg['id']),
                         'macro'         => $cf['notizie']['pages']['elenco']['macro']
                     );
-
-
-                    $cf['contents']['pages'][$pid]['macro'] = array_merge(
-                        $cf['contents']['pages'][$pid]['macro'],
-                        array('_mod/_3100.notizie/_src/_inc/_macro/_notizie.elenco.php')
-                    );
-
 
                     aggiungiGruppi(
                         $cf['contents']['pages'][$pid],
@@ -141,7 +138,8 @@
             'LEFT JOIN categorie_notizie ON notizie_categorie.id_categoria = categorie_notizie.id '.
             'WHERE categorie_notizie.id_sito = ? '.
             'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) '.
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) ',
+            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) '.
+            'GROUP BY notizie.id',
             array(
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),
@@ -157,9 +155,24 @@
 
             // ciclo principale
             foreach( $pgs as $pg ) {
+            // categorie
+            $cat = mysqlQuery( $cf['mysql']['connection'],
+                'SELECT notizie_categorie.id_categoria '
+                .'FROM notizie_categorie '
+                .'WHERE notizie_categorie.id_notizia = ? '
+                .'ORDER BY ordine',
+                array( array( 's' => $pg['id'] ) )
+            );
+
+            // canonical
+            $canon = NULL;
+
+            // creazione della pagina per tutte le notizie
+            foreach( $cat as $ce ) {
+
 
                 // ID della categoria
-                $cid = PREFX_CATEGORIE_NOTIZIE . $pg['id_categoria'];
+                $cid = PREFX_CATEGORIE_NOTIZIE . $ce['id_categoria'];
 
                 // ID della pagina
                 $pid = $cid . '.' . PREFX_NOTIZIE . $pg['id'];
@@ -167,7 +180,6 @@
                 if (empty($pip)) {
                     $pip = $pg['id_pagina'];
                 }
-
 
 			    // aggiornamento delle pagine
 				if( $pg['timestamp_aggiornamento'] > $cf['contents']['updated'] ) {
@@ -181,22 +193,20 @@
                 // valuto se i dati in cache sono ancora validi
 				if( $pg['timestamp_aggiornamento'] > $age || empty( $pgc ) ) {
 
+                    if( empty( $pg['template'] ) ){ $pg['template'] = $cf['notizie']['pages']['scheda']['template']; }
+                    if( empty( $pg['schema_html'] ) ){ $pg['schema_html'] = $cf['notizie']['pages']['scheda']['schema']; }
+                    if( empty( $pg['tema_css'] ) ){ $pg['tema_css'] = $cf['notizie']['pages']['scheda']['css']; }
+
                     // blocco dati principale
                     $cf['contents']['pages'][ $pid ] = array(
                         'sitemap'		=> ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
                         'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
-                        'parent'		=> array( 'id'		=> $pip ),
+                        'canonical'		=> $canon,
+                        'parent'		=> array( 'id'		=> $cid ),
                         'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] ),
                         'metadata'      => array('id_notizia' => $pg['id']),
-                        'macro'         => $cf['notizie']['pages']['elenco']['macro']
+                        'macro'         => $cf['notizie']['pages']['scheda']['macro']
                     );
-
-
-                    $cf['contents']['pages'][$pid]['macro'] = array_merge(
-                        $cf['contents']['pages'][$pid]['macro'],
-                        array('_mod/_3100.notizie/_src/_inc/_macro/_notizie.scheda.php')
-                    );
-
 
                     aggiungiGruppi(
                         $cf['contents']['pages'][$pid],
@@ -234,9 +244,13 @@
                         'id_notizia'
                     );
 
+                    // canonical
+				    $canon = $pid;
+
                     // scrivo la pagina in cache
                     memcacheWrite( $cf['memcache']['connection'], 'PAGE_' . $pg['id'], $cf['contents']['pages'][ $pg['id'] ] );
-
+                    
+                    }
                 }
 
             }

@@ -26,10 +26,10 @@
 	if( isset( $_REQUEST['categorie_notizie']['template'] ) ) {
 
 	    // controllo file
-		if( file_exists( DIR_BASE . $_REQUEST['notizie']['template'] . '/etc/template.conf' ) ) {
+		if( file_exists( DIR_BASE . $_REQUEST['categorie_notizie']['template'] . '/etc/template.conf' ) ) {
 
 		    // configurazione del template
-			$config = parse_ini_file( DIR_BASE . $_REQUEST['notizie']['template'] . '/etc/template.conf', true, INI_SCANNER_RAW );
+			$config = parse_ini_file( DIR_BASE . $_REQUEST['categorie_notizie']['template'] . '/etc/template.conf', true, INI_SCANNER_RAW );
 
 		        // tendina menù
 			if( isset( $config['template']['menu'] ) ) {
