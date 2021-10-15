@@ -1,5 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
+{% import 'bin/ticket.form.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -51,10 +52,6 @@
 					<span class="label-top">data apertura</span>
 					{{ frm.datetime( table, '', '', 'timestamp_apertura', '', '', request, 'now'|date('Y-m-d\\TH:i') ) }}
 				</div>
-				<div class="col-auto">
-					<span class="label-top">tipologia</span>
-					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
-				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
@@ -98,8 +95,14 @@
 				</div>	
 
 				{% endif %}
+
+				
 			</fieldset>
 
+			{% if request[table].id %}
+				{# SUBFORM CATEGORIE #}
+	    		{{ sub.categorie( table, 'todo_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
+			{% endif %}
 		   
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

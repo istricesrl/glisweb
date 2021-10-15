@@ -56,6 +56,14 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM indirizzi_view' );
 
+    // tendina categorie attivita
+	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_attivita_view WHERE se_ticket = 1'
+	);
+
     // settaggio di cliente, indirizzo, mastro attivita letti dal progetto
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ){
         $ct['etc']['id_cliente'] = mysqlSelectValue(
@@ -71,7 +79,6 @@
         );
        
     }
-
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
