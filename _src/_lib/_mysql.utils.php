@@ -166,6 +166,40 @@
 
     }
 
+    function aggiungiMenu(&$p, $id, $f){
+
+        global $cf;
+
+        $mnu = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT menu.*, lingue.ietf FROM menu ' .
+                'INNER JOIN lingue ON lingue.id = menu.id_lingua ' .
+                'WHERE ' . $f . ' = ?',
+            array(
+                array('s' => $id)
+            )
+        );
+
+        foreach ($mnu as $mn) {
+            $p = array_replace_recursive(
+                $p,
+                array(
+                    'menu'    => array(
+                        $mn['menu']    => array(
+                            $mn['ancora'] => array(
+                                'label'        => array($mn['ietf'] => $mn['nome']),
+                                'subpages'    => $mn['sottopagine'],
+                                'ancora'    => (isset($mn['ancora'])) ? $mn['ancora'] : NULL,
+                                'target'    => (isset($mn['target'])) ? $mn['target'] : NULL,
+                                'priority'    => $mn['ordine']
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }
+
     function aggiungiMetadati( &$p, $id, $f ) {
 
         global $cf;
@@ -274,4 +308,19 @@
 			$cf['mysql']['connection'],
 			'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = NULL'
 		);
+    }
+
+    function trovaTabellaDestinazioneConstraint( $t, $f ) {
+
+        global $cf;
+
+        return mysqlSelectCachedValue(
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+            'SELECT referenced_table_name '.
+            'FROM information_schema.key_column_usage '.
+            'WHERE table_name = ' . $t . ' AND table_schema = database() '.
+            'AND referenced_table_name IS NOT NULL AND column_name = ' . $f
+        );
+
     }
