@@ -18,7 +18,7 @@
 	$ct['view']['table'] = 'attivita';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'attivita.form';
+	$ct['view']['open']['page'] = 'attivita.ticket.form';
 
      // campi della vista
 	$ct['view']['cols'] = array(
@@ -41,10 +41,10 @@
     );
     
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'attivita.form';
+	$ct['view']['open']['page'] = 'attivita.ticket.form';
 
     // pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'attivita.form';
+	$ct['view']['insert']['page'] = 'attivita.ticket.form';
 
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_todo';

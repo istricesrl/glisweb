@@ -85,3 +85,15 @@
 		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'				=> array( 'tabs'	=> $p['ticket.view']['etc']['tabs'] )
 	);
+
+	// gestione attivita
+	$p['attivita.ticket.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione attivita' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'ticket.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.ticket.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.ticket.form.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'attivita.ticket.form' ) )
+	);
