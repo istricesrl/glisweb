@@ -404,37 +404,140 @@
     
     ruoli_immagini
     --------------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* contiene i ruoli che l'entità *immagini* può svolgere relativamente a diverse entità principali.
 
-    colonna                             | descrizione
-    ------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_immagini.id                   | l'ID del ruolo immagine
-    ruoli_immagini.nome                 | nome del ruolo immagine
-    ruoli_immagini.se_contenuti         | 
-    ruoli_immagini.se_anagrafica        | 
-    ruoli_immagini.se_immobili          | 
-    ruoli_immagini.se_catalogo          | 
-    ruoli_immagini.se_prodotti          | 
-    ruoli_immagini.ordine_scalamento    | 
-    
-    La vista ruoli_immagini_view relativa alla tabella ruoli_immagini presenta le seguenti colonne:
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_immagini.id                          | l'ID del ruolo
+    ruoli_immagini.id_genitore                 | l'ID del ruolo genitore
+    ruoli_immagini.ordine_scalamento           | campo di ordinamento relativo allo scalamento automatico
+    ruoli_immagini.nome                        | nome del ruolo
+    ruoli_immagini.se_anagrafica               | flag che indica se il ruolo è pertinente all'anagrafica
+    ruoli_immagini.se_prodotti                 | flag che indica se il ruolo è pertinente ai prodotti
+    ruoli_immagini.se_articoli                 | flag che indica se il ruolo è pertinente agli articoli
+    ruoli_immagini.se_categorie_prodotti       | flag che indica se il ruolo è pertinente alle categorie di prodotti
+    ruoli_immagini.se_risorse                  | flag che indica se il ruolo è pertinente alle risorse
+    ruoli_immagini.se_categorie_risorse        | flag che indica se il ruolo è pertinente alle categorie di risorse
+    ruoli_immagini.se_progetti                 | flag che indica se il ruolo è pertinente ai progetti
+    ruoli_immagini.se_categorie_progetti       | flag che indica se il ruolo è pertinente alle categorie di progetti
+    ruoli_immagini.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati         | comportamento
+    ----------------------------------------|-----------------------|-----------------------------------|------------------
+    ruoli_immagini_ibfk_01                  | id_genitore           | ruoli_immagini.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_immagini_view* relativa alla tabella *ruoli_immagini* presenta le seguenti colonne:
  
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_immagini_view.id                         | -
+    ruoli_immagini_view.id_genitore                | -
+    ruoli_immagini_view.ordine_scalamento          | -
+    ruoli_immagini_view.nome                       | -
+    ruoli_immagini_view.se_anagrafica              | -
+    ruoli_immagini_view.se_prodotti                | -
+    ruoli_immagini_view.se_articoli                | -
+    ruoli_immagini_view.se_categorie_prodotti      | -
+    ruoli_immagini_view.se_risorse                 | -
+    ruoli_immagini_view.se_categorie_risorse       | -
+    ruoli_immagini_view.se_progetti                | -
+    ruoli_immagini_view.se_categorie_progetti      | -
+    ruoli_immagini_view.se_pagine                  | -
+    ruoli_immagini_view.__label__                  | etichetta descrittiva del ruolo
+
+    ruoli_indirizzi
+    ---------------
+    Questa tabella di *supporto* contiene i ruoli che l'entità *indirizzi* può svolgere relativamente a diverse entità principali.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_indirizzi.id                      | l'ID del ruolo
+    ruoli_indirizzi.id_genitore             | l'ID del ruolo genitore
+    ruoli_indirizzi.nome                    | il nome del ruolo
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati         | comportamento
+    ----------------------------------------|-----------------------|-----------------------------------|------------------
+    ruoli_indirizzi_ibfk_01                 | id_genitore           | ruoli_indirizzi.id                | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_indirizzi_view* relativa alla tabella *ruoli_indirizzi* presenta le seguenti colonne:
+ 
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_indirizzi_view.id                        | -
+    ruoli_indirizzi_view.id_genitore               | -
+    ruoli_indirizzi_view.nome                      | -
+    ruoli_indirizzi_view.__label__                 | etichetta descrittiva del ruolo
+
+    ruoli_prodotti
+    --------------
+    Questa tabella di *supporto* contiene i ruoli che l'entità *prodotti* può svolgere relativamente a diverse entità principali.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_prodotti.id                       | l'ID del ruolo
+    ruoli_prodotti.id_genitore              | l'ID del ruolo genitore
+    ruoli_prodotti.nome                     | il nome del ruolo
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati         | comportamento
+    ----------------------------------------|-----------------------|-----------------------------------|------------------
+    ruoli_prodotti_ibfk_01                  | id_genitore           | ruoli_prodotti.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_prodotti_view* relativa alla tabella *ruoli_prodotti* presenta le seguenti colonne:
+ 
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_prodotti_view.id                         | -
+    ruoli_prodotti_view.id_genitore                | -
+    ruoli_prodotti_view.nome                       | -
+    ruoli_prodotti_view.__label__                  | etichetta descrittiva del ruolo
+
     ruoli_video
     -----------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* contiene i ruoli che l'entità *video* può svolgere relativamente a diverse entità principali.
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_video.id                       | l'ID del ruolo video
-    ruoli_video.nome                     | 
-    ruoli_video.se_anagrafica            | 
-  
-    La vista ruoli_video_view relativa alla tabella ruoli_video presenta le seguenti colonne:
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_video.id                          | l'ID del ruolo
+    ruoli_video.id_genitore                 | l'ID del ruolo genitore
+    ruoli_video.nome                        | il nome del ruolo
+    ruoli_video.se_anagrafica               | flag che indica se il ruolo è pertinente all'anagrafica
+    ruoli_video.se_prodotti                 | flag che indica se il ruolo è pertinente ai prodotti
+    ruoli_video.se_articoli                 | flag che indica se il ruolo è pertinente agli articoli
+    ruoli_video.se_categorie_prodotti       | flag che indica se il ruolo è pertinente alle categorie di prodotti
+    ruoli_video.se_risorse                  | flag che indica se il ruolo è pertinente alle risorse
+    ruoli_video.se_categorie_risorse        | flag che indica se il ruolo è pertinente alle categorie di risorse
+    ruoli_video.se_progetti                 | flag che indica se il ruolo è pertinente ai progetti
+    ruoli_video.se_categorie_progetti       | flag che indica se il ruolo è pertinente alle categorie di progetti
+    ruoli_video.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                               | campo                 | tabella e campo collegati      | comportamento
+    -------------------------------------|-----------------------|--------------------------------|------------------
+    ruoli_video_ibfk_01                  | id_genitore           | ruoli_video.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_video_view* relativa alla tabella *ruoli_video* presenta le seguenti colonne:
  
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_video_view.id                         | -
+    ruoli_video_view.id_genitore                | -
+    ruoli_video_view.nome                       | -
+    ruoli_video_view.se_anagrafica              | -
+    ruoli_video_view.se_prodotti                | -
+    ruoli_video_view.se_articoli                | -
+    ruoli_video_view.se_categorie_prodotti      | -
+    ruoli_video_view.se_risorse                 | -
+    ruoli_video_view.se_categorie_risorse       | -
+    ruoli_video_view.se_progetti                | -
+    ruoli_video_view.se_categorie_progetti      | -
+    ruoli_video_view.se_pagine                  | -
+    ruoli_video_view.__label__                  | etichetta descrittiva del ruolo
     
 */

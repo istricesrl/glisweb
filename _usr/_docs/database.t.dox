@@ -52,105 +52,122 @@
 
     telefoni
     --------
-    Questa tabbella *gestista*
+    Questa tabella *gestita* contiene i numeri di telefono associati all'entità principale *anagrafica*.
     
     colonna                           | descrizione
     ----------------------------------|---------------------------------------------------------------------------------------
-    telefoni.id                       | l'ID del numero di telefono
-    telefoni.id_anagrafica            | l'ID dell'anagrafica associata al numero di telefono
-    telefoni.id_indirizzo             | l'ID dell'indirizzo associato al numero di telefono
-    telefoni.id_tipologia             | l'ID della tipologia del numero di telefono
-    telefoni.se_notifiche             | 
-    telefoni.numero                   | 
-    telefoni.descrizione              | 
+    telefoni.id                       | l'ID del telefono
+    telefoni.id_tipologia             | l'ID della tipologia del telefono
+    telefoni.id_anagrafica            | l'ID dell'anagrafica cui appartiene il telefono
+    telefoni.numero                   | il numero di telefono
+    telefoni.note                     | note aggiuntive sul telefono
+    telefoni.se_notifiche             | flag che indica se il telefono può essere utilizzato per l'invio di notifiche
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                          | campo                     | tabella e campo collegati         | comportamento
+    --------------------------------|---------------------------|-----------------------------------|------------------
+    telefoni_ibfk_01_nofollow       | id_tipologia              | tipologie_telefoni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    telefoni_ibfk_02                | id_anagrafica             | anagrafica.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+
     La vista *telefoni_view* relativa alla tabella *telefoni* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    telefoni_view.id                       | -
+    telefoni_view.id_tipologia             | -
+    telefoni_view.tipologia                | la tipologia del telefono
+    telefoni_view.id_anagrafica            | -
+    telefoni_view.anagrafica               | l'anagrafica cui appartiene il telefono
+    telefoni_view.numero                   | -
+    telefoni_view.note                     | -
+    telefoni_view.se_notifiche             | -
+    telefoni_view.__label__                | etichetta descrittiva del telefono
 
-    template_mail
-    -------------
-    Questa tabbella *gestista*
+    template
+    --------
+    Questa tabella *gestita* contiene i template che possono essere applicati a diversi tipi di output
+    quali ad esempio mail, SMS e documenti. Il contenuto del template si trova nella tabella *contenuti*.
+    
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    template.id                           | l'ID del template
+    template.ruolo                        | il ruolo del template
+    template.nome                         | il nome attribuito al template
+    template.tipo                         | il tipo di template, da cui dipende il motore usato per il rendering
+    template.note                         | note aggiuntive sul template
+    template.se_mail                      | flag che indica se il template può essere applicato alle mail
+    template.se_sms                       | flag che indica se il template può essere applicato agli SMS
+
+    La tabella non ha chiavi esterne.
+
+    La vista *template_view* relativa alla tabella *template* presenta le seguenti colonne:
     
     colonna                                    | descrizione
     -------------------------------------------|---------------------------------------------------------------------------------------
-    template_mail.id                           | l'ID del template mail
-    template_mail.ruolo                        | il ruolo del template mail
-    template_mail.nome                         | il nome attribuito al template mail
-    template_mail.type                         | il tipo del template mail
-    template_mail.note                         |
-    template_mail.id_account_inserimento       | 
-    template_mail.timestamp_inserimento        | 
-    template_mail.id_account_aggiornamento     | 
-    template_mail.timestamp_aggiornamento      | 
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
-    La vista *template_mail_view* relativa alla tabella *template_mail* presenta le seguenti colonne:
-    
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    template_view.id                           | -
+    template_view.ruolo                        | -
+    template_view.nome                         | -
+    template_view.tipo                         | -
+    template_view.note                         | -
+    template_view.se_mail                      | -
+    template_view.se_sms                       | -
+    template_view.__label__                    | etichetta descrittiva del template
 
     tipologie_anagrafica
     --------------------
-    Questa tabbella *assistita*
+    Questa tabella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *anagrafica*.
     
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_anagrafica.id                           | l'ID della tipologia anagrafica
-    tipologie_anagrafica.id_genitore                  | l'ID parente
-    tipologie_anagrafica.nome                         | il nome attribuito alla tipologia anagrafica
+    tipologie_anagrafica.id                           | l'ID della tipologia
+    tipologie_anagrafica.id_genitore                  | l'ID della tipologia genitore
+    tipologie_anagrafica.ordine                       | campo di ordinamento
+    tipologie_anagrafica.nome                         | il nome della tipologia
+    tipologie_anagrafica.html_entity                  | -
+    tipologie_anagrafica.font_awesome                 | -
+    tipologie_anagrafica.se_persona_fisica            | flag che indica se la tipologia definisce una persona fisica
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                          | campo                 | tabella e campo collegati         | comportamento
+    ------------------------------------------------|-----------------------|-----------------------------------|------------------
+    tipologie_anagrafica_ibfk_01_nofollow           | id_genitore           | tipologie_anagrafica.id           | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_anagrafica_view* relativa alla tabella *tipologie_anagrafica* presenta le seguenti colonne:
     
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_anagrafica_view.id                           | -
+    tipologie_anagrafica_view.id_genitore                  | -
+    tipologie_anagrafica_view.ordine                       | -
+    tipologie_anagrafica_view.nome                         | -
+    tipologie_anagrafica_view.html_entity                  | -
+    tipologie_anagrafica_view.font_awesome                 | -
+    tipologie_anagrafica_view.se_persona_fisica            | -
+    tipologie_anagrafica_view.__label__                    | etichetta descrittiva della tipologia
     
     tipologie_attivita
     ------------------
-    Questa tabbella *gestita*
+    Questa tabbella *gestita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *attivita*.
     
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_attivita.id                           | l'ID della tipologia attività
-    tipologie_attivita.id_genitore                  | l'ID parente
-    tipologie_attivita.nome                         | il nome attribuito alla tipologia attività
-    tipologie_attivita.html                         | 
-    tipologie_attivita.font_awesome                 | 
-    tipologie_attivita.se_anagrafica                |
-    tipologie_attivita.se_censimento_immobili       | 
-    tipologie_attivita.se_notizie_immobili          | 
-    tipologie_attivita.se_richieste_immobili        | 
-    tipologie_attivita.se_dashboard_agenda          | 
-    tipologie_attivita.se_pratiche                  | 
-    tipologie_attivita.se_commerciale               | 
-    tipologie_attivita.se_produzione                | 
-    tipologie_attivita.se_amministrazione           | 
-    tipologie_attivita.se_contratto                 | 
-    tipologie_attivita.se_chiamata                  | 
-    tipologie_attivita.se_scalare                   | 
-    tipologie_attivita.se_commessa                  | 
-    tipologie_attivita.se_forfait                   | 
+    tipologie_attivita.id                           | l'ID della tipologia
+    tipologie_attivita.id_genitore                  | l'ID della tipologia genitore
+    tipologie_attivita.ordine                       | campo di ordinamento
+    tipologie_attivita.nome                         | il nome della tipologia
+    tipologie_attivita.html_entity                  | entità HTML che rappresenta visivamente la tipologia
+    tipologie_attivita.font_awesome                 | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_attivita.se_anagrafica                | flag che indica se la tipologia è applicabile alle attività relative all'anagrafica
+    tipologie_attivita.se_agenda                    | flag che indica se la tipologia è applicabile alle attività relative all'agenda
   
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                  | campo                 | tabella e campo collegati         | comportamento
+    ----------------------------------------|-----------------------|-----------------------------------|------------------
+    tipologie_attivita_ibfk_01_nofollow     | id_genitore           | tipologie_attivita.id             | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_attivita_view* relativa alla tabella *tipologie_attivita* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -158,66 +175,54 @@
 
     tipologie_contatti
     ------------------
-    Questa tabbella *gestita*
+    Questa tabbella *gestita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *contatti*
     
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_contatti.id                           | l'ID della tipologia di contatto
-    tipologie_contatti.nome                         | il nome di riferimento alla tipologia di contratto
-    tipologie_contatti.se_segnalazione              | 
+    tipologie_contatti.id                           | l'ID della tipologia
+    tipologie_contatti.id_genitore                  | l'ID della tipologia genitore
+    tipologie_contatti.ordine                       | campo di ordinamento
+    tipologie_contatti.nome                         | il nome della tipologia
+    tipologie_contatti.html_entity                  | entità HTML che rappresenta visivamente la tipologia
+    tipologie_contatti.font_awesome                 | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                  | campo                     | tabella e campo collegati     | comportamento
+    ----------------------------------------|---------------------------|-------------------------------|----------------------
+    tipologie_contatti_ibfk_01_nofollow     | id_genitore               | tipologie_contatti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_contatti_view* relativa alla tabella *tipologie_contatti* presenta le seguenti colonne:
     
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
 
-    tipologie_date
-    --------------
-    Questa tabbella *gestita*
-    
-    colonna                                    | descrizione
-    -------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_date.id                          | l'ID della tipologia di data
-    tipologie_date.nome                        | il nome della tipologia di data
-  
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
-    La vista *tipologie_date_view* relativa alla tabella *tipologie_date* presenta le seguenti colonne:
-    
-    colonna                                                | descrizione
-    -------------------------------------------------------|--------------------------------------------------------------------------
-
     tipologie_documenti
     -------------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *documenti*.
     
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_documenti.id                          | l'ID della tipologia di documento
-    tipologie_documenti.nome                        |
-    tipologie_documenti.codice                      | 
-    tipologie_documenti.se_fattura                  |
-    tipologie_documenti.se_nota_credito             | 
-    tipologie_documenti.se_trasporto                |
-    tipologie_documenti.se_pro_forma                | 
-    tipologie_documenti.se_offerta                  |
-    tipologie_documenti.se_ordine                   |
-    tipologie_documenti.se_ricevuta                 | 
-    tipologie_documenti.stampa_xml                  |
-    tipologie_documenti.stampa_pdf                  | 
+    tipologie_documenti.id                          | l'ID della tipologia
+    tipologie_documenti.id_genitore                 | l'ID della tipologia genitore
+    tipologie_documenti.ordine                      | campo di ordinamento
+    tipologie_documenti.codice                      | il codice della tipologia
+    tipologie_documenti.nome                        | il nome della tipologia
+    tipologie_documenti.html_entity                 | entità HTML che rappresenta visivamente la tipologia
+    tipologie_documenti.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_documenti.se_fattura                  | flag che indica se il documento cui si riferisce la tipologia è una fattura
+    tipologie_documenti.se_nota_credito             | flag che indica se il documento cui si riferisce la tipologia è una nota di credito
+    tipologie_documenti.se_documento_trasporto      | flag che indica se il documento cui si riferisce la tipologia è un documento di trasporto
+    tipologie_documenti.se_pro_forma                | flag che indica se il documento cui si riferisce la tipologia è una fattura pro forma
+    tipologie_documenti.se_offerta                  | flag che indica se il documento cui si riferisce la tipologia è un'offerta
+    tipologie_documenti.se_ordine                   | flag che indica se il documento cui si riferisce la tipologia è un ordine
+    tipologie_documenti.se_ricevuta                 | flag che indica se il documento cui si riferisce la tipologia è una ricevuta
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
+    chiave                                      | campo             | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------|-------------------------------|----------------------
+    tipologie_documenti_ibfk_01_nofollow        | id_genitore       | tipologie_documenti.id        | ON DELETE SET NULL ON UPDATE SET NULL
  
     La vista *tipologie_documenti_view* relativa alla tabella *tipologie_documenti* presenta le seguenti colonne:
     
@@ -226,23 +231,24 @@
 
     tipologie_indirizzi
     -------------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *indirizzi*.
     
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_indirizzi.id                       | l'ID della tipologia di indirizzio
-    tipologie_indirizzi.nome                     |
-    tipologie_indirizzi.se_sede                  | 
-    tipologie_indirizzi.se_operativa             |
-    tipologie_indirizzi.se_abitazione            |
-    tipologie_indirizzi.html                     |
-    
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_indirizzi.id                          | l'ID della tipologia
+    tipologie_indirizzi.id_genitore                 | l'ID della tipologia genitore
+    tipologie_indirizzi.ordine                      | campo di ordinamento
+    tipologie_indirizzi.codice                      | il codice della tipologia
+    tipologie_indirizzi.nome                        | il nome della tipologia
+    tipologie_indirizzi.html_entity                 | entità HTML che rappresenta visivamente la tipologia
+    tipologie_indirizzi.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                      | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------|-------------------------------|----------------------
+    tipologie_indirizzi_ibfk_01_nofollow        | id_genitore           | tipologie_indirizzi.id        | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_indirizzi_view* relativa alla tabella *tipologie_indirizzi* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -250,18 +256,24 @@
 
     tipologie_mastri
     ----------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *mastri*.
     
-    colonna                                   | descrizione
-    ------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_mastri.id                       | l'ID della tipologia di interesse
-    tipologie_mastri.nome                     |
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_mastri.id                          | l'ID della tipologia
+    tipologie_mastri.id_genitore                 | l'ID della tipologia genitore
+    tipologie_mastri.ordine                      | campo di ordinamento
+    tipologie_mastri.codice                      | il codice della tipologia
+    tipologie_mastri.nome                        | il nome della tipologia
+    tipologie_mastri.html_entity                 | entità HTML che rappresenta visivamente la tipologia
+    tipologie_mastri.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|----------------------
+    tipologie_mastri_ibfk_01_nofollow       | id_genitore           | tipologie_mastri.id           | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_mastri_view* relativa alla tabella *tipologie_mastri* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -269,18 +281,24 @@
 
     tipologie_notizie
     -----------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *notizie*.
     
-    colonna                                             | descrizione
-    ----------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_notizie.id                                | l'ID della tipologia di notizie
-    tipologie_notizie.nome                              |
-    
+    colonna                                       | descrizione
+    ----------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_notizie.id                          | l'ID della tipologia
+    tipologie_notizie.id_genitore                 | l'ID della tipologia genitore
+    tipologie_notizie.ordine                      | campo di ordinamento
+    tipologie_notizie.codice                      | il codice della tipologia
+    tipologie_notizie.nome                        | il nome della tipologia
+    tipologie_notizie.html_entity                 | entità HTML che rappresenta visivamente la tipologia
+    tipologie_notizie.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                  | campo                 | tabella e campo collegati         | comportamento
+    ----------------------------------------|-----------------------|-----------------------------------|------------------
+    tipologie_notizie_ibfk_01_nofollow      | id_genitore           | tipologie_notizie.id              | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_notizie_view* relativa alla tabella *tipologie_notizie* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -288,18 +306,24 @@
 
     tipologie_popup
     ---------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *popup*.
     
-    colonna                                           | descrizione
-    --------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_popup.id                                | l'ID della tipologia popup
-    tipologie_popup.nome                              |
-    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_popup.id                          | l'ID della tipologia
+    tipologie_popup.id_genitore                 | l'ID della tipologia genitore
+    tipologie_popup.ordine                      | campo di ordinamento
+    tipologie_popup.codice                      | il codice della tipologia
+    tipologie_popup.nome                        | il nome della tipologia
+    tipologie_popup.html_entity                 | entità HTML che rappresenta visivamente la tipologia
+    tipologie_popup.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|----------------------
+    tipologie_popup_ibfk_01_nofollow        | id_genitore           | tipologie_popup.id            | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_popup_view* relativa alla tabella *tipologie_popup* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -307,23 +331,30 @@
 
     tipologie_prodotti
     ------------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *prodotti*.
     
-    colonna                                           | descrizione
-    --------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_prodotti.id                             | l'ID della tipologia prodotto
-    tipologie_prodotti.nome                           |
-    tipologie_prodotti.se_colori                      | 
-    tipologie_prodotti.se_taglie                      |
-    tipologie_prodotti.se_dimensioni                  |
-    tipologie_prodotti.se_imballo                     |
-    tipologie_prodotti.se_stagioni                    |
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_prodotti.id                          | l'ID della tipologia
+    tipologie_prodotti.id_genitore                 | l'ID della tipologia genitore
+    tipologie_prodotti.ordine                      | campo di ordinamento
+    tipologie_prodotti.codice                      | il codice della tipologia
+    tipologie_prodotti.nome                        | il nome della tipologia
+    tipologie_prodotti.html_entity                 | entità HTML che rappresenta visivamente la tipologia
+    tipologie_prodotti.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_prodotti.se_colori                   | flag che indica se il prodotto cui si riferisce la tipologia ha varianti per colore
+    tipologie_prodotti.se_taglie                   | flag che indica se il prodotto cui si riferisce la tipologia ha varianti per taglie
+    tipologie_prodotti.se_dimensioni               | flag che indica se il prodotto cui si riferisce la tipologia ha varianti per dimensioni
+    tipologie_prodotti.se_imballo                  | flag che indica se il prodotto cui si riferisce la tipologia è un imballaggio
+    tipologie_prodotti.se_spedizione               | flag che indica se il prodotto cui si riferisce la tipologia è una modalità di spedizione
+    tipologie_prodotti.se_trasporto                | flag che indica se il prodotto cui si riferisce la tipologia è una modalità di trasporto
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                      | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------|-------------------------------|----------------------
+    tipologie_prodotti_ibfk_01_nofollow         | id_genitore           | tipologie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_prodotti_view* relativa alla tabella *tipologie_prodotti* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -331,23 +362,24 @@
   
     tipologie_progetti
     ------------------
-    Questa tabbella di *supporto*
-    
-    colonna                                           | descrizione
-    --------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_progetti.id                             | l'ID della tipologia progetto
-    tipologie_progetti.nome                           |
-    tipologie_progetti.se_scalare                     | 
-    tipologie_progetti.se_commessa                    |
-    tipologie_progetti.se_chiamata                    |
-    tipologie_progetti.se_contratto                   |
-    tipologie_progetti.se_forfait                     |
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *progetti*.
+
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_progetti.id                          | l'ID della tipologia
+    tipologie_progetti.id_genitore                 | l'ID della tipologia genitore
+    tipologie_progetti.ordine                      | campo di ordinamento
+    tipologie_progetti.codice                      | il codice della tipologia
+    tipologie_progetti.nome                        | il nome della tipologia
+    tipologie_progetti.html_entity                 | entità HTML che rappresenta visivamente la tipologia
+    tipologie_progetti.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|----------------------
+    tipologie_progetti_ibfk_01_nofollow     | id_genitore           | tipologie_progetti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_progetti_view* relativa alla tabella *tipologie_progetti* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -355,27 +387,27 @@
   
     tipologie_pubblicazioni
     -----------------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *pubblicazioni*.
     
     colonna                                           | descrizione
     --------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_pubblicazioni.id                        | l'ID della tipologia di publicazione
-    tipologie_pubblicazioni.nome                      |
-    tipologie_pubblicazioni.ordine                    | 
-    tipologie_pubblicazioni.se_bozza                  |
-    tipologie_pubblicazioni.se_pubblicato             |
-    tipologie_pubblicazioni.se_evidenza               |
-    tipologie_pubblicazioni.se_newsletter             |
-    tipologie_pubblicazioni.se_secondario             |
-    tipologie_pubblicazioni.se_incroci                |
-    tipologie_pubblicazioni.se_contratto              |
-    tipologie_pubblicazioni.se_suggerito              |
+    tipologie_pubblicazioni.id                        | l'ID della tipologia
+    tipologie_pubblicazioni.id_genitore               | l'ID della tipologia genitore
+    tipologie_pubblicazioni.ordine                    | campo di ordinamento
+    tipologie_pubblicazioni.codice                    | il codice della tipologia
+    tipologie_pubblicazioni.nome                      | il nome della tipologia
+    tipologie_pubblicazioni.html_entity               | entità HTML che rappresenta visivamente la tipologia
+    tipologie_pubblicazioni.font_awesome              | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_pubblicazioni.se_bozza                  | flag che indica se l'oggetto cui si riferisce la tipologia è pubblicato in bozza
+    tipologie_pubblicazioni.se_pubblicato             | flag che indica se l'oggetto cui si riferisce la tipologia è pubblicato
+    tipologie_pubblicazioni.se_evidenza               | flag che indica se l'oggetto cui si riferisce la tipologia è pubblicato in evidenza
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                      | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------------------|---------------------------|-------------------------------|----------------------
+    tipologie_pubblicazioni_ibfk_01_nofollow    | id_genitore               | tipologie_pubblicazioni.id    | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_pubblicazioni_view* relativa alla tabella *tipologie_pubblicazioni* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -383,19 +415,24 @@
 
     tipologie_risorse
     -----------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *risorse*.
     
-    colonna                                          | descrizione
-    -------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_risorse.id                             | l'ID della tipologia di risorsa
-    tipologie_risorse.nome                           |
-    tipologie_risorse.ordine                         | 
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_risorse.id                        | l'ID della tipologia
+    tipologie_risorse.id_genitore               | l'ID della tipologia genitore
+    tipologie_risorse.ordine                    | campo di ordinamento
+    tipologie_risorse.codice                    | il codice della tipologia
+    tipologie_risorse.nome                      | il nome della tipologia
+    tipologie_risorse.html_entity               | entità HTML che rappresenta visivamente la tipologia
+    tipologie_risorse.font_awesome              | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|----------------------
+    tipologie_risorse_ibfk_01_nofollow      | id_genitore           | tipologie_risorse.id          | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_risorse_view* relativa alla tabella *tipologie_risorse* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -403,18 +440,24 @@
 
     tipologie_telefoni
     ------------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *telefoni*.
     
-    colonna                                     | descrizione
-    --------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_telefoni.id                       | l'ID della tipologia di telefono
-    tipologie_telefoni.nome                     |
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_telefoni.id                        | l'ID della tipologia
+    tipologie_telefoni.id_genitore               | l'ID della tipologia genitore
+    tipologie_telefoni.ordine                    | campo di ordinamento
+    tipologie_telefoni.codice                    | il codice della tipologia
+    tipologie_telefoni.nome                      | il nome della tipologia
+    tipologie_telefoni.html_entity               | entità HTML che rappresenta visivamente la tipologia
+    tipologie_telefoni.font_awesome              | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
-     
+    chiave                                      | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------|-------------------------------|----------------------
+    tipologie_telefoni_ibfk_01_nofollow         | id_genitore           | tipologie_telefoni.id         | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_telefoni_view* relativa alla tabella *tipologie_telefoni* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -422,30 +465,24 @@
     
     tipologie_todo
     --------------
-    Questa tabbella *gestita*
+    Questa tabbella *gestita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *todo*.
     
     colonna                                     | descrizione
     --------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_todo.id                           |
-    tipologie_todo.nome                         |
-    tipologie_todo.se_pianificata               | 
-    tipologie_todo.se_richiesta                 | 
-    tipologie_todo.se_imprevista                | 
-    tipologie_todo.se_contratto                 | 
-    tipologie_todo.se_chiamata                  | 
-    tipologie_todo.se_scalare                   | 
-    tipologie_todo.se_commessa                  | 
-    tipologie_todo.se_forfait                   | 
-    tipologie_todo.id_account_inserimento       | 
-    tipologie_todo.timestamp_inserimento        | 
-    tipologie_todo.id_account_aggiornamento     | 
-    tipologie_todo.timestamp_aggiornamento      | 
+    tipologie_todo.id                           | l'ID della tipologia
+    tipologie_todo.id_genitore                  | l'ID della tipologia genitore
+    tipologie_todo.ordine                       | campo di ordinamento
+    tipologie_todo.codice                       | il codice della tipologia
+    tipologie_todo.nome                         | il nome della tipologia
+    tipologie_todo.html_entity                  | entità HTML che rappresenta visivamente la tipologia
+    tipologie_todo.font_awesome                 | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|----------------------
+    tipologie_todo_ibfk_01_nofollow     | id_genitore           | tipologie_todo.id             | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_todo_view* relativa alla tabella *tipologie_todo* presenta le seguenti colonne:
     
     colonna                                                | descrizione
@@ -453,18 +490,24 @@
     
     tipologie_udm
     -------------
-    Questa tabbella di *supporto*
+    Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *udm*.
     
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_udm.id                       | l'ID dell'unità di misura
-    tipologie_udm.nome                     |
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_udm.id                           | l'ID della tipologia
+    tipologie_udm.id_genitore                  | l'ID della tipologia genitore
+    tipologie_udm.ordine                       | campo di ordinamento
+    tipologie_udm.codice                       | il codice della tipologia
+    tipologie_udm.nome                         | il nome della tipologia
+    tipologie_udm.html_entity                  | entità HTML che rappresenta visivamente la tipologia
+    tipologie_udm.font_awesome                 | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
-     
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|----------------------
+    tipologie_udm_ibfk_01_nofollow      | id_genitore           | tipologie_udm.id              | ON DELETE SET NULL ON UPDATE SET NULL
+
     La vista *tipologie_udm_view* relativa alla tabella *tipologie_udm* presenta le seguenti colonne:
     
     colonna                                                | descrizione

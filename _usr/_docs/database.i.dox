@@ -61,7 +61,7 @@
     immagini.taglio                     | -
     immagini.nome                       | il nome dell'immagine
     immagini.path                       | il percorso del file dell'immagine
-    immagini.path_alternativo           | -
+    immagini.path_alternativo           | il percorso del file alternativo dell'immagine
     immagini.token                      | token per il lock software della riga nelle elaborazioni automatiche
     immagini.timestamp_scalamento       | timestamp dello scalamento automatico dell'immagine
 

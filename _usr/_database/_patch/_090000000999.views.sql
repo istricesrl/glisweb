@@ -3465,7 +3465,259 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 	FROM ruoli_file
 ;
 
---| 090000009201
+--| 090000034600
+
+-- ruoli_immagini_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_immagini_view`;
+
+--| 090000034601
+
+-- ruoli_immagini_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-11 18:26 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_immagini_view AS
+	SELECT
+		ruoli_immagini.id,
+		ruoli_immagini.id_genitore,
+		ruoli_immagini.ordine_scalamento,
+		ruoli_immagini.nome,
+		ruoli_immagini.se_anagrafica,
+		ruoli_immagini.se_prodotti,
+		ruoli_immagini.se_articoli,
+		ruoli_immagini.se_categorie_prodotti
+		ruoli_immagini.se_risorse,
+		ruoli_immagini.se_categoria_risorse,
+		ruoli_immagini.se_progetti,
+		ruoli_immagini.se_categorie_progetti,
+		ruoli_immagini.se_pagine,
+	 	ruoli_immagini_path( ruoli_immagini.id ) AS __label__
+	FROM ruoli_immagini
+;
+
+--| 090000034800
+
+-- ruoli_indirizzi_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_indirizzi_view`;
+
+--| 090000034801
+
+-- ruoli_indirizzi_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 11:23 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_indirizzi_view AS
+	SELECT
+		ruoli_indirizzi.id,
+		ruoli_indirizzi.id_genitore,
+		ruoli_indirizzi.nome,
+	 	ruoli_indirizzi_path( ruoli_indirizzi.id ) AS __label__
+	FROM ruoli_immagini
+;
+
+--| 090000035000
+
+-- ruoli_prodotti_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_prodotti_view`;
+
+--| 090000035001
+
+-- ruoli_prodotti_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 11:23 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_prodotti_view AS
+	SELECT
+		ruoli_prodotti.id,
+		ruoli_prodotti.id_genitore,
+		ruoli_prodotti.nome,
+	 	ruoli_prodotti_path( ruoli_prodotti.id ) AS __label__
+	FROM ruoli_immagini
+;
+
+--| 090000035200
+
+-- ruoli_video_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_video_view`;
+
+--| 090000035201
+
+-- ruoli_video_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-11 18:26 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_video_view AS
+	SELECT
+		ruoli_video.id,
+		ruoli_video.id_genitore,
+		ruoli_video.nome,
+		ruoli_video.se_anagrafica,
+		ruoli_video.se_prodotti,
+		ruoli_video.se_articoli,
+		ruoli_video.se_categorie_prodotti
+		ruoli_video.se_risorse,
+		ruoli_video.se_categoria_risorse,
+		ruoli_video.se_progetti,
+		ruoli_video.se_categorie_progetti,
+		ruoli_video.se_pagine,
+	 	ruoli_video_path( ruoli_video.id ) AS __label__
+	FROM ruoli_video
+;
+
+--| 090000037000
+
+-- settori_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `settori_view`;
+
+--| 090000037001
+
+-- settori_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 11:27 Fabio Mosti
+CREATE OR REPLACE VIEW settori_view AS
+	SELECT
+		settori.id,
+		settori.id_genitore,
+		settori.nome,
+		settori.soprannome,
+		settori.ateco,
+	 	settori_path( settori.id ) AS __label__
+	FROM settori
+;
+
+--| 090000041000
+
+-- sms_out_view
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `sms_out_view`;
+
+--| 090000041001
+
+-- sms_out_view
+-- tipolgia: tabella gestita
+-- verifica: 2021-10-12 15:17 Fabio Mosti
+CREATE OR REPLACE VIEW `sms_out_view` AS
+	SELECT
+		sms_out.id,
+		sms_out.id_telefono,
+		sms_out.ordine,
+		sms_out.timestamp_composizione,
+		sms_out.mittente,
+		sms_out.destinatari,
+		sms_out.corpo,
+		sms_out.server,
+		sms_out.host,
+		sms_out.port,
+		sms_out.user,
+		sms_out.password,
+		sms_out.token,
+		sms_out.tentativi,
+		sms_out.timestamp_invio,
+		concat_ws(
+			' ',
+			sms_out.destinatari,
+			sms_out.corpo
+		) AS __label__
+	FROM sms_out
+;
+
+--| 090000041200
+
+-- sms_sent_view
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `sms_sent_view`;
+
+--| 090000041201
+
+-- sms_sent_view
+-- tipolgia: tabella gestita
+-- verifica: 2021-10-12 15:17 Fabio Mosti
+CREATE OR REPLACE VIEW `sms_sent_view` AS
+	SELECT
+		sms_sent.id,
+		sms_sent.id_telefono,
+		sms_sent.ordine,
+		sms_sent.timestamp_composizione,
+		sms_sent.mittente,
+		sms_sent.destinatari,
+		sms_sent.corpo,
+		sms_sent.server,
+		sms_sent.host,
+		sms_sent.port,
+		sms_sent.user,
+		sms_sent.password,
+		sms_sent.token,
+		sms_sent.tentativi,
+		sms_sent.timestamp_invio,
+		concat_ws(
+			' ',
+			sms_sent.destinatari,
+			sms_sent.corpo
+		) AS __label__
+	FROM sms_out
+;
+
+--| 090000042000
+
+-- stati_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `stati_view`;
+
+--| 090000042001
+
+-- stati_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 15:17 Fabio Mosti
+CREATE OR REPLACE VIEW stati_view AS
+    SELECT
+		stati.id,
+		stati.id_continente,
+		continenti.nome AS continente,
+		stati.nome,
+		stati.iso31661alpha2,
+		stati.iso31661alpha3,
+		stati.codice_istat,
+		data_archiviazione,
+		concat_ws(
+			' ',
+			continenti.nome,
+			stati.nome
+		) AS __label__
+    FROM stati
+    	LEFT JOIN continenti ON continenti.id = stati.id_continente
+;
+
+--| 090000042200
+
+-- stati_lingue_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `stati_lingue_view`;
+
+--| 090000042201
+
+-- stati_lingue_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 15:33 Fabio Mosti
+CREATE OR REPLACE VIEW stati_view AS
+    SELECT
+		stati_lingue.id,
+		stati_lingue.id_stato,
+		stati.nome AS stato,
+		stati_lingue.id_lingua,
+		lingue.nome AS lingua,
+		stati_lingue.ordine,
+		concat_ws(
+			' ',
+			stati.nome,
+			lingue.nome
+		) AS __label__
+    FROM stati
+    	LEFT JOIN stati ON stati.id = stati_lingue.id_stato
+    	LEFT JOIN lingue ON lingue.id = stati_lingue.id_lingua
+;
+
+--| 090000043000
 
 -- task_view
 -- tipologia: tabella gestita
@@ -3503,8 +3755,57 @@ CREATE OR REPLACE VIEW task_view AS
 	FROM task
 ;
 
+--| 090000043600
 
+-- telefoni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS telefoni_view;
 
+--| 090000043601
 
+-- telefoni_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-15 11:54 Fabio Mosti
+CREATE OR REPLACE VIEW telefoni_view AS
+	SELECT
+		telefoni.id,
+		telefoni.id_tipologia,
+		tipologie_telefoni.nome AS tipologia,
+		telefoni.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		telefoni.numero,
+		telefoni.se_notifiche,
+		concat_ws(
+			' ',
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+			tipologie_telefoni.nome,
+			telefoni.numero
+		) AS __label__
+	FROM telefoni
+;
+
+--| 090000044000
+
+-- template_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `template_view`;
+
+--| 090000044001
+
+-- template_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-15 12:43 Fabio Mosti
+CREATE OR REPLACE VIEW `template_view` AS
+	SELECT
+		template.id,
+		template.ruolo,
+		template.nome,
+		template.tipo,
+		template.note,
+		template.se_mail,
+		template.se_sms,
+		template.ruolo AS __label__
+	FROM template
+;
 
 --| FINE FILE

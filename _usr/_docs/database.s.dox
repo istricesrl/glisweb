@@ -7,168 +7,199 @@
     le tabelle del database di supporto SA - SZ
     ===========================================
 
-    scadenze
-    --------
-    Questa tabella *gestita* ...
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    scadenze.id                          | l'ID che fa l'associazione fra il documento e la pratica
-    scadenze.id_documento                | l'ID del documento
-    scadenze.id_pratica                  | l'ID della pratica
-    scadenze.data                        | 
-    scadenze.id_modalita_pagamento       | 
-    scadenze.nome                        | 
-    scadenze.importo_lordo_totale        | 
-    scadenze.se_pagato                   | 
-    scadenze.id_account_inserimento      | 
-    scadenze.timestamp_inserimento       | 
-    scadenze.id_account_aggiornamento    | 
-    scadenze.timestamp_aggiornamento     | 
-    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                  | campo                 | tabella e campo collegati     | comportamento
-    ----------------------------------------|-----------------------|-------------------------------|------------------
-
-    La vista scadenze_view relativa alla tabella scadenze presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    
     settori
-    --------
-    Questa tabella *gestita* ...
+    -------
+    Questa tabella *gestita* contiene i settori ATECO per la classificazione delle attività.
 
     colonna                             | descrizione
     ------------------------------------|---------------------------------------------------------------------------------------
     settori.id                          | l'ID del settore
-    settori.id_genitore                 | l'ID parente
-    settori.id_testata                  | 
-    settori.ateco                       | 
-    settori.nome                        | 
-    settori.soprannome                  |
+    settori.id_genitore                 | l'ID del settore genitore
+    settori.nome                        | il nome ufficiale del settore
+    settori.soprannome                  | il nome breve convenzionale del settore
+    settori.ateco                       | il codice ATECO del settore
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                  | campo                 | tabella e campo collegati     | comportamento
-    ----------------------------------------|-----------------------|-------------------------------|------------------
+    chiave                              | campo                 | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------|-------------------------------|------------------
+    settori_ibfk_01                     | id_genitore           | settori.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
-    La vista settori_view relativa alla tabella settori presenta le seguenti colonne:
+    La vista *settori_view* relativa alla tabella *settori* presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
+    settori_view.id                      | -
+    settori_view.id_genitore             | -
+    settori_view.nome                    | -
+    settori_view.soprannome              | -
+    settori_view.ateco                   | -
+    settori_view.__label__               | etichetta descrittiva del settore
     
     sms_out
-    --------
-    Questa tabella *gestita* ...
+    -------
+    Questa tabella *gestita* contiene la coda degli SMS in uscita.
 
     colonna                             | descrizione
     ------------------------------------|---------------------------------------------------------------------------------------
-    sms_out.id                          | l'ID dell'SMS in uscita
-    sms_out.timestamp_composizione      | 
-    sms_out.timestamp_invio             | 
-    sms_out.server                      | 
-    sms_out.mittente                    | il mittente dell'SMS in uscita
-    sms_out.destinatari                 | il destinatario dell'SMS in uscita
-    sms_out.corpo                       | 
-    sms_out.host                        | 
-    sms_out.port                        | 
-    sms_out.user                        | 
-    sms_out.password                    |
-    sms_out.id_newsletter               | 
-    sms_out.id_telefono                 | 
-    sms_out.id_account_inserimento      | 
-    sms_out.timestamp_inserimento       | 
-    sms_out.id_account_aggiornamento    | 
-    sms_out.timestamp_aggiornamento     | 
+    sms_out.id                          | l'ID dell'SMS
+    sms_out.id_telefono                 | l'ID del telefono destinatario dell'SMS
+    sms_out.ordine                      | campo di ordinamento
+    sms_out.timestamp_composizione      | la timestamp di composizione dell'SMS
+    sms_out.mittente                    | il mittente dell'SMS
+    sms_out.destinatari                 | il destinatario dell'SMS
+    sms_out.corpo                       | il corpo dell'SMS
+    sms_out.server                      | il nome del server da utilizzare per l'invio dell'SMS
+    sms_out.host                        | il nome host del server da utilizzare per l'invio dell'SMS
+    sms_out.port                        | la porta del server da utilizzare per l'invio dell'SMS
+    sms_out.user                        | il nome utente del server da utilizzare per l'invio dell'SMS
+    sms_out.password                    | la password del server da utilizzare per l'invio dell'SMS
+    sms_out.token                       | token per il lock software della riga nelle elaborazioni automatiche
+    sms_out.tentativi                   | il numero di tentativi di invio fatti per l'SMS
+    sms_out.timestamp_invio             | la timestamp di invio dell'SMS
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                  | campo                 | tabella e campo collegati     | comportamento
     ----------------------------------------|-----------------------|-------------------------------|------------------
+    sms_out_ibfk_01_nofollow                | id_telefono           | telefoni.id                   | ON DELETE CASCADE ON UPDATE CASCADE
 
-    La vista sms_out_view relativa alla tabella sms_out presenta le seguenti colonne:
+    La vista *sms_out_view* relativa alla tabella *sms_out* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                  | descrizione
+    -----------------------------------------|---------------------------------------------------------------------------------------
+    sms_out_view.id                          | -
+    sms_out_view.id_telefono                 | -
+    sms_out_view.ordine                      | -
+    sms_out_view.timestamp_composizione      | -
+    sms_out_view.mittente                    | -
+    sms_out_view.destinatari                 | -
+    sms_out_view.corpo                       | -
+    sms_out_view.server                      | -
+    sms_out_view.host                        | -
+    sms_out_view.port                        | -
+    sms_out_view.user                        | -
+    sms_out_view.password                    | -
+    sms_out_view.token                       | -
+    sms_out_view.tentativi                   | -
+    sms_out_view.timestamp_invio             | -
+    sms_out_view.__label__                   | etichetta descrittiva dell'SMS
     
     sms_sent
     --------
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene la coda degli SMS inviati.
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    sms_sent.id                          | l'ID dell'SMS mandato
-    sms_sent.timestamp_composizione      | 
-    sms_sent.timestamp_invio             | 
-    sms_sent.server                      | 
-    sms_sent.mittente                    | 
-    sms_sent.destinatari                 |
-    sms_sent.corpo                       | 
-    sms_sent.host                        | 
-    sms_sent.port                        | 
-    sms_sent.user                        | 
-    sms_sent.password                    |
-    sms_sent.id_newsletter               | 
-    sms_sent.id_telefono                 | 
-    sms_sent.id_account_inserimento      | 
-    sms_sent.timestamp_inserimento       | 
-    sms_sent.id_account_aggiornamento    | 
-    sms_out.timestamp_aggiornamento      | 
+    sms_sent.id                          | l'ID dell'SMS
+    sms_sent.id_telefono                 | l'ID del telefono destinatario dell'SMS
+    sms_sent.ordine                      | campo di ordinamento
+    sms_sent.timestamp_composizione      | la timestamp di composizione dell'SMS
+    sms_sent.mittente                    | il mittente dell'SMS
+    sms_sent.destinatari                 | il destinatario dell'SMS
+    sms_sent.corpo                       | il corpo dell'SMS
+    sms_sent.server                      | il nome del server utilizzato per l'invio dell'SMS
+    sms_sent.host                        | il nome host del server utilizzato per l'invio dell'SMS
+    sms_sent.port                        | la porta del server utilizzato per l'invio dell'SMS
+    sms_sent.user                        | il nome utente del server utilizzato per l'invio dell'SMS
+    sms_sent.password                    | la password del server utilizzato per l'invio dell'SMS
+    sms_sent.token                       | token per il lock software della riga nelle elaborazioni automatiche
+    sms_sent.tentativi                   | il numero di tentativi di invio fatti per l'SMS
+    sms_sent.timestamp_invio             | la timestamp di invio dell'SMS
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                  | campo                 | tabella e campo collegati     | comportamento
     ----------------------------------------|-----------------------|-------------------------------|------------------
+    sms_sent_ibfk_01_nofollow               | id_telefono           | telefoni.id                   | ON DELETE CASCADE ON UPDATE CASCADE
 
-    La vista sms_sent_view relativa alla tabella sms_sent presenta le seguenti colonne:
+    La vista *sms_sent_view* relativa alla tabella *sms_sent* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    sms_sent_view.id                          | -
+    sms_sent_view.id_telefono                 | -
+    sms_sent_view.ordine                      | -
+    sms_sent_view.timestamp_composizione      | -
+    sms_sent_view.mittente                    | -
+    sms_sent_view.destinatari                 | -
+    sms_sent_view.corpo                       | -
+    sms_sent_view.server                      | -
+    sms_sent_view.host                        | -
+    sms_sent_view.port                        | -
+    sms_sent_view.user                        | -
+    sms_sent_view.password                    | -
+    sms_sent_view.token                       | -
+    sms_sent_view.tentativi                   | -
+    sms_sent_view.timestamp_invio             | -
+    sms_sent_view.__label__                   | etichetta descrittiva dell'SMS
 
     stati
     -----
-    Questa tabella *gestita* ...
+    Questa tabella *gestita* contiene gli stati, intesi come unità amministrativa che raggruppa
+    le regioni e le collega ai continenti.
 
     colonna                    | descrizione
     ---------------------------|---------------------------------------------------------------------------------------
-    stati.id                   | l'ID dello Stato 
-    stati.id_continente        | la colonna 'id_continente' fa riferimento alla tabella 'continenti
-    stati.iso31661alpha2       | la colonna 'iso31661alpha2' contiene il codice del paese secondo lo standard ISO 3166-1 alpha 2
-    stati.iso31661alpha3       | la colonna 'iso31661alpha3' contiene il codice del paese secondo lo standard ISO 3166-1 alpha 3
-    stati.nome                 | la colonna 'nome' contiene il nome convenzionale del paese, in italiano
-    stati.note                 | la colonna 'note' contiene il nome ufficiale del paese, in italiano
-    stati.codice_istat         | la colonna 'istat' contiene il codice ISTAT del paese
-    stati.data_cessazione      | 
+    stati.id                   | l'ID dello stato
+    stati.id_continente        | l'ID del continente cui appartiene lo stato
+    stati.nome                 | il nome convenzionale del paese
+    stati.note                 | il nome ufficiale del paese
+    stati.iso31661alpha2       | il codice dello stato secondo lo standard ISO 3166-1 alpha 2
+    stati.iso31661alpha3       | il codice dello stato secondo lo standard ISO 3166-1 alpha 3
+    stati.codice_istat         | il codice ISTAT dello stato
+    stati.data_archiviazione   | la data di archiviazione dello stato
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                  | campo                 | tabella e campo collegati     | comportamento
     ----------------------------------------|-----------------------|-------------------------------|------------------
+    stati_ibfk_01_nofollow                  | id_continente         | continenti.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-    La vista stati_view relativa alla tabella stati presenta le seguenti colonne:
+    La vista *stati_view* relativa alla tabella *stati* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    stati_view.id                       | -
+    stati_view.id_continente            | -
+    stati_view.continente               | il continente cui appartiene lo stato
+    stati_view.nome                     | -
+    stati_view.note                     | -
+    stati_view.iso31661alpha2           | -
+    stati_view.iso31661alpha3           | -
+    stati_view.codice_istat             | -
+    stati_view.data_archiviazione       | -
+    stati_view.__label__                | etichetta descrittiva dello stato
        
     stati_lingue
     ------------
-    Questa tabella di *supporto* non ha una colonna 'id' perché non viene gestita in nessun caso dal CMS
+    Questa tabella di *supporto* mette in relazione molti a molti l'entità principale *stati* con l'entità
+    subordinata *lingue*.
 
-    colonna                               | descrizione
-    --------------------------------------|---------------------------------------------------------------------------------------
-    stati_lingue.id_stato                 | l'ID del paese della lingua
-    stati_lingue.id_lingua                | l'ID della lingua 
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    stati_lingue.id                     | l'ID dell'associazione fra stato e lingua
+    stati_lingue.id_stato               | l'ID dello stato
+    stati_lingue.id_lingua              | l'ID della lingua 
+    stati_lingue.ordine                 | campo di ordinamento
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                  | campo                 | tabella e campo collegati     | comportamento
     ----------------------------------------|-----------------------|-------------------------------|------------------
+    stati_lingue_ibfk_01_nofollow           | id_stato              | stati.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    stati_lingue_ibfk_02_nofollow           | id_lingua             | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
 
     La vista stati_lingue_view relativa alla tabella stati_lingue presenta le seguenti colonne:
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
+    stati_lingue_view.id                 | -
+    stati_lingue_view.id_stato           | -
+    stati_lingue_view.stato              | lo stato
+    stati_lingue_view.id_lingua          | -
+    stati_lingue_view.lingua             | la lingua 
+    stati_lingue_view.ordine             | -
+    stati_lingue_view.__label__          | etichetta descrittiva dell'associazione fra stati e lingue
      
 */

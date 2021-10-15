@@ -1947,4 +1947,568 @@ ALTER TABLE `ruoli_file`
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000034600
+
+-- ruoli_immagini
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-11 18:47 Fabio Mosti
+ALTER TABLE `ruoli_immagini`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `ordine_scalamento` (`ordine_scalamento`), 
+	ADD KEY `se_anagrafica` (`se_anagrafica`), 
+	ADD KEY `se_prodotti` (`se_prodotti`), 
+	ADD KEY `se_articoli` (`se_articoli`), 
+	ADD KEY `se_categorie_prodotti` (`se_categorie_prodotti`), 
+	ADD KEY `se_risorse` (`se_risorse`), 
+	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
+	ADD KEY `se_progetti` (`se_progetti`), 
+	ADD KEY `se_categorie_progetti` (`se_categorie_progetti`), 
+	ADD KEY `se_pagine` (`se_pagine`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine_scalamento`,`nome`,`se_anagrafica`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_risorse`,`se_categorie_risorse`,`se_progetti`,`se_categorie_progetti`,`se_pagine`);
+
+--| 030000034601
+
+-- ruoli_immagini
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000034800
+
+-- ruoli_indirizzi
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 10:46 Fabio Mosti
+ALTER TABLE `ruoli_indirizzi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+
+--| 030000034801
+
+-- ruoli_indirizzi
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000035000
+
+-- ruoli_prodotti
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 10:46 Fabio Mosti
+ALTER TABLE `ruoli_prodotti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+
+--| 030000035001
+
+-- ruoli_prodotti
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000035200
+
+-- ruoli_video
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-11 18:47 Fabio Mosti
+ALTER TABLE `ruoli_video`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_anagrafica` (`se_anagrafica`), 
+	ADD KEY `se_prodotti` (`se_prodotti`), 
+	ADD KEY `se_articoli` (`se_articoli`), 
+	ADD KEY `se_categorie_prodotti` (`se_categorie_prodotti`), 
+	ADD KEY `se_risorse` (`se_risorse`), 
+	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
+	ADD KEY `se_progetti` (`se_progetti`), 
+	ADD KEY `se_categorie_progetti` (`se_categorie_progetti`), 
+	ADD KEY `se_pagine` (`se_pagine`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_anagrafica`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_risorse`,`se_categorie_risorse`,`se_progetti`,`se_categorie_progetti`,`se_pagine`);
+
+--| 030000035201
+
+-- ruoli_video
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000037000
+
+-- settori
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-11 10:53 Fabio Mosti
+ALTER TABLE `settori`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`ateco`), 
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `ateco` (`ateco`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`soprannome`,`ateco`);
+
+--| 030000037001
+
+-- settori
+-- tipologia: tabella di supporto
+ALTER TABLE `settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000041000
+
+-- sms_out
+-- tipolgia: tabella gestita
+-- verifica: 2021-10-12 11:58 Fabio Mosti
+ALTER TABLE `sms_out`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_telefono` (`id_telefono`), 
+	ADD KEY `timestamp_composizione` (`timestamp_composizione`), 
+	ADD KEY `timestamp_invio` (`timestamp_invio`), 
+	ADD KEY `token` (`token`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
+	ADD KEY `indice` (`id`,`id_telefono`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
+
+--| 030000041001
+
+-- sms_out
+-- tipologia: tabella di supporto
+ALTER TABLE `sms_out` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000041200
+
+-- sms_sent
+-- tipolgia: tabella gestita
+-- verifica: 2021-10-12 11:58 Fabio Mosti
+ALTER TABLE `sms_sent`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_telefono` (`id_telefono`), 
+	ADD KEY `timestamp_composizione` (`timestamp_composizione`), 
+	ADD KEY `timestamp_invio` (`timestamp_invio`), 
+	ADD KEY `token` (`token`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
+	ADD KEY `indice` (`id`,`id_telefono`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
+
+--| 030000041201
+
+-- sms_sent
+-- tipologia: tabella di supporto
+ALTER TABLE `sms_sent` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000042000
+
+-- stati
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 15:08 Fabio Mosti
+ALTER TABLE `stati`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`codice_istat`),
+	ADD UNIQUE KEY `unica_iso31661alpha2` (`iso31661alpha2`),
+	ADD UNIQUE KEY `unica_iso31661alpha3` (`iso31661alpha3`),
+	ADD KEY `id_continente` (`id_continente`),
+	ADD KEY `indice` (`id`,`id_continente`,`nome`,`iso31661alpha2`,`iso31661alpha3`,`codice_istat`);
+
+--| 030000042001
+
+-- stati
+-- tipologia: tabella di supporto
+ALTER TABLE `stati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000042200
+
+-- stati_lingue
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 15:42 Fabio Mosti
+ALTER TABLE `stati_lingue`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY (`id_stato`,`id_lingua`),
+	ADD KEY `id_stato` (`id_stato`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `indice` (`id`,`id_stato`,`id_lingua`,`ordine`)
+
+--| 030000042201
+
+-- stati_lingue
+-- tipologia: tabella di supporto
+ALTER TABLE `stati_lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000043000
+
+-- task
+-- tipologia: tabella gestita
+-- verifica: 2021-10-12 15:42 Fabio Mosti
+ALTER TABLE `task`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `minuto` (`minuto`),
+	ADD KEY `ora` (`ora`),
+	ADD KEY `giorno_del_mese` (`giorno_del_mese`),
+	ADD KEY `mese` (`mese`),
+	ADD KEY `giorno_della_settimana` (`giorno_della_settimana`),
+	ADD KEY `settimana` (`settimana`),
+	ADD KEY `task` (`task`),
+	ADD KEY `iterazioni` (`iterazioni`),
+	ADD KEY `delay` (`delay`),
+	ADD KEY `token` (`token`),
+	ADD KEY `timestamp_esecuzione` (`timestamp_esecuzione`),
+	ADD KEY `indice` (`id`,`minuto`,`ora`,`giorno_del_mese`,`mese`,`giorno_della_settimana`,`settimana`,`task`,`iterazioni`,`delay`,`token`,`timestamp_esecuzione`);
+
+--| 030000043001
+
+-- task
+-- tipologia: tabella gestita
+ALTER TABLE `task` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000043600
+
+-- telefoni
+-- tipologia: tabella gestita
+-- verifica: 2021-10-15 10:46 Fabio Mosti
+ALTER TABLE `telefoni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`numero`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `numero` (`numero`),
+	ADD KEY `indice` (`id_tipologia`,`id_anagrafica`,`numero`,`se_notifiche`);
+
+--| 030000043601
+
+-- telefoni
+-- tipologia: tabella gestita
+ALTER TABLE `telefoni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000044000
+
+-- template
+-- tipologia: tabella gestita
+-- verifica: 2021-10-15 12:36 Fabio Mosti
+ALTER TABLE `template`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`ruolo`,`nome`,`tipo`,`se_mail`,`se_sms`);
+
+--| 030000044001
+
+-- template
+-- tipologia: tabella gestita
+ALTER TABLE `template` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000050000
+
+-- tipologie_anagrafica
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_anagrafica`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`);
+
+--| 030000050001
+
+-- tipologie_anagrafica
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000050400
+
+-- tipologie_attivita
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_attivita`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`);
+
+--| 030000050401
+
+-- tipologie_attivita
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000050800
+
+-- tipologie_contatti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_contatti`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000050801
+
+-- tipologie_contatti
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000052600
+
+-- tipologie_documenti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_documenti`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_documento_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
+
+--| 030000052601
+
+-- tipologie_documenti
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000053000
+
+-- tipologie_indirizzi
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_indirizzi`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000053001
+
+-- tipologie_indirizzi
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000053400
+
+-- tipologie_mastri
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_mastri`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000053401
+
+-- tipologie_mastri
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000053800
+
+-- tipologie_notizie
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_notizie`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000053801
+
+-- tipologie_notizie
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000054200
+
+-- tipologie_popup
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_popup`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000054201
+
+-- tipologie_popup
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_popup` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000054600
+
+-- tipologie_prodotti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_prodotti`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_colori`,`se_taglie`,`se_dimensioni`,`se_imballo`,`se_spedizione`,`se_trasporto`);
+
+--| 030000054601
+
+-- tipologie_prodotti
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000055000
+
+-- tipologie_progetti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_progetti`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000055001
+
+-- tipologie_progetti
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000055400
+
+-- tipologie_pubblicazioni
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_pubblicazioni`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_bozza`,`se_pubblicato`,`se_evidenza`);
+
+--| 030000055401
+
+-- tipologie_pubblicazioni
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_pubblicazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000055800
+
+-- tipologie_risorse
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_risorse`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000055801
+
+-- tipologie_risorse
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000056200
+
+-- tipologie_telefoni
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_telefoni`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000056201
+
+-- tipologie_telefoni
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_telefoni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000056600
+
+-- tipologie_todo
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_todo`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000056601
+
+-- tipologie_todo
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000057000
+
+-- tipologie_udm
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `tipologie_udm`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000057001
+
+-- tipologie_udm
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| FINE FILE

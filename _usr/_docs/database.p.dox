@@ -6,7 +6,43 @@
 
     le tabelle del database di supporto PA - PZ
     ===========================================
-    
+
+    pagamenti
+    ---------
+    Questa tabella *gestita* contiene i movimenti di denaro fissati nel tempo; i pagamenti
+    movimentano i mastri di tipo economico.
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    pagamenti.id                                    | l'ID del pagamento
+    pagamenti.id_tipologia                          | l'ID della tipologia di pagamento
+    pagamenti.ordine                                | campo di ordinamento
+    pagamenti.id_documento                          | l'ID del documento cui si riferisce il pagamento
+    pagamenti.data                                  | la data del pagamento
+    pagamenti.id_emittente                          | l'ID dell'emittente del pagamento
+    pagamenti.id_destinatario                       | l'ID del destinatario del pagamento
+    pagamenti.id_reparto                            | l'ID del reparto cui si riferisce il pagamento
+    pagamenti.id_progetto                           | l'ID del progetto cui si riferisce il pagamento
+    pagamenti.id_todo                               | l'ID della todo cui si riferisce il pagamento
+    pagamenti.id_attivita                           | l'ID dell'attività cui si riferisce il pagamento
+    pagamenti.id_mastro_provenienza                 | l'ID del mastro scaricato dal pagamento
+    pagamenti.id_mastro_destinazione                | l'ID del mastro caricato dal pagamento
+    pagamenti.importo_netto_totale                  | l'importo netto totale del pagamento
+    pagamenti.id_iva                                | l'ID dell'aliquota IVA associata al pagamento
+    pagamenti.id_listino                            | l'ID del listino associato al pagamento
+    pagamenti.nome                                  | nome descrittivo del pagamento
+    pagamenti.testo                                 | testo descrittivo del pagamento
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+
+    La vista *pagamenti_view* relativa alla tabella *pagamenti* presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+
     pagine
     ------
     Questa tabella *gestita* contiene le pagine pubblicate sul web tramite il framework e costituisce il cuore
