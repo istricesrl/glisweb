@@ -249,7 +249,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	    {% if img.metadati.link %}<a href="{{ img.metadati.link[ lang ] }}"{% if img.metadati.target %} target="{{ img.metadati.target }}"{% endif %}>{% endif %}
 	    {{ cms.picture( img, lang, site, set ) }}
 	    {% if img.h1 or img.h2 or img.cappello %}
-	    <div class="{% if img.metadati.captionClasses %}{{ img.metadati.captionClasses }}{% else %}carousel-caption{% endif %}">
+	    <div class="{% if img.metadati.captionClasses[ lang ] %}{{ img.metadati.captionClasses[ lang ] }}{% else %}carousel-caption{% endif %}">
 		{% if img.h1 %}<h1>{{ img.h1[ lang ]|raw }}</h1>{% endif %}
 		{% if img.h2 %}<h2>{{ img.h2[ lang ]|raw }}</h2>{% endif %}
 		{% if img.cappello %}<p>{{ img.cappello[ lang ]|raw }}</p>{% endif %}

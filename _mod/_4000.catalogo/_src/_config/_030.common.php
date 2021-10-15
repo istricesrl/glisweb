@@ -8,7 +8,6 @@
      * 
      */
 
-
     $cf['catalogo']['pages']['elenco']['template']        = '_src/_templates/_arianna/';
     $cf['catalogo']['pages']['elenco']['schema']            = 'elenco.categorie.html';
     $cf['catalogo']['pages']['elenco']['macro']            = array('_mod/_4000.catalogo/_src/_inc/_macro/_categorie.prodotti.elenco.php');
