@@ -330,7 +330,7 @@
     {% endif %}
 {% endif %}
 <div class="row form-row">
-    <input type="hidden" name="{{ nm }}" id="{{ id }}" value="{{ vl }}" {% if disabled and not vl %}disabled{% endif %}/>
+    <input type="hidden" name="{{ nm }}" id="{{ id }}" value="{{ vl }}" {% if disabled and not pk %}disabled{% endif %}/>
     <div class="col-auto text-left {{ class }}">
 	{% if vl %}
 	<button title="apri il file in una nuova pagina" class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ site.root }}{{ vl }}','_blank');"><i class="fa fa-external-link"></i></button>
