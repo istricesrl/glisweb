@@ -247,9 +247,9 @@
                     // canonical
 				    $canon = $pid;
 
-                    // scrivo la pagina in cache
-                    memcacheWrite( $cf['memcache']['connection'], 'PAGE_' . $pg['id'], $cf['contents']['pages'][ $pg['id'] ] );
-                    
+                   // scrivo la pagina della notizia in cache
+                    memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
+  
                     }
                 }
 

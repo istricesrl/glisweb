@@ -81,8 +81,8 @@ if ($cf['contents']['cached'] === false) {
 
                 // blocco dati principale
                 $cf['contents']['pages'][$pid] = array(
-                    # 'sitemap'		=> ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
-                    # 'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
+                    'sitemap'		=> ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
+                    'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                     'parent'        => array('id'        => $cid),
                     'canonical'        => $canon,
                     'template'        => array('path'    => $cf['prodotti']['pages']['scheda']['template'], 'schema' => $cf['prodotti']['pages']['scheda']['schema'], 'theme' => $cf['prodotti']['pages']['scheda']['css']),
@@ -128,8 +128,9 @@ if ($cf['contents']['cached'] === false) {
                 // canonical
                 $canon = $pid;
 
-                // scrivo la pagina in cache
-                memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
+               // scrivo la pagina del prodotto in cache
+               memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
+
             } else {
 
                 $cf['contents']['pages'][$pid] = $pgc;
