@@ -96,7 +96,23 @@
 
             <div class="form-group form-row">
                 <div class="col-12">
-                    {{ frm.textArea( table, subtable, i, 'testo', 'contenuto', 10, request, '', '', 'ckEditor', 200 ) }}
+                <ul class="nav nav-tabs nav-tabs-secondary">
+                    <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-testo','cke-switch',this);">testo</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-abstract','cke-switch',this);">abstract</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-specifiche','cke-switch',this);">specifiche</a></li>
+                </ul>
+                </div>
+            </div>
+        
+            <div class="form-group form-row flex-fill">
+                <div class="col cke-switch" id="cke-testo">
+                {{ frm.textArea( table, subtable, i, 'testo', 'contenuto della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
+                </div>
+                <div class="col cke-switch" id="cke-abstract" style="display: none;">
+                {{ frm.textArea( table, subtable, i, 'abstract', 'abstract della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
+                </div>
+                <div class="col cke-switch" id="cke-specifiche" style="display: none;">
+                {{ frm.textArea( table, subtable, i, 'specifiche', 'specifiche della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
                 </div>
             </div>
         </fieldset>
