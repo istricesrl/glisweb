@@ -1,0 +1,1 @@
+ALTER TABLE `pubblicazione` ADD `id_notizia` INT NULL DEFAULT NULL AFTER `id_popup`, ADD INDEX `id_notizia`(`id_notizia`) ;
