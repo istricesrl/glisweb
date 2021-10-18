@@ -41,20 +41,47 @@
 
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
+			<legend>dati generali <small>{{ legend }}</small></legend>
 
-		<div class="form-group form-row">
-		    <div class="col-12 col-md">
-			<span class="label-top">genitore</span>
-			{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.categorie_attivita, request, '', '', '', '', '', 'categorie.attivita.form', 'categorie.attivita.form', 'categorie_attivita', 'id_genitore', page, pages, ietf ) }}
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
+				<span class="label-top">genitore</span>
+				{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.categorie_attivita, request, '', '', '', '', '', 'categorie.attivita.form', 'categorie.attivita.form', 'categorie_attivita', 'id_genitore', page, pages, ietf ) }}
+				</div>
+				<div class="col-12 col-md">
+				<span class="label-top">nome della categoria</span>
+				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				</div>
 			</div>
-		    <div class="col-12 col-md">
-			<span class="label-top">nome della categoria</span>
-			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-		    </div>
-		</div>
-
 	    </fieldset>
+
+		<fieldset>
+            <legend>ruoli</legend>
+    
+            <div class="form-group form-row">
+                <div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_ordinario', 'ordinario', '', request ) }}
+					</div>
+                </div>
+                <div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_straordinario', 'straordinario', '', request ) }}
+					</div>
+                </div>
+                <div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_produzione', 'produzione', '', request ) }}
+					</div>
+                </div>
+                <div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_ticket', 'ticket', '', request ) }}
+					</div>
+                </div>
+            </div>
+    
+            </fieldset>
     
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

@@ -41,47 +41,52 @@
 
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
+			<legend>dati generali <small>{{ legend }}</small></legend>
 
-		<div class="form-group form-row">
-		    <div class="col-12 col-md">
-			<span class="label-top">nome della tipologia</span>
-			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-		    </div>
-		</div>
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
+				<span class="label-top">nome della tipologia</span>
+				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				</div>
+			</div>
 
-		<div class="form-group form-row">
-			<div class="col-4 col-md-2 col-form-label">
-				<div class="form-check">
-					{{ frm.checkbox( table, '', '', 'se_anagrafica', 'anagrafica', '', request ) }}
+		</fieldset>
+
+		<fieldset>
+            <legend>ruoli</legend>
+
+			<div class="form-group form-row">
+				<div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_anagrafica', 'anagrafica', '', request ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_produzione', 'produzione', '', request ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_amministrazione', 'amministrazione', '', request ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_commerciale', 'commerciale', '', request ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_contratto', 'contratto', '', request ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-2 col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_ticket', 'ticket', '', request ) }}
+					</div>
 				</div>
 			</div>
-			<div class="col-4 col-md-2 col-form-label">
-				<div class="form-check">
-					{{ frm.checkbox( table, '', '', 'se_produzione', 'produzione', '', request ) }}
-				</div>
-			</div>
-			<div class="col-4 col-md-2 col-form-label">
-				<div class="form-check">
-					{{ frm.checkbox( table, '', '', 'se_amministrazione', 'amministrazione', '', request ) }}
-				</div>
-			</div>
-			<div class="col-4 col-md-2 col-form-label">
-				<div class="form-check">
-					{{ frm.checkbox( table, '', '', 'se_commerciale', 'commerciale', '', request ) }}
-				</div>
-			</div>
-			<div class="col-4 col-md-2 col-form-label">
-				<div class="form-check">
-					{{ frm.checkbox( table, '', '', 'se_contratto', 'contratto', '', request ) }}
-				</div>
-			</div>
-			<div class="col-4 col-md-2 col-form-label">
-				<div class="form-check">
-					{{ frm.checkbox( table, '', '', 'se_ticket', 'ticket', '', request ) }}
-				</div>
-			</div>
-		</div>
 
 	    </fieldset>
     
