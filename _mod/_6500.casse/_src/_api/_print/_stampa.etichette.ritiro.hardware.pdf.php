@@ -65,7 +65,7 @@ $pdf = pdfInit( $info );
     // tipografia
 	$w		    = 297;								// altezza del foglio
 	$h		    = 210;								// larghezza del foglio
-	$ml		    = 21;								// margine sinistro
+	$ml		    = 23;								// margine sinistro
 	$mt		    = 8;								// margine superiore
 	$mr		    = 21;								// margine destro
 	$fnt		= 'helvetica';							// font base
