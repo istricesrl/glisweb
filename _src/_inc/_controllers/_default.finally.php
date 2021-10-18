@@ -24,13 +24,13 @@
 	    case METHOD_PUT:
 	    case METHOD_REPLACE:
 	    case METHOD_UPDATE:
-
+			
 		// applicazione delle regole di attribuzione automatica
 		    if( isset( $_SESSION['account']['id_gruppi_attribuzione'][ $t ] ) ) {
 
 			// debug
 			    // print_r( $_SESSION['account']['id_gruppi_attribuzione'][ $t ] );
-			    // print_r( $d );
+			    
 
 			// attribuzione automatica
 			// TODO anziché FULL di ufficio consentire di specificare permessi diversi
