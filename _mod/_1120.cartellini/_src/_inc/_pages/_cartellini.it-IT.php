@@ -9,7 +9,7 @@
     // tools attività
 	$p['attivita.tools']['macro'][]		= $m . '_src/_inc/_macro/_attivita.tools.php';
 
-	// vista cartellini
+	// dashboard cartellini
 	$p['cartellini'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cartellini' ),
@@ -20,6 +20,18 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['attivita.view']['etc']['tabs'] )
     );
+
+	// gestione cartellini
+	$p['cartellini.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'cartellini' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cartellini.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_cartellini.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'cartellini.form') )
+	);
 
 
 	
