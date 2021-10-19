@@ -2200,6 +2200,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_todo` (
 
 -- tipologie_udm
 -- tipologia: tabella di supporto
+-- verifica: 2021-10-18 11:11 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `tipologie_udm` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -2217,36 +2218,33 @@ CREATE TABLE IF NOT EXISTS `tipologie_udm` (
 
 -- todo
 -- tipologia: tabella gestita
+-- verifica: 2021-10-19 12:56 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `todo` (
   `id` int(11) NOT NULL,
-  `nome` char(255) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `id_priorita` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
-  `id_progetto` char(32) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
   `id_luogo` int(11) DEFAULT NULL,
-  `testo` text,
-  `ore_previste` decimal(5,2) DEFAULT NULL,
-  `testo_ore_previste` text,
-  `anno_previsto` year(4) DEFAULT NULL,
-  `settimana_prevista` int(11) DEFAULT NULL,
-  `id_pianificazione` int(11) DEFAULT NULL,
-  `testo_pianificazione` text,
-  `id_responsabile` int(11) DEFAULT NULL,
-  `timestamp_apertura` int(11) DEFAULT NULL,
-  `timestamp_pianificazione` int(11) DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `ora_scadenza` time DEFAULT NULL,
+  `note_scadenza` text,
   `data_programmazione` date DEFAULT NULL,
   `ora_inizio_programmazione` time DEFAULT NULL,
   `ora_fine_programmazione` time DEFAULT NULL,
   `anno_programmazione` year(4) DEFAULT NULL,
   `settimana_programmazione` int(11) DEFAULT NULL,
-  `data_scadenza` date DEFAULT NULL,
-  `ora_scadenza` time DEFAULT NULL,
-  `timestamp_revisione` int(11) DEFAULT NULL,
-  `note_revisione` text,
-  `timestamp_completamento` int(11) DEFAULT NULL,
-  `testo_completamento` text,
+  `ore_programmazione` decimal(5,2) DEFAULT NULL,
+  `note_programmazione` text,
+  `data_chiusura` date DEFAULT NULL,
+  `note_chiusura` text,
+  `nome` char(255) NOT NULL,
+  `testo` text,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `note_pianificazione` text,
+  `data_archiviazione` DATE DEFAULT NULL,
+  `note_archiviazione` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -2257,24 +2255,26 @@ CREATE TABLE IF NOT EXISTS `todo` (
 
 -- udm
 -- tipologia: tabella di supporto
+-- verifica: 2021-10-19 12:59 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `udm` (
-`id` int(11) NOT NULL,
-  `id_udm` int(11) DEFAULT NULL,
+  `id` int(11) NOT NULL,
   `id_tipologia` int(11) NOT NULL,
+  `id_udm` int(11) DEFAULT NULL,
   `conversione` float DEFAULT NULL,
   `nome` char(32) NOT NULL,
-  `soprannone` char(32) DEFAULT NULL,
-  `sigla` char(8) DEFAULT NULL
+  `sigla` char(8) DEFAULT NULL,
+  `note` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000063000
 
 -- valute
 -- tipologia: tabella di supporto
+-- verifica: 2021-10-19 13:16 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `valute` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `iso4217` char(3) COLLATE utf8_general_ci NOT NULL,
-  `html` char(8) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) COLLATE utf8_general_ci NOT NULL,
   `utf8` char(1) COLLATE utf8_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

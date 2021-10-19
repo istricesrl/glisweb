@@ -172,6 +172,15 @@
     
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_attivita_view.id                             | -
+    tipologie_attivita_view.id_genitore                    | -
+    tipologie_attivita_view.ordine                         | -
+    tipologie_attivita_view.nome                           | -
+    tipologie_attivita_view.html_entity                    | -
+    tipologie_attivita_view.font_awesome                   | -
+    tipologie_attivita_view.se_anagrafica                  | -
+    tipologie_attivita_view.se_agenda                      | -
+    tipologie_attivita_view.__label__                      | etichetta descrittiva della tipologia
 
     tipologie_contatti
     ------------------
@@ -196,6 +205,13 @@
     
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_contatti_view.id                             | -
+    tipologie_contatti_view.id_genitore                    | -
+    tipologie_contatti_view.ordine                         | -
+    tipologie_contatti_view.nome                           | -
+    tipologie_contatti_view.html_entity                    | -
+    tipologie_contatti_view.font_awesome                   | -
+    tipologie_contatti_view.__label__                      | etichetta descrittiva della tipologia
 
     tipologie_documenti
     -------------------
@@ -228,6 +244,20 @@
     
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_documenti_view.id                            | -
+    tipologie_documenti_view.id_genitore                   | -
+    tipologie_documenti_view.ordine                        | -
+    tipologie_documenti_view.nome                          | -
+    tipologie_documenti_view.html_entity                   | -
+    tipologie_documenti_view.font_awesome                  | -
+    tipologie_documenti_view.se_fattura                    | -
+    tipologie_documenti_view.se_nota_credito               | -
+    tipologie_documenti_view.se_documento_trasporto        | -
+    tipologie_documenti_view.se_pro_forma                  | -
+    tipologie_documenti_view.se_offerta                    | -
+    tipologie_documenti_view.se_ordine                     | -
+    tipologie_documenti_view.se_ricevuta                   | -
+    tipologie_documenti_view.__label__                     | etichetta descrittiva della tipologia
 
     tipologie_indirizzi
     -------------------
@@ -253,6 +283,13 @@
     
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_indirizzi_view.id                            | -
+    tipologie_indirizzi_view.id_genitore                   | -
+    tipologie_indirizzi_view.ordine                        | -
+    tipologie_indirizzi_view.nome                          | -
+    tipologie_indirizzi_view.html_entity                   | -
+    tipologie_indirizzi_view.font_awesome                  | -
+    tipologie_indirizzi_view.__label__                     | etichetta descrittiva della tipologia
 
     tipologie_mastri
     ----------------
@@ -276,8 +313,15 @@
 
     La vista *tipologie_mastri_view* relativa alla tabella *tipologie_mastri* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|--------------------------------------------------------------------------
+    colonna                                             | descrizione
+    ----------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_mastri_view.id                            | -
+    tipologie_mastri_view.id_genitore                   | -
+    tipologie_mastri_view.ordine                        | -
+    tipologie_mastri_view.nome                          | -
+    tipologie_mastri_view.html_entity                   | -
+    tipologie_mastri_view.font_awesome                  | -
+    tipologie_mastri_view.__label__                     | etichetta descrittiva della tipologia
 
     tipologie_notizie
     -----------------
@@ -301,8 +345,15 @@
 
     La vista *tipologie_notizie_view* relativa alla tabella *tipologie_notizie* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|--------------------------------------------------------------------------
+    colonna                                              | descrizione
+    -----------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_notizie_view.id                            | -
+    tipologie_notizie_view.id_genitore                   | -
+    tipologie_notizie_view.ordine                        | -
+    tipologie_notizie_view.nome                          | -
+    tipologie_notizie_view.html_entity                   | -
+    tipologie_notizie_view.font_awesome                  | -
+    tipologie_notizie_view.__label__                     | etichetta descrittiva della tipologia
 
     tipologie_popup
     ---------------
@@ -326,8 +377,15 @@
 
     La vista *tipologie_popup_view* relativa alla tabella *tipologie_popup* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|--------------------------------------------------------------------------
+    colonna                                            | descrizione
+    ---------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_popup_view.id                            | -
+    tipologie_popup_view.id_genitore                   | -
+    tipologie_popup_view.ordine                        | -
+    tipologie_popup_view.nome                          | -
+    tipologie_popup_view.html_entity                   | -
+    tipologie_popup_view.font_awesome                  | -
+    tipologie_popup_view.__label__                     | etichetta descrittiva della tipologia
 
     tipologie_prodotti
     ------------------
@@ -359,6 +417,19 @@
     
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_prodotti_view.id                             | -
+    tipologie_prodotti_view.id_genitore                    | -
+    tipologie_prodotti_view.ordine                         | -
+    tipologie_prodotti_view.nome                           | -
+    tipologie_prodotti_view.html_entity                    | -
+    tipologie_prodotti_view.font_awesome                   | -
+    tipologie_prodotti_view.se_colori                      | -
+    tipologie_prodotti_view.se_taglie                      | -
+    tipologie_prodotti_view.se_dimensioni                  | -
+    tipologie_prodotti_view.se_imballo                     | -
+    tipologie_prodotti_view.se_spedizione                  | -
+    tipologie_prodotti_view.se_trasporto                   | -
+    tipologie_prodotti_view.__label__                      | etichetta descrittiva della tipologia
   
     tipologie_progetti
     ------------------
@@ -384,7 +455,14 @@
     
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
-  
+    tipologie_progetti_view.id                             | -
+    tipologie_progetti_view.id_genitore                    | -
+    tipologie_progetti_view.ordine                         | -
+    tipologie_progetti_view.nome                           | -
+    tipologie_progetti_view.html_entity                    | -
+    tipologie_progetti_view.font_awesome                   | -
+    tipologie_progetti_view.__label__                      | etichetta descrittiva della tipologia
+
     tipologie_pubblicazioni
     -----------------------
     Questa tabbella di *supporto* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *pubblicazioni*.
@@ -410,8 +488,18 @@
 
     La vista *tipologie_pubblicazioni_view* relativa alla tabella *tipologie_pubblicazioni* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|--------------------------------------------------------------------------
+    colonna                                                     | descrizione
+    ------------------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_pubblicazioni_view.id                             | -
+    tipologie_pubblicazioni_view.id_genitore                    | -
+    tipologie_pubblicazioni_view.ordine                         | -
+    tipologie_pubblicazioni_view.nome                           | -
+    tipologie_pubblicazioni_view.html_entity                    | -
+    tipologie_pubblicazioni_view.font_awesome                   | -
+    tipologie_pubblicazioni_view.se_bozza                       | -
+    tipologie_pubblicazioni_view.se_pubblicato                  | -
+    tipologie_pubblicazioni_view.se_evidenza                    | -
+    tipologie_pubblicazioni_view.__label__                      | etichetta descrittiva della tipologia
 
     tipologie_risorse
     -----------------
@@ -435,8 +523,15 @@
 
     La vista *tipologie_risorse_view* relativa alla tabella *tipologie_risorse* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|-------------------------------------------------------------------------
+    colonna                                               | descrizione
+    ------------------------------------------------------|-------------------------------------------------------------------------
+    tipologie_risorse_view.id                             | -
+    tipologie_risorse_view.id_genitore                    | -
+    tipologie_risorse_view.ordine                         | -
+    tipologie_risorse_view.nome                           | -
+    tipologie_risorse_view.html_entity                    | -
+    tipologie_risorse_view.font_awesome                   | -
+    tipologie_risorse_view.__label__                      | etichetta descrittiva della tipologia
 
     tipologie_telefoni
     ------------------
@@ -462,6 +557,13 @@
     
     colonna                                                | descrizione
     -------------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_telefoni_view.id                             | -
+    tipologie_telefoni_view.id_genitore                    | -
+    tipologie_telefoni_view.ordine                         | -
+    tipologie_telefoni_view.nome                           | -
+    tipologie_telefoni_view.html_entity                    | -
+    tipologie_telefoni_view.font_awesome                   | -
+    tipologie_telefoni_view.__label__                      | etichetta descrittiva della tipologia
     
     tipologie_todo
     --------------
@@ -485,8 +587,15 @@
 
     La vista *tipologie_todo_view* relativa alla tabella *tipologie_todo* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|--------------------------------------------------------------------------
+    colonna                                            | descrizione
+    ---------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_todo_view.id                             | -
+    tipologie_todo_view.id_genitore                    | -
+    tipologie_todo_view.ordine                         | -
+    tipologie_todo_view.nome                           | -
+    tipologie_todo_view.html_entity                    | -
+    tipologie_todo_view.font_awesome                   | -
+    tipologie_todo_view.__label__                      | etichetta descrittiva della tipologia
     
     tipologie_udm
     -------------
@@ -510,59 +619,94 @@
 
     La vista *tipologie_udm_view* relativa alla tabella *tipologie_udm* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|--------------------------------------------------------------------------
+    colonna                                           | descrizione
+    --------------------------------------------------|--------------------------------------------------------------------------
+    tipologie_udm_view.id                             | -
+    tipologie_udm_view.id_genitore                    | -
+    tipologie_udm_view.ordine                         | -
+    tipologie_udm_view.nome                           | -
+    tipologie_udm_view.html_entity                    | -
+    tipologie_udm_view.font_awesome                   | -
+    tipologie_udm_view.__label__                      | etichetta descrittiva della tipologia
 
     todo
     ----
-    Questa tabbella *gestita*
+    Questa tabbella *gestita* contiene le cose da fare, intese come componenti operative dei progetti e come
+    collettori di attività.
     
     colonna                                     | descrizione
     --------------------------------------------|---------------------------------------------------------------------------------------
-    todo.id                                     |
-    todo.nome                                   |
-    todo.tipologie_attivita                     | 
-    todo.id_priorita                            | 
-    todo.id_anagrafica                          | 
-    todo.id_cliente                             | 
-    todo.id_progetto                            | 
-    todo.id_luogo                               | 
-    todo.testo                                  | 
-    todo.testo_ore_previste                     | 
-    todo.anno_previsto                          | 
-    todo.settimana_prevista                     | 
-    todo.id_pianificazione                      | 
-    todo.testo_pianificazione                   | 
-    todo.id_responsabile                        | 
-    todo.timestamp_apertura                     | 
-    todo.timestamp_pianificazione               | 
-    todo.data_programmazione                    | 
-    todo.ora_inizio_programmazione              | 
-    todo.ora_fine_programmazione                | 
-    todo.anno_programmazione                    | 
-    todo.settimana_programmazione               | 
-    todo.data_scadenza                          |   
-    todo.ora_scadenza                           | 
-    todo.timestamp_revisione                    | 
-    todo.note_revisione                         | 
-    todo.timestamp_completamento                | 
-    todo.testo_completamento                    |
-    todo.id_mastro_attivita_default             | 
-    todo.id_account_inserimento                 |
-    todo.timestamp_inserimento                  |
-    todo.id_account_aggiornamento               |
-    todo.timestamp_aggiornamento                | 
-    todo.timestamp_aggiornamento                | 
+    todo.id                                     | l'ID della todo
+    todo.id_tipologia                           | l'ID della tipologia di todo
+    todo.id_anagrafica                          | l'ID dell'anagrafica responsabile della todo
+    todo.id_cliente                             | l'ID del cliente per cui è svolta la todo
+    todo.id_indirizzo                           | l'ID dell'indirizzo dove si svolge la todo
+    todo.id_luogo                               | l'ID del luogo dove si svolge la todo
+    todo.data_scadenza                          | la data entro cui dev'essere svolta la todo
+    todo.ora_scadenza                           | l'ora entro cui dev'essere svolta la todo
+    todo.note_scadenza                          | note aggiuntive sulla scadenza della todo
+    todo.data_programmazione                    | la data in cui è programmata l'esecuzione della todo
+    todo.ora_inizio_programmazione              | l'ora in cui è programmato l'inizio dell'esecuzione della todo
+    todo.ora_fine_programmazione                | l'ora in cui è programmata la fine dell'esecuzione della todo
+    todo.anno_programmazione                    | l'anno in cui è programmata la todo
+    todo.settimana_programmazione               | la settimana in cui è programmata la todo
+    todo.ore_programmazione                     | numero di ore previste per lo svolgimento della todo
+    todo.note_programmazione                    | note aggiuntive sulla programmazione della todo
+    todo.data_chiusura                          | data in cui è conclusa la todo
+    todo.note_chiusura                          | note aggiuntive sulla conclusione della todo
+    todo.nome                                   | titolo sintetico della todo
+    todo.testo                                  | testo descrittivo della todo
+    todo.id_contatto                            | l'ID del contatto che ha generato la todo
+    todo.id_progetto                            | l'ID del progetto cui si riferisce la todo
+    todo.id_pianificazione                      | l'ID della pianificazione collegata alla todo
+    todo.note_pianificazione                    | note aggiuntive sulla pianificazione collegata alla todo
+    todo.data_archiviazione                     | data in cui viene archiviata la todo
+    todo.note_archiviazione                     | note aggiuntive sull'archiviazione della todo
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                           | campo                        | tabella e campo collegati
-    ---------------------------------|------------------------------|-----------------------------------------------------
- 
+    chiave                          | campo                 | tabella e campo collegati     | comportamento
+    --------------------------------|-----------------------|-------------------------------|----------------------
+    todo_ibfk_01_nofollow           | id_tipologia          | tipologie_todo.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    todo_ibfk_02_nofollow           | id_anagrafica         | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    todo_ibfk_03_nofollow           | id_cliente            | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    todo_ibfk_04_nofollow           | id_indirizzo          | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    todo_ibfk_05_nofollow           | id_luogo              | luoghi.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    todo_ibfk_06_nofollow           | id_contatto           | contatti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    todo_ibfk_07_nofollow           | id_progetto           | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    todo_ibfk_08_nofollow           | id_pianificazione     | pianificazioni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+
     La vista *todo_view* relativa alla tabella *todo* presenta le seguenti colonne:
     
-    colonna                                                | descrizione
-    -------------------------------------------------------|--------------------------------------------------------------------------
+    colonna                                          | descrizione
+    -------------------------------------------------|--------------------------------------------------------------------------
+    todo_view.id                                     | -
+    todo_view.id_tipologia                           | -
+    todo_view.tipologia                              | la tipologia di todo
+    todo_view.id_anagrafica                          | -
+    todo_view.anagrafica                             | l'anagrafica responsabile della todo
+    todo_view.id_cliente                             | -
+    todo_view.cliente                                | il cliente per cui è svolta la todo
+    todo_view.id_indirizzo                           | -
+    todo_view.indirizzo                              | l'indirizzo dove si svolge la todo
+    todo_view.id_luogo                               | 
+    todo_view.luogo                                  | il luogo dove si svolge la todo
+    todo_view.data_scadenza                          | -
+    todo_view.ora_scadenza                           | -
+    todo_view.data_programmazione                    | -
+    todo_view.ora_inizio_programmazione              | -
+    todo_view.ora_fine_programmazione                | -
+    todo_view.anno_programmazione                    | -
+    todo_view.settimana_programmazione               | -
+    todo_view.ore_programmazione                     | -
+    todo_view.data_chiusura                          | -
+    todo_view.nome                                   | -
+    todo_view.testo                                  | -
+    todo_view.id_contatto                            | -
+    todo_view.id_progetto                            | -
+    todo_view.id_pianificazione                      | -
+    todo_view.data_archiviazione                     | -
+    todo_view.__label__                              | etichetta descrittiva della todo
 
 */
 

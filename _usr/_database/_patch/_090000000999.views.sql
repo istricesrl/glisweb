@@ -3808,4 +3808,472 @@ CREATE OR REPLACE VIEW `template_view` AS
 	FROM template
 ;
 
+--| 090000050000
+
+-- tipologie_anagrafica_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_anagrafica_view`;
+
+--| 090000050001
+
+-- tipologie_anagrafica_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
+	SELECT
+		tipologie_anagrafica.id,
+		tipologie_anagrafica.id_genitore,
+		tipologie_anagrafica.ordine,
+		tipologie_anagrafica.nome,
+		tipologie_anagrafica.html_entity,
+		tipologie_anagrafica.font_awesome,
+		tipologie_anagrafica.se_persona_fisica,
+		tipologie_anagrafica_path( tipologie_anagrafica.id ) AS __label__
+	FROM tipologie_anagrafica
+;
+
+--| 090000050400
+
+-- tipologie_attivita_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_attivita_view`;
+
+--| 090000050401
+
+-- tipologie_attivita_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
+	SELECT
+		tipologie_attivita.id,
+		tipologie_attivita.id_genitore,
+		tipologie_attivita.ordine,
+		tipologie_attivita.nome,
+		tipologie_attivita.html_entity,
+		tipologie_attivita.font_awesome,
+		tipologie_attivita.se_anagrafica,
+		tipologie_attivita.se_agenda,
+		tipologie_attivita_path( tipologie_attivita.id ) AS __label__
+	FROM tipologie_attivita
+;
+
+--| 090000050800
+
+-- tipologie_contatti_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_contatti_view`;
+
+--| 090000050801
+
+-- tipologie_contatti_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_contatti_view` AS
+	SELECT
+		tipologie_contatti.id,
+		tipologie_contatti.id_genitore,
+		tipologie_contatti.ordine,
+		tipologie_contatti.nome,
+		tipologie_contatti.html_entity,
+		tipologie_contatti.font_awesome,
+		tipologie_contatti_path( tipologie_contatti.id ) AS __label__
+	FROM tipologie_contatti
+;
+
+--| 090000052600
+
+-- tipologie_documenti_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_documenti_view`;
+
+--| 090000052601
+
+-- tipologie_documenti_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
+	SELECT
+		tipologie_documenti.id,
+		tipologie_documenti.id_genitore,
+		tipologie_documenti.ordine,
+		tipologie_documenti.nome,
+		tipologie_documenti.html_entity,
+		tipologie_documenti.font_awesome,
+		tipologie_documenti.se_fattura,
+		tipologie_documenti.se_nota_credito,
+		tipologie_documenti.se_documento_trasporto,
+		tipologie_documenti.se_pro_forma,
+		tipologie_documenti.se_offerta,
+		tipologie_documenti.se_ordine,
+		tipologie_documenti.se_ricevuta,
+		tipologie_documenti_path( tipologie_documenti.id ) AS __label__
+	FROM tipologie_documenti
+;
+
+--| 090000053000
+
+-- tipologie_indirizzi_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_indirizzi_view`;
+
+--| 090000053001
+
+-- tipologie_indirizzi_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS
+	SELECT
+		tipologie_indirizzi.id,
+		tipologie_indirizzi.id_genitore,
+		tipologie_indirizzi.ordine,
+		tipologie_indirizzi.nome,
+		tipologie_indirizzi.html_entity,
+		tipologie_indirizzi.font_awesome,
+		tipologie_indirizzi_path( tipologie_indirizzi.id ) AS __label__
+	FROM tipologie_indirizzi
+;
+
+--| 090000053400
+
+-- tipologie_mastri_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_mastri_view`;
+
+--| 090000053401
+
+-- tipologie_mastri_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_mastri_view` AS
+	SELECT
+		tipologie_mastri.id,
+		tipologie_mastri.id_genitore,
+		tipologie_mastri.ordine,
+		tipologie_mastri.nome,
+		tipologie_mastri.html_entity,
+		tipologie_mastri.font_awesome,
+		tipologie_mastri_path( tipologie_mastri.id ) AS __label__
+	FROM tipologie_mastri
+;
+
+--| 090000053800
+
+-- tipologie_notizie_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_notizie_view`;
+
+--| 090000053801
+
+-- tipologie_notizie_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_notizie_view` AS
+	SELECT
+		tipologie_notizie.id,
+		tipologie_notizie.id_genitore,
+		tipologie_notizie.ordine,
+		tipologie_notizie.nome,
+		tipologie_notizie.html_entity,
+		tipologie_notizie.font_awesome,
+		tipologie_notizie_path( tipologie_notizie.id ) AS __label__
+	FROM tipologie_notizie
+;
+
+--| 090000054200
+
+-- tipologie_popup_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_popup_view`;
+
+--| 090000054201
+
+-- tipologie_popup_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_popup_view` AS
+	SELECT
+		tipologie_popup.id,
+		tipologie_popup.id_genitore,
+		tipologie_popup.ordine,
+		tipologie_popup.nome,
+		tipologie_popup.html_entity,
+		tipologie_popup.font_awesome,
+		tipologie_popup_path( tipologie_popup.id ) AS __label__
+	FROM tipologie_popup
+;
+
+--| 090000054600
+
+-- tipologie_prodotti_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_prodotti_view`;
+
+--| 090000054601
+
+-- tipologie_prodotti_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
+	SELECT
+		tipologie_prodotti.id,
+		tipologie_prodotti.id_genitore,
+		tipologie_prodotti.ordine,
+		tipologie_prodotti.nome,
+		tipologie_prodotti.html_entity,
+		tipologie_prodotti.font_awesome,
+		tipologie_prodotti_view.se_colori,
+		tipologie_prodotti_view.se_taglie,
+		tipologie_prodotti_view.se_dimensioni,
+		tipologie_prodotti_view.se_imballo,
+		tipologie_prodotti_view.se_spedizione,
+		tipologie_prodotti_view.se_trasporto,
+		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
+	FROM tipologie_prodotti
+;
+
+--| 090000055000
+
+-- tipologie_progetti_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_progetti_view`;
+
+--| 090000055001
+
+-- tipologie_progetti_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
+	SELECT
+		tipologie_progetti.id,
+		tipologie_progetti.id_genitore,
+		tipologie_progetti.ordine,
+		tipologie_progetti.nome,
+		tipologie_progetti.html_entity,
+		tipologie_progetti.font_awesome,
+		tipologie_progetti_path( tipologie_progetti.id ) AS __label__
+	FROM tipologie_progetti
+;
+
+--| 090000055400
+
+-- tipologie_pubblicazioni_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_pubblicazioni_view`;
+
+--| 090000055401
+
+-- tipologie_pubblicazioni_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS
+	SELECT
+		tipologie_pubblicazioni.id,
+		tipologie_pubblicazioni.id_genitore,
+		tipologie_pubblicazioni.ordine,
+		tipologie_pubblicazioni.nome,
+		tipologie_pubblicazioni.html_entity,
+		tipologie_pubblicazioni.font_awesome,
+		tipologie_pubblicazioni_path( tipologie_pubblicazioni.id ) AS __label__
+	FROM tipologie_pubblicazioni
+;
+
+--| 090000055800
+
+-- tipologie_risorse_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_risorse_view`;
+
+--| 090000055801
+
+-- tipologie_risorse_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:11 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_risorse_view` AS
+	SELECT
+		tipologie_risorse.id,
+		tipologie_risorse.id_genitore,
+		tipologie_risorse.ordine,
+		tipologie_risorse.nome,
+		tipologie_risorse.html_entity,
+		tipologie_risorse.font_awesome,
+		tipologie_risorse_path( tipologie_risorse.id ) AS __label__
+	FROM tipologie_risorse
+;
+
+--| 090000056200
+
+-- tipologie_telefoni_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_telefoni_view`;
+
+--| 090000056201
+
+-- tipologie_telefoni_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_telefoni_view` AS
+	SELECT
+		tipologie_telefoni.id,
+		tipologie_telefoni.id_genitore,
+		tipologie_telefoni.ordine,
+		tipologie_telefoni.nome,
+		tipologie_telefoni.html_entity,
+		tipologie_telefoni.font_awesome,
+		tipologie_telefoni_path( tipologie_telefoni.id ) AS __label__
+	FROM tipologie_telefoni
+;
+
+--| 090000056600
+
+-- tipologie_todo_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_todo_view`;
+
+--| 090000056601
+
+-- tipologie_todo_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_todo_view` AS
+	SELECT
+		tipologie_todo.id,
+		tipologie_todo.id_genitore,
+		tipologie_todo.ordine,
+		tipologie_todo.nome,
+		tipologie_todo.html_entity,
+		tipologie_todo.font_awesome,
+		tipologie_todo_path( tipologie_todo.id ) AS __label__
+	FROM tipologie_todo
+;
+
+--| 090000057000
+
+-- tipologie_udm_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_udm_view`;
+
+--| 090000057001
+
+-- tipologie_udm_view
+-- tipologia: tabella assistita
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `tipologie_udm_view` AS
+	SELECT
+		tipologie_udm.id,
+		tipologie_udm.id_genitore,
+		tipologie_udm.ordine,
+		tipologie_udm.nome,
+		tipologie_udm.html_entity,
+		tipologie_udm.font_awesome,
+		tipologie_udm_path( tipologie_udm.id ) AS __label__
+	FROM tipologie_udm
+;
+
+--| 090000060000
+
+-- todo_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `todo_view`;
+
+--| 090000060001
+
+-- todo_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `todo_view` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		todo.id_pianificazione,
+		todo.data_archiviazione,
+		concat(
+			todo.nome,
+			' per ',
+			coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ),
+			' su ',
+			todo.id_progetto
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+;
+
+--| 090000062000
+
+-- udm_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `udm_view`;
+
+--| 090000062001
+
+-- udm_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW udm_view AS
+	SELECT
+		udm.id,
+		udm.id_tipologia,
+		tipologie_udm.nome AS tipologia,
+		coalesce( udm.id_udm, udm.id ) AS id_udm,
+		coalesce( udm.conversione, 1 ) AS conversione,
+		udm.nome,
+		udm.sigla,
+		udm.sigla AS __label__
+	FROM udm
+		LEFT JOIN tipologie_udm ON tipologie_udm.id = udm.id_tipologia
+;
+
+--| 090000063000
+
+-- valute_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `valute_view`;
+
+--| 090000063001
+
+-- valute_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-19 13:22 Fabio Mosti
+CREATE OR REPLACE VIEW valute_view AS
+	SELECT
+		valute.id,
+		valute.iso4217,
+		valute.html_entity,
+		valute.utf8,
+		valute.iso4217 AS __label__
+	FROM valute
+;
+
 --| FINE FILE

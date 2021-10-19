@@ -1,35 +1,45 @@
 
- /*!
+/*!
 
-    \page database_u database del framework, tabelle con la lettera U
+   \page database_u database del framework, tabelle con la lettera U
 
-    Dettagli delle tabelle del database del framework che iniziano con la lettera U.
+   Dettagli delle tabelle del database del framework che iniziano con la lettera U.
 
-    le tabelle del database di supporto UA - UZ
-    ===========================================
-    
-    udm
-    ---
-    Questa tabella di *supporto* ...
+   le tabelle del database di supporto UA - UZ
+   ===========================================
 
-    colonna                         | descrizione
-    --------------------------------|---------------------------------------------------------------------------------------
-    udm.id                          | l'ID che fa l'associazione fra l'unità di misura e la tipologia
-    udm.id_udm                      | l'ID dell'unità di misura
-    udm.id_tipologia                | l'ID della tipologia a cui si riferisce l'unità di misura
-    udm.conversione                 | 
-    udm.nome                        | 
-    udm.soprannome                  | 
-    udm.sigla                       | 
-   
-    La tabella ha le seguenti chiavi esterne:
+   udm
+   ---
+   Questa tabella di *supporto* contiene le unità di misura supportate dal framework.
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+   colonna                         | descrizione
+   --------------------------------|---------------------------------------------------------------------------------------
+   udm.id                          | l'ID dell'unità di misura
+   udm.id_tipologia                | l'ID della tipologia di grandezza cui si riferisce l'unità di misura
+   udm.id_udm                      | l'ID dell'unità di misura superiore
+   udm.conversione                 | il tasso di conversione nell'unità di misura superiore
+   udm.nome                        | il nome per esteso dell'unità di misura
+   udm.sigla                       | la sigla standard dell'unità di misura
+   udm.note                        | note aggiuntive sull'unità di misura
 
-    La vista *udm_view* relativa alla tabella *udm* presenta le seguenti colonne:
+   La tabella ha le seguenti chiavi esterne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+   chiave                          | campo                 | tabella e campo collegati   | comportamento
+   --------------------------------|-----------------------|-----------------------------|------------------------
+   udm_ibfk_01_nofollow            | id_tipologia          | tipologie_udm.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+   udm_ibfk_02_nofollow            | id_udm                | udm.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
 
-   */
+   La vista *udm_view* relativa alla tabella *udm* presenta le seguenti colonne:
+
+   colonna                              | descrizione
+   -------------------------------------|---------------------------------------------------------------------------------------
+   udm_view.id                          | -
+   udm_view.id_tipologia                | -
+   udm_view.tipologia                   | la tipologia di grandezza cui si riferisce l'unità di misura
+   udm_view.id_udm                      | -
+   udm_view.conversione                 | -
+   udm_view.nome                        | -
+   udm_view.sigla                       | -
+   udm_view.__label__                   | etichetta descrittiva dell'unità di misura
+
+*/

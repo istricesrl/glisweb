@@ -2511,4 +2511,63 @@ ALTER TABLE `tipologie_udm`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000060000
+
+-- todo
+-- tipologia: tabella gestita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `todo`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_cliente` (`id_cliente`), 
+	ADD KEY `id_indirizzo` (`id_indirizzo`), 
+	ADD KEY `id_luogo` (`id_luogo`), 
+	ADD KEY `id_contatto` (`id_contatto`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_pianificazione` (`id_pianificazione`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_indirizzo`,`id_luogo`,`data_scadenza`,`ora_scadenza`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`,`anno_programmazione`,`settimana_programmazione`,`data_chiusura`,`id_contatto`,`id_progetto`,`id_pianificazione`,`data_archiviazione`); 
+
+--| 030000060001
+
+-- todo
+-- tipologia: tabella gestita
+ALTER TABLE `todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000062000
+
+-- udm
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-19 13:02 Fabio Mosti
+ALTER TABLE `udm`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_udm`,`sigla`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_udm` (`id_udm`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_udm`,`conversione`,`nome`,`sigla`);
+
+--| 030000062001
+
+-- udm
+-- tipologia: tabella di supporto
+ALTER TABLE `udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000063000
+
+-- valute
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-19 13:21 Fabio Mosti
+ALTER TABLE `valute`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`iso4217`),
+	ADD KEY `indice` (`id`,`iso4217`,`html`,`utf8`);
+
+--| 030000063001
+
+-- valute
+-- tipologia: tabella di supporto
+ALTER TABLE `valute` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| FINE FILE

@@ -10,24 +10,26 @@
     
     valute
     ------
-    Questa tabella di *supporto* ...
+    Questa tabella di *supporto* contiene le valute supportate dal framework.
 
     colonna                        | descrizione
     -------------------------------|---------------------------------------------------------------------------------------
     valute.id                      | l'ID della valuta
-    valute.iso4217                 | codice standard internazionale impiegato per definire i nomi delle valute
-    valute.html                    | 
-    valute.utf8                    | 
+    valute.iso4217                 | codice ISO4217 della valuta
+    valute.html_entity             | entità HTML del simbolo della valuta
+    valute.utf8                    | simbolo della valuta in formato UTF8
    
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    La tabella non ha chiavi esterne.
 
     La vista *valute_view* relativa alla tabella *valute* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    valute_view.id                      | -
+    valute_view.iso4217                 | -
+    valute_view.html_entity             | -
+    valute_view.utf8                    | -
+    valute_view.__label__               | etichetta descrittiva della valuta
 
     variazioni_prezzi
     -----------------
