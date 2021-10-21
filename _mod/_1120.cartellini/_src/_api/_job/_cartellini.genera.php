@@ -21,25 +21,32 @@
             // status
             $status['info'][] = 'iterazione a vuoto su job già completato';
 
-        } 
-        elseif( !isset(  $job['workspace']['mese'] ) || !isset(  $job['workspace']['anno'] ) ){
+        } elseif( !isset(  $job['workspace']['mese'] ) || !isset(  $job['workspace']['anno'] ) ){
             $status['err'][] = 'mese o anno non settati';
-        }
-        else {
+        } else {
 
             // attività di avvio
             if( empty( $job['corrente'] ) ) {
 
+                // logiche di calcolo...
+                $mese = $job['workspace']['mese'];
+                $anno = $job['workspace']['anno'];
+
                 $status['result'] = mysqlSelectColumn(
 				    'id',
                     $cf['mysql']['connection'],
-                    'SELECT id FROM anagrafica_view WHERE se_collaboratore = 1'
+                    'SELECT id FROM contratti_view WHERE data_inizio <= ? AND  ( data_fine_rapporto IS NULL OR data_fine_rapporto >= ? )',
+                    array(
+                        array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
+                        array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-31") ) )
+                    )
+
                 );
                              
-                // creo la lista degli operatori da lavorare
+                // creo la lista dei contratti attivi su cui generare cartellini teorici
                 $job['workspace']['list'] = $status['result'];
 
-                // segno il totale degli operatori da lavorare
+                // segno il totale dei contratti da lavorare
                 $job['totale'] = count( $job['workspace']['list'] );
 
                 // avvio il contatore
@@ -70,7 +77,7 @@
             // aggiusto l'indice di lavoro (gli array partono da zero)
             $widx = $job['corrente'] - 1;
 
-            // ricavo l'ID del progetto corrente
+            // ricavo l'ID del contratto corrente
             $cid = $job['workspace']['list'][ $widx ];
 			
 		// logiche di calcolo...
@@ -92,20 +99,6 @@
                 $data = date( 'Y-m-d', strtotime("$anno-$mese-$giorno") );
                 // numero da 1 a 7, se la funzione date restituisce 0 (domenica) setto 7 per uniformità con i giorni degli orari_contratti
 			    $numgiorno = ( date( 'w', strtotime("$anno-$mese-$giorno") ) == 0 ) ? '7' : date( 'w', strtotime("$anno-$mese-$giorno") );
-    
-                // ricavo il contratto attivo alla data corrente
-                $contratto = mysqlSelectValue(
-                    $cf['mysql']['connection'], 
-                    'SELECT id FROM contratti WHERE id_anagrafica = ? AND data_inizio <= ? AND  ( '.
-                    'data_fine_rapporto IS NULL OR data_fine_rapporto >= ? )  ) ' .
-                    ') ORDER BY id DESC LIMIT 1',
-                    array(
-                        array( 's' => $cid ),
-                        array( 's' => $data ),
-                        array( 's' => $data ),
-                        array( 's' => $data )
-                    )
-                );
     
                 if( !empty( $contratto ) ){
     
