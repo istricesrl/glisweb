@@ -35,7 +35,7 @@
                 $status['result'] = mysqlSelectColumn(
 				    'id',
                     $cf['mysql']['connection'],
-                    'SELECT id FROM contratti_view WHERE data_inizio <= ? AND  ( data_fine_rapporto IS NULL OR data_fine_rapporto >= ? )',
+                    'SELECT id FROM cartellini WHERE data_attivita >= ? AND  data_attivita <= ?',
                     array(
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-31") ) )
@@ -84,86 +84,31 @@
             $mese = $job['workspace']['mese'];
             $anno = $job['workspace']['anno'];
 
-            // costruisco l'elenco giorni partendo da mese e anno
-            $giorni = array();
-            for( $d=1; $d<=31; $d++ )
-            {
-                $time=mktime(12, 0, 0, $mese, $d, $anno);          
-                if (date('m', $time) == $mese){   
-                    $giorni[] = intval( date('d', $time) );
-                }
-            }
-
-            foreach( $giorni as $giorno ){
-
-                $data = date( 'Y-m-d', strtotime("$anno-$mese-$giorno") );
-                // numero da 1 a 7, se la funzione date restituisce 0 (domenica) setto 7 per uniformità con i giorni degli orari_contratti
-			    $numgiorno = ( date( 'w', strtotime("$anno-$mese-$giorno") ) == 0 ) ? '7' : date( 'w', strtotime("$anno-$mese-$giorno") );
-    
-                // recupero i dati del contratto
-                $contratto = mysqlSelectValue(
-                    $cf['mysql']['connection'], 
-                    'SELECT * FROM contratti WHERE id = ? ',
-                    array( array( 's' => $cid ) )
-                );
-
-                if( !empty( $contratto ) ){
-    
-                    // verifico se la data corrente è nella tabella turni e ricavo il turno corrispondente
-                    $turno = mysqlSelectValue(
+            // recupero i dati del contratto
+            $cartellino = mysqlSelectValue(
                         $cf['mysql']['connection'], 
-                        'SELECT turno FROM turni WHERE id_contratto = ? AND (data_inizio <= ? AND data_fine >= ?) ORDER BY id DESC LIMIT 1',
-                        array( 
-                            array( 's' => $cid ),
-                            array( 's' => $data ),
-                            array( 's' => $data )
-                        )
-                    );
-                
-    
-                    // se ci sono turni devo considerare la tabella turni e vedere se la data corrente è in essi
-                    if( empty( $turno ) ){
-                        $turno = 1;
-                    }
-    
-                    // ore previste da contratto per quel giorno
-                    $orecontratto = mysqlQuery(
-                        $cf['mysql']['connection'], 
-                        'SELECT tipologie_attivita_inps.id AS id_tipologia_inps, sum( time_to_sec( timediff( ora_fine, ora_inizio ) ) / 3600 ) as tot_ore FROM orari_contratti ' .
-                        'LEFT JOIN costi_contratti ON orari_contratti.id_costo = costi_contratti.id ' .
-                        'LEFT JOIN tipologie_attivita_inps ON costi_contratti.id_tipologia = tipologie_attivita_inps.id ' .
-                        'WHERE orari_contratti.se_lavoro = 1 ' .
-                        'AND orari_contratti.id_giorno = ? ' . 
-                        'AND orari_contratti.id_contratto = ? AND orari_contratti.turno = ? '.
-                        'GROUP BY tipologie_attivita_inps.id' ,
-                        array(
-                            array( 's' => $numgiorno ),
-                            array( 's' => $cid ),
-                            array( 's' => $turno )
-                        )
-                    );
+                        'SELECT * FROM contratti WHERE id = ? ',
+                        array( array( 's' => $cid ) ) );
 
-                    // genero i cartellini
-                    if( !empty ( $orecontratto ) ){
-                        foreach ( $orecontratto as $oc ){
+                    // TODO: ore effettive per ogni cartellino
+                    $ore = mysqlQuery();
+
+                    // TODO aggiorno i cartellini
+                    if( !empty ( $ore ) ){
+                        foreach ( $ore as $o ){
                            
                             $cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                            'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                            'UPDATE cartellini ore_fatte = ? WHERE id = ? AND id_tipologia_inps = ? ',
                             array( 
-                                array( 's' => $contratto['id_anagrafica'] ), 
+                              /*  array( 's' => $contratto['id_anagrafica'] ), 
                                 array( 's' => $data ),
-                                array( 's' => $oc['id_tipologia_inps'] ),
-                                array( 's' => $oc['tot_ore'] ),  
-                                array( 's' => time() ) ) 
+                                array( 's' => $o['id_tipologia_inps'] ),
+                                array( 's' => $o['tot_ore'] ),  
+                                array( 's' => time() ) ) */
                             );
                             
                         }
                     }
-    
-                }
-    
-
-            }
           
 
             // status
