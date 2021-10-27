@@ -48,7 +48,7 @@
 			<div class="form-group form-row">
 				<div class="col-12 col-md-2">
 					<span class="label-top">tipologia</span>
-					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
+					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
 				</div>		
 				<div class="col">
 					<span class="label-top">descrizione</span>
@@ -77,6 +77,10 @@
 						<span class="label-top">ore</span>
 						{{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '','0.25' ) }}
 					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">esecutore</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+					</div>
 
 				</div>
 				<div class="form-group form-row">
@@ -97,15 +101,15 @@
 			<div class="form-group form-row">
 				<div class="col-12 col-md-6">
 					<span class="label-top">ticket</span>
-					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, '', '','','','','ticket.form','ticket.form','todo', 'id_todo', page, pages, ietf,'ticket' ) }}
+					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.todo, request, '', '','','','','ticket.form','ticket.form','todo', 'id_todo', page, pages, ietf,'ticket' ) }}
 				</div>
 				<div class="col-12 col-md-6">
 					<span class="label-top">progetto</span>
-					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
+					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.progetti, request, '', '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
 				</div>
 				<div class="col-12 col-md-6">
 					<span class="label-top">cliente</span>
-					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
+					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.clienti, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
 				</div>
 				<div class="col-12 col-md-6">
 					<span class="label-top">indirizzo</span>
