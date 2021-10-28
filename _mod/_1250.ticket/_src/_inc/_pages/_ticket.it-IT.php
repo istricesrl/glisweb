@@ -31,11 +31,13 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'ticket.form', 
 														'ticket.form.attivita',
+														'ticket.form.file',
 														'ticket.form.archiviazione',
 														'ticket.form.tools' 
 													) )
 	);
 
+	// gestione ticket vista attività
 	$p['ticket.form.attivita'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'attivita' ),
@@ -45,6 +47,19 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_ticket.form.attivita.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['ticket.form']['etc']['tabs'] )
+	);
+
+	// gestione ticket file
+	$p['ticket.form.file'] = array(
+		'sitemap'	=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'	=> array( 'id'		=> 'ticket.view' ),
+		'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ticket.form.file.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_ticket.form.file.php' ),
+		'etc'		=> array( 'tabs'	=> $p['ticket.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
 	// gestione ticket tools
@@ -97,3 +112,4 @@
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.ticket.form' ) )
 	);
+

@@ -24,20 +24,18 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
         'data_attivita' => 'esecuzione',
+        'tipologia' => 'tipologia',
 	    '__label__' => 'attività',
 	    'anagrafica' => 'svolta da',
-	    'ore' => 'ore',
-        'testo' => 'testo',
-        'note_interne' => 'note_interne'
     );
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
-	    'anagrafica' => 'text-left no-wrap',
-        'note_interne' => 'd-none',
-        'testo' => 'd-none'
+        'data_attivita' => 'text-left',
+        'tipologia' => 'text-left',
+	    'anagrafica' => 'text-left no-wrap'
     );
     
     // pagina per la gestione degli oggetti esistenti

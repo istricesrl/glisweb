@@ -18,7 +18,7 @@
      */
 
     // tabella della vista
-    $ct['view']['table'] = 'ticket';
+    $ct['view']['table'] = 'ticket_archivio';
     
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'ticket.form';
@@ -27,8 +27,9 @@
 	$ct['view']['open']['table'] = 'todo';
 
      // campi della vista
-	$ct['view']['cols'] = array(
+	 $ct['view']['cols'] = array(
 	    'id' => '#',
+		'tipologia' => 'tipologia',
 	    'nome' => 'titolo',
 	    'cliente' => 'da fare per',
 	    'responsabile' => 'assegnato a',
@@ -40,15 +41,14 @@
 	    'id' => 'd-none d-md-table-cell',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
+		'tipologia' => 'text-left',
 	    'responsabile' => 'text-left no-wrap d-none d-sm-table-cell',
 	    'completato' => 'text-left'
 	);
 
-    // inclusione filtri speciali
-#	$ct['etc']['include']['filters'] = 'inc/todo.view.filters.html';
-
     // tendina clienti
-	$ct['etc']['select']['clienti'] = mysqlCachedQuery(
+	$ct['etc']['select']['clienti'] =  mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static WHERE se_interno = 1 OR se_cliente = 1');
@@ -57,15 +57,10 @@
 	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view WHERE se_ticket = 1' );
+        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_ticket = 1' );
    
 	// macro di default
     require DIR_SRC_INC_MACRO . '_default.view.php';
-    
-    // preset filtro custom ticket completati
-	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] ) ) {
-	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['completato']['EQ'] = 1;
-    }
     
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) ){
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] = '__tutti__'; 
@@ -73,11 +68,8 @@
 
 	if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-			if( $row['completato'] == 1 ){ $row['completato']='chiuso';  }
-			else {
-			if( $row['completato'] == 0 ){ $row['completato']='aperto';  }
+			if( $row['completato'] == 2 ){ $row['completato']='chiuso';  }
 			else { $row['completato']='';  }
-			}
 		}
 	}
     
