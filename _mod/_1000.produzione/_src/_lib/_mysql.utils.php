@@ -175,7 +175,7 @@
             'SELECT count(*) FROM orari_contratti '
             .'WHERE orari_contratti.se_disponibile = 1 '
             .'AND orari_contratti.id_contratto = ? '
-            .'AND orari_contratti.id_giorno = ? '
+            .'AND ( orari_contratti.id_giorno = ? OR orari_contratti.id_giorno IS NULL ) '
             .'AND orari_contratti.ora_inizio <= ? AND orari_contratti.ora_fine >= ? ',
             array(
                 array( 's' => $cId ),
