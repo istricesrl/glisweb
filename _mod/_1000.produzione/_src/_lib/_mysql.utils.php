@@ -188,7 +188,7 @@
         $result['disponibile'] = $disponibile;
 
         if( $disponibile > 0 ){
-            $punti = 50;
+            $punti = 100;
         }
 
         //return $result;
