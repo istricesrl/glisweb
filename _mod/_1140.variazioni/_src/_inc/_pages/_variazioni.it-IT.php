@@ -14,10 +14,23 @@
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_variazioni.view.php' ),
-		'etc'			=> array( 'tabs'	=> array(	'variazioni.view' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'variazioni.view', 'periodi.variazioni.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'variazioni' ),
 																		'priority'	=> '115' ) ) )	
+	);
+
+
+	// vista periodi variazioni
+	$p['periodi.variazioni.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'periodi variazioni' ),
+	    'h1'			=> array( $l		=> 'periodi' ),
+	    'parent'		=> array( 'id'		=> 'produzione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_periodi.variazioni.view.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff', 'rop' ) ),
+		'etc'			=> array( 'tabs'	=> $p['variazioni.view']['etc']['tabs'] )
 	);
 
     

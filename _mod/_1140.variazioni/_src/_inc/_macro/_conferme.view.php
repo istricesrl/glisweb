@@ -23,7 +23,9 @@
     
     // id della vista
    # $ct['view']['id'] = md5( $ct['view']['table'] );
-
+    $ct['view']['id'] = md5(
+        $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
+    );
 
     // tendina operatori
 	$ct['etc']['select']['operatori'] = mysqlCachedQuery(
@@ -32,7 +34,7 @@
         'SELECT DISTINCT id_anagrafica as id, anagrafica as __label__ FROM sostituzioni_attivita_view'
     );
 
-    require DIR_SRC_INC_MACRO . '_default.view.php';
+#    require DIR_SRC_INC_MACRO . '_default.view.php';
 
     if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && !empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) ) 
 	{
