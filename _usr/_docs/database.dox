@@ -11,6 +11,13 @@
     contiene i dati di funzionamento del framework è detto database di supporto, mentre gli altri sono detti
     database di lavoro.
 
+    Le tabelle del database di supporto si dividono in tre categorie secondo la politica di aggiornamento dei dati
+    da parte dell'utente:
+
+    - tabelle di supporto
+    - tabelle assistite
+    - tabelle di lavoro
+
     le tabelle di supporto
     ----------------------
     Il database di supporto contiene dati strutturali come lingue, geografia, fusi orari, unità di misura,
@@ -29,6 +36,12 @@
     prima e dopo il file _195.localization.php. La struttura dei dati nel database non corrisponde sempre
     esattamente a quella degli array del framework, ma si è cercato di tenerle il più simili possibile per
     semplificarne la lettura e la gestione e a tendere si cercherà di farle convergere con gli aggiornamenti.
+
+    le tabelle assistite
+    --------------------
+
+    le tabelle di lavoro
+    --------------------
 
     tabelle e view
     --------------
@@ -68,13 +81,18 @@
 
 
 
+    auto follow delle chiavi esterne
+    --------------------------------
+
+
+
     le tabelle del database di supporto
     ===================================
     In questa sezione descriviamo tabella per tabella l'intero database di supporto del framework.
 
     account
     -------
-    Questa tabella contiene gli account presenti nel deploy corrente; è fondamentale per consentire il login degli utenti.
+    Questa tabella *gestita* contiene gli account presenti nel deploy corrente; è fondamentale per consentire il login degli utenti.
 
     colonna                         | descrizione
     --------------------------------|---------------------------------------------------------------------------------------
@@ -94,6 +112,15 @@
     INSERT INTO `account` (`id`, `id_anagrafica`, `id_mail`, `username`, `password`, `se_attivo`)
     VALUES (NULL, NULL, NULL, '<username>', MD5('<password>'), '1');
     \endcode
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                        | campo                        | tabella e campo collegati
+    ------------------------------|------------------------------|-----------------------------------------------------
+    account_ibfk_1_nofollow       | id_anagrafica                | anagrafica.id
+    account_ibfk_4_nofollow       | id_mail                      | mail.id
+    account_ibfk_2_nofollow       | id_account_inserimento       | account.id
+    account_ibfk_3_nofollow       | id_account_aggiornamento     | account.id
 
     La vista account_view relativa alla tabella account presenta le seguenti colonne:
 
@@ -118,7 +145,7 @@
 
     account_gruppi
     --------------
-    Questa tabella mette in relazione molti a molti l'entità principale account con la secondaria gruppi.
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale account con la secondaria gruppi.
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
@@ -134,6 +161,13 @@
     INSERT INTO `account_gruppi` (`id`, `id_account`, `id_gruppo`) VALUES (NULL, '<idAccount>', '<idGruppo>');
     \endcode
 
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                           | campo                        | tabella e campo collegati
+    ---------------------------------|------------------------------|-----------------------------------------------------
+    account_gruppi_ibfk_1            | id_account                   | account.id
+    account_gruppi_ibfk_2_nofollow   | id_gruppo                    | gruppi.id
+
     La vista account_gruppi_view relativa alla tabella account_gruppi presenta le seguenti colonne:
 
     colonna                                   | descrizione
@@ -143,6 +177,105 @@
     account_gruppi_view.id_gruppo             | vedi campo corrispondente sulla tabella relativa
     account_gruppi_view.se_amministratore     | vedi campo corrispondente sulla tabella relativa
     account_gruppi_view.__label__             | -
+
+    account_gruppi_attribuzione
+    ---------------------------
+    Questa tabella *gestita* innesca l'attribuzione automatica di un'entità a un gruppo quando questa viene creata dall'account associato.
+
+    colonna                                  | descrizione
+    -----------------------------------------|---------------------------------------------------------------------------------------
+    account_gruppi_attribuzione.id           | l'ID della regola di attribuzione
+    account_gruppi_attribuzione.id_account   | l'ID dell'account coinvolto nella regola
+    account_gruppi_attribuzione.id_gruppo    | l'ID del gruppo a cui attribuire l'entità
+    account_gruppi_attribuzione.entita       | il nome dell'entità per cui vale la regola
+
+    Per inserire rapidamente una regola di attribuzione automatica si può utilizzare il seguente codice SQL sostituendo
+    <idAccount>, <idGruppo> e <nomeEntità> con i valori desiderati:
+
+    \code{.sql}
+    INSERT INTO `account_gruppi_attribuzione` (`id`, `id_account`, `id_gruppo`, `entita`) VALUES (NULL, '<idAccount>', '<idGruppo>', '<nomeEntità>');
+    \endcode
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati
+    ----------------------------------------------|------------------------------|-----------------------------------------------------
+    account_gruppi_attribuzione_ibfk_1            | id_account                   | account.id
+    account_gruppi_attribuzione_ibfk_2_nofollow   | id_gruppo                    | gruppi.id
+
+    La vista account_gruppi_attribuzione_view relativa alla tabella account_gruppi_attribuzione presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    account_gruppi_attribuzione_view.id                    | vedi campo corrispondente sulla tabella relativa
+    account_gruppi_attribuzione_view.id_account            | vedi campo corrispondente sulla tabella relativa
+    account_gruppi_attribuzione_view.id_gruppo             | vedi campo corrispondente sulla tabella relativa
+    account_gruppi_attribuzione_view.entita                | vedi campo corrispondente sulla tabella relativa
+    account_gruppi_attribuzione_view.__label__             | -
+
+    anagrafica
+    ----------
+    Questa tabella *gestita* contiene i dati anagrafici.
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    id                                   |
+    codice                               |
+    id_tipologia                         |
+    nome                                 |
+    cognome                              |
+    denominazione                        |
+    soprannome                           |
+    sesso                                |
+    id_orientamento_sessuale             |
+    codice_fiscale                       |
+    partita_iva                          |
+    codice_sdi                           |
+    id_pec_sdi                           |
+    id_regime_fiscale                    |
+    note_amministrative                  |
+    luogo_nascita                        |
+    stato_nascita                        |
+    id_stato_nascita                     |
+    comune_nascita                       |
+    giorno_nascita                       |
+    mese_nascita                         |
+    anno_nascita                         |
+    id_diritto                           |
+    id_tipologia_crm                     |
+    id_agente                            |
+    note_commerciali                     |
+    condizioni_vendita                   |
+    condizioni_acquisto                  |
+    note                                 |
+    data_cessazione                      |
+    note_cessazione                      |
+    recapiti                             |
+    id_account_inserimento               |
+    se_importata                         |
+    se_stampa_privacy                    |
+    timestamp_inserimento                |
+    id_account_aggiornamento             |
+    timestamp_aggiornamento              |
+
+    anagrafica_archiviati
+    ---------------------
+    Questa tabella *virtuale* contiene le anagrafiche cessate.
+
+    anagrafica_categorie
+    --------------------
+
+    anagrafica_cittadinanze
+    -----------------------
+
+    anagrafica_settori
+    ------------------
+
+    categorie_anagrafica
+    --------------------
+
+    comuni
+    ------
 
     gruppi
     ------
@@ -169,9 +302,27 @@
     gruppi_view.nome                     | vedi campo corrispondente sulla tabella relativa
     gruppi_view.__label__                | -
 
+    immagini
+    --------
+
+    immagini_anagrafica
+    -------------------
+
+    indirizzi
+    ---------
+
+    mail
+    ----
+
+    mail_out
+    --------
+
+    mail_sent
+    ---------
+
     redirect
     --------
-    Questa tabella contiene i redirect presenti nel deploy corrente.
+    Questa tabella *gestita* contiene i redirect presenti nel deploy corrente.
 
     colonna                              | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
@@ -193,5 +344,14 @@
     redirect.sorgente                    | vedi campo corrispondente sulla tabella relativa
     redirect.destinazione                | vedi campo corrispondente sulla tabella relativa
     redirect.__label__                   | -
+
+    telefoni
+    --------
+
+    template_mail
+    -------------
+
+    test
+    ----
 
 */

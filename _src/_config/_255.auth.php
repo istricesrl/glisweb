@@ -41,5 +41,3 @@
 	// print_r( $_SESSION['account']['permissions'] );
 	// print_r( $cf['auth'] );
 	// echo $cf['auth']['status'];
-
-?>

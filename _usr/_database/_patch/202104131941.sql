@@ -1,0 +1,1 @@
+ALTER TABLE `__acl_attivita__` ADD CONSTRAINT `__acl_attivita___ibfk_1_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

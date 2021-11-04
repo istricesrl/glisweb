@@ -1,0 +1,1 @@
+ALTER TABLE `turni` ADD FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;

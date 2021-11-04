@@ -1,4 +1,4 @@
-<div id="info">
+<div id="info" class="slide-info">
     <h2>GlisWeb framework</h2>
     {% if site.license %}<p><strong>{{ site.license }}</strong></p>{% endif %}
     <p>versione corrente
@@ -9,6 +9,8 @@
         {% if session.account.gruppi %} ({{ session.account.gruppi|join(', ') }}){% endif %}</p>
     <p>ultima attività
         <strong>{{ session.used|date('Y-m-d H:i:s') }}</strong></p>
+    <p>stage corrente
+        <strong>{{ site.status }}</strong></p>
     <p>breakpoint corrente
         <strong class="d-inline-block d-sm-none">XS</strong>
         <strong class="d-none d-sm-inline-block d-md-none">SM</strong>
@@ -17,6 +19,8 @@
         <strong class="d-none d-xl-inline-block">XL</strong></p>
     <p>memoria utilizzata
         <strong>{{ debug.mem.now.php }}</strong></p>
+    <p>MySQL
+        <strong>{% if mysql.connection %}connesso{% else %}non connesso{% endif %}</strong></p>
     <p>memcache
         <strong>{% if memcache.stat %}utilizzati {{ memcache.stat.usage }} ({{ memcache.stat.percent }}){% else %}inattivo{% endif %}</strong></p>
     <p>leggi la

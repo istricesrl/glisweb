@@ -18,6 +18,9 @@
     // debug
 	// print_r( $cf['contents']['pages'] );
 
+	// cache della timestamp di aggiornamento
+	memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] );
+
     // cache delle pagine
 #11	if( $cf['pages']['cacheable'] == true ) {
 	if( $cf['contents']['cached'] === false ) {
@@ -27,13 +30,13 @@
 
 		    // scrittura della cache
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_KEY, $cf['contents']['pages'] );
-			memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] );
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_TREE_KEY, $cf['contents']['tree'] );
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_INDEX_KEY, $cf['contents']['index'] );
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY, $cf['contents']['shortcuts'] );
+			memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_CACHED, time() );
 
 		    // timer
-			timerCheck( $cf['speed'], ' -> fine scrittura cache pagine' );
+			timerCheck( $cf['speed'], '-> fine scrittura cache pagine' );
 
 #11	} else {
 
@@ -45,7 +48,7 @@
 			logWrite( 'struttura delle pagine scritta in cache', 'speed', LOG_ERR );
 
 	    // timer
-#11		timerCheck( $cf['speed'], ' -> fine lettura cache pagine' );
+#11		timerCheck( $cf['speed'], '-> fine lettura cache pagine' );
 
 		} else {
 
@@ -70,5 +73,3 @@
 	// print_r( $cf['contents']['index'] );
 	// print_r( $cf['contents']['pages']['licenza']['content'] );
 	// echo $cf['contents']['updated'];
-
-?>

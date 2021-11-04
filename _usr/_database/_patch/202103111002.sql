@@ -1,0 +1,1 @@
+ALTER TABLE `risorse_anagrafica` CHANGE `id_documento` `id_risorsa` INT(11) NOT NULL;

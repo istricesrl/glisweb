@@ -42,7 +42,10 @@
 	    ),
 	    'log' => array(
 		'label' => 'gestione di log e storage'
-	    )
+	    ),
+		'static' => array(
+			'label' => 'gestione delle viste statiche'
+		)
 	);
 
     // aggiornamento cache
@@ -79,35 +82,6 @@
 	    timerCheck( $cf['speed'], '-> cache Twig' );
 	}
 
-	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM mail_sent LIMIT 1' ) > 0 ) {
-	    $ct['page']['contents']['metro']['mail'][] = array(
-		'ws' => $base . 'mail.queue.clean.sent',
-		'icon' => NULL,
-		'fa' => 'fa-envelope',
-		'title' => 'svuotamento coda mail inviate',
-		'text' => 'cancella la coda delle mail inviate'
-	    );
-	    timerCheck( $cf['speed'], '-> mail in uscita' );
-	}
-
-	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM mail_out LIMIT 1' ) > 0 ) {
-	    $ct['page']['contents']['metro']['mail'][] = array(
-		'ws' => $base . 'mail.queue.clean.out',
-		'icon' => NULL,
-		'fa' => 'fa-envelope-o',
-		'title' => 'svuotamento coda mail in uscita',
-		'text' => 'cancella la coda delle mail in uscita'
-	    );
-	    $ct['page']['contents']['metro']['mail'][] = array(
-		'ws' => $base . 'mail.queue.send?hard=1',
-		'icon' => NULL,
-		'fa' => 'fa-share-square-o',
-		'title' => 'elabora coda mail in uscita',
-		'text' => 'forza elaborazione della coda delle mail in uscita'
-	    );
-	    timerCheck( $cf['speed'], '-> mail inviate' );
-	}
-
 	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM sms_sent LIMIT 1' ) > 0 ) {
 	    $ct['page']['contents']['metro']['sms'][] = array(
 		'ws' => $base . 'sms.queue.clean.sent',
@@ -132,13 +106,20 @@
 
 	if( count( glob( DIR_VAR_LOG . '{*/,}*.log', GLOB_BRACE ) ) > 0 ) {
 	    $ct['page']['contents']['metro']['log'][] = array(
-		'ws' => $base . 'log.clean',
-		'icon' => NULL,
-		'fa' => 'fa-trash-o',
-		'title' => 'pulizia dei log',
-		'text' => 'cancella i log base del framework'
+			'ws' => $base . 'log.clean',
+			'icon' => NULL,
+			'fa' => 'fa-trash-o',
+			'title' => 'pulizia dei log',
+			'text' => 'cancella i log base del framework'
 	    );
-	    timerCheck( $cf['speed'], '-> controllo log' );
+	    $ct['page']['contents']['metro']['log'][] = array(
+			'ws' => $base . 'log.clean?hard=1',
+			'icon' => NULL,
+			'fa' => 'fa-trash',
+			'title' => 'pulizia totale dei log',
+			'text' => 'cancella tutti i log del framework'
+			);
+		timerCheck( $cf['speed'], '-> controllo log' );
 	}
 
 	if( count( glob( DIR_TMP . '*' ) ) > 0 ) {
@@ -152,8 +133,33 @@
 	    timerCheck( $cf['speed'], '-> controllo file temporanei' );
 	}
 
+	if( count( glob( DIR_ETC_SITEMAP . 'sitemap.*.{xml,csv}', GLOB_BRACE ) ) > 0 ) {
+	    $ct['page']['contents']['metro']['cache'][] = array(
+			'ws' => $base . 'sitemap.clean',
+			'icon' => NULL,
+			'fa' => 'fa-file-code-o',
+			'title' => 'pulizia delle sitemap',
+			'text' => 'forza la cancellazione delle sitemap'
+	    );
+	}
+
+	$ct['page']['contents']['metro']['static'][] = array(
+		'modal' => array('id' => 'refresh', 'include' => 'bin/refresh.view.static.html', 'onclick' => 'updateButton();'),
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'ripopola view static',
+		'text' => 'ripopola una o tutte le view static presenti nel database'
+	    );
+
+	// elenco delle view statiche
+	$ct['etc']['static_view'] = mysqlCachedQuery(	   
+		$cf['memcache']['connection'], 
+		$cf['mysql']['connection'], 
+		'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME like "%_static"');	
+
     // debug
 	// print_r( $_SESSION );
 	// echo DIRECTORY_CACHE . 'twig';
 
-?>
+	// macro di default
+    require DIR_SRC_INC_MACRO . '_default.tools.php';

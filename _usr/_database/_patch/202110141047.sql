@@ -1,0 +1,1 @@
+ALTER TABLE `menu` ADD `id_notizia` INT NULL DEFAULT NULL AFTER `id_articolo`, ADD `id_categoria_notizie` INT NULL DEFAULT NULL AFTER `id_notizia`,  ADD INDEX `id_notizia` (`id_notizia`), ADD INDEX `id_categoria_notizie` (`id_categoria_notizie`);

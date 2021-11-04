@@ -1,0 +1,367 @@
+
+{# MACRO PER LA RAPPRESENTAZIONE DEI CONTENUTI #}
+{# NOTA: IMPORTARE SEMPRE COME CNT #}
+
+{% macro picture( img, lang, site, set, alt, pictureclass, imgclass ) %}
+{% if img.path %}
+{% set path = img.path %}
+{% set path_alternativo = img.path_alternativo %}
+{% set orientamento = img.orientamento %}
+{% set mime = img.mimetype %}
+{% else %}
+{% set path = img %}
+{% set mime = 'image/' ~ path|split('.')|last|replace({'jpg':'jpeg'}) %}
+{% set orientamento = 'L' %}
+{% endif %}
+<picture class="{% if pictureclass %}{{ pictureclass }}{% endif %}">
+    {% if not orientamento or path_alternativo or orientamento == 'L' %}
+    <source
+	type="image/webp"
+	{% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
+	srcset="{% if set.formats %}{% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+    <source
+	type="{{ mime }}"
+	{% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
+	srcset="{% if set.formats %}{% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+    {% endif %}
+    {% if not orientamento or path_alternativo or orientamento == 'P' %}
+    <source
+	type="image/webp"
+	{% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
+	srcset="{% if set.formats %}{% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+    <source
+	type="{{ mime }}"
+	{% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
+	srcset="{% if set.formats %}{% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+    {% endif %}
+    <img data-src="{{ site.root }}{{ path|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}" alt="{% if alt %}{{ alt }}{% else %}{{ img.alt }}{% endif %}" class="img-fluid{% if imgclass %} {{ imgclass }}{% endif %} lazyload">
+</picture>
+{% endmacro %}
+
+{% macro image( page, lang, site, role, num, set, pictureclass, imgclass ) %}
+{% import _self as cms %}
+{{ cms.picture( page.contents.images[ role ][ num ], lang, site, set, pictureclass, imgclass ) }}
+{% endmacro %}
+
+{% macro video( page, lang, site, role, num ) %}
+{% if page.contents.video[ role ][ num ].id_tipologia_embed == 3 %}
+{% if not page.contents.video[ role ][ num ].ratio %}{% set rt = '16by9' %}{% else %}{% set rt = page.contents.video[ role ][ num ].ratio %}{% endif %}
+<div class="embed-responsive embed-responsive-{{ rt }}">
+    <iframe class="embed-responsive-item lazyload" data-src="https://www.youtube.com/embed/{{ page.contents.video[ role ][ num ].codice_embed }}?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+</div>
+{% elseif page.contents.video[ role ][ num ].id_tipologia_embed == 2 %}
+VIMEO
+{% else %}
+<video controls width="100%">
+    <source src="{{ site.root }}{{ page.contents.video[ role ][ num ].path }}" type="video/mp4">
+</video>
+{% endif %}
+{% endmacro %}
+
+{% macro audio( site, page, ruolo, ordine ) %}
+<audio controls>
+    <source src="{{ site.root }}{{ page.contents.audio[ ruolo ][ ordine ].path }}" type="audio/mpeg">
+</audio>
+{% endmacro %}
+
+{% macro cardSlider( page, lang, site, name, images, auto, set ) %}
+{# richiede https://kenwheeler.github.io/slick/ #}
+{% import _self as cms %}
+<div class="slider responsive" id="{{ name }}">
+    {% set i = 0 %}
+    {% for img in page.contents.images.card %}
+    <div class="col-12 col-md-4 {{ name }}-hover">
+	<div class="index-card d-flex align-items-center" data-card-index="{{ i }}">
+	    {% if images and set %}
+	    <div class="col-md-12 text-center">
+		{{ cms.picture( img, lang, site, set ) }}
+	    </div>
+	    {% endif %}
+	    <div class="col-md-12 text-center">
+		{{ img.h1[ lang ] }}
+	    </div>
+	</div>
+	<div>
+	    <p>{{ img.cappello[ lang ]|raw }}</p>
+	</div>
+    </div>
+    {% set i = i + 1 %}
+    {% endfor %}
+</div>
+{{ cms.slickSlider( name, auto ) }}
+{% endmacro %}
+
+{% macro subpageCardSlider( page, pages, lang, site, name, auto, set ) %}
+{% import _self as cms %}
+{% set cards = [] %}
+{% for v in page.children.id %}
+{% if pages[ v ].metadati.ruolo == 'cardslider' %}
+{% set cards = cards|merge( { ( v ) : pages[ v ] } ) %}
+{% endif %}
+{% endfor %}
+<div id="{{ name }}" class="slider responsive" ex=" d-flex justify-content-around align-items-stretch">
+    {% set i = 0 %}
+    {% for k,v in cards|sort( ( a,b ) => a.metadati.ordine <=> b.metadati.ordine and b.metadati.ordine != '' ) %}
+    <div class="col-12 col-md-3">
+	<a href="{{ v.url[ lang ] }}" class="index-card d-flex h-100" data-card-index="{{ i }}">
+		{% if v.contents.images.card %}{{ cms.picture( v.contents.images.card|first.path, lang, site, set ) }}{% endif %}
+		<div class="card-body">
+		    <h5 class="card-title">{{ v.h1[ lang ] }}</h5>
+		    <div class="card-text">{{ v.cappello[ lang ] }}</div>
+		</div>
+	</a>
+    </div>
+    {% set i = i + 1 %}
+    {% endfor %}
+</div>
+{{ cms.slickSlider( name, auto ) }}
+{% endmacro %}
+
+{% macro slickSlider( id, auto ) %}
+<script defer type="text/javascript">
+window.addEventListener( 'DOMContentLoaded', function() {
+   $('#{{ id }}').slick({
+        dots: false,
+        infinite: true,
+        autoplay: {% if auto %}true{% else %}false{% endif %},
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        responsive: [{
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: 1
+        }
+        }, {
+            breakpoint: 600,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2
+            }
+        }, {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+            }
+        }]
+    });
+});
+</script>
+{% endmacro %}
+
+{% macro cardRack( page, lang, site, name, set ) %}
+{% import _self as cms %}
+<div class="row">
+    {% for img in page.contents.images.card %}
+    <div class="col-12 col-md-6">
+	<div class="card" style="">
+	    {{ cms.picture( img, lang, site, set ) }}
+	    <div class="col-12 d-flex justify-content-center centered">{{ img.h1[ lang ] }}</div>
+	    <div>
+		<p>{{ img.cappello[ lang ]|raw }}</p>
+	    </div>
+	</div>
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro jumbotron( page, lang, site, name, class, img ) %}
+{% import _self as cms %}
+<div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); background-size: cover; background-position: center;">
+    <div class="container">
+		<div class="row">
+			<div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">
+				{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% endif %}
+				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1_href %}</a>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+				{% if page.metadati.jt_content[ lang ] %}
+				<div class="contents">
+					{{ page.metadati.jt_content[ lang ]|raw }}
+					{% if page.metadati.jt_action[ lang ] %}
+					<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
+					{% endif %}
+				</div>
+				{% endif %}
+			</div>
+		</div>
+    </div>
+</div>
+{% if img %}
+<div class="d-block d-lg-none">
+    <div class="jumbotron-responsive">
+		<div class="container">
+		    <div class="row">
+			<div class="col">
+		    	{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% endif %}
+			</div>
+	    </div>
+	</div>
+</div>
+{{ cms.picture( page.contents.images.jumbotron|first(), lang, site, img ) }}
+<div class="jumbotron-responsive">
+	<div class="container">
+	    <div class="row">
+			<div class="col">
+				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1_href %}</a>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+			</div>
+	    </div>
+	    {% if page.metadati.jt_content[ lang ] %}
+	    <div class="row">
+			<div class="col">
+				<div class="contents">
+					{{ page.metadati.jt_content[ lang ]|raw }}
+					{% if page.metadati.jt_action[ lang ] %}
+					<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
+					{% endif %}
+				</div>
+			</div>
+	    </div>
+	    {% endif %}
+    </div>
+</div>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro carousel( page, lang, site, name, interval, set, role ) %}
+{% import _self as cms %}
+<div id="{{ name }}" class="carousel slide {{ name }}" data-ride="carousel" data-interval="{{ interval }}">
+	{% if not role %}{% set role = 'carousel' %}{% endif %}
+    {% if page.contents.images[ role ]|length > 1 %}
+    <ol class="carousel-indicators">
+	{% for i in 0..( page.contents.images[ role ]|length - 1 ) %}
+	<li data-target="#{{ name }}" data-slide-to="{{ i }}" class="{% if i == 0 %}active{% endif %}"></li>
+	{% endfor %}
+    </ol>
+    {% endif %}
+    {% set i = 0 %}
+    <div class="carousel-inner">
+	{% for img in page.contents.images[ role ] %}
+	<div class="carousel-item{% if i == 0 %} active{% endif %}">
+	    {% if img.metadati.link %}<a href="{{ img.metadati.link[ lang ] }}"{% if img.metadati.target %} target="{{ img.metadati.target }}"{% endif %}>{% endif %}
+	    {{ cms.picture( img, lang, site, set ) }}
+	    {% if img.h1 or img.h2 or img.cappello %}
+	    <div class="{% if img.metadati.captionClasses[ lang ] %}{{ img.metadati.captionClasses[ lang ] }}{% else %}carousel-caption{% endif %}">
+		{% if img.h1 %}<h1>{{ img.h1[ lang ]|raw }}</h1>{% endif %}
+		{% if img.h2 %}<h2>{{ img.h2[ lang ]|raw }}</h2>{% endif %}
+		{% if img.cappello %}<p>{{ img.cappello[ lang ]|raw }}</p>{% endif %}
+	    </div>
+	    {% endif %}
+	    {% if img.metadati.link %}</a>{% endif %}
+	</div>
+	{% set i = i + 1 %}
+	{% endfor %}
+    </div>
+    {% if page.contents.images[ role ]|length > 1 %}
+    <a class="carousel-control-prev" href="#{{ name }}" role="button" data-slide="prev">
+	<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	<span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#{{ name }}" role="button" data-slide="next">
+	<span class="carousel-control-next-icon" aria-hidden="true"></span>
+	<span class="sr-only">Next</span>
+    </a>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro sliderGallery2colorbox( page, lang, site, name, set, height ) %}
+{% set alert = '' %}
+<div id="{{ name }}" class="sg2cb" style="display: none;">
+    {% for k in set %}
+    {% for img in page.contents.images[ k ] %}
+    <div><a class="sg2cb-gallery" href="{{ site.root }}{{ img.path }}">
+	<img style="height: {{ height }}px; margin: 0px 10px;" src="{{ site.root }}{{ img.path }}" class="img-fluid">
+	{# TODO provare a usare la macro standard picture #}
+    </a></div>
+    {% else %}
+    {% set alert = alert ~ '<p><strong>ATTENZIONE!</strong> immagini mancanti per ' ~ k ~ '</p>' %}
+    {% endfor %}
+    {% endfor %}
+</div>
+{% if alert %}<div>{{ alert|raw }}</div>{% endif %}
+<script defer>
+    window.addEventListener( 'DOMContentLoaded', function() {
+
+	$('.sg2cb').slick({
+	    dots: true,
+	    infinite: false,
+	    speed: 300,
+	    slidesToShow: 3,
+	    variableWidth: true,
+	    adaptiveHeight: true,
+	    arrows: false
+	});
+
+	$('.sg2cb-gallery').colorbox({ width: "90%", height: "90%", rel: "sg2cb-gallery", transition: "none" });
+
+	$('.sg2cb').fadeIn();
+
+    });
+</script>
+{% endmacro %}
+
+{% macro gallery2colorbox( page, lang, site, name, set, image, class, cols, trans ) %}
+{% import _self as cms %}
+{% if not trans %}{% set trans = 'elastic' %}{% endif %}
+{% if not cols %}{% set md = 3 %}{% else %}{% set md = ( 12 / cols )|round %}{% endif %}
+{% if md > 2 %}{% set col = 6 %}{% else %}{% set col = 12 %}{% endif %}
+{% if not class %}{% set class = ' d-flex justify-content-center' %}{% endif %}
+{% set alert = '' %}
+<div id="{{ name }}" class="row g2cb {{ class }}" style="display: none;">
+    {% for k in set %}
+    {% for img in page.contents.images[ k ] %}
+    <div class="col-{{ col }} col-md-{{ md }}"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
+		{{ cms.picture( img, lang, site, image, '', '', 'img-fluid mb-4' ) }}
+    </a></div>
+    {% else %}
+    {% set alert = alert ~ '<p><strong>ATTENZIONE!</strong> immagini mancanti per ' ~ k ~ '</p>' %}
+    {% endfor %}
+    {% endfor %}
+</div>
+{% if alert %}<div>{{ alert|raw }}</div>{% endif %}
+<script defer>
+    window.addEventListener( 'DOMContentLoaded', function() {
+
+		$('.g2cb-gallery').colorbox({
+			width: "90%",
+			height: "90%",
+			rel: "g2cb-gallery",
+			transition: "{{ trans }}"
+		});
+
+		$('.g2cb').fadeIn();
+
+    });
+</script>
+{% endmacro %}
+
+{% macro numeroverde( num ) %}
+<div class="numero-verde">
+	<div class="telefono"><i class="fa fa-phone" aria-hidden="true"></i></div>
+	<p class="etichetta">numero verde</p><a href="tel:{{ num }}">{{ num }}</a>
+</div>
+{% endmacro %}
+
+{% macro shareBtn( social, url, img, txt, class ) %}
+{% if social == 'facebook' %}
+{% set a = 'https://www.facebook.com/sharer/sharer.php?u=' ~ url %}
+{% elseif social == 'twitter' %}
+{% set a = 'https://twitter.com/intent/tweet?url=' ~ url ~ '&text=' ~ txt %}
+{% elseif social == 'pinterest' %}
+{% set a = 'http://pinterest.com/pin/create/button/?url=' ~ url ~ '&media=' ~ img ~ '&description=' ~ txt %}
+{% elseif social == 'linkedin' %}
+{% set a = 'http://www.linkedin.com/shareArticle?mini=true&url=' ~ url ~ '&title=' ~ txt %}
+{% elseif social == 'tumblr' %}
+{% set a = 'http://www.tumblr.com/share?v=3&u=' ~ url ~ '&t=' ~ txt %}
+{% endif %}
+<a class="btn {{ class }}" target="_blank" href="{{ a }}"></a>
+{% endmacro %}

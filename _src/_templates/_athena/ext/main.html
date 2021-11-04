@@ -20,7 +20,7 @@
 
                 {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
 
-                <main class="col col-md-10">
+                <main class="col col-md-10 d-flex flex-column">
 
                     {{ nav.tabs( page, pages, localization.language.ietf, etc, form, request ) }}
 
@@ -29,6 +29,7 @@
                 </main>
 
                 {% block info %}{% include 'inc/info.html' %}{% endblock %}
+                {% block jobs %}{% include 'inc/jobs.html' %}{% endblock %}
 
             </div>
 

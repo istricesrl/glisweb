@@ -1,0 +1,1 @@
+ALTER TABLE `mail_out` ADD `ordine` INT NULL DEFAULT NULL AFTER `token`;

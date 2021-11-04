@@ -69,25 +69,46 @@
 	    }
 	}
 
-    // forzatura del template corrente per one-char parameter debug
-	if( isset( $_REQUEST['t'] ) ) {
-	    if( file_exists( DIRECTORY_BASE . 'src/templates/' . $_REQUEST['t'] . '/' ) ) {
-		$ct['page']['template']['path']	= 'src/templates/' . $_REQUEST['t'] . '/';
-	    } elseif( file_exists( DIRECTORY_BASE . '_src/_templates/_' . $_REQUEST['t'] . '/' ) ) {
-		$ct['page']['template']['path']	= '_src/_templates/_' . $_REQUEST['t'] . '/';
-	    }
-	    $ct['page']['template']['schema']	= 'default.html';
-	}
+    // attivo i comandi di una lettera soltanto per DEV e TEST
+    if( SITE_STATUS != PRODUCTION ) {
 
-    // forzatura dello schema corrente per one-char parameter debug
-	if( isset( $_REQUEST['s'] ) ) {
-	    $ct['page']['template']['schema']	= $_REQUEST['s'] . '.html';
-	}
+        // forzatura del template corrente per one-char parameter debug
+        if( isset( $_REQUEST['t'] ) ) {
+            if( file_exists( DIR_BASE . '_src/_templates/_' . $_REQUEST['t'] . '/' ) ) {
+                $ct['page']['template']['path']	= '_src/_templates/_' . $_REQUEST['t'] . '/';
+            } elseif( file_exists( DIR_BASE . 'src/templates/' . $_REQUEST['t'] . '/' ) ) {
+                $ct['page']['template']['path']	= 'src/templates/' . $_REQUEST['t'] . '/';
+            }
+            $ct['page']['template']['schema']	= 'default.html';
+        }
 
-    // forzatura dei contenuti correnti per one-char parameter debug
-	if( isset( $_REQUEST['j'] ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ]	= implode( PHP_EOL, array_fill( 0, $_REQUEST['j'], '<p>'.$cf['common']['lorem']['std'].'</p>' ) );
-	}
+        // forzatura dello schema corrente per one-char parameter debug
+        if( isset( $_REQUEST['s'] ) ) {
+            $ct['page']['template']['schema']	= $_REQUEST['s'] . '.html';
+        }
+
+        // forzatura del tema corrente per one-char parameter string
+        if( isset( $_REQUEST['c'] ) ) {
+            $ct['page']['template']['theme']	= $_REQUEST['c'] . '.css';
+        }
+
+        // forzatura dei contenuti correnti per one-char parameter debug
+        if( isset( $_REQUEST['j'] ) ) {
+            $ct['page']['content'][ $cf['localization']['language']['ietf'] ]	= implode( PHP_EOL, array_fill( 0, $_REQUEST['j'], '<p>'.$cf['common']['lorem']['std'].'</p>' ) );
+        }
+
+    }
+
+    // assegnazione del tema per specificità
+    if( isset( $cf['site']['metadata']['theme'] ) ) {
+
+        if( ! isset( $ct['page']['template']['theme'] ) ) {
+
+            $ct['page']['template']['theme'] = $cf['site']['metadata']['theme'];
+
+        }
+
+    }
 
     /*
      * @todo prevedere la forzatura anche per il tema della pagina
@@ -105,5 +126,3 @@
 	// print_r( $ct['page']['etc']['tabs'] );
 	// print_r( $_SESSION['account']['gruppi'] );
 	// echo $cf['contents']['updated'];
-
-?>

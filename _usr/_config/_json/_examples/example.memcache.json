@@ -1,7 +1,7 @@
 {
   "memcache": {
     "servers": {
-      "localhost": {
+      "default": {
         "address": "127.0.0.1",
         "port": "11211"
       }
@@ -9,12 +9,12 @@
     "profiles": {
       "TEST": {
         "servers": [
-          "localhost"
+          "default"
         ]
       },
       "PROD": {
         "servers": [
-          "localhost"
+          "default"
         ]
       }
     }

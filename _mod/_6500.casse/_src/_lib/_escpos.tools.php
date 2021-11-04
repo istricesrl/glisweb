@@ -50,5 +50,3 @@
 	escpos_write( $h, '"' . ( ( $d !== NULL ) ? $d : date( 'dmyHi' ) ) . '"D' );
 
     }
-
-?>

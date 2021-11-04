@@ -1,0 +1,1 @@
+ALTER TABLE `telefoni` ADD UNIQUE KEY `unico` (`id_anagrafica`,`numero`,`id_tipologia`);

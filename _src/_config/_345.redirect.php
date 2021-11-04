@@ -30,7 +30,7 @@
 	}
 
     // timer
-	timerCheck( $cf['speed'], ' -> fine indicizzazione dei redirect' );
+	timerCheck( $cf['speed'], '-> fine indicizzazione dei redirect' );
 
     // URL sorgente al netto della query string
 	$source					= strtok( $_SERVER['REQUEST_URI'], '?' );
@@ -52,5 +52,3 @@
 
     // debug
 	// var_dump( strtok( $_SERVER['REQUEST_URI'], '?' ) );
-
-?>

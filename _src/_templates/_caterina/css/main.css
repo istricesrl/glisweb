@@ -1,0 +1,135 @@
+body {
+    background-color: #000000;
+    color: #666666;
+    font-family: monospace;
+    margin: 0px;
+}
+
+footer {
+    font-size: 0.8em;
+    padding: 1em 0em;
+}
+
+footer p {
+    margin: 0em;
+}
+
+header, nav, main, footer {
+/*    padding: 0.5em; */
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0px;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+}
+
+h4, h5 {
+    font-size: 1em;
+}
+
+nav {
+}
+
+div.wrapper > .row {
+    margin: 1.5em 0em;
+}
+
+div.jumbotron {
+    min-height: 16em;
+}
+
+a, a:visited {
+    color: #666666;
+}
+
+a:active, a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #dddddd;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #dddddd;
+    text-decoration: underline;
+}
+
+.wrapper {
+    background-color: #ffffff;
+    color: #000000;
+    position: relative;
+}
+
+.nav-link {
+    display: inline;
+    padding: 0em;
+}
+
+.foglio1, .foglio2, .foglio3 {
+    background-color: #ffffff;
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+}
+
+.foglio1 {
+    background-color: #fdfdfd;
+    margin-top: -1em;
+    margin-left: 2em;
+    transform: rotate(3deg);
+    z-index: -20;
+}
+
+.foglio2 {
+    background-color: #fefefe;
+    margin-top: 4em;
+    margin-left: -4em;
+    transform: rotate(-3deg);
+    z-index: -10;
+}
+
+.foglio3 {
+    background-color: #eeeeee;
+    margin-top: 6em;
+    margin-left: 2em;
+    transform: rotate(-1deg);
+    z-index: -30;
+}
+
+.shadow {
+    border: 1px solid #dddddd;
+    box-shadow: 1em 1em 1em #000000;
+}
+
+.breadcrumb-link, .nav-link {
+    white-space: nowrap;
+}
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+}
+
+@media (min-width: 1200px) {
+    
+}

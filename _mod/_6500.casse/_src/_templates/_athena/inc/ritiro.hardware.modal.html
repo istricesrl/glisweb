@@ -1,0 +1,216 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = 'matricole' %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{% if request.table.id %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% else %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% endif %}
+<script>
+	function stampa_etichette( t ){
+		var documento = $( '#id_doc' ).val();
+		var all = $( '#all' ).val();
+		var start = $( '#start' ).val();
+		window.open('{{ site.url }}_mod/_6500.casse/_src/_api/_print/_stampa.etichette.ritiro.hardware.pdf.php?__documento__='+documento+'&__start__='+start+'&__all__='+all, '_blank');
+		$('#stampa_etichette').modal('hide')
+	}
+
+    function genera_matricola( t ) {
+
+		var marchio = $( '#{{ table }}_id_marchio' ).val();
+		var produttore = $( '#{{ table }}_id_produttore' ).val();
+		var serial = $( '#{{ table }}_serial_number' ).val();
+		var nome = encodeURIComponent($( '#{{ table }}_nome' ).val());
+		var testo = encodeURIComponent($( '#{{ table }}_testo' ).val());
+		var bar = $( '#{{ table }}___barcode__' ).val();
+		var id_riga = $( '#id_riga' ).val();
+
+		if( id_riga > 0 ){
+
+			if( bar == '' ){
+				
+				if(nome  == ''){
+
+					document.getElementById("{{ table }}_nome").style.borderColor="#FF0000";
+
+				} else {
+
+					document.getElementById("{{ table }}_nome").style.borderColor = "#ced4da";
+
+					$('#genera-btn').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+					var call = '{{ site.url }}_mod/_4100.prodotti/_src/_api/_task/_generazione.matricola.php?id_marchio='+marchio+'&id_produttore='+produttore+'&serial='+serial+'&nome='+nome+'&testo='+testo+'&id_riga='+id_riga;
+					
+					getws( call,'', function(data) {
+
+						console.log(data);
+					var id = $('#genitore').val()+'_matricola';
+					$('#documenti_'+id).val( data.numero );
+					submitFormOkay = true;
+					$( "#form-documenti" ).submit();
+					});
+				}
+
+			} else {
+
+					$('#genera-btn').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+					var call = '{{ site.url }}_mod/_4100.prodotti/_src/_api/_task/_generazione.matricola.php?barcode='+bar+'&id_riga='+id_riga;
+					
+					getws( call,'', function(data) {
+
+						if( data.status == 'OK' ){
+							console.log(data);
+							submitFormOkay = true;
+							$( "#form-documenti" ).submit();
+						} else {
+
+						}
+
+					});
+			}
+
+		} else {
+
+			if(nome  == ''){
+
+	    		document.getElementById("{{ table }}_nome").style.borderColor="#FF0000";
+
+			} else {
+
+	    	document.getElementById("{{ table }}_nome").style.borderColor = "#ced4da";
+				
+			$('#genera-btn').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+			var call = '{{ site.url }}_mod/_4100.prodotti/_src/_api/_task/_generazione.matricola.php?id_marchio='+marchio+'&id_produttore='+produttore+'&serial='+serial+'&nome='+nome+'&testo='+testo;
+			console.log(call);
+
+			getws( call,'', function(data) {
+				console.log(data);
+				var id = $('#genitore').val()+'_matricola';
+				$('#documenti_'+id).val( data.numero );
+				submitFormOkay = true;
+				$( "#form-documenti" ).submit();
+			});
+
+		}}
+
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="genera_matricola">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h3 class="modal-title">matricola hardware</h3>
+		<button type="button" id="close_matricola" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+			<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+				{# CAMPI HIDDEN DI BASE #}
+				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+				<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+				<input type="hidden" id="genitore" name="{{ table }}[__genitore__]" value="">
+				<input type="hidden" id="id_riga" name="{{ table }}[__id_riga__]" value="">
+					
+				
+		    <div class="form-row form-group">
+			<legend id="legenda_1" hidden>esistente</legend>
+			<div class="col-12" id="barcode_matricola" hidden >
+					<span class="label-top">barcode</span>
+					{{ frm.input( table, '', '', '__barcode__', '', '', request, '', '', '', 'focus-on-load' ) }}
+			</div>
+			<legend id="legenda_2" hidden>nuova</legend>
+			<div class="col-6">
+				<span class="label-top">marchio</span>
+			    {{ frm.select( table, '', '', 'id_marchio', '', etc.select.marchi, request ) }}
+			</div>
+			<div class="col-6">
+				<span class="label-top">produttore</span>
+			    {{ frm.select( table, '', '', 'id_produttore', '', etc.select.produttori, request ) }}
+			</div>
+			<div class="col-12">
+				<span class="label-top">serial number</span>
+			    {{ frm.input( table, '', '', 'serial_number', '', '', request ) }}
+			</div>
+			<div class="col-12">
+				<span class="label-top">oggetto</span>
+			    {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+			</div>
+			<!--div class="col-12">
+				<span class="label-top">descrizione</span>
+			    {{ frm.textarea( table, '', '', 'testo', '', '3', request ) }}
+			</div-->
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+		<button id="elimina_articolo" hidden type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti_articoli&__delete__[id]={{ etc.id_riga }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}','_self');">elimina articolo</button>
+		<button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="genera_matricola(this);">genera</button>
+	    </div>
+		</div></form>
+	</div>
+    </div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="stampa_etichette">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h3 class="modal-title">stampa etichetta hardware</h3>
+		<button type="button" id="close_matricola" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+			<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+				{# CAMPI HIDDEN DI BASE #}
+				<input type="hidden" id="id_doc" value="">
+				<input type="hidden" id="all" value="">
+					
+				
+		    <div class="form-row form-group">
+
+
+			<div class="col-12">
+				<span class="label-top">posizione partenza stampa</span>
+				<select id="start" class=" form-control form-control-sm">
+					<option value="0">1</option>
+					<option value="1">2</option>
+					<option value="2">3</option>
+					<option value="3">4</option>
+					<option value="4">5</option>
+					<option value="5">6</option>
+					<option value="6">7</option>
+					<option value="7">8</option>
+					<option value="8">9</option>
+					<option value="9">10</option>
+				</select>
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+		<button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="stampa_etichette(this);">genera</button>
+	    </div>
+		</div></form>
+	</div>
+    </div>
+</div>

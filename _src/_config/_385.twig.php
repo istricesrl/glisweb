@@ -21,5 +21,3 @@
 	    fullPath( $cf['twig']['profile']['cache'] );
 	    checkFolder( $cf['twig']['profile']['cache'] );
 	}
-
-?>

@@ -1,0 +1,1 @@
+ALTER TABLE `tipologie_progetti` ADD `se_contratto` INT(1) NULL DEFAULT NULL , ADD `se_forfait` INT(1) NULL DEFAULT NULL, ADD KEY `se_contratto` (`se_contratto`), ADD KEY `se_forfait` (`se_forfait`) ;

@@ -1,0 +1,1 @@
+ALTER TABLE `pubblicazione` ADD `note` CHAR(254) NULL DEFAULT NULL AFTER `se_cacheable`;

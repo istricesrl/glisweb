@@ -1,0 +1,10 @@
+_*/
+etc/sitemap/
+etc/latest.conf
+tmp/
+var/
+.htaccess
+composer.*
+robots.*
+sitemap.*
+*.md

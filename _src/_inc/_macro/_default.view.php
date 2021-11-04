@@ -40,8 +40,25 @@
     // id della vista
 	if( ! isset( $ct['view']['id'] ) ) {
 	    $ct['view']['id'] = md5(
-		$ct['view']['table']
+		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
 	    );
+	}
+
+	// filtri aggiuntivi
+	if( isset( $_REQUEST['__filters__'] )  ) {
+		if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] ) ) {
+			$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] = array_replace_recursive(
+				$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'],
+				$_REQUEST['__filters__']
+			);
+		} else {
+			$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] = $_REQUEST['__filters__'];
+		}
+	}
+
+	// filtri presettati
+	if( isset( $ct['view']['__restrict__'] ) ) {
+		$_REQUEST['__view__'][ $ct['view']['id'] ]['__restrict__'] = $ct['view']['__restrict__'];
 	}
 
     // aggiungo le colonne da prelevare
@@ -92,7 +109,7 @@
 
     // prelevamento dei dati
 	// controller( $cf['mysql']['connection'], $_REQUEST['__view__'][ $ct['view']['id'] ], $ct['view']['table'], METHOD_GET, NULL, $_REQUEST['__err__'][ $k ] );
-	controller( $cf['mysql']['connection'], $ct['view']['data'], $ct['view']['table'], METHOD_GET, NULL, $_REQUEST['__err__'][ $ct['view']['id'] ], $_REQUEST['__view__'][ $ct['view']['id'] ] );
+	controller( $cf['mysql']['connection'], $cf['memcache']['connection'], $ct['view']['data'], $ct['view']['table'], METHOD_GET, NULL, $_REQUEST['__err__'][ $ct['view']['id'] ], $_REQUEST['__view__'][ $ct['view']['id'] ] );
 #print_r( $_REQUEST['__view__'][ $ct['view']['id'] ]);
 #print_r( $_REQUEST['__view__'][ $ct['view']['id'] ]);
     // debug
@@ -112,7 +129,7 @@
 	// echo $ct['view']['open']['table'] . PHP_EOL;
 
     // pagina di inserimento
-	if( ! isset( $ct['view']['insert']['page'] ) && isset( $ct['view']['open']['page'] ) ) {
+	if( ! isset( $ct['view']['insert']['page'] ) && isset( $ct['view']['open']['page'] ) && ! isset( $ct['form']['table'] ) ) {
 	    $ct['view']['insert']['page'] = $ct['view']['open']['page'];
 	}
 
@@ -138,5 +155,3 @@
 	// print_r( $ct['view']['data'] );
 	// print_r( $ct['view']['open'] );
 	// print_r( $ct['pages'] );
-
-?>

@@ -217,6 +217,18 @@
     }
 
     /**
+     * 
+     * funzione che inserisce un elemento in un array prima di un altro elemento specificato
+     * - $target: array in cui inserire l'elemento
+     * - $ref: elemento prima del quale inserire quello nuovo
+     * - $add: il nuovo elemento da inserire
+     * 
+     */
+    function arrayInsertBefore( $ref, &$target, $add ) {
+        array_splice( $target, ( array_search( $ref, $target ) ), 0, $add );
+    }
+
+    /**
      *
      * @todo documentare
      *
@@ -232,4 +244,38 @@
 
     }
 
-?>
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function reindex_array_recursive($array) {
+        if (is_array($array)) {
+            if (array_keys($array) === range(0, count($array) - 1)) { // Indexed array
+                return array_values(array_map('reindex_array_recursive', $array));
+            } else { // Associative array
+                foreach ($array as $value) {
+                    $value = reindex_array_recursive($value);
+                }
+                return $array;
+            }
+        } else {
+            return $array;
+        }
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function arrayReplaceRecursive( &$a1, $a2 ) {
+
+        $a1 = ( is_array( $a1 ) ) ? $a1 : array();
+        $a2 = ( is_array( $a2 ) ) ? $a2 : array();
+
+        $a1 = array_replace_recursive( $a1, $a2 );
+
+        return $a1;
+
+    }

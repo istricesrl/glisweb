@@ -236,5 +236,3 @@
 	// print_r( $map );
 	// echo array2xml( xml2array( file_get_contents( DIRECTORY_BASE . 'sitemap.xml' ) ) );
 	// echo $sitemapFile;
-
-?>

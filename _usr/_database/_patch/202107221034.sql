@@ -1,0 +1,1 @@
+ALTER TABLE `attivita_view_static` ADD `note_interne` int(11) NULL AFTER testo;

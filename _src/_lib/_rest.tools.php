@@ -72,9 +72,12 @@
 			    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
 			break;
 
+			case NULL:
 			case 'query':
-			    $data = http_build_query( $data );
-			    $url = sprintf( "%s?%s", $url, $data );
+				if( ! empty( $data ) ) {
+					$data = http_build_query( $data );
+					$url = sprintf( "%s?%s", $url, $data );
+				}
 			break;
 
 		    }
@@ -85,7 +88,9 @@
 	    }
 
 	// impostazione del tipo di dati accettato
-	    $headers = array_merge( $headers, array( 'Accept' => $answertype ) );
+		if( ! empty( $answertype ) ) {
+			$headers = array_merge( $headers, array( 'Accept' => $answertype ) );
+		}
 
 	// impostazione degli headers
 	    if( ! empty( $headers ) ) {
@@ -160,5 +165,3 @@
 	}
 
     }
-
-?>

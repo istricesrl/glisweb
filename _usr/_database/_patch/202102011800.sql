@@ -1,0 +1,1 @@
+ALTER TABLE `progetti_anagrafica` ADD `se_sostituto` INT(1) NULL DEFAULT NULL , ADD INDEX (`se_sostituto`) ;

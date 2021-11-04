@@ -66,7 +66,7 @@
 	if( isset( $_REQUEST['__logout__'] ) ) {
 
 	    $cf['auth']['status'] = LOGIN_LOGOUT;
-
+/*
 	    if( ini_get( 'session.use_cookies' ) ) {
 
 		$params = session_get_cookie_params();
@@ -81,13 +81,19 @@
 	    session_destroy();
 
 	    require DIR_SRC_CONFIG . '_055.session.php';
+*/
+
+        // svuoto selettivamente la $_SESSION
+        foreach( $_SESSION as $k => $v ) {
+            if( ! in_array( $k, array( 'id', 'used' ) ) ) {
+                unset( $_SESSION[ $k ] );
+            }
+        }
 
 	    // TODO lanciare questo header serve?
-	    header('HTTP/1.0 401 Unauthorized');
+	    // header('HTTP/1.0 401 Unauthorized');
 
 	}
 
     // debug
 	// print_r( $cf['localization']['language'] );
-
-?>

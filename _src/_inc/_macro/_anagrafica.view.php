@@ -49,8 +49,8 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left no-wrap',
-	    'telefoni' => 'text-left',
-	    'mail' => 'text-left',
+	    'telefoni' => 'text-left d-none d-md-table-cell',
+	    'mail' => 'text-left d-none d-md-table-cell',
 	    'categorie' => 'text-left'
 	);
 
@@ -74,5 +74,3 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
-
-?>

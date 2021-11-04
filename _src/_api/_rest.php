@@ -173,23 +173,34 @@
 	    // log
 		logWrite( $_REQUEST['__ws__'] . '/' . $_SERVER['REQUEST_METHOD'] . '/' . print_r( $cf['ws'], true ), 'rest' );
 
+		// output
+			$response = $_REQUEST[ $cf['ws']['table'] ];
+
 	    // codice di stato HTTP generato in base all'esito delle operazioni del controller
 		if( isset( $cf['controller']['status'][ $cf['ws']['table'] ] ) ) {
-		    http_response_code( $cf['controller']['status'][ $cf['ws']['table'] ] );
+
+			http_response_code( $cf['controller']['status'][ $cf['ws']['table'] ] );
+
+			if( $cf['controller']['status'][ $cf['ws']['table'] ] > 299 ) {
+				$response = array( 'errors' => $_REQUEST['__err__'] );
+			}
+	
 		}
 
 	    // debug
 		// print_r( $_REQUEST[ $cf['ws']['table'] ] );
 		// print_r( $cf['ws'] );
 		// die( print_r( $cf['ws'], true ) );
+		// print_r( $cf['controller'] );
+		// print_r( $_REQUEST['__err__'][ $cf['ws']['table'] ] );
 
 	    // genero l'output
 		switch( $cf['ws']['accept'] ) {
 		    case 'application/json':
-			buildJson( $_REQUEST[ $cf['ws']['table'] ] );
+				buildJson( $response );
 		    break;
 		    default:
-			http_response_code( 406 );
+				http_response_code( 406 );
 		    break;
 		}
 
@@ -197,6 +208,5 @@
 
 	    // risposta con errore
 		http_response_code( 400 );
-	}
 
-?>
+	}

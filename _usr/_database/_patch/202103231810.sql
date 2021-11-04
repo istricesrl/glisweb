@@ -1,0 +1,1 @@
+ALTER TABLE `categorie_prodotti` ADD `se_sitemap` INT(1) NULL DEFAULT NULL AFTER `menu`, ADD `se_cacheable` INT(1) NULL DEFAULT NULL AFTER `se_sitemap`;

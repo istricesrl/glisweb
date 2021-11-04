@@ -112,6 +112,7 @@
 	    }
 
 	// allegati
+		if( is_array( $attach ) ) {
 	    foreach( $attach as $kAtch => $vAtch ) {
 		fullPath( $vAtch );
 		if( file_exists( $vAtch ) && is_readable( $vAtch ) ) {
@@ -119,7 +120,8 @@
 		} else {
 		    logWrite( 'impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT );
 		}
-	    }
+		}
+		}
 
 	// invio
 	    $status = $mail->Send();
@@ -158,9 +160,17 @@
 //print_r( $t );
 //print_r( $d['ct'] );
 
+/*
+$loader = new \Twig\Loader\ArrayLoader([
+    'index.html' => 'Hello {{ name }}!',
+]);
+$twig = new \Twig\Environment($loader);
+
+echo $twig->render('index.html', ['name' => 'Fabien']);
+*/
 		    // avvio di Twig
-			$twig = new Twig_Environment( new Twig_Loader_Array( $t[ $l ] ) );
-			$from = new Twig_Environment( new Twig_Loader_Array( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) );
+			$twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $t[ $l ] ) );
+			$from = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) );
 #			$to = new Twig_Environment( new Twig_Loader_Array( array( 'nome' => array_key_first( $t[ $l ]['to'] ), 'mail' => reset( $t[ $l ]['to'] ) ) ) );
 
 		    // variabili da passare a queueMail()
@@ -181,7 +191,7 @@
 			if( isset( $to ) ){
 			    foreach( $to as $k => $v ) {
 				$tm = array( 'nome' => $k, 'mail' => $v );
-				$tw = new Twig_Environment( new Twig_Loader_Array( $tm ) );
+				$tw = new \Twig\Environment( new \Twig\Loader\ArrayLoader( $tm ) );
 				$destinatari[ $tw->render( 'nome', $d ) ] = $tw->render( 'mail', $d );
 			    }
 			}
@@ -312,4 +322,49 @@
 
     }
 
-?>
+    /**
+     *
+     * @todo documentare
+     *
+     */
+	function mailString2array( $t ) {
+
+		$ar0 = array();
+
+		$t = str_replace( ',', ';', $t );
+		$ar1 = explode( ';', $t );
+
+		foreach( $ar1 as $ds ) {
+
+			$dsa = array();
+
+			$r = preg_match( '/([\S\s]+)(<[\S\@\.]+>)/', $ds, $dsa );
+
+			if( ! empty( $r ) ) {
+				$ar0[ trim( $dsa[1] ) ] = trim( $dsa[2], '<>' );
+			}
+
+		}
+
+		return $ar0;
+
+	}
+
+    /**
+     *
+     * @todo documentare
+     *
+     */	
+	function array2mailString( $a ) {
+
+		$ar = array();
+
+		foreach( $a as $k => $m ) {
+
+			$ar[] = $k . ' <' . $m . '>';
+
+		}
+
+		return implode( ', ', $ar );
+
+	}

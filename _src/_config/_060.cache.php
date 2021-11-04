@@ -19,13 +19,17 @@
      *
      */
 
+    // debug
+    // print_r( $_COOKIE );
+
     // file per la cache della pagina corrente
 	$cachefile = DIR_VAR_CACHE_PAGES . md5(
 	    $_SERVER['SERVER_NAME'] .
 	    $_SERVER['REQUEST_URI'] .
 	    serialize( $_REQUEST ) .
 	    ( ( isset( $_SESSION['__view__'] ) ) ? serialize( $_SESSION['__view__'] ) : NULL ) .
-	    ( ( isset( $_SESSION['carrello']['spedizione_id_stato'] ) ) ? $_SESSION['carrello']['spedizione_id_stato'] : NULL )
+	    ( ( isset( $_SESSION['carrello']['spedizione_id_stato'] ) ) ? $_SESSION['carrello']['spedizione_id_stato'] : NULL ) .
+	    ( ( isset( $_COOKIE['privacy'] ) ) ? $_COOKIE['privacy'] : NULL )
 	);
 
     // costante per il file per la cache della pagina corrente
@@ -44,5 +48,3 @@
 	    header( 'Content-type: text/html; charset=utf8' );
 	    die( file_get_contents( FILE_CACHE_PAGE ) . $cacheinfo );
 	}
-
-?>

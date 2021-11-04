@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col d-none d-md-block elliptic">
-            <h1><ol class="breadcrumb">{{ nav.breadcrumb( page.template.breadcrumb, localization.language.ietf ) }}</ol></h1>
+            <h1><ol class="breadcrumbs">{{ nav.breadcrumbs( page.template.breadcrumbs, localization.language.ietf ) }}</ol></h1>
         </div>
         <div class="col-12 col-md-auto d-print-none">
             <div class="row">
@@ -14,7 +14,7 @@
                         {{ nav.selectMenu( page.template.menu.admin, localization.language.ietf ) }}
                     </select>
                 </form>
-
+<!--
                 {% if localization.languages|length > 1 %}
                 <form class="col p-0" id="form-language" action="" method="post" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="lingua corrente">
                     {{ frm.select( '__view__', '', '', '__language__', '', localization.languages, request, localization.language.id, 1, 0, 1 ) }}
@@ -26,27 +26,46 @@
                     {{ frm.select( '__view__', '', '', '__site__', '', sites, request, '__null__', 1, 0, 1 ) }}
                 </form>
                 {% endif %}
+-->
 
-                <div id="widget" class="col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="$('#info').slideToggle(400,'swing');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                {% if pages.terminale %}
+                <div id="widget-slack" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ pages.contatti.url['it-IT'] }}', '_self' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-money" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
+                <div id="widget-session" class="widget col-auto p-0 hidden">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="getws('/report/session.status?renew=1');$(this).parent().fadeOut();" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="sessione in scadenza"><i class="fa fa-clock-o" aria-hidden="true"></i></button>
+                </div>
+
+                {% if jobs.foreground|length > 0 %}
+                <div id="widget-docs" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-jobs" onclick="$('.slide-info').not('#jobs').slideUp(400,'swing');$('#jobs').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-jobs').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-cog" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
+                <div id="widget-info" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-info" onclick="$('.slide-info').not('#info').slideUp(400,'swing');$('#info').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-info').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                 </div>
 
                 {% if common.documentation|length == 1 %}
-                <div id="widget" class="col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.open( '{{ common.documentation|first.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                <div id="widget-docs" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.documentation|first.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
 
                 {% if slack.channel.url %}
-                <div id="widget" class="col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.open( '{{ slack.channel.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-slack" aria-hidden="true"></i></button>
+                <div id="widget-slack" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ slack.channel.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-slack" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
 
+                {% if session.account.username %}
                 <form class="col-auto p-0" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">
                     <input type="hidden" name="__logout__" value="1">
-                    <button type="submit" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="logout"><i class="fa fa-sign-out"></i></button>
+                    <button type="submit" class="btn btn-secondary btn-sqr btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="logout"><i class="fa fa-sign-out"></i></button>
                 </form>
+                {% endif %}
 
             </div>
         </div>

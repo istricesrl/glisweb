@@ -1,0 +1,73 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function inviaRichiesta( t ) {
+        $('#btnrichiedi').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+        var form = $( t ).closest('.modal');		
+        var assente = form.find('#_id_assente_r').val();
+        var sostituto = form.find('#_id_sostituto_r').val();
+        var data_inizio = form.find('#_data_inizio_r').val();
+        var data_fine = form.find('#_data_fine_r').val();
+
+	 	var call = '{{ page.url[ietf] }}?__sostituzione__[id_assente]='+assente+'&__sostituzione__[id_sostituto]='+sostituto;
+        
+        if( data_inizio && data_fine ){
+            call += '&__sostituzione__[data_inizio]='+data_inizio+'&__sostituzione__[data_fine]='+data_fine;
+        }
+
+        window.open( call, '_self');
+       
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="richiesta">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+            <h5 class="modal-title">invia richiesta</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+            <div class="container-fluid">
+                <div class="form-row">
+                    <div class="col">
+                        questa operazione invierà una richiesta di sostituzione per le attività scoperte di un operatore assente ad altro operatore
+                    </div>
+                    <div class="col-12">
+                        per limitare la richiesta ad un periodo indicare la data di inizio e fine. se non specificate, la richiesta verrà inviata per tutte le attività scoperte dell'operatore.
+                    </div>
+                </div>
+                <div class="form-row mt-2">
+                    <div class="col">
+                        <span class="label-top">operatore assente</span>
+                        {{ frm.selectBox( table, '', '', 'id_assente_r', '', etc.select.anagrafica, request ) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <span class="label-top">operatore sostituto</span>
+                        {{ frm.selectBox( table, '', '', 'id_sostituto_r', '', etc.select.anagrafica, request ) }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <span class="label-top">data inizio</span>
+                        {{ frm.date( table, '', '', 'data_inizio_r', '', '', request, default ) }}
+                    </div>
+                    <div class="col">
+                        <span class="label-top">data fine</span>
+                        {{ frm.date( table, '', '', 'data_fine_r', '', '', request, default ) }}
+                    </div>
+                </div>
+            </div>
+	    </div>
+	    <div class="modal-footer">
+            <button type="button" id="btnrichiedi" class="btn btn-secondary btn-sm" onclick="inviaRichiesta(this);">conferma</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

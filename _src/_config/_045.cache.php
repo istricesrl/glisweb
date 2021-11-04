@@ -120,17 +120,22 @@
 	define( 'REDIS_DEFAULT_TTL'			, ( ( isset( $cf['redis']['server']['ttl'] ) ) ? $cf['redis']['server']['ttl'] : 0 ) );
 
     // lettura indici della cache
-	$cf['cache']['index'] = memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' );
+	$cf['memcache']['index'] = memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' );
 
     // inizializzazione indice della cache
-	if( empty( $cf['cache']['index'] ) ){
-	    $cf['cache']['index'] = array();
+	if( empty( $cf['memcache']['index'] ) ){
+	    $cf['memcache']['index'] = array();
 	}
+
+/*
+    // inizializzazione regustro della cache
+	if( empty( $cf['memcache']['registry'] ) ){
+	    $cf['memcache']['registry'] = array();
+	}
+*/
 
     // debug
 	// print_r( $cf['memcache']['profile'] );
 	// print_r( $cf['memcache']['profiles'] );
 	// echo $cf['site']['status'] . PHP_EOL;
 	// var_dump( $cf['memcache'] );
-
-?>

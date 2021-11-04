@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `documenti_articoli_view`;

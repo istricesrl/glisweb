@@ -45,56 +45,43 @@
 			    // echo 'page -> ' . $k . PHP_EOL;
 			    // echo print_r( $pages[ $k ], true );
 
-			// verifico se la pagina ha i requisiti per comparire nel menu
-/*
-			    if(
-				isset( $pages[ $k ]['menu'][ $menu ] )
-				&&
-				( ! empty( $pages[ $k ]['menu'][ $menu ]['label'] )
-				    ||
-				( count( $v ) > 0 && in_array( $k, $pages[ $active ]['parents']['id'] ) ) )
-				&&
-				( ! isset( $pages[ $k ]['auth']['groups'] )
-				    || ( isset( $_SESSION['account']['gruppi'] )
-					&& count( array_intersect( $pages[ $k ]['auth']['groups'], $_SESSION['account']['gruppi'] ) ) > 0
-				    )
-				)
-			    ) {
-*/
-
 			// se la pagina compare nel menu...
 			    if( isset( $pages[ $k ]['menu'][ $menu ] ) ) {
 
+foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
+
 				// se la pagina ha un'etichetta per il menu... oppure?
-				    if( ! empty( $pages[ $k ]['menu'][ $menu ]['label'] ) || ( count( $v ) > 0 && in_array( $k, $pages[ $active ]['parents']['id'] ) ) ) {
+				    if( ! empty( $mv['label'] ) || ( count( $v ) > 0 && in_array( $k, $pages[ $active ]['parents']['id'] ) ) ) {
 
 					// se l'utente può visualizzare la pagina
 					// @todo if( getPagePermission( $k ) )
 					    if( ! isset( $pages[ $k ]['auth']['groups'] ) || ( isset( $_SESSION['account']['gruppi'] ) && count( array_intersect( $pages[ $k ]['auth']['groups'], $_SESSION['account']['gruppi'] ) ) > 0 ) ) {
 
 						// debug
-						    // echo print_r( $pages[ $k ]['menu'][ $menu ], true );
-						    // echo print_r( $pages[ $k ]['menu'][ $menu ]['label'], true );
+						    // echo print_r( $mv, true );
+						    // echo print_r( $mv['label'], true );
 						    // echo $k . '/' . $active . PHP_EOL;
 						    // print_r( $pages[ $k ]['parents']['id'] );
-						    // echo  $k . '/' . $pages[ $k ]['menu'][ $menu ]['priority'] . PHP_EOL;
+						    // echo  $k . '/' . $mv['priority'] . PHP_EOL;
 						    // print_r( $pages[ $k ]['url'] );
 
 						// costruisco la chiave per l'ordinamento
-						    $key = $pages[ $k ]['menu'][ $menu ]['priority'] . '|' . $k;
+						    $key = $mv['priority'] . '|' . $k . '|' . $ak;
 
 						// log
-						    if( empty( $pages[ $k ]['menu'][ $menu ]['label'] ) ) {
+						    if( empty( $mv['label'] ) ) {
 							logWrite( 'voce vuota: ' . $k . ' -> ' . $menu . ': ' . $key, 'menu', LOG_ERR );
 						    }
 
 						// costruisco la voce corrente
-						    $nav[ $key ] = array(
-							'label' => $pages[ $k ]['menu'][ $menu ]['label']
+						$nav[ $key ] = array(
+							'label' => $mv['label']
+							,
+							'ancora' => ( isset( $mv['ancora'] ) ) ? $mv['ancora'] : NULL
 							,
 							'location' => ( ( isset( $pages[ $k ]['forced'] ) ) ? $pages[ $k ]['url'] : $pages[ $k ]['path'] )
 							,
-							'target' => ( ( isset( $pages[ $k ]['menu'][ $menu ]['target'] ) && ! empty( $pages[ $k ]['menu'][ $menu ]['target'] ) ) ? $pages[ $k ]['menu'][ $menu ]['target'] : NULL )
+							'target' => ( ( isset( $mv['target'] ) && ! empty( $mv['target'] ) ) ? $mv['target'] : NULL ) 
 							,
 							'active' => ( $k == $active ) ? true : false
 							,
@@ -105,7 +92,7 @@
 						    logWrite( $k . ' -> ' . $menu . ': ' . $key, 'menu' );
 
 						// debug
-						    // echo $pages[ $k ]['menu'][ $menu ]['subpages'] . PHP_EOL;
+						    // echo $mv['subpages'] . PHP_EOL;
 
 						// contenuto del sottomenù
 						    if(
@@ -114,16 +101,16 @@
 							    (
 								in_array( $k, $pages[ $active ]['parents']['id'] )
 								&& (
-								    ! isset( $pages[ $k ]['menu'][ $menu ]['subpages'] )
+								    ! isset( $mv['subpages'] )
 								    ||
-								    $pages[ $k ]['menu'][ $menu ]['subpages'] != 'NEVER_SHOW'
+								    $mv['subpages'] != 'NEVER_SHOW'
 								)
 							    )
 							    ||
 							    (
-								isset( $pages[ $k ]['menu'][ $menu ]['subpages'] )
+								isset( $mv['subpages'] )
 								&&
-								$pages[ $k ]['menu'][ $menu ]['subpages'] == 'ALWAYS_SHOW'
+								$mv['subpages'] == 'ALWAYS_SHOW'
 							    )
 							)
 						    ) {
@@ -145,6 +132,8 @@
 
 				    }
 
+				}
+
 			    } else {
 
 				// log
@@ -162,7 +151,7 @@
 	    }
 
 	// riordino l'array
-	    ksort( $nav, SORT_NUMERIC );
+	    ksort( $nav, SORT_NATURAL );
 
 	// debug
 	    // print_r( $nav );
@@ -177,7 +166,7 @@
      * @todo documentare
      *
      */
-    function buildBreadcrumb( $page, $active ) {
+    function buildBreadcrumbs( $page, $active ) {
 
 	// array del menu
 	    $nav = array();
@@ -248,5 +237,3 @@
 	    return $nav;
 
     }
-
-?>

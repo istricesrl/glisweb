@@ -24,7 +24,7 @@
 
     // tendina tipologie anagrafica
 	$ct['etc']['select']['tipologie_anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY nome ASC'
@@ -33,25 +33,25 @@
     // tendina sesso
 	$ct['etc']['select']['sesso'] = array( 
 	    array( 'id' => '-', '__label__' => '-' ),
-	    array( 'id' => 'M', '__label__' => 'M' ),
-	    array( 'id' => 'F', '__label__' => 'F' ),
+	    array( 'id' => 'M', '__label__' => 'uomo' ),
+	    array( 'id' => 'F', '__label__' => 'donna' ),
 	);
 
     // tendina notifiche
 	$ct['etc']['select']['se_notifiche'] = array(
-	    array( 'id' => NULL, '__label__' => '&#xf1f6;' ),
-	    array( 'id' => 1, '__label__' => '&#xf0f3;' )
+	    array( 'id' => NULL, '__label__' => 'no' ),
+	    array( 'id' => 1, '__label__' => 'si' )
 	);
 
     // tendina PEC
 	$ct['etc']['select']['se_pec'] = array(
-	    array( 'id' => NULL, '__label__' => '&#xf003; mail' ),
-	    array( 'id' => 1, '__label__' => '&#xf0a3; PEC' )
+	    array( 'id' => NULL, '__label__' => 'mail' ),
+	    array( 'id' => 1, '__label__' => 'pec' )
 	);
 
     // tendina categorie anagrafica
 	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
@@ -59,31 +59,38 @@
 
     // tendina tipologie telefoni
 	$ct['etc']['select']['tipologie_telefoni'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_telefoni_view'
+	    'SELECT id, html AS __label__ FROM tipologie_telefoni_view'
 	);
+
 
     // tendina tipologie indirizzi
 	$ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_indirizzi_view'
 	);
-
+	
+/*
     // tendina comuni
 	$ct['etc']['select']['comuni'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM comuni_view'
 	);
+*/
 
-
-
-
+    // tendina indirizzi
+	$ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM indirizzi_view'
+	);
 
 /*
 
@@ -105,15 +112,7 @@
 
 
 
-    // tendina mesi
-	foreach( range( 1, 12 ) as $mese ) {
-	    $ct['etc']['select']['mese'][] = array( 'id' => $mese, '__label__' => int2month( $mese ) );
-	}
 
-    // tendina giorni
-	foreach( range( 1, 31 ) as $giorno ) {
-	    $ct['etc']['select']['giorno'][] = array( 'id' => $giorno.'', '__label__' =>  $giorno  );
-	}
 
     // tendina regime fiscale
 	$ct['etc']['select']['id_regime_fiscale'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM regimi_fiscali_view' );
@@ -140,10 +139,10 @@
 	$ct['etc']['select']['diritti'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_diritto_view' );
 
     // tendina agenti
-	$ct['etc']['select']['id_agente'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view WHERE se_agente = 1' );
+	$ct['etc']['select']['id_agente'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_agente = 1' );
 
     // tendina mandanti/fornitori
-	$ct['etc']['select']['id_mandante_fornitore'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view WHERE se_mandante = 1 OR se_fornitore = 1' );
+	$ct['etc']['select']['id_mandante_fornitore'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_mandante = 1 OR se_fornitore = 1' );
 
     // tendina categorie prodotti
 	$ct['etc']['select']['id_categoria_prodotti'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_prodotti_view' );
@@ -190,7 +189,7 @@
     // gli agenti possono solo inserire le attività
 #	if( isset( $_REQUEST['anagrafica']['id'] ) && isset( $_SESSION['account']['se_agente'] ) && ! empty( $_SESSION['account']['se_agente'] ) ) {
 	if( isset( $_REQUEST['anagrafica']['id'] ) ) {
-	    $ct['etc']['attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view WHERE id_cliente = ? ORDER BY data DESC', array( array( 's' => $_REQUEST['anagrafica']['id'] ) ) );
+	    $ct['etc']['attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_cliente = ? ORDER BY data DESC', array( array( 's' => $_REQUEST['anagrafica']['id'] ) ) );
 #	    $_REQUEST['anagrafica']['attivita'] = array();
 	}
 
@@ -200,7 +199,8 @@
 	}
 */
 
-    // macro di default
-	require DIR_SRC_INC_MACRO . '_default.form.php';
+    // macro di default per l'entità anagrafica
+	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
-?>
+	// macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';

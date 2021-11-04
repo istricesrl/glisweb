@@ -91,6 +91,21 @@
     }
 
     /**
+     *
+     * @todo documentare
+     *
+     */
+    function getFileNameWithoutExtension( $f ) {
+
+        fullPath( $f );
+
+        $i = pathinfo( $f );
+
+        return $i['filename'];
+
+    }
+
+    /**
      * verifica l'esistenza di un path di directory creando quelle mancanti
      *
      * @param string		$p	il percorso da verificare
@@ -124,6 +139,7 @@
 
 		    $m  = 'impossibile creare ' . $f;
 		    error_log( $m );
+            return false;
 
 		}
 
@@ -192,8 +208,18 @@
 
 	fullPath( $f );
 	$d = dirname( $f );
-	checkFolder( $d );
-	closeFile( openFile( $f ) );
+
+    if( checkFolder( $d ) ) {
+
+        if( closeFile( openFile( $f ) ) ) {
+
+            return true;
+
+        }
+
+    }
+
+    return false;
 
     }
 
@@ -352,7 +378,7 @@
      * @todo documentare
      *
      */
-    function recursiveDelete( $d, $p = true ) {
+    function recursiveDelete( $d, $p = true, &$e = array() ) {
 
 	// path completo
 	    fullPath( $d );
@@ -362,8 +388,9 @@
 
 		// rimozione dei file
 		    foreach( getDirIterator( $d ) as $fileinfo ) {
-			$todo = ( $fileinfo->isDir() ) ? 'rmdir' : 'unlink';
-			$todo( $fileinfo->getRealPath() );
+                $e[] = $fileinfo->getRealPath();
+                $todo = ( $fileinfo->isDir() ) ? 'rmdir' : 'unlink';
+                $todo( $fileinfo->getRealPath() );
 		    }
 
 		// rimozione della cartella radice
@@ -382,6 +409,44 @@
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function dirTree2array( $d ) {
+
+        // path completo
+            fullPath( $d );
+
+        // array del risultato
+            $a = array();
+
+        // se la cartella esiste
+            if( file_exists( $d ) ) {
+    
+            // cartella base
+            $a[] = $d;
+
+            // aggiunta cartella
+                foreach( getDirIterator( $d ) as $fileinfo ) {
+                    if( $fileinfo->isDir() ) {
+                        $a[] = $fileinfo->getRealPath();
+                    }
+                }
+
+                // restituisco il risultato
+                return $a;
+
+            } else {
+    
+            // ritorno false
+                return false;
+    
+            }
+    
+        }
+    
     /**
      * restituisce la dimensione di un file
      *
@@ -443,9 +508,11 @@
      * @todo documentare
      *
      */
-    function readStringFromFile( $f ) {
+    function readStringFromFile( $f, $trim = false ) {
 
-	return readFromFile( $f, FILE_READ_AS_STRING );
+        $t = readFromFile( $f, FILE_READ_AS_STRING );
+        if( $trim === true ) { $t = trim( $t ); }
+	    return $t;
 
     }
 
@@ -665,7 +732,7 @@
 
 		if ( is_dir( $rfile ) ) {
 
-		    array_merge( $r , globRecursive( $rFile , $find ) );
+		    array_merge( $r , globRecursive( $rfile , $find ) );
 
 		} else {
 
@@ -804,7 +871,5 @@
      *
      */
     function array2file( $f, $a ) {
-	return writeToFile( trim( implode( PHP_EOL, $a ) ), $f );
+	return writeToFile( trim( implode( PHP_EOL, str_replace( PHP_EOL, NULL, $a ) ) ), $f );
     }
-
-?>

@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DEPLOY" default="dist.interactive">
+    
+    <!-- inclusione file proprietà -->
+    <!-- chiamare phing -propertyfile ./usr/deploy/phing/build.properties dalla cartella radice -->
+    <!-- <property file="../../../usr/deploy/phing/build.properties" /> -->
+
+    <!-- proprietà derivate -->
+    <property name="dst.dir" value="${dst.fld}/${dst.stg}" />
+    <property name="src.dir" value="${src.fld}/${src.stg}" />
+
+    <!-- proprietà generate -->
+    <tstamp>
+        <format property="bak.ext" pattern="%Y%m%d%H%M%S" locale="it,IT" />
+    </tstamp>
+
+    <!-- proprietà di base -->
+    <property name="rsc.xcd" value="etc/sitemap,tmp,var,usr,.git,.github" />
+    <property name="rsc.xcf" value=".gitignore,robots.txt,sitemap.xml,sitemap.csv,build.properties" />
+    <property name="rsc.xcl" value="${rsc.xcd},${rsc.xcf}" />
+
+    <!-- comandi -->
+    <property name="cmd.amp" value="&amp;&amp;" />
+    <property name="cmd.bak" value="tar -cvzf /var/backups/${prj.nme}.${bak.ext}.tar.gz ${dst.dir}" />
+    <property name="cmd.cds" value="cd ${src.dir}" />
+    <property name="cmd.cdd" value="cd ${dst.dir}" />
+    <property name="cmd.cps" value="composer update --quiet" />
+    <property name="cmd.ch1" value="find . -type d		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 775 {} \;" />
+    <property name="cmd.ch2" value="find . -type f		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 664 {} \;" />
+    <property name="cmd.ch3" value="find . -name '*.sh'	-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 775 {} \;" />
+    <property name="cmd.ch4" value="chown -R www-data:www-data *" />
+    <property name="cmd.503" value="mkdir -p ./tmp ${cmd.amp} touch ./tmp/.upgrade" />
+    <property name="cmd.200" value="rm -f ./tmp/.upgrade" />
+    <property name="cmd.F53" value="echo upgrade | ncftpput -u ${ftp.usr} -p ${ftp.psw} -m -c ${ftp.hst} ${ftp.dir}tmp/.upgrade" />
+    <property name="cmd.F20" value="ncftpget -u ${ftp.usr} -p ${ftp.psw} -DD -c ${ftp.hst} ${ftp.dir}tmp/.upgrade > /dev/null" />
+    <property name="cmd.FX1" value="echo | ncftpput -u ${ftp.usr} -p ${ftp.psw} -m -c ${ftp.hst} ${ftp.dir}src/bugfix.json" />
+
+    <!-- comandi da implementare
+    <property name="cmd.cll" value="cd ${dst.dir} &amp;&amp; rm -f ./var/log/*.log &amp;&amp; rm -f ./var/log/slow/*.log" />
+    <property name="cmd.clc" value="cd ${dst.dir} &amp;&amp; rm -rf ./var/cache/" />
+    <property name="cmd.pfx" value="va.lamp.permission.fix.sh ${dst.fld}" />
+    <property name="cmd.ckf" value="cd ${dst.dir} &amp;&amp; mkdir -p ./tmp" />
+    <property name="cmd.mnf" value="cd ${dst.dir} &amp;&amp; _src/_sh/_optimize.sh" />
+    -->
+
+    <!-- fileset del progetto -->
+    <fileset dir="${src.dir}" id="files.project" expandsymboliclinks="true">
+
+        <!-- file inclusi -->
+        <include name="_**/*" />
+        <include name="etc/**/*" />
+        <include name="mod/**/*" />
+        <include name="src/**/*" />
+        <include name="usr/**/*" />
+        <include name="*.md" />
+        <include name=".htaccess" />
+        <include name="composer.json" />
+
+        <!-- file esclusi -->
+        <exclude name=".git/**/*" />
+        <exclude name=".github/**/*" />
+        <exclude name="usr/deploy/phing/build.properties" />
+        <exclude name="robots.txt" />
+
+    </fileset>
+
+    <!-- target da implementare
+    <target name="mysql.diff">
+        <echo msg="confronto gli schemi dei database..." />
+        <if>
+            <equals arg1="${dbs.nme}" arg2="" />
+            <then>
+                <echo msg="nessun database impostato" />
+            </then>
+            <else>
+                <echo msg="dump di ${dbs.nme}..." />
+                <exec command="va.mysql.db.export.schema.sh ${dbs.nme} ${dbs.hst} ${dbs.usr} ${dbs.psv} /var/www/${dst.fld}/" />
+                <echo msg="dump di ${dbd.nme}..." />
+                <exec command="va.mysql.db.export.schema.sh ${dbd.nme} ${dbd.hst} ${dbd.usr} ${dbd.psv} /var/www/${dst.fld}/" />
+                <echo msg="esecuzione del diff..." />
+                <exec command="diff -r -u /var/www/${src.fld}/${dbs.nme}.sql /var/www/${src.fld}/${dbd.nme}.sql > dbdiff.log" />
+                <filesize file="/var/www/${src.fld}/dbdiff.log" propertyname="dff.sze" />
+                <if>
+                    <equals arg1="${dff.sze}" arg2="0" />
+                    <then>
+                        <exec command="rm -f /var/www/${src.fld}/*.sql" />
+                        <exec command="rm -f /var/www/${src.fld}/*.log" />
+                        <echo msg="nessuna differenza fra gli schemi rilevata" />
+                    </then>
+                    <else>
+                        <exec command="rm -f /var/www/${src.fld}/*.sql" />
+                        <fail message="ATTENZIONE! rilevate differenze fra gli schemi, procedura interrotta" />
+                    </else>
+                </if>
+            </else>
+        </if>
+    </target>
+    -->
+
+    <!-- git commit & push -->
+    <target name="git.push">
+
+        <!-- se c'è un repository di progetto -->
+        <if>
+            <available file="${src.dir}/.git/" />
+            <then>
+
+                <!-- se c'è un avanzamento di versione -->
+                <if>
+                    <equals arg1="${prj.inc}" arg2="" />
+                    <then>
+
+                        <!-- messaggi -->
+                        <echo msg="nessun push richiesto in caso di deploy senza avanzamento di versione" />
+
+                    </then>
+                    <else>
+
+                        <!-- se il repository non è quello di sviluppo principale -->
+                        <if>
+                            <equals arg1="${prj.git}" arg2="" />
+                            <then>
+
+                                <!-- messaggi -->
+                                <echo msg="effettuare manualmente il push sul repository standard" />
+
+                            </then>
+                            <else>
+
+                                <!-- passo al ramo master -->
+                                <echo msg="git checkout..." />
+                                <exec command="cd ${src.dir}/ &amp;&amp; git checkout ${prj.git}" />
+
+                                <!-- effettuo il commit delle eventuali modifiche in sospeso -->
+                                <echo msg="git commit..." />
+                                <exec command="cd ${src.dir}/ &amp;&amp; git add . &amp;&amp; git commit -m 'distribuzione della versione ${rev.num}'" />
+
+                                <!-- applico il tag di versione -->
+                                <echo msg="git tag..." />
+                                <echo msg="tag: v${rev.num}" />
+                                <exec command="cd ${src.dir}/ &amp;&amp; git tag -a 'v${rev.num}' -m 'versione ${rev.num}'" />
+
+                                <!-- faccio il push pubblicando il tag -->
+                                <echo msg="git push..." />
+                                <exec command="cd ${src.dir}/ &amp;&amp; git push --follow-tags" />
+
+                            </else>
+                        </if>
+
+                    </else>
+                </if>
+            </then>
+            <else>
+
+                <!-- messaggi -->
+                <echo msg="nessun repository git presente per il progetto" />
+
+            </else>
+        </if>
+    </target>
+
+    <!-- backup per distribuzione locale -->
+    <target name="backup.local">
+
+        <!-- messaggi -->
+        <echo msg="backup della destinazione..." />
+        <echo msg="${cmd.bak}" />
+
+        <!-- esecuzione del backup -->
+        <exec command="${cmd.bak}" />
+
+    </target>
+
+    <!-- notifica via Slack -->
+    <target name="notify.slack">
+
+        <!-- messaggi -->
+        <echo msg="invio la notifica via Slack..." />
+
+        <!-- se Slack è collegato -->
+        <if>
+            <not><isset property="slck.sa" /></not>
+            <then>
+
+                <!-- messaggi -->
+                <echo msg="Slack non configurato" />
+
+            </then>
+            <else>
+
+                <!-- compongo il messaggio -->
+                <property name="slack.01" value="rilasciato aggiornamento *${rev.num}* in *${dst.stg}*, vi preghiamo di prenderne visione su: " />
+                <property name="slack.02" value="${dst.url}" />
+                <property name="slack.03" value="vi preghiamo di prendere visione" />
+
+                <!-- invio il messaggio-->
+                <exec command="va.slack.msg.sh ${slack.sa} ${slack.sb} ${slack.sc} '${slack.01}\n${slack.02}'" />
+
+            </else>
+        </if>
+    
+    </target>
+
+    <!-- notifica via mail -->
+    <target name="notify.email">
+
+        <!-- messaggi -->
+        <echo msg="invio la notifica via mail..." />
+
+        <!-- se il destinatario è configurato -->
+        <if>
+            <not><isset property="eml.adr" /></not>
+            <then>
+
+                <!-- messaggi -->
+                <echo msg="destinatario mail non configurato" />
+
+            </then>
+            <else>
+
+                <!-- messaggio per il codice di licenza -->
+                <if>
+                    <equals arg1="${prj.key}" arg2="" />
+                    <then>
+                        <property name="key.msg" value="ATTENZIONE! questo deploy non è coperto da licenza." />
+                    </then>
+                    <else>
+                        <property name="key.msg" value="La licenza per questo deploy è ${prj.key}." />
+                    </else>
+                </if>
+
+                <!-- messaggi -->
+                <echo msg="invio mail di notifica a ${eml.adr}" />
+
+                <mail tolist="${eml.adr},produzione@istricesrl.it" subject="deploy in ${dst.stg}" from="produzione@istricesrl.it">
+                    <![CDATA[
+
+                    Gentile ${eml.nme},
+                    siamo lieti di informarla che il suo progetto "${prj.nme}" è stato correttamente
+                    aggiornato in ${dst.stg} a partire dalla versione di ${src.stg} da voi approvata
+                    all'indirizzo:
+
+                    ${src.url}
+
+                    Può vedere la versione corrente del progetto ${rev.num} all'indirizzo:
+
+                    ${dst.url}
+
+                    La preghiamo di esaminare attentamente le modifiche e di segnalarci qualsiasi
+                    anomalia dovesse eventualmente riscontrare, che provvederemo senz'altro a
+                    gestire con la massima tempestività.
+
+                    ${key.msg}
+
+                    L'occasione ci è gradita per porgerle i nostri più cordiali saluti,
+
+                    Istrice srl
+                    via F. De Giovanni 25
+                    40129 Bologna BO
+                    produzione@istricesrl.it
+                    051.374789
+                    
+                    ]]>
+                </mail>
+
+            </else>
+        </if>
+
+    </target>
+
+    <!-- avanzamento di versione -->
+    <target name="version.increment">
+
+        <!-- se è settata la cartella di provenienza -->
+        <if>
+            <isset property="src.fld" />
+            <then>
+
+                <!-- se è dichiarato il tipo di deploy o no -->
+                <if>
+                    <equals arg1="${prj.inc}" arg2="" />
+                    <then>
+
+                        <!-- messaggi -->
+                        <echo msg="deploy senza incremento di versione" />
+
+                    </then>
+                    <else>
+
+                        <!-- se non esiste il file di versione all'interno del progetto -->
+                        <if>
+                            <not>
+                                <available file="${src.dir}/etc/version.conf"/>
+                            </not>
+                            <then>
+
+                                <!-- messaggi -->
+                                <echo msg="creo e inizializzo il file: ${src.dir}/etc/version.conf" />
+
+                                <!-- creo la cartella e il file di versione -->
+                                <mkdir dir="${src.dir}/etc" />
+                                <touch file="${src.dir}/etc/version.conf"/>
+                                <echo msg="0.0.0" file="${src.dir}/etc/version.conf" />
+
+                            </then>
+                            <else>
+
+                                <!-- messaggi -->
+                                <echo msg="trovato file: ${src.dir}/etc/version.conf" />
+
+                            </else>
+                        </if>
+
+                        <!-- incremento la versione in base al tipo di deploy -->
+                        <version releasetype="${prj.inc}" file="${src.dir}/etc/version.conf" property="rev.num"/>
+
+                    </else>
+                </if>
+
+            </then>
+            <else>
+
+                <!-- messaggi -->
+                <echo msg="non è stata impostata una cartella sorgente del progetto!" />
+
+            </else>
+        </if>
+
+    </target>
+
+    <!-- distribuzione via FTP -->
+    <target name="dist.ftp">
+
+        <!-- bugfix per "impossibile creare la cartella src/ -->
+        <exec command="${cmd.FX1}" />
+
+        <!-- abilito la pagina 503 -->
+        <echo msg="abilito la pagina di cortesia..." />
+        <exec command="${cmd.F53}" />
+
+        <!-- aggiorno composer nella cartella sorgente -->
+        <echo msg="aggiorno composer in ${src.dir}" />
+        <exec command="${cmd.cds} ${cmd.amp} ${cmd.cps}" />
+
+        <!-- carico i file via FTP -->
+        <echo msg="FTP ${src.dir} -> ${ftp.usr}@${dst.hst}:${ftp.dir}" />
+        <ftpdeploy host="${dst.hst}" port="21" username="${ftp.usr}" password="${ftp.psw}" dir="${ftp.dir}" passive="true" level="debug" depends="true" rawdatafallback="true">
+            <fileset refid="files.project" />
+        </ftpdeploy>
+
+        <!-- disabilito la pagina 503 -->
+        <echo msg="disabilito la pagina di cortesia..." />
+        <exec command="${cmd.F20}" />
+
+    </target>
+
+    <!-- distribuzione via scp -->
+    <target name="dist.scp">
+
+        <!-- abilito la pagina 503 -->
+        <echo msg="abilito la pagina di cortesia..." />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.503}" />
+
+        <!-- copia remota -->
+        <echo msg="scp ${src.dir} -> ${key.usr}@${dst.hst}:${dst.dir}" />
+        <scp username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" todir="${dst.dir}">
+            <fileset refid="files.project" />
+        </scp>
+
+        <!-- aggiorno composer -->
+        <echo msg="aggiorno composer in ${dst.dir}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.cps}" />
+
+        <!-- sistemo i permessi -->
+        <echo msg="sistemo i permessi in ${dst.dir}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch1}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch2}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch3}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch4}" />
+
+        <!-- disabilito la pagina 503 -->
+        <echo msg="disabilito la pagina di cortesia..." />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.200}" />
+
+    </target>
+
+    <!-- distribuzione via rsync in remoto -->
+    <target name="dist.rsync.remote">
+
+        <!-- abilito la pagina 503 -->
+        <echo msg="abilito la pagina di cortesia..." />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.503}" />
+
+        <!-- sincronizzo le cartelle -->
+        <echo msg="rsync ${src.dir} -> ${key.usr}@${dst.hst}:${dst.dir}" />
+        <filesync sourcedir="${src.dir}/" destinationdir="${key.usr}@${dst.hst}:${dst.dir}/" exclude="${rsc.xcl}" delete="true" verbose="false" />
+
+        <!-- aggiorno composer -->
+        <echo msg="aggiorno composer in ${dst.dir}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.cps}" />
+
+        <!-- sistemo i permessi -->
+        <echo msg="sistemo i permessi in ${dst.dir}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch1}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch2}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch3}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch4}" />
+
+        <!-- disabilito la pagina 503 -->
+        <echo msg="disabilito la pagina di cortesia..." />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.200}" />
+
+    </target>
+
+    <!-- distribuzione via rsync in locale -->
+    <target name="dist.rsync.local" depends="backup.local">
+
+        <!-- abilito la pagina 503 -->
+        <echo msg="abilito la pagina di cortesia..." />
+        <mkdir dir="${dst.dir}/tmp" />
+        <touch file="${dst.dir}/tmp/.upgrade" />
+
+        <!-- sincronizzo le cartelle -->
+        <echo msg="rsync ${src.dir} -> ${dst.dir}" />
+        <filesync sourcedir="${src.dir}/" destinationdir="${dst.dir}/" exclude="${rsc.xcl}" delete="true" verbose="false" />
+
+        <!-- aggiorno composer -->
+        <echo msg="aggiorno composer in ${dst.dir}" />
+        <exec command="${cmd.cdd} ${cmd.amp} ${cmd.cps}" />
+
+        <!-- sistemo i permessi -->
+        <echo msg="sistemo i permessi in ${dst.dir}" />
+        <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch1}" />
+        <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch2}" />
+        <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch3}" />
+        <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch4}" />
+
+        <!-- disabilito la pagina 503 -->
+        <echo msg="disabilito la pagina di cortesia..." />
+        <delete file="${dst.dir}/tmp/.upgrade" />
+
+    </target>
+
+    <!-- distribuzione interattiva (chiede il tipo di release -->
+    <target name="dist.interactive">
+
+        <!-- messaggi -->
+        <echo msg="ATTENZIONE! inserire il tipo di release (le etichette sono case sensitive)" />
+        <echo msg="ATTENZIONE! se non si desidera aumentare la versione, lasciare il campo in bianco" />
+
+        <!-- richiedo il tipo di deploy -->
+        <propertyprompt propertyName="prj.inc" defaultValue="" promptText="tipo di distribuzione (Major|Minor|Bugfix)" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
+
+    </target>
+
+    <!-- distribuzione major -->
+    <target name="dist.major">
+
+        <!-- forzo il tipo di avanzamento a Major -->
+        <property name="prj.inc" value="Major" override="true" />
+
+        <!-- messaggi -->
+        <echo msg="impostato avanzamento: ${prj.inc}" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
+
+    </target>
+
+    <!-- distribuzione minor -->
+    <target name="dist.minor">
+
+        <!-- forzo il tipo di avanzamento a Minor -->
+        <property name="prj.inc" value="Minor" override="true" />
+
+        <!-- messaggi -->
+        <echo msg="impostato avanzamento: ${prj.inc}" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
+
+    </target>
+
+    <!-- distribuzione bugfix -->
+    <target name="dist.bugfix">
+
+        <!-- forzo il tipo di avanzamento a Bugfix -->
+        <property name="prj.inc" value="Bugfix" override="true" />
+
+        <!-- messaggi -->
+        <echo msg="impostato avanzamento: ${prj.inc}" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
+
+    </target>
+
+    <!-- esecuzione del deploy -->
+    <target name="dist.exec" depends="version.increment,git.push">
+
+        <!-- se è stato incluso un file properties -->
+        <if>
+            <isset property="prj.nme" />
+            <then>
+
+                <!-- messaggi -->
+                <echo msg="progetto: ${prj.nme}" />
+                <echo msg="distribuzione da ${src.stg} a ${dst.stg}..." />
+                <echo msg="licenza: ${prj.key}" />
+                <echo msg="tipo di release: ${prj.inc}" />
+                <echo msg="versione: ${rev.num}" />
+
+                <!-- se la destinazione è locale oppure remota -->
+                <if>
+                    <not><isset property="dst.hst" /></not>
+                    <then>
+
+                        <!-- messaggi -->
+                        <echo msg="deploy locale su: ${dst.dir}" />
+
+                        <!-- esecuzione del deploy tramite rsync -->
+                        <phingcall target="dist.rsync.local" />
+
+                    </then>
+                    <elseif>
+                        <and>
+                            <isset property="ftp.usr" />
+                            <not><equals arg1="${ftp.usr}" arg2="" /></not>
+                        </and>
+                        <then>
+
+                            <!-- messaggi -->
+                            <echo msg="deploy remoto via FTP" />
+
+                            <!-- esecuzione del deploy tramite FTP -->
+                            <phingcall target="dist.ftp" />
+
+                        </then>
+                    </elseif>
+                    <elseif>
+                        <equals arg1="${dst.cmd}" arg2="scp" />
+                        <then>
+
+                            <!-- messaggi -->
+                            <echo msg="deploy remoto via scp" />
+
+                        <!-- esecuzione del deploy tramite scp -->
+                        <phingcall target="dist.scp" />
+
+                        </then>
+                    </elseif>
+                    <else>
+
+                        <!-- messaggi -->
+                        <echo msg="deploy remoto via rsync" />
+
+                        <!-- esecuzione del deploy tramite rsync -->
+                        <phingcall target="dist.rsync.remote" />
+
+                    </else>
+                </if>
+
+                <!-- se è settato un URL del progetto di destinazione -->
+                <if>
+                    <not><isset property="dst.url" /></not>
+                    <then>
+
+                        <!-- messaggi -->
+                        <echo msg="URL del progetto di destinazione non settato!" />
+
+                    </then>
+                    <else>
+
+                        <!-- notifica su Slack -->
+                        <phingcall target="notify.slack" />
+
+                        <!-- notifica via mail -->
+                        <phingcall target="notify.email" />
+
+                    </else>
+                </if>
+
+            </then>
+            <else>
+
+                <!-- messaggi -->
+                <echo msg="percorso del file properties non settato!" />
+                <echo msg="la sintassi corretta è:" />
+                <echo msg="phing -f ./_usr/_deploy/_phing/_build.xml -propertyfile ./path/to/file.properties" />
+
+            </else>
+        </if>
+
+    </target>
+
+</project>

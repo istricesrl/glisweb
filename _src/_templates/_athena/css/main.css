@@ -10,7 +10,7 @@
  * - stili del nav
  * - stili delle tab
  * - stili della sidebar
- * - stili delle breadcrumb
+ * - stili delle breadcrumbs
  * - stili del main
  * - stili del footer
  * - stili delle timeline
@@ -19,6 +19,7 @@
  * - stili dell'agenda
  * - stili della struttura anagrafica
  * - stili della tabella di descrizione formato importazione
+ * - stili del pannello cassa
  */
 
 /* stili di base */
@@ -46,13 +47,16 @@ h2, h3 {
     font-size: 1.2em;
 }
 
+h4, h5 {
+    font-size: 1em;
+}
+
+
 /* stili dei link */
 
-a,
-a:visited,
-a:hover,
-a:active {
-    color: #777777;
+a, a:visited, a:hover, a:active,
+a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
+        color: #777777;
 }
 
 /* stili delle view */
@@ -100,7 +104,13 @@ a:active {
 
 .view-table thead tr th select:hover {
     background-color: #eeeeee;
-    border-top-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.view-controls {
+    border-top: 1px solid #dddddd;
+    padding-top: 10px;
 }
 
 .view-controls button {
@@ -146,17 +156,52 @@ label.form-check-label {
 }
 
 .label-top {
-    font-size: .85em;
-    height: 1.75em;
+    font-size: .8em;
+/*    height: 1.75em; */
     color: #777777;
+
+    position: absolute;
+    top: -0.75em;
+    left: 1.25em;
+    background-color: white;
+    padding: 0em 0.5em;
+    z-index: 3000;
+
+    border: 1px solid rgba(206,212,218,1);
+    border-image: linear-gradient(to bottom, rgba(206,212,218,0) 25%,rgba(206,212,218,1) 25%,rgba(206,212,218,1) 75%,rgba(206,212,218,0) 75%);
+    border-image-slice: 1;
+
+
+/*
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+*/
 }
 
 legend {
     border-bottom: 1px solid #dddddd;
-    font-size: 1.3em;
-    font-weight: bold;
     margin: 0px;
     margin-bottom: 10px;
+}
+
+fieldset > legend > small {
+    white-space: nowrap;
+}
+
+@media (max-width: 991.98px) {
+    .form-sub {
+        border-bottom: 1px solid #dddddd;
+        margin: 0px;
+        margin-bottom: 10px;
+    }
+    .form-sub:last-child {
+        border: 0px;
+    }
+}
+
+legend {
+    font-size: 1.3em;
+    font-weight: bold;
 }
 
 legend .btn-sm {
@@ -194,12 +239,35 @@ fieldset.form-controls,
 fieldset.form-controls-free {
     border-top: 1px solid #dddddd;
     padding-top: 10px;
+    z-index: 5000;
 }
 
 fieldset.form-controls button {
     height: 31px;
     padding: 3px;
     width: 31px;
+}
+
+.form-control:focus {
+    border-color: #cccccc;
+    box-shadow: inset 0 1px 1px rgba(64, 64, 64, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);
+    }
+
+    @media (max-width: 991.98px) {
+    form.form-main,
+    form.form-filtro {
+        padding-bottom: 40px;
+    }
+    .view-controls,
+    fieldset.form-controls {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 5000;
+        padding: 10px 15px;
+        background-color: #eeeeee;
+    }
 }
 
 .bootstrap-select.form-control-sm .dropdown-toggle {
@@ -263,6 +331,10 @@ select {
     cursor: pointer;
 }
 
+select.font-awesome {
+    font-size: 1.3em !important;
+}
+
 .form-check-input {
     margin-top: .25em;
 }
@@ -276,6 +348,10 @@ select {
 
 .btn-sm {
     font-size: 1em;
+}
+
+.btn-lg {
+    font-size: 1.5em;
 }
 
 .btn-xsm {
@@ -293,12 +369,30 @@ select {
     width: 1.75em;
 }
 
+.btn-secondary {
+    border: 0px;
+}
+
+.btn-secondary {
+    background-color: #777777 !important;
+}
+
+.btn-secondary.clicked,
+.btn-secondary:hover,
+.btn-secondary:active,
+.btn-secondary:visited {
+    background-color: #555555 !important;
+}
+
 /* stili dell'header */
 
-#widget .btn {
+.widget .btn {
     border-radius: 0px;
     font-size: 1.6em;
     height: 45px;
+}
+
+.widget .btn-sqr {
     width: 45px;
 }
 
@@ -327,8 +421,8 @@ header.subform-intestazione {
     margin-bottom: 10px;
 }
 
-#info {
-    background-color: #6c757d;
+#info, #jobs {
+    background-color: #555555;
     color: #ffffff;
     display: none;
     padding: 15px;
@@ -338,12 +432,12 @@ header.subform-intestazione {
     z-index: 999;
 }
 
-#info h2 {
+#info h2, #jobs h2 {
     font-size: 1.6em;
     margin: 0px;
 }
 
-#info p {
+#info p, #jobs p {
     margin: 0px;
     margin-top: 5px;
 }
@@ -351,7 +445,11 @@ header.subform-intestazione {
 #info a,
 #info a:visited,
 #info a:hover,
-#info a:active {
+#info a:active,
+#jobs a,
+#jobs a:visited,
+#jobs a:hover,
+#jobs a:active {
     color: #ffffff;
 }
 
@@ -410,10 +508,12 @@ nav li.nav-item > a.nav-link:active {
 
 nav ul ul {
     background-color: #ffffff;
+    padding-left: 1em;
 }
 
 nav ul ul ul {
     background-color: #ffffff;
+    padding-left: 1em;
 }
 
 /* stili delle tab */
@@ -430,6 +530,11 @@ nav ul ul ul {
 
 .nav-tabs .nav-item {
     cursor: pointer;
+}
+
+.nav-tabs .nav-item.nav-icon a.nav-link {
+    font-size: 1.55em;
+    padding: .15em .5em;
 }
 
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
@@ -449,6 +554,12 @@ ul.nav-tabs li.nav-item > a.nav-link:active {
     font-weight: bold;
 }
 
+select.select-tabs {
+    border: 0px;
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 10px;
+}
+
 /* stili della sidebar */
 
 .sidebar {
@@ -463,9 +574,9 @@ ul.nav-tabs li.nav-item > a.nav-link:active {
     top: 0px;
 }
 
-/* stili delle breadcrumb */
+/* stili delle breadcrumbs */
 
-.breadcrumb {
+.breadcrumbs {
     background-color: transparent;
     display: block !important;
     margin: 0px;
@@ -475,8 +586,15 @@ ul.nav-tabs li.nav-item > a.nav-link:active {
     white-space: nowrap;
 }
 
-.breadcrumb .breadcrumb-item {
+.breadcrumbs .breadcrumb-item {
     display: inline;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    display: inline-block;
+    padding-right: .5rem;
+    color: black;
+    content: "/";
 }
 
 /* stili del main */
@@ -541,10 +659,17 @@ main.container-fluid.browser {
     padding: 10px;
 }
 
-.browse .fa {
+.browse > .col:first-child > .fa {
     font-size: 1.2em;
     font-weight: bold;
     padding: 0px 10px;
+}
+
+.browse .btn-sqr {
+    font-size: 1.5em;
+    border-radius: 0px;
+    height: 40px;
+    width: 40px;
 }
 
 /* stili dell'interfaccia metro */
@@ -559,7 +684,7 @@ main.container-fluid.browser {
     font-size: 1.3em;
     font-weight: bold;
     margin: 0px;
-    padding: 3px;
+    padding: 3px 0px;
 }
 
 .metro h4 {
@@ -668,7 +793,6 @@ main.container-fluid.browser {
     background-color: #dddddd;
 }
 
-
 /* stili della struttura anagrafica */
 
 .browsing-tree .current > a {
@@ -721,4 +845,45 @@ ul.browsing-tree {
     border-right: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
     padding: 5px;
+}
+
+/* stili del pannello cassa */
+
+.pannello-cassa .btn-secondary {
+    border-radius: 0px;
+}
+
+/* stili per i cartellini */
+.cartellini {
+    width: auto !important;
+}
+
+
+.cartellini td, th {
+    vertical-align: middle !important;
+    max-width: 150px;
+}
+
+.cartellini tbody input{
+    height: 25px;
+}
+
+.cartellini tbody tr:last-child{
+    border-bottom: none;
+    height: 40px;
+}
+
+.cartellini th li{
+    text-align: left !important;
+}
+
+/* stile per il loader del campo */
+
+div.combobox-container > .spinner-border {
+    position: absolute;
+    right: 0.5em;
+    height: 1.5em;
+    width: 1.5em;
+    top: 0.5em;
+    display: none;
 }

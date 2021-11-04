@@ -1,0 +1,100 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/anagrafica.form.cliente.sub.html' as sub %}
+{% import 'bin/anagrafica.form.default.sub.html' as dfs %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+	    {# MODULO PRINCIPALE #}
+
+	    <fieldset>
+		<legend>dati commerciali</legend>
+		
+		<div class="form-group form-row">
+			<div class="col">
+				<span class="label-top">ranking</span>
+				{{ frm.select( table, '', '', 'id_tipologia_crm', '', etc.select.tipologie_crm, request ) }}
+			</div>
+		    <div class="col">
+				<span class="label-top">agente</span>
+				{{ frm.selectBox( table, '', '', 'id_agente', '', etc.select.agenti, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_agente', page, pages, ietf ) }}
+			</div>
+			<div class="col">
+				<span class="label-top">responsabile operativo</span>
+				{{ frm.selectBox( table, '', '', 'id_responsabile_operativo', '', etc.select.responsabili_operativi, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_responsabile_operativo', page, pages, ietf ) }}
+			</div>
+		</div>
+		
+		<div class="form-group form-row">
+			<div class="col">
+				<span class="label-top">note commerciali</span>
+				{{ frm.textarea( table, '', '', 'note_commerciali', '', 3, request ) }}
+		    </div>
+        </div>
+		
+		</fieldset>
+			<fieldset>
+			<legend>condizioni di vendita</legend>
+			<div class="form-group form-row">
+				<div class="col">
+					<span class="label-top">condizioni di vendita</span>
+					{{ frm.textarea( table, '', '', 'condizioni_vendita', 'descrizione delle condizioni di vendita applicate al cliente', 3, request, '', '', 'ckEditor', 200 ) }}
+				</div>
+			</div>
+
+		</fieldset>
+
+		{# SUBFORM SETTORI E ATTIVITA #}
+		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
+
+		{# SUBFORM IBAN #}
+		{{ dfs.iban( table, 'iban', 'dati bancari', site, page, pages, localization.language.ietf, etc, request, session ) }}
+
+	    {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+		{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,1 @@
+DROP VIEW IF EXISTS todo_completa_view;

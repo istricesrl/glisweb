@@ -29,9 +29,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row">
-    <div class="col-md-12">
-	<form id="form-{{ table }}" class="" action="{{ page.path[ ietf ] }}" method="post">
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -47,11 +47,11 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
-		    <div class="col">
+		    <div class="col-12 col-md">
 			<span class="label-top">anagrafica</span>
-			{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', pages['anagrafica.form'].path[ ietf ] ~ '?anagrafica[id]=' ~ request[ table ].id_anagrafica ~ '&__backurl__=' ~ page.backurl[ ietf ], pages['anagrafica.form'].path[ ietf ] ~ '?__backurl__=' ~ page.backurl[ ietf ] ) }}
-		    </div>
-		    <div class="col">
+			{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+			</div>
+		    <div class="col-12 col-md">
 			<span class="label-top">e-mail per recupero password</span>
 			{{ frm.select( table, '', '', 'id_mail', '', etc.select.mail, request ) }}
 		    </div>
@@ -60,14 +60,13 @@
 		<div class="form-group form-row">
 		    <div class="col-12 col-md-5">
 			<span class="label-top">username</span>
-			{{ frm.inputRequired( table, '', '', 'username', 'nome utente', '', request ) }}
+			{{ frm.inputRequired( table, '', '', 'username', '', '', request ) }}
 		    </div>
 		    <div class="col">
 			<span class="label-top">password</span>
-			{{ frm.input( table, '', '', 'password', 'password (se possibile almeno 8-12 caratteri alfanumerici)', '', request, '', 'password' ) }}
+			{{ frm.input( table, '', '', 'password', 'se possibile almeno 8-12 caratteri alfanumerici', '', request, '', 'password' ) }}
 		    </div>
 		    <div class="col-auto col-form-label">
-			<span class="label-top">&nbsp;</span>
 			<div class="form-check">
 			    {{ frm.checkbox( table, '', '', 'se_attivo', 'attivo', '', request, etc.attivo ) }}
 			</div>
@@ -76,16 +75,14 @@
 
 	    </fieldset>
 
+		{# SUBFORM GRUPPI #}
 	    {{ sub.gruppi( table, 'account_gruppi', 'gruppi', site, page, pages, ietf, etc, request, session ) }}
 
-	    {{ sub.attribuzione( table, 'account_gruppi_attribuzione', 'attribuzione automatica', site, page, pages, ietf, etc, request, session ) }}
-
 	    {# BOTTONI E COMANDI DEL MODULO #}
-
-	    <fieldset class="form-controls">
-		{{ def.controls( page, pages, localization.language.ietf, '', table, request ) }}
-	    </fieldset>
-
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+		</fieldset>
+	
 	</form>
     </div>
 </section>

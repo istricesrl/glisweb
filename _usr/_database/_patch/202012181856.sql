@@ -1,0 +1,1 @@
+ALTER TABLE categorie_anagrafica DROP INDEX se_agenzia, ADD INDEX se_agenzia_interinale (se_agenzia_interinale);

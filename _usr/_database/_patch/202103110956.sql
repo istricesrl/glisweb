@@ -1,0 +1,1 @@
+ALTER TABLE risorse_categorie DROP INDEX id_documento;

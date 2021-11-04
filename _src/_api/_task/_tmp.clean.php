@@ -27,9 +27,10 @@
     // inizializzo l'array del risultato
 	$status = array();
 
+    // faccio il flush della cache
+	$status['esito'] = recursiveDelete( DIR_TMP );
+
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    buildJson( $status );
 	}
-
-?>

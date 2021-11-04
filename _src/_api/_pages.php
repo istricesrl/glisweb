@@ -24,6 +24,7 @@
 	require '../_config.php';
 
     // debug
+	// die('inizio api pages');
 	// ini_set( 'display_errors', 1 );
 	// ini_set( 'display_startup_errors', 1 );
 	// error_reporting( E_ALL );
@@ -47,10 +48,22 @@
 
     // includo il file di configurazione del template
 	if( file_exists( $ct['page']['template']['ini'] ) ) {
+		// sostituisco il file di configurazione del template con la controparte custom se presente
+		if( file_exists( path2custom( $ct['page']['template']['ini'] ) ) ) {
+			$ct['page']['template']['ini'] = path2custom( $ct['page']['template']['ini'] );
+		}
+		// unisco le direttive di configurazione del file a quelle già esistenti
 	    $ct['page'] = array_merge_recursive(
-		$ct['page'],
-		parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
+			$ct['page'],
+			parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
 	    );
+		// includo i file di configurazione aggiuntivi del template
+		foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
+			$ct['page'] = array_merge_recursive(
+				$ct['page'],
+				parse_ini_file( $addCnf, true, INI_SCANNER_RAW )
+			);
+		}
 	} else {
 	    logWrite( 'il file ' . $ct['page']['template']['ini'] . ' non esiste', 'template', LOG_CRIT );
 	    die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') dannaeggiato o mancante' );
@@ -58,6 +71,21 @@
 
     // log
 	appendToFile( 'fine caricamento file INI del template' . PHP_EOL, FILE_LATEST_RUN );
+
+	// aggiunta del tema ai CSS da caricare
+	// TODO testare cosa fa con i vari css/main.css (standard e custom) css/minchia.css (standard e custom) css/themes/sticazzi.css (standard e custom)
+	if( isset( $ct['page']['template']['theme'] ) ) {
+		foreach( array( 'css/', 'css/themes/' ) as $tDir ) {
+			$tFile = $ct['page']['template']['path'] . $tDir . $ct['page']['template']['theme'];
+			$tcFile = path2custom( $tFile );
+			if( file_exists( DIR_BASE . $tFile ) ) {
+				$ct['page']['css']['template'][] = $tDir . $ct['page']['template']['theme'];
+			}
+			if( file_exists( DIR_BASE . $tcFile ) ) {
+				$ct['page']['css']['custom'][] = $tcFile;
+			}
+		}
+	}
 
     // log
 	appendToFile( 'inizio controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
@@ -80,8 +108,8 @@
 	    foreach( $ct['page']['macro'] as $macro ) {
 		$macroAlternative = path2custom( str_replace( '.php', '.alt.php', $macro ) );
 		if( file_exists( fullPath( $macroAlternative ) ) ) {
-		    timerCheck( $cf['speed'], $macroAlternative );
 		    require fullPath( $macroAlternative );
+		    timerCheck( $cf['speed'], $macroAlternative );
 		    appendToFile( 'inclusione macro -> ' . $macroAlternative . PHP_EOL, FILE_LATEST_RUN );
 		} else {
 		    timerCheck( $cf['speed'], fullPath( $macro ) );
@@ -89,8 +117,8 @@
 		    appendToFile( 'inclusione macro -> ' . $macro . PHP_EOL, FILE_LATEST_RUN );
 		    $macroLocal = path2custom( $macro );
 		    if( file_exists( fullPath( $macroLocal ) ) && $macro !== $macroLocal ) {
-			timerCheck( $cf['speed'], $macroLocal );
 			require fullPath( $macroLocal );
+			timerCheck( $cf['speed'], $macroLocal );
 			appendToFile( 'inclusione macro -> ' . $macroLocal . PHP_EOL, FILE_LATEST_RUN );
 		    }
 		}
@@ -100,6 +128,9 @@
     // debug
 	// print_r( $ct['page']['macro'] );
 	// print_r( get_included_files() );
+
+    // timer
+	timerCheck( $cf['speed'], 'fine inclusione macro' );
 
     // log
 	appendToFile( 'fine inclusione macro' . PHP_EOL, FILE_LATEST_RUN );
@@ -117,13 +148,21 @@
 	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = readStringFromFile( $ctFile );
 	}
 
+	// debug
+	// var_dump( $ctFile );
+
     // timer
 	timerCheck( $cf['speed'], 'fine inclusione contenuti statici' );
 
+	// log
+	appendToFile( 'fine inclusione contenuti statici' . PHP_EOL, FILE_LATEST_RUN );
+
     // @todo documentare questa cosa delle favicon
 
-    // scrittura dell'indice della cache
-	memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['cache']['index'] );
+	// scrittura dell'indice della cache
+	// NOTA questa cosa viene fatta qui perché l'index potrebbe essere modificato dalle macro
+	memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
+	// memcacheWrite( $cf['memcache']['connection'], 'CACHE_REGISTRY', $cf['memcache']['registry'] );
 
     // timer
 	timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
@@ -164,6 +203,9 @@
     // timer
 	timerCheck( $cf['speed'], 'fine ricerca favicons' );
 
+	// log
+	appendToFile( 'fine ricerca favicons' . PHP_EOL, FILE_LATEST_RUN );
+
     // debug
 	// print_r( $ct['page'] );
 	// print_r( $ct['page']['template']['menu'] );
@@ -180,13 +222,16 @@
 	}
 
     // costruzione delle briciole di pane
-	$ct['page']['template']['breadcrumb'] = buildBreadcrumb( $ct['page'], $ct['page']['id'] );
+	$ct['page']['template']['breadcrumbs'] = buildBreadcrumbs( $ct['page'], $ct['page']['id'] );
 
     // costruzione del selettore lingua
 	$ct['page']['template']['flags'] = buildFlags( $ct['page'], $cf['localization']['language']['ietf'] );
 
     // timer
 	timerCheck( $cf['speed'], 'fine generazione elementi secondari di navigazione' );
+
+	// log
+	appendToFile( 'fine generazione elementi secondari di navigazione' . PHP_EOL, FILE_LATEST_RUN );
 
     // debug
 	// print_r( $ct['page']['template'] );
@@ -283,7 +328,21 @@
     // renderizzo il template
 	if( isset( $ct['page']['template']['type'] ) ) {
 
-	    switch( $ct['page']['template']['type'] ) {
+		echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_EOL;
+		
+		if( ! empty( $ct['page']['template']['path'] ) ) {
+			echo PHP_EOL . '<!-- template: ' . $ct['page']['template']['path'] . ' -->' . PHP_EOL;
+		}
+
+		if( ! empty( $ct['page']['template']['schema'] ) ) {
+			echo PHP_EOL . '<!-- schema: ' . $ct['page']['template']['schema'] . ' -->' . PHP_EOL;
+		}
+
+		if( ! empty( $ct['page']['template']['theme'] ) ) {
+			echo PHP_EOL . '<!-- tema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
+		}
+
+		switch( $ct['page']['template']['type'] ) {
 
 		case 'twig':
 
@@ -295,10 +354,13 @@
 
 		    // avvio di Twig
 #			Twig_Autoloader::register();
-			$loader = new Twig_Loader_Filesystem( DIR_BASE . $ct['page']['template']['path'] );
+			$loader = new \Twig\Loader\FilesystemLoader( DIR_BASE . $ct['page']['template']['path'] );
 
 		    // timer
 			timerCheck( $cf['speed'], '-> -> caricamento template' );
+
+			// log
+			appendToFile( 'fine caricamento template Twig ' . $ct['page']['template']['path'] . PHP_EOL, FILE_LATEST_RUN );
 
 		    // debug
 			// print_r( $cf['twig']['profile'] );
@@ -309,7 +371,8 @@
 			$ct['page']['template']['paths'] = array_replace_recursive(
 			    ( isset( $ct['page']['template']['paths'] ) ) ? $ct['page']['template']['paths'] : array(),
 #			    array_unique( glob( DIRECTORY_BASE . '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/' . str_replace( '_', '{,_}', $ct['page']['template']['path'] ), GLOB_BRACE ) )
-			    array_unique( glob( DIR_MOD_ATTIVI . '/' . glob2custom( $ct['page']['template']['path'] ), GLOB_BRACE ) )
+#			    array_unique( glob( DIR_MOD_ATTIVI . glob2custom( $ct['page']['template']['path'] ), GLOB_BRACE ) )
+				array_unique( glob( glob2custom( DIR_MOD_ATTIVI . $ct['page']['template']['path'] ), GLOB_BRACE ) )
 			);
 
 		    // aggiungo la versione locale del template
@@ -326,6 +389,12 @@
 			    $loader->prependPath( $add );
 			}
 
+			// log
+			logWrite( 'path dei template aggiuntivi: ' . implode( ', ', $ct['page']['template']['paths'] ), 'twig' );
+
+			// log
+			appendToFile( 'fine inserimento dei path aggiuntivi in Twig: ' . implode( ', ', $ct['page']['template']['paths'] ) . PHP_EOL, FILE_LATEST_RUN );
+
 		    // debug
 			// print_r( $cf['twig']['profile'] );
 			// print_r( $ct['page']['template']['path'] );
@@ -338,18 +407,27 @@
 			    $loader->addPath( path2custom( DIR_SRC_HTML ) );
 			}
 
+			// log
+			appendToFile( 'fine inserimento dei path custom aggiuntivi in Twig' . PHP_EOL, FILE_LATEST_RUN );
+
 		    // ambiente
-			$twig = new Twig_Environment( $loader, $cf['twig']['profile'] );
+			$twig = new \Twig\Environment( $loader, $cf['twig']['profile'] );
 
 		    // timer
 			timerCheck( $cf['speed'], '-> -> creazione ambiente Twig' );
 
+			// log
+			appendToFile( 'fine creazione ambiente Twig' . PHP_EOL, FILE_LATEST_RUN );
+
 		    // estensioni
-			$twig->addExtension( new Twig_Extension_StringLoader() );
-			$twig->addExtension( new Twig_Extension_Debug() );
+			$twig->addExtension( new \Twig\Extension\StringLoaderExtension() );
+			// $twig->addExtension( new Twig_Extension_Debug() );
 
 		    // timer
 			timerCheck( $cf['speed'], '-> -> estensioni Twig' );
+
+			// log
+			appendToFile( 'fine inclusione estensioni Twig' . PHP_EOL, FILE_LATEST_RUN );
 
 		    // debug
 			// print_r( $ct['page'] );
@@ -360,6 +438,9 @@
 
 		    // timer
 			timerCheck( $cf['speed'], '-> fine render template' );
+
+			// log
+			appendToFile( 'fine render template Twig' . PHP_EOL, FILE_LATEST_RUN );
 
 		    // output
 			build( $html, MIME_TEXT_HTML );
@@ -417,29 +498,38 @@
     // timer
 	timerCheck( $cf['speed'], 'fine headers' );
 
-    // TODO documentare i parametri a una sola lettera (sono nei Google Docs?)
+	// log
+	appendToFile( 'fine invio headers HTTP' . PHP_EOL, FILE_LATEST_RUN );
 
-    // rivelazione dei dati
-	if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
-/*	    array_walk_recursive(
-		$ct,
-		function( &$v, $k ) {
-		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
-			$v = '***';
-		    }
+    // TODO documentare i parametri a una sola lettera (sono nei Google Docs?)
+	// i parametri di una lettera sono riservati a DEV e TEST
+	if( SITE_STATUS != PRODUCTION ) {
+
+		// rivelazione dei dati
+		if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
+	/*	    array_walk_recursive(
+			$ct,
+			function( &$v, $k ) {
+				if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
+				$v = '***';
+				}
+			}
+			);
+	*/	    $tpu = $ct;
+			foreach( $_REQUEST['u'] as $tu ) {
+			if( isset( $tpu[ $tu ] ) ) {
+				$tpu = $tpu[ $tu ];
+			}
+			}
+			echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
 		}
-	    );
-*/	    $tpu = $ct;
-	    foreach( $_REQUEST['u'] as $tu ) {
-		if( isset( $tpu[ $tu ] ) ) {
-		    $tpu = $tpu[ $tu ];
-		}
-	    }
-	    echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
+
+		// debug
+		// print_r( $cf );
+
 	}
 
-    // debug
-	// print_r( $cf );
+	// TODO qui inserire la formattazione con Tidy?
 
     // cache del buffer
 	echo PHP_EOL;
@@ -464,6 +554,9 @@
     // timer
 	timerCheck( $cf['speed'], 'fine esecuzione framework' );
 
+	// log
+	appendToFile( 'fine esecuzione framework' . PHP_EOL, FILE_LATEST_RUN );
+
     // calcolo tempi
 	$tms = array_keys( $cf['speed'] );
 	$run = end( $tms );
@@ -472,13 +565,11 @@
     // log
 	if( $flt > 0.75 || memory_get_usage( true ) > ( 1024 * 1024 * 15 ) ) {
 	    writeToFile(
-		$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
-		'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
-		print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
-		'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
-		' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
-		DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
+			$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
+			'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
+			print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
+			'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
+			' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
+			DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
 	    );
 	}
-
-?>

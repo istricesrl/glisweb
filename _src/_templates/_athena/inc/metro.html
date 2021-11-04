@@ -12,9 +12,9 @@
 	{% if obj.url %}
 	<a href="{{ obj.host }}{{ obj.url }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
 	{% elseif obj.modal %}
-	<a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}">
+	<a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
 	{% elseif obj.ws %}
-	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}');">
+	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
 	{% endif %}
 	    <div class="media">
 		<div class="media-left">
@@ -27,7 +27,7 @@
 	    </div>
 	</a>
     </div>
-    {% if cnt == 3 or loop.last %}</div>
+    {% if cnt == 2 or loop.last %}</div>
 	{% set cnt = 0 %}
 	{% else %}
 	{% set cnt = cnt + 1 %}

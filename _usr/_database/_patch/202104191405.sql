@@ -1,0 +1,1 @@
+ALTER TABLE `anagrafica_view_static` ADD `se_squadra` INT(1) NULL DEFAULT NULL AFTER `se_sostituto`;

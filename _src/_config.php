@@ -193,7 +193,7 @@
      * 400         | configurazioni relative all'URL rewriting
      * 500         | configurazioni relative alla posta
      * 600         | integrazioni con piattaforme di terze parti
-     * 700         | configurazioni relative all'importazione e all'esportazione dei dati
+     * 700         | configurazioni relative all'importazione, all'elaborazione e all'esportazione dei dati
      * 800         | -
      * 900         | operazioni finali
      *
@@ -235,9 +235,12 @@
      * @todo documentare
      *
      */
-	function path2custom( $p ) {
-	    return str_replace( '_', NULL, $p );
-	}
+    function path2custom( $p, $s = NULL ) {
+        $p = str_replace( $_SERVER['DOCUMENT_ROOT'], '§', $p );
+        $p = str_replace(  '_', $s, $p );
+        $p = str_replace( '§', $_SERVER['DOCUMENT_ROOT'], $p );
+        return $p;
+    }
 
     /**
      *
@@ -245,7 +248,7 @@
      *
      */
 	function glob2custom( $p ) {
-	    return str_replace( '_', '{,_}', $p );
+        return path2custom( $p, '{,_}' );
 	}
 
     /**
@@ -266,7 +269,7 @@
 	    array_walk_recursive(
 		$a,
 		function( &$v, $k ) {
-		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ), true ) ) {
+		    if( in_array( $k, array( 'password', 'private', 'key', 'secret', 'sa', 'sb', 'sc' ), true ) ) {
 			$v = '***';
 		    }
 		}
@@ -285,7 +288,9 @@
 	define( 'DIR_MOD'			, DIR_BASE . '_mod/' );
 	define( 'DIR_SRC'			, DIR_BASE . '_src/' );
 	define( 'DIR_SRC_API'			, DIR_BASE . '_src/_api/' );
-	define( 'DIR_SRC_API_TASK'		, DIR_BASE . '_src/_api/_task/' );
+    define( 'DIR_SRC_API_JOB'		, DIR_BASE . '_src/_api/_job/' );
+    define( 'DIR_SRC_API_REPORT'		, DIR_BASE . '_src/_api/_report/' );
+    define( 'DIR_SRC_API_TASK'		, DIR_BASE . '_src/_api/_task/' );
 	define( 'DIR_SRC_CONFIG'		, DIR_BASE . '_src/_config/' );
 	define( 'DIR_SRC_CONFIG_EXT'		, DIR_BASE . '_src/_config/_ext/' );
 	define( 'DIR_SRC_HTML'			, DIR_BASE . '_src/_html/' );
@@ -296,6 +301,8 @@
 	define( 'DIR_SRC_LIB'			, DIR_BASE . '_src/_lib/' );
 	define( 'DIR_SRC_LIB_EXT'		, DIR_BASE . '_src/_lib/_ext/' );
 	define( 'DIR_USR'			, DIR_BASE . '_usr/' );
+    define( 'DIR_USR_DATABASE'      , DIR_USR . '_database/');
+    define( 'DIR_USR_DATABASE_PATCH'      , DIR_USR_DATABASE . '_patch/');
 	define( 'DIR_USR_DOCS'			, DIR_BASE . '_usr/_docs/' );
 	define( 'DIR_USR_DOCS_BUILD'		, DIR_BASE . '_usr/_docs/build/' );
 	define( 'DIR_USR_DOCS_BUILD_HTML'	, DIR_BASE . '_usr/_docs/build/html/' );
@@ -308,10 +315,18 @@
 	define( 'DIR_VAR_CACHE'			, DIR_BASE . 'var/cache/' );
 	define( 'DIR_VAR_CACHE_PAGES'		, DIR_BASE . 'var/cache/pages/' );
 	define( 'DIR_VAR_CACHE_TWIG'		, DIR_BASE . 'var/cache/twig/' );
+	define( 'DIR_VAR_CONTENUTI'		, DIR_BASE . 'var/contenuti/' );
 	define( 'DIR_VAR_IMMAGINI'		, DIR_BASE . 'var/immagini/' );
-	define( 'DIR_VAR_LOG'			, DIR_BASE . 'var/log/' );
+    define( 'DIR_VAR_LOG'			, DIR_BASE . 'var/log/' );
+    define( 'DIR_VAR_LOG_MYSQL'   , DIR_VAR_LOG . 'mysql/' );
+    define( 'DIR_VAR_LOG_MYSQL_PATCH'   , DIR_VAR_LOG_MYSQL . 'patch/' );
 	define( 'DIR_VAR_LOG_LATEST'		, DIR_BASE . 'var/log/latest/' );
 	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
+    define( 'DIR_VAR_SPOOL'			, DIR_BASE . 'var/spool/' );
+    define( 'DIR_VAR_SPOOL_CART'			, DIR_BASE . 'var/spool/cart/' );
+    define( 'DIR_VAR_SPOOL_MAIL'			, DIR_BASE . 'var/spool/mail/' );
+    define( 'DIR_VAR_SPOOL_PAYMENT'			, DIR_BASE . 'var/spool/payment/' );
+    define( 'DIR_VAR_SPOOL_PRINT'			, DIR_BASE . 'var/spool/print/' );
 
     // file
     define( 'FILE_AUTOLOAD'         ,  DIR_SRC_LIB_EXT . 'autoload.php' );
@@ -323,7 +338,8 @@
 	define( 'FILE_LICENSE'			, path2custom( DIR_ETC ) . 'license.conf' );
 	define( 'FILE_LOREM'			, DIR_ETC . '_lorem.conf' );
 	define( 'FILE_MANUAL_HTML'		, DIR_USR_DOCS_BUILD_HTML . 'index.html' );
-	define( 'FILE_MANUAL_PDF'		, DIR_USR_DOCS_BUILD_LATEX . 'refman.pdf' );
+    define( 'FILE_MANUAL_PDF'		, DIR_USR_DOCS_BUILD_LATEX . 'refman.pdf' );
+    define( 'FILE_MYSQL_PATCH'      , DIR_USR_DATABASE . 'mysql.schema.version');
 	define( 'FILE_REDIRECT'			, path2custom( DIR_ETC ) . 'redirect.csv' );
 	define( 'FILE_STATUS'			, path2custom( DIR_ETC ) . 'status.conf' );
 
@@ -362,6 +378,11 @@
 	define( 'MIME_MULTIPART_FORM_DATA'	, 'multipart/form-data' );
 	define( 'MIME_TEXT_PLAIN'		, 'text/plain' );
 	define( 'MIME_TEXT_HTML'		, 'text/html' );
+
+    // controllo scrittura
+    if( ! is_writeable( DIR_BASE ) ) {
+        die( 'la cartella di installazione non è scrivibile, lanciare _gw.permissions.reset.sh' );
+    }
 
     // costanti per l'encoding
 	define( 'ENCODING_UTF8'			, 'utf-8' );
@@ -446,11 +467,13 @@
     // NOTA la lettura dei moduli attivi dalle variabili d'ambiente è obsoleta
 
     // moduli attivi
-	define( 'MODULI_ATTIVI'				, $cf['mods']['active']['string'] );
-	define( 'DIR_MOD_ATTIVI'			, DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
-	define( 'DIR_MOD_ATTIVI_SRC_LIB'		, DIR_MOD_ATTIVI . '_src/_lib/' );
+	define( 'MODULI_ATTIVI'			        	    , $cf['mods']['active']['string'] );
+	define( 'DIR_MOD_ATTIVI'			            , DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
+	define( 'DIR_MOD_ATTIVI_SRC_API_JOB'	        , DIR_MOD_ATTIVI . '_src/_api/_job/' );
 	define( 'DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS'	, DIR_MOD_ATTIVI . '_src/_inc/_controllers/' );
-	define( 'DIR_MOD_ATTIVI_ETC_LOC'		, DIR_MOD_ATTIVI . '_etc/_loc/' );
+	define( 'DIR_MOD_ATTIVI_SRC_INC_MACRO'	        , DIR_MOD_ATTIVI . '_src/_inc/_macro/' );
+	define( 'DIR_MOD_ATTIVI_SRC_LIB'		        , DIR_MOD_ATTIVI . '_src/_lib/' );
+	define( 'DIR_MOD_ATTIVI_ETC_LOC'		        , DIR_MOD_ATTIVI . '_etc/_loc/' );
 
     // collego $ct
 	$ct['mods']				= &$cf['mods'];
@@ -458,7 +481,7 @@
     // ricerca dei files di libreria
 	$arrayLibrerieBase			= glob( DIR_SRC_LIB . '_*.*.php' );
 	$arrayLibrerieModuli			= glob( DIR_MOD_ATTIVI_SRC_LIB . '_*.*.php', GLOB_BRACE );
-	$arrayLibrerie				= array_merge( $arrayLibrerieBase , $arrayLibrerieModuli );
+	$arrayLibrerie				= array_unique( array_merge( $arrayLibrerieBase , $arrayLibrerieModuli ) );
 
     /**
      *
@@ -475,12 +498,16 @@
 
     // inclusione dei files di libreria
 	foreach( $arrayLibrerie as $libreria ) {
-	    $locale = path2custom( $libreria );
+        $locale = path2custom( $libreria );
+        $aggiuntiva = str_replace( '.php', '.add.php', $locale );
 	    if( file_exists( $locale ) ) {
 		require $locale;
 	    } else {
 		require $libreria;
-	    }
+        }
+        if( file_exists( $aggiuntiva ) ) {
+        require $aggiuntiva;
+        }
 	}
 
     // debug
@@ -504,8 +531,15 @@
     // debug
 	// die( 'EXTERNAL LIBRARY CONFIG DONE' );
 
+    // richiesta esplicita di esecuzione runlevel
+    if( isset( $cf['runlevels']['run'] ) ) {
+        $lvls2run = '{' . implode( ',', $cf['runlevels']['run'] ) . '}*';
+    } else {
+        $lvls2run = '*';
+    }
+
     // ricerca dei files di configurazione standard
-	$arrayConfig				= glob( DIR_SRC_CONFIG . '_*.*.php' );
+	$arrayConfig				= glob( DIR_SRC_CONFIG . '_' . $lvls2run . '.*.php', GLOB_BRACE );
 
     // ordinamento dei file trovati
 	sort( $arrayConfig );
@@ -517,7 +551,7 @@
     // $cf['lvls']				contiene informazioni sui runlevel
     // $cf['lvls']['skip']			contiene l'array dei runlevel da saltare
 
-    // filtro per runlevels
+    // filtri per runlevels
 	if( ! isset( $cf['lvls']['skip'] ) ) { $cf['lvls']['skip'] = array(); }
 
     // NOTA le funzioni che hanno "to" nel nome per omogeneità con le altre dovrebbero diventare "2" ad esempio
@@ -616,5 +650,3 @@
 	// print_r( $cf );
 	// print_r( $ct );
 	// print_r( $cx );
-
-?>

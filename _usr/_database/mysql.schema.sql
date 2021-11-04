@@ -26,13 +26,16 @@ CREATE TABLE `__acl_anagrafica__` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_entita` int(11) NOT NULL,
   `id_gruppo` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
   `permesso` char(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_entita` (`id_entita`,`id_gruppo`),
   KEY `id_gruppo` (`id_gruppo`),
   KEY `id_entita_2` (`id_entita`),
+  KEY `id_account` (`id_account`),
   CONSTRAINT `__acl_anagrafica___ibfk_1_nofollow` FOREIGN KEY (`id_entita`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `__acl_anagrafica___ibfk_2_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `__acl_anagrafica___ibfk_2_nofollow` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `__acl_anagrafica___ibfk_3_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -47,11 +50,14 @@ CREATE TABLE `__acl_attivita__` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_entita` int(11) NOT NULL,
   `id_gruppo` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
   `permesso` char(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_entita` (`id_entita`,`id_gruppo`),
   KEY `id_gruppo` (`id_gruppo`),
+  KEY `id_account` (`id_account`),
   CONSTRAINT `__acl_attivita___ibfk_1` FOREIGN KEY (`id_entita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `__acl_attivita___ibfk_1_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `__acl_attivita___ibfk_2` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -109,6 +115,23 @@ SET character_set_client = utf8;
   `anno` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `__report_attivita_assenze__`
+--
+
+DROP TABLE IF EXISTS `__report_attivita_assenze__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_attivita_assenze__` (
+  `id_attivita` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `data_assenza` date NOT NULL,
+  UNIQUE KEY `unico` (`id_attivita`,`id_anagrafica`,`data_assenza`),
+  KEY `id_attivita` (`id_attivita`),
+  KEY `id_anagrafica` (`id_anagrafica`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Temporary table structure for view `__report_attivita_immobiliare__`
@@ -174,6 +197,45 @@ SET character_set_client = utf8;
   `mese` tinyint NOT NULL,
   `mandante` tinyint NOT NULL,
   `totale` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `__report_giacenza_mastri__`
+--
+
+DROP TABLE IF EXISTS `__report_giacenza_mastri__`;
+/*!50001 DROP VIEW IF EXISTS `__report_giacenza_mastri__`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `__report_giacenza_mastri__` (
+  `id` tinyint NOT NULL,
+  `mastro` tinyint NOT NULL,
+  `id_articolo` tinyint NOT NULL,
+  `descrizione` tinyint NOT NULL,
+  `matricola` tinyint NOT NULL,
+  `id_matricola` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
+  `id_destinatario` tinyint NOT NULL,
+  `quantita_totale` tinyint NOT NULL,
+  `importo_totale` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `__report_giacenza_mastri_orari__`
+--
+
+DROP TABLE IF EXISTS `__report_giacenza_mastri_orari__`;
+/*!50001 DROP VIEW IF EXISTS `__report_giacenza_mastri_orari__`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `__report_giacenza_mastri_orari__` (
+  `id` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `ore` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -408,6 +470,62 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Temporary table structure for view `__report_mastri__`
+--
+
+DROP TABLE IF EXISTS `__report_mastri__`;
+/*!50001 DROP VIEW IF EXISTS `__report_mastri__`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `__report_mastri__` (
+  `id` tinyint NOT NULL,
+  `mastro` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `emittente` tinyint NOT NULL,
+  `id_riga` tinyint NOT NULL,
+  `id_articolo` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `descrizione` tinyint NOT NULL,
+  `quantita` tinyint NOT NULL,
+  `importo` tinyint NOT NULL,
+  `listino` tinyint NOT NULL,
+  `data_lavorazione` tinyint NOT NULL,
+  `id_destinatario` tinyint NOT NULL,
+  `id_emittente` tinyint NOT NULL,
+  `id_listino` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
+  `id_matricola` tinyint NOT NULL,
+  `matricola` tinyint NOT NULL,
+  `todo` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `__report_mastri_orari__`
+--
+
+DROP TABLE IF EXISTS `__report_mastri_orari__`;
+/*!50001 DROP VIEW IF EXISTS `__report_mastri_orari__`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `__report_mastri_orari__` (
+  `id` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
+  `id_attivita` tinyint NOT NULL,
+  `nome_attivita` tinyint NOT NULL,
+  `ore` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
+  `id_cliente` tinyint NOT NULL,
+  `data` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `__report_notizie_immobili__`
 --
 
@@ -446,6 +564,102 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `__report_ore_clienti__`
+--
+
+DROP TABLE IF EXISTS `__report_ore_clienti__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_ore_clienti__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mese` int(11) NOT NULL,
+  `anno` int(11) NOT NULL,
+  `id_job` int(11) DEFAULT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `ore_previste` decimal(5,2) DEFAULT NULL,
+  `ore_fatte` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mese` (`mese`),
+  KEY `anno` (`anno`),
+  KEY `id_cliente` (`id_cliente`),
+  KEY `id_job` (`id_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `__report_ore_operatori__`
+--
+
+DROP TABLE IF EXISTS `__report_ore_operatori__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_ore_operatori__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mese` int(11) NOT NULL,
+  `anno` int(11) NOT NULL,
+  `id_job` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `ore_contratto` decimal(5,2) DEFAULT NULL,
+  `ore_fatte` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mese` (`mese`),
+  KEY `anno` (`anno`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `id_job` (`id_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `__report_ore_operatori_per_cliente__`
+--
+
+DROP TABLE IF EXISTS `__report_ore_operatori_per_cliente__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_ore_operatori_per_cliente__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mese` int(11) NOT NULL,
+  `anno` int(11) NOT NULL,
+  `id_job` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `ore_contratto` decimal(5,2) DEFAULT NULL,
+  `ore_fatte` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mese` (`mese`),
+  KEY `anno` (`anno`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `id_cliente` (`id_cliente`),
+  KEY `id_job` (`id_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `__report_ore_operatori_per_progetto__`
+--
+
+DROP TABLE IF EXISTS `__report_ore_operatori_per_progetto__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_ore_operatori_per_progetto__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mese` int(11) NOT NULL,
+  `anno` int(11) NOT NULL,
+  `id_job` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `ore_contratto` decimal(5,2) DEFAULT NULL,
+  `ore_fatte` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mese` (`mese`),
+  KEY `anno` (`anno`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_job` (`id_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Temporary table structure for view `__report_ore_previste__`
 --
 
@@ -480,6 +694,54 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `__report_ore_progetti__`
+--
+
+DROP TABLE IF EXISTS `__report_ore_progetti__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_ore_progetti__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mese` int(11) NOT NULL,
+  `anno` int(11) NOT NULL,
+  `id_job` int(11) DEFAULT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `ore_previste` decimal(5,2) DEFAULT NULL,
+  `ore_fatte` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mese` (`mese`),
+  KEY `anno` (`anno`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_job` (`id_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `__report_ore_progetti_tipologie_mastri__`
+--
+
+DROP TABLE IF EXISTS `__report_ore_progetti_tipologie_mastri__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_ore_progetti_tipologie_mastri__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mese` int(11) NOT NULL,
+  `anno` int(11) NOT NULL,
+  `id_job` int(11) DEFAULT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_tipologia_attivita` int(11) DEFAULT NULL,
+  `id_mastro` int(11) DEFAULT NULL,
+  `ore_previste` decimal(5,2) DEFAULT NULL,
+  `ore_fatte` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mese` (`mese`),
+  KEY `anno` (`anno`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_job` (`id_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Temporary table structure for view `__report_ore_residue__`
 --
 
@@ -494,6 +756,53 @@ SET character_set_client = utf8;
   `ore_residue` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `__report_progetti_assenze__`
+--
+
+DROP TABLE IF EXISTS `__report_progetti_assenze__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_progetti_assenze__` (
+  `id_progetto` char(32) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `data_assenza` date NOT NULL,
+  UNIQUE KEY `unico` (`id_progetto`,`id_anagrafica`,`data_assenza`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_anagrafica` (`id_anagrafica`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `__report_progetti_sostituti__`
+--
+
+DROP TABLE IF EXISTS `__report_progetti_sostituti__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_progetti_sostituti__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_progetto` char(32) NOT NULL,
+  `data_scopertura` date NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `punteggio` int(11) DEFAULT NULL,
+  `punti_sostituto` int(11) DEFAULT NULL,
+  `punti_progetto` int(11) DEFAULT NULL,
+  `punti_copertura` int(11) DEFAULT NULL,
+  `punti_distanza` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_progetto`,`data_scopertura`,`id_anagrafica`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `punti_sostituto` (`punti_sostituto`),
+  KEY `data_scopertura` (`data_scopertura`),
+  KEY `punteggio` (`punteggio`),
+  KEY `punti_progetto` (`punti_progetto`),
+  KEY `punti_copertura` (`punti_copertura`),
+  KEY `punti_distanza` (`punti_distanza`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Temporary table structure for view `__report_promemoria__`
@@ -543,6 +852,38 @@ SET character_set_client = utf8;
   `totale` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `__report_sostituzioni_attivita__`
+--
+
+DROP TABLE IF EXISTS `__report_sostituzioni_attivita__`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `__report_sostituzioni_attivita__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_attivita` char(32) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `punteggio` int(11) DEFAULT NULL,
+  `punti_sostituto` int(11) DEFAULT NULL,
+  `punti_progetto` int(11) DEFAULT NULL,
+  `punti_disponibilita` int(11) DEFAULT NULL,
+  `punti_distanza` int(11) DEFAULT NULL,
+  `se_scartato` int(1) DEFAULT NULL,
+  `se_convocato` int(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_attivita`,`id_anagrafica`),
+  KEY `id_attivita` (`id_attivita`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `punteggio` (`punteggio`),
+  KEY `punti_sostituto` (`punti_sostituto`),
+  KEY `punti_progetto` (`punti_progetto`),
+  KEY `punti_disponibilita` (`punti_disponibilita`),
+  KEY `punti_distanza` (`punti_distanza`),
+  KEY `se_scartato` (`se_scartato`),
+  KEY `se_convocato` (`se_convocato`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Temporary table structure for view `__report_sviluppi_immobili__`
@@ -721,6 +1062,7 @@ SET character_set_client = utf8;
   `utente` tinyint NOT NULL,
   `gruppi` tinyint NOT NULL,
   `id_gruppi` tinyint NOT NULL,
+  `gruppi_attribuzione` tinyint NOT NULL,
   `gruppo_sede` tinyint NOT NULL,
   `id_anagrafica_struttura` tinyint NOT NULL,
   `id_gruppi_attribuzione` tinyint NOT NULL,
@@ -763,6 +1105,7 @@ CREATE TABLE `anagrafica` (
   `id_diritto` int(11) DEFAULT NULL,
   `id_tipologia_crm` int(11) DEFAULT NULL,
   `id_agente` int(11) DEFAULT NULL,
+  `id_responsabile_operativo` int(11) DEFAULT NULL,
   `note_commerciali` text,
   `condizioni_vendita` text,
   `condizioni_acquisto` text,
@@ -793,7 +1136,9 @@ CREATE TABLE `anagrafica` (
   KEY `id_diritto` (`id_diritto`),
   KEY `id_stato_nascita` (`id_stato_nascita`),
   KEY `riferimento` (`riferimento`),
+  KEY `id_responsabile_operativo` (`id_responsabile_operativo`),
   CONSTRAINT `anagrafica_ibfk_1` FOREIGN KEY (`id_orientamento_sessuale`) REFERENCES `orientamenti_sessuali` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `anagrafica_ibfk_10_nofollow` FOREIGN KEY (`id_responsabile_operativo`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_2` FOREIGN KEY (`id_stato_nascita`) REFERENCES `stati` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `anagrafica_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -957,6 +1302,65 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `anagrafica_certificazioni`
+--
+
+DROP TABLE IF EXISTS `anagrafica_certificazioni`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `anagrafica_certificazioni` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_certificazione` int(11) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `id_emittente` int(11) DEFAULT NULL,
+  `data_emissione` date DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `id_certificazione` (`id_certificazione`),
+  KEY `id_emittente` (`id_emittente`),
+  KEY `data_scadenza` (`data_scadenza`),
+  CONSTRAINT `anagrafica_certificazioni_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `anagrafica_certificazioni_ibfk_2` FOREIGN KEY (`id_certificazione`) REFERENCES `certificazioni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `anagrafica_certificazioni_ibfk_2_nofollow` FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `anagrafica_certificazioni_view`
+--
+
+DROP TABLE IF EXISTS `anagrafica_certificazioni_view`;
+/*!50001 DROP VIEW IF EXISTS `anagrafica_certificazioni_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `anagrafica_certificazioni_view` (
+  `id` tinyint NOT NULL,
+  `id_certificazione` tinyint NOT NULL,
+  `id_anagrafica` tinyint NOT NULL,
+  `id_emittente` tinyint NOT NULL,
+  `data_emissione` tinyint NOT NULL,
+  `data_scadenza` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `anagrafica` tinyint NOT NULL,
+  `emittente` tinyint NOT NULL,
+  `certificazione` tinyint NOT NULL,
+  `id_tipologia_certificazione` tinyint NOT NULL,
+  `tipologia_certificazione` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -1406,6 +1810,7 @@ SET character_set_client = utf8;
   `id_diritto` tinyint NOT NULL,
   `id_tipologia_crm` tinyint NOT NULL,
   `id_agente` tinyint NOT NULL,
+  `id_responsabile_operativo` tinyint NOT NULL,
   `note_commerciali` tinyint NOT NULL,
   `condizioni_vendita` tinyint NOT NULL,
   `condizioni_acquisto` tinyint NOT NULL,
@@ -1443,17 +1848,23 @@ SET character_set_client = utf8;
   `se_allievo` tinyint NOT NULL,
   `se_agenzia_interinale` tinyint NOT NULL,
   `se_referente` tinyint NOT NULL,
+  `se_sostituto` tinyint NOT NULL,
+  `se_squadra` tinyint NOT NULL,
+  `se_produzione` tinyint NOT NULL,
+  `se_emittente` tinyint NOT NULL,
   `__label__` tinyint NOT NULL,
   `denominazione_fiscale` tinyint NOT NULL,
   `diritto` tinyint NOT NULL,
   `agente` tinyint NOT NULL,
+  `responsabile_operativo` tinyint NOT NULL,
   `categorie` tinyint NOT NULL,
   `telefoni` tinyint NOT NULL,
   `mail` tinyint NOT NULL,
   `specialita` tinyint NOT NULL,
   `provincia` tinyint NOT NULL,
   `codice_regime_fiscale` tinyint NOT NULL,
-  `gruppo` tinyint NOT NULL
+  `gruppo` tinyint NOT NULL,
+  `cap` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -1573,6 +1984,7 @@ CREATE TABLE `anagrafica_view_static` (
   `id_diritto` int(11) DEFAULT NULL,
   `id_tipologia_crm` int(11) DEFAULT NULL,
   `id_agente` int(11) DEFAULT NULL,
+  `id_responsabile_operativo` int(11) DEFAULT NULL,
   `note_commerciali` text,
   `condizioni_vendita` text,
   `condizioni_acquisto` text,
@@ -1610,10 +2022,15 @@ CREATE TABLE `anagrafica_view_static` (
   `se_allievo` int(1) DEFAULT NULL,
   `se_agenzia_interinale` int(1) DEFAULT NULL,
   `se_referente` int(1) DEFAULT NULL,
+  `se_sostituto` int(1) DEFAULT NULL,
+  `se_squadra` int(1) DEFAULT NULL,
+  `se_produzione` int(1) DEFAULT NULL,
+  `se_emittente` int(1) DEFAULT NULL,
   `__label__` char(255) DEFAULT NULL,
   `denominazione_fiscale` char(255) DEFAULT NULL,
   `diritto` char(255) DEFAULT NULL,
   `agente` char(255) DEFAULT NULL,
+  `responsabile_operativo` char(255) DEFAULT NULL,
   `categorie` text,
   `telefoni` text,
   `mail` text,
@@ -1621,7 +2038,9 @@ CREATE TABLE `anagrafica_view_static` (
   `provincia` text,
   `codice_regime_fiscale` text,
   `gruppo` text,
-  PRIMARY KEY (`id`)
+  `cap` char(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cap` (`cap`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1640,8 +2059,10 @@ CREATE TABLE `articoli` (
   `id_taglia` int(11) DEFAULT NULL,
   `id_colore` int(11) DEFAULT NULL,
   `id_udm` int(11) DEFAULT NULL,
+  `id_reparto` int(11) DEFAULT NULL,
   `se_disponibile` int(1) DEFAULT '1',
   `quantita_disponibile` int(11) DEFAULT NULL,
+  `codice_produttore` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1654,14 +2075,63 @@ CREATE TABLE `articoli` (
   KEY `id_colore` (`id_colore`),
   KEY `ordine` (`ordine`),
   KEY `id_udm` (`id_udm`),
-  CONSTRAINT `articoli_ibfk_4_nofollow` FOREIGN KEY (`id_udm`) REFERENCES `udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `id_reparto` (`id_reparto`),
   CONSTRAINT `articoli_ibfk_1_nofollow` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `articoli_ibfk_2` FOREIGN KEY (`id_taglia`) REFERENCES `taglie` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `articoli_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `articoli_ibfk_3` FOREIGN KEY (`id_colore`) REFERENCES `colori` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `articoli_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `articoli_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `articoli_ibfk_4` FOREIGN KEY (`id_reparto`) REFERENCES `reparti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `articoli_ibfk_4_nofollow` FOREIGN KEY (`id_udm`) REFERENCES `udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `articoli_caratteristiche`
+--
+
+DROP TABLE IF EXISTS `articoli_caratteristiche`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `articoli_caratteristiche` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_articolo` char(32) NOT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `testo` text,
+  `se_non_presente` int(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_articolo` (`id_articolo`,`id_caratteristica`),
+  KEY `ordine` (`ordine`),
+  KEY `indice` (`id`,`id_articolo`,`id_caratteristica`,`ordine`),
+  KEY `id_caratteristica` (`id_caratteristica`),
+  KEY `id_lingua` (`id_lingua`),
+  CONSTRAINT `articoli_caratteristiche_ibfk_1` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `articoli_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `articoli_caratteristiche_view`
+--
+
+DROP TABLE IF EXISTS `articoli_caratteristiche_view`;
+/*!50001 DROP VIEW IF EXISTS `articoli_caratteristiche_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `articoli_caratteristiche_view` (
+  `id` tinyint NOT NULL,
+  `id_articolo` tinyint NOT NULL,
+  `id_caratteristica` tinyint NOT NULL,
+  `id_lingua` tinyint NOT NULL,
+  `ordine` tinyint NOT NULL,
+  `testo` tinyint NOT NULL,
+  `se_non_presente` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL,
+  `caratteristica` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Temporary table structure for view `articoli_view`
@@ -1679,8 +2149,10 @@ SET character_set_client = utf8;
   `id_taglia` tinyint NOT NULL,
   `id_colore` tinyint NOT NULL,
   `id_udm` tinyint NOT NULL,
+  `id_reparto` tinyint NOT NULL,
   `se_disponibile` tinyint NOT NULL,
   `quantita_disponibile` tinyint NOT NULL,
+  `codice_produttore` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -1688,7 +2160,12 @@ SET character_set_client = utf8;
   `it` tinyint NOT NULL,
   `tipologia_taglia` tinyint NOT NULL,
   `udm` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
+  `se_ore` tinyint NOT NULL,
+  `se_matricola` tinyint NOT NULL,
+  `se_prodotto` tinyint NOT NULL,
+  `se_servizio` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL,
+  `nome_articolo` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -1818,8 +2295,10 @@ CREATE TABLE `attivita` (
   `ora_inizio` time DEFAULT NULL,
   `ora_fine` time DEFAULT NULL,
   `data_programmazione` date DEFAULT NULL,
+  `ore_programmazione` int(11) DEFAULT NULL,
   `ora_inizio_programmazione` time DEFAULT NULL,
   `ora_fine_programmazione` time DEFAULT NULL,
+  `note_programmazione` text,
   `id_pratica` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_campagna` int(11) DEFAULT NULL,
@@ -1827,6 +2306,8 @@ CREATE TABLE `attivita` (
   `id_todo` int(11) DEFAULT NULL,
   `id_tipologia_interesse` int(11) DEFAULT NULL,
   `id_tipologia_soddisfazione` int(11) DEFAULT NULL,
+  `id_anagrafica_feedback` int(11) DEFAULT NULL,
+  `timestamp_feedback` int(11) DEFAULT NULL,
   `note_feedback` text,
   `id_immobile` int(11) DEFAULT NULL,
   `id_incarico` int(11) DEFAULT NULL,
@@ -1834,6 +2315,7 @@ CREATE TABLE `attivita` (
   `id_incrocio_immobile` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `testo` text,
+  `note_interne` text,
   `timestamp_scadenza` int(11) DEFAULT NULL,
   `data_scadenza` date DEFAULT NULL,
   `ora_scadenza` time DEFAULT NULL,
@@ -1846,6 +2328,15 @@ CREATE TABLE `attivita` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `id_documenti_articoli` int(11) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
+  `id_todo_articoli` int(11) DEFAULT NULL,
+  `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
+  `se_master` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_progetto` (`id_progetto`),
   KEY `id_task` (`id_task`),
@@ -1870,6 +2361,16 @@ CREATE TABLE `attivita` (
   KEY `id_tipologia_inps` (`id_tipologia_inps`),
   KEY `id_todo` (`id_todo`),
   KEY `id_indirizzo` (`id_indirizzo`),
+  KEY `token` (`token`),
+  KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
+  KEY `id_mastro_destinazione` (`id_mastro_destinazione`),
+  KEY `id_todo_articoli` (`id_todo_articoli`),
+  KEY `timestamp_calcolo_sostituti` (`timestamp_calcolo_sostituti`),
+  KEY `id_contratto` (`id_contratto`),
+  KEY `id_documenti_articoli` (`id_documenti_articoli`),
+  KEY `id_matricola` (`id_matricola`),
+  KEY `se_master` (`se_master`),
+  KEY `id_anagrafica_feedback` (`id_anagrafica_feedback`),
   CONSTRAINT `attivita_ibfk_10_nofollow` FOREIGN KEY (`id_incarico`) REFERENCES `incarichi_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_11_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_12_nofollow` FOREIGN KEY (`id_task`) REFERENCES `task` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -1878,13 +2379,18 @@ CREATE TABLE `attivita` (
   CONSTRAINT `attivita_ibfk_15_nofollow` FOREIGN KEY (`id_luogo`) REFERENCES `luoghi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_16_nofollow` FOREIGN KEY (`id_tipologia_inps`) REFERENCES `tipologie_attivita_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_17_nofollow` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `attivita_ibfk_18_nofollow` FOREIGN KEY (`id_mastro_provenienza`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attivita_ibfk_19_nofollow` FOREIGN KEY (`id_mastro_destinazione`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_attivita` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attivita_ibfk_20_nofollow` FOREIGN KEY (`id_todo_articoli`) REFERENCES `todo_articoli` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attivita_ibfk_21_nofollow` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attivita_ibfk_22_nofollow` FOREIGN KEY (`id_documenti_articoli`) REFERENCES `documenti_articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `attivita_ibfk_23_nofollow` FOREIGN KEY (`id_matricola`) REFERENCES `matricole` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attivita_ibfk_24_nofollow` FOREIGN KEY (`id_anagrafica_feedback`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_2_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_3` FOREIGN KEY (`id_esito`) REFERENCES `esiti_attivita` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_3_nofollow` FOREIGN KEY (`id_mandante`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `attivita_ibfk_4` FOREIGN KEY (`id_tipologia_interesse`) REFERENCES `tipologie_interesse` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_4_nofollow` FOREIGN KEY (`id_cliente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `attivita_ibfk_5` FOREIGN KEY (`id_tipologia_soddisfazione`) REFERENCES `tipologie_soddisfazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `attivita_ibfk_5_nofollow` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_6` FOREIGN KEY (`id_incrocio_immobile`) REFERENCES `incroci_immobili` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `attivita_ibfk_6_nofollow` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -1980,6 +2486,88 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `attivita_categorie`
+--
+
+DROP TABLE IF EXISTS `attivita_categorie`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `attivita_categorie` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_attivita` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_attivita`,`id_categoria`),
+  KEY `id_categoria` (`id_categoria`),
+  KEY `indice` (`id`,`id_attivita`,`id_categoria`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `id_attivita` (`id_attivita`),
+  CONSTRAINT `attivita_categorie_ibfk_1` FOREIGN KEY (`id_attivita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `attivita_categorie_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `attivita_categorie_ibfk_2_nofollow` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_attivita` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `attivita_categorie_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `attivita_categorie_view`
+--
+
+DROP TABLE IF EXISTS `attivita_categorie_view`;
+/*!50001 DROP VIEW IF EXISTS `attivita_categorie_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `attivita_categorie_view` (
+  `id` tinyint NOT NULL,
+  `id_attivita` tinyint NOT NULL,
+  `id_categoria` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `attivita_scoperte_view`
+--
+
+DROP TABLE IF EXISTS `attivita_scoperte_view`;
+/*!50001 DROP VIEW IF EXISTS `attivita_scoperte_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `attivita_scoperte_view` (
+  `id` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `id_anagrafica` tinyint NOT NULL,
+  `id_assente` tinyint NOT NULL,
+  `assente` tinyint NOT NULL,
+  `id_cliente` tinyint NOT NULL,
+  `data_programmazione` tinyint NOT NULL,
+  `ora_inizio_programmazione` tinyint NOT NULL,
+  `ora_fine_programmazione` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `testo` tinyint NOT NULL,
+  `giorno` tinyint NOT NULL,
+  `mese` tinyint NOT NULL,
+  `anno` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
+  `todo` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `richieste` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `attivita_view`
 --
 
@@ -1990,67 +2578,147 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `attivita_view` (
   `id` tinyint NOT NULL,
   `id_tipologia` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
   `id_tipologia_inps` tinyint NOT NULL,
+  `tipologia_inps` tinyint NOT NULL,
   `id_anagrafica` tinyint NOT NULL,
-  `id_mandante` tinyint NOT NULL,
+  `anagrafica` tinyint NOT NULL,
   `id_cliente` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
   `id_luogo` tinyint NOT NULL,
-  `referente` tinyint NOT NULL,
+  `id_indirizzo` tinyint NOT NULL,
+  `indirizzo` tinyint NOT NULL,
+  `latitudine_ora_inizio` tinyint NOT NULL,
+  `longitudine_ora_inizio` tinyint NOT NULL,
+  `latitudine_ora_fine` tinyint NOT NULL,
+  `longitudine_ora_fine` tinyint NOT NULL,
   `id_categoria_prodotti` tinyint NOT NULL,
-  `data` tinyint NOT NULL,
   `data_attivita` tinyint NOT NULL,
-  `ora` tinyint NOT NULL,
   `ora_inizio` tinyint NOT NULL,
   `ora_fine` tinyint NOT NULL,
+  `token` tinyint NOT NULL,
   `data_programmazione` tinyint NOT NULL,
   `ora_inizio_programmazione` tinyint NOT NULL,
   `ora_fine_programmazione` tinyint NOT NULL,
-  `id_pratica` tinyint NOT NULL,
+  `note_programmazione` tinyint NOT NULL,
+  `id_pianificazione` tinyint NOT NULL,
   `id_progetto` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
+  `referenti` tinyint NOT NULL,
   `id_campagna` tinyint NOT NULL,
-  `id_task` tinyint NOT NULL,
   `id_todo` tinyint NOT NULL,
-  `id_tipologia_interesse` tinyint NOT NULL,
-  `id_tipologia_soddisfazione` tinyint NOT NULL,
-  `note_feedback` tinyint NOT NULL,
+  `todo` tinyint NOT NULL,
   `id_immobile` tinyint NOT NULL,
   `id_incarico` tinyint NOT NULL,
   `id_richiesta` tinyint NOT NULL,
-  `id_incrocio_immobile` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
-  `timestamp_scadenza` tinyint NOT NULL,
+  `note_interne` tinyint NOT NULL,
+  `se_ordinario` tinyint NOT NULL,
+  `se_straordinario` tinyint NOT NULL,
   `data_scadenza` tinyint NOT NULL,
   `ora_scadenza` tinyint NOT NULL,
   `note_scadenza` tinyint NOT NULL,
-  `id_attivita_completamento` tinyint NOT NULL,
   `ore` tinyint NOT NULL,
-  `id_esito` tinyint NOT NULL,
-  `id_account_editor` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
+  `ore_previste` tinyint NOT NULL,
   `giorno` tinyint NOT NULL,
   `mese` tinyint NOT NULL,
   `anno` tinyint NOT NULL,
-  `progetto` tinyint NOT NULL,
-  `task` tinyint NOT NULL,
-  `ore_previste_task` tinyint NOT NULL,
-  `todo` tinyint NOT NULL,
-  `ore_previste_todo` tinyint NOT NULL,
-  `tipologia` tinyint NOT NULL,
-  `tipologia_inps` tinyint NOT NULL,
-  `icona_html` tinyint NOT NULL,
-  `icona_fa` tinyint NOT NULL,
-  `pratica` tinyint NOT NULL,
-  `anagrafica` tinyint NOT NULL,
-  `cliente` tinyint NOT NULL,
-  `tipologia_attivita_immobiliare` tinyint NOT NULL,
-  `mandante` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
+  `se_master` tinyint NOT NULL,
+  `id_mastro_provenienza` tinyint NOT NULL,
+  `mastro_provenienza` tinyint NOT NULL,
+  `id_mastro_destinazione` tinyint NOT NULL,
+  `mastro_destinazione` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `attivita_view_static`
+--
+
+DROP TABLE IF EXISTS `attivita_view_static`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `attivita_view_static` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` char(64) DEFAULT NULL,
+  `id_tipologia_inps` int(11) DEFAULT NULL,
+  `tipologia_inps` char(255) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `anagrafica` varchar(320) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `cliente` varchar(320) DEFAULT NULL,
+  `id_luogo` int(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `indirizzo` text,
+  `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL,
+  `longitudine_ora_inizio` decimal(11,7) DEFAULT NULL,
+  `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,
+  `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `data_attivita` date DEFAULT NULL,
+  `ora_inizio` time DEFAULT NULL,
+  `ora_fine` time DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `data_programmazione` date DEFAULT NULL,
+  `ora_inizio_programmazione` time DEFAULT NULL,
+  `ora_fine_programmazione` time DEFAULT NULL,
+  `note_programmazione` text,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `progetto` char(255) DEFAULT NULL,
+  `referenti` text,
+  `id_campagna` int(11) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
+  `todo` char(255) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_incarico` int(11) DEFAULT NULL,
+  `id_richiesta` int(11) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `testo` text,
+  `note_interne` int(11) DEFAULT NULL,
+  `se_ordinario` int(1) DEFAULT NULL,
+  `se_straordinario` int(1) DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `ora_scadenza` time DEFAULT NULL,
+  `note_scadenza` text,
+  `ore` decimal(5,2) DEFAULT NULL,
+  `ore_previste` decimal(5,2) DEFAULT NULL,
+  `giorno` int(2) DEFAULT NULL,
+  `mese` int(2) DEFAULT NULL,
+  `anno` int(4) DEFAULT NULL,
+  `se_master` int(1) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `mastro_provenienza` char(64) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `mastro_destinazione` char(64) DEFAULT NULL,
+  `__label__` varchar(320) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_tipologia` (`id_tipologia`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+  KEY `id_cliente` (`id_cliente`),
+  KEY `id_immobile` (`id_immobile`),
+  KEY `id_incarico` (`id_incarico`),
+  KEY `id_richiesta` (`id_richiesta`),
+  KEY `id_campagna` (`id_campagna`),
+  KEY `id_luogo` (`id_luogo`),
+  KEY `id_tipologia_inps` (`id_tipologia_inps`),
+  KEY `id_todo` (`id_todo`),
+  KEY `id_indirizzo` (`id_indirizzo`),
+  KEY `token` (`token`),
+  KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
+  KEY `id_mastro_destinazione` (`id_mastro_destinazione`),
+  KEY `se_master` (`se_master`),
+  KEY `se_ordinario` (`se_ordinario`),
+  KEY `se_straordinario` (`se_straordinario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `audio`
@@ -2085,8 +2753,8 @@ CREATE TABLE `audio` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `codice_embed` (`codice_embed`),
-  UNIQUE KEY `path` (`path`),
+  UNIQUE KEY `pagina_unico_embed` (`id_pagina`,`codice_embed`),
+  UNIQUE KEY `pagina_unico_path` (`id_pagina`,`path`),
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   KEY `id_pagina` (`id_pagina`),
@@ -2102,6 +2770,8 @@ CREATE TABLE `audio` (
   KEY `id_notizia` (`id_notizia`),
   KEY `id_categoria_notizie` (`id_categoria_notizie`),
   KEY `id_risorsa` (`id_risorsa`),
+  KEY `codice_embed` (`codice_embed`),
+  KEY `path` (`path`),
   CONSTRAINT `audio_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `audio_ibfk_10` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `audio_ibfk_10_nofollow` FOREIGN KEY (`id_tipologia_embed`) REFERENCES `tipologie_embed` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -2205,6 +2875,7 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `n_contatti` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -2257,9 +2928,20 @@ DROP TABLE IF EXISTS `caratteristiche_prodotti`;
 CREATE TABLE `caratteristiche_prodotti` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` char(64) NOT NULL,
+  `se_prodotto` int(1) DEFAULT NULL,
+  `se_articolo` int(1) DEFAULT NULL,
+  `se_categoria` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
-  KEY `indice` (`id`,`nome`)
+  KEY `indice` (`id`,`nome`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  CONSTRAINT `caratteristiche_prodotti_ibfk_1_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `caratteristiche_prodotti_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2274,6 +2956,13 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `caratteristiche_prodotti_view` (
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `se_prodotto` tinyint NOT NULL,
+  `se_articolo` tinyint NOT NULL,
+  `se_categoria` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -2478,6 +3167,59 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `cartellini`
+--
+
+DROP TABLE IF EXISTS `cartellini`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cartellini` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_anagrafica` int(11) NOT NULL,
+  `data_attivita` date NOT NULL,
+  `id_tipologia_inps` int(11) NOT NULL,
+  `ore_previste` decimal(5,2) DEFAULT NULL,
+  `ore_fatte` decimal(5,2) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unica` (`id_anagrafica`,`data_attivita`,`id_tipologia_inps`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `data_attivita` (`data_attivita`),
+  KEY `id_tipologia_inps` (`id_tipologia_inps`),
+  CONSTRAINT `cartellini_ibfk_1_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `cartellini_ibfk_2_nofollow` FOREIGN KEY (`id_tipologia_inps`) REFERENCES `tipologie_attivita_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `cartellini_view`
+--
+
+DROP TABLE IF EXISTS `cartellini_view`;
+/*!50001 DROP VIEW IF EXISTS `cartellini_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `cartellini_view` (
+  `id` tinyint NOT NULL,
+  `id_anagrafica` tinyint NOT NULL,
+  `data_attivita` tinyint NOT NULL,
+  `id_tipologia_inps` tinyint NOT NULL,
+  `ore_previste` tinyint NOT NULL,
+  `ore_fatte` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `tipologia_inps` tinyint NOT NULL,
+  `anagrafica` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `categorie_anagrafica`
 --
 
@@ -2515,6 +3257,10 @@ CREATE TABLE `categorie_anagrafica` (
   `se_allievo` int(1) DEFAULT NULL,
   `se_agenzia_interinale` int(1) DEFAULT NULL,
   `se_referente` int(1) DEFAULT NULL,
+  `se_sostituto` int(1) DEFAULT NULL,
+  `se_squadra` int(1) DEFAULT NULL,
+  `se_produzione` int(1) DEFAULT NULL,
+  `se_emittente` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_genitore` (`id_genitore`),
   KEY `indice` (`id`,`id_genitore`,`nome`),
@@ -2532,6 +3278,10 @@ CREATE TABLE `categorie_anagrafica` (
   KEY `se_agenzia_interinale` (`se_agenzia_interinale`),
   KEY `se_dipendente` (`se_dipendente`),
   KEY `se_referente` (`se_referente`),
+  KEY `se_sostituto` (`se_sostituto`),
+  KEY `se_squadra` (`se_squadra`),
+  KEY `se_produzione` (`se_produzione`),
+  KEY `se_emittente` (`se_emittente`),
   CONSTRAINT `categorie_anagrafica_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `categorie_anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_anagrafica_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_anagrafica_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
@@ -2577,7 +3327,69 @@ SET character_set_client = utf8;
   `se_allievo` tinyint NOT NULL,
   `se_agenzia_interinale` tinyint NOT NULL,
   `se_referente` tinyint NOT NULL,
+  `se_sostituto` tinyint NOT NULL,
+  `se_squadra` tinyint NOT NULL,
+  `se_produzione` tinyint NOT NULL,
+  `se_emittente` tinyint NOT NULL,
   `membri` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `categorie_attivita`
+--
+
+DROP TABLE IF EXISTS `categorie_attivita`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `categorie_attivita` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `se_ordinario` int(1) DEFAULT NULL,
+  `se_straordinario` int(1) DEFAULT NULL,
+  `se_produzione` int(1) DEFAULT NULL,
+  `se_ticket` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_genitore` (`id_genitore`),
+  KEY `indice` (`id`,`id_genitore`,`nome`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `se_ordinario` (`se_ordinario`),
+  KEY `se_straordinario` (`se_straordinario`),
+  KEY `se_produzione` (`se_produzione`),
+  KEY `se_ticket` (`se_ticket`),
+  CONSTRAINT `categorie_attivita_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `categorie_attivita` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `categorie_attivita_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `categorie_attivita_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `categorie_attivita_view`
+--
+
+DROP TABLE IF EXISTS `categorie_attivita_view`;
+/*!50001 DROP VIEW IF EXISTS `categorie_attivita_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `categorie_attivita_view` (
+  `id` tinyint NOT NULL,
+  `id_genitore` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `se_ordinario` tinyint NOT NULL,
+  `se_straordinario` tinyint NOT NULL,
+  `se_produzione` tinyint NOT NULL,
+  `se_ticket` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -2689,7 +3501,13 @@ CREATE TABLE `categorie_notizie` (
   `menu` char(64) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
-  `id_tipologia_pubblicazione` int(11) NOT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(32) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
+  `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -2700,12 +3518,11 @@ CREATE TABLE `categorie_notizie` (
   KEY `indice` (`id`,`id_genitore`,`nome`),
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  KEY `id_tipologia_pubblicazione` (`id_tipologia_pubblicazione`),
+  KEY `id_sito` (`id_sito`),
   CONSTRAINT `categorie_notizie_ibfk_1` FOREIGN KEY (`id_genitore`) REFERENCES `categorie_notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_notizie_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `categorie_notizie_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `categorie_notizie_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `categorie_notizie_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia_pubblicazione`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `categorie_notizie_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2724,13 +3541,17 @@ SET character_set_client = utf8;
   `menu` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
-  `id_tipologia_pubblicazione` tinyint NOT NULL,
+  `id_sito` tinyint NOT NULL,
+  `template` tinyint NOT NULL,
+  `schema_html` tinyint NOT NULL,
+  `tema_css` tinyint NOT NULL,
+  `se_sitemap` tinyint NOT NULL,
+  `se_cacheable` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
-  `se_pubblicato` tinyint NOT NULL,
-  `pubblicazione` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -2857,6 +3678,58 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `categorie_progetti`
+--
+
+DROP TABLE IF EXISTS `categorie_progetti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `categorie_progetti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `se_ordinario` int(1) DEFAULT NULL,
+  `se_straordinario` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_genitore` (`id_genitore`),
+  KEY `indice` (`id`,`id_genitore`,`nome`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `se_ordinario` (`se_ordinario`),
+  KEY `se_straordinario` (`se_straordinario`),
+  CONSTRAINT `categorie_progetti_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `categorie_progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `categorie_progetti_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `categorie_progetti_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `categorie_progetti_view`
+--
+
+DROP TABLE IF EXISTS `categorie_progetti_view`;
+/*!50001 DROP VIEW IF EXISTS `categorie_progetti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `categorie_progetti_view` (
+  `id` tinyint NOT NULL,
+  `id_genitore` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `se_ordinario` tinyint NOT NULL,
+  `se_straordinario` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `categorie_risorse`
 --
 
@@ -2898,6 +3771,49 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `certificazioni`
+--
+
+DROP TABLE IF EXISTS `certificazioni`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `certificazioni` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` char(255) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`),
+  KEY `id_tipologia` (`id_tipologia`),
+  CONSTRAINT `certificazioni_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_certificazioni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `certificazioni_view`
+--
+
+DROP TABLE IF EXISTS `certificazioni_view`;
+/*!50001 DROP VIEW IF EXISTS `certificazioni_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `certificazioni_view` (
+  `id` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `classi_energetiche_immobili`
 --
 
@@ -2929,6 +3845,54 @@ SET character_set_client = utf8;
   `ep_min` tinyint NOT NULL,
   `ep_max` tinyint NOT NULL,
   `rgb` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `codici_tracking`
+--
+
+DROP TABLE IF EXISTS `codici_tracking`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `codici_tracking` (
+  `id` char(64) NOT NULL,
+  `nome` int(11) NOT NULL,
+  `note` int(11) NOT NULL,
+  `id_campagna` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_campagna` (`id_campagna`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  CONSTRAINT `codici_tracking_ibfk_1_nofollow` FOREIGN KEY (`id_campagna`) REFERENCES `campagne` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `codici_tracking_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `codici_tracking_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `codici_tracking_view`
+--
+
+DROP TABLE IF EXISTS `codici_tracking_view`;
+/*!50001 DROP VIEW IF EXISTS `codici_tracking_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `codici_tracking_view` (
+  `id` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
+  `id_campagna` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -3097,10 +4061,14 @@ DROP TABLE IF EXISTS `contatti`;
 CREATE TABLE `contatti` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` char(255) NOT NULL,
-  `json` text NOT NULL,
+  `data_contatto` date DEFAULT NULL,
+  `ora_contatto` time DEFAULT NULL,
+  `json` text,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_segnalatore` int(11) DEFAULT NULL,
+  `id_campagna` int(11) DEFAULT NULL,
+  `note` text,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -3111,11 +4079,13 @@ CREATE TABLE `contatti` (
   KEY `id_anagrafica` (`id_anagrafica`),
   KEY `id_coount_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `id_campagna` (`id_campagna`),
   CONSTRAINT `contatti_ibfk_1` FOREIGN KEY (`id_segnalatore`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `contatti_ibfk_1_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `contatti_ibfk_2` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_contatti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `contatti_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `contatti_ibfk_3` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `contatti_ibfk_4` FOREIGN KEY (`id_account_inserimento`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `contatti_ibfk_5` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `contatti_ibfk_6` FOREIGN KEY (`id_campagna`) REFERENCES `campagne` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3130,14 +4100,22 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `contatti_view` (
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `data_contatto` tinyint NOT NULL,
+  `ora_contatto` tinyint NOT NULL,
   `json` tinyint NOT NULL,
   `id_tipologia` tinyint NOT NULL,
   `id_anagrafica` tinyint NOT NULL,
   `id_segnalatore` tinyint NOT NULL,
+  `id_campagna` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `anagrafica` tinyint NOT NULL,
+  `segnalatore` tinyint NOT NULL,
+  `campagna` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -3387,6 +4365,7 @@ CREATE TABLE `contratti` (
   `id_tipologia_durata` char(32) DEFAULT NULL,
   `id_tipologia_orario` char(32) DEFAULT NULL,
   `ore_settimanali` decimal(5,2) DEFAULT NULL,
+  `proroghe` int(11) DEFAULT NULL,
   `note` text,
   `percentuale_part_time` decimal(6,3) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3431,6 +4410,46 @@ SET character_set_client = utf8;
   `id_tipologia_durata` tinyint NOT NULL,
   `id_tipologia_orario` tinyint NOT NULL,
   `ore_settimanali` tinyint NOT NULL,
+  `proroghe` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
+  `percentuale_part_time` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `anagrafica` tinyint NOT NULL,
+  `agenzia` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `tipologia_qualifica` tinyint NOT NULL,
+  `tipologia_durata` tinyint NOT NULL,
+  `tipologia_orario` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `contratti_completa_view`
+--
+
+DROP TABLE IF EXISTS `contratti_completa_view`;
+/*!50001 DROP VIEW IF EXISTS `contratti_completa_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `contratti_completa_view` (
+  `id` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `id_anagrafica` tinyint NOT NULL,
+  `id_agenzia` tinyint NOT NULL,
+  `data_inizio` tinyint NOT NULL,
+  `data_fine` tinyint NOT NULL,
+  `data_inizio_rapporto` tinyint NOT NULL,
+  `data_fine_rapporto` tinyint NOT NULL,
+  `livello` tinyint NOT NULL,
+  `id_tipologia_qualifica` tinyint NOT NULL,
+  `id_tipologia_durata` tinyint NOT NULL,
+  `id_tipologia_orario` tinyint NOT NULL,
+  `ore_settimanali` tinyint NOT NULL,
+  `proroghe` tinyint NOT NULL,
   `note` tinyint NOT NULL,
   `percentuale_part_time` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
@@ -3469,6 +4488,7 @@ SET character_set_client = utf8;
   `id_tipologia_durata` tinyint NOT NULL,
   `id_tipologia_orario` tinyint NOT NULL,
   `ore_settimanali` tinyint NOT NULL,
+  `proroghe` tinyint NOT NULL,
   `note` tinyint NOT NULL,
   `percentuale_part_time` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
@@ -3902,18 +4922,25 @@ DROP TABLE IF EXISTS `documenti`;
 CREATE TABLE `documenti` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `numero` int(11) NOT NULL,
+  `sezionale` char(6) DEFAULT NULL,
   `id_tipologia` int(11) NOT NULL,
+  `id_contatto` int(11) DEFAULT NULL,
   `data` date NOT NULL,
-  `id_destinatario` int(11) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `id_destinatario` int(11) DEFAULT NULL,
   `id_sede_destinatario` int(11) DEFAULT NULL,
   `id_emittente` int(11) NOT NULL,
   `id_sede_emittente` int(11) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
+  `coupon` char(32) DEFAULT NULL,
   `note_interne` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_chiusura` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`numero`,`id_tipologia`,`data`),
   KEY `id_tipologia` (`id_tipologia`),
   KEY `id_destinatario` (`id_destinatario`),
   KEY `id_sede_destinatario` (`id_sede_destinatario`),
@@ -3921,13 +4948,20 @@ CREATE TABLE `documenti` (
   KEY `id_sede_emittente` (`id_sede_emittente`),
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `id_todo` (`id_todo`),
+  KEY `id_contatto` (`id_contatto`),
+  KEY `coupon` (`coupon`),
+  KEY `sezionale` (`sezionale`),
+  CONSTRAINT `documenti_ibfk_10_nofollow` FOREIGN KEY (`coupon`) REFERENCES `coupon` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_documenti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_ibfk_2_nofollow` FOREIGN KEY (`id_destinatario`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_ibfk_3_nofollow` FOREIGN KEY (`id_sede_destinatario`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_ibfk_4_nofollow` FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_ibfk_5_nofollow` FOREIGN KEY (`id_sede_emittente`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_ibfk_6_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `documenti_ibfk_7_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `documenti_ibfk_7_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `documenti_ibfk_8_nofollow` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `documenti_ibfk_9_nofollow` FOREIGN KEY (`id_contatto`) REFERENCES `contatti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4061,6 +5095,7 @@ CREATE TABLE `documenti_articoli` (
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_udm` int(11) DEFAULT NULL,
+  `id_reparto` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `quantita` decimal(9,2) DEFAULT NULL,
   `data_lavorazione` date NOT NULL,
@@ -4069,10 +5104,12 @@ CREATE TABLE `documenti_articoli` (
   `id_listino` int(11) DEFAULT NULL,
   `id_valuta` int(11) DEFAULT NULL,
   `id_modalita_pagamento` int(11) DEFAULT NULL,
-  `importo_netto_totale` decimal(9,2) NOT NULL,
+  `importo_netto_totale` decimal(9,2) NOT NULL DEFAULT '0.00',
   `importo_netto_totale_non_scontato` decimal(9,2) DEFAULT NULL,
   `id_iva` int(11) DEFAULT NULL,
   `nome` text,
+  `specifiche` char(255) DEFAULT NULL,
+  `matricola` int(11) DEFAULT NULL,
   `testo` text,
   `path` char(255) DEFAULT NULL,
   `se_rimborso` int(1) DEFAULT NULL,
@@ -4099,6 +5136,8 @@ CREATE TABLE `documenti_articoli` (
   KEY `id_destinatario` (`id_destinatario`),
   KEY `id_mastro_provenienza` (`id_mastro_provenienza`),
   KEY `id_mastro_destinazione` (`id_mastro_destinazione`),
+  KEY `id_reparto` (`id_reparto`),
+  KEY `matricola` (`matricola`),
   CONSTRAINT `documenti_articoli_ibfk_1` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `documenti_articoli_ibfk_11` FOREIGN KEY (`id_genitore`) REFERENCES `documenti_articoli` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_articoli_ibfk_12_nofollow` FOREIGN KEY (`id_destinatario`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -4112,11 +5151,13 @@ CREATE TABLE `documenti_articoli` (
   CONSTRAINT `documenti_articoli_ibfk_22` FOREIGN KEY (`id_attivita`) REFERENCES `attivita` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `documenti_articoli_ibfk_23` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `documenti_articoli_ibfk_24` FOREIGN KEY (`id_udm`) REFERENCES `udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `documenti_articoli_ibfk_25` FOREIGN KEY (`id_mastro_provenienza`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `documenti_articoli_ibfk_26` FOREIGN KEY (`id_mastro_destinazione`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `documenti_articoli_ibfk_25` FOREIGN KEY (`id_reparto`) REFERENCES `reparti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `documenti_articoli_ibfk_25_nofollow` FOREIGN KEY (`id_mastro_provenienza`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `documenti_articoli_ibfk_26_nofollow` FOREIGN KEY (`id_mastro_destinazione`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `documenti_articoli_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `documenti_articoli_ibfk_7_nofollow` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `documenti_articoli_ibfk_8_nofollow` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `documenti_articoli_ibfk_8_nofollow` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `documenti_articoli_ibfk_9_nofollow` FOREIGN KEY (`matricola`) REFERENCES `matricole` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4142,6 +5183,7 @@ SET character_set_client = utf8;
   `id_mastro_provenienza` tinyint NOT NULL,
   `id_mastro_destinazione` tinyint NOT NULL,
   `id_udm` tinyint NOT NULL,
+  `id_reparto` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
   `quantita` tinyint NOT NULL,
   `data_lavorazione` tinyint NOT NULL,
@@ -4154,6 +5196,8 @@ SET character_set_client = utf8;
   `importo_netto_totale_non_scontato` tinyint NOT NULL,
   `id_iva` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `specifiche` tinyint NOT NULL,
+  `matricola` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
   `path` tinyint NOT NULL,
   `se_rimborso` tinyint NOT NULL,
@@ -4161,7 +5205,21 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
+  `__label__` tinyint NOT NULL,
+  `codice_tipologia` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `emittente` tinyint NOT NULL,
+  `documento` tinyint NOT NULL,
+  `reparto` tinyint NOT NULL,
+  `articolo` tinyint NOT NULL,
+  `udm` tinyint NOT NULL,
+  `iva` tinyint NOT NULL,
+  `aliquota_iva` tinyint NOT NULL,
+  `label_matricola` tinyint NOT NULL,
+  `mastro_carico` tinyint NOT NULL,
+  `mastro_scarico` tinyint NOT NULL,
+  `totale_riga` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -4176,19 +5234,29 @@ SET character_set_client = utf8;
 /*!50001 CREATE TABLE `documenti_view` (
   `id` tinyint NOT NULL,
   `numero` tinyint NOT NULL,
+  `sezionale` tinyint NOT NULL,
   `id_tipologia` tinyint NOT NULL,
+  `id_contatto` tinyint NOT NULL,
   `data` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
   `id_destinatario` tinyint NOT NULL,
   `id_sede_destinatario` tinyint NOT NULL,
   `id_emittente` tinyint NOT NULL,
   `id_sede_emittente` tinyint NOT NULL,
+  `id_todo` tinyint NOT NULL,
+  `coupon` tinyint NOT NULL,
   `note_interne` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `timestamp_chiusura` tinyint NOT NULL,
+  `codice_tipologia` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `emittente` tinyint NOT NULL,
   `__label__` tinyint NOT NULL,
-  `codice_tipologia` tinyint NOT NULL
+  `totale` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -4528,6 +5596,92 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `fasce_orarie_contratti`
+--
+
+DROP TABLE IF EXISTS `fasce_orarie_contratti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fasce_orarie_contratti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_contratto` int(11) NOT NULL,
+  `turno` int(11) DEFAULT '1',
+  `id_giorno` int(11) NOT NULL,
+  `ora_inizio` time NOT NULL,
+  `ora_fine` time NOT NULL,
+  `id_tipologia_inps` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_contratto` (`id_contratto`),
+  KEY `turno` (`turno`),
+  KEY `id_giorno` (`id_giorno`),
+  KEY `ora_inizio` (`ora_inizio`),
+  KEY `ora_fine` (`ora_fine`),
+  KEY `id_tipologia_inps` (`id_tipologia_inps`),
+  CONSTRAINT `fasce_orarie_contratti_ibfk_1` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fasce_orarie_contratti_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia_inps`) REFERENCES `tipologie_attivita_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `fasce_orarie_contratti_view`
+--
+
+DROP TABLE IF EXISTS `fasce_orarie_contratti_view`;
+/*!50001 DROP VIEW IF EXISTS `fasce_orarie_contratti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `fasce_orarie_contratti_view` (
+  `id` tinyint NOT NULL,
+  `id_contratto` tinyint NOT NULL,
+  `turno` tinyint NOT NULL,
+  `id_giorno` tinyint NOT NULL,
+  `ora_inizio` tinyint NOT NULL,
+  `ora_fine` tinyint NOT NULL,
+  `id_tipologia_inps` tinyint NOT NULL,
+  `tipologia_inps` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `fasi_strategie`
+--
+
+DROP TABLE IF EXISTS `fasi_strategie`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `fasi_strategie` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ordine` int(11) NOT NULL,
+  `nome` int(11) NOT NULL,
+  `id_strategia` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`ordine`,`nome`,`id_strategia`),
+  KEY `id_strategia` (`id_strategia`),
+  KEY `nome` (`nome`),
+  CONSTRAINT `fasi_strategie_ibfk_1` FOREIGN KEY (`id_strategia`) REFERENCES `strategie` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `fasi_strategie_view`
+--
+
+DROP TABLE IF EXISTS `fasi_strategie_view`;
+/*!50001 DROP VIEW IF EXISTS `fasi_strategie_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `fasi_strategie_view` (
+  `id` tinyint NOT NULL,
+  `ordine` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `id_strategia` tinyint NOT NULL,
+  `strategia` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `fatturati`
 --
 
@@ -4652,6 +5806,9 @@ CREATE TABLE `file` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `data_emissione` date DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `id_anagrafica_certificazioni` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `prodotto_unico` (`id_prodotto`,`id_ruolo`,`path`),
   UNIQUE KEY `categoria_prodotti_unico` (`id_categoria_prodotti`,`id_ruolo`,`path`),
@@ -4684,6 +5841,9 @@ CREATE TABLE `file` (
   KEY `id_todo` (`id_todo`),
   KEY `id_categoria_risorse` (`id_categoria_risorse`),
   KEY `id_risorsa` (`id_risorsa`),
+  KEY `data_scadenza` (`data_scadenza`),
+  KEY `data_emissione` (`data_emissione`),
+  KEY `id_anagrafica_certificazioni` (`id_anagrafica_certificazioni`),
   CONSTRAINT `file_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_10` FOREIGN KEY (`id_template_mail`) REFERENCES `template_mail` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_11` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -4694,6 +5854,7 @@ CREATE TABLE `file` (
   CONSTRAINT `file_ibfk_15` FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_16` FOREIGN KEY (`id_categoria_risorse`) REFERENCES `categorie_risorse` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_17` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `file_ibfk_18` FOREIGN KEY (`id_anagrafica_certificazioni`) REFERENCES `anagrafica_certificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_2` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `file_ibfk_3` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -4743,6 +5904,9 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `data_emissione` tinyint NOT NULL,
+  `data_scadenza` tinyint NOT NULL,
+  `id_anagrafica_certificazioni` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -4914,6 +6078,7 @@ CREATE TABLE `immagini` (
   `id_testata` int(11) DEFAULT NULL,
   `id_zona` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
+  `id_anagrafica_certificazioni` int(11) DEFAULT NULL,
   `orientamento` enum('L','P') DEFAULT NULL,
   `path` char(255) NOT NULL,
   `path_alternativo` char(255) DEFAULT NULL,
@@ -4958,6 +6123,7 @@ CREATE TABLE `immagini` (
   KEY `id_lingua` (`id_lingua`),
   KEY `id_categoria_risorse` (`id_categoria_risorse`),
   KEY `id_risorsa` (`id_risorsa`),
+  KEY `id_anagrafica_certificazioni` (`id_anagrafica_certificazioni`),
   CONSTRAINT `immagini_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_10` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_11` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -4968,6 +6134,7 @@ CREATE TABLE `immagini` (
   CONSTRAINT `immagini_ibfk_16` FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_17` FOREIGN KEY (`id_categoria_risorse`) REFERENCES `categorie_risorse` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_18` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `immagini_ibfk_19` FOREIGN KEY (`id_anagrafica_certificazioni`) REFERENCES `anagrafica_certificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_2` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `immagini_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -5030,6 +6197,7 @@ SET character_set_client = utf8;
   `id_testata` tinyint NOT NULL,
   `id_zona` tinyint NOT NULL,
   `id_lingua` tinyint NOT NULL,
+  `id_anagrafica_certificazioni` tinyint NOT NULL,
   `orientamento` tinyint NOT NULL,
   `path` tinyint NOT NULL,
   `path_alternativo` tinyint NOT NULL,
@@ -5752,6 +6920,10 @@ CREATE TABLE `indirizzi` (
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   KEY `id_account_editor` (`id_account_editor`),
   KEY `token` (`token`),
+  KEY `timestamp_geocode` (`timestamp_geocode`),
+  KEY `latitudine` (`latitudine`),
+  KEY `longitudine` (`longitudine`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`),
   CONSTRAINT `indirizzi_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `indirizzi_ibfk_1_nofollow` FOREIGN KEY (`id_comune`) REFERENCES `comuni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `indirizzi_ibfk_2_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -5951,6 +7123,7 @@ CREATE TABLE `job` (
   `delay` int(11) DEFAULT NULL,
   `workspace` text,
   `token` char(254) DEFAULT NULL,
+  `se_foreground` int(1) DEFAULT NULL,
   `timestamp_esecuzione` int(11) DEFAULT NULL,
   `timestamp_completamento` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -5958,7 +7131,11 @@ CREATE TABLE `job` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `token` (`token`)
+  KEY `token` (`token`),
+  KEY `se_foreground` (`se_foreground`),
+  KEY `timestamp_apertura` (`timestamp_apertura`),
+  KEY `timestamp_esecuzione` (`timestamp_esecuzione`),
+  KEY `timestamp_completamento` (`timestamp_completamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6010,6 +7187,7 @@ SET character_set_client = utf8;
   `delay` tinyint NOT NULL,
   `workspace` tinyint NOT NULL,
   `token` tinyint NOT NULL,
+  `se_foreground` tinyint NOT NULL,
   `timestamp_esecuzione` tinyint NOT NULL,
   `timestamp_completamento` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
@@ -6017,6 +7195,8 @@ SET character_set_client = utf8;
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
   `avanzamento` tinyint NOT NULL,
+  `data_ora_apertura` tinyint NOT NULL,
+  `data_ora_esecuzione` tinyint NOT NULL,
   `data_ora_completamento` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
@@ -6119,11 +7299,19 @@ CREATE TABLE `listini` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` char(64) NOT NULL,
   `id_valuta` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `id_valuta` (`id_valuta`),
   KEY `indice` (`id`,`nome`,`id_valuta`),
-  CONSTRAINT `listini_ibfk_1_nofollow` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  CONSTRAINT `listini_ibfk_1_nofollow` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `listini_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `listini_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6147,6 +7335,41 @@ CREATE TABLE `listini_clienti` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `listini_gruppi`
+--
+
+DROP TABLE IF EXISTS `listini_gruppi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `listini_gruppi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_listino` int(11) NOT NULL,
+  `id_gruppo` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_listino` (`id_listino`),
+  KEY `id_gruppo` (`id_gruppo`),
+  CONSTRAINT `listini_gruppi_ibfk_1` FOREIGN KEY (`id_listino`) REFERENCES `listini` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `listini_gruppi_ibfk_2` FOREIGN KEY (`id_gruppo`) REFERENCES `gruppi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `listini_gruppi_view`
+--
+
+DROP TABLE IF EXISTS `listini_gruppi_view`;
+/*!50001 DROP VIEW IF EXISTS `listini_gruppi_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `listini_gruppi_view` (
+  `id` tinyint NOT NULL,
+  `id_listino` tinyint NOT NULL,
+  `id_gruppo` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `listini_view`
 --
 
@@ -6158,6 +7381,10 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `id_valuta` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -6673,11 +7900,26 @@ DROP TABLE IF EXISTS `mastri`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mastri` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_genitore` int(11) DEFAULT NULL,
   `nome` char(64) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `note` text,
   `se_commerciale` int(1) DEFAULT NULL,
   `se_produzione` int(1) DEFAULT NULL,
   `se_amministrazione` int(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `id_tipologia` (`id_tipologia`),
+  KEY `id_genitore` (`id_genitore`),
+  CONSTRAINT `mastri_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `mastri_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `mastri_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `mastri_ibfk_4_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `mastri` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6691,10 +7933,18 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `mastri_view` (
   `id` tinyint NOT NULL,
+  `id_genitore` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
   `se_commerciale` tinyint NOT NULL,
   `se_produzione` tinyint NOT NULL,
   `se_amministrazione` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -6708,6 +7958,9 @@ DROP TABLE IF EXISTS `matricole`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `matricole` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_marchio` int(11) DEFAULT NULL,
+  `id_produttore` int(11) DEFAULT NULL,
+  `serial_number` char(128) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `testo` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -6717,8 +7970,13 @@ CREATE TABLE `matricole` (
   PRIMARY KEY (`id`),
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `serial_number` (`serial_number`),
+  KEY `id_marchio` (`id_marchio`),
+  KEY `id_produttore` (`id_produttore`),
   CONSTRAINT `matricole_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `matricole_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `matricole_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `matricole_ibfk_3_nofollow` FOREIGN KEY (`id_marchio`) REFERENCES `marchi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `matricole_ibfk_4_nofollow` FOREIGN KEY (`id_produttore`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6732,6 +7990,9 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `matricole_view` (
   `id` tinyint NOT NULL,
+  `id_marchio` tinyint NOT NULL,
+  `id_produttore` tinyint NOT NULL,
+  `serial_number` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
@@ -6755,24 +8016,31 @@ CREATE TABLE `menu` (
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_lingua` int(11) NOT NULL,
   `menu` char(32) NOT NULL,
   `nome` char(128) NOT NULL,
+  `ancora` char(128) DEFAULT NULL,
   `target` char(16) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `sottopagine` char(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_pagina_unico` (`id_pagina`,`id_lingua`,`menu`),
+  UNIQUE KEY `id_pagina_unico` (`id_pagina`,`id_lingua`,`menu`,`ancora`),
   KEY `id_pagina` (`id_pagina`),
   KEY `id_lingua` (`id_lingua`),
   KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
   KEY `id_prodotto` (`id_prodotto`),
   KEY `id_articolo` (`id_articolo`),
-  CONSTRAINT `menu_ibfk_5` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `id_notizia` (`id_notizia`),
+  KEY `id_categoria_notizie` (`id_categoria_notizie`),
   CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `menu_ibfk_2_nofollow` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `menu_ibfk_3` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `menu_ibfk_4` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `menu_ibfk_4` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `menu_ibfk_5` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `menu_ibfk_6` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `menu_ibfk_7` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6790,9 +8058,12 @@ SET character_set_client = utf8;
   `id_categoria_prodotti` tinyint NOT NULL,
   `id_prodotto` tinyint NOT NULL,
   `id_articolo` tinyint NOT NULL,
+  `id_notizia` tinyint NOT NULL,
+  `id_categoria_notizie` tinyint NOT NULL,
   `id_lingua` tinyint NOT NULL,
   `menu` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `ancora` tinyint NOT NULL,
   `target` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
   `sottopagine` tinyint NOT NULL,
@@ -7191,6 +8462,11 @@ CREATE TABLE `notizie` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_tipologia` int(11) NOT NULL,
   `id_sito` int(11) DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(32) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -7492,6 +8768,357 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `obiettivi`
+--
+
+DROP TABLE IF EXISTS `obiettivi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obiettivi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` int(11) NOT NULL,
+  `data_inizio` int(11) DEFAULT NULL,
+  `data_fine` int(11) DEFAULT NULL,
+  `sorgente` int(11) NOT NULL,
+  `obiettivo` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `id_fase_strategia` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_genitore` (`id_genitore`),
+  KEY `id_fase_strategia` (`id_fase_strategia`),
+  KEY `id_tipologia` (`id_tipologia`),
+  KEY `nome` (`nome`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  CONSTRAINT `obiettivi_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `obiettivi_ibfk_2` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `obiettivi_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `obiettivi_ibfk_3` FOREIGN KEY (`id_fase_strategia`) REFERENCES `fasi_strategie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `obiettivi_ibfk_3_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `obiettivi_anagrafica`
+--
+
+DROP TABLE IF EXISTS `obiettivi_anagrafica`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obiettivi_anagrafica` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_obiettivo` int(11) NOT NULL,
+  `nome_colonna` char(64) NOT NULL,
+  `valore_colonna` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_obiettivo`,`nome_colonna`,`valore_colonna`),
+  KEY `id_obiettivo` (`id_obiettivo`),
+  CONSTRAINT `obiettivi_anagrafica_ibfk_1` FOREIGN KEY (`id_obiettivo`) REFERENCES `obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `obiettivi_anagrafica_view`
+--
+
+DROP TABLE IF EXISTS `obiettivi_anagrafica_view`;
+/*!50001 DROP VIEW IF EXISTS `obiettivi_anagrafica_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `obiettivi_anagrafica_view` (
+  `id` tinyint NOT NULL,
+  `id_obiettivo` tinyint NOT NULL,
+  `nome_colonna` tinyint NOT NULL,
+  `valore_colonna` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `obiettivi_articoli`
+--
+
+DROP TABLE IF EXISTS `obiettivi_articoli`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obiettivi_articoli` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_obiettivo` int(11) NOT NULL,
+  `nome_colonna` char(64) NOT NULL,
+  `valore_colonna` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_obiettivo`,`nome_colonna`,`valore_colonna`),
+  KEY `id_obiettivo` (`id_obiettivo`),
+  CONSTRAINT `obiettivi_articoli_ibfk_1` FOREIGN KEY (`id_obiettivo`) REFERENCES `obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `obiettivi_articoli_view`
+--
+
+DROP TABLE IF EXISTS `obiettivi_articoli_view`;
+/*!50001 DROP VIEW IF EXISTS `obiettivi_articoli_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `obiettivi_articoli_view` (
+  `id` tinyint NOT NULL,
+  `id_obiettivo` tinyint NOT NULL,
+  `nome_colonna` tinyint NOT NULL,
+  `valore_colonna` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `obiettivi_categorie_prodotti`
+--
+
+DROP TABLE IF EXISTS `obiettivi_categorie_prodotti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obiettivi_categorie_prodotti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_obiettivo` int(11) NOT NULL,
+  `nome_colonna` char(64) NOT NULL,
+  `valore_colonna` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_obiettivo`,`nome_colonna`,`valore_colonna`),
+  KEY `id_obiettivo` (`id_obiettivo`),
+  CONSTRAINT `obiettivi_categorie_prodotti_ibfk_1` FOREIGN KEY (`id_obiettivo`) REFERENCES `obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `obiettivi_categorie_prodotti_view`
+--
+
+DROP TABLE IF EXISTS `obiettivi_categorie_prodotti_view`;
+/*!50001 DROP VIEW IF EXISTS `obiettivi_categorie_prodotti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `obiettivi_categorie_prodotti_view` (
+  `id` tinyint NOT NULL,
+  `id_obiettivo` tinyint NOT NULL,
+  `nome_colonna` tinyint NOT NULL,
+  `valore_colonna` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `obiettivi_prodotti`
+--
+
+DROP TABLE IF EXISTS `obiettivi_prodotti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obiettivi_prodotti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_obiettivo` int(11) NOT NULL,
+  `nome_colonna` char(64) NOT NULL,
+  `valore_colonna` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_obiettivo`,`nome_colonna`,`valore_colonna`),
+  KEY `id_obiettivo` (`id_obiettivo`),
+  CONSTRAINT `obiettivi_prodotti_ibfk_1` FOREIGN KEY (`id_obiettivo`) REFERENCES `obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `obiettivi_prodotti_view`
+--
+
+DROP TABLE IF EXISTS `obiettivi_prodotti_view`;
+/*!50001 DROP VIEW IF EXISTS `obiettivi_prodotti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `obiettivi_prodotti_view` (
+  `id` tinyint NOT NULL,
+  `id_obiettivo` tinyint NOT NULL,
+  `nome_colonna` tinyint NOT NULL,
+  `valore_colonna` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `obiettivi_tipologie_attivita`
+--
+
+DROP TABLE IF EXISTS `obiettivi_tipologie_attivita`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obiettivi_tipologie_attivita` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_obiettivo` int(11) NOT NULL,
+  `nome_colonna` char(64) NOT NULL,
+  `valore_colonna` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_obiettivo`,`nome_colonna`,`valore_colonna`),
+  KEY `id_obiettivo` (`id_obiettivo`),
+  CONSTRAINT `obiettivi_tipologie_attivita_ibfk_1` FOREIGN KEY (`id_obiettivo`) REFERENCES `obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `obiettivi_tipologie_attivita_view`
+--
+
+DROP TABLE IF EXISTS `obiettivi_tipologie_attivita_view`;
+/*!50001 DROP VIEW IF EXISTS `obiettivi_tipologie_attivita_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `obiettivi_tipologie_attivita_view` (
+  `id` tinyint NOT NULL,
+  `id_obiettivo` tinyint NOT NULL,
+  `nome_colonna` tinyint NOT NULL,
+  `valore_colonna` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `obiettivi_tipologie_documenti`
+--
+
+DROP TABLE IF EXISTS `obiettivi_tipologie_documenti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obiettivi_tipologie_documenti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_obiettivo` int(11) NOT NULL,
+  `nome_colonna` char(64) NOT NULL,
+  `valore_colonna` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_obiettivo`,`nome_colonna`,`valore_colonna`),
+  KEY `id_obiettivo` (`id_obiettivo`),
+  CONSTRAINT `obiettivi_tipologie_documenti_ibfk_1` FOREIGN KEY (`id_obiettivo`) REFERENCES `obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `obiettivi_tipologie_documenti_view`
+--
+
+DROP TABLE IF EXISTS `obiettivi_tipologie_documenti_view`;
+/*!50001 DROP VIEW IF EXISTS `obiettivi_tipologie_documenti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `obiettivi_tipologie_documenti_view` (
+  `id` tinyint NOT NULL,
+  `id_obiettivo` tinyint NOT NULL,
+  `nome_colonna` tinyint NOT NULL,
+  `valore_colonna` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `obiettivi_tipologie_progetti`
+--
+
+DROP TABLE IF EXISTS `obiettivi_tipologie_progetti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obiettivi_tipologie_progetti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_obiettivo` int(11) NOT NULL,
+  `nome_colonna` char(64) NOT NULL,
+  `valore_colonna` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_obiettivo`,`nome_colonna`,`valore_colonna`),
+  KEY `id_obiettivo` (`id_obiettivo`),
+  CONSTRAINT `obiettivi_tipologie_progetti_ibfk_1` FOREIGN KEY (`id_obiettivo`) REFERENCES `obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `obiettivi_tipologie_progetti_view`
+--
+
+DROP TABLE IF EXISTS `obiettivi_tipologie_progetti_view`;
+/*!50001 DROP VIEW IF EXISTS `obiettivi_tipologie_progetti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `obiettivi_tipologie_progetti_view` (
+  `id` tinyint NOT NULL,
+  `id_obiettivo` tinyint NOT NULL,
+  `nome_colonna` tinyint NOT NULL,
+  `valore_colonna` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `obiettivi_tracking`
+--
+
+DROP TABLE IF EXISTS `obiettivi_tracking`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obiettivi_tracking` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_obiettivo` int(11) NOT NULL,
+  `nome_colonna` char(64) NOT NULL,
+  `valore_colonna` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_obiettivo`,`nome_colonna`,`valore_colonna`),
+  KEY `id_obiettivo` (`id_obiettivo`),
+  CONSTRAINT `obiettivi_tracking_ibfk_1` FOREIGN KEY (`id_obiettivo`) REFERENCES `obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `obiettivi_tracking_view`
+--
+
+DROP TABLE IF EXISTS `obiettivi_tracking_view`;
+/*!50001 DROP VIEW IF EXISTS `obiettivi_tracking_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `obiettivi_tracking_view` (
+  `id` tinyint NOT NULL,
+  `id_obiettivo` tinyint NOT NULL,
+  `nome_colonna` tinyint NOT NULL,
+  `valore_colonna` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `obiettivi_view`
+--
+
+DROP TABLE IF EXISTS `obiettivi_view`;
+/*!50001 DROP VIEW IF EXISTS `obiettivi_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `obiettivi_view` (
+  `id` tinyint NOT NULL,
+  `id_genitore` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `data_inizio` tinyint NOT NULL,
+  `data_fine` tinyint NOT NULL,
+  `sorgente` tinyint NOT NULL,
+  `obiettivo` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `id_fase_strategia` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `fase` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `offerte_view`
 --
 
@@ -7529,6 +9156,8 @@ CREATE TABLE `orari_contratti` (
   `se_lavoro` int(1) DEFAULT '1',
   `se_disponibile` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unico_lavoro` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_lavoro`),
+  UNIQUE KEY `unico_disponibile` (`id_contratto`,`turno`,`id_giorno`,`ora_inizio`,`ora_fine`,`se_disponibile`),
   KEY `id_contratto` (`id_contratto`),
   KEY `id_costo` (`id_costo`),
   KEY `se_lavoro` (`se_lavoro`),
@@ -7680,8 +9309,8 @@ CREATE TABLE `pagine_macro` (
   UNIQUE KEY `id_pagina` (`id_pagina`,`macro`),
   KEY `id_gruppo` (`macro`),
   KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
-  CONSTRAINT `pagine_macro_ibfk_2` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `pagine_macro_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `pagine_macro_ibfk_1` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pagine_macro_ibfk_2` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7821,6 +9450,51 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `pause_progetti`
+--
+
+DROP TABLE IF EXISTS `pause_progetti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pause_progetti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_progetto` char(32) NOT NULL,
+  `data_inizio` date NOT NULL,
+  `data_fine` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_progetto`,`data_inizio`,`data_fine`),
+  KEY `id_progetto` (`id_progetto`),
+  CONSTRAINT `pause_progetti_ibfk_1` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `pause_progetti_view`
+--
+
+DROP TABLE IF EXISTS `pause_progetti_view`;
+/*!50001 DROP VIEW IF EXISTS `pause_progetti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `pause_progetti_view` (
+  `id` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `data_inizio` tinyint NOT NULL,
+  `data_fine` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `periodi_variazioni_attivita`
 --
 
@@ -7832,8 +9506,11 @@ CREATE TABLE `periodi_variazioni_attivita` (
   `id_variazione` int(11) NOT NULL,
   `data_inizio` date NOT NULL,
   `data_fine` date NOT NULL,
-  `ora_inizio` time NOT NULL,
-  `ora_fine` time NOT NULL,
+  `ora_inizio` time DEFAULT NULL,
+  `ora_fine` time DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  `timestamp_creazione_cartellino` int(11) DEFAULT NULL,
+  `timestamp_controllo_attivita` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -7841,6 +9518,9 @@ CREATE TABLE `periodi_variazioni_attivita` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unico` (`id_variazione`,`data_inizio`,`data_fine`,`ora_inizio`,`ora_fine`),
   KEY `id_variazione` (`id_variazione`),
+  KEY `timestamp_creazione_cartellino` (`timestamp_creazione_cartellino`),
+  KEY `timestamp_controllo_attivita` (`timestamp_controllo_attivita`),
+  KEY `token` (`token`),
   CONSTRAINT `periodi_variazioni_attivita_ibfk_1` FOREIGN KEY (`id_variazione`) REFERENCES `variazioni_attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -7860,6 +9540,9 @@ SET character_set_client = utf8;
   `data_fine` tinyint NOT NULL,
   `ora_inizio` tinyint NOT NULL,
   `ora_fine` tinyint NOT NULL,
+  `token` tinyint NOT NULL,
+  `timestamp_creazione_cartellino` tinyint NOT NULL,
+  `timestamp_controllo_attivita` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -7881,6 +9564,7 @@ CREATE TABLE `pianificazioni` (
   `nome` char(255) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_turno` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
   `periodicita` int(11) NOT NULL,
   `cadenza` int(11) DEFAULT NULL,
   `se_lunedi` int(1) DEFAULT NULL,
@@ -7894,12 +9578,15 @@ CREATE TABLE `pianificazioni` (
   `ripetizione_anno` int(11) DEFAULT NULL,
   `data_fine` date DEFAULT NULL,
   `data_ultimo_oggetto` date DEFAULT NULL,
+  `data_inizio_pulizia` date DEFAULT NULL,
   `giorni_rinnovo` int(11) DEFAULT NULL,
   `note` text,
   `workspace` text,
   `token` char(128) DEFAULT NULL,
   `timestamp_estensione` int(11) DEFAULT NULL,
   `timestamp_popolazione` int(11) DEFAULT NULL,
+  `se_ripopolare` int(1) DEFAULT NULL,
+  `se_fermare` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -7907,12 +9594,19 @@ CREATE TABLE `pianificazioni` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_turno` (`id_turno`),
   UNIQUE KEY `id_todo` (`id_todo`),
+  UNIQUE KEY `id_progetto` (`id_progetto`),
   KEY `nome` (`nome`),
   KEY `token` (`token`),
   KEY `timestamp_estensione` (`timestamp_estensione`),
   KEY `timestamp_popolazione` (`timestamp_popolazione`),
-  CONSTRAINT `pianificazioni_ibfk_3` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `pianificazioni_ibfk_4` FOREIGN KEY (`id_turno`) REFERENCES `turni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `data_fine` (`data_fine`),
+  KEY `data_ultimo_oggetto` (`data_ultimo_oggetto`),
+  KEY `se_ripopolare` (`se_ripopolare`),
+  KEY `data_inizio_pulizia` (`data_inizio_pulizia`),
+  KEY `se_fermare` (`se_fermare`),
+  CONSTRAINT `pianificazioni_ibfk_3` FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `pianificazioni_ibfk_4` FOREIGN KEY (`id_turno`) REFERENCES `turni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pianificazioni_ibfk_5` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7930,6 +9624,7 @@ SET character_set_client = utf8;
   `nome` tinyint NOT NULL,
   `id_todo` tinyint NOT NULL,
   `id_turno` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
   `periodicita` tinyint NOT NULL,
   `cadenza` tinyint NOT NULL,
   `se_lunedi` tinyint NOT NULL,
@@ -7943,10 +9638,15 @@ SET character_set_client = utf8;
   `ripetizione_anno` tinyint NOT NULL,
   `data_fine` tinyint NOT NULL,
   `data_ultimo_oggetto` tinyint NOT NULL,
+  `data_inizio_pulizia` tinyint NOT NULL,
   `giorni_rinnovo` tinyint NOT NULL,
   `note` tinyint NOT NULL,
   `workspace` tinyint NOT NULL,
   `token` tinyint NOT NULL,
+  `timestamp_estensione` tinyint NOT NULL,
+  `timestamp_popolazione` tinyint NOT NULL,
+  `se_ripopolare` tinyint NOT NULL,
+  `se_fermare` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -8551,6 +10251,8 @@ CREATE TABLE `prodotti` (
   `id` char(32) NOT NULL,
   `id_tipologia` int(11) NOT NULL,
   `nome` char(128) NOT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
   `descrizione` text,
   `ordine` int(11) DEFAULT NULL,
   `codifica` text,
@@ -8566,6 +10268,8 @@ CREATE TABLE `prodotti` (
   `id_marchio` int(11) DEFAULT NULL,
   `id_tipologia_pubblicazione` int(11) DEFAULT NULL,
   `se_disponibile` int(1) DEFAULT '1',
+  `se_matricola` int(1) DEFAULT NULL,
+  `se_ore` int(1) DEFAULT NULL,
   `timestamp_pubblicazione` int(11) DEFAULT NULL,
   `timestamp_archiviazione` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -8604,6 +10308,7 @@ DROP TABLE IF EXISTS `prodotti_caratteristiche`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `prodotti_caratteristiche` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_lingua` int(11) DEFAULT NULL,
   `id_prodotto` char(32) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
@@ -8614,6 +10319,7 @@ CREATE TABLE `prodotti_caratteristiche` (
   KEY `ordine` (`ordine`),
   KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`),
   KEY `id_caratteristica` (`id_caratteristica`),
+  KEY `id_lingua` (`id_lingua`),
   CONSTRAINT `prodotti_caratteristiche_ibfk_1` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `prodotti_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -8629,12 +10335,14 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `prodotti_caratteristiche_view` (
   `id` tinyint NOT NULL,
+  `id_lingua` tinyint NOT NULL,
   `id_prodotto` tinyint NOT NULL,
   `id_caratteristica` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
   `se_non_presente` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
+  `__label__` tinyint NOT NULL,
+  `caratteristica` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
@@ -8769,6 +10477,8 @@ SET character_set_client = utf8;
   `id_marchio` tinyint NOT NULL,
   `id_tipologia_pubblicazione` tinyint NOT NULL,
   `se_disponibile` tinyint NOT NULL,
+  `se_matricola` tinyint NOT NULL,
+  `se_ore` tinyint NOT NULL,
   `timestamp_pubblicazione` tinyint NOT NULL,
   `timestamp_archiviazione` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
@@ -8776,10 +10486,12 @@ SET character_set_client = utf8;
   `timestamp_aggiornamento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `se_pubblicato` tinyint NOT NULL,
-  `pubblicazione` tinyint NOT NULL,
+  `tipologia_pubblicazione` tinyint NOT NULL,
   `categorie` tinyint NOT NULL,
   `produttore` tinyint NOT NULL,
   `marchio` tinyint NOT NULL,
+  `se_prodotto` tinyint NOT NULL,
+  `se_servizio` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -8793,13 +10505,15 @@ DROP TABLE IF EXISTS `progetti`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `progetti` (
   `id` char(32) NOT NULL,
-  `id_tipologia` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
   `id_cliente` int(11) NOT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `testo` text,
+  `id_pianificazione` int(11) DEFAULT NULL,
   `ranking` char(32) DEFAULT NULL,
   `id_account_accettazione` int(11) DEFAULT NULL,
+  `data_accettazione` date DEFAULT NULL,
   `timestamp_accettazione` int(11) DEFAULT NULL,
   `fatturato_accettazione` decimal(16,2) DEFAULT NULL,
   `testo_accettazione` text,
@@ -8816,6 +10530,10 @@ CREATE TABLE `progetti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `se_lavoro_festivo` int(1) DEFAULT NULL,
   `se_lavoro_weekend` int(1) DEFAULT NULL,
+  `id_mastro_attivita_default` int(11) DEFAULT NULL,
+  `id_mastro_magazzino_lavoro_default` int(11) DEFAULT NULL,
+  `id_mastro_magazzino_vendita_default` int(11) DEFAULT NULL,
+  `se_cancellare` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_cliente` (`id_cliente`),
   KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -8827,9 +10545,19 @@ CREATE TABLE `progetti` (
   KEY `ranking` (`ranking`),
   KEY `se_lavoro_festivo` (`se_lavoro_festivo`),
   KEY `se_lavoro_weekend` (`se_lavoro_weekend`),
-  CONSTRAINT `progetti_ibfk_1` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `data_accettazione` (`data_accettazione`),
+  KEY `id_pianificazione` (`id_pianificazione`),
+  KEY `id_mastro_attivita_default` (`id_mastro_attivita_default`),
+  KEY `se_cancellare` (`se_cancellare`),
+  KEY `id_mastro_magazzino_lavoro_default` (`id_mastro_magazzino_lavoro_default`),
+  KEY `id_mastro_magazzino_vendita_default` (`id_mastro_magazzino_vendita_default`),
   CONSTRAINT `progetti_ibfk_1_nofollow` FOREIGN KEY (`id_cliente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `progetti_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `progetti_ibfk_32_nofollow` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `progetti_ibfk_33_nofollow` FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `progetti_ibfk_34_nofollow` FOREIGN KEY (`id_mastro_attivita_default`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `progetti_ibfk_35_nofollow` FOREIGN KEY (`id_mastro_magazzino_lavoro_default`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `progetti_ibfk_36_nofollow` FOREIGN KEY (`id_mastro_magazzino_vendita_default`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `progetti_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `progetti_ibfk_4_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `progetti_ibfk_5_nofollow` FOREIGN KEY (`id_account_chiusura`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -8857,7 +10585,7 @@ CREATE TABLE `progetti_anagrafica` (
   KEY `se_sostituto` (`se_sostituto`),
   CONSTRAINT `progetti_anagrafica_ibfk_1` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `progetti_anagrafica_ibfk_1_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `progetti_anagrafica_ibfk_2` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `progetti_anagrafica_ibfk_2_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -8875,6 +10603,110 @@ SET character_set_client = utf8;
   `id_anagrafica` tinyint NOT NULL,
   `id_ruolo` tinyint NOT NULL,
   `se_sostituto` tinyint NOT NULL,
+  `ruolo` tinyint NOT NULL,
+  `se_responsabile_qualita` tinyint NOT NULL,
+  `se_responsabile_acquisti` tinyint NOT NULL,
+  `se_coordinatore` tinyint NOT NULL,
+  `se_responsabile_amministrativo` tinyint NOT NULL,
+  `se_responsabile_servizi` tinyint NOT NULL,
+  `se_operativo` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `progetti_categorie`
+--
+
+DROP TABLE IF EXISTS `progetti_categorie`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `progetti_categorie` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_progetto` char(32) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_progetto`,`id_categoria`),
+  KEY `id_categoria` (`id_categoria`),
+  KEY `indice` (`id`,`id_progetto`,`id_categoria`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `id_progetto` (`id_progetto`),
+  CONSTRAINT `progetti_categorie_ibfk_1` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `progetti_categorie_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `progetti_categorie_ibfk_2_nofollow` FOREIGN KEY (`id_categoria`) REFERENCES `categorie_progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `progetti_categorie_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `progetti_categorie_view`
+--
+
+DROP TABLE IF EXISTS `progetti_categorie_view`;
+/*!50001 DROP VIEW IF EXISTS `progetti_categorie_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `progetti_categorie_view` (
+  `id` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `id_categoria` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `progetti_certificazioni`
+--
+
+DROP TABLE IF EXISTS `progetti_certificazioni`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `progetti_certificazioni` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_certificazione` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unica` (`id_certificazione`,`id_progetto`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_certificazione` (`id_certificazione`),
+  CONSTRAINT `progetti_certificazioni_ibfk_1` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `progetti_certificazioni_ibfk_2` FOREIGN KEY (`id_certificazione`) REFERENCES `certificazioni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `progetti_certificazioni_view`
+--
+
+DROP TABLE IF EXISTS `progetti_certificazioni_view`;
+/*!50001 DROP VIEW IF EXISTS `progetti_certificazioni_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `progetti_certificazioni_view` (
+  `id` tinyint NOT NULL,
+  `id_certificazione` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `certificazione` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -8891,9 +10723,13 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `id_tipologia` tinyint NOT NULL,
   `id_cliente` tinyint NOT NULL,
+  `id_indirizzo` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
+  `id_pianificazione` tinyint NOT NULL,
+  `ranking` tinyint NOT NULL,
   `id_account_accettazione` tinyint NOT NULL,
+  `data_accettazione` tinyint NOT NULL,
   `timestamp_accettazione` tinyint NOT NULL,
   `fatturato_accettazione` tinyint NOT NULL,
   `testo_accettazione` tinyint NOT NULL,
@@ -8908,15 +10744,66 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `se_lavoro_festivo` tinyint NOT NULL,
+  `se_lavoro_weekend` tinyint NOT NULL,
+  `id_mastro_attivita_default` tinyint NOT NULL,
+  `se_cancellare` tinyint NOT NULL,
   `tipologia` tinyint NOT NULL,
-  `se_scalare` tinyint NOT NULL,
-  `se_commessa` tinyint NOT NULL,
+  `categorie` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
   `chiuso` tinyint NOT NULL,
-  `attivo` tinyint NOT NULL,
-  `task_aperti` tinyint NOT NULL,
-  `task_chiusi` tinyint NOT NULL,
+  `mastro_attivita_default` tinyint NOT NULL,
   `cliente` tinyint NOT NULL,
+  `indirizzo` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `progetti_eliminare_view`
+--
+
+DROP TABLE IF EXISTS `progetti_eliminare_view`;
+/*!50001 DROP VIEW IF EXISTS `progetti_eliminare_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `progetti_eliminare_view` (
+  `id` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `id_cliente` tinyint NOT NULL,
+  `id_indirizzo` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `testo` tinyint NOT NULL,
+  `id_pianificazione` tinyint NOT NULL,
+  `ranking` tinyint NOT NULL,
+  `id_account_accettazione` tinyint NOT NULL,
+  `data_accettazione` tinyint NOT NULL,
+  `timestamp_accettazione` tinyint NOT NULL,
+  `fatturato_accettazione` tinyint NOT NULL,
+  `testo_accettazione` tinyint NOT NULL,
+  `fatturato_previsto` tinyint NOT NULL,
+  `ore_previste` tinyint NOT NULL,
+  `costi_previsti` tinyint NOT NULL,
+  `testo_previsioni` tinyint NOT NULL,
+  `id_account_chiusura` tinyint NOT NULL,
+  `timestamp_chiusura` tinyint NOT NULL,
+  `testo_chiusura` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `se_lavoro_festivo` tinyint NOT NULL,
+  `se_lavoro_weekend` tinyint NOT NULL,
+  `id_mastro_attivita_default` tinyint NOT NULL,
+  `se_cancellare` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `se_ordinario` tinyint NOT NULL,
+  `se_straordinario` tinyint NOT NULL,
+  `categorie` tinyint NOT NULL,
+  `chiuso` tinyint NOT NULL,
+  `mastro_attivita_default` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `indirizzo` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -8936,8 +10823,10 @@ SET character_set_client = utf8;
   `id_indirizzo` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
+  `id_pianificazione` tinyint NOT NULL,
   `ranking` tinyint NOT NULL,
   `id_account_accettazione` tinyint NOT NULL,
+  `data_accettazione` tinyint NOT NULL,
   `timestamp_accettazione` tinyint NOT NULL,
   `fatturato_accettazione` tinyint NOT NULL,
   `testo_accettazione` tinyint NOT NULL,
@@ -8954,16 +10843,70 @@ SET character_set_client = utf8;
   `timestamp_aggiornamento` tinyint NOT NULL,
   `se_lavoro_festivo` tinyint NOT NULL,
   `se_lavoro_weekend` tinyint NOT NULL,
+  `id_mastro_attivita_default` tinyint NOT NULL,
+  `se_cancellare` tinyint NOT NULL,
   `tipologia` tinyint NOT NULL,
-  `se_scalare` tinyint NOT NULL,
-  `se_commessa` tinyint NOT NULL,
+  `se_ordinario` tinyint NOT NULL,
+  `se_straordinario` tinyint NOT NULL,
+  `categorie` tinyint NOT NULL,
   `ordine` tinyint NOT NULL,
   `chiuso` tinyint NOT NULL,
+  `mastro_attivita_default` tinyint NOT NULL,
   `attivo` tinyint NOT NULL,
   `task_aperti` tinyint NOT NULL,
   `task_chiusi` tinyint NOT NULL,
-  `se_ore_esubero` tinyint NOT NULL,
   `cliente` tinyint NOT NULL,
+  `indirizzo` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `progetti_scoperti_view`
+--
+
+DROP TABLE IF EXISTS `progetti_scoperti_view`;
+/*!50001 DROP VIEW IF EXISTS `progetti_scoperti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `progetti_scoperti_view` (
+  `id` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `id_cliente` tinyint NOT NULL,
+  `id_indirizzo` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `testo` tinyint NOT NULL,
+  `id_pianificazione` tinyint NOT NULL,
+  `ranking` tinyint NOT NULL,
+  `id_account_accettazione` tinyint NOT NULL,
+  `data_accettazione` tinyint NOT NULL,
+  `timestamp_accettazione` tinyint NOT NULL,
+  `fatturato_accettazione` tinyint NOT NULL,
+  `testo_accettazione` tinyint NOT NULL,
+  `fatturato_previsto` tinyint NOT NULL,
+  `ore_previste` tinyint NOT NULL,
+  `costi_previsti` tinyint NOT NULL,
+  `testo_previsioni` tinyint NOT NULL,
+  `id_account_chiusura` tinyint NOT NULL,
+  `timestamp_chiusura` tinyint NOT NULL,
+  `testo_chiusura` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `se_lavoro_festivo` tinyint NOT NULL,
+  `se_lavoro_weekend` tinyint NOT NULL,
+  `id_mastro_attivita_default` tinyint NOT NULL,
+  `se_cancellare` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `se_ordinario` tinyint NOT NULL,
+  `se_straordinario` tinyint NOT NULL,
+  `categorie` tinyint NOT NULL,
+  `ordine` tinyint NOT NULL,
+  `mastro_attivita_default` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `data_scopertura` tinyint NOT NULL,
+  `assenti` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -8983,8 +10926,10 @@ SET character_set_client = utf8;
   `id_indirizzo` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `testo` tinyint NOT NULL,
+  `id_pianificazione` tinyint NOT NULL,
   `ranking` tinyint NOT NULL,
   `id_account_accettazione` tinyint NOT NULL,
+  `data_accettazione` tinyint NOT NULL,
   `timestamp_accettazione` tinyint NOT NULL,
   `fatturato_accettazione` tinyint NOT NULL,
   `testo_accettazione` tinyint NOT NULL,
@@ -8999,14 +10944,16 @@ SET character_set_client = utf8;
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
+  `se_lavoro_festivo` tinyint NOT NULL,
+  `se_lavoro_weekend` tinyint NOT NULL,
+  `id_mastro_attivita_default` tinyint NOT NULL,
+  `se_cancellare` tinyint NOT NULL,
   `tipologia` tinyint NOT NULL,
-  `se_scalare` tinyint NOT NULL,
-  `se_commessa` tinyint NOT NULL,
+  `se_ordinario` tinyint NOT NULL,
+  `se_straordinario` tinyint NOT NULL,
+  `categorie` tinyint NOT NULL,
   `chiuso` tinyint NOT NULL,
-  `attivo` tinyint NOT NULL,
-  `task_aperti` tinyint NOT NULL,
-  `task_chiusi` tinyint NOT NULL,
-  `se_ore_esubero` tinyint NOT NULL,
+  `mastro_attivita_default` tinyint NOT NULL,
   `cliente` tinyint NOT NULL,
   `indirizzo` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
@@ -9106,8 +11053,11 @@ CREATE TABLE `pubblicazione` (
   `id_pagina` int(11) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `id_popup` int(11) DEFAULT NULL,
+  `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
   `template` char(32) DEFAULT NULL,
   `schema_html` char(32) DEFAULT NULL,
   `tema_css` char(32) DEFAULT NULL,
@@ -9124,12 +11074,18 @@ CREATE TABLE `pubblicazione` (
   KEY `id_popup` (`id_popup`),
   KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
   KEY `id_prodotto` (`id_prodotto`),
+  KEY `id_articolo` (`id_articolo`),
+  KEY `id_notizia` (`id_notizia`),
+  KEY `id_categoria_notizie` (`id_categoria_notizie`),
   CONSTRAINT `pubblicazione_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_pubblicazione` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `pubblicazione_ibfk_10` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pubblicazione_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `pubblicazione` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `pubblicazione_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pubblicazione_ibfk_3` FOREIGN KEY (`id_popup`) REFERENCES `popup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pubblicazione_ibfk_4` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `pubblicazione_ibfk_5` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `pubblicazione_ibfk_5` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pubblicazione_ibfk_6` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pubblicazione_ibfk_9` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9149,8 +11105,11 @@ SET character_set_client = utf8;
   `id_pagina` tinyint NOT NULL,
   `id_categoria_prodotti` tinyint NOT NULL,
   `id_prodotto` tinyint NOT NULL,
+  `id_articolo` tinyint NOT NULL,
   `id_genitore` tinyint NOT NULL,
   `id_popup` tinyint NOT NULL,
+  `id_categoria_notizie` tinyint NOT NULL,
+  `id_notizia` tinyint NOT NULL,
   `template` tinyint NOT NULL,
   `schema_html` tinyint NOT NULL,
   `tema_css` tinyint NOT NULL,
@@ -9363,6 +11322,26 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `refresh_view_statiche`
+--
+
+DROP TABLE IF EXISTS `refresh_view_statiche`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `refresh_view_statiche` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `entita` char(64) NOT NULL,
+  `note` text,
+  `timestamp_prenotazione` int(11) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `entita` (`entita`),
+  KEY `timestamp_prenotazione` (`timestamp_prenotazione`),
+  KEY `token` (`token`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `regimi_fiscali`
 --
 
@@ -9389,6 +11368,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `regimi_fiscali_view` (
   `id` tinyint NOT NULL,
+  `id_genitore` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `codice` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
@@ -9430,6 +11410,59 @@ SET character_set_client = utf8;
   `stato` tinyint NOT NULL,
   `id_continente` tinyint NOT NULL,
   `continente` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `reparti`
+--
+
+DROP TABLE IF EXISTS `reparti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reparti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_iva` int(11) NOT NULL,
+  `id_settore` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_iva` (`id_iva`),
+  KEY `id_settore` (`id_settore`),
+  KEY `nome` (`nome`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  CONSTRAINT `reparti_ibfk_1` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `reparti_ibfk_1_nofollow` FOREIGN KEY (`id_settore`) REFERENCES `settori` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `reparti_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `reparti_ibfk_3_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `reparti_view`
+--
+
+DROP TABLE IF EXISTS `reparti_view`;
+/*!50001 DROP VIEW IF EXISTS `reparti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `reparti_view` (
+  `id` tinyint NOT NULL,
+  `id_iva` tinyint NOT NULL,
+  `id_settore` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `aliquota_iva` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -10435,6 +12468,8 @@ CREATE TABLE `ruoli_audio` (
   `se_anagrafica` int(1) DEFAULT NULL,
   `se_contenuti` int(1) DEFAULT NULL,
   `se_categorie_prodotti` int(1) DEFAULT NULL,
+  `se_prodotti` int(1) DEFAULT NULL,
+  `se_articoli` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
@@ -10455,6 +12490,8 @@ SET character_set_client = utf8;
   `se_anagrafica` tinyint NOT NULL,
   `se_contenuti` tinyint NOT NULL,
   `se_categorie_prodotti` tinyint NOT NULL,
+  `se_prodotti` tinyint NOT NULL,
+  `se_articoli` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -10505,9 +12542,13 @@ CREATE TABLE `ruoli_file` (
   `se_contenuti` int(1) DEFAULT NULL,
   `se_categorie_prodotti` int(1) DEFAULT NULL,
   `se_mail` int(1) DEFAULT NULL,
+  `se_prodotti` int(1) DEFAULT NULL,
+  `se_articoli` int(11) DEFAULT NULL,
+  `se_certificazioni` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
-  KEY `indice` (`id`,`nome`)
+  KEY `indice` (`id`,`nome`),
+  KEY `se_certificazioni` (`se_certificazioni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -10526,6 +12567,9 @@ SET character_set_client = utf8;
   `se_contenuti` tinyint NOT NULL,
   `se_categorie_prodotti` tinyint NOT NULL,
   `se_mail` tinyint NOT NULL,
+  `se_prodotti` tinyint NOT NULL,
+  `se_articoli` tinyint NOT NULL,
+  `se_certificazioni` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -10547,9 +12591,12 @@ CREATE TABLE `ruoli_immagini` (
   `se_prodotti` int(1) DEFAULT NULL,
   `ordine_scalamento` int(11) DEFAULT NULL,
   `se_categorie_prodotti` int(1) DEFAULT NULL,
+  `se_articoli` int(11) DEFAULT NULL,
+  `se_certificazioni` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
-  KEY `indice` (`id`,`nome`,`ordine_scalamento`)
+  KEY `indice` (`id`,`nome`,`ordine_scalamento`),
+  KEY `se_certificazioni` (`se_certificazioni`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -10602,6 +12649,8 @@ SET character_set_client = utf8;
   `se_prodotti` tinyint NOT NULL,
   `ordine_scalamento` tinyint NOT NULL,
   `se_categorie_prodotti` tinyint NOT NULL,
+  `se_articoli` tinyint NOT NULL,
+  `se_certificazioni` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -10678,13 +12727,25 @@ CREATE TABLE `ruoli_progetti` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_genitore` int(11) DEFAULT NULL,
   `nome` char(128) NOT NULL,
+  `se_responsabile_qualita` int(1) DEFAULT NULL,
+  `se_responsabile_acquisti` int(1) DEFAULT NULL,
+  `se_coordinatore` int(1) DEFAULT NULL,
+  `se_responsabile_amministrativo` int(1) DEFAULT NULL,
+  `se_responsabile_servizi` int(1) DEFAULT NULL,
+  `se_operativo` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
-  KEY `id_genitore` (`id_genitore`)
+  KEY `id_genitore` (`id_genitore`),
+  KEY `se_responsabile_qualita` (`se_responsabile_qualita`),
+  KEY `se_coordinatore` (`se_coordinatore`),
+  KEY `se_responsabile_amministrativo` (`se_responsabile_amministrativo`),
+  KEY `se_responsabile_servizi` (`se_responsabile_servizi`),
+  KEY `se_operativo` (`se_operativo`),
+  KEY `se_responsabile_acquisti` (`se_responsabile_acquisti`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -10700,6 +12761,12 @@ SET character_set_client = utf8;
   `id` tinyint NOT NULL,
   `id_genitore` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
+  `se_responsabile_qualita` tinyint NOT NULL,
+  `se_responsabile_acquisti` tinyint NOT NULL,
+  `se_coordinatore` tinyint NOT NULL,
+  `se_responsabile_amministrativo` tinyint NOT NULL,
+  `se_responsabile_servizi` tinyint NOT NULL,
+  `se_operativo` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
@@ -10752,6 +12819,8 @@ CREATE TABLE `ruoli_video` (
   `se_anagrafica` int(1) DEFAULT NULL,
   `se_contenuti` int(1) DEFAULT NULL,
   `se_categorie_prodotti` int(1) DEFAULT NULL,
+  `se_prodotti` int(1) DEFAULT NULL,
+  `se_articoli` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `indice` (`id`,`nome`)
@@ -10772,6 +12841,8 @@ SET character_set_client = utf8;
   `se_anagrafica` tinyint NOT NULL,
   `se_contenuti` tinyint NOT NULL,
   `se_categorie_prodotti` tinyint NOT NULL,
+  `se_prodotti` tinyint NOT NULL,
+  `se_articoli` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -10797,12 +12868,13 @@ CREATE TABLE `scadenze` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `scadenza_documento_unico` (`id_documento`,`data`,`id_modalita_pagamento`),
   KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
   KEY `id_documento` (`id_documento`),
   KEY `id_pratica` (`id_pratica`),
   KEY `id_account_inserimento` (`id_account_inserimento`),
   KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  CONSTRAINT `scadenze_ibfk_1` FOREIGN KEY (`id_documento`) REFERENCES `documenti_amministrativi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `scadenze_ibfk_1` FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `scadenze_ibfk_1_nofollow` FOREIGN KEY (`id_modalita_pagamento`) REFERENCES `modalita_pagamento` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `scadenze_ibfk_2` FOREIGN KEY (`id_pratica`) REFERENCES `pratiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `scadenze_ibfk_2_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
@@ -10895,6 +12967,7 @@ CREATE TABLE `sms_out` (
   `id_telefono` int(11) DEFAULT NULL,
   `token` char(254) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -11034,16 +13107,18 @@ CREATE TABLE `sostituzioni_attivita` (
   `data_richiesta` date NOT NULL,
   `data_accettazione` date DEFAULT NULL,
   `data_rifiuto` date DEFAULT NULL,
+  `data_scarto` date DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unico` (`id_attivita`,`id_anagrafica`),
+  UNIQUE KEY `unico` (`id_attivita`,`id_anagrafica`,`data_richiesta`),
   KEY `id_anagrafica` (`id_anagrafica`),
   KEY `id_attivita` (`id_attivita`),
+  KEY `data_scarto` (`data_scarto`),
   CONSTRAINT `sostituzioni_attivita_ibfk_1_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `sostituzioni_attivita_ibfk_1` FOREIGN KEY (`id_attivita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `sostituzioni_attivita_ibfk_2_nofollow` FOREIGN KEY (`id_attivita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -11062,12 +13137,67 @@ SET character_set_client = utf8;
   `data_richiesta` tinyint NOT NULL,
   `data_accettazione` tinyint NOT NULL,
   `data_rifiuto` tinyint NOT NULL,
+  `data_scarto` tinyint NOT NULL,
   `id_account_inserimento` tinyint NOT NULL,
   `timestamp_inserimento` tinyint NOT NULL,
   `id_account_aggiornamento` tinyint NOT NULL,
   `timestamp_aggiornamento` tinyint NOT NULL,
   `anagrafica` tinyint NOT NULL,
   `attivita` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
+  `data_programmazione` tinyint NOT NULL,
+  `accettata` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `sostituzioni_progetti`
+--
+
+DROP TABLE IF EXISTS `sostituzioni_progetti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sostituzioni_progetti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_progetto` char(32) NOT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `data_scopertura` date NOT NULL,
+  `data_scarto` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico` (`id_progetto`,`id_anagrafica`,`data_scopertura`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  CONSTRAINT `sostituzioni_progetti_ibfk_1_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `sostituzioni_progetti_ibfk_2_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `sostituzioni_progetti_view`
+--
+
+DROP TABLE IF EXISTS `sostituzioni_progetti_view`;
+/*!50001 DROP VIEW IF EXISTS `sostituzioni_progetti_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `sostituzioni_progetti_view` (
+  `id` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `id_anagrafica` tinyint NOT NULL,
+  `data_scopertura` tinyint NOT NULL,
+  `data_scarto` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `anagrafica` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -11162,6 +13292,58 @@ SET character_set_client = utf8;
   `codice_istat` tinyint NOT NULL,
   `data_cessazione` tinyint NOT NULL,
   `continente` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `strategie`
+--
+
+DROP TABLE IF EXISTS `strategie`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `strategie` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` char(128) NOT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `obiettivo` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nome` (`nome`),
+  KEY `id_tipologia` (`id_tipologia`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  CONSTRAINT `strategie_ibfk_1` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_obiettivi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `strategie_ibfk_1_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `strategie_ibfk_2_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `strategie_view`
+--
+
+DROP TABLE IF EXISTS `strategie_view`;
+/*!50001 DROP VIEW IF EXISTS `strategie_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `strategie_view` (
+  `id` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `data_inizio` tinyint NOT NULL,
+  `data_fine` tinyint NOT NULL,
+  `obiettivo` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -11978,6 +14160,38 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Temporary table structure for view `ticket_view`
+--
+
+DROP TABLE IF EXISTS `ticket_view`;
+/*!50001 DROP VIEW IF EXISTS `ticket_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `ticket_view` (
+  `id` tinyint NOT NULL,
+  `data_ora_apertura` tinyint NOT NULL,
+  `id_cliente` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `id_priorita` tinyint NOT NULL,
+  `priorita` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `data_apertura` tinyint NOT NULL,
+  `id_responsabile` tinyint NOT NULL,
+  `responsabile` tinyint NOT NULL,
+  `testo` tinyint NOT NULL,
+  `timestamp_completamento` tinyint NOT NULL,
+  `testo_completamento` tinyint NOT NULL,
+  `data_ora_completamento` tinyint NOT NULL,
+  `completato` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `tipologie_anagrafica`
 --
 
@@ -12032,10 +14246,22 @@ CREATE TABLE `tipologie_attivita` (
   `se_commerciale` int(1) DEFAULT NULL,
   `se_produzione` int(1) DEFAULT NULL,
   `se_amministrazione` int(1) DEFAULT NULL,
+  `se_contratto` int(1) DEFAULT NULL,
+  `se_chiamata` int(1) DEFAULT NULL,
+  `se_scalare` int(1) DEFAULT NULL,
+  `se_commessa` int(1) DEFAULT NULL,
+  `se_forfait` int(1) DEFAULT NULL,
+  `se_ticket` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   UNIQUE KEY `indice` (`id`,`id_genitore`,`nome`,`html`),
   KEY `id_genitore` (`id_genitore`),
+  KEY `se_scalare` (`se_scalare`),
+  KEY `se_commessa` (`se_commessa`),
+  KEY `se_forfait` (`se_forfait`),
+  KEY `se_contratto` (`se_contratto`),
+  KEY `se_chiamata` (`se_chiamata`),
+  KEY `se_ticket` (`se_ticket`),
   CONSTRAINT `tipologie_attivita_ibfk_1_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_attivita` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12103,6 +14329,41 @@ SET character_set_client = utf8;
   `se_commerciale` tinyint NOT NULL,
   `se_produzione` tinyint NOT NULL,
   `se_amministrazione` tinyint NOT NULL,
+  `se_contratto` tinyint NOT NULL,
+  `se_chiamata` tinyint NOT NULL,
+  `se_scalare` tinyint NOT NULL,
+  `se_commessa` tinyint NOT NULL,
+  `se_forfait` tinyint NOT NULL,
+  `se_ticket` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `tipologie_certificazioni`
+--
+
+DROP TABLE IF EXISTS `tipologie_certificazioni`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tipologie_certificazioni` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` char(64) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `tipologie_certificazioni_view`
+--
+
+DROP TABLE IF EXISTS `tipologie_certificazioni_view`;
+/*!50001 DROP VIEW IF EXISTS `tipologie_certificazioni_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `tipologie_certificazioni_view` (
+  `id` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -12624,10 +14885,11 @@ CREATE TABLE `tipologie_indirizzi` (
   `se_sede` int(1) DEFAULT NULL,
   `se_operativa` int(1) DEFAULT NULL,
   `se_abitazione` int(1) DEFAULT NULL,
+  `se_domicilio` int(1) DEFAULT NULL,
   `html` char(16) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
-  KEY `indice` (`id`,`nome`,`se_sede`,`se_operativa`,`se_abitazione`,`html`)
+  KEY `indice` (`nome`,`se_sede`,`se_operativa`,`se_abitazione`,`se_domicilio`,`html`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -12645,6 +14907,7 @@ SET character_set_client = utf8;
   `se_sede` tinyint NOT NULL,
   `se_operativa` tinyint NOT NULL,
   `se_abitazione` tinyint NOT NULL,
+  `se_domicilio` tinyint NOT NULL,
   `html` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
@@ -12674,6 +14937,36 @@ DROP TABLE IF EXISTS `tipologie_interesse_view`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `tipologie_interesse_view` (
+  `id` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `tipologie_mastri`
+--
+
+DROP TABLE IF EXISTS `tipologie_mastri`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tipologie_mastri` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nome` (`nome`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `tipologie_mastri_view`
+--
+
+DROP TABLE IF EXISTS `tipologie_mastri_view`;
+/*!50001 DROP VIEW IF EXISTS `tipologie_mastri_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `tipologie_mastri_view` (
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
@@ -12736,6 +15029,36 @@ DROP TABLE IF EXISTS `tipologie_notizie_view`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `tipologie_notizie_view` (
+  `id` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `tipologie_obiettivi`
+--
+
+DROP TABLE IF EXISTS `tipologie_obiettivi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tipologie_obiettivi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` char(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nome` (`nome`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `tipologie_obiettivi_view`
+--
+
+DROP TABLE IF EXISTS `tipologie_obiettivi_view`;
+/*!50001 DROP VIEW IF EXISTS `tipologie_obiettivi_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `tipologie_obiettivi_view` (
   `id` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
@@ -12847,6 +15170,8 @@ CREATE TABLE `tipologie_prodotti` (
   `se_dimensioni` tinyint(1) DEFAULT NULL,
   `se_imballo` tinyint(1) DEFAULT NULL,
   `se_stagioni` int(1) DEFAULT NULL,
+  `se_servizio` int(1) DEFAULT NULL,
+  `se_prodotto` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `id` (`id`,`nome`,`se_colori`,`se_taglie`,`se_dimensioni`,`se_imballo`)
@@ -12880,11 +15205,17 @@ CREATE TABLE `tipologie_progetti` (
   `nome` char(64) NOT NULL,
   `se_scalare` int(1) DEFAULT NULL,
   `se_commessa` int(1) DEFAULT NULL,
+  `se_chiamata` int(1) DEFAULT NULL,
+  `se_contratto` int(1) DEFAULT NULL,
+  `se_forfait` int(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nome` (`nome`),
   KEY `se_scalare` (`se_scalare`),
   KEY `se_commessa` (`se_commessa`),
-  KEY `indice` (`id`,`nome`,`se_scalare`,`se_commessa`)
+  KEY `se_chiamata` (`se_chiamata`),
+  KEY `se_contratto` (`se_contratto`),
+  KEY `se_forfait` (`se_forfait`),
+  KEY `indice` (`id`,`nome`,`se_scalare`,`se_commessa`,`se_chiamata`,`se_contratto`,`se_forfait`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -12901,6 +15232,9 @@ SET character_set_client = utf8;
   `nome` tinyint NOT NULL,
   `se_scalare` tinyint NOT NULL,
   `se_commessa` tinyint NOT NULL,
+  `se_chiamata` tinyint NOT NULL,
+  `se_contratto` tinyint NOT NULL,
+  `se_forfait` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
@@ -13212,6 +15546,68 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `tipologie_todo`
+--
+
+DROP TABLE IF EXISTS `tipologie_todo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tipologie_todo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` char(64) NOT NULL,
+  `se_pianificata` int(1) DEFAULT NULL,
+  `se_richiesta` int(1) DEFAULT NULL,
+  `se_imprevista` int(1) DEFAULT NULL,
+  `se_contratto` int(1) DEFAULT NULL,
+  `se_chiamata` int(1) DEFAULT NULL,
+  `se_scalare` int(1) DEFAULT NULL,
+  `se_commessa` int(1) DEFAULT NULL,
+  `se_forfait` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `nome` (`nome`),
+  KEY `id_account_inserimento` (`id_account_inserimento`),
+  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  KEY `se_chiamata` (`se_chiamata`),
+  KEY `indice` (`id`,`nome`,`se_pianificata`,`se_richiesta`,`se_imprevista`,`se_contratto`,`se_chiamata`),
+  KEY `se_contratto` (`se_contratto`),
+  KEY `se_scalare` (`se_scalare`),
+  KEY `se_commessa` (`se_commessa`),
+  KEY `se_forfait` (`se_forfait`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `tipologie_todo_view`
+--
+
+DROP TABLE IF EXISTS `tipologie_todo_view`;
+/*!50001 DROP VIEW IF EXISTS `tipologie_todo_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `tipologie_todo_view` (
+  `id` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `se_pianificata` tinyint NOT NULL,
+  `se_richiesta` tinyint NOT NULL,
+  `se_imprevista` tinyint NOT NULL,
+  `se_contratto` tinyint NOT NULL,
+  `se_chiamata` tinyint NOT NULL,
+  `se_scalare` tinyint NOT NULL,
+  `se_commessa` tinyint NOT NULL,
+  `se_forfait` tinyint NOT NULL,
+  `id_account_inserimento` tinyint NOT NULL,
+  `timestamp_inserimento` tinyint NOT NULL,
+  `id_account_aggiornamento` tinyint NOT NULL,
+  `timestamp_aggiornamento` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `tipologie_udm`
 --
 
@@ -13329,11 +15725,13 @@ CREATE TABLE `todo` (
   `id_progetto` char(32) DEFAULT NULL,
   `id_luogo` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
+  `id_contatto` int(11) DEFAULT NULL,
   `testo` text,
   `ore_previste` decimal(5,2) DEFAULT NULL,
   `testo_ore_previste` text,
   `anno_previsto` year(4) DEFAULT NULL,
-  `settimana_prevista` int(11) DEFAULT NULL,
+  `settimana_prevista` imysqldump: Couldn't execute 'show create table `todo_archivio_view`': View '__glisweb__.todo_archivio_view' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them (1356)
+nt(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
   `testo_pianificazione` text,
   `id_responsabile` int(11) DEFAULT NULL,
@@ -13350,10 +15748,16 @@ CREATE TABLE `todo` (
   `note_revisione` text,
   `timestamp_completamento` int(11) DEFAULT NULL,
   `testo_completamento` text,
+  `timestamp_feedback` int(11) DEFAULT NULL,
+  `id_anagrafica_feedback` int(11) DEFAULT NULL,
+  `note_feedback` text,
+  `interesse_feedback` int(11) DEFAULT NULL,
+  `raccomandazione_feedback` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `id_mastro_attivita_default` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_anagrafica` (`id_anagrafica`),
   KEY `id_cliente` (`id_cliente`),
@@ -13366,8095 +15770,23 @@ CREATE TABLE `todo` (
   KEY `id_luogo` (`id_luogo`),
   KEY `id_pianificazione` (`id_pianificazione`),
   KEY `id_indirizzo` (`id_indirizzo`),
-  CONSTRAINT `todo_ibfk_1` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  KEY `data_programmazione` (`data_programmazione`),
+  KEY `id_mastro_attivita_default` (`id_mastro_attivita_default`),
+  KEY `id_contatto` (`id_contatto`),
+  KEY `id_anagrafica_feedback` (`id_anagrafica_feedback`),
+  CONSTRAINT `todo_ibfk_10_nofollow` FOREIGN KEY (`id_contatto`) REFERENCES `contatti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `todo_ibfk_15_nofollow` FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `todo_ibfk_16_nofollow` FOREIGN KEY (`id_mastro_attivita_default`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `todo_ibfk_17_nofollow` FOREIGN KEY (`id_anagrafica_feedback`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `todo_ibfk_1_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `todo_ibfk_2` FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `todo_ibfk_2_nofollow` FOREIGN KEY (`id_priorita`) REFERENCES `priorita` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `todo_ibfk_3` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `todo_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_task` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `todo_ibfk_3_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_attivita` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `todo_ibfk_4_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `todo_ibfk_5_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `todo_ibfk_6_nofollow` FOREIGN KEY (`id_responsabile`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `todo_ibfk_7_nofollow` FOREIGN KEY (`id_cliente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `todo_ibfk_8_nofollow` FOREIGN KEY (`id_luogo`) REFERENCES `luoghi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `todo_ibfk_8_nofollow` FOREIGN KEY (`id_luogo`) REFERENCES `luoghi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `todo_ibfk_9_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `todo_view`
---
-
-DROP TABLE IF EXISTS `todo_view`;
-/*!50001 DROP VIEW IF EXISTS `todo_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `todo_view` (
-  `id` tinyint NOT NULL,
-  `data_ora_apertura` tinyint NOT NULL,
-  `data_ora_pianificazione` tinyint NOT NULL,
-  `cliente` tinyint NOT NULL,
-  `id_cliente` tinyint NOT NULL,
-  `progetto` tinyint NOT NULL,
-  `crm` tinyint NOT NULL,
-  `tipologia` tinyint NOT NULL,
-  `priorita` tinyint NOT NULL,
-  `nome` tinyint NOT NULL,
-  `id_luogo` tinyint NOT NULL,
-  `id_indirizzo` tinyint NOT NULL,
-  `indirizzo` tinyint NOT NULL,
-  `id_priorita` tinyint NOT NULL,
-  `ore_previste` tinyint NOT NULL,
-  `id_progetto` tinyint NOT NULL,
-  `anno_previsto` tinyint NOT NULL,
-  `settimana_prevista` tinyint NOT NULL,
-  `data_programmazione` tinyint NOT NULL,
-  `ora_inizio_programmazione` tinyint NOT NULL,
-  `ora_fine_programmazione` tinyint NOT NULL,
-  `anno_programmazione` tinyint NOT NULL,
-  `settimana_programmazione` tinyint NOT NULL,
-  `data_scadenza` tinyint NOT NULL,
-  `ora_scadenza` tinyint NOT NULL,
-  `id_pianificazione` tinyint NOT NULL,
-  `timestamp_pianificazione` tinyint NOT NULL,
-  `pianificazione` tinyint NOT NULL,
-  `ore_lavorate` tinyint NOT NULL,
-  `ore_residue` tinyint NOT NULL,
-  `id_responsabile` tinyint NOT NULL,
-  `responsabile` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `avanzamento` tinyint NOT NULL,
-  `progresso` tinyint NOT NULL,
-  `timestamp_completamento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `timestamp_revisione` tinyint NOT NULL,
-  `data_ora_completamento` tinyint NOT NULL,
-  `completato` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `transcodifica_clienti`
---
-
-DROP TABLE IF EXISTS `transcodifica_clienti`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `transcodifica_clienti` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_mandante` int(11) NOT NULL,
-  `id_cliente` int(11) NOT NULL,
-  `id_cliente_mandante` int(11) NOT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unico` (`id_mandante`,`id_cliente`,`id_cliente_mandante`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `transcodifica_clienti_view`
---
-
-DROP TABLE IF EXISTS `transcodifica_clienti_view`;
-/*!50001 DROP VIEW IF EXISTS `transcodifica_clienti_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `transcodifica_clienti_view` (
-  `id` tinyint NOT NULL,
-  `id_mandante` tinyint NOT NULL,
-  `id_cliente` tinyint NOT NULL,
-  `id_cliente_mandante` tinyint NOT NULL,
-  `cliente` tinyint NOT NULL,
-  `mandante` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `turni`
---
-
-DROP TABLE IF EXISTS `turni`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `turni` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `turno` int(11) DEFAULT NULL,
-  `id_anagrafica` int(11) DEFAULT NULL,
-  `id_contratto` int(11) DEFAULT NULL,
-  `data_inizio` date DEFAULT NULL,
-  `data_fine` date DEFAULT NULL,
-  `id_pianificazione` int(11) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `turno` (`turno`),
-  KEY `id_anagrafica` (`id_anagrafica`),
-  KEY `id_contratto` (`id_contratto`),
-  KEY `id_pianificazione` (`id_pianificazione`),
-  CONSTRAINT `turni_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `turni_ibfk_2` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `turni_ibfk_3` FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `turni_view`
---
-
-DROP TABLE IF EXISTS `turni_view`;
-/*!50001 DROP VIEW IF EXISTS `turni_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `turni_view` (
-  `id` tinyint NOT NULL,
-  `turno` tinyint NOT NULL,
-  `id_anagrafica` tinyint NOT NULL,
-  `id_contratto` tinyint NOT NULL,
-  `data_inizio` tinyint NOT NULL,
-  `data_fine` tinyint NOT NULL,
-  `id_pianificazione` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `contratto` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `udm`
---
-
-DROP TABLE IF EXISTS `udm`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `udm` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_udm` int(11) DEFAULT NULL,
-  `id_tipologia` int(11) NOT NULL,
-  `conversione` float DEFAULT NULL,
-  `nome` char(32) NOT NULL,
-  `soprannone` char(32) DEFAULT NULL,
-  `sigla` char(8) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_udm` (`id_udm`),
-  KEY `id_tipologia` (`id_tipologia`),
-  CONSTRAINT `udm_ibfk_1_nofollow` FOREIGN KEY (`id_udm`) REFERENCES `udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `udm_ibfk_2_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `udm_view`
---
-
-DROP TABLE IF EXISTS `udm_view`;
-/*!50001 DROP VIEW IF EXISTS `udm_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `udm_view` (
-  `id` tinyint NOT NULL,
-  `id_udm` tinyint NOT NULL,
-  `conversione` tinyint NOT NULL,
-  `nome` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `valutazioni_immobili_archivio_view`
---
-
-DROP TABLE IF EXISTS `valutazioni_immobili_archivio_view`;
-/*!50001 DROP VIEW IF EXISTS `valutazioni_immobili_archivio_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `valutazioni_immobili_archivio_view` (
-  `id` tinyint NOT NULL,
-  `riferimento` tinyint NOT NULL,
-  `id_immobile` tinyint NOT NULL,
-  `indirizzo_sostituzione` tinyint NOT NULL,
-  `id_cliente` tinyint NOT NULL,
-  `id_agenzia` tinyint NOT NULL,
-  `id_agente` tinyint NOT NULL,
-  `id_tipologia` tinyint NOT NULL,
-  `data_notizia` tinyint NOT NULL,
-  `data_sviluppo` tinyint NOT NULL,
-  `data_valutazione` tinyint NOT NULL,
-  `data_inizio` tinyint NOT NULL,
-  `data_fine` tinyint NOT NULL,
-  `prezzo_richiesto` tinyint NOT NULL,
-  `prezzo_mq` tinyint NOT NULL,
-  `prezzo_valutazione` tinyint NOT NULL,
-  `prezzo_incarico` tinyint NOT NULL,
-  `percentuale_intervallo` tinyint NOT NULL,
-  `prezzo_prefisso` tinyint NOT NULL,
-  `prezzo` tinyint NOT NULL,
-  `prezzo_suffisso` tinyint NOT NULL,
-  `prezzo_sostituzione` tinyint NOT NULL,
-  `note` tinyint NOT NULL,
-  `timestamp_incrocio` tinyint NOT NULL,
-  `id_esito_incarico` tinyint NOT NULL,
-  `id_esito_notizia` tinyint NOT NULL,
-  `timestamp_archiviazione` tinyint NOT NULL,
-  `note_archiviazione` tinyint NOT NULL,
-  `id_account_editor` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `data_archiviazione` tinyint NOT NULL,
-  `indirizzo` tinyint NOT NULL,
-  `latitudine` tinyint NOT NULL,
-  `longitudine` tinyint NOT NULL,
-  `id_indirizzo` tinyint NOT NULL,
-  `scala` tinyint NOT NULL,
-  `piano` tinyint NOT NULL,
-  `interno` tinyint NOT NULL,
-  `tipologia` tinyint NOT NULL,
-  `cliente` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `valutazioni_immobili_view`
---
-
-DROP TABLE IF EXISTS `valutazioni_immobili_view`;
-/*!50001 DROP VIEW IF EXISTS `valutazioni_immobili_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `valutazioni_immobili_view` (
-  `id` tinyint NOT NULL,
-  `riferimento` tinyint NOT NULL,
-  `id_immobile` tinyint NOT NULL,
-  `indirizzo_sostituzione` tinyint NOT NULL,
-  `id_cliente` tinyint NOT NULL,
-  `id_agenzia` tinyint NOT NULL,
-  `id_agente` tinyint NOT NULL,
-  `id_tipologia` tinyint NOT NULL,
-  `data_notizia` tinyint NOT NULL,
-  `data_sviluppo` tinyint NOT NULL,
-  `data_valutazione` tinyint NOT NULL,
-  `data_inizio` tinyint NOT NULL,
-  `data_fine` tinyint NOT NULL,
-  `prezzo_richiesto` tinyint NOT NULL,
-  `prezzo_mq` tinyint NOT NULL,
-  `prezzo_valutazione` tinyint NOT NULL,
-  `prezzo_incarico` tinyint NOT NULL,
-  `percentuale_intervallo` tinyint NOT NULL,
-  `prezzo_prefisso` tinyint NOT NULL,
-  `prezzo` tinyint NOT NULL,
-  `prezzo_suffisso` tinyint NOT NULL,
-  `prezzo_sostituzione` tinyint NOT NULL,
-  `note` tinyint NOT NULL,
-  `timestamp_incrocio` tinyint NOT NULL,
-  `id_esito_incarico` tinyint NOT NULL,
-  `id_esito_notizia` tinyint NOT NULL,
-  `timestamp_archiviazione` tinyint NOT NULL,
-  `note_archiviazione` tinyint NOT NULL,
-  `id_account_editor` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `data_archiviazione` tinyint NOT NULL,
-  `indirizzo` tinyint NOT NULL,
-  `latitudine` tinyint NOT NULL,
-  `longitudine` tinyint NOT NULL,
-  `id_indirizzo` tinyint NOT NULL,
-  `scala` tinyint NOT NULL,
-  `piano` tinyint NOT NULL,
-  `interno` tinyint NOT NULL,
-  `tipologia` tinyint NOT NULL,
-  `giorno` tinyint NOT NULL,
-  `mese` tinyint NOT NULL,
-  `anno` tinyint NOT NULL,
-  `cliente` tinyint NOT NULL,
-  `agente` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `valute`
---
-
-DROP TABLE IF EXISTS `valute`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `valute` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `iso4217` char(3) NOT NULL,
-  `html` char(8) NOT NULL,
-  `utf8` char(1) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `iso_4217` (`iso4217`),
-  UNIQUE KEY `html` (`html`),
-  UNIQUE KEY `utf8` (`utf8`),
-  KEY `indice` (`id`,`iso4217`,`html`,`utf8`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `valute_view`
---
-
-DROP TABLE IF EXISTS `valute_view`;
-/*!50001 DROP VIEW IF EXISTS `valute_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `valute_view` (
-  `id` tinyint NOT NULL,
-  `iso4217` tinyint NOT NULL,
-  `html` tinyint NOT NULL,
-  `utf8` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `vani_immobili`
---
-
-DROP TABLE IF EXISTS `vani_immobili`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vani_immobili` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_immobile` int(11) NOT NULL,
-  `id_tipologia` int(11) NOT NULL,
-  `nome` char(64) DEFAULT NULL,
-  `larghezza` decimal(5,2) DEFAULT NULL,
-  `lunghezza` decimal(5,2) DEFAULT NULL,
-  `altezza` decimal(5,2) DEFAULT NULL,
-  `percentuale_commerciale_custom` decimal(5,2) DEFAULT NULL,
-  `mq_commerciali` decimal(5,2) DEFAULT NULL,
-  `mq_calpestabili` decimal(5,2) DEFAULT NULL,
-  `mq_modificatore` decimal(15,2) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_immobile` (`id_immobile`),
-  KEY `id_tipologia` (`id_tipologia`),
-  KEY `id_account_inserimento` (`id_account_inserimento`),
-  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  CONSTRAINT `vani_immobili_ibfk_1` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `vani_immobili_ibfk_2` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_vani` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `vani_immobili_ibfk_3` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `vani_immobili_ibfk_4` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `vani_immobili_view`
---
-
-DROP TABLE IF EXISTS `vani_immobili_view`;
-/*!50001 DROP VIEW IF EXISTS `vani_immobili_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `vani_immobili_view` (
-  `id` tinyint NOT NULL,
-  `id_immobile` tinyint NOT NULL,
-  `id_tipologia` tinyint NOT NULL,
-  `nome` tinyint NOT NULL,
-  `larghezza` tinyint NOT NULL,
-  `lunghezza` tinyint NOT NULL,
-  `altezza` tinyint NOT NULL,
-  `percentuale_commerciale_custom` tinyint NOT NULL,
-  `mq_commerciali` tinyint NOT NULL,
-  `mq_calpestabili` tinyint NOT NULL,
-  `mq_modificatore` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `tipologia` tinyint NOT NULL,
-  `percentuale_commerciale` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `variazioni_attivita`
---
-
-DROP TABLE IF EXISTS `variazioni_attivita`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `variazioni_attivita` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_tipologia` int(11) DEFAULT NULL,
-  `id_tipologia_inps` int(11) NOT NULL,
-  `id_anagrafica` int(11) NOT NULL,
-  `data_richiesta` date NOT NULL,
-  `data_approvazione` date DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_tipologia` (`id_tipologia`),
-  KEY `id_tipologia_inps` (`id_tipologia_inps`),
-  KEY `id_anagrafica` (`id_anagrafica`),
-  CONSTRAINT `variazioni_attivita_ibfk_3_nofollow` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `variazioni_attivita_ibfk_1_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_variazioni_attivita` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `variazioni_attivita_ibfk_2_nofollow` FOREIGN KEY (`id_tipologia_inps`) REFERENCES `tipologie_attivita_inps` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `variazioni_attivita_view`
---
-
-DROP TABLE IF EXISTS `variazioni_attivita_view`;
-/*!50001 DROP VIEW IF EXISTS `variazioni_attivita_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `variazioni_attivita_view` (
-  `id` tinyint NOT NULL,
-  `id_tipologia` tinyint NOT NULL,
-  `id_tipologia_inps` tinyint NOT NULL,
-  `id_anagrafica` tinyint NOT NULL,
-  `data_richiesta` tinyint NOT NULL,
-  `data_approvazione` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `tipologia` tinyint NOT NULL,
-  `tipologia_inps` tinyint NOT NULL,
-  `anagrafica` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `variazioni_prezzi`
---
-
-DROP TABLE IF EXISTS `variazioni_prezzi`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `variazioni_prezzi` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` char(255) DEFAULT NULL,
-  `timestamp_inizio` int(11) DEFAULT NULL,
-  `timestamp_fine` int(11) DEFAULT NULL,
-  `sconto_percentuale` decimal(5,2) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `sconto_fisso` decimal(15,2) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_account_inserimento` (`id_account_inserimento`),
-  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  CONSTRAINT `variazioni_prezzi_ibfk_1` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `variazioni_prezzi_ibfk_2` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `variazioni_prezzi_categorie`
---
-
-DROP TABLE IF EXISTS `variazioni_prezzi_categorie`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `variazioni_prezzi_categorie` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_variazione_prezzo` int(11) NOT NULL,
-  `id_categoria_prodotti` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unico` (`id_variazione_prezzo`,`id_categoria_prodotti`),
-  KEY `id_variazione_prezzo` (`id_variazione_prezzo`),
-  KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
-  CONSTRAINT `variazioni_prezzi_categorie_ibfk_1` FOREIGN KEY (`id_variazione_prezzo`) REFERENCES `variazioni_prezzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `variazioni_prezzi_categorie_ibfk_2` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `variazioni_prezzi_listini`
---
-
-DROP TABLE IF EXISTS `variazioni_prezzi_listini`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `variazioni_prezzi_listini` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_variazione_prezzo` int(11) NOT NULL,
-  `id_listino` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unico` (`id_variazione_prezzo`,`id_listino`),
-  KEY `id_variazione_prezzo` (`id_variazione_prezzo`),
-  KEY `id_listino` (`id_listino`),
-  CONSTRAINT `variazioni_prezzi_listini_ibfk_1` FOREIGN KEY (`id_variazione_prezzo`) REFERENCES `variazioni_prezzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `variazioni_prezzi_listini_ibfk_2` FOREIGN KEY (`id_listino`) REFERENCES `listini` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `variazioni_prezzi_marchi`
---
-
-DROP TABLE IF EXISTS `variazioni_prezzi_marchi`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `variazioni_prezzi_marchi` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_variazione_prezzo` int(11) NOT NULL,
-  `id_marchio` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unico` (`id_variazione_prezzo`,`id_marchio`),
-  KEY `id_variazione_prezzo` (`id_variazione_prezzo`),
-  KEY `id_marchio` (`id_marchio`),
-  CONSTRAINT `variazioni_prezzi_marchi_ibfk_1` FOREIGN KEY (`id_variazione_prezzo`) REFERENCES `variazioni_prezzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `variazioni_prezzi_marchi_ibfk_2` FOREIGN KEY (`id_marchio`) REFERENCES `marchi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `variazioni_prezzi_prodotti`
---
-
-DROP TABLE IF EXISTS `variazioni_prezzi_prodotti`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `variazioni_prezzi_prodotti` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_variazione_prezzo` int(11) NOT NULL,
-  `id_prodotto` char(32) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unico` (`id_variazione_prezzo`,`id_prodotto`),
-  KEY `id_variazione_prezzo` (`id_variazione_prezzo`),
-  KEY `id_prodotto` (`id_prodotto`),
-  CONSTRAINT `variazioni_prezzi_prodotti_ibfk_1` FOREIGN KEY (`id_variazione_prezzo`) REFERENCES `variazioni_prezzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `variazioni_prezzi_prodotti_ibfk_2` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `variazioni_prezzi_stagioni`
---
-
-DROP TABLE IF EXISTS `variazioni_prezzi_stagioni`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `variazioni_prezzi_stagioni` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_variazione_prezzo` int(11) NOT NULL,
-  `id_stagione` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unico` (`id_variazione_prezzo`,`id_stagione`),
-  KEY `id_variazione_prezzo` (`id_variazione_prezzo`),
-  KEY `id_stagione` (`id_stagione`),
-  CONSTRAINT `variazioni_prezzi_stagioni_ibfk_1` FOREIGN KEY (`id_variazione_prezzo`) REFERENCES `variazioni_prezzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `variazioni_prezzi_stagioni_ibfk_2` FOREIGN KEY (`id_stagione`) REFERENCES `stagioni_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `variazioni_prezzi_view`
---
-
-DROP TABLE IF EXISTS `variazioni_prezzi_view`;
-/*!50001 DROP VIEW IF EXISTS `variazioni_prezzi_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `variazioni_prezzi_view` (
-  `id` tinyint NOT NULL,
-  `nome` tinyint NOT NULL,
-  `timestamp_inizio` tinyint NOT NULL,
-  `timestamp_fine` tinyint NOT NULL,
-  `sconto_percentuale` tinyint NOT NULL,
-  `ordine` tinyint NOT NULL,
-  `sconto_fisso` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `video`
---
-
-DROP TABLE IF EXISTS `video`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `video` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_anagrafica` int(11) DEFAULT NULL,
-  `id_pagina` int(11) DEFAULT NULL,
-  `id_file` int(11) DEFAULT NULL,
-  `id_risorsa` int(11) DEFAULT NULL,
-  `id_categoria_risorse` int(11) DEFAULT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
-  `id_categoria_prodotti` int(11) DEFAULT NULL,
-  `id_evento` int(11) DEFAULT NULL,
-  `id_categoria_eventi` int(11) DEFAULT NULL,
-  `id_notizia` int(11) DEFAULT NULL,
-  `id_categoria_notizie` int(11) DEFAULT NULL,
-  `id_lingua` int(11) DEFAULT NULL,
-  `path` char(255) DEFAULT NULL,
-  `codice_embed` char(255) DEFAULT NULL,
-  `id_tipologia_embed` int(11) NOT NULL,
-  `ratio` char(8) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
-  `id_ruolo` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `target` char(255) DEFAULT NULL,
-  `timestamp_scalamento` int(11) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `prodotto_unico_embed` (`id_prodotto`,`codice_embed`),
-  UNIQUE KEY `categoria_prodotti_unico_embed` (`id_categoria_prodotti`,`codice_embed`),
-  UNIQUE KEY `prodotto_unico_path` (`id_prodotto`,`path`),
-  UNIQUE KEY `categoria_prodotti_unico_path` (`id_categoria_prodotti`,`path`),
-  UNIQUE KEY `pagina_unico_embed` (`id_pagina`,`codice_embed`),
-  UNIQUE KEY `pagina_unico_path` (`id_pagina`,`path`),
-  UNIQUE KEY `anagrafica_unico_embed` (`id_anagrafica`,`codice_embed`),
-  UNIQUE KEY `anagrafica_unico_path` (`id_anagrafica`,`path`),
-  UNIQUE KEY `evento_unico_embed` (`id_evento`,`codice_embed`),
-  UNIQUE KEY `evento_unico_path` (`id_evento`,`path`),
-  UNIQUE KEY `file_unico_embed` (`id_file`,`codice_embed`),
-  UNIQUE KEY `file_unico_path` (`id_file`,`path`),
-  UNIQUE KEY `categoria_eventi_unico_embed` (`id_categoria_eventi`,`codice_embed`),
-  UNIQUE KEY `categoria_eventi_unico_path` (`id_categoria_eventi`,`path`),
-  KEY `id_account_inserimento` (`id_account_inserimento`),
-  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  KEY `id_pagina` (`id_pagina`),
-  KEY `id_prodotto` (`id_prodotto`),
-  KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
-  KEY `id_ruolo` (`id_ruolo`),
-  KEY `id_anagrafica` (`id_anagrafica`),
-  KEY `id_evento` (`id_evento`),
-  KEY `id_file` (`id_file`),
-  KEY `id_tipologia_embed` (`id_tipologia_embed`),
-  KEY `id_categoria_eventi` (`id_categoria_eventi`),
-  KEY `path` (`path`),
-  KEY `codice_embed` (`codice_embed`),
-  KEY `id_notizia` (`id_notizia`),
-  KEY `id_categoria_notizie` (`id_categoria_notizie`),
-  KEY `id_lingua` (`id_lingua`),
-  KEY `id_categoria_risorse` (`id_categoria_risorse`),
-  KEY `id_risorsa` (`id_risorsa`),
-  CONSTRAINT `video_ibfk_1` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_10` FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_10_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_11` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_12` FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_13` FOREIGN KEY (`id_categoria_risorse`) REFERENCES `categorie_risorse` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_14` FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_2` FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_3` FOREIGN KEY (`id_file`) REFERENCES `file` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_4` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_5` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_6` FOREIGN KEY (`id_evento`) REFERENCES `eventi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_7_nofollow` FOREIGN KEY (`id_tipologia_embed`) REFERENCES `tipologie_embed` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `video_ibfk_8_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_video` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `video_ibfk_9` FOREIGN KEY (`id_categoria_eventi`) REFERENCES `categorie_eventi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `video_ibfk_9_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `video_view`
---
-
-DROP TABLE IF EXISTS `video_view`;
-/*!50001 DROP VIEW IF EXISTS `video_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `video_view` (
-  `id` tinyint NOT NULL,
-  `id_anagrafica` tinyint NOT NULL,
-  `id_pagina` tinyint NOT NULL,
-  `id_file` tinyint NOT NULL,
-  `id_risorsa` tinyint NOT NULL,
-  `id_categoria_risorse` tinyint NOT NULL,
-  `id_prodotto` tinyint NOT NULL,
-  `id_categoria_prodotti` tinyint NOT NULL,
-  `id_evento` tinyint NOT NULL,
-  `id_categoria_eventi` tinyint NOT NULL,
-  `id_notizia` tinyint NOT NULL,
-  `id_categoria_notizie` tinyint NOT NULL,
-  `id_lingua` tinyint NOT NULL,
-  `path` tinyint NOT NULL,
-  `codice_embed` tinyint NOT NULL,
-  `id_tipologia_embed` tinyint NOT NULL,
-  `ratio` tinyint NOT NULL,
-  `nome` tinyint NOT NULL,
-  `id_ruolo` tinyint NOT NULL,
-  `ordine` tinyint NOT NULL,
-  `target` tinyint NOT NULL,
-  `timestamp_scalamento` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `ruolo` tinyint NOT NULL,
-  `associato` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `zone`
---
-
-DROP TABLE IF EXISTS `zone`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `zone` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `nome` (`nome`),
-  KEY `indice` (`id`,`nome`),
-  KEY `id_genitore` (`id_genitore`),
-  CONSTRAINT `zone_ibfk_1` FOREIGN KEY (`id_genitore`) REFERENCES `zone` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `zone_cap`
---
-
-DROP TABLE IF EXISTS `zone_cap`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `zone_cap` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_zona` int(11) NOT NULL,
-  `cap` char(8) NOT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `cap` (`cap`),
-  KEY `id_zona` (`id_zona`),
-  CONSTRAINT `zone_cap_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `zone_cap_view`
---
-
-DROP TABLE IF EXISTS `zone_cap_view`;
-/*!50001 DROP VIEW IF EXISTS `zone_cap_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `zone_cap_view` (
-  `id` tinyint NOT NULL,
-  `id_zona` tinyint NOT NULL,
-  `cap` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `zone_caratteristiche`
---
-
-DROP TABLE IF EXISTS `zone_caratteristiche`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `zone_caratteristiche` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_zona` int(11) NOT NULL,
-  `id_caratteristica` int(11) NOT NULL,
-  `specifiche` text,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unico` (`id_zona`,`id_caratteristica`),
-  KEY `id_zona` (`id_zona`),
-  KEY `id_caratteristica` (`id_caratteristica`),
-  CONSTRAINT `zone_caratteristiche_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `zone_caratteristiche_ibfk_2` FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `zone_caratteristiche_view`
---
-
-DROP TABLE IF EXISTS `zone_caratteristiche_view`;
-/*!50001 DROP VIEW IF EXISTS `zone_caratteristiche_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `zone_caratteristiche_view` (
-  `id` tinyint NOT NULL,
-  `id_zona` tinyint NOT NULL,
-  `id_caratteristica` tinyint NOT NULL,
-  `specifiche` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `zone_listini`
---
-
-DROP TABLE IF EXISTS `zone_listini`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `zone_listini` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_zona` int(11) NOT NULL,
-  `id_listino` int(11) NOT NULL,
-  `ordine` int(11) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_zona` (`id_zona`,`id_listino`) USING BTREE,
-  KEY `id_listino` (`id_listino`) USING BTREE,
-  KEY `ordine` (`ordine`),
-  CONSTRAINT `zone_listini_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `zone_listini_ibfk_2` FOREIGN KEY (`id_listino`) REFERENCES `listini` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `zone_listini_view`
---
-
-DROP TABLE IF EXISTS `zone_listini_view`;
-/*!50001 DROP VIEW IF EXISTS `zone_listini_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `zone_listini_view` (
-  `id` tinyint NOT NULL,
-  `id_zona` tinyint NOT NULL,
-  `id_listino` tinyint NOT NULL,
-  `ordine` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `zone_prezzi_spedizione`
---
-
-DROP TABLE IF EXISTS `zone_prezzi_spedizione`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `zone_prezzi_spedizione` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_zona` int(11) DEFAULT NULL,
-  `id_ingombro` int(11) DEFAULT NULL,
-  `id_categoria_prodotti` int(11) DEFAULT NULL,
-  `id_prodotto` char(32) DEFAULT NULL,
-  `prezzo` decimal(16,5) NOT NULL,
-  `prezzo_max` decimal(7,2) DEFAULT NULL,
-  `id_listino` int(11) NOT NULL,
-  `id_valuta` int(11) NOT NULL,
-  `id_iva` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_zona` (`id_zona`),
-  KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
-  KEY `id_listino` (`id_listino`),
-  KEY `id_valuta` (`id_valuta`),
-  KEY `id_iva` (`id_iva`),
-  KEY `id_ingombro` (`id_ingombro`),
-  KEY `indice` (`id`,`id_zona`,`id_ingombro`,`id_categoria_prodotti`,`prezzo`,`id_listino`,`id_valuta`,`id_iva`),
-  KEY `id_prodotto` (`id_prodotto`),
-  CONSTRAINT `zone_prezzi_spedizione_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `zone_prezzi_spedizione_ibfk_2_nofollow` FOREIGN KEY (`id_ingombro`) REFERENCES `ingombri` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `zone_prezzi_spedizione_ibfk_3_nofollow` FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `zone_prezzi_spedizione_ibfk_4` FOREIGN KEY (`id_listino`) REFERENCES `listini` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `zone_prezzi_spedizione_ibfk_5_nofollow` FOREIGN KEY (`id_valuta`) REFERENCES `valute` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `zone_prezzi_spedizione_ibfk_6_nofollow` FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `zone_prezzi_spedizione_ibfk_7_nofollow` FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `zone_provincie`
---
-
-DROP TABLE IF EXISTS `zone_provincie`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `zone_provincie` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_zona` int(11) NOT NULL,
-  `id_provincia` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_zona` (`id_zona`,`id_provincia`),
-  KEY `id_provincia` (`id_provincia`),
-  KEY `indice` (`id`,`id_zona`,`id_provincia`),
-  CONSTRAINT `zone_provincie_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `zone_provincie_ibfk_2_nofollow` FOREIGN KEY (`id_provincia`) REFERENCES `provincie` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `zone_stati`
---
-
-DROP TABLE IF EXISTS `zone_stati`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `zone_stati` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_zona` int(11) NOT NULL,
-  `id_stato` int(11) NOT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_zona` (`id_zona`,`id_stato`) USING BTREE,
-  KEY `id_stato` (`id_stato`) USING BTREE,
-  CONSTRAINT `zone_stati_ibfk_1` FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `zone_stati_ibfk_2` FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `zone_stati_view`
---
-
-DROP TABLE IF EXISTS `zone_stati_view`;
-/*!50001 DROP VIEW IF EXISTS `zone_stati_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `zone_stati_view` (
-  `id` tinyint NOT NULL,
-  `id_zona` tinyint NOT NULL,
-  `id_stato` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `zone_view`
---
-
-DROP TABLE IF EXISTS `zone_view`;
-/*!50001 DROP VIEW IF EXISTS `zone_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `zone_view` (
-  `id` tinyint NOT NULL,
-  `id_genitore` tinyint NOT NULL,
-  `nome` tinyint NOT NULL,
-  `id_account_inserimento` tinyint NOT NULL,
-  `timestamp_inserimento` tinyint NOT NULL,
-  `id_account_aggiornamento` tinyint NOT NULL,
-  `timestamp_aggiornamento` tinyint NOT NULL,
-  `padre` tinyint NOT NULL,
-  `cap` tinyint NOT NULL,
-  `immagini` tinyint NOT NULL,
-  `no_immagini` tinyint NOT NULL,
-  `testi` tinyint NOT NULL,
-  `no_testi` tinyint NOT NULL,
-  `__label__` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-
---
--- Dumping events for database '__glisweb__'
---
-
---
--- Dumping routines for database '__glisweb__'
---
-/*!50003 DROP FUNCTION IF EXISTS `account_get_struttura` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `account_get_struttura`( `p1` INT( 11 )) RETURNS int(11)
-    READS SQL DATA
-BEGIN
-
-	
-	
-
-	
-	
-
-	
-	
-	DECLARE struttura int( 11 ) DEFAULT NULL;
-	DECLARE gruppo int( 11 ) DEFAULT NULL;
-
-	
-	SELECT
-	    MAX(account_gruppi.id_gruppo)
-	    FROM account_gruppi
-	    WHERE account_gruppi.id_account = p1
-	    INTO gruppo;
-
-	
-	IF( gruppo IS NULL ) THEN
-	    RETURN NULL;
-	END IF;
-	
-	
-	SELECT
-	    gruppi.id_struttura
-	    FROM gruppi
-	    WHERE gruppi.id = gruppo
-	    INTO struttura;
-
-	
-	WHILE ( struttura IS  NULL AND gruppo IS NOT NULL ) DO
-
-	    
-	    SELECT
-	    gruppi.id_genitore
-	    FROM gruppi
-	    WHERE gruppi.id = gruppo
-	    INTO gruppo;
-	    
-	    
-	    SELECT
-	    gruppi.id_struttura
-	    FROM gruppi
-	    WHERE gruppi.id = gruppo
-	    INTO struttura;
-
-	END WHILE;
-
-	IF( struttura IS NULL ) THEN
-	    RETURN NULL;
-	END IF;
-
-	
-	SELECT
-	anagrafica_ruoli.id_anagrafica
-	FROM anagrafica_ruoli
-	WHERE anagrafica_ruoli.id = struttura
-	INTO struttura;
-
-	RETURN struttura;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `anagrafica_ruoli_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `anagrafica_ruoli_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_anagrafica_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				anagrafica_ruoli.id_genitore,
-				coalesce(
-					anagrafica.soprannome,
-					anagrafica.denominazione,
-					concat( anagrafica.cognome, ' ', anagrafica.nome ),
-					'' ),
-				count( anagrafica_ruoli.id )
-			FROM anagrafica_ruoli
-			LEFT JOIN anagrafica ON anagrafica.id = anagrafica_ruoli.id_anagrafica
-			WHERE anagrafica_ruoli.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `anagrafica_ruoli_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `anagrafica_ruoli_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT anagrafica_ruoli_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				anagrafica_ruoli.id_genitore
-			FROM anagrafica_ruoli
-			WHERE anagrafica_ruoli.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `anagrafica_ruoli_path_find_ancestor` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `anagrafica_ruoli_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS int(11)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT anagrafica_ruoli_path_find_ancestor( <id1> ) AS check
-
-		DECLARE p2 int( 11 ) DEFAULT NULL;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				anagrafica_ruoli.id_genitore,
-				anagrafica_ruoli.id
-			FROM anagrafica_ruoli
-			WHERE anagrafica_ruoli.id = p1
-			INTO p1, p2;
-
-		END WHILE;
-
-		RETURN p2;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_anagrafica_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_anagrafica_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_anagrafica_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				categorie_anagrafica.id_genitore,
-				categorie_anagrafica.nome,
-				count( categorie_anagrafica.id )
-			FROM categorie_anagrafica
-			WHERE categorie_anagrafica.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_anagrafica_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_anagrafica_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_anagrafica_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				categorie_anagrafica.id_genitore
-			FROM categorie_anagrafica
-			WHERE categorie_anagrafica.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_diritti_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_diritti_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_diritti_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				categorie_diritto.id_genitore,
-				categorie_diritto.nome,
-				count( categorie_diritto.id )
-			FROM categorie_diritto
-			WHERE categorie_diritto.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_diritti_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_diritti_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_diritti_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				categorie_diritto.id_genitore
-			FROM categorie_diritto
-			WHERE categorie_diritto.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_documenti_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_documenti_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-	
-	
-
-	
-	
-
-	
-	
-
-	DECLARE path char( 255 ) DEFAULT '';
-	DECLARE step char( 255 ) DEFAULT '';
-	DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-	DECLARE righe int( 11 ) DEFAULT 0;
-
-	WHILE ( p1 IS NOT NULL ) DO
-
-	    SELECT
-		categorie_documenti.id_genitore,
-		categorie_documenti.nome,
-		count( categorie_documenti.id )
-	    FROM categorie_documenti
-	    WHERE categorie_documenti.id = p1
-	    INTO p1, step, righe;
-
-	    IF( p1 IS NULL ) THEN
-		SET separatore = '';
-	    END IF;
-
-	    SET path = concat( separatore, step, path );
-
-	END WHILE;
-
-	RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_documenti_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_documenti_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-	
-	
-	
-
-	
-	
-
-	
-	
-
-	WHILE ( p1 IS NOT NULL ) DO
-
-	    IF( p1 = p2 ) THEN
-		RETURN 1;
-	    END IF;
-
-	    SELECT
-		categorie_documenti.id_genitore
-	    FROM categorie_documenti
-	    WHERE categorie_documenti.id = p1
-	    INTO p1;
-
-	END WHILE;
-
-	RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_eventi_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_eventi_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_eventi_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				categorie_eventi.id_genitore,
-				categorie_eventi.nome,
-				count( categorie_eventi.id )
-			FROM categorie_eventi
-			WHERE categorie_eventi.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_eventi_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_eventi_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_eventi_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				categorie_eventi.id_genitore
-			FROM categorie_eventi
-			WHERE categorie_eventi.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_notizie_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_notizie_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_notizie_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				categorie_notizie.id_genitore,
-				categorie_notizie.nome,
-				count( categorie_notizie.id )
-			FROM categorie_notizie
-			WHERE categorie_notizie.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_notizie_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_notizie_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_notizie_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				categorie_notizie.id_genitore
-			FROM categorie_notizie
-			WHERE categorie_notizie.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_prodotti_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_prodotti_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_prodotti_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				categorie_prodotti.id_genitore,
-				categorie_prodotti.nome,
-				count( categorie_prodotti.id )
-			FROM categorie_prodotti
-			WHERE categorie_prodotti.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `categorie_prodotti_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `categorie_prodotti_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT categorie_prodotti_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				categorie_prodotti.id_genitore
-			FROM categorie_prodotti
-			WHERE categorie_prodotti.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `gruppi_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `gruppi_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				gruppi.id_genitore,
-				gruppi.nome,
-				count( gruppi.id )
-			FROM gruppi
-			WHERE gruppi.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `gruppi_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `gruppi_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT pagine_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				gruppi.id_genitore
-			FROM gruppi
-			WHERE gruppi.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `immobili_bagni_count` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `immobili_bagni_count`( `id` INT( 11 ) ) RETURNS int(11)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- idr int( 11 ) -> l'id dell'immobile di cui contare i bagni
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT immobili_bagni_count( <id> ) AS count
-
-		RETURN (
-			SELECT count( vani_immobili.id )
-			FROM vani_immobili
-			INNER JOIN tipologie_vani ON tipologie_vani.id = vani_immobili.id_tipologia
-			WHERE vani_immobili.id_immobile = id AND tipologie_vani.se_bagno = 1
-		);
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `immobili_camere_count` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `immobili_camere_count`( `id` INT( 11 ) ) RETURNS int(11)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- idr int( 11 ) -> l'id dell'immobile di cui contare le camere
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT immobili_camere_count( <id> ) AS count
-
-		RETURN (
-			SELECT count( vani_immobili.id )
-			FROM vani_immobili
-			INNER JOIN tipologie_vani ON tipologie_vani.id = vani_immobili.id_tipologia
-			WHERE vani_immobili.id_immobile = id AND tipologie_vani.se_camera = 1
-		);
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `immobili_cucine_count` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `immobili_cucine_count`( `id` INT( 11 ) ) RETURNS int(11)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- idr int( 11 ) -> l'id dell'immobile di cui contare le cucine
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT immobili_cucine_count( <id> ) AS count
-
-		RETURN (
-			SELECT count( vani_immobili.id )
-			FROM vani_immobili
-			INNER JOIN tipologie_vani ON tipologie_vani.id = vani_immobili.id_tipologia
-			WHERE vani_immobili.id_immobile = id AND tipologie_vani.se_cucina = 1
-		);
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `pagine_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `pagine_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT pagine_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				pagine.id_genitore,
-				pagine.nome,
-				count( pagine.id )
-			FROM pagine
-			WHERE pagine.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `pagine_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `pagine_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT pagine_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				pagine.id_genitore
-			FROM pagine
-			WHERE pagine.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `pubblicazione_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `pubblicazione_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-	
-	
-
-	
-	
-
-	
-	
-
-	DECLARE path char( 255 ) DEFAULT '';
-	DECLARE step char( 255 ) DEFAULT '';
-	DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-	DECLARE righe int( 11 ) DEFAULT 0;
-
-	WHILE ( p1 IS NOT NULL ) DO
-
-	    SELECT
-		categorie_diritto.id_genitore,
-		categorie_diritto.nome,
-		count( categorie_diritto.id )
-	    FROM categorie_diritto
-	    WHERE categorie_diritto.id = p1
-	    INTO p1, step, righe;
-
-	    IF( p1 IS NULL ) THEN
-		SET separatore = '';
-	    END IF;
-
-	    SET path = concat( separatore, step, path );
-
-	END WHILE;
-
-	RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `pubblicazione_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `pubblicazione_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-	
-	
-	
-
-	
-	
-
-	
-	
-
-	WHILE ( p1 IS NOT NULL ) DO
-
-	    IF( p1 = p2 ) THEN
-		RETURN 1;
-	    END IF;
-
-	    SELECT
-		categorie_diritto.id_genitore
-	    FROM categorie_diritto
-	    WHERE categorie_diritto.id = p1
-	    INTO p1;
-
-	END WHILE;
-
-	RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `richieste_immobili_caratteristiche_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `richieste_immobili_caratteristiche_check`( `idr` INT( 11 ), `idi` INT( 11 ), `ser` INT( 11 ) ) RETURNS decimal(5,2)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- idr int( 11 ) -> l'id della richiesta per la quale si vuole effettuare il check
-		-- idi int( 11 ) -> l'id dell'immobile da utilizzare per il check
-		-- ser int( 11 ) -> 0 per considerare le caratteristiche richieste, 1 per considerare quelle indesiderate
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT richieste_immobili_caratteristiche_check( <idr>, <idi>, <se> ) AS check
-
-		RETURN (
-			coalesce( (
-					SELECT round(
-						( ( count( DISTINCT r2.id_caratteristica ) / count( DISTINCT r1.id_caratteristica ) ) * 100 ), 2
-					) AS r0
-					FROM richieste_immobili_caratteristiche AS r1
-					LEFT JOIN immobili_caratteristiche AS r2 ON ( r2.id_caratteristica = r1.id_caratteristica AND r2.id_immobile = idi )
-					WHERE r1.id_richiesta = idr AND coalesce( r1.se_non_desiderata, 0 ) = ser
-				),
-				if( ser = 1, 0.00, 100.00 )
-			)
-		);
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `ruoli_anagrafica_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `ruoli_anagrafica_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-	
-	
-
-	
-	
-
-	
-	
-
-	DECLARE path char( 255 ) DEFAULT '';
-	DECLARE step char( 255 ) DEFAULT '';
-	DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-	DECLARE righe int( 11 ) DEFAULT 0;
-
-	WHILE ( p1 IS NOT NULL ) DO
-
-	    SELECT
-		ruoli_anagrafica.id_genitore,
-		ruoli_anagrafica.nome,
-		count( ruoli_anagrafica.id )
-	    FROM ruoli_anagrafica
-	    WHERE ruoli_anagrafica.id = p1
-	    INTO p1, step, righe;
-
-	    IF( p1 IS NULL ) THEN
-		SET separatore = '';
-	    END IF;
-
-	    SET path = concat( separatore, step, path );
-
-	END WHILE;
-
-	RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `ruoli_anagrafica_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `ruoli_anagrafica_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-	
-	
-	
-
-	
-	
-
-	
-	
-
-	WHILE ( p1 IS NOT NULL ) DO
-
-	    IF( p1 = p2 ) THEN
-		RETURN 1;
-	    END IF;
-
-	    SELECT
-		ruoli_anagrafica.id_genitore
-	    FROM ruoli_anagrafica
-	    WHERE ruoli_anagrafica.id = p1
-	    INTO p1;
-
-	END WHILE;
-
-	RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `settori_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `settori_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT settori_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				settori.id_genitore,
-				coalesce( settori.soprannome, settori.nome ),
-				count( settori.id )
-			FROM settori
-			WHERE settori.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `tipologie_anagrafica_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `tipologie_anagrafica_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT tipologie_anagrafica_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				tipologie_anagrafica.id_genitore,
-				tipologie_anagrafica.nome,
-				count( tipologie_anagrafica.id )
-			FROM tipologie_anagrafica
-			WHERE tipologie_anagrafica.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `tipologie_attivita_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `tipologie_attivita_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT tipologie_attivita_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				tipologie_attivita.id_genitore,
-				tipologie_attivita.nome,
-				count( tipologie_attivita.id )
-			FROM tipologie_attivita
-			WHERE tipologie_attivita.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `tipologie_attivita_path_base` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `tipologie_attivita_path_base`( `p1` INT( 11 ) ) RETURNS int(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare la base del path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT tipologie_attivita_path_base( <id1> ) AS base
-
-		DECLARE p0 int( 11 ) DEFAULT NULL;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SET p0 = p1;
-		
-			SELECT
-				tipologie_attivita.id_genitore
-			FROM tipologie_attivita
-			WHERE tipologie_attivita.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN p0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `zone_path` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `zone_path`( `p1` INT( 11 ) ) RETURNS char(255) CHARSET utf8
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT zone_path( <id> ) AS path
-
-		DECLARE path char( 255 ) DEFAULT '';
-		DECLARE step char( 255 ) DEFAULT '';
-		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			SELECT
-				zone.id_genitore,
-				zone.nome,
-				count( zone.id )
-			FROM zone
-			WHERE zone.id = p1
-			INTO p1, step, righe;
-
-			IF( p1 IS NULL ) THEN
-				SET separatore = '';
-			END IF;
-
-			SET path = concat( separatore, step, path );
-
-		END WHILE;
-
-		RETURN path;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `zone_path_check` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `zone_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS tinyint(1)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
-		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT zone_path_check( <id1>, <id2> ) AS check
-
-		WHILE ( p1 IS NOT NULL ) DO
-
-			IF( p1 = p2 ) THEN
-				RETURN 1;
-			END IF;
-
-			SELECT
-				zone.id_genitore
-			FROM zone
-			WHERE zone.id = p1
-			INTO p1;
-
-		END WHILE;
-
-		RETURN 0;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP FUNCTION IF EXISTS `zone_prezzo_spedizione_find` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-CREATE DEFINER=CURRENT_USER() FUNCTION `zone_prezzo_spedizione_find`( `z` INT( 11 ), p CHAR( 32 ) ) RETURNS int(11)
-    READS SQL DATA
-BEGIN
-
-		-- PARAMETRI
-		-- z int( 11 ) -> l'id della zona per cui cercare il prezzo di spedizione
-		-- p char( 32 ) -> l'id del prodotto per cui cercare il prezzo di spedizione
-
-		-- DIPENDENZE
-		-- nessuna
-
-		-- TEST
-		-- SELECT tipologie_attivita_path_base( <idZona>, <idProdotto> ) AS t
-
-		DECLARE ing int( 11 ) DEFAULT NULL;
-		DECLARE cat int( 11 ) DEFAULT NULL;
-		DECLARE idp int( 11 ) DEFAULT NULL;
-
-		SELECT prodotti.id_ingombro FROM prodotti WHERE id = p INTO ing;
-		SELECT prodotti_categorie.id_categoria FROM prodotti_categorie WHERE prodotti_categorie.id_prodotto = p ORDER BY ordine LIMIT 1 INTO cat;
-
-		SELECT coalesce(
-			( SELECT id FROM zone_prezzi_spedizione WHERE id_zona = z		AND id_ingombro = ing		AND id_categoria_prodotti = cat			ORDER BY id DESC LIMIT 1 ),
-			( SELECT id FROM zone_prezzi_spedizione WHERE id_zona = z		AND id_ingombro = ing		AND id_categoria_prodotti IS NULL		ORDER BY id DESC LIMIT 1 ),
-			( SELECT id FROM zone_prezzi_spedizione WHERE id_zona = z		AND id_ingombro IS NULL		AND id_categoria_prodotti IS NULL		ORDER BY id DESC LIMIT 1 ),
-			( SELECT id FROM zone_prezzi_spedizione WHERE id_zona IS NULL		AND id_ingombro IS NULL		AND id_categoria_prodotti IS NULL		ORDER BY id DESC LIMIT 1 )
-		) INTO idp;
-
-		RETURN idp;
-
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Final view structure for view `__etichette_anagrafica__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__etichette_anagrafica__`*/;
-/*!50001 DROP VIEW IF EXISTS `__etichette_anagrafica__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__etichette_anagrafica__` AS select `anagrafica`.`id` AS `id`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `__label__`,coalesce(`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `denominazione_fiscale` from `anagrafica` order by coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_analisi_immobiliare__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_analisi_immobiliare__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_analisi_immobiliare__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_analisi_immobiliare__` AS select `incarichi`.`id_agente` AS `id_agente`,`incarichi`.`agente` AS `agente`,`incarichi`.`notizie` AS `notizie`,`incarichi`.`sviluppi` AS `sviluppi`,`incarichi`.`valutazioni` AS `valutazioni`,`incarichi`.`incarichi` AS `incarichi`,`incarichi`.`vendite` AS `vendite`,`incarichi`.`settimana` AS `settimana`,`incarichi`.`anno` AS `anno`,`attivities`.`visioni` AS `visioni`,`attivities`.`contatti` AS `contatti` from (`__report_incarichi_immobili_immobiliare__` `incarichi` left join `__report_attivita_immobiliare__` `attivities` on(((`incarichi`.`id_agente` = `attivities`.`id_agente`) and (`incarichi`.`anno` = `attivities`.`anno`) and (`incarichi`.`settimana` = `attivities`.`settimana`)))) union select `incarichi`.`id_agente` AS `id_agente`,`incarichi`.`agente` AS `agente`,`incarichi`.`notizie` AS `notizie`,`incarichi`.`sviluppi` AS `sviluppi`,`incarichi`.`valutazioni` AS `valutazioni`,`incarichi`.`incarichi` AS `incarichi`,`incarichi`.`vendite` AS `vendite`,`incarichi`.`settimana` AS `settimana`,`incarichi`.`anno` AS `anno`,`attivities`.`visioni` AS `visioni`,`attivities`.`contatti` AS `contatti` from (`__report_attivita_immobiliare__` `attivities` left join `__report_incarichi_immobili_immobiliare__` `incarichi` on(((`incarichi`.`id_agente` = `attivities`.`id_agente`) and (`incarichi`.`anno` = `attivities`.`anno`) and (`incarichi`.`settimana` = `attivities`.`settimana`)))) where ((`incarichi`.`id_agente` is not null) and (`attivities`.`id_agente` is not null)) order by `anno` desc,`settimana` desc */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_attivita__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_attivita__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_attivita__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_attivita__` AS select concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `agente`,count(`attivita`.`id`) AS `attivita`,week(from_unixtime(`attivita`.`timestamp_inserimento`),3) AS `settimana`,year(from_unixtime(`attivita`.`timestamp_inserimento`)) AS `anno` from ((`attivita` join `account` on((`account`.`id` = `attivita`.`id_account_inserimento`))) join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`attivita`.`timestamp_inserimento`)),week(from_unixtime(`attivita`.`timestamp_inserimento`),3) order by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`attivita`.`timestamp_inserimento`)),week(from_unixtime(`attivita`.`timestamp_inserimento`),3) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_attivita_immobiliare__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_attivita_immobiliare__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_attivita_immobiliare__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_attivita_immobiliare__` AS select `anagrafica`.`id` AS `id_agente`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `agente`,sum((case when (`attivita`.`id_tipologia` = 1) then 1 else 0 end)) AS `visioni`,sum((case when (`attivita`.`id_tipologia` = 3) then 1 else 0 end)) AS `contatti`,week(from_unixtime(`attivita`.`timestamp_inserimento`),3) AS `settimana`,year(from_unixtime(`attivita`.`timestamp_inserimento`)) AS `anno` from ((`attivita` left join `account` on((`account`.`id` = `attivita`.`id_account_editor`))) left join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) where (`attivita`.`id_account_editor` is not null) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`attivita`.`timestamp_inserimento`)),week(from_unixtime(`attivita`.`timestamp_inserimento`),3) order by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`attivita`.`timestamp_inserimento`)),week(from_unixtime(`attivita`.`timestamp_inserimento`),3) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_censimento_immobili__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_censimento_immobili__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_censimento_immobili__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_censimento_immobili__` AS select concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `agente`,count(`immobili`.`id`) AS `immobili`,week(from_unixtime(`immobili`.`timestamp_inserimento`),3) AS `settimana`,year(from_unixtime(`immobili`.`timestamp_inserimento`)) AS `anno` from ((`immobili` join `account` on((`account`.`id` = `immobili`.`id_account_inserimento`))) join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`immobili`.`timestamp_inserimento`)),week(from_unixtime(`immobili`.`timestamp_inserimento`),3) order by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`immobili`.`timestamp_inserimento`)),week(from_unixtime(`immobili`.`timestamp_inserimento`),3) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_fatturati_totali_annui__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_fatturati_totali_annui__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_fatturati_totali_annui__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_fatturati_totali_annui__` AS select `fatturati_view`.`id_cliente` AS `id_cliente`,`fatturati_view`.`anno` AS `anno`,`fatturati_view`.`mandante` AS `mandante`,`fatturati_view`.`emittente` AS `emittente`,sum(`fatturati_view`.`importo`) AS `totale` from `fatturati_view` group by `fatturati_view`.`id_cliente`,`fatturati_view`.`anno`,`fatturati_view`.`mandante`,`fatturati_view`.`emittente` order by `fatturati_view`.`id_cliente`,`fatturati_view`.`anno`,`fatturati_view`.`mandante`,`fatturati_view`.`emittente` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_fatturati_totali_mensili__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_fatturati_totali_mensili__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_fatturati_totali_mensili__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_fatturati_totali_mensili__` AS select `fatturati_view`.`anno` AS `anno`,`fatturati_view`.`mese` AS `mese`,`fatturati_view`.`mandante` AS `mandante`,sum(`fatturati_view`.`importo`) AS `totale` from `fatturati_view` group by `fatturati_view`.`anno`,`fatturati_view`.`mandante`,`fatturati_view`.`mese` order by `fatturati_view`.`anno` desc,`fatturati_view`.`mandante`,`fatturati_view`.`mese` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_giornaliero_analisi_immobiliare__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_giornaliero_analisi_immobiliare__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_giornaliero_analisi_immobiliare__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_giornaliero_analisi_immobiliare__` AS select `incarichi`.`id_agente` AS `id_agente`,`incarichi`.`agente` AS `agente`,`incarichi`.`id_agenzia` AS `id_agenzia`,`incarichi`.`agenzia` AS `agenzia`,`incarichi`.`notizie` AS `notizie`,`incarichi`.`sviluppi` AS `sviluppi`,`incarichi`.`valutazioni` AS `valutazioni`,`incarichi`.`incarichi` AS `incarichi`,`incarichi`.`vendite` AS `vendite`,`incarichi`.`giorno` AS `giorno`,`attivita`.`visioni` AS `visioni`,`attivita`.`contatti` AS `contatti` from (`__report_giornaliero_incarichi_immobili_immobiliare__` `incarichi` left join `__report_giornaliero_attivita_immobiliare__` `attivita` on(((`attivita`.`id_agente` = `incarichi`.`id_agente`) and (`attivita`.`giorno` = `incarichi`.`giorno`)))) union select `attivita`.`id_agente` AS `id_agente`,`attivita`.`agente` AS `agente`,`attivita`.`id_agenzia` AS `id_agenzia`,`attivita`.`agenzia` AS `agenzia`,`incarichi`.`notizie` AS `notizie`,`incarichi`.`sviluppi` AS `sviluppi`,`incarichi`.`valutazioni` AS `valutazioni`,`incarichi`.`incarichi` AS `incarichi`,`incarichi`.`vendite` AS `vendite`,`attivita`.`giorno` AS `giorno`,`attivita`.`visioni` AS `visioni`,`attivita`.`contatti` AS `contatti` from (`__report_giornaliero_attivita_immobiliare__` `attivita` left join `__report_giornaliero_incarichi_immobili_immobiliare__` `incarichi` on(((`incarichi`.`id_agente` = `attivita`.`id_agente`) and (`attivita`.`giorno` = `incarichi`.`giorno`)))) order by `giorno` desc */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_giornaliero_attivita_immobiliare__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_giornaliero_attivita_immobiliare__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_giornaliero_attivita_immobiliare__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_giornaliero_attivita_immobiliare__` AS select `anagrafica`.`id` AS `id_agente`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `agente`,`account`.`id_anagrafica_struttura` AS `id_agenzia`,coalesce(`agenzie`.`soprannome`,`agenzie`.`denominazione`,concat_ws(' ',coalesce(`agenzie`.`cognome`,''),coalesce(`agenzie`.`nome`,'')),'') AS `agenzia`,sum((case when (`attivita`.`id_tipologia` = 1) then 1 else 0 end)) AS `visioni`,sum((case when (`attivita`.`id_tipologia` = 3) then 1 else 0 end)) AS `contatti`,date_format(from_unixtime(`attivita`.`timestamp_inserimento`),'%Y-%m-%d') AS `giorno` from (((`attivita` left join `account_view` `account` on((`account`.`id` = `attivita`.`id_account_inserimento`))) left join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) left join `anagrafica` `agenzie` on((`agenzie`.`id` = `account`.`id_anagrafica_struttura`))) where ((`attivita`.`id_account_inserimento` is not null) and (`anagrafica`.`id` is not null)) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,date_format(from_unixtime(`attivita`.`timestamp_inserimento`),'%Y-%m-%d') order by `anagrafica`.`nome`,`anagrafica`.`cognome`,date_format(from_unixtime(`attivita`.`timestamp_inserimento`),'%Y-%m-%d') */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_giornaliero_immobiliare__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_giornaliero_immobiliare__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_giornaliero_immobiliare__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_giornaliero_immobiliare__` AS select `analisi`.`id_agente` AS `id_agente`,`analisi`.`agente` AS `agente`,`analisi`.`id_agenzia` AS `id_agenzia`,`analisi`.`agenzia` AS `agenzia`,`analisi`.`notizie` AS `notizie`,`analisi`.`sviluppi` AS `sviluppi`,`analisi`.`valutazioni` AS `valutazioni`,`analisi`.`incarichi` AS `incarichi`,`analisi`.`vendite` AS `vendite`,`analisi`.`giorno` AS `giorno`,`analisi`.`visioni` AS `visioni`,`analisi`.`contatti` AS `contatti`,`censimento`.`immobili` AS `immobili` from (`__report_giornaliero_analisi_immobiliare__` `analisi` left join `__report_giornaliero_inserimento_immobili__` `censimento` on(((`censimento`.`id_agente` = `analisi`.`id_agente`) and (`censimento`.`giorno` = `analisi`.`giorno`)))) union select `censimento`.`id_agente` AS `id_agente`,`censimento`.`agente` AS `agente`,`censimento`.`id_agenzia` AS `id_agenzia`,`censimento`.`agenzia` AS `agenzia`,`analisi`.`notizie` AS `notizie`,`analisi`.`sviluppi` AS `sviluppi`,`analisi`.`valutazioni` AS `valutazioni`,`analisi`.`incarichi` AS `incarichi`,`analisi`.`vendite` AS `vendite`,`censimento`.`giorno` AS `giorno`,`analisi`.`visioni` AS `visioni`,`analisi`.`contatti` AS `contatti`,`censimento`.`immobili` AS `immobili` from (`__report_giornaliero_inserimento_immobili__` `censimento` left join `__report_giornaliero_analisi_immobiliare__` `analisi` on(((`analisi`.`id_agente` = `censimento`.`id_agente`) and (`analisi`.`giorno` = `censimento`.`giorno`)))) order by `giorno` desc,`agente` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_giornaliero_incarichi_immobili_immobiliare__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_giornaliero_incarichi_immobili_immobiliare__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_giornaliero_incarichi_immobili_immobiliare__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_giornaliero_incarichi_immobili_immobiliare__` AS select `anagrafica`.`id` AS `id_agente`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `agente`,`account`.`id_anagrafica_struttura` AS `id_agenzia`,coalesce(`agenzie`.`soprannome`,`agenzie`.`denominazione`,concat_ws(' ',coalesce(`agenzie`.`cognome`,''),coalesce(`agenzie`.`nome`,'')),'') AS `agenzia`,sum((case when isnull(`incarichi_immobili`.`data_notizia`) then 0 else 1 end)) AS `notizie`,sum((case when isnull(`incarichi_immobili`.`data_sviluppo`) then 0 else 1 end)) AS `sviluppi`,sum((case when isnull(`incarichi_immobili`.`data_valutazione`) then 0 else 1 end)) AS `valutazioni`,sum((case when isnull(`incarichi_immobili`.`data_inizio`) then 0 else 1 end)) AS `incarichi`,sum((case when ((`incarichi_immobili`.`data_fine` is not null) and (`incarichi_immobili`.`id_esito_incarico` = 1)) then 1 else 0 end)) AS `vendite`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),'%Y-%m-%d') AS `giorno` from (((`incarichi_immobili` left join `account_view` `account` on((`account`.`id` = `incarichi_immobili`.`id_account_editor`))) left join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) left join `anagrafica` `agenzie` on((`agenzie`.`id` = `account`.`id_anagrafica_struttura`))) where ((`incarichi_immobili`.`id_account_editor` is not null) and (`anagrafica`.`id` is not null)) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),'%Y-%m-%d') order by `anagrafica`.`nome`,`anagrafica`.`cognome`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),'%Y-%m-%d') */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_giornaliero_inserimento_immobili__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_giornaliero_inserimento_immobili__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_giornaliero_inserimento_immobili__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_giornaliero_inserimento_immobili__` AS select `anagrafica`.`id` AS `id_agente`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `agente`,`account`.`id_anagrafica_struttura` AS `id_agenzia`,coalesce(`agenzie`.`soprannome`,`agenzie`.`denominazione`,concat_ws(' ',coalesce(`agenzie`.`cognome`,''),coalesce(`agenzie`.`nome`,'')),'') AS `agenzia`,count(`immobili`.`id_account_inserimento`) AS `immobili`,date_format(from_unixtime(`immobili`.`timestamp_inserimento`),'%Y-%m-%d') AS `giorno` from (((`immobili` left join `account_view` `account` on((`account`.`id` = `immobili`.`id_account_editor`))) left join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) left join `anagrafica` `agenzie` on((`agenzie`.`id` = `account`.`id_anagrafica_struttura`))) where ((`immobili`.`id_account_editor` is not null) and (`anagrafica`.`id` is not null)) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,date_format(from_unixtime(`immobili`.`timestamp_inserimento`),'%Y-%m-%d') order by `anagrafica`.`nome`,`anagrafica`.`cognome`,date_format(from_unixtime(`immobili`.`timestamp_inserimento`),'%Y-%m-%d') */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_immagini_da_scalare__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_immagini_da_scalare__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_immagini_da_scalare__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_immagini_da_scalare__` AS select `immagini`.`id` AS `id`,`immagini`.`id_anagrafica` AS `id_anagrafica`,`immagini`.`id_pagina` AS `id_pagina`,`immagini`.`id_file` AS `id_file`,`immagini`.`id_prodotto` AS `id_prodotto`,`immagini`.`id_articolo` AS `id_articolo`,`immagini`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`immagini`.`id_evento` AS `id_evento`,`immagini`.`id_categoria_eventi` AS `id_categoria_eventi`,`immagini`.`id_notizia` AS `id_notizia`,`immagini`.`id_categoria_notizie` AS `id_categoria_notizie`,`immagini`.`id_indirizzo` AS `id_indirizzo`,`immagini`.`id_immobile` AS `id_immobile`,`immagini`.`id_zona` AS `id_zona`,`immagini`.`orientamento` AS `orientamento`,`immagini`.`path` AS `path`,`immagini`.`path_alternativo` AS `path_alternativo`,`immagini`.`nome` AS `nome`,`immagini`.`id_ruolo` AS `id_ruolo`,`immagini`.`ordine` AS `ordine`,`immagini`.`anno` AS `anno`,`immagini`.`taglio` AS `taglio`,`immagini`.`timestamp_scalamento` AS `timestamp_scalamento`,`immagini`.`id_account_inserimento` AS `id_account_inserimento`,`immagini`.`timestamp_inserimento` AS `timestamp_inserimento`,`immagini`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`immagini`.`timestamp_aggiornamento` AS `timestamp_aggiornamento` from (`immagini` join `ruoli_immagini` on((`ruoli_immagini`.`id` = `immagini`.`id_ruolo`))) where (isnull(`immagini`.`timestamp_scalamento`) or (`immagini`.`timestamp_scalamento` < `immagini`.`timestamp_aggiornamento`) or isnull(`immagini`.`timestamp_aggiornamento`)) order by `immagini`.`timestamp_scalamento`,`ruoli_immagini`.`ordine_scalamento`,`immagini`.`ordine` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_immagini_scalate__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_immagini_scalate__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_immagini_scalate__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_immagini_scalate__` AS select sum(if((((`immagini`.`timestamp_scalamento` is not null) or (`immagini`.`timestamp_scalamento` >= `immagini`.`timestamp_aggiornamento`)) and (`immagini`.`timestamp_aggiornamento` is not null)),1,0)) AS `scalate`,sum(if((isnull(`immagini`.`timestamp_scalamento`) or (`immagini`.`timestamp_scalamento` < `immagini`.`timestamp_aggiornamento`) or isnull(`immagini`.`timestamp_aggiornamento`)),1,0)) AS `da_scalare`,count(`immagini`.`id`) AS `totali` from `immagini` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_incarichi_immobili__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_incarichi_immobili__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_incarichi_immobili__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_incarichi_immobili__` AS select concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `agente`,count(`incarichi_immobili`.`id`) AS `notizie`,week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) AS `settimana`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)) AS `anno` from ((`incarichi_immobili` join `account` on((`account`.`id` = `incarichi_immobili`.`id_account_inserimento`))) join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) where (`incarichi_immobili`.`data_inizio` is not null) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)),week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) order by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)),week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_incarichi_immobili_immobiliare__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_incarichi_immobili_immobiliare__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_incarichi_immobili_immobiliare__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_incarichi_immobili_immobiliare__` AS select `anagrafica`.`id` AS `id_agente`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `agente`,sum((case when isnull(`incarichi_immobili`.`data_notizia`) then 0 else 1 end)) AS `notizie`,sum((case when isnull(`incarichi_immobili`.`data_sviluppo`) then 0 else 1 end)) AS `sviluppi`,sum((case when isnull(`incarichi_immobili`.`data_valutazione`) then 0 else 1 end)) AS `valutazioni`,sum((case when isnull(`incarichi_immobili`.`data_inizio`) then 0 else 1 end)) AS `incarichi`,sum((case when ((`incarichi_immobili`.`data_fine` is not null) and (`incarichi_immobili`.`id_esito_incarico` = 1)) then 1 else 0 end)) AS `vendite`,week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) AS `settimana`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)) AS `anno` from ((`incarichi_immobili` left join `account` on((`account`.`id` = `incarichi_immobili`.`id_account_editor`))) left join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) where (`incarichi_immobili`.`id_account_editor` is not null) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)),week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) order by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)),week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_ingombri_prodotti__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_ingombri_prodotti__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_ingombri_prodotti__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_ingombri_prodotti__` AS select `prodotti`.`id` AS `id`,`prodotti`.`id_ingombro` AS `id_ingombro` from `prodotti` order by `prodotti`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_lead_generation__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_lead_generation__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_lead_generation__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_lead_generation__` AS select concat_ws(' ',`ag`.`nome`,`ag`.`cognome`,`ag`.`denominazione`) AS `agente`,`ag`.`id` AS `id_agente`,count(`anagrafica_categorie`.`id`) AS `lead`,week(from_unixtime(`anagrafica_categorie`.`timestamp_inserimento`),3) AS `settimana`,year(from_unixtime(`anagrafica_categorie`.`timestamp_inserimento`)) AS `anno` from (((`anagrafica_categorie` join `account` on((`account`.`id` = `anagrafica_categorie`.`id_account_inserimento`))) join `anagrafica` `ag` on((`ag`.`id` = `account`.`id_anagrafica`))) join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where (`categorie_anagrafica`.`se_lead` = 1) group by `ag`.`id`,year(from_unixtime(`anagrafica_categorie`.`timestamp_inserimento`)),week(from_unixtime(`anagrafica_categorie`.`timestamp_inserimento`),3) order by concat_ws(' ',`ag`.`nome`,`ag`.`cognome`,`ag`.`denominazione`),year(from_unixtime(`anagrafica_categorie`.`timestamp_inserimento`)),week(from_unixtime(`anagrafica_categorie`.`timestamp_inserimento`),3) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_notizie_immobili__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_notizie_immobili__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_notizie_immobili__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_notizie_immobili__` AS select concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `agente`,count(`incarichi_immobili`.`id`) AS `notizie`,week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) AS `settimana`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)) AS `anno` from ((`incarichi_immobili` join `account` on((`account`.`id` = `incarichi_immobili`.`id_account_inserimento`))) join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) where (`incarichi_immobili`.`data_notizia` is not null) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)),week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) order by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)),week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_ore_busta__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_ore_busta__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_ore_busta__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_ore_busta__` AS select `attivita`.`data` AS `data`,year(`attivita`.`data`) AS `anno`,month(`attivita`.`data`) AS `mese`,dayofmonth(`attivita`.`data`) AS `giorno`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`) AS `persona`,`attivita`.`id_anagrafica` AS `id_anagrafica`,`tipologie_attivita`.`nome` AS `tipologia`,`tipologie_attivita`.`id` AS `id_tipologia`,`tipologie_attivita_path_base`(`attivita`.`id_tipologia`) AS `id_tipologia_base`,sum(`attivita`.`ore`) AS `ore_somma` from ((`attivita` join `anagrafica` on((`anagrafica`.`id` = `attivita`.`id_anagrafica`))) left join `tipologie_attivita` on((`tipologie_attivita`.`id` = `tipologie_attivita_path_base`(`attivita`.`id_tipologia`)))) group by `attivita`.`id_anagrafica`,`tipologie_attivita`.`id`,`attivita`.`data` order by `attivita`.`data` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_ore_previste__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_ore_previste__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_ore_previste__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_ore_previste__` AS select `task`.`anno_previsto` AS `anno_previsto`,`task`.`settimana_prevista` AS `settimana_prevista`,`task`.`id_responsabile` AS `id_responsabile`,coalesce(sum(`__report_ore_residue__`.`ore_residue`),0) AS `ore`,concat(`task`.`anno_previsto`,'/',`task`.`settimana_prevista`) AS `__label__` from (`task` left join `__report_ore_residue__` on((`__report_ore_residue__`.`id` = `task`.`id`))) where isnull(`task`.`timestamp_completamento`) group by `task`.`anno_previsto`,`task`.`settimana_prevista`,`task`.`id_responsabile` order by concat(`task`.`anno_previsto`,'/',`task`.`settimana_prevista`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_ore_previste_per_cliente__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_ore_previste_per_cliente__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_ore_previste_per_cliente__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_ore_previste_per_cliente__` AS select `task_view`.`cliente` AS `cliente`,`task_view`.`crm` AS `crm`,sum(`task_view`.`ore_previste`) AS `totale_ore_previste`,sum(`task_view`.`ore_lavorate`) AS `totale_ore_lavorate`,(sum(`task_view`.`ore_previste`) - sum(`task_view`.`ore_lavorate`)) AS `totale_ore_da_fare` from `task_view` group by `task_view`.`cliente` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_ore_residue__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_ore_residue__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_ore_residue__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_ore_residue__` AS select `task`.`id` AS `id`,`task`.`ore_previste` AS `ore_previste`,coalesce(sum(`attivita`.`ore`),0) AS `ore_fatte`,if((`task`.`ore_previste` >= coalesce(sum(`attivita`.`ore`),0)),(`task`.`ore_previste` - coalesce(sum(`attivita`.`ore`),0)),0) AS `ore_residue` from (`task` left join `attivita` on((`attivita`.`id_task` = `task`.`id`))) group by `task`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_promemoria__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_promemoria__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_promemoria__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_promemoria__` AS select concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `agente`,count(`attivita`.`id`) AS `attivita`,week(from_unixtime(`attivita`.`timestamp_inserimento`),3) AS `settimana`,year(from_unixtime(`attivita`.`timestamp_inserimento`)) AS `anno` from ((`attivita` join `account` on((`account`.`id` = `attivita`.`id_account_inserimento`))) join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) where (`attivita`.`timestamp_scadenza` is not null) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`attivita`.`timestamp_inserimento`)),week(from_unixtime(`attivita`.`timestamp_inserimento`),3) order by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`attivita`.`timestamp_inserimento`)),week(from_unixtime(`attivita`.`timestamp_inserimento`),3) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_righe_fatturati_totali_annui__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_righe_fatturati_totali_annui__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_righe_fatturati_totali_annui__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_righe_fatturati_totali_annui__` AS select `righe_fatturati_view`.`id_cliente` AS `id_cliente`,`righe_fatturati_view`.`anno` AS `anno`,`righe_fatturati_view`.`mandante` AS `mandante`,`righe_fatturati_view`.`emittente` AS `emittente`,sum(`righe_fatturati_view`.`imponibile`) AS `totale` from `righe_fatturati_view` group by `righe_fatturati_view`.`id_cliente`,`righe_fatturati_view`.`anno`,`righe_fatturati_view`.`mandante`,`righe_fatturati_view`.`emittente` order by `righe_fatturati_view`.`id_cliente`,`righe_fatturati_view`.`anno`,`righe_fatturati_view`.`mandante`,`righe_fatturati_view`.`emittente` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_righe_fatturati_totali_mensili__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_righe_fatturati_totali_mensili__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_righe_fatturati_totali_mensili__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_righe_fatturati_totali_mensili__` AS select `righe_fatturati_view`.`anno` AS `anno`,`righe_fatturati_view`.`mese` AS `mese`,`righe_fatturati_view`.`mandante` AS `mandante`,sum(`righe_fatturati_view`.`imponibile`) AS `totale` from `righe_fatturati_view` group by `righe_fatturati_view`.`anno`,`righe_fatturati_view`.`mandante`,`righe_fatturati_view`.`mese` order by `righe_fatturati_view`.`anno` desc,`righe_fatturati_view`.`mandante`,`righe_fatturati_view`.`mese` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_sviluppi_immobili__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_sviluppi_immobili__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_sviluppi_immobili__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_sviluppi_immobili__` AS select concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `agente`,count(`incarichi_immobili`.`id`) AS `sviluppi`,week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) AS `settimana`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)) AS `anno` from ((`incarichi_immobili` join `account` on((`account`.`id` = `incarichi_immobili`.`id_account_inserimento`))) join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) where (`incarichi_immobili`.`data_sviluppo` is not null) group by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)),week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) order by `anagrafica`.`nome`,`anagrafica`.`cognome`,year(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`)),week(from_unixtime(`incarichi_immobili`.`timestamp_inserimento`),3) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `__report_volontari_pratiche__`
---
-
-/*!50001 DROP TABLE IF EXISTS `__report_volontari_pratiche__`*/;
-/*!50001 DROP VIEW IF EXISTS `__report_volontari_pratiche__`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `__report_volontari_pratiche__` AS select `anagrafica`.`denominazione` AS `sede`,`anagrafica_view`.`__label__` AS `volontario`,`anagrafica_view`.`categorie` AS `categoria`,count(`pratiche_avvocati`.`id`) AS `pratiche`,sum(if(((`pratiche_avvocati`.`se_responsabile` = 1) and `pratiche_avvocati`.`id`),1,0)) AS `pratiche di cui è responsabile`,sum(if((isnull(`pratiche`.`data_chiusura`) and `pratiche`.`id`),1,0)) AS `pratiche aperte`,sum(if(((`pratiche`.`data_chiusura` is not null) and `pratiche`.`id`),1,0)) AS `pratiche chiuse`,count(`pratiche_old`.`id`) AS `pratiche aperte prima del 2019`,count(`pratiche_2019`.`id`) AS `pratiche aperte nel 2019`,count(`pratiche_2020`.`id`) AS `pratiche aperte nel 2020`,count(`pratiche_2021`.`id`) AS `pratiche aperte nel 2021` from ((((((((((`anagrafica_view` left join `__acl_anagrafica__` on((`anagrafica_view`.`id` = `__acl_anagrafica__`.`id_entita`))) left join `gruppi` on((`gruppi`.`id` = `__acl_anagrafica__`.`id_gruppo`))) left join `anagrafica_ruoli` on((`gruppi`.`id_struttura` = `anagrafica_ruoli`.`id`))) left join `anagrafica` on((`anagrafica`.`id` = `anagrafica_ruoli`.`id_anagrafica`))) left join `pratiche_avvocati` on((`pratiche_avvocati`.`id_anagrafica` = `anagrafica_view`.`id`))) left join `pratiche` on((`pratiche`.`id` = `pratiche_avvocati`.`id_pratica`))) left join `pratiche` `pratiche_old` on(((`pratiche_old`.`id` = `pratiche_avvocati`.`id_pratica`) and (year(`pratiche_old`.`data_apertura`) < 2019)))) left join `pratiche` `pratiche_2019` on(((`pratiche_2019`.`id` = `pratiche_avvocati`.`id_pratica`) and (year(`pratiche_2019`.`data_apertura`) = 2019)))) left join `pratiche` `pratiche_2020` on(((`pratiche_2020`.`id` = `pratiche_avvocati`.`id_pratica`) and (year(`pratiche_2020`.`data_apertura`) = 2020)))) left join `pratiche` `pratiche_2021` on(((`pratiche_2021`.`id` = `pratiche_avvocati`.`id_pratica`) and (year(`pratiche_2021`.`data_apertura`) = 2021)))) where (`anagrafica_view`.`se_collaboratore` = 1) group by `anagrafica_view`.`id` order by `anagrafica`.`denominazione`,`anagrafica_view`.`__label__` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `account_gruppi_attribuzione_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `account_gruppi_attribuzione_view`*/;
-/*!50001 DROP VIEW IF EXISTS `account_gruppi_attribuzione_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `account_gruppi_attribuzione_view` AS select `account_gruppi_attribuzione`.`id` AS `id`,`account_gruppi_attribuzione`.`id_account` AS `id_account`,`account_gruppi_attribuzione`.`id_gruppo` AS `id_gruppo`,`account_gruppi_attribuzione`.`entita` AS `entita`,concat(`account`.`username`,'/',`gruppi`.`nome`,' - ',`account_gruppi_attribuzione`.`entita`) AS `__label__` from ((`account_gruppi_attribuzione` join `account` on((`account`.`id` = `account_gruppi_attribuzione`.`id_account`))) join `gruppi` on((`gruppi`.`id` = `account_gruppi_attribuzione`.`id_gruppo`))) order by concat(`account`.`username`,'/',`gruppi`.`nome`,' - ',`account_gruppi_attribuzione`.`entita`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `account_gruppi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `account_gruppi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `account_gruppi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `account_gruppi_view` AS select `account_gruppi`.`id` AS `id`,`account_gruppi`.`id_account` AS `id_account`,`account_gruppi`.`id_gruppo` AS `id_gruppo`,`account_gruppi`.`se_amministratore` AS `se_amministratore`,concat(`account`.`username`,'/',`gruppi`.`nome`) AS `__label__` from ((`account_gruppi` join `account` on((`account`.`id` = `account_gruppi`.`id_account`))) join `gruppi` on((`gruppi`.`id` = `account_gruppi`.`id_gruppo`))) order by concat(`account`.`username`,'/',`gruppi`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `account_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `account_view`*/;
-/*!50001 DROP VIEW IF EXISTS `account_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `account_view` AS select `account`.`id` AS `id`,`account`.`id_anagrafica` AS `id_anagrafica`,`account`.`id_mail` AS `id_mail`,`account`.`username` AS `username`,`account`.`password` AS `password`,`account`.`se_attivo` AS `se_attivo`,`account`.`token` AS `token`,`account`.`timestamp_login` AS `timestamp_login`,`account`.`id_account_inserimento` AS `id_account_inserimento`,`account`.`timestamp_inserimento` AS `timestamp_inserimento`,`account`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`account`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`account`.`timestamp_cambio_password` AS `timestamp_cambio_password`,if((`account`.`se_attivo` = '1'),'attivo','inattivo') AS `attivo`,coalesce(`anagrafica`.`denominazione`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`),'') AS `utente`,group_concat(`gruppi`.`nome` order by `gruppi`.`id` ASC separator '|') AS `gruppi`,group_concat(`gruppi`.`id` order by `gruppi`.`id` ASC separator '|') AS `id_gruppi`,max(`gruppi`.`id`) AS `gruppo_sede`,`account_get_struttura`(`account`.`id`) AS `id_anagrafica_struttura`,group_concat(distinct concat(`account_gruppi_attribuzione`.`entita`,'#',`account_gruppi_attribuzione`.`id_gruppo`) order by `account_gruppi_attribuzione`.`entita` ASC,`account_gruppi_attribuzione`.`id_gruppo` ASC separator '|') AS `id_gruppi_attribuzione`,`account`.`username` AS `__label__` from ((((`account` left join `anagrafica` on((`anagrafica`.`id` = `account`.`id_anagrafica`))) left join `account_gruppi` on((`account_gruppi`.`id_account` = `account`.`id`))) left join `account_gruppi_attribuzione` on((`account_gruppi_attribuzione`.`id_account` = `account`.`id`))) left join `gruppi` on((`gruppi`.`id` = `account_gruppi`.`id_gruppo`))) group by `account`.`id` order by `account`.`username` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_archiviati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_archiviati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_archiviati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_archiviati_view` AS select `anagrafica`.`id` AS `id`,`anagrafica`.`codice` AS `codice`,`anagrafica`.`id_tipologia` AS `id_tipologia`,`anagrafica`.`nome` AS `nome`,`anagrafica`.`cognome` AS `cognome`,`anagrafica`.`denominazione` AS `denominazione`,`anagrafica`.`soprannome` AS `soprannome`,`anagrafica`.`sesso` AS `sesso`,`anagrafica`.`id_orientamento_sessuale` AS `id_orientamento_sessuale`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,`anagrafica`.`partita_iva` AS `partita_iva`,`anagrafica`.`codice_sdi` AS `codice_sdi`,`anagrafica`.`id_pec_sdi` AS `id_pec_sdi`,`anagrafica`.`id_regime_fiscale` AS `id_regime_fiscale`,`anagrafica`.`note_amministrative` AS `note_amministrative`,`anagrafica`.`luogo_nascita` AS `luogo_nascita`,`anagrafica`.`stato_nascita` AS `stato_nascita`,`anagrafica`.`comune_nascita` AS `comune_nascita`,`anagrafica`.`giorno_nascita` AS `giorno_nascita`,`anagrafica`.`mese_nascita` AS `mese_nascita`,`anagrafica`.`anno_nascita` AS `anno_nascita`,`anagrafica`.`id_diritto` AS `id_diritto`,`anagrafica`.`id_tipologia_crm` AS `id_tipologia_crm`,`anagrafica`.`id_agente` AS `id_agente`,`anagrafica`.`note_commerciali` AS `note_commerciali`,`anagrafica`.`condizioni_vendita` AS `condizioni_vendita`,`anagrafica`.`condizioni_acquisto` AS `condizioni_acquisto`,`anagrafica`.`note` AS `note`,`anagrafica`.`data_cessazione` AS `data_cessazione`,`anagrafica`.`note_cessazione` AS `note_cessazione`,`anagrafica`.`recapiti` AS `recapiti`,`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,group_concat(distinct `pec`.`indirizzo` separator ',') AS `pec_sdi`,group_concat(distinct `indirizzi_view`.`sigla_stato` separator ',') AS `sigla_stato`,max(`categorie_anagrafica`.`se_collaboratore`) AS `se_collaboratore`,max(`categorie_anagrafica`.`se_cliente`) AS `se_cliente`,max(`categorie_anagrafica`.`se_lead`) AS `se_lead`,max(`categorie_anagrafica`.`se_prospect`) AS `se_prospect`,max(`categorie_anagrafica`.`se_mandante`) AS `se_mandante`,max(`categorie_anagrafica`.`se_fornitore`) AS `se_fornitore`,max(`categorie_anagrafica`.`se_produttore`) AS `se_produttore`,max(`categorie_anagrafica`.`se_agente`) AS `se_agente`,max(`categorie_anagrafica`.`se_interno`) AS `se_interno`,max(`categorie_anagrafica`.`se_esterno`) AS `se_esterno`,max(`categorie_anagrafica`.`se_amministrazione`) AS `se_amministrazione`,max(`categorie_anagrafica`.`se_azienda_gestita`) AS `se_azienda_gestita`,max(`categorie_anagrafica`.`se_concorrente`) AS `se_concorrente`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `__label__`,coalesce(`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `denominazione_fiscale`,coalesce(`aAgente`.`soprannome`,`aAgente`.`denominazione`,concat(`aAgente`.`cognome`,' ',`aAgente`.`nome`),'') AS `agente`,group_concat(distinct `categorie_anagrafica`.`nome` separator ' | ') AS `categorie`,group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,group_concat(distinct `provincie`.`sigla` separator ' | ') AS `provincia`,group_concat(distinct `regimi_fiscali`.`codice` separator ',') AS `codice_regime_fiscale` from (((((((((`anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) left join `telefoni` on((`telefoni`.`id_anagrafica` = `anagrafica`.`id`))) left join `mail` on((`mail`.`id_anagrafica` = `anagrafica`.`id`))) left join `regimi_fiscali` on((`regimi_fiscali`.`id` = `anagrafica`.`id_regime_fiscale`))) left join `mail` `pec` on(((`pec`.`id` = `anagrafica`.`id_pec_sdi`) and (`mail`.`se_pec` = 1)))) left join `anagrafica` `aAgente` on((`aAgente`.`id` = `anagrafica`.`id_agente`))) left join `indirizzi_view` on(((`indirizzi_view`.`id_anagrafica` = `anagrafica`.`id`) and (`indirizzi_view`.`se_sede` = 1)))) left join `provincie` on((`provincie`.`id` = `indirizzi_view`.`id_provincia`))) where (`anagrafica`.`data_cessazione` is not null) group by `anagrafica`.`id` order by coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_categorie_diritto_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_categorie_diritto_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_categorie_diritto_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_categorie_diritto_view` AS select `anagrafica_categorie_diritto`.`id` AS `id`,`anagrafica_categorie_diritto`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_categorie_diritto`.`id_diritto` AS `id_diritto`,`anagrafica_categorie_diritto`.`id` AS `__label__` from `anagrafica_categorie_diritto` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_categorie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_categorie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_categorie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_categorie_view` AS select `anagrafica_categorie`.`id` AS `id`,`anagrafica_categorie`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_categorie`.`id_categoria` AS `id_categoria`,`anagrafica_categorie`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica_categorie`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica_categorie`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica_categorie`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(coalesce(`anagrafica`.`denominazione`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`),''),'/',`categorie_anagrafica`.`nome`) AS `__label__` from ((`anagrafica_categorie` join `anagrafica` on((`anagrafica`.`id` = `anagrafica_categorie`.`id_anagrafica`))) join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) order by concat(coalesce(`anagrafica`.`denominazione`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`),''),'/',`categorie_anagrafica`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_cittadinanze_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_cittadinanze_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_cittadinanze_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_cittadinanze_view` AS select `anagrafica_cittadinanze`.`id` AS `id`,`anagrafica_cittadinanze`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_cittadinanze`.`id_stato` AS `id_stato`,`anagrafica_cittadinanze`.`data_inizio` AS `data_inizio`,`anagrafica_cittadinanze`.`data_fine` AS `data_fine`,`anagrafica_cittadinanze`.`id` AS `__label__` from `anagrafica_cittadinanze` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_clienti_estesa_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_clienti_estesa_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_clienti_estesa_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_clienti_estesa_view` AS select `anagrafica`.`id` AS `id`,`anagrafica`.`codice` AS `codice`,`anagrafica`.`id_tipologia` AS `id_tipologia`,`anagrafica`.`nome` AS `nome`,`anagrafica`.`cognome` AS `cognome`,`anagrafica`.`denominazione` AS `denominazione`,`anagrafica`.`soprannome` AS `soprannome`,`anagrafica`.`sesso` AS `sesso`,`anagrafica`.`id_orientamento_sessuale` AS `id_orientamento_sessuale`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,`anagrafica`.`partita_iva` AS `partita_iva`,`anagrafica`.`codice_sdi` AS `codice_sdi`,`anagrafica`.`id_pec_sdi` AS `id_pec_sdi`,`anagrafica`.`id_regime_fiscale` AS `id_regime_fiscale`,`anagrafica`.`note_amministrative` AS `note_amministrative`,`anagrafica`.`luogo_nascita` AS `luogo_nascita`,`anagrafica`.`stato_nascita` AS `stato_nascita`,`anagrafica`.`comune_nascita` AS `comune_nascita`,`anagrafica`.`giorno_nascita` AS `giorno_nascita`,`anagrafica`.`mese_nascita` AS `mese_nascita`,`anagrafica`.`anno_nascita` AS `anno_nascita`,`anagrafica`.`id_diritto` AS `id_diritto`,`anagrafica`.`id_tipologia_crm` AS `id_tipologia_crm`,`anagrafica`.`id_agente` AS `id_agente`,`anagrafica`.`note_commerciali` AS `note_commerciali`,`anagrafica`.`condizioni_vendita` AS `condizioni_vendita`,`anagrafica`.`condizioni_acquisto` AS `condizioni_acquisto`,`anagrafica`.`note` AS `note`,`anagrafica`.`data_cessazione` AS `data_cessazione`,`anagrafica`.`note_cessazione` AS `note_cessazione`,`anagrafica`.`recapiti` AS `recapiti`,`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`),''),coalesce(concat(' - ',`comuni`.`nome`,' (',`provincie`.`sigla`,')'),'')) AS `__label__` from (((((`anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) left join `indirizzi` on((`anagrafica`.`id` = `indirizzi`.`id_anagrafica`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `provincie` on((`comuni`.`id_provincia` = `provincie`.`id`))) where (`categorie_anagrafica`.`se_cliente` = 1) group by `anagrafica`.`id` order by concat(coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`),''),coalesce(concat(' - ',`comuni`.`nome`,' (',`provincie`.`sigla`,')'),'')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_clienti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_clienti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_clienti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_clienti_view` AS select `anagrafica`.`id` AS `id`,`anagrafica`.`codice` AS `codice`,`anagrafica`.`id_tipologia` AS `id_tipologia`,`anagrafica`.`nome` AS `nome`,`anagrafica`.`cognome` AS `cognome`,`anagrafica`.`denominazione` AS `denominazione`,`anagrafica`.`soprannome` AS `soprannome`,`anagrafica`.`sesso` AS `sesso`,`anagrafica`.`id_orientamento_sessuale` AS `id_orientamento_sessuale`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,`anagrafica`.`partita_iva` AS `partita_iva`,`anagrafica`.`codice_sdi` AS `codice_sdi`,`anagrafica`.`id_pec_sdi` AS `id_pec_sdi`,`anagrafica`.`id_regime_fiscale` AS `id_regime_fiscale`,`anagrafica`.`note_amministrative` AS `note_amministrative`,`anagrafica`.`luogo_nascita` AS `luogo_nascita`,`anagrafica`.`stato_nascita` AS `stato_nascita`,`anagrafica`.`comune_nascita` AS `comune_nascita`,`anagrafica`.`giorno_nascita` AS `giorno_nascita`,`anagrafica`.`mese_nascita` AS `mese_nascita`,`anagrafica`.`anno_nascita` AS `anno_nascita`,`anagrafica`.`id_diritto` AS `id_diritto`,`anagrafica`.`id_tipologia_crm` AS `id_tipologia_crm`,`anagrafica`.`id_agente` AS `id_agente`,`anagrafica`.`note_commerciali` AS `note_commerciali`,`anagrafica`.`condizioni_vendita` AS `condizioni_vendita`,`anagrafica`.`condizioni_acquisto` AS `condizioni_acquisto`,`anagrafica`.`note` AS `note`,`anagrafica`.`data_cessazione` AS `data_cessazione`,`anagrafica`.`note_cessazione` AS `note_cessazione`,`anagrafica`.`recapiti` AS `recapiti`,`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`),'') AS `__label__` from ((`anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where (`categorie_anagrafica`.`se_cliente` = 1) group by `anagrafica`.`id` order by coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat(`anagrafica`.`cognome`,' ',`anagrafica`.`nome`),'') */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_condizioni_pagamento_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_condizioni_pagamento_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_condizioni_pagamento_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_condizioni_pagamento_view` AS select `anagrafica_condizioni_pagamento`.`id` AS `id`,`anagrafica_condizioni_pagamento`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_condizioni_pagamento`.`id_condizione` AS `id_condizione`,`anagrafica_condizioni_pagamento`.`id` AS `__label__` from `anagrafica_condizioni_pagamento` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_indirizzi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_indirizzi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_indirizzi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_indirizzi_view` AS select `anagrafica_indirizzi`.`id` AS `id`,`anagrafica_indirizzi`.`id_indirizzo` AS `id_indirizzo`,`anagrafica_indirizzi`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_indirizzi`.`id_tipologia` AS `id_tipologia`,`anagrafica_indirizzi`.`interno` AS `interno`,`anagrafica_indirizzi`.`descrizione` AS `descrizione`,`anagrafica_view`.`__label__` AS `anagrafica`,`indirizzi_view`.`__label__` AS `indirizzo`,`anagrafica_indirizzi`.`descrizione` AS `__label__` from ((`anagrafica_indirizzi` join `anagrafica_view` on((`anagrafica_view`.`id` = `anagrafica_indirizzi`.`id_anagrafica`))) join `indirizzi_view` on((`indirizzi_view`.`id` = `anagrafica_indirizzi`.`id_indirizzo`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_modalita_pagamento_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_modalita_pagamento_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_modalita_pagamento_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_modalita_pagamento_view` AS select `anagrafica_modalita_pagamento`.`id` AS `id`,`anagrafica_modalita_pagamento`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_modalita_pagamento`.`id_modalita` AS `id_modalita`,`anagrafica_modalita_pagamento`.`id` AS `__label__` from `anagrafica_modalita_pagamento` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_provenienze_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_provenienze_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_provenienze_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_provenienze_view` AS select `anagrafica_provenienze`.`id` AS `id`,`anagrafica_provenienze`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_provenienze`.`id_provenienza` AS `id_provenienza`,`anagrafica_provenienze`.`testo` AS `testo`,`anagrafica_provenienze`.`id` AS `__label__` from `anagrafica_provenienze` order by `anagrafica_provenienze`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_ruoli_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_ruoli_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_ruoli_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_ruoli_view` AS select `anagrafica_ruoli`.`id` AS `id`,`anagrafica_ruoli`.`id_genitore` AS `id_genitore`,`anagrafica_ruoli`.`ordine` AS `ordine`,`anagrafica_ruoli`.`id_ruolo` AS `id_ruolo`,`anagrafica_ruoli`.`specifica_ruolo` AS `specifica_ruolo`,`anagrafica_ruoli`.`id_anagrafica` AS `id_anagrafica`,concat_ws(' ',`ruoli_anagrafica`.`nome`,`anagrafica_view`.`__label__`) AS `etichetta`,`anagrafica_ruoli_path`(`anagrafica_ruoli`.`id`) AS `__label__` from ((`anagrafica_ruoli` left join `ruoli_anagrafica` on((`ruoli_anagrafica`.`id` = `anagrafica_ruoli`.`id_ruolo`))) left join `__etichette_anagrafica__` `anagrafica_view` on((`anagrafica_view`.`id` = `anagrafica_ruoli`.`id_anagrafica`))) order by `anagrafica_ruoli_path`(`anagrafica_ruoli`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_servizi_contatto_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_servizi_contatto_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_servizi_contatto_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_servizi_contatto_view` AS select `anagrafica_servizi_contatto`.`id` AS `id`,`anagrafica_servizi_contatto`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_servizi_contatto`.`id_servizio_contatto` AS `id_servizio_contatto`,`anagrafica_servizi_contatto`.`testo` AS `testo`,`anagrafica_servizi_contatto`.`id` AS `__label__` from `anagrafica_servizi_contatto` order by `anagrafica_servizi_contatto`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_settori_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_settori_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_settori_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_settori_view` AS select `anagrafica_settori`.`id` AS `id`,`anagrafica_settori`.`id_anagrafica` AS `id_anagrafica`,`anagrafica_settori`.`id_settore` AS `id_settore`,`anagrafica_settori`.`id` AS `__label__` from `anagrafica_settori` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_view` AS select `anagrafica`.`id` AS `id`,`anagrafica`.`codice` AS `codice`,`anagrafica`.`riferimento` AS `riferimento`,`anagrafica`.`id_tipologia` AS `id_tipologia`,`anagrafica`.`nome` AS `nome`,`anagrafica`.`cognome` AS `cognome`,`anagrafica`.`denominazione` AS `denominazione`,`anagrafica`.`soprannome` AS `soprannome`,`anagrafica`.`sesso` AS `sesso`,`anagrafica`.`stato_civile` AS `stato_civile`,`anagrafica`.`id_orientamento_sessuale` AS `id_orientamento_sessuale`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,`anagrafica`.`partita_iva` AS `partita_iva`,`anagrafica`.`codice_sdi` AS `codice_sdi`,`anagrafica`.`id_pec_sdi` AS `id_pec_sdi`,`anagrafica`.`id_regime_fiscale` AS `id_regime_fiscale`,`anagrafica`.`note_amministrative` AS `note_amministrative`,`anagrafica`.`luogo_nascita` AS `luogo_nascita`,`anagrafica`.`stato_nascita` AS `stato_nascita`,`anagrafica`.`id_stato_nascita` AS `id_stato_nascita`,`anagrafica`.`comune_nascita` AS `comune_nascita`,`anagrafica`.`giorno_nascita` AS `giorno_nascita`,`anagrafica`.`mese_nascita` AS `mese_nascita`,`anagrafica`.`anno_nascita` AS `anno_nascita`,`anagrafica`.`id_diritto` AS `id_diritto`,`anagrafica`.`id_tipologia_crm` AS `id_tipologia_crm`,`anagrafica`.`id_agente` AS `id_agente`,`anagrafica`.`note_commerciali` AS `note_commerciali`,`anagrafica`.`condizioni_vendita` AS `condizioni_vendita`,`anagrafica`.`condizioni_acquisto` AS `condizioni_acquisto`,`anagrafica`.`note` AS `note`,`anagrafica`.`data_cessazione` AS `data_cessazione`,`anagrafica`.`note_cessazione` AS `note_cessazione`,`anagrafica`.`recapiti` AS `recapiti`,`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica`.`se_importata` AS `se_importata`,`anagrafica`.`se_stampa_privacy` AS `se_stampa_privacy`,`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,group_concat(distinct `pec`.`indirizzo` separator ',') AS `pec_sdi`,group_concat(distinct `indirizzi_view`.`sigla_stato` separator ',') AS `sigla_stato`,group_concat(distinct `stati`.`nome` separator ' | ') AS `cittadinanze`,max(`categorie_anagrafica`.`se_collaboratore`) AS `se_collaboratore`,max(`categorie_anagrafica`.`se_dipendente`) AS `se_dipendente`,max(`categorie_anagrafica`.`se_interinale`) AS `se_interinale`,max(`categorie_anagrafica`.`se_cliente`) AS `se_cliente`,max(`categorie_anagrafica`.`se_lead`) AS `se_lead`,max(`categorie_anagrafica`.`se_prospect`) AS `se_prospect`,max(`categorie_anagrafica`.`se_mandante`) AS `se_mandante`,max(`categorie_anagrafica`.`se_fornitore`) AS `se_fornitore`,max(`categorie_anagrafica`.`se_produttore`) AS `se_produttore`,max(`categorie_anagrafica`.`se_agente`) AS `se_agente`,max(`categorie_anagrafica`.`se_interno`) AS `se_interno`,max(`categorie_anagrafica`.`se_esterno`) AS `se_esterno`,max(`categorie_anagrafica`.`se_amministrazione`) AS `se_amministrazione`,max(`categorie_anagrafica`.`se_azienda_gestita`) AS `se_azienda_gestita`,max(`categorie_anagrafica`.`se_concorrente`) AS `se_concorrente`,max(`categorie_anagrafica`.`se_tutor`) AS `se_tutor`,max(`categorie_anagrafica`.`se_classe`) AS `se_classe`,max(`categorie_anagrafica`.`se_docente`) AS `se_docente`,max(`categorie_anagrafica`.`se_allievo`) AS `se_allievo`,max(`categorie_anagrafica`.`se_agenzia_interinale`) AS `se_agenzia_interinale`,max(`categorie_anagrafica`.`se_referente`) AS `se_referente`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `__label__`,coalesce(`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `denominazione_fiscale`,`d`.`nome` AS `diritto`,coalesce(`aAgente`.`soprannome`,`aAgente`.`denominazione`,concat(`aAgente`.`cognome`,' ',`aAgente`.`nome`),'') AS `agente`,group_concat(distinct `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) separator ' | ') AS `categorie`,group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,group_concat(distinct `categorie_diritto`.`nome` separator ' | ') AS `specialita`,group_concat(distinct `provincie`.`sigla` separator ' | ') AS `provincia`,group_concat(distinct `regimi_fiscali`.`codice` separator ',') AS `codice_regime_fiscale`,group_concat(distinct `__acl_anagrafica__`.`id_gruppo` separator ' | ') AS `gruppo` from (((((((((((((((`anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_anagrafica` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) left join `telefoni` on((`telefoni`.`id_anagrafica` = `anagrafica`.`id`))) left join `mail` on((`mail`.`id_anagrafica` = `anagrafica`.`id`))) left join `regimi_fiscali` on((`regimi_fiscali`.`id` = `anagrafica`.`id_regime_fiscale`))) left join `mail` `pec` on(((`pec`.`id` = `anagrafica`.`id_pec_sdi`) and (`mail`.`se_pec` = 1)))) left join `anagrafica` `aAgente` on((`aAgente`.`id` = `anagrafica`.`id_agente`))) left join `indirizzi_view` on(((`indirizzi_view`.`id_anagrafica` = `anagrafica`.`id`) and (`indirizzi_view`.`se_sede` = 1)))) left join `provincie` on((`provincie`.`id` = `indirizzi_view`.`id_provincia`))) left join `anagrafica_categorie_diritto` on((`anagrafica_categorie_diritto`.`id_anagrafica` = `anagrafica`.`id`))) left join `categorie_diritto` on((`categorie_diritto`.`id` = `anagrafica_categorie_diritto`.`id_diritto`))) left join `categorie_diritto` `d` on((`d`.`id` = `anagrafica`.`id_diritto`))) left join `anagrafica_cittadinanze` on((`anagrafica_cittadinanze`.`id_anagrafica` = `anagrafica`.`id`))) left join `stati` on((`stati`.`id` = `anagrafica_cittadinanze`.`id_stato`))) left join `__acl_anagrafica__` on((`__acl_anagrafica__`.`id_entita` = `anagrafica`.`id`))) where isnull(`anagrafica`.`data_cessazione`) group by `anagrafica`.`id` order by coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `anagrafica_view_TEST`
---
-
-/*!50001 DROP TABLE IF EXISTS `anagrafica_view_TEST`*/;
-/*!50001 DROP VIEW IF EXISTS `anagrafica_view_TEST`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `anagrafica_view_TEST` AS select `anagrafica`.`id` AS `id`,`anagrafica`.`codice` AS `codice`,`anagrafica`.`id_tipologia` AS `id_tipologia`,`anagrafica`.`nome` AS `nome`,`anagrafica`.`cognome` AS `cognome`,`anagrafica`.`denominazione` AS `denominazione`,`anagrafica`.`soprannome` AS `soprannome`,`anagrafica`.`sesso` AS `sesso`,`anagrafica`.`id_orientamento_sessuale` AS `id_orientamento_sessuale`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,`anagrafica`.`partita_iva` AS `partita_iva`,`anagrafica`.`codice_sdi` AS `codice_sdi`,`anagrafica`.`id_pec_sdi` AS `id_pec_sdi`,`anagrafica`.`id_regime_fiscale` AS `id_regime_fiscale`,`anagrafica`.`note_amministrative` AS `note_amministrative`,`anagrafica`.`luogo_nascita` AS `luogo_nascita`,`anagrafica`.`stato_nascita` AS `stato_nascita`,`anagrafica`.`id_stato_nascita` AS `id_stato_nascita`,`anagrafica`.`comune_nascita` AS `comune_nascita`,`anagrafica`.`giorno_nascita` AS `giorno_nascita`,`anagrafica`.`mese_nascita` AS `mese_nascita`,`anagrafica`.`anno_nascita` AS `anno_nascita`,`anagrafica`.`id_diritto` AS `id_diritto`,`anagrafica`.`id_tipologia_crm` AS `id_tipologia_crm`,`anagrafica`.`id_agente` AS `id_agente`,`anagrafica`.`note_commerciali` AS `note_commerciali`,`anagrafica`.`condizioni_vendita` AS `condizioni_vendita`,`anagrafica`.`condizioni_acquisto` AS `condizioni_acquisto`,`anagrafica`.`note` AS `note`,`anagrafica`.`data_cessazione` AS `data_cessazione`,`anagrafica`.`note_cessazione` AS `note_cessazione`,`anagrafica`.`recapiti` AS `recapiti`,`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`anagrafica`.`se_importata` AS `se_importata`,`anagrafica`.`se_stampa_privacy` AS `se_stampa_privacy`,`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `__label__`,coalesce(`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `denominazione_fiscale`,(select group_concat(distinct `telefoni`.`numero` separator ' | ') from `telefoni` where (`telefoni`.`id_anagrafica` = `anagrafica`.`id`)) AS `telefoni`,(select group_concat(distinct `mail`.`indirizzo` separator ' | ') from `mail` where (`mail`.`id_anagrafica` = `anagrafica`.`id`)) AS `mail`,(select group_concat(distinct `categorie_anagrafica_path`(`anagrafica_categorie`.`id_categoria`) separator ' | ') from `anagrafica_categorie` where (`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`)) AS `categorie`,(select `categorie_anagrafica`.`se_collaboratore` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_collaboratore` = 1)) limit 1) AS `se_collaboratore`,(select `categorie_anagrafica`.`se_dipendente` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_dipendente` = 1)) limit 1) AS `se_dipendente`,(select `categorie_anagrafica`.`se_cliente` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_cliente` = 1)) limit 1) AS `se_cliente`,(select `categorie_anagrafica`.`se_lead` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_lead` = 1)) limit 1) AS `se_lead`,(select `categorie_anagrafica`.`se_prospect` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_prospect` = 1)) limit 1) AS `se_prospect`,(select `categorie_anagrafica`.`se_mandante` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_mandante` = 1)) limit 1) AS `se_mandante`,(select `categorie_anagrafica`.`se_fornitore` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_fornitore` = 1)) limit 1) AS `se_fornitore`,(select `categorie_anagrafica`.`se_produttore` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_produttore` = 1)) limit 1) AS `se_produttore`,(select `categorie_anagrafica`.`se_agente` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_agente` = 1)) limit 1) AS `se_agente`,(select `categorie_anagrafica`.`se_interno` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_interno` = 1)) limit 1) AS `se_interno`,(select `categorie_anagrafica`.`se_esterno` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_esterno` = 1)) limit 1) AS `se_esterno`,(select `categorie_anagrafica`.`se_amministrazione` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_amministrazione` = 1)) limit 1) AS `se_amministrazione`,(select `categorie_anagrafica`.`se_azienda_gestita` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_azienda_gestita` = 1)) limit 1) AS `se_azienda_gestita`,(select `categorie_anagrafica`.`se_concorrente` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_concorrente` = 1)) limit 1) AS `se_concorrente`,(select `categorie_anagrafica`.`se_tutor` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_tutor` = 1)) limit 1) AS `se_tutor`,(select `categorie_anagrafica`.`se_classe` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_classe` = 1)) limit 1) AS `se_classe`,(select `categorie_anagrafica`.`se_docente` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_docente` = 1)) limit 1) AS `se_docente`,(select `categorie_anagrafica`.`se_allievo` from (`categorie_anagrafica` join `anagrafica_categorie` on((`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))) where ((`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`) and (`categorie_anagrafica`.`se_allievo` = 1)) limit 1) AS `se_allievo`,(select `provincie`.`sigla` from ((`indirizzi` join `comuni` on((`comuni`.`id` = `indirizzi`.`id_comune`))) join `provincie` on((`provincie`.`id` = `comuni`.`id_provincia`))) where ((`indirizzi`.`id_anagrafica` = `anagrafica`.`id`) and (`indirizzi`.`id_tipologia` = 1))) AS `provincia`,(select group_concat(distinct `stati`.`nome` separator ' | ') from (`stati` join `anagrafica_cittadinanze` on((`stati`.`id` = `anagrafica_cittadinanze`.`id_stato`))) where (`anagrafica_cittadinanze`.`id_anagrafica` = `anagrafica`.`id`)) AS `cittadinanze`,(select `stati`.`iso31661alpha2` from ((((`indirizzi` join `comuni` on((`comuni`.`id` = `indirizzi`.`id_comune`))) join `provincie` on((`provincie`.`id` = `comuni`.`id_provincia`))) join `regioni` on((`regioni`.`id` = `provincie`.`id_regione`))) join `stati` on((`stati`.`id` = `regioni`.`id_stato`))) where ((`indirizzi`.`id_anagrafica` = `anagrafica`.`id`) and (`indirizzi`.`id_tipologia` = 1))) AS `sigla_stato`,(select group_concat(distinct `mail`.`indirizzo` separator ',') from `mail` where ((`mail`.`id_anagrafica` = `anagrafica`.`id`) and (`mail`.`se_pec` = 1))) AS `pec_sdi`,(select `categorie_diritto`.`nome` from `categorie_diritto` where (`categorie_diritto`.`id` = `anagrafica`.`id_diritto`)) AS `diritto`,(select group_concat(distinct `categorie_diritto`.`nome` separator ' | ') from (`categorie_diritto` join `anagrafica_categorie_diritto` on((`anagrafica_categorie_diritto`.`id_diritto` = `categorie_diritto`.`id`))) where (`anagrafica_categorie_diritto`.`id_anagrafica` = `anagrafica`.`id`)) AS `specialita`,(select coalesce(`tAgente`.`soprannome`,`tAgente`.`denominazione`,concat(`tAgente`.`cognome`,' ',`tAgente`.`nome`),'') from `anagrafica` `tAgente` where (`tAgente`.`id` = `anagrafica`.`id_agente`)) AS `agente`,(select `regimi_fiscali`.`codice` from `regimi_fiscali` where (`regimi_fiscali`.`id` = `anagrafica`.`id_regime_fiscale`)) AS `codice_regime_fiscale` from `anagrafica` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `articoli_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `articoli_view`*/;
-/*!50001 DROP VIEW IF EXISTS `articoli_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `articoli_view` AS select `articoli`.`id` AS `id`,`articoli`.`id_prodotto` AS `id_prodotto`,`articoli`.`nome` AS `nome`,`articoli`.`ordine` AS `ordine`,`articoli`.`id_taglia` AS `id_taglia`,`articoli`.`id_colore` AS `id_colore`,`articoli`.`id_udm` AS `id_udm`,`articoli`.`se_disponibile` AS `se_disponibile`,`articoli`.`quantita_disponibile` AS `quantita_disponibile`,`articoli`.`id_account_inserimento` AS `id_account_inserimento`,`articoli`.`timestamp_inserimento` AS `timestamp_inserimento`,`articoli`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`articoli`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`taglie`.`it` AS `it`,`tipologie_taglie`.`nome` AS `tipologia_taglia`,`udm`.`sigla` AS `udm`,concat_ws(' ',`articoli`.`id`,`articoli`.`nome`) AS `__label__` from (((`articoli` left join `taglie` on((`taglie`.`id` = `articoli`.`id_taglia`))) left join `tipologie_taglie` on((`tipologie_taglie`.`id` = `taglie`.`id_tipologia`))) left join `udm` on((`udm`.`id` = `articoli`.`id_udm`))) order by concat_ws(' ',`articoli`.`id`,`articoli`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `attivita_archiviate_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `attivita_archiviate_view`*/;
-/*!50001 DROP VIEW IF EXISTS `attivita_archiviate_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `attivita_archiviate_view` AS select `attivita`.`id` AS `id`,`attivita`.`id_tipologia` AS `id_tipologia`,`attivita`.`id_tipologia_inps` AS `id_tipologia_inps`,`attivita`.`id_anagrafica` AS `id_anagrafica`,`attivita`.`id_mandante` AS `id_mandante`,`attivita`.`id_cliente` AS `id_cliente`,`attivita`.`id_luogo` AS `id_luogo`,`attivita`.`referente` AS `referente`,`attivita`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`attivita`.`data` AS `data`,`attivita`.`ora` AS `ora`,`attivita`.`ora_fine` AS `ora_fine`,`attivita`.`id_pratica` AS `id_pratica`,`attivita`.`id_progetto` AS `id_progetto`,`attivita`.`id_campagna` AS `id_campagna`,`attivita`.`id_task` AS `id_task`,`attivita`.`id_todo` AS `id_todo`,`attivita`.`id_tipologia_interesse` AS `id_tipologia_interesse`,`attivita`.`id_tipologia_soddisfazione` AS `id_tipologia_soddisfazione`,`attivita`.`note_feedback` AS `note_feedback`,`attivita`.`id_immobile` AS `id_immobile`,`attivita`.`id_incarico` AS `id_incarico`,`attivita`.`id_richiesta` AS `id_richiesta`,`attivita`.`id_incrocio_immobile` AS `id_incrocio_immobile`,`attivita`.`nome` AS `nome`,`attivita`.`testo` AS `testo`,`attivita`.`timestamp_scadenza` AS `timestamp_scadenza`,`attivita`.`note_scadenza` AS `note_scadenza`,`attivita`.`id_attivita_completamento` AS `id_attivita_completamento`,`attivita`.`ore` AS `ore`,`attivita`.`id_esito` AS `id_esito`,`attivita`.`id_account_editor` AS `id_account_editor`,`attivita`.`id_account_inserimento` AS `id_account_inserimento`,`attivita`.`timestamp_inserimento` AS `timestamp_inserimento`,`attivita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`attivita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`progetti`.`nome` AS `progetto`,`task`.`nome` AS `task`,`task`.`ore_previste` AS `ore_previste_task`,`todo`.`nome` AS `todo`,`todo`.`ore_previste` AS `ore_previste_todo`,`tipologie_attivita`.`nome` AS `tipologia`,`tipologie_attivita`.`html` AS `icona_html`,`tipologie_attivita`.`font_awesome` AS `icona_fa`,concat(`anagrafica`.`nome`,' ',`anagrafica`.`cognome`) AS `anagrafica`,concat_ws(' ',`cliente`.`nome`,`cliente`.`cognome`,coalesce(`cliente`.`soprannome`,`cliente`.`denominazione`)) AS `cliente`,concat_ws(' ',`mandante`.`nome`,`mandante`.`cognome`,coalesce(`mandante`.`soprannome`,`mandante`.`denominazione`)) AS `mandante`,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) AS `__label__` from (((((((`attivita` left join `tipologie_attivita` on((`tipologie_attivita`.`id` = `attivita`.`id_tipologia`))) left join `anagrafica` on((`anagrafica`.`id` = `attivita`.`id_anagrafica`))) left join `task` on((`task`.`id` = `attivita`.`id_task`))) left join `todo` on((`todo`.`id` = `attivita`.`id_todo`))) left join `progetti` on((`progetti`.`id` = `attivita`.`id_progetto`))) left join `anagrafica` `cliente` on((`cliente`.`id` = coalesce(`progetti`.`id_cliente`,`task`.`id_cliente`,`todo`.`id_cliente`)))) left join `anagrafica` `mandante` on((`mandante`.`id` = `attivita`.`id_mandante`))) where ((`attivita`.`data` is not null) and (`attivita`.`timestamp_scadenza` is not null)) order by `attivita`.`data` desc,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `attivita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `attivita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `attivita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `attivita_view` AS select `attivita`.`id` AS `id`,`attivita`.`id_tipologia` AS `id_tipologia`,`attivita`.`id_tipologia_inps` AS `id_tipologia_inps`,`attivita`.`id_anagrafica` AS `id_anagrafica`,`attivita`.`id_mandante` AS `id_mandante`,`attivita`.`id_cliente` AS `id_cliente`,`attivita`.`id_luogo` AS `id_luogo`,`attivita`.`referente` AS `referente`,`attivita`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`attivita`.`data` AS `data`,`attivita`.`data_attivita` AS `data_attivita`,`attivita`.`ora` AS `ora`,`attivita`.`ora_inizio` AS `ora_inizio`,`attivita`.`ora_fine` AS `ora_fine`,coalesce(`attivita`.`data_programmazione`,`todo`.`data_programmazione`) AS `data_programmazione`,coalesce(`attivita`.`ora_inizio_programmazione`,`todo`.`ora_inizio_programmazione`) AS `ora_inizio_programmazione`,coalesce(`attivita`.`ora_fine_programmazione`,`todo`.`ora_fine_programmazione`) AS `ora_fine_programmazione`,`attivita`.`id_pratica` AS `id_pratica`,`attivita`.`id_progetto` AS `id_progetto`,`attivita`.`id_campagna` AS `id_campagna`,`attivita`.`id_task` AS `id_task`,`attivita`.`id_todo` AS `id_todo`,`attivita`.`id_tipologia_interesse` AS `id_tipologia_interesse`,`attivita`.`id_tipologia_soddisfazione` AS `id_tipologia_soddisfazione`,`attivita`.`note_feedback` AS `note_feedback`,`attivita`.`id_immobile` AS `id_immobile`,`attivita`.`id_incarico` AS `id_incarico`,`attivita`.`id_richiesta` AS `id_richiesta`,`attivita`.`id_incrocio_immobile` AS `id_incrocio_immobile`,`attivita`.`nome` AS `nome`,`attivita`.`testo` AS `testo`,`attivita`.`timestamp_scadenza` AS `timestamp_scadenza`,coalesce(`attivita`.`data_scadenza`,`todo`.`data_scadenza`) AS `data_scadenza`,coalesce(`attivita`.`ora_scadenza`,`todo`.`ora_scadenza`) AS `ora_scadenza`,`attivita`.`note_scadenza` AS `note_scadenza`,`attivita`.`id_attivita_completamento` AS `id_attivita_completamento`,`attivita`.`ore` AS `ore`,`attivita`.`id_esito` AS `id_esito`,`attivita`.`id_account_editor` AS `id_account_editor`,`attivita`.`id_account_inserimento` AS `id_account_inserimento`,`attivita`.`timestamp_inserimento` AS `timestamp_inserimento`,`attivita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`attivita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,dayofmonth(coalesce(`attivita`.`data_attivita`,`attivita`.`data`)) AS `giorno`,month(coalesce(`attivita`.`data_attivita`,`attivita`.`data`)) AS `mese`,year(coalesce(`attivita`.`data_attivita`,`attivita`.`data`)) AS `anno`,`progetti`.`nome` AS `progetto`,`task`.`nome` AS `task`,`task`.`ore_previste` AS `ore_previste_task`,`todo`.`nome` AS `todo`,`todo`.`ore_previste` AS `ore_previste_todo`,`tipologie_attivita`.`nome` AS `tipologia`,`tipologie_attivita_inps`.`nome` AS `tipologia_inps`,`tipologie_attivita`.`html` AS `icona_html`,`tipologie_attivita`.`font_awesome` AS `icona_fa`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `pratica`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`nome`,''),coalesce(`anagrafica`.`cognome`,'')),'') AS `anagrafica`,coalesce(`cliente`.`soprannome`,`cliente`.`denominazione`,concat_ws(' ',coalesce(`cliente`.`cognome`,''),coalesce(`cliente`.`nome`,'')),'') AS `cliente`,(case when (isnull(`attivita`.`id_incarico`) and isnull(`attivita`.`id_richiesta`) and (`attivita`.`id_immobile` is not null)) then 'censimento' when (isnull(`attivita`.`id_incarico`) and (`attivita`.`id_richiesta` is not null)) then 'richiesta' when ((`attivita`.`id_incarico` is not null) and (`attivita`.`data` > `incarichi_immobili`.`data_inizio`)) then 'incarico' when ((`attivita`.`id_incarico` is not null) and (isnull(`incarichi_immobili`.`data_inizio`) or (`attivita`.`data` < `incarichi_immobili`.`data_inizio`)) and (`attivita`.`data` > `incarichi_immobili`.`data_valutazione`)) then 'valutazione' when ((`attivita`.`id_incarico` is not null) and (isnull(`incarichi_immobili`.`data_inizio`) or (`attivita`.`data` < `incarichi_immobili`.`data_inizio`)) and (isnull(`incarichi_immobili`.`data_valutazione`) or (`attivita`.`data` < `incarichi_immobili`.`data_valutazione`)) and (`attivita`.`data` > `incarichi_immobili`.`data_notizia`)) then 'notizia' when ((`attivita`.`id_incarico` is not null) and (isnull(`incarichi_immobili`.`data_inizio`) or (`attivita`.`data` < `incarichi_immobili`.`data_inizio`)) and (isnull(`incarichi_immobili`.`data_valutazione`) or (`attivita`.`data` < `incarichi_immobili`.`data_valutazione`)) and (isnull(`incarichi_immobili`.`data_notizia`) or (`attivita`.`data` < `incarichi_immobili`.`data_notizia`)) and (`attivita`.`data` > `incarichi_immobili`.`data_sviluppo`)) then 'sviluppo' else NULL end) AS `tipologia_attivita_immobiliare`,concat_ws(' ',`mandante`.`nome`,`mandante`.`cognome`,coalesce(`mandante`.`soprannome`,`mandante`.`denominazione`)) AS `mandante`,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) AS `__label__` from (((((((((((`attivita` left join `tipologie_attivita` on((`tipologie_attivita`.`id` = `attivita`.`id_tipologia`))) left join `tipologie_attivita_inps` on((`tipologie_attivita_inps`.`id` = `attivita`.`id_tipologia_inps`))) left join `incarichi_immobili` on((`incarichi_immobili`.`id` = `attivita`.`id_incarico`))) left join `anagrafica` on((`anagrafica`.`id` = `attivita`.`id_anagrafica`))) left join `task` on((`task`.`id` = `attivita`.`id_task`))) left join `todo` on((`todo`.`id` = `attivita`.`id_todo`))) left join `progetti` on((`progetti`.`id` = `attivita`.`id_progetto`))) left join `anagrafica` `cliente` on((`cliente`.`id` = coalesce(`attivita`.`id_cliente`,`progetti`.`id_cliente`,`task`.`id_cliente`,`todo`.`id_cliente`)))) left join `anagrafica` `mandante` on((`mandante`.`id` = `attivita`.`id_mandante`))) left join `pratiche` on((`pratiche`.`id` = `attivita`.`id_pratica`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) order by `attivita`.`data` desc,concat(`tipologie_attivita`.`nome`,' ',`attivita`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `audio_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `audio_view`*/;
-/*!50001 DROP VIEW IF EXISTS `audio_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `audio_view` AS select `audio`.`id` AS `id`,`audio`.`id_anagrafica` AS `id_anagrafica`,`audio`.`id_pagina` AS `id_pagina`,`audio`.`id_file` AS `id_file`,`audio`.`id_risorsa` AS `id_risorsa`,`audio`.`id_prodotto` AS `id_prodotto`,`audio`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`audio`.`id_notizia` AS `id_notizia`,`audio`.`id_categoria_notizie` AS `id_categoria_notizie`,`audio`.`id_evento` AS `id_evento`,`audio`.`id_categoria_eventi` AS `id_categoria_eventi`,`audio`.`id_lingua` AS `id_lingua`,`audio`.`path` AS `path`,`audio`.`codice_embed` AS `codice_embed`,`audio`.`id_tipologia_embed` AS `id_tipologia_embed`,`audio`.`nome` AS `nome`,`audio`.`id_ruolo` AS `id_ruolo`,`audio`.`ordine` AS `ordine`,`audio`.`target` AS `target`,`audio`.`timestamp_scalamento` AS `timestamp_scalamento`,`audio`.`id_account_inserimento` AS `id_account_inserimento`,`audio`.`timestamp_inserimento` AS `timestamp_inserimento`,`audio`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`audio`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`audio`.`nome` AS `__label__` from `audio` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `campagne_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `campagne_view`*/;
-/*!50001 DROP VIEW IF EXISTS `campagne_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `campagne_view` AS select `campagne`.`id` AS `id`,`campagne`.`nome` AS `nome`,`campagne`.`testo` AS `testo`,`campagne`.`id_account_chiusura` AS `id_account_chiusura`,`campagne`.`timestamp_chiusura` AS `timestamp_chiusura`,`campagne`.`testo_chiusura` AS `testo_chiusura`,`campagne`.`id_account_inserimento` AS `id_account_inserimento`,`campagne`.`timestamp_inserimento` AS `timestamp_inserimento`,`campagne`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`campagne`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`campagne`.`nome` AS `__label__` from `campagne` order by `campagne`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `caratteristiche_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `caratteristiche_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `caratteristiche_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `caratteristiche_immobili_view` AS select `caratteristiche_immobili`.`id` AS `id`,`caratteristiche_immobili`.`nome` AS `nome`,`caratteristiche_immobili`.`font_awesome` AS `font_awesome`,`caratteristiche_immobili`.`html` AS `html`,`caratteristiche_immobili`.`se_immobile` AS `se_immobile`,`caratteristiche_immobili`.`se_indirizzo` AS `se_indirizzo`,`caratteristiche_immobili`.`nome` AS `__label__` from `caratteristiche_immobili` order by `caratteristiche_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `caratteristiche_prodotti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `caratteristiche_prodotti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `caratteristiche_prodotti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `caratteristiche_prodotti_view` AS select `caratteristiche_prodotti`.`id` AS `id`,`caratteristiche_prodotti`.`nome` AS `nome`,`caratteristiche_prodotti`.`nome` AS `__label__` from `caratteristiche_prodotti` order by `caratteristiche_prodotti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `carrelli_articoli_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `carrelli_articoli_view`*/;
-/*!50001 DROP VIEW IF EXISTS `carrelli_articoli_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `carrelli_articoli_view` AS select `carrelli_articoli`.`id` AS `id`,`carrelli_articoli`.`id_carrello` AS `id_carrello`,`carrelli_articoli`.`id_articolo` AS `id_articolo`,`carrelli_articoli`.`quantita` AS `quantita`,`modalita_spedizione`.`nome` AS `spedizione`,`iva`.`descrizione` AS `iva`,concat(`carrelli_articoli`.`id`,' ',`carrelli_articoli`.`quantita`,'x ',`carrelli_articoli`.`id_articolo`) AS `__label__` from ((`carrelli_articoli` left join `modalita_spedizione` on((`modalita_spedizione`.`id` = `carrelli_articoli`.`id_modalita_spedizione`))) left join `iva` on((`iva`.`id` = `carrelli_articoli`.`id_iva`))) order by concat(`carrelli_articoli`.`id`,' ',`carrelli_articoli`.`quantita`,'x ',`carrelli_articoli`.`id_articolo`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `carrelli_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `carrelli_view`*/;
-/*!50001 DROP VIEW IF EXISTS `carrelli_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `carrelli_view` AS select `carrelli`.`id` AS `id`,date_format(from_unixtime(`carrelli`.`timestamp_inserimento`),'%Y-%m-%d %H:%i') AS `data_ora_apertura`,`carrelli`.`prezzo_lordo_complessivo` AS `prezzo_lordo_complessivo`,`carrelli`.`intestazione_nome` AS `intestazione_nome`,`carrelli`.`intestazione_cognome` AS `intestazione_cognome`,`carrelli`.`intestazione_indirizzo` AS `intestazione_indirizzo`,`carrelli`.`intestazione_citta` AS `intestazione_citta`,`carrelli`.`intestazione_cap` AS `intestazione_cap`,`provincie`.`sigla` AS `intestazione_provincia`,`carrelli`.`intestazione_telefono` AS `intestazione_telefono`,`carrelli`.`intestazione_mail` AS `intestazione_mail`,if(isnull(`carrelli`.`spedizione_id_provincia`),'ritiro gratuito','spedizione') AS `ritiro`,`carrelli`.`id_modalita_spedizione` AS `id_modalita_spedizione`,`modalita_pagamento`.`nome` AS `pagamento`,`assicurazioni_trasporto`.`nome` AS `assicurazione_trasporto`,`garanzie_carrelli`.`nome` AS `garanzia`,date_format(from_unixtime(`carrelli`.`timestamp_pagamento`),'%Y-%m-%d %H:%i') AS `data_ora_pagamento`,`carrelli`.`codice_pagamento` AS `codice_pagamento`,`carrelli`.`id` AS `__label__` from ((((`carrelli` left join `provincie` on((`provincie`.`id` = `carrelli`.`intestazione_id_provincia`))) left join `modalita_pagamento` on((`modalita_pagamento`.`id` = `carrelli`.`id_modalita_pagamento`))) left join `assicurazioni_trasporto` on((`assicurazioni_trasporto`.`id` = `carrelli`.`id_assicurazione_trasporto`))) left join `garanzie_carrelli` on((`garanzie_carrelli`.`id` = `carrelli`.`id_garanzia`))) order by `carrelli`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `categorie_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `categorie_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `categorie_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `categorie_anagrafica_view` AS select `categorie_anagrafica`.`id` AS `id`,`categorie_anagrafica`.`id_genitore` AS `id_genitore`,`categorie_anagrafica`.`nome` AS `nome`,`categorie_anagrafica`.`se_lead` AS `se_lead`,`categorie_anagrafica`.`se_prospect` AS `se_prospect`,`categorie_anagrafica`.`se_cliente` AS `se_cliente`,`categorie_anagrafica`.`se_mandante` AS `se_mandante`,`categorie_anagrafica`.`se_fornitore` AS `se_fornitore`,`categorie_anagrafica`.`se_produttore` AS `se_produttore`,`categorie_anagrafica`.`se_collaboratore` AS `se_collaboratore`,`categorie_anagrafica`.`se_dipendente` AS `se_dipendente`,`categorie_anagrafica`.`se_interinale` AS `se_interinale`,`categorie_anagrafica`.`se_interno` AS `se_interno`,`categorie_anagrafica`.`se_esterno` AS `se_esterno`,`categorie_anagrafica`.`se_agente` AS `se_agente`,`categorie_anagrafica`.`se_concorrente` AS `se_concorrente`,`categorie_anagrafica`.`se_rassegna_stampa` AS `se_rassegna_stampa`,`categorie_anagrafica`.`se_azienda_gestita` AS `se_azienda_gestita`,`categorie_anagrafica`.`se_amministrazione` AS `se_amministrazione`,`categorie_anagrafica`.`se_notizie` AS `se_notizie`,`categorie_anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`categorie_anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`categorie_anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`categorie_anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`categorie_anagrafica`.`se_docente` AS `se_docente`,`categorie_anagrafica`.`se_tutor` AS `se_tutor`,`categorie_anagrafica`.`se_classe` AS `se_classe`,`categorie_anagrafica`.`se_allievo` AS `se_allievo`,`categorie_anagrafica`.`se_agenzia_interinale` AS `se_agenzia_interinale`,`categorie_anagrafica`.`se_referente` AS `se_referente`,count(`anagrafica_categorie`.`id`) AS `membri`,`categorie_anagrafica_path`(`categorie_anagrafica`.`id`) AS `__label__` from (`categorie_anagrafica` left join `anagrafica_categorie` on((`anagrafica_categorie`.`id_categoria` = `categorie_anagrafica`.`id`))) group by `categorie_anagrafica`.`id` order by `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `categorie_diritto_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `categorie_diritto_view`*/;
-/*!50001 DROP VIEW IF EXISTS `categorie_diritto_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `categorie_diritto_view` AS select `categorie_diritto`.`id` AS `id`,`categorie_diritto`.`nome` AS `nome`,`categorie_diritto`.`id_genitore` AS `id_genitore`,(select count(0) from `categorie_diritto` `figli` where (`figli`.`id_genitore` = `categorie_diritto`.`id`)) AS `n_figli`,`categorie_diritti_path`(`categorie_diritto`.`id`) AS `__label__` from `categorie_diritto` order by `categorie_diritti_path`(`categorie_diritto`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `categorie_eventi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `categorie_eventi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `categorie_eventi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `categorie_eventi_view` AS select `categorie_eventi`.`id` AS `id`,`categorie_eventi`.`id_genitore` AS `id_genitore`,`categorie_eventi`.`id_pagina` AS `id_pagina`,`categorie_eventi`.`ordine` AS `ordine`,`categorie_eventi`.`nome` AS `nome`,`categorie_eventi`.`id_tipologia_pubblicazione` AS `id_tipologia_pubblicazione`,`categorie_eventi`.`id_account_inserimento` AS `id_account_inserimento`,`categorie_eventi`.`timestamp_inserimento` AS `timestamp_inserimento`,`categorie_eventi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`categorie_eventi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_pubblicazione`.`se_pubblicato` AS `se_pubblicato`,`tipologie_pubblicazione`.`nome` AS `pubblicazione`,`categorie_eventi`.`nome` AS `__label__` from (`categorie_eventi` join `tipologie_pubblicazione` on((`tipologie_pubblicazione`.`id` = `categorie_eventi`.`id_tipologia_pubblicazione`))) order by `categorie_eventi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `categorie_notizie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `categorie_notizie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `categorie_notizie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `categorie_notizie_view` AS select `categorie_notizie`.`id` AS `id`,`categorie_notizie`.`id_genitore` AS `id_genitore`,`categorie_notizie`.`id_pagina` AS `id_pagina`,`categorie_notizie`.`menu` AS `menu`,`categorie_notizie`.`ordine` AS `ordine`,`categorie_notizie`.`nome` AS `nome`,`categorie_notizie`.`id_tipologia_pubblicazione` AS `id_tipologia_pubblicazione`,`categorie_notizie`.`id_account_inserimento` AS `id_account_inserimento`,`categorie_notizie`.`timestamp_inserimento` AS `timestamp_inserimento`,`categorie_notizie`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`categorie_notizie`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_pubblicazione`.`se_pubblicato` AS `se_pubblicato`,`tipologie_pubblicazione`.`nome` AS `pubblicazione`,`categorie_notizie_path`(`categorie_notizie`.`id`) AS `__label__` from (`categorie_notizie` join `tipologie_pubblicazione` on((`tipologie_pubblicazione`.`id` = `categorie_notizie`.`id_tipologia_pubblicazione`))) order by `categorie_notizie_path`(`categorie_notizie`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `categorie_prodotti_caratteristiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `categorie_prodotti_caratteristiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `categorie_prodotti_caratteristiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `categorie_prodotti_caratteristiche_view` AS select `categorie_prodotti_caratteristiche`.`id` AS `id`,`categorie_prodotti_caratteristiche`.`id_categoria` AS `id_categoria`,`categorie_prodotti_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`categorie_prodotti_caratteristiche`.`se_non_presente` AS `se_non_presente`,`categorie_prodotti_caratteristiche`.`se_visibile` AS `se_visibile`,`categorie_prodotti_caratteristiche`.`ordine` AS `ordine`,`categorie_prodotti_caratteristiche`.`testo` AS `testo`,`categorie_prodotti_caratteristiche`.`id` AS `__label__` from `categorie_prodotti_caratteristiche` order by `categorie_prodotti_caratteristiche`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `categorie_prodotti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `categorie_prodotti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `categorie_prodotti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `categorie_prodotti_view` AS select `categorie_prodotti`.`id` AS `id`,`categorie_prodotti`.`id_genitore` AS `id_genitore`,`categorie_prodotti`.`id_pagina` AS `id_pagina`,`categorie_prodotti`.`id_sito` AS `id_sito`,`categorie_prodotti`.`ordine` AS `ordine`,`categorie_prodotti`.`nome` AS `nome`,`categorie_prodotti`.`template` AS `template`,`categorie_prodotti`.`schema_html` AS `schema_html`,`categorie_prodotti`.`tema_css` AS `tema_css`,`categorie_prodotti`.`menu` AS `menu`,`categorie_prodotti`.`se_sitemap` AS `se_sitemap`,`categorie_prodotti`.`se_cacheable` AS `se_cacheable`,`categorie_prodotti`.`note` AS `note`,`categorie_prodotti`.`id_tipologia_pubblicazione` AS `id_tipologia_pubblicazione`,`categorie_prodotti`.`id_account_inserimento` AS `id_account_inserimento`,`categorie_prodotti`.`timestamp_inserimento` AS `timestamp_inserimento`,`categorie_prodotti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`categorie_prodotti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_pubblicazione`.`se_pubblicato` AS `se_pubblicato`,`tipologie_pubblicazione`.`nome` AS `pubblicazione`,count(`prodotti_categorie`.`id`) AS `numero_prodotti`,`categorie_prodotti_path`(`categorie_prodotti`.`id`) AS `__label__` from ((`categorie_prodotti` left join `tipologie_pubblicazione` on((`tipologie_pubblicazione`.`id` = `categorie_prodotti`.`id_tipologia_pubblicazione`))) left join `prodotti_categorie` on((`prodotti_categorie`.`id_categoria` = `categorie_prodotti`.`id`))) group by `categorie_prodotti`.`id` order by `categorie_prodotti_path`(`categorie_prodotti`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `categorie_risorse_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `categorie_risorse_view`*/;
-/*!50001 DROP VIEW IF EXISTS `categorie_risorse_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `categorie_risorse_view` AS select `categorie_risorse`.`id` AS `id`,`categorie_risorse`.`id_genitore` AS `id_genitore`,`categorie_risorse`.`id_pagina` AS `id_pagina`,`categorie_risorse`.`nome` AS `nome`,`categorie_risorse`.`menu` AS `menu`,`categorie_risorse`.`ordine` AS `ordine`,`categorie_risorse`.`nome` AS `__label__` from `categorie_risorse` order by `categorie_risorse`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `classi_energetiche_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `classi_energetiche_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `classi_energetiche_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `classi_energetiche_immobili_view` AS select `classi_energetiche_immobili`.`id` AS `id`,`classi_energetiche_immobili`.`nome` AS `nome`,`classi_energetiche_immobili`.`ep_min` AS `ep_min`,`classi_energetiche_immobili`.`ep_max` AS `ep_max`,`classi_energetiche_immobili`.`rgb` AS `rgb`,`classi_energetiche_immobili`.`nome` AS `__label__` from `classi_energetiche_immobili` order by `classi_energetiche_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `colori_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `colori_view`*/;
-/*!50001 DROP VIEW IF EXISTS `colori_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `colori_view` AS select `colori`.`id` AS `id`,`colori`.`nome` AS `nome`,`colori`.`hex` AS `hex`,`colori`.`r` AS `r`,`colori`.`g` AS `g`,`colori`.`b` AS `b`,`colori`.`nome` AS `__label__` from `colori` order by `colori`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `comuni_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `comuni_view`*/;
-/*!50001 DROP VIEW IF EXISTS `comuni_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `comuni_view` AS select `comuni`.`id` AS `id`,`comuni`.`id_provincia` AS `id_provincia`,`comuni`.`nome` AS `nome`,`comuni`.`codice_istat` AS `codice_istat`,`comuni`.`codice_catasto` AS `codice_catasto`,`provincie_view`.`__label__` AS `provincia`,`provincie_view`.`id_regione` AS `id_regione`,`provincie_view`.`regione` AS `regione`,`provincie_view`.`id_stato` AS `id_stato`,`provincie_view`.`stato` AS `stato`,`provincie_view`.`id_continente` AS `id_continente`,`provincie_view`.`continente` AS `continente`,concat(`comuni`.`nome`,' ',coalesce(concat('(',`provincie_view`.`sigla`,') '),''),' ',ucase(`stati_view`.`iso31661alpha2`)) AS `__label__` from ((`comuni` join `provincie_view` on((`provincie_view`.`id` = `comuni`.`id_provincia`))) join `stati_view` on((`stati_view`.`id` = `provincie_view`.`id_stato`))) order by concat(`comuni`.`nome`,' ',coalesce(concat('(',`provincie_view`.`sigla`,') '),''),' ',ucase(`stati_view`.`iso31661alpha2`)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `condizioni_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `condizioni_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `condizioni_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `condizioni_immobili_view` AS select `condizioni_immobili`.`id` AS `id`,`condizioni_immobili`.`nome` AS `nome`,`condizioni_immobili`.`nome` AS `__label__` from `condizioni_immobili` order by `condizioni_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `condizioni_pagamento_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `condizioni_pagamento_view`*/;
-/*!50001 DROP VIEW IF EXISTS `condizioni_pagamento_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `condizioni_pagamento_view` AS select `condizioni_pagamento`.`id` AS `id`,`condizioni_pagamento`.`nome` AS `nome`,`condizioni_pagamento`.`descrizione` AS `descrizione`,`condizioni_pagamento`.`id_account_inserimento` AS `id_account_inserimento`,`condizioni_pagamento`.`timestamp_inserimento` AS `timestamp_inserimento`,`condizioni_pagamento`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`condizioni_pagamento`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`condizioni_pagamento`.`nome` AS `__label__` from `condizioni_pagamento` order by `condizioni_pagamento`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `contatti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `contatti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `contatti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `contatti_view` AS select `contatti`.`id` AS `id`,`contatti`.`nome` AS `nome`,`contatti`.`json` AS `json`,`contatti`.`id_tipologia` AS `id_tipologia`,`contatti`.`id_anagrafica` AS `id_anagrafica`,`contatti`.`id_segnalatore` AS `id_segnalatore`,`contatti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`contatti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`contatti`.`timestamp_inserimento` AS `timestamp_inserimento`,`contatti`.`id_account_inserimento` AS `id_account_inserimento`,`contatti`.`json` AS `__label__` from `contatti` order by `contatti`.`json` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `contenuti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `contenuti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `contenuti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `contenuti_view` AS select `contenuti`.`id` AS `id`,`contenuti`.`id_pagina` AS `id_pagina`,`contenuti`.`id_popup` AS `id_popup`,`contenuti`.`id_immagine` AS `id_immagine`,`contenuti`.`id_prodotto` AS `id_prodotto`,`contenuti`.`id_articolo` AS `id_articolo`,`contenuti`.`id_marchio` AS `id_marchio`,`contenuti`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`contenuti`.`id_notizia` AS `id_notizia`,`contenuti`.`id_categoria_notizie` AS `id_categoria_notizie`,`contenuti`.`id_evento` AS `id_evento`,`contenuti`.`id_categoria_eventi` AS `id_categoria_eventi`,`contenuti`.`id_file` AS `id_file`,`contenuti`.`id_risorsa` AS `id_risorsa`,`contenuti`.`id_audio` AS `id_audio`,`contenuti`.`id_video` AS `id_video`,`contenuti`.`id_lingua` AS `id_lingua`,`contenuti`.`title` AS `title`,`contenuti`.`keywords` AS `keywords`,`contenuti`.`h1` AS `h1`,`contenuti`.`h2` AS `h2`,`contenuti`.`h3` AS `h3`,`contenuti`.`abstract` AS `abstract`,`contenuti`.`cappello` AS `cappello`,`contenuti`.`testo` AS `testo`,`contenuti`.`alt` AS `alt`,`contenuti`.`og_title` AS `og_title`,`contenuti`.`og_type` AS `og_type`,`contenuti`.`og_image` AS `og_image`,`contenuti`.`og_audio` AS `og_audio`,`contenuti`.`og_video` AS `og_video`,`contenuti`.`og_determiner` AS `og_determiner`,`contenuti`.`og_description` AS `og_description`,`contenuti`.`path_custom` AS `path_custom`,`contenuti`.`url_custom` AS `url_custom`,`contenuti`.`rewrite_custom` AS `rewrite_custom`,`contenuti`.`specifiche` AS `specifiche`,`contenuti`.`label_menu` AS `label_menu`,`contenuti`.`h1` AS `__label__` from `contenuti` order by `contenuti`.`h1` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `continenti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `continenti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `continenti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `continenti_view` AS select `continenti`.`id` AS `id`,`continenti`.`codice` AS `codice`,`continenti`.`nome` AS `nome`,`continenti`.`nome` AS `__label__` from `continenti` order by `continenti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `contratti_archiviati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `contratti_archiviati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `contratti_archiviati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `contratti_archiviati_view` AS select `contratti`.`id` AS `id`,`contratti`.`id_tipologia` AS `id_tipologia`,`contratti`.`id_anagrafica` AS `id_anagrafica`,`contratti`.`id_agenzia` AS `id_agenzia`,`contratti`.`data_inizio` AS `data_inizio`,`contratti`.`data_fine` AS `data_fine`,`contratti`.`data_inizio_rapporto` AS `data_inizio_rapporto`,`contratti`.`data_fine_rapporto` AS `data_fine_rapporto`,`contratti`.`livello` AS `livello`,`contratti`.`id_tipologia_qualifica` AS `id_tipologia_qualifica`,`contratti`.`id_tipologia_durata` AS `id_tipologia_durata`,`contratti`.`id_tipologia_orario` AS `id_tipologia_orario`,`contratti`.`ore_settimanali` AS `ore_settimanali`,`contratti`.`note` AS `note`,`contratti`.`percentuale_part_time` AS `percentuale_part_time`,`contratti`.`id_account_inserimento` AS `id_account_inserimento`,`contratti`.`timestamp_inserimento` AS `timestamp_inserimento`,`contratti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`contratti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,coalesce(`agenzie`.`soprannome`,`agenzie`.`denominazione`,concat_ws(' ',coalesce(`agenzie`.`cognome`,''),coalesce(`agenzie`.`nome`,'')),'') AS `agenzia`,`tipologie_contratti`.`nome` AS `tipologia`,`tipologie_qualifiche_inps`.`nome` AS `tipologia_qualifica`,`tipologie_durate_inps`.`nome` AS `tipologia_durata`,`tipologie_orari_inps`.`nome` AS `tipologia_orario`,concat(`contratti`.`id`,' ',`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__` from ((((((`contratti` left join `anagrafica` on((`contratti`.`id_anagrafica` = `anagrafica`.`id`))) left join `anagrafica` `agenzie` on((`contratti`.`id_agenzia` = `agenzie`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) left join `tipologie_qualifiche_inps` on((`contratti`.`id_tipologia_qualifica` = `tipologie_qualifiche_inps`.`id`))) left join `tipologie_durate_inps` on((`contratti`.`id_tipologia_durata` = `tipologie_durate_inps`.`id`))) left join `tipologie_orari_inps` on((`contratti`.`id_tipologia_orario` = `tipologie_orari_inps`.`id`))) where ((`contratti`.`data_fine_rapporto` is not null) or ((`contratti`.`data_fine` is not null) and (`contratti`.`data_fine` < curdate()))) order by concat(`contratti`.`id`,' ',`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `contratti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `contratti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `contratti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `contratti_view` AS select `contratti`.`id` AS `id`,`contratti`.`id_tipologia` AS `id_tipologia`,`contratti`.`id_anagrafica` AS `id_anagrafica`,`contratti`.`id_agenzia` AS `id_agenzia`,`contratti`.`data_inizio` AS `data_inizio`,`contratti`.`data_fine` AS `data_fine`,`contratti`.`data_inizio_rapporto` AS `data_inizio_rapporto`,`contratti`.`data_fine_rapporto` AS `data_fine_rapporto`,`contratti`.`livello` AS `livello`,`contratti`.`id_tipologia_qualifica` AS `id_tipologia_qualifica`,`contratti`.`id_tipologia_durata` AS `id_tipologia_durata`,`contratti`.`id_tipologia_orario` AS `id_tipologia_orario`,`contratti`.`ore_settimanali` AS `ore_settimanali`,`contratti`.`note` AS `note`,`contratti`.`percentuale_part_time` AS `percentuale_part_time`,`contratti`.`id_account_inserimento` AS `id_account_inserimento`,`contratti`.`timestamp_inserimento` AS `timestamp_inserimento`,`contratti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`contratti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,coalesce(`agenzie`.`soprannome`,`agenzie`.`denominazione`,concat_ws(' ',coalesce(`agenzie`.`cognome`,''),coalesce(`agenzie`.`nome`,'')),'') AS `agenzia`,`tipologie_contratti`.`nome` AS `tipologia`,`tipologie_qualifiche_inps`.`nome` AS `tipologia_qualifica`,`tipologie_durate_inps`.`nome` AS `tipologia_durata`,`tipologie_orari_inps`.`nome` AS `tipologia_orario`,concat(`contratti`.`id`,' ',`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__` from ((((((`contratti` left join `anagrafica` on((`contratti`.`id_anagrafica` = `anagrafica`.`id`))) left join `anagrafica` `agenzie` on((`contratti`.`id_agenzia` = `agenzie`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) left join `tipologie_qualifiche_inps` on((`contratti`.`id_tipologia_qualifica` = `tipologie_qualifiche_inps`.`id`))) left join `tipologie_durate_inps` on((`contratti`.`id_tipologia_durata` = `tipologie_durate_inps`.`id`))) left join `tipologie_orari_inps` on((`contratti`.`id_tipologia_orario` = `tipologie_orari_inps`.`id`))) where (isnull(`contratti`.`data_fine_rapporto`) and (isnull(`contratti`.`data_fine`) or ((`contratti`.`data_fine` is not null) and (`contratti`.`data_fine` >= curdate())))) order by concat(`contratti`.`id`,' ',`tipologie_contratti`.`nome`,' ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `costi_contratti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `costi_contratti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `costi_contratti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `costi_contratti_view` AS select `costi_contratti`.`id` AS `id`,`costi_contratti`.`id_contratto` AS `id_contratto`,`costi_contratti`.`id_tipologia` AS `id_tipologia`,`costi_contratti`.`note` AS `note`,`costi_contratti`.`costo_orario` AS `costo_orario`,concat(if((`tipologie_attivita_inps`.`codice` is not null),concat(`tipologie_attivita_inps`.`codice`,' - '),''),`tipologie_attivita_inps`.`nome`) AS `__label__` from (`costi_contratti` left join `tipologie_attivita_inps` on((`tipologie_attivita_inps`.`id` = `costi_contratti`.`id_tipologia`))) order by concat(if((`tipologie_attivita_inps`.`codice` is not null),concat(`tipologie_attivita_inps`.`codice`,' - '),''),`tipologie_attivita_inps`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `coupon_categorie_prodotti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `coupon_categorie_prodotti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `coupon_categorie_prodotti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `coupon_categorie_prodotti_view` AS select `coupon_categorie_prodotti`.`id` AS `id`,`coupon_categorie_prodotti`.`id_coupon` AS `id_coupon`,`coupon_categorie_prodotti`.`id_categoria_prodotti` AS `id_categoria_prodotti`,concat(`coupon`.`nome`,' | ',`categorie_prodotti`.`nome`) AS `__label__`,`coupon`.`nome` AS `nome_coupon`,date_format(from_unixtime(`coupon`.`timestamp_inizio`),'%Y-%m-%d') AS `inizio_validita`,date_format(from_unixtime(`coupon`.`timestamp_fine`),'%Y-%m-%d') AS `fine_validita`,`coupon`.`sconto_percentuale` AS `sconto_percentuale`,`coupon`.`sconto_fisso` AS `sconto_fisso` from ((`coupon_categorie_prodotti` left join `categorie_prodotti` on((`coupon_categorie_prodotti`.`id_categoria_prodotti` = `categorie_prodotti`.`id`))) left join `coupon` on((`coupon_categorie_prodotti`.`id_coupon` = `coupon`.`id`))) order by concat(`coupon`.`nome`,' | ',`categorie_prodotti`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `coupon_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `coupon_view`*/;
-/*!50001 DROP VIEW IF EXISTS `coupon_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `coupon_view` AS select `coupon`.`id` AS `id`,`coupon`.`nome` AS `nome`,`coupon`.`note` AS `note`,`coupon`.`timestamp_inizio` AS `timestamp_inizio`,`coupon`.`timestamp_fine` AS `timestamp_fine`,`coupon`.`sconto_percentuale` AS `sconto_percentuale`,`coupon`.`sconto_fisso` AS `sconto_fisso`,`coupon`.`se_multiuso` AS `se_multiuso`,`coupon`.`se_globale` AS `se_globale`,`coupon`.`id_account_inserimento` AS `id_account_inserimento`,`coupon`.`timestamp_inserimento` AS `timestamp_inserimento`,`coupon`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`coupon`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`coupon`.`timestamp_inizio`),'%Y-%m-%d') AS `inizio_validita`,date_format(from_unixtime(`coupon`.`timestamp_fine`),'%Y-%m-%d') AS `fine_validita`,`coupon`.`nome` AS `__label__` from `coupon` order by `coupon`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `cron_log_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `cron_log_view`*/;
-/*!50001 DROP VIEW IF EXISTS `cron_log_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `cron_log_view` AS select `cron_log`.`id` AS `id`,`cron_log`.`id_cron` AS `id_cron`,`cron_log`.`testo` AS `testo`,`cron_log`.`timestamp_esecuzione` AS `timestamp_esecuzione`,`cron_log`.`testo` AS `__label__` from `cron_log` order by `cron_log`.`testo` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `cron_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `cron_view`*/;
-/*!50001 DROP VIEW IF EXISTS `cron_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `cron_view` AS select `cron`.`id` AS `id`,`cron`.`minuto` AS `minuto`,`cron`.`ora` AS `ora`,`cron`.`giorno_del_mese` AS `giorno_del_mese`,`cron`.`mese` AS `mese`,`cron`.`giorno_della_settimana` AS `giorno_della_settimana`,`cron`.`settimana` AS `settimana`,`cron`.`task` AS `task`,`cron`.`iterazioni` AS `iterazioni`,`cron`.`delay` AS `delay`,`cron`.`token` AS `token`,`cron`.`timestamp_esecuzione` AS `timestamp_esecuzione`,`cron`.`id_account_inserimento` AS `id_account_inserimento`,`cron`.`timestamp_inserimento` AS `timestamp_inserimento`,`cron`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`cron`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`cron`.`task` AS `__label__` from `cron` order by `cron`.`task` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `date_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `date_view`*/;
-/*!50001 DROP VIEW IF EXISTS `date_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `date_view` AS select `date`.`id` AS `id`,`date`.`id_evento` AS `id_evento`,`date`.`id_notizia` AS `id_notizia`,`date`.`nome` AS `nome`,`date`.`id_luogo` AS `id_luogo`,`date`.`id_tipologia` AS `id_tipologia`,`date`.`id_tipologia_pubblicazione` AS `id_tipologia_pubblicazione`,`date`.`timestamp_inizio` AS `timestamp_inizio`,`date`.`timestamp_fine` AS `timestamp_fine`,`date`.`id_account_inserimento` AS `id_account_inserimento`,`date`.`timestamp_inserimento` AS `timestamp_inserimento`,`date`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`date`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`luoghi`.`nome` AS `luogo`,`eventi`.`nome` AS `evento`,`date`.`nome` AS `__label__` from ((`date` left join `luoghi` on((`luoghi`.`id` = `date`.`id_luogo`))) left join `eventi` on((`eventi`.`id` = `date`.`id_evento`))) order by `date`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `disponibilita_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `disponibilita_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `disponibilita_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `disponibilita_immobili_view` AS select `disponibilita_immobili`.`id` AS `id`,`disponibilita_immobili`.`nome` AS `nome`,`disponibilita_immobili`.`se_disponibile` AS `se_disponibile`,`disponibilita_immobili`.`nome` AS `__label__` from `disponibilita_immobili` order by `disponibilita_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `documenti_amministrativi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `documenti_amministrativi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `documenti_amministrativi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `documenti_amministrativi_view` AS select `documento`.`id` AS `id`,`documento`.`id_tipologia` AS `id_tipologia`,`documento`.`numero` AS `numero`,`documento`.`revisione` AS `revisione`,`documento`.`sezione` AS `sezione`,`documento`.`data` AS `data`,`documento`.`progressivo_invio` AS `progressivo_invio`,`documento`.`id_emittente` AS `id_emittente`,`documento`.`id_sede_emittente` AS `id_sede_emittente`,`documento`.`id_referente_emittente` AS `id_referente_emittente`,`documento`.`id_agente_emittente` AS `id_agente_emittente`,`documento`.`id_cliente` AS `id_cliente`,`documento`.`id_esigibilita` AS `id_esigibilita`,`documento`.`id_sede_cliente` AS `id_sede_cliente`,`documento`.`id_referente_cliente` AS `id_referente_cliente`,`documento`.`id_fornitore` AS `id_fornitore`,`documento`.`nome` AS `nome`,`documento`.`causale` AS `causale`,`documento`.`note_cliente` AS `note_cliente`,`documento`.`note_interne` AS `note_interne`,`documento`.`note_pagamento` AS `note_pagamento`,`documento`.`note_reso` AS `note_reso`,`documento`.`note_consegna` AS `note_consegna`,`documento`.`note_imballo` AS `note_imballo`,`documento`.`data_fine_validita` AS `data_fine_validita`,`documento`.`id_account_inserimento` AS `id_account_inserimento`,`documento`.`timestamp_inserimento` AS `timestamp_inserimento`,`documento`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`documento`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`documento`.`numero`,'/',year(`documento`.`data`),' del ',`documento`.`data`,' per cliente ',concat(coalesce(`clienti`.`nome`,''),coalesce(`clienti`.`cognome`,''),coalesce(`clienti`.`denominazione`,'')),' | ',coalesce(`documento`.`nome`,'')) AS `__label__`,`tipologie`.`codice` AS `codice_tipologia` from ((`documenti_amministrativi` `documento` left join `anagrafica` `clienti` on((`clienti`.`id` = `documento`.`id_cliente`))) left join `tipologie_documenti_amministrativi` `tipologie` on((`tipologie`.`id` = `documento`.`id_tipologia`))) order by concat(`documento`.`numero`,'/',year(`documento`.`data`),' del ',`documento`.`data`,' per cliente ',concat(coalesce(`clienti`.`nome`,''),coalesce(`clienti`.`cognome`,''),coalesce(`clienti`.`denominazione`,'')),' | ',coalesce(`documento`.`nome`,'')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `documenti_articoli_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `documenti_articoli_view`*/;
-/*!50001 DROP VIEW IF EXISTS `documenti_articoli_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `documenti_articoli_view` AS select `documenti_articoli`.`id` AS `id`,`documenti_articoli`.`id_tipologia` AS `id_tipologia`,`documenti_articoli`.`id_documento` AS `id_documento`,`documenti_articoli`.`id_destinatario` AS `id_destinatario`,`documenti_articoli`.`id_emittente` AS `id_emittente`,`documenti_articoli`.`id_genitore` AS `id_genitore`,`documenti_articoli`.`id_progetto` AS `id_progetto`,`documenti_articoli`.`id_todo` AS `id_todo`,`documenti_articoli`.`id_attivita` AS `id_attivita`,`documenti_articoli`.`id_articolo` AS `id_articolo`,`documenti_articoli`.`id_mastro_provenienza` AS `id_mastro_provenienza`,`documenti_articoli`.`id_mastro_destinazione` AS `id_mastro_destinazione`,`documenti_articoli`.`id_udm` AS `id_udm`,`documenti_articoli`.`ordine` AS `ordine`,`documenti_articoli`.`quantita` AS `quantita`,`documenti_articoli`.`data_lavorazione` AS `data_lavorazione`,`documenti_articoli`.`data_fatturabile` AS `data_fatturabile`,`documenti_articoli`.`data_scadenza` AS `data_scadenza`,`documenti_articoli`.`id_listino` AS `id_listino`,`documenti_articoli`.`id_valuta` AS `id_valuta`,`documenti_articoli`.`id_modalita_pagamento` AS `id_modalita_pagamento`,`documenti_articoli`.`importo_netto_totale` AS `importo_netto_totale`,`documenti_articoli`.`importo_netto_totale_non_scontato` AS `importo_netto_totale_non_scontato`,`documenti_articoli`.`id_iva` AS `id_iva`,`documenti_articoli`.`nome` AS `nome`,`documenti_articoli`.`testo` AS `testo`,`documenti_articoli`.`path` AS `path`,`documenti_articoli`.`se_rimborso` AS `se_rimborso`,`documenti_articoli`.`id_account_inserimento` AS `id_account_inserimento`,`documenti_articoli`.`timestamp_inserimento` AS `timestamp_inserimento`,`documenti_articoli`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`documenti_articoli`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`documenti_articoli`.`nome` AS `__label__` from `documenti_articoli` order by `documenti_articoli`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `documenti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `documenti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `documenti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `documenti_view` AS select `documenti`.`id` AS `id`,`documenti`.`numero` AS `numero`,`documenti`.`id_tipologia` AS `id_tipologia`,`documenti`.`data` AS `data`,`documenti`.`id_destinatario` AS `id_destinatario`,`documenti`.`id_sede_destinatario` AS `id_sede_destinatario`,`documenti`.`id_emittente` AS `id_emittente`,`documenti`.`id_sede_emittente` AS `id_sede_emittente`,`documenti`.`note_interne` AS `note_interne`,`documenti`.`id_account_inserimento` AS `id_account_inserimento`,`documenti`.`timestamp_inserimento` AS `timestamp_inserimento`,`documenti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`documenti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`documenti`.`numero`,'/',year(`documenti`.`data`),' del ',`documenti`.`data`) AS `__label__`,`tipologie`.`codice` AS `codice_tipologia` from (`documenti` left join `tipologie_documenti` `tipologie` on((`tipologie`.`id` = `documenti`.`id_tipologia`))) order by concat(`documenti`.`numero`,'/',year(`documenti`.`data`),' del ',`documenti`.`data`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `esigibilita_iva_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `esigibilita_iva_view`*/;
-/*!50001 DROP VIEW IF EXISTS `esigibilita_iva_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `esigibilita_iva_view` AS select `esigibilita_iva`.`id` AS `id`,`esigibilita_iva`.`nome` AS `nome`,`esigibilita_iva`.`codice` AS `codice`,`esigibilita_iva`.`nome` AS `__label__` from `esigibilita_iva` order by `esigibilita_iva`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `esiti_attivita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `esiti_attivita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `esiti_attivita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `esiti_attivita_view` AS select `esiti_attivita`.`id` AS `id`,`esiti_attivita`.`nome` AS `nome`,`esiti_attivita`.`se_positivo` AS `se_positivo`,`esiti_attivita`.`se_richiede_azione` AS `se_richiede_azione`,`esiti_attivita`.`nome` AS `__label__` from `esiti_attivita` order by `esiti_attivita`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `esiti_incarichi_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `esiti_incarichi_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `esiti_incarichi_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `esiti_incarichi_immobili_view` AS select `esiti_incarichi_immobili`.`id` AS `id`,`esiti_incarichi_immobili`.`nome` AS `nome`,`esiti_incarichi_immobili`.`se_positivo` AS `se_positivo`,`esiti_incarichi_immobili`.`nome` AS `__label__` from `esiti_incarichi_immobili` order by `esiti_incarichi_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `esiti_incroci_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `esiti_incroci_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `esiti_incroci_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `esiti_incroci_immobili_view` AS select `esiti_incroci_immobili`.`id` AS `id`,`esiti_incroci_immobili`.`nome` AS `nome`,`esiti_incroci_immobili`.`se_positivo` AS `se_positivo`,`esiti_incroci_immobili`.`nome` AS `__label__` from `esiti_incroci_immobili` order by `esiti_incroci_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `esiti_notizie_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `esiti_notizie_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `esiti_notizie_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `esiti_notizie_immobili_view` AS select `esiti_notizie_immobili`.`id` AS `id`,`esiti_notizie_immobili`.`nome` AS `nome`,`esiti_notizie_immobili`.`se_positivo` AS `se_positivo`,`esiti_notizie_immobili`.`nome` AS `__label__` from `esiti_notizie_immobili` order by `esiti_notizie_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `esiti_pratiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `esiti_pratiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `esiti_pratiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `esiti_pratiche_view` AS select `esiti_pratiche`.`id` AS `id`,`esiti_pratiche`.`nome` AS `nome`,`esiti_pratiche`.`se_positivo` AS `se_positivo`,`esiti_pratiche`.`nome` AS `__label__` from `esiti_pratiche` order by `esiti_pratiche`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `esiti_richieste_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `esiti_richieste_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `esiti_richieste_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `esiti_richieste_immobili_view` AS select `esiti_richieste_immobili`.`id` AS `id`,`esiti_richieste_immobili`.`nome` AS `nome`,`esiti_richieste_immobili`.`se_positivo` AS `se_positivo`,`esiti_richieste_immobili`.`nome` AS `__label__` from `esiti_richieste_immobili` order by `esiti_richieste_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `eventi_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `eventi_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `eventi_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `eventi_anagrafica_view` AS select `eventi_anagrafica`.`id` AS `id`,`eventi_anagrafica`.`id_evento` AS `id_evento`,`eventi_anagrafica`.`id_anagrafica` AS `id_anagrafica`,`eventi_anagrafica`.`id_ruolo` AS `id_ruolo`,`eventi_anagrafica`.`nome` AS `nome`,`eventi_anagrafica`.`ordine` AS `ordine`,`eventi_anagrafica`.`nome` AS `__label__` from `eventi_anagrafica` order by `eventi_anagrafica`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `eventi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `eventi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `eventi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `eventi_view` AS select `eventi`.`id` AS `id`,`eventi`.`id_tipologia` AS `id_tipologia`,`eventi`.`nome` AS `nome`,`eventi`.`testo` AS `testo`,`eventi`.`se_repertorio` AS `se_repertorio`,`eventi`.`id_account_inserimento` AS `id_account_inserimento`,`eventi`.`timestamp_inserimento` AS `timestamp_inserimento`,`eventi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`eventi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`eventi`.`nome` AS `__label__` from `eventi` order by `eventi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `fatturati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `fatturati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `fatturati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `fatturati_view` AS select `fatturati`.`id` AS `id`,`fatturati`.`nome` AS `nome`,`fatturati`.`id_emittente` AS `id_emittente`,`fatturati`.`id_cliente` AS `id_cliente`,`fatturati`.`id_agente` AS `id_agente`,`fatturati`.`id_mandante` AS `id_mandante`,`fatturati`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`fatturati`.`id_tipologia` AS `id_tipologia`,`fatturati`.`mese` AS `mese`,`fatturati`.`anno` AS `anno`,`fatturati`.`importo` AS `importo`,`fatturati`.`id_account_inserimento` AS `id_account_inserimento`,`fatturati`.`timestamp_inserimento` AS `timestamp_inserimento`,`fatturati`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`fatturati`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,monthname(str_to_date(`fatturati`.`mese`,'%m')) AS `nome_mese`,`tipologie`.`nome` AS `tipologia`,concat_ws(' ',`emittenti`.`cognome`,`emittenti`.`nome`,`emittenti`.`denominazione`) AS `emittente`,concat_ws(' ',`clienti`.`cognome`,`clienti`.`nome`,`clienti`.`denominazione`) AS `cliente`,concat_ws(' ',`agenti`.`cognome`,`agenti`.`nome`,`agenti`.`denominazione`) AS `agente`,concat_ws(' ',`mandanti`.`cognome`,`mandanti`.`nome`,`mandanti`.`denominazione`) AS `mandante`,sum(`righe_fatturati`.`provvigione_azienda`) AS `provvigione_azienda`,sum(`righe_fatturati`.`provvigione_agente`) AS `provvigione_agente`,`fatturati`.`nome` AS `__label__` from ((((((`fatturati` left join `tipologie_attivita` `tipologie` on((`tipologie`.`id` = `fatturati`.`id_tipologia`))) left join `anagrafica` `emittenti` on((`emittenti`.`id` = `fatturati`.`id_emittente`))) left join `anagrafica` `clienti` on((`clienti`.`id` = `fatturati`.`id_cliente`))) left join `anagrafica` `agenti` on((`agenti`.`id` = `fatturati`.`id_agente`))) left join `anagrafica` `mandanti` on((`mandanti`.`id` = `fatturati`.`id_mandante`))) left join `righe_fatturati` on((`righe_fatturati`.`id_fatturato` = `fatturati`.`id`))) group by `fatturati`.`id` order by `fatturati`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `fatture_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `fatture_view`*/;
-/*!50001 DROP VIEW IF EXISTS `fatture_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `fatture_view` AS select `documenti_amministrativi`.`id` AS `id`,concat_ws(' ',`emittenti`.`cognome`,`emittenti`.`nome`,`emittenti`.`denominazione`) AS `emittente`,`documenti_amministrativi`.`data` AS `data`,`documenti_amministrativi`.`nome` AS `nome`,`documenti_amministrativi`.`numero` AS `numero`,`documenti_amministrativi`.`id_cliente` AS `id_cliente`,`documenti_amministrativi`.`id_emittente` AS `id_emittente`,`clienti`.`__label__` AS `cliente`,year(`documenti_amministrativi`.`data`) AS `anno`,count(`scadenze`.`id_documento`) AS `scadenze`,sum(`scadenze`.`se_pagato`) AS `pagato`,`scadenze`.`importo_lordo_totale` AS `totale`,`documenti_amministrativi`.`nome` AS `__label__` from ((((`documenti_amministrativi` left join `anagrafica_view` `clienti` on((`clienti`.`id` = `documenti_amministrativi`.`id_cliente`))) left join `tipologie_documenti_amministrativi` `tipologie` on((`tipologie`.`id` = `documenti_amministrativi`.`id_tipologia`))) left join `scadenze` on((`scadenze`.`id_documento` = `documenti_amministrativi`.`id`))) left join `anagrafica_view` `emittenti` on((`emittenti`.`id` = `documenti_amministrativi`.`id_emittente`))) where (`tipologie`.`se_fattura` = 1) group by `documenti_amministrativi`.`id` order by `documenti_amministrativi`.`data` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `file_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `file_view`*/;
-/*!50001 DROP VIEW IF EXISTS `file_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `file_view` AS select `file`.`id` AS `id`,`file`.`id_anagrafica` AS `id_anagrafica`,`file`.`id_prodotto` AS `id_prodotto`,`file`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`file`.`id_pagina` AS `id_pagina`,`file`.`id_task` AS `id_task`,`file`.`id_todo` AS `id_todo`,`file`.`id_rassegna_stampa` AS `id_rassegna_stampa`,`file`.`id_evento` AS `id_evento`,`file`.`id_categoria_eventi` AS `id_categoria_eventi`,`file`.`id_template_mail` AS `id_template_mail`,`file`.`id_mailing` AS `id_mailing`,`file`.`id_notizia` AS `id_notizia`,`file`.`id_categoria_notizie` AS `id_categoria_notizie`,`file`.`id_pratica` AS `id_pratica`,`file`.`id_risorsa` AS `id_risorsa`,`file`.`id_categoria_risorse` AS `id_categoria_risorse`,`file`.`id_lingua` AS `id_lingua`,`file`.`path` AS `path`,`file`.`url` AS `url`,`file`.`nome` AS `nome`,`file`.`id_ruolo` AS `id_ruolo`,`file`.`ordine` AS `ordine`,`file`.`id_account_inserimento` AS `id_account_inserimento`,`file`.`timestamp_inserimento` AS `timestamp_inserimento`,`file`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`file`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`file`.`path` AS `__label__` from `file` order by `file`.`path` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `gruppi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `gruppi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `gruppi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `gruppi_view` AS select `gruppi`.`id` AS `id`,`gruppi`.`nome` AS `nome`,`gruppi_path`(`gruppi`.`id`) AS `__label__` from `gruppi` order by `gruppi_path`(`gruppi`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `iban_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `iban_view`*/;
-/*!50001 DROP VIEW IF EXISTS `iban_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `iban_view` AS select `iban`.`id` AS `id`,`iban`.`id_anagrafica` AS `id_anagrafica`,`iban`.`intestazione` AS `intestazione`,`iban`.`iban` AS `iban`,`iban`.`note` AS `note`,`iban`.`id_account_inserimento` AS `id_account_inserimento`,`iban`.`timestamp_inserimento` AS `timestamp_inserimento`,`iban`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`iban`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`iban`.`iban` AS `__label__`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica` from (`iban` left join `anagrafica` on((`anagrafica`.`id` = `iban`.`id_anagrafica`))) order by `iban`.`iban` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `immagini_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `immagini_view`*/;
-/*!50001 DROP VIEW IF EXISTS `immagini_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `immagini_view` AS select `immagini`.`id` AS `id`,`immagini`.`id_anagrafica` AS `id_anagrafica`,`immagini`.`id_pagina` AS `id_pagina`,`immagini`.`id_file` AS `id_file`,`immagini`.`id_prodotto` AS `id_prodotto`,`immagini`.`id_articolo` AS `id_articolo`,`immagini`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`immagini`.`id_risorsa` AS `id_risorsa`,`immagini`.`id_categoria_risorse` AS `id_categoria_risorse`,`immagini`.`id_evento` AS `id_evento`,`immagini`.`id_categoria_eventi` AS `id_categoria_eventi`,`immagini`.`id_notizia` AS `id_notizia`,`immagini`.`id_categoria_notizie` AS `id_categoria_notizie`,`immagini`.`id_indirizzo` AS `id_indirizzo`,`immagini`.`id_immobile` AS `id_immobile`,`immagini`.`id_testata` AS `id_testata`,`immagini`.`id_zona` AS `id_zona`,`immagini`.`id_lingua` AS `id_lingua`,`immagini`.`orientamento` AS `orientamento`,`immagini`.`path` AS `path`,`immagini`.`path_alternativo` AS `path_alternativo`,`immagini`.`nome` AS `nome`,`immagini`.`id_ruolo` AS `id_ruolo`,`immagini`.`ordine` AS `ordine`,`immagini`.`anno` AS `anno`,`immagini`.`taglio` AS `taglio`,`immagini`.`token` AS `token`,`immagini`.`timestamp_scalamento` AS `timestamp_scalamento`,`immagini`.`id_account_inserimento` AS `id_account_inserimento`,`immagini`.`timestamp_inserimento` AS `timestamp_inserimento`,`immagini`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`immagini`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`ruoli_immagini`.`nome` AS `ruolo`,coalesce(if((`eventi`.`nome` is not null),concat('evento | ',`eventi`.`nome`),NULL),if((`pagine`.`nome` is not null),concat('pagina | ',`pagine`.`nome`),NULL),if((`prodotti`.`nome` is not null),concat('prodotto | ',`prodotti`.`nome`),NULL),if((`categorie_prodotti`.`nome` is not null),concat('categoria prodotti | ',`categorie_prodotti`.`nome`),NULL)) AS `associato`,`immagini`.`path` AS `__label__` from (((((`immagini` left join `ruoli_immagini` on((`ruoli_immagini`.`id` = `immagini`.`id_ruolo`))) left join `eventi` on((`eventi`.`id` = `immagini`.`id_evento`))) left join `pagine` on((`pagine`.`id` = `immagini`.`id_pagina`))) left join `prodotti` on((`prodotti`.`id` = `immagini`.`id_prodotto`))) left join `categorie_prodotti` on((`categorie_prodotti`.`id` = `immagini`.`id_categoria_prodotti`))) order by `immagini`.`path` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `immobili_caratteristiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `immobili_caratteristiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `immobili_caratteristiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `immobili_caratteristiche_view` AS select `immobili_caratteristiche`.`id` AS `id`,`immobili_caratteristiche`.`id_immobile` AS `id_immobile`,`immobili_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`immobili_caratteristiche`.`specifiche` AS `specifiche`,`immobili_caratteristiche`.`specifiche` AS `__label__` from `immobili_caratteristiche` order by `immobili_caratteristiche`.`specifiche` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `immobili_incarichi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `immobili_incarichi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `immobili_incarichi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `immobili_incarichi_view` AS select `immobili`.`id` AS `id`,`immobili`.`id_tipologia` AS `id_tipologia`,`immobili`.`id_indirizzo` AS `id_indirizzo`,`immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`immobili`.`scala` AS `scala`,`immobili`.`interno` AS `interno`,`immobili`.`piano` AS `piano`,`immobili`.`campanello` AS `campanello`,`immobili`.`livelli` AS `livelli`,`immobili`.`mq_commerciali` AS `mq_commerciali`,`immobili`.`mq_calpestabili` AS `mq_calpestabili`,`immobili`.`mq_modificatore` AS `mq_modificatore`,`immobili`.`prezzo_mq` AS `prezzo_mq`,`immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`immobili`.`percentuale_incremento_commerciale` AS `percentuale_incremento_commerciale`,`immobili`.`id_condizione` AS `id_condizione`,`immobili`.`id_disponibilita` AS `id_disponibilita`,`immobili`.`id_classe_energetica` AS `id_classe_energetica`,`immobili`.`spese_annue` AS `spese_annue`,`immobili`.`note_censimento` AS `note_censimento`,`immobili`.`note_struttura` AS `note_struttura`,`immobili`.`id_account_editor` AS `id_account_editor`,`immobili`.`id_account_inserimento` AS `id_account_inserimento`,`immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`indirizzi`.`descrizione` AS `descrizione`,`indirizzi`.`indirizzo` AS `indirizzo`,`indirizzi`.`cap` AS `cap`,`indirizzi`.`localita` AS `localita`,count(`immagini`.`id_immobile`) AS `immagini`,if((count(`immagini`.`id_immobile`) = 0),'1',NULL) AS `no_immagini`,count(`contenuti`.`id_immobile`) AS `testi`,if((count(`contenuti`.`id_immobile`) = 0),'1',NULL) AS `no_testi`,concat(`indirizzi`.`indirizzo`,' ',`immobili`.`interno`,' ',`immobili`.`scala`) AS `__label__` from ((((`incarichi_immobili_view` left join `immobili` on((`immobili`.`id` = `incarichi_immobili_view`.`id_immobile`))) left join `indirizzi` on((`indirizzi`.`id` = `immobili`.`id_indirizzo`))) left join `immagini` on((`immagini`.`id_immobile` = `immobili`.`id`))) left join `contenuti` on((`contenuti`.`id_immobile` = `immobili`.`id`))) group by `immobili`.`id` order by concat(`indirizzi`.`indirizzo`,' ',`immobili`.`interno`,' ',`immobili`.`scala`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `immobili_notizie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `immobili_notizie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `immobili_notizie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `immobili_notizie_view` AS select distinct `immobili`.`id` AS `id`,`immobili`.`id_tipologia` AS `id_tipologia`,`immobili`.`id_indirizzo` AS `id_indirizzo`,`immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`immobili`.`scala` AS `scala`,`immobili`.`interno` AS `interno`,`immobili`.`piano` AS `piano`,`immobili`.`campanello` AS `campanello`,`immobili`.`livelli` AS `livelli`,`immobili`.`mq_commerciali` AS `mq_commerciali`,`immobili`.`mq_calpestabili` AS `mq_calpestabili`,`immobili`.`mq_modificatore` AS `mq_modificatore`,`immobili`.`prezzo_mq` AS `prezzo_mq`,`immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`immobili`.`percentuale_incremento_commerciale` AS `percentuale_incremento_commerciale`,`immobili`.`id_condizione` AS `id_condizione`,`immobili`.`id_disponibilita` AS `id_disponibilita`,`immobili`.`id_classe_energetica` AS `id_classe_energetica`,`immobili`.`spese_annue` AS `spese_annue`,`immobili`.`note_censimento` AS `note_censimento`,`immobili`.`note_struttura` AS `note_struttura`,`immobili`.`id_account_editor` AS `id_account_editor`,`immobili`.`id_account_inserimento` AS `id_account_inserimento`,`immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`indirizzi`.`descrizione` AS `descrizione`,`indirizzi`.`indirizzo` AS `indirizzo`,`indirizzi`.`cap` AS `cap`,`indirizzi`.`localita` AS `localita`,`indirizzi`.`latitudine` AS `latitudine`,`indirizzi`.`longitudine` AS `longitudine`,count(`immagini`.`id_immobile`) AS `immagini`,if((count(`immagini`.`id_immobile`) = 0),'1',NULL) AS `no_immagini`,count(`contenuti`.`id_immobile`) AS `testi`,if((count(`contenuti`.`id_immobile`) = 0),'1',NULL) AS `no_testi`,concat(`indirizzi`.`indirizzo`,' ',`immobili`.`interno`,' ',`immobili`.`scala`) AS `__label__` from ((((`notizie_immobili_view` left join `immobili` on((`immobili`.`id` = `notizie_immobili_view`.`id_immobile`))) left join `indirizzi` on((`indirizzi`.`id` = `immobili`.`id_indirizzo`))) left join `immagini` on((`immagini`.`id_immobile` = `immobili`.`id`))) left join `contenuti` on((`contenuti`.`id_immobile` = `immobili`.`id`))) where (`notizie_immobili_view`.`data_notizia` is not null) group by `notizie_immobili_view`.`id` order by concat(`indirizzi`.`indirizzo`,' ',`immobili`.`interno`,' ',`immobili`.`scala`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `immobili_sviluppi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `immobili_sviluppi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `immobili_sviluppi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `immobili_sviluppi_view` AS select distinct `immobili`.`id` AS `id`,`immobili`.`id_tipologia` AS `id_tipologia`,`immobili`.`id_indirizzo` AS `id_indirizzo`,`immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`immobili`.`scala` AS `scala`,`immobili`.`interno` AS `interno`,`immobili`.`piano` AS `piano`,`immobili`.`campanello` AS `campanello`,`immobili`.`livelli` AS `livelli`,`immobili`.`mq_commerciali` AS `mq_commerciali`,`immobili`.`mq_calpestabili` AS `mq_calpestabili`,`immobili`.`mq_modificatore` AS `mq_modificatore`,`immobili`.`prezzo_mq` AS `prezzo_mq`,`immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`immobili`.`percentuale_incremento_commerciale` AS `percentuale_incremento_commerciale`,`immobili`.`id_condizione` AS `id_condizione`,`immobili`.`id_disponibilita` AS `id_disponibilita`,`immobili`.`id_classe_energetica` AS `id_classe_energetica`,`immobili`.`spese_annue` AS `spese_annue`,`immobili`.`note_censimento` AS `note_censimento`,`immobili`.`note_struttura` AS `note_struttura`,`immobili`.`id_account_editor` AS `id_account_editor`,`immobili`.`id_account_inserimento` AS `id_account_inserimento`,`immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`indirizzi`.`descrizione` AS `descrizione`,`indirizzi`.`indirizzo` AS `indirizzo`,`indirizzi`.`cap` AS `cap`,`indirizzi`.`localita` AS `localita`,`indirizzi`.`latitudine` AS `latitudine`,`indirizzi`.`longitudine` AS `longitudine`,count(`immagini`.`id_immobile`) AS `immagini`,if((count(`immagini`.`id_immobile`) = 0),'1',NULL) AS `no_immagini`,count(`contenuti`.`id_immobile`) AS `testi`,if((count(`contenuti`.`id_immobile`) = 0),'1',NULL) AS `no_testi`,concat(`indirizzi`.`indirizzo`,' ',`immobili`.`interno`,' ',`immobili`.`scala`) AS `__label__` from ((((`sviluppi_immobili_view` left join `immobili` on((`immobili`.`id` = `sviluppi_immobili_view`.`id_immobile`))) left join `indirizzi` on((`indirizzi`.`id` = `immobili`.`id_indirizzo`))) left join `immagini` on((`immagini`.`id_immobile` = `immobili`.`id`))) left join `contenuti` on((`contenuti`.`id_immobile` = `immobili`.`id`))) group by `sviluppi_immobili_view`.`id` order by concat(`indirizzi`.`indirizzo`,' ',`immobili`.`interno`,' ',`immobili`.`scala`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `immobili_view` AS select `immobili`.`id` AS `id`,`immobili`.`id_tipologia` AS `id_tipologia`,`immobili`.`id_indirizzo` AS `id_indirizzo`,`immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`immobili`.`scala` AS `scala`,`immobili`.`interno` AS `interno`,`immobili`.`piano` AS `piano`,`immobili`.`campanello` AS `campanello`,`immobili`.`livelli` AS `livelli`,`immobili`.`mq_commerciali` AS `mq_commerciali`,`immobili`.`mq_calpestabili` AS `mq_calpestabili`,`immobili`.`mq_modificatore` AS `mq_modificatore`,`immobili`.`prezzo_mq` AS `prezzo_mq`,`immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`immobili`.`percentuale_incremento_commerciale` AS `percentuale_incremento_commerciale`,`immobili`.`id_condizione` AS `id_condizione`,`immobili`.`id_disponibilita` AS `id_disponibilita`,`immobili`.`id_classe_energetica` AS `id_classe_energetica`,`immobili`.`spese_annue` AS `spese_annue`,`immobili`.`note_censimento` AS `note_censimento`,`immobili`.`note_struttura` AS `note_struttura`,`immobili`.`id_account_editor` AS `id_account_editor`,`immobili`.`id_account_inserimento` AS `id_account_inserimento`,`immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`indirizzi`.`descrizione` AS `descrizione`,`indirizzi`.`indirizzo` AS `indirizzo`,`indirizzi`.`cap` AS `cap`,`indirizzi`.`localita` AS `localita`,count(`immagini`.`id_immobile`) AS `immagini`,if((count(`immagini`.`id_immobile`) = 0),'1',NULL) AS `no_immagini`,count(`contenuti`.`id_immobile`) AS `testi`,if((count(`contenuti`.`id_immobile`) = 0),'1',NULL) AS `no_testi`,max(`contatti`.`data`) AS `ultimo_contatto`,count(distinct `attivita`.`id`) AS `n_attivita`,count(distinct `contatti`.`id`) AS `n_contatti`,count(distinct `incarichi_immobili`.`id`) AS `incarichi`,coalesce(`agenti`.`soprannome`,`agenti`.`denominazione`,concat_ws(' ',coalesce(`agenti`.`cognome`,''),coalesce(`agenti`.`nome`,'')),'') AS `agente`,`condizioni_immobili`.`nome` AS `condizione`,`disponibilita_immobili`.`nome` AS `disponibilita`,concat(if((`immobili`.`scala` is not null),concat('scala ',`immobili`.`scala`),''),convert(if((`immobili`.`scala` is not null),' - ','') using utf8),if((`immobili`.`piano` is not null),concat('piano ',`immobili`.`piano`),''),if((`immobili`.`interno` is not null),concat(' - interno ',`immobili`.`interno`),'')) AS `__short_label__`,concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),''),if((`immobili`.`scala` is not null),concat(' - scala ',`immobili`.`scala`),''),if((`immobili`.`piano` is not null),concat(' - piano ',`immobili`.`piano`),''),if((`immobili`.`interno` is not null),concat(' - interno ',`immobili`.`interno`),''),if((`immobili`.`campanello` is not null),concat(' | campanello ',`immobili`.`campanello`),'')) AS `__label__` from (((((((((((`immobili` left join `indirizzi` on((`indirizzi`.`id` = `immobili`.`id_indirizzo`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `immagini` on((`immagini`.`id_immobile` = `immobili`.`id`))) left join `contenuti` on((`contenuti`.`id_immobile` = `immobili`.`id`))) left join `account` on((`account`.`id` = `immobili`.`id_account_editor`))) left join `anagrafica` `agenti` on((`account`.`id_anagrafica` = `agenti`.`id`))) left join `attivita` on(((`attivita`.`id_immobile` = `immobili`.`id`) and isnull(`attivita`.`timestamp_scadenza`)))) left join `attivita` `contatti` on(((`contatti`.`id_immobile` = `immobili`.`id`) and isnull(`contatti`.`timestamp_scadenza`) and (`contatti`.`id_tipologia` = 3)))) left join `incarichi_immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `condizioni_immobili` on((`condizioni_immobili`.`id` = `immobili`.`id_condizione`))) left join `disponibilita_immobili` on((`disponibilita_immobili`.`id` = `immobili`.`id_disponibilita`))) group by `immobili`.`id`,`incarichi_immobili`.`id_immobile` order by concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),''),if((`immobili`.`scala` is not null),concat(' - scala ',`immobili`.`scala`),''),if((`immobili`.`piano` is not null),concat(' - piano ',`immobili`.`piano`),''),if((`immobili`.`interno` is not null),concat(' - interno ',`immobili`.`interno`),''),if((`immobili`.`campanello` is not null),concat(' | campanello ',`immobili`.`campanello`),'')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `immobiliare_censimento_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `immobiliare_censimento_view`*/;
-/*!50001 DROP VIEW IF EXISTS `immobiliare_censimento_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `immobiliare_censimento_view` AS select `indirizzi`.`indirizzo` AS `indirizzo`,`indirizzi`.`civico` AS `civico`,`indirizzi`.`cap` AS `cap`,`indirizzi`.`localita` AS `localita`,`indirizzi`.`id_comune` AS `id_comune`,`comuni`.`nome` AS `comune`,`provincie`.`nome` AS `provincia`,`immobili`.`id` AS `id`,`immobili`.`id_indirizzo` AS `id_indirizzo`,`immobili`.`piano` AS `piano`,`immobili`.`scala` AS `scala`,`immobili`.`interno` AS `interno`,date_format(from_unixtime(`immobili`.`timestamp_inserimento`),'%Y-%m-%d') AS `data_inserimento`,dayofmonth(from_unixtime(`immobili`.`timestamp_inserimento`)) AS `giorno`,month(from_unixtime(`immobili`.`timestamp_inserimento`)) AS `mese`,year(from_unixtime(`immobili`.`timestamp_inserimento`)) AS `anno`,count(`immagini`.`id_immobile`) AS `immagini`,if((count(`immagini`.`id_immobile`) = 0),'1',NULL) AS `no_immagini`,count(`contenuti`.`id_immobile`) AS `testi`,if((count(`contenuti`.`id_immobile`) = 0),'1',NULL) AS `no_testi`,concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`cap` like ''))),concat(', ',`indirizzi`.`cap`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),'')) AS `__label__`,`indirizzi`.`id_agente` AS `id_agente`,coalesce(`agenti`.`soprannome`,`agenti`.`denominazione`,concat_ws(' ',coalesce(`agenti`.`cognome`,''),coalesce(`agenti`.`nome`,'')),'') AS `agente`,`immobili`.`id_account_inserimento` AS `id_account_inserimento`,`immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`immobili`.`id_account_editor` AS `id_account_editor` from (((((((`indirizzi` join `immobili` on((`indirizzi`.`id` = `immobili`.`id_indirizzo`))) left join `account` on((`account`.`id` = `immobili`.`id_account_editor`))) left join `anagrafica` `agenti` on((`account`.`id_anagrafica` = `agenti`.`id`))) left join `comuni` on((`comuni`.`id` = `indirizzi`.`id_comune`))) left join `provincie` on((`provincie`.`id` = `comuni`.`id_provincia`))) left join `immagini` on((`immagini`.`id_immobile` = `immobili`.`id`))) left join `contenuti` on((`contenuti`.`id_immobile` = `immobili`.`id`))) group by `immobili`.`id` union select `indirizzi`.`indirizzo` AS `indirizzo`,`indirizzi`.`civico` AS `civico`,`indirizzi`.`cap` AS `cap`,`indirizzi`.`localita` AS `localita`,NULL AS `NULL`,`comuni`.`nome` AS `comune`,`provincie`.`nome` AS `provincia`,NULL AS `NULL`,`indirizzi`.`id` AS `id_indirizzo`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,NULL AS `NULL`,`indirizzi`.`id_account_inserimento` AS `id_account_inserimento`,`indirizzi`.`timestamp_inserimento` AS `timestamp_inserimento`,`indirizzi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`indirizzi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`indirizzi`.`id_account_editor` AS `id_account_editor` from ((`indirizzi` left join `comuni` on((`comuni`.`id` = `indirizzi`.`id_comune`))) left join `provincie` on((`provincie`.`id` = `comuni`.`id_provincia`))) order by `id_indirizzo` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `incarichi_immobili_aperti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `incarichi_immobili_aperti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `incarichi_immobili_aperti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `incarichi_immobili_aperti_view` AS select `incarichi_immobili`.`id` AS `id`,`incarichi_immobili`.`riferimento` AS `riferimento`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,`incarichi_immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`incarichi_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_agenzia` AS `id_agenzia`,`incarichi_immobili`.`id_agente` AS `id_agente`,`incarichi_immobili`.`id_tipologia` AS `id_tipologia`,`incarichi_immobili`.`data_notizia` AS `data_notizia`,`incarichi_immobili`.`data_sviluppo` AS `data_sviluppo`,`incarichi_immobili`.`data_valutazione` AS `data_valutazione`,`incarichi_immobili`.`data_inizio` AS `data_inizio`,`incarichi_immobili`.`data_fine` AS `data_fine`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo_richiesto`,`incarichi_immobili`.`prezzo_mq` AS `prezzo_mq`,`incarichi_immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`incarichi_immobili`.`prezzo_incarico` AS `prezzo_incarico`,`incarichi_immobili`.`percentuale_intervallo` AS `percentuale_intervallo`,`incarichi_immobili`.`prezzo_prefisso` AS `prezzo_prefisso`,`incarichi_immobili`.`prezzo` AS `prezzo`,`incarichi_immobili`.`prezzo_suffisso` AS `prezzo_suffisso`,`incarichi_immobili`.`prezzo_sostituzione` AS `prezzo_sostituzione`,`incarichi_immobili`.`note` AS `note`,`incarichi_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`incarichi_immobili`.`id_esito_incarico` AS `id_esito_incarico`,`incarichi_immobili`.`id_esito_notizia` AS `id_esito_notizia`,`incarichi_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incarichi_immobili`.`note_archiviazione` AS `note_archiviazione`,`incarichi_immobili`.`id_account_editor` AS `id_account_editor`,`incarichi_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incarichi_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incarichi_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incarichi_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),'')) AS `indirizzo`,`immobili`.`scala` AS `scala`,`immobili`.`piano` AS `piano`,`immobili`.`interno` AS `interno`,`tipologie_incarichi_immobili`.`nome` AS `tipologia`,dayofmonth(`incarichi_immobili`.`data_fine`) AS `giorno`,month(`incarichi_immobili`.`data_fine`) AS `mese`,year(`incarichi_immobili`.`data_fine`) AS `anno`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,coalesce(`agenti`.`soprannome`,`agenti`.`denominazione`,concat_ws(' ',coalesce(`agenti`.`cognome`,''),coalesce(`agenti`.`nome`,'')),'') AS `agente`,concat('incarico ',`incarichi_immobili`.`riferimento`) AS `__label__` from (((((((`incarichi_immobili` left join `immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `indirizzi` on((`immobili`.`id_indirizzo` = `indirizzi`.`id`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_incarichi_immobili` on((`incarichi_immobili`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `anagrafica` on((`incarichi_immobili`.`id_cliente` = `anagrafica`.`id`))) left join `account` on((`account`.`id` = `incarichi_immobili`.`id_account_editor`))) left join `anagrafica` `agenti` on((`account`.`id_anagrafica` = `agenti`.`id`))) where ((`incarichi_immobili`.`data_inizio` is not null) and isnull(`incarichi_immobili`.`timestamp_archiviazione`)) order by concat('incarico ',`incarichi_immobili`.`riferimento`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `incarichi_immobili_archivio_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `incarichi_immobili_archivio_view`*/;
-/*!50001 DROP VIEW IF EXISTS `incarichi_immobili_archivio_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `incarichi_immobili_archivio_view` AS select `incarichi_immobili`.`id` AS `id`,`incarichi_immobili`.`riferimento` AS `riferimento`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,`incarichi_immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`incarichi_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_agenzia` AS `id_agenzia`,`incarichi_immobili`.`id_agente` AS `id_agente`,`incarichi_immobili`.`id_tipologia` AS `id_tipologia`,`incarichi_immobili`.`data_notizia` AS `data_notizia`,`incarichi_immobili`.`data_sviluppo` AS `data_sviluppo`,`incarichi_immobili`.`data_valutazione` AS `data_valutazione`,`incarichi_immobili`.`data_inizio` AS `data_inizio`,`incarichi_immobili`.`data_fine` AS `data_fine`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo_richiesto`,`incarichi_immobili`.`prezzo_mq` AS `prezzo_mq`,`incarichi_immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`incarichi_immobili`.`prezzo_incarico` AS `prezzo_incarico`,`incarichi_immobili`.`percentuale_intervallo` AS `percentuale_intervallo`,`incarichi_immobili`.`prezzo_prefisso` AS `prezzo_prefisso`,`incarichi_immobili`.`prezzo` AS `prezzo`,`incarichi_immobili`.`prezzo_suffisso` AS `prezzo_suffisso`,`incarichi_immobili`.`prezzo_sostituzione` AS `prezzo_sostituzione`,`incarichi_immobili`.`note` AS `note`,`incarichi_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`incarichi_immobili`.`id_esito_incarico` AS `id_esito_incarico`,`incarichi_immobili`.`id_esito_notizia` AS `id_esito_notizia`,`incarichi_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incarichi_immobili`.`note_archiviazione` AS `note_archiviazione`,`incarichi_immobili`.`id_account_editor` AS `id_account_editor`,`incarichi_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incarichi_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incarichi_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incarichi_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),'')) AS `indirizzo`,`immobili`.`scala` AS `scala`,`immobili`.`piano` AS `piano`,`immobili`.`interno` AS `interno`,`tipologie_incarichi_immobili`.`nome` AS `tipologia`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,concat('incarico archiviato ',`incarichi_immobili`.`riferimento`) AS `__label__` from (((((`incarichi_immobili` left join `immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `indirizzi` on((`immobili`.`id_indirizzo` = `indirizzi`.`id`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_incarichi_immobili` on((`incarichi_immobili`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `anagrafica` on((`incarichi_immobili`.`id_cliente` = `anagrafica`.`id`))) where ((`incarichi_immobili`.`data_inizio` is not null) and (`incarichi_immobili`.`timestamp_archiviazione` is not null)) order by concat('incarico archiviato ',`incarichi_immobili`.`riferimento`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `incarichi_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `incarichi_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `incarichi_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `incarichi_immobili_view` AS select `incarichi_immobili`.`id` AS `id`,`incarichi_immobili`.`riferimento` AS `riferimento`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,`incarichi_immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`incarichi_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_agenzia` AS `id_agenzia`,`incarichi_immobili`.`id_agente` AS `id_agente`,`incarichi_immobili`.`id_tipologia` AS `id_tipologia`,`incarichi_immobili`.`data_notizia` AS `data_notizia`,`incarichi_immobili`.`data_sviluppo` AS `data_sviluppo`,`incarichi_immobili`.`data_valutazione` AS `data_valutazione`,`incarichi_immobili`.`data_inizio` AS `data_inizio`,`incarichi_immobili`.`data_fine` AS `data_fine`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo_richiesto`,`incarichi_immobili`.`prezzo_mq` AS `prezzo_mq`,`incarichi_immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`incarichi_immobili`.`prezzo_incarico` AS `prezzo_incarico`,`incarichi_immobili`.`percentuale_intervallo` AS `percentuale_intervallo`,`incarichi_immobili`.`prezzo_prefisso` AS `prezzo_prefisso`,`incarichi_immobili`.`prezzo` AS `prezzo`,`incarichi_immobili`.`prezzo_suffisso` AS `prezzo_suffisso`,`incarichi_immobili`.`prezzo_sostituzione` AS `prezzo_sostituzione`,`incarichi_immobili`.`note` AS `note`,`incarichi_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`incarichi_immobili`.`id_esito_incarico` AS `id_esito_incarico`,`incarichi_immobili`.`id_esito_notizia` AS `id_esito_notizia`,`incarichi_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incarichi_immobili`.`note_archiviazione` AS `note_archiviazione`,`incarichi_immobili`.`id_account_editor` AS `id_account_editor`,`incarichi_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incarichi_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incarichi_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incarichi_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),'')) AS `indirizzo`,`immobili`.`scala` AS `scala`,`immobili`.`piano` AS `piano`,`immobili`.`interno` AS `interno`,`tipologie_incarichi_immobili`.`nome` AS `tipologia`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,coalesce(`agenti`.`soprannome`,`agenti`.`denominazione`,concat_ws(' ',coalesce(`agenti`.`cognome`,''),coalesce(`agenti`.`nome`,'')),'') AS `agente`,concat(coalesce(`incarichi_immobili`.`riferimento`,convert(concat('senza riferimento n. ',`incarichi_immobili`.`id`) using utf8))) AS `__label__` from (((((((`incarichi_immobili` left join `immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `indirizzi` on((`immobili`.`id_indirizzo` = `indirizzi`.`id`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_incarichi_immobili` on((`incarichi_immobili`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `anagrafica` on((`incarichi_immobili`.`id_cliente` = `anagrafica`.`id`))) left join `account` on((`account`.`id` = `incarichi_immobili`.`id_account_editor`))) left join `anagrafica` `agenti` on((`account`.`id_anagrafica` = `agenti`.`id`))) order by concat(coalesce(`incarichi_immobili`.`riferimento`,convert(concat('senza riferimento n. ',`incarichi_immobili`.`id`) using utf8))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `incroci_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `incroci_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `incroci_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `incroci_immobili_view` AS select `incroci_immobili`.`id` AS `id`,`incroci_immobili`.`id_incarico` AS `id_incarico`,`incroci_immobili`.`id_richiesta` AS `id_richiesta`,`incroci_immobili`.`note_incrocio` AS `note_incrocio`,`incroci_immobili`.`id_esito` AS `id_esito`,`incroci_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incroci_immobili`.`note_archiviazione` AS `note_archiviazione`,`incroci_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incroci_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incroci_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incroci_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`incarichi_immobili`.`riferimento` AS `riferimento`,`richieste_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),''),if((`immobili`.`scala` is not null),concat(' - scala ',`immobili`.`scala`),''),if((`immobili`.`piano` is not null),concat(' - piano ',`immobili`.`piano`),''),if((`immobili`.`interno` is not null),concat(' - interno ',`immobili`.`interno`),'')) AS `immobile`,`tipologie_immobili`.`nome` AS `tipologia_immobile`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,`zone`.`nome` AS `zona`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo`,`tipologie_incarichi_immobili`.`nome` AS `tipo_incarico`,`tipologie_edifici`.`nome` AS `tipologia_edificio`,group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,concat('incarico ',`incarichi_immobili`.`riferimento`,' - richiesta #',`richieste_immobili`.`id`) AS `__label__` from ((((((((((((`incroci_immobili` left join `incarichi_immobili` on((`incarichi_immobili`.`id` = `incroci_immobili`.`id_incarico`))) left join `richieste_immobili` on((`richieste_immobili`.`id` = `incroci_immobili`.`id_richiesta`))) left join `anagrafica` on((`anagrafica`.`id` = `richieste_immobili`.`id_cliente`))) left join `telefoni` on((`telefoni`.`id_anagrafica` = `anagrafica`.`id`))) left join `mail` on((`mail`.`id_anagrafica` = `anagrafica`.`id`))) left join `immobili` on((`immobili`.`id` = `incarichi_immobili`.`id_immobile`))) left join `indirizzi` on((`indirizzi`.`id` = `immobili`.`id_indirizzo`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_edifici` on((`tipologie_edifici`.`id` = `indirizzi`.`id_tipologia_edificio`))) left join `tipologie_immobili` on((`tipologie_immobili`.`id` = `immobili`.`id_tipologia`))) left join `tipologie_incarichi_immobili` on((`tipologie_incarichi_immobili`.`id` = `incarichi_immobili`.`id_tipologia`))) left join `zone` on((`zone`.`id` = `indirizzi`.`id_zona`))) group by `incroci_immobili`.`id` order by concat('incarico ',`incarichi_immobili`.`riferimento`,' - richiesta #',`richieste_immobili`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `indirizzi_caratteristiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `indirizzi_caratteristiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `indirizzi_caratteristiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `indirizzi_caratteristiche_view` AS select `indirizzi_caratteristiche`.`id` AS `id`,`indirizzi_caratteristiche`.`id_indirizzo` AS `id_indirizzo`,`indirizzi_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`indirizzi_caratteristiche`.`specifiche` AS `specifiche`,`indirizzi_caratteristiche`.`specifiche` AS `__label__` from `indirizzi_caratteristiche` order by `indirizzi_caratteristiche`.`specifiche` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `indirizzi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `indirizzi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `indirizzi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `indirizzi_view` AS select `indirizzi`.`id` AS `id`,`indirizzi`.`id_anagrafica` AS `id_anagrafica`,`indirizzi`.`id_tipologia` AS `id_tipologia`,`indirizzi`.`id_tipologia_edificio` AS `id_tipologia_edificio`,`indirizzi`.`id_condizione` AS `id_condizione`,`indirizzi`.`id_agente` AS `id_agente`,`indirizzi`.`piani` AS `piani`,`indirizzi`.`descrizione` AS `descrizione`,`indirizzi`.`indirizzo` AS `indirizzo`,`indirizzi`.`civico` AS `civico`,`indirizzi`.`cap` AS `cap`,`indirizzi`.`localita` AS `localita`,`indirizzi`.`id_comune` AS `id_comune`,`indirizzi`.`latitudine` AS `latitudine`,`indirizzi`.`longitudine` AS `longitudine`,`indirizzi`.`timestamp_geocode` AS `timestamp_geocode`,`indirizzi`.`id_zona` AS `id_zona`,`indirizzi`.`note` AS `note`,`indirizzi`.`id_account_editor` AS `id_account_editor`,`indirizzi`.`id_account_inserimento` AS `id_account_inserimento`,`indirizzi`.`timestamp_inserimento` AS `timestamp_inserimento`,`indirizzi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`indirizzi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`comuni`.`id_provincia` AS `id_provincia`,`provincie`.`sigla` AS `sigla`,`comuni`.`nome` AS `comune`,`stati`.`iso31661alpha2` AS `sigla_stato`,`tipologie_indirizzi`.`se_sede` AS `se_sede`,date_format(from_unixtime(`indirizzi`.`timestamp_inserimento`),'%Y-%m-%d') AS `data_inserimento`,dayofmonth(from_unixtime(`indirizzi`.`timestamp_inserimento`)) AS `giorno`,month(from_unixtime(`indirizzi`.`timestamp_inserimento`)) AS `mese`,year(from_unixtime(`indirizzi`.`timestamp_inserimento`)) AS `anno`,coalesce(`agenti`.`soprannome`,`agenti`.`denominazione`,concat_ws(' ',coalesce(`agenti`.`cognome`,''),coalesce(`agenti`.`nome`,'')),'') AS `agente`,concat(if((not((`indirizzi`.`descrizione` like ''))),concat(`indirizzi`.`descrizione`,' - '),''),`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`cap` like ''))),concat(', ',`indirizzi`.`cap`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' ',`comuni`.`nome`,' (',`provincie`.`sigla`,')'),'')) AS `__label__`,count(`immagini`.`id_indirizzo`) AS `immagini`,if((count(`immagini`.`id_indirizzo`) = 0),1,NULL) AS `no_immagini`,count(`contenuti`.`id_indirizzo`) AS `testi`,if((count(`contenuti`.`id_indirizzo`) = 0),1,NULL) AS `no_testi` from (((((((((`indirizzi` left join `comuni` on((`comuni`.`id` = `indirizzi`.`id_comune`))) left join `provincie` on((`provincie`.`id` = `comuni`.`id_provincia`))) left join `regioni` on((`regioni`.`id` = `provincie`.`id_regione`))) left join `stati` on((`stati`.`id` = `regioni`.`id_stato`))) left join `account` on((`account`.`id` = `indirizzi`.`id_account_editor`))) left join `anagrafica` `agenti` on((`account`.`id_anagrafica` = `agenti`.`id`))) left join `immagini` on((`immagini`.`id_indirizzo` = `indirizzi`.`id`))) left join `contenuti` on((`contenuti`.`id_indirizzo` = `indirizzi`.`id`))) left join `tipologie_indirizzi` on((`tipologie_indirizzi`.`id` = `indirizzi`.`id_tipologia`))) group by `indirizzi`.`id` order by concat(if((not((`indirizzi`.`descrizione` like ''))),concat(`indirizzi`.`descrizione`,' - '),''),`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`cap` like ''))),concat(', ',`indirizzi`.`cap`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' ',`comuni`.`nome`,' (',`provincie`.`sigla`,')'),'')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ingombri_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ingombri_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ingombri_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ingombri_view` AS select `ingombri`.`id` AS `id`,`ingombri`.`nome` AS `nome`,`ingombri`.`min` AS `min`,`ingombri`.`max` AS `max`,`ingombri`.`nome` AS `__label__` from `ingombri` order by `ingombri`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `iva_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `iva_view`*/;
-/*!50001 DROP VIEW IF EXISTS `iva_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `iva_view` AS select `iva`.`id` AS `id`,`iva`.`aliquota` AS `aliquota`,`iva`.`nome` AS `nome`,`iva`.`descrizione` AS `descrizione`,`iva`.`codice` AS `codice`,`iva`.`se_ecommerce` AS `se_ecommerce`,`iva`.`nome` AS `__label__` from `iva` order by `iva`.`aliquota` desc */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `job_tari_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `job_tari_view`*/;
-/*!50001 DROP VIEW IF EXISTS `job_tari_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `job_tari_view` AS select `job`.`id` AS `id`,`job`.`nome` AS `nome`,`job`.`job` AS `job`,`job`.`timestamp_apertura` AS `timestamp_apertura`,`job`.`totale` AS `totale`,`job`.`corrente` AS `corrente`,`job`.`iterazioni` AS `iterazioni`,`job`.`workspace` AS `workspace`,`job`.`timestamp_esecuzione` AS `timestamp_esecuzione`,`job`.`timestamp_completamento` AS `timestamp_completamento`,`job`.`id_account_inserimento` AS `id_account_inserimento`,`job`.`timestamp_inserimento` AS `timestamp_inserimento`,`job`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`job`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`job`.`timestamp_inserimento`),'%Y-%m-%d %H:%i') AS `data_ora_inserimento`,date_format(from_unixtime(`job`.`timestamp_completamento`),'%Y-%m-%d %H:%i') AS `data_ora_completamento`,`job`.`nome` AS `__label__` from `job` where (`job`.`job` like '%_src/_api/_job/_tari.%') order by `job`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `job_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `job_view`*/;
-/*!50001 DROP VIEW IF EXISTS `job_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `job_view` AS select `job`.`id` AS `id`,`job`.`nome` AS `nome`,`job`.`job` AS `job`,`job`.`timestamp_apertura` AS `timestamp_apertura`,`job`.`totale` AS `totale`,`job`.`corrente` AS `corrente`,`job`.`iterazioni` AS `iterazioni`,`job`.`delay` AS `delay`,`job`.`workspace` AS `workspace`,`job`.`token` AS `token`,`job`.`timestamp_esecuzione` AS `timestamp_esecuzione`,`job`.`timestamp_completamento` AS `timestamp_completamento`,`job`.`id_account_inserimento` AS `id_account_inserimento`,`job`.`timestamp_inserimento` AS `timestamp_inserimento`,`job`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`job`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,if((`job`.`corrente` is not null),concat_ws(' ',`job`.`corrente`,' di ',`job`.`totale`),'-') AS `avanzamento`,date_format(from_unixtime(`job`.`timestamp_completamento`),'%Y-%m-%d %H:%i') AS `data_ora_completamento`,`job`.`nome` AS `__label__` from `job` order by `job`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `lingue_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `lingue_view`*/;
-/*!50001 DROP VIEW IF EXISTS `lingue_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `lingue_view` AS select `lingue`.`id` AS `id`,`lingue`.`nome` AS `nome`,`lingue`.`note` AS `note`,`lingue`.`iso6391alpha2` AS `iso6391alpha2`,`lingue`.`iso6393alpha3` AS `iso6393alpha3`,`lingue`.`ietf` AS `ietf`,group_concat(`stati`.`iso31661alpha3` separator ',') AS `stati`,`lingue`.`note` AS `__label__` from ((`lingue` left join `stati_lingue` on((`stati_lingue`.`id_lingua` = `lingue`.`id`))) left join `stati` on((`stati`.`id` = `stati_lingue`.`id_stato`))) group by `lingue`.`id` order by `lingue`.`note` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `liste_mailing_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `liste_mailing_view`*/;
-/*!50001 DROP VIEW IF EXISTS `liste_mailing_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `liste_mailing_view` AS select `liste_mailing`.`id` AS `id`,`liste_mailing`.`nome` AS `nome`,`liste_mailing`.`descrizione` AS `descrizione`,`liste_mailing`.`id_account_inserimento` AS `id_account_inserimento`,`liste_mailing`.`timestamp_inserimento` AS `timestamp_inserimento`,`liste_mailing`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`liste_mailing`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(count(`mail_liste_mailing`.`id`),0) AS `iscritti`,concat(`liste_mailing`.`nome`,' (',coalesce(count(`mail_liste_mailing`.`id`),0),' iscritti)') AS `__label__` from (`liste_mailing` left join `mail_liste_mailing` on((`mail_liste_mailing`.`id_lista` = `liste_mailing`.`id`))) group by `liste_mailing`.`id` order by concat(`liste_mailing`.`nome`,' (',coalesce(count(`mail_liste_mailing`.`id`),0),' iscritti)') */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `listini_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `listini_view`*/;
-/*!50001 DROP VIEW IF EXISTS `listini_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `listini_view` AS select `listini`.`id` AS `id`,`listini`.`nome` AS `nome`,`listini`.`id_valuta` AS `id_valuta`,`listini`.`nome` AS `__label__` from `listini` order by `listini`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `luoghi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `luoghi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `luoghi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `luoghi_view` AS select `luoghi`.`id` AS `id`,`luoghi`.`id_genitore` AS `id_genitore`,`luoghi`.`nome` AS `nome`,`luoghi`.`id_account_inserimento` AS `id_account_inserimento`,`luoghi`.`timestamp_inserimento` AS `timestamp_inserimento`,`luoghi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`luoghi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`luoghi`.`nome` AS `__label__` from `luoghi` order by `luoghi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `macro_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `macro_view`*/;
-/*!50001 DROP VIEW IF EXISTS `macro_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `macro_view` AS select `macro`.`id` AS `id`,`macro`.`id_pagina` AS `id_pagina`,`macro`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`macro`.`id_prodotto` AS `id_prodotto`,`macro`.`id_articolo` AS `id_articolo`,`macro`.`macro` AS `macro`,`macro`.`macro` AS `__label__` from `macro` order by `macro`.`macro` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `mail_out_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `mail_out_view`*/;
-/*!50001 DROP VIEW IF EXISTS `mail_out_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mail_out_view` AS select `mail_out`.`id` AS `id`,`mail_out`.`timestamp_composizione` AS `timestamp_composizione`,`mail_out`.`timestamp_invio` AS `timestamp_invio`,`mail_out`.`server` AS `server`,`mail_out`.`mittente` AS `mittente`,`mail_out`.`destinatari` AS `destinatari`,`mail_out`.`destinatari_cc` AS `destinatari_cc`,`mail_out`.`destinatari_bcc` AS `destinatari_bcc`,`mail_out`.`oggetto` AS `oggetto`,`mail_out`.`corpo` AS `corpo`,`mail_out`.`allegati` AS `allegati`,`mail_out`.`headers` AS `headers`,`mail_out`.`host` AS `host`,`mail_out`.`port` AS `port`,`mail_out`.`user` AS `user`,`mail_out`.`password` AS `password`,`mail_out`.`id_newsletter` AS `id_newsletter`,`mail_out`.`id_email` AS `id_email`,`mail_out`.`tentativi` AS `tentativi`,`mail_out`.`token` AS `token`,`mail_out`.`ordine` AS `ordine`,`mail_out`.`id_account_inserimento` AS `id_account_inserimento`,`mail_out`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_out`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_out`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_out`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_out`.`oggetto` AS `__label__` from `mail_out` order by `mail_out`.`timestamp_invio` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `mail_sent_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `mail_sent_view`*/;
-/*!50001 DROP VIEW IF EXISTS `mail_sent_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mail_sent_view` AS select `mail_sent`.`id` AS `id`,`mail_sent`.`timestamp_composizione` AS `timestamp_composizione`,`mail_sent`.`timestamp_invio` AS `timestamp_invio`,`mail_sent`.`server` AS `server`,`mail_sent`.`mittente` AS `mittente`,`mail_sent`.`destinatari` AS `destinatari`,`mail_sent`.`destinatari_cc` AS `destinatari_cc`,`mail_sent`.`destinatari_bcc` AS `destinatari_bcc`,`mail_sent`.`oggetto` AS `oggetto`,`mail_sent`.`corpo` AS `corpo`,`mail_sent`.`allegati` AS `allegati`,`mail_sent`.`headers` AS `headers`,`mail_sent`.`host` AS `host`,`mail_sent`.`port` AS `port`,`mail_sent`.`user` AS `user`,`mail_sent`.`password` AS `password`,`mail_sent`.`id_newsletter` AS `id_newsletter`,`mail_sent`.`id_email` AS `id_email`,`mail_sent`.`tentativi` AS `tentativi`,`mail_sent`.`token` AS `token`,`mail_sent`.`ordine` AS `ordine`,`mail_sent`.`id_account_inserimento` AS `id_account_inserimento`,`mail_sent`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail_sent`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail_sent`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`mail_sent`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`mail_sent`.`oggetto` AS `__label__` from `mail_sent` order by `mail_sent`.`timestamp_invio` desc */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `mail_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `mail_view`*/;
-/*!50001 DROP VIEW IF EXISTS `mail_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mail_view` AS select `mail`.`id` AS `id`,`mail`.`id_anagrafica` AS `id_anagrafica`,`mail`.`se_notifiche` AS `se_notifiche`,`mail`.`se_pec` AS `se_pec`,`mail`.`indirizzo` AS `indirizzo`,`mail`.`descrizione` AS `descrizione`,`mail`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`mail`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mail`.`timestamp_inserimento` AS `timestamp_inserimento`,`mail`.`id_account_inserimento` AS `id_account_inserimento`,`__etichette_anagrafica__`.`__label__` AS `anagrafica`,`mail`.`indirizzo` AS `__label__` from (`mail` left join `__etichette_anagrafica__` on((`__etichette_anagrafica__`.`id` = `mail`.`id_anagrafica`))) order by `mail`.`indirizzo` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `mailing_liste_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `mailing_liste_view`*/;
-/*!50001 DROP VIEW IF EXISTS `mailing_liste_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mailing_liste_view` AS select `mailing_liste`.`id` AS `id`,`mailing_liste`.`id_mailing` AS `id_mailing`,`mailing_liste`.`id_lista` AS `id_lista`,`mailing_liste`.`id` AS `__label__` from `mailing_liste` order by `mailing_liste`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `mailing_mail_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `mailing_mail_view`*/;
-/*!50001 DROP VIEW IF EXISTS `mailing_mail_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mailing_mail_view` AS select `mailing_mail`.`id` AS `id`,`mailing_mail`.`id_mail` AS `id_mail`,`mailing_mail`.`id_mailing` AS `id_mailing`,`mailing_mail`.`id_mail_coda` AS `id_mail_coda`,`mailing_mail`.`id` AS `__label__` from `mailing_mail` order by `mailing_mail`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `mailing_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `mailing_view`*/;
-/*!50001 DROP VIEW IF EXISTS `mailing_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mailing_view` AS select `mailing`.`id` AS `id`,`mailing`.`nome` AS `nome`,`mailing`.`timestamp_invio` AS `timestamp_invio`,`mailing`.`note` AS `note`,`mailing`.`id_job` AS `id_job`,`mailing`.`id_account_inserimento` AS `id_account_inserimento`,`mailing`.`timestamp_inserimento` AS `timestamp_inserimento`,`mailing`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`mailing`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`mailing`.`nome` AS `__label__` from `mailing` order by `mailing`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `marchi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `marchi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `marchi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `marchi_view` AS select `marchi`.`id` AS `id`,`marchi`.`nome` AS `nome`,`marchi`.`id_account_inserimento` AS `id_account_inserimento`,`marchi`.`timestamp_inserimento` AS `timestamp_inserimento`,`marchi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`marchi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`marchi`.`nome` AS `__label__` from `marchi` order by `marchi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `mastri_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `mastri_view`*/;
-/*!50001 DROP VIEW IF EXISTS `mastri_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `mastri_view` AS select `mastri`.`id` AS `id`,`mastri`.`nome` AS `nome`,`mastri`.`se_commerciale` AS `se_commerciale`,`mastri`.`se_produzione` AS `se_produzione`,`mastri`.`se_amministrazione` AS `se_amministrazione`,`mastri`.`nome` AS `__label__` from `mastri` order by `mastri`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `matricole_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `matricole_view`*/;
-/*!50001 DROP VIEW IF EXISTS `matricole_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `matricole_view` AS select `matricole`.`id` AS `id`,`matricole`.`nome` AS `nome`,`matricole`.`testo` AS `testo`,`matricole`.`id_account_inserimento` AS `id_account_inserimento`,`matricole`.`timestamp_inserimento` AS `timestamp_inserimento`,`matricole`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`matricole`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(convert(lpad(`matricole`.`id`,11,'0') using utf8),' ',`matricole`.`nome`) AS `__label__` from `matricole` order by concat(convert(lpad(`matricole`.`id`,11,'0') using utf8),' ',`matricole`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `menu_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `menu_view`*/;
-/*!50001 DROP VIEW IF EXISTS `menu_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `menu_view` AS select `menu`.`id` AS `id`,`menu`.`id_pagina` AS `id_pagina`,`menu`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`menu`.`id_prodotto` AS `id_prodotto`,`menu`.`id_articolo` AS `id_articolo`,`menu`.`id_lingua` AS `id_lingua`,`menu`.`menu` AS `menu`,`menu`.`nome` AS `nome`,`menu`.`target` AS `target`,`menu`.`ordine` AS `ordine`,`menu`.`sottopagine` AS `sottopagine`,`menu`.`nome` AS `__label__` from `menu` order by `menu`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `metadati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `metadati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `metadati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `metadati_view` AS select `metadati`.`id` AS `id`,`metadati`.`id_anagrafica` AS `id_anagrafica`,`metadati`.`id_prodotto` AS `id_prodotto`,`metadati`.`id_articolo` AS `id_articolo`,`metadati`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`metadati`.`id_risorsa` AS `id_risorsa`,`metadati`.`id_categoria_risorse` AS `id_categoria_risorse`,`metadati`.`id_immagine` AS `id_immagine`,`metadati`.`id_video` AS `id_video`,`metadati`.`id_file` AS `id_file`,`metadati`.`id_pagina` AS `id_pagina`,`metadati`.`id_evento` AS `id_evento`,`metadati`.`id_categoria_eventi` AS `id_categoria_eventi`,`metadati`.`id_notizia` AS `id_notizia`,`metadati`.`id_categoria_notizie` AS `id_categoria_notizie`,`metadati`.`id_mailing` AS `id_mailing`,`metadati`.`id_lingua` AS `id_lingua`,`metadati`.`nome` AS `nome`,`metadati`.`testo` AS `testo`,`lingue`.`ietf` AS `ietf`,concat(`metadati`.`nome`,':',`metadati`.`testo`) AS `__label__` from (`metadati` left join `lingue` on((`lingue`.`id` = `metadati`.`id_lingua`))) order by concat(`metadati`.`nome`,':',`metadati`.`testo`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `modalita_pagamento_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `modalita_pagamento_view`*/;
-/*!50001 DROP VIEW IF EXISTS `modalita_pagamento_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `modalita_pagamento_view` AS select `modalita_pagamento`.`id` AS `id`,`modalita_pagamento`.`nome` AS `nome`,`modalita_pagamento`.`suggerimento` AS `suggerimento`,`modalita_pagamento`.`ordine` AS `ordine`,`modalita_pagamento`.`importo_min` AS `importo_min`,`modalita_pagamento`.`importo_max` AS `importo_max`,`modalita_pagamento`.`percentuale_acconto` AS `percentuale_acconto`,`modalita_pagamento`.`se_contanti` AS `se_contanti`,`modalita_pagamento`.`provider` AS `provider`,`modalita_pagamento`.`codice` AS `codice`,`modalita_pagamento`.`nome` AS `__label__` from `modalita_pagamento` order by `modalita_pagamento`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `modalita_spedizione_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `modalita_spedizione_view`*/;
-/*!50001 DROP VIEW IF EXISTS `modalita_spedizione_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `modalita_spedizione_view` AS select `modalita_spedizione`.`id` AS `id`,`modalita_spedizione`.`nome` AS `nome`,`modalita_spedizione`.`nome` AS `__label__` from `modalita_spedizione` order by `modalita_spedizione`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `motivazioni_tari_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `motivazioni_tari_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `motivazioni_tari_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `motivazioni_tari_anagrafica_view` AS select `motivazioni_tari_anagrafica`.`id` AS `id`,`motivazioni_tari_anagrafica`.`id_tari_anagrafica` AS `id_tari_anagrafica`,`motivazioni_tari_anagrafica`.`id_motivazione` AS `id_motivazione`,`motivazioni_tari_anagrafica`.`riga_provenienza` AS `riga_provenienza`,`motivazioni_tari_anagrafica`.`dettagli_provenienza` AS `dettagli_provenienza`,`motivazioni_tari_anagrafica`.`path` AS `path`,`motivazioni_tari_anagrafica`.`riga` AS `riga`,concat(`motivazioni_tari_anagrafica`.`path`,' riga ',`motivazioni_tari_anagrafica`.`path`) AS `__label__` from `motivazioni_tari_anagrafica` order by concat(`motivazioni_tari_anagrafica`.`path`,' riga ',`motivazioni_tari_anagrafica`.`path`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `note_pro_forma_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `note_pro_forma_view`*/;
-/*!50001 DROP VIEW IF EXISTS `note_pro_forma_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `note_pro_forma_view` AS select `documenti_amministrativi`.`id` AS `id`,`documenti_amministrativi`.`id_tipologia` AS `id_tipologia`,`documenti_amministrativi`.`numero` AS `numero`,`documenti_amministrativi`.`revisione` AS `revisione`,`documenti_amministrativi`.`sezione` AS `sezione`,`documenti_amministrativi`.`data` AS `data`,`documenti_amministrativi`.`progressivo_invio` AS `progressivo_invio`,`documenti_amministrativi`.`id_emittente` AS `id_emittente`,`documenti_amministrativi`.`id_sede_emittente` AS `id_sede_emittente`,`documenti_amministrativi`.`id_referente_emittente` AS `id_referente_emittente`,`documenti_amministrativi`.`id_agente_emittente` AS `id_agente_emittente`,`documenti_amministrativi`.`id_cliente` AS `id_cliente`,`documenti_amministrativi`.`id_esigibilita` AS `id_esigibilita`,`documenti_amministrativi`.`id_sede_cliente` AS `id_sede_cliente`,`documenti_amministrativi`.`id_referente_cliente` AS `id_referente_cliente`,`documenti_amministrativi`.`id_fornitore` AS `id_fornitore`,`documenti_amministrativi`.`nome` AS `nome`,`documenti_amministrativi`.`causale` AS `causale`,`documenti_amministrativi`.`note_cliente` AS `note_cliente`,`documenti_amministrativi`.`note_interne` AS `note_interne`,`documenti_amministrativi`.`note_pagamento` AS `note_pagamento`,`documenti_amministrativi`.`note_reso` AS `note_reso`,`documenti_amministrativi`.`note_consegna` AS `note_consegna`,`documenti_amministrativi`.`note_imballo` AS `note_imballo`,`documenti_amministrativi`.`data_fine_validita` AS `data_fine_validita`,`documenti_amministrativi`.`id_account_inserimento` AS `id_account_inserimento`,`documenti_amministrativi`.`timestamp_inserimento` AS `timestamp_inserimento`,`documenti_amministrativi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`documenti_amministrativi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,year(`documenti_amministrativi`.`data`) AS `anno`,`clienti`.`__label__` AS `cliente`,concat(`documenti_amministrativi`.`numero`,'/',year(`documenti_amministrativi`.`data`),' del ',`documenti_amministrativi`.`data`,' per cliente ',concat(coalesce(`clienti`.`nome`,''),' ',coalesce(`clienti`.`cognome`,''),coalesce(`clienti`.`denominazione`,'')),' | ',coalesce(`documenti_amministrativi`.`nome`,'')) AS `__label__` from ((`documenti_amministrativi` left join `anagrafica_view` `clienti` on((`clienti`.`id` = `documenti_amministrativi`.`id_cliente`))) left join `tipologie_documenti_amministrativi` `tipologie` on((`tipologie`.`id` = `documenti_amministrativi`.`id_tipologia`))) where (`tipologie`.`se_pro_forma` = 1) order by `documenti_amministrativi`.`data` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `notizie_categorie_prodotti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `notizie_categorie_prodotti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `notizie_categorie_prodotti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `notizie_categorie_prodotti_view` AS select `notizie_categorie_prodotti`.`id` AS `id`,`notizie_categorie_prodotti`.`id_notizia` AS `id_notizia`,`notizie_categorie_prodotti`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`notizie_categorie_prodotti`.`id` AS `__label__` from `notizie_categorie_prodotti` order by `notizie_categorie_prodotti`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `notizie_categorie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `notizie_categorie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `notizie_categorie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `notizie_categorie_view` AS select `notizie_categorie`.`id` AS `id`,`notizie_categorie`.`id_notizia` AS `id_notizia`,`notizie_categorie`.`id_categoria` AS `id_categoria`,`notizie_categorie`.`ordine` AS `ordine`,`notizie_categorie`.`id` AS `__label__` from `notizie_categorie` order by `notizie_categorie`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `notizie_immobili_archiviate_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `notizie_immobili_archiviate_view`*/;
-/*!50001 DROP VIEW IF EXISTS `notizie_immobili_archiviate_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `notizie_immobili_archiviate_view` AS select `incarichi_immobili`.`id` AS `id`,`incarichi_immobili`.`riferimento` AS `riferimento`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,`incarichi_immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`incarichi_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_agenzia` AS `id_agenzia`,`incarichi_immobili`.`id_agente` AS `id_agente`,`incarichi_immobili`.`id_tipologia` AS `id_tipologia`,`incarichi_immobili`.`data_notizia` AS `data_notizia`,`incarichi_immobili`.`data_sviluppo` AS `data_sviluppo`,`incarichi_immobili`.`data_valutazione` AS `data_valutazione`,`incarichi_immobili`.`data_inizio` AS `data_inizio`,`incarichi_immobili`.`data_fine` AS `data_fine`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo_richiesto`,`incarichi_immobili`.`prezzo_mq` AS `prezzo_mq`,`incarichi_immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`incarichi_immobili`.`prezzo_incarico` AS `prezzo_incarico`,`incarichi_immobili`.`percentuale_intervallo` AS `percentuale_intervallo`,`incarichi_immobili`.`prezzo_prefisso` AS `prezzo_prefisso`,`incarichi_immobili`.`prezzo` AS `prezzo`,`incarichi_immobili`.`prezzo_suffisso` AS `prezzo_suffisso`,`incarichi_immobili`.`prezzo_sostituzione` AS `prezzo_sostituzione`,`incarichi_immobili`.`note` AS `note`,`incarichi_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`incarichi_immobili`.`id_esito_incarico` AS `id_esito_incarico`,`incarichi_immobili`.`id_esito_notizia` AS `id_esito_notizia`,`incarichi_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incarichi_immobili`.`note_archiviazione` AS `note_archiviazione`,`incarichi_immobili`.`id_account_editor` AS `id_account_editor`,`incarichi_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incarichi_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incarichi_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incarichi_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),'')) AS `indirizzo`,`indirizzi`.`latitudine` AS `latitudine`,`indirizzi`.`longitudine` AS `longitudine`,`indirizzi`.`id` AS `id_indirizzo`,`immobili`.`scala` AS `scala`,`immobili`.`piano` AS `piano`,`immobili`.`interno` AS `interno`,`tipologie_incarichi_immobili`.`nome` AS `tipologia`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,`incarichi_immobili`.`note` AS `__label__` from (((((`incarichi_immobili` left join `immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `indirizzi` on((`immobili`.`id_indirizzo` = `indirizzi`.`id`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_incarichi_immobili` on((`incarichi_immobili`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `anagrafica` on((`incarichi_immobili`.`id_cliente` = `anagrafica`.`id`))) where ((`incarichi_immobili`.`data_notizia` is not null) and isnull(`incarichi_immobili`.`data_sviluppo`) and isnull(`incarichi_immobili`.`data_valutazione`) and isnull(`incarichi_immobili`.`data_inizio`) and (`incarichi_immobili`.`timestamp_archiviazione` is not null)) order by `incarichi_immobili`.`note` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `notizie_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `notizie_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `notizie_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `notizie_immobili_view` AS select `incarichi_immobili`.`id` AS `id`,`incarichi_immobili`.`riferimento` AS `riferimento`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,`incarichi_immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`incarichi_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_agenzia` AS `id_agenzia`,`incarichi_immobili`.`id_agente` AS `id_agente`,`incarichi_immobili`.`id_tipologia` AS `id_tipologia`,`incarichi_immobili`.`data_notizia` AS `data_notizia`,`incarichi_immobili`.`data_sviluppo` AS `data_sviluppo`,`incarichi_immobili`.`data_valutazione` AS `data_valutazione`,`incarichi_immobili`.`data_inizio` AS `data_inizio`,`incarichi_immobili`.`data_fine` AS `data_fine`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo_richiesto`,`incarichi_immobili`.`prezzo_mq` AS `prezzo_mq`,`incarichi_immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`incarichi_immobili`.`prezzo_incarico` AS `prezzo_incarico`,`incarichi_immobili`.`percentuale_intervallo` AS `percentuale_intervallo`,`incarichi_immobili`.`prezzo_prefisso` AS `prezzo_prefisso`,`incarichi_immobili`.`prezzo` AS `prezzo`,`incarichi_immobili`.`prezzo_suffisso` AS `prezzo_suffisso`,`incarichi_immobili`.`prezzo_sostituzione` AS `prezzo_sostituzione`,`incarichi_immobili`.`note` AS `note`,`incarichi_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`incarichi_immobili`.`id_esito_incarico` AS `id_esito_incarico`,`incarichi_immobili`.`id_esito_notizia` AS `id_esito_notizia`,`incarichi_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incarichi_immobili`.`note_archiviazione` AS `note_archiviazione`,`incarichi_immobili`.`id_account_editor` AS `id_account_editor`,`incarichi_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incarichi_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incarichi_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incarichi_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat(`indirizzi`.`indirizzo`,if((`indirizzi`.`civico` <> ''),concat(' ',`indirizzi`.`civico`),''),if((`indirizzi`.`localita` <> ''),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),'')) AS `indirizzo`,`indirizzi`.`latitudine` AS `latitudine`,`indirizzi`.`longitudine` AS `longitudine`,`indirizzi`.`id` AS `id_indirizzo`,`immobili`.`scala` AS `scala`,`immobili`.`piano` AS `piano`,`immobili`.`interno` AS `interno`,`tipologie_incarichi_immobili`.`nome` AS `tipologia`,dayofmonth(`incarichi_immobili`.`data_notizia`) AS `giorno`,month(`incarichi_immobili`.`data_notizia`) AS `mese`,year(`incarichi_immobili`.`data_notizia`) AS `anno`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,coalesce(`agenti`.`soprannome`,`agenti`.`denominazione`,concat_ws(' ',coalesce(`agenti`.`cognome`,''),coalesce(`agenti`.`nome`,'')),'') AS `agente`,`incarichi_immobili`.`note` AS `__label__` from (((((((`incarichi_immobili` left join `immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `indirizzi` on((`immobili`.`id_indirizzo` = `indirizzi`.`id`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_incarichi_immobili` on((`incarichi_immobili`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `anagrafica` on((`incarichi_immobili`.`id_cliente` = `anagrafica`.`id`))) left join `account` on((`account`.`id` = `incarichi_immobili`.`id_account_editor`))) left join `anagrafica` `agenti` on((`account`.`id_anagrafica` = `agenti`.`id`))) where ((`incarichi_immobili`.`data_notizia` is not null) and isnull(`incarichi_immobili`.`data_sviluppo`) and isnull(`incarichi_immobili`.`data_valutazione`) and isnull(`incarichi_immobili`.`data_inizio`) and isnull(`incarichi_immobili`.`timestamp_archiviazione`)) order by `incarichi_immobili`.`note` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `notizie_prodotti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `notizie_prodotti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `notizie_prodotti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `notizie_prodotti_view` AS select `notizie_prodotti`.`id` AS `id`,`notizie_prodotti`.`id_notizia` AS `id_notizia`,`notizie_prodotti`.`id_prodotto` AS `id_prodotto`,`notizie_prodotti`.`id` AS `__label__` from `notizie_prodotti` order by `notizie_prodotti`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `notizie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `notizie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `notizie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `notizie_view` AS select `notizie`.`id` AS `id`,`notizie`.`id_tipologia` AS `id_tipologia`,`notizie`.`id_sito` AS `id_sito`,`notizie`.`nome` AS `nome`,`notizie`.`note` AS `note`,`notizie`.`id_account_inserimento` AS `id_account_inserimento`,`notizie`.`timestamp_inserimento` AS `timestamp_inserimento`,`notizie`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`notizie`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`contenuti`.`title` AS `title`,`contenuti`.`abstract` AS `abstract`,group_concat(`categorie_notizie`.`nome` separator '|') AS `categorie`,`notizie`.`nome` AS `__label__` from (((`notizie` left join `notizie_categorie` on((`notizie_categorie`.`id_notizia` = `notizie`.`id`))) left join `categorie_notizie` on((`categorie_notizie`.`id` = `notizie_categorie`.`id_categoria`))) left join `contenuti` on(((`contenuti`.`id_notizia` = `notizie`.`id`) and ((`contenuti`.`title` is not null) or (`contenuti`.`abstract` is not null))))) group by `notizie`.`id` order by `notizie`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `offerte_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `offerte_view`*/;
-/*!50001 DROP VIEW IF EXISTS `offerte_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `offerte_view` AS select `documenti_amministrativi`.`id` AS `id`,`documenti_amministrativi`.`data` AS `data`,`documenti_amministrativi`.`nome` AS `nome`,`documenti_amministrativi`.`numero` AS `numero`,`documenti_amministrativi`.`causale` AS `causale`,`documenti_amministrativi`.`id_cliente` AS `id_cliente`,`clienti`.`__label__` AS `cliente`,`documenti_amministrativi`.`nome` AS `__label__` from ((`documenti_amministrativi` left join `anagrafica_view` `clienti` on((`clienti`.`id` = `documenti_amministrativi`.`id_cliente`))) left join `tipologie_documenti_amministrativi` `tipologie` on((`tipologie`.`id` = `documenti_amministrativi`.`id_tipologia`))) where (`tipologie`.`se_offerta` = 1) order by `documenti_amministrativi`.`data` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `orari_contratti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `orari_contratti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `orari_contratti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `orari_contratti_view` AS select `orari_contratti`.`id` AS `id`,`orari_contratti`.`id_contratto` AS `id_contratto`,`orari_contratti`.`turno` AS `turno`,`orari_contratti`.`id_giorno` AS `id_giorno`,`orari_contratti`.`ora_inizio` AS `ora_inizio`,`orari_contratti`.`ora_fine` AS `ora_fine`,`orari_contratti`.`id_costo` AS `id_costo`,`orari_contratti`.`se_lavoro` AS `se_lavoro`,`orari_contratti`.`se_disponibile` AS `se_disponibile`,concat('turno ',`orari_contratti`.`turno`,' ',`orari_contratti`.`id_giorno`,' ',`orari_contratti`.`ora_inizio`,' ',`orari_contratti`.`ora_fine`) AS `__label__` from `orari_contratti` order by concat('turno ',`orari_contratti`.`turno`,' ',`orari_contratti`.`id_giorno`,' ',`orari_contratti`.`ora_inizio`,' ',`orari_contratti`.`ora_fine`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `orientamenti_sessuali_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `orientamenti_sessuali_view`*/;
-/*!50001 DROP VIEW IF EXISTS `orientamenti_sessuali_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `orientamenti_sessuali_view` AS select `orientamenti_sessuali`.`id` AS `id`,`orientamenti_sessuali`.`nome` AS `nome`,`orientamenti_sessuali`.`nome` AS `__label__` from `orientamenti_sessuali` order by `orientamenti_sessuali`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pagine_gruppi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pagine_gruppi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pagine_gruppi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pagine_gruppi_view` AS select `pagine_gruppi`.`id` AS `id`,`pagine_gruppi`.`id_pagina` AS `id_pagina`,`pagine_gruppi`.`id_gruppo` AS `id_gruppo`,`pagine_gruppi`.`id` AS `__label__` from `pagine_gruppi` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pagine_macro_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pagine_macro_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pagine_macro_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pagine_macro_view` AS select `pagine_macro`.`id` AS `id`,`pagine_macro`.`id_pagina` AS `id_pagina`,`pagine_macro`.`macro` AS `macro`,`pagine_macro`.`macro` AS `__label__` from `pagine_macro` order by `pagine_macro`.`macro` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pagine_menu_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pagine_menu_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pagine_menu_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pagine_menu_view` AS select `pagine_menu`.`id` AS `id`,`pagine_menu`.`id_pagina` AS `id_pagina`,`pagine_menu`.`id_lingua` AS `id_lingua`,`pagine_menu`.`menu` AS `menu`,`pagine_menu`.`nome` AS `nome`,`pagine_menu`.`target` AS `target`,`pagine_menu`.`ordine` AS `ordine`,`pagine_menu`.`sottopagine` AS `sottopagine`,`pagine_menu`.`nome` AS `__label__` from `pagine_menu` order by `pagine_menu`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pagine_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pagine_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pagine_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pagine_view` AS select `pagine`.`id` AS `id`,`pagine`.`id_genitore` AS `id_genitore`,`pagine`.`id_sito` AS `id_sito`,`pagine`.`nome` AS `nome`,`pagine`.`template` AS `template`,`pagine`.`schema_html` AS `schema_html`,`pagine`.`tema_css` AS `tema_css`,`pagine`.`id_contenuti` AS `id_contenuti`,`pagine`.`id_tipologia_pubblicazione` AS `id_tipologia_pubblicazione`,`pagine`.`se_sitemap` AS `se_sitemap`,`pagine`.`se_cacheable` AS `se_cacheable`,`pagine`.`note` AS `note`,`pagine`.`timestamp_inserimento` AS `timestamp_inserimento`,`pagine`.`id_account_inserimento` AS `id_account_inserimento`,`pagine`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pagine`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tipologie_pubblicazione`.`nome` AS `tipologia_pubblicazione`,`tipologie_pubblicazione`.`se_bozza` AS `se_bozza`,`tipologie_pubblicazione`.`se_pubblicato` AS `se_pubblicato`,group_concat(distinct `pagine_gruppi`.`id_gruppo` separator ' | ') AS `gruppi`,`pagine_path`(`pagine`.`id`) AS `__label__` from ((`pagine` left join `tipologie_pubblicazione` on((`tipologie_pubblicazione`.`id` = `pagine`.`id_tipologia_pubblicazione`))) left join `pagine_gruppi` on((`pagine`.`id` = `pagine_gruppi`.`id_pagina`))) group by `pagine`.`id` order by `pagine_path`(`pagine`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `patrocini_pratiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `patrocini_pratiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `patrocini_pratiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `patrocini_pratiche_view` AS select `patrocini_pratiche`.`id` AS `id`,`patrocini_pratiche`.`id_pratica` AS `id_pratica`,`patrocini_pratiche`.`numero` AS `numero`,`patrocini_pratiche`.`se_liquidato` AS `se_liquidato`,`patrocini_pratiche`.`data_liquidazione` AS `data_liquidazione`,`patrocini_pratiche`.`se_fatturato` AS `se_fatturato`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `pratica`,concat('patrocinio della pratica ',concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)),' ',`patrocini_pratiche`.`numero`,' | ',if(`patrocini_pratiche`.`se_liquidato`,if(`patrocini_pratiche`.`data_liquidazione`,concat(' liquidato in data ',`patrocini_pratiche`.`data_liquidazione`),'liquidato'),' non liquidato'),' | ',if(`patrocini_pratiche`.`se_fatturato`,'fatturato','non fatturato')) AS `__label__` from ((`patrocini_pratiche` left join `pratiche` on((`patrocini_pratiche`.`id_pratica` = `pratiche`.`id`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) order by concat('patrocinio della pratica ',concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)),' ',`patrocini_pratiche`.`numero`,' | ',if(`patrocini_pratiche`.`se_liquidato`,if(`patrocini_pratiche`.`data_liquidazione`,concat(' liquidato in data ',`patrocini_pratiche`.`data_liquidazione`),'liquidato'),' non liquidato'),' | ',if(`patrocini_pratiche`.`se_fatturato`,'fatturato','non fatturato')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `periodi_variazioni_attivita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `periodi_variazioni_attivita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `periodi_variazioni_attivita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `periodi_variazioni_attivita_view` AS select `periodi_variazioni_attivita`.`id` AS `id`,`periodi_variazioni_attivita`.`id_variazione` AS `id_variazione`,`periodi_variazioni_attivita`.`data_inizio` AS `data_inizio`,`periodi_variazioni_attivita`.`data_fine` AS `data_fine`,`periodi_variazioni_attivita`.`ora_inizio` AS `ora_inizio`,`periodi_variazioni_attivita`.`ora_fine` AS `ora_fine`,`periodi_variazioni_attivita`.`id_account_inserimento` AS `id_account_inserimento`,`periodi_variazioni_attivita`.`timestamp_inserimento` AS `timestamp_inserimento`,`periodi_variazioni_attivita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`periodi_variazioni_attivita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`periodi_variazioni_attivita`.`id` AS `__label__` from `periodi_variazioni_attivita` order by `periodi_variazioni_attivita`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pianificazioni_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pianificazioni_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pianificazioni_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pianificazioni_view` AS select `pianificazioni`.`id` AS `id`,`pianificazioni`.`entita` AS `entita`,`pianificazioni`.`nome` AS `nome`,`pianificazioni`.`id_todo` AS `id_todo`,`pianificazioni`.`id_turno` AS `id_turno`,`pianificazioni`.`periodicita` AS `periodicita`,`pianificazioni`.`cadenza` AS `cadenza`,`pianificazioni`.`se_lunedi` AS `se_lunedi`,`pianificazioni`.`se_martedi` AS `se_martedi`,`pianificazioni`.`se_mercoledi` AS `se_mercoledi`,`pianificazioni`.`se_giovedi` AS `se_giovedi`,`pianificazioni`.`se_venerdi` AS `se_venerdi`,`pianificazioni`.`se_sabato` AS `se_sabato`,`pianificazioni`.`se_domenica` AS `se_domenica`,`pianificazioni`.`ripetizione_mese` AS `ripetizione_mese`,`pianificazioni`.`ripetizione_anno` AS `ripetizione_anno`,`pianificazioni`.`data_fine` AS `data_fine`,`pianificazioni`.`data_ultimo_oggetto` AS `data_ultimo_oggetto`,`pianificazioni`.`giorni_rinnovo` AS `giorni_rinnovo`,`pianificazioni`.`note` AS `note`,`pianificazioni`.`workspace` AS `workspace`,`pianificazioni`.`token` AS `token`,`pianificazioni`.`id_account_inserimento` AS `id_account_inserimento`,`pianificazioni`.`timestamp_inserimento` AS `timestamp_inserimento`,`pianificazioni`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pianificazioni`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`pianificazioni`.`id`,' ',`pianificazioni`.`entita`,' ',`pianificazioni`.`nome`) AS `__label__` from `pianificazioni` order by concat(`pianificazioni`.`id`,' ',`pianificazioni`.`entita`,' ',`pianificazioni`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `popup_pagine_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `popup_pagine_view`*/;
-/*!50001 DROP VIEW IF EXISTS `popup_pagine_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `popup_pagine_view` AS select `popup_pagine`.`id` AS `id`,`popup_pagine`.`id_pagina` AS `id_pagina`,`popup_pagine`.`id_popup` AS `id_popup`,`popup_pagine`.`se_presente` AS `se_presente`,`pagine`.`nome` AS `__label__` from (`popup_pagine` left join `pagine` on((`popup_pagine`.`id_pagina` = `pagine`.`id`))) order by `pagine`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `popup_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `popup_view`*/;
-/*!50001 DROP VIEW IF EXISTS `popup_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `popup_view` AS select `popup`.`id` AS `id`,`popup`.`nome` AS `nome`,`popup`.`id_html` AS `id_html`,`popup`.`classi_html` AS `classi_html`,`popup`.`note` AS `note`,`popup`.`id_tipologia` AS `id_tipologia`,`popup`.`id_tipologia_pubblicazione` AS `id_tipologia_pubblicazione`,`popup`.`n_scroll` AS `n_scroll`,`popup`.`n_secondi` AS `n_secondi`,`popup`.`template` AS `template`,`popup`.`schema_html` AS `schema_html`,`popup`.`classe_attivazione` AS `classe_attivazione`,`popup`.`se_ovunque` AS `se_ovunque`,`popup`.`id_account_inserimento` AS `id_account_inserimento`,`popup`.`timestamp_inserimento` AS `timestamp_inserimento`,`popup`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`popup`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_pubblicazione`.`nome` AS `tipologia_pubblicazione`,`tipologie_popup`.`nome` AS `tipologia`,`popup`.`nome` AS `__label__` from ((`popup` left join `tipologie_popup` on((`tipologie_popup`.`id` = `popup`.`id_tipologia`))) left join `tipologie_pubblicazione` on((`tipologie_pubblicazione`.`id` = `popup`.`id_tipologia_pubblicazione`))) order by `popup`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pratiche_all_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pratiche_all_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pratiche_all_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pratiche_all_view` AS select `pratiche`.`id` AS `id`,`pratiche`.`numero` AS `numero`,`pratiche`.`numero_ruolo` AS `numero_ruolo`,`pratiche`.`data_apertura` AS `data_apertura`,`pratiche`.`data_chiusura` AS `data_chiusura`,`pratiche`.`id_sede_apertura` AS `id_sede_apertura`,`pratiche`.`id_tipologia` AS `id_tipologia`,`pratiche`.`id_categoria_diritto` AS `id_categoria_diritto`,`pratiche`.`id_provenienza` AS `id_provenienza`,`pratiche`.`note_segnalazione` AS `note_segnalazione`,`pratiche`.`descrizione` AS `descrizione`,`pratiche`.`controparte` AS `controparte`,`pratiche`.`se_patrocinio` AS `se_patrocinio`,`pratiche`.`se_accompagnamento` AS `se_accompagnamento`,`pratiche`.`note_chiusura` AS `note_chiusura`,`pratiche`.`ore_stimate` AS `ore_stimate`,`pratiche`.`id_esito` AS `id_esito`,`pratiche`.`se_richiesta_liquidazione` AS `se_richiesta_liquidazione`,`pratiche`.`se_richiesto_rimborso` AS `se_richiesto_rimborso`,`pratiche`.`id_account_editor` AS `id_account_editor`,`pratiche`.`timestamp_inserimento` AS `timestamp_inserimento`,`pratiche`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pratiche`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pratiche`.`id_account_inserimento` AS `id_account_inserimento`,`pratiche`.`se_importata` AS `se_importata`,`pratiche`.`id_account_chiusura` AS `id_account_chiusura`,`pratiche`.`timestamp_chiusura` AS `timestamp_chiusura`,if((`pratiche`.`se_importata` = 1),1,0) AS `importata`,if(`pratiche`.`data_chiusura`,1,0) AS `se_chiusa`,`pratiche_avvocati`.`id_anagrafica` AS `id_responsabile`,`avvocati`.`id_anagrafica` AS `id_volontario`,group_concat(distinct coalesce(`volontari`.`soprannome`,`volontari`.`denominazione`,concat_ws(' ',coalesce(`volontari`.`cognome`,''),coalesce(`volontari`.`nome`,'')),'') separator ' | ') AS `lista_volontari`,group_concat(distinct coalesce(`assistiti`.`soprannome`,`assistiti`.`denominazione`,concat_ws(' ',coalesce(`assistiti`.`cognome`,''),coalesce(`assistiti`.`nome`,'')),'') separator ' | ') AS `lista_assistiti`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `responsabile`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `__short_label__`,`categorie_diritto_view`.`__label__` AS `diritto`,`tipologie_pratiche_view`.`__label__` AS `tipologia`,`esiti_pratiche`.`nome` AS `esito`,concat('pratica n° ',`pratiche`.`numero`,' aperta in sede ',coalesce(`sede`.`denominazione`,concat_ws(' ',coalesce(`sede`.`cognome`,''),coalesce(`sede`.`nome`,'')),'')) AS `__label__` from ((((((((((`pratiche` left join `pratiche_avvocati` on(((`pratiche_avvocati`.`id_pratica` = `pratiche`.`id`) and (`pratiche_avvocati`.`se_responsabile` = 1)))) left join `pratiche_assistiti` on((`pratiche_assistiti`.`id_pratica` = `pratiche`.`id`))) left join `pratiche_avvocati` `avvocati` on((`avvocati`.`id_pratica` = `pratiche`.`id`))) left join `anagrafica` on((`anagrafica`.`id` = `pratiche_avvocati`.`id_anagrafica`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) left join `anagrafica` `assistiti` on((`assistiti`.`id` = `pratiche_assistiti`.`id_anagrafica`))) left join `anagrafica` `volontari` on((`volontari`.`id` = `avvocati`.`id_anagrafica`))) left join `categorie_diritto_view` on((`categorie_diritto_view`.`id` = `pratiche`.`id_categoria_diritto`))) left join `tipologie_pratiche_view` on((`tipologie_pratiche_view`.`id` = `pratiche`.`id_tipologia`))) left join `esiti_pratiche` on((`esiti_pratiche`.`id` = `pratiche`.`id_esito`))) group by `pratiche`.`id` order by year(`pratiche`.`data_apertura`) desc,length(`pratiche`.`numero`),`pratiche`.`numero` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pratiche_aperte_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pratiche_aperte_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pratiche_aperte_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pratiche_aperte_view` AS select `pratiche`.`id` AS `id`,`pratiche`.`numero` AS `numero`,`pratiche`.`numero_ruolo` AS `numero_ruolo`,`pratiche`.`data_apertura` AS `data_apertura`,`pratiche`.`data_chiusura` AS `data_chiusura`,`pratiche`.`id_sede_apertura` AS `id_sede_apertura`,`pratiche`.`id_tipologia` AS `id_tipologia`,`pratiche`.`id_categoria_diritto` AS `id_categoria_diritto`,`pratiche`.`id_provenienza` AS `id_provenienza`,`pratiche`.`note_segnalazione` AS `note_segnalazione`,`pratiche`.`descrizione` AS `descrizione`,`pratiche`.`controparte` AS `controparte`,`pratiche`.`se_patrocinio` AS `se_patrocinio`,`pratiche`.`se_accompagnamento` AS `se_accompagnamento`,`pratiche`.`note_chiusura` AS `note_chiusura`,`pratiche`.`ore_stimate` AS `ore_stimate`,`pratiche`.`id_esito` AS `id_esito`,`pratiche`.`se_richiesta_liquidazione` AS `se_richiesta_liquidazione`,`pratiche`.`se_richiesto_rimborso` AS `se_richiesto_rimborso`,`pratiche`.`id_account_editor` AS `id_account_editor`,`pratiche`.`timestamp_inserimento` AS `timestamp_inserimento`,`pratiche`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pratiche`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pratiche`.`id_account_inserimento` AS `id_account_inserimento`,`pratiche`.`se_importata` AS `se_importata`,`pratiche`.`id_account_chiusura` AS `id_account_chiusura`,`pratiche`.`timestamp_chiusura` AS `timestamp_chiusura`,if((`pratiche`.`se_importata` = 1),1,0) AS `importata`,`pratiche_avvocati`.`id_anagrafica` AS `id_responsabile`,`avvocati`.`id_anagrafica` AS `id_volontario`,group_concat(distinct coalesce(`volontari`.`soprannome`,`volontari`.`denominazione`,concat_ws(' ',coalesce(`volontari`.`cognome`,''),coalesce(`volontari`.`nome`,'')),'') separator ' | ') AS `lista_volontari`,group_concat(distinct coalesce(`assistiti`.`soprannome`,`assistiti`.`denominazione`,concat_ws(' ',coalesce(`assistiti`.`cognome`,''),coalesce(`assistiti`.`nome`,'')),'') separator ' | ') AS `lista_assistiti`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `responsabile`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `__short_label__`,`categorie_diritto_view`.`__label__` AS `diritto`,`tipologie_pratiche_view`.`__label__` AS `tipologia`,concat('pratica n° ',`pratiche`.`numero`,' aperta in sede ',coalesce(`sede`.`denominazione`,concat_ws(' ',coalesce(`sede`.`cognome`,''),coalesce(`sede`.`nome`,'')),'')) AS `__label__` from (((((((((`pratiche` left join `pratiche_avvocati` on(((`pratiche_avvocati`.`id_pratica` = `pratiche`.`id`) and (`pratiche_avvocati`.`se_responsabile` = 1)))) left join `pratiche_assistiti` on((`pratiche_assistiti`.`id_pratica` = `pratiche`.`id`))) left join `pratiche_avvocati` `avvocati` on((`avvocati`.`id_pratica` = `pratiche`.`id`))) left join `anagrafica` on((`anagrafica`.`id` = `pratiche_avvocati`.`id_anagrafica`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) left join `anagrafica` `assistiti` on((`assistiti`.`id` = `pratiche_assistiti`.`id_anagrafica`))) left join `anagrafica` `volontari` on((`volontari`.`id` = `avvocati`.`id_anagrafica`))) left join `categorie_diritto_view` on((`categorie_diritto_view`.`id` = `pratiche`.`id_categoria_diritto`))) left join `tipologie_pratiche_view` on((`tipologie_pratiche_view`.`id` = `pratiche`.`id_tipologia`))) where isnull(`pratiche`.`data_chiusura`) group by `pratiche`.`id` order by length(`pratiche`.`numero`),`pratiche`.`numero`,year(`pratiche`.`data_apertura`) desc */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pratiche_archivio_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pratiche_archivio_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pratiche_archivio_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pratiche_archivio_view` AS select `pratiche`.`id` AS `id`,`pratiche`.`numero` AS `numero`,`pratiche`.`numero_ruolo` AS `numero_ruolo`,`pratiche`.`data_apertura` AS `data_apertura`,`pratiche`.`data_chiusura` AS `data_chiusura`,`pratiche`.`id_sede_apertura` AS `id_sede_apertura`,`pratiche`.`id_tipologia` AS `id_tipologia`,`pratiche`.`id_categoria_diritto` AS `id_categoria_diritto`,`pratiche`.`id_provenienza` AS `id_provenienza`,`pratiche`.`note_segnalazione` AS `note_segnalazione`,`pratiche`.`descrizione` AS `descrizione`,`pratiche`.`controparte` AS `controparte`,`pratiche`.`se_patrocinio` AS `se_patrocinio`,`pratiche`.`se_accompagnamento` AS `se_accompagnamento`,`pratiche`.`note_chiusura` AS `note_chiusura`,`pratiche`.`ore_stimate` AS `ore_stimate`,`pratiche`.`id_esito` AS `id_esito`,`pratiche`.`se_richiesta_liquidazione` AS `se_richiesta_liquidazione`,`pratiche`.`se_richiesto_rimborso` AS `se_richiesto_rimborso`,`pratiche`.`id_account_editor` AS `id_account_editor`,`pratiche`.`timestamp_inserimento` AS `timestamp_inserimento`,`pratiche`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pratiche`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pratiche`.`id_account_inserimento` AS `id_account_inserimento`,`pratiche`.`se_importata` AS `se_importata`,`pratiche`.`id_account_chiusura` AS `id_account_chiusura`,`pratiche`.`timestamp_chiusura` AS `timestamp_chiusura`,if((`pratiche`.`se_importata` = 1),1,0) AS `importata`,`pratiche_avvocati`.`id_anagrafica` AS `id_responsabile`,`avvocati`.`id_anagrafica` AS `id_volontario`,group_concat(distinct coalesce(`volontari`.`soprannome`,`volontari`.`denominazione`,concat_ws(' ',coalesce(`volontari`.`cognome`,''),coalesce(`volontari`.`nome`,'')),'') separator ' | ') AS `lista_volontari`,group_concat(distinct coalesce(`assistiti`.`soprannome`,`assistiti`.`denominazione`,concat_ws(' ',coalesce(`assistiti`.`cognome`,''),coalesce(`assistiti`.`nome`,'')),'') separator ' | ') AS `lista_assistiti`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `responsabile`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `__short_label__`,`categorie_diritto_view`.`__label__` AS `diritto`,`tipologie_pratiche_view`.`__label__` AS `tipologia`,concat('pratica n° ',`pratiche`.`numero`,' aperta in sede ',coalesce(`sede`.`soprannome`,`sede`.`denominazione`,concat_ws(' ',coalesce(`sede`.`cognome`,''),coalesce(`sede`.`nome`,'')),'')) AS `__label__` from (((((((((`pratiche` left join `pratiche_avvocati` on(((`pratiche_avvocati`.`id_pratica` = `pratiche`.`id`) and (`pratiche_avvocati`.`se_responsabile` = 1)))) left join `pratiche_assistiti` on((`pratiche_assistiti`.`id_pratica` = `pratiche`.`id`))) left join `pratiche_avvocati` `avvocati` on((`avvocati`.`id_pratica` = `pratiche`.`id`))) left join `anagrafica` on((`anagrafica`.`id` = `pratiche_avvocati`.`id_anagrafica`))) left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) left join `anagrafica` `assistiti` on((`assistiti`.`id` = `pratiche_assistiti`.`id_anagrafica`))) left join `anagrafica` `volontari` on((`volontari`.`id` = `avvocati`.`id_anagrafica`))) left join `categorie_diritto_view` on((`categorie_diritto_view`.`id` = `pratiche`.`id_categoria_diritto`))) left join `tipologie_pratiche_view` on((`tipologie_pratiche_view`.`id` = `pratiche`.`id_tipologia`))) where (`pratiche`.`data_chiusura` is not null) group by `pratiche`.`id` order by length(`pratiche`.`numero`),`pratiche`.`numero`,year(`pratiche`.`data_apertura`) desc */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pratiche_assistiti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pratiche_assistiti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pratiche_assistiti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pratiche_assistiti_view` AS select `pratiche_assistiti`.`id` AS `id`,`pratiche_assistiti`.`id_anagrafica` AS `id_anagrafica`,`pratiche_assistiti`.`id_pratica` AS `id_pratica`,`pratiche_view`.`data_apertura` AS `data_apertura`,`pratiche_view`.`data_chiusura` AS `data_chiusura`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `responsabile`,`categorie_diritto_view`.`__label__` AS `diritto`,`tipologie_pratiche_view`.`__label__` AS `tipologia`,`pratiche_view`.`__short_label__` AS `__short_label__`,concat('relazione tra assistito ',coalesce(`assistito`.`soprannome`,`assistito`.`denominazione`,concat_ws(' ',coalesce(`assistito`.`cognome`,''),coalesce(`assistito`.`nome`,'')),''),' e pratica ',`pratiche_view`.`__short_label__`) AS `__label__` from ((((((`pratiche_assistiti` left join `pratiche_view` on((`pratiche_view`.`id` = `pratiche_assistiti`.`id_pratica`))) left join `categorie_diritto_view` on((`categorie_diritto_view`.`id` = `pratiche_view`.`id_categoria_diritto`))) left join `tipologie_pratiche_view` on((`tipologie_pratiche_view`.`id` = `pratiche_view`.`id_tipologia`))) left join `pratiche_avvocati` on(((`pratiche_avvocati`.`id_pratica` = `pratiche_view`.`id`) and (`pratiche_avvocati`.`se_responsabile` = 1)))) left join `anagrafica` on((`anagrafica`.`id` = `pratiche_avvocati`.`id_anagrafica`))) left join `anagrafica` `assistito` on((`assistito`.`id` = `pratiche_assistiti`.`id_anagrafica`))) order by concat('relazione tra assistito ',coalesce(`assistito`.`soprannome`,`assistito`.`denominazione`,concat_ws(' ',coalesce(`assistito`.`cognome`,''),coalesce(`assistito`.`nome`,'')),''),' e pratica ',`pratiche_view`.`__short_label__`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pratiche_avvocati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pratiche_avvocati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pratiche_avvocati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pratiche_avvocati_view` AS select `pratiche_avvocati`.`id` AS `id`,`pratiche_avvocati`.`id_anagrafica` AS `id_anagrafica`,`pratiche_avvocati`.`id_pratica` AS `id_pratica`,`pratiche_avvocati`.`se_responsabile` AS `se_responsabile`,`pratiche_avvocati`.`timestamp_inserimento` AS `timestamp_inserimento`,`pratiche_avvocati`.`id_account_inserimento` AS `id_account_inserimento`,`pratiche_avvocati`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pratiche_avvocati`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pratiche_view`.`__short_label__` AS `__short_label__`,`pratiche_view`.`lista_assistiti` AS `lista_assistiti`,`pratiche_view`.`data_apertura` AS `data_apertura`,`pratiche_view`.`data_chiusura` AS `data_chiusura`,`categorie_diritto_view`.`__label__` AS `diritto`,concat('relazione tra volontario ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),''),' e pratica ',`pratiche_view`.`__short_label__`) AS `__label__` from (((`pratiche_avvocati` left join `anagrafica` on((`anagrafica`.`id` = `pratiche_avvocati`.`id_anagrafica`))) left join `pratiche_all_view` `pratiche_view` on((`pratiche_view`.`id` = `pratiche_avvocati`.`id_pratica`))) left join `categorie_diritto_view` on((`categorie_diritto_view`.`id` = `pratiche_view`.`id_categoria_diritto`))) order by concat('relazione tra volontario ',coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),''),' e pratica ',`pratiche_view`.`__short_label__`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pratiche_servizi_contatto_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pratiche_servizi_contatto_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pratiche_servizi_contatto_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pratiche_servizi_contatto_view` AS select `pratiche_servizi_contatto`.`id` AS `id`,`pratiche_servizi_contatto`.`id_pratica` AS `id_pratica`,`pratiche_servizi_contatto`.`id_servizio_contatto` AS `id_servizio_contatto`,`pratiche_servizi_contatto`.`testo` AS `testo`,`pratiche_servizi_contatto`.`id` AS `__label__` from `pratiche_servizi_contatto` order by `pratiche_servizi_contatto`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pratiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pratiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pratiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pratiche_view` AS select `pratiche`.`id` AS `id`,`pratiche`.`numero` AS `numero`,`pratiche`.`numero_ruolo` AS `numero_ruolo`,`pratiche`.`data_apertura` AS `data_apertura`,`pratiche`.`data_chiusura` AS `data_chiusura`,`pratiche`.`id_sede_apertura` AS `id_sede_apertura`,`pratiche`.`id_tipologia` AS `id_tipologia`,`pratiche`.`id_categoria_diritto` AS `id_categoria_diritto`,`pratiche`.`id_provenienza` AS `id_provenienza`,`pratiche`.`note_segnalazione` AS `note_segnalazione`,`pratiche`.`descrizione` AS `descrizione`,`pratiche`.`controparte` AS `controparte`,`pratiche`.`se_patrocinio` AS `se_patrocinio`,`pratiche`.`se_accompagnamento` AS `se_accompagnamento`,`pratiche`.`note_chiusura` AS `note_chiusura`,`pratiche`.`ore_stimate` AS `ore_stimate`,`pratiche`.`id_esito` AS `id_esito`,`pratiche`.`se_richiesta_liquidazione` AS `se_richiesta_liquidazione`,`pratiche`.`se_richiesto_rimborso` AS `se_richiesto_rimborso`,`pratiche`.`id_account_editor` AS `id_account_editor`,`pratiche`.`timestamp_inserimento` AS `timestamp_inserimento`,`pratiche`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`pratiche`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`pratiche`.`id_account_inserimento` AS `id_account_inserimento`,`pratiche`.`se_importata` AS `se_importata`,`pratiche`.`id_account_chiusura` AS `id_account_chiusura`,`pratiche`.`timestamp_chiusura` AS `timestamp_chiusura`,concat(coalesce(`sede`.`nome`,`sede`.`denominazione`),'/',`pratiche`.`numero`,'/',year(`pratiche`.`data_apertura`)) AS `__short_label__`,concat('pratica n° ',`pratiche`.`numero`,' aperta in sede ',coalesce(`sede`.`soprannome`,`sede`.`denominazione`,concat_ws(' ',coalesce(`sede`.`cognome`,''),coalesce(`sede`.`nome`,'')),'')) AS `__label__` from (`pratiche` left join `anagrafica` `sede` on((`sede`.`id` = `pratiche`.`id_sede_apertura`))) group by `pratiche`.`id` order by concat('pratica n° ',`pratiche`.`numero`,' aperta in sede ',coalesce(`sede`.`soprannome`,`sede`.`denominazione`,concat_ws(' ',coalesce(`sede`.`cognome`,''),coalesce(`sede`.`nome`,'')),'')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `prezzi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `prezzi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `prezzi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `prezzi_view` AS select `prezzi`.`id` AS `id`,`prezzi`.`id_prodotto` AS `id_prodotto`,`prezzi`.`id_articolo` AS `id_articolo`,`prezzi`.`prezzo` AS `prezzo`,`prezzi`.`id_listino` AS `id_listino`,`prezzi`.`id_valuta` AS `id_valuta`,`prezzi`.`id_iva` AS `id_iva`,`prezzi`.`id_udm` AS `id_udm`,`listini`.`nome` AS `listino`,`iva`.`descrizione` AS `iva`,round(`prezzi`.`prezzo`,2) AS `prezzo_netto`,round(((`prezzi`.`prezzo` / 100) * `iva`.`aliquota`),2) AS `aliquota_iva`,round(((`prezzi`.`prezzo` / 100) * (100 + `iva`.`aliquota`)),2) AS `prezzo_lordo`,`valute`.`html` AS `valuta_html`,`valute`.`utf8` AS `valuta_utf8`,`valute`.`iso4217` AS `valuta_iso4217`,concat_ws(' ',`prezzi`.`id_prodotto`,`valute`.`iso4217`,round(`prezzi`.`prezzo`,2),'+ IVA',`iva`.`descrizione`) AS `__label__` from (((`prezzi` join `listini` on((`listini`.`id` = `prezzi`.`id_listino`))) join `iva` on((`iva`.`id` = `prezzi`.`id_iva`))) join `valute` on((`valute`.`id` = `prezzi`.`id_valuta`))) order by concat_ws(' ',`prezzi`.`id_prodotto`,`valute`.`iso4217`,round(`prezzi`.`prezzo`,2),'+ IVA',`iva`.`descrizione`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `priorita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `priorita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `priorita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `priorita_view` AS select `priorita`.`id` AS `id`,`priorita`.`nome` AS `nome`,`priorita`.`ordine` AS `ordine`,`priorita`.`nome` AS `__label__` from `priorita` order by `priorita`.`ordine` desc */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `prodotti_caratteristiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `prodotti_caratteristiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `prodotti_caratteristiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `prodotti_caratteristiche_view` AS select `prodotti_caratteristiche`.`id` AS `id`,`prodotti_caratteristiche`.`id_prodotto` AS `id_prodotto`,`prodotti_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`prodotti_caratteristiche`.`ordine` AS `ordine`,`prodotti_caratteristiche`.`testo` AS `testo`,`prodotti_caratteristiche`.`se_non_presente` AS `se_non_presente`,`prodotti_caratteristiche`.`id` AS `__label__` from `prodotti_caratteristiche` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `prodotti_categorie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `prodotti_categorie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `prodotti_categorie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `prodotti_categorie_view` AS select `prodotti_categorie`.`id` AS `id`,`prodotti_categorie`.`id_prodotto` AS `id_prodotto`,`prodotti_categorie`.`id_categoria` AS `id_categoria`,`prodotti_categorie`.`id_ruolo` AS `id_ruolo`,`prodotti_categorie`.`ordine` AS `ordine`,`prodotti_categorie`.`se_principale` AS `se_principale`,`prodotti_categorie`.`id` AS `__label__`,`prodotti`.`nome` AS `prodotto`,`tipologie_pubblicazione`.`nome` AS `pubblicazione` from ((`prodotti_categorie` left join `prodotti` on((`prodotti_categorie`.`id_prodotto` = `prodotti`.`id`))) left join `tipologie_pubblicazione` on((`prodotti`.`id_tipologia_pubblicazione` = `tipologie_pubblicazione`.`id`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `prodotti_stagioni_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `prodotti_stagioni_view`*/;
-/*!50001 DROP VIEW IF EXISTS `prodotti_stagioni_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `prodotti_stagioni_view` AS select `prodotti_stagioni`.`id` AS `id`,`prodotti_stagioni`.`id_prodotto` AS `id_prodotto`,`prodotti_stagioni`.`id_stagione` AS `id_stagione`,`prodotti_stagioni`.`id` AS `__label__` from `prodotti_stagioni` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `prodotti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `prodotti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `prodotti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `prodotti_view` AS select `prodotti`.`id` AS `id`,`prodotti`.`id_tipologia` AS `id_tipologia`,`prodotti`.`nome` AS `nome`,`prodotti`.`descrizione` AS `descrizione`,`prodotti`.`ordine` AS `ordine`,`prodotti`.`codifica` AS `codifica`,`prodotti`.`id_udm` AS `id_udm`,`prodotti`.`id_ingombro` AS `id_ingombro`,`prodotti`.`ingombro_proporzionale` AS `ingombro_proporzionale`,`prodotti`.`larghezza_prodotto` AS `larghezza_prodotto`,`prodotti`.`lunghezza_prodotto` AS `lunghezza_prodotto`,`prodotti`.`altezza_prodotto` AS `altezza_prodotto`,`prodotti`.`id_produttore` AS `id_produttore`,`prodotti`.`codice_produttore` AS `codice_produttore`,`prodotti`.`id_fornitore` AS `id_fornitore`,`prodotti`.`id_marchio` AS `id_marchio`,`prodotti`.`id_tipologia_pubblicazione` AS `id_tipologia_pubblicazione`,`prodotti`.`se_disponibile` AS `se_disponibile`,`prodotti`.`timestamp_pubblicazione` AS `timestamp_pubblicazione`,`prodotti`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`prodotti`.`timestamp_inserimento` AS `timestamp_inserimento`,`prodotti`.`id_account_inserimento` AS `id_account_inserimento`,`prodotti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`prodotti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tipologie_pubblicazione`.`se_pubblicato` AS `se_pubblicato`,`tipologie_pubblicazione`.`nome` AS `pubblicazione`,group_concat(distinct `categorie_prodotti_view`.`__label__` separator ' | ') AS `categorie`,`produttori`.`denominazione` AS `produttore`,`marchi`.`nome` AS `marchio`,concat_ws(' ',`prodotti`.`id`,`prodotti`.`nome`) AS `__label__` from (((((`prodotti` left join `tipologie_pubblicazione` on((`tipologie_pubblicazione`.`id` = `prodotti`.`id_tipologia_pubblicazione`))) left join `prodotti_categorie` on((`prodotti_categorie`.`id_prodotto` = `prodotti`.`id`))) left join `categorie_prodotti_view` on((`categorie_prodotti_view`.`id` = `prodotti_categorie`.`id_categoria`))) left join `anagrafica` `produttori` on((`produttori`.`id` = `prodotti`.`id_produttore`))) left join `marchi` on((`marchi`.`id` = `prodotti`.`id_marchio`))) group by `prodotti`.`id` order by concat_ws(' ',`prodotti`.`id`,`prodotti`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `progetti_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `progetti_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `progetti_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `progetti_anagrafica_view` AS select `progetti_anagrafica`.`id` AS `id`,`progetti_anagrafica`.`id_progetto` AS `id_progetto`,`progetti_anagrafica`.`id_anagrafica` AS `id_anagrafica`,`progetti_anagrafica`.`id_ruolo` AS `id_ruolo`,`progetti_anagrafica`.`se_sostituto` AS `se_sostituto`,concat_ws(' ',`progetti`.`nome`,`anagrafica`.`nome`,`ruoli_progetti`.`nome`) AS `__label__` from (((`progetti_anagrafica` left join `ruoli_progetti` on((`ruoli_progetti`.`id` = `progetti_anagrafica`.`id_ruolo`))) left join `progetti` on((`progetti`.`id` = `progetti_anagrafica`.`id_progetto`))) left join `anagrafica` on((`anagrafica`.`id` = `progetti_anagrafica`.`id_anagrafica`))) order by concat_ws(' ',`progetti`.`nome`,`anagrafica`.`nome`,`ruoli_progetti`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `progetti_commerciale_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `progetti_commerciale_view`*/;
-/*!50001 DROP VIEW IF EXISTS `progetti_commerciale_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `progetti_commerciale_view` AS select `progetti`.`id` AS `id`,`progetti`.`id_tipologia` AS `id_tipologia`,`progetti`.`id_cliente` AS `id_cliente`,`progetti`.`nome` AS `nome`,`progetti`.`testo` AS `testo`,`progetti`.`id_account_accettazione` AS `id_account_accettazione`,`progetti`.`timestamp_accettazione` AS `timestamp_accettazione`,`progetti`.`fatturato_accettazione` AS `fatturato_accettazione`,`progetti`.`testo_accettazione` AS `testo_accettazione`,`progetti`.`fatturato_previsto` AS `fatturato_previsto`,`progetti`.`ore_previste` AS `ore_previste`,`progetti`.`costi_previsti` AS `costi_previsti`,`progetti`.`testo_previsioni` AS `testo_previsioni`,`progetti`.`id_account_chiusura` AS `id_account_chiusura`,`progetti`.`timestamp_chiusura` AS `timestamp_chiusura`,`progetti`.`testo_chiusura` AS `testo_chiusura`,`progetti`.`id_account_inserimento` AS `id_account_inserimento`,`progetti`.`timestamp_inserimento` AS `timestamp_inserimento`,`progetti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`progetti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_progetti`.`nome` AS `tipologia`,`tipologie_progetti`.`se_scalare` AS `se_scalare`,`tipologie_progetti`.`se_commessa` AS `se_commessa`,`tipologie_crm`.`ordine` AS `ordine`,if((`progetti`.`timestamp_chiusura` is not null),1,0) AS `chiuso`,if(sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)),1,0) AS `attivo`,sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)) AS `task_aperti`,sum(if(((`task`.`id` is not null) and (`task`.`timestamp_completamento` is not null)),1,0)) AS `task_chiusi`,coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat(`anagrafica_cliente`.`cognome`,' ',`anagrafica_cliente`.`nome`),'') AS `cliente`,`progetti`.`nome` AS `__label__` from ((((`progetti` left join `task` on((`task`.`id_progetto` = `progetti`.`id`))) left join `anagrafica` `anagrafica_cliente` on((`anagrafica_cliente`.`id` = `progetti`.`id_cliente`))) left join `tipologie_progetti` on((`tipologie_progetti`.`id` = `progetti`.`id_tipologia`))) left join `tipologie_crm` on((`tipologie_crm`.`id` = `anagrafica_cliente`.`id_tipologia_crm`))) where isnull(`progetti`.`timestamp_accettazione`) group by `progetti`.`id` order by `progetti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `progetti_produzione_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `progetti_produzione_view`*/;
-/*!50001 DROP VIEW IF EXISTS `progetti_produzione_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `progetti_produzione_view` AS select `progetti`.`id` AS `id`,`progetti`.`id_tipologia` AS `id_tipologia`,`progetti`.`id_cliente` AS `id_cliente`,`progetti`.`id_indirizzo` AS `id_indirizzo`,`progetti`.`nome` AS `nome`,`progetti`.`testo` AS `testo`,`progetti`.`ranking` AS `ranking`,`progetti`.`id_account_accettazione` AS `id_account_accettazione`,`progetti`.`timestamp_accettazione` AS `timestamp_accettazione`,`progetti`.`fatturato_accettazione` AS `fatturato_accettazione`,`progetti`.`testo_accettazione` AS `testo_accettazione`,`progetti`.`fatturato_previsto` AS `fatturato_previsto`,`progetti`.`ore_previste` AS `ore_previste`,`progetti`.`costi_previsti` AS `costi_previsti`,`progetti`.`testo_previsioni` AS `testo_previsioni`,`progetti`.`id_account_chiusura` AS `id_account_chiusura`,`progetti`.`timestamp_chiusura` AS `timestamp_chiusura`,`progetti`.`testo_chiusura` AS `testo_chiusura`,`progetti`.`id_account_inserimento` AS `id_account_inserimento`,`progetti`.`timestamp_inserimento` AS `timestamp_inserimento`,`progetti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`progetti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`progetti`.`se_lavoro_festivo` AS `se_lavoro_festivo`,`progetti`.`se_lavoro_weekend` AS `se_lavoro_weekend`,`tipologie_progetti`.`nome` AS `tipologia`,`tipologie_progetti`.`se_scalare` AS `se_scalare`,`tipologie_progetti`.`se_commessa` AS `se_commessa`,`tipologie_crm`.`ordine` AS `ordine`,if((`progetti`.`timestamp_chiusura` is not null),1,0) AS `chiuso`,if(sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)),1,0) AS `attivo`,sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)) AS `task_aperti`,sum(if(((`task`.`id` is not null) and (`task`.`timestamp_completamento` is not null)),1,0)) AS `task_chiusi`,if(((select sum(`attivita`.`ore`) from (`attivita` left join `task` `t` on((`t`.`id` = `attivita`.`id_task`))) where ((`attivita`.`id_progetto` = `progetti`.`id`) or (`t`.`id_progetto` = `progetti`.`id`))) > `progetti`.`ore_previste`),1,0) AS `se_ore_esubero`,coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat(`anagrafica_cliente`.`cognome`,' ',`anagrafica_cliente`.`nome`),'') AS `cliente`,`progetti`.`nome` AS `__label__` from ((((`progetti` left join `task` on((`task`.`id_progetto` = `progetti`.`id`))) left join `anagrafica` `anagrafica_cliente` on((`anagrafica_cliente`.`id` = `progetti`.`id_cliente`))) left join `tipologie_progetti` on((`tipologie_progetti`.`id` = `progetti`.`id_tipologia`))) left join `tipologie_crm` on((`tipologie_crm`.`id` = `anagrafica_cliente`.`id_tipologia_crm`))) where (`progetti`.`timestamp_accettazione` is not null) group by `progetti`.`id` order by `progetti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `progetti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `progetti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `progetti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `progetti_view` AS select `progetti`.`id` AS `id`,`progetti`.`id_tipologia` AS `id_tipologia`,`progetti`.`id_cliente` AS `id_cliente`,`progetti`.`id_indirizzo` AS `id_indirizzo`,`progetti`.`nome` AS `nome`,`progetti`.`testo` AS `testo`,`progetti`.`ranking` AS `ranking`,`progetti`.`id_account_accettazione` AS `id_account_accettazione`,`progetti`.`timestamp_accettazione` AS `timestamp_accettazione`,`progetti`.`fatturato_accettazione` AS `fatturato_accettazione`,`progetti`.`testo_accettazione` AS `testo_accettazione`,`progetti`.`fatturato_previsto` AS `fatturato_previsto`,`progetti`.`ore_previste` AS `ore_previste`,`progetti`.`costi_previsti` AS `costi_previsti`,`progetti`.`testo_previsioni` AS `testo_previsioni`,`progetti`.`id_account_chiusura` AS `id_account_chiusura`,`progetti`.`timestamp_chiusura` AS `timestamp_chiusura`,`progetti`.`testo_chiusura` AS `testo_chiusura`,`progetti`.`id_account_inserimento` AS `id_account_inserimento`,`progetti`.`timestamp_inserimento` AS `timestamp_inserimento`,`progetti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`progetti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_progetti`.`nome` AS `tipologia`,`tipologie_progetti`.`se_scalare` AS `se_scalare`,`tipologie_progetti`.`se_commessa` AS `se_commessa`,if((`progetti`.`timestamp_chiusura` is not null),1,0) AS `chiuso`,if(sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)),1,0) AS `attivo`,sum(if(((`task`.`id` is not null) and isnull(`task`.`timestamp_completamento`)),1,0)) AS `task_aperti`,sum(if(((`task`.`id` is not null) and (`task`.`timestamp_completamento` is not null)),1,0)) AS `task_chiusi`,if(((select sum(`attivita`.`ore`) from (`attivita` left join `task` `t` on((`t`.`id` = `attivita`.`id_task`))) where ((`attivita`.`id_progetto` = `progetti`.`id`) or (`t`.`id_progetto` = `progetti`.`id`))) > `progetti`.`ore_previste`),1,0) AS `se_ore_esubero`,coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat(`anagrafica_cliente`.`cognome`,' ',`anagrafica_cliente`.`nome`),'') AS `cliente`,concat(if((not((`indirizzi`.`descrizione` like ''))),concat(`indirizzi`.`descrizione`,' - '),''),`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`cap` like ''))),concat(', ',`indirizzi`.`cap`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' ',`comuni`.`nome`,' (',`provincie`.`sigla`,')'),'')) AS `indirizzo`,`progetti`.`nome` AS `__label__` from ((((((`progetti` left join `task` on((`task`.`id_progetto` = `progetti`.`id`))) left join `anagrafica` `anagrafica_cliente` on((`anagrafica_cliente`.`id` = `progetti`.`id_cliente`))) left join `tipologie_progetti` on((`tipologie_progetti`.`id` = `progetti`.`id_tipologia`))) left join `indirizzi` on((`indirizzi`.`id` = `progetti`.`id_indirizzo`))) left join `comuni` on((`comuni`.`id` = `indirizzi`.`id_comune`))) left join `provincie` on((`provincie`.`id` = `comuni`.`id_provincia`))) group by `progetti`.`id` order by `progetti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `provenienze_contatti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `provenienze_contatti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `provenienze_contatti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `provenienze_contatti_view` AS select `provenienze_contatti`.`id` AS `id`,`provenienze_contatti`.`nome` AS `nome`,`provenienze_contatti`.`se_contatto` AS `se_contatto`,`provenienze_contatti`.`se_segnalato` AS `se_segnalato`,`provenienze_contatti`.`nome` AS `__label__` from `provenienze_contatti` order by `provenienze_contatti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `provincie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `provincie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `provincie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `provincie_view` AS select `provincie`.`id` AS `id`,`provincie`.`id_regione` AS `id_regione`,`provincie`.`nome` AS `nome`,`provincie`.`sigla` AS `sigla`,`provincie`.`codice_istat` AS `codice_istat`,`regioni_view`.`__label__` AS `regione`,`regioni_view`.`id_stato` AS `id_stato`,`regioni_view`.`stato` AS `stato`,`regioni_view`.`id_continente` AS `id_continente`,`regioni_view`.`continente` AS `continente`,coalesce(`provincie`.`sigla`,`provincie`.`nome`,'') AS `__label__` from (`provincie` join `regioni_view` on((`regioni_view`.`id` = `provincie`.`id_regione`))) order by coalesce(`provincie`.`sigla`,`provincie`.`nome`,'') */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `pubblicazione_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `pubblicazione_view`*/;
-/*!50001 DROP VIEW IF EXISTS `pubblicazione_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `pubblicazione_view` AS select `pubblicazione`.`id` AS `id`,`pubblicazione`.`id_sito` AS `id_sito`,`pubblicazione`.`id_tipologia` AS `id_tipologia`,`pubblicazione`.`ordine` AS `ordine`,`pubblicazione`.`id_pagina` AS `id_pagina`,`pubblicazione`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`pubblicazione`.`id_prodotto` AS `id_prodotto`,`pubblicazione`.`id_genitore` AS `id_genitore`,`pubblicazione`.`id_popup` AS `id_popup`,`pubblicazione`.`template` AS `template`,`pubblicazione`.`schema_html` AS `schema_html`,`pubblicazione`.`tema_css` AS `tema_css`,`pubblicazione`.`se_sitemap` AS `se_sitemap`,`pubblicazione`.`se_cacheable` AS `se_cacheable`,`pubblicazione`.`note` AS `note`,`pubblicazione`.`timestamp_pubblicazione` AS `timestamp_pubblicazione`,`pubblicazione`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`pubblicazione`.`id` AS `__label__` from `pubblicazione` order by `pubblicazione`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `rassegna_stampa_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `rassegna_stampa_view`*/;
-/*!50001 DROP VIEW IF EXISTS `rassegna_stampa_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `rassegna_stampa_view` AS select `rassegna_stampa`.`id` AS `id`,`rassegna_stampa`.`data` AS `data`,`rassegna_stampa`.`id_testata` AS `id_testata`,`rassegna_stampa`.`id_tipologia` AS `id_tipologia`,`rassegna_stampa`.`nome` AS `nome`,`rassegna_stampa`.`testo` AS `testo`,`rassegna_stampa`.`id_account_inserimento` AS `id_account_inserimento`,`rassegna_stampa`.`timestamp_inserimento` AS `timestamp_inserimento`,`rassegna_stampa`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`rassegna_stampa`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,group_concat(distinct `eventi`.`nome` separator ' | ') AS `eventi`,group_concat(distinct `rassegna_stampa_anagrafica`.`id_anagrafica` separator ' | ') AS `autori`,`rassegna_stampa`.`nome` AS `__label__` from (((`rassegna_stampa` left join `rassegna_stampa_eventi` on((`rassegna_stampa_eventi`.`id_rassegna_stampa` = `rassegna_stampa`.`id`))) left join `eventi` on((`eventi`.`id` = `rassegna_stampa_eventi`.`id_evento`))) left join `rassegna_stampa_anagrafica` on((`rassegna_stampa`.`id` = `rassegna_stampa_anagrafica`.`id_rassegna_stampa`))) group by `rassegna_stampa`.`id` order by `rassegna_stampa`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `recensioni_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `recensioni_view`*/;
-/*!50001 DROP VIEW IF EXISTS `recensioni_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `recensioni_view` AS select `recensioni`.`id` AS `id`,`recensioni`.`id_lingua` AS `id_lingua`,`recensioni`.`id_prodotto` AS `id_prodotto`,`recensioni`.`id_pagina` AS `id_pagina`,`recensioni`.`autore` AS `autore`,`recensioni`.`valutazione` AS `valutazione`,`recensioni`.`titolo` AS `titolo`,`recensioni`.`testo` AS `testo`,`recensioni`.`se_approvata` AS `se_approvata`,`recensioni`.`id_account_inserimento` AS `id_account_inserimento`,`recensioni`.`timestamp_inserimento` AS `timestamp_inserimento`,`recensioni`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`recensioni`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`recensioni`.`timestamp_inserimento`),'%Y-%m-%d %H:%i') AS `data_ora_recensione`,concat_ws('|',`recensioni`.`autore`,`recensioni`.`titolo`) AS `__label__` from `recensioni` order by concat_ws('|',`recensioni`.`autore`,`recensioni`.`titolo`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `redirect_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `redirect_view`*/;
-/*!50001 DROP VIEW IF EXISTS `redirect_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `redirect_view` AS select `redirect`.`id` AS `id`,`redirect`.`codice` AS `codice`,`redirect`.`sorgente` AS `sorgente`,`redirect`.`destinazione` AS `destinazione`,`redirect`.`id_account_inserimento` AS `id_account_inserimento`,`redirect`.`timestamp_inserimento` AS `timestamp_inserimento`,`redirect`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`redirect`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat_ws(' -> ',`redirect`.`sorgente`,`redirect`.`codice`,`redirect`.`destinazione`) AS `__label__` from `redirect` order by concat_ws(' -> ',`redirect`.`sorgente`,`redirect`.`codice`,`redirect`.`destinazione`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `regimi_fiscali_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `regimi_fiscali_view`*/;
-/*!50001 DROP VIEW IF EXISTS `regimi_fiscali_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `regimi_fiscali_view` AS select `regimi_fiscali`.`id` AS `id`,`regimi_fiscali`.`nome` AS `nome`,`regimi_fiscali`.`codice` AS `codice`,concat(`regimi_fiscali`.`codice`,' ',`regimi_fiscali`.`nome`) AS `__label__` from `regimi_fiscali` order by concat(`regimi_fiscali`.`codice`,' ',`regimi_fiscali`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `regioni_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `regioni_view`*/;
-/*!50001 DROP VIEW IF EXISTS `regioni_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `regioni_view` AS select `regioni`.`id` AS `id`,`regioni`.`id_stato` AS `id_stato`,`regioni`.`nome` AS `nome`,`regioni`.`codice_istat` AS `codice_istat`,`stati_view`.`__label__` AS `stato`,`stati_view`.`id_continente` AS `id_continente`,`stati_view`.`continente` AS `continente`,`regioni`.`nome` AS `__label__` from (`regioni` left join `stati_view` on((`stati_view`.`id` = `regioni`.`id_stato`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_archivio_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_archivio_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_archivio_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_archivio_view` AS select `richieste_immobili`.`id` AS `id`,`richieste_immobili`.`id_cliente` AS `id_cliente`,`richieste_immobili`.`id_agente` AS `id_agente`,`richieste_immobili`.`piano_min` AS `piano_min`,`richieste_immobili`.`piano_max` AS `piano_max`,`richieste_immobili`.`mq_min` AS `mq_min`,`richieste_immobili`.`mq_max` AS `mq_max`,`richieste_immobili`.`cucine_min` AS `cucine_min`,`richieste_immobili`.`cucine_max` AS `cucine_max`,`richieste_immobili`.`bagni_min` AS `bagni_min`,`richieste_immobili`.`bagni_max` AS `bagni_max`,`richieste_immobili`.`camere_min` AS `camere_min`,`richieste_immobili`.`camere_max` AS `camere_max`,`richieste_immobili`.`spese_min` AS `spese_min`,`richieste_immobili`.`spese_max` AS `spese_max`,`richieste_immobili`.`note_richiesta` AS `note_richiesta`,`richieste_immobili`.`note_interne` AS `note_interne`,`richieste_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`richieste_immobili`.`id_esito` AS `id_esito`,`richieste_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`richieste_immobili`.`note_archiviazione` AS `note_archiviazione`,`richieste_immobili`.`id_account_editor` AS `id_account_editor`,`richieste_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`richieste_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat_ws(' ',`anagrafica_view`.`cognome`,`anagrafica_view`.`nome`,`anagrafica_view`.`denominazione`) AS `cliente`,group_concat(distinct `tipologie_incarichi_immobili`.`nome` separator ' | ') AS `tipologia_incarico`,group_concat(distinct `tipologie_immobili`.`nome` separator ' | ') AS `tipologia_immobile`,group_concat(distinct `zone`.`nome` separator ' | ') AS `zona`,`anagrafica_view`.`mail` AS `mail`,`anagrafica_view`.`telefoni` AS `telefoni`,concat('richiesta archiviata',concat_ws(' ',`anagrafica_view`.`cognome`,`anagrafica_view`.`nome`,`anagrafica_view`.`denominazione`),' riferimento id ',`richieste_immobili`.`id`) AS `__label__` from (((((((`richieste_immobili` left join `anagrafica_view` on((`anagrafica_view`.`id` = `richieste_immobili`.`id_cliente`))) left join `richieste_immobili_tipologie_incarichi` on((`richieste_immobili_tipologie_incarichi`.`id_richiesta` = `richieste_immobili`.`id`))) left join `tipologie_incarichi_immobili` on((`richieste_immobili_tipologie_incarichi`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `richieste_immobili_tipologie` on((`richieste_immobili_tipologie`.`id_richiesta` = `richieste_immobili`.`id`))) left join `tipologie_immobili` on((`richieste_immobili_tipologie`.`id_tipologia` = `tipologie_immobili`.`id`))) left join `richieste_immobili_zone` on((`richieste_immobili_zone`.`id_richiesta` = `richieste_immobili`.`id`))) left join `zone` on((`richieste_immobili_zone`.`id_zona` = `zone`.`id`))) where (`richieste_immobili`.`timestamp_archiviazione` is not null) group by `richieste_immobili`.`id` order by concat('richiesta archiviata',concat_ws(' ',`anagrafica_view`.`cognome`,`anagrafica_view`.`nome`,`anagrafica_view`.`denominazione`),' riferimento id ',`richieste_immobili`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_caratteristiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_caratteristiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_caratteristiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_caratteristiche_view` AS select `richieste_immobili_caratteristiche`.`id` AS `id`,`richieste_immobili_caratteristiche`.`id_richiesta` AS `id_richiesta`,`richieste_immobili_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`richieste_immobili_caratteristiche`.`specifiche` AS `specifiche`,`richieste_immobili_caratteristiche`.`se_non_desiderata` AS `se_non_desiderata`,`richieste_immobili_caratteristiche`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili_caratteristiche`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili_caratteristiche`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili_caratteristiche`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`richieste_immobili_caratteristiche`.`id_richiesta`,'-',`richieste_immobili_caratteristiche`.`id_caratteristica`) AS `__label__` from `richieste_immobili_caratteristiche` order by concat(`richieste_immobili_caratteristiche`.`id_richiesta`,'-',`richieste_immobili_caratteristiche`.`id_caratteristica`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_classi_energetiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_classi_energetiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_classi_energetiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_classi_energetiche_view` AS select `richieste_immobili_classi_energetiche`.`id` AS `id`,`richieste_immobili_classi_energetiche`.`id_richiesta` AS `id_richiesta`,`richieste_immobili_classi_energetiche`.`id_classe` AS `id_classe`,`richieste_immobili_classi_energetiche`.`se_non_desiderata` AS `se_non_desiderata`,`richieste_immobili_classi_energetiche`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili_classi_energetiche`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili_classi_energetiche`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili_classi_energetiche`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`richieste_immobili_classi_energetiche`.`id_richiesta`,'-',`richieste_immobili_classi_energetiche`.`id_classe`) AS `__label__` from `richieste_immobili_classi_energetiche` order by concat(`richieste_immobili_classi_energetiche`.`id_richiesta`,'-',`richieste_immobili_classi_energetiche`.`id_classe`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_condizioni_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_condizioni_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_condizioni_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_condizioni_view` AS select `richieste_immobili_condizioni`.`id` AS `id`,`richieste_immobili_condizioni`.`id_richiesta` AS `id_richiesta`,`richieste_immobili_condizioni`.`id_condizione` AS `id_condizione`,`richieste_immobili_condizioni`.`se_non_desiderata` AS `se_non_desiderata`,`richieste_immobili_condizioni`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili_condizioni`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili_condizioni`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili_condizioni`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`richieste_immobili_condizioni`.`id_richiesta`,'-',`richieste_immobili_condizioni`.`id_condizione`) AS `__label__` from `richieste_immobili_condizioni` order by concat(`richieste_immobili_condizioni`.`id_richiesta`,'-',`richieste_immobili_condizioni`.`id_condizione`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_disponibilita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_disponibilita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_disponibilita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_disponibilita_view` AS select `richieste_immobili_disponibilita`.`id` AS `id`,`richieste_immobili_disponibilita`.`id_richiesta` AS `id_richiesta`,`richieste_immobili_disponibilita`.`id_disponibilita` AS `id_disponibilita`,`richieste_immobili_disponibilita`.`se_non_desiderata` AS `se_non_desiderata`,`richieste_immobili_disponibilita`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili_disponibilita`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili_disponibilita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili_disponibilita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`richieste_immobili_disponibilita`.`id_richiesta`,'-',`richieste_immobili_disponibilita`.`id_disponibilita`) AS `__label__` from `richieste_immobili_disponibilita` order by concat(`richieste_immobili_disponibilita`.`id_richiesta`,'-',`richieste_immobili_disponibilita`.`id_disponibilita`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_tipologie_edifici_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_tipologie_edifici_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_tipologie_edifici_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_tipologie_edifici_view` AS select `richieste_immobili_tipologie_edifici`.`id` AS `id`,`richieste_immobili_tipologie_edifici`.`id_richiesta` AS `id_richiesta`,`richieste_immobili_tipologie_edifici`.`id_tipologia` AS `id_tipologia`,`richieste_immobili_tipologie_edifici`.`se_non_desiderata` AS `se_non_desiderata`,`richieste_immobili_tipologie_edifici`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili_tipologie_edifici`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili_tipologie_edifici`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili_tipologie_edifici`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`richieste_immobili_tipologie_edifici`.`id_richiesta`,'-',`richieste_immobili_tipologie_edifici`.`id_tipologia`) AS `__label__` from `richieste_immobili_tipologie_edifici` order by concat(`richieste_immobili_tipologie_edifici`.`id_richiesta`,'-',`richieste_immobili_tipologie_edifici`.`id_tipologia`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_tipologie_incarichi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_tipologie_incarichi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_tipologie_incarichi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_tipologie_incarichi_view` AS select `richieste_immobili_tipologie_incarichi`.`id` AS `id`,`richieste_immobili_tipologie_incarichi`.`id_richiesta` AS `id_richiesta`,`richieste_immobili_tipologie_incarichi`.`id_tipologia` AS `id_tipologia`,`richieste_immobili_tipologie_incarichi`.`id_tipologia_founding` AS `id_tipologia_founding`,`richieste_immobili_tipologie_incarichi`.`prezzo_min` AS `prezzo_min`,`richieste_immobili_tipologie_incarichi`.`prezzo_max` AS `prezzo_max`,`richieste_immobili_tipologie_incarichi`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili_tipologie_incarichi`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili_tipologie_incarichi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili_tipologie_incarichi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`richieste_immobili_tipologie_incarichi`.`id_richiesta`,'-',`richieste_immobili_tipologie_incarichi`.`id_tipologia`) AS `__label__` from `richieste_immobili_tipologie_incarichi` order by concat(`richieste_immobili_tipologie_incarichi`.`id_richiesta`,'-',`richieste_immobili_tipologie_incarichi`.`id_tipologia`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_tipologie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_tipologie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_tipologie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_tipologie_view` AS select `richieste_immobili_tipologie`.`id` AS `id`,`richieste_immobili_tipologie`.`id_richiesta` AS `id_richiesta`,`richieste_immobili_tipologie`.`id_tipologia` AS `id_tipologia`,`richieste_immobili_tipologie`.`se_non_desiderata` AS `se_non_desiderata`,`richieste_immobili_tipologie`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili_tipologie`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili_tipologie`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili_tipologie`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`richieste_immobili_tipologie`.`id_richiesta`,'-',`richieste_immobili_tipologie`.`id_tipologia`) AS `__label__` from `richieste_immobili_tipologie` order by concat(`richieste_immobili_tipologie`.`id_richiesta`,'-',`richieste_immobili_tipologie`.`id_tipologia`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_view` AS select `richieste_immobili`.`id` AS `id`,`richieste_immobili`.`id_cliente` AS `id_cliente`,`richieste_immobili`.`id_agente` AS `id_agente`,`richieste_immobili`.`piano_min` AS `piano_min`,`richieste_immobili`.`piano_max` AS `piano_max`,`richieste_immobili`.`mq_min` AS `mq_min`,`richieste_immobili`.`mq_max` AS `mq_max`,`richieste_immobili`.`cucine_min` AS `cucine_min`,`richieste_immobili`.`cucine_max` AS `cucine_max`,`richieste_immobili`.`bagni_min` AS `bagni_min`,`richieste_immobili`.`bagni_max` AS `bagni_max`,`richieste_immobili`.`camere_min` AS `camere_min`,`richieste_immobili`.`camere_max` AS `camere_max`,`richieste_immobili`.`spese_min` AS `spese_min`,`richieste_immobili`.`spese_max` AS `spese_max`,`richieste_immobili`.`note_richiesta` AS `note_richiesta`,`richieste_immobili`.`note_interne` AS `note_interne`,`richieste_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`richieste_immobili`.`id_esito` AS `id_esito`,`richieste_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`richieste_immobili`.`note_archiviazione` AS `note_archiviazione`,`richieste_immobili`.`id_account_editor` AS `id_account_editor`,`richieste_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`richieste_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,date_format(from_unixtime(`richieste_immobili`.`timestamp_inserimento`),'%Y-%m-%d') AS `data_inserimento`,concat_ws(' ',`anagrafica_view`.`cognome`,`anagrafica_view`.`nome`,`anagrafica_view`.`denominazione`) AS `cliente`,(case when (isnull(`richieste_immobili`.`camere_max`) and (`richieste_immobili`.`camere_min` is not null)) then concat('min ',`richieste_immobili`.`camere_min`) when (isnull(`richieste_immobili`.`camere_min`) and (`richieste_immobili`.`camere_max` is not null)) then concat('max ',`richieste_immobili`.`camere_max`) else concat(`richieste_immobili`.`camere_min`,'/',`richieste_immobili`.`camere_max`) end) AS `locali`,group_concat(distinct concat(`tipologie_incarichi_immobili`.`nome`,convert(ifnull(concat(' € ',convert(format(`richieste_immobili_tipologie_incarichi`.`prezzo_max`,2,'de_DE') using utf8mb4)),' ') using utf8)) separator ' | ') AS `tipologia_incarico`,group_concat(distinct `tipologie_immobili`.`nome` separator ' | ') AS `tipologia_immobile`,group_concat(distinct `zone`.`nome` separator ' | ') AS `zona`,`anagrafica_view`.`mail` AS `mail`,`anagrafica_view`.`telefoni` AS `telefoni`,dayofmonth(from_unixtime(`richieste_immobili`.`timestamp_inserimento`)) AS `giorno`,month(from_unixtime(`richieste_immobili`.`timestamp_inserimento`)) AS `mese`,year(from_unixtime(`richieste_immobili`.`timestamp_inserimento`)) AS `anno`,coalesce(`agenti`.`soprannome`,`agenti`.`denominazione`,concat_ws(' ',coalesce(`agenti`.`cognome`,''),coalesce(`agenti`.`nome`,'')),'') AS `agente`,(select count(0) from `incroci_immobili` where ((`incroci_immobili`.`id_richiesta` = `richieste_immobili`.`id`) and isnull(`incroci_immobili`.`timestamp_archiviazione`))) AS `incroci`,concat('richiesta ',concat_ws(' ',`anagrafica_view`.`cognome`,`anagrafica_view`.`nome`,`anagrafica_view`.`denominazione`),' riferimento id ',`richieste_immobili`.`id`) AS `__label__` from (((((((((`richieste_immobili` left join `anagrafica_view` on((`anagrafica_view`.`id` = `richieste_immobili`.`id_cliente`))) left join `account` on((`account`.`id` = `richieste_immobili`.`id_account_editor`))) left join `anagrafica` `agenti` on((`account`.`id_anagrafica` = `agenti`.`id`))) left join `richieste_immobili_tipologie_incarichi` on((`richieste_immobili_tipologie_incarichi`.`id_richiesta` = `richieste_immobili`.`id`))) left join `tipologie_incarichi_immobili` on((`richieste_immobili_tipologie_incarichi`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `richieste_immobili_tipologie` on((`richieste_immobili_tipologie`.`id_richiesta` = `richieste_immobili`.`id`))) left join `tipologie_immobili` on((`richieste_immobili_tipologie`.`id_tipologia` = `tipologie_immobili`.`id`))) left join `richieste_immobili_zone` on((`richieste_immobili_zone`.`id_richiesta` = `richieste_immobili`.`id`))) left join `zone` on((`richieste_immobili_zone`.`id_zona` = `zone`.`id`))) where isnull(`richieste_immobili`.`timestamp_archiviazione`) group by `richieste_immobili`.`id` order by concat('richiesta ',concat_ws(' ',`anagrafica_view`.`cognome`,`anagrafica_view`.`nome`,`anagrafica_view`.`denominazione`),' riferimento id ',`richieste_immobili`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `richieste_immobili_zone_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `richieste_immobili_zone_view`*/;
-/*!50001 DROP VIEW IF EXISTS `richieste_immobili_zone_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `richieste_immobili_zone_view` AS select `richieste_immobili_zone`.`id` AS `id`,`richieste_immobili_zone`.`id_richiesta` AS `id_richiesta`,`richieste_immobili_zone`.`id_zona` AS `id_zona`,`richieste_immobili_zone`.`se_non_desiderata` AS `se_non_desiderata`,`richieste_immobili_zone`.`id_account_inserimento` AS `id_account_inserimento`,`richieste_immobili_zone`.`timestamp_inserimento` AS `timestamp_inserimento`,`richieste_immobili_zone`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`richieste_immobili_zone`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`richieste_immobili_zone`.`id_richiesta`,'-',`richieste_immobili_zone`.`id_zona`) AS `__label__` from `richieste_immobili_zone` order by concat(`richieste_immobili_zone`.`id_richiesta`,'-',`richieste_immobili_zone`.`id_zona`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `righe_documenti_amministrativi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `righe_documenti_amministrativi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `righe_documenti_amministrativi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `righe_documenti_amministrativi_view` AS select `righe_documenti_amministrativi`.`id` AS `id`,`righe_documenti_amministrativi`.`id_tipologia` AS `id_tipologia`,`righe_documenti_amministrativi`.`id_documento` AS `id_documento`,`righe_documenti_amministrativi`.`id_cliente` AS `id_cliente`,`righe_documenti_amministrativi`.`id_emittente` AS `id_emittente`,`righe_documenti_amministrativi`.`id_genitore` AS `id_genitore`,`righe_documenti_amministrativi`.`id_riferimento` AS `id_riferimento`,`righe_documenti_amministrativi`.`id_progetto` AS `id_progetto`,`righe_documenti_amministrativi`.`id_pratica` AS `id_pratica`,`righe_documenti_amministrativi`.`id_task` AS `id_task`,`righe_documenti_amministrativi`.`id_todo` AS `id_todo`,`righe_documenti_amministrativi`.`id_attivita` AS `id_attivita`,`righe_documenti_amministrativi`.`id_articolo` AS `id_articolo`,`righe_documenti_amministrativi`.`id_udm` AS `id_udm`,`righe_documenti_amministrativi`.`ordine` AS `ordine`,`righe_documenti_amministrativi`.`quantita` AS `quantita`,`righe_documenti_amministrativi`.`data_lavorazione` AS `data_lavorazione`,`righe_documenti_amministrativi`.`data_fatturabile` AS `data_fatturabile`,`righe_documenti_amministrativi`.`data_scadenza` AS `data_scadenza`,`righe_documenti_amministrativi`.`id_listino` AS `id_listino`,`righe_documenti_amministrativi`.`id_valuta` AS `id_valuta`,`righe_documenti_amministrativi`.`id_modalita_pagamento` AS `id_modalita_pagamento`,`righe_documenti_amministrativi`.`importo_netto_totale` AS `importo_netto_totale`,`righe_documenti_amministrativi`.`importo_netto_totale_non_scontato` AS `importo_netto_totale_non_scontato`,`righe_documenti_amministrativi`.`id_iva` AS `id_iva`,`righe_documenti_amministrativi`.`nome` AS `nome`,`righe_documenti_amministrativi`.`testo` AS `testo`,`righe_documenti_amministrativi`.`path` AS `path`,`righe_documenti_amministrativi`.`se_rimborso` AS `se_rimborso`,`righe_documenti_amministrativi`.`id_account_inserimento` AS `id_account_inserimento`,`righe_documenti_amministrativi`.`timestamp_inserimento` AS `timestamp_inserimento`,`righe_documenti_amministrativi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`righe_documenti_amministrativi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`righe_documenti_amministrativi`.`nome` AS `__label__`,count(`figlie`.`id`) AS `numero_aggregate` from (`righe_documenti_amministrativi` left join `righe_documenti_amministrativi` `figlie` on((`figlie`.`id_genitore` = `righe_documenti_amministrativi`.`id`))) group by `righe_documenti_amministrativi`.`id` order by `righe_documenti_amministrativi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `righe_fatturati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `righe_fatturati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `righe_fatturati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `righe_fatturati_view` AS select `righe_fatturati`.`id` AS `id`,`righe_fatturati`.`id_fatturato` AS `id_fatturato`,`righe_fatturati`.`id_emittente` AS `id_emittente`,`righe_fatturati`.`id_cliente` AS `id_cliente`,`righe_fatturati`.`id_agente` AS `id_agente`,`righe_fatturati`.`id_mandante` AS `id_mandante`,`righe_fatturati`.`mese` AS `mese`,`righe_fatturati`.`anno` AS `anno`,`righe_fatturati`.`riferimento_fattura` AS `riferimento_fattura`,`righe_fatturati`.`imponibile` AS `imponibile`,`righe_fatturati`.`imponibile_provvigionale` AS `imponibile_provvigionale`,`righe_fatturati`.`provvigione_azienda` AS `provvigione_azienda`,`righe_fatturati`.`provvigione_agente` AS `provvigione_agente`,`righe_fatturati`.`se_importato` AS `se_importato`,`righe_fatturati`.`id_account_inserimento` AS `id_account_inserimento`,`righe_fatturati`.`timestamp_inserimento` AS `timestamp_inserimento`,`righe_fatturati`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`righe_fatturati`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat_ws(' ',`emittenti`.`cognome`,`emittenti`.`nome`,`emittenti`.`denominazione`) AS `emittente`,concat_ws(' ',`clienti`.`cognome`,`clienti`.`nome`,`clienti`.`denominazione`) AS `cliente`,concat_ws(' ',`agenti`.`cognome`,`agenti`.`nome`,`agenti`.`denominazione`) AS `agente`,concat_ws(' ',`mandanti`.`cognome`,`mandanti`.`nome`,`mandanti`.`denominazione`) AS `mandante`,monthname(str_to_date(`righe_fatturati`.`mese`,'%m')) AS `nome_mese`,concat('riferimento fattura ',`righe_fatturati`.`riferimento_fattura`) AS `__label__` from ((((`righe_fatturati` left join `anagrafica` `emittenti` on((`emittenti`.`id` = `righe_fatturati`.`id_emittente`))) left join `anagrafica` `clienti` on((`clienti`.`id` = `righe_fatturati`.`id_cliente`))) left join `anagrafica` `agenti` on((`agenti`.`id` = `righe_fatturati`.`id_agente`))) left join `anagrafica` `mandanti` on((`mandanti`.`id` = `righe_fatturati`.`id_mandante`))) order by `righe_fatturati`.`anno` desc,`righe_fatturati`.`mese` desc,`righe_fatturati`.`id` desc,concat('riferimento fattura ',`righe_fatturati`.`riferimento_fattura`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `righe_fatture_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `righe_fatture_view`*/;
-/*!50001 DROP VIEW IF EXISTS `righe_fatture_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `righe_fatture_view` AS select `righe_documenti_amministrativi`.`id` AS `id`,`righe_documenti_amministrativi`.`data_fatturabile` AS `data_fatturabile`,`righe_documenti_amministrativi`.`nome` AS `nome`,`righe_documenti_amministrativi`.`quantita` AS `quantita`,`righe_documenti_amministrativi`.`id_cliente` AS `id_cliente`,`righe_documenti_amministrativi`.`id_emittente` AS `id_emittente`,`righe_documenti_amministrativi`.`id_genitore` AS `id_genitore`,`righe_documenti_amministrativi`.`id_documento` AS `id_documento`,`righe_documenti_amministrativi`.`id_riferimento` AS `id_riferimento`,`righe_documenti_amministrativi`.`id_articolo` AS `id_articolo`,`righe_documenti_amministrativi`.`id_udm` AS `id_udm`,`righe_documenti_amministrativi`.`data_lavorazione` AS `data_lavorazione`,concat(round(`righe_documenti_amministrativi`.`importo_netto_totale`,2),' ',`valute`.`utf8`) AS `importo_netto_totale`,`clienti`.`__label__` AS `cliente`,`emittenti`.`__label__` AS `emittente`,concat(`documento`.`numero`,'/',year(`documento`.`data`)) AS `fattura`,year(`righe_documenti_amministrativi`.`data_lavorazione`) AS `anno`,`righe_documenti_amministrativi`.`nome` AS `__label__`,`udm`.`sigla` AS `udm`,`articoli`.`nome` AS `articolo` from (((((((((((((`righe_documenti_amministrativi` left join `anagrafica_view` `clienti` on((`clienti`.`id` = `righe_documenti_amministrativi`.`id_cliente`))) left join `anagrafica_view` `emittenti` on((`clienti`.`id` = `righe_documenti_amministrativi`.`id_emittente`))) left join `listini` on((`listini`.`id` = `righe_documenti_amministrativi`.`id_listino`))) left join `valute` on((`valute`.`id` = coalesce(`righe_documenti_amministrativi`.`id_valuta`,`listini`.`id_valuta`)))) left join `documenti_amministrativi` `righe_fattura` on((`righe_fattura`.`id` = `righe_documenti_amministrativi`.`id_genitore`))) left join `documenti_amministrativi` `documento` on((`documento`.`id` = `righe_documenti_amministrativi`.`id_documento`))) left join `righe_documenti_amministrativi` `genitore` on((`righe_documenti_amministrativi`.`id` = `genitore`.`id`))) left join `tipologie_documenti_amministrativi` `tipologie` on((`tipologie`.`id` = `documento`.`id_tipologia`))) left join `tipologie_righe_documenti_amministrativi` `tipologie_riga` on((`tipologie_riga`.`id` = `righe_documenti_amministrativi`.`id_tipologia`))) left join `documenti_amministrativi` `documento_genitore` on((`documento_genitore`.`id` = `genitore`.`id_documento`))) left join `tipologie_documenti_amministrativi` `tipologie_genitori` on((`tipologie_genitori`.`id` = `documento_genitore`.`id_tipologia`))) left join `udm` on((`udm`.`id` = `righe_documenti_amministrativi`.`id_udm`))) left join `articoli` on((`articoli`.`id` = `righe_documenti_amministrativi`.`id_articolo`))) where (((`righe_documenti_amministrativi`.`id_documento` is not null) and (`tipologie`.`se_fattura` = 1)) or ((`righe_documenti_amministrativi`.`id_genitore` is not null) and (`tipologie_genitori`.`se_fattura` = 1)) or (`tipologie_riga`.`se_fattura` = 1)) order by `righe_documenti_amministrativi`.`data_fatturabile` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `righe_note_pro_forma_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `righe_note_pro_forma_view`*/;
-/*!50001 DROP VIEW IF EXISTS `righe_note_pro_forma_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `righe_note_pro_forma_view` AS select `righe_documenti_amministrativi`.`id` AS `id`,`righe_documenti_amministrativi`.`id_tipologia` AS `id_tipologia`,`righe_documenti_amministrativi`.`id_documento` AS `id_documento`,`righe_documenti_amministrativi`.`id_cliente` AS `id_cliente`,`righe_documenti_amministrativi`.`id_emittente` AS `id_emittente`,`righe_documenti_amministrativi`.`id_genitore` AS `id_genitore`,`righe_documenti_amministrativi`.`id_riferimento` AS `id_riferimento`,`righe_documenti_amministrativi`.`id_progetto` AS `id_progetto`,`righe_documenti_amministrativi`.`id_pratica` AS `id_pratica`,`righe_documenti_amministrativi`.`id_task` AS `id_task`,`righe_documenti_amministrativi`.`id_attivita` AS `id_attivita`,`righe_documenti_amministrativi`.`id_articolo` AS `id_articolo`,`righe_documenti_amministrativi`.`id_udm` AS `id_udm`,`righe_documenti_amministrativi`.`ordine` AS `ordine`,`righe_documenti_amministrativi`.`quantita` AS `quantita`,`righe_documenti_amministrativi`.`data_lavorazione` AS `data_lavorazione`,`righe_documenti_amministrativi`.`data_fatturabile` AS `data_fatturabile`,`righe_documenti_amministrativi`.`data_scadenza` AS `data_scadenza`,`righe_documenti_amministrativi`.`id_listino` AS `id_listino`,`righe_documenti_amministrativi`.`id_valuta` AS `id_valuta`,`righe_documenti_amministrativi`.`importo_netto_totale` AS `importo_netto_totale`,`righe_documenti_amministrativi`.`importo_netto_totale_non_scontato` AS `importo_netto_totale_non_scontato`,`righe_documenti_amministrativi`.`id_iva` AS `id_iva`,`righe_documenti_amministrativi`.`nome` AS `nome`,`righe_documenti_amministrativi`.`testo` AS `testo`,`righe_documenti_amministrativi`.`path` AS `path`,`righe_documenti_amministrativi`.`se_rimborso` AS `se_rimborso`,`righe_documenti_amministrativi`.`id_account_inserimento` AS `id_account_inserimento`,`righe_documenti_amministrativi`.`timestamp_inserimento` AS `timestamp_inserimento`,`righe_documenti_amministrativi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`righe_documenti_amministrativi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(round(`righe_documenti_amministrativi`.`importo_netto_totale`,2),' ',`valute`.`utf8`) AS `importo_netto_totale_label`,`clienti`.`__label__` AS `cliente`,`emittenti`.`__label__` AS `emittente`,`articoli`.`nome` AS `articolo`,year(`righe_documenti_amministrativi`.`data_lavorazione`) AS `anno`,concat(`documento`.`numero`,'/',year(`documento`.`data`)) AS `nota_pro_forma`,`righe_documenti_amministrativi`.`nome` AS `__label__`,`udm`.`sigla` AS `udm` from ((((((((((((`righe_documenti_amministrativi` left join `anagrafica_view` `clienti` on((`clienti`.`id` = `righe_documenti_amministrativi`.`id_cliente`))) left join `anagrafica_view` `emittenti` on((`emittenti`.`id` = `righe_documenti_amministrativi`.`id_emittente`))) left join `udm` on((`udm`.`id` = `righe_documenti_amministrativi`.`id_udm`))) left join `articoli` on((`articoli`.`id` = `righe_documenti_amministrativi`.`id_articolo`))) left join `listini` on((`listini`.`id` = `righe_documenti_amministrativi`.`id_listino`))) left join `valute` on((`valute`.`id` = coalesce(`righe_documenti_amministrativi`.`id_valuta`,`listini`.`id_valuta`)))) left join `documenti_amministrativi` `documento` on((`documento`.`id` = `righe_documenti_amministrativi`.`id_documento`))) left join `tipologie_documenti_amministrativi` `tipologie` on((`tipologie`.`id` = `documento`.`id_tipologia`))) left join `tipologie_righe_documenti_amministrativi` `tipologie_riga` on((`tipologie_riga`.`id` = `righe_documenti_amministrativi`.`id_tipologia`))) left join `righe_documenti_amministrativi` `genitore` on((`righe_documenti_amministrativi`.`id` = `genitore`.`id`))) left join `documenti_amministrativi` `documento_genitore` on((`documento_genitore`.`id` = `genitore`.`id_documento`))) left join `tipologie_documenti_amministrativi` `tipologie_genitori` on((`tipologie_genitori`.`id` = `documento_genitore`.`id_tipologia`))) where (((`tipologie`.`se_pro_forma` = 1) and (`righe_documenti_amministrativi`.`id_documento` is not null)) or (`tipologie_riga`.`se_pro_forma` = 1) or ((`righe_documenti_amministrativi`.`id_genitore` is not null) and (`tipologie_genitori`.`se_fattura` = 1))) order by `righe_documenti_amministrativi`.`data_fatturabile` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `righe_offerte_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `righe_offerte_view`*/;
-/*!50001 DROP VIEW IF EXISTS `righe_offerte_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `righe_offerte_view` AS select `righe_documenti_amministrativi`.`id` AS `id`,`righe_documenti_amministrativi`.`data_fatturabile` AS `data_fatturabile`,`righe_documenti_amministrativi`.`nome` AS `nome`,`righe_documenti_amministrativi`.`id_genitore` AS `id_genitore`,concat(round(`righe_documenti_amministrativi`.`importo_netto_totale`,2),' ',`valute`.`utf8`) AS `importo_netto_totale`,`clienti`.`__label__` AS `cliente`,concat(`documento`.`numero`,'/',year(`documento`.`data`)) AS `offerta`,`righe_documenti_amministrativi`.`nome` AS `__label__` from (((((((((`righe_documenti_amministrativi` left join `anagrafica_view` `clienti` on((`clienti`.`id` = `righe_documenti_amministrativi`.`id_cliente`))) left join `listini` on((`listini`.`id` = `righe_documenti_amministrativi`.`id_listino`))) left join `valute` on((`valute`.`id` = coalesce(`righe_documenti_amministrativi`.`id_valuta`,`listini`.`id_valuta`)))) left join `documenti_amministrativi` `righe_offerta` on((`righe_offerta`.`id` = `righe_documenti_amministrativi`.`id_genitore`))) left join `documenti_amministrativi` `documento` on((`documento`.`id` = `righe_documenti_amministrativi`.`id_documento`))) left join `righe_documenti_amministrativi` `genitore` on((`righe_documenti_amministrativi`.`id_genitore` = `genitore`.`id`))) left join `tipologie_documenti_amministrativi` `tipologie` on((`tipologie`.`id` = `documento`.`id_tipologia`))) left join `documenti_amministrativi` `documento_genitore` on((`documento_genitore`.`id` = `genitore`.`id_documento`))) left join `tipologie_documenti_amministrativi` `tipologie_genitori` on((`tipologie_genitori`.`id` = `documento_genitore`.`id_tipologia`))) where (((`righe_documenti_amministrativi`.`id_documento` is not null) and (`tipologie`.`se_offerta` = 1)) or ((`righe_documenti_amministrativi`.`id_genitore` is not null) and (`tipologie_genitori`.`se_offerta` = 1))) order by `righe_documenti_amministrativi`.`data_fatturabile` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `risorse_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `risorse_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `risorse_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `risorse_anagrafica_view` AS select `risorse_anagrafica`.`id` AS `id`,`risorse_anagrafica`.`id_risorsa` AS `id_risorsa`,`risorse_anagrafica`.`id_anagrafica` AS `id_anagrafica`,`risorse_anagrafica`.`id` AS `__label__` from `risorse_anagrafica` order by `risorse_anagrafica`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `risorse_categorie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `risorse_categorie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `risorse_categorie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `risorse_categorie_view` AS select `risorse_categorie`.`id` AS `id`,`risorse_categorie`.`id_categoria` AS `id_categoria`,`risorse_categorie`.`id_risorsa` AS `id_risorsa`,`risorse_categorie`.`ordine` AS `ordine`,`risorse_categorie`.`id` AS `__label__` from `risorse_categorie` order by `risorse_categorie`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `risorse_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `risorse_view`*/;
-/*!50001 DROP VIEW IF EXISTS `risorse_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `risorse_view` AS select `risorse`.`id` AS `id`,`risorse`.`codice` AS `codice`,`risorse`.`id_testata` AS `id_testata`,`risorse`.`id_tipologia` AS `id_tipologia`,`risorse`.`id_categoria` AS `id_categoria`,`risorse`.`data_pubblicazione` AS `data_pubblicazione`,`testate`.`nome` AS `testata`,`contenuti`.`id_lingua` AS `id_lingua`,`contenuti`.`title` AS `titolo`,group_concat(distinct coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') separator ' | ') AS `autori`,`risorse`.`codice` AS `__label__` from ((((`risorse` left join `risorse_anagrafica` on((`risorse_anagrafica`.`id_risorsa` = `risorse`.`id`))) left join `anagrafica` on((`anagrafica`.`id` = `risorse_anagrafica`.`id_anagrafica`))) left join `testate` on((`testate`.`id` = `risorse`.`id_testata`))) left join `contenuti` on((`contenuti`.`id_risorsa` = `risorse`.`id`))) where (`contenuti`.`id_lingua` = 1) group by `risorse`.`id` order by `risorse`.`codice` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_anagrafica_view` AS select `ruoli_anagrafica`.`id` AS `id`,`ruoli_anagrafica`.`id_genitore` AS `id_genitore`,`ruoli_anagrafica`.`nome` AS `nome`,`ruoli_anagrafica_path`(`ruoli_anagrafica`.`id`) AS `__label__` from `ruoli_anagrafica` order by `ruoli_anagrafica_path`(`ruoli_anagrafica`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_audio_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_audio_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_audio_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_audio_view` AS select `ruoli_audio`.`id` AS `id`,`ruoli_audio`.`nome` AS `nome`,`ruoli_audio`.`se_anagrafica` AS `se_anagrafica`,`ruoli_audio`.`se_contenuti` AS `se_contenuti`,`ruoli_audio`.`se_categorie_prodotti` AS `se_categorie_prodotti`,`ruoli_audio`.`nome` AS `__label__` from `ruoli_audio` order by `ruoli_audio`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_eventi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_eventi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_eventi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_eventi_view` AS select `ruoli_eventi`.`id` AS `id`,`ruoli_eventi`.`nome` AS `nome`,`ruoli_eventi`.`locandina` AS `locandina`,`ruoli_eventi`.`nome` AS `__label__` from `ruoli_eventi` order by `ruoli_eventi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_file_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_file_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_file_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_file_view` AS select `ruoli_file`.`id` AS `id`,`ruoli_file`.`nome` AS `nome`,`ruoli_file`.`se_anagrafica` AS `se_anagrafica`,`ruoli_file`.`se_contenuti` AS `se_contenuti`,`ruoli_file`.`se_categorie_prodotti` AS `se_categorie_prodotti`,`ruoli_file`.`se_mail` AS `se_mail`,`ruoli_file`.`nome` AS `__label__` from `ruoli_file` order by `ruoli_file`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_immagini_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_immagini_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_immagini_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_immagini_anagrafica_view` AS select `ruoli_immagini_anagrafica`.`id` AS `id`,`ruoli_immagini_anagrafica`.`nome` AS `nome`,`ruoli_immagini_anagrafica`.`nome` AS `__label__` from `ruoli_immagini_anagrafica` order by `ruoli_immagini_anagrafica`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_immagini_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_immagini_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_immagini_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_immagini_view` AS select `ruoli_immagini`.`id` AS `id`,`ruoli_immagini`.`nome` AS `nome`,`ruoli_immagini`.`se_contenuti` AS `se_contenuti`,`ruoli_immagini`.`se_anagrafica` AS `se_anagrafica`,`ruoli_immagini`.`se_immobili` AS `se_immobili`,`ruoli_immagini`.`se_catalogo` AS `se_catalogo`,`ruoli_immagini`.`se_prodotti` AS `se_prodotti`,`ruoli_immagini`.`ordine_scalamento` AS `ordine_scalamento`,`ruoli_immagini`.`se_categorie_prodotti` AS `se_categorie_prodotti`,`ruoli_immagini`.`nome` AS `__label__` from `ruoli_immagini` order by `ruoli_immagini`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_immobili_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_immobili_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_immobili_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_immobili_anagrafica_view` AS select `ruoli_immobili_anagrafica`.`id` AS `id`,`ruoli_immobili_anagrafica`.`nome` AS `nome`,`ruoli_immobili_anagrafica`.`nome` AS `__label__` from `ruoli_immobili_anagrafica` order by `ruoli_immobili_anagrafica`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_prodotti_categorie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_prodotti_categorie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_prodotti_categorie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_prodotti_categorie_view` AS select `ruoli_prodotti_categorie`.`id` AS `id`,`ruoli_prodotti_categorie`.`nome` AS `nome`,`ruoli_prodotti_categorie`.`se_bestseller` AS `se_bestseller`,`ruoli_prodotti_categorie`.`nome` AS `__label__` from `ruoli_prodotti_categorie` order by `ruoli_prodotti_categorie`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_progetti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_progetti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_progetti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_progetti_view` AS select `ruoli_progetti`.`id` AS `id`,`ruoli_progetti`.`id_genitore` AS `id_genitore`,`ruoli_progetti`.`nome` AS `nome`,`ruoli_progetti`.`id_account_inserimento` AS `id_account_inserimento`,`ruoli_progetti`.`timestamp_inserimento` AS `timestamp_inserimento`,`ruoli_progetti`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`ruoli_progetti`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`ruoli_progetti`.`nome` AS `__label__` from `ruoli_progetti` order by `ruoli_progetti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_rassegna_stampa_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_rassegna_stampa_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_rassegna_stampa_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_rassegna_stampa_view` AS select `ruoli_rassegna_stampa`.`id` AS `id`,`ruoli_rassegna_stampa`.`nome` AS `nome`,`ruoli_rassegna_stampa`.`nome` AS `__label__` from `ruoli_rassegna_stampa` order by `ruoli_rassegna_stampa`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `ruoli_video_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `ruoli_video_view`*/;
-/*!50001 DROP VIEW IF EXISTS `ruoli_video_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `ruoli_video_view` AS select `ruoli_video`.`id` AS `id`,`ruoli_video`.`nome` AS `nome`,`ruoli_video`.`se_anagrafica` AS `se_anagrafica`,`ruoli_video`.`se_contenuti` AS `se_contenuti`,`ruoli_video`.`se_categorie_prodotti` AS `se_categorie_prodotti`,`ruoli_video`.`nome` AS `__label__` from `ruoli_video` order by `ruoli_video`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `scadenze_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `scadenze_view`*/;
-/*!50001 DROP VIEW IF EXISTS `scadenze_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `scadenze_view` AS select `scadenze`.`id` AS `id`,`scadenze`.`id_documento` AS `id_documento`,`scadenze`.`id_pratica` AS `id_pratica`,`scadenze`.`data` AS `data`,`scadenze`.`id_modalita_pagamento` AS `id_modalita_pagamento`,`scadenze`.`nome` AS `nome`,`scadenze`.`importo_lordo_totale` AS `importo_lordo_totale`,`scadenze`.`se_pagato` AS `se_pagato`,`scadenze`.`timestamp_inserimento` AS `timestamp_inserimento`,`scadenze`.`id_account_inserimento` AS `id_account_inserimento`,`scadenze`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`scadenze`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`scadenze`.`nome` AS `__label__` from `scadenze` order by `scadenze`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `settori_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `settori_view`*/;
-/*!50001 DROP VIEW IF EXISTS `settori_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `settori_view` AS select `settori`.`id` AS `id`,`settori`.`id_genitore` AS `id_genitore`,`settori`.`nome` AS `nome`,concat(`settori`.`ateco`,' - ',`settori_path`(`settori`.`id`)) AS `__label__` from `settori` order by concat(`settori`.`ateco`,' - ',`settori_path`(`settori`.`id`)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `sms_out_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `sms_out_view`*/;
-/*!50001 DROP VIEW IF EXISTS `sms_out_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `sms_out_view` AS select `sms_out`.`id` AS `id`,`sms_out`.`timestamp_composizione` AS `timestamp_composizione`,`sms_out`.`timestamp_invio` AS `timestamp_invio`,`sms_out`.`server` AS `server`,`sms_out`.`mittente` AS `mittente`,`sms_out`.`destinatari` AS `destinatari`,`sms_out`.`corpo` AS `corpo`,`sms_out`.`host` AS `host`,`sms_out`.`port` AS `port`,`sms_out`.`user` AS `user`,`sms_out`.`password` AS `password`,`sms_out`.`id_newsletter` AS `id_newsletter`,`sms_out`.`id_telefono` AS `id_telefono`,`sms_out`.`token` AS `token`,`sms_out`.`ordine` AS `ordine`,`sms_out`.`id_account_inserimento` AS `id_account_inserimento`,`sms_out`.`timestamp_inserimento` AS `timestamp_inserimento`,`sms_out`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`sms_out`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`sms_out`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`sms_out`.`corpo` AS `__label__` from `sms_out` order by `sms_out`.`timestamp_invio` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `sms_sent_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `sms_sent_view`*/;
-/*!50001 DROP VIEW IF EXISTS `sms_sent_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `sms_sent_view` AS select `sms_sent`.`id` AS `id`,`sms_sent`.`timestamp_composizione` AS `timestamp_composizione`,`sms_sent`.`timestamp_invio` AS `timestamp_invio`,`sms_sent`.`server` AS `server`,`sms_sent`.`mittente` AS `mittente`,`sms_sent`.`destinatari` AS `destinatari`,`sms_sent`.`corpo` AS `corpo`,`sms_sent`.`host` AS `host`,`sms_sent`.`port` AS `port`,`sms_sent`.`user` AS `user`,`sms_sent`.`password` AS `password`,`sms_sent`.`id_newsletter` AS `id_newsletter`,`sms_sent`.`id_telefono` AS `id_telefono`,`sms_sent`.`token` AS `token`,`sms_sent`.`ordine` AS `ordine`,`sms_sent`.`id_account_inserimento` AS `id_account_inserimento`,`sms_sent`.`timestamp_inserimento` AS `timestamp_inserimento`,`sms_sent`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`sms_sent`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`sms_sent`.`timestamp_invio`),'%Y-%m-%d %H:%i') AS `data_ora_invio`,`sms_sent`.`corpo` AS `__label__` from `sms_sent` order by `sms_sent`.`timestamp_invio` desc */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `sostituzioni_attivita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `sostituzioni_attivita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `sostituzioni_attivita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `sostituzioni_attivita_view` AS select `sostituzioni_attivita`.`id` AS `id`,`sostituzioni_attivita`.`id_attivita` AS `id_attivita`,`sostituzioni_attivita`.`id_anagrafica` AS `id_anagrafica`,`sostituzioni_attivita`.`data_richiesta` AS `data_richiesta`,`sostituzioni_attivita`.`data_accettazione` AS `data_accettazione`,`sostituzioni_attivita`.`data_rifiuto` AS `data_rifiuto`,`sostituzioni_attivita`.`id_account_inserimento` AS `id_account_inserimento`,`sostituzioni_attivita`.`timestamp_inserimento` AS `timestamp_inserimento`,`sostituzioni_attivita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`sostituzioni_attivita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`nome`,''),coalesce(`anagrafica`.`cognome`,'')),'') AS `anagrafica`,`attivita`.`nome` AS `attivita`,concat(coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`nome`,''),coalesce(`anagrafica`.`cognome`,'')),''),' ',`attivita`.`nome`) AS `__label__` from ((`sostituzioni_attivita` left join `anagrafica` on((`anagrafica`.`id` = `sostituzioni_attivita`.`id_anagrafica`))) left join `attivita` on((`attivita`.`id` = `sostituzioni_attivita`.`id_attivita`))) order by concat(coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`nome`,''),coalesce(`anagrafica`.`cognome`,'')),''),' ',`attivita`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `stagioni_prodotti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `stagioni_prodotti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `stagioni_prodotti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `stagioni_prodotti_view` AS select `stagioni_prodotti`.`id` AS `id`,`stagioni_prodotti`.`nome` AS `nome`,`stagioni_prodotti`.`new` AS `new`,`stagioni_prodotti`.`nome` AS `__label__` from `stagioni_prodotti` order by `stagioni_prodotti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `stati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `stati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `stati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `stati_view` AS select `stati`.`id` AS `id`,`stati`.`id_continente` AS `id_continente`,`stati`.`iso31661alpha2` AS `iso31661alpha2`,`stati`.`iso31661alpha3` AS `iso31661alpha3`,`stati`.`nome` AS `nome`,`stati`.`note` AS `note`,`stati`.`codice_istat` AS `codice_istat`,`stati`.`data_cessazione` AS `data_cessazione`,`continenti_view`.`__label__` AS `continente`,coalesce(concat(`stati`.`nome`,' (cessato il ',date_format(from_unixtime(`stati`.`data_cessazione`),'%d/%m/%Y'),')'),`stati`.`nome`) AS `__label__` from (`stati` left join `continenti_view` on((`continenti_view`.`id` = `stati`.`id_continente`))) order by coalesce(concat(`stati`.`nome`,' (cessato il ',date_format(from_unixtime(`stati`.`data_cessazione`),'%d/%m/%Y'),')'),`stati`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `sviluppi_immobili_archivio_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `sviluppi_immobili_archivio_view`*/;
-/*!50001 DROP VIEW IF EXISTS `sviluppi_immobili_archivio_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `sviluppi_immobili_archivio_view` AS select `incarichi_immobili`.`id` AS `id`,`incarichi_immobili`.`riferimento` AS `riferimento`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,`incarichi_immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`incarichi_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_agenzia` AS `id_agenzia`,`incarichi_immobili`.`id_agente` AS `id_agente`,`incarichi_immobili`.`id_tipologia` AS `id_tipologia`,`incarichi_immobili`.`data_notizia` AS `data_notizia`,`incarichi_immobili`.`data_sviluppo` AS `data_sviluppo`,`incarichi_immobili`.`data_valutazione` AS `data_valutazione`,`incarichi_immobili`.`data_inizio` AS `data_inizio`,`incarichi_immobili`.`data_fine` AS `data_fine`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo_richiesto`,`incarichi_immobili`.`prezzo_mq` AS `prezzo_mq`,`incarichi_immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`incarichi_immobili`.`prezzo_incarico` AS `prezzo_incarico`,`incarichi_immobili`.`percentuale_intervallo` AS `percentuale_intervallo`,`incarichi_immobili`.`prezzo_prefisso` AS `prezzo_prefisso`,`incarichi_immobili`.`prezzo` AS `prezzo`,`incarichi_immobili`.`prezzo_suffisso` AS `prezzo_suffisso`,`incarichi_immobili`.`prezzo_sostituzione` AS `prezzo_sostituzione`,`incarichi_immobili`.`note` AS `note`,`incarichi_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`incarichi_immobili`.`id_esito_incarico` AS `id_esito_incarico`,`incarichi_immobili`.`id_esito_notizia` AS `id_esito_notizia`,`incarichi_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incarichi_immobili`.`note_archiviazione` AS `note_archiviazione`,`incarichi_immobili`.`id_account_editor` AS `id_account_editor`,`incarichi_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incarichi_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incarichi_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incarichi_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),'')) AS `indirizzo`,`indirizzi`.`latitudine` AS `latitudine`,`indirizzi`.`longitudine` AS `longitudine`,`indirizzi`.`id` AS `id_indirizzo`,`immobili`.`scala` AS `scala`,`immobili`.`piano` AS `piano`,`immobili`.`interno` AS `interno`,`tipologie_incarichi_immobili`.`nome` AS `tipologia`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,`incarichi_immobili`.`note` AS `__label__` from (((((`incarichi_immobili` left join `immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `indirizzi` on((`immobili`.`id_indirizzo` = `indirizzi`.`id`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_incarichi_immobili` on((`incarichi_immobili`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `anagrafica` on((`incarichi_immobili`.`id_cliente` = `anagrafica`.`id`))) where ((`incarichi_immobili`.`data_sviluppo` is not null) and isnull(`incarichi_immobili`.`data_notizia`) and isnull(`incarichi_immobili`.`data_valutazione`) and isnull(`incarichi_immobili`.`data_inizio`) and (`incarichi_immobili`.`timestamp_archiviazione` is not null)) order by `incarichi_immobili`.`note` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `sviluppi_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `sviluppi_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `sviluppi_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `sviluppi_immobili_view` AS select `incarichi_immobili`.`id` AS `id`,`incarichi_immobili`.`riferimento` AS `riferimento`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,`incarichi_immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`incarichi_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_agenzia` AS `id_agenzia`,`incarichi_immobili`.`id_agente` AS `id_agente`,`incarichi_immobili`.`id_tipologia` AS `id_tipologia`,`incarichi_immobili`.`data_notizia` AS `data_notizia`,`incarichi_immobili`.`data_sviluppo` AS `data_sviluppo`,`incarichi_immobili`.`data_valutazione` AS `data_valutazione`,`incarichi_immobili`.`data_inizio` AS `data_inizio`,`incarichi_immobili`.`data_fine` AS `data_fine`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo_richiesto`,`incarichi_immobili`.`prezzo_mq` AS `prezzo_mq`,`incarichi_immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`incarichi_immobili`.`prezzo_incarico` AS `prezzo_incarico`,`incarichi_immobili`.`percentuale_intervallo` AS `percentuale_intervallo`,`incarichi_immobili`.`prezzo_prefisso` AS `prezzo_prefisso`,`incarichi_immobili`.`prezzo` AS `prezzo`,`incarichi_immobili`.`prezzo_suffisso` AS `prezzo_suffisso`,`incarichi_immobili`.`prezzo_sostituzione` AS `prezzo_sostituzione`,`incarichi_immobili`.`note` AS `note`,`incarichi_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`incarichi_immobili`.`id_esito_incarico` AS `id_esito_incarico`,`incarichi_immobili`.`id_esito_notizia` AS `id_esito_notizia`,`incarichi_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incarichi_immobili`.`note_archiviazione` AS `note_archiviazione`,`incarichi_immobili`.`id_account_editor` AS `id_account_editor`,`incarichi_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incarichi_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incarichi_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incarichi_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat(`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),'')) AS `indirizzo`,`indirizzi`.`latitudine` AS `latitudine`,`indirizzi`.`longitudine` AS `longitudine`,`indirizzi`.`id` AS `id_indirizzo`,`immobili`.`scala` AS `scala`,`immobili`.`piano` AS `piano`,`immobili`.`interno` AS `interno`,`tipologie_incarichi_immobili`.`nome` AS `tipologia`,dayofmonth(`incarichi_immobili`.`data_sviluppo`) AS `giorno`,month(`incarichi_immobili`.`data_sviluppo`) AS `mese`,year(`incarichi_immobili`.`data_sviluppo`) AS `anno`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,coalesce(`agenti`.`soprannome`,`agenti`.`denominazione`,concat_ws(' ',coalesce(`agenti`.`cognome`,''),coalesce(`agenti`.`nome`,'')),'') AS `agente`,`incarichi_immobili`.`note` AS `__label__` from (((((((`incarichi_immobili` left join `immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `indirizzi` on((`immobili`.`id_indirizzo` = `indirizzi`.`id`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_incarichi_immobili` on((`incarichi_immobili`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `anagrafica` on((`incarichi_immobili`.`id_cliente` = `anagrafica`.`id`))) left join `account` on((`account`.`id` = `incarichi_immobili`.`id_account_editor`))) left join `anagrafica` `agenti` on((`account`.`id_anagrafica` = `agenti`.`id`))) where ((`incarichi_immobili`.`data_sviluppo` is not null) and isnull(`incarichi_immobili`.`data_notizia`) and isnull(`incarichi_immobili`.`data_valutazione`) and isnull(`incarichi_immobili`.`data_inizio`) and isnull(`incarichi_immobili`.`timestamp_archiviazione`)) order by `incarichi_immobili`.`note` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `taglie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `taglie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `taglie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `taglie_view` AS select `taglie`.`id` AS `id`,`taglie`.`it` AS `it`,`taglie`.`eu` AS `eu`,`taglie`.`us` AS `us`,`taglie`.`uk` AS `uk`,`taglie`.`fr` AS `fr`,`taglie`.`international` AS `international`,`taglie`.`jeans` AS `jeans`,`taglie`.`id_tipologia` AS `id_tipologia`,`taglie`.`cm` AS `cm`,`taglie`.`it` AS `__label__` from `taglie` order by `taglie`.`it` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tari_anagrafica_archiviati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tari_anagrafica_archiviati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tari_anagrafica_archiviati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tari_anagrafica_archiviati_view` AS select `tari_anagrafica_view`.`id` AS `id`,`tari_anagrafica_view`.`id_anagrafica` AS `id_anagrafica`,`tari_anagrafica_view`.`anno` AS `anno`,`tari_anagrafica_view`.`se_verificato` AS `se_verificato`,`tari_anagrafica_view`.`data_verifica` AS `data_verifica`,`tari_anagrafica_view`.`id_operatore_verifica` AS `id_operatore_verifica`,`tari_anagrafica_view`.`note_verifica` AS `note_verifica`,`tari_anagrafica_view`.`se_gestito` AS `se_gestito`,`tari_anagrafica_view`.`data_gestione` AS `data_gestione`,`tari_anagrafica_view`.`id_operatore_gestione` AS `id_operatore_gestione`,`tari_anagrafica_view`.`note_gestione` AS `note_gestione`,`tari_anagrafica_view`.`se_convocato` AS `se_convocato`,`tari_anagrafica_view`.`data_convocazione` AS `data_convocazione`,`tari_anagrafica_view`.`id_operatore_convocazione` AS `id_operatore_convocazione`,`tari_anagrafica_view`.`note_convocazione` AS `note_convocazione`,`tari_anagrafica_view`.`se_confermato` AS `se_confermato`,`tari_anagrafica_view`.`data_conferma` AS `data_conferma`,`tari_anagrafica_view`.`id_operatore_conferma` AS `id_operatore_conferma`,`tari_anagrafica_view`.`note_conferma` AS `note_conferma`,`tari_anagrafica_view`.`data_aggiornamento` AS `data_aggiornamento`,`tari_anagrafica_view`.`id_account_inserimento` AS `id_account_inserimento`,`tari_anagrafica_view`.`timestamp_inserimento` AS `timestamp_inserimento`,`tari_anagrafica_view`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tari_anagrafica_view`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tari_anagrafica_view`.`codice_fiscale` AS `codice_fiscale`,`tari_anagrafica_view`.`anagrafica` AS `anagrafica`,`tari_anagrafica_view`.`__label__` AS `__label__`,`tari_anagrafica_view`.`motivazioni` AS `motivazioni`,`tari_anagrafica_view`.`peso` AS `peso` from `tari_anagrafica_view` where ((`tari_anagrafica_view`.`se_verificato` = 1) and (`tari_anagrafica_view`.`se_gestito` = 1) and (`tari_anagrafica_view`.`se_confermato` = 2)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tari_anagrafica_convocati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tari_anagrafica_convocati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tari_anagrafica_convocati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tari_anagrafica_convocati_view` AS select `tari_anagrafica_view`.`id` AS `id`,`tari_anagrafica_view`.`id_anagrafica` AS `id_anagrafica`,`tari_anagrafica_view`.`anno` AS `anno`,`tari_anagrafica_view`.`se_verificato` AS `se_verificato`,`tari_anagrafica_view`.`data_verifica` AS `data_verifica`,`tari_anagrafica_view`.`id_operatore_verifica` AS `id_operatore_verifica`,`tari_anagrafica_view`.`note_verifica` AS `note_verifica`,`tari_anagrafica_view`.`se_gestito` AS `se_gestito`,`tari_anagrafica_view`.`data_gestione` AS `data_gestione`,`tari_anagrafica_view`.`id_operatore_gestione` AS `id_operatore_gestione`,`tari_anagrafica_view`.`note_gestione` AS `note_gestione`,`tari_anagrafica_view`.`se_convocato` AS `se_convocato`,`tari_anagrafica_view`.`data_convocazione` AS `data_convocazione`,`tari_anagrafica_view`.`id_operatore_convocazione` AS `id_operatore_convocazione`,`tari_anagrafica_view`.`note_convocazione` AS `note_convocazione`,`tari_anagrafica_view`.`se_confermato` AS `se_confermato`,`tari_anagrafica_view`.`data_conferma` AS `data_conferma`,`tari_anagrafica_view`.`id_operatore_conferma` AS `id_operatore_conferma`,`tari_anagrafica_view`.`note_conferma` AS `note_conferma`,`tari_anagrafica_view`.`data_aggiornamento` AS `data_aggiornamento`,`tari_anagrafica_view`.`id_account_inserimento` AS `id_account_inserimento`,`tari_anagrafica_view`.`timestamp_inserimento` AS `timestamp_inserimento`,`tari_anagrafica_view`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tari_anagrafica_view`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tari_anagrafica_view`.`codice_fiscale` AS `codice_fiscale`,`tari_anagrafica_view`.`anagrafica` AS `anagrafica`,`tari_anagrafica_view`.`__label__` AS `__label__`,`tari_anagrafica_view`.`motivazioni` AS `motivazioni`,`tari_anagrafica_view`.`peso` AS `peso` from `tari_anagrafica_view` where ((`tari_anagrafica_view`.`se_verificato` = 1) and (`tari_anagrafica_view`.`se_gestito` = 1) and (`tari_anagrafica_view`.`se_convocato` = 1) and isnull(`tari_anagrafica_view`.`se_confermato`)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tari_anagrafica_da_convocare_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tari_anagrafica_da_convocare_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tari_anagrafica_da_convocare_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tari_anagrafica_da_convocare_view` AS select `tari_anagrafica_view`.`id` AS `id`,`tari_anagrafica_view`.`id_anagrafica` AS `id_anagrafica`,`tari_anagrafica_view`.`anno` AS `anno`,`tari_anagrafica_view`.`se_verificato` AS `se_verificato`,`tari_anagrafica_view`.`data_verifica` AS `data_verifica`,`tari_anagrafica_view`.`id_operatore_verifica` AS `id_operatore_verifica`,`tari_anagrafica_view`.`note_verifica` AS `note_verifica`,`tari_anagrafica_view`.`se_gestito` AS `se_gestito`,`tari_anagrafica_view`.`data_gestione` AS `data_gestione`,`tari_anagrafica_view`.`id_operatore_gestione` AS `id_operatore_gestione`,`tari_anagrafica_view`.`note_gestione` AS `note_gestione`,`tari_anagrafica_view`.`se_convocato` AS `se_convocato`,`tari_anagrafica_view`.`data_convocazione` AS `data_convocazione`,`tari_anagrafica_view`.`id_operatore_convocazione` AS `id_operatore_convocazione`,`tari_anagrafica_view`.`note_convocazione` AS `note_convocazione`,`tari_anagrafica_view`.`se_confermato` AS `se_confermato`,`tari_anagrafica_view`.`data_conferma` AS `data_conferma`,`tari_anagrafica_view`.`id_operatore_conferma` AS `id_operatore_conferma`,`tari_anagrafica_view`.`note_conferma` AS `note_conferma`,`tari_anagrafica_view`.`data_aggiornamento` AS `data_aggiornamento`,`tari_anagrafica_view`.`id_account_inserimento` AS `id_account_inserimento`,`tari_anagrafica_view`.`timestamp_inserimento` AS `timestamp_inserimento`,`tari_anagrafica_view`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tari_anagrafica_view`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tari_anagrafica_view`.`codice_fiscale` AS `codice_fiscale`,`tari_anagrafica_view`.`anagrafica` AS `anagrafica`,`tari_anagrafica_view`.`__label__` AS `__label__`,`tari_anagrafica_view`.`motivazioni` AS `motivazioni`,`tari_anagrafica_view`.`peso` AS `peso` from `tari_anagrafica_view` where ((`tari_anagrafica_view`.`se_verificato` = 1) and (`tari_anagrafica_view`.`se_gestito` = 1) and isnull(`tari_anagrafica_view`.`se_convocato`) and isnull(`tari_anagrafica_view`.`se_confermato`)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tari_anagrafica_da_gestire_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tari_anagrafica_da_gestire_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tari_anagrafica_da_gestire_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tari_anagrafica_da_gestire_view` AS select `tari_anagrafica_view`.`id` AS `id`,`tari_anagrafica_view`.`id_anagrafica` AS `id_anagrafica`,`tari_anagrafica_view`.`anno` AS `anno`,`tari_anagrafica_view`.`se_verificato` AS `se_verificato`,`tari_anagrafica_view`.`data_verifica` AS `data_verifica`,`tari_anagrafica_view`.`id_operatore_verifica` AS `id_operatore_verifica`,`tari_anagrafica_view`.`note_verifica` AS `note_verifica`,`tari_anagrafica_view`.`se_gestito` AS `se_gestito`,`tari_anagrafica_view`.`data_gestione` AS `data_gestione`,`tari_anagrafica_view`.`id_operatore_gestione` AS `id_operatore_gestione`,`tari_anagrafica_view`.`note_gestione` AS `note_gestione`,`tari_anagrafica_view`.`se_convocato` AS `se_convocato`,`tari_anagrafica_view`.`data_convocazione` AS `data_convocazione`,`tari_anagrafica_view`.`id_operatore_convocazione` AS `id_operatore_convocazione`,`tari_anagrafica_view`.`note_convocazione` AS `note_convocazione`,`tari_anagrafica_view`.`se_confermato` AS `se_confermato`,`tari_anagrafica_view`.`data_conferma` AS `data_conferma`,`tari_anagrafica_view`.`id_operatore_conferma` AS `id_operatore_conferma`,`tari_anagrafica_view`.`note_conferma` AS `note_conferma`,`tari_anagrafica_view`.`data_aggiornamento` AS `data_aggiornamento`,`tari_anagrafica_view`.`id_account_inserimento` AS `id_account_inserimento`,`tari_anagrafica_view`.`timestamp_inserimento` AS `timestamp_inserimento`,`tari_anagrafica_view`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tari_anagrafica_view`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tari_anagrafica_view`.`codice_fiscale` AS `codice_fiscale`,`tari_anagrafica_view`.`anagrafica` AS `anagrafica`,`tari_anagrafica_view`.`__label__` AS `__label__`,`tari_anagrafica_view`.`motivazioni` AS `motivazioni`,`tari_anagrafica_view`.`peso` AS `peso` from `tari_anagrafica_view` where (isnull(`tari_anagrafica_view`.`se_confermato`) and isnull(`tari_anagrafica_view`.`se_gestito`) and isnull(`tari_anagrafica_view`.`se_convocato`) and (`tari_anagrafica_view`.`se_verificato` = 1)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tari_anagrafica_da_verificare_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tari_anagrafica_da_verificare_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tari_anagrafica_da_verificare_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tari_anagrafica_da_verificare_view` AS select `tari_anagrafica_view`.`id` AS `id`,`tari_anagrafica_view`.`id_anagrafica` AS `id_anagrafica`,`tari_anagrafica_view`.`anno` AS `anno`,`tari_anagrafica_view`.`se_verificato` AS `se_verificato`,`tari_anagrafica_view`.`data_verifica` AS `data_verifica`,`tari_anagrafica_view`.`id_operatore_verifica` AS `id_operatore_verifica`,`tari_anagrafica_view`.`note_verifica` AS `note_verifica`,`tari_anagrafica_view`.`se_gestito` AS `se_gestito`,`tari_anagrafica_view`.`data_gestione` AS `data_gestione`,`tari_anagrafica_view`.`id_operatore_gestione` AS `id_operatore_gestione`,`tari_anagrafica_view`.`note_gestione` AS `note_gestione`,`tari_anagrafica_view`.`se_convocato` AS `se_convocato`,`tari_anagrafica_view`.`data_convocazione` AS `data_convocazione`,`tari_anagrafica_view`.`id_operatore_convocazione` AS `id_operatore_convocazione`,`tari_anagrafica_view`.`note_convocazione` AS `note_convocazione`,`tari_anagrafica_view`.`se_confermato` AS `se_confermato`,`tari_anagrafica_view`.`data_conferma` AS `data_conferma`,`tari_anagrafica_view`.`id_operatore_conferma` AS `id_operatore_conferma`,`tari_anagrafica_view`.`note_conferma` AS `note_conferma`,`tari_anagrafica_view`.`data_aggiornamento` AS `data_aggiornamento`,`tari_anagrafica_view`.`id_account_inserimento` AS `id_account_inserimento`,`tari_anagrafica_view`.`timestamp_inserimento` AS `timestamp_inserimento`,`tari_anagrafica_view`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tari_anagrafica_view`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tari_anagrafica_view`.`codice_fiscale` AS `codice_fiscale`,`tari_anagrafica_view`.`anagrafica` AS `anagrafica`,`tari_anagrafica_view`.`__label__` AS `__label__`,`tari_anagrafica_view`.`motivazioni` AS `motivazioni`,`tari_anagrafica_view`.`peso` AS `peso` from `tari_anagrafica_view` where (isnull(`tari_anagrafica_view`.`se_verificato`) and isnull(`tari_anagrafica_view`.`se_gestito`) and isnull(`tari_anagrafica_view`.`se_convocato`) and isnull(`tari_anagrafica_view`.`se_confermato`)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tari_anagrafica_esportazione_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tari_anagrafica_esportazione_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tari_anagrafica_esportazione_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tari_anagrafica_esportazione_view` AS select `tari_anagrafica_view`.`id` AS `id`,`tari_anagrafica_view`.`id_anagrafica` AS `id_anagrafica`,`tari_anagrafica_view`.`anno` AS `anno`,`tari_anagrafica_view`.`se_verificato` AS `se_verificato`,`tari_anagrafica_view`.`data_verifica` AS `data_verifica`,`tari_anagrafica_view`.`id_operatore_verifica` AS `id_operatore_verifica`,`tari_anagrafica_view`.`note_verifica` AS `note_verifica`,`tari_anagrafica_view`.`se_gestito` AS `se_gestito`,`tari_anagrafica_view`.`data_gestione` AS `data_gestione`,`tari_anagrafica_view`.`id_operatore_gestione` AS `id_operatore_gestione`,`tari_anagrafica_view`.`note_gestione` AS `note_gestione`,`tari_anagrafica_view`.`se_convocato` AS `se_convocato`,`tari_anagrafica_view`.`data_convocazione` AS `data_convocazione`,`tari_anagrafica_view`.`id_operatore_convocazione` AS `id_operatore_convocazione`,`tari_anagrafica_view`.`note_convocazione` AS `note_convocazione`,`tari_anagrafica_view`.`se_confermato` AS `se_confermato`,`tari_anagrafica_view`.`data_conferma` AS `data_conferma`,`tari_anagrafica_view`.`id_operatore_conferma` AS `id_operatore_conferma`,`tari_anagrafica_view`.`note_conferma` AS `note_conferma`,`tari_anagrafica_view`.`data_aggiornamento` AS `data_aggiornamento`,`tari_anagrafica_view`.`id_account_inserimento` AS `id_account_inserimento`,`tari_anagrafica_view`.`timestamp_inserimento` AS `timestamp_inserimento`,`tari_anagrafica_view`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tari_anagrafica_view`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tari_anagrafica_view`.`codice_fiscale` AS `codice_fiscale`,`tari_anagrafica_view`.`anagrafica` AS `anagrafica`,`tari_anagrafica_view`.`__label__` AS `__label__`,`tari_anagrafica_view`.`motivazioni` AS `motivazioni`,`tari_anagrafica_view`.`peso` AS `peso`,`motivazioni_tari_anagrafica`.`id_motivazione` AS `id_motivazione`,concat(`motivazioni_tari_anagrafica`.`path`,' riga ',`motivazioni_tari_anagrafica`.`riga`) AS `note`,`motivazioni_tari_anagrafica`.`riga_provenienza` AS `riga_provenienza`,`tipologie_motivazioni_tari_view`.`nome` AS `nome` from ((`motivazioni_tari_anagrafica` left join `tari_anagrafica_view` on((`motivazioni_tari_anagrafica`.`id_tari_anagrafica` = `tari_anagrafica_view`.`id`))) left join `tipologie_motivazioni_tari_view` on((`motivazioni_tari_anagrafica`.`id_motivazione` = `tipologie_motivazioni_tari_view`.`id`))) order by `tari_anagrafica_view`.`id_anagrafica`,`motivazioni_tari_anagrafica`.`id_motivazione` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tari_anagrafica_ruolo_tari_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tari_anagrafica_ruolo_tari_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tari_anagrafica_ruolo_tari_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tari_anagrafica_ruolo_tari_view` AS select `tari_anagrafica_view`.`id` AS `id`,`tari_anagrafica_view`.`id_anagrafica` AS `id_anagrafica`,`tari_anagrafica_view`.`anno` AS `anno`,`tari_anagrafica_view`.`se_verificato` AS `se_verificato`,`tari_anagrafica_view`.`data_verifica` AS `data_verifica`,`tari_anagrafica_view`.`id_operatore_verifica` AS `id_operatore_verifica`,`tari_anagrafica_view`.`note_verifica` AS `note_verifica`,`tari_anagrafica_view`.`se_gestito` AS `se_gestito`,`tari_anagrafica_view`.`data_gestione` AS `data_gestione`,`tari_anagrafica_view`.`id_operatore_gestione` AS `id_operatore_gestione`,`tari_anagrafica_view`.`note_gestione` AS `note_gestione`,`tari_anagrafica_view`.`se_convocato` AS `se_convocato`,`tari_anagrafica_view`.`data_convocazione` AS `data_convocazione`,`tari_anagrafica_view`.`id_operatore_convocazione` AS `id_operatore_convocazione`,`tari_anagrafica_view`.`note_convocazione` AS `note_convocazione`,`tari_anagrafica_view`.`se_confermato` AS `se_confermato`,`tari_anagrafica_view`.`data_conferma` AS `data_conferma`,`tari_anagrafica_view`.`id_operatore_conferma` AS `id_operatore_conferma`,`tari_anagrafica_view`.`note_conferma` AS `note_conferma`,`tari_anagrafica_view`.`data_aggiornamento` AS `data_aggiornamento`,`tari_anagrafica_view`.`id_account_inserimento` AS `id_account_inserimento`,`tari_anagrafica_view`.`timestamp_inserimento` AS `timestamp_inserimento`,`tari_anagrafica_view`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tari_anagrafica_view`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tari_anagrafica_view`.`codice_fiscale` AS `codice_fiscale`,`tari_anagrafica_view`.`anagrafica` AS `anagrafica`,`tari_anagrafica_view`.`__label__` AS `__label__`,`tari_anagrafica_view`.`motivazioni` AS `motivazioni`,`tari_anagrafica_view`.`peso` AS `peso` from `tari_anagrafica_view` where ((`tari_anagrafica_view`.`se_verificato` = 1) and (`tari_anagrafica_view`.`se_gestito` = 1) and (`tari_anagrafica_view`.`se_confermato` = 1)) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tari_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tari_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tari_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tari_anagrafica_view` AS select `tari_anagrafica`.`id` AS `id`,`tari_anagrafica`.`id_anagrafica` AS `id_anagrafica`,`tari_anagrafica`.`anno` AS `anno`,`tari_anagrafica`.`se_verificato` AS `se_verificato`,`tari_anagrafica`.`data_verifica` AS `data_verifica`,`tari_anagrafica`.`id_operatore_verifica` AS `id_operatore_verifica`,`tari_anagrafica`.`note_verifica` AS `note_verifica`,`tari_anagrafica`.`se_gestito` AS `se_gestito`,`tari_anagrafica`.`data_gestione` AS `data_gestione`,`tari_anagrafica`.`id_operatore_gestione` AS `id_operatore_gestione`,`tari_anagrafica`.`note_gestione` AS `note_gestione`,`tari_anagrafica`.`se_convocato` AS `se_convocato`,`tari_anagrafica`.`data_convocazione` AS `data_convocazione`,`tari_anagrafica`.`id_operatore_convocazione` AS `id_operatore_convocazione`,`tari_anagrafica`.`note_convocazione` AS `note_convocazione`,`tari_anagrafica`.`se_confermato` AS `se_confermato`,`tari_anagrafica`.`data_conferma` AS `data_conferma`,`tari_anagrafica`.`id_operatore_conferma` AS `id_operatore_conferma`,`tari_anagrafica`.`note_conferma` AS `note_conferma`,`tari_anagrafica`.`data_aggiornamento` AS `data_aggiornamento`,`tari_anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,`tari_anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,`tari_anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tari_anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`anagrafica`.`codice_fiscale` AS `codice_fiscale`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `anagrafica`,concat_ws(' ',`anagrafica`.`codice_fiscale`,convert(if((`tari_anagrafica`.`se_verificato` = 1),if((`tari_anagrafica`.`se_gestito` = 1),if((`tari_anagrafica`.`se_confermato` = 1),'a ruolo per il',if((`tari_anagrafica`.`se_confermato` = 2),'archiviato per il',if((`tari_anagrafica`.`se_convocato` = 1),'convocato per il','da convocare per il'))),'da gestire per il'),'da verificare per il') using utf8),`tari_anagrafica`.`anno`) AS `__label__`,group_concat(distinct `tipologie_motivazioni_tari`.`soprannome` separator ' | ') AS `motivazioni`,count(`anagrafica`.`id`) AS `peso` from (((`tari_anagrafica` left join `anagrafica` on((`anagrafica`.`id` = `tari_anagrafica`.`id_anagrafica`))) left join `motivazioni_tari_anagrafica` on((`motivazioni_tari_anagrafica`.`id_tari_anagrafica` = `tari_anagrafica`.`id`))) left join `tipologie_motivazioni_tari` on((`tipologie_motivazioni_tari`.`id` = `motivazioni_tari_anagrafica`.`id_motivazione`))) group by `tari_anagrafica`.`id` order by `tari_anagrafica`.`anno` desc,count(`anagrafica`.`id`) desc,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),''),`tari_anagrafica`.`se_verificato` desc,`tari_anagrafica`.`se_confermato` desc,`tipologie_motivazioni_tari`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `task_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `task_view`*/;
-/*!50001 DROP VIEW IF EXISTS `task_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `task_view` AS select `task`.`id` AS `id`,date_format(from_unixtime(`task`.`timestamp_apertura`),'%Y-%m-%d %H:%i') AS `data_ora_apertura`,date_format(from_unixtime(`task`.`timestamp_pianificazione`),'%d-%m-%Y %H:%i') AS `data_ora_pianificazione`,dayofmonth(date_format(from_unixtime(`task`.`timestamp_pianificazione`),'%Y-%m-%d %H:%i')) AS `giorno`,month(date_format(from_unixtime(`task`.`timestamp_pianificazione`),'%Y-%m-%d %H:%i')) AS `mese`,year(date_format(from_unixtime(`task`.`timestamp_pianificazione`),'%Y-%m-%d %H:%i')) AS `anno`,coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat_ws(' ',coalesce(`anagrafica_cliente`.`cognome`,''),coalesce(`anagrafica_cliente`.`nome`,'')),'') AS `cliente`,coalesce(`task`.`id_cliente`,`progetti`.`id_cliente`) AS `id_cliente`,`luoghi`.`nome` AS `luogo`,`progetti`.`nome` AS `progetto`,`tipologie_crm`.`nome` AS `crm`,`tipologie_task`.`nome` AS `tipologia`,`priorita`.`nome` AS `priorita`,`task`.`nome` AS `nome`,`task`.`id_luogo` AS `id_luogo`,`task`.`id_priorita` AS `id_priorita`,`task`.`ore_previste` AS `ore_previste`,`task`.`id_progetto` AS `id_progetto`,`task`.`anno_previsto` AS `anno_previsto`,`task`.`settimana_prevista` AS `settimana_prevista`,`task`.`timestamp_pianificazione` AS `timestamp_pianificazione`,concat(`task`.`anno_previsto`,'/',lpad(`task`.`settimana_prevista`,2,'0')) AS `pianificazione`,coalesce(sum(`attivita`.`ore`),0) AS `ore_lavorate`,greatest((`task`.`ore_previste` - coalesce(sum(`attivita`.`ore`),0)),0) AS `ore_residue`,`task`.`id_responsabile` AS `id_responsabile`,coalesce(`anagrafica_responsabile`.`denominazione`,concat(`anagrafica_responsabile`.`cognome`,' ',`anagrafica_responsabile`.`nome`),'') AS `responsabile`,`task`.`id_account_inserimento` AS `id_account_inserimento`,((coalesce(sum(`attivita`.`ore`),0) / `task`.`ore_previste`) * 100) AS `avanzamento`,concat(coalesce(sum(`attivita`.`ore`),0),' di ',`task`.`ore_previste`) AS `progresso`,`task`.`timestamp_completamento` AS `timestamp_completamento`,`task`.`timestamp_inserimento` AS `timestamp_inserimento`,`task`.`timestamp_revisione` AS `timestamp_revisione`,date_format(from_unixtime(`task`.`timestamp_completamento`),'%Y-%m-%d %H:%i') AS `data_ora_completamento`,if((`task`.`timestamp_completamento` is not null),2,if((`task`.`timestamp_revisione` is not null),1,0)) AS `completato`,concat_ws(' | ',coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat(`anagrafica_cliente`.`cognome`,' ',`anagrafica_cliente`.`nome`),''),`task`.`id_progetto`,`task`.`nome`) AS `__label__` from (((((((((`task` left join `anagrafica` on((`anagrafica`.`id` = `task`.`id_anagrafica`))) left join `anagrafica` `anagrafica_cliente` on((`anagrafica_cliente`.`id` = `task`.`id_cliente`))) left join `anagrafica` `anagrafica_responsabile` on((`anagrafica_responsabile`.`id` = `task`.`id_responsabile`))) left join `attivita` on((`attivita`.`id_task` = `task`.`id`))) left join `luoghi` on((`luoghi`.`id` = `task`.`id_luogo`))) left join `progetti` on((`progetti`.`id` = `task`.`id_progetto`))) left join `priorita` on((`priorita`.`id` = `task`.`id_priorita`))) left join `tipologie_task` on((`tipologie_task`.`id` = `task`.`id_tipologia`))) left join `tipologie_crm` on((`tipologie_crm`.`id` = `anagrafica_cliente`.`id_tipologia_crm`))) group by `task`.`id` order by concat(`task`.`anno_previsto`,'/',lpad(`task`.`settimana_prevista`,2,'0')),`priorita`.`ordine` desc,`tipologie_crm`.`ordine`,`task`.`timestamp_apertura` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `telefoni_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `telefoni_view`*/;
-/*!50001 DROP VIEW IF EXISTS `telefoni_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `telefoni_view` AS select `telefoni`.`id` AS `id`,`telefoni`.`id_anagrafica` AS `id_anagrafica`,`telefoni`.`id_indirizzo` AS `id_indirizzo`,`telefoni`.`id_tipologia` AS `id_tipologia`,`telefoni`.`se_notifiche` AS `se_notifiche`,`telefoni`.`numero` AS `numero`,`telefoni`.`descrizione` AS `descrizione`,`telefoni`.`numero` AS `__label__` from `telefoni` order by `telefoni`.`numero` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `template_mail_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `template_mail_view`*/;
-/*!50001 DROP VIEW IF EXISTS `template_mail_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `template_mail_view` AS select `template_mail`.`id` AS `id`,`template_mail`.`ruolo` AS `ruolo`,`template_mail`.`nome` AS `nome`,`template_mail`.`type` AS `type`,`template_mail`.`note` AS `note`,`template_mail`.`id_account_inserimento` AS `id_account_inserimento`,`template_mail`.`timestamp_inserimento` AS `timestamp_inserimento`,`template_mail`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`template_mail`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`template_mail`.`nome` AS `__label__` from `template_mail` order by `template_mail`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `testate_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `testate_view`*/;
-/*!50001 DROP VIEW IF EXISTS `testate_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `testate_view` AS select `testate`.`id` AS `id`,`testate`.`nome` AS `nome`,`testate`.`id_account_inserimento` AS `id_account_inserimento`,`testate`.`timestamp_inserimento` AS `timestamp_inserimento`,`testate`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`testate`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`testate`.`nome` AS `__label__` from `testate` order by `testate`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_anagrafica_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_anagrafica_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_anagrafica_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_anagrafica_view` AS select `tipologie_anagrafica`.`id` AS `id`,`tipologie_anagrafica`.`id_genitore` AS `id_genitore`,`tipologie_anagrafica`.`nome` AS `nome`,`tipologie_anagrafica_path`(`tipologie_anagrafica`.`id`) AS `__label__` from `tipologie_anagrafica` order by `tipologie_anagrafica_path`(`tipologie_anagrafica`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_attivita_inps_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_attivita_inps_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_attivita_inps_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_attivita_inps_view` AS select `tipologie_attivita_inps`.`id` AS `id`,`tipologie_attivita_inps`.`id_genitore` AS `id_genitore`,`tipologie_attivita_inps`.`nome` AS `nome`,`tipologie_attivita_inps`.`codice` AS `codice`,`tipologie_attivita_inps`.`se_quadratura` AS `se_quadratura`,concat(if((`tipologie_attivita_inps`.`codice` is not null),concat(`tipologie_attivita_inps`.`codice`,' - '),''),`tipologie_attivita_inps`.`nome`) AS `__label__` from `tipologie_attivita_inps` order by concat(if((`tipologie_attivita_inps`.`codice` is not null),concat(`tipologie_attivita_inps`.`codice`,' - '),''),`tipologie_attivita_inps`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_attivita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_attivita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_attivita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_attivita_view` AS select `tipologie_attivita`.`id` AS `id`,`tipologie_attivita`.`id_genitore` AS `id_genitore`,`tipologie_attivita`.`nome` AS `nome`,`tipologie_attivita`.`html` AS `html`,`tipologie_attivita`.`font_awesome` AS `font_awesome`,`tipologie_attivita`.`se_anagrafica` AS `se_anagrafica`,`tipologie_attivita`.`se_censimento_immobili` AS `se_censimento_immobili`,`tipologie_attivita`.`se_notizie_immobili` AS `se_notizie_immobili`,`tipologie_attivita`.`se_richieste_immobili` AS `se_richieste_immobili`,`tipologie_attivita`.`se_dashboard_agenda` AS `se_dashboard_agenda`,`tipologie_attivita`.`se_pratiche` AS `se_pratiche`,`tipologie_attivita`.`se_commerciale` AS `se_commerciale`,`tipologie_attivita`.`se_produzione` AS `se_produzione`,`tipologie_attivita`.`se_amministrazione` AS `se_amministrazione`,`tipologie_attivita_path`(`tipologie_attivita`.`id`) AS `__label__` from `tipologie_attivita` order by `tipologie_attivita_path`(`tipologie_attivita`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_contatti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_contatti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_contatti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_contatti_view` AS select `tipologie_contatti`.`id` AS `id`,`tipologie_contatti`.`nome` AS `nome`,`tipologie_contatti`.`se_segnalazione` AS `se_segnalazione`,`tipologie_contatti`.`nome` AS `__label__` from `tipologie_contatti` order by `tipologie_contatti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_conteggio_attivita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_conteggio_attivita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_conteggio_attivita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_conteggio_attivita_view` AS select `tipologie_conteggio_attivita`.`id` AS `id`,`tipologie_conteggio_attivita`.`nome` AS `nome`,`tipologie_conteggio_attivita`.`se_standard` AS `se_standard`,`tipologie_conteggio_attivita`.`se_extra` AS `se_extra`,`tipologie_conteggio_attivita`.`se_gratuita` AS `se_gratuita`,`tipologie_conteggio_attivita`.`nome` AS `__label__` from `tipologie_conteggio_attivita` order by `tipologie_conteggio_attivita`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_contratti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_contratti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_contratti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_contratti_view` AS select `tipologie_contratti`.`id` AS `id`,`tipologie_contratti`.`nome` AS `nome`,`tipologie_contratti`.`nome` AS `__label__` from `tipologie_contratti` order by `tipologie_contratti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_crm_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_crm_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_crm_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_crm_view` AS select `tipologie_crm`.`id` AS `id`,`tipologie_crm`.`nome` AS `nome`,`tipologie_crm`.`ordine` AS `ordine`,`tipologie_crm`.`note` AS `note`,`tipologie_crm`.`id_account_inserimento` AS `id_account_inserimento`,`tipologie_crm`.`timestamp_inserimento` AS `timestamp_inserimento`,`tipologie_crm`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tipologie_crm`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,count(`anagrafica`.`id`) AS `membri`,`tipologie_crm`.`nome` AS `__label__` from (`tipologie_crm` left join `anagrafica` on((`anagrafica`.`id_tipologia_crm` = `tipologie_crm`.`id`))) group by `tipologie_crm`.`id` order by `tipologie_crm`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_date_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_date_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_date_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_date_view` AS select `tipologie_date`.`id` AS `id`,`tipologie_date`.`nome` AS `nome`,`tipologie_date`.`nome` AS `__label__` from `tipologie_date` order by `tipologie_date`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_documenti_amministrativi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_documenti_amministrativi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_documenti_amministrativi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_documenti_amministrativi_view` AS select `tipologie_documenti_amministrativi`.`id` AS `id`,`tipologie_documenti_amministrativi`.`nome` AS `nome`,`tipologie_documenti_amministrativi`.`codice` AS `codice`,`tipologie_documenti_amministrativi`.`se_fattura` AS `se_fattura`,`tipologie_documenti_amministrativi`.`se_nota_credito` AS `se_nota_credito`,`tipologie_documenti_amministrativi`.`se_trasporto` AS `se_trasporto`,`tipologie_documenti_amministrativi`.`se_pro_forma` AS `se_pro_forma`,`tipologie_documenti_amministrativi`.`se_offerta` AS `se_offerta`,`tipologie_documenti_amministrativi`.`se_ordine` AS `se_ordine`,`tipologie_documenti_amministrativi`.`se_ricevuta` AS `se_ricevuta`,`tipologie_documenti_amministrativi`.`nome` AS `__label__` from `tipologie_documenti_amministrativi` order by `tipologie_documenti_amministrativi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_documenti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_documenti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_documenti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_documenti_view` AS select `tipologie_documenti`.`id` AS `id`,`tipologie_documenti`.`nome` AS `nome`,`tipologie_documenti`.`codice` AS `codice`,`tipologie_documenti`.`se_fattura` AS `se_fattura`,`tipologie_documenti`.`se_nota_credito` AS `se_nota_credito`,`tipologie_documenti`.`se_trasporto` AS `se_trasporto`,`tipologie_documenti`.`se_pro_forma` AS `se_pro_forma`,`tipologie_documenti`.`se_offerta` AS `se_offerta`,`tipologie_documenti`.`se_ordine` AS `se_ordine`,`tipologie_documenti`.`se_ricevuta` AS `se_ricevuta`,`tipologie_documenti`.`stampa_xml` AS `stampa_xml`,`tipologie_documenti`.`stampa_pdf` AS `stampa_pdf`,`tipologie_documenti`.`nome` AS `__label__` from `tipologie_documenti` order by `tipologie_documenti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_durate_inps_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_durate_inps_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_durate_inps_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_durate_inps_view` AS select `tipologie_durate_inps`.`id` AS `id`,`tipologie_durate_inps`.`nome` AS `nome`,concat(`tipologie_durate_inps`.`id`,' - ',`tipologie_durate_inps`.`nome`) AS `__label__` from `tipologie_durate_inps` order by concat(`tipologie_durate_inps`.`id`,' - ',`tipologie_durate_inps`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_edifici_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_edifici_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_edifici_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_edifici_view` AS select `tipologie_edifici`.`id` AS `id`,`tipologie_edifici`.`nome` AS `nome`,`tipologie_edifici`.`nome` AS `__label__` from `tipologie_edifici` order by `tipologie_edifici`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_embed_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_embed_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_embed_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_embed_view` AS select `tipologie_embed`.`id` AS `id`,`tipologie_embed`.`nome` AS `nome`,`tipologie_embed`.`se_video` AS `se_video`,`tipologie_embed`.`se_audio` AS `se_audio`,`tipologie_embed`.`nome` AS `__label__` from `tipologie_embed` order by `tipologie_embed`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_eventi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_eventi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_eventi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_eventi_view` AS select `tipologie_eventi`.`id` AS `id`,`tipologie_eventi`.`nome` AS `nome`,`tipologie_eventi`.`id_account_inserimento` AS `id_account_inserimento`,`tipologie_eventi`.`timestamp_inserimento` AS `timestamp_inserimento`,`tipologie_eventi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tipologie_eventi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_eventi`.`nome` AS `__label__` from `tipologie_eventi` order by `tipologie_eventi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_founding_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_founding_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_founding_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_founding_view` AS select `tipologie_founding`.`id` AS `id`,`tipologie_founding`.`nome` AS `nome`,`tipologie_founding`.`nome` AS `__label__` from `tipologie_founding` order by `tipologie_founding`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_immobili_view` AS select `tipologie_immobili`.`id` AS `id`,`tipologie_immobili`.`nome` AS `nome`,`tipologie_immobili`.`se_residenziale` AS `se_residenziale`,`tipologie_immobili`.`se_industriale` AS `se_industriale`,`tipologie_immobili`.`nome` AS `__label__` from `tipologie_immobili` order by `tipologie_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_incarichi_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_incarichi_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_incarichi_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_incarichi_immobili_view` AS select `tipologie_incarichi_immobili`.`id` AS `id`,`tipologie_incarichi_immobili`.`nome` AS `nome`,`tipologie_incarichi_immobili`.`nome` AS `__label__` from `tipologie_incarichi_immobili` order by `tipologie_incarichi_immobili`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_indirizzi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_indirizzi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_indirizzi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_indirizzi_view` AS select `tipologie_indirizzi`.`id` AS `id`,`tipologie_indirizzi`.`nome` AS `nome`,`tipologie_indirizzi`.`se_sede` AS `se_sede`,`tipologie_indirizzi`.`se_operativa` AS `se_operativa`,`tipologie_indirizzi`.`se_abitazione` AS `se_abitazione`,`tipologie_indirizzi`.`html` AS `html`,`tipologie_indirizzi`.`nome` AS `__label__` from `tipologie_indirizzi` order by `tipologie_indirizzi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_interesse_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_interesse_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_interesse_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_interesse_view` AS select `tipologie_interesse`.`id` AS `id`,`tipologie_interesse`.`nome` AS `nome`,`tipologie_interesse`.`nome` AS `__label__` from `tipologie_interesse` order by `tipologie_interesse`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_motivazioni_tari_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_motivazioni_tari_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_motivazioni_tari_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_motivazioni_tari_view` AS select `tipologie_motivazioni_tari`.`id` AS `id`,`tipologie_motivazioni_tari`.`nome` AS `nome`,`tipologie_motivazioni_tari`.`soprannome` AS `soprannome`,`tipologie_motivazioni_tari`.`nome` AS `__label__` from `tipologie_motivazioni_tari` order by `tipologie_motivazioni_tari`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_notizie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_notizie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_notizie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_notizie_view` AS select `tipologie_notizie`.`id` AS `id`,`tipologie_notizie`.`nome` AS `nome`,`tipologie_notizie`.`nome` AS `__label__` from `tipologie_notizie` order by `tipologie_notizie`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_orari_inps_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_orari_inps_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_orari_inps_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_orari_inps_view` AS select `tipologie_orari_inps`.`id` AS `id`,`tipologie_orari_inps`.`nome` AS `nome`,concat(`tipologie_orari_inps`.`id`,' - ',`tipologie_orari_inps`.`nome`) AS `__label__` from `tipologie_orari_inps` order by concat(`tipologie_orari_inps`.`id`,' - ',`tipologie_orari_inps`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_popup_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_popup_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_popup_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_popup_view` AS select `tipologie_popup`.`id` AS `id`,`tipologie_popup`.`nome` AS `nome`,`tipologie_popup`.`nome` AS `__label__` from `tipologie_popup` order by `tipologie_popup`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_pratiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_pratiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_pratiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_pratiche_view` AS select `tipologie_pratiche`.`id` AS `id`,`tipologie_pratiche`.`nome` AS `nome`,`tipologie_pratiche`.`nome` AS `__label__` from `tipologie_pratiche` order by `tipologie_pratiche`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_prodotti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_prodotti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_prodotti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_prodotti_view` AS select `tipologie_prodotti`.`id` AS `id`,`tipologie_prodotti`.`nome` AS `nome`,`tipologie_prodotti`.`nome` AS `__label__` from `tipologie_prodotti` order by `tipologie_prodotti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_progetti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_progetti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_progetti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_progetti_view` AS select `tipologie_progetti`.`id` AS `id`,`tipologie_progetti`.`nome` AS `nome`,`tipologie_progetti`.`se_scalare` AS `se_scalare`,`tipologie_progetti`.`se_commessa` AS `se_commessa`,`tipologie_progetti`.`nome` AS `__label__` from `tipologie_progetti` order by `tipologie_progetti`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_pubblicazione_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_pubblicazione_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_pubblicazione_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_pubblicazione_view` AS select `tipologie_pubblicazione`.`id` AS `id`,`tipologie_pubblicazione`.`nome` AS `nome`,`tipologie_pubblicazione`.`ordine` AS `ordine`,`tipologie_pubblicazione`.`se_bozza` AS `se_bozza`,`tipologie_pubblicazione`.`se_pubblicato` AS `se_pubblicato`,`tipologie_pubblicazione`.`se_evidenza` AS `se_evidenza`,`tipologie_pubblicazione`.`se_newsletter` AS `se_newsletter`,`tipologie_pubblicazione`.`se_secondario` AS `se_secondario`,`tipologie_pubblicazione`.`se_incroci` AS `se_incroci`,`tipologie_pubblicazione`.`se_suggerito` AS `se_suggerito`,`tipologie_pubblicazione`.`nome` AS `__label__` from `tipologie_pubblicazione` order by `tipologie_pubblicazione`.`ordine` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_qualifiche_inps_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_qualifiche_inps_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_qualifiche_inps_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_qualifiche_inps_view` AS select `tipologie_qualifiche_inps`.`id` AS `id`,`tipologie_qualifiche_inps`.`nome` AS `nome`,concat(`tipologie_qualifiche_inps`.`id`,' - ',`tipologie_qualifiche_inps`.`nome`) AS `__label__` from `tipologie_qualifiche_inps` order by concat(`tipologie_qualifiche_inps`.`id`,' - ',`tipologie_qualifiche_inps`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_rassegna_stampa_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_rassegna_stampa_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_rassegna_stampa_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_rassegna_stampa_view` AS select `tipologie_rassegna_stampa`.`id` AS `id`,`tipologie_rassegna_stampa`.`nome` AS `nome`,`tipologie_rassegna_stampa`.`id_account_inserimento` AS `id_account_inserimento`,`tipologie_rassegna_stampa`.`timestamp_inserimento` AS `timestamp_inserimento`,`tipologie_rassegna_stampa`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`tipologie_rassegna_stampa`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_rassegna_stampa`.`nome` AS `__label__` from `tipologie_rassegna_stampa` order by `tipologie_rassegna_stampa`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_risorse_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_risorse_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_risorse_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_risorse_view` AS select `tipologie_risorse`.`id` AS `id`,`tipologie_risorse`.`nome` AS `nome`,`tipologie_risorse`.`ordine` AS `ordine`,`tipologie_risorse`.`nome` AS `__label__` from `tipologie_risorse` order by `tipologie_risorse`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_soddisfazione_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_soddisfazione_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_soddisfazione_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_soddisfazione_view` AS select `tipologie_soddisfazione`.`id` AS `id`,`tipologie_soddisfazione`.`nome` AS `nome`,`tipologie_soddisfazione`.`nome` AS `__label__` from `tipologie_soddisfazione` order by `tipologie_soddisfazione`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_taglie_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_taglie_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_taglie_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_taglie_view` AS select `tipologie_taglie`.`id` AS `id`,`tipologie_taglie`.`nome` AS `nome`,`tipologie_taglie`.`nome` AS `__label__` from `tipologie_taglie` order by `tipologie_taglie`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_task_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_task_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_task_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_task_view` AS select `tipologie_task`.`id` AS `id`,`tipologie_task`.`nome` AS `nome`,`tipologie_task`.`nome` AS `__label__` from `tipologie_task` order by `tipologie_task`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_telefoni_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_telefoni_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_telefoni_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_telefoni_view` AS select `tipologie_telefoni`.`id` AS `id`,`tipologie_telefoni`.`nome` AS `nome`,`tipologie_telefoni`.`html` AS `html`,concat(coalesce(`tipologie_telefoni`.`html`,''),' ',`tipologie_telefoni`.`nome`) AS `__label__` from `tipologie_telefoni` order by concat(coalesce(`tipologie_telefoni`.`html`,''),' ',`tipologie_telefoni`.`nome`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_udm_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_udm_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_udm_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_udm_view` AS select `tipologie_udm`.`id` AS `id`,`tipologie_udm`.`nome` AS `nome`,`tipologie_udm`.`nome` AS `__label__` from `tipologie_udm` order by `tipologie_udm`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_vani_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_vani_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_vani_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_vani_view` AS select `tipologie_vani`.`id` AS `id`,`tipologie_vani`.`nome` AS `nome`,`tipologie_vani`.`se_camera` AS `se_camera`,`tipologie_vani`.`se_cucina` AS `se_cucina`,`tipologie_vani`.`se_bagno` AS `se_bagno`,`tipologie_vani`.`se_commerciale` AS `se_commerciale`,`tipologie_vani`.`percentuale_commerciale` AS `percentuale_commerciale`,`tipologie_vani`.`nome` AS `__label__` from `tipologie_vani` order by `tipologie_vani`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tipologie_variazioni_attivita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `tipologie_variazioni_attivita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `tipologie_variazioni_attivita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `tipologie_variazioni_attivita_view` AS select `tipologie_variazioni_attivita`.`id` AS `id`,`tipologie_variazioni_attivita`.`nome` AS `nome`,`tipologie_variazioni_attivita`.`nome` AS `__label__` from `tipologie_variazioni_attivita` order by `tipologie_variazioni_attivita`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `todo_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `todo_view`*/;
-/*!50001 DROP VIEW IF EXISTS `todo_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `todo_view` AS select `todo`.`id` AS `id`,date_format(from_unixtime(`todo`.`timestamp_apertura`),'%Y-%m-%d %H:%i') AS `data_ora_apertura`,date_format(from_unixtime(`todo`.`timestamp_pianificazione`),'%Y-%m-%d %H:%i') AS `data_ora_pianificazione`,coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat_ws(' ',coalesce(`anagrafica_cliente`.`cognome`,''),coalesce(`anagrafica_cliente`.`nome`,'')),'') AS `cliente`,coalesce(`todo`.`id_cliente`,`progetti`.`id_cliente`) AS `id_cliente`,`progetti`.`nome` AS `progetto`,`tipologie_crm`.`nome` AS `crm`,`tipologie_task`.`nome` AS `tipologia`,`priorita`.`nome` AS `priorita`,`todo`.`nome` AS `nome`,`todo`.`id_luogo` AS `id_luogo`,`todo`.`id_indirizzo` AS `id_indirizzo`,concat(if((not((`indirizzi`.`descrizione` like ''))),concat(`indirizzi`.`descrizione`,' - '),''),`indirizzi`.`indirizzo`,if((not((`indirizzi`.`civico` like ''))),concat(' ',`indirizzi`.`civico`),''),if((not((`indirizzi`.`cap` like ''))),concat(', ',`indirizzi`.`cap`),''),if((not((`indirizzi`.`localita` like ''))),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' ',`comuni`.`nome`,' (',`provincie`.`sigla`,')'),'')) AS `indirizzo`,`todo`.`id_priorita` AS `id_priorita`,`todo`.`ore_previste` AS `ore_previste`,`todo`.`id_progetto` AS `id_progetto`,`todo`.`anno_previsto` AS `anno_previsto`,`todo`.`settimana_prevista` AS `settimana_prevista`,`todo`.`data_programmazione` AS `data_programmazione`,`todo`.`ora_inizio_programmazione` AS `ora_inizio_programmazione`,`todo`.`ora_fine_programmazione` AS `ora_fine_programmazione`,`todo`.`anno_programmazione` AS `anno_programmazione`,`todo`.`settimana_programmazione` AS `settimana_programmazione`,`todo`.`data_scadenza` AS `data_scadenza`,`todo`.`ora_scadenza` AS `ora_scadenza`,`todo`.`id_pianificazione` AS `id_pianificazione`,`todo`.`timestamp_pianificazione` AS `timestamp_pianificazione`,concat(`todo`.`anno_previsto`,'/',lpad(`todo`.`settimana_prevista`,2,'0')) AS `pianificazione`,coalesce(sum(`attivita`.`ore`),0) AS `ore_lavorate`,greatest((`todo`.`ore_previste` - coalesce(sum(`attivita`.`ore`),0)),0) AS `ore_residue`,`todo`.`id_responsabile` AS `id_responsabile`,coalesce(`anagrafica_responsabile`.`denominazione`,concat(`anagrafica_responsabile`.`cognome`,' ',`anagrafica_responsabile`.`nome`),'') AS `responsabile`,`todo`.`id_account_inserimento` AS `id_account_inserimento`,((coalesce(sum(`attivita`.`ore`),0) / `todo`.`ore_previste`) * 100) AS `avanzamento`,concat(coalesce(sum(`attivita`.`ore`),0),' di ',`todo`.`ore_previste`) AS `progresso`,`todo`.`timestamp_completamento` AS `timestamp_completamento`,`todo`.`timestamp_inserimento` AS `timestamp_inserimento`,`todo`.`timestamp_revisione` AS `timestamp_revisione`,date_format(from_unixtime(`todo`.`timestamp_completamento`),'%Y-%m-%d %H:%i') AS `data_ora_completamento`,if((`todo`.`timestamp_completamento` is not null),2,if((`todo`.`timestamp_revisione` is not null),1,0)) AS `completato`,concat_ws(' | ',coalesce(`anagrafica_cliente`.`soprannome`,`anagrafica_cliente`.`denominazione`,concat(`anagrafica_cliente`.`cognome`,' ',`anagrafica_cliente`.`nome`),''),`todo`.`id_progetto`,`todo`.`nome`) AS `__label__` from (((((((((((`todo` left join `anagrafica` on((`anagrafica`.`id` = `todo`.`id_anagrafica`))) left join `anagrafica` `anagrafica_cliente` on((`anagrafica_cliente`.`id` = `todo`.`id_cliente`))) left join `anagrafica` `anagrafica_responsabile` on((`anagrafica_responsabile`.`id` = `todo`.`id_responsabile`))) left join `attivita` on((`attivita`.`id_todo` = `todo`.`id`))) left join `progetti` on((`progetti`.`id` = `todo`.`id_progetto`))) left join `priorita` on((`priorita`.`id` = `todo`.`id_priorita`))) left join `tipologie_task` on((`tipologie_task`.`id` = `todo`.`id_tipologia`))) left join `tipologie_crm` on((`tipologie_crm`.`id` = `anagrafica_cliente`.`id_tipologia_crm`))) left join `indirizzi` on((`indirizzi`.`id` = `todo`.`id_indirizzo`))) left join `comuni` on((`comuni`.`id` = `indirizzi`.`id_comune`))) left join `provincie` on((`provincie`.`id` = `comuni`.`id_provincia`))) group by `todo`.`id` order by concat(`todo`.`anno_previsto`,'/',lpad(`todo`.`settimana_prevista`,2,'0')),`priorita`.`ordine` desc,`tipologie_crm`.`ordine`,`todo`.`timestamp_apertura` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `transcodifica_clienti_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `transcodifica_clienti_view`*/;
-/*!50001 DROP VIEW IF EXISTS `transcodifica_clienti_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `transcodifica_clienti_view` AS select `tc`.`id` AS `id`,`tc`.`id_mandante` AS `id_mandante`,`tc`.`id_cliente` AS `id_cliente`,`tc`.`id_cliente_mandante` AS `id_cliente_mandante`,coalesce(`cliente`.`soprannome`,`cliente`.`denominazione`,concat_ws(' ',coalesce(`cliente`.`cognome`,''),coalesce(`cliente`.`nome`,'')),'') AS `cliente`,coalesce(`mandante`.`soprannome`,`mandante`.`denominazione`,concat_ws(' ',coalesce(`mandante`.`cognome`,''),coalesce(`mandante`.`nome`,'')),'') AS `mandante`,concat(coalesce(`mandante`.`soprannome`,`mandante`.`denominazione`,concat_ws(' ',coalesce(`mandante`.`cognome`,''),coalesce(`mandante`.`nome`,'')),''),' | ',coalesce(`cliente`.`soprannome`,`cliente`.`denominazione`,concat_ws(' ',coalesce(`cliente`.`cognome`,''),coalesce(`cliente`.`nome`,'')),'')) AS `__label__` from ((`transcodifica_clienti` `tc` left join `anagrafica` `cliente` on((`tc`.`id_cliente` = `cliente`.`id`))) left join `anagrafica` `mandante` on((`tc`.`id_mandante` = `mandante`.`id`))) order by concat(coalesce(`mandante`.`soprannome`,`mandante`.`denominazione`,concat_ws(' ',coalesce(`mandante`.`cognome`,''),coalesce(`mandante`.`nome`,'')),''),' | ',coalesce(`cliente`.`soprannome`,`cliente`.`denominazione`,concat_ws(' ',coalesce(`cliente`.`cognome`,''),coalesce(`cliente`.`nome`,'')),'')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `turni_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `turni_view`*/;
-/*!50001 DROP VIEW IF EXISTS `turni_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `turni_view` AS select `turni`.`id` AS `id`,`turni`.`turno` AS `turno`,`turni`.`id_anagrafica` AS `id_anagrafica`,`turni`.`id_contratto` AS `id_contratto`,`turni`.`data_inizio` AS `data_inizio`,`turni`.`data_fine` AS `data_fine`,`turni`.`id_pianificazione` AS `id_pianificazione`,`turni`.`id_account_inserimento` AS `id_account_inserimento`,`turni`.`timestamp_inserimento` AS `timestamp_inserimento`,`turni`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`turni`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,concat(`turni`.`id_contratto`,' ',`tipologie_contratti`.`nome`,' ',coalesce(`collaboratori`.`soprannome`,`collaboratori`.`denominazione`,concat_ws(' ',coalesce(`collaboratori`.`cognome`,''),coalesce(`collaboratori`.`nome`,'')),'')) AS `contratto`,concat('turno ',`turni`.`turno`,' ','contratto ',`turni`.`id_contratto`,' ',coalesce(`collaboratori`.`soprannome`,`collaboratori`.`denominazione`,concat_ws(' ',coalesce(`collaboratori`.`cognome`,''),coalesce(`collaboratori`.`nome`,'')))) AS `__label__` from (((`turni` left join `contratti` on((`turni`.`id_contratto` = `contratti`.`id`))) left join `anagrafica` `collaboratori` on((`contratti`.`id_anagrafica` = `collaboratori`.`id`))) left join `tipologie_contratti` on((`contratti`.`id_tipologia` = `tipologie_contratti`.`id`))) order by `turni`.`data_inizio` desc,concat('turno ',`turni`.`turno`,' ','contratto ',`turni`.`id_contratto`,' ',coalesce(`collaboratori`.`soprannome`,`collaboratori`.`denominazione`,concat_ws(' ',coalesce(`collaboratori`.`cognome`,''),coalesce(`collaboratori`.`nome`,'')))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `udm_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `udm_view`*/;
-/*!50001 DROP VIEW IF EXISTS `udm_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `udm_view` AS select `udm`.`id` AS `id`,coalesce(`udm`.`id_udm`,`udm`.`id`) AS `id_udm`,coalesce(`udm`.`conversione`,1) AS `conversione`,`udm`.`nome` AS `nome`,`udm`.`sigla` AS `__label__` from `udm` order by `udm`.`sigla` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `valutazioni_immobili_archivio_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `valutazioni_immobili_archivio_view`*/;
-/*!50001 DROP VIEW IF EXISTS `valutazioni_immobili_archivio_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `valutazioni_immobili_archivio_view` AS select `incarichi_immobili`.`id` AS `id`,`incarichi_immobili`.`riferimento` AS `riferimento`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,`incarichi_immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`incarichi_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_agenzia` AS `id_agenzia`,`incarichi_immobili`.`id_agente` AS `id_agente`,`incarichi_immobili`.`id_tipologia` AS `id_tipologia`,`incarichi_immobili`.`data_notizia` AS `data_notizia`,`incarichi_immobili`.`data_sviluppo` AS `data_sviluppo`,`incarichi_immobili`.`data_valutazione` AS `data_valutazione`,`incarichi_immobili`.`data_inizio` AS `data_inizio`,`incarichi_immobili`.`data_fine` AS `data_fine`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo_richiesto`,`incarichi_immobili`.`prezzo_mq` AS `prezzo_mq`,`incarichi_immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`incarichi_immobili`.`prezzo_incarico` AS `prezzo_incarico`,`incarichi_immobili`.`percentuale_intervallo` AS `percentuale_intervallo`,`incarichi_immobili`.`prezzo_prefisso` AS `prezzo_prefisso`,`incarichi_immobili`.`prezzo` AS `prezzo`,`incarichi_immobili`.`prezzo_suffisso` AS `prezzo_suffisso`,`incarichi_immobili`.`prezzo_sostituzione` AS `prezzo_sostituzione`,`incarichi_immobili`.`note` AS `note`,`incarichi_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`incarichi_immobili`.`id_esito_incarico` AS `id_esito_incarico`,`incarichi_immobili`.`id_esito_notizia` AS `id_esito_notizia`,`incarichi_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incarichi_immobili`.`note_archiviazione` AS `note_archiviazione`,`incarichi_immobili`.`id_account_editor` AS `id_account_editor`,`incarichi_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incarichi_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incarichi_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incarichi_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat(`indirizzi`.`indirizzo`,if((`indirizzi`.`civico` <> ''),concat(' ',`indirizzi`.`civico`),''),if((`indirizzi`.`localita` <> ''),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),'')) AS `indirizzo`,`indirizzi`.`latitudine` AS `latitudine`,`indirizzi`.`longitudine` AS `longitudine`,`indirizzi`.`id` AS `id_indirizzo`,`immobili`.`scala` AS `scala`,`immobili`.`piano` AS `piano`,`immobili`.`interno` AS `interno`,`tipologie_incarichi_immobili`.`nome` AS `tipologia`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,`incarichi_immobili`.`note` AS `__label__` from (((((`incarichi_immobili` left join `immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `indirizzi` on((`immobili`.`id_indirizzo` = `indirizzi`.`id`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_incarichi_immobili` on((`incarichi_immobili`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `anagrafica` on((`incarichi_immobili`.`id_cliente` = `anagrafica`.`id`))) where ((`incarichi_immobili`.`data_valutazione` is not null) and isnull(`incarichi_immobili`.`data_inizio`) and (`incarichi_immobili`.`timestamp_archiviazione` is not null)) order by `incarichi_immobili`.`note` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `valutazioni_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `valutazioni_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `valutazioni_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `valutazioni_immobili_view` AS select `incarichi_immobili`.`id` AS `id`,`incarichi_immobili`.`riferimento` AS `riferimento`,`incarichi_immobili`.`id_immobile` AS `id_immobile`,`incarichi_immobili`.`indirizzo_sostituzione` AS `indirizzo_sostituzione`,`incarichi_immobili`.`id_cliente` AS `id_cliente`,`incarichi_immobili`.`id_agenzia` AS `id_agenzia`,`incarichi_immobili`.`id_agente` AS `id_agente`,`incarichi_immobili`.`id_tipologia` AS `id_tipologia`,`incarichi_immobili`.`data_notizia` AS `data_notizia`,`incarichi_immobili`.`data_sviluppo` AS `data_sviluppo`,`incarichi_immobili`.`data_valutazione` AS `data_valutazione`,`incarichi_immobili`.`data_inizio` AS `data_inizio`,`incarichi_immobili`.`data_fine` AS `data_fine`,`incarichi_immobili`.`prezzo_richiesto` AS `prezzo_richiesto`,`incarichi_immobili`.`prezzo_mq` AS `prezzo_mq`,`incarichi_immobili`.`prezzo_valutazione` AS `prezzo_valutazione`,`incarichi_immobili`.`prezzo_incarico` AS `prezzo_incarico`,`incarichi_immobili`.`percentuale_intervallo` AS `percentuale_intervallo`,`incarichi_immobili`.`prezzo_prefisso` AS `prezzo_prefisso`,`incarichi_immobili`.`prezzo` AS `prezzo`,`incarichi_immobili`.`prezzo_suffisso` AS `prezzo_suffisso`,`incarichi_immobili`.`prezzo_sostituzione` AS `prezzo_sostituzione`,`incarichi_immobili`.`note` AS `note`,`incarichi_immobili`.`timestamp_incrocio` AS `timestamp_incrocio`,`incarichi_immobili`.`id_esito_incarico` AS `id_esito_incarico`,`incarichi_immobili`.`id_esito_notizia` AS `id_esito_notizia`,`incarichi_immobili`.`timestamp_archiviazione` AS `timestamp_archiviazione`,`incarichi_immobili`.`note_archiviazione` AS `note_archiviazione`,`incarichi_immobili`.`id_account_editor` AS `id_account_editor`,`incarichi_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`incarichi_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`incarichi_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`incarichi_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,date_format(from_unixtime(`incarichi_immobili`.`timestamp_archiviazione`),'%Y-%m-%d %H:%i') AS `data_archiviazione`,concat(`indirizzi`.`indirizzo`,if((`indirizzi`.`civico` <> ''),concat(' ',`indirizzi`.`civico`),''),if((`indirizzi`.`localita` <> ''),concat(' ',`indirizzi`.`localita`),''),if((`indirizzi`.`id_comune` is not null),concat(' - ',`comuni`.`nome`),'')) AS `indirizzo`,`indirizzi`.`latitudine` AS `latitudine`,`indirizzi`.`longitudine` AS `longitudine`,`indirizzi`.`id` AS `id_indirizzo`,`immobili`.`scala` AS `scala`,`immobili`.`piano` AS `piano`,`immobili`.`interno` AS `interno`,`tipologie_incarichi_immobili`.`nome` AS `tipologia`,dayofmonth(`incarichi_immobili`.`data_valutazione`) AS `giorno`,month(`incarichi_immobili`.`data_valutazione`) AS `mese`,year(`incarichi_immobili`.`data_valutazione`) AS `anno`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'') AS `cliente`,coalesce(`agenti`.`soprannome`,`agenti`.`denominazione`,concat_ws(' ',coalesce(`agenti`.`cognome`,''),coalesce(`agenti`.`nome`,'')),'') AS `agente`,`incarichi_immobili`.`note` AS `__label__` from (((((((`incarichi_immobili` left join `immobili` on((`incarichi_immobili`.`id_immobile` = `immobili`.`id`))) left join `indirizzi` on((`immobili`.`id_indirizzo` = `indirizzi`.`id`))) left join `comuni` on((`indirizzi`.`id_comune` = `comuni`.`id`))) left join `tipologie_incarichi_immobili` on((`incarichi_immobili`.`id_tipologia` = `tipologie_incarichi_immobili`.`id`))) left join `anagrafica` on((`incarichi_immobili`.`id_cliente` = `anagrafica`.`id`))) left join `account` on((`account`.`id` = `incarichi_immobili`.`id_account_editor`))) left join `anagrafica` `agenti` on((`account`.`id_anagrafica` = `agenti`.`id`))) where ((`incarichi_immobili`.`data_valutazione` is not null) and isnull(`incarichi_immobili`.`data_inizio`) and isnull(`incarichi_immobili`.`timestamp_archiviazione`)) order by `incarichi_immobili`.`note` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `valute_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `valute_view`*/;
-/*!50001 DROP VIEW IF EXISTS `valute_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `valute_view` AS select `valute`.`id` AS `id`,`valute`.`iso4217` AS `iso4217`,`valute`.`html` AS `html`,`valute`.`utf8` AS `utf8`,`valute`.`iso4217` AS `__label__` from `valute` order by `valute`.`iso4217` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `vani_immobili_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `vani_immobili_view`*/;
-/*!50001 DROP VIEW IF EXISTS `vani_immobili_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `vani_immobili_view` AS select `vani_immobili`.`id` AS `id`,`vani_immobili`.`id_immobile` AS `id_immobile`,`vani_immobili`.`id_tipologia` AS `id_tipologia`,`vani_immobili`.`nome` AS `nome`,`vani_immobili`.`larghezza` AS `larghezza`,`vani_immobili`.`lunghezza` AS `lunghezza`,`vani_immobili`.`altezza` AS `altezza`,`vani_immobili`.`percentuale_commerciale_custom` AS `percentuale_commerciale_custom`,`vani_immobili`.`mq_commerciali` AS `mq_commerciali`,`vani_immobili`.`mq_calpestabili` AS `mq_calpestabili`,`vani_immobili`.`mq_modificatore` AS `mq_modificatore`,`vani_immobili`.`id_account_inserimento` AS `id_account_inserimento`,`vani_immobili`.`timestamp_inserimento` AS `timestamp_inserimento`,`vani_immobili`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`vani_immobili`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_vani`.`nome` AS `tipologia`,`tipologie_vani`.`percentuale_commerciale` AS `percentuale_commerciale`,concat(`tipologie_vani`.`nome`,': ',`vani_immobili`.`larghezza`,'x',`vani_immobili`.`lunghezza`) AS `__label__` from (`vani_immobili` left join `tipologie_vani` on((`vani_immobili`.`id_tipologia` = `tipologie_vani`.`id`))) order by concat(`tipologie_vani`.`nome`,': ',`vani_immobili`.`larghezza`,'x',`vani_immobili`.`lunghezza`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `variazioni_attivita_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `variazioni_attivita_view`*/;
-/*!50001 DROP VIEW IF EXISTS `variazioni_attivita_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `variazioni_attivita_view` AS select `variazioni_attivita`.`id` AS `id`,`variazioni_attivita`.`id_tipologia` AS `id_tipologia`,`variazioni_attivita`.`id_tipologia_inps` AS `id_tipologia_inps`,`variazioni_attivita`.`id_anagrafica` AS `id_anagrafica`,`variazioni_attivita`.`data_richiesta` AS `data_richiesta`,`variazioni_attivita`.`data_approvazione` AS `data_approvazione`,`variazioni_attivita`.`id_account_inserimento` AS `id_account_inserimento`,`variazioni_attivita`.`timestamp_inserimento` AS `timestamp_inserimento`,`variazioni_attivita`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`variazioni_attivita`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`tipologie_variazioni_attivita`.`nome` AS `tipologia`,`tipologie_attivita_inps`.`nome` AS `tipologia_inps`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`nome`,''),coalesce(`anagrafica`.`cognome`,'')),'') AS `anagrafica`,concat(coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`nome`,''),coalesce(`anagrafica`.`cognome`,'')),''),' - ',`tipologie_variazioni_attivita`.`nome`,' - ',`variazioni_attivita`.`data_richiesta`) AS `__label__` from (((`variazioni_attivita` left join `tipologie_variazioni_attivita` on((`tipologie_variazioni_attivita`.`id` = `variazioni_attivita`.`id_tipologia`))) left join `tipologie_attivita_inps` on((`tipologie_attivita_inps`.`id` = `variazioni_attivita`.`id_tipologia_inps`))) left join `anagrafica` on((`anagrafica`.`id` = `variazioni_attivita`.`id_anagrafica`))) order by concat(coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`nome`,''),coalesce(`anagrafica`.`cognome`,'')),''),' - ',`tipologie_variazioni_attivita`.`nome`,' - ',`variazioni_attivita`.`data_richiesta`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `variazioni_prezzi_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `variazioni_prezzi_view`*/;
-/*!50001 DROP VIEW IF EXISTS `variazioni_prezzi_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `variazioni_prezzi_view` AS select `variazioni_prezzi`.`id` AS `id`,`variazioni_prezzi`.`nome` AS `nome`,`variazioni_prezzi`.`timestamp_inizio` AS `timestamp_inizio`,`variazioni_prezzi`.`timestamp_fine` AS `timestamp_fine`,`variazioni_prezzi`.`sconto_percentuale` AS `sconto_percentuale`,`variazioni_prezzi`.`ordine` AS `ordine`,`variazioni_prezzi`.`sconto_fisso` AS `sconto_fisso`,`variazioni_prezzi`.`id_account_inserimento` AS `id_account_inserimento`,`variazioni_prezzi`.`timestamp_inserimento` AS `timestamp_inserimento`,`variazioni_prezzi`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`variazioni_prezzi`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`variazioni_prezzi`.`nome` AS `__label__` from `variazioni_prezzi` order by `variazioni_prezzi`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `video_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `video_view`*/;
-/*!50001 DROP VIEW IF EXISTS `video_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `video_view` AS select `video`.`id` AS `id`,`video`.`id_anagrafica` AS `id_anagrafica`,`video`.`id_pagina` AS `id_pagina`,`video`.`id_file` AS `id_file`,`video`.`id_risorsa` AS `id_risorsa`,`video`.`id_categoria_risorse` AS `id_categoria_risorse`,`video`.`id_prodotto` AS `id_prodotto`,`video`.`id_categoria_prodotti` AS `id_categoria_prodotti`,`video`.`id_evento` AS `id_evento`,`video`.`id_categoria_eventi` AS `id_categoria_eventi`,`video`.`id_notizia` AS `id_notizia`,`video`.`id_categoria_notizie` AS `id_categoria_notizie`,`video`.`id_lingua` AS `id_lingua`,`video`.`path` AS `path`,`video`.`codice_embed` AS `codice_embed`,`video`.`id_tipologia_embed` AS `id_tipologia_embed`,`video`.`ratio` AS `ratio`,`video`.`nome` AS `nome`,`video`.`id_ruolo` AS `id_ruolo`,`video`.`ordine` AS `ordine`,`video`.`target` AS `target`,`video`.`timestamp_scalamento` AS `timestamp_scalamento`,`video`.`id_account_inserimento` AS `id_account_inserimento`,`video`.`timestamp_inserimento` AS `timestamp_inserimento`,`video`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`video`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`ruoli_video`.`nome` AS `ruolo`,coalesce(if((`eventi`.`nome` is not null),concat('evento | ',`eventi`.`nome`),NULL),if((`pagine`.`nome` is not null),concat('pagina | ',`pagine`.`nome`),NULL),if((`prodotti`.`nome` is not null),concat('prodotto | ',`prodotti`.`nome`),NULL),if((`categorie_prodotti`.`nome` is not null),concat('categoria prodotti | ',`categorie_prodotti`.`nome`),NULL)) AS `associato`,`video`.`nome` AS `__label__` from (((((`video` left join `ruoli_video` on((`ruoli_video`.`id` = `video`.`id_ruolo`))) left join `eventi` on((`eventi`.`id` = `video`.`id_evento`))) left join `pagine` on((`pagine`.`id` = `video`.`id_pagina`))) left join `prodotti` on((`prodotti`.`id` = `video`.`id_prodotto`))) left join `categorie_prodotti` on((`categorie_prodotti`.`id` = `video`.`id_categoria_prodotti`))) order by `video`.`nome` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `zone_cap_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `zone_cap_view`*/;
-/*!50001 DROP VIEW IF EXISTS `zone_cap_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `zone_cap_view` AS select `zone_cap`.`id` AS `id`,`zone_cap`.`id_zona` AS `id_zona`,`zone_cap`.`cap` AS `cap`,`zone_cap`.`id_account_inserimento` AS `id_account_inserimento`,`zone_cap`.`timestamp_inserimento` AS `timestamp_inserimento`,`zone_cap`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`zone_cap`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`zone_cap`.`cap` AS `__label__` from `zone_cap` order by `zone_cap`.`cap` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `zone_caratteristiche_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `zone_caratteristiche_view`*/;
-/*!50001 DROP VIEW IF EXISTS `zone_caratteristiche_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `zone_caratteristiche_view` AS select `zone_caratteristiche`.`id` AS `id`,`zone_caratteristiche`.`id_zona` AS `id_zona`,`zone_caratteristiche`.`id_caratteristica` AS `id_caratteristica`,`zone_caratteristiche`.`specifiche` AS `specifiche`,`zone_caratteristiche`.`specifiche` AS `__label__` from `zone_caratteristiche` order by `zone_caratteristiche`.`specifiche` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `zone_listini_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `zone_listini_view`*/;
-/*!50001 DROP VIEW IF EXISTS `zone_listini_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `zone_listini_view` AS select `zone_listini`.`id` AS `id`,`zone_listini`.`id_zona` AS `id_zona`,`zone_listini`.`id_listino` AS `id_listino`,`zone_listini`.`ordine` AS `ordine`,`zone_listini`.`id_account_inserimento` AS `id_account_inserimento`,`zone_listini`.`timestamp_inserimento` AS `timestamp_inserimento`,`zone_listini`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`zone_listini`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`zone_listini`.`id` AS `__label__` from `zone_listini` order by `zone_listini`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `zone_stati_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `zone_stati_view`*/;
-/*!50001 DROP VIEW IF EXISTS `zone_stati_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `zone_stati_view` AS select `zone_stati`.`id` AS `id`,`zone_stati`.`id_zona` AS `id_zona`,`zone_stati`.`id_stato` AS `id_stato`,`zone_stati`.`id_account_inserimento` AS `id_account_inserimento`,`zone_stati`.`timestamp_inserimento` AS `timestamp_inserimento`,`zone_stati`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`zone_stati`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`zone_stati`.`id` AS `__label__` from `zone_stati` order by `zone_stati`.`id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `zone_view`
---
-
-/*!50001 DROP TABLE IF EXISTS `zone_view`*/;
-/*!50001 DROP VIEW IF EXISTS `zone_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=CURRENT_USER() SQL SECURITY DEFINER */
-/*!50001 VIEW `zone_view` AS select `zone`.`id` AS `id`,`zone`.`id_genitore` AS `id_genitore`,`zone`.`nome` AS `nome`,`zone`.`id_account_inserimento` AS `id_account_inserimento`,`zone`.`timestamp_inserimento` AS `timestamp_inserimento`,`zone`.`id_account_aggiornamento` AS `id_account_aggiornamento`,`zone`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,`genitore`.`nome` AS `padre`,group_concat(`zone_cap`.`cap` separator ' | ') AS `cap`,count(`immagini`.`id_zona`) AS `immagini`,if((count(`immagini`.`id_zona`) = 0),'1',NULL) AS `no_immagini`,count(`contenuti`.`id_zona`) AS `testi`,if((count(`contenuti`.`id_zona`) = 0),'1',NULL) AS `no_testi`,`zone_path`(`zone`.`id`) AS `__label__` from ((((`zone` left join `zone` `genitore` on((`genitore`.`id` = `zone`.`id_genitore`))) left join `zone_cap` on((`zone_cap`.`id_zona` = `zone`.`id`))) left join `contenuti` on((`contenuti`.`id_zona` = `zone`.`id`))) left join `immagini` on((`immagini`.`id_zona` = `zone`.`id`))) group by `zone`.`id` order by `zone_path`(`zone`.`id`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2021-03-25 11:56:19

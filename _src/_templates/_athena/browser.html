@@ -1,0 +1,93 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends 'ext/blank.html' %}
+
+{% block header %}
+<header class="fixed-top">
+<div class="row widget no-gutters">
+    <div class="col text-left p-2">
+        <h1>{{ browse.base }}</h1>
+    </div>
+    <div class="col-auto text-right">
+        <button class="btn btn-secondary btn-sm btn-sqr" type="button" data-toggle="modal" data-target="#caricaFile"><i class="fa fa-file"></i></button>
+    </div>
+    <div class="col-auto text-right">
+        <button class="btn btn-secondary btn-sm btn-sqr" type="button" data-toggle="modal" data-target="#creaCartella"><i class="fa fa-folder-open"></i></button>
+    </div>
+</div>
+</header>
+{% endblock %}
+
+{% block main %}
+
+{% for dir in browse.dirs %}
+<div class="row no-gutters m-0 browse browse-dir">
+<div class="col" onclick="window.open( '?{{ browse.get ~ dir ~ '/' }}', '_self' );">
+    {% if dir == browse.parent %}
+    <i class="fa fa-level-up" aria-hidden="true"></i>
+    {% else %}
+    <i class="fa fa-folder-o" aria-hidden="true"></i>
+    {{ dir|split('/')|last }}
+    {% endif %}
+</div>
+<div class="col-auto text-right p-0 d-flex">
+    <button class="btn btn-secondary btn-sm btn-sqr" type="button" data-toggle="modal" data-target="#spostaCartella" onclick="mvfolder('{{ dir }}');"><i class="fa fa-external-link-square"></i></button>
+</div>
+<div class="col-auto text-right p-0 d-flex">
+    <button class="btn btn-secondary btn-sm btn-sqr" type="button" data-toggle="modal" data-target="#cancellaCartella" onclick="rmfolder('{{ dir }}');"><i class="fa fa-trash-o"></i></button>
+</div>
+</div>
+{% endfor %}
+
+{% for file in browse.files %}
+<div class="row no-gutters m-0 browse browse-file">
+<div class="col" onclick="cmsReturnFileUrl('{{ '/' ~ file.path }}')">
+    <i class="fa fa-file-o" aria-hidden="true"></i>
+    {{ file.path|split('/')|last }}
+</div>
+<div class="col-auto text-right pr-3">{{ file.size }}</div>
+<div class="col-auto text-right p-0 d-flex">
+    <button class="btn btn-secondary btn-sm btn-sqr" type="button" onclick="window.open('/{{ file.path }}','_blank');"><i class="fa fa-external-link"></i></button>
+    <button class="btn btn-secondary btn-sm btn-sqr" type="button" data-toggle="modal" data-target="#spostaFile" onclick="mvfile('{{ file.path }}');"><i class="fa fa-external-link-square"></i></button>
+    <button class="btn btn-secondary btn-sm btn-sqr" type="button" data-toggle="modal" data-target="#cancellaFile" onclick="rmfile('{{ file.path }}');"><i class="fa fa-trash-o"></i></button>
+</div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+    function rmfile( f ) {
+        $('#rmfile').val( basename( f ) );
+        $('#rmfilename').html( basename( f ) );
+    }
+
+    function mvfile( f ) {
+        $('#mvfile').val( basename( f ) );
+        $('#mvfilename').html( basename( f ) );
+    }
+
+    function mvfolder( f ) {
+        $('#mvfolder').val( basename( f ) );
+        $('#mvfoldername').html( basename( f ) );
+    }
+
+    function rmfolder( f ) {
+        $('#rmfolder').val( basename( f ) );
+        $('#rmfoldername').html( basename( f ) );
+    }
+
+	// invia un URL di file a CKEDITOR
+	function cmsReturnFileUrl( path ) {
+		var funcNum = getUrlParam( 'CKEditorFuncNum' );
+		var fileUrl = path;
+		// window.open('','cms').CKEDITOR.tools.callFunction( funcNum, fileUrl );
+		window.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl );
+		// console.log( path );
+		window.close();
+	}
+	
+</script>
+{% endblock %}

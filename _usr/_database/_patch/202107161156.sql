@@ -1,0 +1,1 @@
+ALTER TABLE `prodotti_caratteristiche` ADD `id_lingua` INT NULL DEFAULT NULL AFTER `id`, ADD INDEX (`id_lingua`);

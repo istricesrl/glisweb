@@ -1,0 +1,1 @@
+ALTER TABLE `sostituzioni_attivita` DROP FOREIGN KEY `sostituzioni_attivita_ibfk_1`; 

@@ -1,0 +1,52 @@
+{
+  "sites": {
+    "1": {
+      "id": 1,
+      "__label__": "%etichetta del sito%",
+      "name": {
+        "it-IT": "%nome it-IT del sito%"
+      },
+      "protocols": {
+        "DEV": "%protocollo del sito%"
+      },
+      "hosts": {
+        "DEV": "%nome host del sito%"
+      },
+      "domains": {
+        "DEV": "%dominio del sito%"
+      }
+    }
+  },
+  "auth": {
+    "accounts": {
+      "root": {
+        "password": "%password di root%"
+      }
+    }
+  },
+  "mysql": {
+    "servers": {
+      "default": {
+        "address": "%indirizzo IP del server MySQL%",
+        "port": "%porta del server MySQL%",
+        "username": "%nome utente del server MySQL%",
+        "password": "%password del server MySQL%",
+        "db": "%nome del database MySQL%"
+      }
+    },
+    "profiles": {
+      "DEV": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  },%opzioni%
+  "mods": {
+    "active": {
+      "array": [
+        %moduli%
+      ]
+    }
+  }
+}

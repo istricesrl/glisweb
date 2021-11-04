@@ -1,0 +1,1 @@
+ALTER TABLE `__report_progetti_sostituti__` ADD UNIQUE KEY `unico` (`id_progetto`,`data_prima_scopertura`,`id_anagrafica`);

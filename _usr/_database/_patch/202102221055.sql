@@ -1,0 +1,1 @@
+ALTER TABLE `todo` CHANGE `timestamp_inserimento` `timestamp_inserimento` INT(11) NULL DEFAULT NULL;

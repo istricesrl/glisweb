@@ -125,5 +125,3 @@
     // lingua corrente del sito
 	$cf['site']['ietf']				= &$cf['localization']['language']['ietf'];
 */
-
-?>

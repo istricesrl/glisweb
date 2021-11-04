@@ -100,9 +100,18 @@
      * @todo documentare
      *
      */
+    function numeric2null( $s ) {
+        return empty2null( $s, true );
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function empty2null( $s, $numeric = false ) {
 
-	if( $numeric === true && $s == 0 ) {
+	if( $numeric === true && is_numeric( $s ) ) {
 	    return $s;
 	} elseif( empty( $s ) ) {
 	    return NULL;
@@ -298,5 +307,49 @@
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    if( ! function_exists( 'str_starts_with' ) ) {
 
-?>
+        function str_starts_with( $haystack, $needle ) {
+
+            if( strpos( $haystack, $needle ) === 0) {
+                return true;
+             } else {
+                 return false;
+             }
+
+        }
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function str_starts_with_array( $haystack, $needles ) {
+
+        foreach( $needles as $needle ) {
+            if( str_starts_with( $haystack, $needle ) ) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function m2km( $m ) {
+
+        return $m / 1000;
+
+    }

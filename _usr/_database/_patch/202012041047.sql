@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `anagrafica_servizi_contatto_view`;

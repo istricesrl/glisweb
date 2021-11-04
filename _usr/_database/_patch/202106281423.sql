@@ -1,0 +1,1 @@
+ALTER TABLE `scadenze`  ADD UNIQUE KEY `scadenza_documento_unico` (`id_documento`,`data`,`id_modalita_pagamento`);

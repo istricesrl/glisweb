@@ -16,17 +16,13 @@
     <div class="col-auto col-md-5 text-right">
 	<div class="row">
 	<div class="col">
-	    {% if localization %}
-	    {{ frm.select( '__view__', '', '', '__language__', '', localization.languages, request, localization.language.id, 1, 0, 1 ) }}
-	    {% endif %}
-	</div>
-	<div class="col-auto">
-	    {% if request.__backurl__ %}
+		{% if request.__backurl__ %}
 	    {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
 	    {{ frm.button( '<i class="fa fa-arrow-circle-left"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#backurl").val("");$("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");','salva e torna alla pagina precedente' ) }}
 	    {% endif %}
 	    {{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e inserisci altri dati' ) }}
-	    {% else %}
+		{{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '?__backurl__=' ~ request.__backurl__ ~ '");','salva e inserisci altri dati' ) }}
+		{% else %}
 	    {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
 {# gdl - se short è valorizzato viene mostrato solo il pulsante di salvataggio #}
 {% if short is null %}

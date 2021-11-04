@@ -1,0 +1,14 @@
+.github/
+_*/
+tmp/
+var/
+.htaccess
+CODE_OF_CONDUCT.md
+composer.*
+CONTRIBUTING.md
+LICENSE.md
+README.md
+RELEASE.md
+robots.*
+SECURITY.md
+sitemap.*

@@ -1,0 +1,1 @@
+ALTER TABLE `pubblicazione` CHANGE `id_sito` `id_sito` INT(11) NULL DEFAULT NULL;

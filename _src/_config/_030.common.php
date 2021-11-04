@@ -95,7 +95,7 @@
     // controllo aggiornamento
 	if( ! file_exists( FILE_LATEST_UPDATE ) || filemtime( FILE_LATEST_UPDATE ) < strtotime( '-1 week' ) ) {
 	    $latest = restCall(
-		'https://glisweb.videoarts.it/current.conf',
+		'https://glisweb.videoarts.it/current.release',
 		METHOD_GET,
 		array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'] ),
 		MIME_APPLICATION_JSON,
@@ -105,10 +105,16 @@
 	}
 
     // versione corrente del framework
-	$cf['common']['version']['current'] = trim( readStringFromFile( FILE_CURRENT_VERSION ) );
+    $cf['common']['version']['current'] = trim( readStringFromFile( FILE_CURRENT_VERSION ) );
+
+    // costante per la versione corrente del framework
+    define( 'VERSION_CURRENT'		, $cf['common']['version']['current'] );
 
     // versione aggiornata del framework
 	$cf['common']['version']['latest'] = trim( readStringFromFile( FILE_LATEST_UPDATE ) );
+
+    // costante per la versione aggiornata del framework
+    define( 'VERSION_LATEST'		, $cf['common']['version']['latest'] );
 
     // link al manuale utente
 	$cf['common']['docs']['user']['html'] = array(
@@ -132,6 +138,4 @@
 	}
 
     // collegamento all'array $ct
-	$ct['common']					= &$cf['common'];
-
-?>
+    $ct['common']					= &$cf['common'];

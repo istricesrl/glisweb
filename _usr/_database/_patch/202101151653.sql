@@ -1,0 +1,1 @@
+ALTER TABLE `macro` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `id_pagina` (`id_pagina`,`macro`), ADD KEY `id_gruppo` (`macro`);

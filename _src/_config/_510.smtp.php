@@ -71,9 +71,12 @@
 	    $cf['smtp'] = array_replace_recursive( $cf['smtp'], $cx['smtp'] );
 	}
 
+    // configurazione extra per sito
+	if( isset( $cf['site']['smtp'] ) ) {
+	    $cf['smtp'] = array_replace_recursive( $cf['smtp'], $cf['site']['smtp'] );
+	}
+
     // debug
 	// print_r( $cf['contents']['pages']['licenza']['content'] );
 	// print_r( $cf['contents']['page'] );
 	// print_r( $ct['page'] );
-
-?>

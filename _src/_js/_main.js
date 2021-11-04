@@ -1,5 +1,40 @@
 
-    // operazioni da eseguire al caricamento della pagina
+    // rimuove le lettere accentate
+	function strClean( st ) {
+
+	    var st = st.split('');
+	    var stOut = new Array();
+	    var stLen = st.length;
+	    var accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+	    var accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+
+	    for( var y = 0; y < stLen; y++ ) {
+		if( accents.indexOf( st[y] ) != -1 ) {
+		    stOut[y] = accentsOut.substr( accents.indexOf( st[y] ), 1 );
+		} else {
+		    stOut[y] = st[y];
+		}
+	    }
+
+	    stOut = stOut.join('');
+
+	    return stOut;
+
+	}
+
+	// restituisce un nome di file al netto del path
+	function basename(path) {
+		return path.split(/[\\/]/).pop();
+	}
+
+    // prende un parametro dall'URL
+	function getUrlParam( paramName ) {
+	    var reParam = new RegExp( '(?:[\?&]|&)' + paramName + '=([^&]+)', 'i' );
+	    var match = window.location.search.match( reParam );
+	    return ( match && match.length > 1 ) ? match[1] : null;
+	}
+
+	// operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
 
 	    // mostro l'overlay dei cookie
@@ -7,6 +42,9 @@
 
 	    // apro i modal con classe popup-open
 		$('.popup-open').modal();
+
+		// focus su un elemento
+		$('.focus-on-load').focus();
 
 	    // apro in ritardo i modal con classe popup-delay in base al valore dell'attributo popup-delay
 		$('.popup-delay').each( function() {
@@ -56,7 +94,16 @@
 		    $(this).attr('img-hover', src );
 		});
 
-	    // ???
+	    // collego il campo hidden per le checkbox
+		$('input[type=checkbox]').click( function() {
+		    if( this.checked ) {
+			$(this).prev().val('1');
+		    } else {
+			$(this).prev().val('0');
+		    }
+		});
+
+		// ???
 		$( window ).scroll( function() {
 		    $('.hide-on-scroll').hide();
 		    if( $(this).scrollTop() > 50 ) {

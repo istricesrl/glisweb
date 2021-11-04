@@ -132,7 +132,7 @@
 	} elseif( file_exists( FILE_STATUS ) ) {
 	    $cf['site']['status']		=  readStringFromFile( FILE_STATUS );
 	} else {
-	    $cf['site']['status']		= TESTING;
+	    $cf['site']['status']		= DEVELOPEMENT;
 	}
 
     // status del sito
@@ -141,5 +141,3 @@
     // debug
 	// die( 'host: ' . $_SERVER['HTTP_HOST'] );
 	// print_r( $cf['site'] );
-
-?>

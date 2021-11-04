@@ -28,7 +28,7 @@
 	}
 
     // timer
-	timerCheck( $cf['speed'], ' -> inizio avvio sessione' );
+	timerCheck( $cf['speed'], '-> inizio avvio sessione' );
 
     // avvio della sessione php
 	if( session_start() ) {
@@ -36,8 +36,10 @@
 	    // registro l'id della sessione nell'array $cf
 		$_SESSION['id']				= session_id();
 
-	    // imposto il tempo se la sessione è appena stata creata
-		$_SESSION['used']			= time();
+		// imposto il tempo se la sessione è appena stata creata
+		if( ! isset( $_SESSION['used'] ) ) {
+			$_SESSION['used']			= time();
+		}
 
 	    // log
 		logWrite( 'avviata la sessione ' . session_id(), 'session' );
@@ -50,7 +52,7 @@
 	}
 
     // timer
-	timerCheck( $cf['speed'], ' -> fine avvio sessione' );
+	timerCheck( $cf['speed'], '-> fine avvio sessione' );
 
     // debug
 	// $h = fopen( DIRECTORY_BASE . 'var/log/sessions.debug', 'a+' );
@@ -66,5 +68,3 @@
     // debug
 	// echo 'sessione ' . session_id();
 	// print_r( $cf['session'] );
-
-?>

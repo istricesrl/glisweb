@@ -21,7 +21,8 @@
 	    '__label__' => 'account',
 	    'utente' => 'anagrafica',
 	    'se_attivo' => 'attivo',
-	    'gruppi' 	=> 'gruppi'
+	    'gruppi' 	=> 'gruppi',
+		'gruppi_attribuzione' => 'attribuzione automatica'
 	);
 
     // stili della vista
@@ -40,5 +41,3 @@
 	foreach( $ct['view']['data'] as &$row ) {
 	    if( $row['se_attivo'] == 1 ) { $row['se_attivo'] = '<i class="fa fa-check"></i>'; }
 	}
-
-?>

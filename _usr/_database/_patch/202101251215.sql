@@ -1,0 +1,1 @@
+ALTER TABLE todo DROP INDEX id;

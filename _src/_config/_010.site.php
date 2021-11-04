@@ -100,5 +100,3 @@
 
     // link al multisito
 	$ct['sites'] = &$cf['sites'];
-
-?>

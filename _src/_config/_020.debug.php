@@ -39,5 +39,3 @@
 
     // costante che descrive il livello corrente di log
 	define( 'LOG_CURRENT_LEVEL'		, $cf['debug'][ SITE_STATUS ]['*']['log']['lvl'] );
-
-?>

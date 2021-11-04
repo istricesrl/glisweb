@@ -44,5 +44,3 @@
 	    logWrite( $e -> getMessage(), 'cassa', LOG_ERR );
 
 	}
-
-?>

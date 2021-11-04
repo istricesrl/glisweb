@@ -1,0 +1,1 @@
+ALTER TABLE `pianificazioni` ADD `se_pulire` INT(1) NULL DEFAULT NULL AFTER `timestamp_popolazione`, ADD `se_ripopolare` INT(1) NULL DEFAULT NULL AFTER `se_pulire`, ADD KEY `se_pulire` (`se_pulire`), ADD KEY `se_ripopolare` (`se_ripopolare`);

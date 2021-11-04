@@ -40,7 +40,7 @@
 	}
 
     // tool per chiamare un webservice da un bottone dell'interfaccia metro
-	$.fn.metroWs = function( ws ) {
+	$.fn.metroWs = function( ws, callback ) {
 
 	    var el = $(this).get(0);
 	    var e = this;
@@ -68,6 +68,7 @@
 	    }).done( function( data ) {
 //		console.log( e );
 		e.find('.media-left').first().html('<i class="fa fa-check">');
+		callback();
 	    });
 
 	}

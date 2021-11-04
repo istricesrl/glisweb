@@ -1,0 +1,17 @@
+{
+  "twig": {
+    "profiles": {
+      "DEV": {
+        "debug": true
+      },
+      "TEST": {
+        "debug": false,
+        "cache": "var/cache/twig/"
+      },
+      "PROD": {
+        "debug": false,
+        "cache": "var/cache/twig/"
+      }
+    }
+  }
+}
