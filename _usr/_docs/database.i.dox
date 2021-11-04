@@ -132,35 +132,43 @@
     indirizzi.longitudine                   | la longitudine dell'indirizzo
     indirizzi.token                         | token per il lock software della riga nelle elaborazioni automatiche
     indirizzi.timestamp_geolocalizzazione   | la timestamp della geolocalizzazione dell'indirizzo
+    indirizzi.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    indirizzi.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    indirizzi.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    indirizzi.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo             | tabella e campo collegati     | comportamento
-    ------------------------------------|-------------------|-------------------------------|----------------------
-    indirizzi_ibfk_01_nofollow          | id_comune         | comuni.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                              | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------------|-------------------------------|----------------------
+    indirizzi_ibfk_01_nofollow          | id_comune                     | comuni.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    indirizzi_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    indirizzi_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista indirizzi_view relativa alla tabella indirizzi presenta le seguenti colonne:
 
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    indirizzi_view.id                            | -
-    indirizzi_view.id_comune                     | -
-    indirizzi_view.comune                        | il comune dove si trova l'indirizzo
-    indirizzi_view.id_provincia                  | l'ID della provincia dove si trova l'indirizzo
-    indirizzi_view.provincia                     | la provincia dove si trova l'indirizzo
-    indirizzi_view.id_regione                    | l'ID della regione dove si trova l'indirizzo
-    indirizzi_view.regione                       | la regione dove si trova l'indirizzo
-    indirizzi_view.id_stato                      | l'ID dello stato dove si trova l'indirizzo
-    indirizzi_view.stato                         | lo stato dove si trova l'indirizzo
-    indirizzi_view.localita                      | -
-    indirizzi_view.indirizzo                     | -
-    indirizzi_view.civico                        | -
-    indirizzi_view.cap                           | -
-    indirizzi_view.latitudine                    | -
-    indirizzi_view.longitudine                   | -
-    indirizzi_view.token                         | -
-    indirizzi_view.timestamp_geolocalizzazione   | -
-    indirizzi_view.__label__                     | etichetta descrittiva dell'indirizzo
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    indirizzi_view.id                           | -
+    indirizzi_view.id_comune                    | -
+    indirizzi_view.comune                       | il comune dove si trova l'indirizzo
+    indirizzi_view.id_provincia                 | l'ID della provincia dove si trova l'indirizzo
+    indirizzi_view.provincia                    | la provincia dove si trova l'indirizzo
+    indirizzi_view.id_regione                   | l'ID della regione dove si trova l'indirizzo
+    indirizzi_view.regione                      | la regione dove si trova l'indirizzo
+    indirizzi_view.id_stato                     | l'ID dello stato dove si trova l'indirizzo
+    indirizzi_view.stato                        | lo stato dove si trova l'indirizzo
+    indirizzi_view.localita                     | -
+    indirizzi_view.indirizzo                    | -
+    indirizzi_view.civico                       | -
+    indirizzi_view.cap                          | -
+    indirizzi_view.latitudine                   | -
+    indirizzi_view.longitudine                  | -
+    indirizzi_view.token                        | -
+    indirizzi_view.timestamp_geolocalizzazione  | -
+    indirizzi_view.id_account_inserimento       | -
+    indirizzi_view.id_account_aggiornamento     | -
+    indirizzi_view.__label__                    | etichetta descrittiva dell'indirizzo
     
     iva
     ---

@@ -27,112 +27,150 @@
     task.delay                              | il ritardo in secondi fra le esecuzioni del task nella stessa chiamata
     task.token                              | token per il lock della riga
     task.timestamp_esecuzione               | timestamp dell'ultima esecuzione della riga
+    task.id_account_inserimento             | l'ID dell'account che ha inserito la riga
+    task.timestamp_inserimento              | la timestamp dell'inserimento della riga
+    task.id_account_aggiornamento           | l'ID dell'ultimo account che ha modificato la riga
+    task.timestamp_aggiornamento            | la timestamp dell'ultimo aggiornamento della riga
 
     Per l'indicazione del tempo in cui il task va eseguito, il framework rispetta la sintassi del file crontab di Linux (https://crontab.guru/).
 
-    La tabella non ha chiavi esterne.
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                        | tabella e campo collegati    | comportamento
+    ----------------------------------------|------------------------------|------------------------------|-----------------------
+    task_ibfk_98_nofollow                   | id_account_inserimento       | account.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    task_ibfk_99_nofollow                   | id_account_aggiornamento     | account.id                   | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *task_view* relativa alla tabella *task* presenta le seguenti colonne:
 
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    task_view.id                                 | -
-    task_view.minuto                             | -
-    task_view.ora                                | -
-    task_view.giorno_del_mese                    | -
-    task_view.mese                               | -
-    task_view.giorno_della_settimana             | -
-    task_view.settimana                          | -
-    task_view.task                               | -
-    task_view.iterazioni                         | -
-    task_view.delay                              | -
-    task_view.token                              | -
-    task_view.timestamp_esecuzione               | -
-    task_view.__label__                          | etichetta descrittiva della pianificazione
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    task_view.id                                | -
+    task_view.minuto                            | -
+    task_view.ora                               | -
+    task_view.giorno_del_mese                   | -
+    task_view.mese                              | -
+    task_view.giorno_della_settimana            | -
+    task_view.settimana                         | -
+    task_view.task                              | -
+    task_view.iterazioni                        | -
+    task_view.delay                             | -
+    task_view.token                             | -
+    task_view.timestamp_esecuzione              | -
+    task_view.id_account_inserimento            | -
+    task_view.id_account_aggiornamento          | -
+    task_view.__label__                         | etichetta descrittiva della pianificazione
 
     telefoni
     --------
     Questa tabella *gestita* contiene i numeri di telefono associati all'entità principale *anagrafica*.
     
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    telefoni.id                       | l'ID del telefono
-    telefoni.id_tipologia             | l'ID della tipologia del telefono
-    telefoni.id_anagrafica            | l'ID dell'anagrafica cui appartiene il telefono
-    telefoni.numero                   | il numero di telefono
-    telefoni.note                     | note aggiuntive sul telefono
-    telefoni.se_notifiche             | flag che indica se il telefono può essere utilizzato per l'invio di notifiche
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    telefoni.id                         | l'ID del telefono
+    telefoni.id_anagrafica              | l'ID dell'anagrafica cui appartiene il telefono
+    telefoni.id_tipologia               | l'ID della tipologia del telefono
+    telefoni.numero                     | il numero di telefono
+    telefoni.note                       | note aggiuntive sul telefono
+    telefoni.se_notifiche               | flag che indica se il telefono può essere utilizzato per l'invio di notifiche
+    telefoni.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    telefoni.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    telefoni.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    telefoni.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                          | campo                     | tabella e campo collegati         | comportamento
-    --------------------------------|---------------------------|-----------------------------------|------------------
-    telefoni_ibfk_01_nofollow       | id_tipologia              | tipologie_telefoni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
-    telefoni_ibfk_02                | id_anagrafica             | anagrafica.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                          | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------|-------------------------------|-----------------------------------|------------------
+    telefoni_ibfk_01                | id_anagrafica                 | anagrafica.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    telefoni_ibfk_02_nofollow       | id_tipologia                  | tipologie_telefoni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    telefoni_ibfk_98_nofollow       | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    telefoni_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *telefoni_view* relativa alla tabella *telefoni* presenta le seguenti colonne:
     
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
-    telefoni_view.id                       | -
-    telefoni_view.id_tipologia             | -
-    telefoni_view.tipologia                | la tipologia del telefono
-    telefoni_view.id_anagrafica            | -
-    telefoni_view.anagrafica               | l'anagrafica cui appartiene il telefono
-    telefoni_view.numero                   | -
-    telefoni_view.note                     | -
-    telefoni_view.se_notifiche             | -
-    telefoni_view.__label__                | etichetta descrittiva del telefono
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    telefoni_view.id                        | -
+    telefoni_view.id_anagrafica             | -
+    telefoni_view.anagrafica                | l'anagrafica cui appartiene il telefono
+    telefoni_view.id_tipologia              | -
+    telefoni_view.tipologia                 | la tipologia del telefono
+    telefoni_view.numero                    | -
+    telefoni_view.note                      | -
+    telefoni_view.se_notifiche              | -
+    telefoni_view.id_account_inserimento    | -
+    telefoni_view.id_account_aggiornamento  | -
+    telefoni_view.__label__                 | etichetta descrittiva del telefono
 
     template
     --------
     Questa tabella *gestita* contiene i template che possono essere applicati a diversi tipi di output
     quali ad esempio mail, SMS e documenti. Il contenuto del template si trova nella tabella *contenuti*.
     
-    colonna                               | descrizione
-    --------------------------------------|---------------------------------------------------------------------------------------
-    template.id                           | l'ID del template
-    template.ruolo                        | il ruolo del template
-    template.nome                         | il nome attribuito al template
-    template.tipo                         | il tipo di template, da cui dipende il motore usato per il rendering
-    template.note                         | note aggiuntive sul template
-    template.se_mail                      | flag che indica se il template può essere applicato alle mail
-    template.se_sms                       | flag che indica se il template può essere applicato agli SMS
-
-    La tabella non ha chiavi esterne.
-
-    La vista *template_view* relativa alla tabella *template* presenta le seguenti colonne:
-    
-    colonna                                    | descrizione
-    -------------------------------------------|---------------------------------------------------------------------------------------
-    template_view.id                           | -
-    template_view.ruolo                        | -
-    template_view.nome                         | -
-    template_view.tipo                         | -
-    template_view.note                         | -
-    template_view.se_mail                      | -
-    template_view.se_sms                       | -
-    template_view.__label__                    | etichetta descrittiva del template
-
-    tipologie_anagrafica
-    --------------------
-    Questa tabella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *anagrafica*.
-    
-    colonna                                           | descrizione
-    --------------------------------------------------|---------------------------------------------------------------------------------------
-    tipologie_anagrafica.id                           | l'ID della tipologia
-    tipologie_anagrafica.id_genitore                  | l'ID della tipologia genitore
-    tipologie_anagrafica.ordine                       | campo di ordinamento
-    tipologie_anagrafica.nome                         | il nome della tipologia
-    tipologie_anagrafica.html_entity                  | -
-    tipologie_anagrafica.font_awesome                 | -
-    tipologie_anagrafica.se_persona_fisica            | flag che indica se la tipologia definisce una persona fisica
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    template.id                             | l'ID del template
+    template.ruolo                          | il ruolo del template
+    template.nome                           | il nome attribuito al template
+    template.tipo                           | il tipo di template, da cui dipende il motore usato per il rendering
+    template.note                           | note aggiuntive sul template
+    template.se_mail                        | flag che indica se il template può essere applicato alle mail
+    template.se_sms                         | flag che indica se il template può essere applicato agli SMS
+    template.id_account_inserimento         | l'ID dell'account che ha inserito la riga
+    template.timestamp_inserimento          | la timestamp dell'inserimento della riga
+    template.id_account_aggiornamento       | l'ID dell'ultimo account che ha modificato la riga
+    template.timestamp_aggiornamento        | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                          | campo                 | tabella e campo collegati         | comportamento
-    ------------------------------------------------|-----------------------|-----------------------------------|------------------
-    tipologie_anagrafica_ibfk_01_nofollow           | id_genitore           | tipologie_anagrafica.id           | ON DELETE SET NULL ON UPDATE SET NULL
+    chiave                          | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------|-------------------------------|-----------------------------------|------------------
+    template_ibfk_98_nofollow       | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    template_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *template_view* relativa alla tabella *template* presenta le seguenti colonne:
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    template_view.id                            | -
+    template_view.ruolo                         | -
+    template_view.nome                          | -
+    template_view.tipo                          | -
+    template_view.note                          | -
+    template_view.se_mail                       | -
+    template_view.se_sms                        | -
+    template_view.id_account_inserimento        | -
+    template_view.id_account_aggiornamento      | -
+    template_view.__label__                     | etichetta descrittiva del template
+
+    tipologie_anagrafica
+    --------------------
+    Questa tabella *standard* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *anagrafica*.
+    
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_anagrafica.id                         | l'ID della tipologia
+    tipologie_anagrafica.id_genitore                | l'ID della tipologia genitore
+    tipologie_anagrafica.ordine                     | campo di ordinamento
+    tipologie_anagrafica.nome                       | il nome della tipologia
+    tipologie_anagrafica.html_entity                | -
+    tipologie_anagrafica.font_awesome               | -
+    tipologie_anagrafica.se_persona_fisica          | flag che indica se la tipologia definisce una persona fisica
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                          | campo                         | tabella e campo collegati         | comportamento
+    ------------------------------------------------|-------------------------------|-----------------------------------|------------------
+    tipologie_anagrafica_ibfk_01_nofollow           | id_genitore                   | tipologie_anagrafica.id           | ON DELETE SET NULL ON UPDATE SET NULL
+
+    Alla tabella *tipologie_anagrafica* sono collegate le seguenti procedure:
+
+    procedura                                   | note
+    --------------------------------------------|---------------------------------------------------------
+    tipologie_anagrafica_path                   | costruisce il percorso di una data tipologia
+    tipologie_anagrafica_path_check             | verifica se una tipologia si trova fra gli antenati di un'altra
+    tipologie_anagrafica_path_find_ancestor     | trova l'ID della tipologia radice del percorso di una data tipologia
 
     La vista *tipologie_anagrafica_view* relativa alla tabella *tipologie_anagrafica* presenta le seguenti colonne:
     
@@ -552,6 +590,14 @@
     chiave                                      | campo                 | tabella e campo collegati     | comportamento
     --------------------------------------------|-----------------------|-------------------------------|----------------------
     tipologie_telefoni_ibfk_01_nofollow         | id_genitore           | tipologie_telefoni.id         | ON DELETE SET NULL ON UPDATE SET NULL
+
+    Alla tabella *tipologie_telefoni* sono collegate le seguenti procedure:
+
+    procedura                                   | note
+    --------------------------------------------|---------------------------------------------------------
+    tipologie_telefoni_path                     | costruisce il percorso di una data tipologia
+    tipologie_telefoni_path_check               | verifica se una tipologia si trova fra gli antenati di un'altra
+    tipologie_telefoni_path_find_ancestor       | trova l'ID della tipologia radice del percorso di una data tipologia
 
     La vista *tipologie_telefoni_view* relativa alla tabella *tipologie_telefoni* presenta le seguenti colonne:
     

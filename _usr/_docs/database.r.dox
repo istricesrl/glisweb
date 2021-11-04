@@ -17,8 +17,17 @@
     ranking.id                              | l'ID del ranking
     ranking.nome                            | il nome del ranking
     ranking.ordine                          | campo di ordinamento
+    ranking.id_account_inserimento          | l'ID dell'account che ha inserito la riga
+    ranking.timestamp_inserimento           | la timestamp dell'inserimento della riga
+    ranking.id_account_aggiornamento        | l'ID dell'ultimo account che ha modificato la riga
+    ranking.timestamp_aggiornamento         | la timestamp dell'ultimo aggiornamento della riga
 
-    La tabella non ha chiavi esterne.
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                         | tabella e campo collegati         | comportamento
+    ------------------------------------|-------------------------------|-----------------------------------|------------------
+    ranking_ibfk_98_nofollow            | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    ranking_ibfk_99_nofollow            | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *ranking_view* relativa alla tabella *ranking* presenta le seguenti colonne:
 
@@ -27,6 +36,8 @@
     ranking_view.id                             | -
     ranking_view.nome                           | -
     ranking_view.ordine                         | -
+    ranking_view.id_account_inserimento         | -
+    ranking_view.id_account_aggiornamento       | -
     ranking_view.__label__                      | etichetta descrittiva del ranking
 
     recensioni
@@ -456,6 +467,12 @@
     ruoli_indirizzi.id                      | l'ID del ruolo
     ruoli_indirizzi.id_genitore             | l'ID del ruolo genitore
     ruoli_indirizzi.nome                    | il nome del ruolo
+    ruoli_indirizzi.html_entity             | entità HTML che rappresenta visivamente la tipologia
+    ruoli_indirizzi.font_awesome            | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    ruoli_indirizzi.se_sede_legale          | flag che indica se l'indirizzo è una sede legale
+    ruoli_indirizzi.se_sede_operativa       | flag che indica se l'indirizzo è una sede operativa
+    ruoli_indirizzi.se_residenza            | flag che indica se l'indirizzo è una residenza
+    ruoli_indirizzi.se_domicilio            | flag che indica se l'indirizzo è un domicilio
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -463,14 +480,28 @@
     ----------------------------------------|-----------------------|-----------------------------------|------------------
     ruoli_indirizzi_ibfk_01                 | id_genitore           | ruoli_indirizzi.id                | ON DELETE SET NULL ON UPDATE SET NULL
 
+    Alla tabella *ruoli_indirizzi* sono collegate le seguenti procedure:
+
+    procedura                               | note
+    ----------------------------------------|---------------------------------------------------------
+    ruoli_indirizzi_path                    | costruisce il percorso di un dato ruolo
+    ruoli_indirizzi_path_check              | verifica se un ruolo si trova fra gli antenati di un'altro
+    ruoli_indirizzi_path_find_ancestor      | trova l'ID del ruolo radice del percorso di un dato ruolo
+
     La vista *ruoli_indirizzi_view* relativa alla tabella *ruoli_indirizzi* presenta le seguenti colonne:
  
-    colonna                                        | descrizione
-    -----------------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_indirizzi_view.id                        | -
-    ruoli_indirizzi_view.id_genitore               | -
-    ruoli_indirizzi_view.nome                      | -
-    ruoli_indirizzi_view.__label__                 | etichetta descrittiva del ruolo
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_indirizzi_view.id                         | -
+    ruoli_indirizzi_view.id_genitore                | -
+    ruoli_indirizzi_view.nome                       | -
+    ruoli_indirizzi_view.html_entity                | -
+    ruoli_indirizzi_view.font_awesome               | -
+    ruoli_indirizzi_view.se_sede_legale             | -
+    ruoli_indirizzi_view.se_sede_operativa          | -
+    ruoli_indirizzi_view.se_residenza               | -
+    ruoli_indirizzi_view.se_domicilio               | -
+    ruoli_indirizzi_view.__label__                  | etichetta descrittiva del ruolo
 
     ruoli_prodotti
     --------------

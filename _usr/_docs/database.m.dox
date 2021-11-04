@@ -46,128 +46,150 @@
     ----
     Questa tabella *gestita* contiene gli indirizzi mail associati all'entità principale *anagrafica*.
 
-    colonna                          | descrizione
-    ---------------------------------|---------------------------------------------------------------------------------------
-    mail.id                          | l'ID della mail
-    mail.id_anagrafica               | l'ID dell'anagrafica associata alla mail
-    mail.indirizzo                   | l'indirizzo della mail
-    mail.note                        | note relative alla mail
-    mail.se_notifiche                | flag che indica se la mail può essere utilizzata per le notifiche
-    mail.se_pec                      | flag che indica se la mail è una PEC
-  
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    mail.id                         | l'ID della mail
+    mail.id_anagrafica              | l'ID dell'anagrafica associata alla mail
+    mail.indirizzo                  | l'indirizzo della mail
+    mail.note                       | note relative alla mail
+    mail.se_notifiche               | flag che indica se la mail può essere utilizzata per le notifiche
+    mail.se_pec                     | flag che indica se la mail è una PEC
+    mail.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    mail.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    mail.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    mail.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                  | campo                 | tabella e campo collegati     | comportamento
-    ------------------------|-----------------------|-------------------------------|----------------------
-    mail_ibfk_01            | id_anagrafica         | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE,
+    chiave                  | campo                         | tabella e campo collegati     | comportamento
+    ------------------------|-------------------------------|-------------------------------|----------------------
+    mail_ibfk_01            | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE,
+    mail_ibfk_98_nofollow   | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    mail_ibfk_99_nofollow   | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *mail_view* relativa alla tabella *mail* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    mail_view.id                         | -
-    mail_view.id_anagrafica              | -
-    mail_view.anagrafica                 | l'anagrafica collegata alla mail
-    mail_view.indirizzo                  | -
-    mail_view.se_notifiche               | -
-    mail_view.se_pec                     | -
-    mail_view.__label__                  | l'etichetta descrittiva della mail
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    mail_view.id                        | -
+    mail_view.id_anagrafica             | -
+    mail_view.anagrafica                | l'anagrafica collegata alla mail
+    mail_view.indirizzo                 | -
+    mail_view.se_notifiche              | -
+    mail_view.se_pec                    | -
+    mail_view.id_account_inserimento    | -
+    mail_view.id_account_aggiornamento  | -
+    mail_view.__label__                 | l'etichetta descrittiva della mail
 
     mail_out
     --------
     Questa tabella *gestita* contiene la coda delle mail da inviare.
 
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    mail_out.id                       | l'ID della mail
-    mail_out.id_mail                  | l'ID della mail associato alla mail
-    mail_out.id_mailing               | l'ID del mailing collegato alla mail
-    mail_out.ordine                   | campo di ordinamento
-    mail_out.timestamp_composizione   | la timestamp di composizione della mail
-    mail_out.mittente                 | il mittente della mail
-    mail_out.destinatari              | destinatari della mail
-    mail_out.destinatari_cc           | destinatari in copia della mail
-    mail_out.destinatari_bcc          | destinatari in copia nascosta della mail
-    mail_out.oggetto                  | oggetto della mail
-    mail_out.corpo                    | corpo della mail
-    mail_out.allegati                 | allegati della mail
-    mail_out.headers                  | header della mail
-    mail_out.server                   | il nome del server SMTP da usare per l'invio
-    mail_out.host                     | il nome host del server SMTP da usare per l'invio
-    mail_out.port                     | la porta del server SMTP da usare per l'invio
-    mail_out.user                     | il nome utente del server SMTP da usare per l'invio
-    mail_out.password                 | la password del server SMTP da usare per l'invio
-    mail_out.token                    | token per il lock software della riga nelle elaborazioni automatiche
-    mail_out.tentativi                | il numero di tentativi di invio fatti per la mail
-    mail_out.timestamp_invio          | la timestamp dell'invio della mail
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    mail_out.id                         | l'ID della mail
+    mail_out.id_mail                    | l'ID della mail associato alla mail
+    mail_out.id_mailing                 | l'ID del mailing collegato alla mail
+    mail_out.ordine                     | campo di ordinamento
+    mail_out.timestamp_composizione     | la timestamp di composizione della mail
+    mail_out.mittente                   | il mittente della mail
+    mail_out.destinatari                | destinatari della mail
+    mail_out.destinatari_cc             | destinatari in copia della mail
+    mail_out.destinatari_bcc            | destinatari in copia nascosta della mail
+    mail_out.oggetto                    | oggetto della mail
+    mail_out.corpo                      | corpo della mail
+    mail_out.allegati                   | allegati della mail
+    mail_out.headers                    | header della mail
+    mail_out.server                     | il nome del server SMTP da usare per l'invio
+    mail_out.host                       | il nome host del server SMTP da usare per l'invio
+    mail_out.port                       | la porta del server SMTP da usare per l'invio
+    mail_out.user                       | il nome utente del server SMTP da usare per l'invio
+    mail_out.password                   | la password del server SMTP da usare per l'invio
+    mail_out.token                      | token per il lock software della riga nelle elaborazioni automatiche
+    mail_out.tentativi                  | il numero di tentativi di invio fatti per la mail
+    mail_out.timestamp_invio            | la timestamp dell'invio della mail
+    mail_out.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    mail_out.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    mail_out.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    mail_out.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo                 | tabella e campo collegati     | comportamento
-    ------------------------------------|-----------------------|-------------------------------|----------------------
-    mail_out_ibfk_01_nofollow           | id_mail               | mail.id                       | ON DELETE CASCADE ON UPDATE CASCADE
-    mail_out_ibfk_02_nofollow           | id_mailing            | mailing.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                              | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------------|-------------------------------|----------------------
+    mail_out_ibfk_01_nofollow           | id_mail                       | mail.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    mail_out_ibfk_02_nofollow           | id_mailing                    | mailing.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    mail_out_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    mail_out_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *mail_out_view* relativa alla tabella *mail_out* presenta le seguenti colonne:
 
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
-    mail_out_view.id                       | -
-    mail_out_view.id_mail                  | -
-    mail_out_view.id_mailing               | -
-    mail_out_view.ordine                   | -
-    mail_out_view.timestamp_composizione   | -
-    mail_out_view.mittente                 | -
-    mail_out_view.destinatari              | -
-    mail_out_view.destinatari_cc           | -
-    mail_out_view.destinatari_bcc          | -
-    mail_out_view.oggetto                  | -
-    mail_out_view.allegati                 | -
-    mail_out_view.headers                  | -
-    mail_out_view.server                   | -
-    mail_out_view.host                     | -
-    mail_out_view.port                     | -
-    mail_out_view.user                     | -
-    mail_out_view.password                 | -
-    mail_out_view.token                    | -
-    mail_out_view.tentativi                | -
-    mail_out_view.timestamp_invio          | -
-    mail_out_view.__label__                | etichetta descrittiva della mail
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    mail_out_view.id                        | -
+    mail_out_view.id_mail                   | -
+    mail_out_view.id_mailing                | -
+    mail_out_view.ordine                    | -
+    mail_out_view.timestamp_composizione    | -
+    mail_out_view.mittente                  | -
+    mail_out_view.destinatari               | -
+    mail_out_view.destinatari_cc            | -
+    mail_out_view.destinatari_bcc           | -
+    mail_out_view.oggetto                   | -
+    mail_out_view.allegati                  | -
+    mail_out_view.headers                   | -
+    mail_out_view.server                    | -
+    mail_out_view.host                      | -
+    mail_out_view.port                      | -
+    mail_out_view.user                      | -
+    mail_out_view.password                  | -
+    mail_out_view.token                     | -
+    mail_out_view.tentativi                 | -
+    mail_out_view.timestamp_invio           | -
+    mail_out_view.id_account_inserimento    | -
+    mail_out_view.id_account_aggiornamento  | -
+    mail_out_view.__label__                 | etichetta descrittiva della mail
 
     mail_sent
     ---------
     Questa tabella *gestita* contiene la coda delle mail inviate.
 
-    colonna                            | descrizione
-    -----------------------------------|---------------------------------------------------------------------------------------
-    mail_sent.id                       | l'ID della mail
-    mail_sent.id_mail                  | l'ID della mail associato alla mail
-    mail_sent.id_mailing               | l'ID del mailing collegato alla mail
-    mail_sent.ordine                   | campo di ordinamento
-    mail_sent.timestamp_composizione   | la timestamp di composizione della mail
-    mail_sent.mittente                 | il mittente della mail
-    mail_sent.destinatari              | destinatari della mail
-    mail_sent.destinatari_cc           | destinatari in copia della mail
-    mail_sent.destinatari_bcc          | destinatari in copia nascosta della mail
-    mail_sent.oggetto                  | oggetto della mail
-    mail_sent.corpo                    | corpo della mail
-    mail_sent.allegati                 | allegati della mail
-    mail_sent.headers                  | header della mail
-    mail_sent.server                   | il nome del server SMTP da usare per l'invio
-    mail_sent.host                     | il nome host del server SMTP da usare per l'invio
-    mail_sent.port                     | la porta del server SMTP da usare per l'invio
-    mail_sent.user                     | il nome utente del server SMTP da usare per l'invio
-    mail_sent.password                 | la password del server SMTP da usare per l'invio
-    mail_sent.token                    | token per il lock software della riga nelle elaborazioni automatiche
-    mail_sent.tentativi                | il numero di tentativi di invio fatti per la mail
-    mail_sent.timestamp_invio          | la timestamp dell'invio della mail
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    mail_sent.id                            | l'ID della mail
+    mail_sent.id_mail                       | l'ID della mail associato alla mail
+    mail_sent.id_mailing                    | l'ID del mailing collegato alla mail
+    mail_sent.ordine                        | campo di ordinamento
+    mail_sent.timestamp_composizione        | la timestamp di composizione della mail
+    mail_sent.mittente                      | il mittente della mail
+    mail_sent.destinatari                   | destinatari della mail
+    mail_sent.destinatari_cc                | destinatari in copia della mail
+    mail_sent.destinatari_bcc               | destinatari in copia nascosta della mail
+    mail_sent.oggetto                       | oggetto della mail
+    mail_sent.corpo                         | corpo della mail
+    mail_sent.allegati                      | allegati della mail
+    mail_sent.headers                       | header della mail
+    mail_sent.server                        | il nome del server SMTP da usare per l'invio
+    mail_sent.host                          | il nome host del server SMTP da usare per l'invio
+    mail_sent.port                          | la porta del server SMTP da usare per l'invio
+    mail_sent.user                          | il nome utente del server SMTP da usare per l'invio
+    mail_sent.password                      | la password del server SMTP da usare per l'invio
+    mail_sent.token                         | token per il lock software della riga nelle elaborazioni automatiche
+    mail_sent.tentativi                     | il numero di tentativi di invio fatti per la mail
+    mail_sent.timestamp_invio               | la timestamp dell'invio della mail
+    mail_sent.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    mail_sent.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    mail_sent.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    mail_sent.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                               | campo                 | tabella e campo collegati     | comportamento
-    -------------------------------------|-----------------------|-------------------------------|----------------------
-    mail_sent_ibfk_01_nofollow           | id_mail               | mail.id                       | ON DELETE CASCADE ON UPDATE CASCADE
-    mail_sent_ibfk_02_nofollow           | id_mailing            | mailing.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                               | campo                        | tabella e campo collegati     | comportamento
+    -------------------------------------|------------------------------|-------------------------------|----------------------
+    mail_sent_ibfk_01_nofollow           | id_mail                      | mail.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    mail_sent_ibfk_02_nofollow           | id_mailing                   | mailing.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    mail_sent_ibfk_98_nofollow           | id_account_inserimento       | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    mail_sent_ibfk_99_nofollow           | id_account_aggiornamento     | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *mail_sent_view* relativa alla tabella *mail_sent* presenta le seguenti colonne:
 
@@ -193,6 +215,8 @@
     mail_sent_view.token                    | -
     mail_sent_view.tentativi                | -
     mail_sent_view.timestamp_invio          | -
+    mail_sent_view.id_account_inserimento   | -
+    mail_sent_view.id_account_aggiornamento | -
     mail_sent_view.__label__                | etichetta descrittiva della mail
 
     mailing

@@ -14,65 +14,154 @@
     Le tabelle del database di supporto si dividono in tre categorie secondo la politica di aggiornamento dei dati
     da parte dell'utente:
 
-    - tabelle di supporto
+    - tabelle standard
     - tabelle assistite
-    - tabelle di lavoro
+    - tabelle gestite
 
     tipologie di tabelle
     ====================
-
-    le tabelle gestite
-    ------------------
-
-    tabella                     | codice base           | descrizione
-    ----------------------------|-----------------------|------------------------------
-    account                     | 000100                | contiene gli account che possono fare il login nel framework
-
-    le tabelle assistite
-    --------------------
-
-    tabella                     | codice base           | descrizione
-    ----------------------------|-----------------------|------------------------------
+    Il database di supporto contiene dati strutturali come lingue, informazioni geografiche, fusi orari, unità
+    di misura, valute, e così via; anche se non è indispensabile dal momento che il framework può funzionare
+    anche senza, svolge comunque un ruolo importante e se è possibile si consiglia sempre di installarlo. Il
+    database di supporto può contenere sia tabelle standard che tabelle assistite o gestite (vedi sotto), mentre
+    i database di lavoro possono contenere solo tabelle assistite e gestite.
 
     le tabelle standard
     -------------------
-    Il database di supporto contiene dati strutturali come lingue, geografia, fusi orari, unità di misura,
-    valute, e così via; anche se non è indispensabile dal momento che il framework può funzionare anche senza,
-    svolge comunque un ruolo importante e se è possibile si consiglia sempre di installarlo. Il database di
-    supporto può contenere sia tabelle di supporto che tabelle assistite o gestite (vedi sotto), mentre i
-    database di lavoro possono contenere solo tabelle assistite e gestite.
+    La differenza principale fra le tabelle standard e le altre è che contengono informazioni non
+    modificabili tramite l'interfaccia del framework, in quanto sono considerate parte del framework stesso
+    e la modifica dei loro contenuti è considerata un aggiornamento; le tabelle di lavoro (gestite e assistite)
+    invece sono pensate proprio per essere modificate tramite le interfacce del framework.
 
-    La differenza principale fra le tabelle di supporto e le tabelle di lavoro è che le prime contengono informazioni
-    non modificabili tramite l'interfaccia del framework, in quanto sono ritenute parte del framework stesso e la
-    loro modifica è considerata un aggiornamento; le tabelle di lavoro (gestite e assistite) invece sono pensate
-    proprio per essere modificate tramite le interfacce del framework.
-
-    Una caratteristica fondamentale delle tabelle di supporto è quella di integrare array già presenti nel
+    Una caratteristica fondamentale delle tabelle standard è quella di integrare array già presenti nel
     framework, aggiungendo dati e informazioni. Si veda ad esempio l'array $cf['localization']['languages']
-    prima e dopo il file _195.localization.php. La struttura dei dati nel database non corrisponde sempre
-    esattamente a quella degli array del framework, ma si è cercato di tenerle il più simili possibile per
+    prima e dopo il file _src/_config/_195.localization.php. La struttura dei dati nel database non corrisponde
+    sempre esattamente a quella degli array del framework, ma si è cercato di tenerle il più simili possibile per
     semplificarne la lettura e la gestione e a tendere si cercherà di farle convergere con gli aggiornamenti.
 
-    tabella                     | codice base           | descrizione
-    ----------------------------|-----------------------|------------------------------
+    tabella                         | codice    | modello       | gruppo        | descrizione
+    --------------------------------|-----------|---------------|---------------|------------------------------
+    comuni                          | 005300    | base          | principale    | contiene i comuni
+    continenti                      | 007100    | base          | principale    | contiene i continenti
+    lingue                          | 016800    | base          | principale    | contiene le lingue supportate dal framework
+    provincie                       | 028000    | base          | principale    | contiene le provincie
+    regioni                         | 030200    | base          | principale    | contiene le regioni
+    ruoli_indirizzi                 | 034800    | base          | ruoli         | contiene i ruoli svolti dagli indirizzi
+    settori                         | 037000    | ricorsiva     | principale    | contiene i settori di attività ATECO
+    stati                           | 042000    | base          | principale    | contiene gli stati
+    tipologie_anagrafica            | 050000    | ricorsiva     | tipologie     | contiene le tipologie delle anagrafiche
+    tipologie_telefoni              | 056200    | ricorsiva     | tipologie     | contiene le tipologie di telefoni
+
+    le tabelle assistite
+    --------------------
+    Le tabelle assistite contengono dati standard per comodità dell'utente ma possono essere gestite tramite le interfacce
+    del framework. Il loro contenuto non è quindi considerato parte del framework e può essere liberamente modificato dagli
+    utenti.
+
+    tabella                         | codice    | modello       | gruppo        | descrizione
+    --------------------------------|-----------|---------------|---------------|------------------------------
+    categorie_anagrafica            | 003100    | ricorsiva     | categorie     | contiene le categorie dell'anagrafica
+    ranking                         | 028600    | base          | principale    | contiene i ranking relativi all'anagrafica
+    task                            | 043000    | base          | principale    | contiene i task pianificati
+
+    le tabelle gestite
+    ------------------
+    Le tabelle gestite contengono i dati che vengono manipolati tramite le interfacce del framework;
+    sono sempre vuote nelle nuove installazioni e accolgono i dati che vengono via via inseriti dagli utenti.
+
+    tabella                         | codice    | modello       | gruppo        | descrizione
+    --------------------------------|-----------|---------------|---------------|------------------------------
+    account                         | 000100    | base          | principale    | contiene gli account che possono fare il login nel framework
+    account_gruppi                  | 000200    | relazione     | principale    | mette in relazione account e gruppi
+    account_gruppi_attribuzione     | 000300    | relazione     | principale    | mette in relazione account e gruppi per l'attribuzione automatica di entità al gruppo
+    anagrafica                      | 000400    | base          | principale    | contiene le anagrafiche
+    anagrafica_categorie            | 000500    | relazione     | principale    | mette in relazione anagrafica e categorie_anagrafica
+    anagrafica_cittadinanze         | 000700    | relazione     | principale    | mette in relazione anagrafica e stati
+    anagrafica_indirizzi            | 000900    | relazione     | principale    | mette in relazione anagrafica e indirizzi
+    anagrafica_settori              | 001200    | relazione     | principale    | mette in relazione anagrafica e settori
+    gruppi                          | 015200    | ricorsiva     | principale    | contiene i gruppi attivi nel framework
+    indirizzi                       | 015800    | base          | principale    | contiene gli indirizzi
+    job                             | 016200    | base          | principale    | contiene i job
+    mail                            | 018600    | base          | principale    | contiene gli indirizzi e-mail
+    mail_out                        | 018800    | base          | principale    | contiene le mail in uscita
+    mail_sent                       | 018900    | base          | principale    | contiene le mail inviate
+    sms_out                         | 041000    | base          | principale    | contiene gli SMS in uscita
+    sms_sent                        | 041200    | base          | principale    | contiene gli SMS inviati
+    telefoni                        | 043600    | base          | principale    | contiene i numeri di telefono
+    template                        | 044000    | base          | principale    | contiene i template per le mail e gli SMS
+
+    tabelle e moduli
+    ================
+    Non tutti i moduli necessitano di tutte le tabelle. Per sapere quali tabelle sono richieste dai vari moduli è
+    possibile fare riferimento alla seguente tabella:
+
+    modulo                  | tabella
+    ------------------------|----------------------------------------------------------
+    BASE                    | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, comuni, continenti, gruppi, indirizzi, job, lingue, mail, mail_out, mail_sent, ranking, regioni, ruoli_indirizzi, settori, sms_out, sms_sent, stati, task, telefoni, template, tipologie_anagrafica, tipologie_telefoni
+
+    Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
+
+    tabella                         | moduli
+    --------------------------------|-----------------------------------------------------------
+    account                         | BASE
+    account_gruppi                  | BASE
+    account_gruppi_attribuzione     | BASE
+    anagrafica                      | BASE
+    anagrafica_categorie            | BASE
+    anagrafica_cittadinanze         | BASE
+    anagrafica_indirizzi            | BASE
+    anagrafica_settori              | BASE
+    categorie_anagrafica            | BASE
+    comuni                          | BASE
+    continenti                      | BASE
+    gruppi                          | BASE
+    indirizzi                       | BASE
+    job                             | BASE
+    lingue                          | BASE
+    mail                            | BASE
+    mail_out                        | BASE
+    mail_sent                       | BASE
+    ranking                         | BASE
+    regioni                         | BASE
+    ruoli_indirizzi                 | BASE
+    settori                         | BASE
+    sms_out                         | BASE
+    sms_sent                        | BASE
+    stati                           | BASE
+    task                            | BASE
+    telefoni                        | BASE
+    template                        | BASE
+    tipologie_anagrafica            | BASE
+    tipologie_telefoni              | BASE
 
     modelli di tabelle
     ==================
 
     tabelle base
     ------------
+    Le tabelle di base costituiscono l'ossatura principale del database del framework. Sono in relazione fra loro,
+    ma non con sé stesse.
 
-    tabelle di associazione
-    -----------------------
+    tabelle di relazione
+    --------------------
+    Le tabelle base possono essere in relazione uno a molti fra loro, ma per ottenere relazioni di tipo molti a molti
+    è necessario ricorrere a tabelle di appoggio, che mettono in relazione fra loro entità rappresentate da due
+    diverse tabelle base. Quando una tabella mette in relazione molti a molti le entità di una sola tabella base,
+    allora prende il nome di tabella di correlazione.
 
     tabelle ricorsive
     -----------------
+    Le tabelle che rappresentano dati strutturati ad albero sono in relazione con sé stesse, tipicamente tramite il
+    campo *id_genitore*, e a parte questo si comportano come normali tabelle base.
 
     gruppi di tabelle
     =================
 
     tabelle principali
     ------------------
+
+    tabelle per i contenuti
+    -----------------------
 
     tabelle per le categorie
     ------------------------
@@ -117,8 +206,18 @@
 
     ordine standard dei campi
     -------------------------
+    Le tabelle possono essere viste, sotto il profilo strutturale, come divise in alcune aree che raggruppano
+    i campi con funzioni simili. Al netto della chiave primaria, che occupa sempre la prima posizione,
+    possiamo individuare i seguenti blocchi funzionali:
 
+    - campi di relazione, che collegano la tabella ad altre tabelle del database tipicamente tramite chiavi esterne
+    - campi di catalogazione, come *id_tipologia* e *ordine* che servono per suddividere e ordinare i dati contenuti nelle tabelle
+    - campi principali, che contengono i dati veri e propri
+    - campi di attribuzione, tipicamente flag booleani, che qualificano i dati contenuti nella tabella
+    - campi di servizio, che contengono informazioni relative alla gestione della tabella da parte del framework
 
+    All'interno dei blocchi i campi sono disposti sempre con la stessa logica; fra campi con lo stesso ruolo si utilizza
+    per comodità l'ordine alfabetico.
 
     campi di servizio
     -----------------

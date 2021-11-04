@@ -53,6 +53,9 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
   `categorie` text,
   `telefoni` text,
   `mail` text,
+  `data_archiviazione` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
   `__label__` char(255) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

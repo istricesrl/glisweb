@@ -27,27 +27,28 @@ CREATE OR REPLACE DEFINER = CURRENT_USER() VIEW account_view AS
 	SELECT
 		account.id,
 		account.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), NULL ) AS anagrafica,
 		account.id_mail,
+		mail.indirizzo AS mail,
 		account.username,
 		account.password,
 		account.se_attivo,
 		account.token,
 		account.timestamp_login,
 		account.timestamp_cambio_password,
-		if( account.se_attivo = '1', 'attivo', 'inattivo' ) AS attivo,
-		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS utente,
 		group_concat( gruppi.nome ORDER BY gruppi.id SEPARATOR '|' ) AS gruppi,
 		group_concat( gruppi.id ORDER BY gruppi.id SEPARATOR '|' ) AS id_gruppi,
-		max( gruppi.id ) AS gruppo_sede,
-		account_get_struttura( account.id ) AS id_anagrafica_struttura,
 		group_concat(
 			DISTINCT
 			concat( account_gruppi_attribuzione.entita,'#',account_gruppi_attribuzione.id_gruppo )
 			ORDER BY account_gruppi_attribuzione.entita,account_gruppi_attribuzione.id_gruppo
 			SEPARATOR '|' ) AS id_gruppi_attribuzione,
+		account.id_account_inserimento,
+		account.id_account_aggiornamento,
 		account.username AS __label__
 	FROM account
 		LEFT JOIN anagrafica ON anagrafica.id = account.id_anagrafica
+		LEFT JOIN mail ON mail.id = account.id_mail
 		LEFT JOIN account_gruppi ON account_gruppi.id_account = account.id
 		LEFT JOIN account_gruppi_attribuzione ON account_gruppi_attribuzione.id_account = account.id
 		LEFT JOIN gruppi ON gruppi.id = account_gruppi.id_gruppo
@@ -69,16 +70,21 @@ CREATE OR REPLACE VIEW account_gruppi_view AS
 	SELECT
 		account_gruppi.id,
 		account_gruppi.id_account,
+		account.username AS account,
 		account_gruppi.id_gruppo,
+		gruppi.nome AS gruppo,
+		account_gruppi.ordine,
 		account_gruppi.se_amministratore,
+		account_gruppi.id_account_inserimento,
+		account_gruppi.id_account_aggiornamento,
 		concat(
 			account.username,
 			' / ',
 			gruppi.nome
 		) AS __label__
 	FROM account_gruppi
-		INNER JOIN account ON account.id = account_gruppi.id_account
-		INNER JOIN gruppi ON gruppi.id = account_gruppi.id_gruppo
+		LEFT JOIN account ON account.id = account_gruppi.id_account
+		LEFT JOIN gruppi ON gruppi.id = account_gruppi.id_gruppo
 ;
 
 --| 090000000300
@@ -97,7 +103,10 @@ CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 		account_gruppi_attribuzione.id,
 		account_gruppi_attribuzione.id_account,
 		account_gruppi_attribuzione.id_gruppo,
+		account_gruppi_attribuzione.ordine,
 		account_gruppi_attribuzione.entita,
+		account_gruppi_attribuzione.id_account_inserimento,
+		account_gruppi_attribuzione.id_account_aggiornamento,
 		concat(
 			account.username,
 			' / ',
@@ -106,8 +115,8 @@ CREATE OR REPLACE VIEW account_gruppi_attribuzione_view AS
 			account_gruppi_attribuzione.entita
 		) AS __label__
 	FROM account_gruppi_attribuzione
-		INNER JOIN account ON account.id = account_gruppi_attribuzione.id_account
-		INNER JOIN gruppi ON gruppi.id = account_gruppi_attribuzione.id_gruppo
+		LEFT JOIN account ON account.id = account_gruppi_attribuzione.id_account
+		LEFT JOIN gruppi ON gruppi.id = account_gruppi_attribuzione.id_gruppo
 ;
 
 --| 090000000400
@@ -134,7 +143,7 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		anagrafica.sesso,
 		anagrafica.codice_fiscale,
 		anagrafica.partita_iva,
-		tipologie_crm.nome AS tipologia_crm,
+		ranking.nome AS ranking,
 		anagrafica.recapiti,
 		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
 		max( categorie_anagrafica.se_dipendente ) AS se_dipendente,
@@ -164,6 +173,8 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
 		anagrafica.data_archiviazione,
+		anagrafica.id_account_inserimento,
+		anagrafica.id_account_aggiornamento,
 		coalesce(
 			anagrafica.soprannome,
 			anagrafica.denominazione,
@@ -173,12 +184,11 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		) AS __label__
 	FROM anagrafica
 		LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia
-		LEFT JOIN tipologie_crm ON tipologie_crm.id = anagrafica.id_tipologia_crm
+		LEFT JOIN ranking ON ranking.id = anagrafica.id_ranking
 		LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id
 		LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
 		LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id
 		LEFT JOIN mail ON mail.id_anagrafica = anagrafica.id
-		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
 	GROUP BY anagrafica.id
 ;
 
@@ -206,7 +216,7 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		anagrafica.sesso,
 		anagrafica.codice_fiscale,
 		anagrafica.partita_iva,
-		tipologie_crm.nome AS tipologia_crm,
+		ranking.nome AS ranking,
 		anagrafica.recapiti,
 		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
 		max( categorie_anagrafica.se_dipendente ) AS se_dipendente,
@@ -236,6 +246,8 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
 		anagrafica.data_archiviazione,
+		anagrafica.id_account_inserimento,
+		anagrafica.id_account_aggiornamento,
 		coalesce(
 			anagrafica.soprannome,
 			anagrafica.denominazione,
@@ -245,12 +257,11 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		) AS __label__
 	FROM anagrafica
 		LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia
-		LEFT JOIN tipologie_crm ON tipologie_crm.id = anagrafica.id_tipologia_crm
+		LEFT JOIN ranking ON ranking.id = anagrafica.id_ranking
 		LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id
 		LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
 		LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id
 		LEFT JOIN mail ON mail.id_anagrafica = anagrafica.id
-		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
 	WHERE anagrafica.data_archiviazione IS NOT NULL
 	GROUP BY anagrafica.id
 ;
@@ -279,7 +290,7 @@ CREATE OR REPLACE VIEW anagrafica_attivi_view AS
 		anagrafica.sesso,
 		anagrafica.codice_fiscale,
 		anagrafica.partita_iva,
-		tipologie_crm.nome AS tipologia_crm,
+		ranking.nome AS ranking,
 		anagrafica.recapiti,
 		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
 		max( categorie_anagrafica.se_dipendente ) AS se_dipendente,
@@ -309,6 +320,8 @@ CREATE OR REPLACE VIEW anagrafica_attivi_view AS
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
 		anagrafica.data_archiviazione,
+		anagrafica.id_account_inserimento,
+		anagrafica.id_account_aggiornamento,
 		coalesce(
 			anagrafica.soprannome,
 			anagrafica.denominazione,
@@ -318,12 +331,11 @@ CREATE OR REPLACE VIEW anagrafica_attivi_view AS
 		) AS __label__
 	FROM anagrafica
 		LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia
-		LEFT JOIN tipologie_crm ON tipologie_crm.id = anagrafica.id_tipologia_crm
+		LEFT JOIN ranking ON ranking.id = anagrafica.id_ranking
 		LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id
 		LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
 		LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id
 		LEFT JOIN mail ON mail.id_anagrafica = anagrafica.id
-		LEFT JOIN __acl_anagrafica__ ON __acl_anagrafica__.id_entita = anagrafica.id
 	WHERE anagrafica.data_archiviazione IS NULL
 	GROUP BY anagrafica.id
 ;
@@ -339,20 +351,20 @@ DROP TABLE IF EXISTS `anagrafica_categorie_view`;
 -- anagrafica_categorie_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 19:15 Fabio Mosti
--- nota: non dovrebbe esserci il path qui?
 CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 	SELECT
 		anagrafica_categorie.id,
 		anagrafica_categorie.id_anagrafica,
 		anagrafica_categorie.id_categoria,
+		anagrafica_categorie.id_account_inserimento,
+		anagrafica_categorie.id_account_aggiornamento,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
-			categorie_anagrafica.nome
+			categorie_anagrafica_path( anagrafica_categorie.id_categoria )
 		) AS __label__
 	FROM anagrafica_categorie
-		INNER JOIN anagrafica ON anagrafica.id = anagrafica_categorie.id_anagrafica
-		INNER JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
+		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_categorie.id_anagrafica
 ;
 
 --| 090000000700
@@ -373,6 +385,8 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 		anagrafica_cittadinanze.id_stato,
 		anagrafica_cittadinanze.data_inizio,
 		anagrafica_cittadinanze.data_fine,
+		anagrafica_cittadinanze.id_account_inserimento,
+		anagrafica_cittadinanze.id_account_aggiornamento,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
@@ -396,47 +410,29 @@ DROP TABLE IF EXISTS `anagrafica_indirizzi_view`;
 CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 	SELECT
 		anagrafica_indirizzi.id,
-		anagrafica_indirizzi.id_ruolo,
-		ruoli_indirizzi.nome AS ruolo,
 		anagrafica_indirizzi.id_anagrafica,
 		anagrafica_indirizzi.id_indirizzo,
+		anagrafica_indirizzi.id_ruolo,
+		ruoli_indirizzi.nome AS ruolo,
+		anagrafica_indirizzi.id_account_inserimento,
+		anagrafica_indirizzi.id_account_aggiornamento,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
-			coalesce( anagrafica_indirizzi.note, anagrafica_indirizzi.id_indirizzo )
+			coalesce( anagrafica_indirizzi.note, anagrafica_indirizzi.id_indirizzo ),
+			' / ',
+			indirizzi.indirizzo,
+			' ',
+			comuni.nome,
+			' ',
+			provincie.sigla
 		) AS __label__
 	FROM anagrafica_indirizzi
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
 		LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo
-;
-
---| 090000001100
-
--- anagrafica_ruoli_view
--- tipologia: tabella gestita
--- verifica: 2021-05-23 15:35 Fabio Mosti
-DROP TABLE IF EXISTS `anagrafica_ruoli_view`;
-
---| 090000001101
-
--- anagrafica_ruoli_view
--- tipologia: tabella gestita
--- verifica: 2021-05-23 15:35 Fabio Mosti
-CREATE OR REPLACE VIEW anagrafica_ruoli_view AS
-	SELECT
-		anagrafica_ruoli.id,
-		anagrafica_ruoli.id_genitore,
-		anagrafica_ruoli.ordine,
-		anagrafica_ruoli.id_anagrafica,
-		anagrafica_ruoli.id_ruolo,
-		anagrafica_ruoli_path( anagrafica_ruoli.id ) AS ruolo,
-		concat(
-			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
-			' / ',
-			anagrafica_ruoli_path( anagrafica_ruoli.id )
-		) AS __label__
-	FROM anagrafica_ruoli
-		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_ruoli.id_anagrafica
+		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 ;
 
 --| 090000001200
@@ -458,6 +454,8 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 		anagrafica_settori.id_settore,
 		settori.nome AS settore,
 		anagrafica_settori.ordine,
+		anagrafica_settori.id_account_inserimento,
+		anagrafica_settori.id_account_aggiornamento,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
@@ -747,7 +745,6 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 		categorie_anagrafica.se_esterno,
 		categorie_anagrafica.se_agente,
 		categorie_anagrafica.se_concorrente,
-		categorie_anagrafica.se_rassegna_stampa,
 		categorie_anagrafica.se_azienda_gestita,
 		categorie_anagrafica.se_amministrazione,
 		categorie_anagrafica.se_notizie,
@@ -944,13 +941,13 @@ CREATE OR REPLACE VIEW colori_view AS
 --| 090000005300
 
 -- comuni_view
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 DROP TABLE IF EXISTS `comuni_view`;
 
 --| 090000005301
 
 -- comuni_view
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-06-03 20:31 Fabio Mosti
 CREATE OR REPLACE VIEW comuni_view AS
 	SELECT
@@ -959,7 +956,7 @@ CREATE OR REPLACE VIEW comuni_view AS
 		provincie.nome AS provincia,
 		provincie.sigla AS sigla_provincia,
 		provincie.id_regione,
-		regioni.nome AS regione
+		regioni.nome AS regione,
 		regioni.id_stato,
 		stati.nome AS stato,
 		comuni.nome,
@@ -972,9 +969,8 @@ CREATE OR REPLACE VIEW comuni_view AS
 		) AS __label__
 	FROM comuni
 		INNER JOIN provincie ON provincie.id = comuni.id_provincia
-		INNER JOIN regioni ON regioni.id = provincie.id_regioni
+		INNER JOIN regioni ON regioni.id = provincie.id_regione
 		INNER JOIN stati ON stati.id = regioni.id_stato
-	ORDER BY __label__
 ;
 
 --| 090000006700
@@ -1697,6 +1693,8 @@ CREATE OR REPLACE VIEW `gruppi_view` AS
 		gruppi.id_genitore,
 		gruppi.id_organizzazione,
 		gruppi.nome,
+		gruppi.id_account_inserimento,
+		gruppi.id_account_aggiornamento,
 		gruppi_path( gruppi.id ) AS __label__
 	FROM gruppi
 ;
@@ -1816,6 +1814,8 @@ CREATE OR REPLACE VIEW indirizzi_view AS
 		indirizzi.longitudine,
 		indirizzi.token,
 		indirizzi.timestamp_geolocalizzazione,
+		indirizzi.id_account_inserimento,
+		indirizzi.id_account_aggiornamento,
 		concat_ws(
 			' ',
 			indirizzo,
@@ -1883,6 +1883,8 @@ CREATE OR REPLACE VIEW job_view AS
 		from_unixtime( job.timestamp_esecuzione, '%Y-%m-%d %H:%i' ) AS data_ora_esecuzione,
 		job.timestamp_completamento,
 		from_unixtime( job.timestamp_completamento, '%Y-%m-%d %H:%i' ) AS data_ora_completamento,
+		job.id_account_inserimento,
+		job.id_account_aggiornamento,
 		concat(
 			job.nome,
 			' ',
@@ -2057,6 +2059,8 @@ CREATE OR REPLACE VIEW `mail_view` AS
 		mail.indirizzo,
 		mail.se_notifiche,
 		mail.se_pec,
+		mail.id_account_inserimento,
+		mail.id_account_aggiornamento,
 		concat(
 			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
 			' ',
@@ -2099,9 +2103,11 @@ CREATE OR REPLACE VIEW `mail_out_view` AS
 		mail_out.token,
 		mail_out.tentativi,
 		mail_out.timestamp_invio,
+		mail_out.id_account_inserimento,
+		mail_out.id_account_aggiornamento,
 		concat(
 			mail_out.destinatari,
-			' / '
+			' / ',
 			mail_out.oggetto
 		) AS __label__
 	FROM mail_out
@@ -2140,9 +2146,11 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 		mail_sent.token,
 		mail_sent.tentativi,
 		mail_sent.timestamp_invio,
+		mail_sent.id_account_inserimento,
+		mail_sent.id_account_aggiornamento,
 		concat(
 			mail_sent.destinatari,
-			' / '
+			' / ',
 			mail_sent.oggetto
 		) AS __label__
 	FROM mail_sent
@@ -2422,12 +2430,6 @@ CREATE OR REPLACE VIEW `pagine_view` AS
 		pagine_path( pagine.id ) AS __label__
 	FROM pagine
 ;
-
---| 090000009200
-
--- task_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `task_view`;
 
 --| 090000023600
 
@@ -3153,6 +3155,8 @@ CREATE OR REPLACE VIEW `ranking_view` AS
 		ranking.id,
 		ranking.nome,
 		ranking.ordine,
+		ranking.id_account_inserimento,
+		ranking.id_account_aggiornamento,
 		ranking.nome AS __label__
     FROM ranking
 ;
@@ -3265,7 +3269,7 @@ CREATE OR REPLACE VIEW regioni_view AS
 			stati.nome
 		) AS __label__
 	FROM regioni
-		LEFT JOIN stati_view ON stati_view.id = regioni.id_stato
+		LEFT JOIN stati ON stati.id = regioni.id_stato
 ;
 
 --| 090000030800
@@ -3511,8 +3515,14 @@ CREATE OR REPLACE VIEW ruoli_indirizzi_view AS
 		ruoli_indirizzi.id,
 		ruoli_indirizzi.id_genitore,
 		ruoli_indirizzi.nome,
+    	ruoli_indirizzi.html_entity,
+    	ruoli_indirizzi.font_awesome,
+    	ruoli_indirizzi.se_sede_legale,
+    	ruoli_indirizzi.se_sede_operativa,
+    	ruoli_indirizzi.se_residenza,
+    	ruoli_indirizzi.se_domicilio,
 	 	ruoli_indirizzi_path( ruoli_indirizzi.id ) AS __label__
-	FROM ruoli_immagini
+	FROM ruoli_indirizzi
 ;
 
 --| 090000035000
@@ -3614,6 +3624,8 @@ CREATE OR REPLACE VIEW `sms_out_view` AS
 		sms_out.token,
 		sms_out.tentativi,
 		sms_out.timestamp_invio,
+		sms_out.id_account_inserimento,
+		sms_out.id_account_aggiornamento,
 		concat_ws(
 			' ',
 			sms_out.destinatari,
@@ -3650,12 +3662,14 @@ CREATE OR REPLACE VIEW `sms_sent_view` AS
 		sms_sent.token,
 		sms_sent.tentativi,
 		sms_sent.timestamp_invio,
+		sms_sent.id_account_inserimento,
+		sms_sent.id_account_aggiornamento,
 		concat_ws(
 			' ',
 			sms_sent.destinatari,
 			sms_sent.corpo
 		) AS __label__
-	FROM sms_out
+	FROM sms_sent
 ;
 
 --| 090000042000
@@ -3720,7 +3734,13 @@ CREATE OR REPLACE VIEW stati_view AS
 --| 090000043000
 
 -- task_view
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `task_view`;
+
+--| 090000043001
+
+-- task_view
+-- tipologia: tabella assistita
 -- verifica: 2021-06-30 11:57 Fabio Mosti
 CREATE OR REPLACE VIEW task_view AS
 	SELECT
@@ -3736,6 +3756,8 @@ CREATE OR REPLACE VIEW task_view AS
 		task.delay,
 		task.token,
 		task.timestamp_esecuzione,
+		task.id_account_inserimento,
+		task.id_account_aggiornamento,
 		CONCAT(
 			' / ',
 			coalesce( task.minuto, '*' ),
@@ -3769,19 +3791,23 @@ DROP TABLE IF EXISTS telefoni_view;
 CREATE OR REPLACE VIEW telefoni_view AS
 	SELECT
 		telefoni.id,
-		telefoni.id_tipologia,
-		tipologie_telefoni.nome AS tipologia,
 		telefoni.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		telefoni.id_tipologia,
+		tipologie_telefoni.nome AS tipologia,
 		telefoni.numero,
 		telefoni.se_notifiche,
+		telefoni.id_account_inserimento,
+		telefoni.id_account_aggiornamento,
 		concat_ws(
 			' ',
-			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
 			tipologie_telefoni.nome,
 			telefoni.numero
 		) AS __label__
 	FROM telefoni
+		LEFT JOIN anagrafica AS a1 ON a1.id = telefoni.id_anagrafica
+		LEFT JOIN tipologie_telefoni ON tipologie_telefoni.id = telefoni.id_tipologia
 ;
 
 --| 090000044000
@@ -4274,6 +4300,57 @@ CREATE OR REPLACE VIEW valute_view AS
 		valute.utf8,
 		valute.iso4217 AS __label__
 	FROM valute
+;
+
+--| 090000065000
+
+-- video_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `video_view`;
+
+--| 090000065001
+
+-- video_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-22 12:45 Fabio Mosti
+CREATE OR REPLACE VIEW `video_view` AS
+	SELECT
+		video.id,
+		video.id_anagrafica,
+		video.id_pagina,
+		video.id_file,
+		video.id_prodotto,
+		video.id_articolo,
+		video.id_categoria_prodotti,
+		video.id_risorsa,
+		video.id_categoria_risorse,
+		video.id_notizia,
+		video.id_categoria_notizie,
+		video.id_indirizzo,
+		video.id_lingua,
+		lingue.nome AS lingua,
+		video.id_ruolo,
+		ruoli_video.nome AS ruolo,
+		video.ordine,
+		video.nome,
+		video.path,
+		video.embed_standard,
+		video.embed_custom,
+		video.target,
+		video.orientamento,
+		video.ratio,
+		concat(
+			ruoli_video.nome,
+			' # ',
+			video.ordine,
+			' / ',
+			video.nome,
+			' / ',
+			video.path
+		) AS __label__
+	FROM video
+		LEFT JOIN lingue ON lingue.id = video.id_lingua
+		LEFT JOIN ruoli_video ON ruoli_video.id = ruoli.id_ruolo
 ;
 
 --| FINE FILE

@@ -37,6 +37,147 @@ CREATE
 
     END;
 
+--| 070000003100
+
+-- categorie_anagrafica_path
+DROP FUNCTION IF EXISTS `categorie_anagrafica_path`;
+
+--| 070000003101
+
+-- categorie_anagrafica_path
+-- verifica: 2021-06-01 18:34 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `categorie_anagrafica_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_anagrafica_path( <id> ) AS path
+
+		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+		DECLARE righe int( 11 ) DEFAULT 0;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				categorie_anagrafica.id_genitore,
+				categorie_anagrafica.nome,
+				count( categorie_anagrafica.id )
+			FROM categorie_anagrafica
+			WHERE categorie_anagrafica.id = p1
+			INTO p1, step, righe;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 070000003110
+
+-- categorie_anagrafica_path_check
+DROP FUNCTION IF EXISTS `categorie_anagrafica_path_check`;
+
+--| 070000003111
+
+-- categorie_anagrafica_path_check
+-- verifica: 2021-06-01 18:35 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `categorie_anagrafica_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_anagrafica_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				categorie_anagrafica.id_genitore
+			FROM categorie_anagrafica
+			WHERE categorie_anagrafica.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 070000003120
+
+-- categorie_anagrafica_path_find_ancestor
+DROP FUNCTION IF EXISTS `categorie_anagrafica_path_find_ancestor`;
+
+--| 070000003121
+
+-- categorie_anagrafica_path_find_ancestor
+-- verifica: 2021-05-23 18:35 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `categorie_anagrafica_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_anagrafica_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				categorie_anagrafica.id_genitore,
+				categorie_anagrafica.id
+			FROM categorie_anagrafica
+			WHERE categorie_anagrafica.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 --| 070000003700
 
 -- categorie_notizie_path
