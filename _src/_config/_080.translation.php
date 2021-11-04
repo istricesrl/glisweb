@@ -21,8 +21,8 @@
 	$cf['tr']				= array();
 
     // ricerca dei files di dizionario
-	$arrayDizionariBase			= glob( DIR_ETC_LOC . '_*.{' . LINGUE_ATTIVE . '}.conf', GLOB_BRACE );
-	$arrayDizionariModuli			= glob( DIR_MOD_ATTIVI_ETC_LOC . '_*.{' . LINGUE_ATTIVE . '}.conf', GLOB_BRACE );
+	$arrayDizionariBase			= glob( glob2custom( DIR_ETC_LOC . '_*.{' . LINGUE_ATTIVE . '}.conf' ), GLOB_BRACE );
+	$arrayDizionariModuli		= glob( glob2custom( DIR_MOD_ATTIVI_ETC_LOC . '_*.{' . LINGUE_ATTIVE . '}.conf' ), GLOB_BRACE );
 	$arrayDizionari				= array_merge( $arrayDizionariBase , $arrayDizionariModuli );
 
     // popolazione della tabella di traduzione
