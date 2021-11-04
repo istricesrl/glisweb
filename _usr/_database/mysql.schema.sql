@@ -11368,6 +11368,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `regimi_fiscali_view` (
   `id` tinyint NOT NULL,
+  `id_genitore` tinyint NOT NULL,
   `nome` tinyint NOT NULL,
   `codice` tinyint NOT NULL,
   `__label__` tinyint NOT NULL
@@ -12966,6 +12967,7 @@ CREATE TABLE `sms_out` (
   `id_telefono` int(11) DEFAULT NULL,
   `token` char(254) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
