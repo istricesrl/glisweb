@@ -2679,7 +2679,7 @@ CREATE TABLE `attivita_view_static` (
   `id_richiesta` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `testo` text,
-  `note_interne` int(11) DEFAULT NULL,
+  `note_interne` text,
   `se_ordinario` int(1) DEFAULT NULL,
   `se_straordinario` int(1) DEFAULT NULL,
   `data_scadenza` date DEFAULT NULL,
@@ -15839,8 +15839,8 @@ CREATE TABLE `todo` (
   KEY `id_pianificazione` (`id_pianificazione`),
   KEY `id_indirizzo` (`id_indirizzo`),
   KEY `data_programmazione` (`data_programmazione`),
-  KEY `id_mastro_attivita_default` (`id_mastro_attimysqldump: Couldn't execute 'show create table `todo_archivio_view`': View '__glisweb__.todo_archivio_view' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them (1356)
-vita_default`),
+  KEY `id_mastro_attivita_default` (`id_mastro_attivita_default`),
+mysqldump: Couldn't execute 'show create table `todo_archivio_view`': View '__glisweb__.todo_archivio_view' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them (1356)
   KEY `id_contatto` (`id_contatto`),
   KEY `id_anagrafica_feedback` (`id_anagrafica_feedback`),
   CONSTRAINT `todo_ibfk_10_nofollow` FOREIGN KEY (`id_contatto`) REFERENCES `contatti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
