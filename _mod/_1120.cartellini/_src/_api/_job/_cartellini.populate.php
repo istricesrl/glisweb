@@ -5,7 +5,7 @@
      *  
      * 
      */
-
+#gdl
     // inizializzo l'array del risultato
 	$status = array();
 
@@ -42,7 +42,9 @@
                     )
 
                 );
-                             
+
+                logWrite( 'trovati  ' . count( $status['result'] ).' cartellini per il mese   '.$mese.'/'.$anno , 'cartellini', LOG_ERR );
+          
                 // creo la lista dei contratti attivi su cui generare cartellini teorici
                 $job['workspace']['list'] = $status['result'];
 
@@ -84,13 +86,44 @@
             $mese = $job['workspace']['mese'];
             $anno = $job['workspace']['anno'];
 
-            // recupero i dati del contratto
+            // recupero i dati del cartellino
             $cartellino = mysqlSelectRow(
                         $cf['mysql']['connection'], 
                         'SELECT * FROM cartellini WHERE id = ? ',
                         array( array( 's' => $cid ) ) );
 
+            logWrite( 'lavoro il cartellino ' . $cid , 'cartellini', LOG_ERR );
 
+            // verifico quante ore il soggetto ha fatto nel guiorno indicato
+            $ore = mysqlSelectValue(
+                $cf['mysql']['connection'], 
+                'SELECT SUM(ore) FROM attivita WHERE id_anagrafica = ? AND data_attivita = ? AND id_tipologia_inps = ?',
+                array( array( 's' => $cartellino['id_anagrafica'] ), array( 's' => $cartellino['data_attivita'] ),array( 's' => $cartellino['id_tipologia_inps'] ) )
+            );
+
+            if( !empty ( $ore ) ){
+   
+                logWrite( 'il cartellino ' . $cid.' ha  '.$ore.' effettivamente lavorate ' , 'cartellini', LOG_ERR );
+
+                    $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                    'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
+                    array( 
+                        array( 's' => $ore ), 
+                        array( 's' => time() ),
+                        array( 's' => $cid ) ) 
+                    );
+
+            } else {
+                logWrite( 'il cartellino non ha ore lavorate ' , 'cartellini', LOG_ERR );
+
+                $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
+                array( 
+                    array( 's' => 0 ), 
+                    array( 's' => time() ),
+                    array( 's' => $cid ) ) 
+                );
+            }
                     // TODO: ore fascia oraria
             /*        $ore = mysqlQuery(  $cf['mysql']['connection'], 
                     'SELECT ora_inizio, ora_fine  FROM fasce_orari_contratti WHERE fasce_orari_contratti.id_contratto = ? AND fasce_orari_contratti.id_tipologia_inps = ? ',
@@ -98,20 +131,7 @@
 
 
                     // TODO aggiorno i cartellini
-                    if( !empty ( $ore ) ){
-                        foreach ( $ore as $o ){
-                           
-                            $cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                            'UPDATE cartellini ore_fatte = ? WHERE id = ? ',
-                            array( 
-                                array( 's' => $contratto['id_anagrafica'] ), 
-                                array( 's' => $data ),
-                                array( 's' => $o['tot_ore'] ),  
-                                array( 's' => time() ) ) 
-                            );
-                            
-                        }
-                    }
+
           */
 
             // status

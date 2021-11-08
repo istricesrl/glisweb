@@ -5,7 +5,7 @@
      *  
      * 
      */
-
+#gdl
     // inizializzo l'array del risultato
 	$status = array();
 
@@ -91,22 +91,28 @@
 
             // costruisco l'elenco giorni partendo da mese e anno
             $giorni = array();
-            for( $d=1; $d<=31; $d++ )
+
+            for( $d = 1; $d <= 31; $d++ )
             {
-                $time=mktime(12, 0, 0, $mese, $d, $anno);          
-                if (date('m', $time) == $mese){   
-                    $giorni[] = intval( date('d', $time) );
+                $time = mktime(12, 0, 0, $mese, $d, $anno);          
+                if ( date( 'm', $time ) == $mese ) {   
+                    $giorni[] = intval( date( 'd' , $time ) );
                 }
             }
 
+            logWrite( 'lavoro il contratto ' . $cid , 'cartellini', LOG_ERR );
             foreach( $giorni as $giorno ){
 
                 $data = date( 'Y-m-d', strtotime("$anno-$mese-$giorno") );
+
+                // log
+               
                 // numero da 1 a 7, se la funzione date restituisce 0 (domenica) setto 7 per uniformità con i giorni degli orari_contratti
 			    $numgiorno = ( date( 'w', strtotime("$anno-$mese-$giorno") ) == 0 ) ? '7' : date( 'w', strtotime("$anno-$mese-$giorno") );
     
+                logWrite( 'verifico il contratto ' . $cid.' per il  giorno  '.$data , 'cartellini', LOG_ERR );
                 // check if contratto valido nel giorno in analisi
-                $contratto = mysqlSelectValue(
+                $contratto = mysqlSelectRow(
                     $cf['mysql']['connection'], 
                     'SELECT * FROM contratti WHERE id = ? AND data_inizio_rapporto <= ? AND '.
                     '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR ( data_fine IS NOT NULL and data_fine >= ? ) ) )',
@@ -115,6 +121,7 @@
 
                 if( !empty( $contratto ) && isset( $contratto['id'] ) ){
     
+                    logWrite( 'il contratto ' . $cid.' è valido nel giorno  '.$data , 'cartellini', LOG_ERR );
                     // verifico se la data corrente è nella tabella turni e ricavo il turno corrispondente
                     $turno = mysqlSelectValue(
                         $cf['mysql']['connection'], 
@@ -125,7 +132,6 @@
                             array( 's' => $data )
                         )
                     );
-                
     
                     // se ci sono turni devo considerare la tabella turni e vedere se la data corrente è in essi
                     if( empty( $turno ) ){
@@ -149,29 +155,29 @@
                         )
                     );
 
+                    logWrite( 'il contratto ' . $cid.' per il giorno  '.$data.' prevede  '.count( $orecontratto ).' orari attivi ' , 'cartellini', LOG_ERR );
+
                     // genero i cartellini
                     if( !empty ( $orecontratto ) ){
                         foreach ( $orecontratto as $oc ){
                            
                             $cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                            'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
-                            array( 
-                                array( 's' => $contratto['id_anagrafica'] ), 
-                                array( 's' => $data ),
-                                array( 's' => $oc['id_tipologia_inps'] ),
-                                array( 's' => $oc['tot_ore'] ),  
-                                array( 's' => time() ) ) 
-                            );
+                                'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                                array( 
+                                    array( 's' => $contratto['id_anagrafica'] ), 
+                                    array( 's' => $data ),
+                                    array( 's' => $oc['id_tipologia_inps'] ),
+                                    array( 's' => $oc['tot_ore'] ),  
+                                    array( 's' => time() ) ) 
+                                );
                             
                         }
                     }
     
                 }
     
-
             }
           
-
             // status
             $status['info'][] = 'ho lavorato la riga: ' . $cid;
 
