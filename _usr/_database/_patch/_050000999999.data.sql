@@ -844,6 +844,12 @@ REPLACE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
 
+--| 050000056800
+
+-- tipologie_url
+-- tipologia: tabella assistita
+-- verifica: 2021-11-09 12:45 Chiara GDL
+
 --| 050000062000
 
 -- udm

@@ -88,6 +88,7 @@
     tipologie_risorse               | 055800    | ricorsiva     | tipologie     | contiene le tipologie di risorse
     tipologie_telefoni              | 056200    | ricorsiva     | tipologie     | contiene le tipologie di telefoni
     tipologie_todo                  | 056600    | ricorsiva     | tipologie     | contiene le tipologie di todo
+    tipologie_url                   | 056800    | ricorsiva     | tipologie     | contiene le tipologie di url
 
     le tabelle gestite
     ------------------
@@ -173,7 +174,7 @@
 
     modulo      | codice    | tabella
     ------------|-----------|----------------------------------------------------------
-    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, colori, comuni, continenti, gruppi, iban, indirizzi, iva, job, lingue, luoghi, mail, mail_out, mail_sent, metadati, periodicita, ranking, regimi, regioni, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, udm, url, valute
+    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, colori, comuni, continenti, gruppi, iban, indirizzi, iva, job, lingue, luoghi, mail, mail_out, mail_sent, metadati, periodicita, ranking, regimi, regioni, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
     CONTATTI    | 0300      | contatti, tipologie_contatti
     PRODUZIONE  | 1000      | categorie_progetti, pianificazioni, progetti, progetti_anagrafica, progetti_categorie, ruoli_anagrafica, tipologie_progetti, todo
     ATTIVITA    | 1100      | attivita, pianificazioni, tipologie_attivita, todo
@@ -293,6 +294,7 @@
     tipologie_risorse               | RISORSE
     tipologie_telefoni              | BASE
     tipologie_todo                  | PRODUZIONE, ATTIVITA
+    tipologie_url                   | BASE
     todo                            | PRODUZIONE, ATTIVITA
     udm                             | BASE
     url                             | BASE

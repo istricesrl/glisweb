@@ -3875,6 +3875,31 @@ CREATE OR REPLACE VIEW `tipologie_todo_view` AS
 	FROM tipologie_todo
 ;
 
+--| 090000056800
+
+-- tipologie_url_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_url_view`;
+
+--| 090000056801
+
+-- tipologie_url_view
+-- tipologia: tabella assistita
+-- verifica: 2021-11-09 12:45 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_url_view` AS
+	SELECT
+		tipologie_url.id,
+		tipologie_url.id_genitore,
+		tipologie_url.ordine,
+		tipologie_url.nome,
+		tipologie_url.html_entity,
+		tipologie_url.font_awesome,
+		tipologie_url.id_account_inserimento,
+		tipologie_url.id_account_aggiornamento,
+		tipologie_url_path( tipologie_url.id ) AS __label__
+	FROM tipologie_url
+;
+
 --| 090000060000
 
 -- todo_view
