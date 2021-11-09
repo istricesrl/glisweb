@@ -111,6 +111,7 @@
 			    $numgiorno = ( date( 'w', strtotime("$anno-$mese-$giorno") ) == 0 ) ? '7' : date( 'w', strtotime("$anno-$mese-$giorno") );
     
                 logWrite( 'verifico il contratto ' . $cid.' per il  giorno  '.$data , 'cartellini', LOG_ERR );
+                
                 // check if contratto valido nel giorno in analisi
                 $contratto = mysqlSelectRow(
                     $cf['mysql']['connection'], 
@@ -121,7 +122,7 @@
 
                 if( !empty( $contratto ) && isset( $contratto['id'] ) ){
     
-                    logWrite( 'il contratto ' . $cid.' è valido nel giorno  '.$data , 'cartellini', LOG_ERR );
+                    logWrite( 'il contratto ' . $cid . ' è valido nel giorno  '.$data , 'cartellini', LOG_ERR );
                     // verifico se la data corrente è nella tabella turni e ricavo il turno corrispondente
                     $turno = mysqlSelectValue(
                         $cf['mysql']['connection'], 
@@ -139,7 +140,7 @@
                     }
     
                     // ore previste da contratto per quel giorno
-                    $orecontratto = mysqlQuery(
+                  /*  $orecontratto = mysqlQuery(
                         $cf['mysql']['connection'], 
                         'SELECT tipologie_attivita_inps.id AS id_tipologia_inps, sum( time_to_sec( timediff( ora_fine, ora_inizio ) ) / 3600 ) as tot_ore FROM orari_contratti ' .
                         'LEFT JOIN costi_contratti ON orari_contratti.id_costo = costi_contratti.id ' .
@@ -153,7 +154,8 @@
                             array( 's' => $cid ),
                             array( 's' => $turno )
                         )
-                    );
+                    );*/
+                    $orecontratto = oreGiornaliereContratto( $contratto['id_anagrafica'], $data );
 
                     logWrite( 'il contratto ' . $cid.' per il giorno  '.$data.' prevede  '.count( $orecontratto ).' orari attivi ' , 'cartellini', LOG_ERR );
 
@@ -166,8 +168,8 @@
                                 array( 
                                     array( 's' => $contratto['id_anagrafica'] ), 
                                     array( 's' => $data ),
-                                    array( 's' => $oc['id_tipologia_inps'] ),
-                                    array( 's' => $oc['tot_ore'] ),  
+                                    array( 's' => 1 ), // tipologia inps ordinaria
+                                    array( 's' => $orecontratto ),  
                                     array( 's' => time() ) ) 
                                 );
                             

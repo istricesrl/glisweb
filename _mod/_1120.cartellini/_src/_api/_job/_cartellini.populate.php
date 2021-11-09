@@ -33,9 +33,9 @@
                 $anno = $job['workspace']['anno'];
 
                 $status['result'] = mysqlSelectColumn(
-				    'id',
+				    'data_attivita',
                     $cf['mysql']['connection'],
-                    'SELECT id FROM cartellini WHERE data_attivita >= ? AND  data_attivita <= ?',
+                    'SELECT DISTINCT data_attivita FROM cartellini WHERE data_attivita >= ? AND  data_attivita <= ?',
                     array(
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-31") ) )
@@ -87,66 +87,115 @@
             $anno = $job['workspace']['anno'];
 
             // recupero i dati del cartellino
-            $cartellino = mysqlSelectRow(
+            $cartellini = mysqlSelectRow(
                         $cf['mysql']['connection'], 
-                        'SELECT * FROM cartellini WHERE id = ? ',
+                        'SELECT * FROM cartellini WHERE data_attivita = ? ',
                         array( array( 's' => $cid ) ) );
 
-            logWrite( 'lavoro il cartellino ' . $cid , 'cartellini', LOG_ERR );
+            logWrite( 'trovati ' . count( $cartellini ) .' per la data '.$cid , 'cartellini', LOG_ERR );
 
-            // verifico quante ore il soggetto ha fatto nel guiorno indicato
-            $ore = mysqlSelectValue(
-                $cf['mysql']['connection'], 
-                'SELECT SUM(ore) FROM attivita WHERE id_anagrafica = ? AND data_attivita = ? AND id_tipologia_inps = ?',
-                array( array( 's' => $cartellino['id_anagrafica'] ), array( 's' => $cartellino['data_attivita'] ),array( 's' => $cartellino['id_tipologia_inps'] ) )
-            );
+            foreach( $cartellini as $car ){
 
-            if( !empty ( $ore ) ){
-   
-                logWrite( 'il cartellino ' . $cid.' ha  '.$ore.' effettivamente lavorate ' , 'cartellini', LOG_ERR );
+                // ricavo l'id del contratto attivo alla data indicata
+                $contratto = contrattoAttivo( $car['id_anagrafica'], $cid );
+
+                // verifico se c'è un turno specificato nella tabella turni
+                $turno = mysqlSelectValue(
+                    $cf['mysql']['connection'], 
+                    'SELECT turno FROM turni WHERE id_contratto = ? AND (data_inizio <= ? AND data_fine >= ?) ORDER BY id DESC LIMIT 1',
+                    array( 
+                        array( 's' => $contratto ),
+                        array( 's' => $cid ),
+                        array( 's' => $cid )
+                    )
+                );
+            
+                // se non ci sono turni, di base è attivo il turno 1
+                if( empty( $turno ) ){
+                    $turno = 1;
+                }
+
+                $fasce = mysqlSelectRow(
+                    $cf['mysql']['connection'],  
+                    'SELECT * FROM fasce_orari_contratti WHERE id_contratto = ? AND id_turno = ? AND giorno = ? LIMIT 1',
+                    array(
+                        array( 's' => $contratto ),
+                        array( 's' => $turno ),
+                        array( 's' => ( date( 'w', strtotime("$cid") ) == 0 ) ? '7' : date( 'w', strtotime("$cid") ) )
+                    )
+                );
+
+                // LAVORO ORDINARIO
+                // tutte le attività svolte nella fascia oraria del giorno
+                $oreOrdinarie = mysqlQuery( 
+                    $cf['mysql']['connection'], 
+                    'SELECT sum(ore) as tot_ore FROM attivita ' .
+                    'WHERE data_attivita = ? and id_anagrafica = ? AND ora_inizio >= ? AND ora_fine <= ? GROUP by data_attivita',
+                    array(
+                        array( 's' => $cid ),
+                        array( 's' => $car['id_anagrafica'] ),
+                        array( 's' => $fasce['ora_inizio'] ),
+                        array( 's' => $fasce['ora_fine'] )
+                    )			
+                );
+
+                // LAVORO STRAORDINARIO
+                // tutte le attività svolte nella fascia oraria del giorno
+                $oreStraordinarie = mysqlQuery( 
+                    $cf['mysql']['connection'], 
+                    'SELECT sum(ore) as tot_ore FROM attivita ' .
+                    'WHERE data_attivita = ? and id_anagrafica = ? AND (ora_inizio < ? OR ora_fine > ?) GROUP by data_attivita',
+                    array(
+                        array( 's' => $cid ),
+                        array( 's' => $car['id_anagrafica'] ),
+                        array( 's' => $fasce['ora_inizio'] ),
+                        array( 's' => $fasce['ora_fine'] )
+                    )			
+                );
+
+                if( !empty ( $ore ) ){
+    
+                    logWrite( 'il cartellino ' . $cid.' ha  '.$ore.' effettivamente lavorate ' , 'cartellini', LOG_ERR );
+
+                        $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                        'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
+                        array( 
+                            array( 's' => $ore ), 
+                            array( 's' => time() ),
+                            array( 's' => $cid ) ) 
+                        );
+
+                } /*else {
+
+                    logWrite( 'il cartellino non ha ore lavorate ' , 'cartellini', LOG_ERR );
 
                     $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
                     'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
                     array( 
-                        array( 's' => $ore ), 
+                        array( 's' => 0 ), 
                         array( 's' => time() ),
                         array( 's' => $cid ) ) 
                     );
+                }*/
 
-            } else {
-                logWrite( 'il cartellino non ha ore lavorate ' , 'cartellini', LOG_ERR );
+                // status
+                $status['info'][] = 'ho lavorato la riga: ' . $cid;
 
-                $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
-                array( 
-                    array( 's' => 0 ), 
-                    array( 's' => time() ),
-                    array( 's' => $cid ) ) 
+                // aggiorno i valori di visualizzazione avanzamento
+                $jobs = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE job SET totale = ?, corrente = ? WHERE id = ?',
+                    array(
+                    array( 's' => $job['totale'] ),
+                    array( 's' => $job['corrente'] ),
+                    array( 's' => $job['id'] )
+                    )
                 );
+
             }
-                    // TODO: ore fascia oraria
-            /*        $ore = mysqlQuery(  $cf['mysql']['connection'], 
-                    'SELECT ora_inizio, ora_fine  FROM fasce_orari_contratti WHERE fasce_orari_contratti.id_contratto = ? AND fasce_orari_contratti.id_tipologia_inps = ? ',
-                    array( array( 's' => $cartellino['id_contratto'] ) ) );
-
-
-                    // TODO aggiorno i cartellini
-
-          */
 
             // status
-            $status['info'][] = 'ho lavorato la riga: ' . $cid;
-
-            // aggiorno i valori di visualizzazione avanzamento
-            $jobs = mysqlQuery(
-                $cf['mysql']['connection'],
-                'UPDATE job SET totale = ?, corrente = ? WHERE id = ?',
-                array(
-                array( 's' => $job['totale'] ),
-                array( 's' => $job['corrente'] ),
-                array( 's' => $job['id'] )
-                )
-            );
+            $status['info'][] = 'ho lavorato la data: ' . $cid;
 
             // operazioni di chiusura
             if( $job['corrente'] == $job['totale'] ) {
@@ -165,6 +214,7 @@
                 slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
 
             }
+
 
         }
 
