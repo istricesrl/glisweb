@@ -18,23 +18,31 @@
     iban.intestazione               | l'intestazione del conto
     iban.iban                       | l'IBAN
     iban.note                       | note relative all'IBAN
+    iban.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    iban.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    iban.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    iban.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                  | campo                 | tabella e campo collegati     | comportamento
-    ------------------------|-----------------------|-------------------------------|----------------------
-    iban_ibfk_01            | id_anagrafica         | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                  | campo                         | tabella e campo collegati     | comportamento
+    ------------------------|-------------------------------|-------------------------------|----------------------
+    iban_ibfk_01            | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    iban_ibfk_98_nofollow   | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    iban_ibfk_99_nofollow   | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *iban_view* relativa alla tabella *iban* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    iban_view.id                         | -
-    iban_view.id_anagrafica              | -
-    iban_view.anagrafica                 | l'anagrafica collegata all'IBAN
-    iban_view.intestazione               | -
-    iban_view.iban                       | -
-    iban_view.__label__                  | etichetta descrittiva dell'IBAN
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    iban_view.id                        | -
+    iban_view.id_anagrafica             | -
+    iban_view.anagrafica                | l'anagrafica collegata all'IBAN
+    iban_view.intestazione              | -
+    iban_view.iban                      | -
+    iban_view.id_account_inserimento    | -
+    iban_view.id_account_aggiornamento  | -
+    iban_view.__label__                 | etichetta descrittiva dell'IBAN
 
     immagini
     --------
@@ -64,6 +72,10 @@
     immagini.path_alternativo           | il percorso del file alternativo dell'immagine
     immagini.token                      | token per il lock software della riga nelle elaborazioni automatiche
     immagini.timestamp_scalamento       | timestamp dello scalamento automatico dell'immagine
+    immagini.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    immagini.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    immagini.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    immagini.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     Relativamente allo scalamento automatico delle immagini si veda la documentazione del file _src/_api/_task/_images.resize.php.
 
@@ -84,35 +96,40 @@
     immagini_ibfk_11                | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
     immagini_ibfk_12_nofollow       | id_lingua                     | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     immagini_ibfk_13_nofollow       | id_ruolo                      | ruoli_immagini.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    immagini_ibfk_98_nofollow       | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
-    La vista immagini_view relativa alla tabella immagini presenta le seguenti colonne:
+    La vista *immagini_view* relativa alla tabella *immagini* presenta le seguenti colonne:
 
-    colonna                                  | descrizione
-    -----------------------------------------|---------------------------------------------------------------------------------------
-    immagini_view.id                         | -
-    immagini_view.id_anagrafica              | -
-    immagini_view.id_pagina                  | -
-    immagini_view.id_file                    | -
-    immagini_view.id_prodotto                | -
-    immagini_view.id_articolo                | -
-    immagini_view.id_categoria_prodotti      | -
-    immagini_view.id_risorsa                 | -
-    immagini_view.id_categoria_risorse       | -
-    immagini_view.id_notizia                 | -
-    immagini_view.id_categoria_notizie       | -
-    immagini_view.id_indirizzo               | -
-    immagini_view.id_lingua                  | -
-    immagini_view.lingua                     | la lingua dell'immagine
-    immagini_view.id_ruolo                   | -
-    immagini_view.ruolo                      | il ruolo dell'immagine relativamente all'entità cui si riferisce
-    immagini_view.ordine                     | -
-    immagini_view.orientamento               | -
-    immagini_view.taglio                     | -
-    immagini_view.nome                       | -
-    immagini_view.path                       | -
-    immagini_view.path_alternativo           | -
-    immagini_view.token                      | -
-    immagini_view.timestamp_scalamento       | -
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    immagini_view.id                        | -
+    immagini_view.id_anagrafica             | -
+    immagini_view.id_pagina                 | -
+    immagini_view.id_file                   | -
+    immagini_view.id_prodotto               | -
+    immagini_view.id_articolo               | -
+    immagini_view.id_categoria_prodotti     | -
+    immagini_view.id_risorsa                | -
+    immagini_view.id_categoria_risorse      | -
+    immagini_view.id_notizia                | -
+    immagini_view.id_categoria_notizie      | -
+    immagini_view.id_indirizzo              | -
+    immagini_view.id_lingua                 | -
+    immagini_view.lingua                    | la lingua dell'immagine
+    immagini_view.id_ruolo                  | -
+    immagini_view.ruolo                     | il ruolo dell'immagine relativamente all'entità cui si riferisce
+    immagini_view.ordine                    | -
+    immagini_view.orientamento              | -
+    immagini_view.taglio                    | -
+    immagini_view.nome                      | -
+    immagini_view.path                      | -
+    immagini_view.path_alternativo          | -
+    immagini_view.token                     | -
+    immagini_view.timestamp_scalamento      | -
+    immagini_view.id_account_inserimento    | -
+    immagini_view.id_account_aggiornamento  | -
+    immagini_view.__label__                 | -
     
     indirizzi
     ---------
@@ -172,7 +189,7 @@
     
     iva
     ---
-    Questa tabella *di supporto* contiene le aliquote IVA utilizzate nel framework.
+    Questa tabella *standard* contiene le aliquote IVA utilizzate nel framework.
 
     colonna                         | descrizione
     --------------------------------|---------------------------------------------------------------------------------------
@@ -187,7 +204,14 @@
 
     La vista *iva_view* relativa alla tabella *iva* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    iva_view.id                         | -
+    iva_view.aliquota                   | -
+    iva_view.nome                       | -
+    iva_view.descrizione                | -
+    iva_view.codice                     | -
+    iva_view.timestamp_archiviazione    | -
+    iva_view.__label__                  | etichetta descrittiva dell'aliquota IVA
 
 */

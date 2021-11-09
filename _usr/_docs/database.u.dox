@@ -10,36 +10,78 @@
 
    udm
    ---
-   Questa tabella di *supporto* contiene le unità di misura supportate dal framework.
+   Questa tabella *standard* contiene le unità di misura supportate dal framework.
 
-   colonna                         | descrizione
-   --------------------------------|---------------------------------------------------------------------------------------
-   udm.id                          | l'ID dell'unità di misura
-   udm.id_tipologia                | l'ID della tipologia di grandezza cui si riferisce l'unità di misura
-   udm.id_udm                      | l'ID dell'unità di misura superiore
-   udm.conversione                 | il tasso di conversione nell'unità di misura superiore
-   udm.nome                        | il nome per esteso dell'unità di misura
-   udm.sigla                       | la sigla standard dell'unità di misura
-   udm.note                        | note aggiuntive sull'unità di misura
+   colonna                          | descrizione
+   ---------------------------------|---------------------------------------------------------------------------------------
+   udm.id                           | l'ID dell'unità di misura
+   udm.id_genitore                  | l'ID dell'unità di misura superiore
+   udm.conversione                  | il tasso di conversione nell'unità di misura superiore
+   udm.nome                         | il nome per esteso dell'unità di misura
+   udm.sigla                        | la sigla standard dell'unità di misura
+   udm.note                         | note aggiuntive sull'unità di misura
+   udm.se_lunghezza                 | flag che indica se l'unità di misura riguarda la lunghezza
+   udm.se_peso                      | flag che indica se l'unità di misura riguarda il peso
+   udm.se_quantita                  | flag che indica se l'unità di misura riguarda la quantità
 
    La tabella ha le seguenti chiavi esterne:
 
-   chiave                          | campo                 | tabella e campo collegati   | comportamento
-   --------------------------------|-----------------------|-----------------------------|------------------------
-   udm_ibfk_01_nofollow            | id_tipologia          | tipologie_udm.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
-   udm_ibfk_02_nofollow            | id_udm                | udm.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+   chiave                           | campo                 | tabella e campo collegati   | comportamento
+   ---------------------------------|-----------------------|-----------------------------|------------------------
+   udm_ibfk_01_nofollow             | id_genitore           | udm.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
 
    La vista *udm_view* relativa alla tabella *udm* presenta le seguenti colonne:
 
-   colonna                              | descrizione
-   -------------------------------------|---------------------------------------------------------------------------------------
-   udm_view.id                          | -
-   udm_view.id_tipologia                | -
-   udm_view.tipologia                   | la tipologia di grandezza cui si riferisce l'unità di misura
-   udm_view.id_udm                      | -
-   udm_view.conversione                 | -
-   udm_view.nome                        | -
-   udm_view.sigla                       | -
-   udm_view.__label__                   | etichetta descrittiva dell'unità di misura
+   colonna                             | descrizione
+   ------------------------------------|---------------------------------------------------------------------------------------
+   udm_view.id                         | -
+   udm_view.id_genitore                | -
+   udm_view.conversione                | -
+   udm_view.nome                       | -
+   udm_view.sigla                      | -
+   udm_view.se_lunghezza               | -
+   udm_view.se_peso                    | -
+   udm_view.se_quantita                | -
+   udm_view.__label__                  | etichetta descrittiva dell'unità di misura
+
+   url
+   ---
+   Questa tabella *gestita* contiene gli URL collegati all'entità principale *anagrafica*.
+
+   colonna                             | descrizione
+   ------------------------------------|---------------------------------------------------------------------------------------
+   url.id                              | l'ID dell'account
+   url.id_tipologia                    | l'ID della tipologia dell'URL
+   url.id_anagrafica                   | l'ID dell'anagrafica collegata all'URL 
+   url.url                             | l'URL comprensivo di protocollo
+   url.nome                            | nome descrittivo dell'URL
+   url.id_account_inserimento          | l'ID dell'account che ha inserito la riga
+   url.timestamp_inserimento           | la timestamp dell'inserimento della riga
+   url.id_account_aggiornamento        | l'ID dell'ultimo account che ha modificato la riga
+   url.timestamp_aggiornamento         | la timestamp dell'ultimo aggiornamento della riga
+
+   La tabella ha le seguenti chiavi esterne:
+
+   chiave                        | campo                       | tabella e campo collegati         | comportamento
+   ------------------------------|-----------------------------|-----------------------------------|-------------------
+   account_ibfk_01_nofollow      | id_tipologia                | tipologie_url.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+   account_ibfk_02_nofollow      | id_anagrafica               | anagrafica.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+   account_ibfk_98_nofollow      | id_account_inserimento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+   account_ibfk_99_nofollow      | id_account_aggiornamento    | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+   La vista *url_view* relativa alla tabella *url* presenta le seguenti colonne:
+
+   colonna                                   | descrizione
+   ------------------------------------------|---------------------------------------------------------------------------------------
+   url_view.id                               | -
+   url_view.id_tipologia                     | -
+   url_view.tipologia                        | la tipologia dell'URL
+   url_view.id_anagrafica                    | -
+   url_view.anagrafica                       | l'anagrafica collegata all'URL
+   url_view.url                              | -
+   url_view.nome                             | -
+   url_view.id_account_inserimento           | -
+   url_view.id_account_aggiornamento         | -
+   url_view.__label__                        | l'etichetta che descrive l'URL
 
 */

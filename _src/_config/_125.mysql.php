@@ -147,14 +147,14 @@
 
 			$patchLevel = mysqlSelectValue(
 				$cf['mysql']['connection'],
-				'SELECT id FROM mysql_patch ORDER BY id DESC LIMIT 1'
+				'SELECT id FROM __patch__ ORDER BY id DESC LIMIT 1'
 			);
 
 			if( empty( $patchLevel ) ) {
 
 				mysqlQuery(
 					$cf['mysql']['connection'],
-					'CREATE TABLE IF NOT EXISTS `mysql_patch` ('.
+					'CREATE TABLE IF NOT EXISTS `__patch__` ('.
 					'	`id` char(12) NOT NULL PRIMARY KEY,'.
 					'	`patch` text COLLATE utf8_unicode_ci,'.
 					'	`timestamp_esecuzione` int(11) DEFAULT NULL'.
@@ -206,7 +206,7 @@
 										'patch' => trim( $pQuery ),
 										'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() )
 									),
-									'mysql_patch',
+									'__patch__',
 									false
 								);
 	

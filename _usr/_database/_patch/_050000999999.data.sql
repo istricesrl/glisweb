@@ -6,6 +6,90 @@
 -- - tipologie_pubblicazione
 --
 
+--| 050000003100
+
+-- categorie_anagrafica
+-- tipologia: tabella assistita
+-- verifica: 2021-05-28 19:56 Fabio Mosti
+REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `se_lead`, `se_prospect`, `se_cliente`, `se_mandante`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_dipendente`, `se_interinale`, `se_interno`, `se_esterno`, `se_agente`, `se_concorrente`, `se_azienda_gestita`, `se_amministrazione`, `se_produzione`, `se_notizie`, `se_docente`, `se_tutor`, `se_classe`, `se_allievo`, `se_agenzia_interinale`, `se_referente`, `se_sostituto`, `se_squadra`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'clienti',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'collaboratori',   	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'fornitori',	    NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000005100
+
+-- colori
+-- tipologia: tabella standard
+-- verifica: 2021-06-02 22:27 Fabio Mosti
+REPLACE INTO `colori` (`id`, `nome`, `hex`, `r`, `g`, `b`) VALUES
+(1,	    'rosso',	'ff0000',	255,	0,	    0),
+(3,	    'bianco',	'ffffff',	255,	255,	255),
+(4,	    'nero',	    '000000',	0,	    0,	    0),
+(5,	    'blu',	    '0000ff',	0,	    0,	    255),
+(6,	    'verde',	'00ff00',	0,	    255,	0);
+
+--| 050000005300
+
+-- comuni
+-- tipologia: tabella standard
+-- verifica: 2021-06-03 19:58 Fabio Mosti
+REPLACE INTO `comuni` (`id`, `id_provincia`, `nome`, `codice_istat`, `codice_catasto`) VALUES
+(1,	    1,	'Bologna',	                        '037006',	'A944'),
+(2,	    1,	'Casalecchio di Reno',	            '037011',	'B880'),
+(3,	    1,	'San Giovanni in Persiceto',	    '037053',	'G467'),
+(4,	    1,	'Crevalcore',	                    '037024',	'D166'),
+(8,	    1,	'Monte San Pietro',	                '037042',	'F627'),
+(9,	    1,	'San Lazzaro di Savena',	        '037054',	'H945'),
+(10,	1,	'Castel Maggiore',	                '037019',	'C204'),
+(13,	1,	'Zola Predosa',	                    '037060',	'M185'),
+(16,	1,	'Anzola dell\'Emilia',	            '037001',	'A324'),
+(3980,	1,	'Argelato',	                        '037002',	'A392'),
+(3981,	1,	'Baricella',	                    '037003',	'A665'),
+(3983,	1,	'Bentivoglio',	                    '037005',	'A785'),
+(3984,	1,	'Borgo Tossignano',	                '037007',	'B044'),
+(3985,	1,	'Budrio',	                        '037008',	'B249'),
+(3986,	1,	'Calderara di Reno',	            '037009',	'B399'),
+(3987,	1,	'Camugnano',	                    '037010',	'B572'),
+(3988,	1,	'Casalfiumanese',	                '037012',	'B892'),
+(3989,	1,	'Castel d\'Aiano',	                '037013',	'C075'),
+(3990,	1,	'Castel del Rio',	                '037014',	'C086'),
+(3991,	1,	'Castel di Casio',	                '037015',	'B969'),
+(3992,	1,	'Castel Guelfo di Bologna',	        '037016',	'C121'),
+(3993,	1,	'Castello d\'Argile',	            '037017',	'C185'),
+(3995,	1,	'Castel San Pietro Terme',	        '037020',	'C265'),
+(3996,	1,	'Castenaso',	                    '037021',	'C292'),
+(3997,	1,	'Castiglione dei Pepoli',	        '037022',	'C296'),
+(3999,	1,	'Dozza',	                        '037025',	'D360'),
+(4000,	1,	'Fontanelice',	                    '037026',	'D668'),
+(4001,	1,	'Gaggio Montano',	                '037027',	'D847'),
+(4002,	1,	'Galliera',	                        '037028',	'D878'),
+(4004,	1,	'Granarolo dell\'Emilia',	        '037030',	'E136'),
+(4005,	1,	'Grizzana Morandi',	                '037031',	'E187'),
+(4006,	1,	'Imola',	                        '037032',	'E289'),
+(4007,	1,	'Lizzano in Belvedere',	            '037033',	'A771'),
+(4008,	1,	'Loiano',	                        '037034',	'E655'),
+(4009,	1,	'Malalbergo',	                    '037035',	'E844'),
+(4010,	1,	'Marzabotto',	                    '037036',	'B689'),
+(4011,	1,	'Medicina',	                        '037037',	'F083'),
+(4012,	1,	'Minerbio',	                        '037038',	'F219'),
+(4013,	1,	'Molinella',	                    '037039',	'F288'),
+(4014,	1,	'Monghidoro',	                    '037040',	'F363'),
+(4015,	1,	'Monterenzio',	                    '037041',	'F597'),
+(4017,	1,	'Monzuno',	                        '037044',	'F706'),
+(4018,	1,	'Mordano',	                        '037045',	'F718'),
+(4019,	1,	'Ozzano dell\'Emilia',	            '037046',	'G205'),
+(4020,	1,	'Pianoro',	                        '037047',	'G570'),
+(4021,	1,	'Pieve di Cento',	                '037048',	'G643'),
+(4023,	1,	'Sala Bolognese',	                '037050',	'H678'),
+(4024,	1,	'San Benedetto Val di Sambro',      '037051',	'G566'),
+(4025,	1,	'San Giorgio di Piano',	            '037052',	'H896'),
+(4026,	1,	'San Pietro in Casale',	            '037055',	'I110'),
+(4027,	1,	'Sant\'Agata Bolognese',	        '037056',	'I191'),
+(4028,	1,	'Sasso Marconi',	                '037057',	'G972'),
+(4030,	1,	'Vergato',	                        '037059',	'L762'),
+(12594,	1,	'Valsamoggia',	                    '037061',	'M320'),
+(12595,	1,	'Alto Reno Terme',	                '037062',	'M369');
+
 --| 050000007100
 
 -- continenti
@@ -19,6 +103,18 @@ REPLACE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (5,	'AU',	'Oceania'),
 (6,	'LA',	'America Latina'),
 (7,	'AN',	'Antartide');
+
+--| 050000016000
+
+REPLACE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`) VALUES
+(1,	22.00,	'IVA 22%',                                                          'IVA 22%',	                                                                                                                                NULL),
+(2,	10.00,	'IVA agevolata 10%',	                                            'IVA agevolata 10%',	                                                                                                                    NULL),
+(3,	4.00,	'IVA agevolata 4%',	                                                'IVA agevolata 4%',	                                                                                                                        NULL),
+(4,	0.00,	'escluso ex art. 15 d.P.R. n. 633/1972',	                        'operazione esclusa ex art. 15 del d.P.R. n. 633/1972',	                                                                                    'N1'),
+(5,	0.00,	'non soggetto ex art.7 d.P.R. 633/1972',	                        'operazione non soggetta a IVA ex art. 7 del d.P.R. 633/1972',	                                                                            'N2'),
+(6,	0.00,	'non imponibile ex art. 8 d.P.R. 633/1972',	                        'operazione non imponibile ex art. 8 del d.P.R. 633/1972',	                                                                                'N3'),
+(7,	0.00,	'fuori campo IVA ex art. 2 d.P.R. 633/1972',	                    'operazione non imponibile ex art. 2 del d.P.R. 633/1972',	                                                                                'N2'),
+(8,	0.00,	'non soggetto ex art. 1 ll. nn. 190/2014, 208/2015 e 145/2018',     'operazione non soggetta a IVA ai sensi ex art. 1 legge 190/2014 come modificato dalla legge n. 208/2015 e dalla legge n. 145/2018',	    'N2');
 
 --| 050000016800
 
@@ -42,10 +138,39 @@ REPLACE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alpha3`, `
 (14,	'croato',	    'croato (Croazia)',	        'hr',	'hrv',	'hr-HR'),
 (15,	'rumeno',	    'rumeno (Romania)',	        'ro',	'ron',	'ro-RO');
 
+--| 050000017200
+
+-- listini
+-- tipologia: tabella assistita
+-- verifica: 2021-09-24 17:49 Fabio Mosti
+REPLACE INTO `listini` (`id`, `id_valuta`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,     1,	            'DEFAULT',	                NULL,	NULL,	NULL,	NULL);
+
+--| 050000028600
+
+-- ranking
+-- tipologia: tabella assistita
+-- verifica: 2021-10-11 17:48 Fabio Mosti
+REPLACE INTO `ranking` (`id`, `nome`, `ordine`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'GOLD',	    100,	NULL,	NULL,	NULL,	NULL),
+(2,	'SILVER',	200,	NULL,	NULL,	NULL,	NULL),
+(3,	'BRONZE',	300,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000023600
+
+-- periodicita
+-- tipologia: tabella standard
+-- verifica: 2021-10-05 17:57 Fabio Mosti
+REPLACE INTO `periodicita` (`id`, `nome`) VALUES
+(1,	'giornaliera'),
+(2,	'settimanale'),
+(3,	'mensile'),
+(4,	'annuale');
+
 --| 050000028000
 
 -- provincie
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-08 16:20 Fabio Mosti
 REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) VALUES
 (1,	    1,	'Bologna',	                        'BO',	'237'),
@@ -158,6 +283,45 @@ REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) V
 (110,	21,	'Ogliastra',	                    'OG',	NULL),
 (111,	21,	'Sud Sardegna',	                    'SU',	'111');
 
+--| 050000029800
+
+-- regimi
+-- tipologia: tabella standard
+-- verifica: 2021-10-09 15:02 Fabio Mosti
+REPLACE INTO `regimi` (`id`, `nome`, `codice`) VALUES
+(1,     'ordinario',                    'RF01'),
+(2,     'minimi',                       'RF02'),
+(3,     'agricoltura e pesca',          'RF04'),
+(4,     'sali e tabacchi',              'RF05'),
+(5,     'editoria',                     'RF07'),
+(6,     'intrattenimento',              'RF10'),
+(7,     'viaggi e turismo',             'RF11'),
+(8,     'agriturismo',                  'RF12'),
+(9,     'vendite a domicilio',          'RF13'),
+(10,    'beni usati e collezionismo',   'RF14'),
+(11,    'IVA per cassa P.A.',           'RF16'),
+(12,    'IVA per cassa',                'RF17'),
+(13,    'altro',                        'RF18'),
+(14,    'forfettario',                  'RF19');
+
+-- Contribuenti minimi (art. 1, commi 96-117, legge n. 244/2007)	RF2
+-- Agricoltura e attività connesse e pesca (articoli 34 e 34-bis, D.P.R. n. 633/1972);	RF04
+-- Vendita sali e tabacchi (art. 74, comma 1, D.P.R. n. 633/1972)	RF05
+-- Commercio dei fiammiferi (art. 74, comma 1, D.P.R. n. 633/1972)	RF06
+-- Editoria (art. 74, comma 1, D.P.R. n. 633/1972)	RF07
+-- Gestione di servizi di telefonia pubblica (art. 74, comma 1, D.P.R. n. 633/1972)	RF08
+-- Rivendita di documenti di trasporto pubblico e di sosta (art. 74, comma 1, D.P.R. n. 633/1972)	RF09
+-- Intrattenimenti, giochi e altre attività di cui alla tariffa allegata al D.P.R. n. 640/1972 (art. 74, comma 6, D.P.R. n. 633/1972)	RF10
+-- Agenzie di viaggi e turismo (art. 74-ter, D.P.R. n. 633/1972)	RF11
+-- Agriturismo (art. 5, comma 2, legge n. 413/1991)	FR12
+-- Vendite a domicilio (art. 25-bis, comma 6, D.P.R. n. 600/1973)	RF13
+-- Rivendita di beni usati, di oggetti d’arte, d’antiquariato o da collezione (art. 36, D.L. n. 41/1995)	RF14
+-- Agenzie di vendite all’asta di oggetti d’arte, antiquariato o da collezione (art. 40-bis, D.L. n. 41/1995)	RF15
+-- IVA per cassa P.A. (art. 6, comma 5, D.P.R. n. 633/1972)	RF16
+-- IVA per cassa (art. 32-bis, D.L. n. 83/2012)	RF17
+-- Altro	RF18
+-- Forfettario (art.1, commi 54-89, legge n. 190/2014)	RF19
+
 --| 050000030200
 
 -- regioni
@@ -185,22 +349,128 @@ REPLACE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
 (20,	1,	'Sicilia',	                        '19'),
 (21,	1,	'Sardegna',	                        '20');
 
+--| 050000034000
+
+-- ruoli_anagrafica
+-- tipologia: tabella standard
+-- verifica: 2021-10-09 18:11 Fabio Mosti
+REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `se_organizzazioni`, `se_risorse`, `se_progetti`) VALUES
+(1,	    NULL,	'titolare',	                    1,	    NULL,	NULL),
+(2,	    NULL,	'amministratore',	            1,	    NULL,	NULL),
+(3,	    NULL,	'socio',	                    1,	    NULL,	NULL),
+(4,	    NULL,	'dipendente',	                1,	    NULL,	NULL),
+(5,	    NULL,	'direttore',	                1,	    NULL,	NULL),
+(6,	    NULL,	'presidente',	                1,	    NULL,	NULL),
+(7,	    NULL,	'tesoriere',	                1,	    NULL,	NULL),
+(8,	    NULL,	'coordinatore',	                1,	    NULL,	1),
+(9,	    NULL,	'vicepresidente',	            1,	    NULL,	NULL),
+(10,	NULL,	'vicedirettore',	            1,	    NULL,	NULL),
+(11,	NULL,	'segretario',	                1,	    NULL,	NULL),
+(12,	NULL,	'responsabile amministrativo',	1,	    NULL,	NULL),
+(13,	NULL,	'responsabile acquisti',	    1,	    NULL,	NULL),
+(14,	NULL,	'responsabile operativo',	    1,	    NULL,	NULL),
+(15,	NULL,	'operatore',	                NULL,	NULL,	1),
+(16,	NULL,	'responsabile',	                NULL,	NULL,	1),
+(17,	NULL,	'assistente',	                1,	    NULL,	1),
+(18,	NULL,	'autore',	                    NULL,	1,	    NULL);
+
+--| 050000034200
+
+-- ruoli_audio
+-- tipologia: tabella standard
+-- verifica: 2021-10-09 18:28 Fabio Mosti
+REPLACE INTO `ruoli_audio` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_prodotti`, `se_articoli`) VALUES
+(1,	    'audio',	    1,	    1,	    1,	    1,	    1),
+(2,	    'commento',	    NULL,	1,	    NULL,	1,	    1);
+
+--| 050000034400
+
+-- ruoli_file
+-- tipologia: tabella standard
+-- verifica: 2021-10-11 18:14 Fabio Mosti
+REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_risorse`) VALUES
+(1,	    'allegato',	        1,	    1,	    1,	    1,	    1,	    1,	    NULL),
+(2,	    'brochure',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
+(3,	    'documentazione',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
+(4,	    'driver',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
+(5,	    'manualistica',	    NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
+(6,	    'press kit',	    1,	    NULL,	NULL,	NULL,	1,	    NULL,	NULL),
+(7,	    'schede tecniche',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
+(8,	    'software',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL);
+
+--| 050000034600
+
+-- ruoli_immagini
+-- tipologia: tabella standard
+-- verifica: 2021-10-11 18:47 Fabio Mosti
+REPLACE INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
+(1,	NULL,	900,	'immagine',	    NULL,	NULL,	1,	    1,	    1,	    1,	    1,	    1,	    1,	    1,	    1),
+(2,	NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	900,	'sfondo',	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	600,	'gallery',	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	100,	'avatar',	    NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	300,	'logo',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| 050000034800
 
 -- ruoli_indirizzi
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 10:45 Fabio Mosti
 REPLACE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sede_legale`, `se_sede_operativa`, `se_residenza`, `se_domicilio`) VALUES
-(3,	'casa',             '&#xf015;',     '',     NULL,	NULL,	1,	    NULL),
-(5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1),
-(4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
 (1,	'sede legale',	    '&#xf1ad;',	    '',     1,	    NULL,	NULL,	NULL),
-(2,	'sede operativa',	'&#xf275;',     '',     NULL,	1,	    NULL,	NULL);
+(2,	'sede operativa',	'&#xf275;',     '',     NULL,	1,	    NULL,	NULL),
+(3,	'casa',             '&#xf015;',     '',     NULL,	NULL,	1,	    NULL),
+(4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
+(5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
+
+--| 050000035000
+
+-- ruoli_prodotti
+-- tipologia: tabella standard
+-- verifica: 2021-10-12 10:46 Fabio Mosti
+REPLACE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
+(1,	    NULL,	'prodotto',	    NULL,	NULL),
+(2,	    NULL,	'principale',	NULL,	NULL),
+(3,	    NULL,	'suggerito',	NULL,	NULL);
+
+--| 050000035200
+
+-- ruoli_video
+-- tipologia: tabella standard
+-- verifica: 2021-10-11 18:47 Fabio Mosti
+REPLACE INTO `ruoli_video` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_prodotti`, `se_articoli`) VALUES
+(1,	    'intestazione',	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	    'sfondo',	    NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	    'card',	        NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	    'media',	    NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	    'gallery',	    NULL,	NULL,	NULL,	1,	    1),
+(8,	    'footer',	    NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	    'contenuto',	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	'principale',	NULL,	1,	    1,	    1,	    1),
+(12,	'carousel',	    NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	'video',	    1,	    1,	    1,	    1,	    1),
+(14,	'jumbotron',	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	NULL),
+(16,	'anteprima',	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000037000
+
+-- settori
+-- tipologia: tabella standard
+-- verifica: 2021-10-11 10:53 Fabio Mosti
+REPLACE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`) VALUES
+(1,     NULL,   'A',          'AGRICOLTURA, SILVICOLTURA E PESCA',                                                    'agricoltura, silvicoltura e pesca'),
+(2,     1,      '01',         'COLTIVAZIONI AGRICOLE E PRODUZIONE DI PRODOTTI ANIMALI, CACCIA E SERVIZI CONNESSI',    'coltivazioni, prodotti animali e caccia'),
+(3,     2,      '01.1',       'COLTIVAZIONE DI COLTURE AGRICOLE NON PERMANENTI',                                      'colture non permanenti'),
+(4,     2,      '01.11',      'Coltivazione di cereali (escluso il riso), legumi da granella e semi oleosi',          'coltivazione di cereali, legumi e semi'),
+(5,     4,      '01.11.1',    'Coltivazione di cereali (escluso il riso)',                                            'coltivazione di cereali');
 
 --| 050000042000
 
 -- stati
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 15:06 Fabio Mosti
 REPLACE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`, `nome`, `note`, `codice_istat`, `data_archiviazione`) VALUES
 (1,	    1,	'IT',	'ITA',	'Italia',	'Repubblica Italiana',	NULL,	NULL),
@@ -440,6 +710,40 @@ REPLACE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`,
 (236,	1,	NULL,	NULL,	'Serbia e Montenegro',	'Costituite le nazioni indipendenti della Serbia e del Montenegro a seguito del distacco del Montenegro dal soppresso Stato della',	'224',	'2006-06-03'),
 (237,	4,	NULL,	NULL,	'Sint Maarten (NL)',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'928',	'2017-04-13');
 
+--| 050000042200
+
+-- stati_lingue
+-- tipologia: tabella standard
+-- verifica: 2021-10-12 15:42 Fabio Mosti
+REPLACE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
+(1,     1,	    1),
+(2,     2,	    2),
+(3,     3,	    6),
+(4,     4,	    7),
+(5,     5,	    8),
+(6,     6,	    9),
+(7,     7,	    10),
+(8,     8,	    5),
+(9,     9,	    3),
+(10,    10,	    13),
+(11,    11,	    11),
+(12,    12,	    4),
+(13,    13,	    12),
+(14,    14,	    14);
+
+--| 050000043000
+
+-- task
+-- tipologia: tabella assistita
+-- verifica: 2021-10-12 15:42 Fabio Mosti
+REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_images.resize.php',	            1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	            3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	            3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_indirizzi.geocode.php',	        1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	6,	    2,	    6,	    2,	    NULL,	NULL,	'_src/_api/_task/_comuni.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	6,	    6,	    6,	    6,	    NULL,	NULL,	'_src/_api/_task/_settori.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| 050000050000
 
 -- tipologie_anagrafica
@@ -452,6 +756,77 @@ REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `htm
 (4,	1,	    20,	'gent.ma',	            NULL,	NULL,	1),
 (5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL);
 
+--| 050000050400
+
+-- tipologie_attivita
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'lavoro',	NULL,	NULL,	1,	    1,	    NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'permessi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'malattie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000050800
+
+-- tipologie_contatti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'di persona',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'telefono',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'mail',	        NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'form web',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	'chat',	        NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000053000
+
+-- tipologie_indirizzi
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+
+--| 050000053400
+
+-- tipologie_mastri
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+
+--| 050000053800
+
+-- tipologie_notizie
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+
+--| 050000054200
+
+-- tipologie_popup
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+
+--| 050000054600
+
+-- tipologie_prodotti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+
+--| 050000055000
+
+-- tipologie_progetti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+
+--| 050000055400
+
+-- tipologie_pubblicazioni
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+
+--| 050000055800
+
+-- tipologie_risorse
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+
 --| 050000056200
 
 -- tipologie_telefoni
@@ -462,5 +837,27 @@ REPLACE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 (2,	NULL,   20,     'mobile',	    '&#xf10b;',     ''),
 (3,	NULL,   30,     'fax',	        '&#xf02f;',     ''),
 (4,	NULL,   40,     'telefono/fax',	'&#xf1ac;',     '');
+
+--| 050000056600
+
+-- tipologie_todo
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+
+--| 050000062000
+
+-- udm
+-- tipologia: tabella standard
+-- verifica: 2021-10-19 13:02 Fabio Mosti
+REPLACE INTO `udm` (`id`, `id_genitore`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_peso`, `se_quantita`) VALUES
+(1, NULL,	NULL,	'pezzi',	'pz.',	'unità di misura usata genericamente per misurare le quantità',	NULL,	NULL,	1);
+
+--| 050000063000
+
+-- valute
+-- tipologia: tabella standard
+-- verifica: 2021-10-19 13:21 Fabio Mosti
+REPLACE INTO `valute` (`id`, `iso4217`, `html_entity`, `utf8`) VALUES
+(1,	'EUR',	'&#8634;',	'€');
 
 --| FINE FILE

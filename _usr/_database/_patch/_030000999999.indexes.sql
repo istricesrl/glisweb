@@ -90,7 +90,7 @@ ALTER TABLE `anagrafica`
 	ADD UNIQUE KEY `unica_aziende` (`denominazione`,`partita_iva`,`codice_fiscale`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_pec_sdi` (`id_pec_sdi`),
-	ADD KEY `id_regime_fiscale` (`id_regime_fiscale`),
+	ADD KEY `id_regime` (`id_regime`),
 	ADD KEY `id_stato_nascita` (`id_stato_nascita`),
 	ADD KEY `id_comune_nascita` (`id_comune_nascita`),
 	ADD KEY `id_ranking` (`id_ranking`),	
@@ -240,11 +240,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_luogo` (`id_luogo`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
-	ADD KEY `id_todo` (`id_todo`), 
-	ADD KEY `id_campagna` (`id_campagna`), 
-	ADD KEY `id_immobile` (`id_immobile`), 
-	ADD KEY `id_richiesta` (`id_richiesta`), 
-	ADD KEY `id_todo_articoli` (`id_todo_articoli`),
+	ADD KEY `id_todo` (`id_todo`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
@@ -274,46 +270,27 @@ ALTER TABLE `audio`
 	ADD UNIQUE KEY `unica_codice_embed` (`codice_embed`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
 	ADD KEY `id_ruolo` (`id_ruolo`), 
-	ADD KEY `id_tipologia_embed` (`id_tipologia_embed`), 
+	ADD KEY `id_embed` (`id_embed`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_pagina` (`id_pagina`), 
 	ADD KEY `id_file` (`id_file`), 
 	ADD KEY `id_risorsa` (`id_risorsa`), 
 	ADD KEY `id_prodotto` (`id_prodotto`), 
+	ADD KEY `id_articolo` (`id_articolo`), 
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
-	ADD KEY `id_evento` (`id_evento`), 
-	ADD KEY `id_categoria_eventi` (`id_categoria_eventi`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_tipologia_embed`),
-	ADD KEY `indice_anagrafica` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_tipologia_embed`,`id_anagrafica`),
-	ADD KEY `indice_pagine` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_tipologia_embed`,`id_pagina`,`id_file`,`id_risorsa`);
+	ADD KEY `indice` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_embed`),
+	ADD KEY `indice_anagrafica` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_embed`,`id_anagrafica`),
+	ADD KEY `indice_pagine` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_embed`,`id_pagina`,`id_file`,`id_risorsa`);
 
 --| 030000002101
 
 -- audio
 -- tipologia: tabella gestita
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 030000002500
-
--- campagne
--- tipologia: tabella gestita
--- verifica: 2021-05-28 17:50 Fabio Mosti
-ALTER TABLE `campagne`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `nome` (`nome`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`,`timestamp_apertura`,`timestamp_chiusura`);
-
---| 030000002501
-
--- campagne
--- tipologia: tabella gestita
-ALTER TABLE `campagne` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000002900
 
@@ -324,6 +301,8 @@ ALTER TABLE `caratteristiche_prodotti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_tipologia`,`nome`),
 	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`);
 
 --| 030000002901
@@ -427,9 +406,7 @@ ALTER TABLE `categorie_progetti`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `se_ordinario` (`se_ordinario`), 
-	ADD KEY `se_straordinario` (`se_straordinario`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_ordinario`,`se_straordinario`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`);
 
 --| 030000004301
 
@@ -456,23 +433,6 @@ ALTER TABLE `categorie_risorse`
 -- categorie_risorse
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 030000004700
-
--- classi_energetiche
--- tipologia: tabella di supporto
--- verifica: 2021-06-02 20:38 Fabio Mosti
-ALTER TABLE `classi_energetiche`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_colore` (`id_colore`),
-	ADD KEY `se_immobili` (`se_immobili`),
-	ADD KEY `indice` (`id`, `nome`, `id_colore`, `se_immobili`);
-
---| 030000004701
-
--- classi_energetiche
--- tipologia: tabella di supporto
-ALTER TABLE `classi_energetiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000005100
 
@@ -526,7 +486,7 @@ ALTER TABLE `contatti`
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_campagna` (`id_campagna`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_inviante` (`id_inviante`), 
+	ADD KEY `id_inviante` (`id_inviante`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
@@ -563,7 +523,7 @@ ALTER TABLE `contenuti`
 	ADD UNIQUE KEY `unica_notizia` (`id_lingua`,`id_notizia`), 
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`), 
 	ADD UNIQUE KEY `unica_data` (`id_lingua`,`id_data`), 
-	ADD UNIQUE KEY `unica_template_mail` (`id_lingua`,`id_template_mail`), 
+	ADD UNIQUE KEY `unica_template` (`id_lingua`,`id_template`), 
 	ADD UNIQUE KEY `unica_colore` (`id_lingua`,`id_colore`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
@@ -584,8 +544,10 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
 	ADD KEY `id_data` (`id_data`),
-	ADD KEY `id_template_mail` (`id_template_mail`), 
+	ADD KEY `id_template` (`id_template`), 
 	ADD KEY `id_colore` (`id_colore`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_lingua`),
 	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`),
 	ADD KEY `indice_prodotti` (`id`,`id_lingua`,`id_prodotto`,`id_articolo`,`id_categoria_prodotti`,`id_marchio`),
@@ -593,11 +555,11 @@ ALTER TABLE `contenuti`
 	ADD KEY `indice_file` (`id`,`id_lingua`,`id_file`),
 	ADD KEY `indice_risorse` (`id`,`id_lingua`,`id_risorsa`,`id_categoria_risorse`),
 	ADD KEY `indice_pagine` (`id`,`id_lingua`,`id_pagina`,`id_popup`),
-	ADD KEY `indice_notizie` (`id`,`id_lingua`,`id_notizie`,`id_categoria_notizie`),
+	ADD KEY `indice_notizie` (`id`,`id_lingua`,`id_notizia`,`id_categoria_notizie`),
 	ADD KEY `indice_video` (`id`,`id_lingua`,`id_video`),
 	ADD KEY `indice_audio` (`id`,`id_lingua`,`id_audio`),
 	ADD KEY `indice_data` (`id`,`id_lingua`,`id_data`),
-	ADD KEY `indice_template_mail` (`id`,`id_lingua`,`id_template_mail`),
+	ADD KEY `indice_template` (`id`,`id_lingua`,`id_template`),
 	ADD KEY `indice_colore` (`id`,`id_lingua`,`id_colore`);
 
 --| 030000006901
@@ -622,65 +584,6 @@ ALTER TABLE `continenti`
 -- tipologia: tabella di supporto
 ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000007600
-
--- contratti
--- tipologia: tabella gestita
--- verifica: 2021-06-09 12:47 Fabio Mosti
-ALTER TABLE `contratti`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
-	ADD KEY `id_azienda` (`id_azienda`),
-	ADD KEY `id_agenzia` (`id_agenzia`),
-	ADD KEY `id_livello` (`id_livello`), 
-	ADD KEY `id_qualifica` (`id_qualifica`), 
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_azienda`,`id_agenzia`, `data_stipula`, `data_inizio`, `data_fine`, `data_inizio_rapporto`, `data_fine_rapporto`, `id_livello`, `id_qualifica`);
-
---| 030000007601
-
--- contratti
--- tipologia: tabella gestita
-ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 030000007700
-
--- correlazioni_articoli
--- tipologia: tabella gestita
--- verifica: 2021-05-26 11:59 Fabio Mosti
-ALTER TABLE `correlazioni_articoli`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica_prodotto` (`id_tipologia`,`id_articolo`,`id_prodotto_correlato`), 
-	ADD UNIQUE KEY `unica_articolo` (`id_tipologia`,`id_articolo`,`id_articolo_correlato`), 
-	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `id_prodotto_correlato` (`id_prodotto_correlato`),
-	ADD KEY `id_articolo_correlato` (`id_articolo_correlato`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_articolo`,`id_prodotto_correlato`,`id_prodotto_correlato`,`ordine`,`se_upselling`,`se_crosselling` );
-
---| 030000007701
-
--- correlazioni_articoli
--- tipologia: tabella gestita
-ALTER TABLE `correlazioni_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 030000007800
-
--- costi_contratti
--- tipologia: tabella gestita
--- verifica: 2021-06-09 12:47 Fabio Mosti
-ALTER TABLE `costi_contratti`
-	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_contratto`,`id_tipologia_inps_attivita`),
-	ADD KEY `id_contratto` (`id_contratto`),
-	ADD KEY `indice` (`id`,`id_contratto`,`costo_orario`);
-
---| 030000007801
-
--- costi_contratti
--- tipologia: tabella gestita
-ALTER TABLE `costi_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --| 030000008000
 
 -- coupon
@@ -688,6 +591,8 @@ ALTER TABLE `costi_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-06-29 15:50 Fabio Mosti
 ALTER TABLE `coupon`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`timestamp_inizio`,`timestamp_fine`,`sconto_percentuale`,`sconto_fisso`,`se_multiuso`,`se_globale`);
  
 --| 030000008200
@@ -700,7 +605,9 @@ ALTER TABLE `coupon_categorie_prodotti`
 	ADD UNIQUE KEY `unica` (`id_coupon`,`id_categoria`),
 	ADD KEY `id_coupon` (`id_coupon`), 
 	ADD KEY `id_categoria` (`id_categoria`),
-	ADD KEY `indice` (`id`,`id_coupon`,`id_categoria`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_categoria`,`ordine`);
 
 --| 030000008201
  
@@ -718,10 +625,12 @@ ALTER TABLE `coupon_listini`
 	ADD UNIQUE KEY `unica` (`id_coupon`,`id_listino`),
 	ADD KEY `id_coupon` (`id_coupon`), 
 	ADD KEY `id_listino` (`id_listino`),
-	ADD KEY `indice` (`id`,`id_coupon`,`id_listino`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_listino`,`ordine`);
 
 --| 030000008401
- 
+
 -- coupon_listini
 -- tipologia: tabella gestita
 ALTER TABLE `coupon_listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -736,7 +645,9 @@ ALTER TABLE `coupon_marchi`
 	ADD UNIQUE KEY `unica` (`id_coupon`,`id_marchio`),
 	ADD KEY `id_coupon` (`id_coupon`), 
 	ADD KEY `id_marchio` (`id_marchio`),
-	ADD KEY `indice` (`id`,`id_coupon`,`id_marchio`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_marchio`,`ordine`);
 
 --| 030000008601
 
@@ -754,51 +665,15 @@ ALTER TABLE `coupon_prodotti`
 	ADD UNIQUE KEY `unica` (`id_coupon`,`id_prodotto`),
 	ADD KEY `id_coupon` (`id_coupon`), 
 	ADD KEY `id_prodotto` (`id_prodotto`),
-	ADD KEY `indice` (`id`,`id_coupon`,`id_prodotto`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_prodotto`,`ordine`);
 
 --| 030000008801
 
 -- coupon_prodotti
 -- tipologia: tabella gestita
 ALTER TABLE `coupon_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 030000009000
-
--- coupon_stagioni
--- tipologia: tabella gestita
--- verifica: 2021-06-29 17:02 Fabio Mosti
-ALTER TABLE `coupon_stagioni`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_coupon`,`id_stagione`),
-	ADD KEY `id_coupon` (`id_coupon`), 
-	ADD KEY `id_stagione` (`id_stagione`),
-	ADD KEY `indice` (`id`,`id_coupon`,`id_stagione`);
-
---| 030000009001
-
--- coupon_stagioni
--- tipologia: tabella gestita
-ALTER TABLE `coupon_stagioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 030000009400
-
--- date
--- tipologia: tabella gestita
--- verifica: 2021-09-03 17:09 Fabio Mosti
-ALTER TABLE `date`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_evento` (`id_evento`), 
-	ADD KEY `id_luogo` (`id_luogo`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_evento`,`id_luogo`,`timestamp_inizio`,`timestamp_fine`);
-
---| 030000009401
-
--- date
--- tipologia: tabella gestita
-ALTER TABLE `date` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000009800
 
@@ -907,7 +782,7 @@ ALTER TABLE `file`
 	ADD KEY `indice_categorie_risorse` (`id`,`id_ruolo`,`id_categoria_risorse`,`id_lingua`,`path`,`url`);
 
 --| 030000015001
- 
+
 -- file
 -- tipologia: tabella gestita
 ALTER TABLE `file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -1109,10 +984,12 @@ ALTER TABLE `listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-24 18:15 Fabio Mosti
 ALTER TABLE `listini_clienti`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `id_listino` (`id_listino`,`id_cliente`),
+	ADD UNIQUE KEY `unica` (`id_listino`,`id_cliente`),
 	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `id_cliente` (`id_cliente`),
-	ADD KEY `indice` (`id`,`id_listino`,`id_cliente`);
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_listino`,`id_cliente`,`ordine`);
 
 --| 030000017401
 
@@ -1151,15 +1028,23 @@ ALTER TABLE `macro`
 	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`macro`), 
 	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`macro`), 
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`macro`), 
+	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`macro`), 
+	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`macro`), 
+	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`macro`), 
+	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`macro`), 
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
-	ADD KEY `indice` (`id`,`macro`),
-	ADD KEY `indice_pagine` (`id`,`id_pagina`,`macro`),
-	ADD KEY `indice_prodotti` (`id`,`id_prodotto`,`macro`),
-	ADD KEY `indice_articoli` (`id`,`id_articolo`,`macro`),
-	ADD KEY `indice_categorie_prodotti` (`id`,`id_categoria_prodotti`,`macro`);
+	ADD KEY `indice` (`id`,`ordine`,`macro`),
+	ADD KEY `indice_pagine` (`id`,`id_pagina`,`ordine`,`macro`),
+	ADD KEY `indice_prodotti` (`id`,`id_prodotto`,`ordine`,`macro`),
+	ADD KEY `indice_articoli` (`id`,`id_articolo`,`ordine`,`macro`),
+	ADD KEY `indice_categorie_prodotti` (`id`,`id_categoria_prodotti`,`ordine`,`macro`),
+	ADD KEY `indice_notizie` (`id`,`id_notizia`,`ordine`,`macro`),
+	ADD KEY `indice_categorie_notizie` (`id`,`id_categoria_notizie`,`ordine`,`macro`),
+	ADD KEY `indice_risorse` (`id`,`id_risorsa`,`ordine`,`macro`),
+	ADD KEY `indice_categorie_risorse` (`id`,`id_categoria_risorse`,`ordine`,`macro`);
 
 --| 030000018201
 
@@ -1193,7 +1078,7 @@ ALTER TABLE `mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-28 15:29 Fabio Mosti
 ALTER TABLE `mail_out`
 	ADD PRIMARY KEY (`id`), 
-  	ADD UNIQUE KEY `unica` (`id_email`,`id_mailing`),
+  	ADD UNIQUE KEY `unica` (`id_mail`,`id_mailing`),
 	ADD KEY `id_mail` (`id_mail`), 
 	ADD KEY `id_mailing` (`id_mailing`), 
 	ADD KEY `timestamp_composizione` (`timestamp_composizione`), 
@@ -1216,7 +1101,7 @@ ALTER TABLE `mail_out` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-28 16:21 Fabio Mosti
 ALTER TABLE `mail_sent`
 	ADD PRIMARY KEY (`id`), 
-  	ADD UNIQUE KEY `unica` (`id_email`,`id_mailing`),
+  	ADD UNIQUE KEY `unica` (`id_mail`,`id_mailing`),
 	ADD KEY `id_mail` (`id_mail`), 
 	ADD KEY `id_mailing` (`id_mailing`), 
 	ADD KEY `timestamp_composizione` (`timestamp_composizione`), 
@@ -1225,25 +1110,6 @@ ALTER TABLE `mail_sent`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
 	ADD KEY `indice` (`id`,`id_mail`,`id_mailing`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
-
---| 030000019200
-
--- mailing
--- tipologia: tabella gestita
--- verifica: 2021-09-28 16:21 Fabio Mosti
-ALTER TABLE `mailing`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_job` (`id_job`),
-	ADD KEY `timestamp_invio` (`timestamp_invio`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_job`,`nome`,`timestamp_invio`);
-
---| 030000019201
-
--- mailing
--- tipologia: tabella gestita
-ALTER TABLE `mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000020200
 
@@ -1283,23 +1149,6 @@ ALTER TABLE `mastri`
 -- tipologia: tabella gestita
 ALTER TABLE `mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000021200
-
--- matricole
--- tipologia: tabella gestita
--- verifica: 2021-09-29 11:33 Fabio Mosti
-ALTER TABLE `matricole`
-	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`numero`,`id_marchio`,`id_produttore`,`nome`);
-
---| 030000021201
-
--- matricole
--- tipologia: tabella gestita
-ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --| 030000021600
 
 -- menu
@@ -1308,9 +1157,18 @@ ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `menu`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_lingua`,`id_pagina`,`menu`), 
-	ADD KEY `id_pagina` (`id_pagina`), 
+ 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_lingua`,`id_categoria_prodotti`,`menu`), 
+ 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`,`menu`), 
+ 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_lingua`,`id_categoria_risorse`,`menu`), 
 	ADD KEY `id_lingua` (`id_lingua`),
-	ADD KEY `indice` (`id`,`id_lingua`,`id_pagina`,`ordine`,`menu`,`nome`,`target`,`sottopagine`);
+	ADD KEY `id_pagina` (`id_pagina`), 
+ 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
+ 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+ 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
+	ADD KEY `indice` (`id`,`id_lingua`,`id_pagina`,`ordine`,`menu`,`nome`,`target`,`sottopagine`),
+	ADD KEY `indice_categorie_prodotti` (`id`,`id_lingua`,`id_categoria_prodotti`,`menu`,`nome`),
+	ADD KEY `indice_categorie_notizie` (`id`,`id_lingua`,`id_categoria_notizie`,`menu`,`nome`),
+	ADD KEY `indice_categorie_risorse` (`id`,`id_lingua`,`id_categoria_risorse`,`menu`,`nome`);
 
 --| 030000021601
 
@@ -1326,49 +1184,46 @@ ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `metadati`
  	ADD PRIMARY KEY (`id`), 
  	ADD UNIQUE KEY `unica_anagrafica` (`id_lingua`,`id_anagrafica`,`nome`), 
+ 	ADD UNIQUE KEY `unica_pagina` (`id_lingua`,`id_pagina`,`nome`), 
  	ADD UNIQUE KEY `unica_prodotto` (`id_lingua`,`id_prodotto`,`nome`), 
  	ADD UNIQUE KEY `unica_articolo` (`id_lingua`,`id_articolo`,`nome`), 
  	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_lingua`,`id_categoria_prodotti`,`nome`), 
+ 	ADD UNIQUE KEY `unica_notizia` (`id_lingua`,`id_notizia`,`nome`), 
+ 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`,`nome`), 
  	ADD UNIQUE KEY `unica_risorsa` (`id_lingua`,`id_risorsa`,`nome`), 
  	ADD UNIQUE KEY `unica_categoria_risorse` (`id_lingua`,`id_categoria_risorse`,`nome`), 
  	ADD UNIQUE KEY `unica_immagine` (`id_lingua`,`id_immagine`,`nome`), 
  	ADD UNIQUE KEY `unica_video` (`id_lingua`,`id_video`,`nome`), 
  	ADD UNIQUE KEY `unica_audio` (`id_lingua`,`id_audio`,`nome`), 
  	ADD UNIQUE KEY `unica_file` (`id_lingua`,`id_file`,`nome`), 
- 	ADD UNIQUE KEY `unica_pagina` (`id_lingua`,`id_pagina`,`nome`), 
- 	ADD UNIQUE KEY `unica_notizia` (`id_lingua`,`id_notizia`,`nome`), 
- 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`,`nome`), 
- 	ADD UNIQUE KEY `unica_mailing` (`id_lingua`,`id_mailing`,`nome`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+ 	ADD KEY `id_pagina` (`id_pagina`), 
  	ADD KEY `id_prodotto` (`id_prodotto`), 
  	ADD KEY `id_articolo` (`id_articolo`), 
  	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
+ 	ADD KEY `id_notizia` (`id_notizia`), 
+ 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
  	ADD KEY `id_risorsa` (`id_risorsa`),
  	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
  	ADD KEY `id_immagine` (`id_immagine`), 
  	ADD KEY `id_video` (`id_video`), 
  	ADD KEY `id_audio` (`id_audio`), 
  	ADD KEY `id_file` (`id_file`), 
- 	ADD KEY `id_pagina` (`id_pagina`), 
- 	ADD KEY `id_notizia` (`id_notizia`), 
- 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
- 	ADD KEY `id_mailing` (`id_mailing`), 
-	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`),
-	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`,`nome`,`testo`),
-	ADD KEY `indice_prodotti` (`id`,`id_lingua`,`id_prodotto`,`nome`,`testo`),
-	ADD KEY `indice_articoli` (`id`,`id_lingua`,`id_articolo`,`nome`,`testo`),
-	ADD KEY `indice_categorie_prodotti` (`id`,`id_lingua`,`id_categoria_prodotti`,`nome`,`testo`),
-	ADD KEY `indice_risorse` (`id`,`id_lingua`,`id_risorsa`,`nome`,`testo`),
-	ADD KEY `indice_categorie_risorse` (`id`,`id_lingua`,`id_categoria_risorse`,`nome`,`testo`),
-	ADD KEY `indice_immagini` (`id`,`id_lingua`,`id_immagine`,`nome`,`testo`),
-	ADD KEY `indice_video` (`id`,`id_lingua`,`id_video`,`nome`,`testo`),
-	ADD KEY `indice_audio` (`id`,`id_lingua`,`id_audio`,`nome`,`testo`),
-	ADD KEY `indice_file` (`id`,`id_lingua`,`id_file`,`nome`,`testo`),
-	ADD KEY `indice_pagina` (`id`,`id_lingua`,`id_pagina`,`nome`,`testo`),
-	ADD KEY `indice_notizie` (`id`,`id_lingua`,`id_notizia`,`nome`,`testo`),
-	ADD KEY `indice_categoria_notizie` (`id`,`id_lingua`,`id_categoria_notizie`,`nome`,`testo`),
-	ADD KEY `indice_mailing` (`id`,`id_lingua`,`id_mailing`,`nome`,`testo`);
+	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255)),
+	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`,`nome`,`testo`(255)),
+	ADD KEY `indice_pagina` (`id`,`id_lingua`,`id_pagina`,`nome`,`testo`(255)),
+	ADD KEY `indice_prodotti` (`id`,`id_lingua`,`id_prodotto`,`nome`,`testo`(255)),
+	ADD KEY `indice_articoli` (`id`,`id_lingua`,`id_articolo`,`nome`,`testo`(255)),
+	ADD KEY `indice_categorie_prodotti` (`id`,`id_lingua`,`id_categoria_prodotti`,`nome`,`testo`(255)),
+	ADD KEY `indice_notizie` (`id`,`id_lingua`,`id_notizia`,`nome`,`testo`(255)),
+	ADD KEY `indice_categoria_notizie` (`id`,`id_lingua`,`id_categoria_notizie`,`nome`,`testo`(255)),
+	ADD KEY `indice_risorse` (`id`,`id_lingua`,`id_risorsa`,`nome`,`testo`(255)),
+	ADD KEY `indice_categorie_risorse` (`id`,`id_lingua`,`id_categoria_risorse`,`nome`,`testo`(255)),
+	ADD KEY `indice_immagini` (`id`,`id_lingua`,`id_immagine`,`nome`,`testo`(255)),
+	ADD KEY `indice_video` (`id`,`id_lingua`,`id_video`,`nome`,`testo`(255)),
+	ADD KEY `indice_audio` (`id`,`id_lingua`,`id_audio`,`nome`,`testo`(255)),
+	ADD KEY `indice_file` (`id`,`id_lingua`,`id_file`,`nome`,`testo`(255));
 
 --| 030000021801
 
@@ -1405,6 +1260,8 @@ ALTER TABLE `notizie_categorie`
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_categoria` (`id_categoria`), 
 	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_notizia`,`id_categoria`,`ordine`);
 
 --| 030000022201
@@ -1425,6 +1282,8 @@ ALTER TABLE `organizzazioni`
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`id_anagrafica`,`id_ruolo`);
 
 --| 030000022801
@@ -1458,29 +1317,6 @@ ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000023600
 
--- pianificazioni
--- tipologia: tabella gestita
--- verifica: 2021-10-05 17:57 Fabio Mosti
-ALTER TABLE `pianificazioni`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica_progetto` (`id_progetto`), 
-	ADD UNIQUE KEY `unica_todo` (`id_todo`), 
-	ADD UNIQUE KEY `unica_attivita` (`id_turno`), 
-	ADD KEY `id_periodicita` (`id_periodicita`),
-	ADD KEY `nome` (`nome`), 
-	ADD KEY `token` (`token`), 
-	ADD KEY `data_fine` (`data_fine`),
-	ADD KEY `data_elaborazione` (`data_elaborazione`),
-	ADD KEY `indice` (`id`,`id_progetto`,`id_todo`,`id_attivita`.`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`workspace`,`token`);
-
---| 030000023601
-
--- pianificazioni
--- tipologia: tabella gestita
-ALTER TABLE `pianificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 030000023800
-
 -- periodicita
 -- tipologia: tabella di supporto
 -- verifica: 2021-10-05 17:57 Fabio Mosti
@@ -1489,6 +1325,35 @@ ALTER TABLE `periodicita`
 	ADD UNIQUE KEY `unica` (`nome`), 
 	ADD KEY `nome` (`nome`), 
 	ADD KEY `indice` (`id`,`nome`);
+
+--| 030000023601
+
+-- pianificazioni
+-- tipologia: tabella gestita
+ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000023800
+
+-- pianificazioni
+-- tipologia: tabella gestita
+-- verifica: 2021-10-05 17:57 Fabio Mosti
+ALTER TABLE `pianificazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`), 
+	ADD UNIQUE KEY `unica_todo` (`id_todo`), 
+	ADD UNIQUE KEY `unica_attivita` (`id_attivita`), 
+	ADD KEY `id_periodicita` (`id_periodicita`),
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `token` (`token`), 
+	ADD KEY `data_fine` (`data_fine`),
+	ADD KEY `data_elaborazione` (`data_elaborazione`),
+	ADD KEY `indice` (`id`,`id_progetto`,`id_todo`,`id_attivita`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`workspace`(255),`token`);
+
+--| 030000023801
+
+-- pianificazioni
+-- tipologia: tabella gestita
+ALTER TABLE `pianificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000024000
 
@@ -1501,7 +1366,7 @@ ALTER TABLE `popup`
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_sito`,`nome`,`id_html`,`classi_html`,`classe_attivazione`,`n_scroll`,`n_secondi`,`template`,`schema_html`,`se_ovunque`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_sito`,`nome`,`html_id`,`html_class`,`html_class_attivazione`,`n_scroll`,`n_secondi`,`template`,`schema_html`,`se_ovunque`);
 
 --| 030000024001
 
@@ -1520,6 +1385,8 @@ ALTER TABLE `popup_pagine`
 	ADD KEY `id_popup` (`id_popup`), 
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `se_presente` (`se_presente`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_pagina`,`id_popup`,`se_presente`);
 
 --| 030000024201
@@ -1542,6 +1409,8 @@ ALTER TABLE `prezzi`
 	ADD KEY `id_listino` (`id_listino`),
 	ADD KEY `id_iva` (`id_iva`),
 	ADD KEY `prezzo` (`prezzo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_prodotto`,`id_articolo`,`prezzo`,`id_listino`,`id_iva`),
 	ADD KEY `indice_prodotti` (`id`,`id_prodotto`,`prezzo`,`id_listino`,`id_iva`),
 	ADD KEY `indice_articoli` (`id`,`id_articolo`,`prezzo`,`id_listino`,`id_iva`);
@@ -1564,6 +1433,8 @@ ALTER TABLE `prodotti`
 	ADD KEY `id_produttore` (`id_produttore`), 	
 	ADD KEY `nome` (`nome`), 	
 	ADD KEY `codice_produttore` (`codice_produttore`), 	
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_marchio`,`id_produttore`,`nome`,`codice_produttore`);
 
 --| 030000026200
@@ -1573,11 +1444,13 @@ ALTER TABLE `prodotti`
 -- verifica: 2021-10-04 19:26 Fabio Mosti
 ALTER TABLE `prodotti_caratteristiche`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `id_prodotto` (`id_prodotto`,`id_caratteristica`), 
+	ADD UNIQUE KEY `unica` (`id_prodotto`,`id_caratteristica`), 
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `se_assente` (`se_assente`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`,`se_assente`);
 
 --| 030000026201
@@ -1598,6 +1471,8 @@ ALTER TABLE `prodotti_categorie`
 	ADD KEY `id_categoria` (`id_categoria`), 
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_prodotto`,`id_categoria`,`id_ruolo`,`ordine`);
 
 --| 030000026401
@@ -1621,6 +1496,8 @@ ALTER TABLE `progetti`
 	ADD KEY `data_accettazione` (`data_accettazione`),
 	ADD KEY `data_chiusura` (`data_chiusura`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`nome`,`data_accettazione`,`data_chiusura`,`data_archiviazione`);
 
 --| 030000027200
@@ -1635,6 +1512,8 @@ ALTER TABLE `progetti_anagrafica`
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_progetto`,`id_anagrafica`,`id_ruolo`,`ordine`);
 
 --| 030000027201
@@ -1654,6 +1533,8 @@ ALTER TABLE `progetti_categorie`
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_categoria` (`id_categoria`), 
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_progetto`,`id_categoria`,`ordine`);
 
 --| 030000027401
@@ -1685,27 +1566,31 @@ ALTER TABLE `provincie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000028400
 
--- pubblicazione
+-- pubblicazioni
 -- tipologia: tabella gestita
 -- verifica: 2021-10-08 16:40 Fabio Mosti
-ALTER TABLE `pubblicazione`
+ALTER TABLE `pubblicazioni`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_prodotto` (`id_prodotto`);
-	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
-	ADD KEY `id_notizia` (`id_notizia`);
-	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
 	ADD KEY `id_pagina` (`id_pagina`), 
 	ADD KEY `id_popup` (`id_popup`), 
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
 	ADD KEY `timestamp_inizio` (`timestamp_inizio`), 
-	ADD KEY `timestamp_fine` (`timestamp_fine`), 
+	ADD KEY `timestamp_fine` (`timestamp_fine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_prodotto`,`id_categoria_prodotti`,`id_notizia`,`id_categoria_notizie`,`id_pagina`,`id_popup`,`timestamp_inizio`,`timestamp_fine`);
 
 --| 030000028401
 
--- pubblicazione
+-- pubblicazioni
 -- tipologia: tabella gestita
-ALTER TABLE `pubblicazione` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pubblicazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000028600
 
@@ -1728,29 +1613,6 @@ ALTER TABLE `ranking`
 -- verifica: 2021-10-11 17:48 Fabio Mosti
 ALTER TABLE `ranking` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000028800
-
--- recensioni
--- tipologia: tabella gestita
--- verifica: 2021-10-08 16:40 Fabio Mosti
-ALTER TABLE `recensioni`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_lingua` (`id_lingua`), 
-	ADD KEY `id_prodotto` (`id_prodotto`), 
-	ADD KEY `id_articolo` (`id_articolo`), 
-	ADD KEY `timestamp_recensione` (`timestamp_recensione`), 
-	ADD KEY `valutazione` (`valutazione`), 
-	ADD KEY `se_approvata` (`se_approvata`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_lingua`,`id_prodotto`,`id_articolo`,`autore`,`titolo`,`valutazione`,`se_approvata`);
-
---| 030000028801
-
--- recensioni
--- tipologia: tabella gestita
-ALTER TABLE `recensioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --| 030000029400
 
 -- redirect
@@ -1758,8 +1620,10 @@ ALTER TABLE `recensioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 14:43 Fabio Mosti
 ALTER TABLE `redirect`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_sito`,`sorgente`);
-	ADD KEY `id_sito` (`id_sito`), 
+	ADD UNIQUE KEY `unica` (`id_sito`,`sorgente`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`codice`,`sorgente`,`destinazione`); 
 
 --| 030000029401
@@ -1773,9 +1637,9 @@ ALTER TABLE `redirect` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- regimi
 -- tipologia: tabella di supporto
 -- verifica: 2021-10-09 15:04 Fabio Mosti
-ALTER TABLE `redirect`
+ALTER TABLE `regimi`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`);
+	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `indice` (`id`,`nome`,`codice`); 
 
 --| 030000029801
@@ -1811,6 +1675,8 @@ ALTER TABLE `reparti`
 	ADD KEY `id_iva` (`id_iva`), 
 	ADD KEY `id_settore` (`id_settore`), 
 	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_iva`,`id_settore`,`nome`);
 
 --| 030000030801
@@ -1853,6 +1719,8 @@ ALTER TABLE `risorse_anagrafica`
 	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_risorsa`,`id_anagrafica`,`id_ruolo`,`ordine`);
 
 --| 030000032201
@@ -1868,9 +1736,11 @@ ALTER TABLE `risorse_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 17:48 Fabio Mosti
 ALTER TABLE `risorse_categorie`
 	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_risorsa` (`id_risorsa`);
+	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_categoria` (`id_categoria`), 
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_risorsa`,`id_categoria`,`ordine`);
 
 --| 030000032401
@@ -1909,15 +1779,15 @@ ALTER TABLE `ruoli_audio`
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
+	ADD KEY `se_pagine` (`se_pagine`), 
 	ADD KEY `se_prodotti` (`se_prodotti`), 
 	ADD KEY `se_articoli` (`se_articoli`), 
 	ADD KEY `se_categorie_prodotti` (`se_categorie_prodotti`), 
+	ADD KEY `se_notizie` (`se_notizie`), 
+	ADD KEY `se_categorie_notizie` (`se_categorie_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
-	ADD KEY `se_progetti` (`se_progetti`), 
-	ADD KEY `se_categorie_progetti` (`se_categorie_progetti`), 
-	ADD KEY `se_pagine` (`se_pagine`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_anagrafica`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_risorse`,`se_categorie_risorse`,`se_progetti`,`se_categorie_progetti`,`se_pagine`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
 --| 030000034201
 
@@ -1935,15 +1805,16 @@ ALTER TABLE `ruoli_file`
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
+	ADD KEY `se_pagine` (`se_pagine`), 
+	ADD KEY `se_template` (`se_template`), 
 	ADD KEY `se_prodotti` (`se_prodotti`), 
 	ADD KEY `se_articoli` (`se_articoli`), 
 	ADD KEY `se_categorie_prodotti` (`se_categorie_prodotti`), 
+	ADD KEY `se_notizie` (`se_notizie`), 
+	ADD KEY `se_categorie_notizie` (`se_categorie_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
-	ADD KEY `se_progetti` (`se_progetti`), 
-	ADD KEY `se_categorie_progetti` (`se_categorie_progetti`), 
-	ADD KEY `se_pagine` (`se_pagine`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_anagrafica`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_risorse`,`se_categorie_risorse`,`se_progetti`,`se_categorie_progetti`,`se_pagine`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
 --| 030000034401
 
@@ -1962,15 +1833,15 @@ ALTER TABLE `ruoli_immagini`
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `ordine_scalamento` (`ordine_scalamento`), 
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
+	ADD KEY `se_pagine` (`se_pagine`), 
 	ADD KEY `se_prodotti` (`se_prodotti`), 
 	ADD KEY `se_articoli` (`se_articoli`), 
 	ADD KEY `se_categorie_prodotti` (`se_categorie_prodotti`), 
+	ADD KEY `se_notizie` (`se_notizie`), 
+	ADD KEY `se_categorie_notizie` (`se_categorie_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
-	ADD KEY `se_progetti` (`se_progetti`), 
-	ADD KEY `se_categorie_progetti` (`se_categorie_progetti`), 
-	ADD KEY `se_pagine` (`se_pagine`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine_scalamento`,`nome`,`se_anagrafica`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_risorse`,`se_categorie_risorse`,`se_progetti`,`se_categorie_progetti`,`se_pagine`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine_scalamento`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
 --| 030000034601
 
@@ -2024,17 +1895,17 @@ ALTER TABLE `ruoli_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `ruoli_video`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`nome`),
-	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
+	ADD KEY `se_pagine` (`se_pagine`), 
 	ADD KEY `se_prodotti` (`se_prodotti`), 
 	ADD KEY `se_articoli` (`se_articoli`), 
 	ADD KEY `se_categorie_prodotti` (`se_categorie_prodotti`), 
+	ADD KEY `se_notizie` (`se_notizie`), 
+	ADD KEY `se_categorie_notizie` (`se_categorie_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
-	ADD KEY `se_progetti` (`se_progetti`), 
-	ADD KEY `se_categorie_progetti` (`se_categorie_progetti`), 
-	ADD KEY `se_pagine` (`se_pagine`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_anagrafica`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_risorse`,`se_categorie_risorse`,`se_progetti`,`se_categorie_progetti`,`se_pagine`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
 --| 030000035201
 
@@ -2097,12 +1968,6 @@ ALTER TABLE `sms_sent`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
 	ADD KEY `indice` (`id`,`id_telefono`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
 
---| 030000041201
-
--- sms_sent
--- tipologia: tabella di supporto
-ALTER TABLE `sms_sent` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --| 030000042000
 
 -- stati
@@ -2129,11 +1994,11 @@ ALTER TABLE `stati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-12 15:42 Fabio Mosti
 ALTER TABLE `stati_lingue`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY (`id_stato`,`id_lingua`),
+	ADD UNIQUE KEY `unica` (`id_stato`,`id_lingua`),
 	ADD KEY `id_stato` (`id_stato`),
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `indice` (`id`,`id_stato`,`id_lingua`,`ordine`)
+	ADD KEY `indice` (`id`,`id_stato`,`id_lingua`,`ordine`);
 
 --| 030000042201
 
@@ -2219,6 +2084,8 @@ ALTER TABLE `tipologie_anagrafica`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`);
 
 --| 030000050001
@@ -2282,7 +2149,7 @@ ALTER TABLE `tipologie_documenti`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_documento_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
 
 --| 030000052601
 
@@ -2498,27 +2365,6 @@ ALTER TABLE `tipologie_todo`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000057000
-
--- tipologie_udm
--- tipologia: tabella assistita
--- verifica: 2021-10-15 16:17 Fabio Mosti
-ALTER TABLE `tipologie_udm`
-	ADD PRIMARY KEY (`id`),
-  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
-	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `ordine` (`ordine`),
-	ADD KEY `nome` (`nome`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
-
---| 030000057001
-
--- tipologie_udm
--- tipologia: tabella assistita
-ALTER TABLE `tipologie_udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 --| 030000060000
 
 -- todo
@@ -2551,16 +2397,36 @@ ALTER TABLE `todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-19 13:02 Fabio Mosti
 ALTER TABLE `udm`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_udm`,`sigla`),
-	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_udm` (`id_udm`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_udm`,`conversione`,`nome`,`sigla`);
+	ADD UNIQUE KEY `unica` (`id_genitore`,`sigla`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`conversione`,`nome`,`sigla`,`se_lunghezza`,`se_peso`,`se_quantita`);
 
 --| 030000062001
 
 -- udm
 -- tipologia: tabella di supporto
 ALTER TABLE `udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000062600
+
+-- url
+-- tipologia: tabella gestita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+ALTER TABLE `todo`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_genitore`,`sigla`),
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `url` (`url`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`url`); 
+
+--| 030000062601
+
+-- url
+-- tipologia: tabella di supporto
+ALTER TABLE `url` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000063000
 
@@ -2570,7 +2436,7 @@ ALTER TABLE `udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `valute`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`iso4217`),
-	ADD KEY `indice` (`id`,`iso4217`,`html`,`utf8`);
+	ADD KEY `indice` (`id`,`iso4217`,`html_entity`,`utf8`);
 
 --| 030000063001
 
@@ -2585,16 +2451,16 @@ ALTER TABLE `valute` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-19 15:31 Fabio Mosti
 ALTER TABLE `video`
  	ADD PRIMARY KEY (`id`), 
- 	ADD UNIQUE KEY `anagrafica_unico` (`id_anagrafica`,`path`), 
- 	ADD UNIQUE KEY `pagina_unico` (`id_pagina`,`path`), 
- 	ADD UNIQUE KEY `file_unico` (`id_file`,`path`), 
- 	ADD UNIQUE KEY `prodotto_unico` (`id_prodotto`,`path`), 
- 	ADD UNIQUE KEY `articolo_unico` (`id_articolo`,`path`), 
- 	ADD UNIQUE KEY `categoria_prodotti_unico` (`id_categoria_prodotti`,`path`), 
- 	ADD UNIQUE KEY `risorsa_unico` (`id_risorsa`,`path`), 
- 	ADD UNIQUE KEY `categoria_risorse_unico` (`id_categoria_risorse`,`path`), 
- 	ADD UNIQUE KEY `notizia_unico` (`id_notizia`,`path`), 
- 	ADD UNIQUE KEY `categoria_notizie_unico` (`id_categoria_notizie`,`path`), 
+ 	ADD UNIQUE KEY `unica_anagrafica` (`id_anagrafica`,`id_ruolo`,`id_lingua`,`path`), 
+ 	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_ruolo`,`id_lingua`,`path`), 
+ 	ADD UNIQUE KEY `unica_file` (`id_file`,`id_ruolo`,`id_lingua`,`path`), 
+ 	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_ruolo`,`id_lingua`,`path`), 
+ 	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_ruolo`,`id_lingua`,`path`), 
+ 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_ruolo`,`id_lingua`,`path`), 
+ 	ADD UNIQUE KEY `unica_risorse` (`id_risorsa`,`id_ruolo`,`id_lingua`,`path`), 
+ 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_ruolo`,`id_lingua`,`path`), 
+ 	ADD UNIQUE KEY `unica_notizie` (`id_notizia`,`id_ruolo`,`id_lingua`,`path`), 
+ 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_ruolo`,`id_lingua`,`path`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
  	ADD KEY `id_pagina` (`id_pagina`), 
  	ADD KEY `id_file` (`id_file`), 

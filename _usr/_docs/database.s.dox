@@ -197,7 +197,7 @@
        
     stati_lingue
     ------------
-    Questa tabella di *supporto* mette in relazione molti a molti l'entità principale *stati* con l'entità
+    Questa tabella *standard* mette in relazione molti a molti l'entità principale *stati* con l'entità
     subordinata *lingue*.
 
     colonna                             | descrizione

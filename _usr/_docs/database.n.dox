@@ -13,29 +13,37 @@
     Questa entità descrive non soltanto le notizie propriamente intese ma tutti i contenuti a tempo in generale, quindi anche
     post di blog, annunci, e simili.
 
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    notizie.id                        | l'ID della notizia
-    notizie.id_tipologia              | l'ID della tipologia della notizia
-    notizie.nome                      | il titolo della notizia
-    notizie.note                      | note aggiuntive sulla notizia
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    notizie.id                          | l'ID della notizia
+    notizie.id_tipologia                | l'ID della tipologia della notizia
+    notizie.nome                        | il titolo della notizia
+    notizie.note                        | note aggiuntive sulla notizia
+    notizie.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    notizie.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    notizie.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    notizie.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo                 | tabella e campo collegati     | comportamento
-    ------------------------------------|-----------------------|-------------------------------|----------------------
-    notizie_ibfk_01_nofollow            | id_tipologia          | tipologie_notizie.id          | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                              | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------------|-------------------------------|----------------------
+    notizie_ibfk_01_nofollow            | id_tipologia                  | tipologie_notizie.id          | ON DELETE NO ACTION ON UPDATE NO ACTION
+    notizie_ibfk_98_nofollow            | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    notizie_ibfk_99_nofollow            | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *notizie_view* relativa alla tabella *notizie* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    notizie_view.id                      | -
-    notizie_view.id_tipologia            | -
-    notizie_view.tipologia               | la tipologia della notizia
-    notizie_view.nome                    | -
-    notizie_view.categorie               | le categorie cui appartiene la notizia
-    notizie_view.__label__               | l'etichetta descrittiva della notizia
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    notizie_view.id                         | -
+    notizie_view.id_tipologia               | -
+    notizie_view.tipologia                  | la tipologia della notizia
+    notizie_view.nome                       | -
+    notizie_view.categorie                  | le categorie cui appartiene la notizia
+    notizie_view.id_account_inserimento     | -
+    notizie_view.id_account_aggiornamento   | -
+    notizie_view.__label__                  | l'etichetta descrittiva della notizia
     
     notizie_categorie
     -----------------
@@ -48,24 +56,32 @@
     notizie_categorie.id_notizia                | l'ID della notizia
     notizie_categorie.id_categoria              | l'ID della categoria
     notizie_categorie.ordine                    | campo di ordinamento
+    notizie_categorie.id_account_inserimento    | l'ID dell'account che ha inserito la riga
+    notizie_categorie.timestamp_inserimento     | la timestamp dell'inserimento della riga
+    notizie_categorie.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
+    notizie_categorie.timestamp_aggiornamento   | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo                 | tabella e campo collegati     | comportamento
-    ------------------------------------|-----------------------|-------------------------------|----------------------
-    notizie_categorie_ibfk_01           | id_notizia            | notizie.id                    | ON DELETE CASCADE ON UPDATE CASCADE
-    notizie_categorie_ibfk_02           | id_categoria          | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                              | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------------|-------------------------------|----------------------
+    notizie_categorie_ibfk_01           | id_notizia                    | notizie.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    notizie_categorie_ibfk_02           | id_categoria                  | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    notizie_categorie_ibfk_98_nofollow  | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    notizie_categorie_ibfk_99_nofollow  | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *notizie_categorie_view* relativa alla tabella *notizie_categorie* presenta le seguenti colonne:
 
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    notizie_categorie_view.id               | -
-    notizie_categorie_view.id_notizia       | -
-    notizie_categorie_view.id_notizia       | la notizia
-    notizie_categorie_view.id_categoria     | -
-    notizie_categorie_view.id_categoria     | la categoria
-    notizie_categorie_view.ordine           | -
-    notizie_categorie_view.ordine           | etichetta descrittiva dell'associazione fra notizia e categoria
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    notizie_categorie_view.id                           | -
+    notizie_categorie_view.id_notizia                   | -
+    notizie_categorie_view.id_notizia                   | la notizia
+    notizie_categorie_view.id_categoria                 | -
+    notizie_categorie_view.id_categoria                 | la categoria
+    notizie_categorie_view.ordine                       | -
+    notizie_categorie_view.id_account_inserimento       | -
+    notizie_categorie_view.id_account_aggiornamento     | -
+    notizie_categorie_view.__label__                    | etichetta descrittiva dell'associazione fra notizia e categoria
 
  */

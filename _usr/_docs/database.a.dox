@@ -188,7 +188,7 @@
     anagrafica.partita_iva                          | la partita IVA dell'anagrafica
     anagrafica.codice_sdi                           | il codice SDI per la fatturazione elettronica dell'anagrafica
     anagrafica.id_pec_sdi                           | l'ID della casella PEC per la fatturazione elettronica dell'anagrafica
-    anagrafica.id_regime_fiscale                    | l'ID del regime fiscale dell'anagrafica
+    anagrafica.id_regime                            | l'ID del regime fiscale dell'anagrafica
     anagrafica.note_amministrative                  | le note amministrative relative all'anagrafica
     anagrafica.luogo_nascita                        | il luogo di nascita dell'anagrafica
     anagrafica.stato_nascita                        | lo stato di nascita dell'anagrafica
@@ -235,9 +235,9 @@
     colonna                                                | descrizione
     -------------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica_view.id                                     | l'ID dell'anagrafica
+    anagrafica_view.tipologia                              | la tipologia associata all'anagrafica
     anagrafica_view.codice                                 | il codice parlante dell'anagrafica (codice cliente, codice fornitore, matricola dipendente, eccetera)
     anagrafica_view.riferimento                            | -
-    anagrafica_view.tipologia                              | la tipologia associata all'anagrafica
     anagrafica_view.nome                                   | il nome per le persone fisiche
     anagrafica_view.cognome                                | il cognome per le persone fisiche
     anagrafica_view.denominazione                          | la denominazione per le persone giuridiche
@@ -451,32 +451,38 @@
     Questa tabella *gestita* descrive gli articoli di catalogo intesi come varianti di prodotto. Gli articoli sono l'entità che viene movimentata nei magazzini e che
     può essere collegata ai documenti amministrativi, laddove il prodotto invece non descrivendo un oggetto del mondo reale non può essere utilizzato.
 
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    articoli.id                                  | l'ID dell'articolo, costituito dal codice articolo (la colonna non è auto incrementante)
-    articoli.id_prodotto                         | l'ID del prodotto cui appartiene l'articolo
-    articoli.ordine                              | campo di ordinamento
-    articoli.ean                                 | il codice EAN dell'articolo
-    articoli.isbn                                | il codice ISBN dell'articolo
-    articoli.id_reparto                          | l'ID del reparto di default dell'articolo
-    articoli.id_taglia                           | l'ID della taglia
-    articoli.id_colore                           | l'ID del colore
-    articoli.larghezza                           | la larghezza dell'articolo, in millimetri
-    articoli.lunghezza                           | la lunghezza dell'articolo, in millimetri
-    articoli.altezza                             | l'altezza dell'articolo, in millimetri
-    articoli.peso                                | il peso dell'articolo, in grammi
-    articoli.volume                              | il volume dell'articolo in millimetri cubi
-    articoli.capacita                            | la capacità dell'articolo in millilitri
-    articoli.nome                                | il nome dell'articolo, a uso interno
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    articoli.id                                 | l'ID dell'articolo, costituito dal codice articolo (la colonna non è auto incrementante)
+    articoli.id_prodotto                        | l'ID del prodotto cui appartiene l'articolo
+    articoli.ordine                             | campo di ordinamento
+    articoli.ean                                | il codice EAN dell'articolo
+    articoli.isbn                               | il codice ISBN dell'articolo
+    articoli.id_reparto                         | l'ID del reparto di default dell'articolo
+    articoli.id_taglia                          | l'ID della taglia
+    articoli.id_colore                          | l'ID del colore
+    articoli.larghezza                          | la larghezza dell'articolo, in millimetri
+    articoli.lunghezza                          | la lunghezza dell'articolo, in millimetri
+    articoli.altezza                            | l'altezza dell'articolo, in millimetri
+    articoli.peso                               | il peso dell'articolo, in grammi
+    articoli.volume                             | il volume dell'articolo in millimetri cubi
+    articoli.capacita                           | la capacità dell'articolo in millilitri
+    articoli.nome                               | il nome dell'articolo, a uso interno
+    articoli.id_account_inserimento             | l'ID dell'account che ha inserito la riga
+    articoli.timestamp_inserimento              | la timestamp dell'inserimento della riga
+    articoli.id_account_aggiornamento           | l'ID dell'ultimo account che ha modificato la riga
+    articoli.timestamp_aggiornamento            | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                      | campo                 | tabella e campo collegati         | comportamento
-    --------------------------------------------|-----------------------|-----------------------------------|------------------
-    articoli_ibfk_01_nofollow                   | id_prodotto           | prodotti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
-    articoli_ibfk_02_nofollow                   | id_reparto            | reparti.id                        | ON DELETE SET NULL ON UPDATE SET NULL
-    articoli_ibfk_03_nofollow                   | id_taglia             | taglie.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    articoli_ibfk_04_nofollow                   | id_colore             | colori.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                                      | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------------------|-------------------------------|-----------------------------------|------------------
+    articoli_ibfk_01_nofollow                   | id_prodotto                   | prodotti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_ibfk_02_nofollow                   | id_reparto                    | reparti.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    articoli_ibfk_03_nofollow                   | id_taglia                     | taglie.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_ibfk_04_nofollow                   | id_colore                     | colori.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_ibfk_98_nofollow                   | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    articoli_ibfk_99_nofollow                   | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *articoli_view* relativa alla tabella *articoli* presenta le seguenti colonne:
 
@@ -497,28 +503,36 @@
     articoli_view.volume                              | -
     articoli_view.capacita                            | -
     articoli_view.nome                                | -
+    articoli_view.id_account_inserimento              | -
+    articoli_view.id_account_aggiornamento            | -
     articoli_view.__label__                           | l'etichetta descrittiva dell'articolo
 
     articoli_caratteristiche
     ------------------------
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *articoli* con l'entità secondaria *caratteristiche_articoli*.
 
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    articoli_caratteristiche.id                  | l'ID dell'associazione fra articolo e caratteristica
-    articoli_caratteristiche.id_articolo         | l'ID dell'articolo
-    articoli_caratteristiche.id_caratteristica   | l'ID della caratteristica
-    articoli_caratteristiche.ordine              | campo di ordinamento
-    articoli_caratteristiche.valore              | il valore numerico della caratteristica associata all'articolo
-    articoli_caratteristiche.note                | note relative all'associazione fra articolo e caratteristica
-    articoli_caratteristiche.se_assente          | flag che indica se la caratteristica è da considerare presente (NULL) o assente (NOT NULL)
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    articoli_caratteristiche.id                             | l'ID dell'associazione fra articolo e caratteristica
+    articoli_caratteristiche.id_articolo                    | l'ID dell'articolo
+    articoli_caratteristiche.id_caratteristica              | l'ID della caratteristica
+    articoli_caratteristiche.ordine                         | campo di ordinamento
+    articoli_caratteristiche.valore                         | il valore numerico della caratteristica associata all'articolo
+    articoli_caratteristiche.note                           | note relative all'associazione fra articolo e caratteristica
+    articoli_caratteristiche.se_assente                     | flag che indica se la caratteristica è da considerare presente (NULL) o assente (NOT NULL)
+    articoli_caratteristiche.id_account_inserimento         | l'ID dell'account che ha inserito la riga
+    articoli_caratteristiche.timestamp_inserimento          | la timestamp dell'inserimento della riga
+    articoli_caratteristiche.id_account_aggiornamento       | l'ID dell'ultimo account che ha modificato la riga
+    articoli_caratteristiche.timestamp_aggiornamento        | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                      | campo                     | tabella e campo collegati     | comportamento
-    --------------------------------------------|---------------------------|-------------------------------|----------------------
-    articoli_caratteristiche_ibfk_01            | id_articolo               | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    articoli_caratteristiche_ibfk_02_nofollow   | id_caratteristica         | caratteristiche_prodotti.id   | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    articoli_caratteristiche_ibfk_01            | id_articolo                   | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_caratteristiche_ibfk_02_nofollow   | id_caratteristica             | caratteristiche_prodotti.id   | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_caratteristiche_ibfk_98_nofollow   | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    articoli_caratteristiche_ibfk_99_nofollow   | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *articoli_caratteristiche_view* relativa alla tabella *articoli_caratteristiche* presenta le seguenti colonne:
 
@@ -530,50 +544,52 @@
     articoli_caratteristiche_view.ordine                   | -
     articoli_caratteristiche_view.valore                   | -
     articoli_caratteristiche_view.se_assente               | -
+    articoli_caratteristiche_view.id_account_inserimento   | -
+    articoli_caratteristiche_view.id_account_aggiornamento | -
     articoli_caratteristiche_view.__label__                | etichetta descrittiva dell'associazione fra articolo e caratteristica
  
     attivita
     --------
     Questa tabella *gestita* descrive le attività intese come eventi significativi relativi ad altre entità oppure in sé stessi.
 
-    colonna                                              | descrizione
-    -----------------------------------------------------|---------------------------------------------------------------------------------------
-    attivita.id                                          | l'ID dell'attività
-    attivita.id_tipologia                                | l'ID della tipologia
-    attivita.id_anagrafica                               | l'ID dell'anagrafica che svolge l'attività
-    attivita.id_cliente                                  | l'ID del cliente a cui è riferita l'attività
-    attivita.referenti                                   | testo descrittivo del referente (lato cliente) per l'attività
-    attivita.id_indirizzo                                | l'ID dell'indirizzo dove è svolta l'attività
-    attivita.id_luogo                                    | l'ID del luogo dove è svolta l'attività
-    attivita.data_scadenza                               | data entro la quale va svolta l'attività
-    attivita.ora_scadenza                                | l'ora entro la quale va svolta l'attività
-    attivita.note_scadenza                               | note relative alla data e ora entro le quali va svolta l'attività
-    attivita.data_programmazione                         | la data in cui è programmata l'esecuzione dell'attività
-    attivita.ora_inizio_programmazione                   | l'ora in cui è programmato l'inizio dell'esecuzione dell'attività
-    attivita.ora_fine_programmazione                     | l'ora in cui è programmata la fine dell'esecuzione dell'attività
-    attivita.note_programmazione                         | note relative alla data e ora in cui è programmata l'esecuzione dell'attività
-    attivita.ore_programmazione                          | numero di ore uomo previste per l'esecuzione dell'attività
-    attivita.data_attivita                               | la data in cui si svolge l'attività
-    attivita.ora_inizio                                  | l'ora in cui inizia l'attività
-	attivita.latitudine_ora_inizio                       | la latitudine associata all'invio dell'orario di inizio attività
-	attivita.longitudine_ora_inizio                      | la longitudine associata all'invio dell'orario di inizio attività
-    attivita.ora_fine                                    | l'ora in cui termina l'attività
-	attivita.latitudine_ora_fine                         | la latitudine associata all'invio dell'orario di fine attività
-	attivita.longitudine_ora_fine                        | la longitudine associata all'invio dell'orario di fine attività
-    attivita.ore                                         | numero di ore uomo impiegate per l'esecuzione dell'attività
-    attivita.nome                                        | descrizione sintetica dell'attività
-    attivita.testo                                       | descrizione estesa dell'attività
-    attivita.id_progetto                                 | l'ID del progetto cui è riferita l'attività
-    attivita.id_todo                                     | l'ID della todo cui si riferisce l'attività
-    attivita.id_campagna                                 | l'ID della campagna marketing cui è riferita l'attività
-    attivita.id_immobile                                 | l'ID dell'immobile
-    attivita.id_richiesta                                | l'ID della richiesta
-    attivita.id_todo_articoli                            | -
-    attivita.id_mastro_provenienza                       | mastro dal quale viene sottratto il valore del campo ore
-    attivita.id_mastro_destinazione                      | mastro al quale viene aggiunto il valore del campo ore
-    attivita.token                                       | token per il lock software della riga nelle elaborazioni automatiche
-    attivita.timestamp_calcolo_sostituti                 | la timestamp del momento in cui la riga di attività è stata analizzata per il calcolo dei sostituti
-     
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita.id                                         | l'ID dell'attività
+    attivita.id_tipologia                               | l'ID della tipologia
+    attivita.id_anagrafica                              | l'ID dell'anagrafica che svolge l'attività
+    attivita.id_cliente                                 | l'ID del cliente a cui è riferita l'attività
+    attivita.referenti                                  | testo descrittivo del referente (lato cliente) per l'attività
+    attivita.id_indirizzo                               | l'ID dell'indirizzo dove è svolta l'attività
+    attivita.id_luogo                                   | l'ID del luogo dove è svolta l'attività
+    attivita.data_scadenza                              | data entro la quale va svolta l'attività
+    attivita.ora_scadenza                               | l'ora entro la quale va svolta l'attività
+    attivita.note_scadenza                              | note relative alla data e ora entro le quali va svolta l'attività
+    attivita.data_programmazione                        | la data in cui è programmata l'esecuzione dell'attività
+    attivita.ora_inizio_programmazione                  | l'ora in cui è programmato l'inizio dell'esecuzione dell'attività
+    attivita.ora_fine_programmazione                    | l'ora in cui è programmata la fine dell'esecuzione dell'attività
+    attivita.note_programmazione                        | note relative alla data e ora in cui è programmata l'esecuzione dell'attività
+    attivita.ore_programmazione                         | numero di ore uomo previste per l'esecuzione dell'attività
+    attivita.data_attivita                              | la data in cui si svolge l'attività
+    attivita.ora_inizio                                 | l'ora in cui inizia l'attività
+	attivita.latitudine_ora_inizio                      | la latitudine associata all'invio dell'orario di inizio attività
+	attivita.longitudine_ora_inizio                     | la longitudine associata all'invio dell'orario di inizio attività
+    attivita.ora_fine                                   | l'ora in cui termina l'attività
+	attivita.latitudine_ora_fine                        | la latitudine associata all'invio dell'orario di fine attività
+	attivita.longitudine_ora_fine                       | la longitudine associata all'invio dell'orario di fine attività
+    attivita.ore                                        | numero di ore uomo impiegate per l'esecuzione dell'attività
+    attivita.nome                                       | descrizione sintetica dell'attività
+    attivita.testo                                      | descrizione estesa dell'attività
+    attivita.id_progetto                                | l'ID del progetto cui è riferita l'attività
+    attivita.id_todo                                    | l'ID della todo cui si riferisce l'attività
+    attivita.id_mastro_provenienza                      | mastro dal quale viene sottratto il valore del campo ore
+    attivita.id_mastro_destinazione                     | mastro al quale viene aggiunto il valore del campo ore
+    attivita.token                                      | token per il lock software della riga nelle elaborazioni automatiche
+    attivita.timestamp_calcolo_sostituti                | la timestamp del momento in cui la riga di attività è stata analizzata per il calcolo dei sostituti
+    attivita.id_account_inserimento                     | l'ID dell'account che ha inserito la riga
+    attivita.timestamp_inserimento                      | la timestamp dell'inserimento della riga
+    attivita.id_account_aggiornamento                   | l'ID dell'ultimo account che ha modificato la riga
+    attivita.timestamp_aggiornamento                    | la timestamp dell'ultimo aggiornamento della riga
+
     La tabella ha le seguenti chiavi esterne:
 
     chiave                          | campo                         | tabella e campo collegati     | comportamento
@@ -585,12 +601,10 @@
     attivita_ibfk_05_nofollow       | id_luogo                      | luoghi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
     attivita_ibfk_06_nofollow       | id_progetto                   | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
     attivita_ibfk_07_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_08_nofollow       | id_campagna                   | campagne.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_09_nofollow       | id_immobile                   | immobili.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_10_nofollow       | id_richiesta                  | richieste_immobili.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_11_nofollow       | id_todo_articoli              | todo_articoli.id              | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_12_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_13_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_08_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_09_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_98_nofollow       | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *attivita_view* relativa alla tabella *attivita* presenta le seguenti colonne:
 
@@ -630,10 +644,6 @@
     attivita_view.progetto                          | il nome del progetto associato all'attività
     attivita_view.id_todo                           | -
     attivita_view AS todo                           | il nome della todo associata al progetto
-    attivita_view.id_campagna                       | -
-    attivita_view.id_immobile                       | -
-    attivita_view.id_richiesta                      | -
-    attivita_view.id_todo_articoli                  | -
     attivita_view.id_mastro_provenienza             | -
     attivita_view.mastro_provenienza                | il mastro da cui viene sottratto il valore del campo ore
     attivita_view.id_mastro_destinazione            | -
@@ -641,6 +651,8 @@
     attivita_view.se_ordinario                      | flag che indica se l'attività è riferita a un progetto ordinario
     attivita_view.se_straordinario                  | flag che indica se l'attività è riferita a un progetto straordinario
     attivita_view.token                             | -
+    attivita_view.id_account_inserimento            | -
+    attivita_view.id_account_aggiornamento          | -
     attivita_view.__label__                         | etichetta descrittiva dell'attività
 
     La tabella *attivita* è vincolata dalle ACL memorizzate sulla tabella *__acl_attivita__*.
@@ -649,27 +661,30 @@
     -----
     Questa tabella *gestita* descrive l'entità principale audio, ovvero i file audio caricati nel framework.
 
-    colonna                                              | descrizione
-    -----------------------------------------------------|---------------------------------------------------------------------------------------
-    audio.id                                             | l'ID dell'audio
-    audio.id_lingua                                      | l'ID della lingua in cui è registrato l'audio
-    audio.id_ruolo                                       | l'ID del ruolo dell'audio relativamente all'oggetto associato
-    audio.ordine                                         | campo di ordinamento
-    audio.path                                           | il percorso relativo del file audio
-    audio.codice_embed                                   | il codice di embed da usare per incorporare audio esterni
-    audio.id_tipologia_embed                             | l'ID della tipologia di embed da usare per l'inclusione di audio esterni
-    audio.nome                                           | il nome dell'audio, a uso interno
-    audio.target                                         | -
-    audio.id_anagrafica                                  | l'ID dell'anagrafica cui è associato l'audio
-    audio.id_pagina                                      | l'ID della pagina cui è associato l'audio
-    audio.id_file                                        | l'ID del file cui è associato l'audio
-    audio.id_risorsa                                     | l'ID della risorsa cui è associato l'audio
-    audio.id_prodotto                                    | l'ID del prodotto cui è associato l'audio
-    audio.id_categoria_prodotti                          | l'ID della categoria di prodotti cui è associato l'audio
-    audio.id_notizia                                     | l'ID della notizia cui è associato l'audio
-    audio.id_categoria_notizie                           | l'ID della categoria di notizie cui è associato l'audio
-    audio.id_evento                                      | l'ID dell'evento cui è associato l'audio
-    audio.id_categoria_eventi                            | l'ID della categoria degli eventi cui è associato l'audio
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    audio.id                                            | l'ID dell'audio
+    audio.id_lingua                                     | l'ID della lingua in cui è registrato l'audio
+    audio.id_ruolo                                      | l'ID del ruolo dell'audio relativamente all'oggetto associato
+    audio.ordine                                        | campo di ordinamento
+    audio.path                                          | il percorso relativo del file audio
+    audio.codice_embed                                  | il codice di embed da usare per incorporare audio esterni
+    audio.id_embed                                      | l'ID della modalità di embed da usare per l'inclusione di audio esterni
+    audio.nome                                          | il nome dell'audio, a uso interno
+    audio.target                                        | -
+    audio.id_anagrafica                                 | l'ID dell'anagrafica cui è associato l'audio
+    audio.id_pagina                                     | l'ID della pagina cui è associato l'audio
+    audio.id_file                                       | l'ID del file cui è associato l'audio
+    audio.id_risorsa                                    | l'ID della risorsa cui è associato l'audio
+    audio.id_prodotto                                   | l'ID del prodotto cui è associato l'audio
+    audio.id_articolo                                   | l'ID dell'articolo cui è associato l'audio
+    audio.id_categoria_prodotti                         | l'ID della categoria di prodotti cui è associato l'audio
+    audio.id_notizia                                    | l'ID della notizia cui è associato l'audio
+    audio.id_categoria_notizie                          | l'ID della categoria di notizie cui è associato l'audio
+    audio.id_account_inserimento                        | l'ID dell'account che ha inserito la riga
+    audio.timestamp_inserimento                         | la timestamp dell'inserimento della riga
+    audio.id_account_aggiornamento                      | l'ID dell'ultimo account che ha modificato la riga
+    audio.timestamp_aggiornamento                       | la timestamp dell'ultimo aggiornamento della riga
 
     Per gli audio caricati direttamente nella piattaforma ed embeddati con HTML5, si utilizza il campo *path*. Altrimenti va valorizzato il campo
     *codice_embed* che viene poi gestito dalla macro Twig di embed. Per le logiche relative all'erogazione dei file caricati nella piattaforma si veda
@@ -681,17 +696,18 @@
     ------------------------------------|---------------------------|-------------------------------|----------------------
     audio_ibfk_01_nofollow              | id_lingua                 | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     audio_ibfk_02_nofollow              | id_ruolo                  | ruoli_audio.id                | ON DELETE NO ACTION ON UPDATE NO ACTION
-    audio_ibfk_03_nofollow              | id_tipologia_embed        | tipologie_embed.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    audio_ibfk_03_nofollow              | id_embed                  | embed.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
     audio_ibfk_04                       | id_anagrafica             | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
     audio_ibfk_05                       | id_pagina                 | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
     audio_ibfk_06                       | id_file                   | file.id                       | ON DELETE SET NULL ON UPDATE SET NULL
     audio_ibfk_07                       | id_risorsa                | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     audio_ibfk_08                       | id_prodotto               | prodotti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
-    audio_ibfk_09                       | id_categoria_prodotti     | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
-    audio_ibfk_10                       | id_notizia                | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
-    audio_ibfk_11                       | id_categoria_notizie      | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
-    audio_ibfk_12                       | id_evento                 | eventi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
-    audio_ibfk_13                       | id_categoria_eventi       | categorie_eventi.id           | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_09                       | id_articolo               | articoli.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_10                       | id_categoria_prodotti     | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_11                       | id_notizia                | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_12                       | id_categoria_notizie      | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *audio_view* relativa alla tabella *audio* presenta le seguenti colonne:
 
@@ -705,8 +721,8 @@
     audio_view.ordine                               | -
     audio_view.path                                 | -
     audio_view.codice_embed                         | -
-    audio_view.id_tipologia_embed                   | -
-    audio_view.tipologia_embed                      | la tipologia di codice da utilizzare per l'embed di audio esterni
+    audio_view.id_embed                             | -
+    audio_view.embed                                | la modalità da utilizzare per l'embed di audio esterni
     audio_view.nome                                 | -
     audio_view.target                               | -
     audio_view.id_anagrafica                        | -
@@ -714,11 +730,12 @@
     audio_view.id_file                              | -
     audio_view.id_risorsa                           | -
     audio_view.id_prodotto                          | -
+    audio_view.id_articolo                          | -
     audio_view.id_categoria_prodotti                | -
     audio_view.id_notizia                           | -
     audio_view.id_categoria_notizie                 | -
-    audio_view.id_evento                            | -
-    audio_view.id_categoria_eventi                  | -
+    audio_view.id_account_inserimento               | -
+    audio_view.id_account_aggiornamento             | -
     audio_view.__label__                            | l'etichetta descrittiva dell'audio
 
 */

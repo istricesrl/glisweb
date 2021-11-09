@@ -40,56 +40,21 @@
     ranking_view.id_account_aggiornamento       | -
     ranking_view.__label__                      | etichetta descrittiva del ranking
 
-    recensioni
-    ----------
-    Questa tabella *gestita* contiene le recensioni collegate a varie entità principali del framework.
-
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
-    recensioni.id                          | l'ID della recensione
-    recensioni.id_lingua                   | l'ID della lingua della recensione
-    recensioni.id_prodotto                 | l'ID del prodotto cui si riferisce la recensione
-    recensioni.id_articolo                 | l'ID dell'articolo cui si riferisce la recensione
-    recensioni.timestamp_recensione        | la timestamp della recensione
-    recensioni.valutazione                 | la valutazione della recensione
-    recensioni.autore                      | l'autore della recensione
-    recensioni.titolo                      | il titolo della recensione
-    recensioni.testo                       | il testo della recensione
-    recensioni.se_approvata                | flag che indica se la recensione è approvata
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                              | campo                 | tabella e campo collegati     | comportamento
-    ------------------------------------|-----------------------|-------------------------------|------------------
-    recensioni_ibfk_01_nofollow         | id_prodotto           | prodotti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
-    recensioni_ibfk_02_nofollow         | id_lingua             | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-
-    La vista *recensioni_view* relativa alla tabella *recensioni* presenta le seguenti colonne:
-
-    colonna                                     | descrizione
-    --------------------------------------------|---------------------------------------------------------------------------------------
-    recensioni_view.id                          | -
-    recensioni_view.id_lingua                   | -
-    recensioni_view.id_prodotto                 | -
-    recensioni_view.id_articolo                 | -
-    recensioni_view.timestamp_recensione        | -
-    recensioni_view.valutazione                 | -
-    recensioni_view.autore                      | -
-    recensioni_view.titolo                      | -
-    recensioni_view.se_approvata                | -
-    recensioni_view.__label__                   | etichetta descrittiva della recensione
-
     redirect
     --------
     Questa tabella *gestita* contiene i redirect presenti nel deploy corrente.
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    redirect.id                          | l'ID del redirect
-    redirect.id_sito                     | l'ID del sito cui si applica il redirect (NULL per tutti i siti)
-    redirect.codice                      | il codice HTTP da lanciare con il redirect
-    redirect.sorgente                    | l'URL che innesca il redirect
-    redirect.destinazione                | l'URL di destinazione del redirect
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    redirect.id                         | l'ID del redirect
+    redirect.id_sito                    | l'ID del sito cui si applica il redirect (NULL per tutti i siti)
+    redirect.codice                     | il codice HTTP da lanciare con il redirect
+    redirect.sorgente                   | l'URL che innesca il redirect
+    redirect.destinazione               | l'URL di destinazione del redirect
+    redirect.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    redirect.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    redirect.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    redirect.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     \code{.sql}
     INSERT INTO `redirect` (`id`, `codice`, `sorgente`, `destinazione`) VALUES (NULL, '<code>', '<source>', '<target>');
@@ -98,22 +63,29 @@
     Si noti che il campo *id_sito* serve a discriminare i casi cui si applica il redirect in caso di sorgenti
     con lo stesso nome che si trovano in siti diversi.
 
-    La tabella non ha chiavi esterne.
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                         | tabella e campo collegati         | comportamento
+    ------------------------------------|-------------------------------|-----------------------------------|------------------
+    redirect_ibfk_98_nofollow           | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    redirect_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *redirect_view* relativa alla tabella *redirect* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    redirect.id                          | -
-    redirect.id_sito                     | -
-    redirect.codice                      | -
-    redirect.sorgente                    | -
-    redirect.destinazione                | -
-    redirect.__label__                   | etichetta descrittiva del redirect
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    redirect_view.id                        | -
+    redirect_view.id_sito                   | -
+    redirect_view.codice                    | -
+    redirect_view.sorgente                  | -
+    redirect_view.destinazione              | -
+    redirect_view.id_account_inserimento    | -
+    redirect_view.id_account_aggiornamento  | -
+    redirect_view.__label__                 | etichetta descrittiva del redirect
     
     regimi
     ------
-    Questa tabella *di supporto* contiene i regimi fiscali che possono essere applicati all'entità principale anagrafica.
+    Questa tabella *standard* contiene i regimi fiscali che possono essere applicati all'entità principale anagrafica.
 
     colonna                       | descrizione
     ------------------------------|---------------------------------------------------------------------------------------
@@ -134,7 +106,7 @@
     
     regioni
     -------
-    Questa tabella *di supporto* contiene le regioni, intese come entità di collegamento fra *provincie* e *stati*.
+    Questa tabella *standard* contiene le regioni, intese come entità di collegamento fra *provincie* e *stati*.
 
     colonna                        | descrizione
     -------------------------------|---------------------------------------------------------------------------------------
@@ -164,76 +136,92 @@
     -------
     Questa tabella *gestita* contiene i reparti intesi come divisioni contabili.
 
-    colonna                | descrizione
-    -----------------------|---------------------------------------------------------------------------------------
-    reparti.id             | l'ID del reparto
-    reparti.id_iva         | l'ID dell'aliquota IVA associata al reparto
-    reparti.id_settore     | l'ID del settore cui si riferisce il reparto
-    reparti.nome           | il nome del reparto
-    reparti.note           | note aggiuntive sul reparto
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    reparti.id                          | l'ID del reparto
+    reparti.id_iva                      | l'ID dell'aliquota IVA associata al reparto
+    reparti.id_settore                  | l'ID del settore cui si riferisce il reparto
+    reparti.nome                        | il nome del reparto
+    reparti.note                        | note aggiuntive sul reparto
+    reparti.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    reparti.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    reparti.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    reparti.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo                 | tabella e campo collegati     | comportamento
-    ------------------------------------|-----------------------|-------------------------------|------------------
-    reparti_ibfk_01_nofollow            | id_iva                | iva.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
-    reparti_ibfk_02_nofollow            | id_settore            | settori.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|------------------
+    reparti_ibfk_01_nofollow            | id_iva                    | iva.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    reparti_ibfk_02_nofollow            | id_settore                | settori.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    reparti_ibfk_98_nofollow            | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    reparti_ibfk_99_nofollow            | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *reparti_view* relativa alla tabella *reparti* presenta le seguenti colonne:
 
-    colonna                     | descrizione
-    ----------------------------|---------------------------------------------------------------------------------------
-    reparti_view.id             | -
-    reparti_view.id_iva         | -
-    reparti_view.iva            | l'aliquota IVA associata al reparto
-    reparti_view.id_settore     | -
-    reparti_view.settore        | il settore cui si riferisce il reparto
-    reparti_view.nome           | -
-    reparti_view.__label__      | etichetta descrittiva del reparto
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    reparti_view.id                         | -
+    reparti_view.id_iva                     | -
+    reparti_view.iva                        | l'aliquota IVA associata al reparto
+    reparti_view.id_settore                 | -
+    reparti_view.settore                    | il settore cui si riferisce il reparto
+    reparti_view.nome                       | -
+    reparti_view.id_account_inserimento     | -
+    reparti_view.id_account_aggiornamento   | -
+    reparti_view.__label__                  | etichetta descrittiva del reparto
 
     risorse
     -------
     Questa tabella *gestita* contiene le risorse documentali, intese come documenti o parti di documenti di varia natura
     (testi, audio, multimedia, eccetera) catalogati e individualmente identificabili.
 
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    risorse.id                                   | l'ID della risorsa
-    risorse.id_tipologia                         | l'ID della tipologia della risorsa
-    risorse.codice                               | il codice della risorsa
-    risorse.nome                                 | il nome della risorsa
-    risorse.note                                 | note aggiuntive sulla risorsa
-    risorse.id_testata                           | l'ID della testata su cui è stata pubblicata la risorsa
-    risorse.giorno_pubblicazione                 | il giorno di pubblicazione della risorsa
-    risorse.mese_pubblicazione                   | il mese di pubblicazione della risorsa
-    risorse.anno_pubblicazione                   | l'anno di pubblicazione della risorsa
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    risorse.id                                  | l'ID della risorsa
+    risorse.id_tipologia                        | l'ID della tipologia della risorsa
+    risorse.codice                              | il codice della risorsa
+    risorse.nome                                | il nome della risorsa
+    risorse.note                                | note aggiuntive sulla risorsa
+    risorse.id_testata                          | l'ID della testata su cui è stata pubblicata la risorsa
+    risorse.giorno_pubblicazione                | il giorno di pubblicazione della risorsa
+    risorse.mese_pubblicazione                  | il mese di pubblicazione della risorsa
+    risorse.anno_pubblicazione                  | l'anno di pubblicazione della risorsa
+    risorse.id_account_inserimento              | l'ID dell'account che ha inserito la riga
+    risorse.timestamp_inserimento               | la timestamp dell'inserimento della riga
+    risorse.id_account_aggiornamento            | l'ID dell'ultimo account che ha modificato la riga
+    risorse.timestamp_aggiornamento             | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo                 | tabella e campo collegati     | comportamento
-    ------------------------------------|-----------------------|-------------------------------|------------------
-    risorse_ibfk_01_nofollow            | id_tipologia          | tipologie_risorse.id          | ON DELETE NO ACTION ON UPDATE NO ACTION
-    risorse_ibfk_02_nofollow            | id_testata            | testate.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|------------------
+    risorse_ibfk_01_nofollow            | id_tipologia              | tipologie_risorse.id          | ON DELETE NO ACTION ON UPDATE NO ACTION
+    risorse_ibfk_02_nofollow            | id_testata                | testate.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    risorse_ibfk_98_nofollow            | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    risorse_ibfk_99_nofollow            | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *risorse_view* relativa alla tabella *risorse* presenta le seguenti colonne:
  
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    risorse_view.id                      | -
-    risorse_view.id_tipologia            | -
-    risorse_view.tipologia               | la tipologia della risorsa
-    risorse_view.codice                  | -
-    risorse_view.nome                    | -
-    risorse_view.id_testata              | -
-    risorse_view.testata                 | la testata su cui è stata pubblicata la risorsa
-    risorse_view.giorno_pubblicazione    | -
-    risorse_view.mese_pubblicazione      | -
-    risorse_view.anno_pubblicazione      | -
-    risorse_view.__label__               | etichetta descrittiva della risorsa
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    risorse_view.id                         | -
+    risorse_view.id_tipologia               | -
+    risorse_view.tipologia                  | la tipologia della risorsa
+    risorse_view.codice                     | -
+    risorse_view.nome                       | -
+    risorse_view.id_testata                 | -
+    risorse_view.testata                    | la testata su cui è stata pubblicata la risorsa
+    risorse_view.giorno_pubblicazione       | -
+    risorse_view.mese_pubblicazione         | -
+    risorse_view.anno_pubblicazione         | -
+    risorse_view.id_account_inserimento     | -
+    risorse_view.id_account_aggiornamento   | -
+    risorse_view.__label__                  | etichetta descrittiva della risorsa
     
     risorse_anagrafica
     ------------------
-    Questa tabella di *supporto* mette in relazione molti a molti l'entità principale *risorse* con l'entità secondaria *anagrafica*.
+    Questa tabella *standard* mette in relazione molti a molti l'entità principale *risorse* con l'entità secondaria *anagrafica*.
 
     colonna                                      | descrizione
     ---------------------------------------------|---------------------------------------------------------------------------------------
@@ -267,7 +255,7 @@
     
     risorse_categorie
     -----------------
-    Questa tabella di *supporto* mette in relazione molti a molti l'entità principale *risorse* con l'entità subordinata *categorie_risorse*.
+    Questa tabella *standard* mette in relazione molti a molti l'entità principale *risorse* con l'entità subordinata *categorie_risorse*.
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
@@ -297,7 +285,7 @@
     
     ruoli_anagrafica
     ----------------
-    Questa tabella di *supporto* contiene i ruoli che l'entità *anagrafica* può svolgere in relazione a diverse
+    Questa tabella *standard* contiene i ruoli che l'entità *anagrafica* può svolgere in relazione a diverse
     entità principali.
 
     colonna                                | descrizione
@@ -329,22 +317,24 @@
     
     ruoli_audio
     -----------
-    Questa tabella di *supporto* contiene i ruoli che l'entità *audio* può svolgere relativamente a diverse entità principali.
+    Questa tabella *standard* contiene i ruoli che l'entità *audio* può svolgere relativamente a diverse entità principali.
 
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_audio.id                         | l'ID del ruolo
-    ruoli_audio.id_genitore                | l'ID del ruolo genitore
-    ruoli_audio.nome                       | il nome del ruolo
-    ruoli_audio.se_anagrafica              | flag che indica se il ruolo è pertinente all'anagrafica
-    ruoli_audio.se_prodotti                | flag che indica se il ruolo è pertinente ai prodotti
-    ruoli_audio.se_articoli                | flag che indica se il ruolo è pertinente agli articoli
-    ruoli_audio.se_categorie_prodotti      | flag che indica se il ruolo è pertinente alle categorie di prodotti
-    ruoli_audio.se_risorse                 | flag che indica se il ruolo è pertinente alle risorse
-    ruoli_audio.se_categorie_risorse       | flag che indica se il ruolo è pertinente alle categorie di risorse
-    ruoli_audio.se_progetti                | flag che indica se il ruolo è pertinente ai progetti
-    ruoli_audio.se_categorie_progetti      | flag che indica se il ruolo è pertinente alle categorie di progetti
-    ruoli_audio.se_pagine                  | flag che indica se il ruolo è pertinente alle pagine
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_audio.id                          | l'ID del ruolo
+    ruoli_audio.id_genitore                 | l'ID del ruolo genitore
+    ruoli_audio.nome                        | il nome del ruolo
+    ruoli_audio.html_entity                 | entità HTML che rappresenta visivamente il ruolo
+    ruoli_audio.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente il ruolo
+    ruoli_audio.se_anagrafica               | flag che indica se il ruolo è pertinente all'anagrafica
+    ruoli_audio.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
+    ruoli_audio.se_prodotti                 | flag che indica se il ruolo è pertinente ai prodotti
+    ruoli_audio.se_articoli                 | flag che indica se il ruolo è pertinente agli articoli
+    ruoli_audio.se_categorie_prodotti       | flag che indica se il ruolo è pertinente alle categorie di prodotti
+    ruoli_audio.se_notizie                  | flag che indica se il ruolo è pertinente alle notizie
+    ruoli_audio.se_categorie_notizie        | flag che indica se il ruolo è pertinente alle categorie di notizie
+    ruoli_audio.se_risorse                  | flag che indica se il ruolo è pertinente alle risorse
+    ruoli_audio.se_categorie_risorse        | flag che indica se il ruolo è pertinente alle categorie di risorse
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -359,35 +349,39 @@
     ruoli_audio_view.id                         | -
     ruoli_audio_view.id_genitore                | -
     ruoli_audio_view.nome                       | -
+    ruoli_audio_view.html_entity                | -
+    ruoli_audio_view.font_awesome               | -
     ruoli_audio_view.se_anagrafica              | -
+    ruoli_audio_view.se_pagine                  | -
     ruoli_audio_view.se_prodotti                | -
     ruoli_audio_view.se_articoli                | -
     ruoli_audio_view.se_categorie_prodotti      | -
+    ruoli_audio_view.se_notizie                 | -
+    ruoli_audio_view.se_categorie_notizie       | -
     ruoli_audio_view.se_risorse                 | -
     ruoli_audio_view.se_categorie_risorse       | -
-    ruoli_audio_view.se_progetti                | -
-    ruoli_audio_view.se_categorie_progetti      | -
-    ruoli_audio_view.se_pagine                  | -
     ruoli_audio_view.__label__                  | etichetta descrittiva del ruolo
     
     ruoli_file
     ----------
-    Questa tabella di *supporto* contiene i ruoli che l'entità *file* può svolgere relativamente a diverse entità principali.
+    Questa tabella *standard* contiene i ruoli che l'entità *file* può svolgere relativamente a diverse entità principali.
 
     colonna                                | descrizione
     ---------------------------------------|---------------------------------------------------------------------------------------
     ruoli_file.id                          | l'ID del ruolo
     ruoli_file.id_genitore                 | l'ID del ruolo genitore
     ruoli_file.nome                        | il nome del ruolo
+    ruoli_file.html_entity                 | entità HTML che rappresenta visivamente il ruolo
+    ruoli_file.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente il ruolo
     ruoli_file.se_anagrafica               | flag che indica se il ruolo è pertinente all'anagrafica
+    ruoli_file.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
     ruoli_file.se_prodotti                 | flag che indica se il ruolo è pertinente ai prodotti
     ruoli_file.se_articoli                 | flag che indica se il ruolo è pertinente agli articoli
     ruoli_file.se_categorie_prodotti       | flag che indica se il ruolo è pertinente alle categorie di prodotti
+    ruoli_file.se_notizie                  | flag che indica se il ruolo è pertinente alle notizie
+    ruoli_file.se_categorie_notizie        | flag che indica se il ruolo è pertinente alle categorie di notizie
     ruoli_file.se_risorse                  | flag che indica se il ruolo è pertinente alle risorse
     ruoli_file.se_categorie_risorse        | flag che indica se il ruolo è pertinente alle categorie di risorse
-    ruoli_file.se_progetti                 | flag che indica se il ruolo è pertinente ai progetti
-    ruoli_file.se_categorie_progetti       | flag che indica se il ruolo è pertinente alle categorie di progetti
-    ruoli_file.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -397,25 +391,27 @@
 
     La vista *ruoli_file_view* relativa alla tabella *ruoli_file* presenta le seguenti colonne:
  
-    colonna                                    | descrizione
-    -------------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_file_view.id                         | -
-    ruoli_file_view.id_genitore                | -
-    ruoli_file_view.nome                       | -
-    ruoli_file_view.se_anagrafica              | -
-    ruoli_file_view.se_prodotti                | -
-    ruoli_file_view.se_articoli                | -
-    ruoli_file_view.se_categorie_prodotti      | -
-    ruoli_file_view.se_risorse                 | -
-    ruoli_file_view.se_categorie_risorse       | -
-    ruoli_file_view.se_progetti                | -
-    ruoli_file_view.se_categorie_progetti      | -
-    ruoli_file_view.se_pagine                  | -
-    ruoli_file_view.__label__                  | etichetta descrittiva del ruolo
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_file_view.id                          | -
+    ruoli_file_view.id_genitore                 | -
+    ruoli_file_view.nome                        | -
+    ruoli_file_view.html_entity                 | -
+    ruoli_file_view.font_awesome                | -
+    ruoli_file_view.se_anagrafica               | -
+    ruoli_file_view.se_pagine                   | -
+    ruoli_file_view.se_prodotti                 | -
+    ruoli_file_view.se_articoli                 | -
+    ruoli_file_view.se_categorie_prodotti       | -
+    ruoli_file_view.se_notizie                  | -
+    ruoli_file_view.se_categorie_notizie        | -
+    ruoli_file_view.se_risorse                  | -
+    ruoli_file_view.se_categorie_risorse        | -
+    ruoli_file_view.__label__                   | etichetta descrittiva del ruolo
     
     ruoli_immagini
     --------------
-    Questa tabella di *supporto* contiene i ruoli che l'entità *immagini* può svolgere relativamente a diverse entità principali.
+    Questa tabella *standard* contiene i ruoli che l'entità *immagini* può svolgere relativamente a diverse entità principali.
 
     colonna                                    | descrizione
     -------------------------------------------|---------------------------------------------------------------------------------------
@@ -423,15 +419,17 @@
     ruoli_immagini.id_genitore                 | l'ID del ruolo genitore
     ruoli_immagini.ordine_scalamento           | campo di ordinamento relativo allo scalamento automatico
     ruoli_immagini.nome                        | nome del ruolo
+    ruoli_immagini.html_entity                 | entità HTML che rappresenta visivamente il ruolo
+    ruoli_immagini.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente il ruolo
     ruoli_immagini.se_anagrafica               | flag che indica se il ruolo è pertinente all'anagrafica
+    ruoli_immagini.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
     ruoli_immagini.se_prodotti                 | flag che indica se il ruolo è pertinente ai prodotti
     ruoli_immagini.se_articoli                 | flag che indica se il ruolo è pertinente agli articoli
     ruoli_immagini.se_categorie_prodotti       | flag che indica se il ruolo è pertinente alle categorie di prodotti
+    ruoli_immagini.se_notizie                  | flag che indica se il ruolo è pertinente alle notizie
+    ruoli_immagini.se_categorie_notizie        | flag che indica se il ruolo è pertinente alle categorie di notizie
     ruoli_immagini.se_risorse                  | flag che indica se il ruolo è pertinente alle risorse
     ruoli_immagini.se_categorie_risorse        | flag che indica se il ruolo è pertinente alle categorie di risorse
-    ruoli_immagini.se_progetti                 | flag che indica se il ruolo è pertinente ai progetti
-    ruoli_immagini.se_categorie_progetti       | flag che indica se il ruolo è pertinente alle categorie di progetti
-    ruoli_immagini.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -441,34 +439,36 @@
 
     La vista *ruoli_immagini_view* relativa alla tabella *ruoli_immagini* presenta le seguenti colonne:
  
-    colonna                                        | descrizione
-    -----------------------------------------------|---------------------------------------------------------------------------------------
-    ruoli_immagini_view.id                         | -
-    ruoli_immagini_view.id_genitore                | -
-    ruoli_immagini_view.ordine_scalamento          | -
-    ruoli_immagini_view.nome                       | -
-    ruoli_immagini_view.se_anagrafica              | -
-    ruoli_immagini_view.se_prodotti                | -
-    ruoli_immagini_view.se_articoli                | -
-    ruoli_immagini_view.se_categorie_prodotti      | -
-    ruoli_immagini_view.se_risorse                 | -
-    ruoli_immagini_view.se_categorie_risorse       | -
-    ruoli_immagini_view.se_progetti                | -
-    ruoli_immagini_view.se_categorie_progetti      | -
-    ruoli_immagini_view.se_pagine                  | -
-    ruoli_immagini_view.__label__                  | etichetta descrittiva del ruolo
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_immagini_view.id                          | -
+    ruoli_immagini_view.id_genitore                 | -
+    ruoli_immagini_view.ordine_scalamento           | -
+    ruoli_immagini_view.nome                        | -
+    ruoli_immagini_view.html_entity                 | -
+    ruoli_immagini_view.font_awesome                | -
+    ruoli_immagini_view.se_anagrafica               | -
+    ruoli_immagini_view.se_pagine                   | -
+    ruoli_immagini_view.se_prodotti                 | -
+    ruoli_immagini_view.se_articoli                 | -
+    ruoli_immagini_view.se_categorie_prodotti       | -
+    ruoli_immagini_view.se_notizie                  | -
+    ruoli_immagini_view.se_categorie_notizie        | -
+    ruoli_immagini_view.se_risorse                  | -
+    ruoli_immagini_view.se_categorie_risorse        | -
+    ruoli_immagini_view.__label__                   | etichetta descrittiva del ruolo
 
     ruoli_indirizzi
     ---------------
-    Questa tabella di *supporto* contiene i ruoli che l'entità *indirizzi* può svolgere relativamente a diverse entità principali.
+    Questa tabella *standard* contiene i ruoli che l'entità *indirizzi* può svolgere relativamente a diverse entità principali.
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
     ruoli_indirizzi.id                      | l'ID del ruolo
     ruoli_indirizzi.id_genitore             | l'ID del ruolo genitore
     ruoli_indirizzi.nome                    | il nome del ruolo
-    ruoli_indirizzi.html_entity             | entità HTML che rappresenta visivamente la tipologia
-    ruoli_indirizzi.font_awesome            | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    ruoli_indirizzi.html_entity             | entità HTML che rappresenta visivamente il ruolo
+    ruoli_indirizzi.font_awesome            | classe Font Awesome dell'icona che rappresenta visivamente il ruolo
     ruoli_indirizzi.se_sede_legale          | flag che indica se l'indirizzo è una sede legale
     ruoli_indirizzi.se_sede_operativa       | flag che indica se l'indirizzo è una sede operativa
     ruoli_indirizzi.se_residenza            | flag che indica se l'indirizzo è una residenza
@@ -505,7 +505,7 @@
 
     ruoli_prodotti
     --------------
-    Questa tabella di *supporto* contiene i ruoli che l'entità *prodotti* può svolgere relativamente a diverse entità principali.
+    Questa tabella *standard* contiene i ruoli che l'entità *prodotti* può svolgere relativamente a diverse entità principali.
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
@@ -530,22 +530,24 @@
 
     ruoli_video
     -----------
-    Questa tabella di *supporto* contiene i ruoli che l'entità *video* può svolgere relativamente a diverse entità principali.
+    Questa tabella *standard* contiene i ruoli che l'entità *video* può svolgere relativamente a diverse entità principali.
 
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
     ruoli_video.id                          | l'ID del ruolo
     ruoli_video.id_genitore                 | l'ID del ruolo genitore
     ruoli_video.nome                        | il nome del ruolo
+    ruoli_video.html_entity                 | entità HTML che rappresenta visivamente il ruolo
+    ruoli_video.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente il ruolo
     ruoli_video.se_anagrafica               | flag che indica se il ruolo è pertinente all'anagrafica
+    ruoli_video.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
     ruoli_video.se_prodotti                 | flag che indica se il ruolo è pertinente ai prodotti
     ruoli_video.se_articoli                 | flag che indica se il ruolo è pertinente agli articoli
     ruoli_video.se_categorie_prodotti       | flag che indica se il ruolo è pertinente alle categorie di prodotti
+    ruoli_video.se_notizie                  | flag che indica se il ruolo è pertinente alle notizie
+    ruoli_video.se_categorie_notizie        | flag che indica se il ruolo è pertinente alle categorie di notizie
     ruoli_video.se_risorse                  | flag che indica se il ruolo è pertinente alle risorse
     ruoli_video.se_categorie_risorse        | flag che indica se il ruolo è pertinente alle categorie di risorse
-    ruoli_video.se_progetti                 | flag che indica se il ruolo è pertinente ai progetti
-    ruoli_video.se_categorie_progetti       | flag che indica se il ruolo è pertinente alle categorie di progetti
-    ruoli_video.se_pagine                   | flag che indica se il ruolo è pertinente alle pagine
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -560,15 +562,17 @@
     ruoli_video_view.id                         | -
     ruoli_video_view.id_genitore                | -
     ruoli_video_view.nome                       | -
+    ruoli_video_view.html_entity                | -
+    ruoli_video_view.font_awesome               | -
     ruoli_video_view.se_anagrafica              | -
+    ruoli_video_view.se_pagine                  | -
     ruoli_video_view.se_prodotti                | -
     ruoli_video_view.se_articoli                | -
     ruoli_video_view.se_categorie_prodotti      | -
+    ruoli_video_view.se_notizie                 | -
+    ruoli_video_view.se_categorie_notizie       | -
     ruoli_video_view.se_risorse                 | -
     ruoli_video_view.se_categorie_risorse       | -
-    ruoli_video_view.se_progetti                | -
-    ruoli_video_view.se_categorie_progetti      | -
-    ruoli_video_view.se_pagine                  | -
     ruoli_video_view.__label__                  | etichetta descrittiva del ruolo
     
 */

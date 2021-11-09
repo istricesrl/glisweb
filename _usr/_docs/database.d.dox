@@ -7,63 +7,27 @@
 
     le tabelle del database di supporto DA - DZ
     ===========================================
-    
-    date
-    ----
-    Questa tabella *gestita* contiene le date intese come momenti in cui un evento avviene (ad esempio uno spettacolo).
 
-    colonna                         | descrizione
-    --------------------------------|---------------------------------------------------------------------------------------
-    date.id                         | l'ID della data
-    date.id_tipologia               | l'ID della tipologia della data
-    date.id_evento                  | l'ID dell'evento cui si riferisce la data
-    date.id_luogo                   | l'ID del luogo dove si svolge la data
-    date.nome                       | il titolo della data
-    date.timestamp_inizio           | la timestamp del momento di inizio della data
-    date.timestamp_fine             | la timestamp del momento di fine della data
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                              | campo                 | tabella e campo collegati     | comportamento
-    ------------------------------------|-----------------------|-------------------------------|----------------------
-    date_ibfk_01_nofollow               | id_tipologia          | tipologie_date.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
-    date_ibfk_02                        | id_evento             | eventi.id                     | ON DELETE CASCADE ON UPDATE CASCADE
-    date_ibfk_03_nofollow               | id_luogo              | luoghi.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-
-    La vista *date_view* relativa alla tabella *date* presenta le seguenti colonne:
-
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    date_view.id                         | -
-    date_view.id_tipologia               | -
-    date_view.tipologia                  | la tipologia della data
-    date_view.id_evento                  | -
-    date_view.evento                     | l'evento cui si riferisce la data
-    date_view.id_luogo                   | -
-    date_view.luogo                      | il luogo dove si svolge la data
-    date_view.nome                       | -
-    date_view.timestamp_inizio           | -
-    date_view.data_ora_inizio            | la data e ora del momento di inizio della data
-    date_view.timestamp_fine             | -
-    date_view.data_ora_fine              | la data e ora del momento di fine della data
-    date_view.__label__                  | l'etichetta descrittiva della data
-    
     documenti
     ---------
     Questa tabella *gestita* contiene tutti i documenti amministrativi gestiti dal framework.
 
-    colonna                                   | descrizione
-    ------------------------------------------|---------------------------------------------------------------------------------------
-    documenti.id                              | l'ID del documento
-    documenti.id_tipologia                    | l'ID della tipologia di documento
-    documenti.numero                          | il numero del documento
-    documenti.data                            | la data di emissione del documento
-    documenti.nome                            | il titolo del documento
-    documenti.id_emittente                    | l'ID dell'emittente
-    documenti.id_sede_emittente               | l'ID della sede dell'emittente
-    documenti.id_destinatario                 | l'ID del destinatario del documento
-    documenti.id_sede_destinatario            | l'ID della sede del destinatario
-    documenti.note                            | note aggiuntive sul documento
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    documenti.id                            | l'ID del documento
+    documenti.id_tipologia                  | l'ID della tipologia di documento
+    documenti.numero                        | il numero del documento
+    documenti.data                          | la data di emissione del documento
+    documenti.nome                          | il titolo del documento
+    documenti.id_emittente                  | l'ID dell'emittente
+    documenti.id_sede_emittente             | l'ID della sede dell'emittente
+    documenti.id_destinatario               | l'ID del destinatario del documento
+    documenti.id_sede_destinatario          | l'ID della sede del destinatario
+    documenti.note                          | note aggiuntive sul documento
+    documenti.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    documenti.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    documenti.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    documenti.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -74,22 +38,26 @@
     documenti_ibfk_03_nofollow              | id_sede_emittente         | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_04_nofollow              | id_destinatario           | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_05_nofollow              | id_sede_destinatario      | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    documenti_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *documenti_view* relativa alla tabella *documenti* presenta le seguenti colonne:
 
-    colonna                                        | descrizione
-    -----------------------------------------------|---------------------------------------------------------------------------------------
-    documenti_view.id                              | -
-    documenti_view.id_tipologia                    | -
-    documenti_view.tipologia                       | la tipologia del documento
-    documenti_view.numero                          | -
-    documenti_view.data                            | -
-    documenti_view.nome                            | -
-    documenti_view.id_emittente                    | -
-    documenti_view.emittente                       | l'emittente del documento
-    documenti_view.id_destinatario                 | -
-    documenti_view.destinatario                    | il destinatario del documento
-    documenti_view.__label__                       | l'etichetta descrittiva del documento
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    documenti_view.id                               | -
+    documenti_view.id_tipologia                     | -
+    documenti_view.tipologia                        | la tipologia del documento
+    documenti_view.numero                           | -
+    documenti_view.data                             | -
+    documenti_view.nome                             | -
+    documenti_view.id_emittente                     | -
+    documenti_view.emittente                        | l'emittente del documento
+    documenti_view.id_destinatario                  | -
+    documenti_view.destinatario                     | il destinatario del documento
+    documenti_view.id_account_inserimento           | -
+    documenti_view.id_account_aggiornamento         | -
+    documenti_view.__label__                        | l'etichetta descrittiva del documento
   
     documenti_articoli
     ------------------
@@ -123,7 +91,11 @@
     documenti_articoli.nome                                 | nome descrittivo della riga
     documenti_articoli.specifiche                           | specifiche della riga
     documenti_articoli.testo                                | testo descrittivo della riga
- 
+    documenti_articoli.id_account_inserimento               | l'ID dell'account che ha inserito la riga
+    documenti_articoli.timestamp_inserimento                | la timestamp dell'inserimento della riga
+    documenti_articoli.id_account_aggiornamento             | l'ID dell'ultimo account che ha modificato la riga
+    documenti_articoli.timestamp_aggiornamento              | la timestamp dell'ultimo aggiornamento della riga
+
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                      | campo                         | tabella e campo collegati         | comportamento
@@ -144,40 +116,44 @@
     documenti_articoli_ibfk_14_nofollow         | id_listino                    | listini.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_15_nofollow         | id_valuta                     | valute.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_16_nofollow         | id_iva                        | iva.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_articoli_ibfk_98_nofollow         | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    documenti_articoli_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *documenti_articoli_view* relativa alla tabella *documenti_articoli* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    documenti_articoli_view.id                             | -
-    documenti_articoli_view.id_genitore                    | -
-    documenti_articoli_view.id_tipologia                   | -
-    documenti_articoli_view.tipologia                      | la tipologia del documento collegato alla riga
-    documenti_articoli_view.ordine                         | -
-    documenti_articoli_view.id_documento                   | -
-    documenti_articoli_view.data                           | -
-    documenti_articoli_view.id_emittente                   | -
-    documenti_articoli_view.id_emittente                   | -
-    documenti_articoli_view.emittente                      | l'anagrafica emittente della riga
-    documenti_articoli_view.id_destinatario                | -
-    documenti_articoli_view.destinatario                   | l'anagrafica destinatario della riga
-    documenti_articoli_view.id_reparto                     | -
-    documenti_articoli_view.id_progetto                    | -
-    documenti_articoli_view.id_todo                        | -
-    documenti_articoli_view.id_attivita                    | -
-    documenti_articoli_view.id_articolo                    | -
-    documenti_articoli_view.id_mastro_provenienza          | -
-    documenti_articoli_view.mastro_provenienza             | il mastro scaricato dalla riga
-    documenti_articoli_view.id_mastro_destinazione         | -
-    documenti_articoli_view.mastro_destinazione            | il mastro caricato dalla riga
-    documenti_articoli_view.id_udm                         | -
-    documenti_articoli_view.quantita                       | -
-    documenti_articoli_view.id_listino                     | -
-    documenti_articoli_view.id_valuta                      | -
-    documenti_articoli_view.importo_netto_totale           | -
-    documenti_articoli_view.id_iva                         | -
-    documenti_articoli_view.iva                            | l'aliquota IVA applicata alla riga
-    documenti_articoli_view.nome                           | -
-    documenti_articoli_view.__label__                      | l'etichetta descrittiva della riga
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    documenti_articoli_view.id                              | -
+    documenti_articoli_view.id_genitore                     | -
+    documenti_articoli_view.id_tipologia                    | -
+    documenti_articoli_view.tipologia                       | la tipologia del documento collegato alla riga
+    documenti_articoli_view.ordine                          | -
+    documenti_articoli_view.id_documento                    | -
+    documenti_articoli_view.data                            | -
+    documenti_articoli_view.id_emittente                    | -
+    documenti_articoli_view.id_emittente                    | -
+    documenti_articoli_view.emittente                       | l'anagrafica emittente della riga
+    documenti_articoli_view.id_destinatario                 | -
+    documenti_articoli_view.destinatario                    | l'anagrafica destinatario della riga
+    documenti_articoli_view.id_reparto                      | -
+    documenti_articoli_view.id_progetto                     | -
+    documenti_articoli_view.id_todo                         | -
+    documenti_articoli_view.id_attivita                     | -
+    documenti_articoli_view.id_articolo                     | -
+    documenti_articoli_view.id_mastro_provenienza           | -
+    documenti_articoli_view.mastro_provenienza              | il mastro scaricato dalla riga
+    documenti_articoli_view.id_mastro_destinazione          | -
+    documenti_articoli_view.mastro_destinazione             | il mastro caricato dalla riga
+    documenti_articoli_view.id_udm                          | -
+    documenti_articoli_view.quantita                        | -
+    documenti_articoli_view.id_listino                      | -
+    documenti_articoli_view.id_valuta                       | -
+    documenti_articoli_view.importo_netto_totale            | -
+    documenti_articoli_view.id_iva                          | -
+    documenti_articoli_view.iva                             | l'aliquota IVA applicata alla riga
+    documenti_articoli_view.nome                            | -
+    documenti_articoli_view.id_account_inserimento          | -
+    documenti_articoli_view.id_account_aggiornamento        | -
+    documenti_articoli_view.__label__                       | l'etichetta descrittiva della riga
 
 */

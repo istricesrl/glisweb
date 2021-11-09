@@ -7,42 +7,6 @@
     le tabelle del database di supporto PA - PZ
     ===========================================
 
-    pagamenti
-    ---------
-    Questa tabella *gestita* contiene i movimenti di denaro fissati nel tempo; i pagamenti
-    movimentano i mastri di tipo economico.
-
-    colonna                                         | descrizione
-    ------------------------------------------------|---------------------------------------------------------------------------------------
-    pagamenti.id                                    | l'ID del pagamento
-    pagamenti.id_tipologia                          | l'ID della tipologia di pagamento
-    pagamenti.ordine                                | campo di ordinamento
-    pagamenti.id_documento                          | l'ID del documento cui si riferisce il pagamento
-    pagamenti.data                                  | la data del pagamento
-    pagamenti.id_emittente                          | l'ID dell'emittente del pagamento
-    pagamenti.id_destinatario                       | l'ID del destinatario del pagamento
-    pagamenti.id_reparto                            | l'ID del reparto cui si riferisce il pagamento
-    pagamenti.id_progetto                           | l'ID del progetto cui si riferisce il pagamento
-    pagamenti.id_todo                               | l'ID della todo cui si riferisce il pagamento
-    pagamenti.id_attivita                           | l'ID dell'attività cui si riferisce il pagamento
-    pagamenti.id_mastro_provenienza                 | l'ID del mastro scaricato dal pagamento
-    pagamenti.id_mastro_destinazione                | l'ID del mastro caricato dal pagamento
-    pagamenti.importo_netto_totale                  | l'importo netto totale del pagamento
-    pagamenti.id_iva                                | l'ID dell'aliquota IVA associata al pagamento
-    pagamenti.id_listino                            | l'ID del listino associato al pagamento
-    pagamenti.nome                                  | nome descrittivo del pagamento
-    pagamenti.testo                                 | testo descrittivo del pagamento
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                                  | campo                 | tabella e campo collegati     | comportamento
-    ----------------------------------------|-----------------------|-------------------------------|------------------
-
-    La vista *pagamenti_view* relativa alla tabella *pagamenti* presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-
     pagine
     ------
     Questa tabella *gestita* contiene le pagine pubblicate sul web tramite il framework e costituisce il cuore
@@ -61,6 +25,10 @@
     pagine.id_contenuti               | l'ID del testo della pagina
     pagine.se_sitemap                 | flag che indica se la pagina va inclusa o no nella sitemap
     pagine.se_cacheable               | flag che indica se la pagina può essere salvata nella cache statica
+    pagine.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    pagine.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    pagine.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    pagine.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     Il campo *id_contenuti* consente di collegare a una pagina una specifica riga della tabella *contenuti*, in modo
     da non dover duplicare manualmente un testo che si ripete uguale per diverse pagine (si pensi ad esempio la pagina contatti
@@ -91,39 +59,64 @@
     Per sapere invece quali gruppi possono visualizzare le varie pagine:
 
     \code{.sql}
-	SELECT
-		pagine.id,
-		group_concat(
+    SELECT
+        pagine.id,
+        group_concat(
             DISTINCT __acl_pagine__.id_gruppo SEPARATOR ' | '
         ) AS gruppi,
-		pagine_path( pagine.id ) AS __label__
-	FROM pagine
-		LEFT JOIN __acl_pagine__ ON pagine.id = __acl_pagine__.id_pagina
+        pagine_path( pagine.id ) AS __label__
+    FROM pagine
+        LEFT JOIN __acl_pagine__ ON pagine.id = __acl_pagine__.id_pagina
     GROUP BY pagine.id;
     \endcode
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                      | campo                 | tabella e campo collegati     | comportamento
-    --------------------------------------------|-----------------------|-------------------------------|----------------------
-    pagine_ibfk_01_nofollow                     | id_genitore           | pagine.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    pagine_ibfk_02_nofollow                     | id_contenuti          | contenuti.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    pagine_ibfk_01_nofollow                     | id_genitore                   | pagine.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagine_ibfk_02_nofollow                     | id_contenuti                  | contenuti.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagine_ibfk_98_nofollow                     | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    pagine_ibfk_99_nofollow                     | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *pagine_view* relativa alla tabella *pagine* presenta le seguenti colonne:
 
-    colonna                             | descrizione
-    ------------------------------------|---------------------------------------------------------------------------------------
-    pagine_view.id                      | -
-    pagine_view.id_genitore             | -
-    pagine_view.id_sito                 | -
-    pagine_view.nome                    | -
-    pagine_view.template                | -
-    pagine_view.schema_html             | -
-    pagine_view.tema_css                | -
-    pagine_view.id_contenuti            | -
-    pagine_view.se_sitemap              | -
-    pagine_view.se_cacheable            | -
-    pagine_view.__label__               | l'etichetta descrittiva della pagina
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    pagine_view.id                        | -
+    pagine_view.id_genitore               | -
+    pagine_view.id_sito                   | -
+    pagine_view.nome                      | -
+    pagine_view.template                  | -
+    pagine_view.schema_html               | -
+    pagine_view.tema_css                  | -
+    pagine_view.id_contenuti              | -
+    pagine_view.se_sitemap                | -
+    pagine_view.se_cacheable              | -
+    pagine_view.id_account_inserimento    | -
+    pagine_view.id_account_aggiornamento  | -
+    pagine_view.__label__                 | l'etichetta descrittiva della pagina
+
+    La tabella *pagine* è vincolata dalle ACL memorizzate sulla tabella *__acl_pagine__*.
+
+    periodicita
+    -----------
+    Questa tabella *standard* contiene le periodicità con cui si possono applicare le pianificazioni.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    periodicita.id                          | l'ID della periodicità
+    periodicita.nome                        | il nome della periodicità
+
+    La tabella non ha chiavi esterne.
+
+    La vista *periodicita_view* relativa alla tabella *periodicita* presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    periodicita_view.id                  | -
+    periodicita_view.nome                | -
+    periodicita_view.__label__           | l'etichetta descrittiva della periodicità
 
     pianificazioni
     --------------
@@ -135,29 +128,33 @@
     codice e i commenti della libreria _mod/_0750.pianificazioni/_src/_lib/_mysql.utils.add.php e in generale del modulo
     pianificazioni.
 
-    colonna                                    | descrizione
-    -------------------------------------------|---------------------------------------------------------------------------------------
-    pianificazioni.id                          | l'ID della pianificazione
-    pianificazioni.id_progetto                 | l'ID del progetto cui si riferisce la pianificazione
-    pianificazioni.id_todo                     | l'ID della todo cui si riferisce la pianificazione
-    pianificazioni.id_attivita                 | l'ID dell'attività cui si riferisce la pianificazione
-    pianificazioni.nome                        | nome della pianificazione
-    pianificazioni.note                        | note aggiuntive sulla pianificazione
-    pianificazioni.id_periodicita              | l'ID della periodicità di ripetizione
-    pianificazioni.cadenza                     | intero che definisce la quantità relativa alla periodicità
-    pianificazioni.se_lunedi                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il lunedì
-    pianificazioni.se_martedi                  | flag che indica se nella periodicità settimanale dev'essere utilizzato il martedì
-    pianificazioni.se_mercoledi                | flag che indica se nella periodicità settimanale dev'essere utilizzato il mercoledì
-    pianificazioni.se_giovedi                  | flag che indica se nella periodicità settimanale dev'essere utilizzato il giovedì
-    pianificazioni.se_venerdi                  | flag che indica se nella periodicità settimanale dev'essere utilizzato il venerdì
-    pianificazioni.se_sabato                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il sabato
-    pianificazioni.se_domenica                 | flag che indica se nella periodicità settimanale dev'essere utilizzata la domenica
-    pianificazioni.schema_ripetizione          | valore che indica la strategia di ripetizione per le periodicità mensili e annuali
-    pianificazioni.data_elaborazione           | data dell'ultima attività di creazione delle entità pianificate
-    pianificazioni.giorni_estensione           | numero di giorni per cui va spostata in avanti la data di fine quando la pianificazione viene allungata.
-    pianificazioni.data_fine                   | data fino alla quale vengono create le entità pianificate
-    pianificazioni.workspace                   | memoria di lavoro della pianificazione in formato JSON
-    pianificazioni.token                       | token per il lock software della riga nelle elaborazioni automatiche
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    pianificazioni.id                           | l'ID della pianificazione
+    pianificazioni.id_progetto                  | l'ID del progetto cui si riferisce la pianificazione
+    pianificazioni.id_todo                      | l'ID della todo cui si riferisce la pianificazione
+    pianificazioni.id_attivita                  | l'ID dell'attività cui si riferisce la pianificazione
+    pianificazioni.nome                         | nome della pianificazione
+    pianificazioni.note                         | note aggiuntive sulla pianificazione
+    pianificazioni.id_periodicita               | l'ID della periodicità di ripetizione
+    pianificazioni.cadenza                      | intero che definisce la quantità relativa alla periodicità
+    pianificazioni.se_lunedi                    | flag che indica se nella periodicità settimanale dev'essere utilizzato il lunedì
+    pianificazioni.se_martedi                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il martedì
+    pianificazioni.se_mercoledi                 | flag che indica se nella periodicità settimanale dev'essere utilizzato il mercoledì
+    pianificazioni.se_giovedi                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il giovedì
+    pianificazioni.se_venerdi                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il venerdì
+    pianificazioni.se_sabato                    | flag che indica se nella periodicità settimanale dev'essere utilizzato il sabato
+    pianificazioni.se_domenica                  | flag che indica se nella periodicità settimanale dev'essere utilizzata la domenica
+    pianificazioni.schema_ripetizione           | valore che indica la strategia di ripetizione per le periodicità mensili e annuali
+    pianificazioni.data_elaborazione            | data dell'ultima attività di creazione delle entità pianificate
+    pianificazioni.giorni_estensione            | numero di giorni per cui va spostata in avanti la data di fine quando la pianificazione viene allungata.
+    pianificazioni.data_fine                    | data fino alla quale vengono create le entità pianificate
+    pianificazioni.workspace                    | memoria di lavoro della pianificazione in formato JSON
+    pianificazioni.token                        | token per il lock software della riga nelle elaborazioni automatiche
+    pianificazioni.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    pianificazioni.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    pianificazioni.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    pianificazioni.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
 
     La relazione fra i campi *id_periodicita* e *cadenza* è che il secondo indica ogni quante unità di tempo specificate
     dal primo dev'essere replicata l'entità sorgente. Se ad esempio è indicata una periodicità giornaliera con cadenza tre,
@@ -178,14 +175,16 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                        | tabella e campo collegati
-    ----------------------------------------------|------------------------------|-----------------------------------------------------
-    ADD CONSTRAINT `pianificazioni_ibfk_01`             FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `pianificazioni_ibfk_02`             FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `pianificazioni_ibfk_03`             FOREIGN KEY (`id_attivita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `pianificazioni_ibfk_04_nofollow`    FOREIGN KEY (`id_periodicita`) REFERENCES `periodicita` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    chiave                                        | campo                         | tabella e campo collegati         | comportamento
+    ----------------------------------------------|-------------------------------|-----------------------------------|------------------
+    pianificazioni_ibfk_01                        | id_progetto                   | progetti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    pianificazioni_ibfk_02                        | id_todo                       | todo.id                           | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pianificazioni_ibfk_03                        | id_attivita                   | attivita.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    pianificazioni_ibfk_04_nofollow               | id_periodicita                | periodicita.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pianificazioni_ibfk_98_nofollow               | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    pianificazioni_ibfk_99_nofollow               | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
-    La vista pianificazioni_view relativa alla tabella pianificazioni presenta le seguenti colonne:
+    La vista *pianificazioni_view* relativa alla tabella *pianificazioni* presenta le seguenti colonne:
 
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
@@ -210,26 +209,9 @@
     pianificazioni_view.data_fine                   | -
     pianificazioni_view.workspace                   | -
     pianificazioni_view.token                       | -
+    pianificazioni_view.id_account_inserimento      | -
+    pianificazioni_view.id_account_aggiornamento    | -
     pianificazioni_view.__label__                   | etichetta descrittiva della pianificazione
-
-    periodicita
-    -----------
-    Questa tabella *di supporto* contiene le periodicità con cui si possono applicare le pianificazioni.
-
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    periodicita.id                          | l'ID della periodicità
-    periodicita.nome                        | il nome della periodicità
-
-    La tabella non ha chiavi esterne.
-
-    La vista *periodicita_view* relativa alla tabella *periodicita* presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    periodicita_view.id                  | -
-    periodicita_view.nome                | -
-    periodicita_view.__label__           | l'etichetta descrittiva della periodicità
 
     popup
     -----
@@ -243,50 +225,62 @@
     popup.id_sito                     | l'ID del sito cui è collegato il popup (NULL per tutti i siti)
     popup.nome                        | il nome del popup
     popup.note                        | note aggiuntive sul popup
-    popup.id_html                     | il valore dell'attributo ID del tag contenitore del popup
-    popup.classi_html                 | il valore dell'attributo CLASS del tag contenitore del popup
-    popup.classe_attivazione          | -
+    popup.html_id                     | il valore dell'attributo ID del tag contenitore del popup
+    popup.html_class                  | il valore dell'attributo CLASS del tag contenitore del popup
+    popup.html_class_attivazione      | -
     popup.n_scroll                    | valore di scroll dopo cui appare il popup (zero per immediatamente, NULL per non collegare il popup a un evento di scroll)
     popup.n_secondi                   | valore in secondi dopo cui appare il popup (zero per immediatamente, NULL per non collegare il popup a un evento di timer)
     popup.template                    | -
     popup.schema_html                 | -
     popup.se_ovunque                  | flag che indica se il popup deve apparire su tutte le pagine
+    popup.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    popup.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    popup.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    popup.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                          | campo             | tabella e campo collegati     | comportamento
-    --------------------------------|-------------------|-------------------------------|----------------------
-    popup_ibfk_01_nofollow          | id_tipologia      | tipologie_popup.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                          | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------------------|-------------------------------|----------------------
+    popup_ibfk_01_nofollow          | id_tipologia                  | tipologie_popup.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    popup_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    popup_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *popup_view* relativa alla tabella *popup* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    popup_view.id                        | -
-    popup_view.id_tipologia              | -
-    popup_view.tipologia                 | la tipologia del popup
-    popup_view.id_sito                   | -
-    popup_view.nome                      | -
-    popup_view.id_html                   | -
-    popup_view.classi_html               | -
-    popup_view.classe_attivazione        | -
-    popup_view.n_scroll                  | -
-    popup_view.n_secondi                 | -
-    popup_view.template                  | -
-    popup_view.schema_html               | -
-    popup_view.se_ovunque                | -
-    popup_view.__label__                 | etichetta descrittiva del popup
-    
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    popup_view.id                         | -
+    popup_view.id_tipologia               | -
+    popup_view.tipologia                  | la tipologia del popup
+    popup_view.id_sito                    | -
+    popup_view.nome                       | -
+    popup_view.html_id                    | -
+    popup_view.html_class                 | -
+    popup_view.html_class_attivazione     | -
+    popup_view.n_scroll                   | -
+    popup_view.n_secondi                  | -
+    popup_view.template                   | -
+    popup_view.schema_html                | -
+    popup_view.se_ovunque                 | -
+    popup_view.id_account_inserimento     | -
+    popup_view.id_account_aggiornamento   | -
+    popup_view.__label__                  | etichetta descrittiva del popup
+
     popup_pagine
     ------------
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *popup* a quella subordinata *pagine*.
 
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    popup_pagine.id                   | l'ID dell'associazione fra popup e pagina
-    popup_pagine.id_popup             | l'ID del popup
-    popup_pagine.id_pagina            | l'ID della pagina
-    popup_pagine.se_presente          | flag che indica se il popup è presente nella pagina indicata
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    popup_pagine.id                         | l'ID dell'associazione fra popup e pagina
+    popup_pagine.id_popup                   | l'ID del popup
+    popup_pagine.id_pagina                  | l'ID della pagina
+    popup_pagine.se_presente                | flag che indica se il popup è presente nella pagina indicata
+    popup_pagine.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    popup_pagine.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    popup_pagine.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    popup_pagine.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     Il flag *se_presente* è utile per creare scenari in cui un popup è collegato alla maggior parte delle pagine di un sito; in
     questo caso è possibile attivare il flag *se_ovunque* sulla tabella *popup* e poi indicare manualmente le pagine su cui
@@ -295,20 +289,24 @@
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                      | campo             | tabella e campo collegati     | comportamento
-    ----------------------------|-------------------|-------------------------------|----------------------
-    popup_pagine_ibfk_01        | id_popup          | popup.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
-    popup_pagine_ibfk_02        | id_pagina         | pagine.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                              | campo                       | tabella e campo collegati     | comportamento
+    ------------------------------------|-----------------------------|-------------------------------|----------------------
+    popup_pagine_ibfk_01                | id_popup                    | popup.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    popup_pagine_ibfk_02_nofollow       | id_pagina                   | pagine.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    popup_pagine_ibfk_98_nofollow       | id_account_inserimento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    popup_pagine_ibfk_99_nofollow       | id_account_aggiornamento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *popup_pagine_view* relativa alla tabella *popup_pagine* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    popup_pagine_view.id                 | -
-    popup_pagine_view.id_popup           | -
-    popup_pagine_view.id_pagina          | -
-    popup_pagine_view.se_presente        | -
-    popup_pagine_view.__label__          | etichetta descrittiva dell'associazione fra popup e pagina
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    popup_pagine_view.id                        | -
+    popup_pagine_view.id_popup                  | -
+    popup_pagine_view.id_pagina                 | -
+    popup_pagine_view.se_presente               | -
+    popup_pagine_view.id_account_inserimento    | -
+    popup_pagine_view.id_account_aggiornamento  | -
+    popup_pagine_view.__label__                 | etichetta descrittiva dell'associazione fra popup e pagina
 
     prezzi
     ------
@@ -317,38 +315,46 @@
     registrati nella tabella *prezzi* si intendono sempre netti, e la relativa aliquota IVA è indicata tramite la
     relazione con la tabella *iva* tramite il campo *id_iva*.
 
-    colonna                     | descrizione
-    ----------------------------|---------------------------------------------------------------------------------------
-    prezzi.id                   | l'ID del prezzo
-    prezzi.id_prodotto          | l'ID del prodotto cui si riferisce il prezzo
-    prezzi.id_articolo          | l'ID dell'articolo cui si riferisce il prezzo
-    prezzi.prezzo               | il prezzo, in decimale
-    prezzi.id_listino           | l'ID del listino cui appartiene il prezzo
-    prezzi.id_iva               | l'ID dell'aliquota IVA relativa al prezzo
+    colonna                           | descrizione
+    ----------------------------------|---------------------------------------------------------------------------------------
+    prezzi.id                         | l'ID del prezzo
+    prezzi.id_prodotto                | l'ID del prodotto cui si riferisce il prezzo
+    prezzi.id_articolo                | l'ID dell'articolo cui si riferisce il prezzo
+    prezzi.prezzo                     | il prezzo, in decimale
+    prezzi.id_listino                 | l'ID del listino cui appartiene il prezzo
+    prezzi.id_iva                     | l'ID dell'aliquota IVA relativa al prezzo
+    prezzi.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    prezzi.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    prezzi.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    prezzi.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                          | campo             | tabella e campo collegati     | comportamento
-    --------------------------------|-------------------|-------------------------------|----------------------
-    prezzi_ibfk_01                  | id_prodotto       | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    prezzi_ibfk_02                  | id_articolo       | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    prezzi_ibfk_03_nofollow         | id_listino        | listini.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
-    prezzi_ibfk_04_nofollow         | id_iva            | iva.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                          | campo                       | tabella e campo collegati     | comportamento
+    --------------------------------|-----------------------------|-------------------------------|----------------------
+    prezzi_ibfk_01                  | id_prodotto                 | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    prezzi_ibfk_02                  | id_articolo                 | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    prezzi_ibfk_03_nofollow         | id_listino                  | listini.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    prezzi_ibfk_04_nofollow         | id_iva                      | iva.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    prezzi_ibfk_98_nofollow         | id_account_inserimento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    prezzi_ibfk_99_nofollow         | id_account_aggiornamento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *prezzi_view* relativa alla tabella *prezzi* presenta le seguenti colonne:
 
-    colonna                          | descrizione
-    ---------------------------------|---------------------------------------------------------------------------------------
-    prezzi_view.id                   | -
-    prezzi_view.id_prodotto          | -
-    prezzi_view.id_articolo          | -
-    prezzi_view.prezzo               | -
-    prezzi_view.id_listino           | -
-    prezzi_view.listino              | il listino cui appartiene il prezzo
-    prezzi_view.valuta               | la valuta del listino cui appartiene il prezzo
-    prezzi_view.id_iva               | -
-    prezzi_view.iva                  | l'aliquota IVA del prezzo
-    prezzi_view.__label__            | etichetta descrittiva del prezzo
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    prezzi_view.id                        | -
+    prezzi_view.id_prodotto               | -
+    prezzi_view.id_articolo               | -
+    prezzi_view.prezzo                    | -
+    prezzi_view.id_listino                | -
+    prezzi_view.listino                   | il listino cui appartiene il prezzo
+    prezzi_view.valuta                    | la valuta del listino cui appartiene il prezzo
+    prezzi_view.id_iva                    | -
+    prezzi_view.iva                       | l'aliquota IVA del prezzo
+    prezzi_view.id_account_inserimento    | -
+    prezzi_view.id_account_aggiornamento  | -
+    prezzi_view.__label__                 | etichetta descrittiva del prezzo
 
     prodotti
     --------
@@ -356,42 +362,50 @@
     intesi come oggetti teorici che raggruppano uno o più articoli che hanno le stesse caratteristiche di base; fungono anche da
     collegamento fra gli articoli e il catalogo inteso come albero delle categorie dei prodotti.
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    prodotti.id                          | l'ID del prodotto
-    prodotti.id_tipologia                | l'ID della tipologia del prodotto
-    prodotti.nome                        | il nome del prodotto
-    prodotti.note                        | note aggiuntive sul prodotto
-    prodotti.note_codifica               | note aggiuntive sulla codifica del prodotto
-    prodotti.id_marchio                  | l'ID del marchio del prodotto
-    prodotti.id_produttore               | l'ID del produttore del prodotto
-    prodotti.codice_produttore           | il codice assegnato dal produttore al prodotto
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    prodotti.id                         | l'ID del prodotto
+    prodotti.id_tipologia               | l'ID della tipologia del prodotto
+    prodotti.nome                       | il nome del prodotto
+    prodotti.note                       | note aggiuntive sul prodotto
+    prodotti.note_codifica              | note aggiuntive sulla codifica del prodotto
+    prodotti.id_marchio                 | l'ID del marchio del prodotto
+    prodotti.id_produttore              | l'ID del produttore del prodotto
+    prodotti.codice_produttore          | il codice assegnato dal produttore al prodotto
+    prodotti.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    prodotti.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    prodotti.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    prodotti.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                          | campo                 | tabella e campo collegati     | comportamento
-    --------------------------------|-----------------------|-------------------------------|----------------------
-    prodotti_ibfk_01_nofollow       | id_tipologia          | tipologie_prodotti.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    prodotti_ibfk_02_nofollow       | id_marchio            | marchi.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    prodotti_ibfk_03_nofollow       | id_produttore         | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                          | campo                       | tabella e campo collegati     | comportamento
+    --------------------------------|-----------------------------|-------------------------------|----------------------
+    prodotti_ibfk_01_nofollow       | id_tipologia                | tipologie_prodotti.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    prodotti_ibfk_02_nofollow       | id_marchio                  | marchi.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    prodotti_ibfk_03_nofollow       | id_produttore               | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    prodotti_ibfk_98_nofollow       | id_account_inserimento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    prodotti_ibfk_99_nofollow       | id_account_aggiornamento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *prodotti_view* relativa alla tabella *prodotti* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    prodotti_view.id                     | -
-    prodotti_view.id_tipologia           | -
-    prodotti_view.tipologia              | la tipologia del prodotto
-    prodotti_view.se_prodotto            | flag che indica se il prodotto rappresenta un bene materiale
-    prodotti_view.se_servizio            | flag che indica se il prodotto rappresenta un servizio
-    prodotti_view.nome                   | -
-    prodotti_view.id_marchio             | -
-    prodotti_view.marchio                | il marchio del prodotto
-    prodotti_view.id_produttore          | -
-    prodotti_view.produttore             | il produttore del prodotto
-    prodotti_view.codice_produttore      | -
-    prodotti_view.categorie              | le categorie cui appartiene il prodotto
-    prodotti_view.__label__              | etichetta descrittiva del prodotto
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_view.id                        | -
+    prodotti_view.id_tipologia              | -
+    prodotti_view.tipologia                 | la tipologia del prodotto
+    prodotti_view.se_prodotto               | flag che indica se il prodotto rappresenta un bene materiale
+    prodotti_view.se_servizio               | flag che indica se il prodotto rappresenta un servizio
+    prodotti_view.nome                      | -
+    prodotti_view.id_marchio                | -
+    prodotti_view.marchio                   | il marchio del prodotto
+    prodotti_view.id_produttore             | -
+    prodotti_view.produttore                | il produttore del prodotto
+    prodotti_view.codice_produttore         | -
+    prodotti_view.categorie                 | le categorie cui appartiene il prodotto
+    prodotti_view.id_account_inserimento    | -
+    prodotti_view.id_account_aggiornamento  | -
+    prodotti_view.__label__                 | etichetta descrittiva del prodotto
 
     prodotti_caratteristiche
     ------------------------
@@ -407,89 +421,109 @@
     prodotti_caratteristiche.ordine                   | campo di ordinamento
     prodotti_caratteristiche.note                     | note aggiuntive sull'associazione fra prodotto e caratteristica
     prodotti_caratteristiche.se_assente               | flag che indica se la caratteristica è assente dal prodotto
-    
+    prodotti_caratteristiche.id_account_inserimento   | l'ID dell'account che ha inserito la riga
+    prodotti_caratteristiche.timestamp_inserimento    | la timestamp dell'inserimento della riga
+    prodotti_caratteristiche.id_account_aggiornamento | l'ID dell'ultimo account che ha modificato la riga
+    prodotti_caratteristiche.timestamp_aggiornamento  | la timestamp dell'ultimo aggiornamento della riga
+
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                      | campo                 | tabella e campo collegati     | comportamento
-    --------------------------------------------|-----------------------|-------------------------------|----------------------
-    prodotti_caratteristiche_ibfk_01            | id_prodotto           | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    prodotti_caratteristiche_ibfk_02_nofollow   | id_caratteristica     | caratteristiche_prodotti.id   | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                                      | campo                       | tabella e campo collegati     | comportamento
+    --------------------------------------------|-----------------------------|-------------------------------|----------------------
+    prodotti_caratteristiche_ibfk_01            | id_prodotto                 | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    prodotti_caratteristiche_ibfk_02_nofollow   | id_caratteristica           | caratteristiche_prodotti.id   | ON DELETE CASCADE ON UPDATE CASCADE
+    prodotti_caratteristiche_ibfk_98_nofollow   | id_account_inserimento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    prodotti_caratteristiche_ibfk_99_nofollow   | id_account_aggiornamento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *prodotti_caratteristiche_view* relativa alla tabella *prodotti_caratteristiche* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    prodotti_caratteristiche_view.id                       | -
-    prodotti_caratteristiche_view.id_prodotto              | -
-    prodotti_caratteristiche_view.id_caratteristica        | -
-    prodotti_caratteristiche_view.caratteristica           | il nome della caratteristica
-    prodotti_caratteristiche_view.ordine                   | -
-    prodotti_caratteristiche_view.se_assente               | -
-    prodotti_caratteristiche_view.__label__                | -
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_caratteristiche_view.id                        | -
+    prodotti_caratteristiche_view.id_prodotto               | -
+    prodotti_caratteristiche_view.id_caratteristica         | -
+    prodotti_caratteristiche_view.caratteristica            | il nome della caratteristica
+    prodotti_caratteristiche_view.ordine                    | -
+    prodotti_caratteristiche_view.se_assente                | -
+    prodotti_caratteristiche_view.id_account_inserimento    | -
+    prodotti_caratteristiche_view.id_account_aggiornamento  | -
+    prodotti_caratteristiche_view.__label__                 | -
 
     prodotti_categorie
     ------------------
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *prodotti* con l'entità
     secondaria *categorie_prodotti*.
 
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    prodotti_categorie.id                   | l'ID dell'associazione fra prodotto e categoria
-    prodotti_categorie.id_prodotto          | l'ID del prodotto
-    prodotti_categorie.id_categoria         | l'ID della categoria
-    prodotti_categorie.id_ruolo             | l'ID del ruolo svolto dal prodotto nella categoria
-    prodotti_categorie.ordine               | campo di ordinamento
-    
+    colonna                                       | descrizione
+    ----------------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_categorie.id                         | l'ID dell'associazione fra prodotto e categoria
+    prodotti_categorie.id_prodotto                | l'ID del prodotto
+    prodotti_categorie.id_categoria               | l'ID della categoria
+    prodotti_categorie.id_ruolo                   | l'ID del ruolo svolto dal prodotto nella categoria
+    prodotti_categorie.ordine                     | campo di ordinamento
+    prodotti_categorie.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    prodotti_categorie.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    prodotti_categorie.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    prodotti_categorie.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                  | campo                 | tabella e campo collegati     | comportamento
-    ----------------------------------------|-----------------------|-------------------------------|----------------------
-    prodotti_categorie_ibfk_01              | id_prodotto           | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    prodotti_categorie_ibfk_02_nofollow     | id_categoria          | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
-    prodotti_categorie_ibfk_03_nofollow     | id_ruolo              | ruoli_prodotti.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                                  | campo                       | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------------|-------------------------------|----------------------
+    prodotti_categorie_ibfk_01              | id_prodotto                 | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    prodotti_categorie_ibfk_02_nofollow     | id_categoria                | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    prodotti_categorie_ibfk_03_nofollow     | id_ruolo                    | ruoli_prodotti.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    prodotti_categorie_ibfk_98_nofollow     | id_account_inserimento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    prodotti_categorie_ibfk_99_nofollow     | id_account_aggiornamento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *prodotti_categorie_view* relativa alla tabella *prodotti_categorie* presenta le seguenti colonne:
 
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    prodotti_categorie_view.id                   | -
-    prodotti_categorie_view.id_prodotto          | -
-    prodotti_categorie_view.id_categoria         | -
-    prodotti_categorie_view.categoria            | òa categoria cui appartiene il prodotto
-    prodotti_categorie_view.id_ruolo             | -
-    prodotti_categorie_view.ruolo                | il ruolo svolto dal prodotto nella categoria
-    prodotti_categorie_view.ordine               | -
-    prodotti_categorie_view.__label__            | etichetta descrittiva dell'associazione fra prodotto e categoria
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    prodotti_categorie_view.id                        | -
+    prodotti_categorie_view.id_prodotto               | -
+    prodotti_categorie_view.id_categoria              | -
+    prodotti_categorie_view.categoria                 | òa categoria cui appartiene il prodotto
+    prodotti_categorie_view.id_ruolo                  | -
+    prodotti_categorie_view.ruolo                     | il ruolo svolto dal prodotto nella categoria
+    prodotti_categorie_view.ordine                    | -
+    prodotti_categorie_view.id_account_inserimento    | -
+    prodotti_categorie_view.id_account_aggiornamento  | -
+    prodotti_categorie_view.__label__                 | etichetta descrittiva dell'associazione fra prodotto e categoria
 
     progetti
     --------
     Questa tabella *gestita* contiene i progetti, intesi come aggregatori di cose da fare, contenute nella tabella
     *todo*, e attività, contenute appunto nella tabella *attivita*.
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    progetti.id                          | l'ID del progetto
-    progetti.id_tipologia                | l'ID della tipologia del progetto
-    progetti.id_pianificazione           | l'ID della pianificazione cui appartiene il progetto
-    progetti.id_cliente                  | l'ID del cliente del progetto
-    progetti.id_indirizzo                | l'ID dell'indirizzo del progetto
-    progetti.nome                        | il nome del progetto
-    progetti.note                        | note aggiuntive sul progetto
-    progetti.entrate_previste            | l'importo degli incassi previsti
-    progetti.ore_previste                | il numero di ore previste per il progetto
-    progetti.costi_previsti              | l'importo dei costi previsti per il progetto
-    progetti.note_previsioni             | note aggiuntive sulle previsioni per il progetto
-    progetti.entrate_accettazione        | l'importo degli incassi accettati per il progetto da parte del cliente
-    progetti.data_accettazione           | data dell'accettazione del progetto da parte del cliente
-    progetti.note_accettazione           | note aggiuntive sull'accettazione del progetto
-    progetti.data_chiusura               | data di chiusura dei lavori del progetto
-    progetti.note_chiusura               | note aggiuntive sulla chiusura dei lavori del progetto
-    progetti.entrate_totali              | entrate totali per il progetto
-    progetti.ore_totali                  | ore totali impiegate per il progetto
-    progetti.uscite_totali               | uscite totali per il progetto
-    progetti.note_totali                 | note sui totali per il progetto
-    progetti.data_archiviazione          | data di archiviazione del progetto
-    progetti.note_archiviazione          | note aggiuntive sull'archiviazione del progetto
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    progetti.id                           | l'ID del progetto
+    progetti.id_tipologia                 | l'ID della tipologia del progetto
+    progetti.id_pianificazione            | l'ID della pianificazione cui appartiene il progetto
+    progetti.id_cliente                   | l'ID del cliente del progetto
+    progetti.id_indirizzo                 | l'ID dell'indirizzo del progetto
+    progetti.nome                         | il nome del progetto
+    progetti.note                         | note aggiuntive sul progetto
+    progetti.entrate_previste             | l'importo degli incassi previsti
+    progetti.ore_previste                 | il numero di ore previste per il progetto
+    progetti.costi_previsti               | l'importo dei costi previsti per il progetto
+    progetti.note_previsioni              | note aggiuntive sulle previsioni per il progetto
+    progetti.entrate_accettazione         | l'importo degli incassi accettati per il progetto da parte del cliente
+    progetti.data_accettazione            | data dell'accettazione del progetto da parte del cliente
+    progetti.note_accettazione            | note aggiuntive sull'accettazione del progetto
+    progetti.data_chiusura                | data di chiusura dei lavori del progetto
+    progetti.note_chiusura                | note aggiuntive sulla chiusura dei lavori del progetto
+    progetti.entrate_totali               | entrate totali per il progetto
+    progetti.ore_totali                   | ore totali impiegate per il progetto
+    progetti.uscite_totali                | uscite totali per il progetto
+    progetti.note_totali                  | note sui totali per il progetto
+    progetti.data_archiviazione           | data di archiviazione del progetto
+    progetti.note_archiviazione           | note aggiuntive sull'archiviazione del progetto
+    progetti.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    progetti.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    progetti.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    progetti.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -499,6 +533,8 @@
     progetti_ibfk_02_nofollow           | id_pianificazione             | pianificazioni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
     progetti_ibfk_03_nofollow           | id_cliente                    | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
     progetti_ibfk_04_nofollow           | id_indirizzo                  | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    progetti_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    progetti_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista progetti_view relativa alla tabella progetti presenta le seguenti colonne:
 
@@ -523,6 +559,8 @@
     progetti_view.uscite_totali               | -
     progetti_view.data_archiviazione          | -
     progetti_view.categorie                   | le categorie cui appartiene il progetto
+    progetti_view.id_account_inserimento      | -
+    progetti_view.id_account_aggiornamento    | -
     progetti_view.__label__                   | etichetta descrittiva del progetto
 
     progetti_commerciale
@@ -560,21 +598,27 @@
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *progetti* con l'attività secondaria
     *anagrafica*.
     
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    progetti_anagrafica.id                       | l'ID dell'associazione fra progetto e anagrafica
-    progetti_anagrafica.id_progetto              | l'ID del progetto
-    progetti_anagrafica.id_anagrafica            | l'ID dell'anagrafica
-    progetti_anagrafica.id_ruolo                 | l'ID del ruolo svolto dall'anagrafica nel progetto
-    progetti_anagrafica.ordine                   | campo di ordinamento
+    colonna                                       | descrizione
+    ----------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_anagrafica.id                        | l'ID dell'associazione fra progetto e anagrafica
+    progetti_anagrafica.id_progetto               | l'ID del progetto
+    progetti_anagrafica.id_anagrafica             | l'ID dell'anagrafica
+    progetti_anagrafica.id_ruolo                  | l'ID del ruolo svolto dall'anagrafica nel progetto
+    progetti_anagrafica.ordine                    | campo di ordinamento
+    progetti_anagrafica.id_account_inserimento    | l'ID dell'account che ha inserito la riga
+    progetti_anagrafica.timestamp_inserimento     | la timestamp dell'inserimento della riga
+    progetti_anagrafica.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
+    progetti_anagrafica.timestamp_aggiornamento   | la timestamp dell'ultimo aggiornamento della riga
     
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                      | campo                     | tabella e campo collegati     | comportamento
-    --------------------------------------------|---------------------------|-------------------------------|----------------------
-    progetti_anagrafica_ibfk_01                 | id_progetto               | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    progetti_anagrafica_ibfk_02_nofollow        | id_anagrafica             | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
-    progetti_anagrafica_ibfk_03_nofollow        | id_ruolo                  | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    progetti_anagrafica_ibfk_01                 | id_progetto                   | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_anagrafica_ibfk_02_nofollow        | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_anagrafica_ibfk_03_nofollow        | id_ruolo                      | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
+    progetti_anagrafica_ibfk_98_nofollow        | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    progetti_anagrafica_ibfk_99_nofollow        | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *progetti_anagrafica_view* relativa alla tabella *progetti_anagrafica* presenta le seguenti colonne:
     
@@ -588,6 +632,8 @@
     progetti_anagrafica_view.id_ruolo                 | -
     progetti_anagrafica_view.ruolo                    | il ruolo dell'anagrafica nel progetto
     progetti_anagrafica_view.ordine                   | -
+    progetti_anagrafica_view.id_account_inserimento   | -
+    progetti_anagrafica_view.id_account_aggiornamento | -
     progetti_anagrafica_view.__label__                | etichetta descrittiva dell'associazione fra progetto e anagrafica
 
     progetti_categorie
@@ -600,6 +646,10 @@
     progetti_categorie.id_progetto                | l'ID del progetto
     progetti_categorie.id_categoria               | l'ID della categoria
     progetti_categorie.ordine                     | campo di ordinamento
+    progetti_categorie.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    progetti_categorie.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    progetti_categorie.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    progetti_categorie.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
     
     La tabella ha le seguenti chiavi esterne:
 
@@ -607,18 +657,22 @@
     --------------------------------------------|---------------------------|-------------------------------|----------------------
     progetti_categorie_ibfk_01                  | id_progetto               | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
     progetti_categorie_ibfk_02_nofollow         | id_categoria              | categorie_progetti.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_categorie_ibfk_98_nofollow         | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    progetti_categorie_ibfk_99_nofollow         | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *progetti_categorie_view* relativa alla tabella *progetti_categorie* presenta le seguenti colonne:
     
-    colonna                                 | descrizione
-    ----------------------------------------|---------------------------------------------------------------------------------------
-    progetti_categorie_view.id              | -
-    progetti_categorie_view.id_progetto     | -
-    progetti_categorie_view.progetto        | il progetto
-    progetti_categorie_view.id_categoria    | -
-    progetti_categorie_view.categoria       | la categoria
-    progetti_categorie_view.ordine          | -
-    progetti_categorie_view.__label__       | etichetta descrittiva dell'associazione fra progetto e categoria
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_categorie_view.id                        | -
+    progetti_categorie_view.id_progetto               | -
+    progetti_categorie_view.progetto                  | il progetto
+    progetti_categorie_view.id_categoria              | -
+    progetti_categorie_view.categoria                 | la categoria
+    progetti_categorie_view.ordine                    | -
+    progetti_categorie_view.id_account_inserimento    | -
+    progetti_categorie_view.id_account_aggiornamento  | -
+    progetti_categorie_view.__label__                 | etichetta descrittiva dell'associazione fra progetto e categoria
 
     provincie
     ---------
@@ -651,54 +705,68 @@
     provincie_view.codice_istat      | -
     provincie_view.__label__         | etichetta descrittiva della provincia
     
-    pubblicazione
+    pubblicazioni
     -------------
-    Questa tabella *gestita* contiene le informazioni di pubblicazione sul web relative a numerose
+    Questa tabella *gestita* contiene le informazioni di pubblicazioni sul web relative a numerose
     entità principali.
 
     colonna                                   | descrizione
     ------------------------------------------|---------------------------------------------------------------------------------------
-    pubblicazione.id                          | l'ID della publicazione
-    pubblicazione.id_tipologia                | l'ID della tipologia di pubblicazione
-    pubblicazione.ordine                      | campo di ordinamento
-    pubblicazione.id_prodotto                 | l'ID del prodotto cui si riferisce la pubblicazione
-    pubblicazione.id_categoria_prodotti       | l'ID della categoria di prodotti cui si riferisce la pubblicazione
-    pubblicazione.id_notizia                  | l'ID della notizia cui si riferisce la pubblicazione
-    pubblicazione.id_categoria_notizie        | l'ID della categoria di notizie cui si riferisce la pubblicazione
-    pubblicazione.id_pagina                   | l'ID della pagina cui si riferisce la pubblicazione
-    pubblicazione.id_popup                    | l'ID del popup cui si riferisce la pubblicazione
-    pubblicazione.note                        | note aggiuntive sulla pubblicazione
-    pubblicazione.timestamp_inizio            | timestamp di inizio della pubblicazione
-    pubblicazione.timestamp_fine              | timestamp di fine della pubblicazione
+    pubblicazioni.id                          | l'ID della publicazione
+    pubblicazioni.id_tipologia                | l'ID della tipologia di pubblicazione
+    pubblicazioni.ordine                      | campo di ordinamento
+    pubblicazioni.id_pagina                   | l'ID della pagina cui si riferisce la pubblicazione
+    pubblicazioni.id_popup                    | l'ID del popup cui si riferisce la pubblicazione
+    pubblicazioni.id_prodotto                 | l'ID del prodotto cui si riferisce la pubblicazione
+    pubblicazioni.id_categoria_prodotti       | l'ID della categoria di prodotti cui si riferisce la pubblicazione
+    pubblicazioni.id_notizia                  | l'ID della notizia cui si riferisce la pubblicazione
+    pubblicazioni.id_categoria_notizie        | l'ID della categoria di notizie cui si riferisce la pubblicazione
+    pubblicazioni.id_risorsa                  | l'ID della risorsa cui si riferisce la pubblicazione
+    pubblicazioni.id_categoria_risorse        | l'ID della categoria di risorse cui si riferisce la pubblicazione
+    pubblicazioni.note                        | note aggiuntive sulla pubblicazione
+    pubblicazioni.timestamp_inizio            | timestamp di inizio della pubblicazione
+    pubblicazioni.timestamp_fine              | timestamp di fine della pubblicazione
+    pubblicazioni.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    pubblicazioni.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    pubblicazioni.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    pubblicazioni.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
     chiave                                      | campo                     | tabella e campo collegati         | comportamento
     --------------------------------------------|---------------------------|-----------------------------------|------------------
-    pubblicazione_ibfk_01_nofollow              | id_tipologia              | tipologie_pubblicazione.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
-    pubblicazione_ibfk_02                       | id_prodotto               | prodotti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazione_ibfk_03                       | id_categoria_prodotti     | categorie_prodotti.id             | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazione_ibfk_04                       | id_notizia                | notizie.id                        | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazione_ibfk_05                       | id_categoria_notizie      | categorie_notizie.id              | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazione_ibfk_06                       | id_pagina                 | pagine.id                         | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazione_ibfk_07                       | id_popup                  | popup.id                          | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_01_nofollow              | id_tipologia              | tipologie_pubblicazioni.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pubblicazioni_ibfk_02                       | id_pagina                 | pagine.id                         | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_03                       | id_popup                  | popup.id                          | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_04                       | id_prodotto               | prodotti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_05                       | id_categoria_prodotti     | categorie_prodotti.id             | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_06                       | id_notizia                | notizie.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_07                       | id_categoria_notizie      | categorie_notizie.id              | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_08                       | id_risorsa                | risorse.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_09                       | id_categoria_risorse      | categorie_risorse.id              | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_98_nofollow              | id_account_inserimento    | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    pubblicazioni_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
-    La vista *pubblicazione_view* relativa alla tabella *pubblicazione* presenta le seguenti colonne:
-    
-    colonna                                        | descrizione
-    -----------------------------------------------|---------------------------------------------------------------------------------------
-    pubblicazione_view.id                          | -
-    pubblicazione_view.id_tipologia                | -
-    pubblicazione_view.tipologia                   | la tipologia della pubblicazione
-    pubblicazione_view.ordine                      | -
-    pubblicazione_view.id_prodotto                 | -
-    pubblicazione_view.id_categoria_prodotti       | -
-    pubblicazione_view.id_notizia                  | -
-    pubblicazione_view.id_categoria_notizie        | -
-    pubblicazione_view.id_pagina                   | -
-    pubblicazione_view.id_popup                    | -
-    pubblicazione_view.timestamp_inizio            | -
-    pubblicazione_view.timestamp_fine              | -
-    pubblicazione_view.__label__                   | etichetta descrittiva della pubblicazione
-    
-    */
+    La vista *pubblicazioni_view* relativa alla tabella *pubblicazioni* presenta le seguenti colonne:
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    pubblicazioni_view.id                           | -
+    pubblicazioni_view.id_tipologia                 | -
+    pubblicazioni_view.tipologia                    | la tipologia della pubblicazione
+    pubblicazioni_view.ordine                       | -
+    pubblicazioni_view.id_pagina                    | -
+    pubblicazioni_view.id_popup                     | -
+    pubblicazioni_view.id_prodotto                  | -
+    pubblicazioni_view.id_categoria_prodotti        | -
+    pubblicazioni_view.id_notizia                   | -
+    pubblicazioni_view.id_categoria_notizie         | -
+    pubblicazioni_view.id_risorsa                   | -
+    pubblicazioni_view.id_categoria_risorse         | -
+    pubblicazioni_view.timestamp_inizio             | -
+    pubblicazioni_view.timestamp_fine               | -
+    pubblicazioni_view.id_account_inserimento       | -
+    pubblicazioni_view.id_account_aggiornamento     | -
+    pubblicazioni_view.__label__                    | etichetta descrittiva della pubblicazione
+
+*/

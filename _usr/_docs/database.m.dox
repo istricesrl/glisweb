@@ -19,28 +19,50 @@
     macro.id_prodotto               | l'ID del prodotto cui si riferisce la macro
     macro.id_articolo               | l'ID dell'articolo cui si riferisce la macro
     macro.id_categoria_prodotti     | l'ID della categoria di prodotti cui si riferisce la macro
+    macro.id_notizia                | l'ID della notizia cui si riferisce la macro
+    macro.id_categoria_notizie      | l'ID della categoria di notizie cui si riferisce la macro
+    macro.id_risorsa                | l'ID della risorsa cui si riferisce la macro
+    macro.id_categoria_risorse      | l'ID della categoria di risorse cui si riferisce la macro
+    macro.ordine                    | campo di ordinamento
     macro.macro                     | il percorso della macro
+    macro.id_account_inserimento    | l'ID dell'account che ha inserito la riga
+    macro.timestamp_inserimento     | la timestamp dell'inserimento della riga
+    macro.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
+    macro.timestamp_aggiornamento   | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave              | campo                     | tabella e campo collegati     | comportamento
-    --------------------|---------------------------|-------------------------------|----------------------
-    macro_ibfk_01       | id_pagina                 | pagine.id                     | ON DELETE CASCADE ON UPDATE CASCADE
-    macro_ibfk_02       | id_prodotto               | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    macro_ibfk_03       | id_articolo               | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    macro_ibfk_04       | id_categoria_prodotti     | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                      | campo                     | tabella e campo collegati     | comportamento
+    ----------------------------|---------------------------|-------------------------------|----------------------
+    macro_ibfk_01               | id_pagina                 | pagine.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    macro_ibfk_02               | id_prodotto               | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    macro_ibfk_03               | id_articolo               | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    macro_ibfk_04               | id_categoria_prodotti     | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    macro_ibfk_05               | id_notizia                | notizie.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    macro_ibfk_06               | id_categoria_notizie      | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    macro_ibfk_07               | id_risorsa                | risorse.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    macro_ibfk_08               | id_categoria_risorse      | categorie_risorse.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    macro_ibfk_98_nofollow      | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    macro_ibfk_99_nofollow      | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *macro_view* relativa alla tabella *macro* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    macro_view.id                        | -
-    macro_view.id_pagina                 | -
-    macro_view.id_prodotto               | -
-    macro_view.id_articolo               | -
-    macro_view.id_categoria_prodotti     | -
-    macro_view.macro                     | -
-    macro_view.macro                     | l'etichetta descrittiva della macro
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    macro_view.id                           | -
+    macro_view.id_pagina                    | -
+    macro_view.id_prodotto                  | -
+    macro_view.id_articolo                  | -
+    macro_view.id_categoria_prodotti        | -
+    macro_view.id_notizia                   | -
+    macro_view.id_categoria_notizie         | -
+    macro_view.id_risorsa                   | -
+    macro_view.id_categoria_risorse         | -
+    macro_view.ordine                       | -
+    macro_view.macro                        | -
+    macro_view.id_account_inserimento       | -
+    macro_view.id_account_aggiornamento     | -
+    macro_view.__label__                    | l'etichetta descrittiva della macro
     
     mail
     ----
@@ -181,7 +203,7 @@
     mail_sent.timestamp_inserimento         | la timestamp dell'inserimento della riga
     mail_sent.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
     mail_sent.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
-    
+
     La tabella ha le seguenti chiavi esterne:
 
     chiave                               | campo                        | tabella e campo collegati     | comportamento
@@ -219,54 +241,36 @@
     mail_sent_view.id_account_aggiornamento | -
     mail_sent_view.__label__                | etichetta descrittiva della mail
 
-    mailing
-    -------
-    Questa tabella *gestita* contiene gli invii massivi di mail. Per ulteriori informazioni sul funzionamento dell'invio massivo
-    di mail si faccia riferimento alla documentazione del modulo *mailing*.
-
-    colonna                             | descrizione
-    ------------------------------------|---------------------------------------------------------------------------------------
-    mailing.id                          | l'ID dell'invio massivo
-    mailing.id_job                      | l'ID del job di generazione mail collegato all'invio massivo
-    mailing.nome                        | il nome dell'invio massivo
-    mailing.note                        | note aggiuntive sull'invio massivo
-    mailing.timestamp_invio             | la timestamp di inizio di invio delle mail
-
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                          | campo                     | tabella e campo collegati     | comportamento
-    --------------------------------|---------------------------|-------------------------------|----------------------
-    mailing_ibfk_01_nofollow        | id_job                    | job.id                        | ON DELETE SET NULL ON UPDATE SET NULL
-
-    La vista *mailing_view* relativa alla tabella *mailing* presenta le seguenti colonne:
-
-    colonna                                  | descrizione
-    -----------------------------------------|---------------------------------------------------------------------------------------
-    mailing_view.id                          | -
-    mailing_view.id_job                      | -
-    mailing_view.nome                        | -
-    mailing_view.timestamp_invio             | -
-    mailing_view.__label__                   | l'etichetta descrittiva dell'invio massivo
-
     marchi
     ------
     Questa tabella *gestita* contiene i marchi gestiti dal framework.
 
-    colonna                         | descrizione
-    --------------------------------|---------------------------------------------------------------------------------------
-    marchi.id                       | l'ID del marchio
-    marchi.nome                     | il nome del marchio
-    marchi.note                     | note descrittive del marchio
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    marchi.id                           | l'ID del marchio
+    marchi.nome                         | il nome del marchio
+    marchi.note                         | note descrittive del marchio
+    marchi.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    marchi.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    marchi.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    marchi.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
 
-    La tabella non ha chiavi esterne.
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                          | campo                        | tabella e campo collegati     | comportamento
+    --------------------------------|------------------------------|-------------------------------|----------------------
+    marchi_ibfk_98_nofollow         | id_account_inserimento       | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    marchi_ibfk_99_nofollow         | id_account_aggiornamento     | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *marchi_view* relativa alla tabella *marchi* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    marchi_view.id                       | -
-    marchi_view.nome                     | -
-    marchi_view.__label__                | etichetta descrittiva del marchio
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    marchi_view.id                          | -
+    marchi_view.nome                        | -
+    marchi_view.id_account_inserimento      | -
+    marchi_view.id_account_aggiornamento    | -
+    marchi_view.__label__                   | etichetta descrittiva del marchio
     
     mastri
     ------
@@ -279,94 +283,88 @@
     mastri.id_tipologia             | l'ID della tipologia del mastro
     mastri.nome                     | il nome del mastro
     mastri.note                     | note descrittive del mastro
+    mastri.id_account_inserimento   | l'ID dell'account che ha inserito la riga
+    mastri.timestamp_inserimento    | la timestamp dell'inserimento della riga
+    mastri.id_account_aggiornamento | l'ID dell'ultimo account che ha modificato la riga
+    mastri.timestamp_aggiornamento  | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                          | campo                 | tabella e campo collegati     | comportamento
-    --------------------------------|-----------------------|-------------------------------|----------------------
-    mastri_ibfk_01_nofollow         | id_genitore           | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    mastri_ibfk_02_nofollow         | id_tipologia          | tipologie_mastri.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                          | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------|---------------------------|-------------------------------|----------------------
+    mastri_ibfk_01_nofollow         | id_genitore               | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    mastri_ibfk_02_nofollow         | id_tipologia              | tipologie_mastri.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
+    mastri_ibfk_98_nofollow         | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    mastri_ibfk_99_nofollow         | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *mastri_view* relativa alla tabella *mastri* presenta le seguenti colonne:
 
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    mastri_view.id                       | -
-    mastri_view.id_tipologia             | -
-    mastri_view.tipologia                | la tipologia del mastro
-    mastri_view.nome                     | -
-    mastri_view.__label__                | etichetta descrittiva del mastro
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    mastri_view.id                          | -
+    mastri_view.id_tipologia                | -
+    mastri_view.tipologia                   | la tipologia del mastro
+    mastri_view.nome                        | -
+    mastri_view.id_account_inserimento      | -
+    mastri_view.id_account_aggiornamento    | -
+    mastri_view.__label__                   | etichetta descrittiva del mastro
 
-    matricole
-    ---------
-    Questa tabella *gestita* contiene le matricole intese come codici univoci che identificano uno specifico oggetto
-    del mondo reale; viene utilizzata per vari scopi dall'inventario dei cespiti all'immatricolazione degli oggetti
-    venduti passando per la catalogazione di oggetti in transito, eccetera.
-
-    colonna                            | descrizione
-    -----------------------------------|---------------------------------------------------------------------------------------
-    matricole.id                       | l'ID dell'oggetto immatricolato
-    matricole.numero                   | il numero di matricola dell'oggetto
-    matricole.id_marchio               | l'ID del marchio dell'oggetto immatricolato
-    matricole.id_produttore            | l'ID del produttore dell'oggetto immatricolato
-    matricole.nome                     | il nome dell'oggetto immatricolato
-    matricole.testo                    | la descrizione dell'oggetto immatricolato
-
-    Questa tabella non ha chiavi esterne.
-
-    La vista matricole_view relativa alla tabella matricole presenta le seguenti colonne:
-
-    colonna                              | descrizione
-    -------------------------------------|---------------------------------------------------------------------------------------
-    matricole_view.id                    | -
-    matricole_view.code128               | il barcode Code 128 dell'oggetto immatricolato
-    matricole_view.numero                | -
-    matricole_view.id_marchio            | -
-    matricole_view.marchio               | il marchio dell'oggetto immatricolato
-    matricole_view.id_produttore         | -
-    matricole_view.produttore            | il produttore dell'oggetto immatricolato
-    matricole_view.nome                  | -
-    matricole_view.__label__             | etichetta descrittiva dell'oggetto immatricolato
-    
     menu
     ----
     Questa tabella *gestita* contiene le voci di menu dei siti; è una delle componenti principali del CMS
     assieme alle tabelle *pagine* e *contenuti*. L'organizzazione delle pagine in GlisWeb è incentrata sulle pagine,
     e non sulle voci di menu che sono un attributo delle pagine stesse.
 
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    menu.id                           | l'ID della voce di menu
-    menu.id_lingua                    | l'ID della lingua della voce di menu
-    menu.id_pagina                    | l'ID della pagina cui si riferisce la voce di menu
-    menu.ordine                       | campo di ordinamento
-    menu.menu                         | il nome del menu cui appartiene la voce
-    menu.nome                         | la voce di menu
-    menu.target                       | il valore dell'attributo target della voce di menu
-    menu.sottopagine                  | strategia applicata alle sottopagine per la voce di menu
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    menu.id                         | l'ID della voce di menu
+    menu.id_lingua                  | l'ID della lingua della voce di menu
+    menu.id_pagina                  | l'ID della pagina cui si riferisce la voce di menu
+    menu.id_categoria_prodotti      | l'ID della categoria di prodotti cui si riferisce la voce di menu
+    menu.id_categoria_notizie       | l'ID della categoria di notizie cui si riferisce la voce di menu
+    menu.id_categoria_risorse       | l'ID della categoria di risorse cui si riferisce la voce di menu
+    menu.ordine                     | campo di ordinamento
+    menu.menu                       | il nome del menu cui appartiene la voce
+    menu.nome                       | la voce di menu
+    menu.target                     | il valore dell'attributo target della voce di menu
+    menu.sottopagine                | strategia applicata alle sottopagine per la voce di menu
+    menu.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    menu.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    menu.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    menu.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     Relativamente alla strategia per le sottopagine si faccia riferimento ai commenti in _src/_lib/_menu.utils.php.
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                          | campo                 | tabella e campo collegati     | comportamento
-    --------------------------------|-----------------------|-------------------------------|----------------------
-    menu_ibfk_01_nofollow           | id_lingua             | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    menu_ibfk_02                    | id_pagina             | pagine.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                          | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------|---------------------------|-------------------------------|----------------------
+    menu_ibfk_01_nofollow           | id_lingua                 | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    menu_ibfk_02                    | id_pagina                 | pagine.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    menu_ibfk_03                    | id_categoria_prodotti     | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    menu_ibfk_04                    | id_categoria_notizie      | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    menu_ibfk_05                    | id_categoria_risorse      | categorie_risorse.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    menu_ibfk_98_nofollow           | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    menu_ibfk_99_nofollow           | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *menu_view* relativa alla tabella *menu* presenta le seguenti colonne:
 
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
-    menu_view.id                           | -
-    menu_view.id_lingua                    | -
-    menu_view.id_pagina                    | -
-    menu_view.ordine                       | -
-    menu_view.menu                         | -
-    menu_view.nome                         | -
-    menu_view.target                       | -
-    menu_view.sottopagine                  | -
-    menu_view.__label__                    | etichetta descrittiva della voce di menu
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    menu_view.id                            | -
+    menu_view.id_lingua                     | -
+    menu_view.id_pagina                     | -
+    menu_view.id_categoria_prodotti         | -
+    menu_view.id_categoria_notizie          | -
+    menu_view.id_categoria_risorse          | -
+    menu_view.ordine                        | -
+    menu_view.menu                          | -
+    menu_view.nome                          | -
+    menu_view.target                        | -
+    menu_view.sottopagine                   | -
+    menu_view.id_account_inserimento        | -
+    menu_view.id_account_aggiornamento      | -
+    menu_view.__label__                     | etichetta descrittiva della voce di menu
     
     metadati
     --------
@@ -378,26 +376,29 @@
     opzionalmente localizzate tramite il campo *id_lingua*. Per ulteriori informazioni su come i metadati vengono associati
     agli oggetti si vedano i commenti alla libreria _src/_lib/_mysql.utils.php.
 
-    colonna                           | descrizione
-    ----------------------------------|---------------------------------------------------------------------------------------
-    metadati.id                       | l'ID del metadato
-    metadati.id_lingua                | l'ID della lingua del metadato
-    metadati.id_anagrafica            | l'ID dell'anagrafica cui si riferisce il metadato
-    metadati.id_prodotto              | l'ID del prodotto cui si riferisce il metadato
-    metadati.id_articolo              | l'ID dell'articolo cui si riferisce il metadato
-    metadati.id_categoria_prodotti    | l'ID della categoria di prodotti cui si riferisce il metadato
-    metadati.id_risorsa               | l'ID della risorsa cui si riferisce il metadato
-    metadati.id_categoria_risorse     | l'ID della categoria di risorse cui si riferisce il metadato
-    metadati.id_immagine              | l'ID dell'immagine cui si riferisce il metadato
-    metadati.id_video                 | l'ID del video cui si riferisce il metadato
-    metadati.id_audio                 | l'ID dell'audio cui si riferisce il metadato
-    metadati.id_file                  | l'ID del file cui si riferisce il metadato
-    metadati.id_pagina                | l'ID della pagina cui si riferisce il metadato
-    metadati.id_notizia               | l'ID della notizia cui si riferisce il metadato
-    metadati.id_categoria_notizie     | l'ID della categoria di notizie cui si riferisce il metadato
-    metadati.id_mailing               | l'ID del mailing cui si riferisce il metadato
-    metadati.nome                     | la chiave del metadato
-    metadati.testo                    | il valore del metadato
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    metadati.id                         | l'ID del metadato
+    metadati.id_lingua                  | l'ID della lingua del metadato
+    metadati.id_anagrafica              | l'ID dell'anagrafica cui si riferisce il metadato
+    metadati.id_pagina                  | l'ID della pagina cui si riferisce il metadato
+    metadati.id_prodotto                | l'ID del prodotto cui si riferisce il metadato
+    metadati.id_articolo                | l'ID dell'articolo cui si riferisce il metadato
+    metadati.id_categoria_prodotti      | l'ID della categoria di prodotti cui si riferisce il metadato
+    metadati.id_notizia                 | l'ID della notizia cui si riferisce il metadato
+    metadati.id_categoria_notizie       | l'ID della categoria di notizie cui si riferisce il metadato
+    metadati.id_risorsa                 | l'ID della risorsa cui si riferisce il metadato
+    metadati.id_categoria_risorse       | l'ID della categoria di risorse cui si riferisce il metadato
+    metadati.id_immagine                | l'ID dell'immagine cui si riferisce il metadato
+    metadati.id_video                   | l'ID del video cui si riferisce il metadato
+    metadati.id_audio                   | l'ID dell'audio cui si riferisce il metadato
+    metadati.id_file                    | l'ID del file cui si riferisce il metadato
+    metadati.nome                       | la chiave del metadato
+    metadati.testo                      | il valore del metadato
+    metadati.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    metadati.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    metadati.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    metadati.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
   
     La tabella ha le seguenti chiavi esterne:
 
@@ -405,43 +406,45 @@
     ------------------------------------|-------------------------------|-------------------------------|----------------------
     metadati_ibfk_01_nofollow           | id_lingua                     | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     metadati_ibfk_02                    | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_03                    | id_prodotto                   | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_04                    | id_articolo                   | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_05                    | id_categoria_prodotti         | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_06                    | id_risorsa                    | risorse.id                    | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_07                    | id_categoria_risorse          | categorie_risorse.id          | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_08                    | id_immagine                   | immagini.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_09                    | id_video                      | video.id                      | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_10                    | id_audio                      | audio.id                      | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_11                    | id_file                       | file.id                       | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_12                    | id_pagina                     | pagine.id                     | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_13                    | id_notizia                    | notizie.id                    | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_14                    | id_categoria_notizie          | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_15                    | id_mailing                    | mailing.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_03                    | id_pagina                     | pagine.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_04                    | id_prodotto                   | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_05                    | id_articolo                   | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_06                    | id_categoria_prodotti         | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_07                    | id_notizia                    | notizie.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_08                    | id_categoria_notizie          | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_09                    | id_risorsa                    | risorse.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_10                    | id_categoria_risorse          | categorie_risorse.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_11                    | id_immagine                   | immagini.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_12                    | id_video                      | video.id                      | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_13                    | id_audio                      | audio.id                      | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_14                    | id_file                       | file.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    metadati_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *metadati_view* relativa alla tabella *metadati* presenta le seguenti colonne:
 
-    colonna                                | descrizione
-    ---------------------------------------|---------------------------------------------------------------------------------------
-    metadati_view.id                       | -
-    metadati_view.id_lingua                | -
-    metadati_view.ietf                     | il codice IETF della lingua del metadato
-    metadati_view.id_anagrafica            | -
-    metadati_view.id_prodotto              | -
-    metadati_view.id_articolo              | -
-    metadati_view.id_categoria_prodotti    | -
-    metadati_view.id_risorsa               | -
-    metadati_view.id_categoria_risorse     | -
-    metadati_view.id_immagine              | -
-    metadati_view.id_video                 | -
-    metadati_view.id_audio                 | -
-    metadati_view.id_file                  | -
-    metadati_view.id_pagina                | -
-    metadati_view.id_notizia               | -
-    metadati_view.id_categoria_notizie     | -
-    metadati_view.id_mailing               | -
-    metadati_view.nome                     | -
-    metadati_view.testo                    | -
-    metadati_view.__label__                | l'etichetta descrittiva del metadato
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    metadati_view.id                        | -
+    metadati_view.id_lingua                 | -
+    metadati_view.ietf                      | il codice IETF della lingua del metadato
+    metadati_view.id_anagrafica             | -
+    metadati_view.id_pagina                 | -
+    metadati_view.id_prodotto               | -
+    metadati_view.id_articolo               | -
+    metadati_view.id_categoria_prodotti     | -
+    metadati_view.id_notizia                | -
+    metadati_view.id_categoria_notizie      | -
+    metadati_view.id_risorsa                | -
+    metadati_view.id_categoria_risorse      | -
+    metadati_view.id_immagine               | -
+    metadati_view.id_video                  | -
+    metadati_view.id_audio                  | -
+    metadati_view.id_file                   | -
+    metadati_view.nome                      | -
+    metadati_view.testo                     | -
+    metadati_view.id_account_inserimento    | -
+    metadati_view.id_account_aggiornamento  | -
+    metadati_view.__label__                 | l'etichetta descrittiva del metadato
     
 */

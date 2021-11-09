@@ -20,27 +20,35 @@
     organizzazioni.id_ruolo                             | l'ID del ruolo ricoperto dall'anagrafica nel nodo
     organizzazioni.nome                                 | nome del nodo dell'organizzazione
     organizzazioni.note                                 | note sul nodo dell'organizzazione
+    organizzazioni.id_account_inserimento               | l'ID dell'account che ha inserito la riga
+    organizzazioni.timestamp_inserimento                | la timestamp dell'inserimento della riga
+    organizzazioni.id_account_aggiornamento             | l'ID dell'ultimo account che ha modificato la riga
+    organizzazioni.timestamp_aggiornamento              | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                                        | campo                         | tabella e campo collegati     | comportamento
-    ----------------------------------------------|-------------------------------|-------------------------------|----------------------
-    organizzazioni_ibfk_01_nofollow               | id_genitore                   | organizzazioni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
-    organizzazioni_ibfk_02                        | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
-    organizzazioni_ibfk_03_nofollow               | id_ruolo                      | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    organizzazioni_ibfk_01_nofollow             | id_genitore                   | organizzazioni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    organizzazioni_ibfk_02                      | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    organizzazioni_ibfk_03_nofollow             | id_ruolo                      | ruoli_anagrafica.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
+    organizzazioni_ibfk_98_nofollow             | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    organizzazioni_ibfk_99_nofollow             | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *organizzazioni_view* relativa alla tabella *organizzazioni* presenta le seguenti colonne:
 
-    colonna                                              | descrizione
-    -----------------------------------------------------|---------------------------------------------------------------------------------------
-    organizzazioni_view.id                               | -
-    organizzazioni_view.id_genitore                      | -
-    organizzazioni_view.ordine                           | -
-    organizzazioni_view.id_anagrafica                    | -
-    organizzazioni_view.anagrafica                       | l'anagrafica collegata al nodo dell'organizzazione
-    organizzazioni_view.id_ruolo                         | -
-    organizzazioni_view.ruolo                            | il ruolo ricoperto dall'anagrafica nel nodo
-    organizzazioni_view.nome                             | -
-    organizzazioni_view.__label__                        | etichetta descrittiva del nodo dell'organizzazione
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    organizzazioni_view.id                              | -
+    organizzazioni_view.id_genitore                     | -
+    organizzazioni_view.ordine                          | -
+    organizzazioni_view.id_anagrafica                   | -
+    organizzazioni_view.anagrafica                      | l'anagrafica collegata al nodo dell'organizzazione
+    organizzazioni_view.id_ruolo                        | -
+    organizzazioni_view.ruolo                           | il ruolo ricoperto dall'anagrafica nel nodo
+    organizzazioni_view.nome                            | -
+    organizzazioni_view.id_account_inserimento          | -
+    organizzazioni_view.id_account_aggiornamento        | -
+    organizzazioni_view.__label__                       | etichetta descrittiva del nodo dell'organizzazione
 
 */

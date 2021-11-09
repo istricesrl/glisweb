@@ -41,16 +41,27 @@
 
     tabella                         | codice    | modello       | gruppo        | descrizione
     --------------------------------|-----------|---------------|---------------|------------------------------
+    colori                          | 005100    | base          | principale    | contiene i colori
     comuni                          | 005300    | base          | principale    | contiene i comuni
     continenti                      | 007100    | base          | principale    | contiene i continenti
+    iva                             | 016000    | base          | principale    | contiene le aliquote IVA
     lingue                          | 016800    | base          | principale    | contiene le lingue supportate dal framework
+    periodicita                     | 023600    | base          | principale    | contiene le periodicità
     provincie                       | 028000    | base          | principale    | contiene le provincie
+    regimi                          | 029800    | base          | principale    | contiene i regimi fiscali
     regioni                         | 030200    | base          | principale    | contiene le regioni
-    ruoli_indirizzi                 | 034800    | base          | ruoli         | contiene i ruoli svolti dagli indirizzi
+    ruoli_anagrafica                | 034000    | ricorsiva     | ruoli         | contiene i ruoli svolti dalle anagrafiche
+    ruoli_audio                     | 034200    | ricorsiva     | ruoli         | contiene i ruoli svolti dagli audio
+    ruoli_file                      | 034400    | ricorsiva     | ruoli         | contiene i ruoli svolti dai file
+    ruoli_immagini                  | 034600    | ricorsiva     | ruoli         | contiene i ruoli svolti dalle immagini
+    ruoli_indirizzi                 | 034800    | ricorsiva     | ruoli         | contiene i ruoli svolti dagli indirizzi
+    ruoli_prodotti                  | 035000    | ricorsiva     | ruoli         | contiene i ruoli svolti dai prodotti
+    ruoli_video                     | 035200    | ricorsiva     | ruoli         | contiene i ruoli svolti dai video
     settori                         | 037000    | ricorsiva     | principale    | contiene i settori di attività ATECO
     stati                           | 042000    | base          | principale    | contiene gli stati
-    tipologie_anagrafica            | 050000    | ricorsiva     | tipologie     | contiene le tipologie delle anagrafiche
-    tipologie_telefoni              | 056200    | ricorsiva     | tipologie     | contiene le tipologie di telefoni
+    stati_lingue                    | 042200    | relazione     | principale    | mette in relazione stati e lingue
+    udm                             | 062000    | ricorsiva     | principale    | contiene le unità di misura
+    valute                          | 063000    | base          | principale    | contiene le valute
 
     le tabelle assistite
     --------------------
@@ -61,8 +72,22 @@
     tabella                         | codice    | modello       | gruppo        | descrizione
     --------------------------------|-----------|---------------|---------------|------------------------------
     categorie_anagrafica            | 003100    | ricorsiva     | categorie     | contiene le categorie dell'anagrafica
+    listini                         | 017200    | base          | principale    | contiene i listini
     ranking                         | 028600    | base          | principale    | contiene i ranking relativi all'anagrafica
     task                            | 043000    | base          | principale    | contiene i task pianificati
+    tipologie_anagrafica            | 050000    | ricorsiva     | tipologie     | contiene le tipologie delle anagrafiche
+    tipologie_attivita              | 050400    | ricorsiva     | tipologie     | contiene le tipologie delle attività
+    tipologie_contatti              | 050800    | ricorsiva     | tipologie     | contiene le tipologie di contatti
+    tipologie_indirizzi             | 053000    | ricorsiva     | tipologie     | contiene le tipologie di indirizzi
+    tipologie_mastri                | 053400    | ricorsiva     | tipologie     | contiene le tipologie di mastri
+    tipologie_notizie               | 053800    | ricorsiva     | tipologie     | contiene le tipologie di notizie
+    tipologie_popup                 | 054200    | ricorsiva     | tipologie     | contiene le tipologie di popup
+    tipologie_prodotti              | 054600    | ricorsiva     | tipologie     | contiene le tipologie di prodotti
+    tipologie_progetti              | 055000    | ricorsiva     | tipologie     | contiene le tipologie di progetti
+    tipologie_pubblicazioni         | 055400    | ricorsiva     | tipologie     | contiene le tipologie di pubblicazioni
+    tipologie_risorse               | 055800    | ricorsiva     | tipologie     | contiene le tipologie di risorse
+    tipologie_telefoni              | 056200    | ricorsiva     | tipologie     | contiene le tipologie di telefoni
+    tipologie_todo                  | 056600    | ricorsiva     | tipologie     | contiene le tipologie di todo
 
     le tabelle gestite
     ------------------
@@ -79,25 +104,88 @@
     anagrafica_cittadinanze         | 000700    | relazione     | principale    | mette in relazione anagrafica e stati
     anagrafica_indirizzi            | 000900    | relazione     | principale    | mette in relazione anagrafica e indirizzi
     anagrafica_settori              | 001200    | relazione     | principale    | mette in relazione anagrafica e settori
+    articoli                        | 001300    | base          | principale    | contiene gli articoli
+    articoli_caratteristiche        | 001600    | relazione     | principale    | mette in relazione articoli e caratteristiche_prodotti
+    attivita                        | 001800    | base          | principale    | contiene le attività
+    audio                           | 002100    | base          | contenuti     | contiene gli audio
+    caratteristiche_prodotti        | 002900    | base          | principale    | contiene le caratteristiche dei prodotti
+    categorie_notizie               | 003700    | ricorsiva     | categorie     | contiene le categorie di notizie
+    categorie_prodotti              | 003900    | ricorsiva     | categorie     | contiene le categorie di prodotti
+    categorie_progetti              | 004300    | ricorsiva     | categorie     | contiene le categorie di progetti
+    categorie_risorse               | 004500    | ricorsiva     | categorie     | contiene le categorie di risorse
+    contatti                        | 006700    | base          | principale    | contiene i contatti
+    contenuti                       | 006900    | base          | contenuti     | contiene i testi
+    coupon                          | 008000    | base          | principale    | contiene i coupon
+    coupon_categorie_prodotti       | 008200    | relazione     | principale    | mette in relazione coupon e categorie_prodotti
+    coupon_listini                  | 008400    | relazione     | principale    | mette in relazione coupon e listini
+    coupon_marchi                   | 008600    | relazione     | principale    | mette in relazione coupon e marchi
+    coupon_prodotti                 | 008800    | relazione     | principale    | mette in relazione coupon e prodotti
+    documenti                       | 009800    | base          | principale    | contiene i documenti
+    documenti_articoli              | 010000    | relazione     | principale    | mette in relazione documenti e articoli
+    file                            | 015000    | base          | contenuti     | contiene i file
     gruppi                          | 015200    | ricorsiva     | principale    | contiene i gruppi attivi nel framework
+    iban                            | 015400    | base          | principale    | contiene gli IBAN
+    immagini                        | 015600    | base          | contenuti     | contiene le immagini
     indirizzi                       | 015800    | base          | principale    | contiene gli indirizzi
     job                             | 016200    | base          | principale    | contiene i job
+    listini_clienti                 | 017400    | relazione     | principale    | mette in relazione listini e anagrafica
+    luoghi                          | 018000    | ricorsiva     | principale    | contiene i luoghi
+    macro                           | 018200    | base          | contenuti     | contiene le macro
     mail                            | 018600    | base          | principale    | contiene gli indirizzi e-mail
     mail_out                        | 018800    | base          | principale    | contiene le mail in uscita
     mail_sent                       | 018900    | base          | principale    | contiene le mail inviate
+    marchi                          | 020200    | base          | principale    | contiene i marchi
+    mastri                          | 020600    | ricorsiva     | principale    | contiene i mastri
+    menu                            | 021600    | base          | contenuti     | contiene le voci di menu
+    metadati                        | 021800    | base          | contenuti     | contiene i metadati
+    notizie                         | 022000    | base          | principale    | contiene le notizie
+    notizie_categorie               | 022200    | relazione     | principale    | mette in relazione notizie e categorie_notizie
+    organizzazioni                  | 022800    | ricorsiva     | principale    | contiene le organizzazioni
+    pagine                          | 023200    | base          | principale    | contiene le pagine web
+    pianificazioni                  | 023800    | base          | principale    | contiene le pianificazioni
+    popup                           | 024000    | base          | principale    | contiene i popup
+    popup_pagine                    | 024200    | relazione     | principale    | mette in relazione popup e pagine
+    prezzi                          | 025000    | base          | principale    | contiene i prezzi
+    prodotti                        | 026000    | base          | principale    | contiene i prodotti
+    prodotti_caratteristiche        | 026200    | relazione     | principale    | mette in relazione prodotti e caratteristiche_prodotti
+    prodotti_categorie              | 026400    | relazione     | principale    | mette in relazione prodotti e categorie_prodotti
+    progetti                        | 027000    | base          | principale    | contiene i progetti
+    progetti_anagrafica             | 027200    | relazione     | principale    | mette in relazione progetti e anagrafica
+    progetti_categorie              | 027400    | relazione     | principale    | mette in relazione progetti e categorie_progetti
+    pubblicazioni                   | 028400    | base          | principale    | contiene le pubblicazioni
+    redirect                        | 029400    | base          | principale    | contiene i redirect HTTP
+    reparti                         | 030800    | base          | principale    | contiene i reparti
+    risorse                         | 032000    | base          | principale    | contiene le risorse
+    risorse_anagrafica              | 032200    | relazione     | principale    | mette in relazione risorse e anagrafica
+    risorse_categorie               | 032400    | relazione     | principale    | mette in relazione risorse e categorie_risorse
     sms_out                         | 041000    | base          | principale    | contiene gli SMS in uscita
     sms_sent                        | 041200    | base          | principale    | contiene gli SMS inviati
     telefoni                        | 043600    | base          | principale    | contiene i numeri di telefono
     template                        | 044000    | base          | principale    | contiene i template per le mail e gli SMS
+    todo                            | 060000    | base          | principale    | contiene le todo
+    url                             | 062600    | base          | principale    | contiene gli URL
+    video                           | 065000    | base          | contenuti     | contiene i video
 
     tabelle e moduli
     ================
     Non tutti i moduli necessitano di tutte le tabelle. Per sapere quali tabelle sono richieste dai vari moduli è
     possibile fare riferimento alla seguente tabella:
 
-    modulo                  | tabella
-    ------------------------|----------------------------------------------------------
-    BASE                    | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, comuni, continenti, gruppi, indirizzi, job, lingue, mail, mail_out, mail_sent, ranking, regioni, ruoli_indirizzi, settori, sms_out, sms_sent, stati, task, telefoni, template, tipologie_anagrafica, tipologie_telefoni
+    modulo      | codice    | tabella
+    ------------|-----------|----------------------------------------------------------
+    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, colori, comuni, continenti, gruppi, iban, indirizzi, iva, job, lingue, luoghi, mail, mail_out, mail_sent, metadati, periodicita, ranking, regimi, regioni, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, udm, url, valute
+    CONTATTI    | 0300      | contatti, tipologie_contatti
+    PRODUZIONE  | 1000      | categorie_progetti, pianificazioni, progetti, progetti_anagrafica, progetti_categorie, ruoli_anagrafica, tipologie_progetti, todo
+    ATTIVITA    | 1100      | attivita, pianificazioni, tipologie_attivita, todo
+    MAGAZZINI   |           | mastri, tipologie_mastri
+    CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
+    POPUP       |           | popup, popup_pagine, pubblicazioni, tipologie_popup, tipologie_pubblicazioni
+    NOTIZIE     |           | audio, contenuti, file, categorie_notizie, immagini, menu, metadati, notizie notizie_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_notizie, tipologie_pubblicazioni, video
+    RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, tipologie_risorse, video
+    COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
+    PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
+    DOCUMENTI   |           | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_prodotti
+    CASSE       | 6500      | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_prodotti
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
 
@@ -111,28 +199,105 @@
     anagrafica_cittadinanze         | BASE
     anagrafica_indirizzi            | BASE
     anagrafica_settori              | BASE
+    articoli                        | PRODOTTI
+    articoli_caratteristiche        | PRODOTTI
+    attivita                        | ATTIVITA
+    audio                           | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
+    caratteristiche_prodotti        | PRODOTTI
     categorie_anagrafica            | BASE
+    categorie_notizie               | NOTIZIE
+    categorie_prodotti              | PRODOTTI
+    categorie_progetti              | PRODUZIONE
+    categorie_risorse               | RISORSE
+    colori                          | BASE, PRODOTTI
     comuni                          | BASE
+    contatti                        | CONTATTI
+    contenuti                       | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     continenti                      | BASE
+    coupon                          | COUPON
+    coupon_categorie_prodotti       | COUPON
+    coupon_listini                  | COUPON
+    coupon_marchi                   | COUPON
+    coupon_prodotti                 | COUPON
+    documenti                       | DOCUMENTI, CASSE
+    documenti_articoli              | DOCUMENTI, CASSE
+    file                            | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     gruppi                          | BASE
+    iban                            | BASE
+    immagini                        | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     indirizzi                       | BASE
+    iva                             | BASE
     job                             | BASE
     lingue                          | BASE
+    listini                         | PRODOTTI, DOCUMENTI, CASSE, COUPON
+    listini_clienti                 | PRODOTTI, DOCUMENTI, CASSE, COUPON
+    luoghi                          | BASE
+    macro                           | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     mail                            | BASE
     mail_out                        | BASE
     mail_sent                       | BASE
+    marchi                          | PRODOTTI, COUPON
+    mastri                          | MAGAZZINI, DOCUMENTI, CASSE
+    menu                            | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
+    metadati                        | BASE, CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
+    notizie                         | NOTIZIE
+    notizie_categorie               | NOTIZIE
+    organizzazioni                  | BASE
+    pagine                          | CONTENUTI
+    periodicita                     | BASE
+    pianificazioni                  | PRODUZIONE, ATTIVITA
+    popup                           | POPUP
+    popup_pagine                    | POPUP
+    prezzi                          | PRODOTTI, DOCUMENTI, CASSE, COUPON
+    prodotti                        | PRODOTTI, DOCUMENTI, CASSE, COUPON
+    prodotti_categorie              | PRODOTTI, COUPON
+    prodotti_caratteristiche        | PRODOTTI
+    progetti                        | PRODUZIONE
+    progetti_anagrafica             | PRODUZIONE
+    progetti_categorie              | PRODUZIONE
+    pubblicazioni                   | CONTENUTI, POPUP, PRODOTTI, NOTIZIE, RISORSE
     ranking                         | BASE
+    redirect                        | CONTENUTI
+    regimi                          | BASE
     regioni                         | BASE
+    reparti                         | DOCUMENTI, CASSE
+    risorse                         | RISORSE
+    risorse_anagrafica              | RISORSE
+    risorse_categorie               | RISORSE
+    ruoli_anagrafica                | BASE, PRODUZIONE, RISORSE
+    ruoli_audio                     | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
+    ruoli_file                      | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
+    ruoli_immagini                  | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     ruoli_indirizzi                 | BASE
+    ruoli_prodotti                  | PRODOTTI
+    ruoli_video                     | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     settori                         | BASE
     sms_out                         | BASE
     sms_sent                        | BASE
     stati                           | BASE
+    stati_lingue                    | BASE
     task                            | BASE
     telefoni                        | BASE
     template                        | BASE
     tipologie_anagrafica            | BASE
+    tipologie_attivita              | ATTIVITA
+    tipologie_contatti              | CONTATTI
+    tipologie_documenti             | DOCUMENTI, CASSE
+    tipologie_indirizzi             | BASE
+    tipologie_mastri                | MAGAZZINI, DOCUMENTI, CASSE
+    tipologie_notizie               | NOTIZIE
+    tipologie_popup                 | POPUP
+    tipologie_prodotti              | PRODOTTI, DOCUMENTI, CASSE, COUPON
+    tipologie_progetti              | PRODUZIONE
+    tipologie_pubblicazioni         | CONTENUTI, POPUP, PRODOTTI, NOTIZIE, RISORSE
+    tipologie_risorse               | RISORSE
     tipologie_telefoni              | BASE
+    tipologie_todo                  | PRODUZIONE, ATTIVITA
+    todo                            | PRODUZIONE, ATTIVITA
+    udm                             | BASE
+    url                             | BASE
+    valute                          | BASE
+    video                           | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
 
     modelli di tabelle
     ==================
@@ -158,6 +323,9 @@
     =================
 
     tabelle principali
+    ------------------
+
+    tabelle secondarie
     ------------------
 
     tabelle per i contenuti
@@ -199,29 +367,28 @@
     =====
 
 
+    campi per le chiavi primarie
+    ----------------------------
 
-    nomenclatura dei campi
+
+    campi per le chiavi esterne
+    ---------------------------
+
+
+    campi per le timestamp
     ----------------------
 
 
-    ordine standard dei campi
-    -------------------------
-    Le tabelle possono essere viste, sotto il profilo strutturale, come divise in alcune aree che raggruppano
-    i campi con funzioni simili. Al netto della chiave primaria, che occupa sempre la prima posizione,
-    possiamo individuare i seguenti blocchi funzionali:
+    campi per data e ora
+    --------------------
 
-    - campi di relazione, che collegano la tabella ad altre tabelle del database tipicamente tramite chiavi esterne
-    - campi di catalogazione, come *id_tipologia* e *ordine* che servono per suddividere e ordinare i dati contenuti nelle tabelle
-    - campi principali, che contengono i dati veri e propri
-    - campi di attribuzione, tipicamente flag booleani, che qualificano i dati contenuti nella tabella
-    - campi di servizio, che contengono informazioni relative alla gestione della tabella da parte del framework
 
-    All'interno dei blocchi i campi sono disposti sempre con la stessa logica; fra campi con lo stesso ruolo si utilizza
-    per comodità l'ordine alfabetico.
+    campi nome e campi note
+    -----------------------
 
-    campi di servizio
-    -----------------
 
+    campi per i flag
+    ----------------
 
 
     diritti, permessi e privilegi
