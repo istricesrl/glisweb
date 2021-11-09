@@ -2365,6 +2365,27 @@ ALTER TABLE `tipologie_todo`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000056800
+
+-- tipologie_url
+-- tipologia: tabella assistita
+-- verifica: 2021-11-09 12:45 Chiara GDL
+ALTER TABLE `tipologie_url`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000056801
+
+-- tipologie_url
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_url` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000060000
 
 -- todo

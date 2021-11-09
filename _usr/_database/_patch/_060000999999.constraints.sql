@@ -1147,6 +1147,16 @@ ALTER TABLE `tipologie_todo`
     ADD CONSTRAINT `tipologie_todo_ibfk_98_nofollow`            FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_todo_ibfk_99_nofollow`            FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+--| 060000056800
+
+-- tipologie_url
+-- tipologia: tabella assistita
+-- verifica: 2021-11-09 12:45 Chiara GDL
+ALTER TABLE `tipologie_url`
+    ADD CONSTRAINT `tipologie_url_ibfk_01_nofollow`            FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_url` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `tipologie_url_ibfk_98_nofollow`            FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `tipologie_url_ibfk_99_nofollow`            FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 --| 060000060000
 
 -- todo
