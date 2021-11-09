@@ -125,77 +125,122 @@
                     )
                 );
 
+                if( empty( $fasce ) ){
+                    $fasce['ora_inizio'] = '09:00:00';
+                    $fasce['ora_fine'] = '22:00:00';
+                }
+
                 // LAVORO ORDINARIO
                 // tutte le attività svolte nella fascia oraria del giorno
-                $oreOrdinarie = mysqlQuery( 
+                $oreOrdinarie = mysqlSelectValue( 
                     $cf['mysql']['connection'], 
-                    'SELECT sum(ore) as tot_ore FROM attivita ' .
-                    'WHERE data_attivita = ? and id_anagrafica = ? AND ora_inizio >= ? AND ora_fine <= ? GROUP by data_attivita',
+                    'SELECT sum( TIMEDIFF( LEAST( ?, ora_fine ),GREATEST( ora_inizio, ? )  ) ) AS tot_ore FROM attivita ' .
+                    'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
+                    'WHERE tipologie_attivita.se_lavoro = 1 AND data_attivita = ? and id_anagrafica = ? AND ora_inizio >= ? AND ora_fine <= ? GROUP by data_attivita',
                     array(
+                        array( 's' => $fasce['ora_fine'] ),
+                        array( 's' => $fasce['ora_inizio'] ),
                         array( 's' => $cid ),
                         array( 's' => $car['id_anagrafica'] ),
                         array( 's' => $fasce['ora_inizio'] ),
                         array( 's' => $fasce['ora_fine'] )
                     )			
-                );
+                )  / 10000 ;
 
                 // LAVORO STRAORDINARIO
                 // tutte le attività svolte nella fascia oraria del giorno
-                $oreStraordinarie = mysqlQuery( 
+                $oreStraordinarie = mysqlSelectValue( 
                     $cf['mysql']['connection'], 
-                    'SELECT sum(ore) as tot_ore FROM attivita ' .
-                    'WHERE data_attivita = ? and id_anagrafica = ? AND (ora_inizio < ? OR ora_fine > ?) GROUP by data_attivita',
+                    'SELECT ( sum( TIMEDIFF( ?, LEAST( ora_inizio, ? )  ) ) + sum( TIMEDIFF(  GREATEST( ora_fine, ? ), ?  )  )  ) as tot_ore FROM attivita ' .
+                    'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
+                    'WHERE tipologie_attivita.se_lavoro = 1 AND data_attivita = ? and id_anagrafica = ? AND (ora_inizio < ? OR ora_fine > ?) GROUP by data_attivita',
                     array(
+                        array( 's' => $fasce['ora_inizio'] ),
+                        array( 's' => $fasce['ora_inizio'] ),
+                        array( 's' => $fasce['ora_fine'] ),
+                        array( 's' => $fasce['ora_fine'] ),
                         array( 's' => $cid ),
                         array( 's' => $car['id_anagrafica'] ),
                         array( 's' => $fasce['ora_inizio'] ),
                         array( 's' => $fasce['ora_fine'] )
                     )			
+                ) / 10000 ;
+
+                $oreMalattia = mysqlSelectValue( 
+                    $cf['mysql']['connection'], 
+                    'SELECT sum( ore ) AS tot_ore FROM attivita ' .
+                    'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
+                    'WHERE tipologie_attivita.se_malattia = 1 AND data_attivita = ? and id_anagrafica = ? GROUP by data_attivita',
+                    array(
+                        array( 's' => $cid ),
+                        array( 's' => $car['id_anagrafica'] )
+                    )			
                 );
 
-                if( !empty ( $ore ) ){
+                if( !empty ( $oreOrdinarie ) && $oreOrdinarie > 0 ){
     
-                    logWrite( 'il cartellino ' . $cid.' ha  '.$ore.' effettivamente lavorate ' , 'cartellini', LOG_ERR );
+                    logWrite( 'il cartellino ' . $cid.' ha  '.$oreOrdinarie.' ore ordinarie lavorate ' , 'cartellini', LOG_ERR );
 
                         $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
                         'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
                         array( 
-                            array( 's' => $ore ), 
+                            array( 's' => $oreOrdinarie ), 
                             array( 's' => time() ),
-                            array( 's' => $cid ) ) 
+                            array( 's' => $car['id'] ) )
                         );
 
-                } /*else {
+                } 
 
-                    logWrite( 'il cartellino non ha ore lavorate ' , 'cartellini', LOG_ERR );
+                if( !empty ( $oreStraordinarie ) && $oreStraordinarie > 0 ){
+    
+                    logWrite( 'il cartellino ' . $cid.' ha  '.$oreStraordinarie.' ore straordinarie lavorate ' , 'cartellini', LOG_ERR );
 
-                    $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                    'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
-                    array( 
-                        array( 's' => 0 ), 
-                        array( 's' => time() ),
-                        array( 's' => $cid ) ) 
-                    );
-                }*/
+                        $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        array( 
+                            array( 's' => $car['id_anagrafica'] ), 
+                            array( 's' => $cid ),
+                            array( 's' => 2 ), // tipologia inps straordinaria
+                            array( 's' => $oreStraordinarie ),  
+                            array( 's' => time() ) ) 
+                        );
 
+                }
+
+                if( !empty ( $oreMalattia ) && $oreMalattia > 0 ){
+    
+                    logWrite( 'il cartellino ' . $cid.' ha  '.$oreMalattia.' ore malattia ' , 'cartellini', LOG_ERR );
+
+                        $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        array( 
+                            array( 's' => $car['id_anagrafica'] ), 
+                            array( 's' => $cid ),
+                            array( 's' => 4 ), // tipologia inps malattia
+                            array( 's' => $oreMalattia ),  
+                            array( 's' => time() ) ) 
+                        );
+
+                }
+                
                 // status
                 $status['info'][] = 'ho lavorato la riga: ' . $cid;
-
-                // aggiorno i valori di visualizzazione avanzamento
-                $jobs = mysqlQuery(
-                    $cf['mysql']['connection'],
-                    'UPDATE job SET totale = ?, corrente = ? WHERE id = ?',
-                    array(
-                    array( 's' => $job['totale'] ),
-                    array( 's' => $job['corrente'] ),
-                    array( 's' => $job['id'] )
-                    )
-                );
 
             }
 
             // status
             $status['info'][] = 'ho lavorato la data: ' . $cid;
+
+            // aggiorno i valori di visualizzazione avanzamento
+            $jobs = mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE job SET totale = ?, corrente = ? WHERE id = ?',
+                array(
+                array( 's' => $job['totale'] ),
+                array( 's' => $job['corrente'] ),
+                array( 's' => $job['id'] )
+                )
+            );
 
             // operazioni di chiusura
             if( $job['corrente'] == $job['totale'] ) {
