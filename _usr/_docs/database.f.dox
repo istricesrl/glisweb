@@ -6,7 +6,7 @@
 
     le tabelle del database di supporto FA - FZ
     ===========================================
-    
+
     file
     ----
     Questa tabella *gestita* contiene i riferimenti ai file caricati e le loro relazioni con le altre entità del framework.
@@ -22,7 +22,7 @@
     file.id_categoria_prodotti      | l'ID della categoria prodotti cui si riferisce al file
     file.id_todo                    | l'ID della todo cui si riferisce al file
     file.id_pagina                  | l'ID della pagina cui si riferisce al file
-    file.id_template_mail           | l'ID del template mail cui si riferisce al file
+    file.id_template                | l'ID del template mail cui si riferisce al file
     file.id_notizia                 | l'ID della notizia cui si riferisce al file
     file.id_categoria_notizie       | l'ID della categoria di notizie cui si riferisce al file
     file.id_risorsa                 | l'ID della risorsa cui si riferisce al file
@@ -47,7 +47,7 @@
     file_ibfk_05                    | id_categoria_prodotti         | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_06                    | id_todo                       | todo.id                       | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_07                    | id_pagina                     | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
-    file_ibfk_08                    | id_template_mail              | template_mail.id              | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_08                    | id_template                   | template.id              | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_09                    | id_notizia                    | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_10                    | id_categoria_notizie          | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_11                    | id_risorsa                    | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
@@ -70,7 +70,7 @@
     file_view.id_categoria_prodotti     | -
     file_view.id_todo                   | -
     file_view.id_pagina                 | -
-    file_view.id_template_mail          | -
+    file_view.id_template               | -
     file_view.id_notizia                | -
     file_view.id_categoria_notizie      | -
     file_view.id_risorsa                | -

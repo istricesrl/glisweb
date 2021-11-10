@@ -949,8 +949,6 @@ CREATE OR REPLACE VIEW contatti_view AS
 		contatti.id,
 		contatti.id_tipologia,
 		tipologie_contatti.nome AS tipologia,
-		contatti.id_campagna,
-		campagne.nome AS campagna,
 		contatti.id_anagrafica,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		contatti.id_inviante,
@@ -966,7 +964,6 @@ CREATE OR REPLACE VIEW contatti_view AS
 		) AS __label__
 	FROM contatti
 		LEFT JOIN tipologie_contatti ON tipologie_contatti.id = contatti.id_tipologia
-		LEFT JOIN campagne ON campagne.id = contatti.id_campagna
 		LEFT JOIN anagrafica AS a1 ON a1.id = contatti.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = contatti.id_inviante
 ;

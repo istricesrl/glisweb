@@ -324,7 +324,6 @@ CREATE TABLE IF NOT EXISTS `audio` (
 -- verifica: 2021-05-28 18:22 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
   `id` int(11) NOT NULL,
-  `id_tipologia` int(11) NOT NULL,
   `nome` char(64) NOT NULL,
   `font_awesome` char(24) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
@@ -496,7 +495,6 @@ CREATE TABLE IF NOT EXISTS `comuni` (
 CREATE TABLE IF NOT EXISTS `contatti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `id_campagna` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_inviante` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -534,7 +532,6 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
-  `id_data` int(11) DEFAULT NULL,
   `id_template` int(11) DEFAULT NULL,
   `id_colore` int(11) DEFAULT NULL,
   `path_custom` char(255) DEFAULT NULL,
@@ -743,7 +740,7 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
-  `id_template_mail` int(11) DEFAULT NULL,
+  `id_template` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,

@@ -16,7 +16,6 @@
     colonna                                             | descrizione
     ----------------------------------------------------|---------------------------------------------------------------------------------------
     caratteristiche_prodotti.id                         | l'ID delle caratteristiche prodotti
-    caratteristiche_prodotti.id_tipologia               | l'ID della tipologia
     caratteristiche_prodotti.nome                       | il nome della caratteristica
     caratteristiche_prodotti.html_entity                | -
     caratteristiche_prodotti.font_awesome               | -
@@ -32,7 +31,6 @@
 
     chiave                                          | campo                         | tabella e campo collegati                 | comportamento
     ------------------------------------------------|-------------------------------|-------------------------------------------|----------
-    caratteristiche_prodotti_ibfk_01_nofollow       | id_tipologia                  | tipologie_caratteristiche_prodotti.id     | ON DELETE NO ACTION ON UPDATE NO ACTION
     caratteristiche_prodotti_ibfk_98_nofollow       | id_account_inserimento        | account.id                                | ON DELETE SET NULL ON UPDATE SET NULL
     caratteristiche_prodotti_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                                | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -41,8 +39,6 @@
     colonna                                                 | descrizione
     --------------------------------------------------------|---------------------------------------------------------------------------------------
     caratteristiche_prodotti_view.id                        | -
-    caratteristiche_prodotti_view.id_tipologia              | -
-    caratteristiche_prodotti_view.tipologia                 | la tipologia
     caratteristiche_prodotti_view.nome                      | -
     caratteristiche_prodotti_view.html_entity               | -
     caratteristiche_prodotti_view.font_awesome              | -
@@ -413,7 +409,6 @@
     ---------------------------------------|---------------------------------------------------------------------------------------
     contatti.id                            | l'ID dell'evento di contatto
     contatti.id_tipologia                  | l'ID della tipologia di contatto
-    contatti.id_campagna                   | l'ID della campagna di provenienza del contatto
     contatti.id_anagrafica                 | l'ID dell'anagrafica che ha effettuato il contatto
     contatti.id_inviante                   | l'ID dell'anagrafica che ha generato il contatto
     contatti.nome                          | una descrizione sintetica del contatto ed eventuali riferimenti della persona
@@ -430,9 +425,8 @@
     chiave                              | campo                         | tabella e campo collegati     | comportamento
     ------------------------------------|-------------------------------|-------------------------------|----------------------
     contatti_ibfk_01_nofollow           | id_tipologia                  | tipologie_contatti.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    contatti_ibfk_02_nofollow           | id_campagna                   | campagne.id                   | ON DELETE SET NULL ON UPDATE SET NULL
-    contatti_ibfk_03_nofollow           | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
-    contatti_ibfk_04_nofollow           | id_inviante                   | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    contatti_ibfk_02_nofollow           | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    contatti_ibfk_03_nofollow           | id_inviante                   | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
     contatti_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     contatti_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -443,8 +437,6 @@
     contatti_view.id                            | -
     contatti_view.id_tipologia                  | -
     contatti_view.tipologia                     | la tipologia del contatto
-    contatti_view.id_campagna                   | -
-    contatti_view.campagna                      | la campagna di provenienza del contatto
     contatti_view.id_anagrafica                 | -
     contatti_view.anagrafica                    | l'anagrafica che ha effettuato il contatto
     contatti_view.id_inviante                   | -
@@ -481,7 +473,6 @@
     contenuti.id_indirizzo                  | l'ID dell'indirizzo cui si riferisce la riga (NULL se non presente)
     contenuti.id_notizia                    | l'ID della notizia cui si riferisce la riga (NULL se non presente)
     contenuti.id_categoria_notizie          | l'ID della categoria di notizie cui si riferisce la riga (NULL se non presente)
-    contenuti.id_data                       | l'ID della data cui si riferisce la riga (NULL se non presente)
     contenuti.id_template                   | l'ID del template cui si riferisce la riga (NULL se non presente)
     contenuti.id_colore                     | l'ID del colore cui si riferisce la riga (NULL se non presente)
     contenuti.path_custom                   | alias non canonico della pagina (deve iniziare con slash)
@@ -542,9 +533,8 @@
     contenuti_ibfk_16                           | id_indirizzo                  | indirizzi.id                      | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_17                           | id_notizia                    | notizie.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_18                           | id_categoria_notizie          | categorie_notizie.id              | ON DELETE SET NULL ON UPDATE SET NULL
-    contenuti_ibfk_19                           | id_data                       | date.id                           | ON DELETE SET NULL ON UPDATE SET NULL
-    contenuti_ibfk_20                           | id_template                   | template.id                       | ON DELETE SET NULL ON UPDATE SET NULL
-    contenuti_ibfk_21                           | id_colore                     | colori.id                         | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_19                           | id_template                   | template.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_20                           | id_colore                     | colori.id                         | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_98_nofollow                  | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_99_nofollow                  | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -571,8 +561,7 @@
     contenuti_view.id_indirizzo                 | -
     contenuti_view.id_notizia                   | -
     contenuti_view.id_categoria_notizie         | -
-    contenuti_view.id_data                      | -
-    contenuti_view.id_template_mail             | -
+    contenuti_view.id_template                  | -
     contenuti_view.id_colore                    | -
     contenuti_view.h1                           | -
     contenuti_view.id_account_inserimento       | -

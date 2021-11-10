@@ -299,11 +299,10 @@ ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-05-28 18:27 Fabio Mosti
 ALTER TABLE `caratteristiche_prodotti`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_tipologia`,`nome`),
-	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`);
+	ADD KEY `indice` (`id`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`);
 
 --| 030000002901
 
@@ -484,7 +483,6 @@ ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `contatti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `id_campagna` (`id_campagna`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_inviante` (`id_inviante`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -522,7 +520,6 @@ ALTER TABLE `contenuti`
 	ADD UNIQUE KEY `unica_indirizzo` (`id_lingua`,`id_indirizzo`), 
 	ADD UNIQUE KEY `unica_notizia` (`id_lingua`,`id_notizia`), 
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`), 
-	ADD UNIQUE KEY `unica_data` (`id_lingua`,`id_data`), 
 	ADD UNIQUE KEY `unica_template` (`id_lingua`,`id_template`), 
 	ADD UNIQUE KEY `unica_colore` (`id_lingua`,`id_colore`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
@@ -542,8 +539,7 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_popup` (`id_popup`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
-	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
-	ADD KEY `id_data` (`id_data`),
+	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
 	ADD KEY `id_template` (`id_template`), 
 	ADD KEY `id_colore` (`id_colore`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -558,7 +554,6 @@ ALTER TABLE `contenuti`
 	ADD KEY `indice_notizie` (`id`,`id_lingua`,`id_notizia`,`id_categoria_notizie`),
 	ADD KEY `indice_video` (`id`,`id_lingua`,`id_video`),
 	ADD KEY `indice_audio` (`id`,`id_lingua`,`id_audio`),
-	ADD KEY `indice_data` (`id`,`id_lingua`,`id_data`),
 	ADD KEY `indice_template` (`id`,`id_lingua`,`id_template`),
 	ADD KEY `indice_colore` (`id`,`id_lingua`,`id_colore`);
 
@@ -746,7 +741,7 @@ ALTER TABLE `file`
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_categoria_prodotti`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_todo` (`id_todo`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`id_ruolo`,`path`), 
-	ADD UNIQUE KEY `unica_template_mail` (`id_template_mail`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_template` (`id_template`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_notizia` (`id_notizia`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_ruolo`,`path`), 
@@ -758,7 +753,7 @@ ALTER TABLE `file`
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
 	ADD KEY `id_todo` (`id_todo`), 
 	ADD KEY `id_pagina` (`id_pagina`), 
-	ADD KEY `id_template_mail` (`id_template_mail`), 
+	ADD KEY `id_template` (`id_template`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
 	ADD KEY `id_risorsa` (`id_risorsa`),
@@ -775,7 +770,7 @@ ALTER TABLE `file`
 	ADD KEY `indice_categorie_prodotti` (`id`,`id_ruolo`,`id_categoria_prodotti`,`id_lingua`,`path`,`url`),
 	ADD KEY `indice_todo` (`id`,`id_ruolo`,`id_todo`,`id_lingua`,`path`,`url`),
 	ADD KEY `indice_pagine` (`id`,`id_ruolo`,`id_pagina`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_template_mail` (`id`,`id_ruolo`,`id_template_mail`,`id_lingua`,`path`,`url`),
+	ADD KEY `indice_template` (`id`,`id_ruolo`,`id_template`,`id_lingua`,`path`,`url`),
 	ADD KEY `indice_notizie` (`id`,`id_ruolo`,`id_notizia`,`id_lingua`,`path`,`url`),
 	ADD KEY `indice_categorie_notizie` (`id`,`id_ruolo`,`id_categoria_notizie`,`id_lingua`,`path`,`url`),
 	ADD KEY `indice_risorse` (`id`,`id_ruolo`,`id_risorsa`,`id_lingua`,`path`,`url`),
@@ -2433,9 +2428,9 @@ ALTER TABLE `udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- url
 -- tipologia: tabella gestita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-ALTER TABLE `todo`
+ALTER TABLE `url`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_genitore`,`sigla`),
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_anagrafica`,`url`),
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `url` (`url`), 

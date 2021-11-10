@@ -716,20 +716,7 @@ REPLACE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`,
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 15:42 Fabio Mosti
 REPLACE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
-(1,     1,	    1),
-(2,     2,	    2),
-(3,     3,	    6),
-(4,     4,	    7),
-(5,     5,	    8),
-(6,     6,	    9),
-(7,     7,	    10),
-(8,     8,	    5),
-(9,     9,	    3),
-(10,    10,	    13),
-(11,    11,	    11),
-(12,    12,	    4),
-(13,    13,	    12),
-(14,    14,	    14);
+(1,     1,	    1);
 
 --| 050000043000
 
