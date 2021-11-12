@@ -6,6 +6,7 @@
      * 
      */
 #gdl
+
     // inizializzo l'array del risultato
 	$status = array();
 
