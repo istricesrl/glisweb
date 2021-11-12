@@ -142,6 +142,7 @@
     notizie                         | 022000    | base          | principale    | contiene le notizie
     notizie_categorie               | 022200    | relazione     | principale    | mette in relazione notizie e categorie_notizie
     organizzazioni                  | 022800    | ricorsiva     | principale    | contiene le organizzazioni
+    pagamenti                       | 023100    | base          | principale    | cpntiene i pagamenti 
     pagine                          | 023200    | base          | principale    | contiene le pagine web
     pianificazioni                  | 023800    | base          | principale    | contiene le pianificazioni
     popup                           | 024000    | base          | principale    | contiene i popup
@@ -185,8 +186,8 @@
     RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
     PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
-    DOCUMENTI   |           | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_prodotti
-    CASSE       | 6500      | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_prodotti
+    DOCUMENTI   |           | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_prodotti
+    CASSE       | 6500      | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_prodotti
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
 
@@ -244,6 +245,7 @@
     notizie                         | NOTIZIE
     notizie_categorie               | NOTIZIE
     organizzazioni                  | BASE
+    pagamenti                       | DOCUMENTI, CASSE
     pagine                          | CONTENUTI
     periodicita                     | BASE
     pianificazioni                  | PRODUZIONE, ATTIVITA

@@ -7,6 +7,70 @@
     le tabelle del database di supporto PA - PZ
     ===========================================
 
+    pagamenti
+    -----------
+    Questa tabella *gestita* contiene i pagamenti in riferimento ai documenti per movimentare i mastri monetari.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    pagamenti.id                            | l'ID del pagamento
+    pagamenti.id_tipologia                  | l'ID della tipologia del pagamento cui si riferisce la riga
+    pagamenti.ordine                        | campo di ordinamento
+    pagamenti.nome                          | nome descrittivo della riga
+    pagamenti.note                          | note aggiuntive sul pagamento
+    pagamenti.id_documento                  | l'ID del documento a cui è collegato il pagamento
+    pagamenti.id_mastro_provenienza         | l'ID del mastro scaricato dalla riga
+    pagamenti.id_mastro_destinazione        | l'ID del mastro caricato dalla riga
+    pagamenti.id_iban                       | l'ID dell'IBAN associato alla riga
+    pagamenti.importo_netto_totale          | l'importo netto totale della riga
+    pagamenti.id_iva                        | l'ID dell'aliquota IVA associata alla riga
+    pagamenti.id_listino                    | l'ID del listino associato alla riga
+    pagamenti.timestamp_pagamento           | la timestamp dell'effettivo pagamento
+    pagamenti.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    pagamenti.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    pagamenti.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    pagamenti.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------------------|-------------------------------|-----------------------------------|------------------
+    pagamenti_ibfk_01_nofollow                  | id_tipologia                  | tipologie_pagamenti.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagamenti_ibfk_02                           | id_documento                  | documenti.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagamenti_ibfk_03_nofollow                  | id_mastro_provenienza         | mastri.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagamenti_ibfk_04_nofollow                  | id_mastro_destinazione        | mastri.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagamenti_ibfk_05_nofollow                  | id_iban                       | iban.id                           | ON DELETE SET NULL ON UPDATE SET NULL
+    pagamenti_ibfk_06_nofollow                  | id_listino                    | listini.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagamenti_ibfk_07_nofollow                  | id_iva                        | iva.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagamenti_ibfk_98_nofollow                  | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    pagamenti_ibfk_99_nofollow                  | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *pagamenti_view* relativa alla tabella *pagamenti* presenta le seguenti colonne:
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    pagamenti_view.id                       | -
+    pagamenti_view.id_tipologia             | -
+    pagamenti_view.tipologia                | la tipologia del pagamento collegato alla riga
+    pagamenti_view.ordine                   | -
+    pagamenti_view.nome                     | -
+    pagamenti_view.note                     | -
+    pagamenti_view.id_documento             | -
+    pagamenti_view.id_mastro_provenienza    | -
+    pagamenti_view.mastro_provenienza       | il mastro scaricato dalla riga
+    pagamenti_view.id_mastro_destinazione   | -
+    pagamenti_view.mastro_destinazione      | il mastro caricato dalla riga
+    pagamenti_view.id_iban                  | -
+    pagamenti_view.importo_netto_totale     | -
+    pagamenti_view.id_iva                   | -
+    pagamenti_view.iva                      | l'aliquota IVA applicata alla riga
+    pagamenti_view.id_listino               | -
+    pagamenti_view.listino                  | il listino di riferimento della riga
+    pagamenti_view.timestamp_pagamento      | -
+    pagamenti.id_account_inserimento        | -
+	pagamenti.id_account_aggiornamento      | -
+    pagamenti_view.__label__                | l'etichetta descrittiva del pagamento
+
     pagine
     ------
     Questa tabella *gestita* contiene le pagine pubblicate sul web tramite il framework e costituisce il cuore

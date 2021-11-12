@@ -1287,6 +1287,33 @@ ALTER TABLE `organizzazioni`
 -- tipologia: tabella gestita
 ALTER TABLE `organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000023100
+
+-- pagamenti
+-- tipologia: tabella gestita
+-- verifica: 2021-11-12 16:00 Chiara GDL
+ALTER TABLE `pagamenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
+	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `id_iban` (`id_iban`), 
+	ADD KEY `id_listino` (`id_listino`), 
+	ADD KEY `id_iva` (`id_iva`), 
+	ADD KEY `timestamp_pagamento` (`timestamp_pagamento`), 
+	ADD KEY `importo_netto_totale` (`importo_netto_totale`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_documento`,`datimestamp_pagamentota`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`id_iban`,`importo_netto_totale`,`id_iva`);
+
+--| 030000023101
+
+-- pagamenti
+-- tipologia: tabella gestita
+ALTER TABLE `pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000023200
 
 -- pagine
