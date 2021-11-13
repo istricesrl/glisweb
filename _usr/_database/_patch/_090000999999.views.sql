@@ -1972,14 +1972,14 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 		notizie_categorie.id_notizia,
 		notizie.nome AS notizia,
 		notizie_categorie.id_categoria,
-		categorie_notizie_path( categorie_notizie.id ) AS categoria,
+		categorie_notizie_path( notizie_categorie.id_categoria ) AS categoria,
 		notizie_categorie.ordine,
 		notizie_categorie.id_account_inserimento,
 		notizie_categorie.id_account_aggiornamento,
 		concat(
 			notizie_categorie.nome,
 			' / ',
-			categorie_notizie_path( categorie_notizie.id )
+			categorie_notizie_path( notizie_categorie.id_categoria )
 		) AS __label__
 	FROM notizie_categorie
 		LEFT JOIN notizie ON notizie.id = notizie_categorie
