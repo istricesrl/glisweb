@@ -144,6 +144,36 @@
     template_view.id_account_aggiornamento      | -
     template_view.__label__                     | etichetta descrittiva del template
 
+    testate
+    -------
+    Questa tabella *gestita* contiene le testate cui sono associate le *risorse*.
+    
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    testate.id                              | l'ID della testata
+    testate.nome                            | il nome della testata
+    testate.id_account_inserimento          | l'ID dell'account che ha inserito la riga
+    testate.timestamp_inserimento           | la timestamp dell'inserimento della riga
+    testate.id_account_aggiornamento        | l'ID dell'ultimo account che ha modificato la riga
+    testate.timestamp_aggiornamento         | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                          | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------|-------------------------------|-----------------------------------|------------------
+    testate_ibfk_98_nofollow        | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    testate_ibfk_99_nofollow        | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *template_view* relativa alla tabella *template* presenta le seguenti colonne:
+    
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    testate_view.id                             | -
+    testate_view.nome                           | -
+    testate_view.id_account_inserimento         | -
+    testate_view.id_account_aggiornamento       | -
+    testate_view.__label__                      | etichetta descrittiva della testata
+
     tipologie_anagrafica
     --------------------
     Questa tabella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *anagrafica*.
@@ -290,7 +320,7 @@
     tipologie_documenti.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
     tipologie_documenti.se_fattura                  | flag che indica se il documento cui si riferisce la tipologia è una fattura
     tipologie_documenti.se_nota_credito             | flag che indica se il documento cui si riferisce la tipologia è una nota di credito
-    tipologie_documenti.se_documento_trasporto      | flag che indica se il documento cui si riferisce la tipologia è un documento di trasporto
+    tipologie_documenti.se_trasporto                | flag che indica se il documento cui si riferisce la tipologia è un documento di trasporto
     tipologie_documenti.se_pro_forma                | flag che indica se il documento cui si riferisce la tipologia è una fattura pro forma
     tipologie_documenti.se_offerta                  | flag che indica se il documento cui si riferisce la tipologia è un'offerta
     tipologie_documenti.se_ordine                   | flag che indica se il documento cui si riferisce la tipologia è un ordine
@@ -320,7 +350,7 @@
     tipologie_documenti_view.font_awesome                   | -
     tipologie_documenti_view.se_fattura                     | -
     tipologie_documenti_view.se_nota_credito                | -
-    tipologie_documenti_view.se_documento_trasporto         | -
+    tipologie_documenti_view.se_trasporto                   | -
     tipologie_documenti_view.se_pro_forma                   | -
     tipologie_documenti_view.se_offerta                     | -
     tipologie_documenti_view.se_ordine                      | -
@@ -508,6 +538,8 @@
     tipologie_prodotti.se_imballo                  | flag che indica se il prodotto cui si riferisce la tipologia è un imballaggio
     tipologie_prodotti.se_spedizione               | flag che indica se il prodotto cui si riferisce la tipologia è una modalità di spedizione
     tipologie_prodotti.se_trasporto                | flag che indica se il prodotto cui si riferisce la tipologia è una modalità di trasporto
+    tipologie_prodotti.se_prodotto                 | -
+    tipologie_prodotti.se_servizio                 | -
     tipologie_prodotti.id_account_inserimento      | l'ID dell'account che ha inserito la riga
     tipologie_prodotti.timestamp_inserimento       | la timestamp dell'inserimento della riga
     tipologie_prodotti.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
@@ -537,6 +569,8 @@
     tipologie_prodotti_view.se_imballo                      | -
     tipologie_prodotti_view.se_spedizione                   | -
     tipologie_prodotti_view.se_trasporto                    | -
+    tipologie_prodotti_view.se_prodotto                     | -
+    tipologie_prodotti_view.se_servizio                     | -
     tipologie_prodotti_view.id_account_inserimento          | -
     tipologie_prodotti_view.id_account_aggiornamento        | -
     tipologie_prodotti_view.__label__                       | etichetta descrittiva della tipologia

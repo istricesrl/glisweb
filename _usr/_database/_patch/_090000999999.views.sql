@@ -145,30 +145,19 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		anagrafica.partita_iva,
 		ranking.nome AS ranking,
 		anagrafica.recapiti,
-		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
-		max( categorie_anagrafica.se_dipendente ) AS se_dipendente,
-		max( categorie_anagrafica.se_interinale ) AS se_interinale,
-		max( categorie_anagrafica.se_cliente ) AS se_cliente,
-		max( categorie_anagrafica.se_lead ) AS se_lead,
 		max( categorie_anagrafica.se_prospect ) AS se_prospect,
-		max( categorie_anagrafica.se_mandante ) AS se_mandante,
+		max( categorie_anagrafica.se_lead ) AS se_lead,
+		max( categorie_anagrafica.se_cliente ) AS se_cliente,
 		max( categorie_anagrafica.se_fornitore ) AS se_fornitore,
 		max( categorie_anagrafica.se_produttore ) AS se_produttore,
-		max( categorie_anagrafica.se_agente ) AS se_agente,
+		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
 		max( categorie_anagrafica.se_interno ) AS se_interno,
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
-		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
-		max( categorie_anagrafica.se_produzione ) AS se_produzione,
-		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_agente ) AS se_agente,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
-		max( categorie_anagrafica.se_tutor ) AS se_tutor,
-		max( categorie_anagrafica.se_classe ) AS se_classe,
-		max( categorie_anagrafica.se_docente ) AS se_docente,
-		max( categorie_anagrafica.se_allievo ) AS se_allievo,
-		max( categorie_anagrafica.se_agenzia_interinale ) AS se_agenzia_interinale,
-		max( categorie_anagrafica.se_referente ) AS se_referente,
-		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
-		max( categorie_anagrafica.se_squadra ) AS se_squadra,
+		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
+		max( categorie_anagrafica.se_notizie ) AS se_notizie,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
@@ -218,30 +207,19 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		anagrafica.partita_iva,
 		ranking.nome AS ranking,
 		anagrafica.recapiti,
-		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
-		max( categorie_anagrafica.se_dipendente ) AS se_dipendente,
-		max( categorie_anagrafica.se_interinale ) AS se_interinale,
-		max( categorie_anagrafica.se_cliente ) AS se_cliente,
-		max( categorie_anagrafica.se_lead ) AS se_lead,
 		max( categorie_anagrafica.se_prospect ) AS se_prospect,
-		max( categorie_anagrafica.se_mandante ) AS se_mandante,
+		max( categorie_anagrafica.se_lead ) AS se_lead,
+		max( categorie_anagrafica.se_cliente ) AS se_cliente,
 		max( categorie_anagrafica.se_fornitore ) AS se_fornitore,
 		max( categorie_anagrafica.se_produttore ) AS se_produttore,
-		max( categorie_anagrafica.se_agente ) AS se_agente,
+		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
 		max( categorie_anagrafica.se_interno ) AS se_interno,
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
-		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
-		max( categorie_anagrafica.se_produzione ) AS se_produzione,
-		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_agente ) AS se_agente,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
-		max( categorie_anagrafica.se_tutor ) AS se_tutor,
-		max( categorie_anagrafica.se_classe ) AS se_classe,
-		max( categorie_anagrafica.se_docente ) AS se_docente,
-		max( categorie_anagrafica.se_allievo ) AS se_allievo,
-		max( categorie_anagrafica.se_agenzia_interinale ) AS se_agenzia_interinale,
-		max( categorie_anagrafica.se_referente ) AS se_referente,
-		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
-		max( categorie_anagrafica.se_squadra ) AS se_squadra,
+		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
+		max( categorie_anagrafica.se_notizie ) AS se_notizie,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
@@ -292,30 +270,19 @@ CREATE OR REPLACE VIEW anagrafica_attivi_view AS
 		anagrafica.partita_iva,
 		ranking.nome AS ranking,
 		anagrafica.recapiti,
-		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
-		max( categorie_anagrafica.se_dipendente ) AS se_dipendente,
-		max( categorie_anagrafica.se_interinale ) AS se_interinale,
-		max( categorie_anagrafica.se_cliente ) AS se_cliente,
-		max( categorie_anagrafica.se_lead ) AS se_lead,
 		max( categorie_anagrafica.se_prospect ) AS se_prospect,
-		max( categorie_anagrafica.se_mandante ) AS se_mandante,
+		max( categorie_anagrafica.se_lead ) AS se_lead,
+		max( categorie_anagrafica.se_cliente ) AS se_cliente,
 		max( categorie_anagrafica.se_fornitore ) AS se_fornitore,
 		max( categorie_anagrafica.se_produttore ) AS se_produttore,
-		max( categorie_anagrafica.se_agente ) AS se_agente,
+		max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
 		max( categorie_anagrafica.se_interno ) AS se_interno,
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
-		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
-		max( categorie_anagrafica.se_produzione ) AS se_produzione,
-		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_agente ) AS se_agente,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
-		max( categorie_anagrafica.se_tutor ) AS se_tutor,
-		max( categorie_anagrafica.se_classe ) AS se_classe,
-		max( categorie_anagrafica.se_docente ) AS se_docente,
-		max( categorie_anagrafica.se_allievo ) AS se_allievo,
-		max( categorie_anagrafica.se_agenzia_interinale ) AS se_agenzia_interinale,
-		max( categorie_anagrafica.se_referente ) AS se_referente,
-		max( categorie_anagrafica.se_sostituto ) AS se_sostituto,
-		max( categorie_anagrafica.se_squadra ) AS se_squadra,
+		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
+		max( categorie_anagrafica.se_notizie ) AS se_notizie,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
 		group_concat( DISTINCT telefoni.numero SEPARATOR ' | ' ) AS telefoni,
 		group_concat( DISTINCT mail.indirizzo SEPARATOR ' | ' ) AS mail,
@@ -526,9 +493,7 @@ CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 		articoli_caratteristiche.valore,
 		articoli_caratteristiche.se_assente,
 		concat(
-			articoli.id,
-			' / ',
-			tipologie_caratteristiche_prodotti.nome,
+			articoli_caratteristiche.id_articolo,
 			': ',
 			caratteristiche_prodotti.nome,
 			' ',
@@ -536,7 +501,6 @@ CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 		) AS __label__
 	FROM articoli_caratteristiche
 		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = articoli_caratteristiche.id_caratteristica
-		LEFT JOIN tipologie_caratteristiche_prodotti ON tipologie_caratteristiche_prodotti.id = caratteristiche_prodotti.id_tipologia
 ;
 
 --| 090000001800
@@ -559,11 +523,10 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		attivita.id_cliente,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
-		coalesce( attivita.referenti, progetti_referenti_view_static.referenti ) AS referenti,
 		attivita.id_indirizzo,
-		indirizzi_view_static.indirizzo,
+		indirizzi.indirizzo AS indirizzo,
 		attivita.id_luogo,
-		luoghi_view_static.luogo,
+		luoghi_path( attivita.id_luogo ) AS luogo,
 		attivita.data_scadenza,
 		attivita.ora_scadenza,
 		attivita.data_programmazione,
@@ -590,8 +553,6 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		m1.nome AS mastro_provenienza,
 		attivita.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
-		max( categorie_progetti.se_ordinario ) AS se_ordinario,
-		max( categorie_progetti.se_straordinario ) AS se_straordinario,
 		attivita.token,
 		attivita.id_account_inserimento,
 		attivita.id_account_aggiornamento,
@@ -606,11 +567,11 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = attivita.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = attivita.id_cliente
-		LEFT JOIN progetti_referenti_view_static ON progetti_referenti_view_static.id_progetto = attivita.id_progetto
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
 		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
 		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
 		LEFT JOIN todo ON todo.id = attivita.id_todo
+		LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo
 		LEFT JOIN mastri AS m1 ON m1.id = attivita.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
 ;
@@ -648,8 +609,6 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		audio.id_categoria_prodotti,
 		audio.id_notizia,
 		audio.id_categoria_notizie,
-		audio.id_evento,
-		audio.id_categoria_eventi,
 		concat(
 			audio.nome,
 			' / ',
@@ -675,8 +634,6 @@ DROP TABLE IF EXISTS `caratteristiche_prodotti_view`;
 CREATE OR REPLACE VIEW caratteristiche_prodotti_view AS
 	SELECT
 		caratteristiche_prodotti.id,
-		caratteristiche_prodotti.id_tipologia,
-		tipologie_caratteristiche_prodotti.nome AS tipologia,
 		caratteristiche_prodotti.nome,
 		caratteristiche_prodotti.html_entity,
 		caratteristiche_prodotti.font_awesome,
@@ -685,13 +642,8 @@ CREATE OR REPLACE VIEW caratteristiche_prodotti_view AS
 		caratteristiche_prodotti.se_articolo,
 		caratteristiche_prodotti.id_account_inserimento,
 		caratteristiche_prodotti.id_account_aggiornamento,
-		concat(
-			tipologie_caratteristiche_prodotti.nome,
-			' / ',
-			caratteristiche_prodotti.nome
-		) AS __label__
+		caratteristiche_prodotti.nome AS __label__
 	FROM caratteristiche_prodotti
-		LEFT JOIN tipologie_caratteristiche_prodotti ON tipologie_caratteristiche_prodotti.id = caratteristiche_prodotti.id_tipologia
 ;
 
 --| 090000003100
@@ -714,12 +666,9 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 		categorie_anagrafica.se_prospect,
 		categorie_anagrafica.se_lead,
 		categorie_anagrafica.se_cliente,
-		categorie_anagrafica.se_mandante,
 		categorie_anagrafica.se_fornitore,
 		categorie_anagrafica.se_produttore,
 		categorie_anagrafica.se_collaboratore,
-		categorie_anagrafica.se_dipendente,
-		categorie_anagrafica.se_interinale,
 		categorie_anagrafica.se_interno,
 		categorie_anagrafica.se_esterno,
 		categorie_anagrafica.se_agente,
@@ -727,14 +676,6 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 		categorie_anagrafica.se_azienda_gestita,
 		categorie_anagrafica.se_amministrazione,
 		categorie_anagrafica.se_notizie,
-		categorie_anagrafica.se_docente,
-		categorie_anagrafica.se_tutor,
-		categorie_anagrafica.se_classe,
-		categorie_anagrafica.se_allievo,
-		categorie_anagrafica.se_agenzia_interinale,
-		categorie_anagrafica.se_referente,
-		categorie_anagrafica.se_sostituto,
-		categorie_anagrafica.se_squadra,
 		count( c1.id ) AS figli,
 		count( anagrafica_categorie.id ) AS membri,
 		categorie_anagrafica.id_account_inserimento,
@@ -764,7 +705,7 @@ CREATE OR REPLACE VIEW categorie_notizie_view AS
 		categorie_notizie.ordine,
 		categorie_notizie.nome,
 		categorie_notizie.template,
-		categorie_notizie.schema_html.
+		categorie_notizie.schema_html,
 		categorie_notizie.tema_css,
 		categorie_notizie.id_pagina,
 		count( c1.id ) AS figli,
@@ -796,7 +737,7 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 		categorie_prodotti.ordine,
 		categorie_prodotti.nome,
 		categorie_prodotti.template,
-		categorie_prodotti.schema_html.
+		categorie_prodotti.schema_html,
 		categorie_prodotti.tema_css,
 		categorie_prodotti.id_pagina,
 		count( c1.id ) AS figli,
@@ -827,8 +768,6 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 		categorie_progetti.id_genitore,
 		categorie_progetti.ordine,
 		categorie_progetti.nome,
-		categorie_progetti.se_ordinario,
-		categorie_progetti.se_straordinario,
 		count( c1.id ) AS figli,
 		count( progetti_categorie.id ) AS membri,
 		categorie_progetti.id_account_inserimento,
@@ -1000,8 +939,7 @@ CREATE OR REPLACE VIEW contenuti_view AS
 		contenuti.id_indirizzo,
 		contenuti.id_notizia,
 		contenuti.id_categoria_notizie,
-		contenuti.id_data,
-		contenuti.id_template_mail,
+		contenuti.id_template,
 		contenuti.id_colore,
 		contenuti.title,
 		contenuti.h1,
@@ -1120,7 +1058,7 @@ CREATE OR REPLACE VIEW `coupon_listini_view` AS
 			listini.nome
 		) AS __label__
 	FROM coupon_listini
-		LEFT JOIN coupon ON coupon_categorie_prodotti.id_coupon = coupon.id
+		LEFT JOIN coupon ON coupon.id = coupon_listini.id_coupon
 		LEFT JOIN listini ON listini.id = coupon_listini.id_listino
 ;
 
@@ -1149,8 +1087,8 @@ CREATE OR REPLACE VIEW `coupon_marchi_view` AS
 			' / ',
 			marchi.nome
 		) AS __label__
-	FROM coupon_listini
-		LEFT JOIN coupon ON coupon_categorie_prodotti.id_coupon = coupon.id
+	FROM coupon_marchi
+		LEFT JOIN coupon ON coupon.id = coupon_marchi.id_coupon
 		LEFT JOIN marchi ON marchi.id = coupon_marchi.id_marchio
 ;
 
@@ -1179,8 +1117,8 @@ CREATE OR REPLACE VIEW `coupon_prodotti_view` AS
 			' / ',
 			prodotti.nome
 		) AS __label__
-	FROM coupon_listini
-		LEFT JOIN coupon ON coupon_categorie_prodotti.id_coupon = coupon.id
+	FROM coupon_prodotti
+		LEFT JOIN coupon ON coupon.id = coupon_prodotti.id_coupon
 		LEFT JOIN prodotti ON prodotti.id = coupon_prodotti.id_prodotto
 ;
 
@@ -1210,7 +1148,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie.nome,
+			tipologie_documenti.nome,
 			' ',
 			documenti.numero,
 			'/',
@@ -1271,7 +1209,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.id_udm,
 		documenti_articoli.quantita,
 		documenti_articoli.id_listino,
-		documenti_articoli.id_valuta,
+		listini.id_valuta,
 		valute.utf8 AS valuta,
 		documenti_articoli.importo_netto_totale,
 		documenti_articoli.id_iva,
@@ -1292,7 +1230,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			' / ',
 			documenti_articoli.importo_netto_totale,
 			' ',
-			valute.utf8
+			valute.utf8,
 			' +IVA ',
 			iva.aliquota,
 			' % '
@@ -1302,9 +1240,30 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
+		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN iva ON iva.id = documenti_articoli.id_iva
+;
+
+--| 090000012800
+
+-- embed_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `embed_view`;
+
+--| 090000012801
+
+-- embed_view
+-- tipologia: tabella standard
+-- verifica: 2021-09-10 16:54 Fabio Mosti
+CREATE OR REPLACE VIEW `embed_view` AS
+	SELECT
+		embed.id,
+		embed.nome,
+		embed.nome AS __label__
+	FROM embed
 ;
 
 --| 090000015000
@@ -1330,13 +1289,13 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_categoria_prodotti,
 		file.id_todo,
 		file.id_pagina,
-		file.id_template_mail,
+		file.id_template,
 		file.id_notizia,
 		file.id_categoria_notizie,
 		file.id_risorsa,
 		file.id_categoria_risorse,
 		file.id_lingua,
-		lingue.iso31661alpha3 AS lingua,
+		lingue.iso6393alpha3 AS lingua,
 		file.path,
 		file.url,
 		file.nome,
@@ -1356,6 +1315,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		) AS __label__
 	FROM file
 		LEFT JOIN ruoli_file ON ruoli_file.id = file.id_ruolo
+		LEFT JOIN lingue ON lingue.id = file.id_lingua
 ;
 
 --| 090000015200
@@ -1623,7 +1583,7 @@ CREATE OR REPLACE VIEW `listini_view` AS
 		listini.id_valuta,
 		valute.iso4217 AS valuta,
 		listini.nome,
-		lisitni.id_account_inserimento,
+		listini.id_account_inserimento,
 		listini.id_account_aggiornamento,
 		concat(
 			listini.nome,
@@ -1989,6 +1949,7 @@ CREATE OR REPLACE VIEW `notizie_view` AS
 		notizie.id_account_aggiornamento,
 		notizie.nome AS __label__
 	FROM notizie
+		LEFT JOIN tipologie_notizie ON tipologie_notizie.id = notizie.id_tipologia
 		LEFT JOIN notizie_categorie ON notizie_categorie.id_notizia = notizie.id
 		LEFT JOIN categorie_notizie ON categorie_notizie.id = notizie_categorie.id_categoria
 	GROUP BY notizie.id
@@ -2016,11 +1977,12 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 		notizie_categorie.id_account_inserimento,
 		notizie_categorie.id_account_aggiornamento,
 		concat(
-			notizie.nome,
+			notizie_categorie.nome,
 			' / ',
 			categorie_notizie_path( categorie_notizie.id )
 		) AS __label__
 	FROM notizie_categorie
+		LEFT JOIN notizie ON notizie.id = notizie_categorie
 ;
 
 --| 090000022800
@@ -2136,7 +2098,7 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		pianificazioni.giorni_estensione,
 		pianificazioni.data_fine,
 		pianificazioni.workspace,
-		pianificazioni.token
+		pianificazioni.token,
 		pianificazioni.id_account_inserimento,
 		pianificazioni.id_account_aggiornamento,
 		concat_ws(
@@ -2167,9 +2129,9 @@ CREATE OR REPLACE VIEW `popup_view` AS
 		tipologie_popup.nome AS tipologia,
 		popup.id_sito,
 		popup.nome,
-		popup.id_html,
-		popup.classi_html,
-		popup.classe_attivazione,
+		popup.html_id,
+		popup.html_class,
+		popup.html_class_attivazione,
 		popup.n_scroll,
 		popup.n_secondi,
 		popup.template,
@@ -2204,11 +2166,12 @@ CREATE OR REPLACE VIEW `popup_pagine_view` AS
 		concat(
 			popup.nome,
 			' / ',
-			pagine_path( popup_pagine.id_pagina )
+			pagine_path( popup_pagine.id_pagina ),
 			' / ',
 			coalesce( popup_pagine.se_presente, 0 )
 		) AS __label__
 	FROM popup_pagine
+		LEFT JOIN popup ON popup.id = popup_pagine.id_popup
 ;
 
 --| 090000025000
@@ -2274,7 +2237,7 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		prodotti.id_produttore,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
 		prodotti.codice_produttore,
-		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		prodotti.id_account_inserimento,
 		prodotti.id_account_aggiornamento,
 		concat_ws(
@@ -2308,15 +2271,12 @@ CREATE OR REPLACE VIEW `prodotti_caratteristiche_view` AS
 		prodotti_caratteristiche.id_caratteristica,
 		caratteristiche_prodotti.nome AS caratteristica,
 		prodotti_caratteristiche.ordine,
-		prodotti_caratteristiche.se_assente,
 		prodotti_caratteristiche.id_account_inserimento,
 		prodotti_caratteristiche.id_account_aggiornamento,
 		concat(
 			prodotti_caratteristiche.id_prodotto,
 			' / ',
-			caratteristiche_prodotti.nome,
-			' / ',
-			coalesce( caratteristiche_prodotti.se_assente, 0 )
+			caratteristiche_prodotti.nome
 		) AS __label__
 	FROM prodotti_caratteristiche
 		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = prodotti_caratteristiche.id_caratteristica
@@ -2348,7 +2308,7 @@ CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
 			' ',
 			prodotti_categorie.id_prodotto,
 			ruoli_prodotti.nome,
-			categorie_prodotti_path( prodotti_categorie.id_categoria ) AS categoria
+			categorie_prodotti_path( prodotti_categorie.id_categoria )
 		) AS __label__
 	FROM prodotti_categorie
 		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = prodotti_categorie.id_ruolo
@@ -2384,7 +2344,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
-		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2402,16 +2362,16 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 
 --| 090000027010
 
--- progetti_produzione_view
+-- progetti_commerciale_view
 -- tipologia: tabella gestita
-DROP TABLE IF EXISTS `progetti_produzione_view`;
+DROP TABLE IF EXISTS `progetti_commerciale_view`;
 
 --| 090000027011
 
--- progetti_produzione_view
+-- progetti_commerciale_view
 -- tipologia: tabella gestita
 -- verifica: 2021-10-08 14:14 Fabio Mosti
-CREATE OR REPLACE VIEW `progetti_produzione_view` AS
+CREATE OR REPLACE VIEW `progetti_commerciale_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
@@ -2430,7 +2390,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
-		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2479,7 +2439,7 @@ CREATE OR REPLACE VIEW `progetti_commerciale_archivio_view` AS
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
-		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2528,7 +2488,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
-		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2577,7 +2537,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_archivio_view` AS
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
-		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2626,7 +2586,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_view` AS
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
-		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2675,7 +2635,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_archivio_view` AS
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
-		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2720,8 +2680,8 @@ CREATE OR REPLACE VIEW progetti_anagrafica_view AS
  		concat_ws(
 			' ',
 			progetti.nome,
-			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-			ruoli_progetti.nome
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
+			ruoli_anagrafica.nome
 		) AS __label__
 	FROM progetti_anagrafica
 		LEFT JOIN progetti ON progetti.id = progetti_anagrafica.id_progetto
@@ -2755,8 +2715,8 @@ CREATE OR REPLACE VIEW progetti_categorie_view AS
 			progetti.nome,
 			categorie_progetti_path( progetti_categorie.id_categoria )
 		) AS __label__
-	FROM progetti_anagrafica
-		LEFT JOIN progetti ON progetti.id = progetti_anagrafica.id_progetto
+	FROM progetti_categorie
+		LEFT JOIN progetti ON progetti.id = progetti_categorie.id_progetto
 ;
 
 --| 090000028000
@@ -2823,6 +2783,7 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 			pubblicazioni.timestamp_fine
 		) AS __label__
     FROM pubblicazioni
+		LEFT JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia
 ;
 
 --| 090000028600
@@ -2969,7 +2930,7 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 		risorse.id_tipologia,
 		tipologie_risorse.nome AS tipologia,
 		risorse.codice, 
-		risorse.nome, 
+		risorse.nome,
 		risorse.id_testata, 
 		testate.nome AS testata,
 		risorse.giorno_pubblicazione,
@@ -3006,7 +2967,7 @@ CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
 		risorse_anagrafica.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		risorse_anagrafica.id_ruolo,
-		ruoli_anagrafica_path( risorse_anagrafica.id_ruolo ) AS ruolo
+		ruoli_anagrafica_path( risorse_anagrafica.id_ruolo ) AS ruolo,
 		risorse_anagrafica.ordine,
 		risorse_anagrafica.id_account_inserimento,
 		risorse_anagrafica.id_account_aggiornamento,
@@ -3018,7 +2979,7 @@ CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
 		) AS __label__
 	FROM risorse_anagrafica
 		LEFT JOIN risorse ON risorse.id = risorse_anagrafica.id_risorsa
-		LEFT JOIN anagrafica AS a1 ON a1.id = progetti_anagrafica.id_anagrafica
+		LEFT JOIN anagrafica AS a1 ON a1.id = risorse_anagrafica.id_anagrafica
 ;
 
 --| 090000032400
@@ -3090,16 +3051,16 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.id_genitore,
 		ruoli_audio.nome,
 		ruoli_audio.html_entity,
-		ruoli_audio.font_awesome
+		ruoli_audio.font_awesome,
 		ruoli_audio.se_anagrafica,
 		ruoli_audio.se_pagine,
 		ruoli_audio.se_prodotti,
 		ruoli_audio.se_articoli,
-		ruoli_audio.se_categorie_prodotti
+		ruoli_audio.se_categorie_prodotti,
 		ruoli_audio.se_notizie,
 		ruoli_audio.se_categorie_notizie,
 		ruoli_audio.se_risorse,
-		ruoli_audio.se_categoria_risorse,
+		ruoli_audio.se_categorie_risorse,
 	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
 	FROM ruoli_audio
 ;
@@ -3120,17 +3081,17 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.id,
 		ruoli_file.id_genitore,
 		ruoli_file.nome,
-		ruoli_audio.html_entity,
-		ruoli_audio.font_awesome
-		ruoli_audio.se_anagrafica,
-		ruoli_audio.se_pagine,
-		ruoli_audio.se_prodotti,
-		ruoli_audio.se_articoli,
-		ruoli_audio.se_categorie_prodotti
-		ruoli_audio.se_notizie,
-		ruoli_audio.se_categorie_notizie,
-		ruoli_audio.se_risorse,
-		ruoli_audio.se_categoria_risorse,
+		ruoli_file.html_entity,
+		ruoli_file.font_awesome,
+		ruoli_file.se_anagrafica,
+		ruoli_file.se_pagine,
+		ruoli_file.se_prodotti,
+		ruoli_file.se_articoli,
+		ruoli_file.se_categorie_prodotti,
+		ruoli_file.se_notizie,
+		ruoli_file.se_categorie_notizie,
+		ruoli_file.se_risorse,
+		ruoli_file.se_categorie_risorse,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;
@@ -3152,17 +3113,17 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS
 		ruoli_immagini.id_genitore,
 		ruoli_immagini.ordine_scalamento,
 		ruoli_immagini.nome,
-		ruoli_audio.html_entity,
-		ruoli_audio.font_awesome
-		ruoli_audio.se_anagrafica,
-		ruoli_audio.se_pagine,
-		ruoli_audio.se_prodotti,
-		ruoli_audio.se_articoli,
-		ruoli_audio.se_categorie_prodotti
-		ruoli_audio.se_notizie,
-		ruoli_audio.se_categorie_notizie,
-		ruoli_audio.se_risorse,
-		ruoli_audio.se_categoria_risorse,
+		ruoli_immagini.html_entity,
+		ruoli_immagini.font_awesome,
+		ruoli_immagini.se_anagrafica,
+		ruoli_immagini.se_pagine,
+		ruoli_immagini.se_prodotti,
+		ruoli_immagini.se_articoli,
+		ruoli_immagini.se_categorie_prodotti,
+		ruoli_immagini.se_notizie,
+		ruoli_immagini.se_categorie_notizie,
+		ruoli_immagini.se_risorse,
+		ruoli_immagini.se_categorie_risorse,
 	 	ruoli_immagini_path( ruoli_immagini.id ) AS __label__
 	FROM ruoli_immagini
 ;
@@ -3210,7 +3171,7 @@ CREATE OR REPLACE VIEW ruoli_prodotti_view AS
 		ruoli_prodotti.id_genitore,
 		ruoli_prodotti.nome,
 	 	ruoli_prodotti_path( ruoli_prodotti.id ) AS __label__
-	FROM ruoli_immagini
+	FROM ruoli_prodotti
 ;
 
 --| 090000035200
@@ -3229,17 +3190,17 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.id,
 		ruoli_video.id_genitore,
 		ruoli_video.nome,
-		ruoli_audio.html_entity,
-		ruoli_audio.font_awesome
-		ruoli_audio.se_anagrafica,
-		ruoli_audio.se_pagine,
-		ruoli_audio.se_prodotti,
-		ruoli_audio.se_articoli,
-		ruoli_audio.se_categorie_prodotti
-		ruoli_audio.se_notizie,
-		ruoli_audio.se_categorie_notizie,
-		ruoli_audio.se_risorse,
-		ruoli_audio.se_categoria_risorse,
+		ruoli_video.html_entity,
+		ruoli_video.font_awesome,
+		ruoli_video.se_anagrafica,
+		ruoli_video.se_pagine,
+		ruoli_video.se_prodotti,
+		ruoli_video.se_articoli,
+		ruoli_video.se_categorie_prodotti,
+		ruoli_video.se_notizie,
+		ruoli_video.se_categorie_notizie,
+		ruoli_video.se_risorse,
+		ruoli_video.se_categorie_risorse,
 	 	ruoli_video_path( ruoli_video.id ) AS __label__
 	FROM ruoli_video
 ;
@@ -3396,7 +3357,7 @@ CREATE OR REPLACE VIEW stati_view AS
 			stati.nome,
 			lingue.nome
 		) AS __label__
-    FROM stati
+    FROM stati_lingue
     	LEFT JOIN stati ON stati.id = stati_lingue.id_stato
     	LEFT JOIN lingue ON lingue.id = stati_lingue.id_lingua
 ;
@@ -3506,6 +3467,25 @@ CREATE OR REPLACE VIEW `template_view` AS
 	FROM template
 ;
 
+--| 090000045000
+
+-- testate_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `testate_view`;
+
+--| 090000045001
+
+-- testate_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-10 16:54 Fabio Mosti
+CREATE OR REPLACE VIEW `testate_view` AS
+	SELECT
+		testate.id,
+		testate.nome,
+		testate.nome AS __label__
+	FROM testate
+;
+
 --| 090000050000
 
 -- tipologie_anagrafica_view
@@ -3605,7 +3585,7 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 		tipologie_documenti.font_awesome,
 		tipologie_documenti.se_fattura,
 		tipologie_documenti.se_nota_credito,
-		tipologie_documenti.se_documento_trasporto,
+		tipologie_documenti.se_trasporto,
 		tipologie_documenti.se_pro_forma,
 		tipologie_documenti.se_offerta,
 		tipologie_documenti.se_ordine,
@@ -3741,6 +3721,8 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 		tipologie_prodotti.se_imballo,
 		tipologie_prodotti.se_spedizione,
 		tipologie_prodotti.se_trasporto,
+		tipologie_prodotti.se_prodotto,
+		tipologie_prodotti.se_servizio,
 		tipologie_prodotti.id_account_inserimento,
 		tipologie_prodotti.id_account_aggiornamento,
 		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
@@ -3935,7 +3917,7 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		todo.ora_inizio_programmazione,
 		todo.ora_fine_programmazione,
 		todo.anno_programmazione,
-		todo.settimana_programmazione
+		todo.settimana_programmazione,
 		todo.ore_programmazione,
 		todo.data_chiusura,
 		todo.nome,
@@ -3958,6 +3940,7 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 ;
 
 --| 090000062000
@@ -4013,7 +3996,9 @@ CREATE OR REPLACE VIEW url_view AS
 			tipologie_url.nome,
 			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
 		) AS __label__
-	FROM udm
+	FROM url
+		LEFT JOIN anagrafica AS a1 ON a1.id = url.id_anagrafica
+		LEFT JOIN tipologie_url ON tipologie_url.id = url.id_tipologia
 ;
 
 --| 090000063000
@@ -4061,7 +4046,6 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_categoria_risorse,
 		video.id_notizia,
 		video.id_categoria_notizie,
-		video.id_indirizzo,
 		video.id_lingua,
 		lingue.nome AS lingua,
 		video.id_ruolo,
@@ -4087,7 +4071,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		) AS __label__
 	FROM video
 		LEFT JOIN lingue ON lingue.id = video.id_lingua
-		LEFT JOIN ruoli_video ON ruoli_video.id = ruoli.id_ruolo
+		LEFT JOIN ruoli_video ON ruoli_video.id = video.id_ruolo
 ;
 
 --| FINE FILE

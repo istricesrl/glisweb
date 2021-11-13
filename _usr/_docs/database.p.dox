@@ -420,7 +420,6 @@
     prodotti_caratteristiche.id_caratteristica        | l'ID della caratteristica 
     prodotti_caratteristiche.ordine                   | campo di ordinamento
     prodotti_caratteristiche.note                     | note aggiuntive sull'associazione fra prodotto e caratteristica
-    prodotti_caratteristiche.se_assente               | flag che indica se la caratteristica è assente dal prodotto
     prodotti_caratteristiche.id_account_inserimento   | l'ID dell'account che ha inserito la riga
     prodotti_caratteristiche.timestamp_inserimento    | la timestamp dell'inserimento della riga
     prodotti_caratteristiche.id_account_aggiornamento | l'ID dell'ultimo account che ha modificato la riga

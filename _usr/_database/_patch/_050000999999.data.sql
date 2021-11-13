@@ -11,10 +11,10 @@
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 -- verifica: 2021-05-28 19:56 Fabio Mosti
-REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `se_lead`, `se_prospect`, `se_cliente`, `se_mandante`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_dipendente`, `se_interinale`, `se_interno`, `se_esterno`, `se_agente`, `se_concorrente`, `se_azienda_gestita`, `se_amministrazione`, `se_produzione`, `se_notizie`, `se_docente`, `se_tutor`, `se_classe`, `se_allievo`, `se_agenzia_interinale`, `se_referente`, `se_sostituto`, `se_squadra`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'clienti',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'collaboratori',   	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'fornitori',	    NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `se_prospect`, `se_lead`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_concorrente`, `se_azienda_gestita`, `se_amministrazione`, `se_produzione`) VALUES
+(1,	NULL,	NULL,	'clienti',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'collaboratori',   	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'fornitori',	    NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000005100
 
@@ -692,7 +692,7 @@ REPLACE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`,
 (218,	1,	NULL,	NULL,	'Gibilterra',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'910',	'2017-04-13'),
 (219,	4,	NULL,	NULL,	'Groenlandia',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'934',	'2017-04-13'),
 (220,	1,	NULL,	NULL,	'Guernsey',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'940',	'2017-04-13'),
-(221,	1,	NULL,	NULL,	'Isola di Man',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'959',	'0000-00-00'),
+(221,	1,	NULL,	NULL,	'Isola di Man',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'959',	NULL),
 (222,	4,	NULL,	NULL,	'Isole Cayman',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'911',	'2017-04-13'),
 (223,	5,	NULL,	NULL,	'Isole Cook (NZ)',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'909',	'2017-04-13'),
 (224,	1,	NULL,	NULL,	'Isole Fær Øer',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'924',	'2017-04-13'),

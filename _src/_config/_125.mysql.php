@@ -157,7 +157,8 @@
 					'CREATE TABLE IF NOT EXISTS `__patch__` ('.
 					'	`id` char(12) NOT NULL PRIMARY KEY,'.
 					'	`patch` text COLLATE utf8_unicode_ci,'.
-					'	`timestamp_esecuzione` int(11) DEFAULT NULL'.
+					'	`timestamp_esecuzione` int(11) DEFAULT NULL,'.
+					'	`note_esecuzione` text'.
 					'  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'
 				);
 
@@ -172,12 +173,12 @@
 
 				$pFilePatchLevel = substr( basename( $pFile ), 1, 12 );
 
-				echo 'patch level del file ' . $pFilePatchLevel . HTML_EOL;
-				echo 'patch level del database ' . $patchLevel . HTML_EOL;
+				// echo 'patch level del file ' . $pFilePatchLevel . HTML_EOL;
+				// echo 'patch level del database ' . $patchLevel . HTML_EOL;
 
 				if( $pFilePatchLevel > $patchLevel ) {
 
-					echo 'prelevo le patch dal file ' . $pFilePatchLevel . HTML_EOL;
+					// echo 'prelevo le patch dal file ' . $pFilePatchLevel . HTML_EOL;
 
 					$rows = readFromFile( $pFile );
 
@@ -189,33 +190,41 @@
 						if( substr( trim( $row ), 0, 3 ) == '--|' ) {
 	
 							if( ! empty( trim( $pQuery ) ) ) {
-	
-								echo 'eseguo la patch ' . $pId . HTML_EOL;
+
+								// echo 'eseguo la patch ' . $pId . HTML_EOL;
 
 								$pEx = mysqlQuery(
 									$cf['mysql']['connection'],
 									$pQuery
 								);
 
-								echo 'scrivo la patch ' . $pId . HTML_EOL;
+								// echo 'scrivo la patch ' . $pId . HTML_EOL;
+
+								$pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
+
+								if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
+									echo $pQuery . HTML_EOL;
+									echo $pStatus . HTML_EOL;
+								}
 
 								mysqlInsertRow(
 									$cf['mysql']['connection'],
 									array(
 										'id' => $pId,
 										'patch' => trim( $pQuery ),
-										'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() )
+										'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() ),
+										'note_esecuzione' => ( ( empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) ? 'OK' : $pStatus )
 									),
 									'__patch__',
 									false
 								);
-	
+
 							}
 	
 							$pId = substr( $row, 4, 12 );
 							$pQuery = null;
 
-							echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
+							// echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
 							
 						} elseif( substr( trim( $row ), 0, 2 ) !== '--' ) {
 	

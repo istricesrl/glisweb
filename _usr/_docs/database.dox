@@ -44,6 +44,7 @@
     colori                          | 005100    | base          | principale    | contiene i colori
     comuni                          | 005300    | base          | principale    | contiene i comuni
     continenti                      | 007100    | base          | principale    | contiene i continenti
+    embed                           | 012800    | base          | principale    | contiene le strategie di embed dei contenuti multimediali
     iva                             | 016000    | base          | principale    | contiene le aliquote IVA
     lingue                          | 016800    | base          | principale    | contiene le lingue supportate dal framework
     periodicita                     | 023600    | base          | principale    | contiene le periodicità
@@ -163,6 +164,7 @@
     sms_sent                        | 041200    | base          | principale    | contiene gli SMS inviati
     telefoni                        | 043600    | base          | principale    | contiene i numeri di telefono
     template                        | 044000    | base          | principale    | contiene i template per le mail e gli SMS
+    testate                         | 045000    | base          | principale    | contiene le testate
     todo                            | 060000    | base          | principale    | contiene le todo
     url                             | 062600    | base          | principale    | contiene gli URL
     video                           | 065000    | base          | contenuti     | contiene i video
@@ -174,7 +176,7 @@
 
     modulo      | codice    | tabella
     ------------|-----------|----------------------------------------------------------
-    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, colori, comuni, continenti, gruppi, iban, indirizzi, iva, job, lingue, luoghi, mail, mail_out, mail_sent, metadati, periodicita, ranking, regimi, regioni, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
+    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, luoghi, mail, mail_out, mail_sent, metadati, periodicita, ranking, regimi, regioni, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
     CONTATTI    | 0300      | contatti, tipologie_contatti
     PRODUZIONE  | 1000      | categorie_progetti, pianificazioni, progetti, progetti_anagrafica, progetti_categorie, ruoli_anagrafica, tipologie_progetti, todo
     ATTIVITA    | 1100      | attivita, pianificazioni, tipologie_attivita, todo
@@ -182,7 +184,7 @@
     CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
     POPUP       |           | popup, popup_pagine, pubblicazioni, tipologie_popup, tipologie_pubblicazioni
     NOTIZIE     |           | audio, contenuti, file, categorie_notizie, immagini, menu, metadati, notizie notizie_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_notizie, tipologie_pubblicazioni, video
-    RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, tipologie_risorse, video
+    RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
     PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
     DOCUMENTI   |           | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_prodotti
@@ -222,6 +224,7 @@
     coupon_prodotti                 | COUPON
     documenti                       | DOCUMENTI, CASSE
     documenti_articoli              | DOCUMENTI, CASSE
+    embed                           | BASE
     file                            | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     gruppi                          | BASE
     iban                            | BASE
@@ -280,6 +283,7 @@
     task                            | BASE
     telefoni                        | BASE
     template                        | BASE
+    testate                         | RISORSE
     tipologie_anagrafica            | BASE
     tipologie_attivita              | ATTIVITA
     tipologie_contatti              | CONTATTI
