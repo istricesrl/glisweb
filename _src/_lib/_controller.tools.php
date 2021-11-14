@@ -28,13 +28,13 @@
 	    logWrite( "${t}/${a}", 'controller' );
 
 	// inizializzazioni
-	    $q					= NULL;				// la query MySQL che verrà eseguita
-	    $s					= array();			// 
-	    $r					= false;			// 
-	    $ks					= array();			// 
-	    $vs					= array();			// 
-	    $vm					= false;			// 
-		$rm					= '_view';			// 
+	    $q					= NULL;										// la query MySQL che verrà eseguita
+	    $s					= array();									// 
+	    $r					= false;									// 
+	    $ks					= array();									// 
+	    $vs					= array();									// 
+	    $vm					= false;									// 
+		$rm					= getStaticViewExtension( $mc, $c, $t );	// 
 
 	// inclusione dei controller
 	    $cb					= DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
@@ -52,18 +52,18 @@
 	// genero l'array delle chiavi, dei valori e dei sottomoduli
 	    foreach( $d as $k => $v ) {
 		if( is_array( $v ) && substr( $k, 0, 2 ) !== '__' ) {		// nel caso il valore sia un subform, viene
-		    $s[ $k ] = $v;						// passato così com'è per la ricorsione
-		} elseif( strtolower( $k )	== '__method__' ) {		//
-		    $a = strtoupper( $v );					// impostazione esplicita del method del form
-		} elseif( strtolower( $k )	== '__table__' ) {		//
-		    $t = $v;							// impostazione esplicita della tabella del form
-		} elseif( strtolower( $k )	== '__reset__' ) {		//
-		    $r = string2boolean( $v );					// richiesta esplicita di svuotare $_REQUEST[ $t ]
-		} elseif( strtolower( $k )	== '__view_mode__' ) {		//
-		    $vm = true;							//
-		} elseif( strtolower( $k )	== '__report_mode__' ) {	//
-		    $rm = NULL;							//
-		} elseif( substr( $k, 0, 2 )	!== '__' ) {			//
+		    $s[ $k ] = $v;											// passato così com'è per la ricorsione
+		} elseif( strtolower( $k )	== '__method__' ) {				//
+		    $a = strtoupper( $v );									// impostazione esplicita del method del form
+		} elseif( strtolower( $k )	== '__table__' ) {				//
+		    $t = $v;												// impostazione esplicita della tabella del form
+		} elseif( strtolower( $k )	== '__reset__' ) {				//
+		    $r = string2boolean( $v );								// richiesta esplicita di svuotare $_REQUEST[ $t ]
+		} elseif( strtolower( $k )	== '__view_mode__' ) {			//
+		    $vm = true;												//
+		} elseif( strtolower( $k )	== '__report_mode__' ) {		//
+		    $rm = NULL;												//
+		} elseif( substr( $k, 0, 2 )	!== '__' ) {				//
 
 		    if( strtolower( $v )	== '__null__' )		{ $v = NULL; }
 		    if( strtolower( $v )	== '__parent_id__' )	{ $v = $p; }
@@ -71,8 +71,8 @@
 		    if( strtolower( $v )	== '__timestamp__' )	{ $v = time(); }
 		    if( strtolower( $v )	== '__date__' )		{ $v = date( 'Y-m-d' ); }
 
-		    $vs[ $k ]			= array( 's' => $v );		// array dei valori per il bind dei parametri
-		    $ks[]			= $k;				// array delle chiavi per la costruzione della query
+		    $vs[ $k ]		= array( 's' => $v );					// array dei valori per il bind dei parametri
+		    $ks[]			= $k;									// array delle chiavi per la costruzione della query
 
 		}
 	    }
@@ -82,11 +82,20 @@
 
 		// se è stata effettuata una GET senza ID, passo alla modalità view
 		    if( $a === METHOD_GET && ( ! array_key_exists( 'id', $d ) || $vm === true ) ) {
+/*
+			// verifico se esiste la view statica
+				$stv = mysqlSelectValue(
+					$c,
+					'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+					array( array('s' => $t . $rm . '_static' ) )
+				);
 
-			// TODO verifico se esiste la view statica
-				// ...
-				// ... $rm = '_view_static';
-
+			// se esiste la vista statica...
+				if( $stv ) {
+					$rm = '_view_static';
+					logWrite( "trovata view static per ${t}, $stv", 'controller' );
+				}
+*/
 			// log
 			    logWrite( "permessi sufficienti per ${t}/${a}", 'controller', LOG_DEBUG );
 
@@ -127,16 +136,29 @@
 
 			// ricerca nella vista
 			    if( isset( $i['__fields__'] ) && isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
-				foreach( explode( ' ', $i['__search__'] ) as $tks ) {
-				    $like = "%${tks}%";
-				    $cond = array();
-				    foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
-					$cond[] = $field . ' LIKE ?';
-					$vs[] = array( 's' => $like );
-				    }
-				    $whr[] = '(' . implode( ' OR ', $cond ) . ')';
+					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
+						if( ! empty( $tks ) ) {
+							$like = "%${tks}%";
+							$cond = array();
+							foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
+							$cond[] = $field . ' LIKE ?';
+							$vs[] = array( 's' => $like );
+							}
+# PERCHÉ OR?							$whr[] = '(' . implode( ' AND ', $cond ) . ')';
+							$whr[] = '(' . implode( ' OR ', $cond ) . ')';
+						}
+					}
+			    } elseif( isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
+					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
+						if( ! empty( $tks ) && strlen( $tks ) >= 3 ) {
+							$like = "%${tks}%";
+							$vs[] = array( 's' => $like );
+							$cond[] = ' __label__ LIKE ? ';
+						}
+					}
+# PERCHÉ OR?					$whr[] = '(' . implode( ' OR ', $cond ) . ')';
+					$whr[] = '(' . implode( ' AND ', $cond ) . ')';
 				}
-			    }
 
 			// filtri per i campi
 			    foreach( $ks as $fk ) {
@@ -144,7 +166,8 @@
 			    }
 
 			// debug
-			    // print_r( $i['__filters__'] );
+				// print_r( $i['__filters__'] );
+				// print_r( $whr );
 
 			/*
 			 * @todo IMPORTANTE
@@ -243,7 +266,7 @@
 
 			// debug
 			    // print_r( $i );
-			    //  echo $q . PHP_EOL;
+			     // echo $q . PHP_EOL;
 
 			// eseguo la query
 			    $d = mysqlQuery( $c, $q, $vs, $e['__codes__'] );
@@ -574,6 +597,7 @@
 			// svuotamento o integrazione del blocco dati
 			// NOTA a cosa serve questa cosa???
 			// TODO selezionare dalla vista può essere inefficente, è possibile selezionare dalla tabella?
+
 			    if( $r ) {
 				$_SESSION['__latest__'][ $t ] = $d;
 				$d = array();

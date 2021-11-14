@@ -802,3 +802,22 @@
 		}
 		return array();
 	}
+
+	function getStaticViewExtension( $m, $c, $t ) {
+
+			// verifico se esiste la view statica
+			$stv = mysqlSelectCachedValue(
+				$m,
+				$c,
+				'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+				array( array('s' => $t . '_view_static' ) )
+			);
+
+		// se esiste la vista statica...
+			if( ! empty( $stv ) ) {
+				return '_view_static';
+			} else {
+				return '_view';
+			}
+
+	}
