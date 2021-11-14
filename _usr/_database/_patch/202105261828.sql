@@ -1,1 +1,0 @@
-ALTER TABLE `pianificazioni` DROP `se_pulire`;

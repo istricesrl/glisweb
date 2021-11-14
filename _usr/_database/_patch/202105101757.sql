@@ -1,1 +1,0 @@
-ALTER TABLE `anagrafica` ADD CONSTRAINT `anagrafica_ibfk_10_nofollow` FOREIGN KEY (`id_responsabile_operativo`) REFERENCES `anagrafica`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;

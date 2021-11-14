@@ -1,1 +1,0 @@
-ALTER TABLE `documenti` CHANGE `id_destinatario` `id_destinatario` INT(11) NULL DEFAULT NULL;

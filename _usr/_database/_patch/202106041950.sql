@@ -1,1 +1,0 @@
-DROP TRIGGER IF EXISTS anagrafica_categorie_update_static;

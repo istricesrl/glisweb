@@ -1,1 +1,0 @@
-ALTER TABLE `mastri` ADD `id_tipologia` INT NOT NULL AFTER `nome`, ADD INDEX (`id_tipologia`) ;

@@ -1982,7 +1982,7 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 			categorie_notizie_path( notizie_categorie.id_categoria )
 		) AS __label__
 	FROM notizie_categorie
-		LEFT JOIN notizie ON notizie.id = notizie_categorie
+		LEFT JOIN notizie ON notizie.id = notizie_categorie.id_notizia
 ;
 
 --| 090000022800

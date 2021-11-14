@@ -1,1 +1,0 @@
-INSERT INTO `tipologie_mastri` (`id`, `nome`) VALUES (1, 'quantitativo'), (2, 'monetario');
