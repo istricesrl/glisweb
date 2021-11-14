@@ -52,6 +52,7 @@
 		$( base ).removeClass('hidden');
 
 		$( base ).find( 'input, textarea, select, button' ).each( function( i, obj ) {
+			
 		    if( typeof( obj.attributes['default'] ) !== 'undefined' ) {
 			empty = obj.attributes['default'].value;
 		    } else {
@@ -156,12 +157,12 @@
 
 		// controllo in background dello status della sessione
 		setInterval( function() {
-			getws( '/report/session.status', null, function( d ){
-				var obj = JSON.parse( d );
+			getws( '/report/session.status', null, function( obj ){
+//				var obj = JSON.parse( d );
 				if( obj.time > ( obj.expires - ( obj.lifetime / 100 ) ) ) {
 					$('#widget-session').fadeIn();
 				}
-				console.log( obj );
+//				console.log( obj );
 			});
 		}, 60000 );
 
@@ -184,6 +185,63 @@
 			$(this).removeClass('fa fa-chevron-circle-down');
 			$(this).addClass('fa fa-chevron-circle-up');
 		    }
+
+		});
+
+		var fgSliders = [];
+
+		// attivazione dei job in foreground
+		$('.foreground-job-slider').each( function() {
+
+			// console.log( $( this ) );
+			// console.log( $( this ).attr('job-id') );
+
+			var jobId = $( this ).attr('job-id');
+			var pgBar = $( this );
+
+			fgSliders[ jobId ] = setInterval( function() {
+
+				getws( '/job/' + jobId, null, function( d ) {
+
+					// console.log( jobId );
+					// console.log( d );
+
+//					var obj = JSON.parse( d );
+
+					// console.log( obj );
+
+					console.log( pgBar.attr('aria-valuenow') );
+
+					pgBar.attr( 'aria-valuenow', d.corrente );
+					pgBar.attr( 'aria-valuemax', d.totale );
+
+					var percentuale = Math.round( percentuale = d.corrente / d.totale * 100 );
+
+					pgBar.width( percentuale + '%' );
+
+					var container = pgBar.closest('.foreground-job-container');
+					var parent = pgBar.closest('.progress');
+
+					if( d.corrente >= d.totale ) {
+
+						clearInterval( fgSliders[ jobId ] );
+
+						parent.slideUp();
+						parent.remove();
+
+						if( d.hasOwnProperty('result') ) {
+							if( d.result.hasOwnProperty('link') ) {
+								container.append('<p><a target="_blank" href="'+d.result.link+'">'+d.result.label+'</a></p>');
+							} else {
+								container.append('<p>'+d.result.label+'</p>');
+							}
+						}
+
+					}
+
+				});
+	
+			}, 3000 );
 
 		});
 

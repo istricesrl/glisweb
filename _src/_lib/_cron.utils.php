@@ -236,14 +236,14 @@
                         } else {
                             $d = date('Y-m-d',strtotime(' next '.$days[$g], strtotime($d_inizio) ));
                         }
-                        do {
+                        while ( $d <= $data_fine ) {
                         if($d >= $data){
                             $attivita[] =$d;
                         }
                         // aggiorno la data con la successiva
                         $d = date('Y-m-d', strtotime($d. ' + '.$cadenza.' weeks'));
                         
-                        } while ( $d <= $data_fine );
+                        }
                     }
                 break;
     

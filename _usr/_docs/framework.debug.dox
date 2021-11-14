@@ -9,11 +9,22 @@
 
     comandi di una lettera
     ======================
+    I comandi di una lettera sono parametri URL che possono essere aggiunti per ottenere effetti particolari, utili soprattutto per i test e il debug del
+    framework. Normalmente vengono gestiti in _src/_config/_420.pages.php oppure nell'API pages _src/_api/_pages.php.
 
-    il comando ?u
+    il comando ?c
+    -------------
+
+    il comando ?j
+    -------------
+
+    il comando ?s
     -------------
 
     il comando ?t
+    -------------
+
+    il comando ?u
     -------------
 
     il sistema di log

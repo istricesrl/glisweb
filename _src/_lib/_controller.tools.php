@@ -47,7 +47,8 @@
 		// var_dump( $d );
 
 	// modifico in NULL tutti i valori vuoti
-	    $d = array_map( 'empty2null', $d );
+	    // $d = array_map( 'empty2null', $d );
+	    $d = array_map( 'numeric2null', $d );
 
 	// genero l'array delle chiavi, dei valori e dei sottomoduli
 	    foreach( $d as $k => $v ) {
@@ -123,6 +124,13 @@
 
 			// inizializzo l'array per ricerca e filtri
 			    $whr = array();
+				
+				// NOTA BENE: questo foreach l'abbiamo spostato il 28-07-2021 prima del successivo IF per risolvere il problema dell'ordinamento parametri
+				// esempio chiamata postman https://glisweb.istricesrl.it/api/attivita?attivita[data_programmazione]=2021-07-27&attivita[id_anagrafica]=66 con utente glisweb (staff) loggato e acl su attività
+				// filtri per i campi
+				foreach( $ks as $fk ) {
+					$whr[] = "${fk} = ?";
+				}
 
 			// unisco la tabella di ACL se presente
 			    if( ! empty( $aclTb ) ) {
@@ -133,6 +141,8 @@
 				$vs[] = array( 's' => $aclId );
 				$i['__group__'] = array( $t . $rm . '.id' );
 			    }
+
+				
 
 			// ricerca nella vista
 			    if( isset( $i['__fields__'] ) && isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
@@ -160,10 +170,7 @@
 					$whr[] = '(' . implode( ' AND ', $cond ) . ')';
 				}
 
-			// filtri per i campi
-			    foreach( $ks as $fk ) {
-				$whr[] = "${fk} = ?";
-			    }
+			
 
 			// debug
 				// print_r( $i['__filters__'] );
@@ -266,7 +273,8 @@
 
 			// debug
 			    // print_r( $i );
-			     // echo $q . PHP_EOL;
+			    //  echo $q . PHP_EOL;
+				// print_r($vs);
 
 			// eseguo la query
 			    $d = mysqlQuery( $c, $q, $vs, $e['__codes__'] );
@@ -311,7 +319,8 @@
 
 			// debug
 			    // echo( print_r( mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) ), true ) ) . PHP_EOL;
-			    // echo $before . PHP_EOL;
+			    // print_r($d);
+				// echo $before . PHP_EOL;
 
 			// controller pre query (before)
 			    $cn = 'before.php';
@@ -618,7 +627,11 @@
 			// TODO il valore di ritorno di questo ramo dipende dall'esito delle operazioni sopra
 			    return $i['__status__'];
 
-		    }
+		    } else {
+
+				#gdl
+				logWrite( "diritti INSUFFICIENTI per ${t}/${a} - ".$d['id'], 'controller', LOG_DEBUG );
+			}
 
 	    }
 

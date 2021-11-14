@@ -55,6 +55,10 @@
 					<span class="label-top">numero</span>
 					{{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
 				</div>
+				<div class="col-4 col-md-2">
+					<span class="label-top">sezionale</span>
+					{{ frm.input( table, '', '', 'sezionale', '', '', request ) }}
+				</div>
 				<div class="col-md-auto col-4">
 					<span class="label-top">tipologia</span>
 					{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request ) }}
@@ -65,9 +69,15 @@
 				</div>
 			</div>
 			<div class="form-group form-row">
+				<div class="col-12 col-md">
+					<span class="label-top">coupon {% if request[table].tipologia == 'documento di reso' %} reso{% else %}sconto{% endif %}</span>
+					{{ frm.selectBox( table, '', '', 'coupon', '', etc.select.coupon, request, '', '','','','','coupon.form','coupon.form','coupon', 'coupon' , page, pages, ietf,'coupon' ) }}
+				</div>
+			</div>
+			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">note</span>
-				{{ frm.textarea( table, '', '', 'note_interne', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
+				{{ frm.textarea( table, '', '', 'note_interne', '', 3, request ) }}
 				</div>
 			</div>
 	
@@ -75,12 +85,12 @@
 		<div class="form-group form-row">
 			<div class="col-12 col-md">
 				<span class="label-top">mittente</span>
-				{{ frm.selectBox( table, '', '', 'id_emittente', 'mittente', etc.select.id_mittenti, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_mittente' , page, pages, ietf ) }}
+				{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_mittenti, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_mittente' , page, pages, ietf,'anagrafica' ) }}
 			</div>
 			{% if request[ table ].id %}
 			<div class="col-12 col-md-8">
 				<span class="label-top">sede mittente</span>
-				{{ frm.selectBox( table, '', '', 'id_sede_emittente', 'sede mittente', etc.select.id_sedi_mittente, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_mittente' , page, pages, ietf ) }}
+				{{ frm.selectBox( table, '', '', 'id_sede_emittente', '', etc.select.id_sedi_mittente, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_mittente' , page, pages, ietf,'indirizzi' ) }}
 			</div>
 			{% endif %}
 		</div>
@@ -89,12 +99,12 @@
 		<div class="form-group form-row">
 			<div class="col-12 col-md">
 				<span class="label-top">destinatario</span>
-				{{ frm.selectBox( table, '', '', 'id_destinatario', 'destinatario', etc.select.id_destinatari, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf ) }}
+				{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
 			</div>
 			{% if request[ table ].id %}
 			<div class="col-12 col-md-8">
 				<span class="label-top">sede destinatario</span>
-				{{ frm.selectBox( table, '', '', 'id_sede_destinatario', 'sede destinatario', etc.select.id_sedi_destinatario, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_destinatario' , page, pages, ietf ) }}
+				{{ frm.selectBox( table, '', '', 'id_sede_destinatario', '', etc.select.id_sedi_destinatario, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_destinatario' , page, pages, ietf ) }}
 			</div>
 			{% endif %}
 		</div>

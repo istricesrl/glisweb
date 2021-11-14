@@ -34,6 +34,10 @@
 				$vs[ $vKey ]['s'] = strtotime( $vVal['s'] );
 			    }
 
+            // nei numeri sostituisco la , con il .
+			    if( $vKey == 'importo_netto_totale' && ( ! empty( $vVal['s'] )  ) ) {
+                    $vs[ $vKey ]['s'] = str_replace(",",".",$vs[ $vKey ]['s']);
+                }
 		    }
 
 	    break;

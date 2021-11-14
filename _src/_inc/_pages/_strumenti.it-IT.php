@@ -4,35 +4,35 @@
 	$l = 'it-IT';
 
     // pagina degli strumenti
-	$p['strumenti'] = array(
+	$p['strumenti'] 	= array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'strumenti' ),
-	    'h1'		=> array( $l		=> 'strumenti' ),
+	    'title'			=> array( $l		=> 'strumenti' ),
+	    'h1'			=> array( $l		=> 'strumenti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'strumenti.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_strumenti.php' ),
+	    'macro'			=> array( '_src/_inc/_macro/_strumenti.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'strumenti' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'strumenti' ),
-									'priority'	=> '950' ) )
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'			=> array( 'tabs'	=> array(	'strumenti' ) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'strumenti' ),
+									'priority'	=> '950' ) ) )
 	);
 
     // vista mail in uscita
 	$p['mail.out.view'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'mail in uscita' ),
-	    'h1'		=> array( $l		=> 'in uscita' ),
+	    'title'			=> array( $l		=> 'mail in uscita' ),
+	    'h1'			=> array( $l		=> 'in uscita' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.out.view.php' ),
+	    'macro'			=> array( '_src/_inc/_macro/_mail.out.view.php' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'mail.out.view',
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'mail.out.view',
 													'mail.sent.view',
 													'template.mail.view',
 													'mail.tools'
 												 ) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'mail' ),
-									'priority'	=> '950' ) )
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'mail' ),
+								'priority'	=> '950' ) ) )
 	);
 
     // gestione mail in uscita
@@ -164,7 +164,36 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
- 
+
+
+	// vista job
+	$p['job.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'job' ),
+		'h1'		=> array( $l		=> 'job' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_job.view.php' ),
+		'parent'		=> array( 'id'		=> 'strumenti' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'job.view',) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'job' ),
+																		'priority'	=> '960' ) ) )
+		);
+
+	// gestione job
+	$p['job.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'job.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_job.form.php' ),
+		'parent'		=> array( 'id'		=> 'job.view' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'job.form',
+
+													) ),
+	);
+
 /*
     // pagina gestione cron
 	$p['cron'] = array(

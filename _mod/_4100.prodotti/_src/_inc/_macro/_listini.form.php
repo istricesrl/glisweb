@@ -24,7 +24,7 @@
 
     // tendina unità di misura
 	$ct['etc']['select']['valute'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM valute_view' );

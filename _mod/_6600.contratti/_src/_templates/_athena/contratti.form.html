@@ -62,21 +62,25 @@
         </div>
 
         <div class="form-group form-row">          
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md">
                 <span class="label-top">data inizio contratto</span>
                 {{ frm.date( table, '', '', 'data_inizio', '', '', request, default ) }}
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md">
                 <span class="label-top ">data fine contratto</span>
                 {{ frm.date( table,  '', '', 'data_fine', '', '', request, default ) }}
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md">
                 <span class="label-top">data inizio rapporto</span>
                 {{ frm.date( table, '', '', 'data_inizio_rapporto', '', '', request, default ) }}
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md">
                 <span class="label-top ">data fine rapporto</span>
                 {{ frm.date( table,  '', '', 'data_fine_rapporto', '', '', request, default ) }}
+            </div>
+            <div class="col-12 col-md">
+                <span class="label-top">proroghe</span>
+                {{ frm.input( table, '', '', 'proroghe', '', '', request ) }}
             </div>
         </div>
 

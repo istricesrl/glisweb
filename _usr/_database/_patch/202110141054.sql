@@ -1,0 +1,1 @@
+ALTER TABLE `categorie_notizie` DROP FOREIGN KEY `categorie_notizie_ibfk_3_nofollow`;

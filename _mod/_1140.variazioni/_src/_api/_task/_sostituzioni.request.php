@@ -44,6 +44,16 @@
 
         $status['info'][] = 'inserita riga di sostituzione di id ' . $q . ' e con data ' . date('Y-m-d');
 
+        // setto a 1 la colonna se_convocato nella tabella __report_sostituzioni_attivita__ così non me la propone più
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE __report_sostituzioni_attivita__ SET se_convocato = 1 WHERE id_attivita = ? AND id_anagrafica = ?',
+            array(
+                array( 's' => $_REQUEST['id_attivita'] ),
+                array( 's' => $_REQUEST['id_anagrafica'] )
+            )
+        );
+
         // se la riga di sostituzione è stata inserita e sono in modalità hard procedo con la conferma e l'aggiornamento dell'attività
         if( !empty( $q ) && !empty( $_REQUEST['hard'] ) ){
             $status['sostituzione'] = $q;

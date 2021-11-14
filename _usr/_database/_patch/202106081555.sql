@@ -1,0 +1,1 @@
+insert into todo_view_static SELECT * FROM `todo_view`;

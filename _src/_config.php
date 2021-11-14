@@ -193,7 +193,7 @@
      * 400         | configurazioni relative all'URL rewriting
      * 500         | configurazioni relative alla posta
      * 600         | integrazioni con piattaforme di terze parti
-     * 700         | configurazioni relative all'importazione e all'esportazione dei dati
+     * 700         | configurazioni relative all'importazione, all'elaborazione e all'esportazione dei dati
      * 800         | -
      * 900         | operazioni finali
      *
@@ -235,9 +235,12 @@
      * @todo documentare
      *
      */
-	function path2custom( $p ) {
-	    return str_replace( '_', NULL, $p );
-	}
+    function path2custom( $p, $s = NULL ) {
+        $p = str_replace( $_SERVER['DOCUMENT_ROOT'], '§', $p );
+        $p = str_replace(  '_', $s, $p );
+        $p = str_replace( '§', $_SERVER['DOCUMENT_ROOT'], $p );
+        return $p;
+    }
 
     /**
      *
@@ -245,7 +248,7 @@
      *
      */
 	function glob2custom( $p ) {
-	    return str_replace( '_', '{,_}', $p );
+        return path2custom( $p, '{,_}' );
 	}
 
     /**
@@ -285,6 +288,7 @@
 	define( 'DIR_MOD'			, DIR_BASE . '_mod/' );
 	define( 'DIR_SRC'			, DIR_BASE . '_src/' );
 	define( 'DIR_SRC_API'			, DIR_BASE . '_src/_api/' );
+    define( 'DIR_SRC_API_JOB'		, DIR_BASE . '_src/_api/_job/' );
     define( 'DIR_SRC_API_REPORT'		, DIR_BASE . '_src/_api/_report/' );
     define( 'DIR_SRC_API_TASK'		, DIR_BASE . '_src/_api/_task/' );
 	define( 'DIR_SRC_CONFIG'		, DIR_BASE . '_src/_config/' );
@@ -463,12 +467,13 @@
     // NOTA la lettura dei moduli attivi dalle variabili d'ambiente è obsoleta
 
     // moduli attivi
-	define( 'MODULI_ATTIVI'				, $cf['mods']['active']['string'] );
-	define( 'DIR_MOD_ATTIVI'			, DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
+	define( 'MODULI_ATTIVI'			        	    , $cf['mods']['active']['string'] );
+	define( 'DIR_MOD_ATTIVI'			            , DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
+	define( 'DIR_MOD_ATTIVI_SRC_API_JOB'	        , DIR_MOD_ATTIVI . '_src/_api/_job/' );
 	define( 'DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS'	, DIR_MOD_ATTIVI . '_src/_inc/_controllers/' );
-	define( 'DIR_MOD_ATTIVI_SRC_INC_MACRO'	, DIR_MOD_ATTIVI . '_src/_inc/_macro/' );
-	define( 'DIR_MOD_ATTIVI_SRC_LIB'		, DIR_MOD_ATTIVI . '_src/_lib/' );
-	define( 'DIR_MOD_ATTIVI_ETC_LOC'		, DIR_MOD_ATTIVI . '_etc/_loc/' );
+	define( 'DIR_MOD_ATTIVI_SRC_INC_MACRO'	        , DIR_MOD_ATTIVI . '_src/_inc/_macro/' );
+	define( 'DIR_MOD_ATTIVI_SRC_LIB'		        , DIR_MOD_ATTIVI . '_src/_lib/' );
+	define( 'DIR_MOD_ATTIVI_ETC_LOC'		        , DIR_MOD_ATTIVI . '_etc/_loc/' );
 
     // collego $ct
 	$ct['mods']				= &$cf['mods'];
@@ -476,7 +481,7 @@
     // ricerca dei files di libreria
 	$arrayLibrerieBase			= glob( DIR_SRC_LIB . '_*.*.php' );
 	$arrayLibrerieModuli			= glob( DIR_MOD_ATTIVI_SRC_LIB . '_*.*.php', GLOB_BRACE );
-	$arrayLibrerie				= array_merge( $arrayLibrerieBase , $arrayLibrerieModuli );
+	$arrayLibrerie				= array_unique( array_merge( $arrayLibrerieBase , $arrayLibrerieModuli ) );
 
     /**
      *

@@ -1,0 +1,1 @@
+ALTER TABLE attivita DROP INDEX id_account_feedback;

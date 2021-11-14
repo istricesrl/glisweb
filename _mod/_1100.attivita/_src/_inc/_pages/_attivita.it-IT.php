@@ -16,8 +16,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'cartellini', 'attivita.tools' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'attività' ),
-														'priority'	=> '100' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'attività' ),
+																		'priority'	=> '100' ) ) )	
 	);
 
     // tools attività
@@ -41,9 +41,9 @@
 	    'parent'		=> array( 'id'		=> 'attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'attivita.form',
-														'attivita.form.feedback' ) )
+	    'parser'		=> array( $m . '_src/_inc/_parser/_attivita.form.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'attivita.form' ) )
 	);
 
 	// gestione attivita - feedback
@@ -70,8 +70,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_turni.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'turni.view', 'turni.schema' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'turni' ),
-									'priority'	=> '110' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'turni' ),
+																		'priority'	=> '110' ) ) )	
 	);
 
 
@@ -127,3 +127,56 @@
 		'etc'			=> array( 'tabs'	=> $p['turni.form']['etc']['tabs'] )
 	);
 
+
+	// vista categorie attività - ripristinato solo per todo
+	$p['categorie.attivita.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'categorie' ),
+		'h1'		=> array( $l		=> 'categorie' ),
+		'parent'		=> array( 'id'		=> 'attivita.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_categorie.attivita.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'categorie.attivita.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'categorie' ),
+		'priority'	=> '115' ) ) )
+	);
+
+	// gestione categorie attività - rimosso provvisoriamente
+	$p['categorie.attivita.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'categorie.attivita.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.attivita.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_categorie.attivita.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'categorie.attivita.form' ) )
+	);
+
+
+	$p['tipologie.attivita.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'attivita.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.attivita.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.attivita.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																		'priority'	=> '115' ) ) )	
+	);
+
+	// gestione categorie attività
+	$p['tipologie.attivita.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'tipologie.attivita.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.attivita.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_tipologie.attivita.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'tipologie.attivita.form' ) )
+	);
+	

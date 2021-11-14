@@ -266,6 +266,7 @@
 # CONSIDERA EDITOR				    array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )
 				);
 
+
 			// creo l'array delle autorizzazioni
 			// @todo verificare cosa fa questa cosa esattamente
 			    $i['__auth__'] = explode( ',', $r );

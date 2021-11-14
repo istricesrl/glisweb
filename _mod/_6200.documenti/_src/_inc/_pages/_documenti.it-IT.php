@@ -14,8 +14,8 @@
 		'etc'			=> array( 'tabs'	=> array(	'documenti.view',
 														'documenti.articoli.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'documenti' ),
-														'priority'	=> '100' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'documenti' ),
+														'priority'	=> '100' ) ) )
 	);
 
 	// gestione documenti
@@ -37,7 +37,7 @@
 	// gestione tools documenti
 	$p['documenti.form.righe'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'righe' ),
+	    'title'			=> array( $l		=> 'righe_documenti' ),
 	    'h1'			=> array( $l		=> 'righe' ),
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.righe.html' ),
@@ -89,7 +89,7 @@
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'righe' ),
 	    'h1'			=> array( $l		=> 'righe' ),
-	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_documenti.articoli.view.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
@@ -105,7 +105,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form', 'documenti.articoli.form.tools' ) )
+		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form','documenti.articoli.form.attivita', 'documenti.articoli.form.tools' ) )
+	);
+
+	// gestione tools documenti_articoli - attivita
+	$p['documenti.articoli.form.attivita'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'attivita' ),
+		'h1'			=> array( $l		=> 'attivita' ),
+		'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.attivita.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.attivita.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
 	);
 
 	// gestione tools documenti_articoli

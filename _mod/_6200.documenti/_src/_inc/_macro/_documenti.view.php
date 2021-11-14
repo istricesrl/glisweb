@@ -21,7 +21,7 @@
     $ct['view']['table'] = 'documenti';
     
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.form';
@@ -29,12 +29,13 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
+        'data' => 'data',
         'tipologia' => 'tipologia',
         'numero' => 'numero',
-        'data' => 'data',
         '__label__' => 'nome',
         'cliente' => 'cliente',
-        'emittente' => 'emittente' 
+        'emittente' => 'emittente',
+        'totale' => 'totale' 
 	);
 
     // stili della vista
@@ -45,7 +46,8 @@
         '__label__' => 'text-left',
         'cliente' => 'text-left',
         'emittente' => 'text-left',
-        'tipologia' => 'text-left'
+        'tipologia' => 'text-left',
+        'totale' => 'text-right' 
     );
 
     // inclusione filtri speciali
@@ -63,7 +65,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view WHERE se_azienda_gestita = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_azienda_gestita = 1'
 	);
 
     // tendina destinatari
@@ -71,7 +73,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view WHERE se_cliente = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1'
 	);
 
     // macro di default

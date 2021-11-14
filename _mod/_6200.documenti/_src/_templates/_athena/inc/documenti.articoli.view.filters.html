@@ -26,7 +26,7 @@
 			{% endfor %}
 		</select>
 	</div>
-	<div class="col-12 col-md-auto">
+	<div class="col-12 col-md-2">
 		<span class="label-top">articolo</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_articolo][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_articolo.EQ == "" %}selected{% endif %}>tutti</option>
@@ -49,7 +49,6 @@
 	<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>
     <div class="col-auto">
-		<div class="label-top">&nbsp;</div>
 	<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
 	{% if view.insert.path %}
 	<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>

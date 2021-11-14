@@ -1,0 +1,1 @@
+ALTER TABLE `mastri` ADD `note` TEXT NULL DEFAULT NULL AFTER `id_tipologia`;

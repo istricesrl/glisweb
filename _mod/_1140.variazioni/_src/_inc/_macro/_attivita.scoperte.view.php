@@ -22,7 +22,7 @@
 	$ct['view']['table'] = 'attivita_scoperte';
 
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // tabella per la gestione degli oggetti esistenti
 	$ct['view']['open']['table'] = 'attivita';
@@ -40,7 +40,8 @@
         'ora_fine_programmazione' => 'ora fine',
         'assente' => 'da sostituire',
         'cliente' => 'cliente',
-        'progetto' => 'progetto'
+        'progetto' => 'progetto',
+        'richieste' => 'richieste'
 	);
 
     // stili della vista
@@ -68,7 +69,7 @@
 	$ct['etc']['select']['clienti'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_interno = 1 OR se_cliente = 1'
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_interno = 1 OR se_cliente = 1'
     );
 
      // tendina progetti

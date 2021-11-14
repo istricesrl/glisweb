@@ -30,6 +30,10 @@
         'documenti_articoli' => array(
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
+        ),
+		'scadenze' => array(
+		    CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         )
         )
 	);

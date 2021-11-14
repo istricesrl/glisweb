@@ -14,10 +14,10 @@
 	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.view.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'contratti.view', 'contratti.archivio.view' ) ),
+	    'etc'		=> array( 'tabs'	=> array( 'contratti.view', 'contratti.scadenze.view', 'contratti.archivio.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contratti' ),
-									'priority'	=> '200' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'contratti' ),
+									'priority'	=> '200' ) ) )						
 	);
 
 	// vista archivio contratti
@@ -33,6 +33,18 @@
 	    'etc'		=> array( 'tabs'	=> $p['contratti.view']['etc']['tabs'] )
 	);
 
+	// vista scadenze contratti
+	$p['contratti.scadenze.view'] = array(
+	    'sitemap'		=> false,
+		'title'		=> array( $l		=> 'scadenze' ),
+	    'h1'		=> array( $l		=> 'scadenze' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_contratti.scadenze.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['contratti.view']['etc']['tabs'] )
+	);
+
     // gestione contratti
 	$p['contratti.form'] = array(
 	    'sitemap'		=> false,
@@ -41,7 +53,6 @@
 	    'parent'		=> array( 'id'		=> 'contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.form.php' ),
-	#    'etc'		=> array( 'tabs'	=> array( 'contratti.form', 'contratti.form.orari', 'contratti.form.tools' ) ),
 		'etc'		=> array( 'tabs'	=> array( 'contratti.form' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
@@ -53,18 +64,6 @@
 	$p['contratti.form']['etc']['tabs'][] = 'contratti.form.disponibilita';
 	$p['contratti.form']['etc']['tabs'][] = 'contratti.form.tools';
 
-	// gestione contratti orari
-/*	$p['contratti.form.orari'] = array(
-	    'sitemap'		=> false,
-		'title'		=> array( $l		=> 'orari turno 1' ),
-	    'h1'		=> array( $l		=> 'turno 1' ),
-	    'parent'		=> array( 'id'		=> 'contratti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.orari.html' ),
-	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.form.orari.php' ),
-	    'etc'		=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
-	);
-*/
 
 	foreach( range( 1, 9 ) as $i ) {
 		$p['contratti.form.orari.' . $i ] = array(
@@ -115,8 +114,8 @@
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.contratti.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.view' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'tipologie' ),
-									'priority'	=> '120' ) )
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+									'priority'	=> '120' ) ) )
 	);
 
 	// gestione tipologie contratti

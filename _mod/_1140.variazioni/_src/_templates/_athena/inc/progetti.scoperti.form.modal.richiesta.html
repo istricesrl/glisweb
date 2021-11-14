@@ -5,16 +5,27 @@
 {% set ietf = localization.language.ietf %}
 
 <script>
-     function inviaRichiesta() {
+     function inviaRichiesta( t ) {
 		$('#btnrichiedi').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
-		idoperatore = $('#modaloperatoreid').text();
+		var form = $( t ).closest('.modal');
+		var idoperatore = $('#modaloperatoreid').text();
+		var data_inizio = form.find('#_data_inizio_richiesta').val();
+		var data_fine = form.find('#_data_fine_richiesta').val();
+		var ora_inizio = form.find('#_ora_inizio_richiesta').val();
+		var ora_fine = form.find('#_ora_fine_richiesta').val();
 
-		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_sostituzioni.progetto.request.php?id_progetto={{ request[table].id }}&id_anagrafica='+idoperatore;
+		var call = '{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}&__sostituzione__[id_anagrafica]='+idoperatore;
 
-		getws( call,'', function() {
-			window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
-		});
-		
+		if( data_inizio && data_fine ){
+			call += '&__sostituzione__[data_inizio]='+data_inizio+'&__sostituzione__[data_fine]='+data_fine;
+		}
+
+		if( ora_inizio && ora_fine ){
+			call += '&__sostituzione__[ora_inizio]='+ora_inizio+'&__sostituzione__[ora_fine]='+ora_fine;
+		}
+
+		window.open( call, '_self');
+
 	}
 
 </script>
@@ -29,15 +40,38 @@
 	    <div class="modal-body">
 		<div class="container-fluid">
 		    <div class="form-row">
-			<div class="col">
-				si desidera inviare una richiesta di sostituzione per le attività del progetto {{ request[table].id }} all'operatore 
-                <span id="modaloperatoreid"></span> - <span id="modaloperatorenome"></span> ?
+				<div class="col">
+					questa operazione invierà una richiesta di sostituzione per le attività del progetto {{ request[table].id }} all'operatore 
+					<span id="modaloperatoreid"></span> - <span id="modaloperatorenome"></span>
+				</div>
+				<div class="col-12">
+					per limitare la richiesta ad un periodo e/o ad una determinata fascia oraria specificare gli intervalli di date e orari. se non specificati, la richiesta verrà inviata per tutte le attività scoperte del progetto.
+				</div>
 			</div>
-		</div>
+			<div class="form-row  mt-2">
+				<div class="col-6">
+					<span class="label-top">data inizio</span>
+					{{ frm.date( '', '', '', 'data_inizio_richiesta', '', '', request, default, '', 1 ) }}
+				</div>
+
+				<div class="col-6">
+					<span class="label-top">data fine</span>
+					{{ frm.date( '', '', '', 'data_fine_richiesta', '', '', request, default, '', 1 ) }}
+				</div>
+
+				<div class="col-6">
+					<span class="label-top">ora inizio</span>
+					{{ frm.time( '', '', '', 'ora_inizio_richiesta', '', '', request) }} 
+				</div>
+				<div class="col-6">
+					<span class="label-top">ora fine</span>
+					{{ frm.time( '', '', '', 'ora_fine_richiesta', '', '', request) }} 
+				</div>
+			</div>
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button id="btnrichiedi" type="button" class="btn btn-secondary btn-sm" onclick="inviaRichiesta();">conferma</button>
+		<button id="btnrichiedi" type="button" class="btn btn-secondary btn-sm" onclick="inviaRichiesta( this );">conferma</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

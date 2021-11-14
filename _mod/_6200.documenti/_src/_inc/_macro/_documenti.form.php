@@ -35,7 +35,15 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view WHERE se_azienda_gestita = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static'
+	);
+
+	// tendina coupon
+	$ct['etc']['select']['coupon'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM coupon_view'
 	);
 
     // tendina destinatari
@@ -43,7 +51,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view WHERE se_cliente = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static'
 	);
 
     // tendina indirizzi mittenti

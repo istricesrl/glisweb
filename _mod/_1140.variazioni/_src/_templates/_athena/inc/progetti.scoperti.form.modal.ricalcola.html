@@ -1,0 +1,39 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+     function ricalcolaSostituti() {
+		$('#btnricalcola').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+		window.open('{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}&__calcolo_sostituti__=1&__calcolo_sostituti__[hard]=1', '_self');
+	}
+
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="ricalcola">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">ricalcola sostituti</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+				questa procedura resetterà il calcolo dei sostituti già effettuato per le attività del progetto {{ request[table].id }} e lo rielaborerà da zero.<br>
+				si desidera avviare la procedura?<br>
+				l'operazione potrebbe richiedere alcuni minuti
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="btnricalcola" type="button" class="btn btn-secondary btn-sm" onclick="ricalcolaSostituti();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

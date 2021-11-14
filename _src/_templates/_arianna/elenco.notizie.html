@@ -1,0 +1,14 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+{{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
+
+{% for n in page.contents.notizie %}
+
+    {% set id_p = page.id ~ '.NOTIZIE.' ~ n.id %}
+    <a href="{{ pages[ id_p ].url[ localization.language.ietf ] }}">{{ n.h1 }}</a>
+    {% endfor %}
+    
+{% endblock %}

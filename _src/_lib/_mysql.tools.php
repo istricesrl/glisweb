@@ -136,6 +136,10 @@
 			    $r = mysqlFetchResult( mysqli_query( $c, $q ) );
 			break;
 
+			case 'CALL':
+				$r = mysqli_query( $c, $q );
+			break;
+			
 			case 'SET':
 			    $r = mysqli_query( $c, $q );
 			break;
@@ -581,14 +585,24 @@
     }
 
     /**
-     *
-     * @todo documentare
+	 * effettua la duplicazione ricorsiva di un oggetto e degli eventuali oggetti figli delle tabelle correlate
+	 * 
+     * @param	mysqli		$c		connessione mysqli
+	 * @param	string		$t		nome della tabella in cui si trova il record principale da duplicare
+	 * @param	string		$o		id dell'oggetto da duplicare
+	 * @param	string		$n		id dell'oggetto figlio ottenuto, passare NULL per autoincrement
+	 * @param	string		$x		puntatore ad un array contenente in chiave i nomi delle tabelle (principale e collegate) da coinvolgere nella duplicazione e in valore un array che a sua volta contiene in chiave l'elenco dei campi da modificare nell'oggetto duplicato e in valore il valore da utilizzare
+	 * 
+     * @todo finire di documentare
      *
      */
     function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array() ) {
 
 		// debug
-		// print_r( $x[ $t ] );
+	//	echo "stampo x" . PHP_EOL;
+	//	print_r($x);
+	//	echo "stampo x[t]" . PHP_EOL;
+	//	 print_r( $x[ $t ] );
 
 		// se non ho un ID di partenza
 		if( empty( $o ) ) {
@@ -623,10 +637,13 @@
 		);
 
 		// debug
+		//echo "tabelle collegate". PHP_EOL;
 		// print_r( $ks );
 
 		// per ogni relazione
 		foreach( $ks as $ksr ) {
+
+		//	echo "tabella " . $ksr['TABLE_NAME'] . PHP_EOL;
 
 			// aggiungo il campo di relazione alle sostituzioni
 			$x[ $ksr['TABLE_NAME'] ][ $ksr['COLUMN_NAME'] ] = $id;
@@ -638,14 +655,17 @@
 			$rls = mysqlQuery( $c, $q );
 
 			// debug
-			// var_dump( $q );
-			// print_r( $rls );
+		//	echo "query di ricerca relazioni" . PHP_EOL;
+		//	 var_dump( $q );
+
+		//	 echo "righe collegate" . PHP_EOL;
+		//	 print_r( $rls );
 
 			// per ogni riga della relazione
 			foreach( $rls as $rl ) {
 
 				// debug
-				// print_r( $rl );
+			//	 print_r( $rl );
 
 				// chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
 				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x );
@@ -657,7 +677,7 @@
 	}
 
     /**
-     *
+     * 
      * @todo documentare
      * $c	connessione
      * $t	nome tabella
@@ -667,6 +687,9 @@
      *
      */
     function mysqlDuplicateRow( $c, $t, $o, $n = NULL, $x = array() ) {
+
+		// salvo l'id
+		$id = isset( $x['id'] ) ? $x['id'] : null;
 
 	// campi da modificare
 	    $x = array_merge( array( 'id' => $n ), $x );
@@ -693,6 +716,10 @@
 	// esecuzione della query
 		$n = mysqlQuery( $c, $q, $values );
 
+		if( empty( $n ) ){
+			$n = $id;
+		}
+
 	// debug
 		// echo $q . PHP_EOL;
 		// print_r( $values );
@@ -703,6 +730,94 @@
 	    return $n;
 
     }
+
+    /**
+     *
+     * @todo documentare
+	 * 
+	 * la funzione effettua l'eliminazione ricorsiva di un oggetto e, a cascata, di tutti gli oggetti collegati da vincoli di chiave "NO ACTION".
+	 * riceve in ingresso i parametri seguenti:
+	 * - $m: connessione a memcache
+	 * - $c: connessione al database
+	 * - $t: nome della tabella
+	 * - $d: id del record da eliminare
+	 * 
+	 * NOTA: poiché la funzione utilizza memcache, se si apportano modifiche alle tipologia dei vincoli di chiave tra le tabelle del database, svuotare sempre memcache
+     *
+     */
+	function mysqlDeleteRowRecursive( $m, $c, $t, $d ) {
+
+		// debug
+	#	echo 'chiamata funzione cancellazione ricorsiva' . PHP_EOL;
+	#	echo "richiesta la cancellazione della riga #${d} dalla tabella {$t}" . PHP_EOL;
+
+		// cerco i vincoli di chiave esterna per l'entità $t
+		// NOTA mi interessano TABLE_NAME, COLUMN_NAME, REFERENCED_COLUMN_NAME
+		$x = mysqlCachedQuery(
+			$m,
+			$c,
+			'SELECT information_schema.key_column_usage.TABLE_NAME, information_schema.key_column_usage.COLUMN_NAME, information_schema.key_column_usage.REFERENCED_COLUMN_NAME, information_schema.key_column_usage.REFERENCED_TABLE_NAME, '.
+			'information_schema.referential_constraints.DELETE_RULE '.
+			'FROM information_schema.key_column_usage '.
+			'INNER JOIN information_schema.referential_constraints ON ( information_schema.referential_constraints.REFERENCED_TABLE_NAME = information_schema.key_column_usage.REFERENCED_TABLE_NAME '.
+			'AND information_schema.referential_constraints.TABLE_NAME = information_schema.key_column_usage.TABLE_NAME ) '.
+			'WHERE information_schema.key_column_usage.REFERENCED_TABLE_NAME = ? AND table_schema = database() AND information_schema.referential_constraints.DELETE_RULE = ? ',
+			array(
+				array( 's' => $t ),
+				array( 's' => 'NO ACTION' )
+			)
+		);
+
+		// dati prelevati
+		foreach( $x as $x1 ) {
+
+			// debug
+		#	print_r( $x1 );
+
+			// variabili in uso
+			$t1 = $x1['TABLE_NAME'];
+			$f1 = $x1['COLUMN_NAME'];
+			$l1 = $x1['REFERENCED_COLUMN_NAME'];
+
+			// debug
+		#	echo "SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?" . PHP_EOL;
+		#	echo "cerco le righe di ${t1} che hanno ${t1}.${f1} uguale a ${d}" . PHP_EOL;
+
+			// prelevo le righe referenziate
+			$r = mysqlQuery(
+				$c,
+				"SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?",
+				array(
+					array( 's' => $d )
+				)
+			);
+
+			// debug
+		#	print_r( $r );
+
+			// per ogni riga delle tabelle referenziate chiamo ricorsivamente
+			foreach( $r as $r1 ) {
+
+				// chiamata ricorsiva
+				mysqlDeleteRowRecursive( $m, $c, $t1, $r1[ $l1 ] );
+
+			}
+
+		}
+
+		// debug
+		# echo "elimino la riga #${d} dalla tabella {$t}" . PHP_EOL;
+
+		// cancello l'oggetto richiesto
+		$r = mysqlQuery(
+			$c,
+			"DELETE FROM ${t} WHERE ${t}.id = ?",
+			array(
+				array( 's' => $d )
+			)
+		);
+
+	}
 
     /**
      *
@@ -727,7 +842,7 @@
      */
     function array2mysqlFieldnames( $a ) {
 
-	return implode( ', ', addStr2arrayElements( array_keys( $a ), '`', '`' ) );
+		return implode( ', ', addStr2arrayElements( array_keys( $a ), '`', '`' ) );
 
     }
 

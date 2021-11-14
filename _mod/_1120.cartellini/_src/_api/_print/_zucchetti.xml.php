@@ -21,6 +21,7 @@
             'INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
             'INNER JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = attivita.id_tipologia_inps '.
             'WHERE attivita.data_attivita BETWEEN ? AND ? '.
+            'AND anagrafica.codice IS NOT NULL '.
             'ORDER BY attivita.id_anagrafica ASC, attivita.data_attivita ASC, tipologie_attivita.id ASC ',
             array(
                     array( 's' => $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ),
@@ -55,8 +56,8 @@
 
         // headers
         $filename = 'ore.'.$_REQUEST['__anno__'].'.'.$_REQUEST['__mese__'].'.xml';
-        header("Content-Type: text/html/force-download");
-        header("Content-Disposition: attachment; filename=".$filename.".xml");
+        header('Content-Type: text/html/force-download');
+        header('Content-Disposition: attachment; filename='.$filename);
 
         // inizializzo l'oggetto XML
 		$xml = new XMLWriter();
@@ -80,7 +81,7 @@
             // inizio nuovo dipendente
             $xml->startElement( 'Dipendente' );
             $xml->writeAttribute( 'CodAziendaUfficiale', $cf['zucchetti']['profile']['azienda'] );
-            $xml->writeAttribute( 'CodDipendenteUfficiale', $dipendente );
+            $xml->writeAttribute( 'CodDipendenteUfficiale', sprintf( '%07d', $dipendente ) );
 
             // attività del dipendente
             $xml->startElement( 'Movimenti' );
@@ -93,9 +94,9 @@
                 foreach( $codici as $codice => $lavoro ) {
 
                     // spacchetto le ore in ore e minuti
-                    $aLavoro = explode( '.', trim( str_replace( ',', '.', $lavoro ), ' 0' ) );
-                    $ore = $aLavoro[0];
-                    $minuti = ( isset( $aLavoro[1] ) ) ? ( $aLavoro[1] * 60 / 10 ) : 0;
+                    $aLavoro = explode( ',', sprintf( '%0.2f', trim( str_replace( ',', '.', $lavoro ) ), ' ' ) );
+                    $ore = sprintf( '%0d', ( $aLavoro[0] ) );
+                    $minuti = sprintf( '%0d', ( isset( $aLavoro[1] ) ) ? ( $aLavoro[1] * 60 / 100 ) : 0 );
 
                     // inizio nodo attività
                     $xml->startElement( 'Movimento' );

@@ -1,0 +1,36 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<div class="modal" tabindex="-1" role="dialog" id="modifica">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">modifica pianificazione</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				<div class="col">
+                    proseguendo si verrà portati alla pagina di modifica della pianificazione originale di cui questo oggetto è figlio
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-6 col-md-auto">
+					<span class="label-top">id della pianificazione</span>
+					{{ frm.input( table, '', '', 'id_pianificazione', '', '', request, default, '', '', '', 1 ) }}
+				</div>
+			</div>
+	    </div>
+	    </div>
+
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" onclick="window.open('{{ pages['pianificazioni.form'].path[ ietf ]~'?pianificazioni[id]='~request[table].id_pianificazione }}','_self');">modifica</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

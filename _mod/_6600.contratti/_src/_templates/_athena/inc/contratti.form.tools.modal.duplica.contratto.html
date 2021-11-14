@@ -6,6 +6,7 @@
 
 <script>
     function duplicaContratto( ) {
+		$('#btnduplicacontratto').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_contratti.duplicate.php?id={{ request[table].id }}';
 		getws( call,'', function(data) {
 			window.open('{{ pages['contratti.form'].path[ ietf ] }}?contratti[id]='+data['id_nuovo'],'_self');
@@ -32,7 +33,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="duplicaContratto();">conferma</button>
+		<button type="button" id="btnduplicacontratto" class="btn btn-secondary btn-sm" onclick="duplicaContratto();">conferma</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

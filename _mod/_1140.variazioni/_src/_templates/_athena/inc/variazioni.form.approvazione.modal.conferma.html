@@ -6,7 +6,9 @@
 
 <script>
     function approva( ) {
-	 	var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_variazioni.approve.php?id={{ request[table].id }}';
+		$('#btnapprova').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+	
+		var call = '{{ site.url }}_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.approve.php?id={{ request[table].id }}';
 
 		getws( call,'', function() {
 			window.open('{{ pages['variazioni.form'].path[ ietf ] }}?variazioni_attivita[id]={{ request[table].id }}','_self');
@@ -32,7 +34,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="approva();">approva</button>
+		<button type="button" id="btnapprova" class="btn btn-secondary btn-sm" onclick="approva();">approva</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

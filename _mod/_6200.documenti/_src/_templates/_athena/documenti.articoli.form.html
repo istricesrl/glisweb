@@ -47,12 +47,18 @@
 	    <fieldset>
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
-
+		{% if  request.__preset__[ table ].data_lavorazione %}
+			{% set default_data = request.__preset__[ table ].data_lavorazione %}
+		{% elseif  session.__latest__[ table ].data_lavorazione %}
+			{% set default_data = session.__latest__[ table ].data_lavorazione %}
+		{% else %}
+			{% set default_data = 'now'|date('Y-m-d') %}	
+		{% endif %}
 	
 		<div class="form-group form-row">
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">data</span>
-				{{ frm.date( table, '', '', 'data_lavorazione', 'data', '', request ) }}
+				{{ frm.date( table, '', '', 'data_lavorazione', '', '', request, default_data, '', 1 ) }}
 			</div>
 			<div class="col-md-auto col-4">
 				<span class="label-top">tipologia</span>
@@ -60,7 +66,7 @@
 			</div>	
 			<div class="col">
 				<span class="label-top remove-after-duplicate">descrizione</span>
-				{{ frm.input( table, '', '', 'nome', 'descrizione', '', request ) }}
+				{{ frm.input( table, '', '', 'nome', '', '', request ) }}
 			</div>
 		</div>
 
@@ -69,28 +75,33 @@
 		<div class="form-group form-row">
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">quantità</span>
-				{{ frm.input( table, '', '', 'quantita', 'quantità', '', request ) }}
+				{{ frm.input( table, '', '', 'quantita', '', '', request, 1 ) }}
 			</div>
+			{% if  session.__latest__[ table ].id_udm %}
+				{% set default_udm = session.__latest__[ table ].id_udm %}
+			{% endif %}
 			<div class="col-auto">
-				<span class="label-top remove-after-duplicate">unità di misura</span>
-				{{ frm.select( table, '', '', 'id_udm', '', etc.select.id_udm, request ) }}
+				<span class="label-top remove-after-duplicate">udm</span>
+				{{ frm.select( table, '', '', 'id_udm', '', etc.select.id_udm, request, default_udm ) }}
 			</div>
-			<div class="col-auto">
+			<div class="col-6">
 				<span class="label-top remove-after-duplicate">articolo</span>
-				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
 			</div>
-			<div class="col">
+			<div class="col col-md">
 				<span class="label-top remove-after-duplicate">specifiche</span>
-				{{ frm.input( table, '', '', 'specifiche', 'specifiche', '', request ) }}
+				{{ frm.input( table, '', '', 'specifiche', '', '', request ) }}
 			</div>
+		</div>	
+		<div class="form-group form-row">
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">importo</span>
-				{{ frm.input( table, '', '', 'importo_netto_totale', 'importo', '', request ) }}
+				{{ frm.inputRequired( table, '', '', 'importo_netto_totale', '', '', request ) }}
 			</div>
-			<!--div class="col-auto">
-				<span class="label-top remove-after-duplicate">valuta</span>
-				{{ frm.select( table, '', '', 'id_valuta', '', etc.select.id_valute, request ) }}
-			</div-->
+			<div class="col-auto">
+				<span class="label-top remove-after-duplicate">reparto</span>
+				{{ frm.select( table, '', '', 'id_reparto', '', etc.select.id_reparti, request ) }}
+			</div>
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">listino</span>
 				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request ) }}
@@ -98,6 +109,10 @@
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">iva</span>
 				{{ frm.select( table, '', '', 'id_iva', '', etc.select.id_iva, request ) }}
+			</div>
+			<div class="col">
+				<span class="label-top remove-after-duplicate">matricola</span>
+				{{ frm.selectBox( table, '', '', 'matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'matricole' ) }}
 			</div>
 		</div>	
 		<div class="form-group form-row">
@@ -114,39 +129,58 @@
 		<div class="form-group form-row">
 			<div class="col-md col">
 				<span class="label-top remove-after-duplicate">emittente</span>
-				{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, etc.id_emittente, '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+				{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, etc.id_emittente, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_emittente', page, pages, ietf, 'anagrafica' ) }}
 			</div>
 			<div class="col-md col">
 				<span class="label-top remove-after-duplicate">destinatario</span>
-				{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, etc.id_destinatario, '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+				{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, etc.id_destinatario, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
 			</div>
 		</div>
 		<div class="form-group form-row">
 			<div class="col-md col">
 				<span class="label-top remove-after-duplicate">documento</span>
-				{{ frm.selectBox( table, '', '', 'id_documento', '', etc.select.id_documenti, request, default_documento, 1, '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+				{{ frm.selectBox( table, '', '', 'id_documento', '', etc.select.id_documenti, request, default_documento, 1, '', '', 'font-awesome', 'documenti.form', 'documenti.form', 'documenti', 'id_documento', page, pages, ietf, 'documenti' ) }}
 			</div>
 			 {% if ( request[ table ].id) or default_documento %}
 			<div class="col-md-6 col">
 				<span class="label-top remove-after-duplicate">riga genitore</span>
-				{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.id_righe_genitori, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+				{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.id_righe_genitori, request, '', '', '', '', 'font-awesome', 'documenti.articoli.form', 'documenti.articoli.form', 'documenti_articoli', 'id_genitore', page, pages, ietf) }}
 			</div>
 			{% endif %}
 		</div>
 
 		<legend>attribuzione</legend>
 		<div class="form-group form-row">
-			<div class="col-md-4 col">
+			{% if  session.__latest__[ table ].id_progetto %}
+				{% set default_p = session.__latest__[ table ].id_progetto %}
+			{% endif %}
+			<div class="col-md-6 col">
 				<span class="label-top remove-after-duplicate">progetto</span>
-				{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetti, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+				{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetti, request, default_p, '', '', '', 'font-awesome', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
 			</div>
-			<div class="col-md-4 col">
-				<span class="label-top remove-after-duplicate">carico</span>
-				{{ frm.selectBox( table, '', '', 'id_mastro_provenienza', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+			{% if  session.__latest__[ table ].id_todo %}
+				{% set default_todo = session.__latest__[ table ].id_todo %}
+			{% endif %}
+			<div class="col-md-6 col">
+				<span class="label-top remove-after-duplicate">todo</span>
+				{{ frm.selectBox( table, '', '', 'id_todo', '', etc.select.id_todo, request, default_todo, '', '', '', 'font-awesome', 'todo.form', 'todo.form', 'todo', 'id_todo', page, pages, ietf, 'todo' ) }}
 			</div>
-			<div class="col-md-4 col">
+		</div>	
+		<legend>magazzino</legend>
+		{% if  session.__latest__[ table ].id_mastro_provenienza %}
+			{% set default_mp = session.__latest__[ table ].id_mastro_provenienza %}
+		{% endif %}
+		<div class="form-group form-row">
+			<div class="col-md-6 col">
 				<span class="label-top remove-after-duplicate">scarico</span>
-				{{ frm.selectBox( table, '', '', 'id_mastro_destinazione', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+				{{ frm.selectBox( table, '', '', 'id_mastro_provenienza', '', etc.select.id_mastri, request, default_mp, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_provenienza', page, pages, ietf ) }}
+			</div>
+			{% if  session.__latest__[ table ].id_mastro_destinazione %}
+				{% set default_md = session.__latest__[ table ].id_mastro_destinazione %}
+			{% endif %}
+			<div class="col-md-6 col">
+				<span class="label-top remove-after-duplicate">carico</span>
+				{{ frm.selectBox( table, '', '', 'id_mastro_destinazione', '', etc.select.id_mastri, request, default_md, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_destinazione', page, pages, ietf ) }}
 			</div>
 		</div>	
 

@@ -5,12 +5,12 @@
 
 <script>
     function pulisciPianificazione( t ) {
+		$('#btnpulisci').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var form = $( t ).closest('.modal');
 		var id = $('#todo_pianificazioni_0_id').val();
         var data = form.find('#_data_inizio_pulizia').val();
-	//    window.open( '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php?id='+id+'&data_inizio_pulizia='+data, '_self');	
 	
-		var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.clean.php?id='+id+'&data_inizio_pulizia='+data;
+		var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.flag.php?id='+id+'&data_inizio_pulizia='+data;
 		
 		getws( call,'', function() {
 			$('#pulisci').modal('toggle');
@@ -41,7 +41,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="pulisciPianificazione(this);">rimuovi</button>
+		<button type="button" id="btnpulisci" class="btn btn-secondary btn-sm" onclick="pulisciPianificazione(this);">rimuovi</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

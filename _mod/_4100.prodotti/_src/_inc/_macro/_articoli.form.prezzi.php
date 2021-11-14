@@ -27,14 +27,14 @@
 
     // tendina listini
 	$ct['etc']['select']['listini'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM listini_view' );
 
     // tendina IVA
 	$ct['etc']['select']['iva'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM iva_view' );

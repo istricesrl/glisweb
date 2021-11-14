@@ -20,7 +20,7 @@
 	    <div class="form-group form-row">
             <div class="col-2 col-md-1">
                <span class="label-top">ordine</span>
-                {{ frm.input( table, subtable, i, 'ordine', '#', '', request, '', '', '', '', disabled ) }}
+                {{ frm.input( table, subtable, i, 'ordine', '', '', request, '', '', '', '', disabled ) }}
             </div>
             <div class="col">
                 <span class="label-top">etichetta</span>
@@ -41,7 +41,7 @@
                 {{ frm.input( table, subtable, i, 'codice_embed', 'codice embed', '', request, '', '', '', '', disabled ) }}
             </div>
             <div class="col-auto col-md-auto">
-                {{ frm.uploader( table, subtable, i, 'path', 'file', '', request, 'var/contenuti/', site, 'anagrafica.form.video', pages, lang, '', '', '', '', 1 ) }}
+                {{ frm.uploader( table, subtable, i, 'path', 'file', '', request, 'var/contenuti/', site, 'video.form', pages, lang, '', '', '', '', 1 ) }}
             </div>
             {% if r.id %}
             <div class="col-auto text-right remove-on-duplicate d-print-none">

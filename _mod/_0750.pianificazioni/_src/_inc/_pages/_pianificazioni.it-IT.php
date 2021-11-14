@@ -16,8 +16,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_pianificazioni.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'pianificazioni.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'pianificazioni' ),
-														'priority'	=> '150' ) )
+	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'pianificazioni' ),
+														'priority'	=> '150' ) ) )																										
 	);
 
 	// gestione pianificazioni

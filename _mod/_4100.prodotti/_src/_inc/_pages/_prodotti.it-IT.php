@@ -15,11 +15,24 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'prodotti.view') ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'prodotti' ),
-									'priority'	=> '015' ) )
+	    'etc'		=> array( 'tabs'	=> array(	'prodotti.view', 'prodotti.stampe') ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'prodotti' ),
+									'priority'	=> '015' ) ) )	
 	);
 	
+	// gestione anagrafica stampe
+	$p['prodotti.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'prodotti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['prodotti.view']['etc']['tabs'] )
+	);
+
     // gestione prodotti
 	$p['prodotti.form'] = array(
 	    'sitemap'		=> false,
@@ -40,6 +53,7 @@
 													'prodotti.form.video',
 													'prodotti.form.audio',
 													'prodotti.form.file',
+													'prodotti.form.stampe',
 													'prodotti.form.metadati'
 												) )
 	);
@@ -126,7 +140,7 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.immagini.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.immagini.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff') ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 
@@ -139,7 +153,7 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.video.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.video.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 	
@@ -152,7 +166,7 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.file.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.file.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 
@@ -165,8 +179,21 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.audio.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.audio.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica stampe
+	$p['prodotti.form.stampe'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'prodotti.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_prodotti.form.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 
 	// gestione prodotti metadati
@@ -178,7 +205,7 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.metadati.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.metadati.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 	
@@ -190,10 +217,23 @@
 	    'parent'		=> array( 'id'		=> 'catalogo' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_articoli.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'articoli.view' ) ),
+		'etc'			=> array( 'tabs'	=> array( 'articoli.view' , 'articoli.stampe' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'articoli' ),
-								'priority'	=> '020' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'articoli' ),
+									'priority'	=> '020' ) ) )
+	);
+
+	// gestione articoli stampe
+	$p['articoli.stampe'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe_articoli' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'articoli.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_articoli.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['articoli.view']['etc']['tabs'] )
 	);
 
 	// gestione articoli
@@ -215,9 +255,12 @@
 													'articoli.form.video',
 													'articoli.form.audio',
 													'articoli.form.file',
+													'articoli.form.stampe',
 													'articoli.form.metadati'
 												) )
 	);
+
+
 /*
 	// gestione articoli pubblicazione
 	$p['articoli.form.pubblicazione'] = array(
@@ -289,7 +332,7 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.immagini.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.immagini.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 
@@ -302,7 +345,7 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.video.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.video.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' , 'staff') ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 	
@@ -315,7 +358,7 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.file.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.file.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' , 'staff') ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 
@@ -328,9 +371,23 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.audio.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.audio.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
+
+	// gestione articoli stampe
+	$p['articoli.form.stampe'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'articoli.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_articoli.form.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
 
 	// gestione articoli metadati
 	$p['articoli.form.metadati'] = array(
@@ -341,7 +398,7 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.metadati.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.metadati.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 	
@@ -355,8 +412,8 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_listini.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'listini.view' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'			=> array( 'admin'	=> array(	'label'		=> array( $l => 'listini' ),
-								'priority'	=> '025' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'listini' ),
+								'priority'	=> '025' ) ) )
 	);
 
 	// gestione listini
@@ -382,4 +439,56 @@
 		'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.gruppi.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['listini.form']['etc']['tabs'] )
+	);
+    
+	// vista reparti
+	$p['reparti.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'reparti' ),
+	    'h1'			=> array( $l		=> 'reparti' ),
+	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_reparti.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'reparti.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'reparti' ),
+		'priority'	=> '025' ) ) )
+	);
+
+	// gestione reparti
+	$p['reparti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'reparti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'reparti.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_reparti.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'reparti.form' ) )
+	);
+
+		// vista coupon
+	$p['coupon.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'coupon' ),
+	    'h1'			=> array( $l		=> 'coupon' ),
+	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_coupon.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'coupon.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'coupon' ),
+								'priority'	=> '025' ) ) )
+	);
+
+	// gestione listini
+	$p['coupon.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'coupon.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'coupon.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'coupon.form'		) )
 	);

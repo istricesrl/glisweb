@@ -1,0 +1,1 @@
+ALTER TABLE `pubblicazione` ADD CONSTRAINT `pubblicazione_ibfk_9` FOREIGN KEY (`id_notizia`) REFERENCES `notizie`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;

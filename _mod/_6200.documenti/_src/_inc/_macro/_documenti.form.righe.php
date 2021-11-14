@@ -27,7 +27,7 @@
 	$ct['view']['table'] = 'documenti_articoli';
 
     // id della vista
-    $ct['view']['id'] = md5( $ct['view']['table'] );
+   # $ct['view']['id'] = md5( $ct['view']['table'] );
 
         // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.articoli.form';
@@ -45,26 +45,34 @@
         'tipologia' => 'tipologia',
         'data_lavorazione' => 'data',
         'nome' => 'nome',
-        'importo_netto_totale' => 'importo',
+		'id_articolo' => 'articolo',
+		'mastro_scarico' => 'scarico',
+		'mastro_carico' => 'carico',
+        'importo_netto_totale' => 'importo netto',
         'quantita' => 'quantità',
+		'totale_riga' => 'totale',
 		'id_documento' => 'id_documento'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
-        'importo_netto_totale' => 'text-left',
-        'quantita' => 'text-left',
+        'importo_netto_totale' => 'text-right',
+        'quantita' => 'text-right',
+		'totale_riga' => 'text-right',
         'id_documento' => 'd-none',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
-        'data_lavorazione' => 'text-left', 
-        'tipologia' => 'text-left'
+        'data_lavorazione' => 'text-left no-wrap', 
+        'tipologia' => 'text-left',
+		'id_articolo' => 'text-left'
     );
 
-    // preset filtro custom progetti aperti
-	$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
-  
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+		// preset filtro custom progetti aperti
+		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+	}
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
