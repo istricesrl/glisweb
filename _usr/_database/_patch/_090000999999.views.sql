@@ -1977,7 +1977,7 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 		notizie_categorie.id_account_inserimento,
 		notizie_categorie.id_account_aggiornamento,
 		concat(
-			notizie_categorie.nome,
+			notizie.nome,
 			' / ',
 			categorie_notizie_path( notizie_categorie.id_categoria )
 		) AS __label__

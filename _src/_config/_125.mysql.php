@@ -203,8 +203,8 @@
 								$pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
 
 								if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
-									echo $pQuery . HTML_EOL;
-									echo $pStatus . HTML_EOL;
+									// echo $pQuery . HTML_EOL;
+									// echo $pStatus . HTML_EOL;
 								}
 
 								mysqlInsertRow(
