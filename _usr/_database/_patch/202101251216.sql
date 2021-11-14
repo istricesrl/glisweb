@@ -1,1 +1,0 @@
-ALTER TABLE `todo` DROP FOREIGN KEY `todo_ibfk_1`;

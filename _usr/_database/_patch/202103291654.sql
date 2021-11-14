@@ -1,2 +1,0 @@
-ALTER TABLE `listini_gruppi`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

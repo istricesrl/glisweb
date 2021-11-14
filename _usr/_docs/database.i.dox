@@ -1,0 +1,217 @@
+/*!
+
+    \page database_i database del framework, tabelle con la lettera I
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera I.
+
+    le tabelle del database di supporto IA - IZ
+    ===========================================
+    
+    iban
+    ----
+    Questa tabella *gestita* contiene i codici IBAN collegati all'entità principale *anagrafica*.
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    iban.id                         | l'ID dell'iban
+    iban.id_anagrafica              | l'ID dell'anagrafica collegata all'IBAN
+    iban.intestazione               | l'intestazione del conto
+    iban.iban                       | l'IBAN
+    iban.note                       | note relative all'IBAN
+    iban.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    iban.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    iban.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    iban.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                  | campo                         | tabella e campo collegati     | comportamento
+    ------------------------|-------------------------------|-------------------------------|----------------------
+    iban_ibfk_01            | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    iban_ibfk_98_nofollow   | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    iban_ibfk_99_nofollow   | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *iban_view* relativa alla tabella *iban* presenta le seguenti colonne:
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    iban_view.id                        | -
+    iban_view.id_anagrafica             | -
+    iban_view.anagrafica                | l'anagrafica collegata all'IBAN
+    iban_view.intestazione              | -
+    iban_view.iban                      | -
+    iban_view.id_account_inserimento    | -
+    iban_view.id_account_aggiornamento  | -
+    iban_view.__label__                 | etichetta descrittiva dell'IBAN
+
+    immagini
+    --------
+    Questa tabella *gestita* contiene le immagini collegate a varie entità principali del framework.
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    immagini.id                         | l'ID dell'immagine
+    immagini.id_anagrafica              | l'ID dell'anagrafica cui si riferisce l'immagine
+    immagini.id_pagina                  | l'ID della pagina cui si riferisce l'immagine
+    immagini.id_file                    | l'ID del file cui si riferisce l'immagine
+    immagini.id_prodotto                | l'ID del prodotto cui si riferisce l'immagine
+    immagini.id_articolo                | l'ID dell'articolo cui si riferisce l'immagine
+    immagini.id_categoria_prodotti      | l'ID della categoria di prodotti cui si riferisce l'immagine
+    immagini.id_risorsa                 | l'ID della risorsa cui si riferisce l'immagine
+    immagini.id_categoria_risorse       | l'ID della categoria di risorse cui si riferisce l'immagine
+    immagini.id_notizia                 | l'ID della notizia cui si riferisce l'immagine
+    immagini.id_categoria_notizie       | l'ID della categoria di notizie cui si riferisce l'immagine
+    immagini.id_indirizzo               | l'ID dell'indirizzo cui si riferisce l'immagine
+    immagini.id_lingua                  | l'ID della lingua dell'immagine
+    immagini.id_ruolo                   | l'ID del ruolo dell'immagine relativamente all'entità cui si riferisce
+    immagini.ordine                     | campo di ordinamento
+    immagini.orientamento               | l'orientamento dell'immagine ('L' per orizzintale, 'P' per verticale)
+    immagini.taglio                     | -
+    immagini.nome                       | il nome dell'immagine
+    immagini.path                       | il percorso del file dell'immagine
+    immagini.path_alternativo           | il percorso del file alternativo dell'immagine
+    immagini.token                      | token per il lock software della riga nelle elaborazioni automatiche
+    immagini.timestamp_scalamento       | timestamp dello scalamento automatico dell'immagine
+    immagini.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    immagini.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    immagini.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    immagini.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+
+    Relativamente allo scalamento automatico delle immagini si veda la documentazione del file _src/_api/_task/_images.resize.php.
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                          | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------------------|-------------------------------|----------------------
+    immagini_ibfk_01                | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_02                | id_pagina                     | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_03                | id_file                       | file.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_04                | id_prodotto                   | prodotti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_05                | id_articolo                   | articoli.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_06                | id_categoria_prodotti         | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_07                | id_risorsa                    | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_08                | id_categoria_risorse          | categorie_risorse.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_09                | id_notizia                    | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_10                | id_categoria_notizie          | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_11                | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_12_nofollow       | id_lingua                     | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    immagini_ibfk_13_nofollow       | id_ruolo                      | ruoli_immagini.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    immagini_ibfk_98_nofollow       | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    immagini_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *immagini_view* relativa alla tabella *immagini* presenta le seguenti colonne:
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    immagini_view.id                        | -
+    immagini_view.id_anagrafica             | -
+    immagini_view.id_pagina                 | -
+    immagini_view.id_file                   | -
+    immagini_view.id_prodotto               | -
+    immagini_view.id_articolo               | -
+    immagini_view.id_categoria_prodotti     | -
+    immagini_view.id_risorsa                | -
+    immagini_view.id_categoria_risorse      | -
+    immagini_view.id_notizia                | -
+    immagini_view.id_categoria_notizie      | -
+    immagini_view.id_indirizzo              | -
+    immagini_view.id_lingua                 | -
+    immagini_view.lingua                    | la lingua dell'immagine
+    immagini_view.id_ruolo                  | -
+    immagini_view.ruolo                     | il ruolo dell'immagine relativamente all'entità cui si riferisce
+    immagini_view.ordine                    | -
+    immagini_view.orientamento              | -
+    immagini_view.taglio                    | -
+    immagini_view.nome                      | -
+    immagini_view.path                      | -
+    immagini_view.path_alternativo          | -
+    immagini_view.token                     | -
+    immagini_view.timestamp_scalamento      | -
+    immagini_view.id_account_inserimento    | -
+    immagini_view.id_account_aggiornamento  | -
+    immagini_view.__label__                 | -
+    
+    indirizzi
+    ---------
+    Questa tabella *gestita* contiene gli indirizzi; gli indirizzi sono collegati all'entità principale *anagrafica* tramite la
+    tabella di associazione molti a molti *anagrafica_indirizzi*.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    indirizzi.id                            | l'ID dell'indirizzo
+    indirizzi.id_comune                     | l'ID del comune dove si trova l'indirizzo
+    indirizzi.localita                      | la località dove si trova l'indirizzo
+    indirizzi.indirizzo                     | l'indirizzo
+    indirizzi.civico                        | il civico dell'indirizzo
+    indirizzi.cap                           | il CAP dell'indirizzo
+    indirizzi.note                          | note relative all'indirizzo
+    indirizzi.latitudine                    | la latitudine dell'indirizzo
+    indirizzi.longitudine                   | la longitudine dell'indirizzo
+    indirizzi.token                         | token per il lock software della riga nelle elaborazioni automatiche
+    indirizzi.timestamp_geolocalizzazione   | la timestamp della geolocalizzazione dell'indirizzo
+    indirizzi.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    indirizzi.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    indirizzi.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    indirizzi.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------------|-------------------------------|----------------------
+    indirizzi_ibfk_01_nofollow          | id_comune                     | comuni.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    indirizzi_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    indirizzi_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista indirizzi_view relativa alla tabella indirizzi presenta le seguenti colonne:
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    indirizzi_view.id                           | -
+    indirizzi_view.id_comune                    | -
+    indirizzi_view.comune                       | il comune dove si trova l'indirizzo
+    indirizzi_view.id_provincia                 | l'ID della provincia dove si trova l'indirizzo
+    indirizzi_view.provincia                    | la provincia dove si trova l'indirizzo
+    indirizzi_view.id_regione                   | l'ID della regione dove si trova l'indirizzo
+    indirizzi_view.regione                      | la regione dove si trova l'indirizzo
+    indirizzi_view.id_stato                     | l'ID dello stato dove si trova l'indirizzo
+    indirizzi_view.stato                        | lo stato dove si trova l'indirizzo
+    indirizzi_view.localita                     | -
+    indirizzi_view.indirizzo                    | -
+    indirizzi_view.civico                       | -
+    indirizzi_view.cap                          | -
+    indirizzi_view.latitudine                   | -
+    indirizzi_view.longitudine                  | -
+    indirizzi_view.token                        | -
+    indirizzi_view.timestamp_geolocalizzazione  | -
+    indirizzi_view.id_account_inserimento       | -
+    indirizzi_view.id_account_aggiornamento     | -
+    indirizzi_view.__label__                    | etichetta descrittiva dell'indirizzo
+    
+    iva
+    ---
+    Questa tabella *standard* contiene le aliquote IVA utilizzate nel framework.
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    iva.id                          | l'ID dell'aliquota IVA
+    iva.aliquota                    | la percentuale dell'aliquota IVA
+    iva.nome                        | il nome dell'aliquota IVA
+    iva.descrizione                 | la descrizione estesa dell'aliquota IVA
+    iva.codice                      | il codice dell'aliquota IVA nella fatturazione elettronica
+    iva.timestamp_archiviazione     | timestamp di archiviazione dell'aliquota IVA
+
+    La tabella non ha chiavi esterne.
+
+    La vista *iva_view* relativa alla tabella *iva* presenta le seguenti colonne:
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    iva_view.id                         | -
+    iva_view.aliquota                   | -
+    iva_view.nome                       | -
+    iva_view.descrizione                | -
+    iva_view.codice                     | -
+    iva_view.timestamp_archiviazione    | -
+    iva_view.__label__                  | etichetta descrittiva dell'aliquota IVA
+
+*/

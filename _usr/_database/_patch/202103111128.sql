@@ -1,1 +1,0 @@
-ALTER TABLE video DROP INDEX id_categoria_documenti;

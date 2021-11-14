@@ -61,8 +61,10 @@
      *
      */
     function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
-	return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
-    }
+
+		return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
+
+	}
 
     /**
      *
@@ -710,7 +712,7 @@
     function mysqlInsertRow( $c, $r, $t, $d = true ) {
 
 	return mysqlQuery( $c,
-	    'INSERT INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
+	    'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
 	    .'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
 	    .( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
 	    array2mysqlStatementParameters( $r )

@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` CHANGE `data_pianificazione` `data_programmazione` DATE NULL DEFAULT NULL;

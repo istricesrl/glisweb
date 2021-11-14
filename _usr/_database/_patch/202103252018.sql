@@ -1,1 +1,0 @@
-ALTER TABLE `periodi_variazioni_attivita` CHANGE `ora_inizio` `ora_inizio` TIME NULL DEFAULT NULL;

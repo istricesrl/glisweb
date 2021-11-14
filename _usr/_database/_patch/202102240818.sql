@@ -1,1 +1,0 @@
-ALTER TABLE pianificazioni DROP INDEX id_turno;

@@ -1,1 +1,0 @@
-INSERT IGNORE INTO `tipologie_progetti` (`id`, `nome`, `se_scalare`, `se_commessa`) VALUES (5, 'consuntivo', NULL, NULL);

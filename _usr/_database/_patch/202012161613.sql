@@ -1,1 +1,0 @@
-ALTER TABLE `contratti` ADD `livello` CHAR(64) NULL DEFAULT NULL AFTER `data_fine_rapporto`;

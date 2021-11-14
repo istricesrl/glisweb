@@ -25,6 +25,7 @@ Options -Indexes
 
     # directory ad accesso vietato
     RewriteRule ^tmp/*^ - [F,L,NC]
+    RewriteRule ^usr/database/* - [F,L,NC]
     RewriteRule ^usr/test/* - [F,L,NC]
     RewriteRule ^var/log/* - [F,L,NC]
     RewriteRule ^var/session/* - [F,L,NC]

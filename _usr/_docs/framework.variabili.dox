@@ -200,7 +200,7 @@
     contents.pages.<x>.content.<l>               | contenuto della pagina <x> nella lingua <l> (vedi _src/_config/_420.pages.php)
     contents.pages.<x>.h1                        | i tag H1 della pagina <x>
     contents.pages.<x>.h1.<l>                    | il tag H1 della pagina <x> nella lingua <l>
-    contents.pages.<x>.id_sito                   | l'ID del sito di appartenenza della pagina <x> (vedi 
+    contents.pages.<x>.id_sito                   | l'ID del sito di appartenenza della pagina <x>
     contents.pages.<x>.macro                     | array degli script PHP da eseguire prima del rendering della pagina <x>
     contents.pages.<x>.metadata                  | array dei metadati della pagina <x>
     contents.pages.<x>.menu                      | dettagli sui menu in cui è presente la pagina <x>
@@ -258,14 +258,12 @@
     contents.page.breadcrumbs                    | dettagli sulla navigazione a briciole di pane
     contents.page.css                            | dettagli sui fogli di stile
     contents.page.css.head                       | array delle regole di stile da inserire in un tag style all'interno del tag head
-    contents.page.css.head.<s>                   | array delle regole di stile da applicare al selettore <s> nel tag style all'interno del tag head
+    contents.page.css.head.<x>                   | array delle regole di stile da applicare al selettore <x> nel tag style all'interno del tag head
     contents.page.css.template                   | array dei fogli di stile da prelevare dal template corrente
     contents.page.canonical                      | contiene l'ID della pagina canonica se l'URL corrente non è fra gli URL canonici (vedi _src/_config/_420.pages.php)
     contents.page.favicons                       | dettagli sulle favicons del template
     contents.page.flags                          | dettagli sulla navigazione multilingua (selettore a bandiere)
     contents.page.template.ini                   | il percorso del file di configurazione del template
-
-    \todo contents.page va approfondito, ci sono molte sotto chiavi da documentare, vedi output di ?u[]=page
 
     Inoltre la chiave contents.page.content.<l> può essere valorizzata anche creando un file nella cartella _src/_inc/_contents/
     o nella sua controparte custom; il file deve avere il nome composto dall'ID della pagina e dalla lingua del contenuto, ad
@@ -342,16 +340,16 @@
 
     chiave                       | descrizione
     -----------------------------|---------------------------------------------------------------------------------------
-    debug.<s>                    | configurazioni relative allo status <s>
-    debug.<s>.<f>                | configurazioni che si applicano alla factory <f> dello status <s> (usare '*' per 'tutte')
-    debug.<s>.<f>.log            | configurazioni relative al log della factory <f> per lo status <s>
-    debug.<s>.<f>.log.lvl        | livello di log della factory <f> per lo status <s>
-    debug.<s>.<f>.log.rotation   | stringa per date() per la rotazione dei log della factory <f> per lo status <s>
-    debug.<s>.<f>.report         | configurazioni per gli eventi da mostrare a video per la factory <f> per lo status <s>
-    debug.<s>.<f>.report.lvl     | livello di gravità degli eventi da mostrare a video per la factory <f> per lo status <s>
-    debug.<s>.<f>.target         | configurazioni per la destinazione dei log della factory <f> per lo status <s>
-    debug.<s>.<f>.target.<l>     | configurazioni per la destinazione dei log di gravità <l> della factory <f> per lo status <s>
-    debug.<s>.<f>.target.<l>.<t> | configurazione del target dei log di gravità <l> della factory <f> per lo status <s>
+    debug.<j>                    | configurazioni relative allo status <j>
+    debug.<j>.<f>                | configurazioni che si applicano alla factory <f> dello status <j> (usare '*' per 'tutte')
+    debug.<j>.<f>.log            | configurazioni relative al log della factory <f> per lo status <j>
+    debug.<j>.<f>.log.lvl        | livello di log della factory <f> per lo status <j>
+    debug.<j>.<f>.log.rotation   | stringa per date() per la rotazione dei log della factory <f> per lo status <j>
+    debug.<j>.<f>.report         | configurazioni per gli eventi da mostrare a video per la factory <f> per lo status <j>
+    debug.<j>.<f>.report.lvl     | livello di gravità degli eventi da mostrare a video per la factory <f> per lo status <j>
+    debug.<j>.<f>.target         | configurazioni per la destinazione dei log della factory <f> per lo status <j>
+    debug.<j>.<f>.target.<l>     | configurazioni per la destinazione dei log di gravità <l> della factory <f> per lo status <j>
+    debug.<j>.<f>.target.<l>.<t> | configurazione del target dei log di gravità <l> della factory <f> per lo status <j>
     debug.fs                     | configurazioni relative al debug del filesystem
     debug.fs.files               | configurazioni relative al debug dei file
     debug.fs.folders             | configurazioni relative al debug delle cartelle
@@ -370,7 +368,7 @@
 
     chiave                               | descrizione
     -------------------------------------|---------------------------------------------------------------------------------------
-    debug.<s>.<f>.target.<l>.LOG2GCE.pid | l'id del progetto GCE su cui loggare gli eventi di livello <l> per la factory <f> allo status <s>
+    debug.<j>.<f>.target.<l>.LOG2GCE.pid | l'id del progetto GCE su cui loggare gli eventi di livello <l> per la factory <f> allo status <j>
 
     Vediamo un esempio molto semplice di settaggio dei livelli di log alla massima verbosità per l'ambiente di TEST e a una
     verbosità ridotta per l'ambiente di produzione:
@@ -406,8 +404,8 @@
     -------------------------------------------|---------------------------------------------------------------------------------------
     hotjar.profile                             | il profilo di Hotjar corrente (è una scorciatoia per hotjar.profiles.<site.status>)
     hotjar.profiles                            | i profili di Hotjar disponibili
-    hotjar.profiles.<s>                        | dettagli del profilo di Hotjar per lo status <s>
-    hotjar.profiles.<s>.id                     | ID del profilo di Hotjar per lo status <s>
+    hotjar.profiles.<j>                        | dettagli del profilo di Hotjar per lo status <j>
+    hotjar.profiles.<j>.id                     | ID del profilo di Hotjar per lo status <j>
 
     Vediamo un esempio di configurazione per l'intero deploy:
 
@@ -533,8 +531,8 @@
     ----------------------------------|---------------------------------------------------------------------------------------
     mapquest.profile                  | il profilo Mapquest corrente (scorciatoia per mapquest.profiles.<site.status>)
     mapquest.profiles                 | l'array dei profili mapquest disponibili
-    mapquest.profiles.<s>             | il profilo mapquest per lo status <s>
-    mapquest.profiles.<s>.servers     | array dei nomi dei server mapquest disponibli per lo status <s>
+    mapquest.profiles.<j>             | il profilo mapquest per lo status <j>
+    mapquest.profiles.<j>.servers     | array dei nomi dei server mapquest disponibli per lo status <j>
     mapquest.server                   | il server mapquest corrente (scorciatoia per mapquest.servers, vedi _src/_config/_525.mapquest.php)
     mapquest.servers                  | array dei dettagli dei server mapquest disponibili
     mapquest.servers.<n>              | dettagli del server <n>
@@ -579,8 +577,8 @@
     memcache.index                    | l'indice delle chiavi di memcache organizzate per entità
     memcache.profile                  | il profilo Memcache corrente (scorciatoia per memcache.profiles.<site.status>)
     memcache.profiles                 | l'array dei profili memcache disponibili
-    memcache.profiles.<s>             | il profilo memcache per lo status <s>
-    memcache.profiles.<s>.servers     | array dei nomi dei server memcache disponibli per lo status <s>
+    memcache.profiles.<j>             | il profilo memcache per lo status <j>
+    memcache.profiles.<j>.servers     | array dei nomi dei server memcache disponibli per lo status <j>
     memcache.server                   | il server memcache corrente (scorciatoia per memcache.servers, vedi _src/_config/_045.cache.php)
     memcache.servers                  | array dei dettagli dei server memcache disponibili
     memcache.servers.<n>              | dettagli del server <n>
@@ -660,8 +658,8 @@
     mysql.profile.patch.level         | il livello di patch del database corrente
     mysql.profile.patch.list          | l'elenco delle patch disponibili
     mysql.profiles                    | l'array dei profili mysql disponibili
-    mysql.profiles.<s>                | il profilo mysql per lo status <s>
-    mysql.profiles.<s>.servers        | array dei nomi dei server mysql disponibli per lo status <s>
+    mysql.profiles.<j>                | il profilo mysql per lo status <j>
+    mysql.profiles.<j>.servers        | array dei nomi dei server mysql disponibli per lo status <j>
     mysql.server                      | il server mysql corrente (scorciatoia per mysql.servers, vedi _src/_config/_125.mysql.php)
     mysql.servers                     | array dei dettagli dei server mysql disponibili
     mysql.servers.<n>                 | dettagli del server <n>
@@ -672,7 +670,7 @@
     mysql.servers.<n>.username        | nome utente per la connessione al server <n>
     mysql.servers.<n>.VERSION         | versione del server <n> (aggiunta automaticamente in _src/_config/_125.mysql.php)
 
-    Vediamo un esempio di configurazione di Mysql per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
+    Vediamo un esempio di configurazione di MySQL per TEST e PROD tramite file JSON, ipotizzando che il server giri sulla
     stessa macchina del sito:
 
     \code{.json}
@@ -806,8 +804,8 @@
     redis.connections                 | l'array delle connessioni a redis attive
     redis.profile                     | il profilo redis corrente (scorciatoia per redis.profiles.<site.status>)
     redis.profiles                    | l'array dei profili redis disponibili
-    redis.profiles.<s>                | il profilo redis per lo status <s>
-    redis.profiles.<s>.servers        | array dei nomi dei server redis disponibli per lo status <s>
+    redis.profiles.<j>                | il profilo redis per lo status <j>
+    redis.profiles.<j>.servers        | array dei nomi dei server redis disponibli per lo status <j>
     redis.server                      | il server redis corrente (scorciatoia per redis.servers, vedi _src/_config/_045.cache.php)
     redis.servers                     | array dei dettagli dei server redis disponibili
     redis.servers.<n>                 | dettagli del server <n>
@@ -974,21 +972,21 @@
     site.__label__               | etichetta del sito <n> per la tendina dei siti nel CMS
     site.alias                   | alias del sito <n>
     site.alias.domains           | alias di dominio del sito <n>
-    site.alias.domains.<s>       | array degli alias di dominio del sito <n> per lo status <s>
+    site.alias.domains.<j>       | array degli alias di dominio del sito <n> per lo status <j>
     site.alias.hosts             | alias di host del sito <n>
-    site.alias.hosts.<s>         | array degli alias di host del sito <n> per lo status <s>
+    site.alias.hosts.<j>         | array degli alias di host del sito <n> per lo status <j>
     site.domain                  | scorciatoia per site.domains<site.status>
     site.domains                 | domini del sito <n>
-    site.domains.<s>             | dominio del sito <n> per lo status <s>
+    site.domains.<j>             | dominio del sito <n> per lo status <j>
     site.folders                 | cartelle del sito <n> (nel caso il framework sia installato in una sottocartella)
-    site.folders.<s>             | cartelle del sito <n> per lo status <s>
+    site.folders.<j>             | cartelle del sito <n> per lo status <j>
     site.fqdn                    | FQDN del sito
     site.home                    | scorciatoia per site.homes<site.status>
     site.homes                   | pagine home del sito <n> (pagina utilizzata in caso non sia specificata una pagina)
-    site.homes.<s>               | id della pagina home del sito <n> per lo status <s>
+    site.homes.<j>               | id della pagina home del sito <n> per lo status <j>
     site.host                    | scorciatoia per site.hosts<site.status>
     site.hosts                   | hosts del sito <n> (ad es. www)
-    site.hosts.<s>               | host del sito <n> per lo status <s>
+    site.hosts.<j>               | host del sito <n> per lo status <j>
     site.id                      | id del sito <n> (vedi _src/_config/_015.site.php)
     site.metadata                | array dei metadati del sito <n>
     site.metadata.theme          | tema di default del sito <n>
@@ -996,12 +994,12 @@
     site.name.<l>                | nome del sito <n> per la lingua <l>
     site.pages                   | configurazioni aggiuntive per le pagine, da sovrapporre a $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
     site.protocols               | protocolli del sito <n> (ad es. https)
-    site.protocols.<s>           | protocollo del sito <n> per lo status <s>
+    site.protocols.<j>           | protocollo del sito <n> per lo status <j>
     site.root                    | path base del sito
     site.status                  | status attribuito dal framework al sito <n>
     site.url                     | scorciatoia per site.urls.<site.status>
     site.urls                    | array degli URL del sito
-    site.urls.<s>                | URL del sito per lo status <s>
+    site.urls.<j>                | URL del sito per lo status <j>
 
     L'array $cf['site'] viene integrato da $cx['site'] ed è linkato a $ct['site'], per ulteriori dettagli vedi
     _src/_config/_025.site.php. Si noti che le chiavi generate per $cf['site'] saranno visibili anche in
@@ -1031,24 +1029,24 @@
     sites.<n>.__label__          | etichetta del sito <n> per la tendina dei siti nel CMS
     sites.<n>.alias              | alias del sito <n>
     sites.<n>.alias.domains      | alias di dominio del sito <n>
-    sites.<n>.alias.domains.<s>  | array degli alias di dominio del sito <n> per lo status <s>
+    sites.<n>.alias.domains.<j>  | array degli alias di dominio del sito <n> per lo status <j>
     sites.<n>.alias.hosts        | alias di host del sito <n>
-    sites.<n>.alias.hosts.<s>    | array degli alias di host del sito <n> per lo status <s>
+    sites.<n>.alias.hosts.<j>    | array degli alias di host del sito <n> per lo status <j>
     sites.<n>.domains            | domini del sito <n>
-    sites.<n>.domains.<s>        | dominio del sito <n> per lo status <s>
+    sites.<n>.domains.<j>        | dominio del sito <n> per lo status <j>
     sites.<n>.folders            | cartelle del sito <n> (nel caso il framework sia installato in una sottocartella)
-    sites.<n>.folders.<s>        | cartelle del sito <n> per lo status <s>
+    sites.<n>.folders.<j>        | cartelle del sito <n> per lo status <j>
     sites.<n>.homes              | pagine home del sito <n> (pagina utilizzata in caso non sia specificata una pagina)
-    sites.<n>.homes.<s>          | id della pagina home del sito <n> per lo status <s>
+    sites.<n>.homes.<j>          | id della pagina home del sito <n> per lo status <j>
     sites.<n>.hosts              | hosts del sito <n> (ad es. www)
-    sites.<n>.hosts.<s>          | host del sito <n> per lo status <s>
+    sites.<n>.hosts.<j>          | host del sito <n> per lo status <j>
     sites.<n>.id                 | id del sito <n> (dev'essere uguale a <n>)
     sites.<n>.metadata           | array dei metadati del sito
     sites.<n>.name               | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     sites.<n>.name.<l>           | nome del sito <n> per la lingua <l>
     sites.<n>.pages              | configurazioni aggiuntive per le pagine (integra $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
     sites.<n>.protocols          | protocolli del sito <n> (ad es. https)
-    sites.<n>.protocols.<s>      | protocollo del sito <n> per lo status <s>
+    sites.<n>.protocols.<j>      | protocollo del sito <n> per lo status <j>
     sites.<n>.status             | status attribuito dal framework al sito <n>
 
     Vediamo un esempio abbastanza classico, ecco la configurazione JSON per un ipotetico sito www.domain.bho con alias
@@ -1099,12 +1097,12 @@
     --------------------------------------|---------------------------------------------------------------------------------------
     slack.profile                         | il profilo di Slack corrente (è una scorciatoia per slack.profiles.<site.status>)
     slack.profiles                        | i profili di Slack disponibili
-    slack.profiles.<s>                    | dettagli del profilo di Slack per lo status <s>
-    slack.profiles.<s>.webhooks           | webhook di Slack per lo status <s>
-    slack.profiles.<s>.webhooks.<w>       | dettagli del webhook <w> per il profilo dello status <s>
-    slack.profiles.<s>.webhooks.<w>.sa    | chiave A per il webhook <w> per il profilo dello status <s>
-    slack.profiles.<s>.webhooks.<w>.sb    | chiave B per il webhook <w> per il profilo dello status <s>
-    slack.profiles.<s>.webhooks.<w>.sc    | chiave C per il webhook <w> per il profilo dello status <s>
+    slack.profiles.<j>                    | dettagli del profilo di Slack per lo status <j>
+    slack.profiles.<j>.webhooks           | webhook di Slack per lo status <j>
+    slack.profiles.<j>.webhooks.<w>       | dettagli del webhook <w> per il profilo dello status <j>
+    slack.profiles.<j>.webhooks.<w>.sa    | chiave A per il webhook <w> per il profilo dello status <j>
+    slack.profiles.<j>.webhooks.<w>.sb    | chiave B per il webhook <w> per il profilo dello status <j>
+    slack.profiles.<j>.webhooks.<w>.sc    | chiave C per il webhook <w> per il profilo dello status <j>
 
     Vediamo un esempio di configurazione per l'intero deploy:
 
@@ -1158,8 +1156,8 @@
     --------------------------|---------------------------------------------------------------------------------------
     smtp.profile              | il profilo SMTP corrente (scorciatoia per smtp.profiles.<site.status>)
     smtp.profiles             | array dei profili SMTP disponibili
-    smtp.profiles.<s>         | dettagli del profilo SMTP <s>
-    smtp.profiles.<s>.servers | array dei nomi dei server SMTP disponibili per il profilo SMTP <s>
+    smtp.profiles.<j>         | dettagli del profilo SMTP <j>
+    smtp.profiles.<j>.servers | array dei nomi dei server SMTP disponibili per il profilo SMTP <j>
     smtp.server               | il server SMTP corrente (scorciatoia per smtp.servers, vedi _src/_config/_515.smtp.php)
     smtp.servers              | array dei server SMTP disponibili
     smtp.servers.<k>          | dettagli del server SMTP <k>
@@ -1221,9 +1219,9 @@
     -----------------------------|---------------------------------------------------------------------------------------
     twig.profile                 | il profilo di Twig corrente (è una scorciatoia per twig.profiles.<site.status>)
     twig.profiles                | i profili di Twig disponibili
-    twig.profiles.<s>            | dettagli del profilo di Twig per lo status <s>
-    twig.profiles.<s>.cache      | percorso della cartella per la cache; se valorizzato indica che il caching è attivo per il profilo di Twig per lo status <s>
-    twig.profiles.<s>.debug      | se vale 1 indica che il debug è attivo per il profilo di Twig per lo status <s>
+    twig.profiles.<j>            | dettagli del profilo di Twig per lo status <j>
+    twig.profiles.<j>.cache      | percorso della cartella per la cache; se valorizzato indica che il caching è attivo per il profilo di Twig per lo status <j>
+    twig.profiles.<j>.debug      | se vale 1 indica che il debug è attivo per il profilo di Twig per lo status <j>
 
     Vediamo un esempio di configurazione di Twig tramite Json:
 

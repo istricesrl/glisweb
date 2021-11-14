@@ -1,0 +1,145 @@
+/*!
+    \page database_l database del framework, tabelle con la lettera L
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera L.
+
+    le tabelle del database di supporto LA - LZ
+    ===========================================
+    
+    lingue
+    ------
+    Questa tabella *standard* contiene le lingue supportate dal framework.
+
+    colonna                         | descrizione
+    --------------------------------|---------------------------------------------------------------------------------------
+    lingue.id                       | l'ID della lingua
+    lingue.nome                     | contiene il nome comune della lingua, in italiano
+    lingue.note                     | contiene annotazioni libere sulla lingua, di solito il nome e il paese
+    lingue.iso6391alpha2            | fa riferimento allo standard ISO 639-1 alpha-2
+    lingue.iso6393alpha3            | fa riferimento allo standard ISO 639-3 alpha-3
+    lingue.ietf                     | fa riferimento allo standard IETF
+  
+    La tabella non ha chiavi esterne.
+
+    La vista *lingue_view* relativa alla tabella *lingue* presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    lingue_view.id                       | -
+    lingue_view.nome                     | -
+    lingue_view.iso6391alpha2            | -
+    lingue_view.iso6393alpha3            | -
+    lingue_view.ietf                     | -
+    lingue_view.__label__                | etichetta descrittiva della lingua
+
+    listini
+    -------
+    Questa tabella *gestita* contiene i listini cui fanno riferimento i prezzi. La valuta viene assegnata ai prezzi
+    tramite il listino cui il prezzo appartiene.
+
+    colonna                            | descrizione
+    -----------------------------------|---------------------------------------------------------------------------------------
+    listini.id                         | l'ID del listino
+    listini.id_valuta                  | l'ID della valuta del listino
+    listini.nome                       | il nome del listino
+    listini.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    listini.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    listini.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    listini.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------------|-------------------------------|-------------------------------|----------------------
+    listini_ibfk_01_nofollow                | id_valuta                     | valute.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    listini_ibfk_98_nofollow                | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    listini_ibfk_99_nofollow                | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *listini_view* relativa alla tabella *listini* presenta le seguenti colonne:
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    listini_view.id                         | -
+    listini_view.id_valuta                  | -
+    listini_view.valuta                     | la valuta del listino
+    listini_view.nome                       | -
+    listini_view.id_account_inserimento     | -
+    listini_view.id_account_aggiornamento   | -
+    listini_view.__label__                  | l'etichetta descrittiva del listino
+    
+    listini_clienti
+    ---------------
+    Questa tabella *gestita* mette in relazione molti a molti le entità *listini* e *anagrafica* relativamente ai prezzi di vendita.
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    listini_clienti.id                          | l'ID dell'associazione fra il listino e il cliente
+    listini_clienti.id_listino                  | l'ID del listino
+    listini_clienti.id_cliente                  | l'ID del cliente
+    listini_clienti.ordine                      | campo di ordinamento
+    listini_clienti.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    listini_clienti.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    listini_clienti.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    listini_clienti.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------------|-------------------------------|-------------------------------|----------------------
+    listini_clienti_ibfk_01_nofollow        | id_listino                    | listini.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    listini_clienti_ibfk_02_nofollow        | id_cliente                    | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    listini_clienti_ibfk_98_nofollow        | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    listini_clienti_ibfk_99_nofollow        | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *listini_clienti_view* relativa alla tabella *listini_clienti* presenta le seguenti colonne:
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    listini_clienti_view.id                         | -
+    listini_clienti_view.id_listino                 | -
+    listini_clienti_view.listino                    | il listino
+    listini_clienti_view.id_cliente                 | -
+    listini_clienti_view.cliente                    | il cliente
+    listini_clienti_view.ordine                     | -
+    listini_clienti_view.id_account_inserimento     | -
+    listini_clienti_view.id_account_aggiornamento   | -
+    listini_clienti_view.__label__                  | etichetta descrittiva dell'associazione fra listino e cliente
+    
+    luoghi
+    ------
+    Questa tabella *gestita* contiene i luoghi intesi come strutture ad albero che descrivono spazi e organizzazioni di spazi.
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    luoghi.id                           | l'ID del luogo
+    luoghi.id_genitore                  | l'ID del luogo genitore
+    luoghi.id_indirizzo                 | l'ID dell'indirizzo collegato al luogo
+    luoghi.nome                         | il nome del luogo
+    luoghi.note                         | note sul luogo
+    luoghi.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    luoghi.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    luoghi.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    luoghi.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
+  
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                          | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------------------|-------------------------------|----------------------
+    luoghi_ibfk_01_nofollow         | id_genitore                   | luoghi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    luoghi_ibfk_02_nofollow         | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    luoghi_ibfk_98_nofollow         | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    luoghi_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *luoghi_view* relativa alla tabella *luoghi* presenta le seguenti colonne:
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    luoghi_view.id                          | -
+    luoghi_view.id_genitore                 | -
+    luoghi_view.id_indirizzo                | -
+    luoghi_view.indirizzo                   | l'indirizzo collegato al luogo
+    luoghi_view.nome                        | -
+    luoghi_view.id_account_inserimento      | -
+    luoghi_view.id_account_aggiornamento    | -
+    luoghi_view.__label__                   | etichetta descrittiva del luogo
+    

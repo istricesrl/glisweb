@@ -1,1 +1,0 @@
-ALTER TABLE pianificazioni ADD UNIQUE id_todo (id_todo);

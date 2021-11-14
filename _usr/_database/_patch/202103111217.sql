@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS `tipologie_documenti_view`;

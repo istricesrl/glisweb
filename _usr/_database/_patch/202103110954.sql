@@ -1,1 +1,0 @@
-ALTER TABLE `contenuti` ADD CONSTRAINT `contenuti_ibfk_25` FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;

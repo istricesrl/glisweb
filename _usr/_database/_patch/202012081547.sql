@@ -1,1 +1,0 @@
-ALTER TABLE orari_contratti DROP INDEX unico;
