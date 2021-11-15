@@ -868,6 +868,35 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 	GROUP BY categorie_risorse.id
 ;
 
+--| 090000004800
+
+-- chiavi_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `chiavi_view`;
+
+--| 090000004801
+
+-- chiavi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-11-15 12:29 Chiara GDL
+CREATE OR REPLACE VIEW chiavi_view AS
+	SELECT
+		chiavi.id,
+		chiavi.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		chiavi.id_licenza,
+		licenze.nome AS licenza,
+		chiavi.codice,
+		chiavi.seriale,
+		chiavi.nome,
+		chiavi.id_account_inserimento,
+		chiavi.id_account_aggiornamento,
+		chiavi.nome AS __label__
+	FROM chiavi
+		LEFT JOIN licenze ON licenze.id = chiavi.id_licenza
+		LEFT JOIN anagrafica ON anagrafica.id = chiavi.id_anagrafica
+;
+
 --| 090000005100
 
 -- colori_view

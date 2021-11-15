@@ -433,6 +433,26 @@ ALTER TABLE `categorie_risorse`
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000004800
+
+-- chiavi
+-- tipologia: tabella di supporto
+-- verifica: 2021-11-15 11:58 Chiara GDL
+ALTER TABLE `chiavi`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_licenza`,`codice`),
+	ADD KEY `codice` (`codice`),
+	ADD KEY `seriale` (`seriale`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_licenza` (`id_licenza`),
+	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`,`id_anagrafica`);
+
+--| 030000004801
+
+-- chiavi
+-- tipologia: tabella di supporto
+ALTER TABLE `chiavi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000005100
 
 -- colori

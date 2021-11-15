@@ -319,6 +319,48 @@
     categorie_risorse_view.id_account_aggiornamento        | -
     categorie_risorse_view.__label__                       | l'etichetta descrittiva della categoria
  
+    chiavi
+    ------
+    Questa tabella *gestita* contiene l'entità principale *chiavi*, che rappresenta le chiavi dei software
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    chiavi.id                              | l'ID dell'evento di contatto
+    chiavi.id_anagrafica                   | l'ID della tipologia di contatto
+    chiavi.id_licenza                      | l'ID dell'anagrafica che ha effettuato il contatto
+    chiavi.codice                          | l'ID dell'anagrafica che ha generato il contatto
+    chiavi.seriale                         | una descrizione sintetica del contatto ed eventuali riferimenti della persona
+    chiavi.nome                            | annotazioni estese sul contatto, le richieste, e simili
+    chiavi.id_account_inserimento          | l'ID dell'account che ha inserito la riga
+    chiavi.timestamp_inserimento           | la timestamp dell'inserimento della riga
+    chiavi.id_account_aggiornamento        | l'ID dell'ultimo account che ha modificato la riga
+    chiavi.timestamp_aggiornamento         | la timestamp dell'ultimo aggiornamento della riga
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                            | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------|-------------------------------|-------------------------------|----------------------
+    chiavi_ibfk_01_nofollow           | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    chiavi_ibfk_02_nofollow           | id_licenza                    | licenze.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    chiavi_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    chiavi_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *chiavi_view* relativa alla tabella *chiavi* presenta le seguenti colonne:
+
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    chiavi_view.id                            | -
+    chiavi_view.id_anagrafica                 | -
+    chiavi_view.anagrafica                    | l'anagrafica proprietaria della chiave
+    chiavi_view.id_licenza                    | -
+    chiavi_view.licenza                       | la licenza a cui la chiave fa riferimento del contatto
+    chiavi_view.codice                        | -
+    chiavi_view.seriale                       | -
+    chiavi_view.nome                          | -
+    chiavi_view.id_account_inserimento        | -
+    chiavi_view.id_account_aggiornamento      | -
+    chiavi_view.__label__                     | l'etichetta descrittiva della chiave
+
     colori
     ------
     Questa tabella *standard* descrive i colori secondo varie codifiche (RGB, esadecimale); i colori sono organizzati

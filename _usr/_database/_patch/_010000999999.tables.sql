@@ -453,6 +453,24 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000004800
+
+-- chiavi
+-- tipologia: tabella gestita
+-- verifica: 2021-11-15 12:04 Chiara GDL
+CREATE TABLE IF NOT EXISTS `chiavi` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_licenza` int(11) DEFAULT NULL,
+  `codice` char(32) COLLATE utf8_general_ci DEFAULT NULL,
+  `seriale` char(32) COLLATE utf8_general_ci DEFAULT NULL,
+  `nome` char(32) COLLATE utf8_general_ci NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000005100
 
 -- colori
