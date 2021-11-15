@@ -158,6 +158,54 @@
     sms_sent_view.id_account_aggiornamento      | -
     sms_sent_view.__label__                     | etichetta descrittiva dell'SMS
 
+    software
+    --------
+    Questa tabella *gestita* contiene i software e le loro versioni.
+
+    colonna                              | descrizione
+    -------------------------------------|---------------------------------------------------------------------------------------
+    software.id                          | l'ID del software
+    software.id_genitore                 | l'ID del telefono destinatario dell'SMS
+    software.id_articolo                 | 
+    software.json                        | 
+    software.nome                        | 
+    software.note                        | 
+    software.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    software.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    software.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    software.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------------|-------------------------------|-------------------------------|------------------
+    software_ibfk_01_nofollow               | id_telefono                   | telefoni.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    software_ibfk_98_nofollow               | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    software_ibfk_99_nofollow               | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *software_view* relativa alla tabella *software* presenta le seguenti colonne:
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    software_view.id                            | -
+    software_view.id_telefono                   | -
+    software_view.ordine                        | -
+    software_view.timestamp_composizione        | -
+    software_view.mittente                      | -
+    software_view.destinatari                   | -
+    software_view.corpo                         | -
+    software_view.server                        | -
+    software_view.host                          | -
+    software_view.port                          | -
+    software_view.user                          | -
+    software_view.password                      | -
+    software_view.token                         | -
+    software_view.tentativi                     | -
+    software_view.timestamp_invio               | -
+    software_view.id_account_inserimento        | -
+    software_view.id_account_aggiornamento      | -
+    software_view.__label__                     | etichetta descrittiva del software
+
     stati
     -----
     Questa tabella *gestita* contiene gli stati, intesi come unità amministrativa che raggruppa
