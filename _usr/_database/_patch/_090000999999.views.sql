@@ -3601,6 +3601,31 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 	FROM tipologie_attivita
 ;
 
+--| 090000050600
+
+-- tipologie_chiavi_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_chiavi_view`;
+
+--| 0900000050601
+
+-- tipologie_chiavi_view
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_chiavi_view` AS
+	SELECT
+		tipologie_chiavi.id,
+		tipologie_chiavi.id_genitore,
+		tipologie_chiavi.ordine,
+		tipologie_chiavi.nome,
+		tipologie_chiavi.html_entity,
+		tipologie_chiavi.font_awesome,
+		tipologie_chiavi.id_account_inserimento,
+		tipologie_chiavi.id_account_aggiornamento,
+		tipologie_chiavi_path( tipologie_chiavi.id ) AS __label__
+	FROM tipologie_chiavi
+;
+
 --| 090000050800
 
 -- tipologie_contatti_view
@@ -3683,6 +3708,31 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS
 	FROM tipologie_indirizzi
 ;
 
+--| 090000053200
+
+-- tipologie_licenze_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_licenze_view`;
+
+--| 0900000053201
+
+-- tipologie_licenze_view
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_licenze_view` AS
+	SELECT
+		tipologie_licenze.id,
+		tipologie_licenze.id_genitore,
+		tipologie_licenze.ordine,
+		tipologie_licenze.nome,
+		tipologie_licenze.html_entity,
+		tipologie_licenze.font_awesome,
+		tipologie_licenze.id_account_inserimento,
+		tipologie_licenze.id_account_aggiornamento,
+		tipologie_licenze_path( tipologie_licenze.id ) AS __label__
+	FROM tipologie_licenze
+;
+
 --| 090000053400
 
 -- tipologie_mastri_view
@@ -3731,6 +3781,31 @@ CREATE OR REPLACE VIEW `tipologie_notizie_view` AS
 		tipologie_notizie.id_account_aggiornamento,
 		tipologie_notizie_path( tipologie_notizie.id ) AS __label__
 	FROM tipologie_notizie
+;
+
+--| 090000054000
+
+-- tipologie_pagamenti_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_pagamenti_view`;
+
+--| 0900000054001
+
+-- tipologie_pagamenti_view
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_pagamenti_view` AS
+	SELECT
+		tipologie_pagamenti.id,
+		tipologie_pagamenti.id_genitore,
+		tipologie_pagamenti.ordine,
+		tipologie_pagamenti.nome,
+		tipologie_pagamenti.html_entity,
+		tipologie_pagamenti.font_awesome,
+		tipologie_pagamenti.id_account_inserimento,
+		tipologie_pagamenti.id_account_aggiornamento,
+		tipologie_pagamenti_path( tipologie_pagamenti.id ) AS __label__
+	FROM tipologie_pagamenti
 ;
 
 --| 090000054200

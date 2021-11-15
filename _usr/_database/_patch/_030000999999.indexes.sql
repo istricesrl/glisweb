@@ -2137,6 +2137,27 @@ ALTER TABLE `tipologie_attivita`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000050600
+
+-- tipologie_chiavi
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:07 Chiara GDL
+ALTER TABLE `tipologie_chiavi`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000050601
+
+-- tipologie_chiavi
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_chiavi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000050800
 
 -- tipologie_contatti
@@ -2200,6 +2221,27 @@ ALTER TABLE `tipologie_indirizzi`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000053200
+
+-- tipologie_licenze
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:07 Chiara GDL
+ALTER TABLE `tipologie_licenze`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000053201
+
+-- tipologie_licenze
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000053400
 
 -- tipologie_mastri
@@ -2241,6 +2283,27 @@ ALTER TABLE `tipologie_notizie`
 -- tipologie_notizie
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000054000
+
+-- tipologie_pagamenti
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:07 Chiara GDL
+ALTER TABLE `tipologie_pagamenti`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000054001
+
+-- tipologie_pagamenti
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000054200
 

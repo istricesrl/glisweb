@@ -77,10 +77,13 @@
     task                            | 043000    | base          | principale    | contiene i task pianificati
     tipologie_anagrafica            | 050000    | ricorsiva     | tipologie     | contiene le tipologie delle anagrafiche
     tipologie_attivita              | 050400    | ricorsiva     | tipologie     | contiene le tipologie delle attività
+    tipologie_chiavi                | 050600    | ricorsiva     | tipologie     | contiene le tipologie delle chiavi
     tipologie_contatti              | 050800    | ricorsiva     | tipologie     | contiene le tipologie di contatti
     tipologie_indirizzi             | 053000    | ricorsiva     | tipologie     | contiene le tipologie di indirizzi
+    tipologie_licenze               | 053200    | ricorsiva     | tipologie     | contiene le tipologie delle licenze
     tipologie_mastri                | 053400    | ricorsiva     | tipologie     | contiene le tipologie di mastri
     tipologie_notizie               | 053800    | ricorsiva     | tipologie     | contiene le tipologie di notizie
+    tipologie_pagamenti             | 054000    | ricorsiva     | tipologie     | contiene le tipologie dei pagamenti
     tipologie_popup                 | 054200    | ricorsiva     | tipologie     | contiene le tipologie di popup
     tipologie_prodotti              | 054600    | ricorsiva     | tipologie     | contiene le tipologie di prodotti
     tipologie_progetti              | 055000    | ricorsiva     | tipologie     | contiene le tipologie di progetti
@@ -186,8 +189,9 @@
     RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
     PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
-    DOCUMENTI   |           | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_prodotti
-    CASSE       | 6500      | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_prodotti
+    DOCUMENTI   |           | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
+    CASSE       | 6500      | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
+    LICENZE     |           | tipologie_chiavi, tipologie_licenze
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
 
@@ -284,11 +288,14 @@
     template                        | BASE
     tipologie_anagrafica            | BASE
     tipologie_attivita              | ATTIVITA
+    tipologie_chiavi                | LICENZE
     tipologie_contatti              | CONTATTI
     tipologie_documenti             | DOCUMENTI, CASSE
     tipologie_indirizzi             | BASE
+    tipologie_licenze               | LICENZE
     tipologie_mastri                | MAGAZZINI, DOCUMENTI, CASSE
     tipologie_notizie               | NOTIZIE
+    tipologie_pagamenti             | DOCUMENTI, CASSE
     tipologie_popup                 | POPUP
     tipologie_prodotti              | PRODOTTI, DOCUMENTI, CASSE, COUPON
     tipologie_progetti              | PRODUZIONE
