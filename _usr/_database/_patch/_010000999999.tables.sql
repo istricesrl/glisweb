@@ -904,6 +904,32 @@ CREATE TABLE IF NOT EXISTS `job` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000016600
+
+-- licenze
+-- tipologia: tabella standard
+-- verifica: 2021-11-15 12:41 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `licenze` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_rivenditore` int(11) DEFAULT NULL,
+  `codice` char(254) DEFAULT NULL,
+  `postazioni` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `note` char(254) DEFAULT NULL,
+  `testo` text,
+  `giorni_validita` int(11) DEFAULT NULL,
+  `giorni_rinnovo` int(11) DEFAULT NULL,
+  `timestamp_distribuzione` int(11) DEFAULT NULL,
+  `timestamp_inizio` int(11) DEFAULT NULL,
+  `timestamp_fine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000016800
 
 -- lingue

@@ -5,7 +5,69 @@
 
     le tabelle del database di supporto LA - LZ
     ===========================================
-    
+
+    licenze
+    ------
+    Questa tabella *gestita* contiene le licenze.
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    licenze.id                          | l'ID della lingua
+    licenze.id_tipologia                | l'ID della tipologia della licenza
+    licenze.id_anagrafica               | l'ID dell'anagrafica proprietaria della licenza
+    licenze.id_rivenditore              | l'ID dell'anagrafica rivenditrice della licenza
+    licenze.codice                      | il codice della licenza
+    licenze.postazioni                  | il numero delle postazioni per cui la licenza è valida
+    licenze.nome                        | contiene il nome della licenza
+    licenze.note                        | contiene annotazioni libere sulla licenza
+    licenze.testo                       | testo descrittivo della licenza
+    licenze.giorni_validita             | il numero di giorni per cui la licenza è valida a partire dal timestamp_inizio
+    licenze.giorni_rinnovo              | il numero di giorni per cui viene rinnovata la licenza a partire dal timestamp_fine
+    licenze.timestamp_distribuzione     | la timestamp di distribuzione della licenza
+    licenze.timestamp_inizio            | la timestamp dell'ultimo aggiornamento della riga
+    licenze.timestamp_fine              | la timestamp dell'ultimo aggiornamento della riga
+    licenze.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    licenze.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    licenze.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    licenze.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------------|---------------------------|-------------------------------|----------------------
+    licenze_ibfk_01_nofollow              | id_tipologia              | tipologie_licenze.id          | ON DELETE NO ACTION ON UPDATE NO ACTION
+    licenze_ibfk_02_nofollow              | id_anagrafica             | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    licenze_ibfk_03_nofollow              | id_rivenditore            | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    licenze_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    licenze_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+
+    La vista *licenze_view* relativa alla tabella *licenze* presenta le seguenti colonne:
+
+    colonna                                  | descrizione
+    -----------------------------------------|---------------------------------------------------------------------------------------
+    licenze_view.id                          | -
+    licenze_view.id_tipologia                | -
+    licenze_view.tipologia                   | il nome della tipologia della licenza
+    licenze_view.id_anagrafica               | -
+    licenze_view.anagrafica                  | l'anagrafica proprietaria della licenza
+    licenze_view.id_rivenditore              | -
+    licenze_view.rivenditore                 | l'anagrafica rivenditrice della licenza
+    licenze_view.codice                      | -
+    licenze_view.postazioni                  | -
+    licenze_view.nome                        | -
+    licenze_view.note                        | -
+    licenze_view.testo                       | -
+    licenze_view.giorni_validita             | -
+    licenze_view.giorni_rinnovo              | -
+    licenze_view.timestamp_distribuzione     | -
+    licenze_view.timestamp_inizio            | -
+    licenze_view.timestamp_fine              | -
+    licenze_view.id_account_inserimento      | -
+    licenze_view.timestamp_inserimento       | -
+    licenze_view.id_account_aggiornamento    | -
+    licenze_view.timestamp_aggiornamento     | -
+
     lingue
     ------
     Questa tabella *standard* contiene le lingue supportate dal framework.

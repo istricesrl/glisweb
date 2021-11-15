@@ -1613,6 +1613,45 @@ CREATE OR REPLACE VIEW job_view AS
 	FROM job
 ;
 
+--| 090000016600
+
+-- licenze_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `licenze_view`;
+
+--| 090000016601
+
+-- licenze_view
+-- tipologia: tabella gestita
+-- verifica: 2021-11-15 12:44 Chiara GDL
+CREATE OR REPLACE VIEW licenze_view AS
+	SELECT
+		licenze.id,                         
+    	licenze.id_tipologia,                
+		tipologie_licenze.nome AS tipologia,               
+		licenze.id_anagrafica,               
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,               
+		licenze.id_rivenditore,              
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS rivenditore,                 
+		licenze.codice,                      
+		licenze.postazioni,                  
+		licenze.nome,                        
+		licenze.note,                        
+		licenze.testo,                       
+		licenze.giorni_validita,             
+		licenze.giorni_rinnovo,              
+		licenze.timestamp_distribuzione,     
+		licenze.timestamp_inizio,            
+		licenze.timestamp_fine,              
+		licenze.id_account_inserimento,      
+		licenze.id_account_aggiornamento,    
+		licenze.nome AS __label__
+	FROM licenze
+		LEFT JOIN tipologie_licenze ON tipologie_licenze.id = licenze.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = licenze.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
+;
+
 --| 090000016800
 
 -- lingue_view
