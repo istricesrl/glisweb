@@ -135,6 +135,7 @@
     categorie_notizie.template                          | il template da applicare alla categoria per la pubblicazione sul web
     categorie_notizie.schema_html                       | lo schema da applicare alla categoria per la pubblicazione sul web
     categorie_notizie.tema_css                          | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_notizie.id_sito                           | il codice identificativo del sito in cui la categoria è pubblicata, attualmente non è un vincolo  
     categorie_notizie.id_pagina                         | l'ID della pagina genitore della categoria per la pubblicazione sul web
     categorie_notizie.id_account_inserimento            | l'ID dell'account che ha inserito la riga
     categorie_notizie.timestamp_inserimento             | la timestamp dell'inserimento della riga
@@ -181,6 +182,7 @@
     categorie_prodotti.template                         | il template da applicare alla categoria per la pubblicazione sul web
     categorie_prodotti.schema_html                      | lo schema da applicare alla categoria per la pubblicazione sul web
     categorie_prodotti.tema_css                         | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_prodotti.id_sito                          | il codice identificativo del sito in cui la categoria è pubblicata, attualmente non è un vincolo
     categorie_prodotti.id_pagina                        | l'ID della pagina genitore della categoria per la pubblicazione sul web
     categorie_prodotti.id_account_inserimento           | l'ID dell'account che ha inserito la riga
     categorie_prodotti.timestamp_inserimento            | la timestamp dell'inserimento della riga
