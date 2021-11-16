@@ -1614,13 +1614,13 @@ CREATE OR REPLACE VIEW licenze_view AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
 ;
 
---| 060000016700
+--| 090000016700
 
 -- licenze_software
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `licenze_software_view`;
 
---| 060000016701
+--| 090000016701
 
 -- licenze_software
 -- tipologia: tabella gestita
