@@ -432,9 +432,8 @@ ALTER TABLE `chiavi`
 	ADD UNIQUE KEY `unica` (`id_licenza`,`codice`),
 	ADD KEY `codice` (`codice`),
 	ADD KEY `seriale` (`seriale`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_licenza` (`id_licenza`),
-	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`,`id_anagrafica`);
+	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`);
 
 --| 030000004801
 

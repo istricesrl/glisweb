@@ -822,8 +822,6 @@ DROP TABLE IF EXISTS `chiavi_view`;
 CREATE OR REPLACE VIEW chiavi_view AS
 	SELECT
 		chiavi.id,
-		chiavi.id_anagrafica,
-		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		chiavi.id_licenza,
 		licenze.nome AS licenza,
 		chiavi.codice,

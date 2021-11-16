@@ -196,7 +196,7 @@
     PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
     DOCUMENTI   |           | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     CASSE       | 6500      | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
-    LICENZE     |           | chiavi, licenze, software, tipologie_chiavi, tipologie_licenze
+    SOFTWARE    |           | chiavi, licenze, software, tipologie_chiavi, tipologie_licenze
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
 
@@ -220,7 +220,7 @@
     categorie_prodotti              | PRODOTTI
     categorie_progetti              | PRODUZIONE
     categorie_risorse               | RISORSE
-    chiavi                          | LICENZE
+    chiavi                          | SOFTWARE
     colori                          | BASE, PRODOTTI
     comuni                          | BASE
     contatti                        | CONTATTI
@@ -241,7 +241,7 @@
     indirizzi                       | BASE
     iva                             | BASE
     job                             | BASE
-    licenze                         | LICENZE
+    licenze                         | SOFTWARE
     lingue                          | BASE
     listini                         | PRODOTTI, DOCUMENTI, CASSE, COUPON
     listini_clienti                 | PRODOTTI, DOCUMENTI, CASSE, COUPON
@@ -289,7 +289,7 @@
     settori                         | BASE
     sms_out                         | BASE
     sms_sent                        | BASE
-    software                        | LICENZE
+    software                        | SOFTWARE
     stati                           | BASE
     stati_lingue                    | BASE
     task                            | BASE
@@ -298,11 +298,11 @@
     testate                         | RISORSE
     tipologie_anagrafica            | BASE
     tipologie_attivita              | ATTIVITA
-    tipologie_chiavi                | LICENZE
+    tipologie_chiavi                | SOFTWARE
     tipologie_contatti              | CONTATTI
     tipologie_documenti             | DOCUMENTI, CASSE
     tipologie_indirizzi             | BASE
-    tipologie_licenze               | LICENZE
+    tipologie_licenze               | SOFTWARE
     tipologie_mastri                | MAGAZZINI, DOCUMENTI, CASSE
     tipologie_notizie               | NOTIZIE
     tipologie_pagamenti             | DOCUMENTI, CASSE
