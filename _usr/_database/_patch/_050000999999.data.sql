@@ -2,9 +2,6 @@
 -- DATI
 -- questo file contiene le query per l'inserimento dei dati standard nelle tabelle
 --
--- NOTA queste tabelle è importante che abbiano dati standard:
--- - tipologie_pubblicazione
---
 
 --| 050000003100
 
@@ -739,8 +736,8 @@ REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_d
 REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`) VALUES
 (1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1),
 (2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL),
-(3,	1,	    10,	'gent.mo',	            NULL,	NULL,	1),
-(4,	1,	    20,	'gent.ma',	            NULL,	NULL,	1),
+(3,	1,	    10,	'sig.',	                NULL,	NULL,	1),
+(4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1),
 (5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL);
 
 --| 050000050400
@@ -771,6 +768,10 @@ REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'via',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'viale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'piazza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000053400
 

@@ -34,26 +34,26 @@
     da non dover duplicare manualmente un testo che si ripete uguale per diverse pagine (si pensi ad esempio la pagina contatti
     in uno scenario multisito, in cui ogni sito ha le stesse informazioni di contatto).
 
-    La pubblicazione delle pagine è gestita da un lato tramite la tabella *pubblicazione*, dall'altro tramite le regole
+    La pubblicazione delle pagine è gestita da un lato tramite la tabella *pubblicazioni*, dall'altro tramite le regole
     delle ACL in base alla tabella *__acl_pagine__*. Per sapere quali sono gli stati correnti di pubblicazione delle pagine si può usare
     la query:
 
     \code{.sql}
     SELECT
         pagine.id,
-        tipologie_pubblicazione.se_pubblicato,
+        tipologie_pubblicazioni.se_pubblicato,
         pagine_path( pagine.id ) AS __label__
     FROM pagine
-    LEFT JOIN pubblicazione ON (
-		pubblicazione.id = pagine.id
+    LEFT JOIN pubblicazioni ON (
+		pubblicazioni.id = pagine.id
 		AND
-		pubblicazione.timestamp_pubblicazione <= UNIX_TIMESTAMP()
+		pubblicazioni.timestamp_inizio <= UNIX_TIMESTAMP()
 		AND (
-			pubblicazione.timestamp_archiviazione > UNIX_TIMESTAMP()
+			pubblicazioni.timestamp_fine > UNIX_TIMESTAMP()
 			OR
-			pubblicazione.timestamp_accettazione IS NULL
+			pubblicazioni.timestamp_fine IS NULL
 		)
-		LEFT JOIN tipologie_pubblicazione ON tipologie_pubblicazione.id = pubblicazione.id_tipologia;
+		LEFT JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia;
     \endcode
 
     Per sapere invece quali gruppi possono visualizzare le varie pagine:

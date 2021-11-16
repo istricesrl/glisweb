@@ -47,6 +47,10 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
+		    <div class="col-auto">
+			<span class="label-top">tipo</span>
+			{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_indirizzi, request ) }}
+			</div>
             <div class="col">
             <span class="label-top ">indirizzo</span>
                 {{ frm.input( table, '', '', 'indirizzo', '', '', request ) }}
@@ -74,7 +78,7 @@
         <div class="form-group form-row">
             <div class="col">
             <span class="label-top">descrizione e note</span>
-			{{ frm.textarea( table, '', '', 'note', 'ad uso interno', 3, request ) }}
+			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
             </div>
         </div>
        

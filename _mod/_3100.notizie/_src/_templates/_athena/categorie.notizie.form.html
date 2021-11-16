@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
 {% import 'bin/notizie.form.sub.html' as sub_notizie %}
 
 {% extends "ext/main.html" %}
@@ -95,8 +95,8 @@
 		{# SUBFORM CATEGORIE #}
 		{# sub_notizie.categorie( table, 'notizie_categorie', 'categorie',site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_notizie' ) #}
 
-		{# SUBFORM PUBBLICAZIONE #}
-        {{ sub.pubblicazione( table, 'pubblicazione', 'pubblicazione', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_notizie' ) }}
+		{# SUBFORM PUBBLICAZIONI #}
+        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_notizie' ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

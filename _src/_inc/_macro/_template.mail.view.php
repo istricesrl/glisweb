@@ -19,7 +19,7 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'template_mail';
+	$ct['view']['table'] = 'template';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'template.mail.form';

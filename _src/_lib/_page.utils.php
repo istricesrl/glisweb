@@ -35,7 +35,7 @@
             'menu' => array(),
             'macro' => array(),
             'pagine_gruppi' => array(),
-            'pubblicazione' => array()
+            'pubblicazioni' => array()
         );
 
         mysqlDuplicateRowRecursive(

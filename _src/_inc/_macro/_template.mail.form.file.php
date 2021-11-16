@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'template_mail';
+    $ct['form']['table'] = 'template';
 
      // tendina ruolo file
 	$ct['etc']['select']['ruoli_file'] = mysqlCachedIndexedQuery(

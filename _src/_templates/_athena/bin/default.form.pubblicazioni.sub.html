@@ -1,4 +1,4 @@
-{% macro pubblicazione( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
+{% macro pubblicazioni( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
@@ -24,12 +24,12 @@
             </div>
             <div class="col-10 col-md-auto">
                 <span class="label-top">tipologia</span>
-                {{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_pubblicazione, request, '', '', '', '', '', disabled  ) }}
+                {{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_pubblicazioni, request, '', '', '', '', '', disabled  ) }}
             </div>
             <div class="w-100 d-block d-md-none m-0"></div>
             <div class="col-6 col-md-auto">
                 <span class="label-top">inizio</span>
-                {{ frm.dateTime( table, subtable, i, 'timestamp_pubblicazione', '', '', request, '', '', '', '', disabled ) }}
+                {{ frm.dateTime( table, subtable, i, 'timestamp_pubblicazioni', '', '', request, '', '', '', '', disabled ) }}
             </div>
             <div class="col-6 col-md-auto">
                 <span class="label-top">fine</span>

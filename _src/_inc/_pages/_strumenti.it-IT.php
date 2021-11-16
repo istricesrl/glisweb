@@ -257,7 +257,7 @@
 									'priority'	=> 100 ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'mail_out',
 									'mail_sent',
-									'template_mail' ) )
+									'template' ) )
 	);
 
     // gestione mail in uscita
@@ -295,7 +295,7 @@
 	);
 
     // vista template mail
-	$p['template_mail'] = array(
+	$p['template'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'template' ),
 	    'h1'		=> array( $l		=> 'template' ),
@@ -307,41 +307,41 @@
 	);
 
     // gestione template mail
-	$p['template_mail_gestione'] = array(
+	$p['template_gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'template.mail.gestione.html' ),
-	    'parent'		=> array( 'id'		=> 'template_mail' ),
+	    'parent'		=> array( 'id'		=> 'template' ),
 	    'macro'		=> array( '_src/_inc/_macro/_template.mail.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'template_mail_gestione',
-									'template_mail_gestione_contenuti',
-									'template_mail_gestione_allegati' ) )
+	    'etc'		=> array( 'tabs'	=> array(	'template_gestione',
+									'template_gestione_contenuti',
+									'template_gestione_allegati' ) )
 	);
 
     // gestione contenuti template mail
-	$p['template_mail_gestione_contenuti'] = array(
+	$p['template_gestione_contenuti'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'template.mail.gestione.contenuti.html' ),
-	    'parent'		=> array( 'id'		=> 'template_mail' ),
+	    'parent'		=> array( 'id'		=> 'template' ),
 	    'macro'		=> array( '_src/_inc/_macro/_template.mail.gestione.php', '_src/_inc/_macro/_template.mail.gestione.contenuti.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['template_mail_gestione']['etc']['tabs'] )
+	    'etc'		=> array( 'tabs'	=> $p['template_gestione']['etc']['tabs'] )
 	);
 
     // gestione allegati template mail
-	$p['template_mail_gestione_allegati'] = array(
+	$p['template_gestione_allegati'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'allegati' ),
 	    'h1'		=> array( $l		=> 'allegati' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'template.mail.gestione.allegati.html' ),
-	    'parent'		=> array( 'id'		=> 'template_mail' ),
+	    'parent'		=> array( 'id'		=> 'template' ),
 	    'macro'		=> array( '_src/_inc/_macro/_template.mail.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['template_mail_gestione']['etc']['tabs'] )
+	    'etc'		=> array( 'tabs'	=> $p['template_gestione']['etc']['tabs'] )
 	);
 
     // coda SMS in uscita

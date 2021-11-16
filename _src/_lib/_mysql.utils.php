@@ -54,12 +54,13 @@
     
         switch( $t ) {
             case 'immagini':
-                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
+#                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
+                $tc = 'immagini.orientamento, immagini.taglio, immagini.path_alternativo FROM immagini ';
                 $tf = 'id_immagine';
                 $tk = 'images';
             break;
             case 'video':
-                $tc = 'video.id_tipologia_embed, video.codice_embed FROM video ';
+                $tc = 'video.id_embed, video.codice_embed FROM video ';
                 $tf = 'id_video';
                 $tk = 'video';
             break;
@@ -130,7 +131,7 @@
                 case 'video':
                     $im = array_replace_recursive( $im, array(
                     'codice_embed'            => $cn['codice_embed'],
-                    'id_tipologia_embed'      => $cn['id_tipologia_embed']
+                    'id_embed'              => $cn['id_embed']
                     ) );
                 break;
             }

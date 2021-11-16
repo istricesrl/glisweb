@@ -894,6 +894,7 @@ ALTER TABLE `immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `indirizzi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_comune`,`indirizzo`,`civico`,`cap`),
+	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_comune` (`id_comune`), 
 	ADD KEY `timestamp_geolocalizzazione` (`timestamp_geolocalizzazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -2521,20 +2522,21 @@ ALTER TABLE `video`
  	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_ruolo` (`id_ruolo`), 
+ 	ADD KEY `id_embed` (`id_embed`), 
  	ADD KEY `path` (`path`), 
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_anagrafica` (`id`,`id_anagrafica`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_pagine` (`id`,`id_pagina`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_file` (`id`,`id_file`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_prodotti` (`id`,`id_prodotto`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_articoli` (`id`,`id_articolo`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_categorie_prodotti` (`id`,`id_categoria_prodotti`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_risorse` (`id`,`id_risorsa`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_categorie_risorse` (`id`,`id_categoria_risorse`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_notizie` (`id`,`id_notizia`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
-	ADD KEY `indice_categorie_notizie` (`id`,`id_categoria_notizie`,`id_lingua`,`id_ruolo`,`path`,`embed_standard`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`);
+	ADD KEY `indice` (`id`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_anagrafica` (`id`,`id_anagrafica`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_pagine` (`id`,`id_pagina`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_file` (`id`,`id_file`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_prodotti` (`id`,`id_prodotto`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_articoli` (`id`,`id_articolo`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_categorie_prodotti` (`id`,`id_categoria_prodotti`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_risorse` (`id`,`id_risorsa`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_categorie_risorse` (`id`,`id_categoria_risorse`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_notizie` (`id`,`id_notizia`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
+	ADD KEY `indice_categorie_notizie` (`id`,`id_categoria_notizie`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`);
 
 --| 030000065001
 

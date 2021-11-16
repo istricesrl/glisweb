@@ -23,13 +23,13 @@
 
 		    // array delle immagini
 			$pub = mysqlQuery( $cf['mysql']['connection'],
-			    'SELECT pubblicazione.* FROM pubblicazione '
-			    .'WHERE pubblicazione.id_notizia = ? ORDER BY pubblicazione.timestamp_pubblicazione ',
+			    'SELECT pubblicazioni.* FROM pubblicazioni '
+			    .'WHERE pubblicazioni.id_notizia = ? ORDER BY pubblicazioni.timestamp_inizio ',
 			    array( array( 's' => $cf['contents']['page']['metadata']['id_notizia'] ) ) );
 
 		    // ciclo per le immagini
 			foreach( $pub as $p ) {
-			    $cf['contents']['page']['pubblicazione'][ $p['ordine'] ][ $p['id'] ] = $p;
+			    $cf['contents']['page']['pubblicazioni'][ $p['ordine'] ][ $p['id'] ] = $p;
 			}
 
 

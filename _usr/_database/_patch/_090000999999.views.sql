@@ -596,9 +596,10 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		ruoli_audio.nome AS ruolo,
 		audio.ordine,
 		audio.path,
-		audio.codice_embed,
 		audio.id_embed,
 		embed.nome AS embed,
+		audio.codice_embed,
+		audio.embed_custom,
 		audio.nome,
 		audio.target,
 		audio.id_anagrafica,
@@ -1444,6 +1445,8 @@ DROP TABLE IF EXISTS indirizzi_view;
 CREATE OR REPLACE VIEW indirizzi_view AS
 	SELECT
 		indirizzi.id,
+		indirizzi.id_tipologia,
+		tipologie_indirizzi.nome AS tipologia,
 		indirizzi.id_comune,
 		comuni.nome AS comune,
 		comuni.id_provincia,
@@ -1464,6 +1467,7 @@ CREATE OR REPLACE VIEW indirizzi_view AS
 		indirizzi.id_account_aggiornamento,
 		concat_ws(
 			' ',
+			tipologie_indirizzi.nome,
 			indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
@@ -1472,6 +1476,7 @@ CREATE OR REPLACE VIEW indirizzi_view AS
 			provincie.sigla
 		) AS __label__
 	FROM indirizzi
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN regioni ON regioni.id = provincie.id_regione
@@ -4053,7 +4058,8 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.ordine,
 		video.nome,
 		video.path,
-		video.embed_standard,
+		video.id_embed,
+		video.codice_embed,
 		video.embed_custom,
 		video.target,
 		video.orientamento,
