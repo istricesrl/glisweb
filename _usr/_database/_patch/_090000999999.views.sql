@@ -708,6 +708,7 @@ CREATE OR REPLACE VIEW categorie_notizie_view AS
 		categorie_notizie.template,
 		categorie_notizie.schema_html,
 		categorie_notizie.tema_css,
+		categorie_notizie.id_sito,
 		categorie_notizie.id_pagina,
 		count( c1.id ) AS figli,
 		count( notizie_categorie.id ) AS membri,
@@ -740,6 +741,7 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 		categorie_prodotti.template,
 		categorie_prodotti.schema_html,
 		categorie_prodotti.tema_css,
+		categorie_prodotti.id_sito,
 		categorie_prodotti.id_pagina,
 		count( c1.id ) AS figli,
 		count( prodotti_categorie.id ) AS membri,
@@ -822,8 +824,6 @@ DROP TABLE IF EXISTS `chiavi_view`;
 CREATE OR REPLACE VIEW chiavi_view AS
 	SELECT
 		chiavi.id,
-		chiavi.id_anagrafica,
-		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		chiavi.id_licenza,
 		licenze.nome AS licenza,
 		chiavi.codice,
@@ -834,7 +834,6 @@ CREATE OR REPLACE VIEW chiavi_view AS
 		chiavi.nome AS __label__
 	FROM chiavi
 		LEFT JOIN licenze ON licenze.id = chiavi.id_licenza
-		LEFT JOIN anagrafica ON anagrafica.id = chiavi.id_anagrafica
 ;
 
 --| 090000005100
@@ -1617,6 +1616,30 @@ CREATE OR REPLACE VIEW licenze_view AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
 ;
 
+--| 090000016700
+
+-- licenze_software
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `licenze_software_view`;
+
+--| 090000016701
+
+-- licenze_software
+-- tipologia: tabella gestita
+-- verifica: 2021-11-16 15:30 Chiara GDL
+CREATE OR REPLACE VIEW licenze_software_view AS
+	SELECT
+		licenze_software.id,
+		licenze_software.id_licenza,
+		licenze_software.id_software,
+		licenze_software.id_account_inserimento,
+		licenze_software.id_account_aggiornamento,
+		concat( licenze.nome, ' | ', software.nome ) AS __label__
+	FROM licenze_software
+		LEFT JOIN software ON software.id = licenze_software.id_software
+		LEFT JOIN licenze ON licenze.id = licenze_software.id_licenza
+;
+
 --| 090000016800
 
 -- lingue_view
@@ -2025,7 +2048,6 @@ CREATE OR REPLACE VIEW `notizie_view` AS
 		LEFT JOIN tipologie_notizie ON tipologie_notizie.id = notizie.id_tipologia
 		LEFT JOIN notizie_categorie ON notizie_categorie.id_notizia = notizie.id
 		LEFT JOIN categorie_notizie ON categorie_notizie.id = notizie_categorie.id_categoria
-		LEFT JOIN tipologie_notizie ON tipologie_notizie.id = notizie.id_tipologia
 	GROUP BY notizie.id
 ;
 

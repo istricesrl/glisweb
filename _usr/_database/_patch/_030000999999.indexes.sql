@@ -352,10 +352,11 @@ ALTER TABLE `categorie_notizie`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_pagina`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_sito`,`id_pagina`);
 
 --| 030000003701
 
@@ -372,10 +373,11 @@ ALTER TABLE `categorie_prodotti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_pagina`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_sito`,`id_pagina`);
 
 --| 030000003901
 
@@ -432,9 +434,8 @@ ALTER TABLE `chiavi`
 	ADD UNIQUE KEY `unica` (`id_licenza`,`codice`),
 	ADD KEY `codice` (`codice`),
 	ADD KEY `seriale` (`seriale`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_licenza` (`id_licenza`),
-	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`,`id_anagrafica`);
+	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`);
 
 --| 030000004801
 
@@ -990,6 +991,26 @@ ALTER TABLE `licenze`
 -- licenze
 -- tipologia: tabella standard
 ALTER TABLE `licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000016700
+
+-- licenze_software
+-- tipologia: tabella gestita
+-- verifica: 2021-11-16 15:30 Chiara GDL
+ALTER TABLE `licenze_software`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_licenza`,`id_software`),
+	ADD KEY `id_licenza` (`id_licenza`), 
+	ADD KEY `id_software` (`id_software`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_licenza`,`id_software`,`ordine`);
+
+--| 030000016701
+
+-- licenze_software
+-- tipologia: tabella gestita
+ALTER TABLE `licenze_software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000016800
 

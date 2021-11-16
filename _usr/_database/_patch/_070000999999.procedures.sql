@@ -2712,17 +2712,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				software.id_genitore,
-				software.nome,
-				count( software.id )
+				software.nome
 			FROM software
 			WHERE software.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -3131,17 +3129,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_chiavi.id_genitore,
-				tipologie_chiavi.nome,
-				count( tipologie_chiavi.id )
+				tipologie_chiavi.nome
 			FROM tipologie_chiavi
 			WHERE tipologie_chiavi.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -3689,17 +3685,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_licenze.id_genitore,
-				tipologie_licenze.nome,
-				count( tipologie_licenze.id )
+				tipologie_licenze.nome
 			FROM tipologie_licenze
 			WHERE tipologie_licenze.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -4108,17 +4102,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_pagamenti.id_genitore,
-				tipologie_pagamenti.nome,
-				count( tipologie_pagamenti.id )
+				tipologie_pagamenti.nome
 			FROM tipologie_pagamenti
 			WHERE tipologie_pagamenti.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
