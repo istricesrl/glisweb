@@ -38,7 +38,7 @@
 	}
 
     // permessi di scrittura
-	foreach( $cf['debug']['fs']['folders'] as $dir ) {
+	foreach( array_keys( $cf['debug']['fs']['folders'] ) as $dir ) {
 	    if( is_dir( $dir ) && is_writeable( $dir ) ) {
 		echo '[ OK ] posso scrivere su ' . shortPath( $dir ) . PHP_EOL;
 	    } else {
@@ -47,7 +47,7 @@
 	}
 
     // permessi di scrittura
-	foreach( $cf['debug']['fs']['files'] as $file ) {
+	foreach( array_keys( $cf['debug']['fs']['files'] ) as $file ) {
 	    if( is_writeable( $file ) ) {
 		echo '[ OK ] posso scrivere su ' . shortPath( $file ) . PHP_EOL;
 	    } else {

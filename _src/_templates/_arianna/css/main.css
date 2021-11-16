@@ -69,7 +69,8 @@ nav .logo img {
 }
 
 main > .container > .row {
-    margin: 1.5em 0em;
+    margin-top: 1.5em;
+	margin-bottom: 1.5em;
 }
 
 div.jumbotron {

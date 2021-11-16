@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.form.pubblicazione.sub.html' as sub %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -57,7 +57,7 @@
             <div class="form-group form-row">
                 <div class="col-12 col-md-auto">
                     <span class="label-top">tipologia</span>
-                    {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
                 </div>  
                 <div class="col-12 col-md-auto">
                     <span class="label-top">codice</span>
@@ -65,7 +65,7 @@
                 </div>  
                 <div class="col-12 col-md">
                     <span class="label-top">nome</span>
-                    {{ frm.input( table, '', '', 'nome', 'nome del prodotto', '', request ) }}
+                    {{ frm.input( table, '', '', 'nome', 'nome del prodotto', '', request, '', '', 1 ) }}
                 </div>
             </div>
         </fieldset>
@@ -89,6 +89,16 @@
                     <span class="label-top">marchio</span>
                     {{ frm.select( table, '', '', 'id_marchio', '', etc.select.marchi, request ) }}
                 </div>
+                <div class="col-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_matricola', 'matricola', '', request ) }}
+					</div>
+				</div>
+				<div class="col-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_ore', 'ore', '', request ) }}
+					</div>
+				</div>
             </div>
 
 		</fieldset>
@@ -109,8 +119,8 @@
 
 		</fieldset>
 
-		{# SUBFORM PUBBLICAZIONE #}
-        {{ sub.pubblicazione( table, 'pubblicazione', 'pubblicazione', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
+		{# SUBFORM PUBBLICAZIONI #}
+        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

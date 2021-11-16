@@ -24,39 +24,46 @@
 
     // tendina prodotti
 	$ct['etc']['select']['prodotti'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM prodotti_view' );
 
     // tendina colori
 	$ct['etc']['select']['colori'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM colori_view' );
 
-    // tendina id_tipologia_pubblicazione
-	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+    // tendina id_tipologia_pubblicazioni
+	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
+	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
 	);
 
     // tendina taglie
 	$ct['etc']['select']['taglie'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM taglie_view' );
 
     // tendina unità di misura
 	$ct['etc']['select']['udm'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM udm_view' );
+
+    // tendina reparti
+	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
+	    $cf['cache']['index'],
+	    $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM reparti_view' );    
 
     if( isset( $_REQUEST['__preset__']['articoli']['id_prodotto']  ) ){
         // unità di misura di default

@@ -24,18 +24,32 @@
     if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
         // richiamo la funzione che ritorna l'array degli operatori coi punteggi
-        $ct['etc']['operatori'] = elencoSostitutiAttivita( $_REQUEST[ $ct['form']['table'] ]['id'] );
+     #   $ct['etc']['operatori'] = elencoSostitutiAttivita( $_REQUEST[ $ct['form']['table'] ]['id'] );
+
+     // leggo i sostituti dalla tabella __report_sostituzioni_attivita__
+         $ct['etc']['operatori'] = mysqlQuery(
+             $cf['mysql']['connection'],
+             'SELECT r.*, '
+             .'coalesce(
+                a.soprannome,
+                a.denominazione,
+                concat_ws(" ", coalesce(a.nome, ""),
+                coalesce(a.cognome, "") ),
+                ""
+            ) as anagrafica '
+            .'FROM __report_sostituzioni_attivita__ AS r LEFT JOIN anagrafica AS a ON r.id_anagrafica = a.id '
+            .'WHERE r.id_attivita = ? AND r.se_convocato IS NULL AND r.se_scartato IS NULL ORDER BY punteggio DESC, punti_sostituto DESC, punti_progetto DESC, punti_distanza DESC LIMIT 30',
+             array(
+                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
+             )
+         );
 
         // tendina operatori per settaggio manuale
 	    $ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
-            $cf['cache']['index'],
+            $cf['memcache']['index'],
             $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            "SELECT DISTINCT id_anagrafica AS id, anagrafica AS __label__ FROM contratti_view WHERE "
-            ."id_anagrafica NOT IN ( SELECT id_anagrafica FROM sostituzioni_attivita WHERE id_attivita = ? ) ORDER BY anagrafica",
-            array(
-                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
-            )
+            $cf['mysql']['connection'],
+            "SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1"
         );
     }
 
@@ -52,6 +66,11 @@
     // modal per la conferma di scarto operatore
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'scarta', 'include' => 'inc/attivita.scoperte.form.modal.scarta.html' )
+    );
+
+    // modal per la conferma di avvio calcolo sostituti
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'calcola', 'include' => 'inc/attivita.scoperte.form.modal.calcola.html' )
     );
 
 	// macro di default

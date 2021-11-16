@@ -22,11 +22,11 @@
     // tabella gestita
 	$ct['form']['table'] =  'variazioni_attivita';
 
-   
+  
 
     // se ho un operatore e dei range devo andare a vedere tutte le attività che entrano nei range
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['periodi_variazioni_attivita'] ) ) {
-        
+
         // per ogni riga di periodo devo vedere se ci sono attività che hanno data e ora programmazione in quel range, completamente o parzialmente
         // se sì aggiungo il progetto e la data all'array dei risultati da mostrare in dashboard
         
@@ -55,12 +55,12 @@
             // elenco delle righe di attività già pianificate coinvolte nella sostituzione
             $attivita = mysqlQuery( 
                 $cf['mysql']['connection'],
-                "SELECT attivita_view.id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
-                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, id_progetto, progetto, "
+                "SELECT attivita_view_static.id, id_anagrafica, data_programmazione, TIME_FORMAT(ora_inizio_programmazione, '%H:%i') as ora_inizio_programmazione, "
+                ."TIME_FORMAT(ora_fine_programmazione, '%H:%i') as ora_fine_programmazione, attivita_view_static.id_progetto, progetto, "
                 ."coalesce( p1.id, p2.id) AS id_pianificazione, coalesce( p1.data_fine, p2.data_fine) as data_fine, "
-                ."coalesce( p1.giorni_rinnovo, p2.giorni_rinnovo) as giorni_rinnovo FROM attivita_view "
-                ."LEFT JOIN pianificazioni as p1 ON attivita_view.id_pianificazione = p1.id "
-                ."LEFT JOIN pianificazioni as p2 ON attivita_view.id_todo = p2.id_todo "
+                ."coalesce( p1.giorni_rinnovo, p2.giorni_rinnovo) as giorni_rinnovo FROM attivita_view_static "
+                ."LEFT JOIN pianificazioni as p1 ON attivita_view_static.id_pianificazione = p1.id "
+                ."LEFT JOIN pianificazioni as p2 ON attivita_view_static.id_todo = p2.id_todo "
                 ."WHERE id_anagrafica = ? "
                 ."AND ( ( TIMESTAMP( data_programmazione, ora_inizio_programmazione ) between ? and ? ) OR ( TIMESTAMP( data_programmazione, ora_fine_programmazione ) between ? and ? ) ) "
                 ."ORDER by data_programmazione, id_progetto, ora_inizio_programmazione"
@@ -74,13 +74,15 @@
                 )
             );
 
+            if( !empty( $attivita )){
+                foreach( $attivita as $a ){
+            /*       $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['attivita'][ $a['id'] ] = $a;
+                $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['progetto'] = $a['progetto']; */ 
             
-           foreach( $attivita as $a ){
-        /*       $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['attivita'][ $a['id'] ] = $a;
-               $ct['etc']['attivita'][ $a['data_programmazione'] ][ $a['id_progetto'] ]['progetto'] = $a['progetto']; */ 
-           
-                $ct['etc']['attivita'][ $a['id'] ] = $a;
-            }          
+                    $ct['etc']['attivita'][ $a['id'] ] = $a;
+                }         
+            }
+            
         }
 
         // se ho un valore di data_fine massima settato
@@ -104,7 +106,7 @@
             $progetti = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT a.id_progetto, a.progetto, min( p.data_fine ) as data_fine FROM pianificazioni as p '
-                .'INNER JOIN attivita_view as a ON ( p.id_todo = a.id_todo AND a.id_anagrafica = ? ) '
+                .'INNER JOIN attivita_view_static as a ON ( p.id_todo = a.id_todo AND a.id_anagrafica = ? ) '
                 .'WHERE p.data_fine < ? AND p.giorni_rinnovo > 0 '
                 .'GROUP BY a.id_progetto',
                 array(
@@ -133,6 +135,11 @@
     // modal per la conferma di approvazione
     $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array('id' => 'conferma', 'include' => 'inc/variazioni.form.approvazione.modal.conferma.html' )
+    );
+	
+	// modal per la conferma di rifiuto
+    $ct['page']['contents']['metro'][NULL][] = array(
+        'modal' => array('id' => 'rifiuta', 'include' => 'inc/variazioni.form.rifiuto.modal.conferma.html' )
     );
 
     // modal per la conferma di allungamento pianificazione singola

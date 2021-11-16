@@ -35,7 +35,7 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE pianificazioni SET token = ? WHERE id = ?',
+            'UPDATE pianificazioni SET token = ? WHERE id = ? AND token IS NULL',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['id'] )
@@ -51,6 +51,7 @@
             'WHERE ( timestamp_popolazione < ? OR timestamp_popolazione IS NULL ) '.
             'AND data_fine > ? '.
             'AND token IS NULL '.
+			'AND data_inizio_pulizia IS NULL '.		// non deve leggere quelle chiamate dalla check
             'ORDER BY timestamp_popolazione ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] ),
@@ -65,11 +66,14 @@
     $current = mysqlSelectRow(
         $cf['mysql']['connection'],
         'SELECT pianificazioni.*, '.
-        'coalesce( id_todo, id_turno ) AS ref_id '.
+        'coalesce( id_todo, id_turno, id_progetto ) AS ref_id '.
         'FROM pianificazioni '.
         'WHERE token = ? ',
         array( array( 's' => $status['token'] ) )
     );
+
+    // TODO
+    // $current['entita'] = pianificazioniGetMatchEntityName( $current['id'] );
 
     // se c'è almeno una riga da inviare
     if( ! empty( $current ) ) {
@@ -102,7 +106,6 @@
         if( $current['se_sabato']       == 1 ) { $giorni[] = 5; }
         if( $current['se_domenica']     == 1 ) { $giorni[] = 6; }
 
-    #    var_dump( $current['data_ultimo_oggetto'] );
 
         // chiamo la funzione creazionePianificazione() 
         $date = creazionePianificazione(
@@ -116,14 +119,8 @@
             $current['ripetizione_mese'],
             $current['ripetizione_anno']
         );
-
-    #    print_r( $date );
     
         $date = array_diff( $date, array( $current['data_ultimo_oggetto'] ) );
-
-    #    print_r( $date );
-        // debug
-         
 
         // per ogni data...
         foreach( $date as $data ) {
@@ -136,6 +133,28 @@
 
             $a = 1;
 
+            /* NOTA
+            L'array pause definisce il comportamento in caso di pause per l'oggetto da duplicare. 
+            Ad esempio se un progetto è in pausa, presumibilmente non si dovranno duplicare le to-do e attività figlie.
+            Sarà tuttavia possibile indicare di procedere con la duplicazione, eventualmente saltando alcune entità
+            L'array pause potrebbe essere costituito come segue (esempio relativo alla duplicazione di una to-do figlia di un progetto con pause).
+
+            'pause' => array(
+                    'tabella' => 'pause_progetti',
+                    'campo' => 'id_progetto',
+                    'strategia' => array(
+                        'duplica' => true,
+                        'escludi' => array('attivita')
+                    )
+                )
+
+            La chiave "strategia" contiene le due chiavi seguenti:
+            - duplica: settato a "false" se non bisogna duplicare, altrimenti a "true"
+            - escludi: contiene l'elenco delle tabelle da non duplicare, nell'esempio la populate duplicherà solo le to-do e non le attività figlie
+
+            */
+
+            // verifico se ci sono pause e se è necessario duplicare o meno
             if( !empty( $wksp['metadati']['pause'] ) ){
                 
                 // vado nell'oggetto genitore della pianificazione ed estraggo il valore del campo di match per la tabella di pausa
@@ -150,13 +169,36 @@
                 $status['info'][ $data ][] = 'cerco pause su tabella ' . $wksp['metadati']['pause']['tabella'] .', campo di match ' . $wksp['metadati']['pause']['campo'] . ', valore ' . $val;
 
                 $a = seDataAttiva( $data, $wksp['metadati']['pause']['tabella'], $wksp['metadati']['pause']['campo'], $val );
+
+                $status['info'][ $data ]['attiva'] = $a;
+
+                // se la data è attiva duplico l'oggetto
+                if( $a == 1 ){
+                    $duplica = true;
+                }
+                // se la data non è attiva ma la strategia indica di duplicare, verifico gli eventuali oggetti da escludere
+                elseif( $a == 0 && $wksp['metadati']['pause']['strategia']['duplica'] === true ){
+                    $status['info'][ $data ][] = 'data non attiva ma richiesta duplicazione';
+                    $duplica = true;
+                    if( isset( $wksp['metadati']['pause']['strategia']['escludi'] ) ){
+                        // rimuovo le chiavi dell'array 'escludi' dalle tabelle da duplicare
+                        foreach( $wksp['metadati']['pause']['strategia']['escludi'] as $e ){
+                            unset( $wksp['sostituzioni'][ $e ] );
+                        }
+                    }
+                }
+                else{
+                    $duplica = false;
+                }
+            }
+            // se non ci sono pause da considerare, procedo con la duplicazione
+            else{
+                $duplica = true;
             }
 
-            $status['info'][ $data ]['attiva'] = $a;
 
-
-            // solo se non ci sono pause o la data corrente non è nel periodo di pausa procedo con la duplicazione
-            if( $a == 1 ){
+            // procedo con la duplicazione
+            if( $duplica === true ){
                 // array di match
                 $matches = array();
 
@@ -169,10 +211,18 @@
                             $value = $current['id'];
                         } elseif( preg_match_all( '/%data\+([0-9]+)%/', $value, $matches ) ) {
                             $value = date( 'Y-m-d', strtotime( '+' . $matches[1][0] . ' days', strtotime( $data ) ) );
+                        } elseif( $value == '§ref_id+data§'){
+                            $value = $current['ref_id'] . '-' . date( 'Ymd', strtotime( $data ) );
+                        } elseif( $value == '%null%'){
+                            $value = NULL;
                         }
                     }
                 }
 
+            #    $status['info'][$data]['sostituzioni'] = $wksp['sostituzioni'];
+
+                // TODO
+                // check se la data è 
 
                 // chiamo la funzione mysqlDuplicateRowRecursive()
                 mysqlDuplicateRowRecursive(
@@ -195,8 +245,28 @@
                         array( 's' => $status['token'] )
                     )
                 );
+
             }
 
+        }
+
+        // estraggo le statiche coinvolte nella creazione
+        $status['statiche'] = pianificazioniGetStatic( $current['id'] );
+		
+		if( !empty( $status['statiche'] ) && !empty( $date ) ){
+            
+			// inserisco una richiesta di ripopolamento delle statiche
+            foreach( $status['statiche'] as $s ){
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                    array(
+                        array( 's' => $s ),
+                        array( 's' => '_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.php'),
+                        array( 's' => time() )
+                    )
+                );
+            }
         }
 
         // rilascio il token
@@ -207,7 +277,8 @@
                 array( 's' => time() ),
                 array( 's' => $status['token'] )
             )
-        );
+        );       
+		
 
     } else {
 

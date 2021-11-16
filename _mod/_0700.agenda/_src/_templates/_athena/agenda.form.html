@@ -1,0 +1,244 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/attivita.form.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+        
+	    <input type="hidden" id="continue" name="__continue__" value="">
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>dati generali <small>{{ legend }}</small></legend>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md-2">
+					<span class="label-top">tipologia</span>
+                    {% if request.__continue__ %}{% set default = request.__continue__  %}{% else  %}{% set default = '' %}{% endif %}
+					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request, default ) }}
+				</div>
+				<div class="col-12 col-md-2">
+					<span class="label-top">scarico</span>
+					{% if not request[table].id %}
+					{% if not session.__latest__[ table ].id_mastro_provenienza %}{% set default = etc.id_mastro_provenienza %}{% else %}{% set default = session.__latest__[ table ].id_mastro_provenienza %}{% endif %}
+					{% endif %}
+					{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, default ) }}
+				</div>
+				<div class="col-12 col-md-2">
+					<span class="label-top">carico</span>
+					{% if not request[table].id %}
+					{% if not session.__latest__[ table ].id_mastro_destinazione %}{% set default = etc.id_mastro_destinazione %}{% else %}{% set default = session.__latest__[ table ].id_mastro_destinazione %}{% endif %}
+					{% endif %}
+					{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default ) }}
+				</div>
+			
+				<div class="col">
+					<span class="label-top">descrizione</span>
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				</div>
+			</div>
+
+
+			</fieldset>
+
+			{% if request[ table ].id_todo %}
+			<fieldset>
+				<legend>stato lavorazione</legend>
+				<div class="col">
+
+				
+				{{ etc.todo.nome }}
+				{% if etc.attivita_completate %}
+				<legend style="font-size: 90%;">attività completate</legend>
+					<ul>
+					{% for a in etc.attivita_completate %}
+						<li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.note_cliente }}</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+				{% if etc.attivita_programmate %}
+				<legend style="font-size: 90%;">attività pianificate</legend>
+					<ul>
+					{% for a in etc.attivita_programmate %}
+						<li>{{ a.data_programmazione|date('d/m/Y') }} {% if a.ora_inizio_programmazione %}{{ a.ora_inizio_programmazione|date('H:i') }}{% endif %}- {{ a.nome }}: {{ a.note_programmazione }}</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+				</div>
+			</fieldset>
+			{% endif %}
+
+			<fieldset>
+				<legend>programmazione</legend>
+				<div class="form-group form-row">
+					<div class="col-6 col-md-auto">
+						<span class="label-top">data</span>
+						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora inizio</span>
+						{{ frm.time( table, '', '', 'ora_inizio_programmazione', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora fine</span>
+						{{ frm.time( table, '', '', 'ora_fine_programmazione', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ore</span>
+						{{ frm.input( table, '', '', 'ore_programmazione', '', '', request, '', 'number', '', '', '','0.25' ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">esecutore</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+					</div>
+				</div>
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">note programmazione</span>
+					{{ frm.textarea( table, '', '', 'note_programmazione', '', 2, request ) }}
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset>
+				<legend>esecuzione</legend>
+				<div class="form-group form-row">
+					<div class="col-6 col-md-auto">
+						<span class="label-top">data</span>
+						{{ frm.date( table, '', '', 'data_attivita', '', '', request ) }}
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora inizio</span>
+						{{ frm.time( table, '', '', 'ora_inizio', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ora fine</span>
+						{{ frm.time( table, '', '', 'ora_fine', '', '', request) }} 
+					</div>
+					<div class="col-2 col-md-1">
+						<span class="label-top">ore</span>
+						{{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '','0.25' ) }}
+					</div>
+
+					<!--div class="col-auto">
+						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
+					</div-->
+				</div>
+				<div class="form-group form-row">
+					<div class="col-12 col-md-6">
+					<span class="label-top">note interne</span>
+					{{ frm.textarea( table, '', '', 'note_interne', '', 2, request ) }}
+					</div>
+
+					<div class="col-12 col-md-6">
+					<span class="label-top">note cliente</span>
+					{{ frm.textarea( table, '', '', 'testo', '', 2, request ) }}
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset>
+			<legend>attribuzione</legend>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md-6">
+					<span class="label-top">todo</span>
+                    {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_todo %}{% else %}{% set default = '' %}{% endif %}
+					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, default, '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf,'todo' ) }}
+				</div>
+				<div class="col-12 col-md-6">
+					<span class="label-top">progetto</span>
+                    {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_progetto %}{% else %}{% set default = '' %}{% endif %}
+					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, default, '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
+				</div>
+				<div class="col-12 col-md-6">
+					<span class="label-top">cliente</span>
+                    {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_cliente %}{% else %}{% set default = '' %}{% endif %}
+					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, default, '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
+				</div>
+				<div class="col-12 col-md-6">
+					<span class="label-top">indirizzo</span>
+                    {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_indirizzo %}{% else %}{% set default = '' %}{% endif %}
+					{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, default, '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
+				</div>
+				{% if '4100.prodotti' in mods.active.array %}
+				<div class="col-12 col-md-6">
+					<span class="label-top">matricola</span>
+                    {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_matricola %}{% else %}{% set default = '' %}{% endif %}
+					{{ frm.selectBox( table, '', '', 'id_matricola', 'matricola', etc.select.matricole, request, '', '','','','','matricole.form','','matricole', 'id_matricola', page, pages, ietf,'matricole' ) }}
+				</div>
+				<div class="col-2 col-md-6">
+					<span class="label-top">barcode matricola</span>
+					{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
+				</div>
+				{% endif %}
+			</div>
+			</fieldset>
+
+			{# SUBFORM CATEGORIE #}
+	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
+	
+        
+
+
+        <fieldset style="margin-bottom: 25px">
+            <legend>salva e inserisci una nuova attività di tipo</legend>
+            <div class="form-row">
+            {% for b in etc.id_tipologia_attivita_new %}
+            <div class="col-2 text-right">
+        <!--	    <button type="submit" class="btn btn-secondary btn-sm btn-block" onclick="'{{ pages.agenda_gestione.url[ localization.language.ietf ] }}?id_tipologia={{ b.id }}', '_self')">{{ b.__label__ }}</button> -->
+                {{ frm.button(  b.__label__ ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#continue").val(' ~ b.id ~ '); $("#reset").val(1); $("#form-' ~ table ~ '").submit();','salva e crea una nuova attività/promemoria di tipo '~ b.__label__ ) }}
+        
+            </div>
+            {% endfor %}
+            </div>
+        </fieldset>
+
+        {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+	</form>
+    </div>
+</section>
+
+
+
+{% endblock %}

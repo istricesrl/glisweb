@@ -1,0 +1,47 @@
+<script>
+ 
+ 	function updateButton(){
+		$('#refresh-btn').html('ripopola');
+	}
+
+    function refresh_view(){
+	
+        var view = $('#view').val();
+	    $('#refresh-btn').html('<i class="fa fa-circle-o-notch fa-spin  fa-fw"></i>');
+	  
+		getws("/_src/_api/_task/_mysql.view.static.refresh.php","__view_static__="+view, 
+		function( data ) { 
+			console.log(data);
+			if( data.__status__ == 'NO' ){ $('#refresh-btn').html('<i class="fa fa-exclamation-triangle fa-inverse" aria-hidden="true"></i>'); } 
+			else { $('#refresh-btn').html('<i class="fa fa-check" aria-hidden="true"></i>'); } }	);
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="refresh" >
+    <div class="modal-dialog modal-md" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">Ripopola view static</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				    <label class="d-none d-md-block col-md-2 col-form-label">view</label>
+			<div class="col">
+				<select class="form-control form-control-sm selectpicker" data-live-search="true" title="seleziona la view"  id="view" onchange="updateButton()">
+				    <option value="">tutte</option>
+				    {% for v in etc.static_view %}
+					<option value="{{ v.TABLE_NAME }}">{{ v.TABLE_NAME }} </option>
+				    {% endfor %}
+				</select>
+
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" id="refresh-btn" onclick="refresh_view();">ripopola</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

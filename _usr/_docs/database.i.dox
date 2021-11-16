@@ -139,6 +139,7 @@
     colonna                                 | descrizione
     ----------------------------------------|---------------------------------------------------------------------------------------
     indirizzi.id                            | l'ID dell'indirizzo
+    indirizzi.id_tipologia                  | l'ID della tipologia di indirizzo
     indirizzi.id_comune                     | l'ID del comune dove si trova l'indirizzo
     indirizzi.localita                      | la località dove si trova l'indirizzo
     indirizzi.indirizzo                     | l'indirizzo
@@ -158,7 +159,8 @@
 
     chiave                              | campo                         | tabella e campo collegati     | comportamento
     ------------------------------------|-------------------------------|-------------------------------|----------------------
-    indirizzi_ibfk_01_nofollow          | id_comune                     | comuni.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    indirizzi_ibfk_01_nofollow          | id_tipologia                  | tipologie_indirizzi.id        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    indirizzi_ibfk_02_nofollow          | id_comune                     | comuni.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     indirizzi_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     indirizzi_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -167,6 +169,8 @@
     colonna                                     | descrizione
     --------------------------------------------|---------------------------------------------------------------------------------------
     indirizzi_view.id                           | -
+    indirizzi_view.id_tipologia                 | -
+    indirizzi_view.tipologia                    | la tipologia di indirizzo
     indirizzi_view.id_comune                    | -
     indirizzi_view.comune                       | il comune dove si trova l'indirizzo
     indirizzi_view.id_provincia                 | l'ID della provincia dove si trova l'indirizzo

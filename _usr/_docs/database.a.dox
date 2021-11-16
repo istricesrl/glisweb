@@ -667,8 +667,9 @@
     audio.id_ruolo                                      | l'ID del ruolo dell'audio relativamente all'oggetto associato
     audio.ordine                                        | campo di ordinamento
     audio.path                                          | il percorso relativo del file audio
-    audio.codice_embed                                  | il codice di embed da usare per incorporare audio esterni
     audio.id_embed                                      | l'ID della modalità di embed da usare per l'inclusione di audio esterni
+    audio.codice_embed                                  | il codice di embed da usare per incorporare audio esterni
+    audio.embed_custom                                  | -
     audio.nome                                          | il nome dell'audio, a uso interno
     audio.target                                        | -
     audio.id_anagrafica                                 | l'ID dell'anagrafica cui è associato l'audio
@@ -719,9 +720,10 @@
     audio_view.ruolo                                | il ruolo ricoperto dall'audio relativamente all'oggetto collegato
     audio_view.ordine                               | -
     audio_view.path                                 | -
-    audio_view.codice_embed                         | -
     audio_view.id_embed                             | -
     audio_view.embed                                | la modalità da utilizzare per l'embed di audio esterni
+    audio_view.codice_embed                         | -
+    audio_view.embed_custom                         | -
     audio_view.nome                                 | -
     audio_view.target                               | -
     audio_view.id_anagrafica                        | -

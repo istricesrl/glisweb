@@ -30,10 +30,10 @@
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT pagine.* FROM pagine '.
-            'INNER JOIN pubblicazione ON pubblicazione.id_pagina = pagine.id '.
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_pagina = pagine.id '.
             'WHERE pagine.id_sito = ? '.
-            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) '.
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) '.
+            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) '.
             'GROUP BY pagine.id ',
             array(
                 array( 's' => SITE_CURRENT ),
@@ -74,7 +74,6 @@
                     // TODO fare aggiungiGruppi()
                     aggiungiGruppi(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        NULL,
                         $pg['id']
                     );
 /*
@@ -99,8 +98,8 @@
                     // TODO fare aggiungiContenuti()
                     aggiungiContenuti(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        'id_pagina',
-                        $pg['id']
+                        $pg['id'],
+                        'id_pagina'
                     );
 /*
                     // array dei contenuti
@@ -141,17 +140,18 @@
                     // aggiungo le immagini
                     aggiungiImmagini(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        'id_pagina',
                         $pg['id'],
+                        'id_pagina',
                         array( 4, 16, 29, 14 )
                     );
 
-                    // TODO fare aggiungiMetadati()
+                    // aggiungo i metadati
                     aggiungiMetadati(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        'id_pagina',
-                        $pg['id']
+                        $pg['id'],
+                        'id_pagina'
                     );
+
 /*
                     // array dei metadati
                     $meta = mysqlQuery(
@@ -176,8 +176,8 @@
                     // TODO fare aggiungiMenu()
                     aggiungiMenu(
                         $cf['contents']['pages'][ $pg['id'] ],
-                        'id_pagina',
-                        $pg['id']
+                        $pg['id'],
+                        'id_pagina'
                     );
 /*
                     // array dei menu
@@ -231,10 +231,10 @@
 		$cf['contents']['updated'] = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT max( pagine.timestamp_aggiornamento ) AS updated FROM pagine '.
-            'INNER JOIN pubblicazione ON pubblicazione.id_pagina = pagine.id '.
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_pagina = pagine.id '.
             'WHERE pagine.id_sito = ? '.
-            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) '.
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) ',
+            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
             array(
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),

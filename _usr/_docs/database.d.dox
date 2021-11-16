@@ -85,7 +85,6 @@
     documenti_articoli.id_udm                               | l'ID dell'unità di misura relativa alla quantità movimentata dalla riga
     documenti_articoli.quantita                             | la quantità movimentata dalla riga
     documenti_articoli.id_listino                           | l'ID del listino associato alla riga
-    documenti_articoli.id_valuta                            | l'ID della valuta associata agli importi della riga
     documenti_articoli.importo_netto_totale                 | l'importo netto totale della riga
     documenti_articoli.id_iva                               | l'ID dell'aliquota IVA associata alla riga
     documenti_articoli.nome                                 | nome descrittivo della riga
@@ -114,8 +113,7 @@
     documenti_articoli_ibfk_12_nofollow         | id_mastro_destinazione        | mastri.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_13_nofollow         | id_udm                        | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_14_nofollow         | id_listino                    | listini.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
-    documenti_articoli_ibfk_15_nofollow         | id_valuta                     | valute.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    documenti_articoli_ibfk_16_nofollow         | id_iva                        | iva.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_articoli_ibfk_15_nofollow         | id_iva                        | iva.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_98_nofollow         | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     documenti_articoli_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -147,7 +145,6 @@
     documenti_articoli_view.id_udm                          | -
     documenti_articoli_view.quantita                        | -
     documenti_articoli_view.id_listino                      | -
-    documenti_articoli_view.id_valuta                       | -
     documenti_articoli_view.importo_netto_totale            | -
     documenti_articoli_view.id_iva                          | -
     documenti_articoli_view.iva                             | l'aliquota IVA applicata alla riga

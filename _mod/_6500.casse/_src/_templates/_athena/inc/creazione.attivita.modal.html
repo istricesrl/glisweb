@@ -1,0 +1,102 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = 'attivita' %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account %}
+    {% set account = session.account.id %}
+    {% set anagrafica = session.account.id_anagrafica %}
+{% else %}
+    {% set account = '__null__' %}
+    {% set anagrafica = '__null__' %}
+{% endif %}
+
+{% if request.table.id %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% else %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% endif %}
+<script>
+    function genera( t ) {
+
+		var marchio = $( '#{{ table }}_id_marchio' ).val();
+		var produttore = $( '#{{ table }}_id_produttore' ).val();
+		var serial = $( '#{{ table }}_serial_number' ).val();
+		var nome = $( '#{{ table }}_nome' ).val();
+		var testo = $( '#{{ table }}_testo' ).val();
+		var bar = $( '#{{ table }}_barcode' ).val();
+		var id_riga = $( '#id_riga' ).val();
+
+
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="crea_attivita">
+    <div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h3 class="modal-title">attività</h3>
+		<!--button type="button" id="close_matricola" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button-->
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+			<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+				{# CAMPI HIDDEN DI BASE #}
+				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+				<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+				<input type="hidden" id="id" name="{{ table }}[id]" >
+                <input type="hidden" id="id_account_inserimento" name="{{ table }}[id_account_inserimento]" value="{{ account }}">
+				<input type="hidden" id="id_anagrafica" name="{{ table }}[id_anagrafica]" value="{{ anagrafica }}">	
+				<input type="hidden" id="id_tipologia" name="{{ table }}[id_tipologia]" value="{{ etc.id_tipologia_carico }}">	
+                <input type="hidden" id="id_documenti_articoli" name="{{ table }}[id_documenti_articoli]" >	
+				<input type="hidden" id="data_attivita" name="{{ table }}[data_attivita]" value="{{ 'now'|date('Y-m-d') }}">	
+
+		    <div class="form-row form-group">
+
+            <legend>dati generali</legend>
+            <div class="col-12">
+				<span class="label-top">nome</span>
+			    {{ frm.input( table, '', '', 'nome', '', '', request, 'carico ore da scontrino' ) }}
+			</div>
+            <div class="col-4">
+				<span class="label-top">ore</span>
+			    {{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '', '0.5' ) }}
+             </div>
+			 <div class="col" >
+				<span class="label-top">mastro</span>
+				{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri_ore, request, etc.mastro_attivita ) }}
+			</div>
+			<div class="col-12">
+				<span class="label-top">descrizione</span>
+			    {{ frm.textarea( table, '', '', 'testo', '', '3', request ) }}
+			</div>
+		</div>
+        <legend>attribuzione</legend>
+
+        <div class="form-group form-row">
+            <div class="col-12 col-md-4">
+                <span class="label-top">cliente</span>
+                {{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, session.assistenza.id_cliente, '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
+            </div>
+            <div class="col-12 col-md-8">
+                <span class="label-top">progetto</span>
+                {{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, session.assistenza.id_progetto, '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
+            </div>
+        </div>
+        </fieldset>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<!--button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button-->
+        <button id="elimina_articolo" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti_articoli&__delete__[id]={{ etc.id_riga }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}','_self');">elimina articolo</button>
+        <button type="submit" class="btn btn-secondary btn-sm" id="genera-btn"  >crea</button>
+	    </div>
+		</div></form>
+	</div>
+    </div>
+</div>

@@ -19,7 +19,7 @@
 
     // tendina contratti
         $ct['etc']['select']['contratti'] = mysqlCachedIndexedQuery(
-        $cf['cache']['index'],
+        $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
         'SELECT id, __label__ FROM contratti_view'

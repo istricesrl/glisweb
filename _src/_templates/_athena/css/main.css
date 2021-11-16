@@ -156,9 +156,26 @@ label.form-check-label {
 }
 
 .label-top {
-    font-size: .85em;
-    height: 1.75em;
+    font-size: .8em;
+/*    height: 1.75em; */
     color: #777777;
+
+    position: absolute;
+    top: -0.75em;
+    left: 1.25em;
+    background-color: white;
+    padding: 0em 0.5em;
+    z-index: 3000;
+
+    border: 1px solid rgba(206,212,218,1);
+    border-image: linear-gradient(to bottom, rgba(206,212,218,0) 25%,rgba(206,212,218,1) 25%,rgba(206,212,218,1) 75%,rgba(206,212,218,0) 75%);
+    border-image-slice: 1;
+
+
+/*
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+*/
 }
 
 legend {
@@ -222,6 +239,7 @@ fieldset.form-controls,
 fieldset.form-controls-free {
     border-top: 1px solid #dddddd;
     padding-top: 10px;
+    z-index: 5000;
 }
 
 fieldset.form-controls button {
@@ -230,7 +248,12 @@ fieldset.form-controls button {
     width: 31px;
 }
 
-@media (max-width: 991.98px) {
+.form-control:focus {
+    border-color: #cccccc;
+    box-shadow: inset 0 1px 1px rgba(64, 64, 64, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);
+    }
+
+    @media (max-width: 991.98px) {
     form.form-main,
     form.form-filtro {
         padding-bottom: 40px;
@@ -241,7 +264,7 @@ fieldset.form-controls button {
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: 1030;
+        z-index: 5000;
         padding: 10px 15px;
         background-color: #eeeeee;
     }
@@ -398,7 +421,7 @@ header.subform-intestazione {
     margin-bottom: 10px;
 }
 
-#info {
+#info, #jobs {
     background-color: #555555;
     color: #ffffff;
     display: none;
@@ -409,12 +432,12 @@ header.subform-intestazione {
     z-index: 999;
 }
 
-#info h2 {
+#info h2, #jobs h2 {
     font-size: 1.6em;
     margin: 0px;
 }
 
-#info p {
+#info p, #jobs p {
     margin: 0px;
     margin-top: 5px;
 }
@@ -422,7 +445,11 @@ header.subform-intestazione {
 #info a,
 #info a:visited,
 #info a:hover,
-#info a:active {
+#info a:active,
+#jobs a,
+#jobs a:visited,
+#jobs a:hover,
+#jobs a:active {
     color: #ffffff;
 }
 
@@ -481,10 +508,12 @@ nav li.nav-item > a.nav-link:active {
 
 nav ul ul {
     background-color: #ffffff;
+    padding-left: 1em;
 }
 
 nav ul ul ul {
     background-color: #ffffff;
+    padding-left: 1em;
 }
 
 /* stili delle tab */
@@ -846,4 +875,15 @@ ul.browsing-tree {
 
 .cartellini th li{
     text-align: left !important;
+}
+
+/* stile per il loader del campo */
+
+div.combobox-container > .spinner-border {
+    position: absolute;
+    right: 0.5em;
+    height: 1.5em;
+    width: 1.5em;
+    top: 0.5em;
+    display: none;
 }

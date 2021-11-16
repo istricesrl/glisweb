@@ -73,11 +73,11 @@
 		$qs['lvl'] = array_merge( $_REQUEST['lvl'], array( $keyRef ) );
 
 		if( isset( $print[ $key ] ) && is_array( $print[ $key ] ) ) {
-			$tx .= '<li><a href="?' . htmlentities( http_build_query( $qs ) ) . '">' . ( ( ! is_numeric( $key ) && empty( $key ) ) ? '(vuoto)' : htmlentities( $key ) ) . '</a></li>';
+			$tx .= '<li><a href="?' . htmlentities( http_build_query( $qs ) ) . '">' . ( ( ! is_numeric( $key ) && empty( $key ) ) ? '(vuoto)' : htmlspecialchars( $key ) ) . '</a></li>';
 		} elseif( isset( $print[ $key ] ) && is_object( $print[ $key ] ) ) {
 		    $tx .= '<li>' . str_pad( $key . ' ', 32, '-' ) . ' &#x2192; ' . ( ( ! is_numeric( $key ) && empty( $print[ $key ] ) ) ? '(vuoto)' : print_r( $print[ $key ], true ) ) . '</li>';
 		} else {
-		    $tx .= '<li>' . str_pad( $key . ' ', 32, '-' ) . ' &#x2192; ' . ( ( ! is_numeric( $key ) && empty( $print[ $key ] ) ) ? '(vuoto)' : htmlentities( $print[ $key ] ) ) . '</li>';
+		    $tx .= '<li>' . str_pad( $key . ' ', 32, '-' ) . ' &#x2192; ' . ( ( ! is_numeric( $key ) && empty( $print[ $key ] ) ) ? '(vuoto)' : htmlspecialchars( $print[ $key ] ) ) . '</li>';
 		}
 	    }
 

@@ -2,19 +2,16 @@
 -- DATI
 -- questo file contiene le query per l'inserimento dei dati standard nelle tabelle
 --
--- NOTA queste tabelle è importante che abbiano dati standard:
--- - tipologie_pubblicazione
---
 
 --| 050000003100
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 -- verifica: 2021-05-28 19:56 Fabio Mosti
-REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `se_lead`, `se_prospect`, `se_cliente`, `se_mandante`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_dipendente`, `se_interinale`, `se_interno`, `se_esterno`, `se_agente`, `se_concorrente`, `se_azienda_gestita`, `se_amministrazione`, `se_produzione`, `se_notizie`, `se_docente`, `se_tutor`, `se_classe`, `se_allievo`, `se_agenzia_interinale`, `se_referente`, `se_sostituto`, `se_squadra`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'clienti',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'collaboratori',   	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'fornitori',	    NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `se_prospect`, `se_lead`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_concorrente`, `se_azienda_gestita`, `se_amministrazione`, `se_produzione`) VALUES
+(1,	NULL,	NULL,	'clienti',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'collaboratori',   	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'fornitori',	    NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000005100
 
@@ -692,7 +689,7 @@ REPLACE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`,
 (218,	1,	NULL,	NULL,	'Gibilterra',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'910',	'2017-04-13'),
 (219,	4,	NULL,	NULL,	'Groenlandia',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'934',	'2017-04-13'),
 (220,	1,	NULL,	NULL,	'Guernsey',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'940',	'2017-04-13'),
-(221,	1,	NULL,	NULL,	'Isola di Man',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'959',	'1900-01-01'),
+(221,	1,	NULL,	NULL,	'Isola di Man',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'959',	NULL),
 (222,	4,	NULL,	NULL,	'Isole Cayman',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'911',	'2017-04-13'),
 (223,	5,	NULL,	NULL,	'Isole Cook (NZ)',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'909',	'2017-04-13'),
 (224,	1,	NULL,	NULL,	'Isole Fær Øer',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'924',	'2017-04-13'),
@@ -739,8 +736,8 @@ REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_d
 REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`) VALUES
 (1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1),
 (2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL),
-(3,	1,	    10,	'gent.mo',	            NULL,	NULL,	1),
-(4,	1,	    20,	'gent.ma',	            NULL,	NULL,	1),
+(3,	1,	    10,	'sig.',	                NULL,	NULL,	1),
+(4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1),
 (5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL);
 
 --| 050000050400
@@ -771,6 +768,10 @@ REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'via',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'viale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'piazza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000053400
 

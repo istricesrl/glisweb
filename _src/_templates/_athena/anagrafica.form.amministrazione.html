@@ -49,7 +49,7 @@
         <div class="form-group form-row">
 		    <div class="col-12">
 			<span class="label-top">note amministrative</span>
-			{{ frm.textarea( table, '', '', 'note_amministrative', 'informazioni amministrative aggiuntive (ad uso interno)', 3, request ) }}
+			{{ frm.textarea( table, '', '', 'note_amministrative', '', 3, request ) }}
 		    </div>
         </div>
         </fieldset>
@@ -60,11 +60,11 @@
         <div class="form-group form-row">
             <div class="col-12 col-md-4">
                 <span class="label-top">codice fiscale</span>
-                {{ frm.input( table, '', '', 'codice_fiscale', 'codice fiscale', '', request ) }}
+                {{ frm.input( table, '', '', 'codice_fiscale', '', '', request ) }}
                 </div>
             <div class="col-12 col-md-4">
                 <span class="label-top">partita IVA</span>
-                {{ frm.input( table, '', '', 'partita_iva', 'partita IVA', '', request ) }}
+                {{ frm.input( table, '', '', 'partita_iva', '', '', request ) }}
             </div>
             <div class="col-12 col-md-4">
                 <span class="label-top">regime fiscale</span>
@@ -79,12 +79,12 @@
         <div class="form-group form-row">
             <div class="col-12 col-md-6">
                 <span class="label-top">cod. destinatario SDI</span>
-                {{ frm.input( table, '', '', 'codice_sdi', 'codice destinatario SDI', '', request ) }}
+                {{ frm.input( table, '', '', 'codice_sdi', '', '', request ) }}
                 </div>
             
             <div class="col-12 col-md-6">
                 <span class="label-top">PEC per fatturazione</span>
-                {{ frm.selectRequired( table, 'id_pec_sdi', '', 'nome', '', etc.select.pec, request, '', 1 ) }}
+                {{ frm.select( table, 'id_pec_sdi', '', 'nome', '', etc.select.pec, request ) }}
             </div>
         </div>
 

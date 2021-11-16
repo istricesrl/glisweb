@@ -1,0 +1,395 @@
+/**
+ * INDICE
+ * - stili di base
+ * - stili dei titoli
+ * - stili dei link
+ * - stili delle view
+ * - stili dei form
+ * - stili dei bottoni
+ * - stili dell'header
+ * - stili del nav
+ * - stili delle tab
+ * - stili della sidebar
+ * - stili delle breadcrumb
+ * - stili del main
+ * - stili del footer
+ * - stili delle timeline
+ * - stili del file browser
+ * - stili dell'interfaccia metro
+ * - stili dell'agenda
+ * - stili della struttura anagrafica
+ * - stili della tabella di descrizione formato importazione
+ */
+
+/* stili di base */
+
+body {
+    background-color: #ffffff;
+}
+
+/* stili dei titoli */
+
+h1, h2, h3 {
+}
+
+h1 {
+}
+
+h2, h3 {
+}
+
+/* stili dei link */
+
+a,
+a:visited,
+a:hover,
+a:active {
+    color: #1e0041;
+}
+
+/* stili delle view */
+
+.view-table th {
+    border-bottom: 1px solid #cccccc;
+}
+
+.view-table.clickable tbody tr:hover {
+    background-color: #eeeeee;
+}
+
+.view-table tbody tr {
+    border-bottom: 1px solid #eeeeee;
+}
+
+.view-table tbody tr:last-child {
+    border-bottom: 1px solid #cccccc;
+}
+
+.view-table.line-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.view-table thead tr th select:hover {
+    background-color: #eeeeee;
+}
+
+/* stili dei form */
+.linea{
+    border-bottom: 5px solid #222f64 !important;
+}
+
+.label-top {
+    color: #777777;
+}
+
+legend {
+    border-bottom: 1px solid #dddddd;
+}
+
+legend small {
+    color: #999999;
+}
+
+fieldset.form-controls,
+fieldset.form-controls-free {
+    border-top: 1px solid #dddddd;
+}
+
+.bootstrap-select.form-control-sm .dropdown-toggle {
+    color: #495057;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+}
+
+fieldset.interlinee > div:not(:first-of-type) {
+    border-top: 1px solid #dddddd;
+}
+
+fieldset.static-history > .form-row > div:first-child {
+    border-right: 1px solid #dddddd;
+}
+
+/* stili dei bottoni */
+
+.btn{
+    background-color: #222f64;
+    color: #dddddd !important;
+}
+
+.btn-secondary{
+    color: #eeeeee !important;
+    background-color: #1a639a!important; 
+}
+
+.btn-secondary:hover{
+    background-color: #222f64 !important; 
+}
+
+.btn:hover{
+    color: #222f64 !important;
+    background-color: #e1e9ffdc !important;
+}
+
+/* stili dell'header */
+
+header {
+    /*background-color: #32035e;*/
+    background-color:#1a639a;
+}
+
+header a {
+    color:#ffffff;    
+}
+
+header a:visited {
+    color: #ffffff;
+}
+
+header a:hover,
+header a:active {
+    color: white;
+    text-decoration: underline;
+}
+
+header.subform-intestazione {
+    background-color: transparent;
+    border-bottom: 1px solid #dddddd;
+}
+
+#info {
+    background-color: #083d6ef6;
+    color: #ffffff;
+}
+
+#info a,
+#info a:visited,
+#info a:hover,
+#info a:active {
+    color: #ffffff;
+}
+
+/* stili del nav */
+a.nav-link {
+    /*border-right: 2px solid #222f64;*/
+}
+nav {
+    /* background-color: #9dc30c; */
+    background-color: transparent !important;
+    /*background-image: url(../../img/logo.png);*/
+    /*background-image: url(../../img/logo-vico.png);*/
+    background-image: url(../img/logo.png);
+    background-position: bottom center;
+    background-position-x: center;
+    background-position-y: 90%;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    padding-top: 45px;
+    width: 100%;
+}
+
+nav li.nav-item > a.nav-link{
+    color: white !important;
+    font-weight: bold;
+    transition: background-color 100ms linear;
+}
+
+nav li.nav-item > a.nav-link:hover {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    transition: background-color 100ms linear;
+}
+
+nav li.nav-item.current > a.nav-link {
+    background-color: white;
+    text-decoration: underline;
+    color:#222f64 !important;
+}
+
+nav li.nav-item > a.nav-link:hover {
+    background-color: #1a639a;
+    color: #ffffff !important;
+    text-decoration: underline;
+    transition: background-color 100ms linear;
+    
+}
+nav li.nav-item.active > a.nav-link,
+nav li.nav-item > a.nav-link:active{
+    background-color: #1a639a;
+    color: #ffffff !important;
+    text-decoration: underline;
+    transition: background-color 100ms linear;
+    
+}
+/*nav li.nav-item.active > a.nav-link,
+nav li.nav-item > a.nav-link:hover 
+nav li.nav-item > a.nav-link:active{
+    background-color: #ffffff;
+    color: #222f64 !important;
+    text-decoration: underline;
+    transition: background-color 100ms linear;
+}
+*/
+nav li.nav-item ul li.nav-item a.nav-link:hover{ 
+   background-color: #ffffff;
+    color: black !important;
+    text-decoration: underline;
+    transition: background-color 100ms linear;
+}
+
+nav li.nav-item ul li.nav-item a.nav-link{ 
+   background-color: #ffffff;
+    color: black !important;
+    transition: background-color 100ms linear;
+}
+
+nav ul ul {
+    background-color: #ffffff;
+}
+
+nav ul ul ul {
+    background-color: #ffffff;
+}
+
+/* stili delle tab */
+
+.nav-tabs {
+    border-bottom: 1px solid #dddddd;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    border-color: #dddddd #dddddd #ffffff;
+}
+
+ul.nav-tabs li.nav-item > a.nav-link,
+ul.nav-tabs li.nav-item > a.nav-link:visited {
+    color: #333333;
+}
+
+ul.nav-tabs li.nav-item.active > a.nav-link,
+ul.nav-tabs li.nav-item > a.nav-link:hover,
+ul.nav-tabs li.nav-item > a.nav-link:active {
+    color: #333333;
+}
+
+/* stili della sidebar */
+/*
+.sidebar {
+    background: linear-gradient(20deg, #210644 30%, #3f0699 0%);
+}
+*/
+.sidebar {
+    background-color: #222f64 ;
+}
+
+/* stili delle breadcrumb */
+.breadcrumb-item,
+.breadcrumb {
+    color: #f4f1fa !important;
+}
+
+.breadcrumb > .active,
+.breadcrumb > .active li
+ {
+    color: #f4f1fa;
+}
+
+.breadcrumb .breadcrumb-link {
+    display: inline;
+    color: rgb(120, 170, 236);
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    display: inline-block;
+    padding-right: .5rem;
+    color: #f4f1fa !important;
+    content: "/";
+}
+
+/* stili del main */
+
+/* stili del footer */
+
+/* stili delle timeline */
+
+.timeline {
+    background: linear-gradient( 0deg, transparent 48%, #cccccc 49%, transparent 51% );
+}
+
+.timeline > div {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+}
+
+/* stili del file browser */
+
+.browse:hover {
+    background-color: #cccccc;
+}
+
+.browse-dir {
+    background-color: #dddddd;
+}
+
+.browse-file {
+    background-color: #eeeeee;
+}
+
+/* stili dell'interfaccia metro */
+
+.metro h3 {
+    border-bottom: 1px solid #dddddd;
+}
+
+.metro a,
+.metro a:visited,
+.metro a:hover,
+.metro a:active {
+    color: #333333;
+}
+
+.metro a:hover .media,
+.metro a:active .media {
+    background-color: #c4daee;
+}
+
+.metro .media {
+    border: 1px solid #dddddd;
+}
+
+.metro .valore .media-body {
+    background-color: #eeeeee;
+}
+
+/* stili dell'agenda */
+
+.agenda-row:hover {
+    background-color: #eeeeee;
+}
+
+.agenda-row .metro a:hover .media {
+    background-color: #dddddd;
+}
+
+/* stili della struttura anagrafica */
+
+.browsing-tree .current > a, div.current_details {
+    background-color: #eeeeee;
+}
+
+/* stile tabella descrizione formato di importazione */
+
+.import-schema table.table th {
+    background-color: #dddddd;
+}
+
+.import-schema table.table th,
+.import-schema table.table td {
+    border-right: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+}
+
+
+.form-control:focus {
+    border-color: #cccccc;
+    box-shadow: inset 0 0px 0px rgba(34, 97, 190, 0.589), 0 0 8px rgba(156, 188, 224, 0.877) !important;
+    }

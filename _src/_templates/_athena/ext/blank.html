@@ -1,3 +1,5 @@
+{% import '_bin/_navigation.html' as nav %}
+
 <!DOCTYPE html>
 <html lang="{{ localization.language.ietf }}">
 
@@ -11,12 +13,28 @@
 
         {% include '_inc/_page.open.html' %}
 
+        {% if pages[ page.id ].etc.sheets %}
         <header class="fixed-top">
-            {% block header %}{% endblock %}
+            
+            <div class="row widget no-gutters linea" style=" border-bottom: 5px solid #343A40;">
+                
+                {% block header %}
+                
+                {% endblock %}
+
+                {{ nav.sheets( page, pages, localization.language.ietf, etc, form, request ) }}
+            </div>
+
+                {% block line %}
+
+                {% endblock %}
         </header>
+        {% endif %}
 
         <main class="d-flex flex-column container-fluid w-100 vh-100">
+            
             {% block main %}{% endblock %}
+
         </main>
 
         {% include '_inc/_page.close.html' %}

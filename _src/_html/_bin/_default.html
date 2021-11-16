@@ -44,12 +44,12 @@
 {% endmacro %}
 
 {% macro video( page, lang, site, role, num ) %}
-{% if page.contents.video[ role ][ num ].id_tipologia_embed == 3 %}
+{% if page.contents.video[ role ][ num ].id_embed == 3 %}
 {% if not page.contents.video[ role ][ num ].ratio %}{% set rt = '16by9' %}{% else %}{% set rt = page.contents.video[ role ][ num ].ratio %}{% endif %}
 <div class="embed-responsive embed-responsive-{{ rt }}">
     <iframe class="embed-responsive-item lazyload" data-src="https://www.youtube.com/embed/{{ page.contents.video[ role ][ num ].codice_embed }}?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
 </div>
-{% elseif page.contents.video[ role ][ num ].id_tipologia_embed == 2 %}
+{% elseif page.contents.video[ role ][ num ].id_embed == 2 %}
 VIMEO
 {% else %}
 <video controls width="100%">
@@ -208,9 +208,9 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	    <div class="row">
 			<div class="col">
 				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-				{% if page.metadati.jt_h1[ lang ] %}<h2>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
 				{% if page.metadati.jt_h1_href %}</a>{% endif %}
-				{% if page.metadati.jt_h2[ lang ] %}<h1>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
 			</div>
 	    </div>
 	    {% if page.metadati.jt_content[ lang ] %}
@@ -226,6 +226,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	    </div>
 	    {% endif %}
     </div>
+</div>
 </div>
 {% endif %}
 {% endmacro %}
@@ -248,7 +249,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	    {% if img.metadati.link %}<a href="{{ img.metadati.link[ lang ] }}"{% if img.metadati.target %} target="{{ img.metadati.target }}"{% endif %}>{% endif %}
 	    {{ cms.picture( img, lang, site, set ) }}
 	    {% if img.h1 or img.h2 or img.cappello %}
-	    <div class="{% if img.metadati.captionClasses %}{{ img.metadati.captionClasses }}{% else %}carousel-caption{% endif %}">
+	    <div class="{% if img.metadati.captionClasses[ lang ] %}{{ img.metadati.captionClasses[ lang ] }}{% else %}carousel-caption{% endif %}">
 		{% if img.h1 %}<h1>{{ img.h1[ lang ]|raw }}</h1>{% endif %}
 		{% if img.h2 %}<h2>{{ img.h2[ lang ]|raw }}</h2>{% endif %}
 		{% if img.cappello %}<p>{{ img.cappello[ lang ]|raw }}</p>{% endif %}

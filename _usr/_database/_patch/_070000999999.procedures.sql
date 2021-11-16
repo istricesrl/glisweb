@@ -66,17 +66,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				categorie_anagrafica.id_genitore,
-				categorie_anagrafica.nome,
-				count( categorie_anagrafica.id )
+				categorie_anagrafica.nome
 			FROM categorie_anagrafica
 			WHERE categorie_anagrafica.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -207,17 +205,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				categorie_notizie.id_genitore,
-				categorie_notizie.nome,
-				count( categorie_notizie.id )
+				categorie_notizie.nome
 			FROM categorie_notizie
 			WHERE categorie_notizie.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -348,17 +344,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				categorie_prodotti.id_genitore,
-				categorie_prodotti.nome,
-				count( categorie_prodotti.id )
+				categorie_prodotti.nome
 			FROM categorie_prodotti
 			WHERE categorie_prodotti.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -489,17 +483,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				categorie_progetti.id_genitore,
-				categorie_progetti.nome,
-				count( categorie_progetti.id )
+				categorie_progetti.nome
 			FROM categorie_progetti
 			WHERE categorie_progetti.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -630,17 +622,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				categorie_risorse.id_genitore,
-				categorie_risorse.nome,
-				count( categorie_risorse.id )
+				categorie_risorse.nome
 			FROM categorie_risorse
 			WHERE categorie_risorse.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -771,17 +761,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				colori.id_genitore,
-				colori.nome,
-				count( colori.id )
+				colori.nome
 			FROM colori
 			WHERE colori.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -912,17 +900,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				gruppi.id_genitore,
-				gruppi.nome,
-				count( gruppi.id )
+				gruppi.nome
 			FROM gruppi
 			WHERE gruppi.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -1053,17 +1039,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				luoghi.id_genitore,
-				luoghi.nome,
-				count( luoghi.id )
+				luoghi.nome
 			FROM luoghi
 			WHERE luoghi.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -1194,17 +1178,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				mastri.id_genitore,
-				mastri.nome,
-				count( mastri.id )
+				mastri.nome
 			FROM mastri
 			WHERE mastri.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -1335,7 +1317,6 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
@@ -1345,12 +1326,11 @@ CREATE
 					anagrafica.soprannome,
 					anagrafica.denominazione,
 					concat( anagrafica.cognome, ' ', anagrafica.nome ),
-					'' ),
-				count( organizzazioni.id )
+					'' )
 			FROM organizzazioni
 			LEFT JOIN anagrafica ON anagrafica.id = organizzazioni.id_anagrafica
 			WHERE organizzazioni.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -1481,17 +1461,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				pagine.id_genitore,
-				pagine.nome,
-				count( pagine.id )
+				pagine.nome
 			FROM pagine
 			WHERE pagine.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -1622,17 +1600,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				ruoli_anagrafica.id_genitore,
-				ruoli_anagrafica.nome,
-				count( ruoli_anagrafica.id )
+				ruoli_anagrafica.nome
 			FROM ruoli_anagrafica
 			WHERE ruoli_anagrafica.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -1763,17 +1739,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				ruoli_audio.id_genitore,
-				ruoli_audio.nome,
-				count( ruoli_audio.id )
+				ruoli_audio.nome
 			FROM ruoli_audio
 			WHERE ruoli_audio.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -1904,17 +1878,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				ruoli_file.id_genitore,
-				ruoli_file.nome,
-				count( ruoli_file.id )
+				ruoli_file.nome
 			FROM ruoli_file
 			WHERE ruoli_file.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -2045,17 +2017,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				ruoli_immagini.id_genitore,
-				ruoli_immagini.nome,
-				count( ruoli_immagini.id )
+				ruoli_immagini.nome
 			FROM ruoli_immagini
 			WHERE ruoli_immagini.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -2186,17 +2156,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				ruoli_indirizzi.id_genitore,
-				ruoli_indirizzi.nome,
-				count( ruoli_indirizzi.id )
+				ruoli_indirizzi.nome
 			FROM ruoli_indirizzi
 			WHERE ruoli_indirizzi.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -2327,17 +2295,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				ruoli_prodotti.id_genitore,
-				ruoli_prodotti.nome,
-				count( ruoli_prodotti.id )
+				ruoli_prodotti.nome
 			FROM ruoli_prodotti
 			WHERE ruoli_prodotti.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -2468,17 +2434,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				ruoli_video.id_genitore,
-				ruoli_video.nome,
-				count( ruoli_video.id )
+				ruoli_video.nome
 			FROM ruoli_video
 			WHERE ruoli_video.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -2609,17 +2573,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				settori.id_genitore,
-				concat( settori.ateco, ' ', settori.nome ),
-				count( settori.id )
+				concat( settori.ateco, ' ', settori.nome )
 			FROM settori
 			WHERE settori.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -2891,17 +2853,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_anagrafica.id_genitore,
-				tipologie_anagrafica.nome,
-				count( tipologie_anagrafica.id )
+				tipologie_anagrafica.nome
 			FROM tipologie_anagrafica
 			WHERE tipologie_anagrafica.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -3032,17 +2992,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_attivita.id_genitore,
-				tipologie_attivita.nome,
-				count( tipologie_attivita.id )
+				tipologie_attivita.nome
 			FROM tipologie_attivita
 			WHERE tipologie_attivita.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -3314,17 +3272,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_contatti.id_genitore,
-				tipologie_contatti.nome,
-				count( tipologie_contatti.id )
+				tipologie_contatti.nome
 			FROM tipologie_contatti
 			WHERE tipologie_contatti.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -3455,17 +3411,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_documenti.id_genitore,
-				tipologie_documenti.nome,
-				count( tipologie_documenti.id )
+				tipologie_documenti.nome
 			FROM tipologie_documenti
 			WHERE tipologie_documenti.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -3596,17 +3550,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_indirizzi.id_genitore,
-				tipologie_indirizzi.nome,
-				count( tipologie_indirizzi.id )
+				tipologie_indirizzi.nome
 			FROM tipologie_indirizzi
 			WHERE tipologie_indirizzi.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -3878,17 +3830,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_mastri.id_genitore,
-				tipologie_mastri.nome,
-				count( tipologie_mastri.id )
+				tipologie_mastri.nome
 			FROM tipologie_mastri
 			WHERE tipologie_mastri.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -4019,17 +3969,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_notizie.id_genitore,
-				tipologie_notizie.nome,
-				count( tipologie_notizie.id )
+				tipologie_notizie.nome
 			FROM tipologie_notizie
 			WHERE tipologie_notizie.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -4301,17 +4249,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_popup.id_genitore,
-				tipologie_popup.nome,
-				count( tipologie_popup.id )
+				tipologie_popup.nome
 			FROM tipologie_popup
 			WHERE tipologie_popup.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -4442,17 +4388,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_prodotti.id_genitore,
-				tipologie_prodotti.nome,
-				count( tipologie_prodotti.id )
+				tipologie_prodotti.nome
 			FROM tipologie_prodotti
 			WHERE tipologie_prodotti.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -4583,17 +4527,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_progetti.id_genitore,
-				tipologie_progetti.nome,
-				count( tipologie_progetti.id )
+				tipologie_progetti.nome
 			FROM tipologie_progetti
 			WHERE tipologie_progetti.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -4724,17 +4666,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_pubblicazioni.id_genitore,
-				tipologie_pubblicazioni.nome,
-				count( tipologie_pubblicazioni.id )
+				tipologie_pubblicazioni.nome
 			FROM tipologie_pubblicazioni
 			WHERE tipologie_pubblicazioni.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -4865,17 +4805,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_risorse.id_genitore,
-				tipologie_risorse.nome,
-				count( tipologie_risorse.id )
+				tipologie_risorse.nome
 			FROM tipologie_risorse
 			WHERE tipologie_risorse.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -5006,17 +4944,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_telefoni.id_genitore,
-				tipologie_telefoni.nome,
-				count( tipologie_telefoni.id )
+				tipologie_telefoni.nome
 			FROM tipologie_telefoni
 			WHERE tipologie_telefoni.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -5147,17 +5083,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_todo.id_genitore,
-				tipologie_todo.nome,
-				count( tipologie_todo.id )
+				tipologie_todo.nome
 			FROM tipologie_todo
 			WHERE tipologie_todo.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';
@@ -5289,17 +5223,15 @@ CREATE
 		DECLARE path char( 255 ) DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
-		DECLARE righe int( 11 ) DEFAULT 0;
 
 		WHILE ( p1 IS NOT NULL ) DO
 
 			SELECT
 				tipologie_url.id_genitore,
-				tipologie_url.nome,
-				count( tipologie_url.id )
+				tipologie_url.nome
 			FROM tipologie_url
 			WHERE tipologie_url.id = p1
-			INTO p1, step, righe;
+			INTO p1, step;
 
 			IF( p1 IS NULL ) THEN
 				SET separatore = '';

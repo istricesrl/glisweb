@@ -64,12 +64,9 @@
     categorie_anagrafica.se_prospect                       | -
     categorie_anagrafica.se_lead                           | -
     categorie_anagrafica.se_cliente                        | -
-    categorie_anagrafica.se_mandante                       | -
     categorie_anagrafica.se_fornitore                      | -
     categorie_anagrafica.se_produttore                     | -
     categorie_anagrafica.se_collaboratore                  | -
-    categorie_anagrafica.se_dipendente                     | -
-    categorie_anagrafica.se_interinale                     | -
     categorie_anagrafica.se_interno                        | -
     categorie_anagrafica.se_esterno                        | -
     categorie_anagrafica.se_agente                         | -
@@ -77,14 +74,6 @@
     categorie_anagrafica.se_azienda_gestita                | -
     categorie_anagrafica.se_amministrazione                | -
     categorie_anagrafica.se_notizie                        | -
-    categorie_anagrafica.se_docente                        | -
-    categorie_anagrafica.se_tutor                          | -
-    categorie_anagrafica.se_classe                         | -
-    categorie_anagrafica.se_allievo                        | -
-    categorie_anagrafica.se_agenzia_interinale             | -
-    categorie_anagrafica.se_referente                      | -
-    categorie_anagrafica.se_sostituto                      | -
-    categorie_anagrafica.se_squadra                        | -
     categorie_anagrafica.id_account_inserimento            | l'ID dell'account che ha inserito la riga
     categorie_anagrafica.timestamp_inserimento             | la timestamp dell'inserimento della riga
     categorie_anagrafica.id_account_aggiornamento          | l'ID dell'ultimo account che ha modificato la riga
@@ -117,12 +106,9 @@
     categorie_anagrafica_view.se_prospect                   | -
     categorie_anagrafica_view.se_lead                       | -
     categorie_anagrafica_view.se_cliente                    | -
-    categorie_anagrafica_view.se_mandante                   | -
     categorie_anagrafica_view.se_fornitore                  | -
     categorie_anagrafica_view.se_produttore                 | -
     categorie_anagrafica_view.se_collaboratore              | -
-    categorie_anagrafica_view.se_dipendente                 | -
-    categorie_anagrafica_view.se_interinale                 | -
     categorie_anagrafica_view.se_interno                    | -
     categorie_anagrafica_view.se_esterno                    | -
     categorie_anagrafica_view.se_agente                     | -
@@ -130,14 +116,6 @@
     categorie_anagrafica_view.se_azienda_gestita            | -
     categorie_anagrafica_view.se_amministrazione            | -
     categorie_anagrafica_view.se_notizie                    | -
-    categorie_anagrafica_view.se_docente                    | -
-    categorie_anagrafica_view.se_tutor                      | -
-    categorie_anagrafica_view.se_classe                     | -
-    categorie_anagrafica_view.se_allievo                    | -
-    categorie_anagrafica_view.se_agenzia_interinale         | -
-    categorie_anagrafica_view.se_referente                  | -
-    categorie_anagrafica_view.se_sostituto                  | -
-    categorie_anagrafica_view.se_squadra                    | -
     categorie_anagrafica_view.figli                         | il numero di categorie figlie di questa categoria
     categorie_anagrafica_view.membri                        | il numero di anagrafiche collegate a questa categoria
     categorie_anagrafica_view.id_account_inserimento        | -
@@ -246,8 +224,6 @@
     categorie_progetti.id_genitore                  | l'ID della categoria genitore
     categorie_progetti.ordine                       | campo di ordinamento
     categorie_progetti.nome                         | il nome della categoria
-    categorie_progetti.se_ordinario                 | flag che indica se i progetti di questa categoria sono ordinari
-    categorie_progetti.se_straordinario             | flag che indica se i progetti di questa categoria sono straordinari
     categorie_progetti.id_account_inserimento       | l'ID dell'account che ha inserito la riga
     categorie_progetti.timestamp_inserimento        | la timestamp dell'inserimento della riga
     categorie_progetti.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
@@ -269,8 +245,6 @@
     categorie_progetti_view.id_genitore                     | -
     categorie_progetti_view.ordine                          | -
     categorie_progetti_view.nome                            | -
-    categorie_progetti_view.se_ordinario                    | -
-    categorie_progetti_view.se_straordinario                | -
     categorie_progetti_view.figli                           | il numero di categorie figlie di questa categoria
     categorie_progetti_view.membri                          | il numero di eventi collegati a questa categoria
     categorie_progetti_view.id_account_inserimento          | -

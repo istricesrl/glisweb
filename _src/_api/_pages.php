@@ -81,6 +81,7 @@
 	require '../_config.php';
 
     // debug
+	// die('inizio api pages');
 	// ini_set( 'display_errors', 1 );
 	// ini_set( 'display_startup_errors', 1 );
 	// error_reporting( E_ALL );
@@ -104,10 +105,16 @@
 
     // includo il file di configurazione del template
 	if( file_exists( $ct['page']['template']['ini'] ) ) {
+		// sostituisco il file di configurazione del template con la controparte custom se presente
+		if( file_exists( path2custom( $ct['page']['template']['ini'] ) ) ) {
+			$ct['page']['template']['ini'] = path2custom( $ct['page']['template']['ini'] );
+		}
+		// unisco le direttive di configurazione del file a quelle già esistenti
 	    $ct['page'] = array_merge_recursive(
 			$ct['page'],
 			parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
 	    );
+		// includo i file di configurazione aggiuntivi del template
 		foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
 			$ct['page'] = array_merge_recursive(
 				$ct['page'],
@@ -615,11 +622,11 @@
     // log
 	if( $flt > 0.75 || memory_get_usage( true ) > ( 1024 * 1024 * 15 ) ) {
 	    writeToFile(
-		$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
-		'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
-		print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
-		'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
-		' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
-		DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
+			$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
+			'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
+			print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
+			'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
+			' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
+			DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
 	    );
 	}

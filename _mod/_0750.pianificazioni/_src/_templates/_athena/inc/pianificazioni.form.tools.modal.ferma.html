@@ -9,9 +9,9 @@
         var form = $( t ).closest('.modal');
         var id = form.find('#pianificazioni_id').val();
         var data = form.find('#pianificazioni_data_inizio_pulizia').val();
-	//    window.open( '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.stop.php?id='+id+'&data_inizio_pulizia='+data, '_self');	
-	
-		var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.stop.php?id='+id+'&data_inizio_pulizia='+data;
+
+		//var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.stop.php?id='+id+'&data_inizio_pulizia='+data;
+		var call = '{{ site.url }}_mod/_0750.pianificazioni/_src/_api/_task/_pianificazioni.populate.flag.php?id='+id+'&data_inizio_pulizia='+data+'&ferma=1';
 		getws( call,'', function() {
 			$('#ferma').modal('toggle');
 		});

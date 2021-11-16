@@ -1,8 +1,9 @@
 <?php
 
     /**
-     * task che gira, preleva le righe di periodi_variazioni_attivita per le variazioni approvate
-     * e crea le attività sostitutive (ferie, permessi, ...) corrispondenti
+     * task che gira, preleva le righe di periodi_variazioni_attivita per le variazioni approvate che hanno timestamp_creazione_cartellino NULL e
+     * - crea le attività sostitutive per il cartellino (ferie, permessi, ...) corrispondenti
+     * - setta timestamp_creazione_cartellino (la riga non dovrà più essere controllata)
      *
      *
      * @todo commentare
@@ -23,8 +24,8 @@
         $cf['mysql']['connection'],
         'SELECT pv.*, v.id_anagrafica, v.id_tipologia_inps FROM periodi_variazioni_attivita as pv '
         .'LEFT JOIN variazioni_attivita AS v ON pv.id_variazione = v.id '
-        .'WHERE v.data_approvazione IS NOT NULL AND pv.timestamp_elaborazione IS NULL '
-        .'ORDER BY pv.timestamp_elaborazione LIMIT 1'
+        .'WHERE v.data_approvazione IS NOT NULL AND pv.timestamp_creazione_cartellino IS NULL '
+        .'ORDER BY pv.timestamp_creazione_cartellino LIMIT 1'
     );
 
     // se ho una riga da elaborare
@@ -71,6 +72,7 @@
         }
 
         if( !empty( $giornate ) ){
+           
             foreach( $giornate as $g ){
                 
                 $ore = oreGiornaliereContratto( $p['id_anagrafica'], $g['data'], $g['ora_inizio'], $g['ora_fine'] );
@@ -94,12 +96,23 @@
                 
                 }
             }
+
+             // inserisco una richiesta di ripopolamento delle statiche
+             mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                array(
+                    array( 's' => 'attivita' ),
+                    array( 's' => '_mod/_1140.variazioni/_src/_api/_task/_variazioni.attivita.create.php'),
+                    array( 's' => time() )
+                )
+            );
         }
 
         // setto la riga come elaborata
         $u = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE periodi_variazioni_attivita SET timestamp_elaborazione = ? WHERE id = ?',
+            'UPDATE periodi_variazioni_attivita SET timestamp_creazione_cartellino = ? WHERE id = ?',
             array(
                 array( 's' => time() ),
                 array( 's' => $p['id'] )

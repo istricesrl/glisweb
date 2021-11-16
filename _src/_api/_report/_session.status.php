@@ -26,7 +26,8 @@
         // print_r( get_included_files() );
 
     // stampo i dati di validità della sessione corrente
-        echo json_encode(
+#        echo json_encode(
+        buildJson(
             array(
                 'used' => $_SESSION['used'],
                 'lifetime' => SESSION_LIMIT,

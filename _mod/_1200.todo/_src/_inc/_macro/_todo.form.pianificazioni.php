@@ -49,6 +49,7 @@
 
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+
     /*    $ct['etc']['data'] = mysqlSelectValue( 
             $cf['mysql']['connection'], 
             "SELECT from_unixtime(timestamp_pianificazione, '%Y-%m-%d') FROM todo WHERE id = ?",
@@ -56,20 +57,24 @@
         );
     */
 
-        // cerco la pianificazione figlia di questa todo, se esiste
-        $pianificazione = mysqlSelectRow( 
-            $cf['mysql']['connection'], 
-            'SELECT * FROM pianificazioni WHERE id_todo = ?',
-            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
-        );
-
-
+    // cerco la todo genitore
+        if( !empty($_REQUEST[ $ct['form']['table'] ]['id_pianificazione'] ) ){
+            $ct['etc']['id_genitore'] = mysqlSelectValue( 
+                $cf['mysql']['connection'], 
+                'SELECT id_todo FROM pianificazioni WHERE id = ?',
+                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_pianificazione'] ) )
+            );
+        }
+        
         // array per il workspace della pianificazione
         $wks = array(
             'metadati' => array(
                 'pause' => array(
                     'tabella' => 'pause_progetti',
-                    'campo' => 'id_progetto'
+                    'campo' => 'id_progetto',
+                    'strategia' => array(
+                        'duplica' => false
+                    )
                 )
             ),
             'sostituzioni' => array(
@@ -78,9 +83,10 @@
                     'id_pianificazione' => '§id_pianificazione§'
                 ),
                 'attivita' => array(
+                    'data_programmazione' => '§data§',
                     'data_attivita' => '§data§'
                 )
-            )
+          )
         );
 
         $ct['etc']['wks'] = json_encode( $wks, JSON_UNESCAPED_UNICODE );
@@ -111,6 +117,15 @@
 	    'text' => 'modifica la pianificazione'
 	);
 
+    // modal per accedere all'oggetto genitore
+    $ct['page']['contents']['metro']['pianificazione'][] = array(
+	    'modal' => array('id' => 'genitore', 'include' => 'inc/todo.form.pianificazioni.modal.genitore.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-pencil',
+	    'title' => 'modifica genitore',
+	    'text' => 'accede all\'oggetto genitore'
+	);
+
     // modal per fermare la pianificazione originaria
     $ct['page']['contents']['metro']['pianificazione'][] = array(
         'modal' => array('id' => 'ferma', 'include' => 'inc/todo.form.pianificazioni.modal.ferma.html' ),
@@ -123,6 +138,11 @@
     // modal per pulire gli oggetti futuri non più conformi
     $ct['page']['contents']['metro'][NULL][] = array(
 	    'modal' => array('id' => 'pulisci', 'include' => 'inc/todo.form.pianificazioni.modal.pulisci.html' )
+	);
+
+    // modal per ricreare gli oggetti futuri e crearli di nuovo
+    $ct['page']['contents']['metro'][NULL][] = array(
+	    'modal' => array('id' => 'ripianifica', 'include' => 'inc/todo.form.pianificazioni.modal.ripianifica.html' )
 	);
 
 	// macro di default

@@ -36,4 +36,3 @@
             ['anagrafica.form.fornitore']
         );
     }
-

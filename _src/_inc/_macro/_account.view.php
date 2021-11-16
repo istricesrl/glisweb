@@ -21,7 +21,8 @@
 	    '__label__' => 'account',
 	    'utente' => 'anagrafica',
 	    'se_attivo' => 'attivo',
-	    'gruppi' 	=> 'gruppi'
+	    'gruppi' 	=> 'gruppi',
+		'gruppi_attribuzione' => 'attribuzione automatica'
 	);
 
     // stili della vista

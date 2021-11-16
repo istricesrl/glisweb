@@ -14,10 +14,23 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'catalogo.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_catalogo.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'catalogo' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'catalogo' ),
-									'priority'	=> '650' ) )
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'catalogo', 'catalogo.stampe' ) ),
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'catalogo' ),
+									'priority'	=> '650' ) ) )								
+	);
+
+	// gestione anagrafica stampe
+	$p['catalogo.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_catalogo.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['catalogo']['etc']['tabs'] )
 	);
 
 	 // vista categorie prodotti
@@ -30,8 +43,8 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'categorie.prodotti.view') ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'categorie' ),
-									'priority'	=> '010' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'categorie' ),
+									'priority'	=> '010' ) ) )	
 	);
 	
     // gestione categorie prodotti
@@ -141,7 +154,7 @@
 		'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.immagini.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.immagini.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 
@@ -154,7 +167,7 @@
 		'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.video.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.video.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 	
@@ -167,7 +180,7 @@
 		'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.file.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.file.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 
@@ -180,7 +193,7 @@
 		'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.audio.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.audio.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 
@@ -193,7 +206,7 @@
 		'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.metadati.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.metadati.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array('roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 	
@@ -206,7 +219,7 @@
 		'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.gruppi.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.gruppi.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 
@@ -220,8 +233,8 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_caratteristiche.prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'caratteristiche.prodotti.view') ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'caratteristiche' ),
-									'priority'	=> '022' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'caratteristiche' ),
+									'priority'	=> '022' ) ) )	
 	);
 
 	 // gestione catecaratteristichegorie prodotti

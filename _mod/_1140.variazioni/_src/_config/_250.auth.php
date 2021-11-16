@@ -31,6 +31,9 @@
             'sostituzioni_attivita' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
+            'tipologie_variazioni_attivita' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             'variazioni_attivita' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )

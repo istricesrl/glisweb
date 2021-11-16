@@ -25,20 +25,28 @@
     // dati che dipendono dal template
 	if( isset( $_REQUEST['pagine']['template'] ) ) {
 
-	    // controllo file
+	    // controllo file standard
 		if( file_exists( DIR_BASE . $_REQUEST['pagine']['template'] . '/etc/template.conf' ) ) {
 
 		    // configurazione del template
 			$config = parse_ini_file( DIR_BASE . $_REQUEST['pagine']['template'] . '/etc/template.conf', true, INI_SCANNER_RAW );
-
-		        // tendina menù
-			if( isset( $config['template']['menu'] ) ) {
-			    foreach( array_keys( $config['template']['menu'] ) as $menu ) {
-				    $ct['etc']['select']['menu'][] = array( 'id' => $menu, '__label__' => $menu );
-			    }
-			}
-
 		}
+
+        foreach( glob( DIR_BASE . glob2custom( $_REQUEST['pagine']['template'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
+			$config = array_merge_recursive(
+				$config,
+				parse_ini_file( $addCnf, true, INI_SCANNER_RAW )
+			);
+		}
+
+
+        // tendina menù
+        if( isset( $config['template']['menu'] ) ) {
+            foreach( array_keys( $config['template']['menu'] ) as $menu ) {
+                $ct['etc']['select']['menu'][] = array( 'id' => $menu, '__label__' => $menu );
+            }
+        }
+        
 
 	}
 

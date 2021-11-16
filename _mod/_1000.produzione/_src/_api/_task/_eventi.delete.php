@@ -39,15 +39,27 @@
 
             foreach( $pause as $p ){
 
-            // elimino le todo (e relative attività figlie) con data_programmazione compresa nel range di pausa
-               $t = mysqlQuery(
+                $whr = array();
+				$par = array();
+                
+                $whr[] = 'id_progetto = ?';
+                $par[] = array( 's' => $_REQUEST['id'] );
+
+                $whr[] = 'data_programmazione >= ?';
+                $par[] = array( 's' => $p['data_inizio'] );
+
+                if( !empty( $p['data_fine'] ) ) {
+                    $whr[] = 'data_programmazione <= ?';
+                    $par[] = array( 's' => $p['data_fine'] );
+                }
+
+                $q = 'DELETE FROM todo WHERE ('  . implode( ' AND ', $whr ) . ')';
+
+                // elimino le todo (e relative attività figlie) con data_programmazione compresa nel range di pausa
+                $t = mysqlQuery(
                     $cf['mysql']['connection'],
-                    "DELETE FROM todo WHERE id_progetto = ? AND (data_programmazione BETWEEN ? AND ?)",
-                    array(
-                        array( 's' => $_REQUEST['id'] ),
-                        array( 's' => $p['data_inizio'] ),
-                        array( 's' => $p['data_fine'] )
-                    )
+                    $q,
+                    $par
                 );
 
                 $status['todo'][] = 'eliminate ' . $t . ' todo per la pausa ' . $p['id'];
@@ -58,7 +70,28 @@
                 // TODO potrebbe verificarsi il caso in cui un'attività è figlia di una todo e le date di programmazione
                 // sono tali per cui la todo rientra nel range da eliminare ma l'attività no?
 
-            }           
+            }     
+            
+           // inserisco una richiesta di ripopolamento per attivita_view_static e todo_view_static
+           mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                array(
+                    array( 's' => 'attivita' ),
+                    array( 's' => '_mod/_1000.produzione/_src/_api/_task/_eventi.delete.php'),
+                    array( 's' => time() )
+                )
+            );
+
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
+                array(
+                    array( 's' => 'todo' ),
+                    array( 's' => '_mod/_1000.produzione/_src/_api/_task/_eventi.delete.php'),
+                    array( 's' => time() )
+                )
+            );
            
         }
        

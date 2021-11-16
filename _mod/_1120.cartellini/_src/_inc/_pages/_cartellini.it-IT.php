@@ -6,7 +6,10 @@
     // modulo di questo file
 	$m = DIR_MOD . '_1120.cartellini/';
 
-    // vista cartellini
+    // tools attività
+	$p['attivita.tools']['macro'][]		= $m . '_src/_inc/_macro/_attivita.tools.php';
+
+	// vista cartellini
 	$p['cartellini'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cartellini' ),

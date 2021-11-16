@@ -7,6 +7,7 @@
      * - id_attivita: id dell'attività
      * 
      * crea una riga nella tabella sostituzioni_attivita per l'anagrafica e l'attività corrente settando data_scarto
+     * setta a 0 il punteggio di quell'anagrafica nella tabella __report_sostituzioni_attivita__ in modo che non venga riproposta
      * 
      *
      *
@@ -41,6 +42,16 @@
                 array( 's' => $_REQUEST['id_attivita'] ),
                 array( 's' => $_REQUEST['id_anagrafica'] ),
                 array( 's' => date('Y-m-d') )
+            )
+        );
+
+        // setto a 1 la colonna se_scartato nella tabella __report_sostituzioni_attivita__ così non me la propone più
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE __report_sostituzioni_attivita__ SET se_scartato = 1 WHERE id_attivita = ? AND id_anagrafica = ?',
+            array(
+                array( 's' => $_REQUEST['id_attivita'] ),
+                array( 's' => $_REQUEST['id_anagrafica'] )
             )
         );
 
