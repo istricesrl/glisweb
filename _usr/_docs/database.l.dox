@@ -67,6 +67,7 @@
     licenze_view.timestamp_inserimento       | -
     licenze_view.id_account_aggiornamento    | -
     licenze_view.timestamp_aggiornamento     | -
+    licenze_view.__label__                   | l'etichetta descrittiva della licenza
 
     lingue
     ------
