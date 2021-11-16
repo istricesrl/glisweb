@@ -443,6 +443,24 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000004800
+
+-- chiavi
+-- tipologia: tabella gestita
+-- verifica: 2021-11-15 12:04 Chiara GDL
+CREATE TABLE IF NOT EXISTS `chiavi` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_licenza` int(11) DEFAULT NULL,
+  `codice` char(32) COLLATE utf8_general_ci DEFAULT NULL,
+  `seriale` char(32) COLLATE utf8_general_ci DEFAULT NULL,
+  `nome` char(32) COLLATE utf8_general_ci NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000005100
 
 -- colori
@@ -886,6 +904,32 @@ CREATE TABLE IF NOT EXISTS `job` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000016600
+
+-- licenze
+-- tipologia: tabella standard
+-- verifica: 2021-11-15 12:41 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `licenze` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_rivenditore` int(11) DEFAULT NULL,
+  `codice` char(254) DEFAULT NULL,
+  `postazioni` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `note` char(254) DEFAULT NULL,
+  `testo` text,
+  `giorni_validita` int(11) DEFAULT NULL,
+  `giorni_rinnovo` int(11) DEFAULT NULL,
+  `timestamp_distribuzione` int(11) DEFAULT NULL,
+  `timestamp_inizio` int(11) DEFAULT NULL,
+  `timestamp_fine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000016800
 
 -- lingue
@@ -1184,6 +1228,31 @@ CREATE TABLE IF NOT EXISTS `organizzazioni` (
   `ordine` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000023100
+
+-- pagamenti
+-- tipologia: tabella gestita
+-- verifica: 2021-11-12 16:00 Chiara GDL
+CREATE TABLE IF NOT EXISTS `pagamenti` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `id_iban` int(11) DEFAULT NULL,
+  `importo_netto_totale` decimal(9,2) NOT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `timestamp_pagamento` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1804,6 +1873,24 @@ CREATE TABLE IF NOT EXISTS `sms_sent` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000041400
+
+-- software
+-- tipologia: tabella gestita
+-- verifica: 2021-11-16 10:39 Chiara GDL
+CREATE TABLE IF NOT EXISTS `software` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `json` text DEFAULT NULL, 
+  `nome` char(128) DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000042000
 
 -- stati
@@ -1948,6 +2035,24 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000050600
+
+-- tipologie_chiavi
+-- tipologia: tabella gestita
+-- verifica: 2021-11-15 11:00 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_chiavi` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000050800
 
 -- tipologie_contatti
@@ -2012,6 +2117,24 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000053200
+
+-- tipologie_licenze
+-- tipologia: tabella gestita
+-- verifica: 2021-11-15 11:00 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000053400
 
 -- tipologie_mastri
@@ -2040,6 +2163,24 @@ CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000054000
+
+-- tipologie_pagamenti
+-- tipologia: tabella gestita
+-- verifica: 2021-11-15 11:00 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,

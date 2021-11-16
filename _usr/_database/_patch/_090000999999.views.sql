@@ -808,6 +808,35 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 	GROUP BY categorie_risorse.id
 ;
 
+--| 090000004800
+
+-- chiavi_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `chiavi_view`;
+
+--| 090000004801
+
+-- chiavi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-11-15 12:29 Chiara GDL
+CREATE OR REPLACE VIEW chiavi_view AS
+	SELECT
+		chiavi.id,
+		chiavi.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		chiavi.id_licenza,
+		licenze.nome AS licenza,
+		chiavi.codice,
+		chiavi.seriale,
+		chiavi.nome,
+		chiavi.id_account_inserimento,
+		chiavi.id_account_aggiornamento,
+		chiavi.nome AS __label__
+	FROM chiavi
+		LEFT JOIN licenze ON licenze.id = chiavi.id_licenza
+		LEFT JOIN anagrafica ON anagrafica.id = chiavi.id_anagrafica
+;
+
 --| 090000005100
 
 -- colori_view
@@ -1549,6 +1578,45 @@ CREATE OR REPLACE VIEW job_view AS
 	FROM job
 ;
 
+--| 090000016600
+
+-- licenze_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `licenze_view`;
+
+--| 090000016601
+
+-- licenze_view
+-- tipologia: tabella gestita
+-- verifica: 2021-11-15 12:44 Chiara GDL
+CREATE OR REPLACE VIEW licenze_view AS
+	SELECT
+		licenze.id,                         
+    	licenze.id_tipologia,                
+		tipologie_licenze.nome AS tipologia,               
+		licenze.id_anagrafica,               
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,               
+		licenze.id_rivenditore,              
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS rivenditore,                 
+		licenze.codice,                      
+		licenze.postazioni,                  
+		licenze.nome,                        
+		licenze.note,                        
+		licenze.testo,                       
+		licenze.giorni_validita,             
+		licenze.giorni_rinnovo,              
+		licenze.timestamp_distribuzione,     
+		licenze.timestamp_inizio,            
+		licenze.timestamp_fine,              
+		licenze.id_account_inserimento,      
+		licenze.id_account_aggiornamento,    
+		licenze.nome AS __label__
+	FROM licenze
+		LEFT JOIN tipologie_licenze ON tipologie_licenze.id = licenze.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = licenze.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
+;
+
 --| 090000016800
 
 -- lingue_view
@@ -1957,6 +2025,7 @@ CREATE OR REPLACE VIEW `notizie_view` AS
 		LEFT JOIN tipologie_notizie ON tipologie_notizie.id = notizie.id_tipologia
 		LEFT JOIN notizie_categorie ON notizie_categorie.id_notizia = notizie.id
 		LEFT JOIN categorie_notizie ON categorie_notizie.id = notizie_categorie.id_categoria
+		LEFT JOIN tipologie_notizie ON tipologie_notizie.id = notizie.id_tipologia
 	GROUP BY notizie.id
 ;
 
@@ -2021,6 +2090,48 @@ CREATE OR REPLACE VIEW `organizzazioni_view` AS
 	FROM organizzazioni
 		LEFT JOIN anagrafica AS a1 ON a1.id = organizzazioni.id_anagrafica
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = organizzazioni.id_ruolo
+;
+
+--| 090000023100
+
+-- pagamenti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `pagamenti_view`;
+
+--| 090000023101
+
+-- pagamenti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-11-12 16:00 Chiara GDL
+CREATE OR REPLACE VIEW `pagamenti_view` AS
+	SELECT
+		pagamenti.id,
+		pagamenti.id_tipologia,
+		tipologie_pagamenti.nome AS tipologia,
+		pagamenti.ordine,
+		pagamenti.nome,
+		pagamenti.note,
+		pagamenti.id_documento,
+		pagamenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		pagamenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		pagamenti.id_iban,
+		pagamenti.importo_netto_totale,
+		pagamenti.id_iva,
+		iva.nome AS iva,
+		pagamenti.id_listino,
+		listini.nome AS listino,
+		pagamenti.timestamp_pagamento,
+		pagamenti.id_account_inserimento,
+		pagamenti.id_account_aggiornamento,
+		pagamenti.nome AS __label__
+	FROM pagamenti
+		LEFT JOIN tipologie_pagamenti ON tipologie_pagamenti.id = pagamenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = pagamenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
+		LEFT JOIN iva ON iva.id = pagamenti.id_iva
+		LEFT JOIN listini ON listini.id = pagamenti.id_listino
 ;
 
 --| 090000023200
@@ -3308,6 +3419,34 @@ CREATE OR REPLACE VIEW `sms_sent_view` AS
 	FROM sms_sent
 ;
 
+--| 090000041400
+
+-- software
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `software_view`;
+
+--| 090000041401
+
+-- software
+-- tipologia: tabella gestita
+-- verifica: 2021-11-16 10:39 Chiara GDL 
+CREATE OR REPLACE VIEW software_view AS
+    SELECT
+		software.id,
+		software.id_genitore,
+		software.id_articolo,
+		concat(prodotti.nome, ' - ',articoli.nome) AS articolo,
+		software.json,
+		software.nome,
+		software.note,
+		software.id_account_inserimento,
+		software.id_account_aggiornamento,
+	 	software_path( software.id ) AS __label__
+	FROM software
+		LEFT JOIN articoli ON software.id_articolo = articoli.id
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+;
+
 --| 090000042000
 
 -- stati_view
@@ -3349,7 +3488,7 @@ DROP TABLE IF EXISTS `stati_lingue_view`;
 -- stati_lingue_view
 -- tipologia: tabella di supporto
 -- verifica: 2021-10-12 15:33 Fabio Mosti
-CREATE OR REPLACE VIEW stati_view AS
+CREATE OR REPLACE VIEW stati_lingue_view AS
     SELECT
 		stati_lingue.id,
 		stati_lingue.id_stato,
@@ -3544,6 +3683,31 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 	FROM tipologie_attivita
 ;
 
+--| 090000050600
+
+-- tipologie_chiavi_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_chiavi_view`;
+
+--| 0900000050601
+
+-- tipologie_chiavi_view
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_chiavi_view` AS
+	SELECT
+		tipologie_chiavi.id,
+		tipologie_chiavi.id_genitore,
+		tipologie_chiavi.ordine,
+		tipologie_chiavi.nome,
+		tipologie_chiavi.html_entity,
+		tipologie_chiavi.font_awesome,
+		tipologie_chiavi.id_account_inserimento,
+		tipologie_chiavi.id_account_aggiornamento,
+		tipologie_chiavi_path( tipologie_chiavi.id ) AS __label__
+	FROM tipologie_chiavi
+;
+
 --| 090000050800
 
 -- tipologie_contatti_view
@@ -3626,6 +3790,31 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS
 	FROM tipologie_indirizzi
 ;
 
+--| 090000053200
+
+-- tipologie_licenze_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_licenze_view`;
+
+--| 0900000053201
+
+-- tipologie_licenze_view
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_licenze_view` AS
+	SELECT
+		tipologie_licenze.id,
+		tipologie_licenze.id_genitore,
+		tipologie_licenze.ordine,
+		tipologie_licenze.nome,
+		tipologie_licenze.html_entity,
+		tipologie_licenze.font_awesome,
+		tipologie_licenze.id_account_inserimento,
+		tipologie_licenze.id_account_aggiornamento,
+		tipologie_licenze_path( tipologie_licenze.id ) AS __label__
+	FROM tipologie_licenze
+;
+
 --| 090000053400
 
 -- tipologie_mastri_view
@@ -3674,6 +3863,31 @@ CREATE OR REPLACE VIEW `tipologie_notizie_view` AS
 		tipologie_notizie.id_account_aggiornamento,
 		tipologie_notizie_path( tipologie_notizie.id ) AS __label__
 	FROM tipologie_notizie
+;
+
+--| 090000054000
+
+-- tipologie_pagamenti_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_pagamenti_view`;
+
+--| 0900000054001
+
+-- tipologie_pagamenti_view
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_pagamenti_view` AS
+	SELECT
+		tipologie_pagamenti.id,
+		tipologie_pagamenti.id_genitore,
+		tipologie_pagamenti.ordine,
+		tipologie_pagamenti.nome,
+		tipologie_pagamenti.html_entity,
+		tipologie_pagamenti.font_awesome,
+		tipologie_pagamenti.id_account_inserimento,
+		tipologie_pagamenti.id_account_aggiornamento,
+		tipologie_pagamenti_path( tipologie_pagamenti.id ) AS __label__
+	FROM tipologie_pagamenti
 ;
 
 --| 090000054200

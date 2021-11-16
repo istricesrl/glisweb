@@ -422,6 +422,26 @@ ALTER TABLE `categorie_risorse`
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000004800
+
+-- chiavi
+-- tipologia: tabella di supporto
+-- verifica: 2021-11-15 11:58 Chiara GDL
+ALTER TABLE `chiavi`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_licenza`,`codice`),
+	ADD KEY `codice` (`codice`),
+	ADD KEY `seriale` (`seriale`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_licenza` (`id_licenza`),
+	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`,`id_anagrafica`);
+
+--| 030000004801
+
+-- chiavi
+-- tipologia: tabella di supporto
+ALTER TABLE `chiavi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000005100
 
 -- colori
@@ -945,6 +965,32 @@ ALTER TABLE `job`
 -- tipologia: tabella gestita
 ALTER TABLE `job` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000016600
+
+-- licenze
+-- tipologia: tabella standard
+-- verifica: 2021-11-15 12:41 Fabio Mosti
+ALTER TABLE `licenze`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `codice` (`codice`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `giorni_validita` (`giorni_validita`),
+	ADD KEY `giorni_rinnovo` (`giorni_rinnovo`),
+	ADD KEY `timestamp_distribuzione` (`timestamp_distribuzione`),
+	ADD KEY `timestamp_inizio` (`timestamp_inizio`),
+	ADD KEY `timestamp_fine` (`timestamp_fine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id_anagrafica`,`id_tipologia`,`id_rivenditore`,`codice`,`postazioni`,`nome`,`giorni_validita`,`giorni_rinnovo`,`timestamp_distribuzione`,`timestamp_inizio`,`timestamp_fine`);
+
+--| 030000016601
+
+-- licenze
+-- tipologia: tabella standard
+ALTER TABLE `licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000016800
 
 -- lingue
@@ -1297,6 +1343,33 @@ ALTER TABLE `organizzazioni`
 -- organizzazioni
 -- tipologia: tabella gestita
 ALTER TABLE `organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000023100
+
+-- pagamenti
+-- tipologia: tabella gestita
+-- verifica: 2021-11-12 16:00 Chiara GDL
+ALTER TABLE `pagamenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
+	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `id_iban` (`id_iban`), 
+	ADD KEY `id_listino` (`id_listino`), 
+	ADD KEY `id_iva` (`id_iva`), 
+	ADD KEY `timestamp_pagamento` (`timestamp_pagamento`), 
+	ADD KEY `importo_netto_totale` (`importo_netto_totale`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_documento`,`timestamp_pagamento`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`id_iban`,`importo_netto_totale`,`id_iva`);
+
+--| 030000023101
+
+-- pagamenti
+-- tipologia: tabella gestita
+ALTER TABLE `pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000023200
 
@@ -1976,6 +2049,27 @@ ALTER TABLE `sms_sent`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
 	ADD KEY `indice` (`id`,`id_telefono`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
 
+--| 030000041400
+
+-- software
+-- tipologia: tabella gestita
+-- verifica: 2021-11-16 10:39 Chiara GDL
+ALTER TABLE `software`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `json` (`json`(255) ),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json`(255));
+
+--| 030000041401
+
+-- software
+-- tipologia: tabella di gestita
+ALTER TABLE `software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000042000
 
 -- stati
@@ -2139,6 +2233,27 @@ ALTER TABLE `tipologie_attivita`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000050600
+
+-- tipologie_chiavi
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:07 Chiara GDL
+ALTER TABLE `tipologie_chiavi`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000050601
+
+-- tipologie_chiavi
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_chiavi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000050800
 
 -- tipologie_contatti
@@ -2202,6 +2317,27 @@ ALTER TABLE `tipologie_indirizzi`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000053200
+
+-- tipologie_licenze
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:07 Chiara GDL
+ALTER TABLE `tipologie_licenze`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000053201
+
+-- tipologie_licenze
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000053400
 
 -- tipologie_mastri
@@ -2243,6 +2379,27 @@ ALTER TABLE `tipologie_notizie`
 -- tipologie_notizie
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000054000
+
+-- tipologie_pagamenti
+-- tipologia: tabella assistita
+-- verifica: 2021-11-15 11:07 Chiara GDL
+ALTER TABLE `tipologie_pagamenti`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000054001
+
+-- tipologie_pagamenti
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000054200
 

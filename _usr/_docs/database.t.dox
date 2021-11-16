@@ -265,10 +265,49 @@
     tipologie_attivita_view.id_account_inserimento          | -
     tipologie_attivita_view.id_account_aggiornamento        | -
     tipologie_attivita_view.__label__                       | etichetta descrittiva della tipologia
+    
+    tipologie_chiavi
+    ------------------
+    Questa tabbella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *chiavi*
+    
+    colonna                                       | descrizione
+    ----------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_chiavi.id                           | l'ID della tipologia
+    tipologie_chiavi.id_genitore                  | l'ID della tipologia genitore
+    tipologie_chiavi.ordine                       | campo di ordinamento
+    tipologie_chiavi.nome                         | il nome della tipologia
+    tipologie_chiavi.html_entity                  | entità HTML che rappresenta visivamente la tipologia
+    tipologie_chiavi.font_awesome                 | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_chiavi.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    tipologie_chiavi.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    tipologie_chiavi.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    tipologie_chiavi.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------|-------------------------------|-------------------------------|----------------------
+    tipologie_chiavi_ibfk_01_nofollow     | id_genitore                   | tipologie_chiavi.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_chiavi_ibfk_98_nofollow     | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_chiavi_ibfk_99_nofollow     | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *tipologie_chiavi_view* relativa alla tabella *tipologie_chiavi* presenta le seguenti colonne:
+    
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_chiavi_view.id                              | -
+    tipologie_chiavi_view.id_genitore                     | -
+    tipologie_chiavi_view.ordine                          | -
+    tipologie_chiavi_view.nome                            | -
+    tipologie_chiavi_view.html_entity                     | -
+    tipologie_chiavi_view.font_awesome                    | -
+    tipologie_chiavi_view.id_account_inserimento          | -
+    tipologie_chiavi_view.id_account_aggiornamento        | -
+    tipologie_chiavi_view.__label__                       | etichetta descrittiva della tipologia
 
     tipologie_contatti
     ------------------
-    Questa tabbella *gestita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *contatti*
+    Questa tabbella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *contatti*
     
     colonna                                         | descrizione
     ------------------------------------------------|---------------------------------------------------------------------------------------
@@ -399,6 +438,45 @@
     tipologie_indirizzi_view.id_account_aggiornamento       | -
     tipologie_indirizzi_view.__label__                      | etichetta descrittiva della tipologia
 
+    tipologie_licenze
+    ------------------
+    Questa tabbella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *licenze*
+    
+    colonna                                        | descrizione
+    -----------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_licenze.id                           | l'ID della tipologia
+    tipologie_licenze.id_genitore                  | l'ID della tipologia genitore
+    tipologie_licenze.ordine                       | campo di ordinamento
+    tipologie_licenze.nome                         | il nome della tipologia
+    tipologie_licenze.html_entity                  | entità HTML che rappresenta visivamente la tipologia
+    tipologie_licenze.font_awesome                 | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_licenze.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    tipologie_licenze.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    tipologie_licenze.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    tipologie_licenze.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                 | campo                         | tabella e campo collegati     | comportamento
+    ---------------------------------------|-------------------------------|-------------------------------|----------------------
+    tipologie_licenze_ibfk_01_nofollow     | id_genitore                   | tipologie_licenze.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_licenze_ibfk_98_nofollow     | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_licenze_ibfk_99_nofollow     | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *tipologie_licenze_view* relativa alla tabella *tipologie_licenze* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_licenze_view.id                              | -
+    tipologie_licenze_view.id_genitore                     | -
+    tipologie_licenze_view.ordine                          | -
+    tipologie_licenze_view.nome                            | -
+    tipologie_licenze_view.html_entity                     | -
+    tipologie_licenze_view.font_awesome                    | -
+    tipologie_licenze_view.id_account_inserimento          | -
+    tipologie_licenze_view.id_account_aggiornamento        | -
+    tipologie_licenze_view.__label__                       | etichetta descrittiva della tipologia
+
     tipologie_mastri
     ----------------
     Questa tabbella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *mastri*.
@@ -478,6 +556,45 @@
     tipologie_notizie_view.id_account_inserimento       | -
     tipologie_notizie_view.id_account_aggiornamento     | -
     tipologie_notizie_view.__label__                    | etichetta descrittiva della tipologia
+
+    tipologie_pagamenti
+    ------------------
+    Questa tabbella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *pagamenti*
+    
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_pagamenti.id                           | l'ID della tipologia
+    tipologie_pagamenti.id_genitore                  | l'ID della tipologia genitore
+    tipologie_pagamenti.ordine                       | campo di ordinamento
+    tipologie_pagamenti.nome                         | il nome della tipologia
+    tipologie_pagamenti.html_entity                  | entità HTML che rappresenta visivamente la tipologia
+    tipologie_pagamenti.font_awesome                 | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_pagamenti.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    tipologie_pagamenti.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    tipologie_pagamenti.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    tipologie_pagamenti.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                   | campo                         | tabella e campo collegati     | comportamento
+    -----------------------------------------|-------------------------------|-------------------------------|----------------------
+    tipologie_pagamenti_ibfk_01_nofollow     | id_genitore                   | tipologie_pagamenti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_pagamenti_ibfk_98_nofollow     | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_pagamenti_ibfk_99_nofollow     | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *tipologie_pagamenti_view* relativa alla tabella *tipologie_pagamenti* presenta le seguenti colonne:
+    
+    colonna                                                  | descrizione
+    ---------------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_pagamenti_view.id                              | -
+    tipologie_pagamenti_view.id_genitore                     | -
+    tipologie_pagamenti_view.ordine                          | -
+    tipologie_pagamenti_view.nome                            | -
+    tipologie_pagamenti_view.html_entity                     | -
+    tipologie_pagamenti_view.font_awesome                    | -
+    tipologie_pagamenti_view.id_account_inserimento          | -
+    tipologie_pagamenti_view.id_account_aggiornamento        | -
+    tipologie_pagamenti_view.__label__                       | etichetta descrittiva della tipologia
 
     tipologie_popup
     ---------------
