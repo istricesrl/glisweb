@@ -832,7 +832,6 @@ CREATE OR REPLACE VIEW chiavi_view AS
 		chiavi.nome AS __label__
 	FROM chiavi
 		LEFT JOIN licenze ON licenze.id = chiavi.id_licenza
-		LEFT JOIN anagrafica ON anagrafica.id = chiavi.id_anagrafica
 ;
 
 --| 090000005100
@@ -1615,6 +1614,30 @@ CREATE OR REPLACE VIEW licenze_view AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
 ;
 
+--| 060000016700
+
+-- licenze_software
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `licenze_software_view`;
+
+--| 060000016701
+
+-- licenze_software
+-- tipologia: tabella gestita
+-- verifica: 2021-11-16 15:30 Chiara GDL
+CREATE OR REPLACE VIEW licenze_software_view AS
+	SELECT
+		licenze_software.id,
+		licenze_software.id_licenza,
+		licenze_software.id_software,
+		licenze_software.id_account_inserimento,
+		licenze_software.id_account_aggiornamento,
+		concat( licenze.nome, ' | ', software.nome ) AS __label__
+	FROM licenze_software
+		LEFT JOIN software ON software.id = licenze_software.id_software
+		LEFT JOIN licenze ON licenze.id = licenze_software.id_licenza
+;
+
 --| 090000016800
 
 -- lingue_view
@@ -2023,7 +2046,6 @@ CREATE OR REPLACE VIEW `notizie_view` AS
 		LEFT JOIN tipologie_notizie ON tipologie_notizie.id = notizie.id_tipologia
 		LEFT JOIN notizie_categorie ON notizie_categorie.id_notizia = notizie.id
 		LEFT JOIN categorie_notizie ON categorie_notizie.id = notizie_categorie.id_categoria
-		LEFT JOIN tipologie_notizie ON tipologie_notizie.id = notizie.id_tipologia
 	GROUP BY notizie.id
 ;
 

@@ -990,6 +990,26 @@ ALTER TABLE `licenze`
 -- tipologia: tabella standard
 ALTER TABLE `licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000016700
+
+-- licenze_software
+-- tipologia: tabella gestita
+-- verifica: 2021-11-16 15:30 Chiara GDL
+ALTER TABLE `licenze_software`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_licenza`,`id_software`),
+	ADD KEY `id_licenza` (`id_licenza`), 
+	ADD KEY `id_software` (`id_software`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_licenza`,`id_software`,`ordine`);
+
+--| 030000016701
+
+-- licenze_software
+-- tipologia: tabella gestita
+ALTER TABLE `licenze_software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000016800
 
 -- lingue

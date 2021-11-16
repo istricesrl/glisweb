@@ -3134,7 +3134,7 @@ CREATE
 
 			SELECT
 				tipologie_chiavi.id_genitore,
-				tipologie_chiavi.nome,
+				tipologie_chiavi.nome
 			FROM tipologie_chiavi
 			WHERE tipologie_chiavi.id = p1
 			INTO p1, step;
