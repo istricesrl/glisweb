@@ -10,11 +10,11 @@
      *
      */
 
-    // inclusione del framework
-	require '../_config.php';
-
     // costanti che descrivono lo stato di funzionamento del framework
 	define( 'CRON_RUNNING'			, 'CRONRUN' );
+
+    // inclusione del framework
+	require '../_config.php';
 
     // apro il report
 	writeToFile( date( 'Y/m/d H:i:s' ), FILE_LATEST_CRON );
