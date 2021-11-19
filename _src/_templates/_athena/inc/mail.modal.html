@@ -1,0 +1,102 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+  //window.addEventListener( 'DOMContentLoaded', function(){ CKEDITOR.instances['_testo'].setData('<p>Buongiorno,</p><p></p><p>Cordiali saluti<br>'); });
+    formChanged = false;
+
+    function send(){
+	formChanged = false;
+	var og = $('#_oggetto').val();
+	var id = $('#_id').val();
+	var to = $('#_destinatario').val();
+	var from = $('#_mittente').val();
+	var t = encodeURIComponent(CKEDITOR.instances['_testo'].getData());
+//	var t1 = $('#_testo').val();
+//console.log(t);
+//console.log(id);
+//console.log(t1);
+	//invio la mail se tutti i campi sono compilati
+	if( og !== '' && to !== '' && t !== '' && from !== ''){
+//console.log(t);
+//console.log(t1);
+	$('#send-btn').html('<i class="fa fa-spinner fa-spin fa-fw"></i>');
+	getws("/_src/_api/_task/_mail.send.php","__og__="+og+"&__id__="+id+"&__from__="+from+"&__to__="+to+"&__t__='"+t+"'",  window.open("{{ session.backurls[page.backurl[localization.language.ietf]]}}?&__send__=1", '_self') );
+	}
+
+	// evidezio i campi obbligatori non compilati
+	if(t == ''){
+	    document.getElementById("_testo").style.borderColor="#FF0000";
+	}else{
+	    document.getElementById("_testo").style.borderColor = "#ced4da";
+	}
+	if(og == ''){
+	    document.getElementById("_oggetto").style.borderColor="#FF0000";
+	}else{
+	    document.getElementById("_oggetto").style.borderColor = "#ced4da";
+	}
+	if(to == ''){
+	    document.getElementById("_destinatario").style.borderColor="#FF0000";
+	}else{
+	    document.getElementById("_destinatario").style.borderColor = "#ced4da";
+	}
+	if(from == ''){
+	    document.getElementById("_mittente").style.borderColor="#FF0000";
+	}else{
+	    document.getElementById("_mittente").style.borderColor = "#ced4da";
+	}
+    }
+
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="send" >
+    <div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">Compila ed invia mail </h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+	    <input type="hidden" id="_id"  value="">
+
+			    <label class="d-none d-md-block col-md-2 col-form-label">Mittente</label>
+			<div class="col">
+			    {{ frm.input(table, '', '', 'mittente', 'mail', '', request ) }}
+			</div>
+		    </div>
+		    <div class="form-row">
+			    <label class="d-none d-md-block col-md-2 col-form-label">Destinatario</label>
+			<div class="col">
+			    {{ frm.input(table, '', '', 'destinatario', 'sede', '', request ) }}
+			</div>
+		    </div>
+	        <div class="form-row">
+			    <label class="d-none d-md-block col-md-2 col-form-label">Oggetto</label>
+			<div class="col-10">
+			    {{ frm.input(table, '', '', 'oggetto', '', '', request ) }}
+			</div>
+		</div>
+		    <div class="form-row">
+			    <label class="d-none d-md-block col-md-2 col-form-label">Testo</label><!--Buongiorno,<p></p><p>Cordiali saluti<br>'~session.account.utente -->
+			    <div class="col-10">
+			     <textarea id="_testo" name="w3review" rows="7" class="ckEditor form-control form-control-sm">Buongiorno,<p></p><p>Cordiali saluti<br>{{session.account.utente}}</textarea>
+			</div>
+		</div>
+	    
+        {% if etc.allegati_mail %}
+                    <div class="form-row">
+                    <label class="d-none d-md-block col-md-2 col-form-label">Allegati</label>
+                    <div class="col-10 ">
+                        <textarea id="_allegati" cols="75" rows="{{ etc.allegati_mail|length }}+1" disabled></textarea>
+                    </div>
+                </div>
+        {% endif %}
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" id="send-btn" onclick="send();">invia</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" >annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
