@@ -205,6 +205,10 @@
 #	    'sms_sent' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'task' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
 	    'telefoni' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
