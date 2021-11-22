@@ -11,7 +11,15 @@
      */
 
     /**
-     *
+     * converte un array di stringhe CSV in un array associativo
+     * 
+     * prende in input un array di stringhe CSV e restituisce un array di array
+     * associativi usando la prima riga per le intestazioni; la riga delle intestazioni
+     * viene eliminata e non viene restituita fra i dati; le righe CSV devono avere
+     * i campi separati da virgola, e tutti i campi di testo delimitati dalle doppie
+     * virgolette
+     * 
+     * 
      * @todo documentare
      *
      */

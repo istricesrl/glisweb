@@ -1,0 +1,398 @@
+/*!
+
+    \page crontab_job meccanismi di esecuzione pianificata dei job del framework
+
+    Descrizione dei meccanismi di esecuzione pianificata dei job del framework.
+
+    introduzione
+    ============
+    Differentemente dai task, che rappresentano compiti atomici e, anche quando contestualizzati, non sostanzialmente correlati al contesto in cui
+    sono inseriti, i job rappresentano lavori suddivisi in step nei quali ogni step è collocato precisamente nel contesto. Questo concetto
+    è fondamentale da comprendere in quanto oltre a rappresentare la differenza fra i due tipi di lavori pianificati del framework, consente di
+    capire il ruolo svolto da ogni step all'interno del job. Due step in particolare vanno messi sotto i riflettori, e sono ovviamente il primo e
+    l'ultimo; l'uno avendo il compito di preparare l'area di lavoro e consentire lo svolgimento del job, l'altro avendo invece il compito di
+    chiudere l'esecuzione del job ed eseguire le operazioni relative.
+
+    chiamata dei job
+    ================
+    Come i task, anche i job possono essere chiamati nel contesto dell'API cron oppure direttamente tramite URL; quest'ultima caratteristica rende
+    possibile l'esecuzione dei job in foreground, tramite chiamate asincrone a intervalli regolari da parte dell'interfaccia web, cosicché sia possibile
+    esporre all'utente in maniera chiara lo stato di lavorazione dei job stessi; questo inoltre facilita le operazioni di debug.
+
+    l'API job
+    ---------
+    L'API job consente di chiamare in maniera semplice i job in foreground, e se un job non necessita di essere chiamato anche in modalità standalone
+    è possibile omettere nel suo codice le parti relative a questa modalità (vedi sotto), utilizzando le logiche analoghe contenute in _src/_api/_job.php.
+
+    passaggio automatico dei job in background
+    ------------------------------------------
+    L'API cron normalmente non esegue i job in foreground per evitare concorrenza; tuttavia, dal momento che l'esecuzione di questo tipo di job è legata
+    alla presenza di almeno un'interfaccia web attiva, può darsi il caso in cui essi rimangano bloccati in mancanza di chiamate dal front-end. Per evitare
+    che questi job rimangano appesi troppo a lungo, l'API cron li passa automaticamente in background dopo un certo periodo di inattività.
+
+    struttura base dei job
+    ======================
+    Il funzionamento di un job dipende essenzialmente dal rispetto delle regole che governano la struttura di questa tipologie di script. È necessario
+    prestare attenzione, in quanto un job è un oggetto molto più complesso di un task proprio in virtù della sua struttura a step; questa complessità
+    si riflette in una maggiore complessità del codice e nella necessità di replicare, per l'esecuzione standalone, alcune logiche che si trovano in
+    _src/_api/_cron.php e che sono necessarie a mantenere la coerenza del lavoro. Si osservi a titolo di esempio il codice riassunto e commentato
+    del seguente job:
+
+    \code{.php}
+    <?php
+
+        /**
+         * LOGICHE PER L'ESECUZIONE STANDALONE
+         * se un job viene eseguito in modalità standalone, deve eseguire da sé alcune operazioni che invece vengono svolte
+         * da _src/_api/_cron.php nel caso dell'esecuzione nel contesto dell'API cron; si noti che per chiamare un job in
+         * modalità standalone è necessario conoscere il suo ID nella tabella job.
+         */
+
+        // esecuzione standalone o tramite cron
+        if( ! defined( 'CRON_RUNNING' ) && ! defined( 'JOB_RUNNING' ) ) {
+
+            // inclusione del framework
+            require '../../../_src/_config.php';
+
+            // inizializzo l'array del risultato
+            $status = array();
+
+            // status
+            $status['info'][] = 'inizio operazioni job standalone di test';
+
+            // chiave di lock
+            $status['token'] = getToken( __FILE__ );
+
+            /**
+             * LOCK DEL JOB
+             * per evitare concorrenza è necessario effettuare il lock della riga del job sul database; inoltre,
+             * come si è visto, è necessaria la presenza di $_REQUEST['id'] per poter elaborare il job corretto
+             */
+
+            // verifico la presenza di un ID
+            if( isset( $_REQUEST['id'] ) ) {
+
+                // metto il lock sui job richiesto
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE job SET token = ? WHERE id = ? AND '.
+                    'timestamp_apertura <= ? OR timestamp_apertura IS NULL AND timestamp_completamento IS NULL AND token IS NULL ',
+                    array(
+                        array( 's' => $status['token'] ),
+                        array( 's' => $_REQUEST['id'] ),
+                        array( 's' => time() )
+                    )
+                );
+
+                // seleziono il job a cui ho applicato il lock
+                $job = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM job WHERE token = ? ',
+                    array(
+                        array( 's' => $status['token'] )
+                    )
+                );
+
+                // decodifica del workspace
+                if( isset( $job['workspace'] ) ) {
+                    $job['workspace'] = json_decode( $job['workspace'], true );
+                }
+
+            }
+
+        }
+
+        /**
+         * CODICE PRINCIPALE DEL JOB
+         * si noti a questo punto che la variabile $job contiene le informazioni di lavoro del job, sia che provengano dal
+         * contesto dell'API cron sia che provengano dall'elaborazione standalone del blocco di codice sopra stante; nel caso
+         * una o più informazioni chiave risultino mancanti, l'esecuzione verrà bloccata dai controlli formali che aprono
+         * la successiva sezione del codice; è molto importante investire tempo a definire questi controlli per ogni job che
+         * si scrive in modo da proteggere il codice esecutivo da anomalie ed errori
+         */
+
+        /* CODICE PRINCIPALE DEL JOB */
+
+        // CUSTOM verifiche formali
+        if( empty( $job['id'] ) ) {
+
+            // CUSTOM status
+            $status['error'][] = 'ID job non trovato';
+
+        } elseif( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
+
+            // CUSTOM status
+            $status['info'][] = 'iterazione a vuoto su job già completato';
+
+        } elseif( empty( $job['workspace']['file'] ) ) {
+
+            // CUSTOM status
+            $status['error'][] = 'questo job richiede un file su cui lavorare';
+
+        } elseif( empty( $job['workspace']['function'] ) ) {
+
+            // CUSTOM status
+            $status['error'][] = 'questo job richiede una funzione da eseguire';
+
+        } else {
+
+            /**
+             * ATTIVITÀ DI AVVIO
+             * se l'esecuzione supera i controlli formali, è ancora necessario verificare se lo step corrente
+             * di esecuzione è il primo o no; se lo è, è necessario svolgere le operazioni di preparazione
+             * dell'area di lavoro a beneficio degli step successivi; questa verifica è fatta in base alla chiave
+             * $job['corrente'] che contiene, appunto, il numero dello step corrente
+             */
+
+            // attività di avvio
+            if( empty( $job['corrente'] ) ) {
+
+                // CUSTOM apro il file
+                $arr = readFromFile( $job['workspace']['file'] );
+
+                /**
+                 * INIZIALIZZAZIONE DEI CONTATORI
+                 * per avviare il job è essenziale determinare la dimensione dell'area di lavoro, e valorizzare di
+                 * conseguenza la chiave $job['totale']; in base a questa, relativamente al valore di $job['corrente'],
+                 * è possibile determinare lo stato di avanzamento del job e capire quando questo è terminato; nel
+                 * primo step del job è pertanto essenziale assegnare un valore a questa chiave, così come lo è
+                 * valorizzare a 1 la chiave $job['corrente'] in modo che il job possa procedere; si può vedere per
+                 * semplicità il primo step del job come step zero, con i successivi numerati pregressivamente da uno
+                 */
+
+                // segno il totale delle cose da fare
+                $job['totale'] = count( $arr );
+
+                // avvio il contatore
+                $job['corrente'] = 1;
+
+                /**
+                 * TIMESTAMP DI AVVIO
+                 * la timestamp di avvio è un dato molto importante per l'API cron e in generale per la gestione dei
+                 * job, quindi andrebbe sempre valorizzata quando si esegue il primo step di un job
+                 */
+
+                // timestamp di avvio
+                if( empty( $job['timestamp_apertura'] ) ) {
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE job SET timestamp_avvio = ? WHERE id = ?',
+                        array(
+                        array( 's' => time() ),
+                        array( 's' => $job['id'] )
+                        )
+                    );
+                }
+
+            } else {
+
+                /**
+                 * STEP SUCCESSIVI AL PRIMO
+                 * dopo che il primo step ha inizializzato l'area di lavoro, quelli successivi devono soltanto
+                 * incrementare il contatore $job['corrente'] ed eventualmente riaprire le risorse necessarie
+                 * a svolgere il lavoro
+                 */
+
+                // CUSTOM apro il file
+                $arr = readFromFile( $job['workspace']['file'] );
+
+                // incremento l'indice di lavoro
+                $job['corrente']++;
+
+            }
+
+            /**
+             * INDICE DI LAVORO
+             * dal momento che è necessario considerare il primo step come step numero zero, è possibile che sia
+             * necessario ridurre di uno l'indice di lavoro nel caso ad esempio in cui si debba accedere a un array
+             * i cui elementi partono appunto da zero - allo step 1 bisogna leggere l'elemento 0; questo non è
+             * sempre necessario e potrebbero esistere job che lavorano su risorse in cui questo allineamento risulta
+             * superfluo oppure in cui sono necessari allineamenti diversi (ad esempio rispetto a una clausola LIMIT)
+             */
+
+            // aggiusto l'indice di lavoro (gli array partono da zero)
+            $widx = $job['corrente'] - 1;
+
+            /**
+             * [...] OMISSIS [...]
+             */
+
+            // CUSTOM status
+            $status['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
+
+            /**
+             * AGGIORNAMENTO STATUS DEL JOB
+             * una volta eseguito il lavoro dello step, è necessario aggiornare la riga di database del job in modo
+             * che gli step successivi possano riprendere il lavoro da dove è stato interrotto
+             */
+
+            // aggiorno i valori di visualizzazione avanzamento
+            $jobs = mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE job SET totale = ?, corrente = ? WHERE id = ?',
+                array(
+                array( 's' => $job['totale'] ),
+                array( 's' => $job['corrente'] ),
+                array( 's' => $job['id'] )
+                )
+            );
+
+            /**
+             * CHIUSURA DEL JOB
+             * se il valore della chiave $job['corrente'] a questo punto è equivalente al valore della chiave $job['totale'],
+             * allora il job è completato e si può procedere con le operazioni di chiusura, che comprendono il salvataggio
+             * della timestamp di completamento, l'avvio di eventuali attività correlate, l'invio di notifiche, eccetera
+             */
+
+            // operazioni di chiusura
+            if( $job['corrente'] == $job['totale'] ) {
+
+                // scrivo la timestamp di completamento
+                $jobs = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE job SET timestamp_completamento = ? WHERE id = ?',
+                    array(
+                    array( 's' => $time ),
+                    array( 's' => $job['id'] )
+                    )
+                );
+
+                // CUSTOM notifiche di fine attività
+                    // TODO
+
+            }
+
+        }
+
+        /* FINE CODICE PRINCIPALE DEL JOB */
+
+        /**
+         * LOGICHE DI FINE ESECUZIONE STANDALONE
+         * nel contesto dell'API cron è il file _src/_api/_cron.php che si occupa di aggiornare la timestamp di esecuzione
+         * del job, salvare il workspace, e di liberare il token; se il job viene eseguito in modalità standalone, queste
+         * operazioni vanno effettuate qui; inoltre come di consueto, fuori dal contesto dell'API cron è necessario fornire
+         * un output JSON per informare il chiamante sull'esito dell'elaborazione
+         */
+
+        // esecuzione standalone o tramite cron
+        if( ! defined( 'CRON_RUNNING' ) && ! defined( 'JOB_RUNNING' ) ) {
+
+            // controllo presenza ID job
+                if( isset( $job['id'] ) ) {
+
+                    // aggiorno la tabella di avanzamento lavori
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
+                            array(
+                                array( 's' => time() ),
+                                array( 's' => json_encode( $job['workspace'] ) ),
+                                array( 's' => $job['id'] )
+                            )
+                        );
+
+                }
+
+            // output
+                buildJson( $job );
+
+        }
+
+        /**
+         * NOTA SULL'ESECUZIONE STANDALONE
+         * il codice aggiunto per l'esecuzione standalone può essere omesso se si progetta di eseguire il job solo nel contesto delle
+         * API cron e job; in questo caso, le logiche necessarie sono già incluse rispettivamente in _src/_api/_cron.php e _src/_api/_job.php;
+         * tuttavia in questo caso sarebbe opportuno prevedere un controllo formale aggiuntivo per proteggere il codice del job da
+         * un'eventuale esecuzione accidentale in modalità standalone
+         */
+
+    \endcode
+
+    job che non possono essere eseguiti in modalità standalone
+    ----------------------------------------------------------
+    Può darsi il caso di job la cui peculiare natura non consente o non rende vantaggiosa l'esecuzione in modalità standalone; in questo caso, è comunque
+    necessario inserire le informazioni nello status del job a beneficio di eventuali chiamate da parte dell'interfaccia web per avere contezza
+    dello stato del job oltre che per facilitare il debug. Si veda ad esempio il seguente codice, che ripropone, ulteriormente riassunto, il job dell'esempio
+    precedente privo del codice per l'esecuzione standalone:
+
+    \code{.php}
+    <?php
+
+        /**
+         * CONTROLLO FORMALE PER IL CONTESTO
+         * si noti che in questo caso abbiamo aggiunto un primo controllo formale per verificare
+         * se il contesto di esecuzione è corretto
+         */
+
+        /* CODICE PRINCIPALE DEL JOB */
+
+        // CUSTOM verifiche formali
+        if( ! defined( 'CRON_RUNNING' ) && ! defined( 'JOB_RUNNING' ) ) {
+
+            // CUSTOM status
+            $status['error'][] = 'questo job non supporta la modalità standalone';
+
+        } elseif( empty( $job['id'] ) ) {
+
+            // CUSTOM status
+            $status['error'][] = 'ID job non trovato';
+
+        } elseif( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
+
+            // CUSTOM status
+            $status['info'][] = 'iterazione a vuoto su job già completato';
+
+        } elseif( empty( $job['workspace']['file'] ) ) {
+
+            // CUSTOM status
+            $status['error'][] = 'questo job richiede un file su cui lavorare';
+
+        } elseif( empty( $job['workspace']['function'] ) ) {
+
+            // CUSTOM status
+            $status['error'][] = 'questo job richiede una funzione da eseguire';
+
+        } else {
+
+            // attività di avvio
+            if( empty( $job['corrente'] ) ) {
+
+                /**
+                * [...] OMISSIS [...]
+                */
+
+            } else {
+
+                /**
+                * [...] OMISSIS [...]
+                */
+
+            }
+
+            /**
+            * [...] OMISSIS [...]
+            */
+
+            // operazioni di chiusura
+            if( $job['corrente'] == $job['totale'] ) {
+
+                /**
+                * [...] OMISSIS [...]
+                */
+
+            }
+
+        }
+
+        /* FINE CODICE PRINCIPALE DEL JOB */
+
+        // output
+        buildJson( $status );
+    \endcode
+
+    Si badi a non confondere la modalità foreground con la modalità standalone; in modalità foreground il job è chiamato tramite l'API job e può
+    quindi beneficiare del codice presente in _src/_api/_job.php così come in modalità cron (o background che dir si voglia) beneficia del codice
+    presente in _src/_api/_cron.php. La modalità standalone invece prevede un job completamente autonomo che viene chiamato direttamente utilizzando
+    il suo URL e quindi deve essere completamente autosufficiente.
+
+*/

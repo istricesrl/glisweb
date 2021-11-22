@@ -672,7 +672,7 @@
 	fullPath( $f2 );
 	checkFolder( dirname( $f2 ) );
 
-	return rename( $f1, $f2 );
+	return @rename( $f1, $f2 );
 
     }
 

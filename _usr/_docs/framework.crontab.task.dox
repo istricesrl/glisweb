@@ -1,0 +1,229 @@
+/*!
+
+    \page crontab_task meccanismi di esecuzione pianificata dei task del framework
+
+    Descrizione dei meccanismi di esecuzione pianificata dei task del framework.
+
+    introduzione
+    ============
+    Un task è essenzialmente un compito che il framework svolge nell'arco di un'unica esecuzione, e che ha la caratteristica
+    di poter essere chiamato indipendentemente dalle interazioni dell'utente con l'interfaccia web. Per questo i task sono
+    soprattutto utilizzati per i compiti di amministrazione della piattaforma e per svolgere le operazioni che devono essere
+    eseguite anche in assenza di operatori o utenti connessi.
+
+    Si noti che per compito va inteso non soltanto un lavoro nel suo complesso, ma anche una frazione di lavoro che sia
+    sostanzialmente autonoma rispetto al contesto complessivo. Questo in particolare si ha nel caso di lavoro su contesti che
+    cambiano anche durante lo svolgimento stesso del lavoro, si pensi ad esempio all'evasione della coda delle mail, che può
+    ricevere nuovi messaggi anche mentre sta venendo sbrigata (e questo è un caso relativamente frequente). Qui il concetto
+    di lavoro non si applica all'intero contesto (l'insieme complessivo delle mail da inviare) ma all'invio di ogni singola mail,
+    che è un compito appunto indipendente dal numero complessivo di mail presenti in coda.
+
+    chiamata dei task
+    =================
+    Una caratteristica molto interessante dei task è che possono essere chiamati sia nel contesto dell'API cron, sia direttamente
+    tramite HTTP, vuoi nella forma di chiamata diretta all'URL del task, vuoi come chiamata asincrona scatenata da un'azione
+    sull'interfaccia come il click su un bottone. L'estrema versatilità dei task sotto questo aspetto è garantita dalla peculiare
+    struttura del loro codice come vedremo fra poco.
+
+    chiamata diretta dei task
+    -------------------------
+
+    struttura base dei task
+    =======================
+    Quando si scrive un nuovo task è importante rispettare la struttura base che vedremo per garantire al task stesso le caratteristiche
+    di flessibilità nella chiamata e di atomicità nell'esecuzione che sono richieste al fine di mantenere lo standard di qualità del
+    codice suggerito dal framework. Una volta compresa tale struttura, sarà facile scrivere task sempre più complessi; a titolo di esempio
+    esaminiamo il codice di una versione ridotta del task _src/_api/_task/_mail.queue.send.php.
+
+    \code{.php}
+    <?php
+
+        /**
+         * INCLUSIONE DEL FRAMEWORK
+         * questa tecnica particolare di inclusione del framework consente al task di essere
+         * chiamato sia nel contesto dell'API cron sia come URL indipendente
+         */
+
+        // inclusione del framework
+        if( ! defined( 'CRON_RUNNING' ) ) {
+            require '../../_config.php';
+        }
+
+        /**
+         * INIZIALIZZAZIONE DELL'ARRAY DEL RISULTATO
+         * il contesto dell'API cron (vedi _src/_api/_cron.php) si aspetta che ogni task eseguito
+         * scriva in un array associativo chiamato $status le informazioni salienti riguardo il
+         * proprio lavoro; tali informazioni vengono aggiunte dall'API cron all'array generale
+         * dei risultati dei task $cf['cron']['task']['results']['task'][<nomeTask>][]
+         */
+
+        // inizializzo l'array del risultato
+        $status = array();
+
+        /**
+         * CONVENZIONI SUI LOG
+         * si raccomanda di prevedere la chiave $status['info'][] dove scrivere le informazioni non
+         * critiche riguardanti l'esecuzione del task; inoltre in questa fase è opportuno effettuare
+         * il log dell'avvio del task nei file di log specifici per le factory interessate dal lavoro
+         * del task stesso
+         */
+
+        // status
+        $status['info'][] = 'inizio evasione coda mail';
+
+        // log
+        logWrite( 'richiesta di elaborazione della coda delle mail in uscita', 'mail' );
+
+        /**
+         * CHIAVE DI LOCK
+         * se il task deve lavorare su scenari con possibilità di concorrenza, è possibile ottenere un
+         * token univoco tramite la funzione getToken()
+         */
+
+        // chiave di lock
+        $status['token'] = getToken( __FILE__ );
+
+        // inizializzo la variabile per l'invio
+        // $mail = NULL;
+
+        /**
+         * LOCK DELLA RIGA
+         * nel codice che segue è possibile vedere tutte e tre le strategie di lock classiche del framework;
+         * in particolare nel primo caso è gestito lo scenario in cui il task venga chiamato esplicitamente con
+         * un parametro $_REQUEST['id'] per il lavoro su una specifica riga; nel secondo caso si gestisce
+         * lo scenario di una chiamata forzata che escluda le normali regole di priorità nella selezione
+         * della riga su cui lavorare, innescata dal parametro $_REQUEST['hard']; infine il terzo caso è quello
+         * di default, in cui una serie di regole operano per la selezione naturale della riga su cui lavorare
+         */
+
+        // modalità di evasione (specifica mail, evasione forzata, evasione naturale)
+        if( isset( $_REQUEST['id'] ) ) {
+
+            // token della riga
+            $status['id'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE mail_out SET token = ? WHERE id = ? AND token IS NULL',
+                array(
+                    array( 's' => $status['token'] ),
+                    array( 's' => $_REQUEST['id'] )
+                )
+            );
+
+        } elseif( isset( $_REQUEST['hard'] ) ) {
+
+            // token della riga
+            $status['id'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE mail_out SET token = ? WHERE token IS NULL '.
+                'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
+                array(
+                    array( 's' => $status['token'] )
+                )
+            );
+
+        } else {
+
+            // token della riga
+            $status['id'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE mail_out SET token = ? WHERE timestamp_invio <= unix_timestamp() '.
+                'AND timestamp_invio IS NOT NULL '.
+                'AND token IS NULL '.
+                'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
+                array(
+                    array( 's' => $status['token'] )
+                )
+            );
+
+        }
+
+        /**
+         * ESECUZIONE DEL LAVORO
+         * una volta bloccata la riga, è possibile svolgere il lavoro previsto per il task, qualunque esso sia,
+         * prelevando i dati dalla riga bloccata tramite il token univoco utilizzato per bloccarla; durante il
+         * lavoro è necessario valorizzare correttamente le chiavi $status['info'][] e $status['err'][] per
+         * trasmettere al contesto l'andamento del lavoro stesso e facilitare la risoluzione di eventuali problemi;
+         * non si trascuri nemmeno di valorizzare i log rilevanti per le factory interessate dal compito svolto
+         * dal task
+         */
+
+        // prelevo una mail dalla coda
+        $mail = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM mail_out WHERE token = ?',
+            array(
+                array( 's' => $status['token'] )
+            )
+        );
+
+        // se c'è almeno una mail da inviare
+        if( ! empty( $mail ) ) {
+
+            // status
+            $status['info'][] = 'trovata una mail da evadere';
+
+            /**
+             * [...] OMISSIS [...]
+             */
+
+        } else {
+
+            // status
+            $status['info'][] = 'nessuna mail da evadere';
+
+        }
+
+        /**
+         * OUTPUT
+         * anche questo codice è necessario per comprendere il contesto in cui il task sta lavorando e, se si tratta di
+         * una chiamata standalone, viene prodotto un output JSON che può essere interpretato dal chiamante; questo non è
+         * ovviamente necessario nel caso in cui il task venga chiamato nell'ambito dell'API cron, che provvede invece
+         * ad aggiungere l'array $status al registro delle lavorazioni in corso
+         */
+
+        // output
+        if( ! defined( 'CRON_RUNNING' ) ) {
+            buildJson( $status );
+        }
+    \endcode
+
+    task che avviano un job
+    -----------------------
+    Un caso particolare è quello dei task il cui unico compito è avviare un job; questo può essere utile per consentire
+    agli operatori di avviare un job semplicemente premendo un tasto anziché compilare l'intero form job. Il codice di un task
+    di questo tipo è semplicissimo, ad esempio:
+
+    \code{.php}
+    <?php
+
+        // inclusione del framework
+        if( ! defined( 'CRON_RUNNING' ) ) {
+            require '../../../_src/_config.php';
+        }
+
+        // inizializzo l'array del risultato
+        $status = array();
+
+        // creo il job
+        $status['inserimento'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'INSERT INTO job ( nome, job, iterazioni, workspace ) VALUES ( ?, ?, ?, ? )',
+            array(
+                array( 's' => 'importazione automatica clienti del ' . date( 'Y/m/d H:i' ) ),
+                array( 's' => 'src/api/job/anagrafica.import.api.php' ),
+                array( 's' => 1 ),
+                array( 's' => json_encode(
+                    array(
+                        'startfrom' => date( 'Y-m-d\T00:00:00.000', strtotime( '-3 day' ) )
+                    )
+                ) )
+            )
+        );
+
+        // output
+        if( ! defined( 'CRON_RUNNING' ) ) {
+            buildJson( $status );
+        }
+    \endcode
+
+*/

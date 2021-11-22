@@ -106,6 +106,12 @@
     ----------------------|------------------------|-----------------------------------|------------------------------------------------
     gruppi.form.membri    | gruppi.view            | gruppi.form.membri.html           | _src/_inc/_macro/_gruppi.form.membri.php che include _src/_inc/_macro/_default.form.php
 
+    Alcuni esempi di pagine tools:
+
+    ID pagina             | ID parent              | schema                            | macro
+    ----------------------|------------------------|-----------------------------------|------------------------------------------------
+    anagrafica.tools      | anagrafica.view        | default.tools.html                | _src/_inc/_macro/_anagrafica.tools.php che include _default.tools.php
+
     Volendo creare una nuova pagina di una data tipologia, si può anche per brevità partire dalla copia dei file di una delle pagine sopra citate ad esempio.    
 
     le pagine view
@@ -356,6 +362,26 @@
     - creare se necessario la macro PHP
     - creare lo schema Twig
     - creare se necessario il file Twig per le subform
+
+    le pagine tools
+    ---------------
+    Le pagine tools fanno solitamente largo uso della macro Twig _src/_templates/_athena/inc/metro.html per rappresentare
+    all'utente elementi interattivi e dati. Esaminando il codice della macro si noterà che, per quanto riguarda i primi, ci
+    sono diverse strategie che possono essere adottate sia relativamente all'esperienza utente sia relativamente all'azione
+    da scatenare in risposta all'interazione dell'utente. Riassumendo, al click su un bottone metro è possibile avere:
+
+    - l'apertura diretta di un URL (link HTML) nel caso la configurazione del bottone contenga il parametro 'url'
+    - l'apertura di un modal, nel caso la configurazione del bottone contenga il parametro 'modal' con le relative sottochiavi 'id' e 'include'
+    - la chiamata asincrona di un URL, nel caso la configurazione del bottone contenga il parametro 'ws' con le relative sotto chiavi
+    - codice arbitrario nel caso sia specificato il parametro 'include' che indica il percorso del file Twig da includere
+
+    Si noti che l'inclusione del codice dei modal avviene in _src/_html/_inc/_page.close.html per l'array principale $ct['page']['contents']['modals']
+    e che i modal dichiarati dai bottoni metro vengono fatti confluire in questo array in _src/_inc/_macro/_default.tools.php. Convenzionalmente,
+    la nomenclatura dei file Twig che contengono il codice dei modal è <pagina>.modal.<ruolo>.html ed essi vengono collocati nella sotto cartella
+    inc/ del template.
+
+    meccaniche del template
+    =======================
 
     il meccanismo di cancellazione
     ------------------------------

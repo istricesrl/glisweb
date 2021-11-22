@@ -241,7 +241,7 @@
 	}
 
     // log
-	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), 'var/log/cron/' . date( 'YmdH' ) . '.log' );
+	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), DIR_VAR_LOG_CRON . date( 'YmdH' ) . '.log' );
 
 	// log
 	writeToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), FILE_LATEST_CRON );

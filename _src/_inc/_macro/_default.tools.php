@@ -20,9 +20,9 @@
 
 			// se ...
 			    if( isset( $metro['modal']['include'] ) ) {
-				$ct['page']['contents']['modals']['metro'][] = array(
-				    'schema' => $metro['modal']['include']
-				);
+					$ct['page']['contents']['modals']['metro'][] = array(
+						'schema' => $metro['modal']['include']
+					);
 			    }
 
 		    }
