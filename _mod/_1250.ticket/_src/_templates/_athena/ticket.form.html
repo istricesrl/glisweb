@@ -81,24 +81,28 @@
 					</div>
 				</div>
 
-				{% if request[table].id %}
+				
 
 				<div class="form-group form-row">
+					{% if request[table].id %}
 					<div class="col col-md-4">
 						<span class="label-top">cliente</span>
 						{{ frm.selectBox( table, '', '', 'id_cliente', '', etc.select.clienti, request, etc.id_cliente, '','','','','anagrafica.form','','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
 					</div>
-					<div class="col-12 col-md-4">
+					{% endif %}
+					<div class="col-12 col-md">
 						<span class="label-top">responsabile</span>
 						{{ frm.selectBox( table, '', '', 'id_responsabile', '', etc.select.anagrafica_collaboratori, request, '', '','','','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf,'anagrafica' ) }}
 					</div>
-					<div class="col-12 col-md">
+					{% if request[table].id %}
+					<div class="col-12 col-md-4">
 						<span class="label-top">indirizzo</span>
 						{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, etc.id_indirizzo, '','','','','indirizzi.form','','indirizzi', 'id_indirizzo' , page, pages, ietf,'indirizzi' ) }}
 					</div>
+					{% endif %}
 				</div>	
 
-				{% endif %}
+				
 
 				
 			</fieldset>
