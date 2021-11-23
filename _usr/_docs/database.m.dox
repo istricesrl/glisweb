@@ -168,6 +168,7 @@
     mail_out_view.token                     | -
     mail_out_view.tentativi                 | -
     mail_out_view.timestamp_invio           | -
+    mail_out_view.data_ora_invio            | la data e l'ora dell'invio
     mail_out_view.id_account_inserimento    | -
     mail_out_view.id_account_aggiornamento  | -
     mail_out_view.__label__                 | etichetta descrittiva della mail
@@ -237,6 +238,7 @@
     mail_sent_view.token                    | -
     mail_sent_view.tentativi                | -
     mail_sent_view.timestamp_invio          | -
+    mail_sent_view.data_ora_invio           | la data e l'ora dell'invio
     mail_sent_view.id_account_inserimento   | -
     mail_sent_view.id_account_aggiornamento | -
     mail_sent_view.__label__                | etichetta descrittiva della mail

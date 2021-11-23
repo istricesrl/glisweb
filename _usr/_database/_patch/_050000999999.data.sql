@@ -405,9 +405,10 @@ REPLACE INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`,
 (2,	NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	900,	'sfondo',	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	NULL,	600,	'gallery',	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	1,      NULL,	1,      NULL,	1),
 (6,	NULL,	100,	'avatar',	    NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	NULL,	300,	'logo',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(7,	NULL,	300,	'logo',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	200,	'carousel',     NULL,	NULL,	NULL,	1,	    NULL,	NULL,	1,      NULL,	1,      NULL,	1);
 
 --| 050000034800
 

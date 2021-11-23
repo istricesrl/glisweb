@@ -16,7 +16,7 @@
     $status = array();
 
     // status
-    $status['info'][] = 'inizio operazioni job standalone di test';
+    $status['info'][] = 'inizio operazioni API job';
 
     // chiave di lock
     $status['token'] = getToken( __FILE__ );

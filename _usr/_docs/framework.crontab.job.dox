@@ -332,6 +332,9 @@
             // CUSTOM status
             $status['error'][] = 'questo job non supporta la modalità standalone';
 
+            // output
+            buildJson( $status );
+
         } elseif( empty( $job['id'] ) ) {
 
             // CUSTOM status
@@ -385,9 +388,6 @@
         }
 
         /* FINE CODICE PRINCIPALE DEL JOB */
-
-        // output
-        buildJson( $status );
     \endcode
 
     Si badi a non confondere la modalità foreground con la modalità standalone; in modalità foreground il job è chiamato tramite l'API job e può
