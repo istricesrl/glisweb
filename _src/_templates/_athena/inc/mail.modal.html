@@ -6,19 +6,15 @@
 
     function send(){
 	formChanged = false;
-	var og = $('#_oggetto').val();
+	var og = encodeURIComponent($('#_oggetto').val());
 	var id = $('#_id').val();
 	var to = $('#_destinatario').val();
 	var from = $('#_mittente').val();
 	var t = encodeURIComponent(CKEDITOR.instances['_testo'].getData());
-//	var t1 = $('#_testo').val();
-//console.log(t);
-//console.log(id);
-//console.log(t1);
+
 	//invio la mail se tutti i campi sono compilati
 	if( og !== '' && to !== '' && t !== '' && from !== ''){
-//console.log(t);
-//console.log(t1);
+
 	$('#send-btn').html('<i class="fa fa-spinner fa-spin fa-fw"></i>');
 	getws("/_src/_api/_task/_mail.send.php","__og__="+og+"&__id__="+id+"&__from__="+from+"&__to__="+to+"&__t__='"+t+"'",  window.open("{{ session.backurls[page.backurl[localization.language.ietf]]}}?&__send__=1", '_self') );
 	}
@@ -68,7 +64,7 @@
 		    <div class="form-row">
 			    <label class="d-none d-md-block col-md-2 col-form-label">Destinatario</label>
 			<div class="col">
-			    {{ frm.input(table, '', '', 'destinatario', 'sede', '', request ) }}
+			    {{ frm.input(table, '', '', 'destinatario', 'mail', '', request ) }}
 			</div>
 		    </div>
 	        <div class="form-row">

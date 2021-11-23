@@ -52,9 +52,6 @@
 		$template[ $cf['localization']['language']['ietf'] ]['testo']
 		);
 
-	
-
-
 	    // log
 //	    logWrite( 'inserisco nella coda mail la mail inviata da indirizzo '.$template[ $cf['localization']['language']['ietf'] ]['from'], 'invio mail', LOG_DEBUG );
 
