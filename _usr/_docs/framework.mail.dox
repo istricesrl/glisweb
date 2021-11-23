@@ -1,0 +1,17 @@
+/*!
+
+    \page mail factory mail del framework
+
+    Descrizione della factory mail del framework.
+
+    introduzione
+    ============
+    La factory mail è la parte del framework che si occupa della creazione e dell'invio delle mail.
+
+    code delle mail in uscita e inviate
+    ===================================
+
+    template per le mail
+    ====================
+
+*/

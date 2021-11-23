@@ -252,7 +252,7 @@
                     $cf['mysql']['connection'],
                     'UPDATE job SET timestamp_completamento = ? WHERE id = ?',
                     array(
-                    array( 's' => $time ),
+                    array( 's' => time() ),
                     array( 's' => $job['id'] )
                     )
                 );
