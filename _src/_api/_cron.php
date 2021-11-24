@@ -186,40 +186,43 @@
 	foreach( $cf['cron']['job'] as $job ) {
 	    if( file_exists( DIR_BASE . $job['job'] ) ) {
 
-		// log
-		    logWrite( 'eseguo il job ' . $job['id'] . ' -> ' . $job['job'], 'cron', LOG_DEBUG );
+			// log
+				logWrite( 'eseguo il job ' . $job['id'] . ' -> ' . $job['job'], 'cron', LOG_DEBUG );
 
-		// resetto lo status
-			$status = array();
+			// resetto lo status
+				$status = array();
 
-		// decodifica del workspace
-			$job['workspace'] = json_decode( $job['workspace'], true );
+			// decodifica del workspace
+				$job['workspace'] = json_decode( $job['workspace'], true );
 
-		// eseguo il job
-			if( ! empty( $job['iterazioni'] ) ) {
-				for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
-					logWrite( 'iterazione #' . $iter . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
-					// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
-					require DIR_BASE . $job['job'];
-					$cf['cron']['results']['job'][ $job['job'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-					if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = 3; }
-					sleep( $job['delay'] );
+			// eseguo il job
+				if( ! empty( $job['iterazioni'] ) ) {
+					for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
+						logWrite( 'iterazione #' . $iter . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
+						// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
+						require DIR_BASE . $job['job'];
+						$cf['cron']['results']['job'][ $job['job'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
+						if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = 3; }
+						sleep( $job['delay'] );
+					}
+				} else {
+					$cf['cron']['results']['errors'][] = 'il job ' . $job['job'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
+					logWrite( 'il job ' . $job['job'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
 				}
-			} else {
-				$cf['cron']['results']['errors'][] = 'il job ' . $job['job'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
-				logWrite( 'il job ' . $job['job'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
-			}
 
-		// aggiorno la tabella di avanzamento lavori
-		    mysqlQuery(
-				$cf['mysql']['connection'],
-				'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
-				array(
-					array( 's' => $time ),
-					array( 's' => json_encode( $job['workspace'] ) ),
-					array( 's' => $job['id'] )
-				)
-			);
+			// aggiorno la tabella di avanzamento lavori
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
+					array(
+						array( 's' => $time ),
+						array( 's' => json_encode( $job['workspace'] ) ),
+						array( 's' => $job['id'] )
+					)
+				);
+
+			// log
+				appendToFile( print_r( $status ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
 
 		} else {
 

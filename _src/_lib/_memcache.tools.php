@@ -47,7 +47,7 @@
 
         if( empty( $conn ) ) {
 
-            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
+            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
 
             return false;
 
@@ -61,7 +61,7 @@
                 logWrite( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
             } else {
                 $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), time(), $ttl );
-                logWrite( 'scrittura effettuata, chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache', LOG_DEBUG );
+                logWrite( 'scrittura effettuata, chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache' );
             }
 
             return $r;
@@ -92,7 +92,7 @@
 
 	if( empty( $conn ) ) {
 
-		logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache', LOG_ERR );
+		logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
 
 		return false;
 
@@ -101,9 +101,9 @@
 		$r = $conn->get( $key );
 
 		if( $r == false ) {
-		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache', LOG_DEBUG );
+		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache', LOG_ERR );
 		} else {
-		    logWrite( 'lettura effettuata, chiave: ' . $key, 'memcache', LOG_DEBUG );
+		    logWrite( 'lettura effettuata, chiave: ' . $key, 'memcache' );
 		}
 
 		return $r;
