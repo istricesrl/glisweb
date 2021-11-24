@@ -43,13 +43,22 @@
 
     // sostituzioni
     $subs = array(
-        'anagrafica' => array(
-            'cognome' => 'Duplicato'
-        ),
-        'telefoni' => array(
-            'descrizione' => 'Duplicato'
+        't' => array(
+            'anagrafica' => array(
+                't' => array(
+                    'telefoni' => array(
+                        'f' => array(
+                            'descrizione' => 'Duplicato'
+                        )
+                    )
+                ),
+                'f' => array(
+                    'cognome' => 'Duplicato'
+                )
+            )
         )
     );
+
 
     // duplicazione
     mysqlDuplicateRowRecursive(

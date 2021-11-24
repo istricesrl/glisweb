@@ -23,20 +23,39 @@
 
         // array delle tabelle da coinvolgere nella duplicazione
         $tbls = array(
-            'pagine' => array(
-                'nome' => $p['nome'] . ' - duplicata'
-            ),
-            'contenuti' => array(),
-            'file' => array(),
-            'metadati' => array(),
-            'immagini' => array(),
-            'audio' => array(),
-            'video' => array(),
-            'menu' => array(),
-            'macro' => array(),
-            'pagine_gruppi' => array(),
-            'pubblicazione' => array()
+            't' => array(
+                'pagine' => array(
+                    't' => array(
+                        'contenuti' => array(),
+                        'immagini' => array(
+                            't' => array(
+                                'contenuti' => array()
+                            )
+                        ),
+                        'metadati' => array(),
+                        'file' => array(),
+                        'audio' => array(
+                            't' => array(
+                                'contenuti' => array()
+                            )
+                        ),
+                        'video' => array(
+                            't' => array(
+                                'contenuti' => array()
+                            )
+                        ),
+                        'menu' => array(),
+                        'macro' => array(),
+                        'pagine_gruppi' => array(),
+                        'pubblicazione' => array()
+                    ),
+                    'f' => array(
+                        'nome' => $p['nome'] . ' - duplicata'
+                    )
+                )
+            )
         );
+
 
         mysqlDuplicateRowRecursive(
             $cf['mysql']['connection'],
