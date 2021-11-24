@@ -122,7 +122,7 @@
         } elseif( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
 
             // CUSTOM status
-            $status['info'][] = 'iterazione a vuoto su job già completato';
+            $status['info'][] = 'iterazione a vuoto su job completato';
 
         } elseif( empty( $job['workspace']['file'] ) ) {
 
@@ -343,7 +343,7 @@
         } elseif( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
 
             // CUSTOM status
-            $status['info'][] = 'iterazione a vuoto su job già completato';
+            $status['info'][] = 'iterazione a vuoto su job completato';
 
         } elseif( empty( $job['workspace']['file'] ) ) {
 
