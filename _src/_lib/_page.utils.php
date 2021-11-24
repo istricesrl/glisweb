@@ -38,6 +38,63 @@
             'pubblicazioni' => array()
         );
 
+        $tbls = array(
+            'pagine' => array(
+                'nome' => $p['nome'] . ' - duplicata',
+
+                'contenuti' => array(
+
+                    'h1' => $p['h1'] . ' - pagina duplicata'
+
+                ),
+                'file' => array(),
+                'metadati' => array(),
+                'immagini' => array(
+                    'contenuti' => array(
+
+                        'h1' => $p['h1'] . ' - immagine duplicata'
+
+                    ),
+                    'metadati' => array(),
+                ),
+                'audio' => array(),
+                'video' => array(),
+                'menu' => array(),
+                'macro' => array(),
+                'pagine_gruppi' => array(),
+                'pubblicazioni' => array()
+            )
+        );
+
+        $tbls = array(
+            't' => array(
+                'pagine' => array(
+                    't' => array(
+                        'contenuti' => array(
+                            'f' => array(
+                                'h1' => $p['h1'] . ' - pagina duplicata'
+                            )
+                        ),
+                        'immagini' => array(
+                            't' => array(
+                                'contenuti' => array(
+                                    't' => array(),
+                                    'f' => array(
+                                        'h1' => $p['h1'] . ' - immagine duplicata'
+                                    )
+                                )
+                            ),
+                            'f' => array()
+                        ),
+                        'metadati' => array()
+                    ),
+                    'f' => array(
+                        'nome' => $p['nome'] . ' - duplicata'
+                    )
+                )
+            )
+        );
+
         mysqlDuplicateRowRecursive(
             $cf['mysql']['connection'],
             'pagine',

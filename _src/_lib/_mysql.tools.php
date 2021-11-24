@@ -610,7 +610,7 @@
 		}
 
 		// duplico la riga
-		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x[ $t ] );
+		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x['t'][ $t ]['f'] );
 
 		// debug
 		// echo 'ID riga duplicata = ' . $id . PHP_EOL;
@@ -618,7 +618,7 @@
 		// creo i placeholder per le tabelle richieste
 		$pholders = array();
 		$values = array( array( 's' => $t ) );
-		foreach( array_keys( $x ) as $rt ) {
+		foreach( array_keys( $x['t'][ $t ]['t'] ) as $rt ) {
 			$pholders[] = '?';
 			$values[] = array( 's' => $rt );
 		}
@@ -668,7 +668,7 @@
 			//	 print_r( $rl );
 
 				// chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
-				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x );
+				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][ $t ] );
 
 			}
 
