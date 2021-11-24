@@ -609,6 +609,10 @@
 			die( 'ID da duplicare non passato' );
 		}
 
+		// defaults
+		if( ! isset( $x['t'][ $t ]['f'] ) ) { $x['t'][ $t ]['f'] = array(); }
+		if( ! isset( $x['t'][ $t ]['t'] ) ) { $x['t'][ $t ]['t'] = array(); }
+
 		// duplico la riga
 		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x['t'][ $t ]['f'] );
 
