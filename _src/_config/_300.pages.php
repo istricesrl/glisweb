@@ -54,7 +54,9 @@
         || $cf['contents']['cached']    <= $cf['contents']['updated']
 	) {
 	    $cf['contents']['cached'] = false;
-	    logWrite( 'struttura delle pagine non presente in cache', 'speed', LOG_NOTICE );
+        if( ! empty( $cf['memcache']['connection'] ) ) {
+            logWrite( 'struttura delle pagine non presente in cache', 'speed', LOG_NOTICE );
+        }
 	} else {
 	    logWrite( 'struttura delle pagine presente in cache', 'speed' );
 	}
