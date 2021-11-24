@@ -23,50 +23,6 @@
 
         // array delle tabelle da coinvolgere nella duplicazione
         $tbls = array(
-            'pagine' => array(
-                'nome' => $p['nome'] . ' - duplicata'
-            ),
-            'contenuti' => array(),
-            'file' => array(),
-            'metadati' => array(),
-            'immagini' => array(),
-            'audio' => array(),
-            'video' => array(),
-            'menu' => array(),
-            'macro' => array(),
-            'pagine_gruppi' => array(),
-            'pubblicazioni' => array()
-        );
-
-        $tbls = array(
-            'pagine' => array(
-                'nome' => $p['nome'] . ' - duplicata',
-
-                'contenuti' => array(
-
-                    'h1' => $p['h1'] . ' - pagina duplicata'
-
-                ),
-                'file' => array(),
-                'metadati' => array(),
-                'immagini' => array(
-                    'contenuti' => array(
-
-                        'h1' => $p['h1'] . ' - immagine duplicata'
-
-                    ),
-                    'metadati' => array(),
-                ),
-                'audio' => array(),
-                'video' => array(),
-                'menu' => array(),
-                'macro' => array(),
-                'pagine_gruppi' => array(),
-                'pubblicazioni' => array()
-            )
-        );
-
-        $tbls = array(
             't' => array(
                 'pagine' => array(
                     't' => array(
