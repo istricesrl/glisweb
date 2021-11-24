@@ -1,1 +1,0 @@
-ALTER TABLE `test` ADD `codice` CHAR(16) NULL DEFAULT NULL AFTER `nome`;

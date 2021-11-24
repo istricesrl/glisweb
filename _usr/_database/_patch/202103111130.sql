@@ -1,1 +1,0 @@
-ALTER TABLE `video` ADD INDEX(`id_categoria_risorse`);

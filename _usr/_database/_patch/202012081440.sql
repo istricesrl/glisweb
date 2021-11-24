@@ -1,1 +1,0 @@
-ALTER TABLE `orari_contratti` ADD `se_lavoro` INT(1) NULL DEFAULT '1' , ADD `se_disponibile` INT(1) NULL DEFAULT NULL ;

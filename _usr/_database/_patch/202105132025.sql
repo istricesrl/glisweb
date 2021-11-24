@@ -1,1 +1,0 @@
-ALTER TABLE `__report_progetti_sostituti__` DROP INDEX `data_prima_scopertura`, ADD INDEX `data_scopertura` (`data_scopertura`);

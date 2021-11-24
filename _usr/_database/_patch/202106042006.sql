@@ -1,1 +1,0 @@
-DROP TRIGGER IF EXISTS anagrafica_modalita_pagamento_insert_static;

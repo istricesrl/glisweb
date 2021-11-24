@@ -1,1 +1,0 @@
-ALTER TABLE `articoli` ADD `codice_produttore` CHAR(128) NULL DEFAULT NULL AFTER `quantita_disponibile`;

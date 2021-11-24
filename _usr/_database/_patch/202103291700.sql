@@ -1,1 +1,0 @@
-DROP VIEW caratteristiche_articoli_view;

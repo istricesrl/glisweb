@@ -1,1 +1,0 @@
-ALTER TABLE `pianificazioni` ADD `token` CHAR(128) NULL DEFAULT NULL AFTER `workspace`, ADD INDEX (`token`) ;

@@ -1,1 +1,0 @@
-ALTER TABLE `audio` ADD INDEX(`id_notizia`), ADD INDEX(`id_categoria_notizie`);

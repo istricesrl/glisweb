@@ -29,8 +29,8 @@
 {% endif %}
 
 {# GEOLOCALIZZAZIONE #}
-{% if request[ table ].timestamp_geocode %}
-    {% set geocode = 'geolocalizzato ' ~ request[ table ][ 'timestamp_geocode' ]|date('Y/m/d H:i:s') %}
+{% if request[ table ].timestamp_geolocalizzazione %}
+    {% set geocode = 'geolocalizzato ' ~ request[ table ][ 'timestamp_geolocalizzazione' ]|date('Y/m/d H:i:s') %}
 {% else %}
     {% set geocode = 'indirizzo non ancora geolocalizzato' %}
 {% endif %}

@@ -1,1 +1,0 @@
-ALTER TABLE `articoli` ADD `id_udm` INT NULL DEFAULT NULL AFTER `id_colore`, ADD INDEX (`id_udm`) ;

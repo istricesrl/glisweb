@@ -121,7 +121,11 @@
 
 	memcacheUniqueKey( $key );
 
-	return $conn->delete( $key );
+    if( ! empty( $conn ) ) {
+        return $conn->delete( $key );
+    } else {
+        return false;
+    }
 
     }
 

@@ -83,9 +83,6 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'anagrafica_clienti' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
 		'anagrafica_condizioni_pagamento' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
@@ -187,7 +184,7 @@
 		'progetti_certificazioni' => array(
             CONTROL_FULL => array( 'roots' )
         ),
-	    'pubblicazione' => array(
+	    'pubblicazioni' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 #	    'prezzi' => array(
@@ -212,7 +209,7 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-	    'template_mail' => array(
+	    'template' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
 	    'test' => array(

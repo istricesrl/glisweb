@@ -67,6 +67,8 @@
 		headers: { accept: 'application/json' }
 	    }).done( function( data ) {
 //		console.log( e );
+		console.log(data);
+		// TODO se data è vuoto o se contiene errori, mostrare un'icona di avvertimento o una x
 		e.find('.media-left').first().html('<i class="fa fa-check">');
 		callback();
 	    });

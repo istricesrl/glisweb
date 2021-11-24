@@ -1,1 +1,0 @@
-ALTER TABLE `ruoli_audio` ADD `se_prodotti` INT(1) NULL , ADD `se_articoli` INT NULL ;

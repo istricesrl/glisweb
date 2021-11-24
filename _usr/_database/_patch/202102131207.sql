@@ -1,2 +1,0 @@
-ALTER TABLE `pianificazioni` ADD FOREIGN KEY (`id_todo`) REFERENCES `todo`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-; 

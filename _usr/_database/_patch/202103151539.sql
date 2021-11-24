@@ -1,1 +1,0 @@
-insert into anagrafica_view_static select * from anagrafica_view;

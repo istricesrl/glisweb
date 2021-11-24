@@ -318,6 +318,7 @@
 	define( 'DIR_VAR_CONTENUTI'		, DIR_BASE . 'var/contenuti/' );
 	define( 'DIR_VAR_IMMAGINI'		, DIR_BASE . 'var/immagini/' );
     define( 'DIR_VAR_LOG'			, DIR_BASE . 'var/log/' );
+    define( 'DIR_VAR_LOG_CRON'   , DIR_VAR_LOG . 'cron/' );
     define( 'DIR_VAR_LOG_MYSQL'   , DIR_VAR_LOG . 'mysql/' );
     define( 'DIR_VAR_LOG_MYSQL_PATCH'   , DIR_VAR_LOG_MYSQL . 'patch/' );
 	define( 'DIR_VAR_LOG_LATEST'		, DIR_BASE . 'var/log/latest/' );

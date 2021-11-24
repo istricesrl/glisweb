@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD `longitudine_ora_inizio` DECIMAL(11,7) NULL DEFAULT NULL AFTER `latitudine_ora_inizio`;

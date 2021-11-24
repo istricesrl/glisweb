@@ -1,1 +1,0 @@
-ALTER TABLE `anagrafica` ADD `id_responsabile_operativo` INT NULL DEFAULT NULL AFTER `id_agente`, ADD KEY `id_responsabile_operativo` (`id_responsabile_operativo`) ;

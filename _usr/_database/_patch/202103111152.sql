@@ -1,1 +1,0 @@
-ALTER TABLE `audio` ADD CONSTRAINT `audio_ibfk_9` FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;

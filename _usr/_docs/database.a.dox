@@ -1,0 +1,742 @@
+/*!
+
+    \page database_a database del framework, tabelle con la lettera A
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera A.
+
+    le tabelle del database di supporto AA - AZ
+    ===========================================
+
+    account
+    -------
+    Questa tabella *gestita* contiene gli account presenti nel deploy corrente; è fondamentale per consentire il login degli utenti.
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    account.id                          | l'ID dell'account
+    account.id_anagrafica               | l'ID dell'anagrafica collegata all'account (referenzia la tabella anagrafica)
+    account.id_mail                     | l'ID della mail collegata all'account (referenzia la tabella mail)
+    account.username                    | il nome utente dell'account (usato per il login)
+    account.password                    | la password dell'account cifrata in MD5
+    account.se_attivo                   | se valorizzato a 1 indica che l'account è attivo, qualsiasi altro valore indica un account inattivo
+    account.token                       | token utilizzato per l'attivazione degli account creati tramite il modulo di registrazione automatica o per il recupero password
+    account.timestamp_login             | timestamp dell'ultimo login effettuato dall'account (vedi _src/_config/_210.auth.php)
+    account.timestamp_cambio_password   | timestamp dell'ultimo cambio di password
+    account.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    account.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    account.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    account.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
+
+    Per inserire rapidamente un account si può utilizzare il seguente codice SQL sostituendo <username> e <password>
+    con i valori desiderati:
+
+    \code{.sql}
+    INSERT INTO `account` (`id`, `id_anagrafica`, `id_mail`, `username`, `password`, `se_attivo`)
+    VALUES (NULL, NULL, NULL, '<username>', MD5('<password>'), '1');
+    \endcode
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                        | campo                        | tabella e campo collegati        | comportamento
+    ------------------------------|------------------------------|----------------------------------|-------------------
+    account_ibfk_01_nofollow      | id_anagrafica                | anagrafica.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    account_ibfk_02_nofollow      | id_mail                      | mail.id                          | ON DELETE SET NULL ON UPDATE SET NULL
+    account_ibfk_98_nofollow      | id_account_inserimento       | account.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    account_ibfk_99_nofollow      | id_account_aggiornamento     | account.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *account_view* relativa alla tabella *account* presenta le seguenti colonne:
+
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    account_view.id                           | -
+    account_view.id_anagrafica                | -
+    account_view.anagrafica                   | l'anagrafica collegata all'account
+    account_view.id_mail                      | -
+    account_view.username                     | -
+    account_view.password                     | -
+    account_view.se_attivo                    | -
+    account_view.token                        | -
+    account_view.timestamp_login              | -
+    account_view.timestamp_cambio_password    | -
+    account_view.attivo                       | descrizione letterale dello status del campo se_attivo
+    account_view.utente                       | -
+    account_view.gruppi                       | -
+    account_view.id_gruppi                    | -
+    account_view.id_gruppi_attribuzione       | -
+    account_view.id_account_inserimento       | -
+    account_view.id_account_aggiornamento     | -
+    account_view.__label__                    | l'etichetta che descrive l'account
+
+    Per approfondire la procedura di login si veda _src/_config/_210.auth.php; per il logout, si veda _src/_config/_220.auth.php. Per la registrazione
+    automatica degli account e per le logiche legate al token, si veda principalmente _mod/_0650.registrazione/_src/_inc/_macro/_registrazione.php.
+
+    account_gruppi
+    --------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *account* con la secondaria *gruppi*.
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    account_gruppi.id                           | l'ID dell'associazione fra account e gruppo
+    account_gruppi.id_account                   | l'ID dell'account
+    account_gruppi.id_gruppo                    | l'ID del gruppo
+    account_gruppi.ordine                       | campo di ordinamento
+    account_gruppi.se_amministratore            | indica se l'account è amministratore del gruppo (può aggiungere altri membri al gruppo)
+    account_gruppi.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    account_gruppi.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    account_gruppi.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    account_gruppi.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
+
+    Per inserire rapidamente un'associazione fra account e gruppo si può utilizzare il seguente codice SQL sostituendo
+    <idAccount> e <idGruppo> con i valori desiderati:
+
+    \code{.sql}
+    INSERT INTO `account_gruppi` (`id`, `id_account`, `id_gruppo`) VALUES (NULL, '<idAccount>', '<idGruppo>');
+    \endcode
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                        | tabella e campo collegati        | comportamento
+    ------------------------------------|------------------------------|----------------------------------|-------------------
+    account_gruppi_ibfk_01              | id_account                   | account.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    account_gruppi_ibfk_02_nofollow     | id_gruppo                    | gruppi.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+    account_gruppi_ibfk_98_nofollow     | id_account_inserimento       | account.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    account_gruppi_ibfk_99_nofollow     | id_account_aggiornamento     | account.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *account_gruppi_view* relativa alla tabella *account_gruppi* presenta le seguenti colonne:
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    account_gruppi_view.id                          | -
+    account_gruppi_view.id_account                  | -
+    account_gruppi_view.account                     | l'account
+    account_gruppi_view.id_gruppo                   | -
+    account_gruppi_view.gruppo                      | il gruppo
+    account_gruppi_view.ordine                      | -
+    account_gruppi_view.se_amministratore           | -
+    account_gruppi_view.id_account_inserimento      | -
+    account_gruppi_view.id_account_aggiornamento    | -
+    account_gruppi_view.__label__                   | l'etichetta che descrive l'associazione
+
+    Dal punto di vista dell'array $cf, l'associazione fra account e gruppi viene utilizzata al momento del login,
+    si veda _src/_config/_210.auth.php per ulteriori dettagli.
+
+    account_gruppi_attribuzione
+    ---------------------------
+    Questa tabella *gestita* innesca l'attribuzione automatica di un'entità a un gruppo quando questa viene creata dall'account associato.
+
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    account_gruppi_attribuzione.id                          | l'ID della regola di attribuzione
+    account_gruppi_attribuzione.id_account                  | l'ID dell'account coinvolto nella regola
+    account_gruppi_attribuzione.id_gruppo                   | l'ID del gruppo a cui attribuire l'entità
+    account_gruppi_attribuzione.ordine                      | campo di ordinamento
+    account_gruppi_attribuzione.entita                      | il nome dell'entità per cui vale la regola
+    account_gruppi_attribuzione.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    account_gruppi_attribuzione.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    account_gruppi_attribuzione.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    account_gruppi_attribuzione.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
+
+    Per inserire rapidamente una regola di attribuzione automatica si può utilizzare il seguente codice SQL sostituendo
+    <idAccount>, <idGruppo> e <nomeEntità> con i valori desiderati:
+
+    \code{.sql}
+    INSERT INTO `account_gruppi_attribuzione` (`id`, `id_account`, `id_gruppo`, `entita`) VALUES (NULL, '<idAccount>', '<idGruppo>', '<nomeEntità>');
+    \endcode
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                          | campo                        | tabella e campo collegati        | comportamento
+    ------------------------------------------------|------------------------------|----------------------------------|-------------------
+    account_gruppi_attribuzione_ibfk_01             | id_account                   | account.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    account_gruppi_attribuzione_ibfk_02_nofollow    | id_gruppo                    | gruppi.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+    account_gruppi_attribuzione_ibfk_98_nofollow    | id_account_inserimento       | account.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    account_gruppi_attribuzione_ibfk_99_nofollow    | id_account_aggiornamento     | account.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *account_gruppi_attribuzione_view* relativa alla tabella *account_gruppi_attribuzione* presenta le seguenti colonne:
+
+    colonna                                                         | descrizione
+    ----------------------------------------------------------------|---------------------------------------------------------------------------------------
+    account_gruppi_attribuzione_view.id                             | -
+    account_gruppi_attribuzione_view.id_account                     | -
+    account_gruppi_attribuzione_view.id_gruppo                      | -
+    account_gruppi_attribuzione_view.ordine                         | -
+    account_gruppi_attribuzione_view.entita                         | -
+    account_gruppi_attribuzione_view.id_account_inserimento         | -
+    account_gruppi_attribuzione_view.id_account_aggiornamento       | -
+    account_gruppi_attribuzione_view.__label__                      | l'etichetta che descrive la regola di attribuzione
+
+    Questa tabella è la base del meccanismo di attribuzione automatica delle entità ai gruppi che consente di dare visibilità agli oggetti a gruppi specifici
+    in scenari dove è presente una tabella di ACL.
+
+    anagrafica
+    ----------
+    Questa tabella *gestita* contiene i dati anagrafici.
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica.id                                   | l'ID dell'anagrafica
+    anagrafica.id_tipologia                         | l'ID della tipologia associata all'anagrafica
+    anagrafica.codice                               | il codice parlante dell'anagrafica (codice cliente, codice fornitore, matricola dipendente, eccetera)
+    anagrafica.riferimento                          | un riferimento non univoco all'anagrafica
+    anagrafica.nome                                 | il nome per le persone fisiche
+    anagrafica.cognome                              | il cognome per le persone fisiche
+    anagrafica.denominazione                        | la denominazione per le persone giuridiche
+    anagrafica.soprannome                           | il soprannome o nome convenzionale, usato ad es. nelle tendine eccetera
+    anagrafica.sesso                                | il sesso dell'anagrafica (M, F o trattino)
+    anagrafica.stato_civile                         | lo stato civile dell'anagrafica
+    anagrafica.codice_fiscale                       | il codice fiscale dell'anagrafica
+    anagrafica.partita_iva                          | la partita IVA dell'anagrafica
+    anagrafica.codice_sdi                           | il codice SDI per la fatturazione elettronica dell'anagrafica
+    anagrafica.id_pec_sdi                           | l'ID della casella PEC per la fatturazione elettronica dell'anagrafica
+    anagrafica.id_regime                            | l'ID del regime fiscale dell'anagrafica
+    anagrafica.note_amministrative                  | le note amministrative relative all'anagrafica
+    anagrafica.luogo_nascita                        | il luogo di nascita dell'anagrafica
+    anagrafica.stato_nascita                        | lo stato di nascita dell'anagrafica
+    anagrafica.id_stato_nascita                     | l'ID dello stato di nascita dell'anagrafica
+    anagrafica.comune_nascita                       | il comune di nascita dell'anagrafica
+    anagrafica.id_comune_nascita                    | l'ID del comune di nascita dell'anagrafica
+    anagrafica.giorno_nascita                       | il giorno di nascita dell'anagrafica
+    anagrafica.mese_nascita                         | il mese di nascita dell'anagrafica
+    anagrafica.anno_nascita                         | l'anno di nascita dell'anagrafica
+    anagrafica.id_ranking                           | l'ID della tipologia CRM dell'anagrafica
+    anagrafica.id_agente                            | l'ID dell'agente associato all'anagrafica
+    anagrafica.id_responsabile_operativo            | l'ID del respondabile operativo
+    anagrafica.note_commerciali                     | le note commerciali relative all'anagrafica
+    anagrafica.condizioni_vendita                   | le condizioni di vendita relative all'anagrafica
+    anagrafica.condizioni_acquisto                  | le condizioni di acquisto relative all'anagrafica
+    anagrafica.note                                 | le note relative all'anagrafica
+    anagrafica.data_archiviazione                   | la data di archiviazione dell'anagrafica
+    anagrafica.note_archiviazione                   | le note relative all'archiviazione dell'anagrafica
+    anagrafica.recapiti                             | recapiti dell'anagrafica
+    anagrafica.se_importata                         | flag che indica se l'anagrafica è stata importata
+    anagrafica.se_stampa_privacy                    | flag che indica se è stata stampata l'informativa privacy per l'anagrafica
+    anagrafica.id_account_inserimento               | l'ID dell'account che ha inserito la riga
+    anagrafica.timestamp_inserimento                | la timestamp dell'inserimento della riga
+    anagrafica.id_account_aggiornamento             | l'ID dell'ultimo account che ha modificato la riga
+    anagrafica.timestamp_aggiornamento              | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                        | tabella e campo collegati    | comportamento
+    --------------------------------------------|------------------------------|------------------------------|-----------------------
+    anagrafica_ibfk_01_nofollow                 | id_tipologia                 | tipologie_anagrafica.id      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_02_nofollow                 | id_pec_sdi                   | mail.id                      | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_ibfk_03_nofollow                 | id_regime_fiscale            | regimi_fiscali.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_04_nofollow                 | id_stato_nascita             | stati.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_05_nofollow                 | id_comune_nascita            | comuni.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_06_nofollow                 | id_ranking                   | ranking.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_07_nofollow                 | id_agente                    | anagrafica.id                | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_ibfk_08_nofollow                 | id_responsabile_operativo    | anagrafica.id                | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_ibfk_98_nofollow                 | id_account_inserimento       | account.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_ibfk_99_nofollow                 | id_account_aggiornamento     | account.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *anagrafica_view* relativa alla tabella *anagrafica* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_view.id                                     | l'ID dell'anagrafica
+    anagrafica_view.tipologia                              | la tipologia associata all'anagrafica
+    anagrafica_view.codice                                 | il codice parlante dell'anagrafica (codice cliente, codice fornitore, matricola dipendente, eccetera)
+    anagrafica_view.riferimento                            | -
+    anagrafica_view.nome                                   | il nome per le persone fisiche
+    anagrafica_view.cognome                                | il cognome per le persone fisiche
+    anagrafica_view.denominazione                          | la denominazione per le persone giuridiche
+    anagrafica_view.soprannome                             | il soprannome o nome convenzionale, usato ad es. nelle tendine eccetera
+    anagrafica_view.sesso                                  | il sesso dell'anagrafica (M, F o trattino)
+    anagrafica_view.codice_fiscale                         | il codice fiscale dell'anagrafica
+    anagrafica_view.partita_iva                            | la partita IVA dell'anagrafica
+    anagrafica_view.tipologia_crm                          | la tipologia CRM dell'anagrafica
+    anagrafica_view.recapiti                               | recapiti dell'anagrafica
+    anagrafica_view.se_collaboratore                       | flag che identifica se il contatto è un collaboratore
+    anagrafica_view.se_dipendente                          | flag che identifica se il contatto è un dipendente
+    anagrafica_view.se_interinale                          | flag che identifica se il contatto è un interinale
+    anagrafica_view.se_cliente                             | flag che identifica se il contatto è un cliente
+    anagrafica_view.se_lead                                | flag che identifica se il contatto è un lead
+    anagrafica_view.se_prospect                            | flag che identifica se il contatto è un prospect
+    anagrafica_view.se_mandante                            | flag che identifica se il contatto è un mandante
+    anagrafica_view.se_fornitore                           | flag che identifica se il contatto è un fornitore
+    anagrafica_view.se_produttore                          | flag che identifica se il contatto è un produttore
+    anagrafica_view.se_agente                              | flag che identifica se il contatto è un agente
+    anagrafica_view.se_interno                             | flag che identifica se il contatto è un interno
+    anagrafica_view.se_esterno                             | flag che identifica se il contatto è un estermp
+    anagrafica_view.se_amministrazione                     | flag che identifica se il contatto è un impiegato amministrativo
+    anagrafica_view.se_produzione                          | flag che identifica se il contatto è un impiegato in produzione
+    anagrafica_view.se_azienda_gestita                     | flag che identifica se il contatto è un'azienda gestita
+    anagrafica_view.se_concorrente                         | flag che identifica se il contatto è un concorrente
+    anagrafica_view.se_tutor                               | flag che identifica se il contatto è un tutor
+    anagrafica_view.se_classe                              | flag che identifica se il contatto è una classe
+    anagrafica_view.se_docente                             | flag che identifica se il contatto è un docente
+    anagrafica_view.se_allievo                             | flag che identifica se il contatto è un allievo
+    anagrafica_view.se_agenzia_interinale                  | flag che identifica se il contatto è un'agenzia interinale
+    anagrafica_view.se_referente                           | flag che identifica se il contatto è un referente
+    anagrafica_view.se_sostituto                           | flag che identifica se il contatto è un sostituto
+    anagrafica_view.se_squadra                             | flag che identifica se il contatto è un membro della squadra emergenze
+    anagrafica_view.categorie                              | -
+    anagrafica_view.telefoni                               | -
+    anagrafica_view.mail                                   | -
+    anagrafica_view.data_archiviazione                     | -
+    anagrafica_view.id_account_inserimento                 | -
+    anagrafica_view.id_account_aggiornamento               | -
+    anagrafica_view.__label__                              | l'etichetta che descrive l'anagrafica
+
+    La vista *anagrafica_view* contiene molti campi booleani che qualificano i contatti in base alle categorie cui appartengono; questo è utile per la popolazione
+    delle tendine (vedi *anagrafica_categorie* e *categorie_anagrafica*).
+
+    La tabella *anagrafica* è vincolata dalle ACL memorizzate sulla tabella *__acl_anagrafica__*.
+
+    anagrafica_attivi
+    -----------------
+    Questa tabella *virtuale* contiene le anagrafiche non archiviate, individuate in base al fatto che il campo *data_archiviazione* è NULL.
+
+    anagrafica_archiviati
+    ---------------------
+    Questa tabella *virtuale* contiene le anagrafiche archiviate, individuate in base al fatto che il campo data_archiviazione è NOT NULL.
+
+    anagrafica_categorie
+    --------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con la secondaria *categorie_anagrafica*.
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_categorie.id                             | l'ID dell'associazione fra anagrafica e categorie
+    anagrafica_categorie.id_anagrafica                  | l'ID dell'anagrafica
+    anagrafica_categorie.id_categoria                   | l'ID della categoria
+    anagrafica_categorie.ordine                         | campo di ordinamento
+    anagrafica_categorie.id_account_inserimento         | l'ID dell'account che ha inserito la riga
+    anagrafica_categorie.timestamp_inserimento          | la timestamp dell'inserimento della riga
+    anagrafica_categorie.id_account_aggiornamento       | l'ID dell'ultimo account che ha modificato la riga
+    anagrafica_categorie.timestamp_aggiornamento        | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati     | comportamento
+    ----------------------------------------------|------------------------------|-------------------------------|----------------------
+    anagrafica_categorie_ibfk_01                  | id_anagrafica                | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_categorie_ibfk_02_nofollow         | id_categoria                 | categorie_anagrafica.id       | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_categorie_ibfk_98_nofollow         | id_account_inserimento       | account.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_categorie_ibfk_99_nofollow         | id_account_aggiornamento     | account.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *anagrafica_categorie_view* relativa alla tabella *anagrafica_categorie* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_categorie_view.id                           | -
+    anagrafica_categorie_view.id_anagrafica                | -
+    anagrafica_categorie_view.id_categoria                 | -
+    anagrafica_categorie_view.ordine                       | -
+    anagrafica_categorie_view.id_account_inserimento       | -
+    anagrafica_categorie_view.id_account_aggiornamento     | -
+    anagrafica_categorie_view.__label__                    | etichetta descrittiva dell'associazione fra anagrafica e categoria
+
+    anagrafica_cittadinanze
+    -----------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* e l'entità *stati* per descrivere le cittadinanze dei contatti;
+    una cittadinanza può essere semplicemente assegnata (con data_inizio e data_fine impostati a NULL) oppure essere acquisita (con data_inizio NOT NULL) o persa
+    (con data_fine NOT NULL).
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_cittadinanze.id                          | l'ID dell'associazione fra anagrafica e stato
+    anagrafica_cittadinanze.id_anagrafica               | l'ID dell'anagrafica
+    anagrafica_cittadinanze.id_stato                    | l'ID dello stato di cittadinanza
+    anagrafica_cittadinanze.data_inizio                 | eventuale data di inizio di cittadinanza
+    anagrafica_cittadinanze.data_fine                   | eventuale data di fine di cittadinanza
+    anagrafica_cittadinanze.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    anagrafica_cittadinanze.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    anagrafica_cittadinanze.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    anagrafica_cittadinanze.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati    | comportamento
+    ----------------------------------------------|------------------------------|------------------------------|-----------------------
+    anagrafica_cittadinanze_ibfk_01               | id_anagrafica                | anagrafica.id                | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_cittadinanze_ibfk_02_nofollow      | id_stato                     | stati.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_cittadinanze_ibfk_98_nofollow      | id_account_inserimento       | account.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_cittadinanze_ibfk_99_nofollow      | id_account_aggiornamento     | account.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *anagrafica_cittadinanze_view* relativa alla tabella *anagrafica_cittadinanze* presenta le seguenti colonne:
+
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_cittadinanze_view.id                         | -
+    anagrafica_cittadinanze_view.id_anagrafica              | -
+    anagrafica_cittadinanze_view.id_stato                   | -
+    anagrafica_cittadinanze_view.data_inizio                | -
+    anagrafica_cittadinanze_view.data_fine                  | -
+    anagrafica_cittadinanze_view.id_account_inserimento     | -
+    anagrafica_cittadinanze_view.id_account_aggiornamento   | -
+    anagrafica_cittadinanze_view.__label__                  | l'etichetta che descrive la cittadinanza
+
+    anagrafica_indirizzi
+    --------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità *indirizzi*.
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_indirizzi.id                         | l'ID dell'associazione fra indirizio e anagrafica
+    anagrafica_indirizzi.id_anagrafica              | l'ID dell'anagrafica
+    anagrafica_indirizzi.id_indirizzo               | l'ID dell'indirizzo
+    anagrafica_indirizzi.id_ruolo                   | l'ID del ruolo svolto dall'indirizzo relativamente all'anagrafica
+    anagrafica_indirizzi.interno                    | l'interno occupato dall'anagrafica all'indirizzo
+    anagrafica_indirizzi.note                       | le note sull'indirizzo relativamente all'anagrafica
+    anagrafica_indirizzi.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    anagrafica_indirizzi.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    anagrafica_indirizzi.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    anagrafica_indirizzi.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                     | tabella e campo collegati         | comportamento
+    --------------------------------------------|---------------------------|-----------------------------------|------------------
+    anagrafica_indirizzi_ibfk_01                | id_anagrafica             | anagrafica.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_indirizzi_ibfk_02_nofollow       | id_indirizzo              | indirizzi.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_indirizzi_ibfk_03_nofollow       | id_ruolo                  | ruoli_indirizzi.id                | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_indirizzi_ibfk_98_nofollow       | id_account_inserimento    | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_indirizzi_ibfk_99_nofollow       | id_account_aggiornamento  | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *anagrafica_indirizzi_view* relativa alla tabella *anagrafica_indirizzi* presenta le seguenti colonne:
+
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_indirizzi_view.id                            | -
+    anagrafica_indirizzi_view.id_anagrafica                 | -
+    anagrafica_indirizzi_view.id_indirizzo                  | -
+    anagrafica_indirizzi_view.id_ruolo                      | -
+    anagrafica_indirizzi_view.ruolo                         | il ruolo dell'indirizzo relativamente all'anagrafica
+    anagrafica_indirizzi_view.id_account_inserimento        | -
+    anagrafica_indirizzi_view.id_account_aggiornamento      | -
+    anagrafica_indirizzi_view.__label__                     | l'etichetta che descrive l'associazione fra anagrafica e indirizzo
+
+    anagrafica_settori
+    ------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con l'entità secondaria *settori* che rappresentano i settori
+    di attività collegati ai codici ATECO.
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_settori.id                               | l'ID dell'associazione fra anagrafica e settore
+    anagrafica_settori.id_anagrafica                    | l'ID dell'anagrafica        
+    anagrafica_settori.ordine                           | campo di ordinamento        
+    anagrafica_settori.id_settore                       | l'ID del settore
+    anagrafica_settori.id_account_inserimento           | l'ID dell'account che ha inserito la riga
+    anagrafica_settori.timestamp_inserimento            | la timestamp dell'inserimento della riga
+    anagrafica_settori.id_account_aggiornamento         | l'ID dell'ultimo account che ha modificato la riga
+    anagrafica_settori.timestamp_aggiornamento          | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    anagrafica_settori_ibfk_01                  | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_settori_ibfk_02_nofollow         | id_settore                    | settori.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_settori_ibfk_98_nofollow         | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_settori_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *anagrafica_settori_view* relativa alla tabella *anagrafica_settori* presenta le seguenti colonne:
+
+    colonna                                               | descrizione
+    ------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_settori_view.id                            | -
+    anagrafica_settori_view.id_anagrafica                 | -
+    anagrafica_settori_view.id_settore                    | -
+    anagrafica_settori_view.settore                       | il nome del settore
+    anagrafica_settori_view.ordine                        | -
+    anagrafica_settori_view.id_account_inserimento        | -
+    anagrafica_settori_view.id_account_aggiornamento      | -
+    anagrafica_settori_view.__label__                     | l'etichetta descrittiva dell'associazione fra anagrafica e settore
+
+    articoli
+    --------
+    Questa tabella *gestita* descrive gli articoli di catalogo intesi come varianti di prodotto. Gli articoli sono l'entità che viene movimentata nei magazzini e che
+    può essere collegata ai documenti amministrativi, laddove il prodotto invece non descrivendo un oggetto del mondo reale non può essere utilizzato.
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    articoli.id                                 | l'ID dell'articolo, costituito dal codice articolo (la colonna non è auto incrementante)
+    articoli.id_prodotto                        | l'ID del prodotto cui appartiene l'articolo
+    articoli.ordine                             | campo di ordinamento
+    articoli.ean                                | il codice EAN dell'articolo
+    articoli.isbn                               | il codice ISBN dell'articolo
+    articoli.id_reparto                         | l'ID del reparto di default dell'articolo
+    articoli.id_taglia                          | l'ID della taglia
+    articoli.id_colore                          | l'ID del colore
+    articoli.larghezza                          | la larghezza dell'articolo, in millimetri
+    articoli.lunghezza                          | la lunghezza dell'articolo, in millimetri
+    articoli.altezza                            | l'altezza dell'articolo, in millimetri
+    articoli.peso                               | il peso dell'articolo, in grammi
+    articoli.volume                             | il volume dell'articolo in millimetri cubi
+    articoli.capacita                           | la capacità dell'articolo in millilitri
+    articoli.nome                               | il nome dell'articolo, a uso interno
+    articoli.id_account_inserimento             | l'ID dell'account che ha inserito la riga
+    articoli.timestamp_inserimento              | la timestamp dell'inserimento della riga
+    articoli.id_account_aggiornamento           | l'ID dell'ultimo account che ha modificato la riga
+    articoli.timestamp_aggiornamento            | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------------------|-------------------------------|-----------------------------------|------------------
+    articoli_ibfk_01_nofollow                   | id_prodotto                   | prodotti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_ibfk_02_nofollow                   | id_reparto                    | reparti.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    articoli_ibfk_03_nofollow                   | id_colore                     | colori.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_ibfk_98_nofollow                   | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    articoli_ibfk_99_nofollow                   | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *articoli_view* relativa alla tabella *articoli* presenta le seguenti colonne:
+
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    articoli_view.id                                  | -
+    articoli_view.id_prodotto                         | -
+    articoli_view.ordine                              | -
+    articoli_view.ean                                 | -
+    articoli_view.isbn                                | -
+    articoli_view.id_reparto                          | -
+    articoli_view.id_taglia                           | -
+    articoli_view.id_colore                           | -
+    articoli_view.larghezza                           | -
+    articoli_view.lunghezza                           | -
+    articoli_view.altezza                             | -
+    articoli_view.peso                                | -
+    articoli_view.volume                              | -
+    articoli_view.capacita                            | -
+    articoli_view.nome                                | -
+    articoli_view.id_account_inserimento              | -
+    articoli_view.id_account_aggiornamento            | -
+    articoli_view.__label__                           | l'etichetta descrittiva dell'articolo
+
+    articoli_caratteristiche
+    ------------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *articoli* con l'entità secondaria *caratteristiche_articoli*.
+
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    articoli_caratteristiche.id                             | l'ID dell'associazione fra articolo e caratteristica
+    articoli_caratteristiche.id_articolo                    | l'ID dell'articolo
+    articoli_caratteristiche.id_caratteristica              | l'ID della caratteristica
+    articoli_caratteristiche.ordine                         | campo di ordinamento
+    articoli_caratteristiche.valore                         | il valore numerico della caratteristica associata all'articolo
+    articoli_caratteristiche.note                           | note relative all'associazione fra articolo e caratteristica
+    articoli_caratteristiche.se_assente                     | flag che indica se la caratteristica è da considerare presente (NULL) o assente (NOT NULL)
+    articoli_caratteristiche.id_account_inserimento         | l'ID dell'account che ha inserito la riga
+    articoli_caratteristiche.timestamp_inserimento          | la timestamp dell'inserimento della riga
+    articoli_caratteristiche.id_account_aggiornamento       | l'ID dell'ultimo account che ha modificato la riga
+    articoli_caratteristiche.timestamp_aggiornamento        | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    articoli_caratteristiche_ibfk_01            | id_articolo                   | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_caratteristiche_ibfk_02_nofollow   | id_caratteristica             | caratteristiche_prodotti.id   | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_caratteristiche_ibfk_98_nofollow   | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    articoli_caratteristiche_ibfk_99_nofollow   | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *articoli_caratteristiche_view* relativa alla tabella *articoli_caratteristiche* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    articoli_caratteristiche_view.id                       | -
+    articoli_caratteristiche_view.id_articolo              | -
+    articoli_caratteristiche_view.id_caratteristica        | -
+    articoli_caratteristiche_view.ordine                   | -
+    articoli_caratteristiche_view.valore                   | -
+    articoli_caratteristiche_view.se_assente               | -
+    articoli_caratteristiche_view.id_account_inserimento   | -
+    articoli_caratteristiche_view.id_account_aggiornamento | -
+    articoli_caratteristiche_view.__label__                | etichetta descrittiva dell'associazione fra articolo e caratteristica
+ 
+    attivita
+    --------
+    Questa tabella *gestita* descrive le attività intese come eventi significativi relativi ad altre entità oppure in sé stessi.
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita.id                                         | l'ID dell'attività
+    attivita.id_tipologia                               | l'ID della tipologia
+    attivita.id_anagrafica                              | l'ID dell'anagrafica che svolge l'attività
+    attivita.id_cliente                                 | l'ID del cliente a cui è riferita l'attività
+    attivita.referenti                                  | testo descrittivo del referente (lato cliente) per l'attività
+    attivita.id_indirizzo                               | l'ID dell'indirizzo dove è svolta l'attività
+    attivita.id_luogo                                   | l'ID del luogo dove è svolta l'attività
+    attivita.data_scadenza                              | data entro la quale va svolta l'attività
+    attivita.ora_scadenza                               | l'ora entro la quale va svolta l'attività
+    attivita.note_scadenza                              | note relative alla data e ora entro le quali va svolta l'attività
+    attivita.data_programmazione                        | la data in cui è programmata l'esecuzione dell'attività
+    attivita.ora_inizio_programmazione                  | l'ora in cui è programmato l'inizio dell'esecuzione dell'attività
+    attivita.ora_fine_programmazione                    | l'ora in cui è programmata la fine dell'esecuzione dell'attività
+    attivita.note_programmazione                        | note relative alla data e ora in cui è programmata l'esecuzione dell'attività
+    attivita.ore_programmazione                         | numero di ore uomo previste per l'esecuzione dell'attività
+    attivita.data_attivita                              | la data in cui si svolge l'attività
+    attivita.ora_inizio                                 | l'ora in cui inizia l'attività
+	attivita.latitudine_ora_inizio                      | la latitudine associata all'invio dell'orario di inizio attività
+	attivita.longitudine_ora_inizio                     | la longitudine associata all'invio dell'orario di inizio attività
+    attivita.ora_fine                                   | l'ora in cui termina l'attività
+	attivita.latitudine_ora_fine                        | la latitudine associata all'invio dell'orario di fine attività
+	attivita.longitudine_ora_fine                       | la longitudine associata all'invio dell'orario di fine attività
+    attivita.ore                                        | numero di ore uomo impiegate per l'esecuzione dell'attività
+    attivita.nome                                       | descrizione sintetica dell'attività
+    attivita.testo                                      | descrizione estesa dell'attività
+    attivita.id_progetto                                | l'ID del progetto cui è riferita l'attività
+    attivita.id_todo                                    | l'ID della todo cui si riferisce l'attività
+    attivita.id_mastro_provenienza                      | mastro dal quale viene sottratto il valore del campo ore
+    attivita.id_mastro_destinazione                     | mastro al quale viene aggiunto il valore del campo ore
+    attivita.token                                      | token per il lock software della riga nelle elaborazioni automatiche
+    attivita.timestamp_calcolo_sostituti                | la timestamp del momento in cui la riga di attività è stata analizzata per il calcolo dei sostituti
+    attivita.id_account_inserimento                     | l'ID dell'account che ha inserito la riga
+    attivita.timestamp_inserimento                      | la timestamp dell'inserimento della riga
+    attivita.id_account_aggiornamento                   | l'ID dell'ultimo account che ha modificato la riga
+    attivita.timestamp_aggiornamento                    | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                          | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------------------|-------------------------------|----------------------
+    attivita_ibfk_01_nofollow       | id_tipologia                  | tipologie_attivita.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_02_nofollow       | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_03_nofollow       | id_cliente                    | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_04_nofollow       | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_05_nofollow       | id_luogo                      | luoghi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_06_nofollow       | id_progetto                   | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_07_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_08_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_09_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_98_nofollow       | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *attivita_view* relativa alla tabella *attivita* presenta le seguenti colonne:
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    attivita_view.id                                | -
+    attivita_view.id_tipologia                      | -
+    attivita_view.tipologia                         | -
+    attivita_view.id_anagrafica                     | -
+    attivita_view.anagrafica                        | l'anagrafica che esegue l'attività
+    attivita_view.id_cliente                        | -
+    attivita_view.cliente                           | il cliente associato all'attività
+    attivita_view.referenti                         | i referenti per il cliente associato all'attività
+    attivita_view.id_indirizzo                      | -
+    attivita_view.indirizzo                         | l'indirizzo associato all'attività
+    attivita_view.id_luogo                          | -
+    attivita_view.luogo                             | il luogo associato all'attività
+    attivita_view.data_scadenza                     | -
+    attivita_view.ora_scadenza                      | -
+    attivita_view.data_programmazione               | -
+    attivita_view.ora_inizio_programmazione         | -
+    attivita_view.ora_fine_programmazione           | -
+    attivita_view.ore_programmazione                | -
+    attivita_view.data_attivita                     | -
+    attivita_view.giorno_attivita                   | il giorno in cui si è svolta l'attività
+    attivita_view.mese_attivita                     | il mese in cui si è svolta l'attività
+    attivita_view.anno_attivita                     | l'anno in cui si è svolta l'attività
+    attivita_view.ora_inizio                        | -
+    attivita_view.latitudine_ora_inizio             | -
+    attivita_view.longitudine_ora_inizio            | -
+    attivita_view.ora_fine                          | -
+    attivita_view.latitudine_ora_fine               | -
+    attivita_view.longitudine_ora_fine              | -
+    attivita_view.ore                               | -
+    attivita_view.nome                              | -
+    attivita_view.id_progetto                       | -
+    attivita_view.progetto                          | il nome del progetto associato all'attività
+    attivita_view.id_todo                           | -
+    attivita_view AS todo                           | il nome della todo associata al progetto
+    attivita_view.id_mastro_provenienza             | -
+    attivita_view.mastro_provenienza                | il mastro da cui viene sottratto il valore del campo ore
+    attivita_view.id_mastro_destinazione            | -
+    attivita_view.mastro_destinazione               | il mastro al quale viene sommato il valore del campo ore
+    attivita_view.se_ordinario                      | flag che indica se l'attività è riferita a un progetto ordinario
+    attivita_view.se_straordinario                  | flag che indica se l'attività è riferita a un progetto straordinario
+    attivita_view.token                             | -
+    attivita_view.id_account_inserimento            | -
+    attivita_view.id_account_aggiornamento          | -
+    attivita_view.__label__                         | etichetta descrittiva dell'attività
+
+    La tabella *attivita* è vincolata dalle ACL memorizzate sulla tabella *__acl_attivita__*.
+
+    audio
+    -----
+    Questa tabella *gestita* descrive l'entità principale audio, ovvero i file audio caricati nel framework.
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    audio.id                                            | l'ID dell'audio
+    audio.id_lingua                                     | l'ID della lingua in cui è registrato l'audio
+    audio.id_ruolo                                      | l'ID del ruolo dell'audio relativamente all'oggetto associato
+    audio.ordine                                        | campo di ordinamento
+    audio.path                                          | il percorso relativo del file audio
+    audio.id_embed                                      | l'ID della modalità di embed da usare per l'inclusione di audio esterni
+    audio.codice_embed                                  | il codice di embed da usare per incorporare audio esterni
+    audio.embed_custom                                  | -
+    audio.nome                                          | il nome dell'audio, a uso interno
+    audio.target                                        | -
+    audio.id_anagrafica                                 | l'ID dell'anagrafica cui è associato l'audio
+    audio.id_pagina                                     | l'ID della pagina cui è associato l'audio
+    audio.id_file                                       | l'ID del file cui è associato l'audio
+    audio.id_risorsa                                    | l'ID della risorsa cui è associato l'audio
+    audio.id_prodotto                                   | l'ID del prodotto cui è associato l'audio
+    audio.id_articolo                                   | l'ID dell'articolo cui è associato l'audio
+    audio.id_categoria_prodotti                         | l'ID della categoria di prodotti cui è associato l'audio
+    audio.id_notizia                                    | l'ID della notizia cui è associato l'audio
+    audio.id_categoria_notizie                          | l'ID della categoria di notizie cui è associato l'audio
+    audio.id_account_inserimento                        | l'ID dell'account che ha inserito la riga
+    audio.timestamp_inserimento                         | la timestamp dell'inserimento della riga
+    audio.id_account_aggiornamento                      | l'ID dell'ultimo account che ha modificato la riga
+    audio.timestamp_aggiornamento                       | la timestamp dell'ultimo aggiornamento della riga
+
+    Per gli audio caricati direttamente nella piattaforma ed embeddati con HTML5, si utilizza il campo *path*. Altrimenti va valorizzato il campo
+    *codice_embed* che viene poi gestito dalla macro Twig di embed. Per le logiche relative all'erogazione dei file caricati nella piattaforma si veda
+    _src/_api/_download.php mentre per le macro di embed si faccia riferimento a _src/_html/_bin/_default.html.
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|----------------------
+    audio_ibfk_01_nofollow              | id_lingua                 | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    audio_ibfk_02_nofollow              | id_ruolo                  | ruoli_audio.id                | ON DELETE NO ACTION ON UPDATE NO ACTION
+    audio_ibfk_03_nofollow              | id_embed                  | embed.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    audio_ibfk_04                       | id_anagrafica             | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_05                       | id_pagina                 | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_06                       | id_file                   | file.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_07                       | id_risorsa                | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_08                       | id_prodotto               | prodotti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_09                       | id_articolo               | articoli.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_10                       | id_categoria_prodotti     | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_11                       | id_notizia                | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_12                       | id_categoria_notizie      | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *audio_view* relativa alla tabella *audio* presenta le seguenti colonne:
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    audio_view.id                                   | -
+    audio_view.id_lingua                            | -
+    audio_view.lingua                               | la lingua in cui è registrato l'audio
+    audio_view.id_ruolo                             | -
+    audio_view.ruolo                                | il ruolo ricoperto dall'audio relativamente all'oggetto collegato
+    audio_view.ordine                               | -
+    audio_view.path                                 | -
+    audio_view.id_embed                             | -
+    audio_view.embed                                | la modalità da utilizzare per l'embed di audio esterni
+    audio_view.codice_embed                         | -
+    audio_view.embed_custom                         | -
+    audio_view.nome                                 | -
+    audio_view.target                               | -
+    audio_view.id_anagrafica                        | -
+    audio_view.id_pagina                            | -
+    audio_view.id_file                              | -
+    audio_view.id_risorsa                           | -
+    audio_view.id_prodotto                          | -
+    audio_view.id_articolo                          | -
+    audio_view.id_categoria_prodotti                | -
+    audio_view.id_notizia                           | -
+    audio_view.id_categoria_notizie                 | -
+    audio_view.id_account_inserimento               | -
+    audio_view.id_account_aggiornamento             | -
+    audio_view.__label__                            | l'etichetta descrittiva dell'audio
+
+*/

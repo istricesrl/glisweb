@@ -1,1 +1,0 @@
-DROP VIEW obiettivi_prodotti_view;

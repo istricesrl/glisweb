@@ -1,0 +1,117 @@
+
+ /*!
+
+    \page database_v database del framework, tabelle con la lettera V
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera V.
+
+    le tabelle del database di supporto VA - VZ
+    ===========================================
+    
+    valute
+    ------
+    Questa tabella *standard* contiene le valute supportate dal framework.
+
+    colonna                        | descrizione
+    -------------------------------|---------------------------------------------------------------------------------------
+    valute.id                      | l'ID della valuta
+    valute.iso4217                 | codice ISO4217 della valuta
+    valute.html_entity             | entità HTML del simbolo della valuta
+    valute.utf8                    | simbolo della valuta in formato UTF8
+   
+    La tabella non ha chiavi esterne.
+
+    La vista *valute_view* relativa alla tabella *valute* presenta le seguenti colonne:
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    valute_view.id                      | -
+    valute_view.iso4217                 | -
+    valute_view.html_entity             | -
+    valute_view.utf8                    | -
+    valute_view.__label__               | etichetta descrittiva della valuta
+
+    video
+    -----
+    Questa tabbella *gestita* contiene i video associati a divese entità principali del framework.
+    
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    video.id                            | l'ID del video
+    video.id_anagrafica                 | l'ID dell'anagrafica cui si riferisce il video
+    video.id_pagina                     | l'ID della pagina cui si riferisce il video
+    video.id_file                       | l'ID del file cui si riferisce il video
+    video.id_prodotto                   | l'ID del prodotto cui si riferisce il video
+    video.id_articolo                   | l'ID dell'articolo cui si riferisce il video
+    video.id_categoria_prodotti         | l'ID della categoria di prodotti cui si riferisce il video
+    video.id_risorsa                    | l'ID della risorsa cui si riferisce il video
+    video.id_categoria_risorse          | l'ID della categoria di risorse cui si riferisce il video
+    video.id_notizia                    | l'ID della notizia cui si riferisce il video
+    video.id_categoria_notizie          | l'ID della categoria di notizie cui si riferisce il video
+    video.id_lingua                     | l'ID della lingua del video
+    video.id_ruolo                      | l'ID del ruolo del video relativamente all'entità cui si riferisce
+    video.ordine                        | campo di ordinamento
+    video.nome                          | il nome del video
+    video.path                          | il percorso del file del video
+    video.id_embed                      | -
+    video.codice_embed                  | il codice HTML necessario a creare un embed custom del video
+    video.embed_custom                  | il codice HTML necessario a creare un embed custom del video
+    video.target                        | -
+    video.orientamento                  | l'orientamento del video ('L' per orizzintale, 'P' per verticale)
+    video.ratio                         | il rapporto del video (ad es. 16:9) 
+    video.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    video.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    video.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    video.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                          | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------------------|-------------------------------|----------------------
+    video_ibfk_01                   | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_02                   | id_pagina                     | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_03                   | id_file                       | file.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_04                   | id_prodotto                   | prodotti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_05                   | id_articolo                   | articoli.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_06                   | id_categoria_prodotti         | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_07                   | id_risorsa                    | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_08                   | id_categoria_risorse          | categorie_risorse.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_09                   | id_notizia                    | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_10                   | id_categoria_notizie          | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_11_nofollow          | id_lingua                     | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    video_ibfk_12_nofollow          | id_ruolo                      | ruoli_video.id                | ON DELETE NO ACTION ON UPDATE NO ACTION
+    video_ibfk_13_nofollow          | id_embed                      | embed.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    video_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *video_view* relativa alla tabella *video* presenta le seguenti colonne:
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    video_view.id                           | -
+    video_view.id_anagrafica                | -
+    video_view.id_pagina                    | -
+    video_view.id_file                      | -
+    video_view.id_prodotto                  | -
+    video_view.id_articolo                  | -
+    video_view.id_categoria_prodotti        | -
+    video_view.id_risorsa                   | -
+    video_view.id_categoria_risorse         | -
+    video_view.id_notizia                   | -
+    video_view.id_categoria_notizie         | -
+    video_view.id_lingua                    | -
+    video_view.id_ruolo                     | -
+    video_view.ordine                       | -
+    video_view.nome                         | -
+    video_view.path                         | -
+    video_view.id_embed                     | -
+    video_view.codice_embed                 | -
+    video_view.embed_custom                 | -
+    video_view.target                       | -
+    video_view.orientamento                 | -
+    video_view.ratio                        | -
+    video_view.id_account_inserimento       | -
+    video_view.id_account_aggiornamento     | -
+    video_view.__label__                    | l'etichetta descrittiva del vidoe
+
+*/

@@ -5,6 +5,63 @@
      *
      *
      *
+     * logiche di render ed erogazione dei contenuti
+     * =============================================
+     *
+     *
+     *
+     * tokenizzazione di __rw__ e inclusione del framework
+     * ---------------------------------------------------
+     *
+     *
+     * configurazione del template
+     * ---------------------------
+     *
+     *
+     *
+     * controllo permessi
+     * ------------------
+     *
+     *
+     *
+     * macro di pagina
+     * ---------------
+     *
+     *
+     *
+     * contenuti statici
+     * -----------------
+     *
+     *
+     *
+     * costruzione degli elementi di navigazione
+     * -----------------------------------------
+     *
+     *
+     *
+     * renderizzazione del template
+     * ----------------------------
+     *
+     *
+     *
+     * headers e codici di stato HTTP
+     * ------------------------------
+     *
+     *
+     *
+     *
+     * gestione dei comandi di una lettera
+     * -----------------------------------
+     *
+     *
+     *
+     * cache statica
+     * -------------
+     *
+     *
+     *
+     *
+     *
      * @todo documentare
      *
      * @file

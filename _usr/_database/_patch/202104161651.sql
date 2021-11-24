@@ -1,1 +1,0 @@
-DROP VIEW obiettivi_tipologie_attivita_view;

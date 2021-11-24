@@ -1,1 +1,0 @@
-ALTER TABLE `progetti` DROP FOREIGN KEY `progetti_ibfk_1`;

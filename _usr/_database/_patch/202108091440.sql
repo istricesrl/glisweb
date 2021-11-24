@@ -1,1 +1,0 @@
-ALTER TABLE `mastri` ADD `id_genitore` INT NULL DEFAULT NULL AFTER `id`, ADD INDEX (`id_genitore`) ;

@@ -521,7 +521,7 @@
      * @todo documentare
      *
      */
-    function getFilteredFileList( $d , $f = '*' ) {
+    function getFilteredFileList( $d , $f = '*', $s = false ) {
 
 	fullPath( $d );
 
@@ -532,7 +532,10 @@
 	foreach( $a as $t ) {
 	    if( is_file( $t ) ) {
 		shortPath( $t );
-		$r[] = $t;
+        if( $s !== false ) {
+            $t = basename( $t );
+        }
+        $r[] = $t;
 	    }
 	}
 
@@ -559,6 +562,33 @@
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function getFilteredDirList( $d, $f = '*', $s = false ) {
+
+        fullPath( $d );
+
+        $a = glob( $d . $f , GLOB_BRACE );
+    
+        $r = array();
+    
+        foreach( $a as $t ) {
+            if( is_dir( $t ) ) {
+            shortPath( $t );
+            if( $s !== false ) {
+                $t = basename( $t );
+            }
+            $r[] = $t;
+            }
+        }
+    
+        return $r;
+    
+    }
+       
     /**
      *
      * @todo documentare
@@ -672,7 +702,7 @@
 	fullPath( $f2 );
 	checkFolder( dirname( $f2 ) );
 
-	return rename( $f1, $f2 );
+	return @rename( $f1, $f2 );
 
     }
 

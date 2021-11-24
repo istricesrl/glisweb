@@ -48,6 +48,7 @@
                         'macro' => array(),
                         'pagine_gruppi' => array(),
                         'pubblicazione' => array()
+
                     ),
                     'f' => array(
                         'nome' => $p['nome'] . ' - duplicata'

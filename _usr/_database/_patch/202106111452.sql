@@ -1,1 +1,0 @@
-ALTER TABLE `documenti` ADD `id_todo` INT NULL DEFAULT NULL AFTER `id_sede_emittente`, ADD INDEX (`id_todo`) ;

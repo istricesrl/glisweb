@@ -129,7 +129,7 @@
                                 queueMailFromTemplate(
                                     $cf['mysql']['connection'],
                                     $template,
-                                    array( 'dati' => $dati, 'ct' => $ct ),
+                                    array( 'dt' => $dati, 'ct' => $ct ),
                                     strtotime( '+1 minutes' ),
                                     $conf['destinatari'],
                                     $conf['language']

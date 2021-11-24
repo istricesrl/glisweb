@@ -1,1 +1,0 @@
-ALTER TABLE `ruoli_anagrafica` ADD `id_genitore` INT NULL DEFAULT NULL AFTER `id`, ADD INDEX (`id_genitore`) ;

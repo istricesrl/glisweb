@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD CONSTRAINT `attivita_ibfk_17_nofollow` FOREIGN KEY (`id_todo`) REFERENCES `todo`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1,1 +1,0 @@
-ALTER TABLE `anagrafica_view_static` ADD `riferimento` CHAR(32) NULL DEFAULT NULL AFTER `codice`;

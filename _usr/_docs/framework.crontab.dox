@@ -20,7 +20,7 @@
     Dall'altra parte, i job rappresentano lavori pianificati con un inizio e una fine e un'estensione
     predeterminata, in quanto hanno cognizione del contesto globale del compito da svolgere.
 
-    Un esempio di task è la gestione delle code della posta; ad ogni chimata, il task controlla se c'è
+    Un esempio di task è la gestione delle code della posta; ad ogni chiamata, il task controlla se c'è
     almeno una mail da inviare, se sì la invia, dopodiché termina, senza preoccuparsi di quante mail da
     inviare ci siano nel complesso (perché è irrilevante dal suo punto di vista). Viceversa, un esempio
     di job è l'importazione dell'elenco aggiornato dei comuni italiani; in questo caso, il job prima
@@ -31,8 +31,13 @@
     
     lo script di appoggio in /etc/cron.d/
     -------------------------------------
+    Ad ogni chiamata, l'API _src/_api/_cron.php ricava dalle tabelle *task* e *job* l'elenco delle cose
+    da fare, utilizzando un meccanismo di lock software basato su token per evitare la concorrenza. Prima
+    vengono eseguiti i task, e successivamente vengono fatti avanzare i job.
 
-
+    Le informazioni rilevanti sul lavoro dell'API vengono salvate rispettivamente sotto le chiavi $cf['cron']['task']
+    e $cf['cron']['job'], inoltre un log specifico per la tracciatura degli esiti di tali lavorazioni è
+    tenuto in var/log/cron/ e specificamente il dettaglio dell'ultima esecuzione è contenuto in var/log/latest/cron.latest.log.
 
     struttura e gestione dei task
     =============================

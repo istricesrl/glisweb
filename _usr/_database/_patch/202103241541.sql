@@ -1,2 +1,0 @@
-ALTER TABLE `periodi_variazioni_attivita`
- ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `unico` (`id_variazione`,`data_inizio`,`data_fine`,`ora_inizio`,`ora_fine`), ADD KEY `id_variazione` (`id_variazione`);

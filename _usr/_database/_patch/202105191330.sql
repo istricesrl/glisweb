@@ -1,1 +1,0 @@
-ALTER TABLE `progetti` CHANGE `id_tipologia` `id_tipologia` INT(11) NULL DEFAULT NULL;

@@ -1,1 +1,0 @@
-ALTER TABLE `categorie_anagrafica` ADD `se_squadra` INT(1) NULL DEFAULT NULL , ADD KEY `se_squadra` (`se_squadra`) ;
