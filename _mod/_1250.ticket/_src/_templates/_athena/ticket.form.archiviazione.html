@@ -68,6 +68,31 @@
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>
 
+		
+			{% if request[ table ].timestamp_completamento %}
+			<div>
+			<p></p>
+				<div class="form-group form-row metro">
+				<div class="col-12 col-md">
+					<a href="#" data-toggle="modal" onclick="CKEDITOR.instances['_testo'].setData('Buongiorno,<p> </p><p>Cordiali saluti<br>{{session.account.utente}}');$('#_destinatario').val('{{ etc.mail_cliente }}'); $('#_oggetto').val('chiusura ticket {{ request[table].id }}'); $('#_mittente').val('{{etc.mail_account  }}');$('#_id').val('{{request[ table ].id}}');" data-target="#send">
+					<div class="media valore">
+					<div class="media-left">
+						<h2><i class="fa fa-envelope-o" aria-hidden="true"></i></h2>
+					</div>
+					<div class="media-left">
+						<h2 class="media-title">invia mail</h2>
+						<p class="media-text">invia una mail per comunicare al cliente la chiusura del ticket</p>
+					</div>
+					</div>
+					</a>
+				</div>
+				</div>
+		
+			
+			
+			{% endif %}
+
+		<section>
 	</form>
     </div>
 </section>
