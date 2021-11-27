@@ -193,6 +193,35 @@
 
 													) ),
 	);
+		
+	// vista task
+	$p['task.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'task' ),
+		'h1'		=> array( $l		=> 'task' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_task.view.php' ),
+		'parent'		=> array( 'id'		=> 'strumenti' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'task.view',) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'task' ),
+																		'priority'	=> '970' ) ) )
+		);
+
+	// gestione job
+	$p['task.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'task.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_task.form.php' ),
+		'parent'		=> array( 'id'		=> 'task.view' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'task.form',
+
+													) ),
+	);
+
 
 /*
     // pagina gestione cron
