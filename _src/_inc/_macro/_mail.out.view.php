@@ -27,7 +27,7 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'data_ora_invio' => 'invio previsto',
+	    'timestamp_invio' => 'invio previsto',
 	    'destinatari' => 'destinatari',
 	    'destinatari_cc' => 'destinatari CC',
 	    'destinatari_bcc' => 'destinatari BCC',
@@ -37,7 +37,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
-	    'data_ora_invio' => 'text-left',
+	    'timestamp_invio' => 'text-left',
 	    'destinatari' => 'text-left',
 	    'destinatari_cc' => 'text-left',
 	    'destinatari_bcc' => 'text-left',
@@ -49,6 +49,8 @@
 
     // trasformazione indirizzi
 	foreach( $ct['view']['data'] as $key => &$row ) {
+
+        $row['timestamp_invio'] = date( 'Y-m-d H:i', $row['timestamp_invio']);
         foreach( $row as $k => $v ) {
             if( in_array( $k, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
                 $row[ $k ] = htmlentities( array2mailString( unserialize( $v ) ) );
