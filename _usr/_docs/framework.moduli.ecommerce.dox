@@ -1,0 +1,58 @@
+/*!
+
+    \page moduli_ecommerce modulo e-commerce del framework
+
+    Panoramica del modulo e-commerce del framework.
+
+    introduzione
+    ============
+
+
+
+    tabelle
+    -------
+
+
+
+    gestione dei dati in ingresso
+    -----------------------------
+    Come già visto per il modulo contatti, anche il modulo e-commerce dovendo gestire dati provenienti dal front-end ha una propria controller
+    specializzata. Questa controller, implementata nel file _mod/_4170.ecommerce/_src/_config/_750.controller.php, viene attivata dalla chiave
+    __carrello__ e si occupa di gestire sia la testata che le righe del carrello.
+
+    il flusso di acquisto
+    =====================
+
+    la pagina di riepilogo
+    ----------------------
+
+    [...] volendo saltare la pagina di riepilogo è possibile inserire un submit() del form all'onload della pagina direttamente nello schema Twig.
+
+    il carrello
+    ===========
+
+    struttura del carrello
+    ----------------------
+
+    calcolo del costo totale della merce
+    ------------------------------------
+
+    calcolo dei costi di spedizione
+    -------------------------------
+
+    il processo di pagamento
+    ========================
+
+    pagamento in contrassegno
+    -------------------------
+
+    pagamento tramite PayPal
+    ------------------------
+
+    pagamento tramite Nexi
+    ----------------------
+
+    pagamenti ibridi
+    ----------------
+
+*/

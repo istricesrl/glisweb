@@ -140,6 +140,7 @@ if ($cf['contents']['cached'] === false) {
 
     // timer
     timerCheck($cf['speed'], ' -> fine elaborazione prodotti prelevati dal database');
+
 } else {
 
     // recupero la timestamp di aggiornamento più recente

@@ -215,7 +215,7 @@
 			    // in menù dove non ha senso che appaiano...) insomma VA TESTATA E DOCUMENTATA MEGLIO
 			    if( is_array( $menu ) && is_array( $parentMenu ) ) {
 				foreach( array_diff( $menu, $parentMenu ) as $manca ) {
-				    $cf['contents']['pages'][ $k ]['menu'][ $manca ] = array(
+				    $cf['contents']['pages'][ $k ]['menu'][ $manca ][] = array(
 					'label' => NULL,
 					'priority' => 'AUTO'
 				    );
