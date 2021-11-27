@@ -68,7 +68,10 @@
 	    'anagrafica' => array(
 		CONTROL_FULL => array( 'roots','staff' )
 	    ),
-	    'anagrafica_archiviati' => array(
+	    'anagrafica_attivi' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+			),
+			'anagrafica_archiviati' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
