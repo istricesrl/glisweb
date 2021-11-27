@@ -48,7 +48,7 @@ DROP FUNCTION IF EXISTS `categorie_anagrafica_path`;
 -- verifica: 2021-06-01 18:34 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_anagrafica_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `categorie_anagrafica_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -63,7 +63,7 @@ CREATE
 		-- TEST
 		-- SELECT categorie_anagrafica_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -187,7 +187,7 @@ DROP FUNCTION IF EXISTS `categorie_notizie_path`;
 -- verifica: 2021-06-01 18:34 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_notizie_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `categorie_notizie_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -202,7 +202,7 @@ CREATE
 		-- TEST
 		-- SELECT categorie_notizie_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -326,7 +326,7 @@ DROP FUNCTION IF EXISTS `categorie_prodotti_path`;
 -- verifica: 2021-06-01 19:58 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_prodotti_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `categorie_prodotti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -341,7 +341,7 @@ CREATE
 		-- TEST
 		-- SELECT categorie_prodotti_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -465,7 +465,7 @@ DROP FUNCTION IF EXISTS `categorie_progetti_path`;
 -- verifica: 2021-06-02 19:52 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_progetti_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `categorie_progetti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -480,7 +480,7 @@ CREATE
 		-- TEST
 		-- SELECT categorie_progetti_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -604,7 +604,7 @@ DROP FUNCTION IF EXISTS `categorie_risorse_path`;
 -- verifica: 2021-06-02 20:22 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `categorie_risorse_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `categorie_risorse_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -619,7 +619,7 @@ CREATE
 		-- TEST
 		-- SELECT categorie_risorse_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -743,7 +743,7 @@ DROP FUNCTION IF EXISTS `colori_path`;
 -- verifica: 2021-06-03 15:19 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `colori_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `colori_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -758,7 +758,7 @@ CREATE
 		-- TEST
 		-- SELECT colori_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -882,7 +882,7 @@ DROP FUNCTION IF EXISTS `gruppi_path`;
 -- verifica: 2021-09-10 18:10 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `gruppi_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `gruppi_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -897,7 +897,7 @@ CREATE
 		-- TEST
 		-- SELECT gruppi_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -1021,7 +1021,7 @@ DROP FUNCTION IF EXISTS `luoghi_path`;
 -- verifica: 2021-09-10 18:10 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `luoghi_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `luoghi_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -1036,7 +1036,7 @@ CREATE
 		-- TEST
 		-- SELECT luoghi_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -1160,7 +1160,7 @@ DROP FUNCTION IF EXISTS `mastri_path`;
 -- verifica: 2021-09-28 18:10 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `mastri_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `mastri_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -1175,7 +1175,7 @@ CREATE
 		-- TEST
 		-- SELECT mastri_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -1299,7 +1299,7 @@ DROP FUNCTION IF EXISTS `organizzazioni_path`;
 -- verifica: 2021-05-23 15:24 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `organizzazioni_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `organizzazioni_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -1314,7 +1314,7 @@ CREATE
 		-- TEST
 		-- SELECT organizzazioni_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -1443,7 +1443,7 @@ DROP FUNCTION IF EXISTS `pagine_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `pagine_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `pagine_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -1458,7 +1458,7 @@ CREATE
 		-- TEST
 		-- SELECT pagine_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -1582,7 +1582,7 @@ DROP FUNCTION IF EXISTS `ruoli_anagrafica_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `ruoli_anagrafica_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `ruoli_anagrafica_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -1597,7 +1597,7 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_anagrafica_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -1721,7 +1721,7 @@ DROP FUNCTION IF EXISTS `ruoli_audio_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `ruoli_audio_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `ruoli_audio_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -1736,7 +1736,7 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_audio_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -1860,7 +1860,7 @@ DROP FUNCTION IF EXISTS `ruoli_file_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `ruoli_file_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `ruoli_file_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -1875,7 +1875,7 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_file_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -1999,7 +1999,7 @@ DROP FUNCTION IF EXISTS `ruoli_immagini_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `ruoli_immagini_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `ruoli_immagini_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -2014,7 +2014,7 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_immagini_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -2138,7 +2138,7 @@ DROP FUNCTION IF EXISTS `ruoli_indirizzi_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `ruoli_indirizzi_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `ruoli_indirizzi_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -2153,7 +2153,7 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_indirizzi_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -2277,7 +2277,7 @@ DROP FUNCTION IF EXISTS `ruoli_prodotti_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `ruoli_prodotti_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `ruoli_prodotti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -2292,7 +2292,7 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_prodotti_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -2416,7 +2416,7 @@ DROP FUNCTION IF EXISTS `ruoli_video_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `ruoli_video_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `ruoli_video_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -2431,7 +2431,7 @@ CREATE
 		-- TEST
 		-- SELECT ruoli_video_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -2555,7 +2555,7 @@ DROP FUNCTION IF EXISTS `settori_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `settori_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `settori_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -2570,7 +2570,7 @@ CREATE
 		-- TEST
 		-- SELECT settori_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -2694,7 +2694,7 @@ DROP FUNCTION IF EXISTS `software_path`;
 -- verifica: 2021-11-16 10:39 Chiara GDL
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `software_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `software_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -2709,7 +2709,7 @@ CREATE
 		-- TEST
 		-- SELECT software_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -2833,7 +2833,7 @@ DROP FUNCTION IF EXISTS `tipologie_anagrafica_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_anagrafica_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_anagrafica_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -2848,7 +2848,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_anagrafica_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -2972,7 +2972,7 @@ DROP FUNCTION IF EXISTS `tipologie_attivita_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_attivita_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_attivita_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -2987,7 +2987,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_attivita_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -3111,7 +3111,7 @@ DROP FUNCTION IF EXISTS `tipologie_chiavi_path`;
 -- verifica: 2021-11-15 11:29 Chiara GDL
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_chiavi_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_chiavi_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -3126,7 +3126,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_chiavi_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -3250,7 +3250,7 @@ DROP FUNCTION IF EXISTS `tipologie_contatti_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_contatti_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_contatti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -3265,7 +3265,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_contatti_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -3389,7 +3389,7 @@ DROP FUNCTION IF EXISTS `tipologie_documenti_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_documenti_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_documenti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -3404,7 +3404,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_documenti_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -3528,7 +3528,7 @@ DROP FUNCTION IF EXISTS `tipologie_indirizzi_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_indirizzi_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_indirizzi_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -3543,7 +3543,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_indirizzi_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -3667,7 +3667,7 @@ DROP FUNCTION IF EXISTS `tipologie_licenze_path`;
 -- verifica: 2021-11-15 11:29 Chiara GDL
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_licenze_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_licenze_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -3682,7 +3682,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_licenze_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -3806,7 +3806,7 @@ DROP FUNCTION IF EXISTS `tipologie_mastri_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_mastri_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_mastri_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -3821,7 +3821,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_mastri_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -3945,7 +3945,7 @@ DROP FUNCTION IF EXISTS `tipologie_notizie_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_notizie_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_notizie_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -3960,7 +3960,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_notizie_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -4084,7 +4084,7 @@ DROP FUNCTION IF EXISTS `tipologie_pagamenti_path`;
 -- verifica: 2021-11-15 11:29 Chiara GDL
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_pagamenti_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_pagamenti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -4099,7 +4099,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_pagamenti_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -4223,7 +4223,7 @@ DROP FUNCTION IF EXISTS `tipologie_popup_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_popup_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_popup_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -4238,7 +4238,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_popup_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -4362,7 +4362,7 @@ DROP FUNCTION IF EXISTS `tipologie_prodotti_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_prodotti_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_prodotti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -4377,7 +4377,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_prodotti_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -4501,7 +4501,7 @@ DROP FUNCTION IF EXISTS `tipologie_progetti_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_progetti_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_progetti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -4516,7 +4516,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_progetti_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -4640,7 +4640,7 @@ DROP FUNCTION IF EXISTS `tipologie_pubblicazioni_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_pubblicazioni_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_pubblicazioni_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -4655,7 +4655,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_pubblicazioni_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -4779,7 +4779,7 @@ DROP FUNCTION IF EXISTS `tipologie_risorse_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_risorse_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_risorse_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -4794,7 +4794,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_risorse_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -4918,7 +4918,7 @@ DROP FUNCTION IF EXISTS `tipologie_telefoni_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_telefoni_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_telefoni_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -4933,7 +4933,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_telefoni_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -5057,7 +5057,7 @@ DROP FUNCTION IF EXISTS `tipologie_todo_path`;
 -- verifica: 2021-10-04 11:49 Fabio Mosti
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_todo_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_todo_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -5072,7 +5072,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_todo_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 
@@ -5197,7 +5197,7 @@ DROP FUNCTION IF EXISTS `tipologie_url_path`;
 -- verifica: 2021-11-09 12:45 Chiara GDL
 CREATE
 	DEFINER = CURRENT_USER()
-	FUNCTION `tipologie_url_path`( `p1` INT( 11 ) ) RETURNS CHAR( 255 ) CHARSET utf8 COLLATE utf8_general_ci
+	FUNCTION `tipologie_url_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
 	NOT DETERMINISTIC
 	READS SQL DATA
 	SQL SECURITY DEFINER
@@ -5212,7 +5212,7 @@ CREATE
 		-- TEST
 		-- SELECT tipologie_url_path( <id> ) AS path
 
-		DECLARE path char( 255 ) DEFAULT '';
+		DECLARE path text DEFAULT '';
 		DECLARE step char( 255 ) DEFAULT '';
 		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
 

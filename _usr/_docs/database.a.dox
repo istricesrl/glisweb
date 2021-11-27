@@ -221,7 +221,7 @@
     --------------------------------------------|------------------------------|------------------------------|-----------------------
     anagrafica_ibfk_01_nofollow                 | id_tipologia                 | tipologie_anagrafica.id      | ON DELETE NO ACTION ON UPDATE NO ACTION
     anagrafica_ibfk_02_nofollow                 | id_pec_sdi                   | mail.id                      | ON DELETE SET NULL ON UPDATE SET NULL
-    anagrafica_ibfk_03_nofollow                 | id_regime_fiscale            | regimi_fiscali.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_ibfk_03_nofollow                 | id_regime_fiscale            | regimi.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
     anagrafica_ibfk_04_nofollow                 | id_stato_nascita             | stati.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     anagrafica_ibfk_05_nofollow                 | id_comune_nascita            | comuni.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
     anagrafica_ibfk_06_nofollow                 | id_ranking                   | ranking.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION

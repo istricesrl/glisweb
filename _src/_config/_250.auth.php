@@ -221,10 +221,7 @@
 #	    'tipologie_attivita' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'tipologie_crm' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
-	    'tipologie_crm' => array(
+	    'ranking' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 		'todo' => array(

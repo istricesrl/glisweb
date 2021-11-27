@@ -8,10 +8,11 @@
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 -- verifica: 2021-05-28 19:56 Fabio Mosti
-REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `se_prospect`, `se_lead`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_concorrente`, `se_azienda_gestita`, `se_amministrazione`, `se_produzione`) VALUES
-(1,	NULL,	NULL,	'clienti',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'collaboratori',   	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'fornitori',	    NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_agente`, `se_concorrente`, `se_azienda_gestita`, `se_amministrazione`, `se_produzione`, `se_notizie`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'clienti',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'collaboratori',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	2,	    NULL,	'agenti',	        NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'fornitori',	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000005100
 
@@ -286,20 +287,21 @@ REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) V
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 15:02 Fabio Mosti
 REPLACE INTO `regimi` (`id`, `nome`, `codice`) VALUES
-(1,     'ordinario',                    'RF01'),
-(2,     'minimi',                       'RF02'),
-(3,     'agricoltura e pesca',          'RF04'),
-(4,     'sali e tabacchi',              'RF05'),
-(5,     'editoria',                     'RF07'),
-(6,     'intrattenimento',              'RF10'),
-(7,     'viaggi e turismo',             'RF11'),
-(8,     'agriturismo',                  'RF12'),
-(9,     'vendite a domicilio',          'RF13'),
-(10,    'beni usati e collezionismo',   'RF14'),
-(11,    'IVA per cassa P.A.',           'RF16'),
-(12,    'IVA per cassa',                'RF17'),
-(13,    'altro',                        'RF18'),
-(14,    'forfettario',                  'RF19');
+(1,     'privato',                      NULL),
+(2,     'ordinario',                    'RF01'),
+(3,     'minimi',                       'RF02'),
+(4,     'agricoltura e pesca',          'RF04'),
+(5,     'sali e tabacchi',              'RF05'),
+(6,     'editoria',                     'RF07'),
+(7,     'intrattenimento',              'RF10'),
+(8,     'viaggi e turismo',             'RF11'),
+(9,     'agriturismo',                  'RF12'),
+(10,    'vendite a domicilio',          'RF13'),
+(11,    'beni usati e collezionismo',   'RF14'),
+(12,    'IVA per cassa P.A.',           'RF16'),
+(13,    'IVA per cassa',                'RF17'),
+(14,    'altro',                        'RF18'),
+(15,    'forfettario',                  'RF19');
 
 -- Contribuenti minimi (art. 1, commi 96-117, legge n. 244/2007)	RF2
 -- Agricoltura e attività connesse e pesca (articoli 34 e 34-bis, D.P.R. n. 633/1972);	RF04

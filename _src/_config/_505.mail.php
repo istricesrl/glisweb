@@ -37,7 +37,7 @@
 
 		    // inizializzo l'oggetto
 			$cf['mail']['tpl'][ $tpl['ruolo'] ] = array(
-			    'type' => $tpl['type'],
+			    'type' => $tpl['tipo'],
 			    'nome' => $tpl['nome']
 			);
 

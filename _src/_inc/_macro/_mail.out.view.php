@@ -31,7 +31,7 @@
 	    'destinatari' => 'destinatari',
 	    'destinatari_cc' => 'destinatari CC',
 	    'destinatari_bcc' => 'destinatari BCC',
-	    '__label__' => 'oggetto'
+	    'oggetto' => 'oggetto'
 	);
 
     // stili della vista
@@ -41,7 +41,7 @@
 	    'destinatari' => 'text-left',
 	    'destinatari_cc' => 'text-left',
 	    'destinatari_bcc' => 'text-left',
-	    '__label__' => 'text-left'
+	    'oggetto' => 'text-left'
 	);
 
     // macro di default

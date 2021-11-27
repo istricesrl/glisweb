@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'tipologie_crm';
+    $ct['form']['table'] = 'ranking';
     
     // tabella della vista
 	$ct['view']['table'] = 'anagrafica';
