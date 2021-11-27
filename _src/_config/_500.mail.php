@@ -18,6 +18,16 @@
 
     // NOTA per convenzione passare sempre al template mail le seguenti chiavi 'ct' => $ct e 'dt' => <datiDellaMail>
 
+    // array del template mail di default
+	$cf['mail']['tpl']['DEFAULT'] = array(
+	    'type' => 'twig',
+	    'it-IT' => array(
+			'from' => array( '{{ ct.site.name[ ct.localization.language.ietf ] }}' => 'noreply@{{ ct.site.fqdn }}' ),
+			'oggetto' => 'template di default',
+			'testo' => 'template di default'
+	    )
+	);
+
     // array dei template mail di test
 	$cf['mail']['tpl']['MAIL_TEST_TEMPLATE'] = array(
 	    'type' => 'twig',

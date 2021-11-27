@@ -146,7 +146,7 @@
      * @todo finire di documentare
      *
      */
-    function queueMailFromTemplate( $c, $t, $d, $timestamp_invio, $to, $l = 'it-IT', $to_cc = array(), $to_bcc = array(), $headers = array(), $server = NULL ) {
+    function queueMailFromTemplate( $c, $t, $d, $timestamp_invio, $to, $l = 'it-IT', $to_cc = array(), $to_bcc = array(), $attach = array(), $headers = array(), $server = NULL ) {
 
 // NOTA $d deve contenere 'ct' => $ct e 'dt' => <i dati che volete incorporare nella mail>
 
@@ -177,7 +177,8 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
 			$mittente	= array( $from->render( 'nome', $d ) => $from->render( 'mail', $d ) );
 			$oggetto	= $twig->render( 'oggetto', $d );
 			$corpo		= $twig->render( 'testo', $d );
-			$allegati	= ( ( isset($t[ $l ]['attach'] ) ) ? $t[ $l ]['attach'] : array() );
+			$allegati	= ( ( isset( $t[ $l ]['attach'] ) ) ? $t[ $l ]['attach'] : array() );
+			$allegati	= array_merge( $allegati, ( ( isset( $attach[ $l ] ) ) ? $attach[ $l ] : array() ) );
 #print_r($corpo );
 		    // se è definito nel template imposto il destinatario
 			if( array_key_exists('to', $t[ $l ] ) && is_array( $t[ $l ]['to'] ) && ! empty( $t[ $l ]['to'][ array_key_first($t[ $l ]['to'] ) ] ) ) {

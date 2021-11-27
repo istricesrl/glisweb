@@ -68,7 +68,7 @@
             </div>
             <div class="col-12 col-md-4">
                 <span class="label-top">regime fiscale</span>
-                {{ frm.selectRequired( table, 'regimi_fiscali', '', 'id', '', etc.select.regimi_fiscali, request, '', 1 ) }}
+                {{ frm.selectRequired( table, 'regimi', '', 'id', '', etc.select.regimi, request, '', 1 ) }}
             </div>
         </div>
         </fieldset>
@@ -84,17 +84,17 @@
             
             <div class="col-12 col-md-6">
                 <span class="label-top">PEC per fatturazione</span>
-                {{ frm.select( table, 'id_pec_sdi', '', 'nome', '', etc.select.pec, request ) }}
+                {{ frm.select( table, '', '', 'id_pec_sdi', '', etc.select.pec, request ) }}
             </div>
         </div>
 
         </fieldset>
         
         {# SUBFORM MODALITA PAGAMENTO #}
-		{{ sub.modalita_pagamento( table, 'anagrafica_modalita_pagamento', 'modalità di pagamento', site, page, pages, localization.language.ietf, etc, request, session ) }}
+		{# sub.modalita_pagamento( table, 'anagrafica_modalita_pagamento', 'modalità di pagamento', site, page, pages, localization.language.ietf, etc, request, session ) #}
 
         {# SUBFORM CONDIZIONI PAGAMENTO #}
-		{{ sub.condizioni_pagamento( table, 'anagrafica_condizioni_pagamento', 'condizioni di pagamento', site, page, pages, localization.language.ietf, etc, request, session ) }}
+		{# sub.condizioni_pagamento( table, 'anagrafica_condizioni_pagamento', 'condizioni di pagamento', site, page, pages, localization.language.ietf, etc, request, session ) #}
 
 
 	    {# BOTTONI E COMANDI DEL MODULO #}

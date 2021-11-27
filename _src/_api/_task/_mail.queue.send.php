@@ -61,7 +61,8 @@
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE mail_out SET token = ? WHERE timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL '.
+            'UPDATE mail_out SET token = ? WHERE timestamp_invio <= unix_timestamp() '.
+			'AND timestamp_invio IS NOT NULL '.
             'AND token IS NULL '.
             'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(

@@ -740,7 +740,9 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
 -- verifica: 2021-06-29 16:56 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `embed` (
   `id` int(11) NOT NULL,
-  `nome` int(11) DEFAULT NULL
+  `nome` char(64) NOT NULL,
+  `se_audio` int(1) DEFAULT NULL,
+  `se_video` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000015000
@@ -764,8 +766,8 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
-  `path` char(255) NOT NULL,
-  `url` char(255) NOT NULL,
+  `path` char(255) DEFAULT NULL,
+  `url` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,

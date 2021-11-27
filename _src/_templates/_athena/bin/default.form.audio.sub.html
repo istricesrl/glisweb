@@ -31,15 +31,15 @@
                 {{ frm.selectRequired( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_audio, request, '', '', '', disabled  ) }}
             </div>
             <div class="col col-md-auto">
-                <span class="label-top">tipologia</span>
-                {{ frm.selectRequired( table, subtable, i, 'id_embed', '', etc.select.tipologie_embed, request, '', '', '', disabled  ) }}
+                <span class="label-top">embed</span>
+                {{ frm.selectRequired( table, subtable, i, 'id_embed', '', etc.select.embed, request, '', '', '', disabled  ) }}
             </div>
             <div class="col col-md-4">
                 <span class="label-top">codice embed</span>
                 {{ frm.input( table, subtable, i, 'codice_embed', '', '', request, '', '', '', '', disabled ) }}
             </div>
             <div class="col-auto col-md-auto">
-                {{ frm.uploader( table, subtable, i, 'path', 'file', '', request, 'var/contenuti/', site, 'anagrafica.form.audio', pages, lang, '', '', '', '', 1 ) }}
+                {{ frm.uploader( table, subtable, i, 'path', '', '', request, 'var/contenuti/', site, 'audio.form', pages, lang, '', '', '1', '', disabled ) }}
             </div>
             {% if r.id %}
             <div class="col-auto text-right remove-on-duplicate d-print-none">

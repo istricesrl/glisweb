@@ -27,13 +27,13 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'ruolo' => 'ruolo',
-	    '__label__' => 'nome'
+	    'nome' => 'nome',
+	    '__label__' => 'ruolo'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'ruolo' => 'text-left',
+	    'nome' => 'text-left',
 	    '__label__' => 'text-left'
 	);
 

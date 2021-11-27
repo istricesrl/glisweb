@@ -1291,6 +1291,8 @@ CREATE OR REPLACE VIEW `embed_view` AS
 	SELECT
 		embed.id,
 		embed.nome,
+		embed.se_audio,
+		embed.se_video,
 		embed.nome AS __label__
 	FROM embed
 ;
@@ -1852,6 +1854,7 @@ CREATE OR REPLACE VIEW `mail_out_view` AS
 		mail_out.token,
 		mail_out.tentativi,
 		mail_out.timestamp_invio,
+		from_unixtime( mail_out.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
 		mail_out.id_account_inserimento,
 		mail_out.id_account_aggiornamento,
 		concat(
@@ -1895,6 +1898,7 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 		mail_sent.token,
 		mail_sent.tentativi,
 		mail_sent.timestamp_invio,
+		from_unixtime( mail_sent.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
 		mail_sent.id_account_inserimento,
 		mail_sent.id_account_aggiornamento,
 		concat(

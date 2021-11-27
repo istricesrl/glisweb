@@ -68,7 +68,10 @@
 	    'anagrafica' => array(
 		CONTROL_FULL => array( 'roots','staff' )
 	    ),
-	    'anagrafica_archiviati' => array(
+	    'anagrafica_attivi' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+			),
+			'anagrafica_archiviati' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
@@ -205,6 +208,10 @@
 #	    'sms_sent' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'task' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
 	    'telefoni' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
@@ -221,10 +228,7 @@
 #	    'tipologie_attivita' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'tipologie_crm' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
-	    'tipologie_crm' => array(
+	    'ranking' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 		'todo' => array(

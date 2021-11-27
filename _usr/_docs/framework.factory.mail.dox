@@ -1,0 +1,32 @@
+/*!
+
+    \page factory_mail factory mail del framework
+
+    Descrizione della factory mail del framework.
+
+    introduzione
+    ============
+    La factory mail è la parte del framework che si occupa della creazione e dell'invio delle mail.
+
+    code delle mail in uscita e inviate
+    ===================================
+
+    template per le mail
+    ====================
+
+    la funzione queueMailFromTemplate()
+    -----------------------------------
+
+    \code{.php}
+    // accodamento
+        queueMailFromTemplate(
+            $cf['mysql']['connection'],
+            $cf['mail']['tpl']['DEFAULT'],
+            array( 'dt' => array( 'chiave' => 'valore' ), 'ct' => $ct ),
+            strtotime( '+5 minutes' ),
+            array( 'Pinco Pallo' => 'pinco.pallo@domain.bogus' ),
+            'it-IT'
+        );
+    \endcode
+
+*/

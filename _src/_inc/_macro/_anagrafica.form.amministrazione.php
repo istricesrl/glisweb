@@ -23,11 +23,11 @@
 	$ct['form']['table'] = 'anagrafica';
 	
 	// tendina regimi fiscali
-	$ct['etc']['select']['regimi_fiscali'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['regimi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM regimi_fiscali_view'
+	    'SELECT id, __label__ FROM regimi_view'
 	);
 
 	// tendina PEC

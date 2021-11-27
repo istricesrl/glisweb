@@ -31,8 +31,13 @@
     
     lo script di appoggio in /etc/cron.d/
     -------------------------------------
+    Ad ogni chiamata, l'API _src/_api/_cron.php ricava dalle tabelle *task* e *job* l'elenco delle cose
+    da fare, utilizzando un meccanismo di lock software basato su token per evitare la concorrenza. Prima
+    vengono eseguiti i task, e successivamente vengono fatti avanzare i job.
 
-
+    Le informazioni rilevanti sul lavoro dell'API vengono salvate rispettivamente sotto le chiavi $cf['cron']['task']
+    e $cf['cron']['job'], inoltre un log specifico per la tracciatura degli esiti di tali lavorazioni è
+    tenuto in var/log/cron/ e specificamente il dettaglio dell'ultima esecuzione è contenuto in var/log/latest/cron.latest.log.
 
     struttura e gestione dei task
     =============================

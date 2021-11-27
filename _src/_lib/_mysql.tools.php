@@ -585,40 +585,70 @@
     }
 
     /**
-	 * effettua la duplicazione ricorsiva di un oggetto e degli eventuali oggetti figli delle tabelle correlate
+	 * effettua la duplicazione ricorsiva di un oggetto e degli eventuali oggetti figli nelle tabelle correlate
 	 * 
      * @param	mysqli		$c		connessione mysqli
 	 * @param	string		$t		nome della tabella in cui si trova il record principale da duplicare
 	 * @param	string		$o		id dell'oggetto da duplicare
 	 * @param	string		$n		id dell'oggetto figlio ottenuto, passare NULL per autoincrement
-	 * @param	string		$x		puntatore ad un array contenente in chiave i nomi delle tabelle (principale e collegate) da coinvolgere nella duplicazione e in valore un array che a sua volta contiene in chiave l'elenco dei campi da modificare nell'oggetto duplicato e in valore il valore da utilizzare
+	 * @param	string		$x		puntatore ad un array costruito come nell'esempio seguente, contenente due chiavi:
+	 * 								- t: array delle tabelle coinvolte nella duplicazione
+	 * 								- f: array che consente, per il nuovo record creato, di impostare un valore per determinati campi. contiene in chiave i nomi dei campi e in valore il corrispondente valore
 	 * 
+	 * esempio di array per la duplicazione di una pagina con relativi contenuti e immagini, e dei contenuti associati alle immagini
+	 * 
+	 * $tbls = array(
+     *      't' => array(
+     *          'pagine' => array(
+     *               't' => array(
+     *                   'contenuti' => array(),
+     *                   'immagini' => array(
+     *                       't' => array(
+     *                           'contenuti' => array()
+     *                       )
+     *                   )
+     *               ),
+     *               'f' => array(
+     *                   'nome' => $p['nome'] . ' - duplicata'
+     *               )
+     *           )
+     *      )
+     * );
+
      * @todo finire di documentare
      *
      */
     function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array() ) {
 
 		// debug
-	//	echo "stampo x" . PHP_EOL;
-	//	print_r($x);
-	//	echo "stampo x[t]" . PHP_EOL;
-	//	 print_r( $x[ $t ] );
+	#	echo "chiamata mysqlDuplicateRowRecursive per array x" . PHP_EOL;
+	#	print_r($x);
+	#	echo "tabella principale: " . $t . " - stampo x[" . $t . "]" . PHP_EOL;
+	#	print_r( $x['t'][ $t ] );
+
+		// defaults
+		if( ! isset( $x['t'][ $t ]['f'] ) ) { $x['t'][ $t ]['f'] = array(); }
+		if( ! isset( $x['t'][ $t ]['t'] ) ) { $x['t'][ $t ]['t'] = array(); }
 
 		// se non ho un ID di partenza
 		if( empty( $o ) ) {
 			die( 'ID da duplicare non passato' );
 		}
 
+		// defaults
+		if( ! isset( $x['t'][ $t ]['f'] ) ) { $x['t'][ $t ]['f'] = array(); }
+		if( ! isset( $x['t'][ $t ]['t'] ) ) { $x['t'][ $t ]['t'] = array(); }
+
 		// duplico la riga
-		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x[ $t ] );
+		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x['t'][ $t ]['f'] );
 
 		// debug
-		// echo 'ID riga duplicata = ' . $id . PHP_EOL;
+	#	 echo 'ID riga duplicata = ' . $id . PHP_EOL;
 
 		// creo i placeholder per le tabelle richieste
 		$pholders = array();
 		$values = array( array( 's' => $t ) );
-		foreach( array_keys( $x ) as $rt ) {
+		foreach( array_keys( $x['t'][ $t ]['t'] ) as $rt ) {
 			$pholders[] = '?';
 			$values[] = array( 's' => $rt );
 		}
@@ -637,16 +667,22 @@
 		);
 
 		// debug
-		//echo "tabelle collegate". PHP_EOL;
-		// print_r( $ks );
+	#	echo "tabelle collegate". PHP_EOL;
+	#	print_r( $ks );
 
+	#	echo "per ogni relazione... ". PHP_EOL;
 		// per ogni relazione
 		foreach( $ks as $ksr ) {
 
-		//	echo "tabella " . $ksr['TABLE_NAME'] . PHP_EOL;
+		#	echo "tabella " . $ksr['TABLE_NAME'] . PHP_EOL;
+
+		#	echo "aggiungo il campo di relazione alle sostituzioni" . PHP_EOL;
 
 			// aggiungo il campo di relazione alle sostituzioni
-			$x[ $ksr['TABLE_NAME'] ][ $ksr['COLUMN_NAME'] ] = $id;
+			$x['t'][$t]['t'][ $ksr['TABLE_NAME'] ]['f'][ $ksr['COLUMN_NAME'] ] = $id;
+
+		#	echo "valore attuale di x". PHP_EOL;
+		#	print_r($x);
 
 			// compongo la query di ricerca relazioni
 			$q = 'SELECT * FROM ' . $ksr['TABLE_NAME'] . ' WHERE ' . $ksr['COLUMN_NAME'] . ' = "' . $o . '"';
@@ -655,20 +691,23 @@
 			$rls = mysqlQuery( $c, $q );
 
 			// debug
-		//	echo "query di ricerca relazioni" . PHP_EOL;
-		//	 var_dump( $q );
+		#	echo "query di ricerca relazioni" . PHP_EOL;
+		#	 var_dump( $q );
 
-		//	 echo "righe collegate" . PHP_EOL;
-		//	 print_r( $rls );
+		#	 echo "righe collegate" . PHP_EOL;
+		#	 print_r( $rls );
 
+		#	 echo "per ogni riga di relazione... ". PHP_EOL;
 			// per ogni riga della relazione
 			foreach( $rls as $rl ) {
 
+			#	echo "stampo la riga di relazione". PHP_EOL;
 				// debug
-			//	 print_r( $rl );
+			#	 print_r( $rl );
 
+			#	 echo "chiamo mysqlDuplicateRowRecursive". PHP_EOL;
 				// chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
-				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x );
+				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][ $t ] );
 
 			}
 
@@ -685,6 +724,7 @@
      * $n	id del record nuovo duplicato (settare NULL per autoincrement)
      * $x	array delle trasformazioni (contiene in chiave i nomi delle colonne da modificare e in valore il valore da aggiornare)
      *
+	 * TODO: creare un meccanismo di sostituzione intelligente dei valori dei campi (oltre al settaggio manuale)
      */
     function mysqlDuplicateRow( $c, $t, $o, $n = NULL, $x = array() ) {
 

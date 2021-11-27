@@ -16,7 +16,7 @@
     $status = array();
 
     // status
-    $status['info'][] = 'inizio operazioni job standalone di test';
+    $status['info'][] = 'inizio operazioni API job';
 
     // chiave di lock
     $status['token'] = getToken( __FILE__ );
@@ -66,15 +66,24 @@
                 )
             );
 
-            // output
-            buildJson( array_merge_recursive( $job, $status ) );
-
         } else {
 
-            // output
-            buildJson( $status );
+            // recupero dati informativi sul job
+            $job = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT id, totale, corrente, nome FROM job WHERE id = ? ',
+                array(
+                    array( 's' => $_REQUEST['__id__'] )
+                )
+            );
 
         }
+
+        // log
+        appendToFile( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+
+        // output
+        buildJson( array_replace_recursive( $job, $status ) );
 
     } elseif( isset( $_REQUEST['__job__'] ) ) {
 

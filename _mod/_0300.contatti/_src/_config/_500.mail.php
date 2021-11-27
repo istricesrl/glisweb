@@ -21,8 +21,10 @@
 	    'type' => 'twig',
 	    'it-IT' => array(
             'from' => array( 'GlisWeb' => 'noreply@glisweb.videoarts.eu' ),
-            'oggetto' => 'invio modulo: {{ dati.modulo }}',
-            'testo' => '<ul>{% for k,v in dati %}<li><b>{{ k }}:</b> {% if v is iterable %}<ul>{% for kk,vv in v %}<li><b>{{ kk }}:</b> {{ vv }}</li>{% endfor %}</ul>{% else %}{{ v }}{% endif %}</li>{% endfor %}</ul>'
+            'oggetto' => 'invio modulo: {{ dt.modulo }}',
+            'testo' => '<ul>{% for k,v in dt %}<li><b>{{ k }}:</b> {% if v is iterable %}<ul>'.
+                '{% for kk,vv in v %}<li><b>{{ kk }}:</b> {{ vv }}</li>{% endfor %}</ul>'.
+                '{% else %}{{ v }}{% endif %}</li>{% endfor %}</ul>'
 	    )
 	);
 
@@ -30,13 +32,13 @@
 	    'type' => 'twig',
 	    'it-IT' => array(
             'from' => array( 'GlisWeb' => 'noreply@glisweb.videoarts.eu' ),
-            'oggetto' => 'grazie {{ dati.nome }}!',
-            'testo' => 'caro {{ dati.nome }}, grazie per averci contattati!'
+            'oggetto' => 'grazie {{ dt.nome }}!',
+            'testo' => 'caro {{ dt.nome }}, grazie per averci contattati!'
 	    ),
 	    'en-GB' => array(
             'from' => array( 'GlisWeb' => 'noreply@glisweb.videoarts.eu' ),
-            'oggetto' => 'thank you {{ dati.nome }}!',
-            'testo' => 'dear {{ dati.nome }}, thank you for your request!'
+            'oggetto' => 'thank you {{ dt.nome }}!',
+            'testo' => 'dear {{ dt.nome }}, thank you for your request!'
 	    )
 	);
 

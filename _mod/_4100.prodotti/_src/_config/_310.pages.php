@@ -22,7 +22,7 @@
 if ($cf['contents']['cached'] === false) {
 
     // log
-    if (!empty($cf['memcache']['connection'])) {
+    if( ! empty( $cf['memcache']['connection'] ) ) {
         logWrite('struttura dei prodotti NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
     }
 

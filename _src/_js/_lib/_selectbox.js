@@ -16,9 +16,11 @@
 
 		var wscall = null;
 
+		var disabled = null;
+
 	    // log
 	    // console.log( select );
-	     console.log( base_id );
+	    // console.log( base_id );
 
 	    // lunghezza minima del filtro
 	    if( $.isNumeric( select.attr( 'min-filter' ) ) ) {
@@ -27,12 +29,18 @@
 		var min = 0;
 	    }
 
+		// se la select è disabilitata
+		if( select.attr( 'disabled' ) == 'disabled' ) {
+			console.log( select.attr( 'disabled' ) );
+			disabled = 'disabled';
+		}
+
 	    // nascondo la select
 	    $( select ).hide();
 
 	    // creo il campo input
 	    // var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '">');
-		var box = $('<input type="text" class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 30 * 100 * 1000 ) ) + '-' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '-' + ( Math.floor(Math.random() * 50 * 100 * 1000 ) ) + '"><div class="spinner-border" role="status"></div>');
+		var box = $('<input type="text" ' + disabled + ' class="form-control form-control-sm selectbox-base-background selectbox-input remove-on-duplicate" id="' + base_id + '_inputbox" autocomplete="' + ( Math.floor(Math.random() * 30 * 100 * 1000 ) ) + '-' + ( Math.floor(Math.random() * 10 * 100 * 1000 ) ) + '-' + ( Math.floor(Math.random() * 50 * 100 * 1000 ) ) + '"><div class="spinner-border" role="status"></div>');
 
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'data-required' ) == 'true' ) {
