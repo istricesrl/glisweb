@@ -15,6 +15,8 @@
     ----------------------------|---------------------------------------------------------------------------------------
     embed.id                    | l'ID della strategia di embed
     embed.nome                  | il nome della strategia di embed
+    embed.se_audio              | -
+    embed.se_video              | -
 
     La tabella non ha chiavi esterne.
 
@@ -24,6 +26,8 @@
     ------------------------------------|---------------------------------------------------------------------------------------
     embed_view.id                       | -
     embed_view.nome                     | -
+    embed_view.se_audio                 | -
+    embed_view.se_video                 | -
     embed_view.__label__                | etichetta descrittiva della strategia di embed
 
 */

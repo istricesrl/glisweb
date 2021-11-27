@@ -45,7 +45,7 @@
 	}
 
     // preset filtro custom progetti aperti
-	$ct['view']['__restrict__']['id_tipologia_crm']['LK'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+	$ct['view']['__restrict__']['id_ranking']['LK'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

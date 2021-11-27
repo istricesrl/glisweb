@@ -1291,6 +1291,8 @@ CREATE OR REPLACE VIEW `embed_view` AS
 	SELECT
 		embed.id,
 		embed.nome,
+		embed.se_audio,
+		embed.se_video,
 		embed.nome AS __label__
 	FROM embed
 ;

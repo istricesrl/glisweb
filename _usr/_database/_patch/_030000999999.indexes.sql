@@ -751,7 +751,7 @@ ALTER TABLE `documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `embed`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `nome` (`nome`), 
-	ADD KEY `indice` (`id`,`nome`);
+	ADD KEY `indice` (`id`,`nome`,`se_audio`,`se_video`);
 
 --| 030000012801
 

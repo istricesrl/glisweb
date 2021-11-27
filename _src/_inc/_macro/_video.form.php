@@ -13,7 +13,7 @@
 	$ct['form']['table'] = 'video';
 
     // tendina tipologie embed
-	$ct['etc']['select']['tipologie_embed'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_embed_view' );
+	$ct['etc']['select']['embed'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM embed_view' );
 
 
     // macro di default
