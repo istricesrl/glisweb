@@ -467,7 +467,7 @@
 	    'etc'		=> array( 'tabs'	=> array(	'reparti.form' ) )
 	);
 
-		// vista coupon
+	// vista coupon
 	$p['coupon.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'coupon' ),
@@ -481,7 +481,7 @@
 								'priority'	=> '025' ) ) )
 	);
 
-	// gestione listini
+	// gestione coupon
 	$p['coupon.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
@@ -490,5 +490,18 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'coupon.form.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'coupon.form'		) )
+	    'etc'		=> array( 'tabs'	=> array(	'coupon.form', 'coupon.form.stampe'	) )
+	);
+
+	// gestione coupon stampe
+	$p['coupon.form.stampe'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'coupon.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_coupon.form.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['coupon.form']['etc']['tabs'] )
 	);
