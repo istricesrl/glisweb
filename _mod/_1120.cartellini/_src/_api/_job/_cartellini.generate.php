@@ -33,6 +33,7 @@
                 $mese = $job['workspace']['mese'];
                 $anno = $job['workspace']['anno'];
 
+                logWrite( 'lavoro i cartellini dal '.date( 'Y-m-d', strtotime("$anno-$mese-01")).' al '.date( 'Y-m-t', strtotime("$anno-$mese-01")) , 'cartellini', LOG_ERR );
                 // tutti i contratti validi in parte o del tutto nel mese/anno indicato
                 $status['result'] = mysqlSelectColumn(
 				    'id',
@@ -42,8 +43,8 @@
                     '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR ( data_fine IS NOT NULL and data_fine >= ? ) ) ) )',
                     array(
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
-                        array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-31") ) ),
-                        array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
+                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ),
+                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ),
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) )
                     )
 
@@ -158,11 +159,11 @@
                     );*/
                     $orecontratto = oreGiornaliereContratto( $contratto['id_anagrafica'], $data );
 
-                    logWrite( 'il contratto ' . $cid.' per il giorno  '.$data.' prevede  '.count( $orecontratto ).' orari attivi ' , 'cartellini', LOG_ERR );
+                    logWrite( 'il contratto ' . $cid.' per il giorno  '.$data.' prevede  '.$orecontratto .' orari attivi ' , 'cartellini', LOG_ERR );
 
                     // genero i cartellini
                     if( !empty ( $orecontratto ) ){
-                        foreach ( $orecontratto as $oc ){
+
                            
                             $cartellino = mysqlQuery( $cf['mysql']['connection'], 
                                 'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
@@ -173,8 +174,7 @@
                                     array( 's' => $orecontratto ),  
                                     array( 's' => time() ) ) 
                                 );
-                            
-                        }
+
                     }
     
                 }
