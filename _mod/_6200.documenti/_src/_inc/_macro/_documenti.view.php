@@ -35,7 +35,9 @@
         '__label__' => 'nome',
         'cliente' => 'cliente',
         'emittente' => 'emittente',
-        'totale' => 'totale' 
+        'totale' => 'totale',
+         'coupon' => 'coupon',
+         'pagamento' => 'pagamento'
 	);
 
     // stili della vista
@@ -47,7 +49,8 @@
         'cliente' => 'text-left',
         'emittente' => 'text-left',
         'tipologia' => 'text-left',
-        'totale' => 'text-right' 
+        'totale' => 'text-right',
+        'coupon' => 'd-none' 
     );
 
     // inclusione filtri speciali
@@ -79,4 +82,17 @@
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
-   
+    // trasformazione icona attivo/inattivo
+	foreach( $ct['view']['data'] as &$row ) {
+	    if( ! empty( $row['coupon'] ) ) { 
+            $row['documenti_articoli'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli WHERE id_documento = ? ', array( array( 's' => $row['id'] ) ) );
+
+            $row['totale'] -= calcolaCoupon( $cf['mysql']['connection'], array(),   $row );
+            $row['totale'] = number_format($row['totale'], 2 ); 
+        };
+
+        if( ! empty( $row['pagamento'] ) ){
+            $row['pagamento'] =  str_replace("1", '<i class="fa fa-money"></i>',  $row['pagamento']);
+            $row['pagamento'] =  str_replace("5", '<i class="fa fa-credit-card"></i>',  $row['pagamento']);
+        }
+	}
