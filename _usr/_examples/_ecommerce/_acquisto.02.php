@@ -19,8 +19,8 @@
     $i = 0;
 
     // form di esempio per l'acquisto di un prodotto
-    $t .= '<form action="_acquisto.03.php" method="POST">';
     if( isset( $_SESSION['carrello']['articoli'] ) ) {
+        $t .= '<form action="_acquisto.03.php" method="POST">';
         foreach( $_SESSION['carrello']['articoli'] as $articolo => $dati ) {
             $t .= '<div>';
             $t .= '<input type="hidden" name="__carrello__[__articoli__]['.$i.'][id_articolo]" value="'.$dati['id_articolo'].'" />';
@@ -31,8 +31,10 @@
         }
         $t .= '<button type="button" onclick="window.open(\'_acquisto.01.php\',\'_self\');">TORNA AGLI ACQUISTI</button>';
         $t .= '<button type="submit">CONFERMA</button>';
+        $t .= '</form>';
+    } else {
+        $t .= '<button type="button" onclick="window.open(\'_acquisto.01.php\',\'_self\');">TORNA AGLI ACQUISTI</button>';
     }
-    $t .= '</form>';
 
     // contenuto del carrello
     if( isset( $_SESSION['carrello'] ) ) {

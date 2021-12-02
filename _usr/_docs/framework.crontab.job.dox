@@ -176,7 +176,7 @@
                 if( empty( $job['timestamp_apertura'] ) ) {
                     mysqlQuery(
                         $cf['mysql']['connection'],
-                        'UPDATE job SET timestamp_avvio = ? WHERE id = ?',
+                        'UPDATE job SET timestamp_apertura = ? WHERE id = ?',
                         array(
                         array( 's' => time() ),
                         array( 's' => $job['id'] )
