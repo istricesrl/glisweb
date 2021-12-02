@@ -141,22 +141,6 @@
                         $turno = 1;
                     }
     
-                    // ore previste da contratto per quel giorno
-                  /*  $orecontratto = mysqlQuery(
-                        $cf['mysql']['connection'], 
-                        'SELECT tipologie_attivita_inps.id AS id_tipologia_inps, sum( time_to_sec( timediff( ora_fine, ora_inizio ) ) / 3600 ) as tot_ore FROM orari_contratti ' .
-                        'LEFT JOIN costi_contratti ON orari_contratti.id_costo = costi_contratti.id ' .
-                        'LEFT JOIN tipologie_attivita_inps ON costi_contratti.id_tipologia = tipologie_attivita_inps.id ' .
-                        'WHERE orari_contratti.se_lavoro = 1 ' .
-                        'AND orari_contratti.id_giorno = ? ' . 
-                        'AND orari_contratti.id_contratto = ? AND orari_contratti.turno = ? '.
-                        'GROUP BY tipologie_attivita_inps.id' ,
-                        array(
-                            array( 's' => $numgiorno ),
-                            array( 's' => $cid ),
-                            array( 's' => $turno )
-                        )
-                    );*/
                     $orecontratto = oreGiornaliereContratto( $contratto['id_anagrafica'], $data );
 
                     logWrite( 'il contratto ' . $cid.' per il giorno  '.$data.' prevede  '.$orecontratto .' orari attivi ' , 'cartellini', LOG_ERR );
