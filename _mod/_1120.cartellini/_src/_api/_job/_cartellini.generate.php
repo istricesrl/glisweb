@@ -171,7 +171,7 @@
                                     array( 's' => $contratto['id_anagrafica'] ), 
                                     array( 's' => $data ),
                                     array( 's' => 1 ), // tipologia inps ordinaria
-                                    array( 's' => $orecontratto ),  
+                                    array( 's' => str_replace(",",".",$orecontratto) ),  
                                     array( 's' => time() ) ) 
                                 );
 

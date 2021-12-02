@@ -26,6 +26,8 @@
             $status['err'][] = 'mese o anno non settati';
         } else {
 
+            logWrite( 'inizio popolamento cartellini', 'cartellini', LOG_ERR );
+
             // attività di avvio
             if( empty( $job['corrente'] ) ) {
 
@@ -39,12 +41,12 @@
                     'SELECT DISTINCT data_attivita FROM cartellini WHERE data_attivita >= ? AND  data_attivita <= ?',
                     array(
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
-                        array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-31") ) )
+                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) )
                     )
 
                 );
 
-                logWrite( 'trovati  ' . count( $status['result'] ).' cartellini per il mese   '.$mese.'/'.$anno , 'cartellini', LOG_ERR );
+                logWrite( 'trovate ' . count( $status['result'] ).' date lavorabili per il mese '.$mese.'/'.$anno , 'cartellini', LOG_ERR );
           
                 // creo la lista dei contratti attivi su cui generare cartellini teorici
                 $job['workspace']['list'] = $status['result'];
@@ -68,7 +70,7 @@
                 }
 
                 // mando un messaggio su Slack
-                slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'avviata ' . $job['nome'] );
+              //  slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'avviata ' . $job['nome'] );
 
             } else {
 
@@ -88,7 +90,7 @@
             $anno = $job['workspace']['anno'];
 
             // recupero i dati del cartellino
-            $cartellini = mysqlSelectRow(
+            $cartellini = mysqlQuery(
                         $cf['mysql']['connection'], 
                         'SELECT * FROM cartellini WHERE data_attivita = ? ',
                         array( array( 's' => $cid ) ) );
@@ -96,6 +98,8 @@
             logWrite( 'trovati ' . count( $cartellini ) .' per la data '.$cid , 'cartellini', LOG_ERR );
 
             foreach( $cartellini as $car ){
+
+                logWrite( 'lavoro l\'anagrafica  ' . $car['id_anagrafica'] .' per la data '.$cid , 'cartellini', LOG_ERR );
 
                 // ricavo l'id del contratto attivo alla data indicata
                 $contratto = contrattoAttivo( $car['id_anagrafica'], $cid );
@@ -137,14 +141,12 @@
                     $cf['mysql']['connection'], 
                     'SELECT sum( TIMEDIFF( LEAST( ?, ora_fine ),GREATEST( ora_inizio, ? )  ) ) AS tot_ore FROM attivita ' .
                     'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
-                    'WHERE tipologie_attivita.se_lavoro = 1 AND data_attivita = ? and id_anagrafica = ? AND ora_inizio >= ? AND ora_fine <= ? GROUP by data_attivita',
+                    'WHERE tipologie_attivita.se_lavoro = 1 AND data_attivita = ? AND id_anagrafica = ? GROUP by data_attivita',
                     array(
                         array( 's' => $fasce['ora_fine'] ),
                         array( 's' => $fasce['ora_inizio'] ),
                         array( 's' => $cid ),
-                        array( 's' => $car['id_anagrafica'] ),
-                        array( 's' => $fasce['ora_inizio'] ),
-                        array( 's' => $fasce['ora_fine'] )
+                        array( 's' => $car['id_anagrafica'] )
                     )			
                 )  / 10000 ;
 
