@@ -41,9 +41,8 @@
                     'SELECT DISTINCT data_attivita FROM cartellini WHERE data_attivita >= ? AND  data_attivita <= ?',
                     array(
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
-                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) )
+                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ) // Y-m-t restituisce l'unltimo giorno del mese per l'anno indicato
                     )
-
                 );
 
                 logWrite( 'trovate ' . count( $status['result'] ).' date lavorabili per il mese '.$mese.'/'.$anno , 'cartellini', LOG_ERR );
@@ -136,7 +135,7 @@
                 }
 
                 // LAVORO ORDINARIO
-                // tutte le attività svolte nella fascia oraria del giorno
+                // tutte le attività svolte nella fascia oraria del giorno 
                 $oreOrdinarie = mysqlSelectValue( 
                     $cf['mysql']['connection'], 
                     'SELECT sum( TIMEDIFF( LEAST( ?, ora_fine ),GREATEST( ora_inizio, ? )  ) ) AS tot_ore FROM attivita ' .
@@ -180,6 +179,28 @@
                     )			
                 );
 
+                $orePermesso = mysqlSelectValue( 
+                    $cf['mysql']['connection'], 
+                    'SELECT sum( ore ) AS tot_ore FROM attivita ' .
+                    'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
+                    'WHERE tipologie_attivita.se_permesso = 1 AND data_attivita = ? and id_anagrafica = ? GROUP by data_attivita',
+                    array(
+                        array( 's' => $cid ),
+                        array( 's' => $car['id_anagrafica'] )
+                    )			
+                );
+
+                $oreFerie = mysqlSelectValue( 
+                    $cf['mysql']['connection'], 
+                    'SELECT sum( ore ) AS tot_ore FROM attivita ' .
+                    'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
+                    'WHERE tipologie_attivita.se_ferie = 1 AND data_attivita = ? and id_anagrafica = ? GROUP by data_attivita',
+                    array(
+                        array( 's' => $cid ),
+                        array( 's' => $car['id_anagrafica'] )
+                    )			
+                );
+
                 if( !empty ( $oreOrdinarie ) && $oreOrdinarie > 0 ){
     
                     logWrite( 'il cartellino ' . $cid.' ha  '.$oreOrdinarie.' ore ordinarie lavorate ' , 'cartellini', LOG_ERR );
@@ -187,7 +208,7 @@
                         $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
                         'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
                         array( 
-                            array( 's' => $oreOrdinarie ), 
+                            array( 's' => str_replace(",",".",$oreOrdinarie) ), 
                             array( 's' => time() ),
                             array( 's' => $car['id'] ) )
                         );
@@ -204,7 +225,7 @@
                             array( 's' => $car['id_anagrafica'] ), 
                             array( 's' => $cid ),
                             array( 's' => 2 ), // tipologia inps straordinaria
-                            array( 's' => $oreStraordinarie ),  
+                            array( 's' => str_replace(",",".",$oreStraordinarie) ),  
                             array( 's' => time() ) ) 
                         );
 
@@ -220,7 +241,39 @@
                             array( 's' => $car['id_anagrafica'] ), 
                             array( 's' => $cid ),
                             array( 's' => 4 ), // tipologia inps malattia
-                            array( 's' => $oreMalattia ),  
+                            array( 's' => str_replace(",",".",$oreMalattia) ),  
+                            array( 's' => time() ) ) 
+                        );
+
+                }
+
+                if( !empty ( $orePermesso ) && $orePermesso > 0 ){
+    
+                    logWrite( 'il cartellino ' . $cid.' ha  '.$orePermesso.' ore di permesso ' , 'cartellini', LOG_ERR );
+
+                        $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        array( 
+                            array( 's' => $car['id_anagrafica'] ), 
+                            array( 's' => $cid ),
+                            array( 's' => 5 ), // tipologia inps permesso
+                            array( 's' => str_replace(",",".",$orePermesso) ),  
+                            array( 's' => time() ) ) 
+                        );
+
+                }
+
+                if( !empty ( $oreFerie ) && $oreFerie > 0 ){
+    
+                    logWrite( 'il cartellino ' . $cid.' ha  '.$oreFerie.' ore di ferie ' , 'cartellini', LOG_ERR );
+
+                        $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        array( 
+                            array( 's' => $car['id_anagrafica'] ), 
+                            array( 's' => $cid ),
+                            array( 's' => 6 ), // tipologia inps malattia
+                            array( 's' => str_replace(",",".",$oreFerie) ),  
                             array( 's' => time() ) ) 
                         );
 
@@ -259,7 +312,7 @@
                 );
 				
                 // mando un messaggio su Slack
-                slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
+            //    slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
 
             }
 

@@ -43,11 +43,10 @@
                     '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR ( data_fine IS NOT NULL and data_fine >= ? ) ) ) )',
                     array(
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
-                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ),
+                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ), // Y-m-t restituisce l'unltimo giorno del mese per l'anno indicato
                         array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ),
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) )
                     )
-
                 );
                            
                 // creo la lista dei contratti attivi su cui generare cartellini teorici
