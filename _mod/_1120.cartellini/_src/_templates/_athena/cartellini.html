@@ -52,7 +52,69 @@
         </div>
 
         {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
-        
+        <div class="form-row">
+            <div class="col-md-12 table-responsive">
+                <table class="view-table cartellini warning-if-changed-cst">
+                    <thead>
+                        <tr>
+                            <th>data</th>
+                            <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
+                            {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
+                            <th>{{ t.__label__ }}</th>
+                            {% endfor %}
+                            <th colspan="2">totale ordinario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k,v in etc.ore %}
+                        <tr>
+                            <td style="text-align: right; {% if v.festivo == 1 %} color: red;{% endif %}">{{ v.nome }} {{ v.data }}</td>
+                            <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
+                            {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
+                            {% if v[ t.id ].id %}
+                            <td style="cursor: pointer" onclick="window.open('{{ pages['cartellini.form'].url[ localization.language.ietf ]~'?cartellini[id]='~v[ t.id ].id }}','_self');">
+                                <div>{{ v[ t.id ].ore_tot }}</div>
+                            {% else %}
+                            <td><div><input disabled style="border: 0ch;"> </div>
+                            {% endif %}
+                            </td>
+                            {% endfor %}
+                            <td>&nbsp;</td>
+                            <td>{% if v.ordinarie_previste > 0 or v.ordinarie_fatte > 0 %}{{'%0.2f'|format( v.ordinarie_fatte ) }} ore di {{ '%0.2f'|format(v.ordinarie_previste) }}{% endif %}</td>
+                            <td>
+                                {% if v.ordinarie_previste != v.ordinarie_fatte %}
+                                <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% elseif v.ordinarie_previste == v.ordinarie_fatte and v.ordinarie_previste > 0 %}
+                                <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr style="font-weight: bold">
+                            <td>totale</td>
+                            <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
+                            {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
+                            <td>{{ '%0.2f'|format(etc.tipologie[ t.id ].ore_totali) }}</td>
+                            {% endfor %}
+                            <td>&nbsp;</td>
+                            <td>
+                                {% if etc.totali_quadratura.ordinarie_fatte > 0 or etc.totali_quadratura.ordinarie_previste > 0 %}
+                                {{'%0.2f'|format( etc.totali_quadratura.ordinarie_fatte ) }} ore di {{ '%0.2f'|format( etc.totali_quadratura.ordinarie_previste ) }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if etc.totali_quadratura.ordinarie_fatte != etc.totali_quadratura.ordinarie_previste %}
+                                <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% else %}
+                                <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
     
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

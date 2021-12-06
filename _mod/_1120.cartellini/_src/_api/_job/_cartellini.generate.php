@@ -6,6 +6,8 @@
      * 
      */
 #gdl
+$idT_inps_ordinario = 1;
+$idT_inps_straordinario = 2;
 
     // inizializzo l'array del risultato
 	$status = array();
@@ -153,12 +155,24 @@
                                 array( 
                                     array( 's' => $contratto['id_anagrafica'] ), 
                                     array( 's' => $data ),
-                                    array( 's' => 1 ), // tipologia inps ordinaria
+                                    array( 's' => $idT_inps_ordinario ), // tipologia inps ordinaria
                                     array( 's' => str_replace(",",".",$orecontratto) ),  
                                     array( 's' => time() ) ) 
                                 );
+                    } else {
+
+                        $cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        array( 
+                            array( 's' => $contratto['id_anagrafica'] ), 
+                            array( 's' => $data ),
+                            array( 's' => $idT_inps_straordinario ), // tipologia inps straordinaria
+                            array( 's' => 0 ),  
+                            array( 's' => time() ) ) 
+                        );
 
                     }
+
     
                 }
     
