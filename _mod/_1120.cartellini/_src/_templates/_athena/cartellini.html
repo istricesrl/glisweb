@@ -91,7 +91,7 @@
                         </tr>
                         {% endfor %}
                         <tr style="font-weight: bold">
-                            <td>totale</td>
+                            <td style="text-align: right;">totale</td>
                             <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
                             <td>{{ '%0.2f'|format(etc.tipologie[ t.id ].ore_totali) }}</td>

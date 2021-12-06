@@ -212,7 +212,7 @@ $idT_inps_straordinario = 2;
                         array(
                             array( 's' => 'popolazione cartellini ' . $job['workspace']['mese'] . '/' . $job['workspace']['anno'] ),
                             array( 's' => '_mod/_1120.cartellini/_src/_api/_job/_cartellini.populate.php' ),
-                            array( 's' => 10 ),
+                            array( 's' => 2 ),
                             array( 's' => json_encode(
                                 array(
                                     'mese' => $job['workspace']['mese'],

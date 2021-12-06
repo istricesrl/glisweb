@@ -127,7 +127,7 @@ $idT_inps_permessi = 5;
 
                     $fasce = mysqlSelectRow(
                         $cf['mysql']['connection'],  
-                        'SELECT * FROM fasce_orari_contratti WHERE id_contratto = ? AND turno = ? AND giorno = ? LIMIT 1',
+                        'SELECT * FROM fasce_orarie_contratti WHERE id_contratto = ? AND turno = ? AND id_giorno = ? LIMIT 1',
                         array(
                             array( 's' => $contratto ),
                             array( 's' => $turno ),
@@ -162,7 +162,7 @@ $idT_inps_permessi = 5;
 
                 if( !empty ( $oreOrdinarie ) && $oreOrdinarie > 0 ){
     
-                    logWrite( 'il cartellino ' . $cid.' ha  '.$oreOrdinarie.' ore ordinarie lavorate ' , 'cartellini', LOG_ERR );
+                    logWrite( 'il cartellino ' . $cid.' ha  '.$oreOrdinarie.' ore ordinarie lavorate tra le '.$fasce['ora_inizio'].' e le '.$fasce['ora_fine'] , 'cartellini', LOG_ERR );
 
                         $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
                         'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
