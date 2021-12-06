@@ -208,7 +208,7 @@ $idT_inps_straordinario = 2;
                     // creo il per popolare i cartellini appena creati
                     $status['job'] = mysqlQuery(
                         $cf['mysql']['connection'],
-                        'INSERT INTO job ( nome, job, iterazioni, workspace ) VALUES ( ?, ?, ?, ? )',
+                        'INSERT INTO job ( nome, job, iterazioni, workspace, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )',
                         array(
                             array( 's' => 'popolazione cartellini ' . $job['workspace']['mese'] . '/' . $job['workspace']['anno'] ),
                             array( 's' => '_mod/_1120.cartellini/_src/_api/_job/_cartellini.populate.php' ),
@@ -218,10 +218,11 @@ $idT_inps_straordinario = 2;
                                     'mese' => $job['workspace']['mese'],
                                     'anno' => $job['workspace']['anno']
                                 )
-                            ) )
+                            ) ),
+                            array( 's' => time() )
                         )
                     );
-				
+                    $status['info'][] = 'ho inserito il job: ' .$status['job'];
                 // mando un messaggio su Slack
         //        slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
 
