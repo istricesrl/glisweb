@@ -127,7 +127,7 @@ $idT_inps_permessi = 5;
 
                     $fasce = mysqlSelectRow(
                         $cf['mysql']['connection'],  
-                        'SELECT * FROM fasce_orari_contratti WHERE id_contratto = ? AND id_turno = ? AND giorno = ? LIMIT 1',
+                        'SELECT * FROM fasce_orari_contratti WHERE id_contratto = ? AND turno = ? AND giorno = ? LIMIT 1',
                         array(
                             array( 's' => $contratto ),
                             array( 's' => $turno ),
@@ -286,7 +286,7 @@ $idT_inps_permessi = 5;
                         array( 
                             array( 's' => $car['id_anagrafica'] ), 
                             array( 's' => $cid ),
-                            array( 's' => $idT_inps_ferie ), // tipologia inps malattia
+                            array( 's' => $idT_inps_ferie ), // tipologia inps ferie
                             array( 's' => str_replace(",",".",$oreFerie) ),  
                             array( 's' => time() ) ) 
                         );
