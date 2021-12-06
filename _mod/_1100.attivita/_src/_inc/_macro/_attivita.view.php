@@ -41,6 +41,8 @@
         'tipologia' => 'tipologia',
         'nome' => 'attivita',
         'ore' => 'ore',
+        'ora_inizio' => 'h inizio',
+        'ora_fine' => 'h fine'
     //    'tipologia_inps' => 'tipologia INPS',
         
 	);
