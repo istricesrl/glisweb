@@ -111,6 +111,16 @@ REPLACE INTO `embed` (`id`, `nome`, `se_video`, `se_audio`) VALUES
 (2, 'Vimeo', 1, NULL),
 (3, 'YouTube', 1, NULL);
 
+--| 050000015200
+
+-- gruppi
+-- tipologia: tabella gestita
+-- verifica: 2021-09-10 17:58 Fabio Mosti
+REPLACE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'roots',	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'staff',	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'users',	NULL,	NULL,	NULL,	NULL);
+
 --| 050000016000
 
 REPLACE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`) VALUES
