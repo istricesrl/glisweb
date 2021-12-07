@@ -692,9 +692,10 @@ ALTER TABLE `documenti`
 	ADD KEY `id_sede_emittente` (`id_sede_emittente`), 
 	ADD KEY `id_destinatario` (`id_destinatario`), 
 	ADD KEY `id_sede_destinatario` (`id_sede_destinatario`), 
+	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
 
 --| 030000009801
 

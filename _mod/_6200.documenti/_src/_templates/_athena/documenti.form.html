@@ -49,7 +49,7 @@
 			<div class="form-group form-row">
 				<div class="col-auto col-md-auto">
 					<span class="label-top">data</span>
-					{{ frm.date( table, '', '', 'data', '', '', request, '', '', '1' ) }}
+					{{ frm.date( table, '', '', 'data', '', '', request, 'now'|date('Y-m-d'), '', '1' ) }}
 				</div>
 				<div class="col-4 col-md-2">
 					<span class="label-top">numero</span>
@@ -71,13 +71,13 @@
 			<div class="form-group form-row">
 				<div class="col-12 col-md">
 					<span class="label-top">coupon {% if request[table].tipologia == 'documento di reso' %} reso{% else %}sconto{% endif %}</span>
-					{{ frm.selectBox( table, '', '', 'coupon', '', etc.select.coupon, request, '', '','','','','coupon.form','coupon.form','coupon', 'coupon' , page, pages, ietf,'coupon' ) }}
+					{{ frm.selectBox( table, '', '', 'id_coupon', '', etc.select.coupon, request, '', '', '', '', '', 'coupon.form', 'coupon.form', 'coupon', 'id_coupon', page, pages, ietf, 'coupon' ) }}
 				</div>
 			</div>
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">note</span>
-				{{ frm.textarea( table, '', '', 'note_interne', '', 3, request ) }}
+				{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
 				</div>
 			</div>
 	
