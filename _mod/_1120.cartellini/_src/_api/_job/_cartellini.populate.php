@@ -41,16 +41,16 @@ $idT_inps_permessi = 5;
                 $anno = $job['workspace']['anno'];
 
                 $status['result'] = mysqlSelectColumn(
-				    'data_attivita',
+				    'id',
                     $cf['mysql']['connection'],
-                    'SELECT DISTINCT data_attivita FROM cartellini WHERE data_attivita >= ? AND  data_attivita <= ?',
+                    'SELECT id FROM cartellini WHERE mese = ? AND  anno = ?',
                     array(
-                        array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
-                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ) // Y-m-t restituisce l'unltimo giorno del mese per l'anno indicato
+                        array( 's' =>$mese ) ,
+                        array( 's' => $anno ) 
                     )
                 );
 
-                logWrite( 'trovate ' . count( $status['result'] ).' date lavorabili per il mese '.$mese.'/'.$anno , 'cartellini', LOG_ERR );
+                logWrite( 'trovate ' . count( $status['result'] ).' cartellini per il mese '.$mese.'/'.$anno , 'cartellini', LOG_ERR );
           
                 // creo la lista dei contratti attivi su cui generare cartellini teorici
                 $job['workspace']['list'] = $status['result'];
@@ -94,19 +94,19 @@ $idT_inps_permessi = 5;
             $anno = $job['workspace']['anno'];
 
             // recupero i dati del cartellino
-            $cartellini = mysqlQuery(
+            $righeCartellini = mysqlQuery(
                         $cf['mysql']['connection'], 
-                        'SELECT * FROM cartellini WHERE data_attivita = ? ',
+                        'SELECT * FROM righe_cartellini WHERE id_cartellino = ? ',
                         array( array( 's' => $cid ) ) );
 
-            logWrite( 'trovati ' . count( $cartellini ) .' per la data '.$cid , 'cartellini', LOG_ERR );
+            logWrite( 'trovate ' . count( $cartellini ) .' righe per il cartellino '.$cid , 'cartellini', LOG_ERR );
 
-            foreach( $cartellini as $car ){
+            foreach( $righeCartellini as $car ){
 
-                logWrite( 'lavoro l\'anagrafica  ' . $car['id_anagrafica'] .' per la data '.$cid , 'cartellini', LOG_ERR );
+                logWrite( 'lavoro l\'anagrafica  ' . $car['id_anagrafica'] .' per la data '.$car['data_attivita'],' tipologia inps '.$car['id_tipologia_inps'] , 'cartellini', LOG_ERR );
 
                 // ricavo l'id del contratto attivo alla data indicata
-                $contratto = contrattoAttivo( $car['id_anagrafica'], $cid );
+                $contratto = $car['id_contratto'];
 
                 if( !empty(  $contratto ) ){
                     // verifico se c'è un turno specificato nella tabella turni
@@ -115,8 +115,8 @@ $idT_inps_permessi = 5;
                         'SELECT turno FROM turni WHERE id_contratto = ? AND (data_inizio <= ? AND data_fine >= ?) ORDER BY id DESC LIMIT 1',
                         array( 
                             array( 's' => $contratto ),
-                            array( 's' => $cid ),
-                            array( 's' => $cid )
+                            array( 's' => $car['data_attivita'] ),
+                            array( 's' => $car['data_attivita'] )
                         )
                     );
 
@@ -131,7 +131,7 @@ $idT_inps_permessi = 5;
                         array(
                             array( 's' => $contratto ),
                             array( 's' => $turno ),
-                            array( 's' => ( date( 'w', strtotime("$cid") ) == 0 ) ? '7' : date( 'w', strtotime("$cid") ) )
+                            array( 's' => ( date( 'w', strtotime($car['data_attivita']) ) == 0 ) ? '7' : date( 'w', strtotime($car['data_attivita']) ) )
                         )
                     );
 
@@ -155,17 +155,17 @@ $idT_inps_permessi = 5;
                     array(
                         array( 's' => $fasce['ora_fine'] ),
                         array( 's' => $fasce['ora_inizio'] ),
-                        array( 's' => $cid ),
+                        array( 's' => $car['data_attivita'] ),
                         array( 's' => $car['id_anagrafica'] )
                     )			
                 ) / 10000 ;
 
                 if( !empty ( $oreOrdinarie ) && $oreOrdinarie > 0 ){
     
-                    logWrite( 'il cartellino ' . $cid.' ha  '.$oreOrdinarie.' ore ordinarie lavorate tra le '.$fasce['ora_inizio'].' e le '.$fasce['ora_fine'] , 'cartellini', LOG_ERR );
+                    logWrite( 'il cartellino ' . $cid.' ha  '.$oreOrdinarie.' ore ordinarie lavorate tra le '.$fasce['ora_inizio'].' e le '.$fasce['ora_fine'].' per il giorno '.$car['data_attivita']  , 'cartellini', LOG_ERR );
 
                         $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                        'UPDATE cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
+                        'UPDATE righe_cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
                         array( 
                             array( 's' => str_replace(",",".",$oreOrdinarie) ), 
                             array( 's' => time() ),
@@ -188,7 +188,7 @@ $idT_inps_permessi = 5;
                         array( 's' => $fasce['ora_inizio'] ),
                         array( 's' => $fasce['ora_fine'] ),
                         array( 's' => $fasce['ora_fine'] ),
-                        array( 's' => $cid ),
+                        array( 's' => $car['data_attivita'] ),
                         array( 's' => $car['id_anagrafica'] ),
                         array( 's' => $fasce['ora_inizio'] ),
                         array( 's' => $fasce['ora_fine'] )
@@ -200,10 +200,12 @@ $idT_inps_permessi = 5;
                     logWrite( 'il cartellino ' . $cid.' ha  '.$oreStraordinarie.' ore straordinarie lavorate ' , 'cartellini', LOG_ERR );
 
                         $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        'INSERT INTO righe_cartellini ( id_anagrafica, id_cartellino, data_attivita, id_contratto, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
                         array( 
                             array( 's' => $car['id_anagrafica'] ), 
                             array( 's' => $cid ),
+                            array( 's' => $car['data_attivita'] ),
+                            array( 's' => $car['id_contratto'] ),
                             array( 's' => $idT_inps_straordinario ), // tipologia inps straordinaria
                             array( 's' => str_replace(",",".",$oreStraordinarie) ),  
                             array( 's' => time() ) ) 
@@ -218,7 +220,7 @@ $idT_inps_permessi = 5;
                     'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
                     'WHERE tipologie_attivita.se_malattia = 1 AND data_attivita = ? and id_anagrafica = ? GROUP by data_attivita',
                     array(
-                        array( 's' => $cid ),
+                        array( 's' => $car['data_attivita'] ),
                         array( 's' => $car['id_anagrafica'] )
                     )			
                 );
@@ -228,10 +230,12 @@ $idT_inps_permessi = 5;
                     logWrite( 'il cartellino ' . $cid.' ha  '.$oreMalattia.' ore malattia ' , 'cartellini', LOG_ERR );
 
                         $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        'INSERT INTO righe_cartellini ( id_anagrafica, id_cartellino, data_attivita, id_contratto, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
                         array( 
                             array( 's' => $car['id_anagrafica'] ), 
                             array( 's' => $cid ),
+                            array( 's' => $car['data_attivita'] ),
+                            array( 's' => $car['id_contratto'] ),
                             array( 's' => $idT_inps_malattie ), // tipologia inps malattia
                             array( 's' => str_replace(",",".",$oreMalattia) ),  
                             array( 's' => time() ) ) 
@@ -245,7 +249,7 @@ $idT_inps_permessi = 5;
                     'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
                     'WHERE tipologie_attivita.se_permesso = 1 AND data_attivita = ? and id_anagrafica = ? GROUP by data_attivita',
                     array(
-                        array( 's' => $cid ),
+                        array( 's' => $car['data_attivita'] ),
                         array( 's' => $car['id_anagrafica'] )
                     )			
                 );
@@ -255,10 +259,12 @@ $idT_inps_permessi = 5;
                     logWrite( 'il cartellino ' . $cid.' ha  '.$orePermesso.' ore di permesso ' , 'cartellini', LOG_ERR );
 
                         $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        'INSERT INTO righe_cartellini ( id_anagrafica, id_cartellino, data_attivita, id_contratto, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
                         array( 
                             array( 's' => $car['id_anagrafica'] ), 
                             array( 's' => $cid ),
+                            array( 's' => $car['data_attivita'] ),
+                            array( 's' => $car['id_contratto'] ),
                             array( 's' => $idT_inps_permessi  ), // tipologia inps permesso
                             array( 's' => str_replace(",",".",$orePermesso) ),  
                             array( 's' => time() ) ) 
@@ -272,7 +278,7 @@ $idT_inps_permessi = 5;
                     'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
                     'WHERE tipologie_attivita.se_ferie = 1 AND data_attivita = ? and id_anagrafica = ? GROUP by data_attivita',
                     array(
-                        array( 's' => $cid ),
+                        array( 's' => $car['data_attivita'] ),
                         array( 's' => $car['id_anagrafica'] )
                     )			
                 );
@@ -282,10 +288,12 @@ $idT_inps_permessi = 5;
                     logWrite( 'il cartellino ' . $cid.' ha  '.$oreFerie.' ore di ferie ' , 'cartellini', LOG_ERR );
 
                         $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        'INSERT INTO righe_cartellini ( id_anagrafica, id_cartellino, data_attivita, id_contratto, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
                         array( 
                             array( 's' => $car['id_anagrafica'] ), 
                             array( 's' => $cid ),
+                            array( 's' => $car['data_attivita'] ),
+                            array( 's' => $car['id_contratto'] ),
                             array( 's' => $idT_inps_ferie ), // tipologia inps ferie
                             array( 's' => str_replace(",",".",$oreFerie) ),  
                             array( 's' => time() ) ) 

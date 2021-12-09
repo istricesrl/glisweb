@@ -104,6 +104,17 @@ $idT_inps_straordinario = 2;
             }
 
             logWrite( 'lavoro il contratto ' . $cid , 'cartellini', LOG_ERR );
+
+            // inserisco il cartellino
+            $cartellino = mysqlQuery( $cf['mysql']['connection'], 
+            'INSERT INTO cartellini ( id_anagrafica, mese, anno, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+            array( 
+                array( 's' => $contratto['id_anagrafica'] ), 
+                array( 's' => $mese ),
+                array( 's' => $anno ),
+                array( 's' => time() ) ) 
+            );
+
             foreach( $giorni as $giorno ){
 
                 $data = date( 'Y-m-d', strtotime("$anno-$mese-$giorno") );
@@ -150,9 +161,11 @@ $idT_inps_straordinario = 2;
                     if( !empty ( $orecontratto ) ){
 
                            
-                            $cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                                'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                            $rigaCartellino = mysqlQuery( $cf['mysql']['connection'], 
+                                'INSERT INTO righe_cartellini ( id_cartellino, id_contratto, id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
                                 array( 
+                                    array( 's' =>  $cartellino  ),
+                                    array( 's' => $contratto['id'] ),
                                     array( 's' => $contratto['id_anagrafica'] ), 
                                     array( 's' => $data ),
                                     array( 's' => $idT_inps_ordinario ), // tipologia inps ordinaria
@@ -161,9 +174,11 @@ $idT_inps_straordinario = 2;
                                 );
                     } else {
 
-                        $cartellino = mysqlQuery( $cf['mysql']['connection'], 
-                        'INSERT INTO cartellini ( id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+                        $rigaCartellino = mysqlQuery( $cf['mysql']['connection'], 
+                        'INSERT INTO righe_cartellini ( id_cartellino, id_contratto, id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
                         array( 
+                            array( 's' =>  $cartellino  ),
+                            array( 's' => $contratto['id'] ),
                             array( 's' => $contratto['id_anagrafica'] ), 
                             array( 's' => $data ),
                             array( 's' => $idT_inps_straordinario ), // tipologia inps straordinaria
