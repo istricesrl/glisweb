@@ -11,7 +11,7 @@
 
     // log
 	logWrite( "controller before per ${t}/${a}", 'controller' );
-
+	
     // elaborazioni di default dei dati
 	switch( strtoupper( $a ) ) {
 

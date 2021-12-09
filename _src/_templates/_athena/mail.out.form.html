@@ -58,14 +58,14 @@
                 </div>
             <div class="col">
             <span class="label-top ">oggetto</span>
-                {{ frm.input( table, '', '', 'oggetto', '', '', request ) }}
+                {{ frm.inputRequired( table, '', '', 'oggetto', '', '', request ) }}
             </div>
         </div>
 
         <div class="form-group form-row">
             <div class="col">
             <span class="label-top">testo</span>
-            {{ frm.textarea( table, '', '', 'corpo', '', 3, request, '', '', 'ckEditor', 200 ) }}
+            {{ frm.textarea( table, '', '', 'corpo', '', 3, request, '', '1', 'ckEditor', 200 ) }}
             </div>
         </div>
        

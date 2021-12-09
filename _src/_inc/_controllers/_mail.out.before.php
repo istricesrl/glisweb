@@ -19,7 +19,21 @@
 	    case METHOD_PUT:
 	    case METHOD_REPLACE:
 	    case METHOD_UPDATE:
+			
+			if( array_key_exists( 'file', $d ) ){
+					
+					$f = array();
 
+					foreach( $d['file'] as $file ){
+						$f[] = $file['path'];
+					}
+
+					$vs['allegati'] = array( 's' => serialize( $f ));
+					$d['allegati'] = serialize( $f );
+					
+				}
+		
+		
 			// elaboro l'array dei valori
 			foreach( $vs as $vKey => $vVal ) {
 
