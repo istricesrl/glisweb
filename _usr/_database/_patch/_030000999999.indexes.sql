@@ -1916,7 +1916,8 @@ ALTER TABLE `ruoli_file`
 	ADD KEY `se_categorie_notizie` (`se_categorie_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
+	ADD KEY `se_mail` (`se_mail`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`, `se_mail`);
 
 --| 030000034401
 

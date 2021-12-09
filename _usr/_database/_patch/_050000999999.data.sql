@@ -396,15 +396,15 @@ REPLACE INTO `ruoli_audio` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_cate
 -- ruoli_file
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:14 Fabio Mosti
-REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_risorse`) VALUES
-(1,	    'allegato',	        1,	    1,	    1,	    1,	    1,	    1,	    NULL),
-(2,	    'brochure',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(3,	    'documentazione',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(4,	    'driver',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(5,	    'manualistica',	    NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(6,	    'press kit',	    1,	    NULL,	NULL,	NULL,	1,	    NULL,	NULL),
-(7,	    'schede tecniche',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(8,	    'software',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL);
+REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_risorse`, `se_mail`) VALUES
+(1,	    'allegato',	        1,	    1,	    1,	    1,	    1,	    1,	    NULL,	    1),
+(2,	    'brochure',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(3,	    'documentazione',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(4,	    'driver',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(5,	    'manualistica',	    NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(6,	    'press kit',	    1,	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	    NULL),
+(7,	    'schede tecniche',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(8,	    'software',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL);
 
 --| 050000034600
 

@@ -1747,7 +1747,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_notizie` int(1) DEFAULT NULL,
   `se_categorie_notizie` int(1) DEFAULT NULL,
   `se_risorse` int(1) DEFAULT NULL,
-  `se_categorie_risorse` int(1) DEFAULT NULL
+  `se_categorie_risorse` int(1) DEFAULT NULL,
+  `se_mail` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034600

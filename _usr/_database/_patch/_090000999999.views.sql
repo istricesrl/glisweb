@@ -3234,6 +3234,7 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.se_categorie_notizie,
 		ruoli_file.se_risorse,
 		ruoli_file.se_categorie_risorse,
+		ruoli_file.se_mail,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;
