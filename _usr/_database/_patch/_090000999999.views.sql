@@ -3632,6 +3632,7 @@ CREATE OR REPLACE VIEW `template_view` AS
 		template.nome,
 		template.tipo,
 		template.note,
+		template.latenza_invio,
 		template.se_mail,
 		template.se_sms,
 		template.id_account_inserimento,

@@ -79,6 +79,8 @@
     file_view.id_categoria_risorse      | -
     file_view.id_lingua                 | -
     file_view.lingua                    | la lingua del file
+    file_view.id_mail_out               | -
+    file_view.id_mail_sent              | -
     file_view.path                      | -
     file_view.url                       | -
     file_view.nome                      | -

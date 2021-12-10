@@ -1994,6 +1994,7 @@ CREATE TABLE IF NOT EXISTS `template` (
   `nome` char(128) NOT NULL,
   `tipo` char(32) NOT NULL,
   `note` text,
+  `latenza_invio` int(11) DEFAULT NULL,
   `se_mail` int(1) DEFAULT NULL,
   `se_sms` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,

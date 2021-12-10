@@ -2191,7 +2191,7 @@ ALTER TABLE `template`
   	ADD UNIQUE KEY `unica` (`ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`ruolo`,`nome`,`tipo`,`se_mail`,`se_sms`);
+  	ADD KEY `indice` (`ruolo`,`nome`,`tipo`,`latenza_invio`, `se_mail`,`se_sms`);
 
 --| 030000044001
 
