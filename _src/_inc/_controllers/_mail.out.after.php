@@ -20,6 +20,7 @@
 		// se sono presenti dati
 		    if( isset( $d ) && is_array( $d ) ) {
 
+
 			// se i dati riguardano un singolo oggetto
 			    if( in_array( 'id', $ks ) ) {
 
@@ -30,6 +31,18 @@
                             $d[ $vKey ] = array2mailString( unserialize( $vVal ) ) ;
                         }
         
+						if( in_array( $vKey, array( 'allegati' ) ) ) {
+							
+							$file =  unserialize( $vVal );
+
+							$d['file'] = array();
+
+							foreach( $file as $f ){
+
+								$d['file'][] =  array( 'path' => $f ,'ordine' => 5, 'nome' => 'allegato mail', 'id_ruolo' => 1 ) ;
+
+							}
+                        }
 				    }
 
 			    } else {

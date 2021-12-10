@@ -19,7 +19,7 @@
 	    case METHOD_PUT:
 	    case METHOD_REPLACE:
 	    case METHOD_UPDATE:
-			
+
 			if( array_key_exists( 'file', $d ) ){
 					
 					$f = array();
@@ -29,7 +29,6 @@
 					}
 
 					$vs['allegati'] = array( 's' => serialize( $f ));
-					$d['allegati'] = serialize( $f );
 					
 				}
 		
