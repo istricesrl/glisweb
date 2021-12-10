@@ -6,6 +6,9 @@
     // shortcut per la lingua
 	$l = $cf['localization']['language']['ietf'];
 
+    // shortcut per il profilo
+    $k = $cf['ecommerce']['profile']['provider'][ $_SESSION['carrello']['provider_pagamento'] ];
+
     // se è impostato un provider di pagamento
     if( isset( $_SESSION['carrello']['provider_pagamento'] ) && ! empty( $_SESSION['carrello']['provider_pagamento'] ) ) {
 
@@ -27,6 +30,13 @@
                 // dati del modulo
                     $ct['etc']['fields']['id']		    = $c['id'];											            // id del carrello
         
+            break;
+
+            case 'paypal':
+
+                // dati per la costruzione del modulo
+                $ct['etc']['meta']['method']	    = $k['method'];											        // metodo di chiamata al server
+
             break;
 
         }

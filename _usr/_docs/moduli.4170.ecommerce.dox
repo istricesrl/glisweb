@@ -22,6 +22,17 @@
 
     il flusso di acquisto
     =====================
+    Il caso più comune di flusso di acquisto è quello che prevede l'aggiunta di prodotti al carrello, la conferma dei dati, la chiusura del carrello;
+    tale chiusura può avvenire in diversi modi secondo la modalità di pagamento selezionata, e principalmente i casi qui sono due ovvero la chiusura
+    diretta, utilizzata per modalità quali il contrassegno e il bonifico, e quella tramite provider di pagamento esterno, usata per PayPal, carte di
+    credito, e simili. Esistono e-commerce semplificati in cui vari passaggi sono riassunti in uno solo ma in tutti i casi è al minimo presente una
+    pagina per l'inserimento dei dati e una pagina di riepilogo che prepara la chiusura dell'ordine.
+
+    Fra gli esempi del framework è presente una struttura elementare che riproduce questo schema, costituita dai file:
+
+    - _usr/_examples/_ecommerce/_acquisto.01.php che simula una pagina prodotto tramite la quale è possibile aggiungere un prodotto al carrello
+    - _usr/_examples/_ecommerce/_acquisto.02.php che simula la pagina di inserimento dati
+    - _usr/_examples/_ecommerce/_acquisto.03.php che simula la pagina di riepilogo che prepara la chiusura dell'ordine
 
     la pagina di riepilogo
     ----------------------

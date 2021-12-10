@@ -17,27 +17,35 @@
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {
 
-                // inizializzazione dei valori del carrello
+                // inizializzazione dei valori base del carrello
+                foreach( $cf['ecommerce']['fields']['carrello'] as $field => $model ) {
+                    $_SESSION['carrello'][ $field ] = $model['default'];
+                }
+
+                // inizializzazione dei valori speciali del carrello
                 $_SESSION['carrello']['session']                    = $_SESSION['id'];      // ogni carrello è collegato alla sessione che l'ha generato
-                $_SESSION['carrello']['id_listino']                 = 1;                    // TODO
                 $_SESSION['carrello']['timestamp_inserimento']      = time();               // timestemp del momento di creazione del carrello
 
                 // inserimento del carrello a database e recupero dell'ID
                 $_SESSION['carrello']['id'] = mysqlInsertRow(
                     $cf['mysql']['connection'],
-                    array(
-                        'session' => $_SESSION['carrello']['session'],
-                        'id_listino' => $_SESSION['carrello']['id_listino'],
-                        'timestamp_inserimento' => $_SESSION['carrello']['timestamp_inserimento']
-                    ),
+                    $_SESSION['carrello'],
                     'carrelli'
                 );
 
                 // log
                 logWrite( 'creato il carrello ' . $_SESSION['carrello']['id'], 'cart' );
-            }
 
-            // STEP 3 - aggiorno i dati del carrello
+            } else {
+
+                // STEP 3 - aggiorno i dati del carrello
+                foreach( $cf['ecommerce']['fields']['carrello'] as $field => $model ) {
+                    if( isset( $_REQUEST['__carrello__'][ $field ] ) ) {
+                        $_SESSION['carrello'][ $field ] = $_REQUEST['__carrello__'][ $field ];
+                    }
+                }
+
+            }
 
             // STEP 4 - gestione acquisto singolo articolo
             if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
@@ -121,11 +129,21 @@
 
             // STEP 7 - calcoli finali
 
-            // STEP 8 - salvataggio carrello nel database
-
             // timestamp di aggiornamento del carrello
             $_SESSION['carrello']['timestamp_aggiornamento'] = time();
 
+            // STEP 8 - salvataggio carrello nel database
+            $_SESSION['carrello']['id'] = mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array_diff_key(
+                    $_SESSION['carrello'], array(
+                        'articoli' => array(),
+                        'timestamp_inserimento' => NULL
+                    )
+                ),
+                'carrelli'
+            );
+/*
             // scrittura di $_SESSION['carrello'] su carrelli
             mysqlInsertRow(
                 $cf['mysql']['connection'],
@@ -135,7 +153,7 @@
                 ),
                 'carrelli'
             );
-
+*/
             // log
             logWrite( 'aggiornato il carrello ' . $_SESSION['carrello']['id'], 'cart' );
 

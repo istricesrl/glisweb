@@ -51,6 +51,14 @@
         $t .= '<button type="button" onclick="window.open(\'_acquisto.02.php\',\'_self\');">MODIFICA LA MODALITÀ DI PAGAMENTO</button>';
     }
 
+    // status corrente del sito
+    $t .= '<pre>' . $cf['site']['status'] . '</pre>';
+
+    // parametri per la costruzione del form
+    if( isset( $ct['etc'] ) ) {
+        $t .= '<pre>' . print_r( $ct['etc'], true ) . '</pre>';
+    }
+
     // contenuto del carrello
     if( isset( $_SESSION['carrello'] ) ) {
         $t .= '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';

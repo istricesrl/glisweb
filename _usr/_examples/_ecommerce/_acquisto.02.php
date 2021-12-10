@@ -33,6 +33,11 @@
             $t .= '</div>';
             $i++;
         }
+        $t .= '<div><select name="__carrello__[provider_pagamento]">';
+        foreach( array_keys( $cf['ecommerce']['profile']['provider'] ) as $provider ) {
+            $t .= '<option ' . ( ( $provider === $_SESSION['carrello']['provider_pagamento'] ) ? 'selected="selected"' : NULL ) . '>' . $provider . '</option>';
+        }
+        $t .= '</select></div>';
         $t .= '<button type="button" onclick="window.open(\'_acquisto.01.php\',\'_self\');">TORNA AGLI ACQUISTI</button>';
         $t .= '<button type="submit">CONFERMA</button>';
         $t .= '</form>';
