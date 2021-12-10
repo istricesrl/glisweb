@@ -790,6 +790,8 @@ ALTER TABLE `file`
 	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
+	ADD KEY `id_mail_out` (`id_mail_out`), 
+	ADD KEY `id_mail_sent` (`id_mail_sent`), 
 	ADD KEY `path` (`path`), 
 	ADD KEY `url` (`url`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 

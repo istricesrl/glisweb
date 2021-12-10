@@ -1325,6 +1325,8 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_categoria_notizie,
 		file.id_risorsa,
 		file.id_categoria_risorse,
+		file.id_mail_out,                    
+		file.id_mail_sent, 
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,

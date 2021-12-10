@@ -28,6 +28,8 @@
     file.id_risorsa                 | l'ID della risorsa cui si riferisce al file
     file.id_categoria_risorse       | l'ID della categoria di risorse cui si riferisce al file
     file.id_lingua                  | l'ID della lingua del file
+    file.id_mail_out                | l'ID della mail in uscita a cui si riferisce il file
+    file.id_mail_sent               | l'ID della mail inviata a cui si riferisce il file
     file.path                       | il percorso del file relativo alla document root per i file locali
     file.url                        | l'URL per i file esterni
     file.nome                       | il nome del file

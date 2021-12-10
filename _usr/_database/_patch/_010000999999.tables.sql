@@ -766,6 +766,8 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
+  `id_mail_out` int(11) DEFAULT NULL,
+  `id_mail_sent` int(11) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
   `url` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
