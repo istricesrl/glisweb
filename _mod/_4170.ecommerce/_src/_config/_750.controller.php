@@ -105,6 +105,14 @@
                         $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo']       = $dati['id_articolo'];
                         $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']          = $dati['quantita'];
 
+                        // trovo il prezzo base dell'articolo
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_unitario'] = calcolaPrezzoNettoArticolo(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            $dati['id_articolo'],
+                            $_SESSION['carrello']['id_listino']
+                        );
+
                         // aggiorno la riga
                         mysqlInsertRow(
                             $cf['mysql']['connection'],
