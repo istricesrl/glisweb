@@ -36,12 +36,31 @@
 			'oggetto' => $_REQUEST['__og__'],
 			'testo' => substr($_REQUEST['__t__'], 1,sizeof($_REQUEST['__t__'])-2 )
 #			'testo' => $_REQUEST['__t__']
-		        )
+		    )
 		);
+
+		if( isset( $_REQUEST['__to_cc__'] ) ){
+			$template[ $cf['localization']['language']['ietf'] ]['to_cc'] =  array( $_REQUEST['__to_cc__'] => $_REQUEST['__to_cc__'] );
+		} else {
+			$template[ $cf['localization']['language']['ietf'] ]['to_cc'] = array();
+		}
+
+		if( isset( $_REQUEST['__to_bcc__'] ) ){
+			$template[ $cf['localization']['language']['ietf'] ]['to_bcc'] =  array( $_REQUEST['__to_bcc__'] => $_REQUEST['__to_bcc__'] );
+		} else {
+			$template[ $cf['localization']['language']['ietf'] ]['to_bcc'] = array();
+		}
 
 	// istanzio il template
 	    $twig = new Twig_Environment( new Twig_Loader_Array( $template[ $cf['localization']['language']['ietf'] ] ) );
-
+/* function queueMail( 
+	$c, 
+	$timestamp_invio, 
+	$mittente, 
+	$destinatari, 
+	$oggetto, 
+	$corpo, $destinatari_cc = array(), $destinatari_bcc = array(), $allegati = array(), $headers = array(), $server = NULL ) {
+*/
 	// accodo la mail
 	    queueMail(
 		$cf['mysql']['connection'],
@@ -49,7 +68,9 @@
 		$template[ $cf['localization']['language']['ietf'] ]['from'],
 		$template[ $cf['localization']['language']['ietf'] ]['to'],
 		$template[ $cf['localization']['language']['ietf'] ]['oggetto'],
-		$template[ $cf['localization']['language']['ietf'] ]['testo']
+		$template[ $cf['localization']['language']['ietf'] ]['testo'],
+		$template[ $cf['localization']['language']['ietf'] ]['to_cc'],
+		$template[ $cf['localization']['language']['ietf'] ]['to_bcc']
 		);
 
 	    // log

@@ -23,7 +23,6 @@
 	    case METHOD_POST:
         case METHOD_PUT:
 
-        #    $todo = mysqlSelectRow( $c, 'SELECT progetti.id_cliente, todo_view.id, todo_view.data_ora_apertura, todo_view.nome, todo_view.testo, todo_view.id_responsabile, todo_view.responsabile FROM todo_view LEFT join progetti ON progetti.id = todo_view.id_progetto WHERE todo_view.id = ?', array( array('s' => $d['id'] ) ) );
             $todo = mysqlSelectRow( 
                 $c, 
                 "SELECT t.*, 
@@ -90,3 +89,4 @@
         break;
 
 	}
+
