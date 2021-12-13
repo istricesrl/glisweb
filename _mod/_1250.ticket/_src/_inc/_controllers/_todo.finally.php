@@ -16,7 +16,7 @@
 
     // log
 	logWrite( "controller finally per ticket ${t}/${a}", 'controller' );
-
+/*
     // elaborazioni di default dei dati
 	switch( strtoupper( $a ) ) {
 
@@ -89,4 +89,4 @@
         break;
 
 	}
-
+*/
