@@ -1,6 +1,5 @@
 --
--- TRIGGER
--- questo file contiene le query per la creazione dei trigger
+-- PATCH
 --
 
 --| 120000000100
