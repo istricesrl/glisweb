@@ -1,0 +1,1 @@
+  ALTER TABLE `cartellini` ADD `mese` INT NOT NULL AFTER `id_anagrafica`, ADD `anno` INT NOT NULL AFTER `mese`;
