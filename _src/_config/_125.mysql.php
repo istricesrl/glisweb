@@ -148,7 +148,7 @@
 
 			*/
 
-			if( ! defined( 'CRON_RUNNING' ) ) {
+			if( ! defined( 'CRON_RUNNING' ) &&  ! defined( 'JOB_RUNNING' ) ) {
 
 				$patchLevel = mysqlSelectValue(
 					$cf['mysql']['connection'],
