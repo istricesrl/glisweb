@@ -55,24 +55,28 @@
     [...] visualizza un contenuto diverso secondo se rileva un successo o un fallimento nel pagamento
     [...] imposta la timestamp_checkout solo in caso di esito positivo (è comunque reimpostata dal listener)
     [...] non chiama le macro di successo (vengono chiamate dal listener)
+    [...] scrive sul log del carrello
 
     la pagina di esito positivo di pagamento
     ----------------------------------------
 
     [...] imposta la timestamp_checkout (è comumque reimpostata dal listener)
     [...] non chiama le macro di successo (vengono chiamate dal listener)
+    [...] scrive sul log del carrello
 
     la pagina di esito negativo di pagamento
     ----------------------------------------
 
     [...] non imposta la timestamp_checkout
     [...] non chiama le macro di successo
+    [...] scrive sul log del carrello
 
     la pagina di chiusura diretta del carrello
     ------------------------------------------
 
     [...] imposta la timestamp_checkout
     [...] chiama le macro di successo
+    [...] scrive sul log del carrello
 
     il carrello
     ===========
@@ -140,6 +144,31 @@
 
     pagamento tramite Nexi
     ----------------------
+
+    personalizzazione delle pagine del carrello
+    ===========================================
+
+    personalizzazione delle pagine del carrello specifica per sito
+    --------------------------------------------------------------
+
+    \code{.json}
+    "sites": {
+      "1": {
+        [...]
+        "contents": {
+          "pages": {
+            "carrello_successo": {
+              "template": "path/per/il/template/",
+              "schema": "schema.custom.html",
+              "theme": "tema.custom.css"
+            },
+            [...]
+          }
+        },
+        [...]
+      }
+    }
+    \endcode
 
     guida all'implementazione di nuove forme di pagamento
     =====================================================

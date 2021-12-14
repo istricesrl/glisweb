@@ -274,6 +274,9 @@
     ricavata dal file .ini del template; per ulteriori dettagli si veda \ref template "la documentazione relativa ai template del framework"
     e il codice di _src/_api/_pages.php.
 
+    La chiave $cf['contents'] può essere riscritta da $cf['site']['contents']; si veda la documentazione di $cf['site']['contents'] per
+    ulteriori dettagli su questo meccanismo.
+
     Vediamo prima di tutto un semplice esempio di creazione di una nuova pagina tramite il file di configurazione Json:
 
     \code{.json}
@@ -978,6 +981,7 @@
     site.alias.domains.<j>       | array degli alias di dominio del sito <n> per lo status <j>
     site.alias.hosts             | alias di host del sito <n>
     site.alias.hosts.<j>         | array degli alias di host del sito <n> per lo status <j>
+    site.contents                | array di riscrittura per $cf['contents'] specifico per il sito (vedi _src/_config/_310.pages.php)
     site.domain                  | scorciatoia per site.domains<site.status>
     site.domains                 | domini del sito <n>
     site.domains.<j>             | dominio del sito <n> per lo status <j>
@@ -995,7 +999,6 @@
     site.metadata.theme          | tema di default del sito <n>
     site.name                    | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     site.name.<l>                | nome del sito <n> per la lingua <l>
-    site.pages                   | configurazioni aggiuntive per le pagine, da sovrapporre a $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
     site.protocols               | protocolli del sito <n> (ad es. https)
     site.protocols.<j>           | protocollo del sito <n> per lo status <j>
     site.root                    | path base del sito
@@ -1009,6 +1012,8 @@
     $cf['sites'][ $cf['site']['status'] ] in quanto il primo array è un collegamento simbolico al secondo; per questo
     motivo non vengono ripetute nella documentazione di $cf['sites'], ovvero perché appartengono solo al sito corrente
     e non ad ogni sito dell'array.
+
+    Per la riscrittura di $cf['contents'] tramite $cf['site']['contents'] si veda il codice del file _src/_config/_310.pages.php.
 
     $cf['sitemap']
     --------------
@@ -1035,6 +1040,7 @@
     sites.<n>.alias.domains.<j>  | array degli alias di dominio del sito <n> per lo status <j>
     sites.<n>.alias.hosts        | alias di host del sito <n>
     sites.<n>.alias.hosts.<j>    | array degli alias di host del sito <n> per lo status <j>
+    sites.<n>.contents           | personalizzazione di $cf['contents'] per il sito <n> (vedi _src/_config/_310.pages.php)
     sites.<n>.domains            | domini del sito <n>
     sites.<n>.domains.<j>        | dominio del sito <n> per lo status <j>
     sites.<n>.folders            | cartelle del sito <n> (nel caso il framework sia installato in una sottocartella)
@@ -1047,7 +1053,6 @@
     sites.<n>.metadata           | array dei metadati del sito
     sites.<n>.name               | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     sites.<n>.name.<l>           | nome del sito <n> per la lingua <l>
-    sites.<n>.pages              | configurazioni aggiuntive per le pagine (integra $cf['contents']['pages'], vedi _src/_config/_310.pages.php)
     sites.<n>.protocols          | protocolli del sito <n> (ad es. https)
     sites.<n>.protocols.<j>      | protocollo del sito <n> per lo status <j>
     sites.<n>.status             | status attribuito dal framework al sito <n>
