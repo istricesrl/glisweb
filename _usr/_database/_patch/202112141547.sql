@@ -1,0 +1,1 @@
+ALTER TABLE `cartellini` DROP FOREIGN KEY `cartellini_ibfk_2_nofollow`;
