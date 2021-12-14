@@ -31,7 +31,7 @@
         'provider' => array(
             'contanti' => array(
                 'id'            => 'contanti',                                                      // ID del provider per le tendine
-                'action'        => 'carrello_esito',                                                // pagina per l'action del form di riepilogo
+                'action'        => 'carrello_checkout',                                             // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
                 '__label__'     => 'contrassegno'                                                   // etichetta del provider per le tendine
             ),
@@ -39,7 +39,7 @@
                 'id'            => 'nexi',                                                          // ID del provider per le tendine
                 'alias'         => NULL,                                                            // 
                 'key'           => NULL,                                                            // 
-                'action'        => 'https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet',   // pagina per l'action del form di riepilogo
+                'action_url'    => 'https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet',   // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
                 'success'       => 'carrello_successo',                                             // pagina di ritorno in caso di pagamento effettuato con successo
                 'error'         => 'carrello_fallimento',                                           // pagina di ritorno in caso di pagamento fallito
@@ -49,10 +49,10 @@
             'paypal' => array(
                 'id'            => 'paypal',                                                        // ID del provider per le tendine
                 'business'      => NULL,                                                            // 
-                'action'        => 'https://www.sandbox.paypal.com/cgi-bin/webscr',                 // pagina per l'action del form di riepilogo
+                'action_url'    => 'https://www.sandbox.paypal.com/cgi-bin/webscr',                 // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
                 'return'        => 'carrello_esito',                                                // pagina di ritorno in caso di pagamento completato con successo o fallito
-                'cancel_return' => 'carrello',                                                      // pagina di ritorno in caso di interruzione della procedura di pagamento
+                'cancel'        => 'carrello',                                                      // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'listener'      => '_mod/_4170.ecommerce/_src/_api/_paypal.listener.php',           // listener per la conferma di pagamento in background
                 '__label__'     => 'PayPal'                                                         // etichetta del provider per le tendine
             )
@@ -60,8 +60,24 @@
     );
 
     /**
+     * NOTA
+     * nei parametri dei provider, per quanto riguarda le pagine di ritorno, si intende:
+     * 
+     * - return è una pagina neutra, che determina in base ai dati ricevuti se c'è stato un successo o un fallimento nel pagamento
+     * - success è una pagina di successo nel pagamento
+     * - error è una pagina di errore nel pagamento
+     * - cancel è la pagina per l'annullamento del pagamento da parte dell'utente
+     * 
+     * per quanto riguarda la pagina action, nel caso dei provider esterni punta al provider stesso, altrimenti è la pagina di chiusura del
+     * carrello per modalità di pagamento offline (contrassegno, bonifico, e simili) la cui macro si occupa della chiusura del carrello; la chiusura
+     * del carrello viene fatta invece dai listener per le modalità di pagamento online (PayPal, Nexi e simili)
+     * 
+     */
+
+    /**
      * NOTA SU NEXI
      * per avere i dati di test (alias, key, e numeri di carte fittizie) registrarsi su https://ecommerce.nexi.it/area-test
+     * per i test con Nexi bisogna utilizzare un importo prefissato (vedi documentazione)
      * 
      * NOTA SU PAYPAL
      * per avere i dati di test (business e account clienti fittizi) registrarsi su https://developer.paypal.com/developer/accounts/

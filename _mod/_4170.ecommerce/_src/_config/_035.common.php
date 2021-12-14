@@ -16,5 +16,5 @@
         'session'                   => array( 'type' => 'string',   'default' => NULL ),
         'intestazione_nome'         => array( 'type' => 'string',   'default' => NULL ),
         'intestazione_cognome'      => array( 'type' => 'string',   'default' => NULL ),
-        'provider_pagamento'        => array( 'type' => 'string',   'default' => NULL,  'values' => array_keys( $cf['ecommerce']['profile']['provider'] ) )
+        'provider_pagamento'        => array( 'type' => 'string',   'default' => NULL,  'values' => array_keys( $cf['ecommerce']['profile']['provider'] ) ),
     );

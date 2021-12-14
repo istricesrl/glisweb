@@ -1,7 +1,6 @@
 <?php
 
     /**
-     * test delle cache
      *
      *
      *

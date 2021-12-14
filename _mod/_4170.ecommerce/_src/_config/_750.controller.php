@@ -47,6 +47,12 @@
 
             }
 
+            // inizializzazione totali carrello
+            $_SESSION['carrello']['prezzo_netto_totale']        = 0;
+            $_SESSION['carrello']['prezzo_lordo_totale']        = 0;
+            $_SESSION['carrello']['prezzo_netto_finale']        = 0;
+            $_SESSION['carrello']['prezzo_lordo_finale']        = 0;
+
             // STEP 4 - gestione acquisto singolo articolo
             if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
 
@@ -101,9 +107,10 @@
                     } else { 
 
                         // aggiorno la riga dell'articolo
-                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello']       = $_SESSION['carrello']['id'];
-                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo']       = $dati['id_articolo'];
-                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']          = $dati['quantita'];
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello']        = $_SESSION['carrello']['id'];
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo']        = $dati['id_articolo'];
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']             = 1;                                // TODO
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']           = $dati['quantita'];
 
                         // trovo il prezzo base dell'articolo
                         $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_unitario'] = calcolaPrezzoNettoArticolo(
@@ -113,16 +120,46 @@
                             $_SESSION['carrello']['id_listino']
                         );
 
+                        // trovo il prezzo lordo dell'articolo
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_unitario'] = calcolaPrezzoLordoArticolo(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            $dati['id_articolo'],
+                            $_SESSION['carrello']['id_listino'],
+                            $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']
+                        );
+
+                        // trovo i prezzi totali
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_unitario'] * $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita'];
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_unitario'] * $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita'];
+
+                        // TODO trovo i prezzi finali
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'];
+                        $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'];
+
                         // aggiorno la riga
                         mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
-                                'id_carrello'   => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'],
-                                'id_articolo'   => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'],
-                                'quantita'      => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']
+                                'id_carrello'               => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'],
+                                'id_articolo'               => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'],
+                                'id_iva'                    => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva'],
+                                'quantita'                  => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita'],
+                                'prezzo_netto_unitario'     => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_unitario'],
+                                'prezzo_lordo_unitario'     => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_unitario'],
+                                'prezzo_netto_totale'       => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'],
+                                'prezzo_lordo_totale'       => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'],
+                                'prezzo_netto_finale'       => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'],
+                                'prezzo_lordo_finale'       => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale']
                             ),
                             'carrelli_articoli'
                         );
+
+                        // incremento i totali carrello
+                        $_SESSION['carrello']['prezzo_netto_totale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'];
+                        $_SESSION['carrello']['prezzo_lordo_totale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'];
+                        $_SESSION['carrello']['prezzo_netto_finale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'];
+                        $_SESSION['carrello']['prezzo_lordo_finale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale'];
 
                         // log
                         logWrite( 'aggiornato articolo ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'] . ' nel carrello ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'], 'cart' );
@@ -151,22 +188,12 @@
                 ),
                 'carrelli'
             );
-/*
-            // scrittura di $_SESSION['carrello'] su carrelli
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                array(
-                    'id'                        => $_SESSION['carrello']['id'],
-                    'timestamp_aggiornamento'   => $_SESSION['carrello']['timestamp_aggiornamento']
-                ),
-                'carrelli'
-            );
-*/
+
             // log
             logWrite( 'aggiornato il carrello ' . $_SESSION['carrello']['id'], 'cart' );
 
             // STEP 9 - salvataggio copia di sicurezza del carrello
             $f = DIR_VAR_SPOOL_CART . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
-            writeToFile( print_r( $_SESSION['carrello'], true ), $f );            
+            writeToFile( print_r( $_SESSION['carrello'], true ), $f );
 
     }
