@@ -37,15 +37,11 @@
 							
 							$d['file'] = array();
 							
-							
 							$counter = 1;
-							if( isset( $file ) && !empty( $file ) ){
 							foreach( $file as $f ){
-
-								$d['file'][] =  array( 'path' => $f ,'ordine' => $counter * 5, 'nome' => 'allegato mail #'.$counter++, 'id_ruolo' => 1 ) ;
-								
-								}
+								$d['file'][] =  array( 'path' => $f ,'ordine' => $counter * 5, 'nome' => 'allegato mail #'.$counter++, 'id_ruolo' => 1 ) ;	
 							}
+							
                         }
 				    }
 
