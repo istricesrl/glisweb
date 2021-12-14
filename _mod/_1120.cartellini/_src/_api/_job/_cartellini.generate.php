@@ -107,7 +107,7 @@ $idT_inps_straordinario = 2;
 
             // inserisco il cartellino
             $cartellino = mysqlQuery( $cf['mysql']['connection'], 
-            'INSERT INTO cartellini ( id_anagrafica, mese, anno, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )  ',
+            'INSERT INTO cartellini ( id_anagrafica, mese, anno, timestamp_inserimento ) VALUES ( ?, ?, ?, ? )  ',
             array( 
                 array( 's' => $contratto['id_anagrafica'] ), 
                 array( 's' => $mese ),
@@ -237,7 +237,8 @@ $idT_inps_straordinario = 2;
                             array( 's' => time() )
                         )
                     );
-                    $status['info'][] = 'ho inserito il job: ' .$status['job'];
+
+                $status['info'][] = 'ho inserito il job: ' .$status['job'];
                 // mando un messaggio su Slack
         //        slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
 
