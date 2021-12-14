@@ -20,7 +20,7 @@
 	    case METHOD_REPLACE:
 	    case METHOD_UPDATE:
 
-			if( array_key_exists( 'file', $d ) ){
+			if( array_key_exists( 'file', $d )  ){
 					
 					$f = array();
 
@@ -30,9 +30,9 @@
 
 					$vs['allegati'] = array( 's' => serialize( $f ));
 					
-			} elseif ( isset( $vs['allegati'] )) {
+			} /*elseif ( isset( $vs['allegati'] )) {
 				$vs['allegati'] = array( 's' => NULL);
-			}
+			}*/
 		
 		
 			// elaboro l'array dei valori

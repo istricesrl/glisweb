@@ -31,17 +31,20 @@
                             $d[ $vKey ] = array2mailString( unserialize( $vVal ) ) ;
                         }
         
-						if( in_array( $vKey, array( 'allegati' ) ) && !empty( $vVal ) ) {
+						if( in_array( $vKey, array( 'allegati' ) ) && !empty( $d[ 'allegati' ]  ) ) {
 							
 							$file =  unserialize( $vVal );
-
+							
 							$d['file'] = array();
-
-							$i = 1;
+							
+							
+							$counter = 1;
+							if( isset( $file ) && !empty( $file ) ){
 							foreach( $file as $f ){
 
-								$d['file'][] =  array( 'path' => $f ,'ordine' => $i * 5, 'nome' => 'allegato mail #'.$i++, 'id_ruolo' => 1 ) ;
-
+								$d['file'][] =  array( 'path' => $f ,'ordine' => $counter * 5, 'nome' => 'allegato mail #'.$counter++, 'id_ruolo' => 1 ) ;
+								
+								}
 							}
                         }
 				    }
