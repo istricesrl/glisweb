@@ -30,9 +30,9 @@
 
 					$vs['allegati'] = array( 's' => serialize( $f ));
 					
-			} /*elseif ( isset( $vs['allegati'] )) {
+			} elseif ( isset( $vs['allegati'] )) {
 				$vs['allegati'] = array( 's' => NULL);
-			}*/
+			}
 		
 		
 			// elaboro l'array dei valori
