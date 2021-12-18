@@ -90,9 +90,9 @@
                 $ct['etc']['mail_account'] = mysqlSelectValue( $cf['mysql']['connection'],'SELECT indirizzo FROM mail WHERE id_anagrafica = ?', array(array( 's' => $_SESSION['account']['id_anagrafica'])));
         }
     
-        $ct['etc']['mail_cliente'] = mysqlSelectValue( $cf['mysql']['connection'],'SELECT indirizzo FROM mail WHERE id_anagrafica = ?', array(array( 's' => $_REQUEST['todo']['id_cliente'])));
+        $ct['etc']['mail_cliente'] = mysqlSelectValue( $cf['mysql']['connection'],'SELECT indirizzo FROM mail WHERE id_anagrafica = ? ORDER BY id LIMIT 1', array(array( 's' => $_REQUEST['todo']['id_cliente'])));
       
-        $ct['etc']['mail_responsabile'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT indirizzo FROM mail WHERE id_anagrafica = ? AND se_notifiche = 1 ORDER BY id LIMIT 1', array( array('s' => $_REQUEST['todo']['id_responsabile'] ) ) );
+        $ct['etc']['mail_responsabile'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT indirizzo FROM mail WHERE id_anagrafica = ? ORDER BY id LIMIT 1', array( array('s' => $_REQUEST['todo']['id_responsabile'] ) ) );
 
                 
         $todo = mysqlSelectRow( 
