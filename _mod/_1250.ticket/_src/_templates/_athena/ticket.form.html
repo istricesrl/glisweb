@@ -123,7 +123,7 @@
 
 		<div class="form-group form-row metro">
 		<div class="col-12 col-md-6">
-			<a href="#" data-toggle="modal" onclick="setTesto('cliente');$('#_destinatario').val('{{ etc.mail_cliente }}'); $('#_oggetto').val('{{ etc.oggetto_cliente }}'); $('#_mittente').val('{{etc.mail_account  }}');$('#_id').val('{{request[ table ].id}}');" data-target="#send">
+			<a href="#" data-toggle="modal" onclick="setTesto('cliente');$('#_destinatario').val('{{ etc.mail_cliente }}'); $('#_oggetto').val('{{ etc.oggetto_cliente }}'); $('#_mittente').val('{{ etc.mittente_cliente}}');$('#_id').val('{{request[ table ].id}}');" data-target="#send">
 			<div class="media valore">
 			<div class="media-left">
 				<h2><i class="fa fa-envelope-o" aria-hidden="true"></i></h2>
@@ -136,7 +136,7 @@
 			</a>
 		</div>
 		<div class="col-12 col-md-6">
-			<a href="#" data-toggle="modal" onclick="setTesto('responsabile');$('#_destinatario').val('{{ etc.mail_responsabile }}'); $('#_oggetto').val('{{ etc.oggetto_responsabile }}'); $('#_mittente').val('{{ etc.mail_account }}');$('#_id').val('{{request[ table ].id}}');" data-target="#send">
+			<a href="#" data-toggle="modal" onclick="setTesto('responsabile'); $('#_mittente').val('{{ etc.mittente_responsabile}}');$('#_destinatario').val('{{ etc.mail_responsabile }}'); $('#_oggetto').val('{{ etc.oggetto_responsabile }}'); $('#_id').val('{{request[ table ].id}}');" data-target="#send">
 			<div class="media valore">
 			<div class="media-left">
 				<h2><i class="fa fa-envelope-o" aria-hidden="true"></i></h2>

@@ -111,9 +111,11 @@
             WHERE t.id = ?", array( array('s' =>$_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
 
         $template = mailGetTemplateByRuolo('DEFAULT_TICKET_RESPONSABILE');
+       // print_r($template[ $cf['localization']['language']['ietf'] ]['from'][array_key_first($template[ $cf['localization']['language']['ietf'] ]['from'])]);
         $twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $template[ $cf['localization']['language']['ietf'] ] ) );
         $corpo = $twig->render( 'testo', array( 'dati' => $todo ) );
 
+        $ct['etc']['mittente_responsabile'] = $template[ $cf['localization']['language']['ietf'] ]['from'][array_key_first($template[ $cf['localization']['language']['ietf'] ]['from'])];
         $ct['etc']['testo_responsabile'] = rawurlencode($corpo);
         $ct['etc']['oggetto_responsabile'] = $template[ $cf['localization']['language']['ietf'] ]['oggetto'];
 
@@ -121,6 +123,7 @@
         $twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $template_c[ $cf['localization']['language']['ietf'] ] ) );
         $corpo_c = $twig->render( 'testo', array( 'dati' => $todo ) ); 
 
+        $ct['etc']['mittente_cliente'] = $template_c[ $cf['localization']['language']['ietf'] ]['from'][array_key_first($template_c[ $cf['localization']['language']['ietf'] ]['from'])];
         $ct['etc']['testo_cliente'] = rawurlencode($corpo_c);
         $ct['etc']['oggetto_cliente'] = $template_c[ $cf['localization']['language']['ietf'] ]['oggetto'];
     }
