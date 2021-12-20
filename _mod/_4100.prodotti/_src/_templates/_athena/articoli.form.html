@@ -69,12 +69,12 @@
             <div class="form-group form-row">
                 <div class="col-12 col-md-4">
                     <span class="label-top">codice ean produttore</span>
-                    {{ frm.input( table, '', '', 'codice_produttore', '', '', request ) }}
+                    {{ frm.input( table, '', '', 'ean', '', '', request ) }}
                 </div>
-                <div class="col-6 col-md-4">
+                <!--div class="col-6 col-md-4">
                     <span class="label-top">udm</span>
                     {{ frm.select( table, '', '', 'id_udm', '', etc.select.udm, request, etc.value.udm ) }}
-                </div>
+                </div-->
                 <div class="col-6 col-md-4">
                     <span class="label-top">reparto di default</span>
                     {{ frm.select( table, '', '', 'id_reparto', '', etc.select.reparti, request ) }}

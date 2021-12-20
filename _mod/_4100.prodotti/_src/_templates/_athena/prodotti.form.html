@@ -73,10 +73,10 @@
         <fieldset>
             <legend>dati tecnici</legend>
             <div class="form-group form-row">
-                <div class="col-12 col-md">
+                <!--div class="col-12 col-md">
                     <span class="label-top">udm</span>
                     {{ frm.select( table, '', '', 'id_udm', '', etc.select.udm, request ) }}
-                </div>
+                </div-->
                 <div class="col-12 col-md">
                     <span class="label-top">codice produttore</span>
                     {{ frm.input( table, '', '', 'codice_produttore', 'codice produttore', '', request ) }}
@@ -89,7 +89,7 @@
                     <span class="label-top">marchio</span>
                     {{ frm.select( table, '', '', 'id_marchio', '', etc.select.marchi, request ) }}
                 </div>
-                <div class="col-auto col-form-label">
+                <!--div class="col-auto col-form-label">
 					<div class="form-check">
 						{{ frm.checkbox( table, '', '', 'se_matricola', 'matricola', '', request ) }}
 					</div>
@@ -98,7 +98,7 @@
 					<div class="form-check">
 						{{ frm.checkbox( table, '', '', 'se_ore', 'ore', '', request ) }}
 					</div>
-				</div>
+				</div-->
             </div>
 
 		</fieldset>
@@ -109,11 +109,11 @@
             <div class="form-group form-row">
                 <div class="col-12">
                     <span class="label-top">descrizione</span>
-                    {{ frm.textarea( table, '', '', 'descrizione', 'descrizione (ad uso interno)', 2, request ) }}
+                    {{ frm.textarea( table, '', '', 'note', 'descrizione (ad uso interno)', 2, request ) }}
                 </div>  
                 <div class="col-12">
                     <span class="label-top">codifica</span>
-                    {{ frm.textarea( table, '', '', 'codifica', 'note di codifica (ad uso interno)', 2, request ) }}
+                    {{ frm.textarea( table, '', '', 'note_codifica', 'note di codifica (ad uso interno)', 2, request ) }}
                 </div>
             </div>  
 
