@@ -196,34 +196,46 @@
 		
 								if( ! empty( trim( $pQuery ) ) ) {
 	
-									// echo 'eseguo la patch ' . $pId . HTML_EOL;
+									 echo 'eseguo la patch ' . $pId . PHP_EOL;
 	
-									$pEx = mysqlQuery(
-										$cf['mysql']['connection'],
-										$pQuery
-									);
-	
-									// echo 'scrivo la patch ' . $pId . HTML_EOL;
-	
-									$pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
-	
-									if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
-										// echo $pQuery . HTML_EOL;
-										// echo $pStatus . HTML_EOL;
-									}
-	
-									mysqlInsertRow(
-										$cf['mysql']['connection'],
-										array(
-											'id' => $pId,
-											'patch' => trim( $pQuery ),
-											'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() ),
-											'note_esecuzione' => ( ( empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) ? 'OK' : $pStatus )
-										),
-										'__patch__',
-										false
-									);
-	
+									if( $pId > $patchLevel ) {
+
+											$pEx = mysqlQuery(
+												$cf['mysql']['connection'],
+												$pQuery
+											);
+			
+											// echo 'scrivo la patch ' . $pId . HTML_EOL;
+			
+											$pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
+			
+											if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
+												// echo $pQuery . HTML_EOL;
+												// echo $pStatus . HTML_EOL;
+											}
+			
+											mysqlInsertRow(
+												$cf['mysql']['connection'],
+												array(
+													'id' => $pId,
+													'patch' => trim( $pQuery ),
+													'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() ),
+													'note_esecuzione' => ( ( empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) ? 'OK' : $pStatus )
+												),
+												'__patch__',
+												false
+											);
+		
+										} else {
+
+											echo 'patch ' . $pId . ' obsoleta rispetto a ' . $patchLevel. PHP_EOL;
+											
+										}
+
+								} else {
+
+									echo 'NON eseguo la patch ' . $pId . PHP_EOL;
+									
 								}
 		
 								$pId = substr( $row, 4, 12 );
