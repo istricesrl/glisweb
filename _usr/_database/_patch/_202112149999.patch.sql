@@ -8,9 +8,17 @@ ALTER TABLE `ruoli_file`  ADD `se_mail` INT NULL DEFAULT NULL ;
 
 --| 202112140010
 
-REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_risorse`, `se_mail`) VALUES
-(1,	    'allegato',	        1,	    1,	    1,	    1,	    1,	    1,	    NULL,	    1);
-
+INSERT INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_risorse`, `se_mail`) VALUES (1,	    'allegato',	        1,	    1,	    1,	    1,	    1,	    1,	    NULL,	    1)
+ON DUPLICATE KEY UPDATE	nome = VALUES( nome ),
+	se_anagrafica = VALUES( se_anagrafica ),
+	se_pagine = VALUES( se_pagine ),
+	se_categorie_prodotti = VALUES( se_categorie_prodotti ),
+	se_template = VALUES( se_template ),
+	se_mail = VALUES( se_mail ),
+	se_prodotti = VALUES( se_prodotti ),
+	se_articoli = VALUES( se_articoli ),
+	se_categorie_risorse = VALUES( se_categorie_risorse )
+;
 --| 202112140020
 
 CREATE OR REPLACE VIEW ruoli_file_view AS

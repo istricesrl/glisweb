@@ -92,7 +92,7 @@
         </fieldset>
     
         <fieldset>
-            <legend>invio</legend>
+            <legend>invio <small>mail generata il {{ request[ table ].timestamp_inserimento|date('Y-m-d H:i') }}{% if request[ table ].tentativi > 1%} | tentativi falliti: {{request[ table ].tentativi}} {% endif %}</small></legend>
             
             <div class="form-group form-row">
                 <div class="col-12 col-md-3">

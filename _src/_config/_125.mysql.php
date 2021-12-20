@@ -196,7 +196,7 @@
 		
 								if( ! empty( trim( $pQuery ) ) ) {
 	
-									 echo 'eseguo la patch ' . $pId . PHP_EOL;
+									// echo 'eseguo la patch ' . $pId . PHP_EOL;
 	
 									if( $pId > $patchLevel ) {
 
@@ -228,13 +228,13 @@
 		
 										} else {
 
-											echo 'patch ' . $pId . ' obsoleta rispetto a ' . $patchLevel. PHP_EOL;
+										//	echo 'patch ' . $pId . ' obsoleta rispetto a ' . $patchLevel. PHP_EOL;
 											
 										}
 
 								} else {
 
-									echo 'NON eseguo la patch ' . $pId . PHP_EOL;
+								//	echo 'NON eseguo la patch ' . $pId . PHP_EOL;
 									
 								}
 		
