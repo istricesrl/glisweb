@@ -113,9 +113,7 @@
                     </tbody>
                 </table>
             </div>
-            <div div class="col-auto col-md-12 text-right">
-                {{ etc.approvazione }}
-            </div>
+
         </div>
 
         
@@ -130,7 +128,12 @@
                 <div class="col-auto col-md-5 text-right">
                     <div class="row">
                         <div class="col">
+                            {% if not etc.approvazione %}
                             <button type="button" onclick="window.open('{{ page.url[ localization.language.ietf ] }}?__approve__=1','_self');" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"  placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">APPROVA CARTELLINO</button>
+                            {% else %}
+                            <button type="button" disabled style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"  placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">{{ etc.approvazione }}</button>
+                          
+                            {% endif %}
                         </div>
                     </div>
                 </div>

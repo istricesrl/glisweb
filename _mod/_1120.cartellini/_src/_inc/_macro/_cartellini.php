@@ -18,7 +18,7 @@
      */
 
 	 // tabella della vista
-	 $ct['view']['table'] = 'cartellini';
+	 $ct['view']['table'] = 'righe_cartellini';
 
 	 // id della vista
 	 if( ! isset( $ct['view']['id'] ) ) {
@@ -114,7 +114,7 @@
 			// lettura cartellino
 			$cart = mysqlQuery(
 				$cf['mysql']['connection'],
-				'SELECT * FROM cartellini_view WHERE id_anagrafica = ? AND data_attivita = ?',
+				'SELECT * FROM righe_cartellini_view WHERE id_anagrafica = ? AND data_attivita = ?',
 				array(
 					array( 's' => $anagrafica ),
 					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) )
@@ -144,7 +144,7 @@
 		// tipologie inps del cartellino
 		$tipologie = mysqlQuery(
 			$cf['mysql']['connection'], 
-			'SELECT DISTINCT t.id, t.__label__ FROM tipologie_attivita_inps_view AS t INNER JOIN cartellini AS c ON t.id = c.id_tipologia_inps '
+			'SELECT DISTINCT t.id, t.__label__ FROM tipologie_attivita_inps_view AS t INNER JOIN righe_cartellini AS c ON t.id = c.id_tipologia_inps '
 			.'WHERE month( c.data_attivita ) = ? AND year( c.data_attivita ) = ? AND c.id_anagrafica = ?',
 			array(
 				array( 's' => $mese ),

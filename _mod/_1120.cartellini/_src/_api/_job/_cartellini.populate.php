@@ -99,7 +99,7 @@ $idT_inps_permessi = 5;
                         'SELECT * FROM righe_cartellini WHERE id_cartellino = ? ',
                         array( array( 's' => $cid ) ) );
 
-            logWrite( 'trovate ' . count( $cartellini ) .' righe per il cartellino '.$cid , 'cartellini', LOG_ERR );
+            logWrite( 'trovate ' . count( $righeCartellini ) .' righe per il cartellino '.$cid , 'cartellini', LOG_ERR );
 
             foreach( $righeCartellini as $car ){
 

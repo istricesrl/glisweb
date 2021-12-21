@@ -105,11 +105,18 @@ $idT_inps_straordinario = 2;
 
             logWrite( 'lavoro il contratto ' . $cid , 'cartellini', LOG_ERR );
 
+            // dati del contratto
+            $dati_contratto = mysqlSelectRow(
+                $cf['mysql']['connection'], 
+                'SELECT * FROM contratti WHERE id = ?',
+                array( array( 's' => $cid ) )
+            );
+
             // inserisco il cartellino
             $cartellino = mysqlQuery( $cf['mysql']['connection'], 
             'INSERT INTO cartellini ( id_anagrafica, mese, anno, timestamp_inserimento ) VALUES ( ?, ?, ?, ? )  ',
             array( 
-                array( 's' => $contratto['id_anagrafica'] ), 
+                array( 's' => $dati_contratto['id_anagrafica'] ), 
                 array( 's' => $mese ),
                 array( 's' => $anno ),
                 array( 's' => time() ) ) 
