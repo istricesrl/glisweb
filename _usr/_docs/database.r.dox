@@ -382,6 +382,7 @@
     ruoli_file.se_categorie_notizie        | flag che indica se il ruolo è pertinente alle categorie di notizie
     ruoli_file.se_risorse                  | flag che indica se il ruolo è pertinente alle risorse
     ruoli_file.se_categorie_risorse        | flag che indica se il ruolo è pertinente alle categorie di risorse
+    ruoli_file.se_mail                     | flag che indica se il ruolo è pertinente alle mail
 
     La tabella ha le seguenti chiavi esterne:
 

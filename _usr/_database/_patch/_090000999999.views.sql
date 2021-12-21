@@ -1325,6 +1325,8 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_categoria_notizie,
 		file.id_risorsa,
 		file.id_categoria_risorse,
+		file.id_mail_out,                    
+		file.id_mail_sent, 
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -3234,6 +3236,7 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.se_categorie_notizie,
 		ruoli_file.se_risorse,
 		ruoli_file.se_categorie_risorse,
+		ruoli_file.se_mail,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;
@@ -3629,6 +3632,7 @@ CREATE OR REPLACE VIEW `template_view` AS
 		template.nome,
 		template.tipo,
 		template.note,
+		template.latenza_invio,
 		template.se_mail,
 		template.se_sms,
 		template.id_account_inserimento,

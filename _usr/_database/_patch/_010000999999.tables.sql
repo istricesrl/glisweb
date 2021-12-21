@@ -766,6 +766,8 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
+  `id_mail_out` int(11) DEFAULT NULL,
+  `id_mail_sent` int(11) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
   `url` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -1747,7 +1749,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_notizie` int(1) DEFAULT NULL,
   `se_categorie_notizie` int(1) DEFAULT NULL,
   `se_risorse` int(1) DEFAULT NULL,
-  `se_categorie_risorse` int(1) DEFAULT NULL
+  `se_categorie_risorse` int(1) DEFAULT NULL,
+  `se_mail` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034600
@@ -1991,6 +1994,7 @@ CREATE TABLE IF NOT EXISTS `template` (
   `nome` char(128) NOT NULL,
   `tipo` char(32) NOT NULL,
   `note` text,
+  `latenza_invio` int(11) DEFAULT NULL,
   `se_mail` int(1) DEFAULT NULL,
   `se_sms` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
