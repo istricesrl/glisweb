@@ -826,6 +826,8 @@ CREATE OR REPLACE VIEW chiavi_view AS
 		chiavi.id,
 		chiavi.id_licenza,
 		licenze.nome AS licenza,
+        chiavi.id_tipologia,
+        tipologie_chiavi.nome AS tipologia,
 		chiavi.codice,
 		chiavi.seriale,
 		chiavi.nome,
@@ -834,6 +836,7 @@ CREATE OR REPLACE VIEW chiavi_view AS
 		chiavi.nome AS __label__
 	FROM chiavi
 		LEFT JOIN licenze ON licenze.id = chiavi.id_licenza
+        LEFT JOIN tipologie_chiavi ON tipologie_chiavi.id = chiavi.id_tipologia
 ;
 
 --| 090000005100
