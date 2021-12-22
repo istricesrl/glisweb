@@ -5,6 +5,7 @@
      * analizza una riga di variazioni_attivita approvata
      * - verifica se ci sono attività in quel periodo assegnate all'anagrafica corrispondente e:
      *      - setta id_anagrafica NULL
+     *      - setta id_account NULL nella riga di __acl_attivita__
      *      - crea una riga nella tabella di report __report_attivita_assenze__
      *      - aggiorna il timestamp_controllo_attivita per i periodi_variazioni_attivita figli
      *      - legge le attività della tabella __report_sostituzioni_attivita__ in cui l'anagrafica è stata coinvolta e azzera il timestamp_calcolo_sostituti per quelle attvità
@@ -165,6 +166,13 @@
             $u = mysqlQuery( 
                 $cf['mysql']['connection'],
                 'UPDATE attivita SET id_anagrafica = NULL WHERE id = ?',
+                array( array( 's' => $cid ) )
+            );
+
+            // aggiorno la riga di acl settando id_account NULL
+            $acl = mysqlQuery( 
+                $cf['mysql']['connection'],
+                'UPDATE __acl_attivita__ SET id_account = NULL WHERE id_entita = ?',
                 array( array( 's' => $cid ) )
             );
 
