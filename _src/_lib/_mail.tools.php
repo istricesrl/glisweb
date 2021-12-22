@@ -181,19 +181,19 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
 			$allegati	= array_merge( $allegati, ( ( isset( $attach[ $l ] ) ) ? $attach[ $l ] : array() ) );
 #print_r($corpo );
 		    // se è definito nel template imposto il destinatario
-			if( array_key_exists('to', $t[ $l ] ) && is_array( $t[ $l ]['to'] ) && ! empty( $t[ $l ]['to'][ array_key_first($t[ $l ]['to'] ) ] ) ) {
+			if( array_key_exists( 'to', $t[ $l ] ) && is_array( $t[ $l ]['to'] ) && ! empty( $t[ $l ]['to'][ array_key_first( $t[ $l ]['to'] ) ] ) ) {
 #print_r( $t[$l] );
 			    //$to = array_replace_recursive( $to, $t[ $l ]['to'] );
 #print_r( $to );
-			    $destinatari[ array_key_first($t[ $l ]['to'] ) ] = $t[ $l ]['to'][ array_key_first( $t[ $l ]['to'] ) ];
+			    $destinatari[ array_key_first( $t[ $l ]['to'] ) ] = $t[ $l ]['to'][ array_key_first( $t[ $l ]['to'] ) ];
 			}
 
 		    // elaboro i placeholder nei destinatari
-			if( isset( $to ) ){
+			if( isset( $to ) ) {
 			    foreach( $to as $k => $v ) {
-				$tm = array( 'nome' => $k, 'mail' => $v );
-				$tw = new \Twig\Environment( new \Twig\Loader\ArrayLoader( $tm ) );
-				$destinatari[ $tw->render( 'nome', $d ) ] = $tw->render( 'mail', $d );
+					$tm = array( 'nome' => $k, 'mail' => $v );
+					$tw = new \Twig\Environment( new \Twig\Loader\ArrayLoader( $tm ) );
+					$destinatari[ $tw->render( 'nome', $d ) ] = $tw->render( 'mail', $d );
 			    }
 			}
 
@@ -218,17 +218,17 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
 
 	// accodo la mail
 	    $id = queueMail(
-		$c,
-		$timestamp_invio,
-		$mittente,
-		$destinatari,
-		$oggetto,
-		$corpo,
-		$destinatari_cc,
-		$destinatari_bcc,
-		$allegati,
-		$headers,
-		$server
+			$c,
+			$timestamp_invio,
+			$mittente,
+			$destinatari,
+			$oggetto,
+			$corpo,
+			$destinatari_cc,
+			$destinatari_bcc,
+			$allegati,
+			$headers,
+			$server
 	    );
 
 	// debug
@@ -249,63 +249,57 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
      */
     function queueMail( $c, $timestamp_invio, $mittente, $destinatari, $oggetto, $corpo, $destinatari_cc = array(), $destinatari_bcc = array(), $allegati = array(), $headers = array(), $server = NULL ) {
 
-	// lock delle tabelle della coda
-	    $lock = mysqlQuery( $c, 'LOCK TABLES mail_out WRITE' );
-
-	// se il lock è andato a buon fine
-	    if( $lock === true ) {
-
 		// inserimento della mail in coda
 		    $id = mysqlQuery(
-			$c,
-			"INSERT INTO mail_out (
-			    timestamp_composizione
-			    ,
-			    timestamp_invio
-			    ,
-			    server
-			    ,
-			    mittente
-			    ,
-			    destinatari
-			    ,
-			    destinatari_cc
-			    ,
-			    destinatari_bcc
-			    ,
-			    oggetto
-			    ,
-			    corpo
-			    ,
-			    allegati
-			    ,
-			    headers
-			) VALUES (
-			    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-			)",
-			array(
-			    array( 's' => time() )
-			    ,
-			    array( 's' => $timestamp_invio )
-			    ,
-			    array( 's' => $server )
-			    ,
-			    array( 's' => serialize( $mittente ) )
-			    ,
-			    array( 's' => serialize( $destinatari ) )
-			    ,
-			    array( 's' => serialize( $destinatari_cc ) )
-			    ,
-			    array( 's' => serialize( $destinatari_bcc ) )
-			    ,
-			    array( 's' => $oggetto )
-			    ,
-			    array( 's' => $corpo )
-			    ,
-			    array( 's' => serialize( $allegati ) )
-			    ,
-			    array( 's' => serialize( $headers ) )
-			)
+				$c,
+				"INSERT INTO mail_out (
+					timestamp_composizione
+					,
+					timestamp_invio
+					,
+					server
+					,
+					mittente
+					,
+					destinatari
+					,
+					destinatari_cc
+					,
+					destinatari_bcc
+					,
+					oggetto
+					,
+					corpo
+					,
+					allegati
+					,
+					headers
+				) VALUES (
+					?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+				)",
+				array(
+					array( 's' => time() )
+					,
+					array( 's' => $timestamp_invio )
+					,
+					array( 's' => $server )
+					,
+					array( 's' => serialize( $mittente ) )
+					,
+					array( 's' => serialize( $destinatari ) )
+					,
+					array( 's' => serialize( $destinatari_cc ) )
+					,
+					array( 's' => serialize( $destinatari_bcc ) )
+					,
+					array( 's' => $oggetto )
+					,
+					array( 's' => $corpo )
+					,
+					array( 's' => serialize( $allegati ) )
+					,
+					array( 's' => serialize( $headers ) )
+				)
 		    );
 
 		// unlock delle tabelle
@@ -313,13 +307,6 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
 
 		// valore di ritorno
 		    return $id;
-
-	    } else {
-
-		// valore di ritorno
-		    return false;
-
-	    }
 
     }
 
