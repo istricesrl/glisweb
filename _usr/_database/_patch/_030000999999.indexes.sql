@@ -435,7 +435,8 @@ ALTER TABLE `chiavi`
 	ADD KEY `codice` (`codice`),
 	ADD KEY `seriale` (`seriale`),
 	ADD KEY `id_licenza` (`id_licenza`),
-	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`);
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`, `id_tipologia`);
 
 --| 030000004801
 

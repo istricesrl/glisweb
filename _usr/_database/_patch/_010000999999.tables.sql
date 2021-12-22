@@ -453,6 +453,7 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
 CREATE TABLE IF NOT EXISTS `chiavi` (
   `id` int(11) NOT NULL,
   `id_licenza` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
   `codice` char(32) COLLATE utf8_general_ci DEFAULT NULL,
   `seriale` char(32) COLLATE utf8_general_ci DEFAULT NULL,
   `nome` char(32) COLLATE utf8_general_ci NOT NULL,
