@@ -2,8 +2,9 @@
 
     /**
      * task che gira autonomamente > preleva una riga di periodi_variazioni_attivita per le variazioni approvate  * 
-     *- verifica se ci sono attività in quel periodo assegnate all'anagrafica corrispondente e:
+     *      - verifica se ci sono attività in quel periodo assegnate all'anagrafica corrispondente e:
      *      - setta id_anagrafica NULL
+     *      - setta id_account NULL nella riga di acl corrispondente
      *      - crea una riga nella tabella di report __report_attivita_assenze__
      *      - aggiorna il timestamp_controllo_attivita per i periodi_variazioni_attivita figli
      *      - legge le attività della tabella __report_sostituzioni_attivita__ in cui l'anagrafica è stata coinvolta e azzera il timestamp_calcolo_sostituti per quelle attvità
@@ -100,6 +101,18 @@
                     $cf['mysql']['connection'],
                     'UPDATE attivita SET id_anagrafica = NULL WHERE id = ?',
                     array( array( 's' => $s['id']) )
+                );
+
+                // aggiorno la riga di acl per l'attività corrente settando id_account NULL
+                $acl = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id_entita'		=> $s['id'],
+                        'id_account'	=> NULL,
+                        'id_gruppo'		=> 2,
+                        'permesso'		=> 'FULL'
+                    ),
+                    '__acl_attivita__'
                 );
 
                 $status['info']['righe_aggiornate'] += $u;

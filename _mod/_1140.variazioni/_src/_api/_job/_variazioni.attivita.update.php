@@ -170,10 +170,15 @@
             );
 
             // aggiorno la riga di acl settando id_account NULL
-            $acl = mysqlQuery( 
+            $acl = mysqlInsertRow(
                 $cf['mysql']['connection'],
-                'UPDATE __acl_attivita__ SET id_account = NULL WHERE id_entita = ?',
-                array( array( 's' => $cid ) )
+                array(
+                    'id_entita'		=> $cid,
+                    'id_account'	=> ( isset( $id_account ) ) ? $id_account : NULL,
+                    'id_gruppo'		=> 2,
+                    'permesso'		=> 'FULL'
+                ),
+                '__acl_attivita__'
             );
 
             // status
