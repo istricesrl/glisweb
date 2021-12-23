@@ -9,14 +9,39 @@
 	var og = encodeURIComponent($('#_oggetto').val());
 	var id = $('#_id').val();
 	var to = $('#_destinatario').val();
+	var to_cc = $('#_destinatario_cc').val();
+	var to_bcc = $('#_destinatario_bcc').val();
 	var from = $('#_mittente').val();
 	var t = encodeURIComponent(CKEDITOR.instances['_testo'].getData());
-
+	var file = $('div[id^="file_"]');
+	
+	const attach = [];
+	var i = 0;
+	file.each( function() {
+		    var f = $( this );
+		    var id = f.attr('id')+'_path';
+			//console.log(id);
+			//console.log( $('#_'+id).val() );
+			if( $('#_'+id).val() != '' ){
+				attach[ i++ ] = $('#_'+id).val();
+			}
+		});
+	
 	//invio la mail se tutti i campi sono compilati
 	if( og !== '' && to !== '' && t !== '' && from !== ''){
 
+	var par = "__og__="+og+"&__id__="+id+"&__from__="+from+"&__to__="+to;
+
+	if( to_cc != '' ){ par = par + '&__to_cc__=' + to_cc; }
+	if( to_bcc != '' ){ par = par + '&__to_bcc__=' + to_bcc; }
+	if( attach.length > 0 ){ par += '&__attach__='+JSON.stringify(attach); }
+
+	par = par +"&__t__='"+t+"'";
+	
+//window.open("{{ session.backurls[page.backurl[localization.language.ietf]]}}?&__send__=1", '_self') 
+
 	$('#send-btn').html('<i class="fa fa-spinner fa-spin fa-fw"></i>');
-	getws("/_src/_api/_task/_mail.send.php","__og__="+og+"&__id__="+id+"&__from__="+from+"&__to__="+to+"&__t__='"+t+"'",  window.open("{{ session.backurls[page.backurl[localization.language.ietf]]}}?&__send__=1", '_self') );
+	getws("{{site.url}}/_src/_api/_task/_mail.send.php",par,window.open("{{ session.backurls[page.backurl[localization.language.ietf]]}}?&__send__=1", '_self') 	);
 	}
 
 	// evidezio i campi obbligatori non compilati
@@ -67,6 +92,18 @@
 			    {{ frm.input(table, '', '', 'destinatario', 'mail', '', request ) }}
 			</div>
 		    </div>
+			<div class="form-row">
+			    <label class="d-none d-md-block col-md-2 col-form-label">Destinatario cc</label>
+			<div class="col">
+			    {{ frm.input(table, '', '', 'destinatario_cc', 'mail cc', '', request ) }}
+			</div>
+		    </div>
+			<div class="form-row">
+			    <label class="d-none d-md-block col-md-2 col-form-label">Destinatario ccn</label>
+			<div class="col">
+			    {{ frm.input(table, '', '', 'destinatario_bcc', 'mail bcc', '', request ) }}
+			</div>
+		    </div>
 	        <div class="form-row">
 			    <label class="d-none d-md-block col-md-2 col-form-label">Oggetto</label>
 			<div class="col-10">
@@ -80,6 +117,48 @@
 			</div>
 		</div>
 	    
+		
+			{% set subtable = 'file' %}
+		{% set counter = 0 %}
+		<fieldset id="{{ subtable }}">
+			{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+			{{ frm.subformLegend( subtable, 'allegati' ) }}
+			{% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+			{% else %}{% set t = require %}{% endif %}
+			{% for i in -1..t %}
+			{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+			{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+			{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+			{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+			{% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+			{% else %}{% set action = 'inserimento' %}{% endif %}
+			{% set timestamp = 'now'|date('U') %}
+			<div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+				{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled  ) }}
+				{{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden', '', '', disabled  ) }}
+				<div class="form-group form-row">
+					<div class="col-auto col-md-auto">
+						{{ frm.uploader( table, subtable, i, 'path', 'file', '', request, 'var/contenuti/', site, '', pages, lang ) }}
+
+					</div>
+					{% if r.id %}
+					<div class="col-auto text-right remove-on-duplicate d-print-none">
+					{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+					</div>
+					<div class="col-auto text-right show-on-duplicate d-print-none hidden">
+					{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
+					</div>
+					{% else %}
+					<div class="col-auto text-right d-print-none">
+					{{ frm.button( '<i class="fa fa-minus"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			{% endfor %}
+		</fieldset>
+
+
         {% if etc.allegati_mail %}
                     <div class="form-row">
                     <label class="d-none d-md-block col-md-2 col-form-label">Allegati</label>
