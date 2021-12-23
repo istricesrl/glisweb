@@ -274,7 +274,7 @@
 
 			// debug
 			    // print_r( $i );
-			      echo $q . PHP_EOL;
+			    //  echo $q . PHP_EOL;
 				// print_r($vs);
 
 			// eseguo la query
