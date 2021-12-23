@@ -5,7 +5,7 @@
      * analizza una riga di variazioni_attivita approvata
      * - verifica se ci sono attività in quel periodo assegnate all'anagrafica corrispondente e:
      *      - setta id_anagrafica NULL
-     *      - setta id_account NULL nella riga di __acl_attivita__
+     *      - se presente una riga di __acl_attivita__ per l'account dell'anagrafica, la elimina
      *      - crea una riga nella tabella di report __report_attivita_assenze__
      *      - aggiorna il timestamp_controllo_attivita per i periodi_variazioni_attivita figli
      *      - legge le attività della tabella __report_sostituzioni_attivita__ in cui l'anagrafica è stata coinvolta e azzera il timestamp_calcolo_sostituti per quelle attvità
@@ -162,6 +162,13 @@
             
             // TODO: gestire il caso in cui l'attività sia coinvolta solo parzialmente > scorporarla creando più attività e scoprire solo la fascia oraria coinvolta
 
+            // verifico se l'anagrafica ha un account associato per eliminare l'eventuale riga di acl corrispondente
+            $id_account = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT id FROM account WHERE id_anagrafica = ?',
+                array( array( 's' => $a['id_anagrafica'] ) )
+            );
+            
             // aggiorno l'attività settando id_anagrafica NULL
             $u = mysqlQuery( 
                 $cf['mysql']['connection'],
@@ -169,17 +176,19 @@
                 array( array( 's' => $cid ) )
             );
 
-            // aggiorno la riga di acl settando id_account NULL
-            $acl = mysqlInsertRow(
-                $cf['mysql']['connection'],
-                array(
-                    'id_entita'		=> $cid,
-                    'id_account'	=> ( isset( $id_account ) ) ? $id_account : NULL,
-                    'id_gruppo'		=> 2,
-                    'permesso'		=> 'FULL'
-                ),
-                '__acl_attivita__'
-            );
+            // elimino la riga di acl
+            if( !empty( $id_account ) ){
+                $status['info'][] = 'elimino le righe di acl per l\'account ' . $id_account . ' e l\'entità ' . $cid;
+                $acl = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'DELETE FROM __acl_attivita__ '
+                    .'WHERE id_account = ? AND id_entita = ?',
+                    array( 
+                        array( 's' => $id_account ),
+                        array( 's' => $cid )
+                    )
+                );
+            }
 
             // status
             $status['info'][] = 'ho lavorato la riga: ' . $cid;
@@ -280,3 +289,4 @@
         buildJson( $status );
 
     }
+

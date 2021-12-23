@@ -4,7 +4,7 @@
      * riceve in ingresso l'id della sostituzione da confermare
      * - estrae l'id dell'attività e dell'anagrafica collegate
      * - aggiorna l'attività settando l'id_anagrafica
-     * - aggiorna la riga di acl per l'attività
+     * - inserisce la riga di acl per l'attività legata alla nuova anagrafica
      * - setta la data di accettazione della sostituzione
      * - rimuove dalla tabella "__report_sostituzioni_attivita__" le righe corrispondenti a questa anagrafica, così il task _sostituzioni.calculate.php la rianalizza
      * 
@@ -67,7 +67,6 @@
                 array(
                     'id_entita'		=> $s['id_attivita'],
                     'id_account'	=> ( isset( $id_account ) ) ? $id_account : NULL,
-                    'id_gruppo'		=> 2,
                     'permesso'		=> 'FULL'
                 ),
                 '__acl_attivita__'
