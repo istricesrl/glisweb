@@ -11,7 +11,7 @@
 CREATE TABLE IF NOT EXISTS`__acl_anagrafica__` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_entita` int(11) NOT NULL,
-  `id_gruppo` int(11) NOT NULL,
+  `id_gruppo` int(11) DEFAULT NULL,
   `id_account` int(11) DEFAULT NULL,
   `permesso` char(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS`__acl_anagrafica__` (
 CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_entita` int(11) NOT NULL,
-  `id_gruppo` int(11) NOT NULL,
+  `id_gruppo` int(11) DEFAULT NULL,
   `id_account` int(11) DEFAULT NULL,
   `permesso` char(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
 CREATE TABLE IF NOT EXISTS `__acl_pagine__` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_entita` int(11) NOT NULL,
-  `id_gruppo` int(11) NOT NULL,
+  `id_gruppo` int(11) DEFAULT NULL,
   `id_account` int(11) DEFAULT NULL,
   `permesso` char(8) DEFAULT NULL,
   PRIMARY KEY (`id`),

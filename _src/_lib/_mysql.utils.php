@@ -124,8 +124,8 @@
                         'path_alternativo'  => ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ),
                     #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),     // commentata questa riga, sostituita con la seguente
                         'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path_alternativo'] ) : array( $cn['main_ietf'] => findFileType( $cn['path_alternativo'] ) ),      // vedere issue #419
-                        'orientamento'      => $cn['orientamento'],
-                        'anno'              => $cn['anno']
+                        'orientamento'      => $cn['orientamento']
+                     #   'anno'              => $cn['anno']
                     ) );
                 break;
                 case 'video':
