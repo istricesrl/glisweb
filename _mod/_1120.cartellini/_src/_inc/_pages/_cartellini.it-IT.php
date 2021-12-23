@@ -48,7 +48,7 @@
 	// gestione cartellini - approvazione
 	$p['cartellini.form.approvazione'] = array(
 	    'sitemap'		=> false,
-		'icon'			=> '<i class="fa-check-square-o" aria-hidden="true"></i>',
+		'icon'			=> '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>',
 	    'title'			=> array( $l		=> 'approvazione' ),
 	    'h1'			=> array( $l		=> 'approvazione' ),
 	    'parent'		=> array( 'id'		=> 'cartellini' ),
