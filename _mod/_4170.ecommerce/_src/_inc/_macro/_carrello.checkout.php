@@ -8,7 +8,10 @@
     // se esiste un carrello in sessione
     if( isset( $_SESSION['carrello']['id'] ) ) {
 
-		// nome del file di ricevuta
+		// normalizzazione ID carrello
+		$idCarrello = $_SESSION['carrello']['id'];
+
+        // nome del file di ricevuta
 		$fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
 
         // imposto la timestamp di checkout
@@ -20,6 +23,7 @@
             $cf['mysql']['connection'],
             array(
                 'id'						=> $_SESSION['carrello']['id'],
+                'session'					=> NULL,
                 'provider_checkout'			=> $_SESSION['carrello']['provider_checkout'],
                 'timestamp_checkout'		=> $_SESSION['carrello']['timestamp_checkout']
             ),

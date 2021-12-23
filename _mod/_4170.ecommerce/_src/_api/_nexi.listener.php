@@ -6,6 +6,9 @@
     // identificativo del carrello
 	if( isset( $_REQUEST['codTrans'] ) ) {
 
+		// normalizzazione ID carrello
+		$idCarrello = $_REQUEST['codTrans'];
+
 		// nome del file di ricevuta
 		$fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_REQUEST['codTrans'] ) . '.log';
 
@@ -30,6 +33,7 @@
 						$cf['mysql']['connection'],
 						array(
 							'id'						=> $_REQUEST['codTrans'],
+							'session'					=> NULL,
 							'provider_checkout'			=> basename( __FILE__ ),
 							'timestamp_checkout'		=> time(),
 							'timestamp_pagamento'		=> time(),

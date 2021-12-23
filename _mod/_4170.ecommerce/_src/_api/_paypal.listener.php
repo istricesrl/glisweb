@@ -6,6 +6,9 @@
     // identificativo del carrello
 	if( isset( $_REQUEST['item_number'] ) ) {
 
+		// normalizzazione ID carrello
+		$idCarrello = $_REQUEST['item_number'];
+
 		// nome del file di ricevuta
 		$fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_REQUEST['item_number'] ) . '.log';
 
@@ -30,6 +33,7 @@
 						$cf['mysql']['connection'],
 						array(
 							'id'						=> $_REQUEST['item_number'],
+							'session'					=> NULL,
 							'provider_checkout'			=> basename( __FILE__ ),
 							'timestamp_checkout'		=> time(),
 							'timestamp_pagamento'		=> time(),

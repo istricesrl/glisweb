@@ -145,6 +145,8 @@
     pagamento tramite Nexi
     ----------------------
 
+    [...] Nexi si comporta come PayPal per esito e annullamento (vedi https://ecommerce.nexi.it/specifiche-tecniche/codicebase.html)
+
     personalizzazione delle pagine del carrello
     ===========================================
 
