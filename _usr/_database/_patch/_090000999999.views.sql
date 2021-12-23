@@ -826,6 +826,8 @@ CREATE OR REPLACE VIEW chiavi_view AS
 		chiavi.id,
 		chiavi.id_licenza,
 		licenze.nome AS licenza,
+        chiavi.id_tipologia,
+        tipologie_chiavi.nome AS tipologia,
 		chiavi.codice,
 		chiavi.seriale,
 		chiavi.nome,
@@ -834,6 +836,7 @@ CREATE OR REPLACE VIEW chiavi_view AS
 		chiavi.nome AS __label__
 	FROM chiavi
 		LEFT JOIN licenze ON licenze.id = chiavi.id_licenza
+        LEFT JOIN tipologie_chiavi ON tipologie_chiavi.id = chiavi.id_tipologia
 ;
 
 --| 090000005100
@@ -1327,6 +1330,8 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_categoria_notizie,
 		file.id_risorsa,
 		file.id_categoria_risorse,
+		file.id_mail_out,                    
+		file.id_mail_sent, 
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -2913,6 +2918,7 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 		tipologie_pubblicazioni.nome AS tipologia,
 		pubblicazioni.ordine,
 		pubblicazioni.id_prodotto,
+		pubblicazioni.id_articolo,
 		pubblicazioni.id_categoria_prodotti,
 		pubblicazioni.id_notizia,
 		pubblicazioni.id_categoria_notizie,
@@ -3236,6 +3242,7 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.se_categorie_notizie,
 		ruoli_file.se_risorse,
 		ruoli_file.se_categorie_risorse,
+		ruoli_file.se_mail,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;
@@ -3631,6 +3638,7 @@ CREATE OR REPLACE VIEW `template_view` AS
 		template.nome,
 		template.tipo,
 		template.note,
+		template.latenza_invio,
 		template.se_mail,
 		template.se_sms,
 		template.id_account_inserimento,

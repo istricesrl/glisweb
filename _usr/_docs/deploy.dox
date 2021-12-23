@@ -7,14 +7,17 @@
     introduzione
     ============
 
-    deploy manuale
-    --------------
+    il versionamento semantico 
+    ==========================
 
-    Phing
-    -----
+    major release
+    -------------
 
-    Kubernetes
-    ----------
+    minor release
+    -------------
+
+    patch release
+    -------------
 
     il deploy a tre step
     ====================
@@ -26,6 +29,18 @@
     -------
 
     production
+    ----------
+
+    modalità di deploy
+    ==================
+
+    deploy manuale
+    --------------
+
+    Phing
+    -----
+
+    Kubernetes
     ----------
 
 */

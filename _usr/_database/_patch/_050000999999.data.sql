@@ -406,15 +406,15 @@ REPLACE INTO `ruoli_audio` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_cate
 -- ruoli_file
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:14 Fabio Mosti
-REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_risorse`) VALUES
-(1,	    'allegato',	        1,	    1,	    1,	    1,	    1,	    1,	    NULL),
-(2,	    'brochure',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(3,	    'documentazione',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(4,	    'driver',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(5,	    'manualistica',	    NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(6,	    'press kit',	    1,	    NULL,	NULL,	NULL,	1,	    NULL,	NULL),
-(7,	    'schede tecniche',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL),
-(8,	    'software',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL);
+REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_risorse`, `se_mail`) VALUES
+(1,	    'allegato',	        1,	    1,	    1,	    1,	    1,	    1,	    NULL,	    1),
+(2,	    'brochure',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(3,	    'documentazione',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(4,	    'driver',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(5,	    'manualistica',	    NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(6,	    'press kit',	    1,	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	    NULL),
+(7,	    'schede tecniche',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
+(8,	    'software',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL);
 
 --| 050000034600
 
@@ -837,6 +837,9 @@ INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_prodotti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+INSERT IGNORE INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_colori`, `se_taglie`, `se_dimensioni`, `se_imballo`, `se_spedizione`, `se_trasporto`, `se_prodotto`, `se_servizio`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'servizio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055000
 
@@ -849,7 +852,7 @@ INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_pubblicazioni
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_pubblicazioni` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_bozza`, `se_pubblicato`, `se_evidenza`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_pubblicazioni` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_bozza`, `se_pubblicato`, `se_evidenza`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'bozza',	    NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'pubblicato',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 

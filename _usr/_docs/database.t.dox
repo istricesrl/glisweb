@@ -115,6 +115,7 @@
     template.nome                           | il nome attribuito al template
     template.tipo                           | il tipo di template, da cui dipende il motore usato per il rendering
     template.note                           | note aggiuntive sul template
+    template.latenza_invio                  | secondi di latenza di invio mail/sms
     template.se_mail                        | flag che indica se il template può essere applicato alle mail
     template.se_sms                         | flag che indica se il template può essere applicato agli SMS
     template.id_account_inserimento         | l'ID dell'account che ha inserito la riga
@@ -138,6 +139,7 @@
     template_view.nome                          | -
     template_view.tipo                          | -
     template_view.note                          | -
+    template_view.latenza_invio                 | -
     template_view.se_mail                       | -
     template_view.se_sms                        | -
     template_view.id_account_inserimento        | -

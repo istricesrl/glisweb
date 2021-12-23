@@ -234,7 +234,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'caratteristiche.prodotti.view') ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'caratteristiche' ),
-									'priority'	=> '022' ) ) )	
+									'priority'	=> '100' ) ) )	
 	);
 
 	 // gestione catecaratteristichegorie prodotti

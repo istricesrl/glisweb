@@ -453,4 +453,28 @@
 
 
 
+    aggiornamento del database e patch
+    ==================================
+
+
+    aggiornamento automatico del database in _src/_config/_125.mysql.php
+    --------------------------------------------------------------------
+
+
+    la tabella __patch__
+    --------------------
+
+
+    schema e dati della release
+    ---------------------------
+
+
+    patch incrementali per la release corrente
+    ------------------------------------------
+
+
+    patch di installazione da zero
+    ------------------------------
+
+
 */
