@@ -9,9 +9,6 @@
 	 // se esiste un carrello in sessione
      if( isset( $_SESSION['carrello']['id'] ) ) {
 
-		// nome del file di ricevuta
-		$fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'nexi/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
-
         // inizializzazione esito pagamento
         $ct['etc']['esito'] = NULL;
 
@@ -29,6 +26,12 @@
                 $ct['etc']['esito'] = 0;
             }
 
+            // nome del file di ricevuta
+            $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'nexi/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
+
+            // log
+            appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
+
         } elseif( isset( $_REQUEST['item_number'] ) ) {
 
             // PayPal
@@ -37,6 +40,12 @@
             } else {
                 $ct['etc']['esito'] = 0;
             }
+
+            // nome del file di ricevuta
+            $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
+
+            // log
+            appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
 
         }
 
