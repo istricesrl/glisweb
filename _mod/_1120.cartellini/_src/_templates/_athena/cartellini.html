@@ -72,7 +72,7 @@
                             <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
                             {% if v[ t.id ].id %}
-                            <td style="cursor: pointer" onclick="window.open('{{ pages['cartellini.form'].url[ localization.language.ietf ]~'?cartellini[id]='~v[ t.id ].id }}','_self');">
+                            <td style="cursor: pointer" onclick="window.open('{{ pages['righe.cartellini.form'].url[ localization.language.ietf ]~'?righe_cartellini[id]='~v[ t.id ].id }}','_self');">
                                 <div>{{ v[ t.id ].ore_tot }}</div>
                             {% else %}
                             <td><div><input disabled style="border: 0ch;"> </div>

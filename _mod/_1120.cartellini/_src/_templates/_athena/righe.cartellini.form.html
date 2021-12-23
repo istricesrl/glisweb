@@ -46,18 +46,36 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 			<div class="form-group form-row">
-
+                <div class="col-12 col-md">
+                    <span class="label-top">cartellino</span>
+                    {{ frm.selectBox( table, '', '', 'id_cartellino', '', etc.select.id_cartellino, request, '', '','','','','cartellini.form','','cartellini', 'id_cartellino' , page, pages, ietf,'cartellini' ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">contratto</span>
+                    {{ frm.selectBox( table, '', '', 'id_contratto', '', etc.select.id_contratto, request, '', '','','','','contratti.form','','contratti', 'id_contratto' , page, pages, ietf,'contratti' ) }}
+                </div>
                 <div class="col-12 col-md">
                     <span class="label-top">anagrafica</span>
                     {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
                 </div>
-                <div class="col-2 col-md-1">
-                    <span class="label-top">mese</span>
-                    {{ frm.inputRequired( table, '', '', 'mese', '', '', request ) }}
+			</div>
+            <div class="form-group form-row">
+				<div class="col-12 col-md-2">
+					<span class="label-top">tipologia INPS</span>
+					{{ frm.select( table, '', '', 'id_tipologia_inps', '', etc.select.id_tipologia_inps, request ) }}
+				</div>
+
+                <div class="col-6 col-md-auto">
+                    <span class="label-top">data</span>
+                    {{ frm.date( table, '', '', 'data_attivita', '', '', request, default ) }}
                 </div>
                 <div class="col-2 col-md-1">
-                    <span class="label-top">anno</span>
-                    {{ frm.inputRequired( table, '', '', 'anno', '', '', request ) }}
+                    <span class="label-top">ore previste</span>
+                    {{ frm.input( table, '', '', 'ore_previste', '', '', request, '', 'number', '', '', '','0.25' ) }}
+                </div>
+                <div class="col-2 col-md-1">
+                    <span class="label-top">ore fatte</span>
+                    {{ frm.input( table, '', '', 'ore_fatte', '', '', request, '', 'number', '', '', '','0.25' ) }}
                 </div>                
 			</div>
 	

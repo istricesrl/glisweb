@@ -21,6 +21,9 @@
 	    array(
         'cartellini' => array(
             CONTROL_FULL => array( 'roots' )
+        ),
+        'righe_cartellini' => array(
+            CONTROL_FULL => array( 'roots' )
         )
 	    )
 	);

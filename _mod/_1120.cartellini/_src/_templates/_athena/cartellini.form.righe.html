@@ -41,32 +41,8 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
-
-			<div class="form-group form-row">
-
-                <div class="col-12 col-md">
-                    <span class="label-top">anagrafica</span>
-                    {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
-                </div>
-                <div class="col-2 col-md-1">
-                    <span class="label-top">mese</span>
-                    {{ frm.inputRequired( table, '', '', 'mese', '', '', request ) }}
-                </div>
-                <div class="col-2 col-md-1">
-                    <span class="label-top">anno</span>
-                    {{ frm.inputRequired( table, '', '', 'anno', '', '', request ) }}
-                </div>                
-			</div>
-	
-			</fieldset>
-        
-	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-			{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
+		{# VIEW PRINCIPALE #}
+		{% include 'inc/view.html' %}
 
 	</form>
     </div>
