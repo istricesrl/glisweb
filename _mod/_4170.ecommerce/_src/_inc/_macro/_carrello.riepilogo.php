@@ -1,16 +1,16 @@
 <?php
 
-    // shortcut per il carrello
-	$c = $_SESSION['carrello'];
-
-    // shortcut per la lingua
-	$l = $cf['localization']['language']['ietf'];
-
-    // shortcut per il profilo
-    $k = $cf['ecommerce']['profile']['provider'][ $_SESSION['carrello']['provider_pagamento'] ];
-
     // se è impostato un provider di pagamento
     if( isset( $_SESSION['carrello']['provider_pagamento'] ) && ! empty( $_SESSION['carrello']['provider_pagamento'] ) ) {
+
+        // shortcut per il carrello
+        $c                                                  = $_SESSION['carrello'];
+
+        // shortcut per la lingua
+        $l                                                  = $cf['localization']['language']['ietf'];
+
+        // shortcut per il profilo
+        $k                                                  = $cf['ecommerce']['profile']['provider'][ $_SESSION['carrello']['provider_pagamento'] ];
 
         // URL espliciti
         $k['action_url']                                    = ( ! isset( $k['action_url'] ) || empty( $k['action_url'] ) ) ? $cf['contents']['pages'][ $k['action'] ]['url'][ $l ] : $k['action_url'];
