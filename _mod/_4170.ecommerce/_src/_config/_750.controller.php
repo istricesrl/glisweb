@@ -19,7 +19,10 @@
 
                 // inizializzazione dei valori base del carrello
                 foreach( $cf['ecommerce']['fields']['carrello'] as $field => $model ) {
-                    $_SESSION['carrello'][ $field ] = $model['default'];
+                    $_SESSION['carrello'][ $field ] =
+                        ( isset( $_REQUEST['__carrello__'][ $field ] ) ) ? 
+                        $_REQUEST['__carrello__'][ $field ] : 
+                        $model['default'];
                 }
 
                 // inizializzazione dei valori speciali del carrello
