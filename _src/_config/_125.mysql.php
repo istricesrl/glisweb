@@ -86,6 +86,9 @@
 					logWrite( 'connessione stabilita: ' . $server, 'mysql' );
 					logWrite( 'dettagli: ' . mysqli_get_host_info( $cn ), 'mysql' );
 
+					// log
+					writeToFile( 'connessione effettuata', FILE_LATEST_MYSQL );
+
 				    // aggiungo la connessione all'array
 					$cf['mysql']['connections'][ $server ] = $cn;
 
@@ -148,7 +151,7 @@
 
 			*/
 
-			if( ! defined( 'CRON_RUNNING' ) &&  ! defined( 'JOB_RUNNING' ) ) {
+			if( ! defined( 'CRON_RUNNING' ) && ! defined( 'JOB_RUNNING' ) ) {
 
 				$patchLevel = mysqlSelectValue(
 					$cf['mysql']['connection'],

@@ -903,3 +903,44 @@
     function array2file( $f, $a ) {
 	return writeToFile( trim( implode( PHP_EOL, str_replace( PHP_EOL, NULL, $a ) ) ), $f );
     }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function array2keyValueFile( $f, $a ) {
+
+        $t = NULL;
+
+        foreach( $a as $k => $v ) {
+            $t .= $k . '="' . trim( $v, " \n\r\t\v\0\"") . '"' . PHP_EOL;
+        }
+
+        return writeToFile( $t, $f );
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function keyValueFile2array( $f ) {
+
+        $a = file2array( $f );
+
+        $j = array();
+
+        foreach( $a as $r ) {
+
+            $s = explode( '=', $r );
+            if( count( $s ) == 2 ) {
+                $j[ $s[0] ] = trim( $s[1], " \n\r\t\v\0\"");
+            }
+
+        }
+
+        return $j;
+
+    }

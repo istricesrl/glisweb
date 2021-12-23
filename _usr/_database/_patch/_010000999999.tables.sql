@@ -1554,6 +1554,7 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (
   `id_pagina` int(11) DEFAULT NULL,
   `id_popup` int(11) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,

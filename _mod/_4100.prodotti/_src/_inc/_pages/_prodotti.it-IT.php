@@ -466,6 +466,8 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'reparti.form' ) )
 	);
+/*
+	TODO spostare nel modulo coupon
 
 		// vista coupon
 	$p['coupon.view'] = array(
@@ -492,3 +494,4 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'coupon.form'		) )
 	);
+*/

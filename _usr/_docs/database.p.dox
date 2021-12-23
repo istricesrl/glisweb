@@ -781,6 +781,7 @@
     pubblicazioni.id_pagina                   | l'ID della pagina cui si riferisce la pubblicazione
     pubblicazioni.id_popup                    | l'ID del popup cui si riferisce la pubblicazione
     pubblicazioni.id_prodotto                 | l'ID del prodotto cui si riferisce la pubblicazione
+    pubblicazioni.id_articolo                 | l'ID dell'articolo cui si riferisce la pubblicazione
     pubblicazioni.id_categoria_prodotti       | l'ID della categoria di prodotti cui si riferisce la pubblicazione
     pubblicazioni.id_notizia                  | l'ID della notizia cui si riferisce la pubblicazione
     pubblicazioni.id_categoria_notizie        | l'ID della categoria di notizie cui si riferisce la pubblicazione
@@ -802,11 +803,12 @@
     pubblicazioni_ibfk_02                       | id_pagina                 | pagine.id                         | ON DELETE CASCADE ON UPDATE CASCADE
     pubblicazioni_ibfk_03                       | id_popup                  | popup.id                          | ON DELETE CASCADE ON UPDATE CASCADE
     pubblicazioni_ibfk_04                       | id_prodotto               | prodotti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazioni_ibfk_05                       | id_categoria_prodotti     | categorie_prodotti.id             | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazioni_ibfk_06                       | id_notizia                | notizie.id                        | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazioni_ibfk_07                       | id_categoria_notizie      | categorie_notizie.id              | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazioni_ibfk_08                       | id_risorsa                | risorse.id                        | ON DELETE CASCADE ON UPDATE CASCADE
-    pubblicazioni_ibfk_09                       | id_categoria_risorse      | categorie_risorse.id              | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_05                       | id_articolo               | articoli.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_06                       | id_categoria_prodotti     | categorie_prodotti.id             | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_07                       | id_notizia                | notizie.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_08                       | id_categoria_notizie      | categorie_notizie.id              | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_09                       | id_risorsa                | risorse.id                        | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_10                       | id_categoria_risorse      | categorie_risorse.id              | ON DELETE CASCADE ON UPDATE CASCADE
     pubblicazioni_ibfk_98_nofollow              | id_account_inserimento    | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     pubblicazioni_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -821,6 +823,7 @@
     pubblicazioni_view.id_pagina                    | -
     pubblicazioni_view.id_popup                     | -
     pubblicazioni_view.id_prodotto                  | -
+    pubblicazioni_view.id_articolo                  | -
     pubblicazioni_view.id_categoria_prodotti        | -
     pubblicazioni_view.id_notizia                   | -
     pubblicazioni_view.id_categoria_notizie         | -

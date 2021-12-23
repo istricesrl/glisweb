@@ -2916,6 +2916,7 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 		tipologie_pubblicazioni.nome AS tipologia,
 		pubblicazioni.ordine,
 		pubblicazioni.id_prodotto,
+		pubblicazioni.id_articolo,
 		pubblicazioni.id_categoria_prodotti,
 		pubblicazioni.id_notizia,
 		pubblicazioni.id_categoria_notizie,

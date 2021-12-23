@@ -30,6 +30,7 @@ Options -Indexes
     RewriteRule ^var/log/* - [F,L,NC]
     RewriteRule ^var/session/* - [F,L,NC]
     RewriteRule ^var/spool/* - [F,L,NC]
+    RewriteRule ^var/work/* - [F,L,NC]
 
     # directory ad accesso diretto
     RewriteRule ^usr/pages/* - [L,NC]

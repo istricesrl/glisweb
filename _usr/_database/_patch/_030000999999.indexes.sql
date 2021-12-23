@@ -1680,6 +1680,7 @@ ALTER TABLE `pubblicazioni`
 	ADD KEY `id_pagina` (`id_pagina`), 
 	ADD KEY `id_popup` (`id_popup`), 
 	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
 	ADD KEY `id_notizia` (`id_notizia`),
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
@@ -1689,7 +1690,7 @@ ALTER TABLE `pubblicazioni`
 	ADD KEY `timestamp_fine` (`timestamp_fine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_prodotto`,`id_categoria_prodotti`,`id_notizia`,`id_categoria_notizie`,`id_pagina`,`id_popup`,`timestamp_inizio`,`timestamp_fine`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_prodotto`,`id_articolo`,`id_categoria_prodotti`,`id_notizia`,`id_categoria_notizie`,`id_pagina`,`id_popup`,`timestamp_inizio`,`timestamp_fine`);
 
 --| 030000028401
 

@@ -859,7 +859,7 @@ ul.browsing-tree {
 }
 
 
-.cartellini td, th {
+.cartellini td, .cartellini th {
     vertical-align: middle !important;
     max-width: 150px;
 }
