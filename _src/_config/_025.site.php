@@ -47,7 +47,7 @@
 	}
 
     // gli URL del sito
-	foreach( array_keys( $site['domains'] ) as $status ) {
+	foreach( array_keys( $cf['site']['domains'] ) as $status ) {
 
 	    $cf['site']['urls'][ $status ] =
 		$cf['site']['protocols'][ $status ] . '://' .

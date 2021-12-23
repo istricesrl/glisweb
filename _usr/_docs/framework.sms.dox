@@ -1,0 +1,33 @@
+/*!
+
+    \page sms factory di invio SMS del framework
+
+    Descrizione del meccanismo di invio degli SMS del framework.
+
+    introduzione
+    ============
+
+    la coda degli SMS
+    =================
+
+    accodamento degli SMS
+    ---------------------
+
+    evasione della coda degli SMS
+    -----------------------------
+
+    provider di invio
+    =================
+
+    invio tramite Skebby
+    --------------------
+
+    invio tramite Ehiweb
+    --------------------
+
+    [...] gli utenti autorizzati a inviare gli SMS sono gestiti tramite il pannello amministratore http://www.rivenditoresms.it/
+
+    [...] in Ehiweb il livello di servizio con cui vengono inviati gli SMS dipende dall'ID API utilizzato nell'invio, che è specificato
+    nella configurazione del server; l'ID API è reperibile nel pannello utente http://sms.istricesrl.it/
+
+*/

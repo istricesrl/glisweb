@@ -303,6 +303,7 @@
     ---------------------------------------|---------------------------------------------------------------------------------------
     chiavi.id                              | l'ID della chiave
     chiavi.id_licenza                      | l'ID della licenza a cui la chiave fa riferimento
+    chiavi.id_tipologia                    | l'ID della tipologia della chiave
     chiavi.codice                          | il codice della chiave
     chiavi.seriale                         | il seriale legato alla chiave 
     chiavi.nome                            | il nome descrittivo della chiave
@@ -316,6 +317,7 @@
     chiave                            | campo                         | tabella e campo collegati     | comportamento
     ----------------------------------|-------------------------------|-------------------------------|----------------------
     chiavi_ibfk_01_nofollow           | id_licenza                    | licenze.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    chiavi_ibfk_02_nofollow           | id_tipologia                  | tipologie_chiavi              | ON DELETE NO ACTION ON UPDATE NO ACTION
     chiavi_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     chiavi_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -326,6 +328,8 @@
     chiavi_view.id                            | -
     chiavi_view.id_licenza                    | -
     chiavi_view.licenza                       | la licenza a cui la chiave fa riferimento del contatto
+    chiavi.id_tipologia                       | -
+    chiavi.tipologia                          | la tipologia della chiave
     chiavi_view.codice                        | -
     chiavi_view.seriale                       | -
     chiavi_view.nome                          | -
@@ -513,8 +517,10 @@
     contenuti.specifiche                    | testo delle specifiche
     contenuti.label_menu                    | etichetta per il menù
     contenuti.mittente_nome                 | nome del mittente per i template delle mail
+    contenuti.mittente_numero               | numero del mittente per i template sms
     contenuti.mittente_mail                 | mail del mittente per i template delle mail
     contenuti.destinatario_nome             | nome del destinatario per i template delle mail
+    contenuti.destinatario_numero           | numero del destinatario per i template sms
     contenuti.destinatario_mail             | mail del destinatario per i template delle mail
     contenuti.destinatario_cc_nome          | nome del destinatario in copia per i template delle mail
     contenuti.destinatario_cc_mail          | mail del destinatario in copia per i template delle mail

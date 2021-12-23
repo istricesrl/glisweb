@@ -148,7 +148,7 @@
 */
 
     // porto in background i job fermi in foreground
-    $status['job']['foreground'] = mysqlSelectRow(
+    mysqlQuery(
         $cf['mysql']['connection'],
         'UPDATE job SET se_foreground = NULL WHERE timestamp_completamento IS NULL AND timestamp_esecuzione < ?',
         array(
@@ -166,6 +166,8 @@
 			'AND se_foreground IS NULL ',
 			array(
 				array( 's' => $cf['cron']['task']['results']['token'] ),
+				array( 's' => $time ),
+				array( 's' => $time ),
 				array( 's' => $time )
 			)
 		);
@@ -175,7 +177,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT * FROM job WHERE token = ? ',
 		array(
-			array( 's' => $cf['cron']['results']['token'] )
+			array( 's' => $cf['cron']['task']['results']['token'] )
 		)
 	);
 
@@ -244,10 +246,10 @@
 	}
 
     // log
-	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), DIR_VAR_LOG_CRON . date( 'YmdH' ) . '.log' );
+	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['task']['results'], true ), DIR_VAR_LOG_CRON . date( 'YmdH' ) . '.log' );
 
 	// log
-	writeToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), FILE_LATEST_CRON );
+	writeToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['task']['results'], true ), FILE_LATEST_CRON );
 
-    // output
-	buildJson( $cf['cron']['results'] );
+	// output
+	buildJson( $cf['cron']['task']['results'] );

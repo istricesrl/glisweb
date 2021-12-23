@@ -435,7 +435,8 @@ ALTER TABLE `chiavi`
 	ADD KEY `codice` (`codice`),
 	ADD KEY `seriale` (`seriale`),
 	ADD KEY `id_licenza` (`id_licenza`),
-	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`);
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`, `id_tipologia`);
 
 --| 030000004801
 
@@ -790,6 +791,8 @@ ALTER TABLE `file`
 	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
+	ADD KEY `id_mail_out` (`id_mail_out`), 
+	ADD KEY `id_mail_sent` (`id_mail_sent`), 
 	ADD KEY `path` (`path`), 
 	ADD KEY `url` (`url`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -1917,7 +1920,8 @@ ALTER TABLE `ruoli_file`
 	ADD KEY `se_categorie_notizie` (`se_categorie_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
+	ADD KEY `se_mail` (`se_mail`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`, `se_mail`);
 
 --| 030000034401
 
@@ -2189,7 +2193,7 @@ ALTER TABLE `template`
   	ADD UNIQUE KEY `unica` (`ruolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`ruolo`,`nome`,`tipo`,`se_mail`,`se_sms`);
+  	ADD KEY `indice` (`ruolo`,`nome`,`tipo`,`latenza_invio`, `se_mail`,`se_sms`);
 
 --| 030000044001
 
