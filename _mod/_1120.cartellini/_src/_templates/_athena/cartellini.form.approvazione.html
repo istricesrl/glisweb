@@ -35,7 +35,9 @@
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-		<input type="hidden" id="nome" name="{{ table }}[nome]" value="{{ request[ table ].nome }}">
+        <input type="hidden" id="id_anagrafica" name="{{ table }}[id_anagrafica]" value="{{ request[ table ].id_anagrafica }}">
+	    <input type="hidden" id="mese" name="{{ table }}[mese]" value="{{ request[ table ].mese }}">
+        <input type="hidden" id="anno" name="{{ table }}[anno]" value="{{ request[ table ].anno }}">
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
