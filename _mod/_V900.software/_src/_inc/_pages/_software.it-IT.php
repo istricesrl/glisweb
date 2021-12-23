@@ -4,7 +4,7 @@
 	$l = 'it-IT';
 
     // modulo di questo file
-	$m = DIR_MOD . '_5000.software/';
+	$m = DIR_MOD . '_V900.software/';
 
 	 // vista software
 	 $p['software.view'] = array(
