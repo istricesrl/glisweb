@@ -10,7 +10,7 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'tipologie_crm';
+	$ct['view']['table'] = 'ranking';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'ranking.anagrafica.form';

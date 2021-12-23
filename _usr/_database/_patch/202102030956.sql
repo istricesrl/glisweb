@@ -1,2 +1,0 @@
-INSERT IGNORE INTO `categorie_anagrafica` (`id`, `id_genitore`, `nome`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_concorrente`, `se_rassegna_stampa`, `se_azienda_gestita`, `se_produttore`, `se_dipendente`, `se_interinale`, `se_agenzia_interinale`, `se_referente` ) VALUES 
-(12, NULL, 'referenti',				NULL,   NULL,   NULL,   NULL,   NULL,   NULL,  NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   NULL,   	  1 );

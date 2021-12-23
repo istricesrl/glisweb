@@ -1,1 +1,0 @@
-ALTER table `tipologie_indirizzi` DROP INDEX indice;

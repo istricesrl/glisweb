@@ -1,1 +1,0 @@
-ALTER TABLE `pubblicazione` ADD FOREIGN KEY (`id_popup`) REFERENCES `popup`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

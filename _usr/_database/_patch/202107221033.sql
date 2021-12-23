@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD `note_interne` TEXT NULL DEFAULT NULL AFTER `testo`;

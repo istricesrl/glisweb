@@ -19,7 +19,9 @@
     // inizializzo l'array del risultato
 	$status = array();
 
-    // elimino i log
+/*
+
+// elimino i log
 	if( isset( $_REQUEST['patch'] ) ) {
 
         // nome della patch
@@ -46,6 +48,8 @@
 	} else {
         $status['info'][] = 'nessuna patch specificata';
 	}
+
+    */
 
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {

@@ -62,16 +62,15 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, html AS __label__ FROM tipologie_telefoni_view'
+	    'SELECT id, __label__ FROM tipologie_telefoni_view'
 	);
 
-
-    // tendina tipologie indirizzi
-	$ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedIndexedQuery(
+	// tendina ruoli indirizzi
+	$ct['etc']['select']['ruoli_indirizzi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_indirizzi_view'
+	    'SELECT id, __label__ FROM ruoli_indirizzi_view'
 	);
 	
 /*
@@ -115,10 +114,10 @@
 
 
     // tendina regime fiscale
-	$ct['etc']['select']['id_regime_fiscale'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM regimi_fiscali_view' );
+	$ct['etc']['select']['id_regime_fiscale'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM regimi_view' );
 
     // tendina tipologia crm
-	$ct['etc']['select']['id_tipologia_crm'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_crm_view ORDER BY ordine ASC' );
+	$ct['etc']['select']['id_ranking'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM ranking_view ORDER BY ordine ASC' );
 
     // tendina tipologia indirizzo
 	$ct['etc']['select']['id_tipologia_indirizzo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_indirizzi_view' );

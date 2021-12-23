@@ -26,7 +26,7 @@
 		$cf['memcache']['index'],
 		$cf['memcache']['connection'],
 		$cf['mysql']['connection'],
-		'SELECT * FROM template_mail'
+		'SELECT * FROM template WHERE se_mail = 1'
 	);
 
     // se ci sono template
@@ -37,7 +37,7 @@
 
 		    // inizializzo l'oggetto
 			$cf['mail']['tpl'][ $tpl['ruolo'] ] = array(
-			    'type' => $tpl['type'],
+			    'type' => $tpl['tipo'],
 			    'nome' => $tpl['nome']
 			);
 
@@ -47,7 +47,7 @@
 				$cf['mysql']['connection'],
 				'SELECT contenuti.*,lingue.ietf FROM contenuti '.
 				'INNER JOIN lingue ON lingue.id = contenuti.id_lingua '.
-				'WHERE contenuti.id_template_mail = ?',
+				'WHERE contenuti.id_template = ?',
 			    array( array( 's' => $tpl['id'] ) )
 			);
 
@@ -69,7 +69,7 @@
 				$cf['mysql']['connection'],
 				'SELECT file.*,lingue.ietf FROM file '.
 				'INNER JOIN lingue ON lingue.id = file.id_lingua '.
-				'WHERE file.id_template_mail = ?',
+				'WHERE file.id_template = ?',
 			    array( array( 's' => $tpl['id'] ) )
 			);
 

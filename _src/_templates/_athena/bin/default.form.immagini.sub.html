@@ -39,7 +39,7 @@
                 {{ frm.select( table, subtable, i, 'orientamento', '', etc.select.orientamenti, request, '', '', '', 1, '', disabled) }}
             </div>
             <div class="col-auto col-md-auto">
-                {{ frm.uploader( table, subtable, i, 'path', 'file', '', request, 'var/contenuti/', site, 'immagini.form', pages, lang, '', '', '', '', 1 ) }}
+                {{ frm.uploader( table, subtable, i, 'path', '', '', request, 'var/contenuti/', site, 'immagini.form', pages, lang, '', '', '1', '', disabled ) }}
             </div>
             {% if r.id %}
             <div class="col-auto text-right remove-on-duplicate d-print-none">

@@ -1,1 +1,0 @@
-ALTER TABLE `tipologie_prodotti` ADD `se_servizio` INT(1) NULL , ADD `se_prodotto` INT(1) NULL ;

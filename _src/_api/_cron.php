@@ -10,11 +10,11 @@
      *
      */
 
-    // inclusione del framework
-	require '../_config.php';
-
     // costanti che descrivono lo stato di funzionamento del framework
 	define( 'CRON_RUNNING'			, 'CRONRUN' );
+
+    // inclusione del framework
+	require '../_config.php';
 
     // apro il report
 	writeToFile( date( 'Y/m/d H:i:s' ), FILE_LATEST_CRON );
@@ -26,18 +26,15 @@
 	$time = time();
 
     // output
-	$cf['cron']['results'] = array();
+	$cf['cron']['task']['results'] = array();
 
     // chiave di lock
-	$cf['cron']['results']['token'] = getToken( __FILE__ );
-		
-	// inizializzo
-#	$cf['cron']['cache']['view']['static']['refresh'] = array();
+	$cf['cron']['task']['results']['token'] = getToken( __FILE__ );
 
     // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
 	$tasks = mysqlQuery(
 	    $cf['mysql']['connection'],
-	    'UPDATE cron SET token = ?, timestamp_esecuzione = ? WHERE '.
+	    'UPDATE task SET token = ? WHERE '.
 	    '( minuto = ?												OR minuto IS NULL ) AND '.
 	    '( ora = ?													OR ora IS NULL ) AND '.
 	    '( giorno_del_mese = ?										OR giorno_del_mese IS NULL ) AND '.
@@ -47,8 +44,7 @@
 		'( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?	OR timestamp_esecuzione IS NULL ) AND '.
 		'( token IS NULL OR ( timestamp_esecuzione < ? ) )',
 	    array(
-			array( 's' => $cf['cron']['results']['token'] ),		//
-			array( 's' => $time ),								//
+			array( 's' => $cf['cron']['task']['results']['token'] ),		//
 			array( 's' => intval( date( 'i', $time ) ) ),			// 
 			array( 's' => date( 'G', $time ) ),						// 
 			array( 's' => date( 'j', $time ) ),						// 
@@ -61,11 +57,11 @@
 	);
 
     // seleziono i task a cui ho applicato il lock
-	$cf['cron']['tasks'] = mysqlQuery(
+	$cf['cron']['task']['tasks'] = mysqlQuery(
 	    $cf['mysql']['connection'],
-	    'SELECT * FROM cron WHERE token = ? ',
+	    'SELECT * FROM task WHERE token = ? ',
 		array(
-			array( 's' => $cf['cron']['results']['token'] )
+			array( 's' => $cf['cron']['task']['results']['token'] )
 		)
 	);
 	
@@ -78,20 +74,20 @@
 	    . date( 'n', $time ) . ' '
 	    . date( 'w', $time ) . ' '
 	    . date( 'W', $time ),
-	    'cron'
+	    'task'
 	);
 
 	// log
-	logWrite( 'task trovati: ' . print_r( $cf['cron']['tasks'], true), 'cron' );
+	logWrite( 'task trovati: ' . print_r( $cf['cron']['task']['tasks'], true), 'cron' );
 
     // ciclo sui task
-	foreach( $cf['cron']['tasks'] as $task ) {
+	foreach( $cf['cron']['task']['tasks'] as $task ) {
 	    if( file_exists( DIR_BASE . $task['task'] ) ) {
 
 			// timestamp di esecuzione iniziale
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'UPDATE cron SET timestamp_esecuzione = ? WHERE id = ?',
+				'UPDATE task SET timestamp_esecuzione = ? WHERE id = ?',
 				array(
 				array( 's' => $time ),
 				array( 's' => $task['id'] )
@@ -110,24 +106,24 @@
 						logWrite( 'iterazione #' . $iter . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 						// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
 						require DIR_BASE . $task['task'];
-						$cf['cron']['results']['task'][ $task['task'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
+						$cf['cron']['task']['results']['task'][ $task['task'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
 						if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = 3; }
 						sleep( $task['delay'] );
 					}
 				} else {
-					$cf['cron']['results']['errors'][] = 'il task ' . $job['task'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
+					$cf['cron']['task']['results']['errors'][] = 'il task ' . $job['task'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
 					logWrite( 'il task ' . $task['task'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
 				}
 	
 		} else {
-			$cf['cron']['results']['errors'][] = 'il file di task ' . $task['task'] . ' non esiste';
+			$cf['cron']['task']['results']['errors'][] = 'il file di task ' . $task['task'] . ' non esiste';
 			logWrite( 'il file di task ' . $task['task'] . ' non esiste', 'cron', LOG_ERR );
 		}
 
 		// aggiorno la tabella di pianificazione
 		mysqlQuery(
 			$cf['mysql']['connection'],
-			'UPDATE cron SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
+			'UPDATE task SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
 			array(
 				array( 's' => $time ),
 				array( 's' => $task['id'] )
@@ -152,7 +148,7 @@
 */
 
     // porto in background i job fermi in foreground
-    $status['job']['foreground'] = mysqlSelectRow(
+    mysqlQuery(
         $cf['mysql']['connection'],
         'UPDATE job SET se_foreground = NULL WHERE timestamp_completamento IS NULL AND timestamp_esecuzione < ?',
         array(
@@ -169,63 +165,66 @@
 			'AND ( token IS NULL OR timestamp_esecuzione < ? ) '.
 			'AND se_foreground IS NULL ',
 			array(
-				array( 's' => $cf['cron']['results']['token'] ),
+				array( 's' => $cf['cron']['task']['results']['token'] ),
 				array( 's' => $time ),
 				array( 's' => $time ),
-				array( 's' => strtotime( '-10 minutes' ) )
+				array( 's' => $time )
 			)
 		);
 	
     // seleziono i job a cui ho applicato il lock
-	$cf['cron']['jobs'] = mysqlQuery(
+	$cf['cron']['job'] = mysqlQuery(
 	    $cf['mysql']['connection'],
 	    'SELECT * FROM job WHERE token = ? ',
 		array(
-			array( 's' => $cf['cron']['results']['token'] )
+			array( 's' => $cf['cron']['task']['results']['token'] )
 		)
 	);
 
 	// log
-	logWrite( 'job trovati: ' . print_r( $cf['cron']['jobs'], true), 'cron' );
+	logWrite( 'job trovati: ' . print_r( $cf['cron']['job'], true), 'cron' );
 
 	// ciclo sui job
-	foreach( $cf['cron']['jobs'] as $job ) {
+	foreach( $cf['cron']['job'] as $job ) {
 	    if( file_exists( DIR_BASE . $job['job'] ) ) {
 
-		// log
-		    logWrite( 'eseguo il job ' . $job['id'] . ' -> ' . $job['job'], 'cron', LOG_DEBUG );
+			// log
+				logWrite( 'eseguo il job ' . $job['id'] . ' -> ' . $job['job'], 'cron', LOG_DEBUG );
 
-		// resetto lo status
-			$status = array();
+			// resetto lo status
+				$status = array();
 
-		// decodifica del workspace
-			$job['workspace'] = json_decode( $job['workspace'], true );
+			// decodifica del workspace
+				$job['workspace'] = json_decode( $job['workspace'], true );
 
-		// eseguo il job
-			if( ! empty( $job['iterazioni'] ) ) {
-				for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
-					logWrite( 'iterazione #' . $iter . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
-					// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
-					require DIR_BASE . $job['job'];
-					$cf['cron']['results']['job'][ $job['job'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-					if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = 3; }
-					sleep( $job['delay'] );
+			// eseguo il job
+				if( ! empty( $job['iterazioni'] ) ) {
+					for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
+						logWrite( 'iterazione #' . $iter . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
+						// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
+						require DIR_BASE . $job['job'];
+						$cf['cron']['results']['job'][ $job['job'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
+						if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = 3; }
+						sleep( $job['delay'] );
+					}
+				} else {
+					$cf['cron']['results']['errors'][] = 'il job ' . $job['job'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
+					logWrite( 'il job ' . $job['job'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
 				}
-			} else {
-				$cf['cron']['results']['errors'][] = 'il job ' . $job['job'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
-				logWrite( 'il job ' . $job['job'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
-			}
 
-		// aggiorno la tabella di avanzamento lavori
-		    mysqlQuery(
-				$cf['mysql']['connection'],
-				'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
-				array(
-					array( 's' => $time ),
-					array( 's' => json_encode( $job['workspace'] ) ),
-					array( 's' => $job['id'] )
-				)
-			);
+			// aggiorno la tabella di avanzamento lavori
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
+					array(
+						array( 's' => $time ),
+						array( 's' => json_encode( $job['workspace'] ) ),
+						array( 's' => $job['id'] )
+					)
+				);
+
+			// log
+				appendToFile( print_r( $status ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
 
 		} else {
 
@@ -247,10 +246,10 @@
 	}
 
     // log
-	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), 'var/log/cron/' . date( 'YmdH' ) . '.log' );
+	appendToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['task']['results'], true ), DIR_VAR_LOG_CRON . date( 'YmdH' ) . '.log' );
 
 	// log
-	writeToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['results'], true ), FILE_LATEST_CRON );
+	writeToFile( '-- ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . print_r( $cf['cron']['task']['results'], true ), FILE_LATEST_CRON );
 
-    // output
-	buildJson( $cf['cron']['results'] );
+	// output
+	buildJson( $cf['cron']['task']['results'] );

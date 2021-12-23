@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD `note_programmazione` TEXT NULL DEFAULT NULL AFTER `ora_fine_programmazione`;

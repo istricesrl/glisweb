@@ -31,10 +31,11 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-	$ct['view']['table'] = 'anagrafica';
+	$ct['view']['table'] = 'anagrafica_attivi';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'anagrafica.form';
+	$ct['view']['open']['table'] = 'anagrafica';
 
     // campi della vista
 	$ct['view']['cols'] = array(

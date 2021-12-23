@@ -30,10 +30,10 @@
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT categorie_notizie.* FROM categorie_notizie '.
-            'INNER JOIN pubblicazione ON pubblicazione.id_categoria_notizie = categorie_notizie.id '.
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_notizie = categorie_notizie.id '.
             'WHERE categorie_notizie.id_sito = ? '.
-            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) '.
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) '.
+            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) '.
             'GROUP BY categorie_notizie.id ',
             array(
                 array( 's' => SITE_CURRENT ),
@@ -133,12 +133,12 @@
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT notizie.*, notizie_categorie.id_categoria AS id_categoria FROM notizie '.
-            'INNER JOIN pubblicazione ON pubblicazione.id_notizia = notizie.id '.
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_notizia = notizie.id '.
             'LEFT JOIN notizie_categorie ON notizie_categorie.id_notizia = notizie.id  '.
             'LEFT JOIN categorie_notizie ON notizie_categorie.id_categoria = categorie_notizie.id '.
             'WHERE categorie_notizie.id_sito = ? '.
-            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) '.
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) '.
+            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) '.
             'GROUP BY notizie.id',
             array(
                 array( 's' => SITE_CURRENT ),
@@ -265,10 +265,10 @@
 		$cf['contents']['updated'] = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT max( categorie_notizie.timestamp_aggiornamento ) AS updated FROM categorie_notizie '.
-            'INNER JOIN pubblicazione ON pubblicazione.id_categoria_notizie = categorie_notizie.id '.
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_notizie = categorie_notizie.id '.
             'WHERE categorie_notizie.id_sito = ? '.
-            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) '.
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) ',
+            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
             array(
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),

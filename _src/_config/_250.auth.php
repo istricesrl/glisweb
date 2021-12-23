@@ -68,7 +68,10 @@
 	    'anagrafica' => array(
 		CONTROL_FULL => array( 'roots','staff' )
 	    ),
-	    'anagrafica_archiviati' => array(
+	    'anagrafica_attivi' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+			),
+			'anagrafica_archiviati' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
@@ -83,9 +86,6 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'anagrafica_clienti' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
 		'anagrafica_condizioni_pagamento' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
@@ -187,7 +187,7 @@
 		'progetti_certificazioni' => array(
             CONTROL_FULL => array( 'roots' )
         ),
-	    'pubblicazione' => array(
+	    'pubblicazioni' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 #	    'prezzi' => array(
@@ -208,11 +208,15 @@
 #	    'sms_sent' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'task' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
 	    'telefoni' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-	    'template_mail' => array(
+	    'template' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
 	    'test' => array(
@@ -224,10 +228,7 @@
 #	    'tipologie_attivita' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'tipologie_crm' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
-	    'tipologie_crm' => array(
+	    'ranking' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 		'todo' => array(

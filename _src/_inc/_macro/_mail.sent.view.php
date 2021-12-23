@@ -27,11 +27,11 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'data_ora_invio' => 'inviata il',
+	    'timestamp_invio' => 'inviata il',
 	    'destinatari' => 'destinatari',
 	    'destinatari_cc' => 'destinatari CC',
 	    'destinatari_bcc' => 'destinatari BCC',
-	    '__label__' => 'oggetto'
+	    'oggetto' => 'oggetto'
 	);
 
     // stili della vista
@@ -41,7 +41,7 @@
 	    'destinatari' => 'text-left',
 	    'destinatari_cc' => 'text-left',
 	    'destinatari_bcc' => 'text-left',
-	    '__label__' => 'text-left'
+	    'oggetto' => 'text-left'
 	);
 
     // macro di default
@@ -49,9 +49,13 @@
 
     // trasformazione indirizzi
 	foreach( $ct['view']['data'] as $key => &$row ) {
+        $row['timestamp_invio'] = date( 'Y-m-d H:i', $row['timestamp_invio']);
         foreach( $row as $k => $v ) {
             if( in_array( $k, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
                 $row[ $k ] = htmlentities( array2mailString( unserialize( $v ) ) );
             }
         }
 	}
+
+    // nascondere il button + per l'inserimento di una nuova riga
+    $ct['view']['insert']['path'] = NULL;

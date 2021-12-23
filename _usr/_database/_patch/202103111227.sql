@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS `documenti_anagrafica_view`;

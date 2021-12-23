@@ -39,11 +39,11 @@
     );
     
      // tendina crm
-	$ct['etc']['select']['tipologie_crm'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['ranking'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_crm_view'
+	    'SELECT id, __label__ FROM ranking_view'
 	);
 
     // tendina settori e attività

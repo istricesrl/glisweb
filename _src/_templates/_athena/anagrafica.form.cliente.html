@@ -51,7 +51,7 @@
 		<div class="form-group form-row">
 			<div class="col">
 				<span class="label-top">ranking</span>
-				{{ frm.select( table, '', '', 'id_tipologia_crm', '', etc.select.tipologie_crm, request ) }}
+				{{ frm.select( table, '', '', 'id_ranking', '', etc.select.ranking, request ) }}
 			</div>
 		    <div class="col">
 				<span class="label-top">agente</span>
@@ -65,20 +65,17 @@
 		
 		<div class="form-group form-row">
 			<div class="col">
+				<span class="label-top">condizioni di vendita</span>
+				{{ frm.textarea( table, '', '', 'condizioni_vendita', '', 3, request ) }}
+			</div>
+		</div>
+
+		<div class="form-group form-row">
+			<div class="col">
 				<span class="label-top">note commerciali</span>
 				{{ frm.textarea( table, '', '', 'note_commerciali', '', 3, request ) }}
 		    </div>
         </div>
-		
-		</fieldset>
-			<fieldset>
-			<legend>condizioni di vendita</legend>
-			<div class="form-group form-row">
-				<div class="col">
-					<span class="label-top">condizioni di vendita</span>
-					{{ frm.textarea( table, '', '', 'condizioni_vendita', 'descrizione delle condizioni di vendita applicate al cliente', 3, request, '', '', 'ckEditor', 200 ) }}
-				</div>
-			</div>
 
 		</fieldset>
 

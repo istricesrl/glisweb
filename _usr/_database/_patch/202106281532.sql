@@ -1,1 +1,0 @@
- ALTER TABLE `attivita` ADD `id_documenti_articoli` INT NULL DEFAULT NULL AFTER `token`, ADD INDEX (`id_documenti_articoli`) ;

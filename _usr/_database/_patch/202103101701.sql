@@ -1,1 +1,0 @@
-ALTER TABLE `pubblicazione` ADD `id_prodotto` CHAR(32) NULL DEFAULT NULL AFTER `id_categoria_prodotti`;

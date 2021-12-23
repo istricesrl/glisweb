@@ -79,6 +79,9 @@
 				    // localizzazione
 					mysqlQuery( $cn, 'SET lc_time_names = ?', array( array( 's' => str_replace( '-', '_', $cf['localization']['language']['ietf'] ) ) ) );
 
+					// modalità SQL
+					// mysqlQuery( $cn, 'SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,"ONLY_FULL_GROUP_BY",""));' );
+
 				    // log
 					logWrite( 'connessione stabilita: ' . $server, 'mysql' );
 					logWrite( 'dettagli: ' . mysqli_get_host_info( $cn ), 'mysql' );
@@ -97,6 +100,8 @@
 			    $cf['mysql']['connection'] = &$cf['mysql']['connections'][ $key ];
 			    $cf['mysql']['server'] = &$cf['mysql']['servers'][ $key ];
 			}
+
+			/*
 
 			// controllo livello di patch database
 			$cf['mysql']['profile']['patch']['current'] = readStringFromFile( FILE_MYSQL_PATCH );
@@ -140,6 +145,120 @@
 
 			// debug
 			// echo print_r( $cf['mysql']['profile']['patch']['list'], true );
+
+			*/
+
+			if( ! defined( 'CRON_RUNNING' ) &&  ! defined( 'JOB_RUNNING' ) ) {
+
+				$patchLevel = mysqlSelectValue(
+					$cf['mysql']['connection'],
+					'SELECT id FROM __patch__ ORDER BY id DESC LIMIT 1'
+				);
+	
+				if( empty( $patchLevel ) ) {
+	
+					mysqlQuery(
+						$cf['mysql']['connection'],
+						'CREATE TABLE IF NOT EXISTS `__patch__` ('.
+						'	`id` char(12) NOT NULL PRIMARY KEY,'.
+						'	`patch` text COLLATE utf8_unicode_ci,'.
+						'	`timestamp_esecuzione` int(11) DEFAULT NULL,'.
+						'	`note_esecuzione` text'.
+						'  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'
+					);
+	
+					$patchLevel = '000000000000';
+	
+				}
+	
+				$pFiles = glob( DIR_USR_DATABASE_PATCH . '_*.*.sql' );
+				sort( $pFiles );
+	
+				foreach( $pFiles as $pFile ) {
+	
+					$pFilePatchLevel = substr( basename( $pFile ), 1, 12 );
+	
+					// echo 'patch level del file ' . $pFilePatchLevel . HTML_EOL;
+					// echo 'patch level del database ' . $patchLevel . HTML_EOL;
+	
+					if( $pFilePatchLevel > $patchLevel ) {
+	
+						// echo 'prelevo le patch dal file ' . $pFilePatchLevel . HTML_EOL;
+	
+						$rows = readFromFile( $pFile );
+	
+						$pId = null;
+						$pQuery = null;
+			
+						foreach( $rows as $row ) {
+		
+							if( substr( trim( $row ), 0, 3 ) == '--|' ) {
+		
+								if( ! empty( trim( $pQuery ) ) ) {
+	
+									// echo 'eseguo la patch ' . $pId . PHP_EOL;
+	
+									if( $pId > $patchLevel ) {
+
+											$pEx = mysqlQuery(
+												$cf['mysql']['connection'],
+												$pQuery
+											);
+			
+											// echo 'scrivo la patch ' . $pId . HTML_EOL;
+			
+											$pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
+			
+											if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
+												// echo $pQuery . HTML_EOL;
+												// echo $pStatus . HTML_EOL;
+											}
+			
+											mysqlInsertRow(
+												$cf['mysql']['connection'],
+												array(
+													'id' => $pId,
+													'patch' => trim( $pQuery ),
+													'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() ),
+													'note_esecuzione' => ( ( empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) ? 'OK' : $pStatus )
+												),
+												'__patch__',
+												false
+											);
+		
+										} else {
+
+										//	echo 'patch ' . $pId . ' obsoleta rispetto a ' . $patchLevel. PHP_EOL;
+											
+										}
+
+								} else {
+
+								//	echo 'NON eseguo la patch ' . $pId . PHP_EOL;
+									
+								}
+		
+								$pId = substr( $row, 4, 12 );
+								$pQuery = null;
+	
+								// echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
+								
+							} elseif( substr( trim( $row ), 0, 2 ) !== '--' ) {
+		
+								$pQuery .= $row;
+	
+							}
+	
+						}
+		
+					}
+	
+				}
+
+			}
+
+			// debug
+			// die();
 
 		} else {
 

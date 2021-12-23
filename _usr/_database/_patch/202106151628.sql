@@ -1,1 +1,0 @@
-ALTER TABLE `contatti` ADD `id_campagna` INT NULL DEFAULT NULL AFTER `id_segnalatore`, ADD `note` TEXT NULL DEFAULT NULL AFTER `id_campagna`, ADD INDEX (`id_campagna`) ;

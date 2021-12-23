@@ -19,10 +19,10 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
 	    '__label__' => 'account',
-	    'utente' => 'anagrafica',
+	    'anagrafica' => 'anagrafica',
 	    'se_attivo' => 'attivo',
-	    'gruppi' 	=> 'gruppi',
-		'gruppi_attribuzione' => 'attribuzione automatica'
+	    'gruppi' 	=> 'gruppi'
+#		'gruppi_attribuzione' => 'attribuzione automatica'
 	);
 
     // stili della vista
@@ -39,5 +39,7 @@
 
     // trasformazione icona attivo/inattivo
 	foreach( $ct['view']['data'] as &$row ) {
-	    if( $row['se_attivo'] == 1 ) { $row['se_attivo'] = '<i class="fa fa-check"></i>'; }
+			if( $row['se_attivo'] == 1 ) { $row['se_attivo'] = '<i class="fa fa-check"></i>'; }
 	}
+	
+

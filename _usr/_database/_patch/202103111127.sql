@@ -1,1 +1,0 @@
-ALTER TABLE `video` DROP FOREIGN KEY `video_ibfk_13`;

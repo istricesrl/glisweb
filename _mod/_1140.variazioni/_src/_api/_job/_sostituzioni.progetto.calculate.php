@@ -22,7 +22,7 @@
         if( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
 
             // status
-            $status['info'][] = 'iterazione a vuoto su job già completato';
+            $status['info'][] = 'iterazione a vuoto su job completato';
 
         } 
         elseif( !isset( $job['workspace']['id_progetto'] ) ){

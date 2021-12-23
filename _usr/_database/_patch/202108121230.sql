@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD `id_account_feedback` INT NULL DEFAULT NULL AFTER `id_tipologia_soddisfazione`, ADD INDEX (`id_account_feedback`) ;

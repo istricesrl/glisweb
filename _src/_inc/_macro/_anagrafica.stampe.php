@@ -39,7 +39,7 @@
 		'icon' => NULL,
 		'fa' => 'fa-file-pdf-o',
 		'title' => 'etichette cartelle sospese',
-		'text' => 'stampa i trafiletti delle anagrafiche'
+		'text' => 'stampa le costine per le cartelle sospese'
 	    );
 
 

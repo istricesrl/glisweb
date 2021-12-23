@@ -1,1 +1,0 @@
-ALTER TABLE `pubblicazione` ADD CONSTRAINT `pubblicazione_ibfk_10` FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

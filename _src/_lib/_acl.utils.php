@@ -249,18 +249,21 @@
 			// valuto la riga
 				$r = mysqlSelectValue(
 				    $c,
-				# CONSIDERA EDITOR   "SELECT concat_ws( ',', group_concat( ${aclTb}.permesso SEPARATOR ',' ), if( ( ${t}_view.id_account_inserimento = ? OR ${t}_view.id_account_editor = ? ), 'FULL', NULL ) ) AS t ".
-				"SELECT concat_ws( ',', group_concat( ${aclTb}.permesso SEPARATOR ',' ), if( ( ${t}_view.id_account_inserimento = ? ), 'FULL', NULL ) ) AS t ".
+# NON CONSIDERA EDITOR
+					"SELECT concat_ws( ',', group_concat( ${aclTb}.permesso SEPARATOR ',' ), if( ( ${t}_view.id_account_inserimento = ? ), 'FULL', NULL ) ) AS t ".
+
+# CONSIDERA EDITOR				    "SELECT concat_ws( ',', group_concat( ${aclTb}.permesso SEPARATOR ',' ), if( ( ${t}_view.id_account_inserimento = ? OR ${t}_view.id_account_editor = ? ), 'FULL', NULL ) ) AS t ".
 				    "FROM ${t}_view ".
 				    "LEFT JOIN ${aclTb} ON ${aclTb}.id_entita = ${t}_view.id ".
 # NON GERARCHICO		    "LEFT JOIN account_gruppi ON account_gruppi.id_gruppo = ${aclTb}.id_gruppo ".
 				    "LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) ) ".
-
+# NON CONSIDERA EDITOR
 		    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? ) ".
-#	CONSIDERA EDITOR			    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? OR ${t}_view.id_account_editor = ? ) ".
+# CONSIDERA EDITOR				    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? OR ${t}_view.id_account_editor = ? ) ".
 				    "AND ${t}_view.id = ? ",
-array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )
-#	CONSIDERA EDITOR	array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )
+# NON CONSIDERA EDITOR
+		    array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )
+# CONSIDERA EDITOR				    array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )
 				);
 
 
@@ -363,14 +366,22 @@ array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), a
 
 	// verifico se l'utente non è root
 	    if( $_SESSION['account']['username'] == 'root' || in_array( 'roots', $_SESSION['account']['gruppi'] ) ) {
+
+			// log
+			logWrite( 'accesso root concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') per ' . $t, 'auth', LOG_DEBUG );
+
 			// default
 			return NULL;
-		}
-		elseif( in_array( CONTROL_FULL, $_SESSION['account']['permissions'][ $t ] ) ){
-			return NULL;
 
-		}
-		else{
+		} elseif( in_array( CONTROL_FULL, $_SESSION['account']['permissions'][ $t ] ) ) {
+
+			// log
+			logWrite( 'accesso FULL concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') per ' . $t, 'auth', LOG_DEBUG );
+
+			// default
+			return NULL;
+			
+		} else {
 
 		// verifico se esiste la tabella $t_gruppi
 #		    $r = mysqlSelectCachedValue(

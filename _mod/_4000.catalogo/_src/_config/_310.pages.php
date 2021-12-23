@@ -22,7 +22,7 @@
 if ($cf['contents']['cached'] === false) {
 
     // log
-    if (!empty($cf['memcache']['connection'])) {
+    if( ! empty( $cf['memcache']['connection'] ) ) {
         logWrite('struttura delle categorie catalogo NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
     }
 
@@ -30,10 +30,10 @@ if ($cf['contents']['cached'] === false) {
     $pgs = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT categorie_prodotti.* FROM categorie_prodotti ' .
-            'INNER JOIN pubblicazione ON pubblicazione.id_categoria_prodotti = categorie_prodotti.id ' .
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_prodotti = categorie_prodotti.id ' .
             'WHERE categorie_prodotti.id_sito = ? ' .
-            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) ' .
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) ' .
+            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ' .
             'GROUP BY categorie_prodotti.id ',
         array(
             array('s' => SITE_CURRENT),
@@ -151,10 +151,10 @@ if ($cf['contents']['cached'] === false) {
     $cf['contents']['updated'] = mysqlSelectValue(
         $cf['mysql']['connection'],
         'SELECT max( categorie_prodotti.timestamp_aggiornamento ) AS updated FROM categorie_prodotti ' .
-            'INNER JOIN pubblicazione ON pubblicazione.id_categoria_prodotti = categorie_prodotti.id ' .
+            'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_prodotti = categorie_prodotti.id ' .
             'WHERE categorie_prodotti.id_sito = ? ' .
-            'AND ( pubblicazione.timestamp_pubblicazione IS NULL OR pubblicazione.timestamp_pubblicazione < ? ) ' .
-            'AND ( pubblicazione.timestamp_archiviazione IS NULL OR pubblicazione.timestamp_archiviazione > ? ) ',
+            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
         array(
             array('s' => SITE_CURRENT),
             array('s' => time()),

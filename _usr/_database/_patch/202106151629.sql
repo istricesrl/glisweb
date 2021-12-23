@@ -1,1 +1,0 @@
-ALTER TABLE `contatti` ADD CONSTRAINT `contatti_ibfk_6` FOREIGN KEY (`id_campagna`) REFERENCES `campagne`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

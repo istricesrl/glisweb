@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` CHANGE `id_account_feedback` `id_anagrafica_feedback` INT(11) NULL DEFAULT NULL;

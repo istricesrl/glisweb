@@ -43,8 +43,8 @@
 		'url' => $file.'?id='.$_REQUEST[ $ct['form']['table'] ]['id'] ,
 		'icon' => NULL,
 		'fa' => 'fa-file-pdf-o',
-		'title' => 'etichette cartelle sospese',
-		'text' => 'stampa i trafiletti delle anagrafiche'
+		'title' => 'etichetta cartella sospesa',
+		'text' => 'stampa la costina per la cartella sospesa'
 	    );
 
     // macro di default per l'entità anagrafica

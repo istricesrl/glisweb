@@ -1,1 +1,0 @@
-ALTER TABLE `categorie_notizie` ADD INDEX `id_sito` (`id_sito`);

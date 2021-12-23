@@ -1,1 +1,0 @@
-ALTER TABLE `documenti` ADD CONSTRAINT `documenti_ibfk_10_nofollow` FOREIGN KEY (`coupon`) REFERENCES `coupon`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

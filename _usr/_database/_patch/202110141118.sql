@@ -1,1 +1,0 @@
-ALTER TABLE `categorie_notizie` DROP `id_tipologia_pubblicazione`;

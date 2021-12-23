@@ -10,7 +10,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'template_mail';
+    $ct['form']['table'] = 'template';
     
     // sotto tabella gestita
     $ct['form']['subtable'] = 'contenuti';

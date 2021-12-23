@@ -189,8 +189,8 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 		#1		    .'INNER JOIN prodotti_categorie ON ( prodotti_categorie.id_prodotto = prodotti.id AND prodotti_categorie.id_categoria = ? ) '
 		. 'INNER JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id '
 		. 'INNER JOIN contenuti ON ( contenuti.id_prodotto = prodotti.id AND contenuti.id_lingua = ? ) '
-		. 'INNER JOIN pubblicazione ON pubblicazione.id_prodotto = prodotti.id '
-		. 'INNER JOIN tipologie_pubblicazione ON tipologie_pubblicazione.id = pubblicazione.id_tipologia '
+		. 'INNER JOIN pubblicazioni ON pubblicazioni.id_prodotto = prodotti.id '
+		. 'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia '
 		#2		    TODO il fatto che siano o meno ammissibili prodotti senza prezzo dovrebbe essere un'opzione
 		#2		    .'INNER JOIN prezzi ON prezzi.id_prodotto = prodotti.id '
 		#2		    .'INNER JOIN iva ON iva.id = prezzi.id_iva '
@@ -201,7 +201,7 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 		. 'LEFT JOIN metadati AS mPiuVenduti ON ( mPiuVenduti.id_prodotto = prodotti.id AND mPiuVenduti.nome = "piu_venduti" ) '
 		. 'LEFT JOIN marchi ON (prodotti.id_marchio = marchi.id ) '		// SDF
 		. 'LEFT JOIN articoli ON prodotti.id = articoli.id_prodotto '		// SDF
-		. 'WHERE categorie_prodotti_path_check( prodotti_categorie.id_categoria, ? ) = 1 AND tipologie_pubblicazione.se_pubblicato = 1 '
+		. 'WHERE categorie_prodotti_path_check( prodotti_categorie.id_categoria, ? ) = 1 AND tipologie_pubblicazioni.se_pubblicato = 1 '
 		#	.'AND (SELECT count(*) FROM immagini where id_articolo IN (SELECT articoli.id FROM articoli WHERE id_prodotto = prodotti.id)) '		// SDF
 		//	.'AND ( (SELECT count(*) FROM immagini where id_articolo IN (SELECT articoli.id FROM articoli WHERE id_prodotto = prodotti.id)) '		// SDF
 		//	.'OR ( SELECT count(*) FROM immagini where id_prodotto = prodotti.id ) ) '		// SDF
@@ -216,7 +216,7 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 		. 'FROM prodotti '
 		. 'INNER JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id '
 		. 'INNER JOIN contenuti ON ( contenuti.id_prodotto = prodotti.id AND contenuti.id_lingua = ? ) '
-		. 'INNER JOIN tipologie_pubblicazione ON tipologie_pubblicazione.id = prodotti.id_tipologia_pubblicazione '
+#		. 'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = prodotti.id_tipologia_pubblicazione '
 		. 'LEFT JOIN prezzi ON prezzi.id_prodotto = prodotti.id '
 		. 'LEFT JOIN iva ON iva.id = prezzi.id_iva '
 		. 'LEFT JOIN immagini ON ( immagini.id_prodotto = prodotti.id AND immagini.id_ruolo = 4 ) '
@@ -224,7 +224,8 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 		. 'LEFT JOIN metadati AS mPiuVenduti ON ( mPiuVenduti.id_prodotto = prodotti.id AND mPiuVenduti.nome = "piu_venduti" ) '
 		. 'LEFT JOIN marchi ON (prodotti.id_marchio = marchi.id ) '		// SDF
 		. 'LEFT JOIN articoli ON prodotti.id = articoli.id_prodotto '		// SDF
-		. 'WHERE categorie_prodotti_path_check( prodotti_categorie.id_categoria, ? ) = 1 AND tipologie_pubblicazione.se_pubblicato = 1 '
+		. 'WHERE categorie_prodotti_path_check( prodotti_categorie.id_categoria, ? ) = 1 '
+		#	.'AND tipologie_pubblicazioni.se_pubblicato = 1 '
 		#	.'AND (SELECT count(*) FROM immagini where id_articolo IN (SELECT articoli.id FROM articoli WHERE id_prodotto = prodotti.id)) '		// SDF
 		//	.'AND ( (SELECT count(*) FROM immagini where id_articolo IN (SELECT articoli.id FROM articoli WHERE id_prodotto = prodotti.id)) '		// SDF
 		//	.'OR ( SELECT count(*) FROM immagini where id_prodotto = prodotti.id ) ) '		// SDF
@@ -311,7 +312,8 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 	$ct['etc']['categorie'] = mysqlQuery(
 		$cf['mysql']['connection'],
 		'SELECT id, nome FROM categorie_prodotti '
-			. 'WHERE (id = ? OR id_genitore = ?) AND id_tipologia_pubblicazione = 2 ORDER BY categorie_prodotti.nome',
+#			. 'WHERE (id = ? OR id_genitore = ?) AND id_tipologia_pubblicazione = 2 ORDER BY categorie_prodotti.nome',
+			. 'WHERE (id = ? OR id_genitore = ?) ORDER BY categorie_prodotti.nome',
 		array(
 			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti']),
 			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti'])

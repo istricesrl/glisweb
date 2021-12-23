@@ -1,1 +1,0 @@
-ALTER TABLE `attivita_view_static` ADD `id_account_inserimento` int(11) NULL;

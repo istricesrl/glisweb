@@ -54,12 +54,13 @@
     
         switch( $t ) {
             case 'immagini':
-                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
+#                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
+                $tc = 'immagini.orientamento, immagini.taglio, immagini.path_alternativo FROM immagini ';
                 $tf = 'id_immagine';
                 $tk = 'images';
             break;
             case 'video':
-                $tc = 'video.id_tipologia_embed, video.codice_embed FROM video ';
+                $tc = 'video.id_embed, video.codice_embed FROM video ';
                 $tf = 'id_video';
                 $tk = 'video';
             break;
@@ -123,14 +124,14 @@
                         'path_alternativo'  => ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ),
                     #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),     // commentata questa riga, sostituita con la seguente
                         'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path_alternativo'] ) : array( $cn['main_ietf'] => findFileType( $cn['path_alternativo'] ) ),      // vedere issue #419
-                        'orientamento'      => $cn['orientamento'],
-                        'anno'              => $cn['anno']
+                        'orientamento'      => $cn['orientamento']
+                     #   'anno'              => $cn['anno']
                     ) );
                 break;
                 case 'video':
                     $im = array_replace_recursive( $im, array(
                     'codice_embed'            => $cn['codice_embed'],
-                    'id_tipologia_embed'      => $cn['id_tipologia_embed']
+                    'id_embed'              => $cn['id_embed']
                     ) );
                 break;
             }

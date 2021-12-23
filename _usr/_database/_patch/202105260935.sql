@@ -1,1 +1,0 @@
-ALTER TABLE `pianificazioni` ADD `se_fermare` INT(1) NULL DEFAULT NULL AFTER `se_ripopolare`, ADD KEY `se_fermare` (`se_fermare`) ;

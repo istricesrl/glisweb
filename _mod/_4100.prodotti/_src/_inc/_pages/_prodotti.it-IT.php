@@ -246,7 +246,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'articoli.form',
-     //                                               'articoli.form.pubblicazione',
+     //                                               'articoli.form.pubblicazioni',
 													'articoli.form.caratteristiche',
 													'articoli.form.sem',
 													'articoli.form.testo',
@@ -262,14 +262,14 @@
 
 
 /*
-	// gestione articoli pubblicazione
-	$p['articoli.form.pubblicazione'] = array(
+	// gestione articoli pubblicazioni
+	$p['articoli.form.pubblicazioni'] = array(
 		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'pubblicazione' ),
-		'h1'		=> array( $l		=> 'pubblicazione' ),
+		'title'		=> array( $l		=> 'pubblicazioni' ),
+		'h1'		=> array( $l		=> 'pubblicazioni' ),
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.pubblicazione.html' ),
-		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.pubblicazione.php' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.pubblicazioni.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.pubblicazioni.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);

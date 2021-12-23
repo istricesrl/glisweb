@@ -1,0 +1,60 @@
+/*!
+
+    \page database_g database del framework, tabelle con la lettera G
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera G.
+
+    le tabelle del database di supporto GA - GZ
+    ===========================================
+    
+    gruppi
+    ------
+    Questa tabella *assistita* contiene i gruppi presenti nel deploy corrente.
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    gruppi.id                           | l'ID del gruppo
+    gruppi.id_genitore                  | l'ID del gruppo genitore
+    gruppi.id_organizzazione            | l'ID del nodo di organizzazione associato al gruppo
+    gruppi.nome                         | il nome del gruppo
+    gruppi.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    gruppi.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    gruppi.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    gruppi.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
+    
+    Per inserire rapidamente un gruppo si può utilizzare il seguente codice SQL sostituendo <nome> con il valore desiderato:
+
+    \code{.sql}
+    INSERT INTO `gruppi` (`id`, `nome`) VALUES (NULL, '<nome>');
+    \endcode
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                      | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------|-------------------------------|-------------------------------|-------------------------
+    gruppi_ibfk_01_nofollow     | id_genitore                   | gruppi.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    gruppi_ibfk_02              | id_organizzazione             | organizzazioni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    gruppi_ibfk_98_nofollow     | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    gruppi_ibfk_99_nofollow     | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    Alla tabella *gruppi* sono collegate le seguenti procedure:
+
+    procedura                       | note
+    --------------------------------|---------------------------------------------------------
+    gruppi_path                     | costruisce il percorso di un dato gruppo
+    gruppi_path_check               | verifica se un gruppo si trova fra gli antenati di un'altro
+    gruppi_path_find_ancestor       | trova l'ID del gruppo radice del percorso di un dato gruppo
+
+    La vista *gruppi_view* relativa alla tabella *gruppi* presenta le seguenti colonne:
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    gruppi_view.id                          | -
+    gruppi_view.id_genitore                 | -
+    gruppi_view.id_organizzazione           | -
+    gruppi_view.nome                        | -
+    gruppi_view.id_account_inserimento      | -
+    gruppi_view.id_account_aggiornamento    | -
+    gruppi_view.__label__                   | etichetta descrittiva del gruppo
+
+*/

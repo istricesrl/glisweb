@@ -17,7 +17,8 @@
      */
 
     // NOTA per convenzione passare sempre al template mail le seguenti chiavi 'ct' => $ct e 'dt' => <datiDellaMail>
-    // array del template mail di default
+
+	// array del template mail di default
 	$cf['mail']['tpl']['DEFAULT'] = array(
 	    'type' => 'twig',
 	    'it-IT' => array(
@@ -26,8 +27,8 @@
 			'testo' => 'template di default'
 	    )
 	);
-	
-    // array dei template mail di test
+
+	// array dei template mail di test
 	$cf['mail']['tpl']['MAIL_TEST_TEMPLATE'] = array(
 	    'type' => 'twig',
 	    'it-IT' => array(

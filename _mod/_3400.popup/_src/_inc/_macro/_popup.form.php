@@ -14,12 +14,12 @@
     // tabella gestita
     $ct['form']['table'] = 'popup';
 
-    // tendina tipologie pubblicazione
-	$ct['etc']['select']['tipologie_pubblicazione'] = mysqlCachedIndexedQuery(
+    // tendina tipologie pubblicazioni
+	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_pubblicazione_view'
+	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
 	);
 
     // tendina tipologie popup

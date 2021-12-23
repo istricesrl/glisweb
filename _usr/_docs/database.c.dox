@@ -1,0 +1,820 @@
+/*!
+
+    \page database_c database del framework, tabelle con la lettera C
+
+    Dettagli delle tabelle del database del framework che iniziano con la lettera C.
+
+    le tabelle del database di supporto CA - CZ
+    ===========================================
+
+    caratteristiche_prodotti
+    ------------------------
+    Questa tabella *gestita* descrive le caratteristiche relative ai prodotti, agli articoli e alle categorie di prodotti; è messa in relazione molti a molti
+    con l'entità principale *articoli* dalla tabella di associazione *articoli_caratteristiche*, all'entità principale *prodotti* tramite la tabella di
+    associazione *prodotti_caratteristiche*, e all'entità principale *categorie_prodotti* dalla tabella di associazione *categorie_prodotti_caratteristiche*.
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    caratteristiche_prodotti.id                         | l'ID delle caratteristiche prodotti
+    caratteristiche_prodotti.nome                       | il nome della caratteristica
+    caratteristiche_prodotti.html_entity                | -
+    caratteristiche_prodotti.font_awesome               | -
+    caratteristiche_prodotti.se_categoria               | flag che indica se la caratteristica si applica alle categorie di prodotti
+    caratteristiche_prodotti.se_prodotto                | flag che indica se la caratteristica si applica ai prodotti
+    caratteristiche_prodotti.se_articolo                | flag che indica se la caratteristica si applica agli articoli
+    caratteristiche_prodotti.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    caratteristiche_prodotti.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    caratteristiche_prodotti.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    caratteristiche_prodotti.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+
+    I flag *se_categoria*, *se_prodotto* e *se_articolo* definiscono il contesto a cui la caratteristica è applicabile.  La tabella ha le seguenti chiavi esterne:
+
+    chiave                                          | campo                         | tabella e campo collegati                 | comportamento
+    ------------------------------------------------|-------------------------------|-------------------------------------------|----------
+    caratteristiche_prodotti_ibfk_98_nofollow       | id_account_inserimento        | account.id                                | ON DELETE SET NULL ON UPDATE SET NULL
+    caratteristiche_prodotti_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                                | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *caratteristiche_prodotti_view* relativa alla tabella *caratteristiche_prodotti* presenta le seguenti colonne:
+
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    caratteristiche_prodotti_view.id                        | -
+    caratteristiche_prodotti_view.nome                      | -
+    caratteristiche_prodotti_view.html_entity               | -
+    caratteristiche_prodotti_view.font_awesome              | -
+    caratteristiche_prodotti_view.se_categoria              | -
+    caratteristiche_prodotti_view.se_prodotto               | -
+    caratteristiche_prodotti_view.se_articolo               | -
+    caratteristiche_prodotti_view.id_account_inserimento    | -
+    caratteristiche_prodotti_view.id_account_aggiornamento  | -
+    caratteristiche_prodotti_view.__label__                 | l'etichetta descrittiva della caratteristica
+   
+    categorie_anagrafica
+    --------------------
+    Questa tabella *assistita* contiene le categorie applicabili ai contatti anagrafici; è essenzialmente un collettore di flag che definiscono i vari
+    ambiti in cui i contatti sono rilevanti. Il suo funzionamento è strettamente legato alla vista *anagrafica_view*. Le categorie anagrafiche sono organizzate
+    in un albero tramite il campo *id_genitore*.
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_anagrafica.id                                | l'ID della categorie anagrafica
+    categorie_anagrafica.id_genitore                       | l'ID della categoria genitore
+    categorie_anagrafica.ordine                            | campo di ordinamento
+    categorie_anagrafica.nome                              | il nome della categoria
+    categorie_anagrafica.se_prospect                       | -
+    categorie_anagrafica.se_lead                           | -
+    categorie_anagrafica.se_cliente                        | -
+    categorie_anagrafica.se_fornitore                      | -
+    categorie_anagrafica.se_produttore                     | -
+    categorie_anagrafica.se_collaboratore                  | -
+    categorie_anagrafica.se_interno                        | -
+    categorie_anagrafica.se_esterno                        | -
+    categorie_anagrafica.se_agente                         | -
+    categorie_anagrafica.se_concorrente                    | -
+    categorie_anagrafica.se_azienda_gestita                | -
+    categorie_anagrafica.se_amministrazione                | -
+    categorie_anagrafica.se_notizie                        | -
+    categorie_anagrafica.id_account_inserimento            | l'ID dell'account che ha inserito la riga
+    categorie_anagrafica.timestamp_inserimento             | la timestamp dell'inserimento della riga
+    categorie_anagrafica.id_account_aggiornamento          | l'ID dell'ultimo account che ha modificato la riga
+    categorie_anagrafica.timestamp_aggiornamento           | la timestamp dell'ultimo aggiornamento della riga
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    categorie_anagrafica_ibfk_01_nofollow       | id_genitore                   | categorie_anagrafica.id       | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_anagrafica_ibfk_98_nofollow       | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_anagrafica_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    Alla tabella *categorie_anagrafica* sono collegate le seguenti procedure:
+
+    procedura                                   | note
+    --------------------------------------------|---------------------------------------------------------
+    categorie_anagrafica_path                   | costruisce il percorso di una data categoria
+    categorie_anagrafica_path_check             | verifica se una categoria si trova fra gli antenati di un'altra
+    categorie_anagrafica_path_find_ancestor     | trova l'ID della categoria radice del percorso di una data categoria
+
+    La vista *categorie_anagrafica_view* relativa alla tabella *categorie_anagrafica* presenta le seguenti colonne:
+    
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_anagrafica_view.id                            | -
+    categorie_anagrafica_view.id_genitore                   | -
+    categorie_anagrafica_view.ordine                        | -
+    categorie_anagrafica_view.nome                          | -
+    categorie_anagrafica_view.se_prospect                   | -
+    categorie_anagrafica_view.se_lead                       | -
+    categorie_anagrafica_view.se_cliente                    | -
+    categorie_anagrafica_view.se_fornitore                  | -
+    categorie_anagrafica_view.se_produttore                 | -
+    categorie_anagrafica_view.se_collaboratore              | -
+    categorie_anagrafica_view.se_interno                    | -
+    categorie_anagrafica_view.se_esterno                    | -
+    categorie_anagrafica_view.se_agente                     | -
+    categorie_anagrafica_view.se_concorrente                | -
+    categorie_anagrafica_view.se_azienda_gestita            | -
+    categorie_anagrafica_view.se_amministrazione            | -
+    categorie_anagrafica_view.se_notizie                    | -
+    categorie_anagrafica_view.figli                         | il numero di categorie figlie di questa categoria
+    categorie_anagrafica_view.membri                        | il numero di anagrafiche collegate a questa categoria
+    categorie_anagrafica_view.id_account_inserimento        | -
+    categorie_anagrafica_view.id_account_aggiornamento      | -
+    categorie_anagrafica_view.__label__                     | l'etichetta descrittiva della categoria
+
+    categorie_notizie
+    -----------------
+    Questa tabella *gestita* contiene le categorie delle notizie, organizzate ad albero tramite il campo *id_genitore*.
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_notizie.id                                | l'ID della categoria di notizie
+    categorie_notizie.id_genitore                       | l'ID della categoria genitore
+    categorie_notizie.ordine                            | campo di ordinamento
+    categorie_notizie.nome                              | il nome della categoria
+    categorie_notizie.template                          | il template da applicare alla categoria per la pubblicazione sul web
+    categorie_notizie.schema_html                       | lo schema da applicare alla categoria per la pubblicazione sul web
+    categorie_notizie.tema_css                          | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_notizie.id_sito                           | il codice identificativo del sito in cui la categoria è pubblicata, attualmente non è un vincolo  
+    categorie_notizie.id_pagina                         | l'ID della pagina genitore della categoria per la pubblicazione sul web
+    categorie_notizie.id_account_inserimento            | l'ID dell'account che ha inserito la riga
+    categorie_notizie.timestamp_inserimento             | la timestamp dell'inserimento della riga
+    categorie_notizie.id_account_aggiornamento          | l'ID dell'ultimo account che ha modificato la riga
+    categorie_notizie.timestamp_aggiornamento           | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    categorie_notizie_ibfk_01_nofollow          | id_genitore                   | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_notizie_ibfk_02_nofollow          | id_pagina                     | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_notizie_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_notizie_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *categorie_notizie_view* relativa alla tabella *categorie_notizie* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_notizie_view.id                              | -
+    categorie_notizie_view.id_genitore                     | -
+    categorie_notizie_view.ordine                          | -
+    categorie_notizie_view.nome                            | -
+    categorie_notizie_view.template                        | -
+    categorie_notizie_view.schema_html                     | -
+    categorie_notizie_view.tema_css                        | -
+    categorie_notizie_view.id_pagina                       | -
+    categorie_notizie_view.figli                           | il numero di categorie figlie di questa categoria
+    categorie_notizie_view.membri                          | il numero di eventi collegati a questa categoria
+    categorie_notizie_view.id_account_inserimento          | -
+    categorie_notizie_view.id_account_aggiornamento        | -
+    categorie_notizie_view.__label__                       | l'etichetta descrittiva della categoria
+
+    categorie_prodotti
+    ------------------
+    Questa tabella *gestita* contiene le categorie dei prodotti, organizzate ad albero tramite il campo *id_genitore*.
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_prodotti.id                               | l'ID della categoria di notizie
+    categorie_prodotti.id_genitore                      | l'ID della categoria genitore
+    categorie_prodotti.ordine                           | campo di ordinamento
+    categorie_prodotti.nome                             | il nome della categoria
+    categorie_prodotti.template                         | il template da applicare alla categoria per la pubblicazione sul web
+    categorie_prodotti.schema_html                      | lo schema da applicare alla categoria per la pubblicazione sul web
+    categorie_prodotti.tema_css                         | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_prodotti.id_sito                          | il codice identificativo del sito in cui la categoria è pubblicata, attualmente non è un vincolo
+    categorie_prodotti.id_pagina                        | l'ID della pagina genitore della categoria per la pubblicazione sul web
+    categorie_prodotti.id_account_inserimento           | l'ID dell'account che ha inserito la riga
+    categorie_prodotti.timestamp_inserimento            | la timestamp dell'inserimento della riga
+    categorie_prodotti.id_account_aggiornamento         | l'ID dell'ultimo account che ha modificato la riga
+    categorie_prodotti.timestamp_aggiornamento          | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    categorie_prodotti_ibfk_01_nofollow         | id_genitore                   | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_prodotti_ibfk_02_nofollow         | id_pagina                     | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_prodotti_ibfk_98_nofollow         | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_prodotti_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *categorie_prodotti_view* relativa alla tabella *categorie_prodotti* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_prodotti_view.id                             | -
+    categorie_prodotti_view.id_genitore                    | -
+    categorie_prodotti_view.ordine                         | -
+    categorie_prodotti_view.nome                           | -
+    categorie_prodotti_view.template                       | -
+    categorie_prodotti_view.schema_html                    | -
+    categorie_prodotti_view.tema_css                       | -
+    categorie_prodotti_view.id_pagina                      | -
+    categorie_prodotti_view.figli                          | il numero di categorie figlie di questa categoria
+    categorie_prodotti_view.membri                         | il numero di eventi collegati a questa categoria
+    categorie_prodotti_view.id_account_inserimento         | -
+    categorie_prodotti_view.id_account_aggiornamento       | -
+    categorie_prodotti_view.__label__                      | l'etichetta descrittiva della categoria
+
+    categorie_progetti
+    ------------------
+    Questa tabella *gestita* contiene le categorie dei progetti, organizzate ad albero tramite il campo *id_genitore*
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_progetti.id                           | l'ID della categoria di progetti
+    categorie_progetti.id_genitore                  | l'ID della categoria genitore
+    categorie_progetti.ordine                       | campo di ordinamento
+    categorie_progetti.nome                         | il nome della categoria
+    categorie_progetti.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    categorie_progetti.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    categorie_progetti.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    categorie_progetti.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------------------|-------------------------------|-----------------------------------|------------------
+    categorie_progetti_ibfk_01_nofollow         | id_genitore                   | categorie_progetti.id             | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_progetti_ibfk_98_nofollow         | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_progetti_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *categorie_progetti_view* relativa alla tabella *categorie_progetti* presenta le seguenti colonne:
+
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_progetti_view.id                              | -
+    categorie_progetti_view.id_genitore                     | -
+    categorie_progetti_view.ordine                          | -
+    categorie_progetti_view.nome                            | -
+    categorie_progetti_view.figli                           | il numero di categorie figlie di questa categoria
+    categorie_progetti_view.membri                          | il numero di eventi collegati a questa categoria
+    categorie_progetti_view.id_account_inserimento          | -
+    categorie_progetti_view.id_account_aggiornamento        | -
+    categorie_progetti_view.__label__                       | l'etichetta descrittiva della categoria
+
+    categorie_risorse
+    -----------------
+    Questa tabella *gestita* descrive le categorie delle risorse, organizzate ad albero tramite il campo *id_genitore*.
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_risorse.id                            | l'ID della categoria di risorse
+    categorie_risorse.id_genitore                   | l'ID della categoria genitore
+    categorie_risorse.ordine                        | campo di ordinamento
+    categorie_risorse.nome                          | il nome della categoria
+    categorie_risorse.template                      | il template da applicare alla categoria per la pubblicazione sul web
+    categorie_risorse.schema_html                   | lo schema da applicare alla categoria per la pubblicazione sul web
+    categorie_risorse.tema_css                      | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_risorse.id_pagina                     | l'ID della pagina genitore della categoria per la pubblicazione sul web
+    categorie_risorse.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    categorie_risorse.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    categorie_risorse.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    categorie_risorse.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    categorie_risorse_ibfk_01_nofollow          | id_genitore                   | categorie_risorse.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_risorse_ibfk_02_nofollow          | id_pagina                     | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_risorse_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_risorse_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *categorie_risorse_view* relativa alla tabella *categorie_risorse* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_risorse_view.id                              | -
+    categorie_risorse_view.id_genitore                     | -
+    categorie_risorse_view.ordine                          | -
+    categorie_risorse_view.nome                            | -
+    categorie_risorse_view.figli                           | il numero di categorie figlie di questa categoria
+    categorie_risorse_view.membri                          | il numero di eventi collegati a questa categoria
+    categorie_risorse_view.id_account_inserimento          | -
+    categorie_risorse_view.id_account_aggiornamento        | -
+    categorie_risorse_view.__label__                       | l'etichetta descrittiva della categoria
+ 
+    chiavi
+    ------
+    Questa tabella *gestita* contiene l'entità principale *chiavi*, che rappresenta le chiavi dei software
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    chiavi.id                              | l'ID della chiave
+    chiavi.id_licenza                      | l'ID della licenza a cui la chiave fa riferimento
+    chiavi.id_tipologia                    | l'ID della tipologia della chiave
+    chiavi.codice                          | il codice della chiave
+    chiavi.seriale                         | il seriale legato alla chiave 
+    chiavi.nome                            | il nome descrittivo della chiave
+    chiavi.id_account_inserimento          | l'ID dell'account che ha inserito la riga
+    chiavi.timestamp_inserimento           | la timestamp dell'inserimento della riga
+    chiavi.id_account_aggiornamento        | l'ID dell'ultimo account che ha modificato la riga
+    chiavi.timestamp_aggiornamento         | la timestamp dell'ultimo aggiornamento della riga
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                            | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------|-------------------------------|-------------------------------|----------------------
+    chiavi_ibfk_01_nofollow           | id_licenza                    | licenze.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    chiavi_ibfk_02_nofollow           | id_tipologia                  | tipologie_chiavi              | ON DELETE NO ACTION ON UPDATE NO ACTION
+    chiavi_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    chiavi_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *chiavi_view* relativa alla tabella *chiavi* presenta le seguenti colonne:
+
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    chiavi_view.id                            | -
+    chiavi_view.id_licenza                    | -
+    chiavi_view.licenza                       | la licenza a cui la chiave fa riferimento del contatto
+    chiavi.id_tipologia                       | -
+    chiavi.tipologia                          | la tipologia della chiave
+    chiavi_view.codice                        | -
+    chiavi_view.seriale                       | -
+    chiavi_view.nome                          | -
+    chiavi_view.id_account_inserimento        | -
+    chiavi_view.id_account_aggiornamento      | -
+    chiavi_view.__label__                     | l'etichetta descrittiva della chiave
+
+    colori
+    ------
+    Questa tabella *standard* descrive i colori secondo varie codifiche (RGB, esadecimale); i colori sono organizzati
+    ad albero per facilitare le ricerche per colore nei siti.
+
+    colonna               | descrizione
+    ----------------------|----------------------------------------------------------------------------------------------------------------------
+    colori.id             | l'ID del colore
+    colori.id_genitore    | l'ID del colore genitore
+    colori.nome           | il nome del colore
+    colori.hex            | il codice esadecimale del colore
+    colori.r              | la componente rossa del colore codificato in RGB
+    colori.g              | la componente gialla del colore codificato in RGB
+    colori.b              | la componente blu del colore codificato in RGB
+    colori.ral            | il codice RAL del colore
+    colori.pantone        | il codice Pantone del colore
+    colori.c              | la componente ciano del colore codificato in CMYK
+    colori.m              | la componente magenta del colore codificato in CMYK
+    colori.y              | la componente gialla del colore codificato in CMYK
+    colori.k              | la componente nera del colore codificato in CMYK
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|----------------------
+    colori_ibfk_01_nofollow             | id_genitore               | colori.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *colori_view* relativa alla tabella *colori* presenta le seguenti colonne:
+
+    colonna                     | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+    colori_view.id              | -
+    colori_view.id_genitore     | -
+    colori_view.nome            | -
+    colori_view.hex             | -
+    colori_view.r               | -
+    colori_view.g               | -
+    colori_view.b               | -
+    colori_view.ral             | -
+    colori_view.pantone         | -
+    colori_view.c               | -
+    colori_view.m               | -
+    colori_view.y               | -
+    colori_view.k               | -
+    colori_view.__label__       | l'etichetta del colore
+
+    comuni
+    ------
+    Questa tabella *standard* contiene i comuni; i comuni contengono gli *indirizzi* e sono contenuti dalle *provincie*.
+
+    colonna                                           | descrizione
+    --------------------------------------------------|---------------------------------------------------------------------------------------
+    comuni.id                                         | l'ID del comune
+    comuni.id_provincia                               | l'ID della provincia di appartenenza del comune
+    comuni.nome                                       | il nome del comune
+    comuni.codice_istat                               | il codice ISTAT del comune
+    comuni.codice_catasto                             | il codice catastale del comune
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                          | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------|---------------------------|-------------------------------|----------------------
+    comuni_ibfk_01_nofollow         | id_provincia              | provincie.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+
+    La vista *comuni_view* relativa alla tabella *comuni* presenta le seguenti colonne:
+
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    comuni_view.id                                         | -
+    comuni_view.id_provincia                               | -
+    comuni_view.provincia                                  | la provincia di appartenenza del comune
+    comuni_view.sigla_provincia                            | la sigla della provincia di appartenenza del comune
+    comuni_view.id_regione                                 | l'ID della regione di appartenenza del comune
+    comuni_view.regione                                    | la regione di appartenenza del comune
+    comuni_view.id_stato                                   | l'ID dello stato di appartenenza del comune
+    comuni_view.stato                                      | lo stato di appartenenza del comune
+    comuni_view.nome                                       | -
+    comuni_view.codice_istat                               | -
+    comuni_view.codice_catasto                             | -
+    comuni_view.__label__                                  | l'etichetta descrittiva del comune
+ 
+    contatti
+    --------
+    Questa tabella *gestita* contiene l'entità principale *contatti*, che rappresenta gli eventi di contatto effettuate da potenziali
+    clienti in conseguenza di campagne di marketing attive o altre sorgenti quali segnalazioni di altre anagrafiche e simili.
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    contatti.id                            | l'ID dell'evento di contatto
+    contatti.id_tipologia                  | l'ID della tipologia di contatto
+    contatti.id_anagrafica                 | l'ID dell'anagrafica che ha effettuato il contatto
+    contatti.id_inviante                   | l'ID dell'anagrafica che ha generato il contatto
+    contatti.nome                          | una descrizione sintetica del contatto ed eventuali riferimenti della persona
+    contatti.note                          | annotazioni estese sul contatto, le richieste, e simili
+    contatti.json                          | il JSON dei contatti via web
+    contatti.timestamp_contatto            | la timestamp del momento in cui avviene il contatto
+    contatti.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    contatti.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    contatti.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    contatti.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------------|-------------------------------|----------------------
+    contatti_ibfk_01_nofollow           | id_tipologia                  | tipologie_contatti.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contatti_ibfk_02_nofollow           | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    contatti_ibfk_03_nofollow           | id_inviante                   | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    contatti_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    contatti_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *contatti_view* relativa alla tabella *contatti* presenta le seguenti colonne:
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    contatti_view.id                            | -
+    contatti_view.id_tipologia                  | -
+    contatti_view.tipologia                     | la tipologia del contatto
+    contatti_view.id_anagrafica                 | -
+    contatti_view.anagrafica                    | l'anagrafica che ha effettuato il contatto
+    contatti_view.id_inviante                   | -
+    contatti_view.inviante                      | l'anagrafica che ha generato il contatto
+    contatti_view.nome                          | -
+    contatti_view.timestamp_contatto            | -
+    contatti_view.id_account_inserimento        | -
+    contatti_view.id_account_aggiornamento      | -
+    contatti_view.__label__                     | l'etichetta descrittiva del contatto
+  
+    contenuti
+    ---------
+    Questa tabella *gestita* contiene tutti i testi esposti nella parte web aperta al pubblico relativi alle entità principali del framework. Viene
+    utilizzata per associare testi in una data lingua agli oggetti.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    contenuti.id                            | l'ID del contenuto
+    contenuti.id_lingua                     | l'ID della lingua del contenuto
+    contenuti.id_anagrafica                 | l'ID dell'anagrafica cui si riferisce la riga (NULL se non presente)
+    contenuti.id_prodotto                   | l'ID del prodotto cui si riferisce la riga (NULL se non presente)
+    contenuti.id_articolo                   | l'ID dell'articolo cui si riferisce la riga (NULL se non presente)
+    contenuti.id_categoria_prodotti         | l'ID della categoria di prodotti cui si riferisce la riga (NULL se non presente)
+    contenuti.id_caratteristica_prodotti    | l'ID della caratteristica dei prodotti cui si riferisce la riga (NULL se non presente)
+    contenuti.id_marchio                    | l'ID del marchio cui si riferisce la riga (NULL se non presente)
+    contenuti.id_file                       | l'ID del file cui si riferisce la riga (NULL se non presente)
+    contenuti.id_immagine                   | l'ID dell'immagine cui si riferisce la riga (NULL se non presente)
+    contenuti.id_video                      | l'ID del video cui si riferisce la riga (NULL se non presente)
+    contenuti.id_audio                      | l'ID dell'audio cui si riferisce la riga (NULL se non presente)
+    contenuti.id_risorsa                    | l'ID della risorsa cui si riferisce la riga (NULL se non presente)
+    contenuti.id_categoria_risorse          | l'ID della categoria di risorse cui si riferisce la riga (NULL se non presente)
+    contenuti.id_pagina                     | l'ID della pagina cui si riferisce la riga (NULL se non presente)
+    contenuti.id_popup                      | l'ID del popup cui si riferisce la riga (NULL se non presente)
+    contenuti.id_indirizzo                  | l'ID dell'indirizzo cui si riferisce la riga (NULL se non presente)
+    contenuti.id_notizia                    | l'ID della notizia cui si riferisce la riga (NULL se non presente)
+    contenuti.id_categoria_notizie          | l'ID della categoria di notizie cui si riferisce la riga (NULL se non presente)
+    contenuti.id_template                   | l'ID del template cui si riferisce la riga (NULL se non presente)
+    contenuti.id_colore                     | l'ID del colore cui si riferisce la riga (NULL se non presente)
+    contenuti.path_custom                   | alias non canonico della pagina (deve iniziare con slash)
+    contenuti.url_custom                    | URL custom a cui far puntare la voce di menù (per i link interni deve iniziare con slash)
+    contenuti.rewrite_custom                | valore che sostituisce quello del tag title ai fini della composizione dell'URL
+    contenuti.title                         | valore del tag title
+    contenuti.keywords                      | valore del meta tag keywords
+    contenuti.description                   | valore del meta tag description
+    contenuti.alt                           | valore dell'attributo alt per le immagini
+    contenuti.og_title                      | valore del meta tag og:title
+    contenuti.og_type                       | valore del meta tag og:type
+    contenuti.og_image                      | valore del meta tag og:image
+    contenuti.og_audio                      | valore del meta tag og:audio
+    contenuti.og_video                      | valore del meta tag og:video
+    contenuti.og_determiner                 | valore del meta tag og:determiner
+    contenuti.og_description                | valore del meta tag og:description
+    contenuti.cappello                      | testo del cappello
+    contenuti.h1                            | valore del tag h1
+    contenuti.h2                            | valore del tag h2
+    contenuti.h3                            | valore del tag h3
+    contenuti.abstract                      | testo dell'abstract
+    contenuti.testo                         | testo principale
+    contenuti.applicazioni                  | testo delle applicazioni
+    contenuti.specifiche                    | testo delle specifiche
+    contenuti.label_menu                    | etichetta per il menù
+    contenuti.mittente_nome                 | nome del mittente per i template delle mail
+    contenuti.mittente_mail                 | mail del mittente per i template delle mail
+    contenuti.destinatario_nome             | nome del destinatario per i template delle mail
+    contenuti.destinatario_mail             | mail del destinatario per i template delle mail
+    contenuti.destinatario_cc_nome          | nome del destinatario in copia per i template delle mail
+    contenuti.destinatario_cc_mail          | mail del destinatario in copia per i template delle mail
+    contenuti.destinatario_ccn_nome         | nome del destinatario in copia nascosta per i template delle mail
+    contenuti.destinatario_ccn_mail         | mail del destinatario in copia nascosta per i template delle mail
+    contenuti.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    contenuti.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    contenuti.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    contenuti.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------------------|-------------------------------|-----------------------------------|------------------
+    contenuti_ibfk_01_nofollow                  | id_lingua                     | lingue.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contenuti_ibfk_02                           | id_anagrafica                 | anagrafica.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_03                           | id_prodotto                   | prodotti.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_04                           | id_articolo                   | articoli.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_05                           | id_categoria_prodotti         | categorie_prodotti.id             | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_06                           | id_caratteristica_prodotti    | caratteristiche_prodotti.id       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_07                           | id_marchio                    | marchi.id                         | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_08                           | id_file                       | file.id                           | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_09                           | id_immagine                   | immagini.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_10                           | id_video                      | video.id                          | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_11                           | id_audio                      | audio.id                          | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_12                           | id_risorsa                    | risorse.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_13                           | id_categoria_risorse          | categorie_risorse.id              | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_14                           | id_pagina                     | pagine.id                         | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_15                           | id_popup                      | popup.id                          | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_16                           | id_indirizzo                  | indirizzi.id                      | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_17                           | id_notizia                    | notizie.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_18                           | id_categoria_notizie          | categorie_notizie.id              | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_19                           | id_template                   | template.id                       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_20                           | id_colore                     | colori.id                         | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_98_nofollow                  | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_99_nofollow                  | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *contenuti_view* relativa alla tabella *contenuti* presenta le seguenti colonne:
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    contenuti_view.id                           | -
+    contenuti_view.id_lingua                    | -
+    contenuti_view.id_anagrafica                | -
+    contenuti_view.id_prodotto                  | -
+    contenuti_view.id_articolo                  | -
+    contenuti_view.id_categoria_prodotti        | -
+    contenuti_view.id_caratteristica_prodotti   | -
+    contenuti_view.id_marchio                   | -
+    contenuti_view.id_file                      | -
+    contenuti_view.id_immagine                  | -
+    contenuti_view.id_video                     | -
+    contenuti_view.id_audio                     | -
+    contenuti_view.id_risorsa                   | -
+    contenuti_view.id_categoria_risorse         | -
+    contenuti_view.id_pagina                    | -
+    contenuti_view.id_popup                     | -
+    contenuti_view.id_indirizzo                 | -
+    contenuti_view.id_notizia                   | -
+    contenuti_view.id_categoria_notizie         | -
+    contenuti_view.id_template                  | -
+    contenuti_view.id_colore                    | -
+    contenuti_view.h1                           | -
+    contenuti_view.id_account_inserimento       | -
+    contenuti_view.id_account_aggiornamento     | -
+    contenuti_view.__label__                    | etichetta descrittiva del contenuto
+
+    continenti
+    ----------
+    Questa tabella *standard* contiene l'entità principale *continenti* che è l'elemento radice della struttura dati utilizzata dal framework
+    per gestire la localizzazione geografica degli oggetti. La struttura, in ordine gerarchico, è costituita da:
+
+    - continenti
+    - stati
+    - regioni
+    - provincie
+    - comuni
+    - indirizzi
+    - immobili
+
+    colonna                               | descrizione
+    --------------------------------------|---------------------------------------------------------------------------------------
+    continenti.id                         | l'ID del continente
+    continenti.codice                     | codice del continente
+    continenti.nome                       | nome del continente
+    
+    Si noti che la tabella riporta i nomi dei continenti ad uso interno in italiano. La tabella non ha chiavi esterne.
+
+    La vista *continenti_view* relativa alla tabella *continenti* presenta le seguenti colonne:
+
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    continenti_view.id                         | -
+    continenti_view.codice                     | -
+    continenti_view.nome                       | -
+    continenti_view.__label__                  | l'etichetta descrittiva del continente
+
+    coupon
+    ------
+    Questa tabella *gestita* contiene i coupon promozionali che possono essere associati ad alcune tipologie di documenti amministrativi
+    descritti dalla tabella *documenti*.
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    coupon.id                           | l'ID del coupon
+    coupon.nome                         | il nome del coupon
+    coupon.note                         | note relative al coupon
+    coupon.timestamp_inizio             | la timestamp di inizio della validità del coupon
+    coupon.timestamp_fine               | la timestamp di fine della validità del coupon
+    coupon.sconto_percentuale           | lo sconto percentuale da applicare
+    coupon.sconto_fisso                 | lo sconto in valore da applicare
+    coupon.se_multiuso                  | flag che determina se lo stesso coupon può essere utilizzato più volte
+    coupon.se_globale                   | -
+    coupon.id_account_inserimento       | l'ID dell'account che ha inserito la riga
+    coupon.timestamp_inserimento        | la timestamp dell'inserimento della riga
+    coupon.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
+    coupon.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
+
+    In linea di principio il coupon andrebbe applicato al documento se la variazione riguarda tutte le righe, oppure alle specifiche righe
+    interessate nel caso di coupon che interessano soltanto una o più righe.
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------------------|-------------------------------|-----------------------------------|------------------
+    coupon_ibfk_98_nofollow                     | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    coupon_ibfk_99_nofollow                     | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *coupon_view* relativa alla tabella *coupon* presenta le seguenti colonne:
+
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_view.id                             | -
+    coupon_view.nome                           | -
+    coupon_view.note                           | -
+    coupon_view.timestamp_inizio               | -
+    coupon_view.data_ora_inizio                | la data e ora di inizio della validità del coupon
+    coupon_view.timestamp_fine                 | -
+    coupon_view.data_ora_fine                  | la data e ora di fine della validità del coupon
+    coupon_view.sconto_percentuale             | -
+    coupon_view.sconto_fisso                   | -
+    coupon_view.se_multiuso                    | -
+    coupon_view.se_globale                     | -
+    coupon_view.id_account_inserimento         | -
+    coupon_view.id_account_aggiornamento       | -
+    coupon_view.__label__                      | etichetta descrittiva del coupon
+
+    coupon_categorie_prodotti
+    -------------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *coupon* con l'entità secondaria *categorie_prodotti* per specificare l'ambito di
+    validità del coupon.
+
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_categorie_prodotti.id                        | l'ID dell'associazione fra coupon e categoria prodotti
+    coupon_categorie_prodotti.id_coupon                 | l'ID del coupon
+    coupon_categorie_prodotti.id_categoria              | l'ID della categoria prodotti
+    coupon_categorie_prodotti.ordine                    | campo di ordinamento
+    coupon_categorie_prodotti.id_account_inserimento    | l'ID dell'account che ha inserito la riga
+    coupon_categorie_prodotti.timestamp_inserimento     | la timestamp dell'inserimento della riga
+    coupon_categorie_prodotti.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
+    coupon_categorie_prodotti.timestamp_aggiornamento   | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------------------|-------------------------------|-----------------------------------|------------------
+    coupon_categorie_prodotti_ibfk_01           | id_coupon                     | coupon.id                         | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_categorie_prodotti_ibfk_02           | id_categoria                  | categorie_prodotti.id             | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_categorie_prodotti_ibfk_98_nofollow  | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    coupon_categorie_prodotti_ibfk_99_nofollow  | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *coupon_categorie_prodotti_view* relativa alla tabella *coupon_categorie_prodotti* presenta le seguenti colonne:
+
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_categorie_prodotti_view.id                       | -
+    coupon_categorie_prodotti_view.id_coupon                | -
+    coupon_categorie_prodotti_view.id_categoria             | -
+    coupon_categorie_prodotti_view.ordine                   | -
+    coupon_categorie_prodotti_view.id_account_inserimento   | -
+    coupon_categorie_prodotti_view.id_account_aggiornamento | -
+    coupon_categorie_prodotti_view.__label__                | l'etichetta descrittiva della relazione fra coupon e categoria prodotti
+    
+    coupon_listini
+    --------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *coupon* con l'entità secondaria *listini* per specificare l'ambito di
+    validità del coupon.
+
+    colonna                                  | descrizione
+    -----------------------------------------|---------------------------------------------------------------------------------------
+    coupon_listini.id                        | l'ID dell'associazione fra coupon e listino
+    coupon_listini.id_coupon                 | l'ID del coupon
+    coupon_listini.id_listino                | l'ID del listino
+    coupon_listini.ordine                    | campo di ordinamento
+    coupon_listini.id_account_inserimento    | l'ID dell'account che ha inserito la riga
+    coupon_listini.timestamp_inserimento     | la timestamp dell'inserimento della riga
+    coupon_listini.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
+    coupon_listini.timestamp_aggiornamento   | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------------|-------------------------------|----------------------
+    coupon_listini_ibfk_01              | id_coupon                     | coupon.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_listini_ibfk_02_nofollow     | id_listino                    | listini.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_listini_ibfk_98_nofollow     | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    coupon_listini_ibfk_99_nofollow     | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *coupon_listini_view* relativa alla tabella *coupon_listini* presenta le seguenti colonne:
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_listini_view.id                          | -
+    coupon_listini_view.id_coupon                   | -
+    coupon_listini_view.id_listino                  | -
+    coupon_listini_view.listino                     | il listino
+    coupon_listini_view.ordine                      | -
+    coupon_listini_view.id_account_inserimento      | -
+    coupon_listini_view.id_account_aggiornamento    | -
+    coupon_listini_view.__label__                   | etichetta descrittiva dell'associazione fra coupon e listino
+  
+    coupon_marchi
+    -------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *coupon* con l'entità secondaria *marchi* per specificare l'ambito di
+    validità del coupon.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    coupon_marchi.id                        | l'ID dell'associazione fra coupon e marchio
+    coupon_marchi.id_coupon                 | l'ID del coupon
+    coupon_marchi.id_marchio                | l'ID del marchio
+    coupon_marchi.ordine                    | campo di ordinamento
+    coupon_marchi.id_account_inserimento    | l'ID dell'account che ha inserito la riga
+    coupon_marchi.timestamp_inserimento     | la timestamp dell'inserimento della riga
+    coupon_marchi.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
+    coupon_marchi.timestamp_aggiornamento   | la timestamp dell'ultimo aggiornamento della riga
+        
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                          | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------|-------------------------------|-------------------------------|----------------------
+    coupon_marchi_ibfk_01           | id_coupon                     | coupon.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_marchi_ibfk_02_nofollow  | id_marchio                    | marchi.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_marchi_ibfk_98_nofollow  | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    coupon_marchi_ibfk_99_nofollow  | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *coupon_marchi_view* relativa alla tabella *coupon_marchi* presenta le seguenti colonne:
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_marchi_view.id                           | -
+    coupon_marchi_view.id_coupon                    | -
+    coupon_marchi_view.id_marchio                   | -
+    coupon_marchi_view.marchio                      | il marchio
+    coupon_marchi_view.ordine                       | -
+    coupon_marchi_view.id_account_inserimento       | -
+    coupon_marchi_view.id_account_aggiornamento     | -
+    coupon_marchi_view.__label__                    | etichetta descrittiva dell'associazione fra coupon e marchio
+
+    coupon_prodotti
+    ---------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *coupon* con l'entità secondaria *prodotti* per specificare l'ambito di
+    validità del coupon.
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_prodotti.id                          | l'ID dell'associazione fra coupon e prodotto
+    coupon_prodotti.id_coupon                   | l'ID del coupon
+    coupon_prodotti.id_prodotto                 | l'ID del prodotto
+    coupon_prodotti.ordine                      | campo di ordinamento
+    coupon_prodotti.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    coupon_prodotti.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    coupon_prodotti.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    coupon_prodotti.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
+        
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                         | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------------|-------------------------------|----------------------
+    coupon_prodotti_ibfk_01             | id_coupon                     | coupon.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_prodotti_ibfk_02_nofollow    | id_prodotto                   | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    coupon_prodotti_ibfk_98_nofollow    | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    coupon_prodotti_ibfk_99_nofollow    | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *coupon_prodotti_view* relativa alla tabella *coupon_prodotti* presenta le seguenti colonne:
+
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    coupon_prodotti_view.id                         | -
+    coupon_prodotti_view.id_coupon                  | -
+    coupon_prodotti_view.id_prodotto                | -
+    coupon_prodotti_view.prodotto                   | il prodotto
+    coupon_prodotti_view.ordine                     | -
+    coupon_prodotti_view.id_account_inserimento     | -
+    coupon_prodotti_view.id_account_aggiornamento   | -
+    coupon_prodotti_view.__label__                  | l'etichetta descrittiva dell'associazione fra coupon e prodotto
+
+*/

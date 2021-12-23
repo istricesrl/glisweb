@@ -1,1 +1,0 @@
-ALTER TABLE `tipologie_attivita_inps` ADD `id_genitore` INT NULL DEFAULT NULL AFTER `id`, ADD INDEX (`id_genitore`) ;

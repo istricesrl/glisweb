@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS `sms_out_view`;

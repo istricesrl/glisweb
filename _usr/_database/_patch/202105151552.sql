@@ -1,1 +1,0 @@
-ALTER TABLE `__report_sostituzioni_attivita__` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

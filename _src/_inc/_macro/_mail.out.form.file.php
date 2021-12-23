@@ -33,5 +33,8 @@
 	    'SELECT id, __label__ FROM ruoli_file_view  WHERE se_mail = 1'
 	);
 
+    // tendina lingue
+    $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

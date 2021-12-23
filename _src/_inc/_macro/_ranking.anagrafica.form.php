@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'tipologie_crm';
+    $ct['form']['table'] = 'ranking';
     
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
