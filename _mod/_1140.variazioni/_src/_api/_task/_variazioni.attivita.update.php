@@ -2,8 +2,9 @@
 
     /**
      * task che gira autonomamente > preleva una riga di periodi_variazioni_attivita per le variazioni approvate  * 
-     *- verifica se ci sono attività in quel periodo assegnate all'anagrafica corrispondente e:
+     *      - verifica se ci sono attività in quel periodo assegnate all'anagrafica corrispondente e:
      *      - setta id_anagrafica NULL
+     *      - se presente una riga di __acl_attivita__ per l'account dell'anagrafica, la elimina
      *      - crea una riga nella tabella di report __report_attivita_assenze__
      *      - aggiorna il timestamp_controllo_attivita per i periodi_variazioni_attivita figli
      *      - legge le attività della tabella __report_sostituzioni_attivita__ in cui l'anagrafica è stata coinvolta e azzera il timestamp_calcolo_sostituti per quelle attvità
@@ -95,12 +96,33 @@
 
                 $status['info'][] = 'inserite ' . $raa . ' righe dalla tabella __report_attivita_assenze__';
                 
+                // verifico se l'anagrafica ha un account associato per eliminare l'eventuale riga di acl corrispondente
+                $id_account = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM account WHERE id_anagrafica = ?',
+                    array( array( 's' => $p['id_anagrafica'] ) )
+                );
+
                 // aggiorno l'attività settando id_anagrafica NULL
                 $u = mysqlQuery( 
                     $cf['mysql']['connection'],
                     'UPDATE attivita SET id_anagrafica = NULL WHERE id = ?',
                     array( array( 's' => $s['id']) )
                 );
+
+                // elimino la riga di acl
+                if( !empty( $id_account ) ){
+                    $status['info'][] = 'elimino le righe di acl per l\'account ' . $id_account . ' e l\'entità ' . $s['id'];
+                    $acl = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'DELETE FROM __acl_attivita__ '
+                        .'WHERE id_account = ? AND id_entita = ?',
+                        array( 
+                            array( 's' => $id_account ),
+                            array( 's' => $s['id'] )
+                        )
+                    );
+                }
 
                 $status['info']['righe_aggiornate'] += $u;
             }

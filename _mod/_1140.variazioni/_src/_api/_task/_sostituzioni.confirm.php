@@ -4,6 +4,7 @@
      * riceve in ingresso l'id della sostituzione da confermare
      * - estrae l'id dell'attività e dell'anagrafica collegate
      * - aggiorna l'attività settando l'id_anagrafica
+     * - inserisce la riga di acl per l'attività legata alla nuova anagrafica
      * - setta la data di accettazione della sostituzione
      * - rimuove dalla tabella "__report_sostituzioni_attivita__" le righe corrispondenti a questa anagrafica, così il task _sostituzioni.calculate.php la rianalizza
      * 
@@ -48,8 +49,27 @@
                 "UPDATE attivita SET id_anagrafica = ? WHERE id = ?",
                 array(
                     array( 's' => $s['id_anagrafica'] ),
-                    array( 's' => $s['id_attivita'])
+                    array( 's' => $s['id_attivita'] )
                 )
+            );
+
+            // leggo l'id dell'account associato all'anagrafica
+            $id_account = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT id FROM account WHERE id_anagrafica = ?',
+                array( array( 's' => $s['id_anagrafica'] ) )
+            );
+
+            
+            // aggiorno la riga di acl
+            $acl = mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'id_entita'		=> $s['id_attivita'],
+                    'id_account'	=> ( isset( $id_account ) ) ? $id_account : NULL,
+                    'permesso'		=> 'FULL'
+                ),
+                '__acl_attivita__'
             );
 
             // se l'aggiornamento attività è andato a buon fine confermo la sostituzione
