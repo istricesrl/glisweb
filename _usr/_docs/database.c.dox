@@ -517,8 +517,10 @@
     contenuti.specifiche                    | testo delle specifiche
     contenuti.label_menu                    | etichetta per il menù
     contenuti.mittente_nome                 | nome del mittente per i template delle mail
+    contenuti.mittente_numero               | numero del mittente per i template sms
     contenuti.mittente_mail                 | mail del mittente per i template delle mail
     contenuti.destinatario_nome             | nome del destinatario per i template delle mail
+    contenuti.destinatario_numero           | numero del destinatario per i template sms
     contenuti.destinatario_mail             | mail del destinatario per i template delle mail
     contenuti.destinatario_cc_nome          | nome del destinatario in copia per i template delle mail
     contenuti.destinatario_cc_mail          | mail del destinatario in copia per i template delle mail
