@@ -40,8 +40,8 @@ $idT_inps_straordinario = 2;
                 $status['result'] = mysqlSelectColumn(
 				    'id',
                     $cf['mysql']['connection'],
-                    'SELECT id FROM contratti WHERE ( data_inizio_rapporto BETWEEN ? AND ? ) '.
-                    'OR ( data_inizio_rapporto < ? AND '.
+                    'SELECT id FROM contratti WHERE ( data_inizio BETWEEN ? AND ? ) '.
+                    'OR ( data_inizio < ? AND '.
                     '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR ( data_fine IS NOT NULL and data_fine >= ? ) ) ) )',
                     array(
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
@@ -114,7 +114,7 @@ $idT_inps_straordinario = 2;
 
             // inserisco il cartellino
             $cartellino = mysqlQuery( $cf['mysql']['connection'], 
-            'INSERT INTO cartellini ( id_anagrafica, mese, anno, timestamp_inserimento ) VALUES ( ?, ?, ?, ? )  ',
+            'INSERT IGNORE INTO cartellini ( id_anagrafica, mese, anno, timestamp_inserimento ) VALUES ( ?, ?, ?, ? )  ',
             array( 
                 array( 's' => $dati_contratto['id_anagrafica'] ), 
                 array( 's' => $mese ),
@@ -134,12 +134,21 @@ $idT_inps_straordinario = 2;
                 logWrite( 'verifico il contratto ' . $cid.' per il  giorno  '.$data , 'cartellini', LOG_ERR );
                 
                 // check if contratto valido nel giorno in analisi
-                $contratto = mysqlSelectRow(
+            /*    $contratto = mysqlSelectRow(
                     $cf['mysql']['connection'], 
                     'SELECT * FROM contratti WHERE id = ? AND data_inizio_rapporto <= ? AND '.
                     '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR ( data_fine IS NOT NULL and data_fine >= ? ) ) )',
                     array( array( 's' => $cid ), array( 's' =>  $data ), array( 's' =>  $data ) )
                 );
+*/
+                $idCa = contrattoAttivo( $dati_contratto['id_anagrafica'], $data );
+                $contratto = mysqlSelectRow(
+                    $cf['mysql']['connection'], 
+                    'SELECT * FROM contratti WHERE id = ?',
+                    array( array( 's' => $idCa ) )
+                );  
+
+            //    $status['giorni'][$giorno]['contratto'] = $contratto;
 
                 if( !empty( $contratto ) && isset( $contratto['id'] ) ){
     
@@ -159,15 +168,18 @@ $idT_inps_straordinario = 2;
                     if( empty( $turno ) ){
                         $turno = 1;
                     }
+
+                //    $status['giorni'][$giorno]['turno'] = $turno;
     
                     $orecontratto = oreGiornaliereContratto( $contratto['id_anagrafica'], $data );
+
+                //    $status['giorni'][$giorno]['ore_previste'] = $orecontratto;
 
                     logWrite( 'il contratto ' . $cid.' per il giorno  '.$data.' prevede  '.$orecontratto .' orari attivi ' , 'cartellini', LOG_ERR );
 
                     // genero i cartellini
                     if( !empty ( $orecontratto ) ){
-
-                           
+                          
                             $rigaCartellino = mysqlQuery( $cf['mysql']['connection'], 
                                 'INSERT INTO righe_cartellini ( id_cartellino, id_contratto, id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
                                 array( 
