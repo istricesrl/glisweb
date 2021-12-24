@@ -8,9 +8,11 @@
 #gdl
 $idT_inps_ordinario = 1;
 $idT_inps_straordinario = 2;
-$idT_inps_ferie = 6;
+
+/*$idT_inps_ferie = 6;
 $idT_inps_malattie = 4;
 $idT_inps_permessi = 5;
+*/
 
     // inizializzo l'array del risultato
 	$status = array();
@@ -136,7 +138,7 @@ $idT_inps_permessi = 5;
                     );
 
                     if( empty( $fasce ) ){
-                        $fasce['ora_inizio'] = '09:00:00';
+                        $fasce['ora_inizio'] = '06:00:00';
                         $fasce['ora_fine'] = '22:00:00';
                     }
 
@@ -214,6 +216,41 @@ $idT_inps_permessi = 5;
 
                 }
 
+                // LAVORO VARIAZIONI
+                // tutte le attività legate alle variazioni (permessi, malattie, ecc.)
+                $oreVariazioni = mysqlQuery( 
+                    $cf['mysql']['connection'], 
+                    'SELECT id_tipologia_inps, sum( ore ) AS tot_ore FROM attivita ' .
+                    'WHERE id_tipologia_inps <> 1 AND data_attivita = ? and id_anagrafica = ? GROUP by id_tipologia_inps',
+                    array(
+                        array( 's' => $car['data_attivita'] ),
+                        array( 's' => $car['id_anagrafica'] )
+                    )			
+                );
+
+                $status[$car['data_attivita']]['ore_variazioni'] = $oreVariazioni;
+
+                if( !empty ( $oreVariazioni ) && $oreVariazioni > 0 ){
+    
+                    logWrite( 'il cartellino ' . $cid. ' ha ore di variazioni ' , 'cartellini', LOG_ERR );
+
+                    foreach( $oreVariazioni as $ov ){
+                        $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                        'INSERT INTO righe_cartellini ( id_anagrafica, id_cartellino, data_attivita, id_contratto, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
+                        array( 
+                            array( 's' => $car['id_anagrafica'] ), 
+                            array( 's' => $cid ),
+                            array( 's' => $car['data_attivita'] ),
+                            array( 's' => $car['id_contratto'] ),
+                            array( 's' => $ov['id_tipologia_inps'] ), // tipologia inps
+                            array( 's' => str_replace(",",".",$ov['tot_ore']) ),  
+                            array( 's' => time() ) ) 
+                        );
+                    }
+
+                }
+
+                /*
                 $oreMalattia = mysqlSelectValue( 
                     $cf['mysql']['connection'], 
                     'SELECT sum( ore ) AS tot_ore FROM attivita ' .
@@ -300,6 +337,8 @@ $idT_inps_permessi = 5;
                         );
 
                 }
+
+                */
                 
                 // status
                 $status['info'][] = 'ho lavorato la riga: ' . $cid;
