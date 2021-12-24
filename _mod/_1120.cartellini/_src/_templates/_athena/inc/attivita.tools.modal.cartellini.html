@@ -5,11 +5,13 @@
         var form = $( t ).closest('.modal');		
         var mese = form.find('#mese').val();
         var anno = form.find('#anno').val();
+
+		$('#btnconferma').html('<i class="fa fa-circle-o-notch fa-spin  fa-fw"></i>');
 		
         var call = '{{ site.url }}_mod/_1120.cartellini/_src/_api/_task/_cartellini.generate.php?mese='+mese+'&anno='+anno;
 		
 		getws( call,'', function() {
-			$('#cartellini').modal('toggle');
+			$('#btnconferma').html('<i class="fa fa-check" aria-hidden="true"></i>');
 		});
 	
 	}
@@ -51,7 +53,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="calcoloCartellini(this);">conferma</button>
+		<button type="button" id="btnconferma" class="btn btn-secondary btn-sm" onclick="calcoloCartellini(this);">conferma</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>
