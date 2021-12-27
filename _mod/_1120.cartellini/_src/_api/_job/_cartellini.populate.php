@@ -176,7 +176,7 @@ $idT_inps_permessi = 5;
 
                 } 
 
-                if( $car['id_tipologia_inps'] == $idT_inps_ordinario ){
+               
 
                 // LAVORO STRAORDINARIO
                 // tutte le attività svolte nella fascia oraria del giorno
@@ -198,6 +198,10 @@ $idT_inps_permessi = 5;
                 ) / 10000 ;
 
                 if( !empty ( $oreStraordinarie ) && $oreStraordinarie > 0 ){
+
+                    if( $car['id_tipologia_inps'] == $idT_inps_ordinario ){
+
+                    $status[$car['data_attivita']]['ore_straordinarie'] = $oreStraordinarie;
     
                     logWrite( 'il cartellino ' . $cid.' ha  '.$oreStraordinarie.' ore straordinarie lavorate ' , 'cartellini', LOG_ERR );
 
@@ -212,9 +216,18 @@ $idT_inps_permessi = 5;
                             array( 's' => str_replace(",",".",$oreStraordinarie) ),  
                             array( 's' => time() ) ) 
                         );
+                    }
+                    else{
+                        $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
+                        'UPDATE righe_cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
+                        array( 
+                            array( 's' => str_replace(",",".",$oreOrdinarie+$oreStraordinarie) ), 
+                            array( 's' => time() ),
+                            array( 's' => $car['id'] ) )
+                        );
+                    }
                 }
-
-                }
+                
 
                 // LAVORO VARIAZIONI
                 // tutte le attività legate alle variazioni (permessi, malattie, ecc.)
