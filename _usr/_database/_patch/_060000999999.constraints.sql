@@ -857,7 +857,8 @@ ALTER TABLE `regioni`
 --| 060000030800
 
 -- reparti
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
+-- verifica: 2021-12-27 10:42 Fabio Mosti
 ALTER TABLE `reparti`
     ADD CONSTRAINT `reparti_ibfk_01_nofollow`   FOREIGN KEY (`id_iva`) REFERENCES `iva` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `reparti_ibfk_02_nofollow`   FOREIGN KEY (`id_settore`) REFERENCES `settori` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

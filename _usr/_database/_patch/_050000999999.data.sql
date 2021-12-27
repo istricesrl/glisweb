@@ -367,6 +367,14 @@ REPLACE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
 (20,	1,	'Sicilia',	                        '19'),
 (21,	1,	'Sardegna',	                        '20');
 
+--| 050000030800
+
+-- reparti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-09 15:34 Fabio Mosti
+INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_inserimento`, `id_account_inserimento`, `timestamp_aggiornamento`, `id_account_aggiornamento`) VALUES
+(1,	1,	NULL,	'VENDITA IVA 22%',	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| 050000034000
 
 -- ruoli_anagrafica

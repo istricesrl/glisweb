@@ -69,18 +69,20 @@
 				</div>
 			</div>
 			<div class="form-group form-row">
-				<div class="col-12 col-md">
-					<span class="label-top">coupon {% if request[table].tipologia == 'documento di reso' %} reso{% else %}sconto{% endif %}</span>
-					{{ frm.selectBox( table, '', '', 'id_coupon', '', etc.select.coupon, request, '', '', '', '', '', 'coupon.form', 'coupon.form', 'coupon', 'id_coupon', page, pages, ietf, 'coupon' ) }}
-				</div>
-			</div>
-			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">note</span>
 				{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
 				</div>
 			</div>
-	
+
+			<legend>variazioni</legend>
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
+					<span class="label-top">coupon {% if request[table].tipologia == 'documento di reso' %} reso{% else %}sconto{% endif %}</span>
+					{{ frm.selectBox( table, '', '', 'id_coupon', '', etc.select.coupon, request, '', '', '', '', '', 'coupon.form', 'coupon.form', 'coupon', 'id_coupon', page, pages, ietf, 'coupon' ) }}
+				</div>
+			</div>
+			
 		<legend>dati mittente</legend>
 		<div class="form-group form-row">
 			<div class="col-12 col-md">

@@ -708,6 +708,8 @@ CREATE OR REPLACE VIEW categorie_notizie_view AS
 		categorie_notizie.template,
 		categorie_notizie.schema_html,
 		categorie_notizie.tema_css,
+		categorie_notizie.se_sitemap,
+		categorie_notizie.se_cacheable,
 		categorie_notizie.id_sito,
 		categorie_notizie.id_pagina,
 		count( c1.id ) AS figli,
@@ -741,6 +743,8 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 		categorie_prodotti.template,
 		categorie_prodotti.schema_html,
 		categorie_prodotti.tema_css,
+		categorie_prodotti.se_sitemap,
+		categorie_prodotti.se_cacheable,
 		categorie_prodotti.id_sito,
 		categorie_prodotti.id_pagina,
 		count( c1.id ) AS figli,
@@ -799,6 +803,13 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 		categorie_risorse.id_genitore,
 		categorie_risorse.ordine,
 		categorie_risorse.nome,
+		categorie_risorse.template,
+		categorie_risorse.schema_html,
+		categorie_risorse.tema_css,
+		categorie_risorse.se_sitemap,
+		categorie_risorse.se_cacheable,
+		categorie_risorse.id_sito,
+		categorie_risorse.id_pagina,
 		count( c1.id ) AS figli,
 		count( risorse_categorie.id ) AS membri,
 		categorie_risorse.id_account_inserimento,
@@ -3040,13 +3051,13 @@ CREATE OR REPLACE VIEW regioni_view AS
 --| 090000030800
 
 -- reparti_view
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 DROP TABLE IF EXISTS reparti_view;
 
 --| 090000030801
 
 -- reparti_view
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:40 Fabio Mosti
 CREATE OR REPLACE VIEW reparti_view AS
 	SELECT

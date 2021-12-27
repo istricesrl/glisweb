@@ -135,6 +135,8 @@
     categorie_notizie.template                          | il template da applicare alla categoria per la pubblicazione sul web
     categorie_notizie.schema_html                       | lo schema da applicare alla categoria per la pubblicazione sul web
     categorie_notizie.tema_css                          | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_notizie.se_sitemap                        | flag che indica se la categoria va inclusa o no nella sitemap
+    categorie_notizie.se_cacheable                      | flag che indica se la categoria può essere salvata nella cache statica
     categorie_notizie.id_sito                           | il codice identificativo del sito in cui la categoria è pubblicata, attualmente non è un vincolo  
     categorie_notizie.id_pagina                         | l'ID della pagina genitore della categoria per la pubblicazione sul web
     categorie_notizie.id_account_inserimento            | l'ID dell'account che ha inserito la riga
@@ -153,21 +155,24 @@
 
     La vista *categorie_notizie_view* relativa alla tabella *categorie_notizie* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_notizie_view.id                              | -
-    categorie_notizie_view.id_genitore                     | -
-    categorie_notizie_view.ordine                          | -
-    categorie_notizie_view.nome                            | -
-    categorie_notizie_view.template                        | -
-    categorie_notizie_view.schema_html                     | -
-    categorie_notizie_view.tema_css                        | -
-    categorie_notizie_view.id_pagina                       | -
-    categorie_notizie_view.figli                           | il numero di categorie figlie di questa categoria
-    categorie_notizie_view.membri                          | il numero di eventi collegati a questa categoria
-    categorie_notizie_view.id_account_inserimento          | -
-    categorie_notizie_view.id_account_aggiornamento        | -
-    categorie_notizie_view.__label__                       | l'etichetta descrittiva della categoria
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_notizie_view.id                               | -
+    categorie_notizie_view.id_genitore                      | -
+    categorie_notizie_view.ordine                           | -
+    categorie_notizie_view.nome                             | -
+    categorie_notizie_view.template                         | -
+    categorie_notizie_view.schema_html                      | -
+    categorie_notizie_view.tema_css                         | -
+    categorie_notizie_view.se_sitemap                       | -
+    categorie_notizie_view.se_cacheable                     | -
+    categorie_notizie_view.id_sito                          | -
+    categorie_notizie_view.id_pagina                        | -
+    categorie_notizie_view.figli                            | il numero di categorie figlie di questa categoria
+    categorie_notizie_view.membri                           | il numero di eventi collegati a questa categoria
+    categorie_notizie_view.id_account_inserimento           | -
+    categorie_notizie_view.id_account_aggiornamento         | -
+    categorie_notizie_view.__label__                        | l'etichetta descrittiva della categoria
 
     categorie_prodotti
     ------------------
@@ -182,6 +187,8 @@
     categorie_prodotti.template                         | il template da applicare alla categoria per la pubblicazione sul web
     categorie_prodotti.schema_html                      | lo schema da applicare alla categoria per la pubblicazione sul web
     categorie_prodotti.tema_css                         | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_prodotti.se_sitemap                       | flag che indica se la categoria va inclusa o no nella sitemap
+    categorie_prodotti.se_cacheable                     | flag che indica se la categoria può essere salvata nella cache statica
     categorie_prodotti.id_sito                          | il codice identificativo del sito in cui la categoria è pubblicata, attualmente non è un vincolo
     categorie_prodotti.id_pagina                        | l'ID della pagina genitore della categoria per la pubblicazione sul web
     categorie_prodotti.id_account_inserimento           | l'ID dell'account che ha inserito la riga
@@ -200,21 +207,24 @@
 
     La vista *categorie_prodotti_view* relativa alla tabella *categorie_prodotti* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_prodotti_view.id                             | -
-    categorie_prodotti_view.id_genitore                    | -
-    categorie_prodotti_view.ordine                         | -
-    categorie_prodotti_view.nome                           | -
-    categorie_prodotti_view.template                       | -
-    categorie_prodotti_view.schema_html                    | -
-    categorie_prodotti_view.tema_css                       | -
-    categorie_prodotti_view.id_pagina                      | -
-    categorie_prodotti_view.figli                          | il numero di categorie figlie di questa categoria
-    categorie_prodotti_view.membri                         | il numero di eventi collegati a questa categoria
-    categorie_prodotti_view.id_account_inserimento         | -
-    categorie_prodotti_view.id_account_aggiornamento       | -
-    categorie_prodotti_view.__label__                      | l'etichetta descrittiva della categoria
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_prodotti_view.id                              | -
+    categorie_prodotti_view.id_genitore                     | -
+    categorie_prodotti_view.ordine                          | -
+    categorie_prodotti_view.nome                            | -
+    categorie_prodotti_view.template                        | -
+    categorie_prodotti_view.schema_html                     | -
+    categorie_prodotti_view.tema_css                        | -
+    categorie_prodotti_view.se_sitemap                      | - 
+    categorie_prodotti_view.se_cacheable                    | -
+    categorie_prodotti_view.id_sito                         | -
+    categorie_prodotti_view.id_pagina                       | -
+    categorie_prodotti_view.figli                           | il numero di categorie figlie di questa categoria
+    categorie_prodotti_view.membri                          | il numero di eventi collegati a questa categoria
+    categorie_prodotti_view.id_account_inserimento          | -
+    categorie_prodotti_view.id_account_aggiornamento        | -
+    categorie_prodotti_view.__label__                       | l'etichetta descrittiva della categoria
 
     categorie_progetti
     ------------------
@@ -266,6 +276,8 @@
     categorie_risorse.template                      | il template da applicare alla categoria per la pubblicazione sul web
     categorie_risorse.schema_html                   | lo schema da applicare alla categoria per la pubblicazione sul web
     categorie_risorse.tema_css                      | il tema da applicare alla categoria per la pubblicazione sul web
+    categorie_risorse.se_sitemap                    | flag che indica se la categoria va inclusa o no nella sitemap
+    categorie_risorse.se_cacheable                  | flag che indica se la categoria può essere salvata nella cache statica
     categorie_risorse.id_pagina                     | l'ID della pagina genitore della categoria per la pubblicazione sul web
     categorie_risorse.id_account_inserimento        | l'ID dell'account che ha inserito la riga
     categorie_risorse.timestamp_inserimento         | la timestamp dell'inserimento della riga
@@ -283,17 +295,24 @@
 
     La vista *categorie_risorse_view* relativa alla tabella *categorie_risorse* presenta le seguenti colonne:
 
-    colonna                                                | descrizione
-    -------------------------------------------------------|---------------------------------------------------------------------------------------
-    categorie_risorse_view.id                              | -
-    categorie_risorse_view.id_genitore                     | -
-    categorie_risorse_view.ordine                          | -
-    categorie_risorse_view.nome                            | -
-    categorie_risorse_view.figli                           | il numero di categorie figlie di questa categoria
-    categorie_risorse_view.membri                          | il numero di eventi collegati a questa categoria
-    categorie_risorse_view.id_account_inserimento          | -
-    categorie_risorse_view.id_account_aggiornamento        | -
-    categorie_risorse_view.__label__                       | l'etichetta descrittiva della categoria
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    categorie_risorse_view.id                               | -
+    categorie_risorse_view.id_genitore                      | -
+    categorie_risorse_view.ordine                           | -
+    categorie_risorse_view.nome                             | -
+    categorie_risorse_view.template                         | -
+    categorie_risorse_view.schema_html                      | -
+    categorie_risorse_view.tema_css                         | -
+    categorie_risorse_view.se_sitemap                       | - 
+    categorie_risorse_view.se_cacheable                     | -
+    categorie_risorse_view.id_sito                          | -
+    categorie_risorse_view.id_pagina                        | -
+    categorie_risorse_view.figli                            | il numero di categorie figlie di questa categoria
+    categorie_risorse_view.membri                           | il numero di eventi collegati a questa categoria
+    categorie_risorse_view.id_account_inserimento           | -
+    categorie_risorse_view.id_account_aggiornamento         | -
+    categorie_risorse_view.__label__                        | l'etichetta descrittiva della categoria
  
     chiavi
     ------

@@ -94,7 +94,7 @@
     documenti_articoli.id_iva                               | l'ID dell'aliquota IVA associata alla riga
     documenti_articoli.nome                                 | nome descrittivo della riga
     documenti_articoli.specifiche                           | specifiche della riga
-    documenti_articoli.testo                                | testo descrittivo della riga
+    documenti_articoli.note                                 | note aggiuntive sulla riga
     documenti_articoli.id_account_inserimento               | l'ID dell'account che ha inserito la riga
     documenti_articoli.timestamp_inserimento                | la timestamp dell'inserimento della riga
     documenti_articoli.id_account_aggiornamento             | l'ID dell'ultimo account che ha modificato la riga

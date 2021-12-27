@@ -380,6 +380,8 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
   `id_sito` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -401,6 +403,8 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
   `id_sito` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -438,6 +442,8 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -731,7 +737,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_iva` int(11) DEFAULT NULL,
   `nome` text,
   `specifiche` char(255) DEFAULT NULL,
-  `testo` text,
+  `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1629,7 +1635,7 @@ CREATE TABLE IF NOT EXISTS `regioni` (
 --| 010000030800
 
 -- reparti
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:34 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `reparti` (
   `id` int(11) NOT NULL,

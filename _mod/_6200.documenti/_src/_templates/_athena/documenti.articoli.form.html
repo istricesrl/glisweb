@@ -70,8 +70,7 @@
 			</div>
 		</div>
 
-
-		<legend>dettaglio</legend>
+		<legend>contenuto della riga</legend>
 		<div class="form-group form-row">
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">quantità</span>
@@ -92,11 +91,13 @@
 				<span class="label-top remove-after-duplicate">specifiche</span>
 				{{ frm.input( table, '', '', 'specifiche', '', '', request ) }}
 			</div>
-		</div>	
+		</div>
+
+		<legend>valore della riga</legend>
 		<div class="form-group form-row">
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">importo</span>
-				{{ frm.inputRequired( table, '', '', 'importo_netto_totale', '', '', request ) }}
+				{{ frm.input( table, '', '', 'importo_netto_totale', '', '', request ) }}
 			</div>
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">reparto</span>

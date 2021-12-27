@@ -1775,7 +1775,7 @@ ALTER TABLE `regioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --| 030000030800
 
 -- reparti
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:36 Fabio Mosti
 ALTER TABLE `reparti` 
 	ADD PRIMARY KEY (`id`), 
