@@ -61,6 +61,7 @@
     categorie_anagrafica.id_genitore                       | l'ID della categoria genitore
     categorie_anagrafica.ordine                            | campo di ordinamento
     categorie_anagrafica.nome                              | il nome della categoria
+    categorie_anagrafica.note                              | note aggiuntive sulla categoria
     categorie_anagrafica.se_prospect                       | -
     categorie_anagrafica.se_lead                           | -
     categorie_anagrafica.se_cliente                        | -
@@ -132,6 +133,7 @@
     categorie_notizie.id_genitore                       | l'ID della categoria genitore
     categorie_notizie.ordine                            | campo di ordinamento
     categorie_notizie.nome                              | il nome della categoria
+    categorie_notizie.note                              | note aggiuntive sulla categoria
     categorie_notizie.template                          | il template da applicare alla categoria per la pubblicazione sul web
     categorie_notizie.schema_html                       | lo schema da applicare alla categoria per la pubblicazione sul web
     categorie_notizie.tema_css                          | il tema da applicare alla categoria per la pubblicazione sul web
@@ -179,6 +181,7 @@
     categorie_prodotti.id_genitore                      | l'ID della categoria genitore
     categorie_prodotti.ordine                           | campo di ordinamento
     categorie_prodotti.nome                             | il nome della categoria
+    categorie_prodotti.note                              | note aggiuntive sulla categoria
     categorie_prodotti.template                         | il template da applicare alla categoria per la pubblicazione sul web
     categorie_prodotti.schema_html                      | lo schema da applicare alla categoria per la pubblicazione sul web
     categorie_prodotti.tema_css                         | il tema da applicare alla categoria per la pubblicazione sul web
@@ -226,6 +229,7 @@
     categorie_progetti.id_genitore                  | l'ID della categoria genitore
     categorie_progetti.ordine                       | campo di ordinamento
     categorie_progetti.nome                         | il nome della categoria
+    categorie_progetti.note                         | note aggiuntive sulla categoria
     categorie_progetti.id_account_inserimento       | l'ID dell'account che ha inserito la riga
     categorie_progetti.timestamp_inserimento        | la timestamp dell'inserimento della riga
     categorie_progetti.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
@@ -263,6 +267,7 @@
     categorie_risorse.id_genitore                   | l'ID della categoria genitore
     categorie_risorse.ordine                        | campo di ordinamento
     categorie_risorse.nome                          | il nome della categoria
+    categorie_risorse.note                          | note aggiuntive sulla categoria
     categorie_risorse.template                      | il template da applicare alla categoria per la pubblicazione sul web
     categorie_risorse.schema_html                   | lo schema da applicare alla categoria per la pubblicazione sul web
     categorie_risorse.tema_css                      | il tema da applicare alla categoria per la pubblicazione sul web

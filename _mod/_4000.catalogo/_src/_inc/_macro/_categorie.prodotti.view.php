@@ -26,9 +26,7 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    '__label__' => 'categoria',
-        'id_tipologia_pubblicazione' => 'pubblicazione',
-        'numero_prodotti' => 'prodotti'
+	    '__label__' => 'categoria'
 	);
 
     // stili della vista
