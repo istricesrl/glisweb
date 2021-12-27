@@ -47,10 +47,10 @@
     );
     
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'attivita.form';
+	$ct['view']['open']['page'] = 'cartellini.form';
 
     // pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'attivita.form';
+	$ct['view']['insert']['page'] = 'cartellini.form';
 
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_cartellino';
