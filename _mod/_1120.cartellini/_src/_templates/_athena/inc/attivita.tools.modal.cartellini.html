@@ -11,7 +11,8 @@
         var call = '{{ site.url }}_mod/_1120.cartellini/_src/_api/_task/_cartellini.generate.php?mese='+mese+'&anno='+anno;
 		
 		getws( call,'', function() {
-			$('#btnconferma').html('<i class="fa fa-check" aria-hidden="true"></i>');
+			$('#btnconferma').html('conferma');
+			$('#cartellini').modal('toggle');
 		});
 	
 	}
