@@ -1244,8 +1244,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		listini.id_valuta,
 		valute.utf8 AS valuta,
 		documenti_articoli.importo_netto_totale,
-		documenti_articoli.id_iva,
-		iva.nome AS iva,
+		documenti_articoli.id_matricola,
+		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS matricola,
 		documenti_articoli.nome,
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,
@@ -1262,10 +1262,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			' / ',
 			documenti_articoli.importo_netto_totale,
 			' ',
-			valute.utf8,
-			' +IVA ',
-			iva.aliquota,
-			' % '
+			valute.utf8
 		) AS __label__
 	FROM
 		documenti_articoli
@@ -1276,7 +1273,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
-		LEFT JOIN iva ON iva.id = documenti_articoli.id_iva
+		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
 ;
 
 --| 090000012800
@@ -1953,6 +1950,27 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		mastri_path( mastri.id ) AS __label__
 	FROM mastri
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
+;
+
+--| 090000021000
+-- matricole
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `matricole_view`;
+
+--| 090000021001
+-- matricole
+-- tipologia: tabella gestita
+-- verifica: 2021-12-28 16:20 Chiara GDL
+CREATE OR REPLACE VIEW `matricole_view` AS
+	SELECT
+	matricole.id,
+	matricole.id_produttore,
+	matricole.id_marchio,
+	matricole.serial_number,
+	matricole.nome,
+	concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS __label__
+	FROM matricole
+	ORDER BY __label__
 ;
 
 --| 090000021600

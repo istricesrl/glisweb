@@ -728,10 +728,10 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_udm` int(11) DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
   `quantita` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `importo_netto_totale` decimal(9,2) NOT NULL,
-  `id_iva` int(11) DEFAULT NULL,
   `nome` text,
   `specifiche` char(255) DEFAULT NULL,
   `testo` text,
@@ -1158,6 +1158,24 @@ CREATE TABLE IF NOT EXISTS `mastri` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000021000
+
+-- matricole
+-- tipologia: tabella gestita
+-- verifica: 2021-12-28 16:20 Chiara GDL
+CREATE TABLE `matricole` (
+  `id` int NOT NULL,
+  `id_marchio` int DEFAULT NULL,
+  `id_produttore` int DEFAULT NULL,
+  `serial_number` char(128) DEFAULT NULL,
+  `nome` char(255) NOT NULL,
+  `note` text,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000021600
