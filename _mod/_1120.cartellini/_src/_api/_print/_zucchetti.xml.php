@@ -10,7 +10,7 @@
         $_REQUEST['__mese__'] = sprintf( '%02d', $_REQUEST['__mese__'] );
 
         // risultato
-        $ct['ore'] = mysqlQuery(
+    /*    $ct['ore'] = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT '.
             'attivita.data_attivita, attivita.ore, '.
@@ -23,6 +23,26 @@
             'WHERE attivita.data_attivita BETWEEN ? AND ? '.
             'AND anagrafica.codice IS NOT NULL '.
             'ORDER BY attivita.id_anagrafica ASC, attivita.data_attivita ASC, tipologie_attivita.id ASC ',
+            array(
+                    array( 's' => $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ),
+                    array( 's' => date( 'Y-m-t', strtotime( $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ) ) 
+                )
+            )
+        );
+*/
+        $ct['ore'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT '.
+            'righe_cartellini.data_attivita, righe_cartellini.ore_fatte as ore, '.
+            'anagrafica.codice AS codice_dipendente, '.
+            'tipologie_attivita_inps.codice AS codice_inps '.
+            'FROM righe_cartellini '.
+            'INNER JOIN anagrafica ON anagrafica.id = righe_cartellini.id_anagrafica '.
+        #    'INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
+            'INNER JOIN tipologie_attivita_inps ON tipologie_attivita_inps.id = righe_cartellini.id_tipologia_inps '.
+            'WHERE righe_cartellini.data_attivita BETWEEN ? AND ? '.
+            'AND anagrafica.codice IS NOT NULL '.
+            'ORDER BY righe_cartellini.id_anagrafica ASC, righe_cartellini.data_attivita ASC ',
             array(
                     array( 's' => $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ),
                     array( 's' => date( 'Y-m-t', strtotime( $_REQUEST['__anno__'].'-'.$_REQUEST['__mese__'].'-01' ) ) 
