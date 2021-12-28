@@ -29,7 +29,7 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 
 														'documenti.form.righe', 
-														'documenti.form.xml',
+														//'documenti.form.xml',
 														'documenti.form.stampe',
 														'documenti.form.tools' ) )
 	);
