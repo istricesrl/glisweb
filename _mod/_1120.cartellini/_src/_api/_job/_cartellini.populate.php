@@ -153,7 +153,7 @@ $idT_inps_permessi = 5;
                     $cf['mysql']['connection'], 
                     'SELECT sum( TIMEDIFF( LEAST( ?, ora_fine ),GREATEST( ora_inizio, ? )  ) ) AS tot_ore FROM attivita ' .
                     'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
-                    'WHERE tipologie_attivita.se_lavoro = 1 AND data_attivita = ? AND id_anagrafica = ? GROUP by data_attivita',
+                    'WHERE tipologie_attivita.se_produzione = 1 AND data_attivita = ? AND id_anagrafica = ? GROUP by data_attivita',
                     array(
                         array( 's' => $fasce['ora_fine'] ),
                         array( 's' => $fasce['ora_inizio'] ),
@@ -184,7 +184,7 @@ $idT_inps_permessi = 5;
                     $cf['mysql']['connection'], 
                     'SELECT ( sum( TIMEDIFF( ?, LEAST( ora_inizio, ? )  ) ) + sum( TIMEDIFF(  GREATEST( ora_fine, ? ), ?  )  )  ) as tot_ore FROM attivita ' .
                     'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
-                    'WHERE tipologie_attivita.se_lavoro = 1 AND data_attivita = ? and id_anagrafica = ? AND (ora_inizio < ? OR ora_fine > ?) GROUP by data_attivita',
+                    'WHERE tipologie_attivita.se_produzione = 1 AND data_attivita = ? and id_anagrafica = ? AND (ora_inizio < ? OR ora_fine > ?) GROUP by data_attivita',
                     array(
                         array( 's' => $fasce['ora_inizio'] ),
                         array( 's' => $fasce['ora_inizio'] ),
