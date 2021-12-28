@@ -73,7 +73,7 @@ $idT_inps_straordinario = 2;
                 }
 
                 // mando un messaggio su Slack
-           //     slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'avviata ' . $job['nome'] );
+                slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'avviata ' . $job['nome'] );
 
             } else {
 
@@ -259,7 +259,7 @@ $idT_inps_straordinario = 2;
 
                 $status['info'][] = 'ho inserito il job: ' .$status['job'];
                 // mando un messaggio su Slack
-        //        slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
+                slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
 
             }
 

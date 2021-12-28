@@ -76,7 +76,7 @@ $idT_inps_permessi = 5;
                 }
 
                 // mando un messaggio su Slack
-              //  slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'avviata ' . $job['nome'] );
+                slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'avviata ' . $job['nome'] );
 
             } else {
 
@@ -386,7 +386,7 @@ $idT_inps_permessi = 5;
                 );
 				
                 // mando un messaggio su Slack
-            //    slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
+                slackTxtMsg( $cf['slack']['profile']['webhooks']['default'], 'completata ' . $job['nome'] );
 
             }
 
