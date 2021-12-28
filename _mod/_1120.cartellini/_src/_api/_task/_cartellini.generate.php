@@ -28,22 +28,41 @@
 
         $nomemese = int2month( $_REQUEST['mese'] );
 
-        // creo il job
-        $status['job'] = mysqlQuery(
+        $nomeJob = '_mod/_1120.cartellini/_src/_api/_job/_cartellini.generate.php';
+        $parametriJob = '%"mese":"' . $status['mese'] . '","anno":"' . $status['anno'] . '"%';
+
+        // verifico se è già presente un job di creazione cartellino per il mese e l'anno correnti
+        $j = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'INSERT INTO job ( nome, job, iterazioni, workspace ) VALUES ( ?, ?, ?, ? )',
+            'SELECT id FROM job WHERE job = ? AND workspace LIKE ?',
             array(
-                array( 's' => 'creazione cartellini ' . $nomemese . ' ' . $_REQUEST['anno'] ),
-                array( 's' => '_mod/_1120.cartellini/_src/_api/_job/_cartellini.generate.php' ),
-                array( 's' => 10 ),
-                array( 's' => json_encode(
-                    array(
-                        'mese' => $_REQUEST['mese'],
-                        'anno' => $_REQUEST['anno']
-                    )
-                ) )
+                array( 's' => $nomeJob ),
+                array( 's' => $parametriJob)
             )
         );
+
+        if( empty( $j ) ){
+            // creo il job
+            $status['job'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO job ( nome, job, iterazioni, workspace ) VALUES ( ?, ?, ?, ? )',
+                array(
+                    array( 's' => 'creazione cartellini ' . $nomemese . ' ' . $_REQUEST['anno'] ),
+                    array( 's' => '_mod/_1120.cartellini/_src/_api/_job/_cartellini.generate.php' ),
+                    array( 's' => 10 ),
+                    array( 's' => json_encode(
+                        array(
+                            'mese' => $_REQUEST['mese'],
+                            'anno' => $_REQUEST['anno']
+                        )
+                    ) )
+                )
+            );
+        }
+        else{
+            // status
+            $status['job'] = 'job esistente';
+        }
 
     } else {
 
