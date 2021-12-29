@@ -155,7 +155,7 @@
 	$ct['etc']['static_view'] = mysqlCachedQuery(	   
 		$cf['memcache']['connection'], 
 		$cf['mysql']['connection'], 
-		'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME like "%_static"');	
+		'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME LIKE "%_static" AND table_schema = database()');	
 
     // debug
 	// print_r( $_SESSION );

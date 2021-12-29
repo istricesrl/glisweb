@@ -963,7 +963,7 @@
 
 	function getStaticViewExtension( $m, $c, $t ) {
 
-			// verifico se esiste la view statica
+		// verifico se esiste la view statica
 			$stv = mysqlSelectCachedValue(
 				$m,
 				$c,
