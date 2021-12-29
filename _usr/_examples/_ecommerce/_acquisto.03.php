@@ -67,7 +67,7 @@
     }
 
     // profili
-    $t .= '<pre>' . print_r( $cf['ecommerce']['profile'], true ) . '</pre>';
+    // $t .= '<pre>' . print_r( $cf['ecommerce']['profile'], true ) . '</pre>';
 
     // output
     buildHTML( $t );

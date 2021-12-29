@@ -216,7 +216,7 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 		. 'FROM prodotti '
 		. 'INNER JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id '
 		. 'INNER JOIN contenuti ON ( contenuti.id_prodotto = prodotti.id AND contenuti.id_lingua = ? ) '
-#		. 'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = prodotti.id_tipologia_pubblicazione '
+#		. 'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = prodotti.id_tipologia_pubblicazioni '
 		. 'LEFT JOIN prezzi ON prezzi.id_prodotto = prodotti.id '
 		. 'LEFT JOIN iva ON iva.id = prezzi.id_iva '
 		. 'LEFT JOIN immagini ON ( immagini.id_prodotto = prodotti.id AND immagini.id_ruolo = 4 ) '
@@ -312,7 +312,7 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 	$ct['etc']['categorie'] = mysqlQuery(
 		$cf['mysql']['connection'],
 		'SELECT id, nome FROM categorie_prodotti '
-#			. 'WHERE (id = ? OR id_genitore = ?) AND id_tipologia_pubblicazione = 2 ORDER BY categorie_prodotti.nome',
+#			. 'WHERE (id = ? OR id_genitore = ?) AND id_tipologia_pubblicazioni = 2 ORDER BY categorie_prodotti.nome',
 			. 'WHERE (id = ? OR id_genitore = ?) ORDER BY categorie_prodotti.nome',
 		array(
 			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti']),
