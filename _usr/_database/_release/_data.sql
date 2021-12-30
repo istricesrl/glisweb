@@ -302,16 +302,16 @@ INSERT INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awe
 (2,	NULL,	'commento',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL)
 ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `id_genitore` = VALUES(`id_genitore`), `nome` = VALUES(`nome`), `html_entity` = VALUES(`html_entity`), `font_awesome` = VALUES(`font_awesome`), `se_anagrafica` = VALUES(`se_anagrafica`), `se_pagine` = VALUES(`se_pagine`), `se_prodotti` = VALUES(`se_prodotti`), `se_articoli` = VALUES(`se_articoli`), `se_categorie_prodotti` = VALUES(`se_categorie_prodotti`), `se_notizie` = VALUES(`se_notizie`), `se_categorie_notizie` = VALUES(`se_categorie_notizie`), `se_risorse` = VALUES(`se_risorse`), `se_categorie_risorse` = VALUES(`se_categorie_risorse`);
 
-INSERT INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_mail`) VALUES
-(1,	NULL,	'allegato',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	1),
-(2,	NULL,	'brochure',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(3,	NULL,	'documentazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(4,	NULL,	'driver',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(5,	NULL,	'manualistica',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(6,	NULL,	'press kit',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(7,	NULL,	'schede tecniche',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(8,	NULL,	'software',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1)
-ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `id_genitore` = VALUES(`id_genitore`), `nome` = VALUES(`nome`), `html_entity` = VALUES(`html_entity`), `font_awesome` = VALUES(`font_awesome`), `se_anagrafica` = VALUES(`se_anagrafica`), `se_pagine` = VALUES(`se_pagine`), `se_template` = VALUES(`se_template`), `se_prodotti` = VALUES(`se_prodotti`), `se_articoli` = VALUES(`se_articoli`), `se_categorie_prodotti` = VALUES(`se_categorie_prodotti`), `se_notizie` = VALUES(`se_notizie`), `se_categorie_notizie` = VALUES(`se_categorie_notizie`), `se_risorse` = VALUES(`se_risorse`), `se_categorie_risorse` = VALUES(`se_categorie_risorse`), `se_mail` = VALUES(`se_mail`);
+INSERT INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
+(1,	NULL,	'allegato',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'brochure',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'documentazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'driver',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'manualistica',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'press kit',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'schede tecniche',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'software',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL)
+ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `id_genitore` = VALUES(`id_genitore`), `nome` = VALUES(`nome`), `html_entity` = VALUES(`html_entity`), `font_awesome` = VALUES(`font_awesome`), `se_anagrafica` = VALUES(`se_anagrafica`), `se_pagine` = VALUES(`se_pagine`), `se_template` = VALUES(`se_template`), `se_prodotti` = VALUES(`se_prodotti`), `se_articoli` = VALUES(`se_articoli`), `se_categorie_prodotti` = VALUES(`se_categorie_prodotti`), `se_notizie` = VALUES(`se_notizie`), `se_categorie_notizie` = VALUES(`se_categorie_notizie`), `se_risorse` = VALUES(`se_risorse`), `se_categorie_risorse` = VALUES(`se_categorie_risorse`);
 
 INSERT INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
 (1,	NULL,	900,	'immagine',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1),

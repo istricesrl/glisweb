@@ -7264,7 +7264,6 @@ CREATE TABLE `ruoli_file` (
   `se_categorie_notizie` int DEFAULT NULL,
   `se_risorse` int DEFAULT NULL,
   `se_categorie_risorse` int DEFAULT NULL,
-  `se_mail` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unica` (`nome`),
   KEY `id_genitore` (`id_genitore`),
@@ -7283,7 +7282,7 @@ CREATE TABLE `ruoli_file` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 
-CREATE TABLE `ruoli_file_view` (`id` int, `id_genitore` int, `nome` char(64), `html_entity` char(8), `font_awesome` char(16), `se_anagrafica` int, `se_pagine` int, `se_prodotti` int, `se_articoli` int, `se_categorie_prodotti` int, `se_notizie` int, `se_categorie_notizie` int, `se_risorse` int, `se_categorie_risorse` int, `se_mail` int, `__label__` text);
+CREATE TABLE `ruoli_file_view` (`id` int, `id_genitore` int, `nome` char(64), `html_entity` char(8), `font_awesome` char(16), `se_anagrafica` int, `se_pagine` int, `se_prodotti` int, `se_articoli` int, `se_categorie_prodotti` int, `se_notizie` int, `se_categorie_notizie` int, `se_risorse` int, `se_categorie_risorse` int,  `__label__` text);
 
 
 CREATE TABLE `ruoli_immagini` (
@@ -8981,7 +8980,7 @@ DROP TABLE IF EXISTS `ruoli_audio_view`;
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `ruoli_audio_view` AS select `ruoli_audio`.`id` AS `id`,`ruoli_audio`.`id_genitore` AS `id_genitore`,`ruoli_audio`.`nome` AS `nome`,`ruoli_audio`.`html_entity` AS `html_entity`,`ruoli_audio`.`font_awesome` AS `font_awesome`,`ruoli_audio`.`se_anagrafica` AS `se_anagrafica`,`ruoli_audio`.`se_pagine` AS `se_pagine`,`ruoli_audio`.`se_prodotti` AS `se_prodotti`,`ruoli_audio`.`se_articoli` AS `se_articoli`,`ruoli_audio`.`se_categorie_prodotti` AS `se_categorie_prodotti`,`ruoli_audio`.`se_notizie` AS `se_notizie`,`ruoli_audio`.`se_categorie_notizie` AS `se_categorie_notizie`,`ruoli_audio`.`se_risorse` AS `se_risorse`,`ruoli_audio`.`se_categorie_risorse` AS `se_categorie_risorse`,`ruoli_audio_path`(`ruoli_audio`.`id`) AS `__label__` from `ruoli_audio`;
 
 DROP TABLE IF EXISTS `ruoli_file_view`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `ruoli_file_view` AS select `ruoli_file`.`id` AS `id`,`ruoli_file`.`id_genitore` AS `id_genitore`,`ruoli_file`.`nome` AS `nome`,`ruoli_file`.`html_entity` AS `html_entity`,`ruoli_file`.`font_awesome` AS `font_awesome`,`ruoli_file`.`se_anagrafica` AS `se_anagrafica`,`ruoli_file`.`se_pagine` AS `se_pagine`,`ruoli_file`.`se_prodotti` AS `se_prodotti`,`ruoli_file`.`se_articoli` AS `se_articoli`,`ruoli_file`.`se_categorie_prodotti` AS `se_categorie_prodotti`,`ruoli_file`.`se_notizie` AS `se_notizie`,`ruoli_file`.`se_categorie_notizie` AS `se_categorie_notizie`,`ruoli_file`.`se_risorse` AS `se_risorse`,`ruoli_file`.`se_categorie_risorse` AS `se_categorie_risorse`,`ruoli_file`.`se_mail` AS `se_mail`,`ruoli_file_path`(`ruoli_file`.`id`) AS `__label__` from `ruoli_file`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `ruoli_file_view` AS select `ruoli_file`.`id` AS `id`,`ruoli_file`.`id_genitore` AS `id_genitore`,`ruoli_file`.`nome` AS `nome`,`ruoli_file`.`html_entity` AS `html_entity`,`ruoli_file`.`font_awesome` AS `font_awesome`,`ruoli_file`.`se_anagrafica` AS `se_anagrafica`,`ruoli_file`.`se_pagine` AS `se_pagine`,`ruoli_file`.`se_prodotti` AS `se_prodotti`,`ruoli_file`.`se_articoli` AS `se_articoli`,`ruoli_file`.`se_categorie_prodotti` AS `se_categorie_prodotti`,`ruoli_file`.`se_notizie` AS `se_notizie`,`ruoli_file`.`se_categorie_notizie` AS `se_categorie_notizie`,`ruoli_file`.`se_risorse` AS `se_risorse`,`ruoli_file`.`se_categorie_risorse` AS `se_categorie_risorse`,`ruoli_file_path`(`ruoli_file`.`id`) AS `__label__` from `ruoli_file`;
 
 DROP TABLE IF EXISTS `ruoli_immagini_view`;
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `ruoli_immagini_view` AS select `ruoli_immagini`.`id` AS `id`,`ruoli_immagini`.`id_genitore` AS `id_genitore`,`ruoli_immagini`.`ordine_scalamento` AS `ordine_scalamento`,`ruoli_immagini`.`nome` AS `nome`,`ruoli_immagini`.`html_entity` AS `html_entity`,`ruoli_immagini`.`font_awesome` AS `font_awesome`,`ruoli_immagini`.`se_anagrafica` AS `se_anagrafica`,`ruoli_immagini`.`se_pagine` AS `se_pagine`,`ruoli_immagini`.`se_prodotti` AS `se_prodotti`,`ruoli_immagini`.`se_articoli` AS `se_articoli`,`ruoli_immagini`.`se_categorie_prodotti` AS `se_categorie_prodotti`,`ruoli_immagini`.`se_notizie` AS `se_notizie`,`ruoli_immagini`.`se_categorie_notizie` AS `se_categorie_notizie`,`ruoli_immagini`.`se_risorse` AS `se_risorse`,`ruoli_immagini`.`se_categorie_risorse` AS `se_categorie_risorse`,`ruoli_immagini_path`(`ruoli_immagini`.`id`) AS `__label__` from `ruoli_immagini`;
