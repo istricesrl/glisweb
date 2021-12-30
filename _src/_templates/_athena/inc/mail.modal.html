@@ -8,13 +8,15 @@
 	formChanged = false;
 	var og = encodeURIComponent($('#_oggetto').val());
 	var id = $('#_id').val();
-	var to = $('#_destinatario').val();
+	var to = encodeURIComponent($('#_destinatario').val());
 	var to_cc = $('#_destinatario_cc').val();
 	var to_bcc = $('#_destinatario_bcc').val();
 	var from = $('#_mittente').val();
 	var t = encodeURIComponent(CKEDITOR.instances['_testo'].getData());
 	var file = $('div[id^="file_"]');
 	
+	
+
 	const attach = [];
 	var i = 0;
 	file.each( function() {
@@ -39,7 +41,7 @@
 	par = par +"&__t__='"+t+"'";
 	
 //window.open("{{ session.backurls[page.backurl[localization.language.ietf]]}}?&__send__=1", '_self') 
-
+console.log(par);
 	$('#send-btn').html('<i class="fa fa-spinner fa-spin fa-fw"></i>');
 	getws("{{site.url}}/_src/_api/_task/_mail.send.php",par,window.open("{{ session.backurls[page.backurl[localization.language.ietf]]}}?&__send__=1", '_self') 	);
 	}
