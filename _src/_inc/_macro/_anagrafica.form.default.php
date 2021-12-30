@@ -40,4 +40,4 @@
         );
     }
 
-    print_r( $ct['page']['etc']['tabs'] );
+    // print_r( $ct['page']['etc']['tabs'] );

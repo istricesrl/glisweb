@@ -612,6 +612,7 @@
 				$_SESSION['__latest__'][ $t ] = $d;
 				$d = array();
 			    } else {
+// echo "${t}$rm";
 				switch( strtoupper( $a ) ) {
 				    case METHOD_GET:
 				    case METHOD_POST:
