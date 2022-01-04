@@ -17,10 +17,10 @@
     $t = null;
 
     // chiamo la funzione archiviumGetListaAziende()
-    $l = archiviumGetListaAziende();
+    $r = archiviumGetDettagliAzienda( $_REQUEST['idAzienda'] );
 
     // output
-    $t .= '<pre>' . print_r( $l, true ) . '</pre>';
+    $t .= '<pre>' . print_r( $r, true ) . '</pre>';
 
     // output
     buildHTML( $t );

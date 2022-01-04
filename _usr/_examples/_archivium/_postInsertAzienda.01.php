@@ -16,11 +16,11 @@
     // testo della pagina
     $t = null;
 
-    // chiamo la funzione archiviumGetListaAziende()
-    $l = archiviumGetListaAziende();
+    // chiamo la funzione archiviumPostInsertAzienda()
+    $s = archiviumPostInsertAzienda( $_REQUEST['id'] );
 
     // output
-    $t .= '<pre>' . print_r( $l, true ) . '</pre>';
+    $t .= '<pre>' . var_dump( $s ) . '</pre>';
 
     // output
     buildHTML( $t );
