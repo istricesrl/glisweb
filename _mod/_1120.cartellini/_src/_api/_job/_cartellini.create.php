@@ -2,10 +2,11 @@
 
     /**
      * 
-     *  
+     *  TODO: POSSIAMO ELIMINARE QUESTO JOB?
      * 
      */
 
+     /*
     // inizializzo l'array del risultato
 	$status = array();
 
@@ -211,3 +212,4 @@
         buildJson( $status );
 
     }
+*/

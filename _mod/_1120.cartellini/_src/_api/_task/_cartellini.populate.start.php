@@ -3,12 +3,11 @@
     /**
      * task che viene richiamato manualmente, riceve in ingresso mese e anno e crea un job che compila la tabella cartellini
      * 
-     * TODO: POSSIAMO ELIMINARE QUESTO TASK?
      *
+     * TODO: SERVE QUESTO TASK?
      * 
-     **/
-     
-    /*
+     *
+     */
 
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
@@ -34,8 +33,8 @@
             $cf['mysql']['connection'],
             'INSERT INTO job ( nome, job, iterazioni, workspace ) VALUES ( ?, ?, ?, ? )',
             array(
-                array( 's' => 'compilazione cartellini ' . $nomemese . ' ' . $_REQUEST['anno'] ),
-                array( 's' => '_mod/_1120.cartellini/_src/_api/_job/_cartellini.create.php' ),
+                array( 's' => 'popolazione cartellini ' . $nomemese . ' ' . $_REQUEST['anno'] ),
+                array( 's' => '_mod/_1120.cartellini/_src/_api/_job/_cartellini.populate.php' ),
                 array( 's' => 10 ),
                 array( 's' => json_encode(
                     array(
@@ -59,4 +58,3 @@
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    buildJson( $status );
 	}
-*/

@@ -5,9 +5,7 @@
      *  
      * 
      */
-#gdl
-$idT_inps_ordinario = 1;
-$idT_inps_straordinario = 2;
+
 
     // inizializzo l'array del risultato
 	$status = array();
@@ -38,9 +36,9 @@ $idT_inps_straordinario = 2;
                 logWrite( 'lavoro i cartellini dal '.date( 'Y-m-d', strtotime("$anno-$mese-01")).' al '.date( 'Y-m-t', strtotime("$anno-$mese-01")) , 'cartellini', LOG_ERR );
                 // tutti i contratti validi in parte o del tutto nel mese/anno indicato
                 $status['result'] = mysqlSelectColumn(
-				    'id',
+				    'id_anagrafica',
                     $cf['mysql']['connection'],
-                    'SELECT id FROM contratti WHERE ( data_inizio BETWEEN ? AND ? ) '.
+                    'SELECT DISTINCT id_anagrafica FROM contratti WHERE ( data_inizio BETWEEN ? AND ? ) '.
                     'OR ( data_inizio < ? AND '.
                     '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR ( data_fine IS NOT NULL and data_fine >= ? ) ) ) )',
                     array(
@@ -92,125 +90,10 @@ $idT_inps_straordinario = 2;
             $mese = $job['workspace']['mese'];
             $anno = $job['workspace']['anno'];
 
-            // costruisco l'elenco giorni partendo da mese e anno
-            $giorni = array();
+            // richiamo il task cartellini.generate
+            $url = $cf['site']['url'] . '_mod/_1120.cartellini/_src/_api/_task/_cartellini.generate.php?mese=' . $mese . '&anno=' . $anno . '&id_anagrafica=' . $cid;
 
-            for( $d = 1; $d <= 31; $d++ )
-            {
-                $time = mktime(12, 0, 0, $mese, $d, $anno);          
-                if ( date( 'm', $time ) == $mese ) {   
-                    $giorni[] = intval( date( 'd' , $time ) );
-                }
-            }
-
-            logWrite( 'lavoro il contratto ' . $cid , 'cartellini', LOG_ERR );
-
-            // dati del contratto
-            $dati_contratto = mysqlSelectRow(
-                $cf['mysql']['connection'], 
-                'SELECT * FROM contratti WHERE id = ?',
-                array( array( 's' => $cid ) )
-            );
-
-            // inserisco il cartellino
-            $cartellino = mysqlQuery( $cf['mysql']['connection'], 
-            'INSERT IGNORE INTO cartellini ( id_anagrafica, mese, anno, timestamp_inserimento ) VALUES ( ?, ?, ?, ? )  ',
-            array( 
-                array( 's' => $dati_contratto['id_anagrafica'] ), 
-                array( 's' => $mese ),
-                array( 's' => $anno ),
-                array( 's' => time() ) ) 
-            );
-
-            foreach( $giorni as $giorno ){
-
-                $data = date( 'Y-m-d', strtotime("$anno-$mese-$giorno") );
-
-                // log
-               
-                // numero da 1 a 7, se la funzione date restituisce 0 (domenica) setto 7 per uniformità con i giorni degli orari_contratti
-			    $numgiorno = ( date( 'w', strtotime("$anno-$mese-$giorno") ) == 0 ) ? '7' : date( 'w', strtotime("$anno-$mese-$giorno") );
-    
-                logWrite( 'verifico il contratto ' . $cid.' per il  giorno  '.$data , 'cartellini', LOG_ERR );
-                
-                // check if contratto valido nel giorno in analisi
-            /*    $contratto = mysqlSelectRow(
-                    $cf['mysql']['connection'], 
-                    'SELECT * FROM contratti WHERE id = ? AND data_inizio_rapporto <= ? AND '.
-                    '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR ( data_fine IS NOT NULL and data_fine >= ? ) ) )',
-                    array( array( 's' => $cid ), array( 's' =>  $data ), array( 's' =>  $data ) )
-                );
-*/
-                $idCa = contrattoAttivo( $dati_contratto['id_anagrafica'], $data );
-                $contratto = mysqlSelectRow(
-                    $cf['mysql']['connection'], 
-                    'SELECT * FROM contratti WHERE id = ?',
-                    array( array( 's' => $idCa ) )
-                );  
-
-            //    $status['giorni'][$giorno]['contratto'] = $contratto;
-
-                if( !empty( $contratto ) && isset( $contratto['id'] ) ){
-    
-                    logWrite( 'il contratto ' . $cid . ' è valido nel giorno  '.$data , 'cartellini', LOG_ERR );
-                    // verifico se la data corrente è nella tabella turni e ricavo il turno corrispondente
-                    $turno = mysqlSelectValue(
-                        $cf['mysql']['connection'], 
-                        'SELECT turno FROM turni WHERE id_contratto = ? AND (data_inizio <= ? AND data_fine >= ?) ORDER BY id DESC LIMIT 1',
-                        array( 
-                            array( 's' => $cid ),
-                            array( 's' => $data ),
-                            array( 's' => $data )
-                        )
-                    );
-    
-                    // se ci sono turni devo considerare la tabella turni e vedere se la data corrente è in essi
-                    if( empty( $turno ) ){
-                        $turno = 1;
-                    }
-
-                //    $status['giorni'][$giorno]['turno'] = $turno;
-    
-                    $orecontratto = oreGiornaliereContratto( $contratto['id_anagrafica'], $data );
-
-                //    $status['giorni'][$giorno]['ore_previste'] = $orecontratto;
-
-                    logWrite( 'il contratto ' . $cid.' per il giorno  '.$data.' prevede  '.$orecontratto .' orari attivi ' , 'cartellini', LOG_ERR );
-
-                    // genero i cartellini
-                    if( !empty ( $orecontratto ) ){
-                          
-                            $rigaCartellino = mysqlQuery( $cf['mysql']['connection'], 
-                                'INSERT INTO righe_cartellini ( id_cartellino, id_contratto, id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
-                                array( 
-                                    array( 's' =>  $cartellino  ),
-                                    array( 's' => $contratto['id'] ),
-                                    array( 's' => $contratto['id_anagrafica'] ), 
-                                    array( 's' => $data ),
-                                    array( 's' => $idT_inps_ordinario ), // tipologia inps ordinaria
-                                    array( 's' => str_replace(",",".",$orecontratto) ),  
-                                    array( 's' => time() ) ) 
-                                );
-                    } else {
-
-                        $rigaCartellino = mysqlQuery( $cf['mysql']['connection'], 
-                        'INSERT INTO righe_cartellini ( id_cartellino, id_contratto, id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
-                        array( 
-                            array( 's' =>  $cartellino  ),
-                            array( 's' => $contratto['id'] ),
-                            array( 's' => $contratto['id_anagrafica'] ), 
-                            array( 's' => $data ),
-                            array( 's' => $idT_inps_straordinario ), // tipologia inps straordinaria
-                            array( 's' => 0 ),  
-                            array( 's' => time() ) ) 
-                        );
-
-                    }
-
-    
-                }
-    
-            }
+            $status[$cid]['esecuzione'] = restcall( $url );
           
             // status
             $status['info'][] = 'ho lavorato la riga: ' . $cid;
@@ -239,23 +122,23 @@ $idT_inps_straordinario = 2;
                     )
                 );
 
-                    // creo il per popolare i cartellini appena creati
-                    $status['job'] = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'INSERT INTO job ( nome, job, iterazioni, workspace, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )',
-                        array(
-                            array( 's' => 'popolazione cartellini ' . $job['workspace']['mese'] . '/' . $job['workspace']['anno'] ),
-                            array( 's' => '_mod/_1120.cartellini/_src/_api/_job/_cartellini.populate.php' ),
-                            array( 's' => 2 ),
-                            array( 's' => json_encode(
-                                array(
-                                    'mese' => $job['workspace']['mese'],
-                                    'anno' => $job['workspace']['anno']
-                                )
-                            ) ),
-                            array( 's' => time() )
-                        )
-                    );
+                // creo il per popolare i cartellini appena creati
+                $status['job'] = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO job ( nome, job, iterazioni, workspace, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )',
+                    array(
+                        array( 's' => 'popolazione cartellini ' . $job['workspace']['mese'] . '/' . $job['workspace']['anno'] ),
+                        array( 's' => '_mod/_1120.cartellini/_src/_api/_job/_cartellini.populate.php' ),
+                        array( 's' => 2 ),
+                        array( 's' => json_encode(
+                            array(
+                                'mese' => $job['workspace']['mese'],
+                                'anno' => $job['workspace']['anno']
+                            )
+                        ) ),
+                        array( 's' => time() )
+                    )
+                );
 
                 $status['info'][] = 'ho inserito il job: ' .$status['job'];
                 // mando un messaggio su Slack
