@@ -8,7 +8,7 @@
 
 		$('#btnconferma').html('<i class="fa fa-circle-o-notch fa-spin  fa-fw"></i>');
 		
-        var call = '{{ site.url }}_mod/_1120.cartellini/_src/_api/_task/_cartellini.generate.php?mese='+mese+'&anno='+anno;
+        var call = '{{ site.url }}_mod/_1120.cartellini/_src/_api/_task/_cartellini.generate.start.php?mese='+mese+'&anno='+anno;
 		
 		getws( call,'', function() {
 			$('#btnconferma').html('conferma');

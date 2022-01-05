@@ -1,7 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
 
-
 {% extends "ext/main.html" %}
 
 {% block main %}
@@ -51,14 +50,18 @@
                 <button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="submit();">APRI CARTELLINO</button>
             </div>
 
-            <div class="col-autp">
-                {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ and not etc.approvazione %}
+            {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
+            <div class="col-auto">
+                <button type="button" class="form-control form-control-sm btn btn-sm btn-secondary" data-toggle="modal" data-target="#ricalcola" data-placement="bottom" data-delay="1000" onclick="submitFormOkay = true;" placeholder="ricalcola cartellino"  data-placement="bottom" data-delay="1000" title="" data-original-title="ricalcola cartellino">RICALCOLA CARTELLINO</button>
+            </div>
+            <div class="col-auto">
+                {% if not etc.approvazione %}
                 <button type="button" style="height: 31px"  onclick="window.open('{{ page.url[ localization.language.ietf ] }}?__approve__=1','_self');" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"  placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">APPROVA CARTELLINO</button>
                 {% else %}
-                <button type="button" disabled style="width: auto; padding-left: 10px; padding-right: 10px; height: 31px" class="btn btn-sm btn-secondary"  placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">{{ etc.approvazione }}</button>
-              
+                <button type="button" disabled style="width: auto; padding-left: 10px; padding-right: 10px; height: 31px" class="btn btn-sm btn-secondary"  placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">{{ etc.approvazione }}</button>             
                 {% endif %}
             </div>
+            {% endif %}
         </div>
 
         {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
