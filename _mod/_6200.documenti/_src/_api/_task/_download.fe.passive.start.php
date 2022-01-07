@@ -19,8 +19,7 @@
             array( 's' => json_encode(
                 array(
                     'aziende' => mysqlSelectColumn( 'codice_archivium', $cf['mysql']['connection'], 'SELECT DISTINCT codice_archivium FROM anagrafica WHERE codice_archivium IS NOT NULL' ),
-#                    'data' => date( 'Y-m-d', strtotime( '-1 day' ) )
-                    'data' => '2022-01-05'
+                    'data' => date( 'Y-m-d', strtotime( '-1 day' ) )
                 )
             ) )
         )
