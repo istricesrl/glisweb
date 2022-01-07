@@ -107,7 +107,7 @@
 	    logWrite( md5( $q ) . ' ' . $q, 'mysql' );
 
 	// log
-		appendToFile( $q, FILE_LATEST_MYSQL );
+		appendToFile( $q . PHP_EOL, FILE_LATEST_MYSQL );
 
 	// verifico se c'è connessione e se la query è preparata o meno
 	    if( empty( $c ) ) {

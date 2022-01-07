@@ -215,6 +215,9 @@
 
             /**
              * [...] OMISSIS [...]
+             *
+             * NOTA qui lavoro su $arr[ $widx ] che contiene l'oggetto corrente
+             *
              */
 
             // CUSTOM status

@@ -361,6 +361,11 @@
         // effettuo la chiamata
         $l      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $s );
 
+        // aggiungo l'azienda a ogni elemento dell'array
+        foreach( $l as &$e ) {
+            $e['IDArchiviumAzienda'] = $idAzienda;
+        }
+
         // debug
         // var_dump( $u );
         // var_dump( $s );
