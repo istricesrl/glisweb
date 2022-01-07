@@ -2,12 +2,19 @@
 -- PATCH
 --
 
+--| 202201070005
+ALTER TABLE `documenti`
+DROP INDEX `indice`;
+
 --| 202201070010
 ALTER TABLE `documenti`
+ADD `sezionale` CHAR(6) NULL DEFAULT NULL AFTER `numero`, 
 ADD `codice_archivium` char(64) NULL AFTER `id_sede_destinatario`,
 ADD `codice_sdi` char(64) NULL AFTER `codice_archivium`,
 ADD `timestamp_invio` int NULL AFTER `codice_sdi`,
-ADD `progressivo_invio` int NULL AFTER `timestamp_invio`;
+ADD `progressivo_invio` int NULL AFTER `timestamp_invio`,
+ADD INDEX `sezionale` (`sezionale`),
+ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
 
 --| 202201070020
 ALTER TABLE `documenti`
