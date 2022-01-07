@@ -144,6 +144,10 @@
 				$result = json_decode( $result , true );
 			break;
 
+			case MIME_APPLICATION_XML:
+				$result = xml2array( $result );
+			break;
+
 	    }
 
 	// restituzione della risposta

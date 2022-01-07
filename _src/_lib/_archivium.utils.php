@@ -349,15 +349,25 @@
         // autenticazione per la chiamata
         $a      = $cf['archivium']['profile']['id'] . '/' . $cf['archivium']['profile']['apikey'];
 
+        // parametri di ricerca
+        $p      = trim( implode( '/', array( $limit, $order, $wildcard, $params ) ), '/' );
+
         // endpoint per la chiamata
-        $e      = 'ISC/' . $a . '/FEPassive/' . $idAzienda . '/list';
+        $e      = 'ISC/' . $a . '/FEPassive/' . $idAzienda . '/list' . ( ( ! empty( $p ) ) ? '/' . $p : NULL );
 
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;
 
-        // TODO fare la chiamata
+        // effettuo la chiamata
+        $l      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $s );
 
-        // TODO restituire il risultato
+        // debug
+        // var_dump( $u );
+        // var_dump( $s );
+        // print_r( $l );
+
+        // restituisco il risultato
+        return $l;
 
     }
 
@@ -383,9 +393,16 @@
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;
 
-        // TODO fare la chiamata
+        // effettuo la chiamata
+        $r      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $s );
 
-        // TODO restituire il risultato
+        // debug
+        // var_dump( $u );
+        // var_dump( $s );
+        // print_r( $r );
+
+        // restituisco il risultato
+        return $r;
 
     }
 
@@ -411,8 +428,144 @@
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;
 
-        // TODO fare la chiamata
+        // effettuo la chiamata
+        $r      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_XML, $s );
 
-        // TODO restituire il risultato
+        // debug
+        // var_dump( $u );
+        // var_dump( $s );
+        // var_dump( $r );
+
+        // restituisco il risultato
+        return $r;
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     * 
+     */
+    function archiviumRegistraFePassive( $idAzienda, $data = NULL ) {
+
+        // valori di default per $dataInizio e $dataFine periodo di download
+        $data = ( empty( $data ) ) ? date( 'Y-m' ) : $data;
+
+        // scarico l'elenco 
+        $l = archiviumGetListaFePassive( $idAzienda, 0, 'ID=ASC', 'RIGHT', 'DataFattura=' . $data );
+
+        // debug
+        // print_r( $l );
+
+        // TODO registro le fatture scaricate
+        foreach( $l as &$f ) {
+
+            $f = array_replace_recursive( $f, archiviumRegistraFePassiva( $idAzienda, $f['IDArchivium'] ) );
+
+        }
+
+        // restituisco il risultato
+        return $l;
+
+    }
+
+    /**
+     * NOTA le tipologie di documento
+     * TD01 - Fattura
+     * TD02 - Acconto/anticipo su fattura
+     * TD03 - Acconto/anticipo su parcella
+     * TD05 - Nota di debito
+     * TD06 - Parcella
+     * TD16 - Integrazione fattura reverse charge interno
+     * TD17 - Integrazione/autofattura per acquisto servizi da estero (ex art. 17 c.2 Dpr 633/72)
+     * TD18 - Integrazione per acquisto beni intracomunitari (art. 46 DL 331/93)
+     * TD19 - Integrazione/autofattura per acquisto beni (ex art.17 co.2 DPR 633/72)
+     * TD20 - Autofattura denuncia (per regolarizzazione e integrazione delle fatture - art.6 c.8 d.lgs.471/97 o art.46 c.5 D.L.331/93)
+     * TD21 - Autofattura per splafonamento
+     * TD22 - Estrazione beni da Deposito IVA
+     * TD23 - Estrazione beni da Deposito IVA con versamento IVA
+     * TD24 - Fattura differita - art.21 c.4 lett. a (ovvero fattura differita di beni collegati a DDT o di servizi collegati a idonea documentazione di prova dell'effettuazione per le prestazioni di servizio)
+     * TD25 - Fattura differita - art.21 c.4 terzo periodo lett. b (triangolari interne, ossia cessione di beni effettuata dal cessionario verso un terzo per il tramite del cedente)
+     * TD26 - Cessione di beni ammortizzabili e per passaggi interni - art.36 DPR 633/72
+     * TD27 - Fattura per autoconsumo o per cessioni gratuite senza rivalsa
+     */
+
+    /**
+     *
+     * @todo documentare
+     * 
+     */
+    function archiviumRegistraFePassiva( $idAzienda, $idFattura ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // inizializzo l'array delle informazioni
+        $i = array();
+
+        // scarico i dettagli della fattura
+        $d = archiviumGetInfoFePassiva( $idAzienda, $idFattura );
+
+        // scarico il contenuto della fattura
+        $f = archiviumGetDownloadFePassiva( $idAzienda, $idFattura );
+
+        // unisco gli array
+        $d = array_replace_recursive( $d, $f );
+
+        // debug
+        // print_r( $d );
+        // print_r( $f );
+
+        // cerco o creo il fornitore
+        $i['idFornitore'] = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id' => NULL,
+                'denominazione' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'],
+                'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
+                'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['CodiceFiscale']['#']
+            ),
+            'anagrafica'
+        );
+
+        // cerco o creo il destinatario
+        $i['idCliente'] = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id' => NULL,
+                'denominazione' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'],
+                'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
+                'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['CodiceFiscale']['#']
+            ),
+            'anagrafica'
+        );
+
+        // pre elaborazione dati
+        $i['numero'] = explode( '/', $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Numero']['#'] );
+
+        // TODO inserisco la riga nella tabella documenti
+        $i['idDocumento'] = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id' => NULL,
+                'id_tipologia' => 11,
+                'data' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Data']['#'],
+                'numero' => $i['numero'][0],
+                'sezionale' => $i['numero'][1],
+                'codice_archivium' => $d['IDArchivium'],
+                'id_emittente' => $i['idFornitore'],
+                'id_destinatario' => $i['idCliente']
+            ),
+            'documenti'
+        );
+
+        // TODO inserisco le righe nella tabella documenti_articoli
+
+        // TODO inserisco le righe nella tabella pagamenti
+
+        // debug
+
+        // restituisco il risultato
+        return array_replace_recursive( $d, array( '__info__' => $i ) );
 
     }

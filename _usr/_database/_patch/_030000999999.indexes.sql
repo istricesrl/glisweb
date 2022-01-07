@@ -688,6 +688,8 @@ ALTER TABLE `coupon_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-03 17:09 Fabio Mosti
 ALTER TABLE `documenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`),
+	ADD UNIQUE KEY `unica_codice_sdi` (`codice_sdi`),
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_emittente` (`id_emittente`), 
 	ADD KEY `id_sede_emittente` (`id_sede_emittente`), 
