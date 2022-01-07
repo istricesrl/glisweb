@@ -694,7 +694,7 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
 
 -- documenti
 -- tipologia: tabella gestita
--- verifica: 2021-08-06 15:55 Fabio Mosti
+-- verifica: 2022-01-07 14:25 chiara gdl
 CREATE TABLE IF NOT EXISTS `documenti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) NOT NULL,
@@ -706,6 +706,10 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `id_sede_emittente` int(11) DEFAULT NULL,
   `id_destinatario` int(11) NOT NULL,
   `id_sede_destinatario` int(11) DEFAULT NULL,
+  `codice_archivium` char(64) DEFAULT NULL ,
+  `codice_sdi` char(64) DEFAULT NULL,
+  `timestamp_invio` int DEFAULT NULL,
+  `progressivo_invio` int DEFAULT NULL,
   `id_coupon` char(32) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,

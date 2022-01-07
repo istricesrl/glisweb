@@ -1175,7 +1175,7 @@ DROP TABLE IF EXISTS `documenti_view`;
 
 -- documenti_view
 -- tipologia: tabella gestita
--- verifica: 2021-09-03 17:25 Fabio Mosti
+-- verifica: 2022-01-07 14:25 chiara gdl
 CREATE OR REPLACE VIEW `documenti_view` AS
     SELECT
 		documenti.id,
@@ -1183,6 +1183,9 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		tipologie_documenti.nome AS tipologia,
 		documenti.numero,
 		documenti.sezionale,
+		documenti.codice_sdi,
+		documenti.codice_archivium,
+		documenti.progressivo_invio,
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
@@ -2146,7 +2149,7 @@ DROP TABLE IF EXISTS `pagamenti_view`;
 
 -- pagamenti_view
 -- tipologia: tabella gestita
--- verifica: 2021-11-12 16:00 Chiara GDL
+-- verifica: 2022-01-07 16:00 Chiara GDL
 CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
@@ -2155,6 +2158,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.ordine,
 		pagamenti.nome,
 		pagamenti.note,
+		pagamenti.note_pagamento,
 		pagamenti.id_documento,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
