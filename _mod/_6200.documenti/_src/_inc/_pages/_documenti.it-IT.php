@@ -149,7 +149,7 @@
 	// vista pagamenti
 	$p['pagamenti.view'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'pagamenti' ),
+	    'title'			=> array( $l		=> 'pagamenti_vista' ),
 	    'h1'			=> array( $l		=> 'pagamenti' ),
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
