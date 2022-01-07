@@ -330,12 +330,12 @@ ALTER TABLE `categorie_anagrafica`
 	ADD KEY `se_esterno` (`se_esterno`), 
 	ADD KEY `se_agente` (`se_agente`), 
 	ADD KEY `se_concorrente` (`se_concorrente`), 
-	ADD KEY `se_azienda_gestita` (`se_azienda_gestita`), 
+	ADD KEY `se_gestita` (`se_gestita`), 
 	ADD KEY `se_amministrazione` (`se_amministrazione`), 
 	ADD KEY `se_notizie` (`se_notizie`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_lead`,`se_prospect`,`se_cliente`,`se_fornitore`,`se_produttore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_agente`,`se_concorrente`,`se_azienda_gestita`,`se_amministrazione`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_lead`,`se_prospect`,`se_cliente`,`se_fornitore`,`se_produttore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_agente`,`se_concorrente`,`se_gestita`,`se_amministrazione`);
 
 --| 030000003101
 

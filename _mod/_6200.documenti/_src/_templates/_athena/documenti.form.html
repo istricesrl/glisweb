@@ -75,13 +75,7 @@
 				</div>
 			</div>
 
-			<legend>variazioni</legend>
-			<div class="form-group form-row">
-				<div class="col-12 col-md">
-					<span class="label-top">coupon {% if request[table].tipologia == 'documento di reso' %} reso{% else %}sconto{% endif %}</span>
-					{{ frm.selectBox( table, '', '', 'id_coupon', '', etc.select.coupon, request, '', '', '', '', '', 'coupon.form', 'coupon.form', 'coupon', 'id_coupon', page, pages, ietf, 'coupon' ) }}
-				</div>
-			</div>
+
 			
 		<legend>dati mittente</legend>
 		<div class="form-group form-row">
@@ -110,6 +104,38 @@
 			</div>
 			{% endif %}
 		</div>
+
+		<legend>variazioni</legend>
+		<div class="form-group form-row">
+			<div class="col-12 col-md">
+				<span class="label-top">coupon {% if request[table].tipologia == 'documento di reso' %} reso{% else %}sconto{% endif %}</span>
+				{{ frm.selectBox( table, '', '', 'id_coupon', '', etc.select.coupon, request, '', '', '', '', '', 'coupon.form', 'coupon.form', 'coupon', 'id_coupon', page, pages, ietf, 'coupon' ) }}
+			</div>
+		</div>
+
+		{% if request[ table ].id_tipologia == 1 and archivium.profiles %}
+		<legend>fatturazione elettronica</legend>
+		<div class="form-group form-row">
+			<div class="col-12 col-md-4">
+				<span class="label-top">codice archivium</span>
+				{{ frm.inputDisabled( table, '', '', 'codice_archivium', '', '', request ) }}	
+			</div>
+			<div class="col-12 col-md-4">
+				<span class="label-top">codice sdi</span>
+				{{ frm.inputDisabled( table, '', '', 'codice_sdi', '', '', request ) }}	
+			</div>
+			<div class="col-12 col-md-4">
+				<span class="label-top">progressivo invio</span>
+				{% if not request[ table ].codice_archivium %}
+				{{ frm.input( table, '', '', 'progressivo_invio', '', '', request ) }}	
+				{{ frm.button(  'OTTIENI PROGRESSIVO' ,'button','btn btn-secondary btn-sm btn-block', 'getProgressivo();','ottieni in modo automatico il progressivo' ) }}
+
+				{% else %}
+				{{ frm.inputDisabled( table, '', '', 'progressivo_invio', '', '', request ) }}	
+				{% endif %}
+			</div>
+		</div>
+		{% endif %}
 
         </fieldset>
 

@@ -14,7 +14,7 @@ if(  isset( $_REQUEST['__documento__'] ) ){
     $documento['righe'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM documenti_articoli_view WHERE id_documento = ?', array( array( 's' => $_REQUEST['__documento__'] ) ) );
 
 }
-$azienda = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_azienda_gestita = 1');
+$azienda = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_gestita = 1');
 
 if( $azienda ){ 
     $logo = anagraficaGetLogo( $azienda['id'] );  
