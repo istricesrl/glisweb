@@ -120,20 +120,21 @@
 				<span class="label-top">codice archivium</span>
 				{{ frm.inputDisabled( table, '', '', 'codice_archivium', '', '', request ) }}	
 			</div>
-			<div class="col-12 col-md-4">
+			<div class="col-12 col-md-3">
 				<span class="label-top">codice sdi</span>
 				{{ frm.inputDisabled( table, '', '', 'codice_sdi', '', '', request ) }}	
 			</div>
-			<div class="col-12 col-md-4">
+			<div class="col-12 col-md">
 				<span class="label-top">progressivo invio</span>
 				{% if not request[ table ].codice_archivium %}
 				{{ frm.input( table, '', '', 'progressivo_invio', '', '', request ) }}	
-				{{ frm.button(  'OTTIENI PROGRESSIVO' ,'button','btn btn-secondary btn-sm btn-block', 'getProgressivo();','ottieni in modo automatico il progressivo' ) }}
-
 				{% else %}
 				{{ frm.inputDisabled( table, '', '', 'progressivo_invio', '', '', request ) }}	
 				{% endif %}
 			</div>
+			<div class="col-12 col-md-auto">{{ frm.button(  'OTTIENI PROGRESSIVO' ,'button','btn btn-secondary btn-sm btn-block', 'getProgressivo();','ottieni in modo automatico il progressivo' ) }}
+			</div>
+			
 		</div>
 		{% endif %}
 
