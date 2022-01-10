@@ -1225,6 +1225,110 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 ;
 
+--| 090000009802
+
+-- fatture_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `fatture_view`;
+
+--| 090000009803
+
+-- fatture_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `fatture_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   WHERE documenti.id_tipologia = 1
+;
+
+--| 090000009804
+
+-- note_proforma_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `note_proforma_view`;
+
+--| 090000009805
+
+-- fatture_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `note_proforma_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   WHERE documenti.id_tipologia = 5
+;
+
 --| 090000010000
 
 -- documenti_articoli_view
@@ -1264,8 +1368,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		listini.id_valuta,
 		valute.utf8 AS valuta,
 		documenti_articoli.importo_netto_totale,
-		documenti_articoli.id_iva,
-		iva.nome AS iva,
+		documenti_articoli.id_matricola,
+		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS matricola,
 		documenti_articoli.nome,
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,
@@ -1282,10 +1386,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			' / ',
 			documenti_articoli.importo_netto_totale,
 			' ',
-			valute.utf8,
-			' +IVA ',
-			iva.aliquota,
-			' % '
+			valute.utf8
 		) AS __label__
 	FROM
 		documenti_articoli
@@ -1296,7 +1397,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
-		LEFT JOIN iva ON iva.id = documenti_articoli.id_iva
+		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
 ;
 
 --| 090000012800
@@ -1973,6 +2074,27 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		mastri_path( mastri.id ) AS __label__
 	FROM mastri
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
+;
+
+--| 090000021000
+-- matricole
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `matricole_view`;
+
+--| 090000021001
+-- matricole
+-- tipologia: tabella gestita
+-- verifica: 2021-12-28 16:20 Chiara GDL
+CREATE OR REPLACE VIEW `matricole_view` AS
+	SELECT
+	matricole.id,
+	matricole.id_produttore,
+	matricole.id_marchio,
+	matricole.serial_number,
+	matricole.nome,
+	concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS __label__
+	FROM matricole
+	ORDER BY __label__
 ;
 
 --| 090000021600
