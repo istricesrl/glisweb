@@ -1304,6 +1304,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text,
+  `note_pagamento` text,
   `id_documento` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
