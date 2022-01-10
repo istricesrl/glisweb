@@ -24,6 +24,10 @@
     documenti.id_sede_emittente             | l'ID della sede dell'emittente
     documenti.id_destinatario               | l'ID del destinatario del documento
     documenti.id_sede_destinatario          | l'ID della sede del destinatario
+    documenti.codice_archivium              | il codice archivium del documento
+    documenti.codice_sdi                    | il codice sdi di invio del documento
+    documenti.timestamp_invio               | il timestamp di invio del documento
+    documenti.progressivo_invio             | il progressivo di invio del documento
     documenti.id_coupon                     | l'ID del coupon associato al documento
     documenti.note                          | note aggiuntive sul documento
     documenti.id_account_inserimento        | l'ID dell'account che ha inserito la riga
@@ -59,6 +63,10 @@
     documenti_view.emittente                        | l'emittente del documento
     documenti_view.id_destinatario                  | -
     documenti_view.destinatario                     | il destinatario del documento
+    documenti_view.codice_archivium                 | -
+    documenti_view.codice_sdi                       | -
+    documenti_view.timestamp_invio                  | -
+    documenti_view.progressivo_invio                | -
     documenti_view.id_coupon                        | -
     documenti_view.id_account_inserimento           | -
     documenti_view.id_account_aggiornamento         | -

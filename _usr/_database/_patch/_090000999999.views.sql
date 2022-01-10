@@ -1192,6 +1192,10 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.codice_archivium
+    	documenti.codice_sdi
+    	documenti.timestamp_invio
+    	documenti.progressivo_invio
 		documenti.id_coupon,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,

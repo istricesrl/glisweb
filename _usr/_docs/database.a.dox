@@ -261,7 +261,7 @@
     anagrafica_view.se_esterno                             | flag che identifica se il contatto è un estermp
     anagrafica_view.se_amministrazione                     | flag che identifica se il contatto è un impiegato amministrativo
     anagrafica_view.se_produzione                          | flag che identifica se il contatto è un impiegato in produzione
-    anagrafica_view.se_azienda_gestita                     | flag che identifica se il contatto è un'azienda gestita
+    anagrafica_view.se_gestita                             | flag che identifica se il contatto è un'azienda gestita
     anagrafica_view.se_concorrente                         | flag che identifica se il contatto è un concorrente
     anagrafica_view.se_tutor                               | flag che identifica se il contatto è un tutor
     anagrafica_view.se_classe                              | flag che identifica se il contatto è una classe

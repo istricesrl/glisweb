@@ -72,7 +72,7 @@
     categorie_anagrafica.se_esterno                        | -
     categorie_anagrafica.se_agente                         | -
     categorie_anagrafica.se_concorrente                    | -
-    categorie_anagrafica.se_azienda_gestita                | -
+    categorie_anagrafica.se_gestita                        | -
     categorie_anagrafica.se_amministrazione                | -
     categorie_anagrafica.se_notizie                        | -
     categorie_anagrafica.id_account_inserimento            | l'ID dell'account che ha inserito la riga
@@ -114,7 +114,7 @@
     categorie_anagrafica_view.se_esterno                    | -
     categorie_anagrafica_view.se_agente                     | -
     categorie_anagrafica_view.se_concorrente                | -
-    categorie_anagrafica_view.se_azienda_gestita            | -
+    categorie_anagrafica_view.se_gestita                    | -
     categorie_anagrafica_view.se_amministrazione            | -
     categorie_anagrafica_view.se_notizie                    | -
     categorie_anagrafica_view.figli                         | il numero di categorie figlie di questa categoria
