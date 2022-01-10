@@ -20,7 +20,7 @@
 	    </div>
 	    <div class="col-auto">
 		<span class="label-top">pec</span>
-		{{ frm.select( table, subtable, i, 'se_pec', '', etc.select.se_pec, request, '', '', '', '', '', disabled ) }}
+		{{ frm.select( table, subtable, i, 'se_pec', '', etc.select.se_pec, request, '', '', '', 1, '', disabled ) }}
 		</div>
 		<div class="w-100 d-block d-md-none m-0"></div>
 	    <div class="col">
@@ -67,7 +67,7 @@
 	    </div>
 	    <div class="col-auto">
 		<span class="label-top">tipo</span>
-		{{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_telefoni, request, '', '', '', '', '', disabled ) }}
+		{{ frm.select( table, subtable, i, 'id_tipologia', '', etc.select.tipologie_telefoni, request, '', '', '', 1, '', disabled ) }}
 		</div>
 		<div class="w-100 d-block d-md-none m-0"></div>
 	    <div class="col">
@@ -110,7 +110,7 @@
 	<div class="form-group form-row">
 		<div class="col-auto">
 			<span class="label-top">ruolo</span>
-			{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_indirizzi, request, '', '', '', '', '', disabled ) }}
+			{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_indirizzi, request, '', '', '', 1, '', disabled ) }}
 		</div>
 	    <div class="col">
 			<span class="label-top">indirizzo</span>
@@ -167,7 +167,7 @@
 	<div class="form-group form-row">
 	    <div class="col">
 		<span class="label-top">categoria</span>
-		{{ frm.selectRequired( table, subtable, i, 'id_categoria', '', etc.select.categorie_anagrafica, request, '2', '', '', disabled ) }}
+		{{ frm.selectRequired( table, subtable, i, 'id_categoria', '', etc.select.categorie_anagrafica, request, '1', 1, '', disabled ) }}
 	    </div>
 	    {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">

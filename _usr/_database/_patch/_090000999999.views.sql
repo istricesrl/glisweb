@@ -155,7 +155,7 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
 		max( categorie_anagrafica.se_agente ) AS se_agente,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
-		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_gestita ) AS se_gestita,
 		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
 		max( categorie_anagrafica.se_notizie ) AS se_notizie,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
@@ -217,7 +217,7 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
 		max( categorie_anagrafica.se_agente ) AS se_agente,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
-		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_gestita ) AS se_gestita,
 		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
 		max( categorie_anagrafica.se_notizie ) AS se_notizie,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
@@ -280,7 +280,7 @@ CREATE OR REPLACE VIEW anagrafica_attivi_view AS
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
 		max( categorie_anagrafica.se_agente ) AS se_agente,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
-		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_gestita ) AS se_gestita,
 		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
 		max( categorie_anagrafica.se_notizie ) AS se_notizie,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
@@ -674,7 +674,7 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 		categorie_anagrafica.se_esterno,
 		categorie_anagrafica.se_agente,
 		categorie_anagrafica.se_concorrente,
-		categorie_anagrafica.se_azienda_gestita,
+		categorie_anagrafica.se_gestita,
 		categorie_anagrafica.se_amministrazione,
 		categorie_anagrafica.se_notizie,
 		count( c1.id ) AS figli,
@@ -708,6 +708,8 @@ CREATE OR REPLACE VIEW categorie_notizie_view AS
 		categorie_notizie.template,
 		categorie_notizie.schema_html,
 		categorie_notizie.tema_css,
+		categorie_notizie.se_sitemap,
+		categorie_notizie.se_cacheable,
 		categorie_notizie.id_sito,
 		categorie_notizie.id_pagina,
 		count( c1.id ) AS figli,
@@ -741,6 +743,8 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 		categorie_prodotti.template,
 		categorie_prodotti.schema_html,
 		categorie_prodotti.tema_css,
+		categorie_prodotti.se_sitemap,
+		categorie_prodotti.se_cacheable,
 		categorie_prodotti.id_sito,
 		categorie_prodotti.id_pagina,
 		count( c1.id ) AS figli,
@@ -799,6 +803,13 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 		categorie_risorse.id_genitore,
 		categorie_risorse.ordine,
 		categorie_risorse.nome,
+		categorie_risorse.template,
+		categorie_risorse.schema_html,
+		categorie_risorse.tema_css,
+		categorie_risorse.se_sitemap,
+		categorie_risorse.se_cacheable,
+		categorie_risorse.id_sito,
+		categorie_risorse.id_pagina,
 		count( c1.id ) AS figli,
 		count( risorse_categorie.id ) AS membri,
 		categorie_risorse.id_account_inserimento,
@@ -1164,19 +1175,28 @@ DROP TABLE IF EXISTS `documenti_view`;
 
 -- documenti_view
 -- tipologia: tabella gestita
--- verifica: 2021-09-03 17:25 Fabio Mosti
+-- verifica: 2022-01-07 14:25 chiara gdl
 CREATE OR REPLACE VIEW `documenti_view` AS
     SELECT
 		documenti.id,
 		documenti.id_tipologia,
 		tipologie_documenti.nome AS tipologia,
 		documenti.numero,
+		documenti.sezionale,
+		documenti.codice_sdi,
+		documenti.codice_archivium,
+		documenti.progressivo_invio,
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.codice_archivium
+    	documenti.codice_sdi
+    	documenti.timestamp_invio
+    	documenti.progressivo_invio
+		documenti.id_coupon,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
@@ -2255,7 +2275,7 @@ DROP TABLE IF EXISTS `pagamenti_view`;
 
 -- pagamenti_view
 -- tipologia: tabella gestita
--- verifica: 2021-11-12 16:00 Chiara GDL
+-- verifica: 2022-01-07 16:00 Chiara GDL
 CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
@@ -2264,6 +2284,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.ordine,
 		pagamenti.nome,
 		pagamenti.note,
+		pagamenti.note_pagamento,
 		pagamenti.id_documento,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
@@ -3160,13 +3181,13 @@ CREATE OR REPLACE VIEW regioni_view AS
 --| 090000030800
 
 -- reparti_view
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 DROP TABLE IF EXISTS reparti_view;
 
 --| 090000030801
 
 -- reparti_view
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:40 Fabio Mosti
 CREATE OR REPLACE VIEW reparti_view AS
 	SELECT

@@ -18,6 +18,7 @@
     pagamenti.ordine                        | campo di ordinamento
     pagamenti.nome                          | nome descrittivo della riga
     pagamenti.note                          | note aggiuntive sul pagamento
+    pagamenti.note_pagamento                | le note relative al pagamento
     pagamenti.id_documento                  | l'ID del documento a cui è collegato il pagamento
     pagamenti.id_mastro_provenienza         | l'ID del mastro scaricato dalla riga
     pagamenti.id_mastro_destinazione        | l'ID del mastro caricato dalla riga
@@ -55,6 +56,7 @@
     pagamenti_view.ordine                   | -
     pagamenti_view.nome                     | -
     pagamenti_view.note                     | -
+    pagamenti_view.note_pagamento           | -
     pagamenti_view.id_documento             | -
     pagamenti_view.id_mastro_provenienza    | -
     pagamenti_view.mastro_provenienza       | il mastro scaricato dalla riga

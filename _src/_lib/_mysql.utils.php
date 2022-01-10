@@ -224,7 +224,7 @@
         }
 
     }
-
+/*
     function aggiungiGruppi( &$p, $id, $f = 'id_pagina', $t = 'pagine_gruppi' ) {
 
         // TODO l'assetto dei gruppi cambierà, probabilmente per usare le ACL
@@ -247,7 +247,7 @@
         }
 
     }
-
+*/
     function aggiungiContenuti( &$p, $id, $f ) {
 
         global $cf;

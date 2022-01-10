@@ -75,6 +75,7 @@
     categorie_anagrafica            | 003100    | ricorsiva     | categorie     | contiene le categorie dell'anagrafica
     listini                         | 017200    | base          | principale    | contiene i listini
     ranking                         | 028600    | base          | principale    | contiene i ranking relativi all'anagrafica
+    reparti                         | 030800    | base          | principale    | contiene i reparti
     task                            | 043000    | base          | principale    | contiene i task pianificati
     tipologie_anagrafica            | 050000    | ricorsiva     | tipologie     | contiene le tipologie delle anagrafiche
     tipologie_attivita              | 050400    | ricorsiva     | tipologie     | contiene le tipologie delle attività
@@ -164,7 +165,6 @@
     progetti_categorie              | 027400    | relazione     | principale    | mette in relazione progetti e categorie_progetti
     pubblicazioni                   | 028400    | base          | principale    | contiene le pubblicazioni
     redirect                        | 029400    | base          | principale    | contiene i redirect HTTP
-    reparti                         | 030800    | base          | principale    | contiene i reparti
     risorse                         | 032000    | base          | principale    | contiene le risorse
     risorse_anagrafica              | 032200    | relazione     | principale    | mette in relazione risorse e anagrafica
     risorse_categorie               | 032400    | relazione     | principale    | mette in relazione risorse e categorie_risorse

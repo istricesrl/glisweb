@@ -330,12 +330,12 @@ ALTER TABLE `categorie_anagrafica`
 	ADD KEY `se_esterno` (`se_esterno`), 
 	ADD KEY `se_agente` (`se_agente`), 
 	ADD KEY `se_concorrente` (`se_concorrente`), 
-	ADD KEY `se_azienda_gestita` (`se_azienda_gestita`), 
+	ADD KEY `se_gestita` (`se_gestita`), 
 	ADD KEY `se_amministrazione` (`se_amministrazione`), 
 	ADD KEY `se_notizie` (`se_notizie`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_lead`,`se_prospect`,`se_cliente`,`se_fornitore`,`se_produttore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_agente`,`se_concorrente`,`se_azienda_gestita`,`se_amministrazione`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_lead`,`se_prospect`,`se_cliente`,`se_fornitore`,`se_produttore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_agente`,`se_concorrente`,`se_gestita`,`se_amministrazione`);
 
 --| 030000003101
 
@@ -688,14 +688,17 @@ ALTER TABLE `coupon_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-03 17:09 Fabio Mosti
 ALTER TABLE `documenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`),
+	ADD UNIQUE KEY `unica_codice_sdi` (`codice_sdi`),
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_emittente` (`id_emittente`), 
 	ADD KEY `id_sede_emittente` (`id_sede_emittente`), 
 	ADD KEY `id_destinatario` (`id_destinatario`), 
 	ADD KEY `id_sede_destinatario` (`id_sede_destinatario`), 
+	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
 
 --| 030000009801
 
@@ -1791,7 +1794,7 @@ ALTER TABLE `regioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --| 030000030800
 
 -- reparti
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:36 Fabio Mosti
 ALTER TABLE `reparti` 
 	ADD PRIMARY KEY (`id`), 

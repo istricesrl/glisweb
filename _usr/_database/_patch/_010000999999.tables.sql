@@ -358,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `se_esterno` int(1) DEFAULT NULL,
   `se_agente` int(1) DEFAULT NULL,
   `se_concorrente` int(1) DEFAULT NULL,
-  `se_azienda_gestita` int(1) DEFAULT NULL,
+  `se_gestita` int(1) DEFAULT NULL,
   `se_amministrazione` int(1) DEFAULT NULL,
   `se_produzione` int(1) DEFAULT NULL,
   `se_notizie` int(1) DEFAULT NULL,
@@ -382,6 +382,8 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
   `id_sito` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -404,6 +406,8 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
   `id_sito` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -443,6 +447,8 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -688,17 +694,23 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
 
 -- documenti
 -- tipologia: tabella gestita
--- verifica: 2021-08-06 15:55 Fabio Mosti
+-- verifica: 2022-01-07 14:25 chiara gdl
 CREATE TABLE IF NOT EXISTS `documenti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) NOT NULL,
   `numero` int(11) NOT NULL,
+  `sezionale` char(32) DEFAULT NULL,
   `data` date NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `id_emittente` int(11) NOT NULL,
   `id_sede_emittente` int(11) DEFAULT NULL,
   `id_destinatario` int(11) NOT NULL,
   `id_sede_destinatario` int(11) DEFAULT NULL,
+  `codice_archivium` char(64) DEFAULT NULL ,
+  `codice_sdi` char(64) DEFAULT NULL,
+  `timestamp_invio` int DEFAULT NULL,
+  `progressivo_invio` int DEFAULT NULL,
+  `id_coupon` char(32) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -734,7 +746,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `importo_netto_totale` decimal(9,2) NOT NULL,
   `nome` text,
   `specifiche` char(255) DEFAULT NULL,
-  `testo` text,
+  `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1650,7 +1662,7 @@ CREATE TABLE IF NOT EXISTS `regioni` (
 --| 010000030800
 
 -- reparti
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:34 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `reparti` (
   `id` int(11) NOT NULL,

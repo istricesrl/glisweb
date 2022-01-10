@@ -29,17 +29,16 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data_lavorazione' => 'data',
-        'documento' => 'documento',
+        'data' => 'data',
+    #    'documento' => 'documento',
         'tipologia' => 'tipologia',
         'nome' => 'nome',
         'id_articolo' => 'articolo',
         'importo_netto_totale' => 'importo',
         'quantita' => 'quantità',
-        'totale_riga' => 'totale',
-        'mastro_carico' => 'carico',
-        'mastro_scarico' => 'scarico',
-
+    #    'totale_riga' => 'totale',
+		'mastro_provenienza' => 'provenienza',
+		'mastro_destinazione' => 'destinazione'
 	);
 
     // stili della vista
@@ -72,7 +71,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_azienda_gestita = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1'
 	);
 
     // tendina destinatari

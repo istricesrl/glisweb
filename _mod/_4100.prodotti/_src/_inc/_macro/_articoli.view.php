@@ -33,8 +33,8 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'nome' => 'text-left',
 	    'id' => 'text-left',
+	    'nome' => 'text-left',
 	    'ean' => 'text-left',
         'id_prodotto' => 'text-left'
 	);

@@ -160,6 +160,26 @@
                  * semplicità il primo step del job come step zero, con i successivi numerati pregressivamente da uno
                  */
 
+                /**
+                 * SORGENTI DATI
+                 * questo esempio è basato su una sorgente dati esterna (un file) che viene letto interamente ogni
+                 * volta; si tratta di uno scenario piuttosto basico ma relativamente comune. Un caso frequente è anche
+                 * la sorgente esterna di tipo API REST oppure database; in questi casi non ha senso leggere l'intero
+                 * dataset ogni volta, ma più facilmente si preleverà in qualche modo la lista degli oggetti da lavorare
+                 * e la si salverà nel workspace, dopodiché a ogni iterazione successiva si preleverà l'oggetto corrente
+                 * dalla sorgente utilizzando l'ID corrente prelevato dalla lista; in questo caso $arr conterrà la lista
+                 * degli ID e andrà salvato nel workspace in questo modo:
+                 *
+                 * $job['workspace']['lista'] = $arr;
+                 *
+                 * Successivamente, nella parte STEP SUCCESSIVI AL PRIMO si svolgerà l'operazione contraria:
+                 *
+                 * $arr = $job['workspace']['lista'];
+                 *
+                 * In questo modo ad ogni iterazione $arr conterrà la lista degli ID su cui lavorare e ad ogni
+                 * iterazione si andrà a lavorare su $arr[ $widx ].
+                 */
+
                 // segno il totale delle cose da fare
                 $job['totale'] = count( $arr );
 
@@ -215,6 +235,9 @@
 
             /**
              * [...] OMISSIS [...]
+             *
+             * NOTA qui lavoro su $arr[ $widx ] che contiene l'oggetto corrente
+             *
              */
 
             // CUSTOM status

@@ -22,7 +22,6 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
-
     // tabella della vista
 	$ct['view']['table'] = 'documenti_articoli';
 
@@ -43,14 +42,14 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'tipologia' => 'tipologia',
-        'data_lavorazione' => 'data',
+        'data' => 'data',
         'nome' => 'nome',
 		'id_articolo' => 'articolo',
-		'mastro_scarico' => 'scarico',
-		'mastro_carico' => 'carico',
+		'mastro_provenienza' => 'provenienza',
+		'mastro_destinazione' => 'destinazione',
         'importo_netto_totale' => 'importo netto',
         'quantita' => 'quantità',
-		'totale_riga' => 'totale',
+	#	'totale_riga' => 'totale',
 		'id_documento' => 'id_documento'
 	);
 
@@ -69,7 +68,7 @@
     );
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-		// preset filtro custom progetti aperti
+		// preset filtro righe documento
 		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
 

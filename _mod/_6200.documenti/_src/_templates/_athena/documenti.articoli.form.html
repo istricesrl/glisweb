@@ -58,7 +58,7 @@
 		<div class="form-group form-row">
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">data</span>
-				{{ frm.date( table, '', '', 'data_lavorazione', '', '', request, default_data, '', 1 ) }}
+				{{ frm.date( table, '', '', 'data', '', '', request, default_data, '', 1 ) }}
 			</div>
 			<div class="col-md-auto col-4">
 				<span class="label-top">tipologia</span>
@@ -70,8 +70,7 @@
 			</div>
 		</div>
 
-
-		<legend>dettaglio</legend>
+		<legend>contenuto della riga</legend>
 		<div class="form-group form-row">
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">quantità</span>
@@ -92,11 +91,13 @@
 				<span class="label-top remove-after-duplicate">specifiche</span>
 				{{ frm.input( table, '', '', 'specifiche', '', '', request ) }}
 			</div>
-		</div>	
+		</div>
+
+		<legend>valore della riga</legend>
 		<div class="form-group form-row">
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">importo</span>
-				{{ frm.inputRequired( table, '', '', 'importo_netto_totale', '', '', request ) }}
+				{{ frm.input( table, '', '', 'importo_netto_totale', '', '', request ) }}
 			</div>
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">reparto</span>
@@ -110,10 +111,10 @@
 				<span class="label-top remove-after-duplicate">iva</span>
 				{{ frm.select( table, '', '', 'id_iva', '', etc.select.id_iva, request ) }}
 			</div>
-			<div class="col">
+			<!--div class="col">
 				<span class="label-top remove-after-duplicate">matricola</span>
 				{{ frm.selectBox( table, '', '', 'matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'matricole' ) }}
-			</div>
+			</div-->
 		</div>	
 		<div class="form-group form-row">
 

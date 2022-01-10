@@ -33,9 +33,8 @@
         'tipologia' => 'tipologia',
         'numero' => 'numero',
         '__label__' => 'nome',
-   //     'cliente' => 'cliente',
-        'emittente' => 'emittente',
-      //  'totale' => 'totale' 
+        'destinatario' => 'destinatario',
+        'emittente' => 'emittente'
 	);
 
     // stili della vista
@@ -44,7 +43,7 @@
         'numero' => 'text-left',
         'data' => 'text-left',
         '__label__' => 'text-left',
-        'cliente' => 'text-left',
+        'destinatario' => 'text-left',
         'emittente' => 'text-left',
         'tipologia' => 'text-left',
         'totale' => 'text-right' 
@@ -65,7 +64,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_azienda_gestita = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1'
 	);
 
     // tendina destinatari

@@ -14,7 +14,7 @@
     require '../../../../../_src/_config.php';
 
     // DATI
-    $azienda = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_azienda_gestita = 1');
+    $azienda = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_gestita = 1');
 
     if( $azienda ){ 
         $logo = anagraficaGetLogo( $azienda['id'] );  

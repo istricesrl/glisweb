@@ -20,15 +20,16 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'nome' => 'articolo',
-        'ean' => 'EAN'
+	    '__label__' => 'articolo',
+        'id_prodotto' => 'id_prodotto',
+        'ean' => 'ean'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'text-left',
-	    'nome' => 'text-left',
-	    'ean' => 'text-left'
+	    '__label__' => 'text-left',
+        'id_prodotto' => 'd-none'
 	);
 
     // pagina per la gestione degli oggetti esistenti
