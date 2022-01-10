@@ -43,7 +43,60 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'proforma.amministrazione.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'proforma.amministrazione.form',
+														'proforma.amministrazione.form.righe',
+														'proforma.amministrazione.form.stampe',
+														'proforma.amministrazione.form.tools' ) )
+	);
+
+	// gestione righe proforma
+	$p['proforma.amministrazione.form.righe'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'righe_fatture' ),
+		'h1'			=> array( $l		=> 'righe' ),
+		'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.righe.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.form.righe.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.form']['etc']['tabs'] )
+	);
+
+	// gestione proforma_righe
+	$p['proforma.amministrazione.righe.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione righe' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.righe.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.righe.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'proforma.amministrazione.righe.form' ) )
+	);
+
+	// gestione tools proforma
+	$p['proforma.amministrazione.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'			=> array( $l		=> 'azioni documenti' ),
+	    'h1'			=> array( $l		=> 'azioni documenti' ),
+	    'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.form.tools.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica stampe
+	$p['proforma.amministrazione.form.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.form.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['proforma.amministrazione.form']['etc']['tabs'] )
 	);
 
 	// vista fatture
@@ -69,5 +122,58 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.form',
+														'fatture.amministrazione.form.righe',
+														'fatture.amministrazione.form.stampe',
+														'fatture.amministrazione.form.tools' ) )
+	);
+
+	// gestione righe fatture
+	$p['fatture.amministrazione.form.righe'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'righe_fatture' ),
+		'h1'			=> array( $l		=> 'righe' ),
+		'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.righe.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.righe.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
+	);
+
+	// gestione fatture_righe
+	$p['fatture.amministrazione.righe.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione righe' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.righe.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.righe.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.righe.form' ) )
+	);
+
+	// gestione tools fatture
+	$p['fatture.amministrazione.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni documenti' ),
+		'h1'			=> array( $l		=> 'azioni documenti' ),
+		'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.tools.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica stampe
+	$p['fatture.amministrazione.form.stampe'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'stampe' ),
+		'h1'		=> array( $l		=> 'stampe' ),
+		'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.stampe.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
 	);
