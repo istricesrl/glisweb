@@ -36,6 +36,7 @@
 
             {# CAMPI HIDDEN DI BASE #}
             <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+            <input type="hidden" id="id_tipologia" name="{{ table }}[id_tipologia]" value="5">
             <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
             <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
             <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]"
@@ -53,10 +54,19 @@
                         <span class="label-top">nome</span>
                         {{ frm.input( table, '', '', 'nome', '', '', request ) }}
                     </div>
-
+                    <div class="col-4 col-md-2">
+                        <span class="label-top">numero</span>
+                        {{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
+                    </div>
                     <div class="col-12 col-md">
                         <span class="label-top">data</span>
                         {{ frm.date( table, '', '', 'data', '', '', request, '', '', '1' ) }}
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col-12">
+                    <span class="label-top">note</span>
+                    {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
                     </div>
                 </div>
 

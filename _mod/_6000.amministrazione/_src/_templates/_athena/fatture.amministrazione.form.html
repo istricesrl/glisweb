@@ -35,6 +35,7 @@
 
             {# CAMPI HIDDEN DI BASE #}
             <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+            <input type="hidden" id="id_tipologia" name="{{ table }}[id_tipologia]" value="1">
             <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
             <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
             <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
@@ -47,19 +48,28 @@
                 <legend>dati generali <small>{{ legend }}</small></legend>
 
                 <div class="form-group form-row">
-                    <div class="col-12 col-md">
+                    <div class="col-4 col-md-2">
                         <span class="label-top">numero</span>
-                        {{ frm.input( table, '', '', 'numero', '', '', request ) }}
+                        {{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
                     </div>
-
+                    <div class="col-4 col-md-2">
+                        <span class="label-top">sezionale</span>
+                        {{ frm.input( table, '', '', 'sezionale', '', '', request ) }}
+                    </div>
                     <div class="col-12 col-md">
                         <span class="label-top">nome</span>
                         {{ frm.input( table, '', '', 'nome', '', '', request ) }}
                     </div>
-
                     <div class="col-12 col-md">
                         <span class="label-top">data</span>
-                        {{ frm.date( table, '', '', 'data', '', '', request, '', '', '1' ) }}
+                        {{ frm.date( table, '', '', 'data', '', '', request, 'now'|date('Y-m-d'), '', '1' ) }}
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    <div class="col-12">
+                    <span class="label-top">note</span>
+                    {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
                     </div>
                 </div>
 

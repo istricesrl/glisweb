@@ -33,9 +33,9 @@
         'tipologia' => 'tipologia',
         'numero' => 'numero',
         '__label__' => 'nome',
-        'cliente' => 'cliente',
+   //     'cliente' => 'cliente',
         'emittente' => 'emittente',
-        'totale' => 'totale' 
+      //  'totale' => 'totale' 
 	);
 
     // stili della vista

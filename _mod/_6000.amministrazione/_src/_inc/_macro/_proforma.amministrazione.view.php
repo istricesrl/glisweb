@@ -23,6 +23,9 @@
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'proforma.amministrazione.form';
 
+    // tabella per la gestione degli oggetti esistenti
+	$ct['view']['open']['table'] = 'documenti';
+
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
