@@ -67,6 +67,7 @@
 					    logWrite( 'database selezionato: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql' );
 					} else {
 					    logWrite( 'impossibile selezionare il database: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql', LOG_ERR );
+						die('impossibile selezionare il database, verificare i permessi sul server MySQL');
 					}
 
 				    // collation
