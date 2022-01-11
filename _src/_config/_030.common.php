@@ -104,7 +104,7 @@
 	    $latestVersion = restCall(
             'https://glisweb.videoarts.it/current.version',
             METHOD_GET,
-            array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'] ),
+            array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'], 'release' => $latestRelease ),
             MIME_APPLICATION_JSON,
             MIME_TEXT_PLAIN
         );
