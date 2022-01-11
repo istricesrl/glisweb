@@ -29,21 +29,12 @@
 
     // versione del framework
 	if( VERSION_CURRENT == VERSION_LATEST ) {
-	    echo '[ OK ] framework aggiornato alla stable (' . VERSION_CURRENT . ')' . PHP_EOL;
+	    echo '[ OK ] framework aggiornato (' . VERSION_CURRENT . ')' . PHP_EOL;
 	} elseif( VERSION_CURRENT < VERSION_LATEST ) {
-	    echo '[WARN] stai usando una versione obsoleta (' . VERSION_CURRENT . ') rispetto alla stable ' . VERSION_LATEST . PHP_EOL;
+	    echo '[WARN] stai usando una versione obsoleta (' . VERSION_CURRENT . ') rispetto a ' . VERSION_LATEST . PHP_EOL;
 	} else {
-	    echo '[INFO] stai usando una versione di sviluppo (' . VERSION_CURRENT . ') superiore alla stable ' . VERSION_LATEST . PHP_EOL;
+	    echo '[INFO] stai usando una versione di sviluppo (' . VERSION_CURRENT . ') superiore a ' . VERSION_LATEST . PHP_EOL;
 	}
-
-	/**
-	 * TODO questo meccanismo può essere migliorato; mentre la release è collegata ai tag di master, la versione è collegata al livello
-	 * di patch di develop; idealmente sarebbe bello che ogni release avesse un suo livello di patch separato in modo da sapere se
-	 * l'installazione corrente è aggiornata a livello di patch rispetto alla propria release
-	 * 
-	 * questo si potrebbe ottenere salvando la versione in file di release su dol-amroth in modo che il webservice di controllo versione
-	 * possa essere interrogato per release
-	 */
 
 	// output
 	echo PHP_EOL;
