@@ -22,6 +22,9 @@
         'contratti' => array(
             CONTROL_FULL => array( 'roots' )
         ),
+        'contratti_articoli' => array(
+            CONTROL_FULL => array( 'roots' )
+        ),
         'contratti_archiviati' => array(
             CONTROL_FULL => array( 'roots' )
         ),

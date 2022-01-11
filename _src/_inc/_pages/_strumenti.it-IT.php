@@ -164,7 +164,30 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
+    // pagina gestione cron
+	$p['cron.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'cron' ),
+	    'h1'		=> array( $l		=> 'cron' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_cron.view.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'cron' ),
+		'priority'	=> '970' ) ) )
+);
 
+    // pagina gestione cron
+	$p['cron.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cron.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_cron.form.php' ),
+	    'parent'		=> array( 'id'		=> 'cron.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'cron.form' ) )
+	);
 
 	// vista job
 	$p['job.view'] = array(
@@ -194,32 +217,9 @@
 													) ),
 	);
 
+
+
 /*
-    // pagina gestione cron
-	$p['cron'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'cron' ),
-	    'h1'		=> array( $l		=> 'cron' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_cron.view.php' ),
-	    'parent'		=> array( 'id'		=> 'strumenti' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gestione cron' ),
-									'priority'	=> 50 ) )
-	);
-
-    // pagina gestione cron
-	$p['cron_gestione'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'cron.gestione.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_cron.gestione.php' ),
-	    'parent'		=> array( 'id'		=> 'cron' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'cron_gestione' ) )
-	);
-
     // pagina gestione job
 	$p['job'] = array(
 	    'sitemap'		=> false,

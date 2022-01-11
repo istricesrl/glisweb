@@ -53,17 +53,32 @@
 	    'parent'		=> array( 'id'		=> 'contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.form.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'contratti.form' ) ),
+		'etc'		=> array( 'tabs'	=> array( 'contratti.form', 'contratti.form.amministrazione' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
+
+
 
 	foreach( range( 1, 9 ) as $i ) {
 		$p['contratti.form']['etc']['tabs'][] = 'contratti.form.orari.'.  $i ;
 	}
 
 	$p['contratti.form']['etc']['tabs'][] = 'contratti.form.disponibilita';
+	$p['contratti.form']['etc']['tabs'][] = 'contratti.form.pianificazioni';
 	$p['contratti.form']['etc']['tabs'][] = 'contratti.form.tools';
 
+
+    // gestione contratti
+	$p['contratti.form.amministrazione'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'amministrazione' ),
+	    'h1'		=> array( $l		=> 'amministrazione' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.amministrazione.html' ),
+	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.form.amministrazione.php' ),
+		'etc'		=> array( 'tabs'	=> $p['contratti.form']['etc']['tabs'] ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
 
 	foreach( range( 1, 9 ) as $i ) {
 		$p['contratti.form.orari.' . $i ] = array(
@@ -101,6 +116,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.form.tools.php' ),
 	    'etc'		=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// gestione contratti pianificazioni
+	$p['contratti.form.pianificazioni'] = array(
+	    'sitemap'		=> false,
+		'title'		=> array( $l		=> 'pianificazioni contratti' ),
+		'icon'		=> '<i class="fa fa-calendar-o" aria-hidden="true"></i>',
+	    'h1'		=> array( $l		=> 'pianificazioni' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.pianificazioni.html' ),
+	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.form.pianificazioni.php' ),
+	    'etc'		=> array( 'tabs'	=> $p['contratti.form']['etc']['tabs'] ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
