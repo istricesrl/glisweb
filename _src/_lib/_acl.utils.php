@@ -254,12 +254,12 @@
 				    "FROM ${t}_view ".
 				    "LEFT JOIN ${aclTb} ON ${aclTb}.id_entita = ${t}_view.id ".
 # NON GERARCHICO		    "LEFT JOIN account_gruppi ON account_gruppi.id_gruppo = ${aclTb}.id_gruppo ".
-				    "LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) ) ".
+				    "LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) OR ${aclTb}.id_account = ? ) ".
 
 		    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? ) ".
 #	CONSIDERA EDITOR			    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? OR ${t}_view.id_account_editor = ? ) ".
 				    "AND ${t}_view.id = ? ",
-array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )
+array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )
 #	CONSIDERA EDITOR	array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )
 				);
 
