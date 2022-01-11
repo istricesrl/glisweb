@@ -92,8 +92,8 @@
 	    $cf['common']['license']['id']		= NULL;
 	}
 
-    // controllo aggiornamento
-	if( ! file_exists( FILE_LATEST_UPDATE ) || filemtime( FILE_LATEST_UPDATE ) < strtotime( '-1 week' ) ) {
+    // controllo aggiornamento release
+	if( ! file_exists( FILE_LATEST_RELEASE ) || filesize( FILE_LATEST_RELEASE ) == 0 || filemtime( FILE_LATEST_RELEASE ) < strtotime( '-1 week' ) ) {
 	    $latestRelease = restCall(
             'https://glisweb.videoarts.it/current.release',
             METHOD_GET,
@@ -101,14 +101,19 @@
             MIME_APPLICATION_JSON,
             MIME_TEXT_PLAIN
 	    );
-	    $latestVersion = restCall(
+        writeToFile( $latestRelease, FILE_LATEST_RELEASE );
+    }
+
+    // controllo aggiornamento versione
+    if( ! file_exists( FILE_LATEST_VERSION ) || filesize( FILE_LATEST_VERSION ) == 0 || filemtime( FILE_LATEST_VERSION ) < strtotime( '-1 week' ) ) {
+        $latestVersion = restCall(
             'https://glisweb.videoarts.it/current.version',
             METHOD_GET,
             array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'], 'release' => $latestRelease ),
             MIME_APPLICATION_JSON,
             MIME_TEXT_PLAIN
         );
-        writeToFile( date( 'Y-m-d H:i:s' ), FILE_LATEST_UPDATE );
+        writeToFile( $latestVersion, FILE_LATEST_VERSION );
 	}
 
     // versione corrente del framework
@@ -124,10 +129,10 @@
     define( 'RELEASE_CURRENT'		, $cf['common']['release']['current'] );
 
     // versione aggiornata del framework
-	$cf['common']['version']['latest'] = trim( $latestVersion );
+	$cf['common']['version']['latest'] = trim( readStringFromFile( FILE_LATEST_VERSION ) );
 
     // release aggiornata del framework
-	$cf['common']['release']['latest'] = trim( $latestRelease );
+	$cf['common']['release']['latest'] = trim( readStringFromFile( FILE_LATEST_RELEASE ) );
 
     // costante per la versione aggiornata del framework
     define( 'VERSION_LATEST'		, $cf['common']['version']['latest'] );

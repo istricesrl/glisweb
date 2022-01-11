@@ -338,7 +338,8 @@
 	define( 'FILE_LATEST_CRON'		, DIR_VAR_LOG_LATEST . 'cron.latest.log');
 	define( 'FILE_LATEST_MYSQL'		, DIR_VAR_LOG_LATEST . 'mysql.latest.log');
 	define( 'FILE_LATEST_SITEMAP'		, DIR_VAR_LOG_LATEST . 'sitemap.latest.log');
-	define( 'FILE_LATEST_UPDATE'		, path2custom( DIR_ETC ) . 'latest.conf' );
+	define( 'FILE_LATEST_RELEASE'		, path2custom( DIR_ETC ) . 'latest.release.conf' );
+	define( 'FILE_LATEST_VERSION'		, path2custom( DIR_ETC ) . 'latest.version.conf' );
 	define( 'FILE_LICENSE'			, path2custom( DIR_ETC ) . 'license.conf' );
 	define( 'FILE_LOREM'			, DIR_ETC . '_lorem.conf' );
 	define( 'FILE_MANUAL_HTML'		, DIR_USR_DOCS_BUILD_HTML . 'index.html' );
