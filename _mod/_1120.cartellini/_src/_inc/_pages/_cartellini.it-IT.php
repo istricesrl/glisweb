@@ -58,15 +58,27 @@
 		'etc'			=> array( 'tabs'	=> $p['cartellini.form']['etc']['tabs'] )
 	);
 
-	// gestione cartellini
+	// gestione righe cartellini
 	$p['righe.cartellini.form'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'gestione_righe' ),
+	    'title'			=> array( $l		=> 'gestione righe' ),
 	    'h1'			=> array( $l		=> 'gestione' ),
 	    'parent'		=> array( 'id'		=> 'cartellini' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.cartellini.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_righe.cartellini.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'righe.cartellini.form') )
+		'etc'			=> array( 'tabs'	=> array(	'righe.cartellini.form', 'righe.cartellini.form.attivita') )
+	);
+
+	// gestione attività di cartellini
+	$p['righe.cartellini.form.attivita'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'righe attivita' ),
+	    'h1'			=> array( $l		=> 'attivita' ),
+	    'parent'		=> array( 'id'		=> 'righe.cartellini.form' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.cartellini.form.attivita.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_righe.cartellini.form.attivita.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'rop' ) ),
+		'etc'			=> array( 'tabs'	=> $p['righe.cartellini.form']['etc']['tabs'] )
 	);
 	
