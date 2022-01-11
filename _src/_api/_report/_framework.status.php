@@ -142,14 +142,14 @@
 
     // aggiornamento della sitemap
 	if( empty( $cf['sitemap']['updated'] ) ) {
-	    echo '[WARN] sitemap non presente' . PHP_EOL;
+	    echo '[INFO] sitemap non presente' . PHP_EOL;
 	} else {
 	    echo '[ -- ] ultimo aggiornamento della sitemap: ' . date( 'Y-m-d H:i:s', $cf['sitemap']['updated'] ) . PHP_EOL;
 	}
 
     // aggiornamento delle pagine
 	if( empty( $cf['contents']['updated'] ) ) {
-	    echo '[WARN] data di aggiornamento dei contenuti non disponibile' . PHP_EOL;
+	    echo '[INFO] data di aggiornamento dei contenuti non disponibile' . PHP_EOL;
 	} else {
 	    echo '[ -- ] ultimo aggiornamento dei contenuti: ' . date( 'Y-m-d H:i:s', $cf['contents']['updated'] ) . PHP_EOL;
 	}
