@@ -75,6 +75,15 @@
      * @todo documentare
      *
      */
+    function arrayTrim( $a ) {
+        return trimArray( $a );
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function removeFromArray( &$a, $e ) {
 
 	if( ! is_array( $e ) ) { $e = array( $e ); }

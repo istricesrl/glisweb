@@ -64,7 +64,7 @@
     // aggiungo le colonne da prelevare
 	// $_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = array_keys( $ct['view']['cols'] );
 	// $ct['view']['data']['__fields__'] = array_keys( $ct['view']['cols'] );
-	$_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = array_keys( $ct['view']['cols'] );
+	$_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = arrayTrim( array_keys( $ct['view']['cols'] ) );
 
 #    // aggiungo i campi di filtro
 #	if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] ) ) {
@@ -106,6 +106,7 @@
 */
     // debug
 	// print_r( $filters );
+	// print_r( $ct['view']['data'] );
 
     // prelevamento dei dati
 	// controller( $cf['mysql']['connection'], $_REQUEST['__view__'][ $ct['view']['id'] ], $ct['view']['table'], METHOD_GET, NULL, $_REQUEST['__err__'][ $k ] );
