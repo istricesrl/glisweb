@@ -14,32 +14,44 @@ cd $RL
 echo "lavoro su: $(pwd)"
 
 ## file da importare
-FILE1="_usr/_database/mysql.schema.sql"
-FILE2="_usr/_database/mysql.data.sql"
+# FILE1="_usr/_database/mysql.schema.sql"
+# FILE2="_usr/_database/mysql.data.sql"
 
 ## intestazione
 echo "installazione del database"
 
 ## se il file su cui lavorare è specificato
-if [ -f "$FILE1" -a -f "$FILE2" ]; then
+# if [ -f "$FILE1" -a -f "$FILE2" ]; then
 
-    read -p "indirizzo del server: " SRVADDR
+    if [ -n "$1" ]; then
+        SRVADDR=$1
+    else
+        read -p "indirizzo del server: " SRVADDR
+    fi
 
-    read -p "porta del server: " SRVPORT
+    if [ -n "$2" ]; then
+        SRVPORT=$2
+    else
+        read -p "porta del server: " SRVPORT
+    fi
 
     read -p "nome utente AMMINISTRATORE: " SRVUSER
 
     read -s -p "password utente AMMINISTRATORE: " SRVPASS && echo
 
-    read -p "database: " SRVDBNAME
+    if [ -n "$3" ]; then
+        SRVDBNAME=$3
+    else
+        read -p "database: " SRVDBNAME
+    fi
 
     if [ -n "$SRVPASS" ]; then
         PASSC="-p$SRVPASS"
     fi
 
     mysql -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE DATABASE IF NOT EXISTS \`$SRVDBNAME\` CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
-    mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE1
-    mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE2
+    # mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE1
+    # mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE2
 
     read -p "vuoi assegnare il database a un utente specifico (s/n)? " YN
 
@@ -47,10 +59,18 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
 
         read -p "l'utente va creato (s/n)? " SYN
 
-        read -p "nome utente DATABASE: " SRVDBUSER
+        if [ -n "$4" ]; then
+            SRVDBUSER=$4
+        else
+            read -p "nome utente DATABASE: " SRVDBUSER
+        fi
 
         if [ $SYN == "s" ]; then
-            read -s -p "password utente DATABASE: " SRVDBPASS && echo
+            if [ -n "$5" ]; then
+                SRVDBPASS=$5
+            else
+                read -s -p "password utente DATABASE: " SRVDBPASS && echo
+            fi
             mysql -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE USER \`$SRVDBUSER\`@\`%\` IDENTIFIED BY '$SRVDBPASS';"
         fi
 
@@ -58,7 +78,7 @@ if [ -f "$FILE1" -a -f "$FILE2" ]; then
 
     fi
 
-    mkdir -p usr/database/
-    cp _usr/_database/mysql.schema.version usr/database/mysql.schema.version
+    # mkdir -p usr/database/
+    # cp _usr/_database/mysql.schema.version usr/database/mysql.schema.version
 
-fi
+# fi

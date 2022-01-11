@@ -101,6 +101,18 @@ if [ -f "$FILE" ]; then
 				DOMAIN=$VALUE
 			fi
 
+			if [ "$PLACEHOLDER" = "%indirizzo IP del server MySQL%" ]; then
+				MYSQLIP=$VALUE
+			elif [ "$PLACEHOLDER" = "%porta del server MySQL%" ]; then
+				MYSQLPORT=$VALUE
+			elif [ "$PLACEHOLDER" = "%nome utente del server MySQL%" ]; then
+				MYSQLUSER=$VALUE
+			elif [ "$PLACEHOLDER" = "%password del server MySQL%" ]; then
+				MYSQLPW=$VALUE
+			elif [ "$PLACEHOLDER" = "%nome del database MySQL%" ]; then
+				MYSQLDB=$VALUE
+			fi
+
 		fi
 
 		perl -pi -e "s/$PLACEHOLDER/$VALUE/g" $FILE
@@ -117,6 +129,12 @@ if [ -f "$FILE" ]; then
     else
 		echo "ATTENZIONE installare il crontab manualmente"
     fi
+
+	read -p "vuoi creare il database MySQL (s/n)? " SN
+
+	if [ "$SN" == "s" ]; then
+		./_src/_sh/_gw.mysql.install.sh $MYSQLIP $MYSQLPORT $MYSQLDB $MYSQLUSER $MYSQLPW
+	fi
 
     ./_src/_sh/_gw.permissions.reset.sh
 
