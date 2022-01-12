@@ -168,7 +168,7 @@
 																		'priority'	=> '115' ) ) )	
 	);
 
-	// gestione categorie attività
+	// gestione tipologie attività
 	$p['tipologie.attivita.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
@@ -177,6 +177,18 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_tipologie.attivita.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'tipologie.attivita.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'tipologie.attivita.form', 'tipologie.attivita.form.articoli' ) )
+	);
+
+	// gestione tipologie attività articoli
+	$p['tipologie.attivita.form.articoli'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'articoli' ),
+		'h1'			=> array( $l		=> 'articoli' ),
+		'parent'		=> array( 'id'		=> 'tipologie.attivita.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.attivita.form.articoli.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_tipologie.attivita.form.articoli.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['tipologie.attivita.form']['etc']['tabs'] )
 	);
 	
