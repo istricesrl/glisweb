@@ -226,3 +226,25 @@
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.produzione.form' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
 	);
+
+	// gestione contratti relativi al progetto
+	if( in_array( "6600.contratti", $cf['mods']['active']['array'] ) ){
+
+		arrayInsertSeq( 'progetti.produzione.form.pause', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.contratti' );
+		
+		foreach( $p['progetti.produzione.form']['etc']['tabs'] as $t ){
+			$p[ $t ]['etc']['tabs'] = $p['progetti.produzione.form']['etc']['tabs'];
+		}
+		
+		// gestione contratti progetti
+		$p['progetti.produzione.form.contratti'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'contratti' ),
+			'h1'			=> array( $l		=> 'contratti' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.contratti.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.contratti.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+	}
