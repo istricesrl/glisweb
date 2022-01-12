@@ -41,14 +41,14 @@
 
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'tipologia' => 'tipologia',
-        'data' => 'data',
+#        'tipologia' => 'tipologia',
+#        'data' => 'data',
         'nome' => 'nome',
 		'id_articolo' => 'articolo',
-		'mastro_provenienza' => 'provenienza',
-		'mastro_destinazione' => 'destinazione',
-        'importo_netto_totale' => 'importo netto',
+		'mastro_provenienza' => 'scarico',
+		'mastro_destinazione' => 'carico',
         'quantita' => 'quantità',
+        'importo_netto_totale' => 'importo netto',
 	#	'totale_riga' => 'totale',
 		'id_documento' => 'id_documento'
 	);
@@ -63,7 +63,7 @@
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data_lavorazione' => 'text-left no-wrap', 
-        'tipologia' => 'text-left',
+#        'tipologia' => 'text-left',
 		'id_articolo' => 'text-left'
     );
 

@@ -1242,6 +1242,7 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		documenti.id_tipologia,
 		tipologie_documenti.nome AS tipologia,
 		documenti.numero,
+		documenti.sezionale,
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,

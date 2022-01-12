@@ -78,6 +78,10 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     padding: 0px;
 }
 
+.view-table th select {
+    text-align: center;
+}
+
 .view-table.clickable tbody tr:hover {
     background-color: #eeeeee;
     cursor: pointer;
@@ -176,6 +180,29 @@ label.form-check-label {
     border-left: 1px solid #ced4da;
     border-right: 1px solid #ced4da;
 */
+}
+
+.label-top-disabled {
+    font-size: .8em;
+    /* height: 1.75em; */
+    color: #666666;
+    position: absolute;
+    top: -0.75em;
+    left: 1.25em;
+    background-color: #e9ecef;
+    padding: 0em 0.5em;
+    z-index: 3000;
+    border-radius: 3px;
+    border: 1px solid rgba(206,212,218,1);
+    border-image: linear-gradient(
+180deg
+, rgba(206,212,218,1) 75%, rgba(255,255,255,0) 75%);
+    border-image-slice: 1; /*
+    background-origin: border-box;
+    background-clip: padding-box, border-box; */
+    -webkit-mask: /*4*/
+    linear-gradient(#fff 0 0) padding-box, 
+    linear-gradient(#fff 0 0);
 }
 
 legend {

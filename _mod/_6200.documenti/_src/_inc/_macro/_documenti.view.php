@@ -31,10 +31,11 @@
         'id' => '#',
         'data' => 'data',
         'tipologia' => 'tipologia',
-        'numero' => 'numero',
-        '__label__' => 'nome',
+        'numero' => 'num.',
+        'sezionale' => 'sez.',
         'destinatario' => 'destinatario',
-        'emittente' => 'emittente'
+        'emittente' => 'emittente',
+        '__label__' => 'nome'
 	);
 
     // stili della vista

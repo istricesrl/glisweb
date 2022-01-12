@@ -42,16 +42,16 @@
 
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data' => 'data',
-    #    'documento' => 'documento',
-        'tipologia' => 'tipologia',
+#        'tipologia' => 'tipologia',
+#        'data' => 'data',
         'nome' => 'nome',
-        'id_articolo' => 'articolo',
-        'importo_netto_totale' => 'importo',
+		'id_articolo' => 'articolo',
+		'mastro_provenienza' => 'scarico',
+		'mastro_destinazione' => 'carico',
         'quantita' => 'quantità',
-    #    'totale_riga' => 'totale',
-		'mastro_provenienza' => 'provenienza',
-		'mastro_destinazione' => 'destinazione'
+        'importo_netto_totale' => 'importo netto',
+	#	'totale_riga' => 'totale',
+		'id_documento' => 'id_documento'
 	);
 
     // stili della vista
@@ -64,9 +64,10 @@
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data_lavorazione' => 'text-left no-wrap', 
-        'tipologia' => 'text-left',
+#        'tipologia' => 'text-left',
 		'id_articolo' => 'text-left'
     );
+
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		// preset filtro custom progetti aperti

@@ -371,9 +371,6 @@
     // leggo l'XML per righe
 	$rows = readFromFile( $outFile );
 
-    // aggiungo il foglio di stile
-	array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="/_mod/_6000.amministrazione/_etc/fatturaordinaria_v1.2.xsl" ?>' . PHP_EOL ) );
-
     // se è richiesto il download
 	if( isset( $_REQUEST['f'] ) ) {
         buildJson( array( 'file' => $outFile ) );
@@ -381,6 +378,7 @@
 	    header( 'Content-disposition: attachment; filename=' . basename( $outFile ) );
         buildXml( implode( $rows ) );
 	} else {
+		array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaordinaria_v1.2.xsl" ?>' . PHP_EOL ) );
         buildXml( implode( $rows ) );
     }
 

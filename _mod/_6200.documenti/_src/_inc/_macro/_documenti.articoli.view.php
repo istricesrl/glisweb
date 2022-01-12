@@ -34,11 +34,11 @@
         'tipologia' => 'tipologia',
         'nome' => 'nome',
         'id_articolo' => 'articolo',
-        'importo_netto_totale' => 'importo',
         'quantita' => 'quantità',
-    #    'totale_riga' => 'totale',
 		'mastro_provenienza' => 'provenienza',
-		'mastro_destinazione' => 'destinazione'
+		'mastro_destinazione' => 'destinazione',
+        'importo_netto_totale' => 'importo'
+    #    'totale_riga' => 'totale',
 	);
 
     // stili della vista
