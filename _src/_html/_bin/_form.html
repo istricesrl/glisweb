@@ -167,7 +167,7 @@
 {{ frm.input( table, subtable, counter, field, placeholder, etc, request, default, type, '', class, 1 ) }}
 {% endmacro %}
 
-{% macro checkbox( table, subtable, counter, field, placeholder, etc, request, default, class ) %}
+{% macro checkbox( table, subtable, counter, field, placeholder, etc, request, default, class, disabled ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -180,8 +180,8 @@
     {% set vl = request[ table ][ field ] %}
     {% set df = request[ table ].id %}
 {% endif %}
-<input type="hidden" name="{{ nm }}" id="{{ id }}" class="" {% if default %} default="{{ default }}" {% endif %} value="{% if vl or ( default and not df ) %}1{% else %}0{% endif %}">
-<input type="checkbox" class="form-check-input {{ class }}" {% if vl or ( default and not df ) %}checked{% endif %}>
+<input type="hidden" {% if disabled %}disabled{% endif %} name="{{ nm }}" id="{{ id }}" class="" {% if default %} default="{{ default }}" {% endif %} value="{% if vl or ( default and not df ) %}1{% else %}0{% endif %}">
+<input type="checkbox" {% if disabled %}disabled{% endif %} class="form-check-input {{ class }}" {% if vl or ( default and not df ) %}checked{% endif %}>
 {% if placeholder %}
 <label class="form-check-label text-left" for="{{ id }}">{{ placeholder }}</label>
 {% endif %}

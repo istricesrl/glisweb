@@ -157,6 +157,9 @@
 	    'job' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
+		'listini_clienti' => array(
+			CONTROL_FULL => array( 'roots' )
+			),
 #	    'luoghi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
