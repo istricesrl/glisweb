@@ -43,7 +43,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_contratti_view'
+	    'SELECT id, __label__ FROM tipologie_contratti_view WHERE se_anagrafica = 1'
     );
     
     // tendina per le tipologie di attività inps
