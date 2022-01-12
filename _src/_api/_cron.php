@@ -224,7 +224,7 @@
 				);
 
 			// log
-				appendToFile( print_r( $status ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+				appendToFile( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
 
 		} else {
 
