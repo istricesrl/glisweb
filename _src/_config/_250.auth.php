@@ -125,9 +125,9 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 		),
-#	    'cron' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'cron' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'date' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -157,6 +157,9 @@
 	    'job' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
+		'listini_clienti' => array(
+			CONTROL_FULL => array( 'roots' )
+			),
 #	    'luoghi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),

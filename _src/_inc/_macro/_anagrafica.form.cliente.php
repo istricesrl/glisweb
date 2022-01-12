@@ -54,6 +54,15 @@
 	    'SELECT id, __label__ FROM settori_view'
 	);
 
+
+     // tendina listini
+	$ct['etc']['select']['listini'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM listini_view'
+	);
+
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 

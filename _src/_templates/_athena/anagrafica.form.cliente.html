@@ -71,7 +71,7 @@
         </div>
 		
 		</fieldset>
-			<fieldset>
+		<fieldset>
 			<legend>condizioni di vendita</legend>
 			<div class="form-group form-row">
 				<div class="col">
@@ -81,6 +81,11 @@
 			</div>
 
 		</fieldset>
+
+		{# SUBFORM LISTINI #}
+		{{ sub.listini( table, 'listini_clienti', 'listini', site, page, pages, localization.language.ietf, etc, request, session ) }}
+
+		
 
 		{# SUBFORM SETTORI E ATTIVITA #}
 		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
