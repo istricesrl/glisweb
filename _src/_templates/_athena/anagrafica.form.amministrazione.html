@@ -77,12 +77,17 @@
             <legend>fatturazione elettronica</legend>
 
         <div class="form-group form-row">
-            <div class="col-12 col-md-6">
+			<div class="col-12 col-md-4">
+				<span class="label-top-disabled">codice archivium</span>
+				{{ frm.inputDisabled( table, '', '', 'codice_archivium', '', '', request ) }}	
+			</div>
+
+            <div class="col-12 col-md-4">
                 <span class="label-top">cod. destinatario SDI</span>
                 {{ frm.input( table, '', '', 'codice_sdi', '', '', request ) }}
                 </div>
             
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-4">
                 <span class="label-top">PEC per fatturazione</span>
                 {{ frm.select( table, '', '', 'id_pec_sdi', '', etc.select.pec, request ) }}
             </div>

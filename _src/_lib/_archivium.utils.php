@@ -171,13 +171,16 @@
         // var_dump( $s );
         // print_r( $r );
 
-        // TODO salvo l'ID SDI dell'anagrafica
+        // salvo l'ID SDI dell'anagrafica
         if( $r['esito'] == 200 ) {
 
             mysqlQuery(
                 $cf['mysql']['connection'],
-                'UPDATE anagrafica SET codice_archivium = ?',
-                array( array( 's' => $r['IDAzienda'] ) )
+                'UPDATE anagrafica SET codice_archivium = ? WHERE id = ?',
+                array(
+                    array( 's' => $r['IDAzienda'] ),
+                    array( 's' => $da['id'] )
+                )
             );
 
         }

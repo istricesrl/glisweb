@@ -17,7 +17,9 @@
     $t = null;
 
     // chiamo la funzione archiviumPostInsertAzienda()
-    $s = archiviumPostInsertAzienda( $_REQUEST['id'] );
+    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', array_keys( $_SESSION['privilegi'] ) ) ) {
+        $s = archiviumPostInsertAzienda( $_REQUEST['id'] );
+    }
 
     // output
     $t .= '<pre>' . var_dump( $s ) . '</pre>';
