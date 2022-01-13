@@ -256,9 +256,9 @@
 				    "FROM ${t}_view ".
 				    "LEFT JOIN ${aclTb} ON ${aclTb}.id_entita = ${t}_view.id ".
 # NON GERARCHICO		    "LEFT JOIN account_gruppi ON account_gruppi.id_gruppo = ${aclTb}.id_gruppo ".
-				    "LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) OR ${aclTb}.id_account = ? ) ".
+				    "LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) ) ".
 # NON CONSIDERA EDITOR
-		    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? ) ".
+		    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? OR ${aclTb}.id_account = ? ) ".
 # CONSIDERA EDITOR				    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? OR ${t}_view.id_account_editor = ? ) ".
 				    "AND ${t}_view.id = ? ",
 # NON CONSIDERA EDITOR
