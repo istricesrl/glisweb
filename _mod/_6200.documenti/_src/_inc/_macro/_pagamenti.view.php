@@ -24,7 +24,7 @@
    # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
-	//$ct['view']['open']['page'] = 'documenti.form';
+	$ct['view']['open']['page'] = 'pagamenti.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(

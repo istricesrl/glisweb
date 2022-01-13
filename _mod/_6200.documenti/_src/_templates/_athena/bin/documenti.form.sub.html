@@ -106,6 +106,10 @@
 		    <span class="label-top">iva</span>
             {{ frm.selectBox( table, subtable, i, 'id_iva', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
 	    </div>
+        <div class="col-auto">
+		    <span class="label-top">iban</span>
+            {{ frm.selectBox( table, subtable, i, 'id_iban', '', etc.select.id_iban, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+	    </div>
         <div class="col">
             <span class="label-top">descrizione</span>
             {{ frm.input( table, subtable, i, 'nome', '', '', request ) }}
