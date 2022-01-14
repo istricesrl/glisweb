@@ -9,7 +9,7 @@
     // tools attività
 	$p['attivita.tools']['macro'][]		= $m . '_src/_inc/_macro/_attivita.tools.php';
 
-	// vista cartellini
+	// dashboard cartellini
 	$p['cartellini'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'cartellini' ),
@@ -21,5 +21,64 @@
 	    'etc'		=> array( 'tabs'	=> $p['attivita.view']['etc']['tabs'] )
     );
 
+	// gestione cartellini
+	$p['cartellini.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'cartellini' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cartellini.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_cartellini.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'cartellini.form', 'cartellini.form.righe','cartellini.form.approvazione' ) )
+	);
 
+	// gestione cartellini - righe
+	$p['cartellini.form.righe'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'righe' ),
+	    'h1'			=> array( $l		=> 'righe' ),
+	    'parent'		=> array( 'id'		=> 'cartellini' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cartellini.form.righe.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_cartellini.form.righe.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['cartellini.form']['etc']['tabs'] )
+	);
+
+	// gestione cartellini - approvazione
+	$p['cartellini.form.approvazione'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-calendar-check-o" aria-hidden="true"></i>',
+	    'title'			=> array( $l		=> 'approvazione' ),
+	    'h1'			=> array( $l		=> 'approvazione' ),
+	    'parent'		=> array( 'id'		=> 'cartellini' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cartellini.form.approvazione.html' ),
+	    'macro'			=> array( $m . '_src/_inc/_macro/_cartellini.form.approvazione.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['cartellini.form']['etc']['tabs'] )
+	);
+
+	// gestione righe cartellini
+	$p['righe.cartellini.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione righe' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'cartellini' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.cartellini.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_righe.cartellini.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'righe.cartellini.form', 'righe.cartellini.form.attivita') )
+	);
+
+	// gestione attività di cartellini
+	$p['righe.cartellini.form.attivita'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'righe attivita' ),
+	    'h1'			=> array( $l		=> 'attivita' ),
+	    'parent'		=> array( 'id'		=> 'righe.cartellini.form' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.cartellini.form.attivita.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_righe.cartellini.form.attivita.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'rop' ) ),
+		'etc'			=> array( 'tabs'	=> $p['righe.cartellini.form']['etc']['tabs'] )
+	);
 	

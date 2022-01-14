@@ -49,6 +49,19 @@
             <div class="col-auto">
                 <button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="submit();">APRI CARTELLINO</button>
             </div>
+
+            {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
+            <div class="col-auto">
+                <button type="button" class="form-control form-control-sm btn btn-sm btn-secondary" data-toggle="modal" data-target="#ricalcola" data-placement="bottom" data-delay="1000" onclick="submitFormOkay = true;" placeholder="ricalcola cartellino"  data-placement="bottom" data-delay="1000" title="" data-original-title="ricalcola cartellino">RICALCOLA CARTELLINO</button>
+            </div>
+            <div class="col-auto">
+                {% if not etc.approvazione %}
+                <button type="button" style="height: 31px"  onclick="window.open('{{ page.url[ localization.language.ietf ] }}?__approve__=1','_self');" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary"  placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">APPROVA CARTELLINO</button>
+                {% else %}
+                <button type="button" disabled style="width: auto; padding-left: 10px; padding-right: 10px; height: 31px" class="btn btn-sm btn-secondary"  placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">{{ etc.approvazione }}</button>             
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
 
         {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
@@ -62,19 +75,6 @@
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
                             <th>{{ t.__label__ }}</th>
                             {% endfor %}
-                            <th> 
-                                <div class="row m-0">
-                                    <div class="col combobox-container p-0">
-                                        <select name="__cartellini__[tipologia_aggiuntiva]" onchange="submitFormOkay=true; submit();" class=" form-control form-control-sm" id="tipologia_aggiuntiva">
-                                            <option value="" >tipologia</option>
-                                            {% for t in etc.select.tipologie_attivita_inps %}
-                                                <option value="{{ t.id }}" >{{ t.__label__ }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                           
-                            </th>
                             <th colspan="2">totale ordinario</th>
                         </tr>
                     </thead>
@@ -84,30 +84,30 @@
                             <td style="text-align: right; {% if v.festivo == 1 %} color: red;{% endif %}">{{ v.nome }} {{ v.data }}</td>
                             <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
-                            {% if v.tipologie_inps[ t.id ] %}
-                            <td style="cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__view__['~view.id~'][__filters__][giorno][EQ]='~k~'&__view__['~view.id~'][__filters__][mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__view__['~view.id~'][__filters__][anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__view__['~view.id~'][__filters__][id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ~'&__view__['~view.id~'][__filters__][id_tipologia_inps][EQ]='~t.id }}','_self');">
-                                <div>{{ v.tipologie_inps[ t.id ] }}</div>
+                            {% if v[ t.id ].id %}
+                            <td style="cursor: pointer" onclick="window.open('{{ pages['righe.cartellini.form'].url[ localization.language.ietf ]~'?righe_cartellini[id]='~v[ t.id ].id }}','_self');">
+                                <div>{{ v[ t.id ].ore_tot }}</div>
                             {% else %}
-                            <td><input type="number" class="form-control form-control-sm" step="0.25" name="__cartellini__[giorni][{{ k }}_{{ t.id }}]">
+                            <td><div><input disabled style="border: 0ch;"> </div>
                             {% endif %}
                             </td>
                             {% endfor %}
                             <td>&nbsp;</td>
                             <td>{% if v.ordinarie_previste > 0 or v.ordinarie_fatte > 0 %}{{'%0.2f'|format( v.ordinarie_fatte ) }} ore di {{ '%0.2f'|format(v.ordinarie_previste) }}{% endif %}</td>
                             <td>
-                                {% if v.extra == '1' %}
+                                {% if v.ordinarie_previste != v.ordinarie_fatte %}
                                 <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
-                                {% elseif v.extra == '0' %}
+                                {% elseif v.ordinarie_previste == v.ordinarie_fatte and v.ordinarie_previste > 0 %}
                                 <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
                                 {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
                         <tr style="font-weight: bold">
-                            <td>totale</td>
+                            <td style="text-align: right;">totale</td>
                             <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
-                            <td>{{ etc.tipologie[ t.id ].ore_totali }}</td>
+                            <td>{{ '%0.2f'|format(etc.tipologie[ t.id ].ore_totali) }}</td>
                             {% endfor %}
                             <td>&nbsp;</td>
                             <td>
@@ -116,9 +116,9 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if etc.totali_quadratura.extra == '1' %}
+                                {% if etc.totali_quadratura.ordinarie_fatte != etc.totali_quadratura.ordinarie_previste %}
                                 <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
-                                {% elseif etc.totali_quadratura.extra == '0' %}
+                                {% else %}
                                 <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
                                 {% endif %}
                             </td>
@@ -126,21 +126,14 @@
                     </tbody>
                 </table>
             </div>
+
         </div>
-    
+
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
             <div class="row no-gutters d-print-none">
-                <div class="col-auto col-md-5">
+                <div class="col-auto col-md-12">
 	                <button type="button" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages['attivita.view'].path[ localization.language.ietf ] }}','_self');" placeholder="torna indietro senza salvare le modifiche" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="torna indietro senza salvare le modifiche"><i class="fa fa-undo"></i></button>
-                </div>
-                <div class="col col-md-2 text-center"></div>
-                <div class="col-auto col-md-5 text-right">
-                    <div class="row">
-                        <div class="col">
-                            <button type="submit" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;" placeholder="salva e rimani nella pagina attuale" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="" data-original-title="salva e rimani nella pagina attuale">SALVA CARTELLINO</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </fieldset>

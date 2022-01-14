@@ -1,0 +1,49 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+     function ricalcolaCartellino() {
+		$('#btncalcola').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+
+		var call = '{{ site.url }}_mod/_1120.cartellini/_src/_api/_task/_cartellini.generate.php?id_anagrafica={{ request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}&mese={{ request.__view__[ view.id ].__filters__.mese.EQ }}&anno={{ request.__view__[ view.id ].__filters__.anno.EQ }}&hard=1';
+
+		getws( call,'', function() {
+			window.open('{{ page.url[ietf] }}?__view__[ view.id ].__filters__.id_anagrafica.EQ={{ request.__view__[ view.id ].__filters__.id_anagrafica.EQ }}&__view__[ view.id ].__filters__.mese.EQ={{ request.__view__[ view.id ].__filters__.mese.EQ }}&__view__[ view.id ].__filters__.anno.EQ={{ request.__view__[ view.id ].__filters__.anno.EQ }}', '_self');
+		});
+		
+	}
+
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="ricalcola">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">ricalcola cartellino</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+			<div class="col">
+				questa operazione eliminerà e creerà di nuovo il cartellino corrente:<br>
+				<ul>
+					<li>anagrafica: {{ request.__view__[ view.id ].__filters__.id_anagrafica.EQ }} - {{ etc.anagrafica[request.__view__[ view.id ].__filters__.id_anagrafica.EQ] }}</li>
+					<li>mese e anno: {{ request.__view__[ view.id ].__filters__.mese.EQ }}/{{ request.__view__[ view.id ].__filters__.anno.EQ }}</li>
+				</ul> 
+				eventuali modifiche apportate al cartellino verranno rimosse.<br>
+				si desidera procedere?
+			</div>
+		</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button id="btncalcola" type="button" class="btn btn-secondary btn-sm" onclick="ricalcolaCartellino();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

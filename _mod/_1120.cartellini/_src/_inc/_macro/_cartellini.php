@@ -18,16 +18,11 @@
      */
 
 	 // tabella della vista
-	 $ct['view']['table'] = 'attivita';
+	 $ct['view']['table'] = 'righe_cartellini';
 
 	 // id della vista
 	 if( ! isset( $ct['view']['id'] ) ) {
-		 /*
-		 $ct['view']['id'] = md5(
-		 $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
-		 );
-		 */
-		 $ct['view']['id'] = md5( $ct['view']['table'] );
+		 $ct['view']['id'] = md5( 'attivita' );
 	 }
 
 	// tendina mesi
@@ -58,10 +53,11 @@
 	}
 
     // tendina operatori
-	$ct['etc']['select']['operatori'] = mysqlCachedQuery(
-        $cf['memcache']['connection'], 
+	$ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore = 1');
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1');
 	
 
 	// costruzione della griglia
@@ -70,6 +66,7 @@
 
 		$mese = intval( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] );
 		$anno = intval( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] );
+		$anagrafica = $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'];
 
 		// costruisco l'elenco giorni partendo da mese e anno
 		$giorni = array();
@@ -111,63 +108,26 @@
 			$ct['etc']['ore'][ $giorno ]['numero'] = ( date( 'w', strtotime("$anno-$mese-$giorno") ) == 0 ) ? '7' : date( 'w', strtotime("$anno-$mese-$giorno") );
 			
 			// inizializzo a 0 le ore ordinarie totali previste ed effettuate
-			$ct['etc']['ore'][ $giorno ]['ordinarie_previste'] = 0;
-			$ct['etc']['ore'][ $giorno ]['ordinarie_fatte'] = 0;
+		#	$ct['etc']['ore'][ $giorno ]['ordinarie_previste'] = 0;
+		#	$ct['etc']['ore'][ $giorno ]['ordinarie_fatte'] = 0;
 
-			// ricavo il contratto attivo alla data corrente
-			$contratto = mysqlSelectValue(
-				$cf['mysql']['connection'], 
-				'SELECT id FROM contratti WHERE id_anagrafica = ? AND data_inizio <= ? AND  ( '.
-				'data_fine_rapporto >= ? OR ( data_fine_rapporto IS NULL AND ( data_fine IS NULL or data_fine >= ? )  ) ' .
-				') ORDER BY id DESC LIMIT 1',
+			// lettura cartellino
+			$cart = mysqlQuery(
+				$cf['mysql']['connection'],
+				'SELECT * FROM righe_cartellini_view WHERE id_anagrafica = ? AND data_attivita = ?',
 				array(
-					array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ),
-					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) ),
-					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) ),
+					array( 's' => $anagrafica ),
 					array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) )
 				)
 			);
 
-			if( !empty( $contratto ) ){
-
-				// verifico se la data corrente è nella tabella turni e ricavo il turno corrispondente
-				$turno = mysqlSelectValue(
-					$cf['mysql']['connection'], 
-					'SELECT turno FROM turni WHERE id_contratto = ? AND (data_inizio <= ? AND data_fine >= ?) ORDER BY id DESC LIMIT 1',
-					array( 
-						array( 's' => $contratto ),
-						array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) ),
-						array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-$giorno") ) )
-					)
-				);
-			
-
-				// se ci sono turni devo considerare la tabella turni e vedere se la data corrente è in essi
-				if( empty( $turno ) ){
-					$turno = 1;
+			if( !empty( $cart ) ){
+				foreach( $cart as $ca ){
+					$ct['etc']['ore'][ $giorno ][$ca['id_tipologia_inps']]['ore_previste'] = $ca['ore_previste'];
+					$ct['etc']['ore'][ $giorno ][$ca['id_tipologia_inps']]['ore_fatte'] = $ca['ore_fatte'];
 				}
-
-				// ore ordinarie e di quadratura previste da contratto per quel giorno
-				$ct['etc']['ore'][ $giorno ]['ordinarie_previste'] = mysqlSelectValue(
-					$cf['mysql']['connection'], 
-					'SELECT sum( time_to_sec( timediff( ora_fine, ora_inizio ) ) / 3600 ) as tot_ore FROM orari_contratti ' .
-					'INNER JOIN costi_contratti ON orari_contratti.id_costo = costi_contratti.id ' .
-					'INNER JOIN tipologie_attivita_inps ON costi_contratti.id_tipologia = tipologie_attivita_inps.id ' .
-					'WHERE tipologie_attivita_inps.se_quadratura = 1 AND orari_contratti.se_lavoro = 1 ' .
-					'AND orari_contratti.id_giorno = ? ' . 
-					'AND orari_contratti.id_contratto = ? AND orari_contratti.turno = ? ' .
-					'GROUP BY orari_contratti.id_giorno',
-					array(
-						array( 's' => $ct['etc']['ore'][ $giorno ]['numero'] ),
-						array( 's' => $contratto ),
-						array( 's' => $turno )
-					)
-				);
-
-			}
-
-			if( !empty( $ct['etc']['ore'][ $giorno ]['ordinarie_previste'] ) ){
-				$ct['etc']['totali_quadratura']['ordinarie_previste'] += $ct['etc']['ore'][ $giorno ]['ordinarie_previste'];
+				$ct['etc']['totali_quadratura']['ordinarie_previste'] += $ca['ore_previste'];
+				$ct['etc']['totali_quadratura']['ordinarie_fatte'] += $ca['ore_fatte'];
 			}
 
 			// nome del giorno (lun, mar, mer, ...)
@@ -181,91 +141,26 @@
 		
 		}
 
-		// costruisco l'array delle tipologie attivita inps da mostrare
-		// inizializzazioni
-		$to = $tf = array();
-
-		// tipologie standard da mostrare sempre (ordinario e straordinario)
-		$tf = mysqlCachedQuery(
-			$cf['memcache']['connection'], 
+		// tipologie inps del cartellino
+		$tipologie = mysqlQuery(
 			$cf['mysql']['connection'], 
-			'SELECT id, __label__ FROM tipologie_attivita_inps_view WHERE id IN (1,2) ORDER BY id'
-		);
-
-		// tipologia aggiuntiva eventualmente indicata dalla tendina
-		if( isset( $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) && !empty( isset( $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) ) ){
-			$ta = mysqlQuery(
-				$cf['mysql']['connection'], 
-				'SELECT id, __label__ FROM tipologie_attivita_inps_view WHERE id = ? ORDER BY id',
-				array( array( 's' => $_REQUEST['__cartellini__']['tipologia_aggiuntiva'] ) )
-			);
-		}
-
-		// tipologie relative alle attivita già fatte dall'operatore escluse quelle standard
-		$to = mysqlQuery(
-			$cf['mysql']['connection'], 
-			'SELECT DISTINCT tipologie_attivita_inps_view.id, tipologie_attivita_inps_view.__label__ FROM tipologie_attivita_inps_view ' .
-			'INNER JOIN attivita_view_static ON tipologie_attivita_inps_view.id = attivita_view_static.id_tipologia_inps '.
-			'WHERE attivita_view_static.anno = ? AND attivita_view_static.mese = ? AND attivita_view_static.id_anagrafica = ? '.
-			'AND tipologie_attivita_inps_view.id NOT IN (1,2)',
+			'SELECT DISTINCT t.id, t.__label__ FROM tipologie_attivita_inps_view AS t INNER JOIN righe_cartellini AS c ON t.id = c.id_tipologia_inps '
+			.'WHERE month( c.data_attivita ) = ? AND year( c.data_attivita ) = ? AND c.id_anagrafica = ?',
 			array(
-				array( 's' => $anno ),
 				array( 's' => $mese ),
-				array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] )
+				array( 's' => $anno ),
+				array( 's' => $anagrafica )
 			)
 		);
 
-		
-		// elenco finale delle tipologie da mostrare
-		// merge tra quelle fisse e quelle dell'operatore
-		$ct['etc']['tipologie_attivita_inps'] = array_merge( $to, $tf );
-
-		// merge delle precedenti con quella eventualmente selezionata dalla tendina
-		if( isset( $ta ) && !empty( $ta ) ){
-			$ct['etc']['tipologie_attivita_inps'] = array_merge( $ct['etc']['tipologie_attivita_inps'], $ta );
-		}
-
-		// tendina delle tipologie rimanenti
-		$ct['etc']['select']['tipologie_attivita_inps'] = mysqlQuery(
-			$cf['mysql']['connection'], 
-			'SELECT DISTINCT id, __label__ FROM tipologie_attivita_inps_view ' .
-			'WHERE id NOT IN (1,2) '. 			// escludo le tipologie fisse
-			( ( isset( $ta ) && !empty( $ta ) ) ? 'AND id <> ' . $ta[0]['id'] : '' ) . ' ' . 	// escludo l'eventuale valore già selezionato con la tendina
-			'AND id NOT IN (SELECT DISTINCT id_tipologia_inps FROM attivita_view_static '.		// escludo le tipologie di attività fatte dall'operatore
-			'WHERE attivita_view_static.anno = ? AND attivita_view_static.mese = ? AND attivita_view_static.id_anagrafica = ? )',
-			array(
-				array( 's' => $anno ),
-				array( 's' => $mese ),
-				array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] )
-			)
-		);
-
-		// ricavo il riepilogo attività presenti
-		$attivita = mysqlQuery( 
-			$cf['mysql']['connection'], 
-			'SELECT giorno, id_tipologia_inps, tipologie_attivita_inps.se_quadratura, sum(ore) as tot_ore FROM attivita_view_static ' .
-			'INNER JOIN tipologie_attivita_inps ON attivita_view_static.id_tipologia_inps = tipologie_attivita_inps.id ' .
-			'WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by data_attivita, id_tipologia_inps',
-			array(
-				array( 's' => $anno ),
-				array( 's' => $mese ),
-				array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] )
-			)			
-		);
-		
-		if( !empty( $attivita ) ){
-			foreach( $attivita as $a ){
-				$ct['etc']['ore'][ $a['giorno'] ]['tipologie_inps'][ $a['id_tipologia_inps'] ] = $a['tot_ore'];
-
-				// setto le ore ordinarie e altre di quadratura totali fatte
-				if( $a['se_quadratura'] == 1 ){
-					$ct['etc']['ore'][ $a['giorno'] ]['ordinarie_fatte'] += $a['tot_ore'];
-					$ct['etc']['totali_quadratura']['ordinarie_fatte'] += $a['tot_ore'];
-				}
+		if( !empty( $tipologie ) ){
+			foreach( $tipologie as $t ){
+				$ct['etc']['tipologie_attivita_inps'][$t['id']] = $t['__label__'];
 			}
 		}
-
-		// confronto le ore ordinarie previste e fatte
+	
+	
+/*		// confronto le ore ordinarie previste e fatte
 		foreach( $ct['etc']['ore'] as &$g ){
 			if( $g['ordinarie_fatte'] != $g['ordinarie_previste'] ){
 				$g['extra'] = '1';
@@ -299,6 +194,6 @@
 				$ct['etc']['totali_quadratura']['extra'] = '0';
 			}
 		}
-		
+*/		
 	}
    
