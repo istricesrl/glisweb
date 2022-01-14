@@ -54,6 +54,22 @@
 	    'SELECT id, __label__ FROM iva_view '
 	);
 
+	// tendina listini
+	$ct['etc']['select']['id_listini'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM listini_view '
+	);
+
+	// tendina mastri
+	$ct['etc']['select']['id_mastri'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 1'
+	);
+
     // tendina valute
 	$ct['etc']['select']['id_valute'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -70,21 +86,7 @@
 	    'SELECT id, __label__ FROM reparti_view '
 	);
 
-	// tendina listini
-	$ct['etc']['select']['id_listini'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM listini_view '
-	);
 
-	// tendina mastri
-	$ct['etc']['select']['id_mastri'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 1'
-	);
 
 	// tendina progetti
 	$ct['etc']['select']['id_progetti'] = mysqlCachedIndexedQuery(

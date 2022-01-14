@@ -35,11 +35,7 @@
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
-		'amministrazione' => array(
-		    CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
-        ),
-		'note_proforma' => array(
+		'proforma' => array(
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),

@@ -157,3 +157,16 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.view']['etc']['tabs'] )
 	);
+
+	// gestione pagamenti
+	$p['pagamenti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'pagamenti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagamenti.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_pagamenti.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'pagamenti.form' ) )
+	);
+	

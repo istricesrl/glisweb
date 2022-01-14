@@ -5,6 +5,7 @@
 
     // modulo di questo file
 	$m = DIR_MOD . '_6000.amministrazione/';
+	$m_d = DIR_MOD . '_6200.documenti/';
 
 	// dashboard amministrazione
 	$p['amministrazione'] = array(
@@ -124,6 +125,7 @@
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.form',
 														'fatture.amministrazione.form.righe',
+														'fatture.amministrazione.form.pagamenti',
 														'fatture.amministrazione.form.stampe',
 														'fatture.amministrazione.form.tools' ) )
 	);
@@ -137,6 +139,18 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.righe.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.righe.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
+	);
+
+	// gestione pagamenti fatture
+	$p['fatture.amministrazione.form.pagamenti'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'pagamenti' ),
+	    'h1'			=> array( $l		=> 'pagamenti' ),
+	    'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.pagamenti.html' ),
+	    'macro'			=> array( $m_d.'_src/_inc/_macro/_documenti.form.pagamenti.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
 	);
 

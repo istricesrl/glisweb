@@ -51,17 +51,21 @@
 					<span class="label-top">data</span>
 					{{ frm.date( table, '', '', 'data', '', '', request, 'now'|date('Y-m-d'), '', '1' ) }}
 				</div>
-				<div class="col-4 col-md-2">
+				<div class="col-4 col-md-1">
 					<span class="label-top">numero</span>
 					{{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
 				</div>
-				<div class="col-4 col-md-2">
+				<div class="col-4 col-md-1">
 					<span class="label-top">sezionale</span>
 					{{ frm.input( table, '', '', 'sezionale', '', '', request ) }}
 				</div>
 				<div class="col-md-auto col-4">
 					<span class="label-top">tipologia</span>
 					{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request ) }}
+				</div>
+				<div class="col-md-auto col-4">
+					<span class="label-top">condizioni pagamento</span>
+					{{ frm.select( table, '', '', 'id_condizione_pagamento', '', etc.select.condizioni_pagamento, request ) }}
 				</div>
 				<div class="col-4 col-md">
 					<span class="label-top">nome</span>

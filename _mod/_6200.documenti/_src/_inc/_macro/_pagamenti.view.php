@@ -24,13 +24,16 @@
    # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
-	//$ct['view']['open']['page'] = 'documenti.form';
+	$ct['view']['open']['page'] = 'pagamenti.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-     
-        '__label__' => 'nome'
+        'nome' => 'nome',
+		'mastro_provenienza' => 'scarico',
+		'mastro_destinazione' => 'carico',
+        'importo_netto_totale' => 'importo netto',
+		'documento' => 'documento'
 	);
 
     // stili della vista

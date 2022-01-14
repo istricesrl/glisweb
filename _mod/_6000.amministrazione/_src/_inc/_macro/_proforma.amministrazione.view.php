@@ -18,7 +18,7 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'note_proforma';
+	$ct['view']['table'] = 'proforma';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'proforma.amministrazione.form';
