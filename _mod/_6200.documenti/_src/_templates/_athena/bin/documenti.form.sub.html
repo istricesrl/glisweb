@@ -102,15 +102,7 @@
             <span class="label-top">ordine</span>
             {{ frm.input( table, subtable, i, 'ordine', '', '', request ) }}
         </div>
-	    <div class="col-auto">
-		    <span class="label-top">iva</span>
-            {{ frm.selectBox( table, subtable, i, 'id_iva', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
-	    </div>
-        <div class="col-auto">
-		    <span class="label-top">iban</span>
-            {{ frm.selectBox( table, subtable, i, 'id_iban', '', etc.select.id_iban, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
-	    </div>
-        <div class="col">
+        <div class="col-2">
             <span class="label-top">descrizione</span>
             {{ frm.input( table, subtable, i, 'nome', '', '', request ) }}
         </div>
@@ -118,22 +110,26 @@
             <span class="label-top">importo</span>
             {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request ) }}
         </div>
-	    <div class="col-1">
-		    <span class="label-top">>quantità</span>
-		    {{ frm.input( table, subtable, i, 'quantita', '', '', request ) }}
+        <div class="col-auto">
+		    <span class="label-top">iva</span>
+            {{ frm.select( table, subtable, i, 'id_iva', '', etc.select.iva, request) }}
 	    </div>
-        <div class="col-md-2 col">
-            <span class="label-top">progetto</span>
-            {{ frm.selectBox( table, subtable, i, 'id_progetto', '', etc.select.id_progetti, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
-         </div>
-        <div class="col-md-2 col">
+        <div class="col-auto">
+		    <span class="label-top">listino</span>
+            {{ frm.select( table, subtable, i, 'id_listino', '', etc.select.listini, request) }}
+	    </div>
+        <div class="col-auto">
+		    <span class="label-top">iban</span>
+            {{ frm.selectBox( table, subtable, i, 'id_iban', '', etc.select.id_iban, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
+	    </div>
+        <div class="col-md-auto col">
             <span class="label-top">scarico</span>
             {{ frm.selectBox( table, subtable, i, 'id_mastro_provenienza', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
 	    </div>
-        <div class="col-md-2 col">
+        <div class="col-md-auto col">
             <span class="label-top">carico</span>
             {{ frm.selectBox( table, subtable, i, 'id_mastro_destinazione', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang ) }}
-         </div>
+         </div>  
 		<div class="w-100 d-block d-md-none m-0"></div>
 		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">

@@ -30,6 +30,14 @@
 	    'SELECT id, __label__ FROM tipologie_documenti_view'
 	);
 
+	// tendina condizioni_pagamento
+	$ct['etc']['select']['condizioni_pagamento'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM condizioni_pagamento_view'
+	);
+	
     // tendina mittenti
 	$ct['etc']['select']['id_mittenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

@@ -1240,17 +1240,20 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		tipologie_documenti.nome AS tipologia,
 		documenti.numero,
 		documenti.sezionale,
+		documenti.codice_sdi,
+		documenti.codice_archivium,
+		documenti.progressivo_invio,
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+    	documenti.timestamp_invio,
+		documenti.id_coupon,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
-			' ',
 			documenti.numero,
 			'/',
 			year( documenti.data ),
@@ -1277,16 +1280,16 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 
 --| 090000009804
 
--- note_proforma_view
+-- proforma_view
 -- tipologia: tabella gestita
-DROP TABLE IF EXISTS `note_proforma_view`;
+DROP TABLE IF EXISTS `proforma_view`;
 
 --| 090000009805
 
--- fatture_view
+-- proforma_view
 -- tipologia: tabella gestita
 -- verifica: 2021-09-03 17:25 Fabio Mosti
-CREATE OR REPLACE VIEW `note_proforma_view` AS
+CREATE OR REPLACE VIEW `proforma_view` AS
     SELECT
 		documenti.id,
 		documenti.id_tipologia,
@@ -1301,8 +1304,6 @@ CREATE OR REPLACE VIEW `note_proforma_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
-			' ',
 			documenti.numero,
 			'/',
 			year( documenti.data ),
@@ -2069,6 +2070,7 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		mastri.id_tipologia,
 		tipologie_mastri.nome AS tipologia,
 		mastri.nome,
+		mastri.note,
 		mastri_path( mastri.id ) AS __label__
 	FROM mastri
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
@@ -2297,6 +2299,13 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.timestamp_pagamento,
 		pagamenti.id_account_inserimento,
 		pagamenti.id_account_aggiornamento,
+		concat(
+			'documento ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data) AS documento,
 		pagamenti.nome AS __label__
 	FROM pagamenti
 		LEFT JOIN tipologie_pagamenti ON tipologie_pagamenti.id = pagamenti.id_tipologia
@@ -2304,6 +2313,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
 		LEFT JOIN iva ON iva.id = pagamenti.id_iva
 		LEFT JOIN listini ON listini.id = pagamenti.id_listino
+		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
 ;
 
 --| 090000023200

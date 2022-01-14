@@ -42,7 +42,6 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'nome' => 'nome',
-		'id_articolo' => 'articolo',
 		'mastro_provenienza' => 'scarico',
 		'mastro_destinazione' => 'carico',
         'importo_netto_totale' => 'importo netto',

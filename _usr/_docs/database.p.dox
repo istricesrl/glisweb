@@ -69,8 +69,9 @@
     pagamenti_view.id_listino               | -
     pagamenti_view.listino                  | il listino di riferimento della riga
     pagamenti_view.timestamp_pagamento      | -
-    pagamenti.id_account_inserimento        | -
-	pagamenti.id_account_aggiornamento      | -
+    pagamenti_view.id_account_inserimento   | -
+	pagamenti_view.id_account_aggiornamento | -
+    pagamenti_view.documento                | il documento a cui il pagamento fa riferimento
     pagamenti_view.__label__                | l'etichetta descrittiva del pagamento
 
     pagine

@@ -29,8 +29,11 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-     
-        '__label__' => 'nome'
+        'nome' => 'nome',
+		'mastro_provenienza' => 'scarico',
+		'mastro_destinazione' => 'carico',
+        'importo_netto_totale' => 'importo netto',
+		'documento' => 'documento'
 	);
 
     // stili della vista

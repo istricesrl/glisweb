@@ -307,6 +307,7 @@
     mastri_view.id_tipologia                | -
     mastri_view.tipologia                   | la tipologia del mastro
     mastri_view.nome                        | -
+    mastri_view.note                        | -
     mastri_view.id_account_inserimento      | -
     mastri_view.id_account_aggiornamento    | -
     mastri_view.__label__                   | etichetta descrittiva del mastro
