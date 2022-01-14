@@ -14,7 +14,13 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'archivium' => array(
+	    'esportazioni' => array(
+        'label' => 'esportazioni'
+        ),
+        'importazioni' => array(
+            'label' => 'importazioni'
+        ),
+        'archivium' => array(
 		'label' => 'Archivium'
 	    )
 	);
