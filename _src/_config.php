@@ -333,12 +333,14 @@
 
     // file
     define( 'FILE_AUTOLOAD'         ,  DIR_SRC_LIB_EXT . 'autoload.php' );
-	define( 'FILE_CURRENT_VERSION'		, DIR_ETC . '_current.conf' );
+	define( 'FILE_CURRENT_RELEASE'		, DIR_ETC . '_current.release.conf' );
+	define( 'FILE_CURRENT_VERSION'		, DIR_ETC . '_current.version.conf' );
 	define( 'FILE_LATEST_RUN'		, DIR_VAR_LOG_LATEST . 'run.latest.log');
 	define( 'FILE_LATEST_CRON'		, DIR_VAR_LOG_LATEST . 'cron.latest.log');
 	define( 'FILE_LATEST_MYSQL'		, DIR_VAR_LOG_LATEST . 'mysql.latest.log');
 	define( 'FILE_LATEST_SITEMAP'		, DIR_VAR_LOG_LATEST . 'sitemap.latest.log');
-	define( 'FILE_LATEST_UPDATE'		, path2custom( DIR_ETC ) . 'latest.conf' );
+	define( 'FILE_LATEST_RELEASE'		, path2custom( DIR_ETC ) . 'latest.release.conf' );
+	define( 'FILE_LATEST_VERSION'		, path2custom( DIR_ETC ) . 'latest.version.conf' );
 	define( 'FILE_LICENSE'			, path2custom( DIR_ETC ) . 'license.conf' );
 	define( 'FILE_LOREM'			, DIR_ETC . '_lorem.conf' );
 	define( 'FILE_MANUAL_HTML'		, DIR_USR_DOCS_BUILD_HTML . 'index.html' );

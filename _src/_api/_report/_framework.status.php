@@ -18,16 +18,25 @@
 	    die( '[FAIL] versione di PHP (' . PHP_VERSION . ') non supportata: ' . PHP_VERSION . PHP_EOL );
 	}
 
-    // versione del framework
-	if( version_compare( VERSION_CURRENT, VERSION_LATEST ) == 0 ) {
-	    echo '[ OK ] framework aggiornato alla stable (' . VERSION_CURRENT . ')' . PHP_EOL;
-	} elseif( version_compare( VERSION_CURRENT, VERSION_LATEST ) == -1 ) {
-	    echo '[WARN] stai usando una versione obsoleta (' . VERSION_CURRENT . ') rispetto alla stable ' . VERSION_LATEST . PHP_EOL;
+    // release del framework
+	if( version_compare( RELEASE_CURRENT, RELEASE_LATEST ) == 0 ) {
+	    echo '[ OK ] framework aggiornato alla release stable (' . RELEASE_CURRENT . ')' . PHP_EOL;
+	} elseif( version_compare( RELEASE_CURRENT, RELEASE_LATEST ) == -1 ) {
+	    echo '[WARN] stai usando una release obsoleta (' . RELEASE_CURRENT . ') rispetto alla stable ' . RELEASE_LATEST . PHP_EOL;
 	} else {
-	    echo '[INFO] stai usando una versione di sviluppo (' . VERSION_CURRENT . ') superiore alla stable ' . VERSION_LATEST . PHP_EOL;
+	    echo '[INFO] stai usando una release di sviluppo (' . RELEASE_CURRENT . ') superiore alla stable ' . RELEASE_LATEST . PHP_EOL;
 	}
 
-    // output
+    // versione del framework
+	if( VERSION_CURRENT == VERSION_LATEST ) {
+	    echo '[ OK ] framework aggiornato (' . VERSION_CURRENT . ')' . PHP_EOL;
+	} elseif( VERSION_CURRENT < VERSION_LATEST ) {
+	    echo '[WARN] stai usando una versione obsoleta (' . VERSION_CURRENT . ') rispetto a ' . VERSION_LATEST . PHP_EOL;
+	} else {
+	    echo '[INFO] stai usando una versione di sviluppo (' . VERSION_CURRENT . ') superiore a ' . VERSION_LATEST . PHP_EOL;
+	}
+
+	// output
 	echo PHP_EOL;
 
     // directory base
@@ -133,14 +142,14 @@
 
     // aggiornamento della sitemap
 	if( empty( $cf['sitemap']['updated'] ) ) {
-	    echo '[WARN] sitemap non presente' . PHP_EOL;
+	    echo '[INFO] sitemap non presente' . PHP_EOL;
 	} else {
 	    echo '[ -- ] ultimo aggiornamento della sitemap: ' . date( 'Y-m-d H:i:s', $cf['sitemap']['updated'] ) . PHP_EOL;
 	}
 
     // aggiornamento delle pagine
 	if( empty( $cf['contents']['updated'] ) ) {
-	    echo '[WARN] data di aggiornamento dei contenuti non disponibile' . PHP_EOL;
+	    echo '[INFO] data di aggiornamento dei contenuti non disponibile' . PHP_EOL;
 	} else {
 	    echo '[ -- ] ultimo aggiornamento dei contenuti: ' . date( 'Y-m-d H:i:s', $cf['contents']['updated'] ) . PHP_EOL;
 	}

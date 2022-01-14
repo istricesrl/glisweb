@@ -135,7 +135,7 @@
 			// unisco la tabella di ACL se presente
 			    if( ! empty( $aclTb ) ) {
 				$q .= " LEFT JOIN $aclTb ON ${aclTb}.id_entita = ${t}$rm.id ";
-				$q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) OR __acl_attivita__.id_account = ? )";
+				$q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) OR ${aclTb}.id_account = ? )";
 				$whr[] = "( account_gruppi.id_account = ? OR ${t}$rm.id_account_inserimento = ? )";
 				$vs[] = array( 's' => $aclId );
 				$vs[] = array( 's' => $aclId );
