@@ -486,6 +486,23 @@ ALTER TABLE `comuni`
 -- tipologia: tabella di supporto
 ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000006200
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `condizioni_pagamento`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `codice` (`codice`),
+	ADD KEY `nome` (`nome`),
+	ADD UNIQUE KEY `unico` (`codice`,`nome`);
+
+--| 030000006201
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000006700
 
 -- contatti

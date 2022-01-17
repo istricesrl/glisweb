@@ -92,6 +92,16 @@ REPLACE INTO `comuni` (`id`, `id_provincia`, `nome`, `codice_istat`, `codice_cat
 (12594,	1,	'Valsamoggia',	                    '037061',	'M320'),
 (12595,	1,	'Alto Reno Terme',	                '037062',	'M369');
 
+--| 050000006200
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-17 16:12 Chiara GDL
+REPLACE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
+(1,	    'TP01',	'pagamento a rate'),
+(2,	    'TP02',	'pagamento completo'),
+(3,	    'TP03',	    'anticipo');
+
 --| 050000007100
 
 -- continenti

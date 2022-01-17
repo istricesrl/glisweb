@@ -915,6 +915,28 @@ CREATE OR REPLACE VIEW comuni_view AS
 		INNER JOIN stati ON stati.id = regioni.id_stato
 ;
 
+--| 090000006200
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `condizioni_pagamento_view`;
+
+--| 090000006201
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW condizioni_pagamento_view AS
+	SELECT
+		condizioni_pagamento.id,
+		condizioni_pagamento.codice,
+		condizioni_pagamento.nome,
+		condizioni_pagamento.note,
+		concat( condizioni_pagamento.codice, ' - ', condizioni_pagamento.nome) AS __label__
+	FROM
+		condizioni_pagamento
+;
+
 --| 090000006700
 
 -- contatti_view

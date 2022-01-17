@@ -107,7 +107,7 @@
     relazioni_documenti_view.id                      | -
     relazioni_documenti_view.id_documento            | -
     relazioni_documenti_view.id_documento_collegato  | -
-    relazioni_documenti_view.__label__               | -
+    relazioni_documenti_view.__label__               | l'etichetta descrittiva della relazione
     
     relazioni_documenti_articoli
     -------
@@ -133,7 +133,7 @@
     relazioni_documenti_articoli_view.id                               | -
     relazioni_documenti_articoli_view.id_documenti_articolo            | -
     relazioni_documenti_articoli_view.id_documenti_articolo_collegato  | -
-    relazioni_documenti_articoli_view.__label__                        | -
+    relazioni_documenti_articoli_view.__label__                        | l'etichetta descrittiva della relazione
 
     relazioni_pagamenti
     -------
@@ -159,7 +159,7 @@
     relazioni_pagamenti_view.id                      | -
     relazioni_pagamenti_view.id_pagamento            | -
     relazioni_pagamenti_view.id_pagamento_collegato  | -
-    relazioni_pagamenti_view.__label__               | -
+    relazioni_pagamenti_view.__label__               | l'etichetta descrittiva della relazione
 
     relazioni_progetti
     -------
@@ -185,7 +185,7 @@
     relazioni_progetti_view.id                       | -
     relazioni_progetti_view.id_progetto              | -
     relazioni_progetti_view.id_progetto_collegato    | -
-    relazioni_progetti_view.__label__                | -
+    relazioni_progetti_view.__label__                | l'etichetta descrittiva della relazione
 
     relazioni_software
     -------
@@ -211,7 +211,7 @@
     relazioni_software_view.id                       | -
     relazioni_software_view.id_software              | -
     relazioni_software_view.id_software_collegato    | -
-    relazioni_software_view.__label__                | -
+    relazioni_software_view.__label__                | l'etichetta descrittiva della relazione
 
     regimi
     ------

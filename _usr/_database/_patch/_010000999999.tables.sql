@@ -508,6 +508,18 @@ CREATE TABLE IF NOT EXISTS `comuni` (
   `codice_catasto` char(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000006200
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
+`id` int(11) NOT NULL,
+  `codice` char(5) NOT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000006700
 
 -- contatti
