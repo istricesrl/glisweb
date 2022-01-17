@@ -865,6 +865,52 @@ ALTER TABLE `redirect`
 ALTER TABLE `regioni`
     ADD CONSTRAINT `regioni_ibfk_01_nofollow`   FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+
+--| 060000030400
+
+-- relazioni_documenti
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_documenti`
+ADD CONSTRAINT `relazioni_documenti_ibfk_01` FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `relazioni_documenti_ibfk_02` FOREIGN KEY (`id_documento_collegato`) REFERENCES `documenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 060000030410
+
+-- relazioni_documenti_articoli
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_documenti_articoli`
+ADD CONSTRAINT `relazioni_documenti_articoli_ibfk_01` FOREIGN KEY (`id_documenti_articolo`) REFERENCES `documenti_articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `relazioni_documenti_articoli_ibfk_02` FOREIGN KEY (`id_documenti_articolo_collegato`) REFERENCES `documenti_articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 060000030440
+
+-- relazioni_pagamenti
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_pagamenti`
+ADD CONSTRAINT `relazioni_pagamenti_ibfk_01` FOREIGN KEY (`id_pagamento`) REFERENCES `pagamenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `relazioni_pagamenti_ibfk_02` FOREIGN KEY (`id_pagamento_collegato`) REFERENCES `pagamenti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 060000030490
+
+-- relazioni_progetti
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_progetti`
+ADD CONSTRAINT `relazioni_progetti_ibfk_01` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `relazioni_progetti_ibfk_02` FOREIGN KEY (`id_progetto_collegato`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 060000030500
+
+-- relazioni_software
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_software`
+ADD CONSTRAINT `relazioni_software_ibfk_01` FOREIGN KEY (`id_software`) REFERENCES `software` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `relazioni_software_ibfk_02` FOREIGN KEY (`id_software_collegato`) REFERENCES `software` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 --| 060000030800
 
 -- reparti

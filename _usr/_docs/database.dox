@@ -17,6 +17,7 @@
     - tabelle standard
     - tabelle assistite
     - tabelle gestite
+    - tabelle di relazione
 
     tipologie di tabelle
     ====================
@@ -178,6 +179,18 @@
     url                             | 062600    | base          | principale    | contiene gli URL
     video                           | 065000    | base          | contenuti     | contiene i video
 
+    le tabelle di relazione
+    ------------------
+    Le tabelle di relazione servono per mettere in relazioni molti a molti oggetti di tabelle principali con altri oggetti della stessa tabella
+
+    tabella                         | codice    | modello       | gruppo        | descrizione
+    --------------------------------|-----------|---------------|---------------|------------------------------
+    relazioni_documenti             | 030400    | relazione     | secondario    | mette in relazione documenti e documenti
+    relazioni_documenti_articoli    | 030410    | relazione     | secondario    | mette in relazione documenti_articoli e documenti_articoli
+    relazioni_pagamenti             | 030440    | relazione     | secondario    | mette in relazione pagamenti e pagamenti
+    relazioni_progetti              | 030490    | relazione     | secondario    | mette in relazione progetti e progetti
+    relazioni_software              | 030500    | relazione     | secondario    | mette in relazione software e software
+
     tabelle e moduli
     ================
     Non tutti i moduli necessitano di tutte le tabelle. Per sapere quali tabelle sono richieste dai vari moduli è
@@ -187,7 +200,7 @@
     ------------|-----------|----------------------------------------------------------
     BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, luoghi, mail, mail_out, mail_sent, metadati, periodicita, ranking, regimi, regioni, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
     CONTATTI    | 0300      | contatti, tipologie_contatti
-    PRODUZIONE  | 1000      | categorie_progetti, pianificazioni, progetti, progetti_anagrafica, progetti_categorie, ruoli_anagrafica, tipologie_progetti, todo
+    PRODUZIONE  | 1000      | categorie_progetti, pianificazioni, progetti, progetti_anagrafica, progetti_categorie, relazioni_progetti, ruoli_anagrafica, tipologie_progetti, todo
     ATTIVITA    | 1100      | attivita, matricole, pianificazioni, tipologie_attivita, todo
     MAGAZZINI   |           | mastri, matricole, tipologie_mastri
     CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
@@ -196,9 +209,9 @@
     RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
     PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, matricole, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
-    DOCUMENTI   |           | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
-    CASSE       | 6500      | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, pagamenti, prezzi, prodotti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
-    SOFTWARE    |           | chiavi, licenze, licenze_software, software, tipologie_chiavi, tipologie_licenze
+    DOCUMENTI   |           | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
+    CASSE       | 6500      | articoli, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
+    SOFTWARE    |           | chiavi, licenze, licenze_software, relazioni_software, software, tipologie_chiavi, tipologie_licenze
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
 
@@ -279,6 +292,11 @@
     redirect                        | CONTENUTI
     regimi                          | BASE
     regioni                         | BASE
+    relazioni_documenti             | DOCUMENTI, CASSE
+    relazioni_documenti_articoli    | DOCUMENTI, CASSE
+    relazioni_pagamenti             | DOCUMENTI, CASSE
+    relazioni_progetti              | PRODUZIONE
+    relazioni_software              | SOFTWARE
     reparti                         | DOCUMENTI, CASSE
     risorse                         | RISORSE
     risorse_anagrafica              | RISORSE
@@ -465,7 +483,7 @@
 
     la tabella __patch__
     --------------------
-
+    
 
     schema e dati della release
     ---------------------------

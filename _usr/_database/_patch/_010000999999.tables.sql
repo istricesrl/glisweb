@@ -1660,6 +1660,61 @@ CREATE TABLE IF NOT EXISTS `regioni` (
   `codice_istat` char(2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000030400
+
+-- relazioni_documenti
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
+`id` int(11) NOT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_documento_collegato` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000030410
+
+-- relazioni_documenti_articoli
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (
+`id` int(11) NOT NULL,
+  `id_documenti_articolo` int(11) DEFAULT NULL,
+  `id_documenti_articolo_collegato` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000030440
+
+-- relazioni_pagamenti
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
+`id` int(11) NOT NULL,
+  `id_pagamento` int(11) DEFAULT NULL,
+  `id_pagamento_collegato` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000030490
+
+-- relazioni_progetti
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
+`id` char(32) NOT NULL,
+  `id_progetto` int(11) DEFAULT NULL,
+  `id_progetto_collegato` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000030500
+
+-- relazioni_software
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE TABLE IF NOT EXISTS `relazioni_software` (
+`id` int(11) NOT NULL,
+  `id_software` int(11) DEFAULT NULL,
+  `id_software_collegato` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000030800
 
 -- reparti

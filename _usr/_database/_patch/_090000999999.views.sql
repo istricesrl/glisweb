@@ -3129,6 +3129,106 @@ CREATE OR REPLACE VIEW redirect_view AS
 	FROM redirect
 ;
 
+--| 090000030400
+
+-- relazioni_documenti_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_documenti_view`;
+
+--| 090000030401
+
+-- relazioni_documenti_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_documenti_view AS
+	SELECT
+	relazioni_documenti.id_documento,
+	relazioni_documenti.id_documento_collegato,
+	concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato) AS __label__
+	FROM relazioni_documenti
+	ORDER BY __label__
+;
+
+--| 090000030410
+
+-- relazioni_documenti_articoli_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_documenti_articoli_view`;
+
+--| 090000030411
+
+-- relazioni_documenti_articoli_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
+	SELECT
+	relazioni_documenti_articoli.id_documenti_articolo,
+	relazioni_documenti_articoli.id_documenti_articolo_collegato,
+	concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato) AS __label__
+	FROM relazioni_documenti_articoli
+	ORDER BY __label__
+;
+
+--| 090000030440
+
+-- relazioni_pagamenti_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_pagamenti_view`;
+
+--| 090000030441
+
+-- relazioni_pagamenti_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
+	SELECT
+	relazioni_pagamenti.id_pagamento,
+	relazioni_pagamenti.id_pagamento_collegato,
+	concat( relazioni_pagamenti.id_pagamento,' - ', relazioni_pagamenti.id_pagamento_collegato) AS __label__
+	FROM relazioni_pagamenti
+	ORDER BY __label__
+;
+
+--| 090000030490
+
+-- relazioni_progetti_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_progetti_view`;
+
+--| 090000030491
+
+-- relazioni_progetti_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_progetti_view AS
+	SELECT
+	relazioni_progetti.id_progetto,
+	relazioni_progetti.id_progetto_collegato,
+	concat( relazioni_progetti.id_progetto,' - ', relazioni_progetti.id_progetto_collegato) AS __label__
+	FROM relazioni_progetti
+	ORDER BY __label__
+;
+
+--| 060000030500
+
+-- relazioni_software_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_software_view`;
+
+--| 060000030501
+
+-- relazioni_software_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_software_view AS
+	SELECT
+	relazioni_software.id_software,
+	relazioni_software.id_software_collegato,
+	concat( relazioni_software.id_software,' - ', relazioni_software.id_software_collegato) AS __label__
+	FROM relazioni_software
+	ORDER BY __label__
+;
+
 --| 090000029800
 
 -- regimi_view
