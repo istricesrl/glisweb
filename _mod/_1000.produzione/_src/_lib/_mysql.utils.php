@@ -129,11 +129,11 @@
         $frequenza = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT count(*) FROM attivita WHERE id_progetto = ? AND id_anagrafica = ? '
-            .'AND (data_programmazione between ? AND ?)',
+            .'AND data_programmazione < ?',
             array(
                 array( 's' => $id_progetto ),
                 array( 's' => $id_anagrafica ),
-                array( 's' => date('Y-m-d', strtotime( $data . '-3 months' ) ) ),
+                array( 's' => $data ),
                 array( 's' => $data )
             )
         );
