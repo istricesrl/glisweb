@@ -1254,6 +1254,18 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000021900
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-18 12:06 Chiara GDL
+CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
+`id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `provider` char(64) DEFAULT NULL,
+  `codice` char(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000022000
 
 -- notizie
