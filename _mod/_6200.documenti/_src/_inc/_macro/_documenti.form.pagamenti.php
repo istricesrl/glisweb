@@ -41,6 +41,7 @@
 
 	$ct['view']['cols'] = array(
         'id' => '#',
+        'data_ora_scadenza' => 'scadenza',
         'nome' => 'nome',
 		'mastro_provenienza' => 'scarico',
 		'mastro_destinazione' => 'carico',

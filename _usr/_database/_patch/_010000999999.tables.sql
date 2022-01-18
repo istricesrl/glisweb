@@ -1324,6 +1324,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `importo_netto_totale` decimal(9,2) NOT NULL,
   `id_iva` int(11) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
+	`timestamp_scadenza` int(11) DEFAULT NULL,
   `timestamp_pagamento` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
