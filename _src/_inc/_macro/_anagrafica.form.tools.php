@@ -26,7 +26,7 @@
 	);
 
     // esportazione azienda in Archivium
-    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', array_keys( $_SESSION['privilegi'] ) ) ) {
+    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', $_SESSION['account']['privilegi'] ) ) {
         $ct['page']['contents']['metro']['archivium'][] = array(
             'host' => $ct['site']['url'],
             'ws' => 'task/anagrafica.attivazione.archivium?id='.$_REQUEST[ $ct['form']['table'] ]['id'],

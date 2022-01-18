@@ -486,6 +486,23 @@ ALTER TABLE `comuni`
 -- tipologia: tabella di supporto
 ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000006200
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `condizioni_pagamento`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `codice` (`codice`),
+	ADD KEY `nome` (`nome`),
+	ADD UNIQUE KEY `unico` (`codice`,`nome`);
+
+--| 030000006201
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000006700
 
 -- contatti
@@ -1790,6 +1807,92 @@ ALTER TABLE `regioni`
 -- regioni
 -- tipologia: tabella standard
 ALTER TABLE `regioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+--| 030000030400
+
+-- relazioni_documenti
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_documenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_documento` (`id_documento`),
+	ADD KEY `id_documento_collegato` (`id_documento_collegato`),
+	ADD UNIQUE KEY `unico` (`id_documento`,`id_documento_collegato`);
+
+--| 030000030401
+
+-- relazioni_documenti
+-- tipologia: tabella relazione
+ALTER TABLE `relazioni_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000030410
+
+-- relazioni_documenti_articoli
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_documenti_articoli`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
+	ADD KEY `id_documenti_articolo_collegato` (`id_documenti_articolo_collegato`),
+	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`);
+
+--| 030000030411
+
+-- relazioni_documenti_articoli
+-- tipologia: tabella relazione
+ALTER TABLE `relazioni_documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000030440
+
+-- relazioni_pagamenti
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_pagamenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_pagamento` (`id_pagamento`),
+	ADD KEY `id_pagamento_collegato` (`id_pagamento_collegato`),
+	ADD UNIQUE KEY `unico` (`id_pagamento`,`id_pagamento_collegato`);
+
+--| 030000030441
+
+-- relazioni_pagamenti
+-- tipologia: tabella relazione
+ALTER TABLE `relazioni_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000030490
+
+-- relazioni_progetti
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_progetti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_progetto_collegato` (`id_progetto_collegato`),
+	ADD UNIQUE KEY `unico` (`id_progetto`,`id_progetto_collegato`);
+
+--| 030000030491
+
+-- relazioni_progetti
+-- tipologia: tabella relazione
+ALTER TABLE `relazioni_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000030500
+
+-- relazioni_software
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+ALTER TABLE `relazioni_software`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_software` (`id_software`),
+	ADD KEY `id_software_collegato` (`id_software_collegato`),
+	ADD UNIQUE KEY `unico` (`id_software`,`id_software_collegato`);
+
+--| 030000030501
+
+-- relazioni_software
+-- tipologia: tabella relazione
+ALTER TABLE `relazioni_software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000030800
 

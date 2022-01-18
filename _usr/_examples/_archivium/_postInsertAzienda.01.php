@@ -17,7 +17,7 @@
     $t = null;
 
     // chiamo la funzione archiviumPostInsertAzienda()
-    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', array_keys( $_SESSION['privilegi'] ) ) ) {
+    if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', $_SESSION['account']['privilegi'] ) ) {
         $s = archiviumPostInsertAzienda( $_REQUEST['id'] );
     }
 
