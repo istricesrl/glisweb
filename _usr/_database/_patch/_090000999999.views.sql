@@ -1521,14 +1521,14 @@ CREATE OR REPLACE VIEW `iban_view` AS
 		iban.id_account_aggiornamento,
 		concat(
 			iban.iban,
+			' ',
 			coalesce(
 				a1.denominazione,
 				concat(
 					a1.cognome,
 					' ',
 					a1.nome
-				),
-				''
+				)
 			)
 		) AS __label__
 	FROM iban
