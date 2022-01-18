@@ -203,5 +203,9 @@ CREATE OR REPLACE VIEW `proforma_view` AS
     WHERE documenti.id_tipologia = 5
 ;
 
+--| 202201180100
+ALTER TABLE `anagrafica`
+ADD UNIQUE KEY `unica_partita_iva` (`partita_iva`),
+ADD UNIQUE KEY `unica_codice_fiscale` (`codice_fiscale`);
 
 --| FINE FILE

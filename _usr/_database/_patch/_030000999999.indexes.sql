@@ -88,6 +88,8 @@ ALTER TABLE `anagrafica`
 	ADD UNIQUE KEY `unica` (`codice`),
 	ADD UNIQUE KEY `unica_persone` (`nome`,`cognome`,`codice_fiscale`),
 	ADD UNIQUE KEY `unica_aziende` (`denominazione`,`partita_iva`,`codice_fiscale`),
+	ADD UNIQUE KEY `unica_partita_iva` (`partita_iva`),
+	ADD UNIQUE KEY `unica_codice_fiscale` (`codice_fiscale`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_pec_sdi` (`id_pec_sdi`),
 	ADD KEY `id_regime` (`id_regime`),
