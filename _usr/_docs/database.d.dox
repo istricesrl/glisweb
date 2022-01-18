@@ -76,6 +76,14 @@
     documenti_view.id_account_aggiornamento         | -
     documenti_view.__label__                        | l'etichetta descrittiva del documento
   
+    fatture_view
+    --------------------
+    Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 1, ovvero un documento di tipologia fattura
+
+    proforma_view
+    --------------------
+    Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 5, ovvero un documento di tipologia proforma
+
     documenti_articoli
     ------------------
     Questa tabella *gestita* contiene le righe associate all'entità principale *documenti*, descritte come associazione fra documenti e articoli; questa

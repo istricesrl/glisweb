@@ -1247,119 +1247,6 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
 ;
 
---| 090000009802
-
--- fatture_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `fatture_view`;
-
---| 090000009803
-
--- fatture_view
--- tipologia: tabella gestita
--- verifica: 2021-09-03 17:25 Fabio Mosti
-CREATE OR REPLACE VIEW `fatture_view` AS
-    SELECT
-		documenti.id,
-		documenti.id_tipologia,
-		tipologie_documenti.nome AS tipologia,
-		documenti.numero,
-		documenti.sezionale,
-		documenti.data,
-		documenti.nome,
-		documenti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		documenti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		documenti.id_condizione_pagamento,
-		condizioni_pagamento.codice AS condizione_pagamento,
-		documenti.codice_archivium,
-    	documenti.codice_sdi,
-    	documenti.timestamp_invio,
-    	documenti.progressivo_invio,
-		documenti.id_coupon,
-		documenti.id_account_inserimento,
-		documenti.id_account_aggiornamento,
-		concat(
-			tipologie_documenti.nome,
-			' ',
-			documenti.numero,
-			'/',
-			year( documenti.data ),
-			' del ',
-			documenti.data,
-			' per ',
-			coalesce(
-				a2.denominazione,
-				concat(
-					a2.cognome,
-					' ',
-					a2.nome
-				),
-				''
-			)
-		) AS __label__
-    FROM
-		documenti
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
-   WHERE documenti.id_tipologia = 1
-;
-
---| 090000009804
-
--- note_proforma_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `note_proforma_view`;
-
---| 090000009805
-
--- fatture_view
--- tipologia: tabella gestita
--- verifica: 2021-09-03 17:25 Fabio Mosti
-CREATE OR REPLACE VIEW `note_proforma_view` AS
-    SELECT
-		documenti.id,
-		documenti.id_tipologia,
-		tipologie_documenti.nome AS tipologia,
-		documenti.numero,
-		documenti.data,
-		documenti.nome,
-		documenti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		documenti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		documenti.id_account_inserimento,
-		documenti.id_account_aggiornamento,
-		concat(
-			tipologie_documenti.nome,
-			' ',
-			documenti.numero,
-			'/',
-			year( documenti.data ),
-			' del ',
-			documenti.data,
-			' per ',
-			coalesce(
-				a2.denominazione,
-				concat(
-					a2.cognome,
-					' ',
-					a2.nome
-				),
-				''
-			)
-		) AS __label__
-    FROM
-		documenti
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-   WHERE documenti.id_tipologia = 5
-;
-
 --| 090000010000
 
 -- documenti_articoli_view
@@ -1450,6 +1337,67 @@ CREATE OR REPLACE VIEW `embed_view` AS
 		embed.se_video,
 		embed.nome AS __label__
 	FROM embed
+;
+
+--| 090000013000
+
+-- fatture_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `fatture_view`;
+
+--| 090000013001
+
+-- fatture_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `fatture_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
+		documenti.id_coupon,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
+   WHERE documenti.id_tipologia = 1
 ;
 
 --| 090000015000
@@ -2661,6 +2609,58 @@ CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
 		) AS __label__
 	FROM prodotti_categorie
 		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = prodotti_categorie.id_ruolo
+;
+
+--| 090000026600
+
+-- proforma_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `proforma_view`;
+
+--| 090000026601
+
+-- proforma_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `proforma_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   WHERE documenti.id_tipologia = 5
 ;
 
 --| 090000027000
