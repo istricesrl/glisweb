@@ -27,6 +27,7 @@
     pagamenti.id_iva                        | l'ID dell'aliquota IVA associata alla riga
     pagamenti.id_listino                    | l'ID del listino associato alla riga
     pagamenti.timestamp_pagamento           | la timestamp dell'effettivo pagamento
+    pagamenti.timestamp_scadenza            | la timestamp entro cui il pagamento deve essere fatto
     pagamenti.id_account_inserimento        | l'ID dell'account che ha inserito la riga
     pagamenti.timestamp_inserimento         | la timestamp dell'inserimento della riga
     pagamenti.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
@@ -69,6 +70,7 @@
     pagamenti_view.id_listino               | -
     pagamenti_view.listino                  | il listino di riferimento della riga
     pagamenti_view.timestamp_pagamento      | -
+    pagamenti_view.timestamp_scadenza       | -
     pagamenti_view.id_account_inserimento   | -
 	pagamenti_view.id_account_aggiornamento | -
     pagamenti_view.documento                | il documento a cui il pagamento fa riferimento

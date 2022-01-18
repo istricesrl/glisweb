@@ -1421,6 +1421,7 @@ ALTER TABLE `pagamenti`
 	ADD KEY `id_listino` (`id_listino`), 
 	ADD KEY `id_iva` (`id_iva`), 
 	ADD KEY `timestamp_pagamento` (`timestamp_pagamento`), 
+	ADD KEY `timestamp_scadenza` (`timestamp_scadenza`), 
 	ADD KEY `importo_netto_totale` (`importo_netto_totale`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 

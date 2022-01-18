@@ -2320,6 +2320,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.id_listino,
 		listini.nome AS listino,
 		pagamenti.timestamp_pagamento,
+		pagamenti.timestamp_scadenza,
 		pagamenti.id_account_inserimento,
 		pagamenti.id_account_aggiornamento,
 		pagamenti.nome AS __label__

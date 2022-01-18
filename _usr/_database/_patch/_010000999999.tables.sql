@@ -721,7 +721,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `codice_archivium` char(64) DEFAULT NULL ,
   `codice_sdi` char(64) DEFAULT NULL,
   `timestamp_invio` int DEFAULT NULL,
-  `progressivo_invio` int DEFAULT NULL,
+  `progressivo_invio` char(5) DEFAULT NULL,
   `id_coupon` char(32) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
