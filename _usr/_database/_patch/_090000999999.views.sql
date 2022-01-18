@@ -2351,8 +2351,10 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		iva.nome AS iva,
 		pagamenti.id_listino,
 		listini.nome AS listino,
-		pagamenti.timestamp_pagamento,
 		pagamenti.timestamp_scadenza,
+		from_unixtime( pagamenti.timestamp_scadenza, '%Y-%m-%d' ) AS data_ora_scadenza,
+		pagamenti.timestamp_pagamento,
+		from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) AS data_ora_pagamento,
 		pagamenti.id_account_inserimento,
 		pagamenti.id_account_aggiornamento,
 		pagamenti.nome AS __label__

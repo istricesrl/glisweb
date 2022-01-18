@@ -81,7 +81,10 @@
 					<span class="label-top remove-after-duplicate">iva</span>
 					{{ frm.select( table, '', '', 'id_iva', '', etc.select.id_iva, request ) }}
 				</div>
-
+				<div class="col-auto">
+					<span class="label-top">scadenza</span>
+					{{ frm.datetime( table, '', '', 'timestamp_scadenza', '', '', request)  }}
+				</div>
 			</div>
 			<div class="form-group form-row">
 				<div class="col-12">
@@ -91,7 +94,7 @@
 			</div>
 
 
-			<legend>magazzino</legend>
+			<legend>conti</legend>
 			{% if  session.__latest__[ table ].id_mastro_provenienza %}
 				{% set default_mp = session.__latest__[ table ].id_mastro_provenienza %}
 			{% endif %}
