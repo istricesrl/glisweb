@@ -2197,6 +2197,28 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
 ;
 
+--| 090000021900
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `modalita_pagamento_view`;
+
+--| 090000021901
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-18 12:06 Chiara GDL
+CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
+	SELECT
+	modalita_pagamento.id,
+	modalita_pagamento.nome,
+	modalita_pagamento.codice,
+	modalita_pagamento.provider,
+	concat( modalita_pagamento.codice,' - ', modalita_pagamento.nome) AS __label__
+	FROM modalita_pagamento
+	ORDER BY __label__
+;
+
 --| 090000022000
 
 -- notizie_view

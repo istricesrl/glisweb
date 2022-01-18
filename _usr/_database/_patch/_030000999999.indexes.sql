@@ -1344,6 +1344,22 @@ ALTER TABLE `metadati`
 -- tipologia: tabella gestita
 ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000021900
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-18 12:06 Chiara GDL
+ALTER TABLE `modalita_pagamento`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`,`codice`),
+	ADD KEY `indice` (`id`,`nome`,`provider`,`codice`);
+
+--| 030000021901
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000022000
 
 -- notizie

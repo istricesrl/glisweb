@@ -488,5 +488,28 @@
     metadati_view.id_account_inserimento    | -
     metadati_view.id_account_aggiornamento  | -
     metadati_view.__label__                 | l'etichetta descrittiva del metadato
-    
+
+    modalita_pagamento
+    ------
+    Questa tabella *standard* contiene le modalità di pagamento codificate secondo lo standard italiano.
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    modalita_pagamento.id               | l'ID della modalita_pagamentoo
+    modalita_pagamento.nome             | il nome della modalità di pagamento
+    modalita_pagamento.provider         | il provider della modalità di pagamento
+    modalita_pagamento.codice           | il codice identificativo del pagamento per la fatturazione elettronica
+
+
+    La tabella non ha chiavi esterne
+
+    La vista *modalita_pagamento_view* relativa alla tabella *modalita_pagamento* presenta le seguenti colonne:
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    modalita_pagamento_view.id              | -
+    modalita_pagamento_view.nome            | -
+    modalita_pagamento_view.provider        | -
+    modalita_pagamento_view.codice          | -
+    modalita_pagamento_view.__label__       | etichetta descrittiva della modalità di pagamentoo    
 */

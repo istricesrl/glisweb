@@ -177,6 +177,37 @@ REPLACE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alpha3`, `
 REPLACE INTO `listini` (`id`, `id_valuta`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,     1,	            'DEFAULT',	                NULL,	NULL,	NULL,	NULL);
 
+--| 050000021900
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-18 12:06 Chiara GDL
+REPLACE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
+(1,	    'MP01',	'contanti'),
+(2,	    'MP02',	'assegno'),
+(3,	    'MP03',	    'assegno circolare'),
+(4,	    'MP04',	    'contanti presso tesoreria'),
+(5,	    'MP05',	'bonifico'),
+(6,	    'MP06',	'vaglia cambiario'),
+(7,	    'MP07',	'bollettino bancario'),
+(8,	    'MP08',	'carta di credito'),
+(9,	    'MP09',	'RID'),
+(10,	    'MP10',	'RID utenze'),
+(11,	    'MP11',	'RID veloce'),
+(12,	    'MP12',	'RIBA'),
+(13,	    'MP13',	'MAV'),
+(14,	    'MP14',	'quietanza erario stato'),
+(15,	    'MP15',	'giroconto su conti di contabilità speciale'),
+(16,	    'MP16',	'domiciliazione bancaria'),
+(17,	    'MP17',	'domiciliazione postale'),
+(18,	    'MP18', 'bollettino di c/c postale'),
+(19, 'MP19', 'SEPA Direct Debit' ),
+(20, 'MP20', 'SEPA Direct Debit CORE' ),
+(21, 'MP21', 'SEPA Direct Debit B2B' ),
+(22, 'MP22', 'Trattenuta su somme già riscosse' ),
+(23,  'MP08', 'bancomat' ),
+(24, 'MP08', 'paypal' );
+
 --| 050000028600
 
 -- ranking
