@@ -945,8 +945,6 @@
     session.account.utente                    | -
     session.groups                            | gruppi collegati alla sessione corrente (appare dopo il login)
     session.id                                | l'ID della sessione corrente
-    session.privilegi                         | dettagli dei privilegi collegati alla sessione corrente (appare dopo il login)
-    session.privilegi.<x>                     | dettagli del privilegio <x> collegato alla sessione corrente
     session.used                              | la timestamp dell'ultimo utilizzo della sessione
 
     \todo approfondire gli aspetti legati a session.__view__

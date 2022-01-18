@@ -84,7 +84,6 @@
 	    'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] )
 	);
 
-
 	// vista immagini
 	$p['immagini.view'] = array(
 		'sitemap'		=> false,
@@ -118,7 +117,6 @@
 												'immagini.form.tools'
 												 ) )	
 	);
-
 
 	// gestione immagini associazioni
 	$p['immagini.form.associazioni'] = array(
@@ -194,8 +192,6 @@
 	    'etc'		=> array( 'tabs'	=> $p['immagini.form']['etc']['tabs'] )
 	);
 
-
-
 	// vista video
 	$p['video.view'] = array(
 		'sitemap'		=> false,
@@ -209,7 +205,6 @@
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'video' ),
 		'priority'	=> '030' ) ) )
 	);
-
 
 	// gestione video
 	$p['video.form'] = array(

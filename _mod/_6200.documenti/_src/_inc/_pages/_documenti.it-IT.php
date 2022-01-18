@@ -27,6 +27,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.php' ),
+		'js'			=> array( 'internal' => array( '_mod/_6200.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 
 														'documenti.form.righe', 
