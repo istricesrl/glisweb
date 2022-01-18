@@ -718,6 +718,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `id_sede_emittente` int(11) DEFAULT NULL,
   `id_destinatario` int(11) NOT NULL,
   `id_sede_destinatario` int(11) DEFAULT NULL,
+  `id_condizione_pagamento` int(11) DEFAULT NULL,
   `codice_archivium` char(64) DEFAULT NULL ,
   `codice_sdi` char(64) DEFAULT NULL,
   `timestamp_invio` int DEFAULT NULL,
@@ -1325,6 +1326,7 @@ CREATE TABLE IF NOT EXISTS `organizzazioni` (
 CREATE TABLE IF NOT EXISTS `pagamenti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `id_modalita_pagamento` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text,

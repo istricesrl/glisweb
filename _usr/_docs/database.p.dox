@@ -15,6 +15,7 @@
     ----------------------------------------|---------------------------------------------------------------------------------------
     pagamenti.id                            | l'ID del pagamento
     pagamenti.id_tipologia                  | l'ID della tipologia del pagamento cui si riferisce la riga
+    pagamenti.id_modalita_pagamento         | l'ID della modalità di pagamento cui si riferisce la riga
     pagamenti.ordine                        | campo di ordinamento
     pagamenti.nome                          | nome descrittivo della riga
     pagamenti.note                          | note aggiuntive sul pagamento
@@ -44,6 +45,7 @@
     pagamenti_ibfk_05_nofollow                  | id_iban                       | iban.id                           | ON DELETE SET NULL ON UPDATE SET NULL
     pagamenti_ibfk_06_nofollow                  | id_listino                    | listini.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
     pagamenti_ibfk_07_nofollow                  | id_iva                        | iva.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagamenti_ibfk_08_nofollow                  | id_modalita_pagamento         | modalita_pagamento.id 
     pagamenti_ibfk_98_nofollow                  | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     pagamenti_ibfk_99_nofollow                  | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -54,6 +56,8 @@
     pagamenti_view.id                       | -
     pagamenti_view.id_tipologia             | -
     pagamenti_view.tipologia                | la tipologia del pagamento collegato alla riga
+    pagamenti_view.id_modalita_pagamento    | -
+    pagamenti_view.modalita_pagamento       | la modalità di pagamento della riga
     pagamenti_view.ordine                   | -
     pagamenti_view.nome                     | -
     pagamenti_view.note                     | -

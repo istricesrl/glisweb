@@ -24,6 +24,7 @@
     documenti.id_sede_emittente             | l'ID della sede dell'emittente
     documenti.id_destinatario               | l'ID del destinatario del documento
     documenti.id_sede_destinatario          | l'ID della sede del destinatario
+    documenti.id_condizione_pagamento       | l'ID della condizione pagamento del documento
     documenti.codice_archivium              | il codice archivium del documento
     documenti.codice_sdi                    | il codice sdi di invio del documento
     documenti.timestamp_invio               | il timestamp di invio del documento
@@ -45,6 +46,7 @@
     documenti_ibfk_04_nofollow              | id_destinatario           | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_05_nofollow              | id_sede_destinatario      | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_06_nofollow              | id_coupon                 | coupon.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_07_nofollow              | id_condizione_pagamento   | condizioni_pagamento.id       | ON DELETE NO ACTION ON UPDATE NO ACTION          
     documenti_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     documenti_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -63,6 +65,8 @@
     documenti_view.emittente                        | l'emittente del documento
     documenti_view.id_destinatario                  | -
     documenti_view.destinatario                     | il destinatario del documento
+    documenti_view.id_condizione_pagamento          | -
+    documenti_view.condizione_pagamento             | il codice di condizione di pagamento del documento
     documenti_view.codice_archivium                 | -
     documenti_view.codice_sdi                       | -
     documenti_view.timestamp_invio                  | -

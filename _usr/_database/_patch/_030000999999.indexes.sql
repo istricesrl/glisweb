@@ -712,6 +712,7 @@ ALTER TABLE `documenti`
 	ADD KEY `id_sede_emittente` (`id_sede_emittente`), 
 	ADD KEY `id_destinatario` (`id_destinatario`), 
 	ADD KEY `id_sede_destinatario` (`id_sede_destinatario`), 
+	ADD KEY `id_condizione_pagamento` (`id_condizione_pagamento`),
 	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -1429,6 +1430,7 @@ ALTER TABLE `organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `pagamenti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `id_documento` (`id_documento`), 
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 

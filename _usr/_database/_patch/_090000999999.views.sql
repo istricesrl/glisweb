@@ -1205,19 +1205,18 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		tipologie_documenti.nome AS tipologia,
 		documenti.numero,
 		documenti.sezionale,
-		documenti.codice_sdi,
-		documenti.codice_archivium,
-		documenti.progressivo_invio,
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		documenti.codice_archivium
-    	documenti.codice_sdi
-    	documenti.timestamp_invio
-    	documenti.progressivo_invio
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
 		documenti.id_coupon,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
@@ -1245,6 +1244,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
 ;
 
 --| 090000009802
@@ -1271,6 +1271,13 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
+		documenti.id_coupon,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
@@ -1297,6 +1304,7 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
    WHERE documenti.id_tipologia = 1
 ;
 
@@ -2325,6 +2333,8 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
 		pagamenti.id_tipologia,
+		pagamenti.id_modalita_pagamento,
+		concat(modalita_pagamento.codice, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
 		tipologie_pagamenti.nome AS tipologia,
 		pagamenti.ordine,
 		pagamenti.nome,
@@ -2352,6 +2362,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
 		LEFT JOIN iva ON iva.id = pagamenti.id_iva
 		LEFT JOIN listini ON listini.id = pagamenti.id_listino
+		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
 ;
 
 --| 090000023200
