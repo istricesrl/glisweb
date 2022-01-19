@@ -60,7 +60,7 @@
                             <span class="label-top">sezionale</span>
                             {{ frm.inputRequired( table, '', '', 'sezionale', '', '', request ) }}
                         </div>
-                        <div class="col-md-auto col-4">
+                        <div class="col-4 col-md-auto">
                             <span class="label-top">tipologia</span>
                             {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request ) }}
                         </div>
@@ -68,7 +68,7 @@
                             <span class="label-top">nome</span>
                             {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
                         </div>
-                        <div class="col-md-auto col-4">
+                        <div class="col-auto">
                             <span class="label-top">condizioni pagamento</span>
                             {{ frm.selectRequired( table, '', '', 'id_condizione_pagamento', '', etc.select.condizioni_pagamento, request ) }}
                         </div>

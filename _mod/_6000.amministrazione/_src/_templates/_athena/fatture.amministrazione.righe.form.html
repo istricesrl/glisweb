@@ -70,8 +70,7 @@
 			</div>
 		</div>
 
-
-		<legend>dettaglio</legend>
+		<legend>contenuto della riga</legend>
 		<div class="form-group form-row">
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">quantità</span>
@@ -92,7 +91,9 @@
 				<span class="label-top remove-after-duplicate">specifiche</span>
 				{{ frm.input( table, '', '', 'specifiche', '', '', request ) }}
 			</div>
-		</div>	
+		</div>
+
+		<legend>valore della riga</legend>
 		<div class="form-group form-row">
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">importo</span>
@@ -105,10 +106,6 @@
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">listino</span>
 				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request ) }}
-			</div>
-			<div class="col-auto">
-				<span class="label-top remove-after-duplicate">iva</span>
-				{{ frm.select( table, '', '', 'id_iva', '', etc.select.id_iva, request ) }}
 			</div>
 			<div class="col">
 				<span class="label-top remove-after-duplicate">matricola</span>
@@ -141,7 +138,7 @@
 				<span class="label-top remove-after-duplicate">documento</span>
 				{{ frm.selectBox( table, '', '', 'id_documento', '', etc.select.id_documenti, request, default_documento, 1, '', '', 'font-awesome', 'documenti.form', 'documenti.form', 'documenti', 'id_documento', page, pages, ietf, 'documenti' ) }}
 			</div>
-			 {% if ( request[ table ].id) or default_documento %}
+			{% if ( request[ table ].id ) or default_documento %}
 			<div class="col-md-6 col">
 				<span class="label-top remove-after-duplicate">riga genitore</span>
 				{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.id_righe_genitori, request, '', '', '', '', 'font-awesome', 'documenti.articoli.form', 'documenti.articoli.form', 'documenti_articoli', 'id_genitore', page, pages, ietf) }}
