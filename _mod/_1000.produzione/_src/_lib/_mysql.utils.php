@@ -129,11 +129,10 @@
         $frequenza = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT count(*) FROM attivita WHERE id_progetto = ? AND id_anagrafica = ? '
-            .'AND (data_programmazione between ? AND ?)',
+            .'AND data_programmazione < ?',
             array(
                 array( 's' => $id_progetto ),
                 array( 's' => $id_anagrafica ),
-                array( 's' => date('Y-m-d', strtotime( $data . '-3 months' ) ) ),
                 array( 's' => $data )
             )
         );
@@ -535,7 +534,7 @@
         );
 
         // elenco degli operatori calcolati per le attività scoperte del progetto corrente
-        $operatori = mysqlQuery(
+       $operatori = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT r.id_anagrafica,  count(r.id) as pta, sum(punteggio) as ptt, sum(punti_distanza) AS ptd, '
             .'max(punti_sostituto) AS pts, sum(punti_progetto) AS ptp, '
@@ -555,7 +554,7 @@
                 array( 's' => $id_progetto  )        
             )
         );
-        
+         
         // array di appoggio per il calcolo dei punteggi
         $op = array();
 
@@ -590,7 +589,7 @@
         }
     
         krsort( $candidati );
-       
+      
         return $candidati;
 
     }
