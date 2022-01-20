@@ -254,6 +254,8 @@
 							}
 	
 						}
+						
+						$patchLevel = substr( basename( $pFile ), 1, 12 );
 		
 					}
 	

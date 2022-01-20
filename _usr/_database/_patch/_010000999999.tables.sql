@@ -1726,9 +1726,9 @@ CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
 -- tipologia: tabella relazione
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
-`id` char(32) NOT NULL,
-  `id_progetto` int(11) DEFAULT NULL,
-  `id_progetto_collegato` int(11) DEFAULT NULL
+`id` int(11) NOT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_progetto_collegato` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000030500
