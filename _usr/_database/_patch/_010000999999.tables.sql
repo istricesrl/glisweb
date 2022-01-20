@@ -449,6 +449,7 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `tema_css` char(128) DEFAULT NULL,
   `se_sitemap` int(1) DEFAULT NULL,
   `se_cacheable` int(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,

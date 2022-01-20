@@ -254,9 +254,12 @@
 							}
 	
 						}
-						
-						$patchLevel = substr( basename( $pFile ), 1, 12 );
-		
+
+						$patchLevel = mysqlSelectValue(
+										$cf['mysql']['connection'],
+										'SELECT id FROM __patch__ ORDER BY id DESC LIMIT 1'
+									);
+							
 					}
 	
 				}
