@@ -101,15 +101,15 @@
 			</div>
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">reparto</span>
-				{{ frm.select( table, '', '', 'id_reparto', '', etc.select.id_reparti, request ) }}
+				{{ frm.select( table, '', '', 'id_reparto', '', etc.select.id_reparti, request, 1 ) }}
 			</div>
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">listino</span>
-				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request ) }}
+				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request, 1 ) }}
 			</div>
 			<div class="col">
 				<span class="label-top remove-after-duplicate">matricola</span>
-				{{ frm.selectBox( table, '', '', 'matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'matricole' ) }}
+				{{ frm.selectBox( table, '', '', 'id_matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'matricole' ) }}
 			</div>
 		</div>	
 		<div class="form-group form-row">
@@ -121,16 +121,29 @@
 	{% elseif  session.__latest__[ table ].id_documento %}
 		{% set default_documento = session.__latest__[ table ].id_documento %}
 	{% endif %}
+	{% if  request.__preset__[ table ].id_emittente %}
+		{% set default_emittente = request.__preset__[ table ].id_emittente %}
+	{% elseif session.__latest__[ table ].id_emittente  %}
+		{% set default_emittente = session.__latest__[ table ].id_emittente  %}
+	{% else %}
+		{% set default_emittente = etc.select.id_emittenti|first.id %}
+	{% endif %}
 
+	{% if  request.__preset__[ table ].id_destinatario %}
+		{% set default_destinatario = request.__preset__[ table ].id_destinatario %}
+	{% elseif session.__latest__[ table ].id_destinatario  %}
+		{% set default_destinatario = session.__latest__[ table ].id_destinatario  %}
+	{% endif %}
+	
 		<legend>riferimenti</legend>
 		<div class="form-group form-row">
 			<div class="col-md col">
 				<span class="label-top remove-after-duplicate">emittente</span>
-				{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, etc.id_emittente, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_emittente', page, pages, ietf, 'anagrafica' ) }}
+				{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, default_emittente, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_emittente', page, pages, ietf, 'anagrafica' ) }}
 			</div>
 			<div class="col-md col">
 				<span class="label-top remove-after-duplicate">destinatario</span>
-				{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, etc.id_destinatario, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
+				{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, default_destinatario, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
 			</div>
 		</div>
 		<div class="form-group form-row">
@@ -146,6 +159,7 @@
 			{% endif %}
 		</div>
 
+		{% if '1000.produzione' in mods.active.array %}
 		<legend>attribuzione</legend>
 		<div class="form-group form-row">
 			{% if  session.__latest__[ table ].id_progetto %}
@@ -163,6 +177,8 @@
 				{{ frm.selectBox( table, '', '', 'id_todo', '', etc.select.id_todo, request, default_todo, '', '', '', 'font-awesome', 'todo.form', 'todo.form', 'todo', 'id_todo', page, pages, ietf, 'todo' ) }}
 			</div>
 		</div>	
+		{% endif  %}
+		{% if '6300.mastri' in mods.active.array %}
 		<legend>magazzino</legend>
 		{% if  session.__latest__[ table ].id_mastro_provenienza %}
 			{% set default_mp = session.__latest__[ table ].id_mastro_provenienza %}
@@ -180,7 +196,7 @@
 				{{ frm.selectBox( table, '', '', 'id_mastro_destinazione', '', etc.select.id_mastri, request, default_md, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_destinazione', page, pages, ietf ) }}
 			</div>
 		</div>	
-
+		{% endif %}
         </fieldset>
 
      

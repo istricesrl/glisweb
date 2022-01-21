@@ -32,14 +32,23 @@
 	    )
 	);
 
-    if( empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_chiusura'] ) ){
-    // aggiorna data e ora
+
+    // aggrega righe
 	$ct['page']['contents']['metro']['general'][] = array(
         'host' => $ct['site']['url'],
-	    'ws' => $base . '_chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+	    'ws' => $base . '_documenti.aggrega.righe.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
 	    'icon' => NULL,
 	    'fa' => 'fa-print',
-	    'title' => 'chiudi documento',
-	    'text' => 'chiudi con data e ora attuale il documento'
+	    'title' => 'aggrega righe',
+	    'text' => 'aggrega a questo documento tutte le righe del cliente'
 	);
-    }
+    
+    // trasforma in fattura 
+	$ct['page']['contents']['metro']['general'][] = array(
+        'host' => $ct['site']['url'],
+	   // 'ws' => $base . '_documenti.aggrega.righe.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+	    'icon' => NULL,
+	    'fa' => 'fa-print',
+	    'title' => 'trasforma in fattura',
+	    'text' => 'crea una fattura a partire da questa proforma'
+	);
