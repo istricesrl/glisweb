@@ -9,16 +9,20 @@
     //campi della vista
     $ct['view']['cols'] =  array(
         'id' => '#',
-        '__label__' => 'nome',
-        'token' => 'token',
-        'delay' => 'delay'
+        'minuto' => 'min',
+        'ora' => 'ora',
+        'giorno_del_mese' => 'giorno/mese',
+        'settimana' => 'settimana',
+        'giorno_della_settimana' => 'giorno/settimana',
+        'task' => 'nome',
+        'iterazioni' => 'iterazioni',
+        'delay' => 'delay',
+        'data_ora_esecuzione' => 'ultima esecuzione'
     );
 
     // stili della vista
     $ct['view']['class'] = array(
-        '__label__' => 'text-left',
-        'token' => 'text-right',
-        'delay' => 'text-right'
+        'task' => 'text-left'
     );
 
     // macro di default

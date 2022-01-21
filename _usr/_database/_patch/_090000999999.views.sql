@@ -3564,6 +3564,7 @@ CREATE OR REPLACE VIEW task_view AS
 		task.delay,
 		task.token,
 		task.timestamp_esecuzione,
+		from_unixtime( task.timestamp_esecuzione, '%Y-%m-%d' ) AS data_ora_esecuzione,
 		task.id_account_inserimento,
 		task.id_account_aggiornamento,
 		CONCAT(
