@@ -28,21 +28,21 @@
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'progetti.produzione.view', 'progetti.eliminare.view', 'progetti.produzione.tools' ) ),
+		'etc'			=> array( 'tabs'	=> array( 'progetti.produzione.view', 'progetti.archivio.view', 'progetti.produzione.tools' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'progetti' ),
 																		'priority'	=> '080' ) ) )									
 	);
 
-	// vista progetti eliminare
-	$p['progetti.eliminare.view'] = array(
+	// vista progetti 
+	$p['progetti.archivio.view'] = array(
 	    'sitemap'		=> false,
-	    'icon'			=> '<i class="fa fa-trash" aria-hidden="true"></i>',
-		'title'			=> array( $l		=> 'eliminare' ),
-	    'h1'			=> array( $l		=> 'eliminare' ),
+	    'icon'			=> '<i class="fa fa-archive" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'archivio' ),
+	    'h1'			=> array( $l		=> 'archivio' ),
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.eliminare.view.php' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_progetti.produzione.archivio.view.php' ),
 		'etc'			=> array( 'tabs'	=> $p['progetti.produzione.view']['etc']['tabs'] ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);

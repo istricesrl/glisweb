@@ -101,7 +101,7 @@
 		$r = $conn->get( $key );
 
 		if( $r == false ) {
-		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache', LOG_ERR );
+		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
 		} else {
 		    logWrite( 'lettura effettuata, chiave: ' . $key, 'memcache' );
 		}

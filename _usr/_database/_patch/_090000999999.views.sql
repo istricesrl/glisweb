@@ -379,6 +379,13 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		anagrafica_indirizzi.id,
 		anagrafica_indirizzi.id_anagrafica,
 		anagrafica_indirizzi.id_indirizzo,
+		concat(
+			indirizzi.indirizzo,
+			' ',
+			comuni.nome,
+			' ',
+			provincie.sigla
+		) AS indirizzo,
 		anagrafica_indirizzi.id_ruolo,
 		ruoli_indirizzi.nome AS ruolo,
 		anagrafica_indirizzi.id_account_inserimento,

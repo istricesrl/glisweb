@@ -402,6 +402,7 @@
     anagrafica_indirizzi_view.id                            | -
     anagrafica_indirizzi_view.id_anagrafica                 | -
     anagrafica_indirizzi_view.id_indirizzo                  | -
+    anagrafica_indirizzi_view.indirizzo                     | l'indirizzo
     anagrafica_indirizzi_view.id_ruolo                      | -
     anagrafica_indirizzi_view.ruolo                         | il ruolo dell'indirizzo relativamente all'anagrafica
     anagrafica_indirizzi_view.id_account_inserimento        | -

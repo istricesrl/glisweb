@@ -19,7 +19,7 @@
 
 
     // tabella della vista
-	$ct['view']['table'] = 'progetti_eliminare';
+	$ct['view']['table'] = 'progetti_produzione_archivio';
 
     // id della vista
  #   $ct['view']['id'] = md5( $ct['view']['table'] );
@@ -65,11 +65,12 @@
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_progetti_view' );
 
-   
+/*   
     // preset filtro aperti
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['chiuso']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['chiuso']['EQ'] = 0;
     }
- 
+*/
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
