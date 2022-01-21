@@ -18,6 +18,12 @@ REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `not
 (7,	1,	NULL,	'lead',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (8,	1,	NULL,	'clienti',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+--| 050000004300
+
+-- categorie_progetti
+-- tipologia: tabella gestita
+-- verifica: 2021-06-02 19:40 Fabio Mosti
+
 --| 050000005100
 
 -- colori
