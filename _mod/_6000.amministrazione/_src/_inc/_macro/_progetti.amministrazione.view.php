@@ -19,7 +19,7 @@
 
 
     // tabella della vista
-	$ct['view']['table'] = 'progetti_produzione';
+	$ct['view']['table'] = 'progetti_amministrazione';
 
     $ct['view']['id'] = md5(
 		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
@@ -29,7 +29,7 @@
 	$ct['view']['open']['table'] = 'progetti';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'progetti.produzione.form';
+	$ct['view']['open']['page'] = 'progetti.amministrazione.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(
@@ -48,7 +48,7 @@
     );
 
     // inclusione filtri speciali
-	$ct['etc']['include']['filters'] = 'inc/progetti.produzione.view.filters.html';
+	$ct['etc']['include']['filters'] = 'inc/progetti.amministrazione.view.filters.html';
 
      // tendina clienti
      $ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(

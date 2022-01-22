@@ -55,7 +55,7 @@
 					<span class="label-top">tipologia INPS</span>
 					{{ frm.select( table, '', '', 'id_tipologia_inps', '', etc.select.id_tipologia_inps, request ) }}
 				</div-->
-
+<!-- NOTA questi campi hanno senso solo se è attivo il modulo magazzini?
 				<div class="col-12 col-md-2">
 					<span class="label-top">scarico</span>
 					{% if not request[table].id %}
@@ -70,7 +70,7 @@
 					{% endif %}
 					{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default ) }}
 				</div>
-			
+-->			
 				<div class="col">
 					<span class="label-top">descrizione</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
@@ -80,32 +80,7 @@
 
 	
 			</fieldset>
-			{% if request[ table ].id_todo %}
-			<fieldset>
-				<legend>stato lavorazione</legend>
-				<div class="col">
 
-				
-				{{ etc.todo.nome }}
-				{% if etc.attivita_completate %}
-				<legend style="font-size: 90%;">attività completate</legend>
-					<ul>
-					{% for a in etc.attivita_completate %}
-						<li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.note_cliente }}</li>
-					{% endfor %}
-					</ul>
-				{% endif %}
-				{% if etc.attivita_programmate %}
-				<legend style="font-size: 90%;">attività pianificate</legend>
-					<ul>
-					{% for a in etc.attivita_programmate %}
-						<li>{{ a.data_programmazione|date('d/m/Y') }} {% if a.ora_inizio_programmazione %}{{ a.ora_inizio_programmazione|date('H:i') }}{% endif %}- {{ a.nome }}: {{ a.note_programmazione }}</li>
-					{% endfor %}
-					</ul>
-				{% endif %}
-				</div>
-			</fieldset>
-			{% endif %}
 			<fieldset>
 				<legend>programmazione</legend>
 				<div class="form-group form-row">
@@ -126,17 +101,72 @@
 						{{ frm.input( table, '', '', 'ore_programmazione', '', '', request, '', 'number', '', '', '','0.25' ) }}
 					</div>
 					<div class="col-12 col-md">
-						<span class="label-top">esecutore</span>
-						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+						<span class="label-top">incaricato</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica_programmazione', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 				</div>
 				<div class="form-group form-row">
 					<div class="col-12">
 					<span class="label-top">note programmazione</span>
-					{{ frm.textarea( table, '', '', 'note_programmazione', '', 3, request ) }}
+					{{ frm.textarea( table, '', '', 'note_programmazione', '', 2, request ) }}
 					</div>
 				</div>
 			</fieldset>
+
+			{% if request[ table ].id_todo %}
+			<fieldset>
+				<legend>contesto della to-do {{ etc.todo.nome }}</legend>
+				<div class="form-group form-row">
+					<div class="col">
+
+						<table class="view-table">
+							<tr>
+								<th>data</th>
+								<th>status</th>
+								<th class="text-left">titolo</th>
+								<th class="text-left">note</th>
+							</tr>
+							{% for a in etc.attivita_completate %}
+							<tr>
+								<td>{{ a.data_attivita|date('d/m/Y') }}</td>
+								<td>completata</td>
+								<td class="text-left">{{ a.nome }}</td>
+								<td class="text-left">{{ a.note_cliente }}</td>
+							</tr>
+							{% endfor %}
+							{% for a in etc.attivita_programmate %}
+							<tr>
+								<td>{{ a.data_programmazione|date('d/m/Y') }}</td>
+								<td>programmata</td>
+								<td class="text-left">{{ a.nome }}</td>
+								<td class="text-left">{{ a.note_cliente }}</td>
+							</tr>
+							{% endfor %}
+						</table>
+<!--
+						{% if etc.attivita_completate %}
+				<legend style="font-size: 90%;">attività completate</legend>
+					<ul>
+					{% for a in etc.attivita_completate %}
+						<li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.note_cliente }}</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+				{% if etc.attivita_programmate %}
+				<legend style="font-size: 90%;">attività pianificate</legend>
+					<ul>
+					{% for a in etc.attivita_programmate %}
+						<li>{{ a.data_programmazione|date('d/m/Y') }} {% if a.ora_inizio_programmazione %}{{ a.ora_inizio_programmazione|date('H:i') }}{% endif %}- {{ a.nome }}: {{ a.note_programmazione }}</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+
+-->
+
+					</div>
+				</div>
+			</fieldset>
+			{% endif %}
 
 			<fieldset>
 				<legend>esecuzione</legend>
@@ -156,6 +186,10 @@
 					<div class="col-2 col-md-1">
 						<span class="label-top">ore</span>
 						{{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '','0.25' ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">esecutore</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 					<!--div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
@@ -178,33 +212,39 @@
 
 			<div class="form-group form-row">
 				<div class="col-12 col-md-6">
-					<span class="label-top">todo</span>
-					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, '', '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf,'todo' ) }}
-				</div>
-				<div class="col-12 col-md-6">
 					<span class="label-top">progetto</span>
 					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
 				</div>
 				<div class="col-12 col-md-6">
+					<span class="label-top">todo</span>
+					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, '', '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf,'todo' ) }}
+				</div>
+			</div>
+			<div class="form-group form-row">
+				<div class="col-12 col-md-4">
 					<span class="label-top">cliente</span>
 					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
 				</div>
-				<div class="col-12 col-md-6">
+				<div class="col-12 col-md">
 					<span class="label-top">indirizzo</span>
 					{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
 				</div>
-				{% if '4100.prodotti' in mods.active.array %}
-				<div class="col-12 col-md-6">
+			</div>
+			{% if '4100.prodotti' in mods.active.array %}
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
 					<span class="label-top">matricola</span>
 					{{ frm.selectBox( table, '', '', 'id_matricola', 'matricola', etc.select.matricole, request, '', '','','','','matricole.form','','matricole', 'id_matricola', page, pages, ietf,'matricole' ) }}
 				</div>
+<!-- NOTA il campo matricola deve poter essere bippato direttamente, senza bisogno del campo barcode affianco
 				<div class="col-2 col-md-6">
 					<span class="label-top">barcode matricola</span>
 					{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
 				</div>
-				{% endif %}
+-->
+			{% endif %}
 				{% if '6200.documenti' in mods.active.array %}
-				<div class="col-12 col-md-6">
+				<div class="col-12 col-md">
 					<span class="label-top">riga</span>
 					{{ frm.selectBox( table, '', '', 'id_documenti_articoli', '', etc.select.id_documenti_articoli, request, '', '','','','','documenti.articoli.form','documenti.articoli.form','documenti_articoli', 'id_documenti_articoli' , page, pages, ietf,'documenti_articoli' ) }}
 				</div>
@@ -215,7 +255,6 @@
 
 			{# SUBFORM CATEGORIE #}
 	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
-	
         
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

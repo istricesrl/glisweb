@@ -28,6 +28,7 @@
 	    )
 	);
 
+/*
     // modal per la conferma di invio richiesta sostituzione
     $ct['page']['contents']['metro']['general'][] = array(
         'url' => $cf['site']['url'].'_mod/_1200.todo/_src/_api/_print/_modulo.assistenza.php',
@@ -37,7 +38,7 @@
 	    'title' => 'stampa modulo assistenza',
 	    'text' => 'stampa tutto o parte del modulo assistenza'
     );
-
+*/
 
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 

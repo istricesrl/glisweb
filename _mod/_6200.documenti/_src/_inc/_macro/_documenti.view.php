@@ -29,12 +29,12 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data' => 'data',
         'tipologia' => 'tipologia',
         'numero' => 'num.',
         'sezionale' => 'sez.',
-        'destinatario' => 'destinatario',
+        'data' => 'data',
         'emittente' => 'emittente',
+        'destinatario' => 'destinatario',
         '__label__' => 'nome'
 	);
 

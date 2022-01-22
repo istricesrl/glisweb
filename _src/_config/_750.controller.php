@@ -256,7 +256,7 @@
 			if( substr( $k, 0, 2 ) !== '__' && strlen( $k ) > 1 ) {
 
 			    // log
-				logWrite( 'blocco dati ricevuto: ' . $k . '/' . $_SERVER['REQUEST_METHOD'], 'controller', LOG_INFO );
+				logWrite( 'blocco dati ricevuto: ' . $k . '/' . $_SERVER['REQUEST_METHOD'], 'controller' );
 
 			    // debug
 				// echo $k . '/' . $_SERVER['REQUEST_METHOD'] . PHP_EOL;
@@ -274,11 +274,13 @@
 				);
 
 			    // debug
+                // echo $k;
 				// print_r( $_SESSION );
 				// print_r( $_REQUEST );
 				// print_r( $_REQUEST['__err__'] );
 				// print_r( $_REQUEST['__info__'] );
 				// if( $k == 'prodotti' ) { print_r( $v ); }
+                // if( ! array_key_exists( $k, $_REQUEST['__info__'] ) ) { echo $k . 'non è in ' . print_r( $_REQUEST['__info__'], true ); }
 
 			    // timer
 				timerCheck( $cf['speed'], '-> fine elaborazione blocco ' . $k );

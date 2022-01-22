@@ -2707,6 +2707,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 			' ',
 			progetti.id,
 			progetti.nome,
+			' cliente ',
 			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
 		) AS __label__
 	FROM progetti

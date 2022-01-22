@@ -115,7 +115,7 @@
      */
 
     // log
-	logWrite( 'pagina corrente: ' . $page, 'rewrite', LOG_INFO );
+	logWrite( 'pagina corrente: ' . $page, 'rewrite' );
 
     // debug
 	// print_r( $cf['contents']['pages']['licenza']['content'] );

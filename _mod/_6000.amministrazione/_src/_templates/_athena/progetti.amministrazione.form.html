@@ -44,6 +44,7 @@
 
 		{# CAMPI HIDDEN SPECIALI #}
 	    <input type="hidden" id="reset" name="{{ table }}[data_accettazione]" value="{% if request[ table ].data_accettazione %}{{ request[ table ].data_accettazione }}{% else %}{{ 'now'|date('Y-m-d') }}{% endif %}" >
+	    <input type="hidden" id="reset" name="{{ table }}[data_chiusura]" value="{% if request[ table ].data_chiusura %}{{ request[ table ].data_chiusura }}{% else %}{{ 'now'|date('Y-m-d') }}{% endif %}" >
 		
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
