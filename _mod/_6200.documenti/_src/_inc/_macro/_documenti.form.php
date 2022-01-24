@@ -37,6 +37,14 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static'
 	);
+	
+	// tendina condizioni_pagamento
+	$ct['etc']['select']['condizioni_pagamento'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM condizioni_pagamento_view'
+	);
 
 	// tendina coupon
 	$ct['etc']['select']['coupon'] = mysqlCachedIndexedQuery(

@@ -27,18 +27,18 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'general' => array(
-		'label' => ''
+	    'amministrazione' => array(
+		'label' => 'operazioni amministrative'
 	    )
 	);
 
     if( empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_chiusura'] ) ){
     // aggiorna data e ora
-	$ct['page']['contents']['metro']['general'][] = array(
+	$ct['page']['contents']['metro']['amministrazione'][] = array(
         'host' => $ct['site']['url'],
 	    'ws' => $base . '_chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
 	    'icon' => NULL,
-	    'fa' => 'fa-print',
+	    'fa' => 'fa-check-square-o',
 	    'title' => 'chiudi documento',
 	    'text' => 'chiudi con data e ora attuale il documento'
 	);

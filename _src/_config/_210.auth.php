@@ -169,14 +169,14 @@
 							  }
 					    }
 					}
-
+/*
 				    // attribuzione dei privilegi utente
 					foreach( $_SESSION['account']['privilegi'] as $pr ) {
 					    $_SESSION['privilegi'][ $pr ] = &$cf['auth']['privileges'][ $pr ];
 					}
-
+*/
 				    // debug
-					// print_r( $_SESSION['privilegi'] );
+					// print_r( $_SESSION['account']['privilegi'] );
 
 				    // status
 					$cf['auth']['status'] = LOGIN_SUCCESS;
@@ -316,14 +316,14 @@
   								}
 						    }
 						}
-
+/*
 					    // attribuzione dei privilegi utente
 						if( isset( $_SESSION['account']['privilegi'] ) ) {
 							foreach( $_SESSION['account']['privilegi'] as $pr ) {
 								$_SESSION['privilegi'][ $pr ] = &$cf['auth']['privileges'][ $pr ];
 							}
 						}
-
+*/
 					    // gruppi di attribuzione automatica dell'utente
 						if( ! empty( $_SESSION['account']['id_gruppi_attribuzione'] ) ) {
 						    $aGroups = explode( '|', $_SESSION['account']['id_gruppi_attribuzione'] );

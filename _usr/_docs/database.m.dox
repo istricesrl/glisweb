@@ -307,9 +307,49 @@
     mastri_view.id_tipologia                | -
     mastri_view.tipologia                   | la tipologia del mastro
     mastri_view.nome                        | -
+    mastri_view.note                        | -
     mastri_view.id_account_inserimento      | -
     mastri_view.id_account_aggiornamento    | -
     mastri_view.__label__                   | etichetta descrittiva del mastro
+
+    matricole
+    ---------
+    Questa tabella *gestita* contiene le matricole 
+
+    colonna                            | descrizione
+    -----------------------------------|---------------------------------------------------------------------------------------
+    matricole.id                       | l'ID della matricola
+    matricole.id_marchio               | l'ID del marchio della matricola
+    matricole.id_produttore            | l'ID del produttore della matricola
+    matricole.serial_number            | il serial number della matricola
+    matricole.nome                     | il nome del mastro
+    matricole.note                     | note descrittive del mastro
+    matricole.id_account_inserimento   | l'ID dell'account che ha inserito la riga
+    matricole.timestamp_inserimento    | la timestamp dell'inserimento della riga
+    matricole.id_account_aggiornamento | l'ID dell'ultimo account che ha modificato la riga
+    matricole.timestamp_aggiornamento  | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                          | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------|---------------------------|-------------------------------|----------------------
+    matricole_ibfk_01_nofollow      | id_marchio                | marchi.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    matricole_ibfk_02_nofollow      | id_produttore             | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    matricole_ibfk_98_nofollow      | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    matricole_ibfk_99_nofollow      | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *matricole_view* relativa alla tabella *matricole* presenta le seguenti colonne:
+
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    matricole_view.id                          | -
+    matricole_view.id_marchio                  | -
+    matricole_view.id_produttore               | -
+    matricole_view.serial_number               | -
+    matricole_view.nome                        | -
+    matricole_view.id_account_inserimento      | -
+    matricole_view.id_account_aggiornamento    | -
+    matricole_view.__label__                   | etichetta descrittiva della matricola nella forma 'MAT.00000'+matricole.id
 
     menu
     ----
@@ -448,5 +488,28 @@
     metadati_view.id_account_inserimento    | -
     metadati_view.id_account_aggiornamento  | -
     metadati_view.__label__                 | l'etichetta descrittiva del metadato
-    
+
+    modalita_pagamento
+    ------
+    Questa tabella *standard* contiene le modalità di pagamento codificate secondo lo standard italiano.
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    modalita_pagamento.id               | l'ID della modalita_pagamentoo
+    modalita_pagamento.nome             | il nome della modalità di pagamento
+    modalita_pagamento.provider         | il provider della modalità di pagamento
+    modalita_pagamento.codice           | il codice identificativo del pagamento per la fatturazione elettronica
+
+
+    La tabella non ha chiavi esterne
+
+    La vista *modalita_pagamento_view* relativa alla tabella *modalita_pagamento* presenta le seguenti colonne:
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    modalita_pagamento_view.id              | -
+    modalita_pagamento_view.nome            | -
+    modalita_pagamento_view.provider        | -
+    modalita_pagamento_view.codice          | -
+    modalita_pagamento_view.__label__       | etichetta descrittiva della modalità di pagamentoo    
 */

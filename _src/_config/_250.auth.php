@@ -32,7 +32,7 @@
 
     // array dei permessi
 	$cf['auth']['permissions'] = array(
-		'__acl_anagrafica__' => array(
+	/*	'__acl_anagrafica__' => array(
 			CONTROL_FULL => array( 'roots','staff' )
 		),
 		'__acl_todo__' => array(
@@ -55,7 +55,7 @@
 		),
 		'__acl_contatti__' => array(
 			CONTROL_FULL => array( 'roots','staff' )
-		),
+		),*/
 	    'account' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),

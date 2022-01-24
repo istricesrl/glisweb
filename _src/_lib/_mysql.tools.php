@@ -107,7 +107,7 @@
 	    logWrite( md5( $q ) . ' ' . $q, 'mysql' );
 
 	// log
-		appendToFile( $q, FILE_LATEST_MYSQL );
+		appendToFile( $q . PHP_EOL, FILE_LATEST_MYSQL );
 
 	// verifico se c'è connessione e se la query è preparata o meno
 	    if( empty( $c ) ) {
@@ -869,12 +869,12 @@
      */
     function mysqlInsertRow( $c, $r, $t, $d = true ) {
 
-	return mysqlQuery( $c,
-	    'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
-	    .'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
-	    .( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
-	    array2mysqlStatementParameters( $r )
-	);
+		return mysqlQuery( $c,
+			'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
+			.'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
+			.( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
+			array2mysqlStatementParameters( $r )
+		);
 
     }
 
@@ -963,7 +963,7 @@
 
 	function getStaticViewExtension( $m, $c, $t ) {
 
-			// verifico se esiste la view statica
+		// verifico se esiste la view statica
 			$stv = mysqlSelectCachedValue(
 				$m,
 				$c,

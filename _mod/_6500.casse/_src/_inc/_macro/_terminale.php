@@ -525,7 +525,7 @@
     // id emittente
 	$ct['etc']['id_emittente'] = mysqlSelectValue(
 	    $cf['mysql']['connection'],
-	    'SELECT id FROM anagrafica_view WHERE se_azienda_gestita = 1 LIMIT 1'
+	    'SELECT id FROM anagrafica_view WHERE se_gestita = 1 LIMIT 1'
 	);
     
 

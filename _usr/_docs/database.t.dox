@@ -1034,5 +1034,13 @@
     todo_view.id_account_aggiornamento              | -
     todo_view.__label__                             | etichetta descrittiva della todo
 
+ 	todo_attivi
+    -----------------
+    Questa tabella *virtuale* contiene le todo non archiviate, individuate in base al fatto che il campo *data_archiviazione* è NULL.
+
+    todo_archiviati
+    ---------------------
+    Questa tabella *virtuale* contiene le todo archiviate, individuate in base al fatto che il campo data_archiviazione è NOT NULL.
+
 */
 

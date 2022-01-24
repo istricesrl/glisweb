@@ -88,7 +88,7 @@
 					logWrite( 'dettagli: ' . mysqli_get_host_info( $cn ), 'mysql' );
 
 					// log
-					writeToFile( 'connessione effettuata', FILE_LATEST_MYSQL );
+					writeToFile( 'connessione effettuata' . PHP_EOL, FILE_LATEST_MYSQL );
 
 				    // aggiungo la connessione all'array
 					$cf['mysql']['connections'][ $server ] = $cn;
@@ -218,7 +218,7 @@
 												// echo $pStatus . HTML_EOL;
 											}
 			
-											mysqlInsertRow(
+											$patchLevel = mysqlInsertRow(
 												$cf['mysql']['connection'],
 												array(
 													'id' => $pId,
@@ -245,7 +245,7 @@
 								$pId = substr( $row, 4, 12 );
 								if( $pId == '------------' ) { $pId = date( 'YmdHis' ); }
 
-								$pQuery = null;
+                $pQuery = null;
 	
 								// echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
 								
@@ -256,7 +256,12 @@
 							}
 	
 						}
-		
+/*
+						$patchLevel = mysqlSelectValue(
+										$cf['mysql']['connection'],
+										'SELECT id FROM __patch__ ORDER BY id DESC LIMIT 1'
+									);
+*/							
 					}
 	
 				}

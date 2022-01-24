@@ -83,6 +83,136 @@
     redirect_view.id_account_aggiornamento  | -
     redirect_view.__label__                 | etichetta descrittiva del redirect
     
+    relazioni_documenti
+    -------
+    Questa tabella *di relazione* contiene le relazioni_documenti, intese come entità di collegamento fra *documenti* e *documenti*.
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_documenti.id                       | l'ID della relazione
+    relazioni_documenti.id_documento             | l'ID del documento principale
+    relazioni_documenti.id_documento_collegato   | l'ID del documento collegato al documento principale
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                   | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------|-------------------------------|------------------
+    relazioni_documenti_ibfk_01         | id_documento            | documenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_documenti_ibfk_02         | id_documento_collegato  | documenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+
+    La vista *relazioni_documenti_view* relativa alla tabella *relazioni_documenti* presenta le seguenti colonne:
+
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_documenti_view.id                      | -
+    relazioni_documenti_view.id_documento            | -
+    relazioni_documenti_view.id_documento_collegato  | -
+    relazioni_documenti_view.__label__               | l'etichetta descrittiva della relazione
+    
+    relazioni_documenti_articoli
+    -------
+    Questa tabella *di relazione* contiene le relazioni_documenti_articoli, intese come entità di collegamento fra *documenti_articoli* e *documenti_articoli*.
+
+    colonna                                                        | descrizione
+    ---------------------------------------------------------------|----------------------------------------------------------
+    relazioni_documenti_articoli.id                                | l'ID della relazione
+    relazioni_documenti_articoli.id_documenti_articolo             | l'ID documenti_articolo principale
+    relazioni_documenti_articoli.id_documenti_articolo_collegato   | l'ID documenti_articolo collegato al documenti_articolo principale
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                               | campo                   | tabella e campo collegati     | comportamento
+    -------------------------------------|-------------------------|-------------------------------|------------------
+    relazioni_documenti_articoli_ibfk_01 | id_documento            | documenti_articoli.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_documenti_articoli_ibfk_02 | id_documento_collegato  | documenti_articoli.id         | ON DELETE CASCADE ON UPDATE CASCADE
+
+    La vista *relazioni_documenti_articoli_view* relativa alla tabella *relazioni_documenti_articoli* presenta le seguenti colonne:
+
+    colonna                                                            | descrizione
+    -------------------------------------------------------------------|-------------------------
+    relazioni_documenti_articoli_view.id                               | -
+    relazioni_documenti_articoli_view.id_documenti_articolo            | -
+    relazioni_documenti_articoli_view.id_documenti_articolo_collegato  | -
+    relazioni_documenti_articoli_view.__label__                        | l'etichetta descrittiva della relazione
+
+    relazioni_pagamenti
+    -------
+    Questa tabella *di relazione* contiene le relazioni_pagamenti, intese come entità di collegamento fra *pagamenti* e *pagamenti*.
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_pagamenti.id                       | l'ID della relazione
+    relazioni_pagamenti.id_pagamento             | l'ID del pagamento principale
+    relazioni_pagamenti.id_pagamento_collegato   | l'ID del pagamento collegato al pagamento principale
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                   | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------|-------------------------------|------------------
+    relazioni_pagamenti_ibfk_01         | id_pagamento            | pagamenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_pagamenti_ibfk_02         | id_pagamento_collegato  | pagamenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+
+    La vista *relazioni_pagamenti_view* relativa alla tabella *relazioni_pagamenti* presenta le seguenti colonne:
+
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_pagamenti_view.id                      | -
+    relazioni_pagamenti_view.id_pagamento            | -
+    relazioni_pagamenti_view.id_pagamento_collegato  | -
+    relazioni_pagamenti_view.__label__               | l'etichetta descrittiva della relazione
+
+    relazioni_progetti
+    -------
+    Questa tabella *di relazione* contiene le relazioni_progetti, intese come entità di collegamento fra *progetti* e *progetti*.
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_progetti.id                        | l'ID della relazione
+    relazioni_progetti.id_progetto               | l'ID del progetto principale
+    relazioni_progetti.id_progetto_collegato     | l'ID del progetto collegato al progetto principale
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                   | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------|-------------------------------|------------------
+    relazioni_progetti_ibfk_01          | id_progetto             | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_progetti_ibfk_02          | id_progetto_collegato   | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+
+    La vista *relazioni_progetti_view* relativa alla tabella *relazioni_progetti* presenta le seguenti colonne:
+
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_progetti_view.id                       | -
+    relazioni_progetti_view.id_progetto              | -
+    relazioni_progetti_view.id_progetto_collegato    | -
+    relazioni_progetti_view.__label__                | l'etichetta descrittiva della relazione
+
+    relazioni_software
+    -------
+    Questa tabella *di relazione* contiene le relazioni_software, intese come entità di collegamento fra *software* e *software*.
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_software.id                        | l'ID della relazione
+    relazioni_software.id_software               | l'ID del software principale
+    relazioni_software.id_software_collegato     | l'ID del software collegato al software principale
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                   | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------|-------------------------------|------------------
+    relazioni_software_ibfk_01          | id_software             | software.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_software_ibfk_02          | id_software_collegato   | software.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+
+    La vista *relazioni_software_view* relativa alla tabella *relazioni_software* presenta le seguenti colonne:
+
+    colonna                                          | descrizione
+    -------------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_software_view.id                       | -
+    relazioni_software_view.id_software              | -
+    relazioni_software_view.id_software_collegato    | -
+    relazioni_software_view.__label__                | l'etichetta descrittiva della relazione
+
     regimi
     ------
     Questa tabella *standard* contiene i regimi fiscali che possono essere applicati all'entità principale anagrafica.
@@ -134,7 +264,7 @@
     
     reparti
     -------
-    Questa tabella *gestita* contiene i reparti intesi come divisioni contabili.
+    Questa tabella *assistita* contiene i reparti intesi come divisioni contabili.
 
     colonna                             | descrizione
     ------------------------------------|---------------------------------------------------------------------------------------

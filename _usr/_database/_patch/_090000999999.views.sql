@@ -155,7 +155,7 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
 		max( categorie_anagrafica.se_agente ) AS se_agente,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
-		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_gestita ) AS se_gestita,
 		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
 		max( categorie_anagrafica.se_notizie ) AS se_notizie,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
@@ -217,7 +217,7 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
 		max( categorie_anagrafica.se_agente ) AS se_agente,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
-		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_gestita ) AS se_gestita,
 		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
 		max( categorie_anagrafica.se_notizie ) AS se_notizie,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
@@ -280,7 +280,7 @@ CREATE OR REPLACE VIEW anagrafica_attivi_view AS
 		max( categorie_anagrafica.se_esterno ) AS se_esterno,
 		max( categorie_anagrafica.se_agente ) AS se_agente,
 		max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
-		max( categorie_anagrafica.se_azienda_gestita ) AS se_azienda_gestita,
+		max( categorie_anagrafica.se_gestita ) AS se_gestita,
 		max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
 		max( categorie_anagrafica.se_notizie ) AS se_notizie,
 		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
@@ -674,7 +674,7 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 		categorie_anagrafica.se_esterno,
 		categorie_anagrafica.se_agente,
 		categorie_anagrafica.se_concorrente,
-		categorie_anagrafica.se_azienda_gestita,
+		categorie_anagrafica.se_gestita,
 		categorie_anagrafica.se_amministrazione,
 		categorie_anagrafica.se_notizie,
 		count( c1.id ) AS figli,
@@ -708,6 +708,8 @@ CREATE OR REPLACE VIEW categorie_notizie_view AS
 		categorie_notizie.template,
 		categorie_notizie.schema_html,
 		categorie_notizie.tema_css,
+		categorie_notizie.se_sitemap,
+		categorie_notizie.se_cacheable,
 		categorie_notizie.id_sito,
 		categorie_notizie.id_pagina,
 		count( c1.id ) AS figli,
@@ -741,6 +743,8 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 		categorie_prodotti.template,
 		categorie_prodotti.schema_html,
 		categorie_prodotti.tema_css,
+		categorie_prodotti.se_sitemap,
+		categorie_prodotti.se_cacheable,
 		categorie_prodotti.id_sito,
 		categorie_prodotti.id_pagina,
 		count( c1.id ) AS figli,
@@ -799,6 +803,13 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 		categorie_risorse.id_genitore,
 		categorie_risorse.ordine,
 		categorie_risorse.nome,
+		categorie_risorse.template,
+		categorie_risorse.schema_html,
+		categorie_risorse.tema_css,
+		categorie_risorse.se_sitemap,
+		categorie_risorse.se_cacheable,
+		categorie_risorse.id_sito,
+		categorie_risorse.id_pagina,
 		count( c1.id ) AS figli,
 		count( risorse_categorie.id ) AS membri,
 		categorie_risorse.id_account_inserimento,
@@ -902,6 +913,28 @@ CREATE OR REPLACE VIEW comuni_view AS
 		INNER JOIN provincie ON provincie.id = comuni.id_provincia
 		INNER JOIN regioni ON regioni.id = provincie.id_regione
 		INNER JOIN stati ON stati.id = regioni.id_stato
+;
+
+--| 090000006200
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `condizioni_pagamento_view`;
+
+--| 090000006201
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW condizioni_pagamento_view AS
+	SELECT
+		condizioni_pagamento.id,
+		condizioni_pagamento.codice,
+		condizioni_pagamento.nome,
+		condizioni_pagamento.note,
+		concat( condizioni_pagamento.codice, ' - ', condizioni_pagamento.nome) AS __label__
+	FROM
+		condizioni_pagamento
 ;
 
 --| 090000006700
@@ -1164,19 +1197,27 @@ DROP TABLE IF EXISTS `documenti_view`;
 
 -- documenti_view
 -- tipologia: tabella gestita
--- verifica: 2021-09-03 17:25 Fabio Mosti
+-- verifica: 2022-01-07 14:25 chiara gdl
 CREATE OR REPLACE VIEW `documenti_view` AS
     SELECT
 		documenti.id,
 		documenti.id_tipologia,
 		tipologie_documenti.nome AS tipologia,
 		documenti.numero,
+		documenti.sezionale,
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
+		documenti.id_coupon,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
@@ -1203,6 +1244,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
 ;
 
 --| 090000010000
@@ -1244,8 +1286,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		listini.id_valuta,
 		valute.utf8 AS valuta,
 		documenti_articoli.importo_netto_totale,
-		documenti_articoli.id_iva,
-		iva.nome AS iva,
+		documenti_articoli.id_matricola,
+		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS matricola,
 		documenti_articoli.nome,
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,
@@ -1262,10 +1304,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			' / ',
 			documenti_articoli.importo_netto_totale,
 			' ',
-			valute.utf8,
-			' +IVA ',
-			iva.aliquota,
-			' % '
+			valute.utf8
 		) AS __label__
 	FROM
 		documenti_articoli
@@ -1276,7 +1315,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
-		LEFT JOIN iva ON iva.id = documenti_articoli.id_iva
+		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
 ;
 
 --| 090000012800
@@ -1298,6 +1337,67 @@ CREATE OR REPLACE VIEW `embed_view` AS
 		embed.se_video,
 		embed.nome AS __label__
 	FROM embed
+;
+
+--| 090000013000
+
+-- fatture_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `fatture_view`;
+
+--| 090000013001
+
+-- fatture_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `fatture_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
+		documenti.id_coupon,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
+   WHERE documenti.id_tipologia = 1
 ;
 
 --| 090000015000
@@ -1399,14 +1499,14 @@ CREATE OR REPLACE VIEW `iban_view` AS
 		iban.id_account_aggiornamento,
 		concat(
 			iban.iban,
+			' ',
 			coalesce(
 				a1.denominazione,
 				concat(
 					a1.cognome,
 					' ',
 					a1.nome
-				),
-				''
+				)
 			)
 		) AS __label__
 	FROM iban
@@ -1955,6 +2055,27 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
 ;
 
+--| 090000021000
+-- matricole
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `matricole_view`;
+
+--| 090000021001
+-- matricole
+-- tipologia: tabella gestita
+-- verifica: 2021-12-28 16:20 Chiara GDL
+CREATE OR REPLACE VIEW `matricole_view` AS
+	SELECT
+	matricole.id,
+	matricole.id_produttore,
+	matricole.id_marchio,
+	matricole.serial_number,
+	matricole.nome,
+	concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS __label__
+	FROM matricole
+	ORDER BY __label__
+;
+
 --| 090000021600
 
 -- menu_view
@@ -2030,6 +2151,28 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		) AS __label__
 	FROM metadati
 		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+;
+
+--| 090000021900
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `modalita_pagamento_view`;
+
+--| 090000021901
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-18 12:06 Chiara GDL
+CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
+	SELECT
+	modalita_pagamento.id,
+	modalita_pagamento.nome,
+	modalita_pagamento.codice,
+	modalita_pagamento.provider,
+	concat( modalita_pagamento.codice,' - ', modalita_pagamento.nome) AS __label__
+	FROM modalita_pagamento
+	ORDER BY __label__
 ;
 
 --| 090000022000
@@ -2133,15 +2276,18 @@ DROP TABLE IF EXISTS `pagamenti_view`;
 
 -- pagamenti_view
 -- tipologia: tabella gestita
--- verifica: 2021-11-12 16:00 Chiara GDL
+-- verifica: 2022-01-07 16:00 Chiara GDL
 CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
 		pagamenti.id_tipologia,
+		pagamenti.id_modalita_pagamento,
+		concat(modalita_pagamento.codice, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
 		tipologie_pagamenti.nome AS tipologia,
 		pagamenti.ordine,
 		pagamenti.nome,
 		pagamenti.note,
+		pagamenti.note_pagamento,
 		pagamenti.id_documento,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
@@ -2153,7 +2299,10 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		iva.nome AS iva,
 		pagamenti.id_listino,
 		listini.nome AS listino,
+		pagamenti.timestamp_scadenza,
+		from_unixtime( pagamenti.timestamp_scadenza, '%Y-%m-%d' ) AS data_ora_scadenza,
 		pagamenti.timestamp_pagamento,
+		from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) AS data_ora_pagamento,
 		pagamenti.id_account_inserimento,
 		pagamenti.id_account_aggiornamento,
 		pagamenti.nome AS __label__
@@ -2163,6 +2312,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
 		LEFT JOIN iva ON iva.id = pagamenti.id_iva
 		LEFT JOIN listini ON listini.id = pagamenti.id_listino
+		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
 ;
 
 --| 090000023200
@@ -2459,6 +2609,58 @@ CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
 		) AS __label__
 	FROM prodotti_categorie
 		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = prodotti_categorie.id_ruolo
+;
+
+--| 090000026600
+
+-- proforma_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `proforma_view`;
+
+--| 090000026601
+
+-- proforma_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `proforma_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   WHERE documenti.id_tipologia = 5
 ;
 
 --| 090000027000
@@ -2985,6 +3187,106 @@ CREATE OR REPLACE VIEW redirect_view AS
 	FROM redirect
 ;
 
+--| 090000030400
+
+-- relazioni_documenti_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_documenti_view`;
+
+--| 090000030401
+
+-- relazioni_documenti_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_documenti_view AS
+	SELECT
+	relazioni_documenti.id_documento,
+	relazioni_documenti.id_documento_collegato,
+	concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato) AS __label__
+	FROM relazioni_documenti
+	ORDER BY __label__
+;
+
+--| 090000030410
+
+-- relazioni_documenti_articoli_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_documenti_articoli_view`;
+
+--| 090000030411
+
+-- relazioni_documenti_articoli_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
+	SELECT
+	relazioni_documenti_articoli.id_documenti_articolo,
+	relazioni_documenti_articoli.id_documenti_articolo_collegato,
+	concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato) AS __label__
+	FROM relazioni_documenti_articoli
+	ORDER BY __label__
+;
+
+--| 090000030440
+
+-- relazioni_pagamenti_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_pagamenti_view`;
+
+--| 090000030441
+
+-- relazioni_pagamenti_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
+	SELECT
+	relazioni_pagamenti.id_pagamento,
+	relazioni_pagamenti.id_pagamento_collegato,
+	concat( relazioni_pagamenti.id_pagamento,' - ', relazioni_pagamenti.id_pagamento_collegato) AS __label__
+	FROM relazioni_pagamenti
+	ORDER BY __label__
+;
+
+--| 090000030490
+
+-- relazioni_progetti_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_progetti_view`;
+
+--| 090000030491
+
+-- relazioni_progetti_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_progetti_view AS
+	SELECT
+	relazioni_progetti.id_progetto,
+	relazioni_progetti.id_progetto_collegato,
+	concat( relazioni_progetti.id_progetto,' - ', relazioni_progetti.id_progetto_collegato) AS __label__
+	FROM relazioni_progetti
+	ORDER BY __label__
+;
+
+--| 060000030500
+
+-- relazioni_software_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_software_view`;
+
+--| 060000030501
+
+-- relazioni_software_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_software_view AS
+	SELECT
+	relazioni_software.id_software,
+	relazioni_software.id_software_collegato,
+	concat( relazioni_software.id_software,' - ', relazioni_software.id_software_collegato) AS __label__
+	FROM relazioni_software
+	ORDER BY __label__
+;
+
 --| 090000029800
 
 -- regimi_view
@@ -3038,13 +3340,13 @@ CREATE OR REPLACE VIEW regioni_view AS
 --| 090000030800
 
 -- reparti_view
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 DROP TABLE IF EXISTS reparti_view;
 
 --| 090000030801
 
 -- reparti_view
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:40 Fabio Mosti
 CREATE OR REPLACE VIEW reparti_view AS
 	SELECT

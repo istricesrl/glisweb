@@ -1,11 +1,14 @@
 <?php
 
-    $seCliente = ( empty( $_REQUEST['anagrafica']['se_cliente'] ) )         ? false : true;
-    $seLead = ( empty( $_REQUEST['anagrafica']['se_lead'] ) )               ? false : true;
-    $seProspect = ( empty( $_REQUEST['anagrafica']['se_prospect'] ) )       ? false : true;
-    $seFornitore = ( empty( $_REQUEST['anagrafica']['se_fornitore'] ) )     ? false : true;
-    $seDipendente = ( empty( $_REQUEST['anagrafica']['se_dipendente'] ) )     ? false : true;
-    $seInterinale = ( empty( $_REQUEST['anagrafica']['se_interinale'] ) )     ? false : true;
+    // die('TEST');
+    // print_r( $_REQUEST );
+
+    $seCliente = ( empty( $_REQUEST['anagrafica']['se_cliente'] ) )                 ? false : true;
+    $seLead = ( empty( $_REQUEST['anagrafica']['se_lead'] ) )                       ? false : true;
+    $seProspect = ( empty( $_REQUEST['anagrafica']['se_prospect'] ) )               ? false : true;
+    $seFornitore = ( empty( $_REQUEST['anagrafica']['se_fornitore'] ) )             ? false : true;
+    $seDipendente = ( empty( $_REQUEST['anagrafica']['se_dipendente'] ) )           ? false : true;
+    $seInterinale = ( empty( $_REQUEST['anagrafica']['se_interinale'] ) )           ? false : true;
     $seCollaboratore = ( empty( $_REQUEST['anagrafica']['se_collaboratore'] ) )     ? false : true;
 
     if( max( [ $seCliente, $seLead, $seProspect ] ) != true ) {
@@ -36,3 +39,5 @@
             ['anagrafica.form.fornitore']
         );
     }
+
+    // print_r( $ct['page']['etc']['tabs'] );

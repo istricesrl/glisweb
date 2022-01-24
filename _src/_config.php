@@ -326,6 +326,7 @@
 	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
     define( 'DIR_VAR_SPOOL'			, DIR_BASE . 'var/spool/' );
     define( 'DIR_VAR_SPOOL_CART'			, DIR_BASE . 'var/spool/cart/' );
+    define( 'DIR_VAR_SPOOL_DOCS'			, DIR_BASE . 'var/spool/docs/' );
     define( 'DIR_VAR_SPOOL_MAIL'			, DIR_BASE . 'var/spool/mail/' );
     define( 'DIR_VAR_SPOOL_PAYMENT'			, DIR_BASE . 'var/spool/payment/' );
     define( 'DIR_VAR_SPOOL_PRINT'			, DIR_BASE . 'var/spool/print/' );
@@ -383,6 +384,7 @@
 	define( 'MIME_MULTIPART_FORM_DATA'	, 'multipart/form-data' );
 	define( 'MIME_TEXT_PLAIN'		, 'text/plain' );
 	define( 'MIME_TEXT_HTML'		, 'text/html' );
+    define( 'MIME_X_WWW_FORM_URLENCODED',   'application/x-www-form-urlencoded' );
 
     // controllo scrittura
     if( ! is_writeable( DIR_BASE ) ) {

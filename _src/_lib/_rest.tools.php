@@ -67,8 +67,13 @@
 			    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
 			break;
 
-			case MIME_MULTIPART_FORM_DATA:
+			case MIME_X_WWW_FORM_URLENCODED:
 			    $data = http_build_query( $data );
+			    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+			break;
+
+			case MIME_MULTIPART_FORM_DATA:
+			    // $data = http_build_query( $data ); // NOTA riga commentata perché in conflitto con l'uso di CURLFile(), fare dei test per verificare se funziona tutto lo stesso
 			    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
 			break;
 
@@ -83,7 +88,7 @@
 		    }
 
 		// log
-		    logWrite( 'invio a ' . $url . ' (' . $method . ') dati: ' . serialize( $data ), 'rest' );
+		    logWrite( 'invio a ' . $url . ' (' . $method . ') dati: ' . print_r( $data, true ), 'rest' );
 
 	    }
 
@@ -124,9 +129,9 @@
 
 	// log
 	    if( ! empty( $error ) || substr( $status, 0, 1 ) != 2 ) {
-		logWrite( 'risposta ' . $status . ( ( ! empty( $error ) ) ? '/' . $error : NULL ) . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' , LOG_ERR );
+			logWrite( 'risposta ' . $status . ( ( ! empty( $error ) ) ? '/' . $error : NULL ) . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' , LOG_ERR );
 	    } else {
-		logWrite( 'risposta ' . $status . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' );
+			logWrite( 'risposta ' . $status . ' ricevuta da ' . $url . ' (' . $method . '): ' . serialize( $result ), 'rest' );
 	    }
 
 	// chiusura della richiesta
@@ -135,9 +140,13 @@
 	// decodifica della risposta
 	    switch( $answertype ) {
 
-		case MIME_APPLICATION_JSON:
-		    $result = json_decode( $result , true );
-		break;
+			case MIME_APPLICATION_JSON:
+				$result = json_decode( $result , true );
+			break;
+
+			case MIME_APPLICATION_XML:
+				$result = xml2array( $result );
+			break;
 
 	    }
 
