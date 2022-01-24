@@ -52,3 +52,13 @@
             'text' => 'crea la fattura corrispondente a questa proforma'
         );
     }
+
+    // aggrega righe
+	$ct['page']['contents']['metro']['general'][] = array(
+        'host' => $ct['site']['url'],
+	    'ws' => $base . '_documenti.aggrega.righe.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+	    'icon' => NULL,
+	    'fa' => 'fa-compress',
+	    'title' => 'aggrega righe',
+	    'text' => 'aggrega a questo documento tutte le righe del cliente'
+	);

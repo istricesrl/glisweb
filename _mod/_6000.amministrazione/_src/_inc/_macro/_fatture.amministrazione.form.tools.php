@@ -39,7 +39,7 @@
 	    'ws' => $base . '_chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
 	    'icon' => NULL,
 	    'fa' => 'fa-check-square-o',
-	    'title' => 'chiudi documento',
-	    'text' => 'chiudi con data e ora attuale il documento'
+	    'title' => 'invia fattura elettronica',
+	    'text' => 'invia tramite archivum la fattura'
 	);
     }

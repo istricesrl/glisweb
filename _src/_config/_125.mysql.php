@@ -218,7 +218,7 @@
 												// echo $pStatus . HTML_EOL;
 											}
 			
-											mysqlInsertRow(
+											$patchLevel = mysqlInsertRow(
 												$cf['mysql']['connection'],
 												array(
 													'id' => $pId,
@@ -244,9 +244,8 @@
 		
 								$pId = substr( $row, 4, 12 );
 								if( $pId == '------------' ) { $pId = date( 'YmdHis' ); }
-
 								$pQuery = null;
-	
+
 								// echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
 								
 							} elseif( substr( trim( $row ), 0, 2 ) !== '--' ) {
@@ -256,7 +255,12 @@
 							}
 	
 						}
-		
+/*
+						$patchLevel = mysqlSelectValue(
+										$cf['mysql']['connection'],
+										'SELECT id FROM __patch__ ORDER BY id DESC LIMIT 1'
+									);
+*/							
 					}
 	
 				}
