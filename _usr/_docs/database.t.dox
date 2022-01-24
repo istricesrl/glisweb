@@ -57,6 +57,7 @@
     task_view.delay                             | -
     task_view.token                             | -
     task_view.timestamp_esecuzione              | -
+    task_view.data_ora_esecuzione               | timestamp esecuzione rielaborato in formato Y-m-d H:i
     task_view.id_account_inserimento            | -
     task_view.id_account_aggiornamento          | -
     task_view.__label__                         | etichetta descrittiva della pianificazione

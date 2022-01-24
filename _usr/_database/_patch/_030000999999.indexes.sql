@@ -237,10 +237,11 @@ ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 ALTER TABLE `attivita`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_cliente` (`id_cliente`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_luogo` (`id_luogo`), 
+	ADD KEY `id_anagrafica_programmazione` (`id_anagrafica_programmazione`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_todo` (`id_todo`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
@@ -1675,6 +1676,7 @@ ALTER TABLE `progetti_anagrafica`
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_sostituto` (`se_sostituto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_progetto`,`id_anagrafica`,`id_ruolo`,`ordine`);
