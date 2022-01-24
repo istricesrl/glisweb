@@ -223,7 +223,7 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 ;
 
 --| 202201240170
-ALTER TABLE `tipologie__progetti` 
+ALTER TABLE `tipologie_progetti` 
     ADD  `se_contratto` tinyint(1) DEFAULT NULL AFTER `font_awesome`,
     ADD  `se_pacchetto` tinyint(1) DEFAULT NULL AFTER `se_contratto`,
     ADD  `se_progetto` tinyint(1) DEFAULT NULL AFTER `se_pacchetto`,
@@ -254,5 +254,18 @@ CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
 		tipologie_progetti_path( tipologie_progetti.id ) AS __label__
 	FROM tipologie_progetti
 ;
+
+--| 202201240190
+INSERT IGNORE INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_contratto`, `se_pacchetto`, `se_progetto`, `se_consuntivo`, `se_forfait`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'contratto',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'pacchetto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'progetto',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	'forfait',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+
+--| 202201240195
+INSERT IGNORE INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `se_ordinario`, `se_straordinario`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'ordinario',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'straordinario',	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 --| FINE FILE
