@@ -192,4 +192,8 @@ ALTER TABLE attivita CHANGE `testo` `note` text NULL AFTER `nome`;
 ALTER TABLE attivita 
 ADD `note_cliente` text NULL after `note`;
 
+--| 202201240140
+ALTER TABLE `categorie_risorse`
+	ADD KEY `id_sito` (`id_sito`);
+
 --| FINE FILE
