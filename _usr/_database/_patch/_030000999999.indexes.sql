@@ -416,6 +416,7 @@ ALTER TABLE `categorie_risorse`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
