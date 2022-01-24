@@ -397,6 +397,8 @@ ALTER TABLE `categorie_progetti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `se_ordinario`(`se_ordinario`),
+	ADD KEY `se_straordinario`(`se_straordinario`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`);
@@ -2627,6 +2629,11 @@ ALTER TABLE `tipologie_progetti`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `se_contratto` (`se_contratto`),
+  	ADD KEY `se_pacchetto` (`se_pacchetto`),
+    ADD KEY `se_progetto` (`se_progetto`),
+    ADD KEY `se_consuntivo` (`se_consuntivo`),
+    ADD KEY `se_forfait` (`se_forfait`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);

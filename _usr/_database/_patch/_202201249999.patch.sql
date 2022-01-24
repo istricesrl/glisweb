@@ -193,7 +193,66 @@ ALTER TABLE attivita
 ADD `note_cliente` text NULL after `note`;
 
 --| 202201240140
-ALTER TABLE `categorie_risorse`
-	ADD KEY `id_sito` (`id_sito`);
+ALTER TABLE `categorie_risorse` 	ADD KEY `id_sito` (`id_sito`);
+
+--| 202201240150
+ALTER TABLE `categorie_progetti` 
+ADD  `se_ordinario` int(1) DEFAULT NULL AFTER `note`,
+ADD  `se_straordinario` int(1) DEFAULT NULL AFTER `se_ordinario`,
+ADD KEY `se_ordinario` (`se_ordinario`),
+ADD KEY `se_straordinario` (`se_straordinario`);
+
+--| 202201240160
+CREATE OR REPLACE VIEW categorie_progetti_view AS
+	SELECT
+		categorie_progetti.id,
+		categorie_progetti.id_genitore,
+		categorie_progetti.ordine,
+		categorie_progetti.nome,
+		categorie_progetti.se_straordinario,
+		categorie_progetti.se_ordinario,
+		count( c1.id ) AS figli,
+		count( progetti_categorie.id ) AS membri,
+		categorie_progetti.id_account_inserimento,
+		categorie_progetti.id_account_aggiornamento,
+		categorie_progetti_path( categorie_progetti.id ) AS __label__
+	FROM categorie_progetti
+		LEFT JOIN categorie_progetti AS c1 ON c1.id_genitore = categorie_progetti.id
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_categoria = categorie_progetti.id
+	GROUP BY categorie_progetti.id
+;
+
+--| 202201240170
+ALTER TABLE `tipologie__progetti` 
+    ADD  `se_contratto` tinyint(1) DEFAULT NULL AFTER `font_awesome`,
+    ADD  `se_pacchetto` tinyint(1) DEFAULT NULL AFTER `se_contratto`,
+    ADD  `se_progetto` tinyint(1) DEFAULT NULL AFTER `se_pacchetto`,
+    ADD  `se_consuntivo` tinyint(1) DEFAULT NULL AFTER `se_progetto`,
+    ADD  `se_forfait` tinyint(1) DEFAULT NULL AFTER `se_consuntivo`,
+	ADD KEY `se_contratto` (`se_contratto`),
+  	ADD KEY `se_pacchetto` (`se_pacchetto`),
+    ADD KEY `se_progetto` (`se_progetto`),
+    ADD KEY `se_consuntivo` (`se_consuntivo`),
+    ADD KEY `se_forfait` (`se_forfait`);
+
+--| 202201240180
+CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
+	SELECT
+		tipologie_progetti.id,
+		tipologie_progetti.id_genitore,
+		tipologie_progetti.ordine,
+		tipologie_progetti.nome,
+		tipologie_progetti.html_entity,
+		tipologie_progetti.font_awesome,
+		tipologie_progetti.se_contratto,
+		tipologie_progetti.se_pacchetto,
+		tipologie_progetti.se_progetto,
+		tipologie_progetti.se_consuntivo,
+		tipologie_progetti.se_forfait,
+		tipologie_progetti.id_account_inserimento,
+		tipologie_progetti.id_account_aggiornamento,
+		tipologie_progetti_path( tipologie_progetti.id ) AS __label__
+	FROM tipologie_progetti
+;
 
 --| FINE FILE

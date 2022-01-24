@@ -708,6 +708,11 @@
     tipologie_progetti.nome                        | il nome della tipologia
     tipologie_progetti.html_entity                 | entità HTML che rappresenta visivamente la tipologia
     tipologie_progetti.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_progetti.se_contratto                | flag che indica se la tipologia è di tipo contratto
+    tipologie_progetti.se_pacchetto                | flag che indica se la tipologia è di tipo pacchetto
+    tipologie_progetti.se_progetto                 | flag che indica se la tipologia è di tipo progetto
+    tipologie_progetti.se_consuntivo               | flag che indica se la tipologia è di tipo consuntivo
+    tipologie_progetti.se_forfait                  | flag che indica se la tipologia è di tipo forfait
     tipologie_progetti.id_account_inserimento      | l'ID dell'account che ha inserito la riga
     tipologie_progetti.timestamp_inserimento       | la timestamp dell'inserimento della riga
     tipologie_progetti.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
@@ -731,6 +736,11 @@
     tipologie_progetti_view.nome                            | -
     tipologie_progetti_view.html_entity                     | -
     tipologie_progetti_view.font_awesome                    | -
+    tipologie_progetti_view.se_contratto                    | -
+    tipologie_progetti_view.se_pacchetto                    | -
+    tipologie_progetti_view.se_progetto                     | -
+    tipologie_progetti_view.se_consuntivo                   | -
+    tipologie_progetti_view.se_forfait                      | -
     tipologie_progetti_view.id_account_inserimento          | -
     tipologie_progetti_view.id_account_aggiornamento        | -
     tipologie_progetti_view.__label__                       | etichetta descrittiva della tipologia
