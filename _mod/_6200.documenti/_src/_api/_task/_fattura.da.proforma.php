@@ -55,7 +55,7 @@
             );
 
             // duplicazione del documento
-            mysqlDuplicateRowRecursive(
+            $status['fattura'] = mysqlDuplicateRowRecursive(
                 $cf['mysql']['connection'],
                 'documenti',
                 $status['current']['id'],
@@ -64,6 +64,7 @@
                 $status['new']
             );
 
+            
             // aggiornamento vista statica
             // mysqlQuery( $c, 'CALL anagrafica_view_static( ? )', array( array( 's' => $d['id'] ) ) );
 

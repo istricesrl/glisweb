@@ -621,7 +621,7 @@
      * @todo finire di documentare
      *
      */
-    function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array() ) {
+    function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array(), &$y = array() ) {
 
 		// debug
 	#	echo "chiamata mysqlDuplicateRowRecursive per array x" . PHP_EOL;
@@ -643,7 +643,7 @@
 		if( ! isset( $x['t'][ $t ]['t'] ) ) { $x['t'][ $t ]['t'] = array(); }
 
 		// duplico la riga
-		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x['t'][ $t ]['f'] );
+		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x['t'][ $t ]['f'], $y );
 
 		// debug
 	#	 echo 'ID riga duplicata = ' . $id . PHP_EOL;
@@ -710,7 +710,7 @@
 
 			#	 echo "chiamo mysqlDuplicateRowRecursive". PHP_EOL;
 				// chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
-				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][ $t ] );
+				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][ $t ], $y[ $ksr['TABLE_NAME'] ] );
 
 			}
 
