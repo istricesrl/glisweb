@@ -8,11 +8,24 @@
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 -- verifica: 2021-05-28 19:56 Fabio Mosti
-REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_agente`, `se_concorrente`, `se_azienda_gestita`, `se_amministrazione`, `se_produzione`, `se_notizie`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'clienti',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'collaboratori',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	2,	    NULL,	'agenti',	        NULL,	NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	'fornitori',	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `note`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_agente`, `se_concorrente`, `se_gestita`, `se_amministrazione`, `se_produzione`, `se_notizie`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'contatti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'collaboratori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	2,	NULL,	'agenti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'fornitori',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	'aziende gestite',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	'rivenditori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	1,	NULL,	'lead',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	1,	NULL,	'clienti',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000004300
+
+-- categorie_progetti
+-- tipologia: tabella gestita
+-- verifica: 2021-06-02 19:40 Fabio Mosti
+INSERT INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `se_ordinario`, `se_straordinario`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'ordinario',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'straordinario',	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000005100
 
@@ -88,6 +101,16 @@ REPLACE INTO `comuni` (`id`, `id_provincia`, `nome`, `codice_istat`, `codice_cat
 (12594,	1,	'Valsamoggia',	                    '037061',	'M320'),
 (12595,	1,	'Alto Reno Terme',	                '037062',	'M369');
 
+--| 050000006200
+
+-- condizioni_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-17 16:12 Chiara GDL
+REPLACE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
+(1,	    'TP01',	'pagamento a rate'),
+(2,	    'TP02',	'pagamento completo'),
+(3,	    'TP03',	    'anticipo');
+
 --| 050000007100
 
 -- continenti
@@ -110,6 +133,16 @@ REPLACE INTO `embed` (`id`, `nome`, `se_video`, `se_audio`) VALUES
 (1, 'HTML5', 1, 1),
 (2, 'Vimeo', 1, NULL),
 (3, 'YouTube', 1, NULL);
+
+--| 050000015200
+
+-- gruppi
+-- tipologia: tabella gestita
+-- verifica: 2021-09-10 17:58 Fabio Mosti
+REPLACE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'roots',	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'staff',	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'users',	NULL,	NULL,	NULL,	NULL);
 
 --| 050000016000
 
@@ -152,6 +185,37 @@ REPLACE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alpha3`, `
 -- verifica: 2021-09-24 17:49 Fabio Mosti
 REPLACE INTO `listini` (`id`, `id_valuta`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,     1,	            'DEFAULT',	                NULL,	NULL,	NULL,	NULL);
+
+--| 050000021900
+
+-- modalita_pagamento
+-- tipologia: tabella standard
+-- verifica: 2022-01-18 12:06 Chiara GDL
+REPLACE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
+(1,	    'MP01',	'contanti'),
+(2,	    'MP02',	'assegno'),
+(3,	    'MP03',	    'assegno circolare'),
+(4,	    'MP04',	    'contanti presso tesoreria'),
+(5,	    'MP05',	'bonifico'),
+(6,	    'MP06',	'vaglia cambiario'),
+(7,	    'MP07',	'bollettino bancario'),
+(8,	    'MP08',	'carta di credito'),
+(9,	    'MP09',	'RID'),
+(10,	    'MP10',	'RID utenze'),
+(11,	    'MP11',	'RID veloce'),
+(12,	    'MP12',	'RIBA'),
+(13,	    'MP13',	'MAV'),
+(14,	    'MP14',	'quietanza erario stato'),
+(15,	    'MP15',	'giroconto su conti di contabilità speciale'),
+(16,	    'MP16',	'domiciliazione bancaria'),
+(17,	    'MP17',	'domiciliazione postale'),
+(18,	    'MP18', 'bollettino di c/c postale'),
+(19, 'MP19', 'SEPA Direct Debit' ),
+(20, 'MP20', 'SEPA Direct Debit CORE' ),
+(21, 'MP21', 'SEPA Direct Debit B2B' ),
+(22, 'MP22', 'Trattenuta su somme già riscosse' ),
+(23,  'MP08', 'bancomat' ),
+(24, 'MP08', 'paypal' );
 
 --| 050000028600
 
@@ -356,6 +420,14 @@ REPLACE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
 (19,	1,	'Calabria',	                        '18'),
 (20,	1,	'Sicilia',	                        '19'),
 (21,	1,	'Sardegna',	                        '20');
+
+--| 050000030800
+
+-- reparti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-09 15:34 Fabio Mosti
+INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_inserimento`, `id_account_inserimento`, `timestamp_aggiornamento`, `id_account_aggiornamento`) VALUES
+(1,	1,	NULL,	'VENDITA IVA 22%',	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000034000
 
@@ -733,12 +805,13 @@ REPLACE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
 -- tipologia: tabella assistita
 -- verifica: 2021-10-12 15:42 Fabio Mosti
 REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_images.resize.php',	            1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	            3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	            3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_indirizzi.geocode.php',	        1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	6,	    2,	    6,	    2,	    NULL,	NULL,	'_src/_api/_task/_comuni.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	6,	    6,	    6,	    6,	    NULL,	NULL,	'_src/_api/_task/_settori.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_images.resize.php',	                                    1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	                                    3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	                                    3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_indirizzi.geocode.php',	                                1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	6,	    2,	    6,	    2,	    NULL,	NULL,	'_src/_api/_task/_comuni.importazione.start.php',	                        1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	6,	    6,	    6,	    6,	    NULL,	NULL,	'_src/_api/_task/_settori.importazione.start.php',	                        1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	6,	    5,	    NULL,	NULL,	NULL,	NULL,	'_mod/_6200.documenti/_src/_api/_task/_download.fe.passive.start.php',	    1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050000
 
@@ -774,6 +847,25 @@ REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 (3,	NULL,	NULL,	'mail',	        NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	NULL,	NULL,	'form web',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (5,	NULL,	NULL,	'chat',	        NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000052600
+
+-- tipologie_documenti
+-- tipologia: tabella di supporto
+-- verifica: 2021-12-07 17:00 Chiara GDL
+REPLACE INTO `tipologie_documenti` (`id`, `nome`, `codice`, `se_fattura`, `se_nota_credito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `stampa_xml`, `stampa_pdf`) VALUES
+(1,	'fattura',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	'fattura accompagnatoria',	'TD01',	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	'nota di credito',	'TD04',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	'documento di trasporto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	'nota pro forma',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	'offerta',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(7,	'ordine',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	'ricevuta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	'scontrino',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10, 'documento di ritiro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(11, 'consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12, 'documento di reso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000053000
 
@@ -817,6 +909,8 @@ INSERT IGNORE INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, 
 -- tipologie_progetti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+INSERT INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`, `se_contratto`, `se_forfait`) VALUES
+(1,	NULL,	NULL,	'standard',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055400
 
@@ -849,6 +943,10 @@ REPLACE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_todo
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000056800
 

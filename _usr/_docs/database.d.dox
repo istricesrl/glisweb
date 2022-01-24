@@ -17,12 +17,19 @@
     documenti.id                            | l'ID del documento
     documenti.id_tipologia                  | l'ID della tipologia di documento
     documenti.numero                        | il numero del documento
+    documenti.sezionale                     | il sezionale del documento se presente
     documenti.data                          | la data di emissione del documento
     documenti.nome                          | il titolo del documento
     documenti.id_emittente                  | l'ID dell'emittente
     documenti.id_sede_emittente             | l'ID della sede dell'emittente
     documenti.id_destinatario               | l'ID del destinatario del documento
     documenti.id_sede_destinatario          | l'ID della sede del destinatario
+    documenti.id_condizione_pagamento       | l'ID della condizione pagamento del documento
+    documenti.codice_archivium              | il codice archivium del documento
+    documenti.codice_sdi                    | il codice sdi di invio del documento
+    documenti.timestamp_invio               | il timestamp di invio del documento
+    documenti.progressivo_invio             | il progressivo di invio del documento
+    documenti.id_coupon                     | l'ID del coupon associato al documento
     documenti.note                          | note aggiuntive sul documento
     documenti.id_account_inserimento        | l'ID dell'account che ha inserito la riga
     documenti.timestamp_inserimento         | la timestamp dell'inserimento della riga
@@ -38,6 +45,8 @@
     documenti_ibfk_03_nofollow              | id_sede_emittente         | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_04_nofollow              | id_destinatario           | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_05_nofollow              | id_sede_destinatario      | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_06_nofollow              | id_coupon                 | coupon.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_07_nofollow              | id_condizione_pagamento   | condizioni_pagamento.id       | ON DELETE NO ACTION ON UPDATE NO ACTION          
     documenti_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     documenti_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -49,16 +58,32 @@
     documenti_view.id_tipologia                     | -
     documenti_view.tipologia                        | la tipologia del documento
     documenti_view.numero                           | -
+    documenti_view.sezionale                        | -
     documenti_view.data                             | -
     documenti_view.nome                             | -
     documenti_view.id_emittente                     | -
     documenti_view.emittente                        | l'emittente del documento
     documenti_view.id_destinatario                  | -
     documenti_view.destinatario                     | il destinatario del documento
+    documenti_view.id_condizione_pagamento          | -
+    documenti_view.condizione_pagamento             | il codice di condizione di pagamento del documento
+    documenti_view.codice_archivium                 | -
+    documenti_view.codice_sdi                       | -
+    documenti_view.timestamp_invio                  | -
+    documenti_view.progressivo_invio                | -
+    documenti_view.id_coupon                        | -
     documenti_view.id_account_inserimento           | -
     documenti_view.id_account_aggiornamento         | -
     documenti_view.__label__                        | l'etichetta descrittiva del documento
   
+    fatture_view
+    --------------------
+    Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 1, ovvero un documento di tipologia fattura
+
+    proforma_view
+    --------------------
+    Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 5, ovvero un documento di tipologia proforma
+
     documenti_articoli
     ------------------
     Questa tabella *gestita* contiene le righe associate all'entità principale *documenti*, descritte come associazione fra documenti e articoli; questa
@@ -83,13 +108,13 @@
     documenti_articoli.id_mastro_provenienza                | l'ID del mastro scaricato dalla riga
     documenti_articoli.id_mastro_destinazione               | l'ID del mastro caricato dalla riga
     documenti_articoli.id_udm                               | l'ID dell'unità di misura relativa alla quantità movimentata dalla riga
+    documenti_articoli.id_matricola                         | l'ID della matricola associata alla riga
     documenti_articoli.quantita                             | la quantità movimentata dalla riga
     documenti_articoli.id_listino                           | l'ID del listino associato alla riga
     documenti_articoli.importo_netto_totale                 | l'importo netto totale della riga
-    documenti_articoli.id_iva                               | l'ID dell'aliquota IVA associata alla riga
     documenti_articoli.nome                                 | nome descrittivo della riga
     documenti_articoli.specifiche                           | specifiche della riga
-    documenti_articoli.testo                                | testo descrittivo della riga
+    documenti_articoli.note                                 | note aggiuntive sulla riga
     documenti_articoli.id_account_inserimento               | l'ID dell'account che ha inserito la riga
     documenti_articoli.timestamp_inserimento                | la timestamp dell'inserimento della riga
     documenti_articoli.id_account_aggiornamento             | l'ID dell'ultimo account che ha modificato la riga
@@ -113,7 +138,7 @@
     documenti_articoli_ibfk_12_nofollow         | id_mastro_destinazione        | mastri.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_13_nofollow         | id_udm                        | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_14_nofollow         | id_listino                    | listini.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
-    documenti_articoli_ibfk_15_nofollow         | id_iva                        | iva.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_articoli_ibfk_15_nofollow         | id_matricola                  | matricole.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_98_nofollow         | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     documenti_articoli_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -146,8 +171,8 @@
     documenti_articoli_view.quantita                        | -
     documenti_articoli_view.id_listino                      | -
     documenti_articoli_view.importo_netto_totale            | -
-    documenti_articoli_view.id_iva                          | -
-    documenti_articoli_view.iva                             | l'aliquota IVA applicata alla riga
+    documenti_articoli_view.id_matricola                    | -
+    documenti_articoli_view.matricola                       | il nome della matricola associato alla riga
     documenti_articoli_view.nome                            | -
     documenti_articoli_view.id_account_inserimento          | -
     documenti_articoli_view.id_account_aggiornamento        | -

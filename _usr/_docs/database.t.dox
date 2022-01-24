@@ -57,6 +57,7 @@
     task_view.delay                             | -
     task_view.token                             | -
     task_view.timestamp_esecuzione              | -
+    task_view.data_ora_esecuzione               | timestamp esecuzione rielaborato in formato Y-m-d H:i
     task_view.id_account_inserimento            | -
     task_view.id_account_aggiornamento          | -
     task_view.__label__                         | etichetta descrittiva della pianificazione
@@ -1033,6 +1034,14 @@
     todo_view.id_account_inserimento                | -
     todo_view.id_account_aggiornamento              | -
     todo_view.__label__                             | etichetta descrittiva della todo
+
+ 	todo_attivi
+    -----------------
+    Questa tabella *virtuale* contiene le todo non archiviate, individuate in base al fatto che il campo *data_archiviazione* è NULL.
+
+    todo_archiviati
+    ---------------------
+    Questa tabella *virtuale* contiene le todo archiviate, individuate in base al fatto che il campo data_archiviazione è NOT NULL.
 
 */
 

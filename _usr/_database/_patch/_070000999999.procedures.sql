@@ -37,6 +37,40 @@ CREATE
 
     END;
 
+--| 070000001000
+
+-- todo_view_static
+DROP PROCEDURE IF EXISTS `attivita_view_static`;
+
+--| 070000001001
+
+-- todo_view_static
+-- verifica: 2021-05-23 15:24 Fabio Mosti
+CREATE
+    DEFINER = CURRENT_USER()
+    PROCEDURE `attivita_view_static`( IN `i` INT(11) )
+    BEGIN
+
+--        IF @TRIGGER_LAZY IS NULL THEN
+
+            IF i IS NULL THEN
+
+                DELETE FROM attivita_view_static;
+                
+                REPLACE INTO attivita_view_static SELECT * FROM attivita_view;
+
+            ELSE
+            
+                DELETE FROM attivita_view_static WHERE attivita_view_static.id = i;
+
+                INSERT INTO attivita_view_static SELECT * FROM attivita_view WHERE attivita_view.id = i;
+            
+            END IF;
+
+--        END IF;
+
+    END;
+
 --| 070000003100
 
 -- categorie_anagrafica_path
@@ -5324,5 +5358,39 @@ CREATE
 		RETURN p2;
 
 END;
+
+--| 070000060000
+
+-- todo_view_static
+DROP PROCEDURE IF EXISTS `todo_view_static`;
+
+--| 070000060001
+
+-- todo_view_static
+-- verifica: 2021-05-23 15:24 Fabio Mosti
+CREATE
+    DEFINER = CURRENT_USER()
+    PROCEDURE `todo_view_static`( IN `i` INT(11) )
+    BEGIN
+
+--        IF @TRIGGER_LAZY IS NULL THEN
+
+            IF i IS NULL THEN
+
+                DELETE FROM todo_view_static;
+                
+                REPLACE INTO todo_view_static SELECT * FROM todo_view;
+
+            ELSE
+            
+                DELETE FROM todo_view_static WHERE todo_view_static.id = i;
+
+                INSERT INTO todo_view_static SELECT * FROM todo_view WHERE todo_view.id = i;
+            
+            END IF;
+
+--        END IF;
+
+    END;
 
 --| FINE FILE

@@ -34,8 +34,8 @@
         'url' => '/print/anagrafica.csv?__categoria__='.$_REQUEST[ $ct['form']['table'] ]['id'],
         'icon' => NULL,
         'fa' => 'fa-file-excel-o',
-        'title' => 'esportazione per MailChimp',
-        'text' => 'esporta i contatti anagrafici di questa categoria in formato CSV'
+        'title' => 'esportazione CSV per MailChimp',
+        'text' => 'esporta i contatti di questa categoria per l\'importazione in MailChimp'
     );
 
 	// macro di default

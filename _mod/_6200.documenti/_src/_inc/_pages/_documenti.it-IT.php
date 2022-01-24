@@ -12,7 +12,8 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_documenti.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'documenti.view',
-														'documenti.articoli.view' ) ),
+														'documenti.articoli.view',
+														'pagamenti.view' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'documenti' ),
 														'priority'	=> '100' ) ) )
@@ -26,10 +27,11 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.php' ),
+		'js'			=> array( 'internal' => array( '_mod/_6200.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 
 														'documenti.form.righe', 
-														'documenti.form.xml',
+														'documenti.form.pagamenti',
 														'documenti.form.stampe',
 														'documenti.form.tools' ) )
 	);
@@ -54,6 +56,18 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.xml.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.xml.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
+	);
+
+	// gestione pagamenti documenti
+	$p['documenti.form.pagamenti'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'pagamenti' ),
+	    'h1'			=> array( $l		=> 'pagamenti' ),
+	    'parent'		=> array( 'id'		=> 'documenti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.pagamenti.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.pagamenti.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
@@ -132,3 +146,28 @@
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
 	);
+
+	// vista pagamenti
+	$p['pagamenti.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'pagamenti_vista' ),
+	    'h1'			=> array( $l		=> 'pagamenti' ),
+	    'parent'		=> array( 'id'		=> 'documenti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_pagamenti.view.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['documenti.view']['etc']['tabs'] )
+	);
+
+	// gestione pagamenti
+	$p['pagamenti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'pagamenti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagamenti.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_pagamenti.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'pagamenti.form' ) )
+	);
+	

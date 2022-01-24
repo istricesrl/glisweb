@@ -31,8 +31,24 @@
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
-		'scadenze' => array(
+		'pagamenti' => array(
 		    CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+		'proforma' => array(
+		    CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+		'fatture' => array(
+		    CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'progetti_amministrazione' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'progetti_amministrazione_archivio' => array(
+            CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         )
         )

@@ -15,9 +15,11 @@
     ----------------------------------------|---------------------------------------------------------------------------------------
     pagamenti.id                            | l'ID del pagamento
     pagamenti.id_tipologia                  | l'ID della tipologia del pagamento cui si riferisce la riga
+    pagamenti.id_modalita_pagamento         | l'ID della modalità di pagamento cui si riferisce la riga
     pagamenti.ordine                        | campo di ordinamento
     pagamenti.nome                          | nome descrittivo della riga
     pagamenti.note                          | note aggiuntive sul pagamento
+    pagamenti.note_pagamento                | le note relative al pagamento
     pagamenti.id_documento                  | l'ID del documento a cui è collegato il pagamento
     pagamenti.id_mastro_provenienza         | l'ID del mastro scaricato dalla riga
     pagamenti.id_mastro_destinazione        | l'ID del mastro caricato dalla riga
@@ -25,6 +27,7 @@
     pagamenti.importo_netto_totale          | l'importo netto totale della riga
     pagamenti.id_iva                        | l'ID dell'aliquota IVA associata alla riga
     pagamenti.id_listino                    | l'ID del listino associato alla riga
+    pagamenti.timestamp_scadenza            | la timestamp entro cui il pagamento deve essere fatto
     pagamenti.timestamp_pagamento           | la timestamp dell'effettivo pagamento
     pagamenti.id_account_inserimento        | l'ID dell'account che ha inserito la riga
     pagamenti.timestamp_inserimento         | la timestamp dell'inserimento della riga
@@ -42,6 +45,7 @@
     pagamenti_ibfk_05_nofollow                  | id_iban                       | iban.id                           | ON DELETE SET NULL ON UPDATE SET NULL
     pagamenti_ibfk_06_nofollow                  | id_listino                    | listini.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
     pagamenti_ibfk_07_nofollow                  | id_iva                        | iva.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pagamenti_ibfk_08_nofollow                  | id_modalita_pagamento         | modalita_pagamento.id 
     pagamenti_ibfk_98_nofollow                  | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     pagamenti_ibfk_99_nofollow                  | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -52,9 +56,12 @@
     pagamenti_view.id                       | -
     pagamenti_view.id_tipologia             | -
     pagamenti_view.tipologia                | la tipologia del pagamento collegato alla riga
+    pagamenti_view.id_modalita_pagamento    | -
+    pagamenti_view.modalita_pagamento       | la modalità di pagamento della riga
     pagamenti_view.ordine                   | -
     pagamenti_view.nome                     | -
     pagamenti_view.note                     | -
+    pagamenti_view.note_pagamento           | -
     pagamenti_view.id_documento             | -
     pagamenti_view.id_mastro_provenienza    | -
     pagamenti_view.mastro_provenienza       | il mastro scaricato dalla riga
@@ -66,9 +73,13 @@
     pagamenti_view.iva                      | l'aliquota IVA applicata alla riga
     pagamenti_view.id_listino               | -
     pagamenti_view.listino                  | il listino di riferimento della riga
+    pagamenti_view.timestamp_scadenza       | -
+    pagamenti_view.data_ora_scadenza        | la data e ora della scadenza
     pagamenti_view.timestamp_pagamento      | -
-    pagamenti.id_account_inserimento        | -
-	pagamenti.id_account_aggiornamento      | -
+    pagamenti_view.data_ora_pagamento       | la data e ora dell'effettivo pagamento
+    pagamenti_view.id_account_inserimento   | -
+	pagamenti_view.id_account_aggiornamento | -
+    pagamenti_view.documento                | il documento a cui il pagamento fa riferimento
     pagamenti_view.__label__                | l'etichetta descrittiva del pagamento
 
     pagine
@@ -668,6 +679,7 @@
     progetti_anagrafica.id_anagrafica             | l'ID dell'anagrafica
     progetti_anagrafica.id_ruolo                  | l'ID del ruolo svolto dall'anagrafica nel progetto
     progetti_anagrafica.ordine                    | campo di ordinamento
+    progetti_anagrafica.se_sostituto              | flag che indica se l'anagrafica collegata al progetto è di un sotituto
     progetti_anagrafica.id_account_inserimento    | l'ID dell'account che ha inserito la riga
     progetti_anagrafica.timestamp_inserimento     | la timestamp dell'inserimento della riga
     progetti_anagrafica.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
@@ -695,6 +707,7 @@
     progetti_anagrafica_view.id_ruolo                 | -
     progetti_anagrafica_view.ruolo                    | il ruolo dell'anagrafica nel progetto
     progetti_anagrafica_view.ordine                   | -
+    progetti_anagrafica_view.se_sostituto             | -
     progetti_anagrafica_view.id_account_inserimento   | -
     progetti_anagrafica_view.id_account_aggiornamento | -
     progetti_anagrafica_view.__label__                | etichetta descrittiva dell'associazione fra progetto e anagrafica

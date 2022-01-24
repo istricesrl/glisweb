@@ -209,6 +209,32 @@
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 	
+	 // vista caratteristiche prodotti
+	 $p['caratteristiche.prodotti.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'caratteristiche prodotti' ),
+	    'h1'		=> array( $l		=> 'caratteristiche' ),
+	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_caratteristiche.prodotti.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'caratteristiche.prodotti.view') ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'caratteristiche' ),
+									'priority'	=> '100' ) ) )	
+	);
+
+	 // gestione catecaratteristichegorie prodotti
+	 $p['caratteristiche.prodotti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'caratteristiche.prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'caratteristiche.prodotti.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_caratteristiche.prodotti.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'caratteristiche.prodotti.form' ) )
+	 );
+	
 	// vista articoli
 	$p['articoli.view'] = array(
 	    'sitemap'		=> false,

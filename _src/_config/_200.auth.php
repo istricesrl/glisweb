@@ -115,8 +115,12 @@
     // privilegi della piattaforma
 	$cf['auth']['privileges'] = array(
 	    'EDIT_CONFIGURAZIONE' => array(
-		'id' => NULL,
-		'nome' => 'editare la configurazione del framework'
+            'id' => NULL,
+            'nome' => 'editare la configurazione del framework'
+        ),
+	    'INVIO_ANAGRAFICA_ARCHIVIUM' => array(
+            'id' => NULL,
+            'nome' => 'inviare una anagrafica ad Archivium'
 	    )
 	);
 
@@ -136,7 +140,8 @@
 		),
 		'permissions' => array(),
 		'privilegi' => array(
-		    'EDIT_CONFIGURAZIONE'
+		    'EDIT_CONFIGURAZIONE',
+            'INVIO_ANAGRAFICA_ARCHIVIUM'
 		)
 	    )
 	);

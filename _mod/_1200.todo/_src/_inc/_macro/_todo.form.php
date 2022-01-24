@@ -21,18 +21,18 @@
 
     // tabella gestita
 	$ct['form']['table'] = 'todo';
-
+/*
     // tendina priorita
 	$ct['etc']['select']['id_priorita'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM priorita_view' );
-
+*/
     // tendina tipologie
 	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_produzione = 1' );
+        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
     
     // tendina collaboratori
 	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(

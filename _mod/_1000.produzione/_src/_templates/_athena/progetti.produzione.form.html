@@ -42,6 +42,9 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
+		{# CAMPI HIDDEN SPECIALI #}
+	    <input type="hidden" id="reset" name="{{ table }}[data_accettazione]" value="{% if request[ table ].data_accettazione %}{{ request[ table ].data_accettazione }}{% else %}{{ 'now'|date('Y-m-d') }}{% endif %}" >
+		
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
 		<legend>dati generali <small>{{ legend }}</small></legend>
@@ -51,20 +54,7 @@
                     <span class="label-top">codice</span>
                     {{ frm.inputRequired( table, '', '', 'id', '', '', request,  'now'|date('YmdHi') ) }}
                 </div>
-                <div class="col-12 col-md-2">
-                    <span class="label-top">tipologia</span>
-                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request, '', '', '', '', 'nomeProgetto()' ) }}
-  				</div>
-
-				<div class="col-12 col-md">
-					<span class="label-top">nome</span>
-					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
-				</div>
-
-        </div>
-            
-	        <div class="form-group form-row">
-				<div class="col col-md">
+				  <div class="col col-md">
 					<span class="label-top">cliente</span>
 					{{ frm.selectBox( table, '', '', 'id_cliente', '', etc.select.clienti, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_cliente', page, pages, ietf, 'anagrafica' ) }}
 				</div>
@@ -74,31 +64,29 @@
 					{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, '','','','','', 'indirizzi.form', 'indirizzi.form', 'indirizzi', 'id_indirizzo', page, pages, ietf, 'indirizzi' ) }}	</div>
 				{% else %}
 				<div class="col-auto">
-					<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="submitFormOkay = true; submit();">CALCOLA INDIRIZZI</button>
+					<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="submitFormOkay = true; submit();">TROVA INDIRIZZI</button>
 				</div>
 				{% endif %}
+        	</div>
+            
+	        <div class="form-group form-row">
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">tipologia</span>
+                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request, '', '', '', '', 'nomeProgetto()' ) }}
+  				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">nome</span>
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
+				</div>
             </div>
             
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">descrizione</span>
-				{{ frm.textarea( table, '', '', 'testo', '', 2, request ) }}
+				{{ frm.textarea( table, '', '', 'note', '', 2, request ) }}
 				</div>
 			</div>
 				
-		</fieldset>
-		<fieldset>
-			<legend>accettazione</legend>
-			<div class="form-group form-row">
-				<div class="col col-md-2">
-					<span class="label-top">data accettazione</span>
-					{{ frm.date( table, '', '', 'data_accettazione', '', '', request ) }}
-				</div>
-				<div class="col-12 col-md-10">
-					<span class="label-top">note di accettazione</span>
-					{{ frm.input( table, '', '', 'testo_accettazione', '', '', request ) }}
-				</div>
-            </div>
 		</fieldset>
 
 		{# SUBFORM CATEGORIE #}

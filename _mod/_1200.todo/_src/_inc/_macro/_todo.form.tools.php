@@ -29,6 +29,9 @@
 	    )
 	);
 
+/**
+ * NOTA il meccanismo di cancellazione va gestito come per i progetti senza coda
+
     // modal per la conferma di invio richiesta sostituzione
     $ct['page']['contents']['metro']['azioni'][] = array(
         'modal' => array('id' => 'elimina', 'include' => 'inc/todo.form.tools.modal.elimina.html' ),
@@ -37,6 +40,8 @@
 	    'title' => 'elimina todo',
 	    'text' => 'elimina la todo e gli oggetti collegati'
     );
+
+ */    
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

@@ -182,7 +182,7 @@
 	} else {
 
 	    // log
-		logWrite( 'nessun SMS in coda da processare', 'sms', LOG_INFO );
+		logWrite( 'nessun SMS in coda da processare', 'sms' );
 
 	    // status
 		$status['info'][] = 'nessun SMS in coda da processare';

@@ -107,7 +107,7 @@
 	    logWrite( md5( $q ) . ' ' . $q, 'mysql' );
 
 	// log
-		appendToFile( $q, FILE_LATEST_MYSQL );
+		appendToFile( $q . PHP_EOL, FILE_LATEST_MYSQL );
 
 	// verifico se c'è connessione e se la query è preparata o meno
 	    if( empty( $c ) ) {
@@ -621,7 +621,7 @@
      * @todo finire di documentare
      *
      */
-    function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array() ) {
+    function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array(), &$y = array() ) {
 
 		// debug
 	#	echo "chiamata mysqlDuplicateRowRecursive per array x" . PHP_EOL;
@@ -643,7 +643,7 @@
 		if( ! isset( $x['t'][ $t ]['t'] ) ) { $x['t'][ $t ]['t'] = array(); }
 
 		// duplico la riga
-		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x['t'][ $t ]['f'] );
+		$id = mysqlDuplicateRow( $c, $t, $o, $n, $x['t'][ $t ]['f'], $y );
 
 		// debug
 	#	 echo 'ID riga duplicata = ' . $id . PHP_EOL;
@@ -710,7 +710,7 @@
 
 			#	 echo "chiamo mysqlDuplicateRowRecursive". PHP_EOL;
 				// chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
-				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][ $t ] );
+				mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][ $t ], $y[ $ksr['TABLE_NAME'] ] );
 
 			}
 
@@ -729,7 +729,7 @@
      *
 	 * TODO: creare un meccanismo di sostituzione intelligente dei valori dei campi (oltre al settaggio manuale)
      */
-    function mysqlDuplicateRow( $c, $t, $o, $n = NULL, $x = array() ) {
+    function mysqlDuplicateRow( $c, $t, $o, $n = NULL, $x = array(), &$y = array() ) {
 
 		// salvo l'id
 		$id = isset( $x['id'] ) ? $x['id'] : null;
@@ -762,6 +762,12 @@
 		if( empty( $n ) ){
 			$n = $id;
 		}
+
+	// popolo l'oggetto
+		$y = mysqlSelectRow(
+			$c, 'SELECT * FROM ' . $t . ' WHERE id = ?',
+			array( array( 's' => $n ) )
+		);
 
 	// debug
 		// echo $q . PHP_EOL;
@@ -869,12 +875,12 @@
      */
     function mysqlInsertRow( $c, $r, $t, $d = true ) {
 
-	return mysqlQuery( $c,
-	    'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
-	    .'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
-	    .( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
-	    array2mysqlStatementParameters( $r )
-	);
+		return mysqlQuery( $c,
+			'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
+			.'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
+			.( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
+			array2mysqlStatementParameters( $r )
+		);
 
     }
 
@@ -963,7 +969,7 @@
 
 	function getStaticViewExtension( $m, $c, $t ) {
 
-			// verifico se esiste la view statica
+		// verifico se esiste la view statica
 			$stv = mysqlSelectCachedValue(
 				$m,
 				$c,

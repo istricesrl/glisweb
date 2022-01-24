@@ -127,7 +127,7 @@
 		'etc'			=> array( 'tabs'	=> $p['turni.form']['etc']['tabs'] )
 	);
 
-
+/*
 	// vista categorie attività - ripristinato solo per todo
 	$p['categorie.attivita.view'] = array(
 		'sitemap'		=> false,
@@ -153,7 +153,7 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'categorie.attivita.form' ) )
 	);
-
+*/
 
 	$p['tipologie.attivita.view'] = array(
 		'sitemap'		=> false,
@@ -179,4 +179,3 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'tipologie.attivita.form' ) )
 	);
-	

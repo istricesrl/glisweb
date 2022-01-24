@@ -251,7 +251,7 @@ $pdf = pdfInit( $info );
     if( isset( $_REQUEST['__all__'] ) &&  $_REQUEST['__all__'] == 1 ){
         $pdf->AddPage('P');					// portrait, millimetri, A4 (x->210 y->297)
 
-        $azienda = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_azienda_gestita = 1');
+        $azienda = mysqlSelectRow( $cf['mysql']['connection'],'SELECT * FROM anagrafica_view WHERE se_gestita = 1');
 
         if( $azienda ){ 
             $logo = anagraficaGetLogo( $azienda['id'] );  
