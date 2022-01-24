@@ -60,7 +60,7 @@
         // TODO basarsi sui flag e non sull'id_tipologia
         $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
-            'ws' => $base . 'fattura.da.proforma?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'ws' => $base . '_fattura.da.proforma.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
             'icon' => NULL,
             'fa' => 'fa-eur',
             'title' => 'crea fattura',
