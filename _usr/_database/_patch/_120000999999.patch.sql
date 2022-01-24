@@ -3,8 +3,7 @@
 --
 
 --| ------------
-FLUSH PRIVILEGES;
 
--- fine installazione database ex novo --
+FLUSH PRIVILEGES;
 
 --| FINE FILE

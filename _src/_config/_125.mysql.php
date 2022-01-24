@@ -244,8 +244,8 @@
 		
 								$pId = substr( $row, 4, 12 );
 								if( $pId == '------------' ) { $pId = date( 'YmdHis' ); }
-								
-								$pQuery = null;
+
+                $pQuery = null;
 	
 								// echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
 								
