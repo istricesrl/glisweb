@@ -32,7 +32,7 @@
 	    )
 	);
 
-    if( empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_chiusura'] ) ){
+   
     // aggiorna data e ora
 	$ct['page']['contents']['metro']['amministrazione'][] = array(
         'host' => $ct['site']['url'],
@@ -42,4 +42,4 @@
 	    'title' => 'invia fattura elettronica',
 	    'text' => 'invia tramite archivum la fattura'
 	);
-    }
+  

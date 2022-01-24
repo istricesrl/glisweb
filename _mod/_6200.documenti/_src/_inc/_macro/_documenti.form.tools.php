@@ -43,3 +43,15 @@
 	    'text' => 'chiudi con data e ora attuale il documento'
 	);
     }
+
+    if(  $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] == 1 ){
+    // invio fattura elettronica
+	$ct['page']['contents']['metro']['amministrazione'][] = array(
+        'host' => $ct['site']['url'],
+	  //  'ws' => $base . '.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+	    'icon' => NULL,
+	    'fa' => 'fa-check-square-o',
+	    'title' => 'invia fattura elettronica',
+	    'text' => 'invia tramite archivum la fattura'
+	);
+    }
