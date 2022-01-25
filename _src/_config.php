@@ -327,6 +327,7 @@
     define( 'DIR_VAR_SPOOL'			, DIR_BASE . 'var/spool/' );
     define( 'DIR_VAR_SPOOL_CART'			, DIR_BASE . 'var/spool/cart/' );
     define( 'DIR_VAR_SPOOL_DOCS'			, DIR_BASE . 'var/spool/docs/' );
+    define( 'DIR_VAR_SPOOL_IMPORT'			, DIR_BASE . 'var/spool/import/' );
     define( 'DIR_VAR_SPOOL_MAIL'			, DIR_BASE . 'var/spool/mail/' );
     define( 'DIR_VAR_SPOOL_PAYMENT'			, DIR_BASE . 'var/spool/payment/' );
     define( 'DIR_VAR_SPOOL_PRINT'			, DIR_BASE . 'var/spool/print/' );
@@ -354,13 +355,13 @@
 	define( 'CONTROL_FULL'			, 'FULL' );
 
     // azioni
-	define( 'METHOD_DELETE'			, 'DELETE' );
-	define( 'METHOD_GET'			, 'GET' );
-	define( 'METHOD_PATCH'			, 'PATCH' );
-	define( 'METHOD_POST'			, 'POST' );
-	define( 'METHOD_PUT'			, 'PUT' );
-	define( 'METHOD_REPLACE'		, 'REPLACE' );
-	define( 'METHOD_UPDATE'			, 'UPDATE' );
+	define( 'METHOD_DELETE'			, 'DELETE' );       // cancellazione
+	define( 'METHOD_GET'			, 'GET' );          // lettura
+	define( 'METHOD_PATCH'			, 'PATCH' );        // aggiornamento
+	define( 'METHOD_POST'			, 'POST' );         // inserimento
+	define( 'METHOD_PUT'			, 'PUT' );          // modifica
+	define( 'METHOD_REPLACE'		, 'REPLACE' );      // rimpiazzo
+	define( 'METHOD_UPDATE'			, 'UPDATE' );       // aggiornamento
 
     // costanti per l'identificazione dei database
 	define( 'DB_MYSQL'			, 'MYSQL' );

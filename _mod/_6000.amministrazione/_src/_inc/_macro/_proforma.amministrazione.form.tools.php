@@ -60,5 +60,5 @@
 	    'icon' => NULL,
 	    'fa' => 'fa-compress',
 	    'title' => 'aggrega righe',
-	    'text' => 'aggrega a questo documento tutte le righe del cliente'
+	    'text' => 'aggrega a questo documento tutte le righe non associate'
 	);

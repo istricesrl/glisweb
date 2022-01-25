@@ -55,6 +55,7 @@
 	    foreach( $d as $k => $v ) {
 		if( is_array( $v ) && substr( $k, 0, 2 ) !== '__' ) {		// nel caso il valore sia un subform, viene
 		    $s[ $k ] = $v;											// passato così com'è per la ricorsione
+// echo 'subform trovato per '.$k.' '.$t.PHP_EOL;
 		} elseif( strtolower( $k )	== '__method__' ) {				//
 		    $a = strtoupper( $v );									// impostazione esplicita del method del form
 		} elseif( strtolower( $k )	== '__table__' ) {				//
@@ -80,7 +81,18 @@
 	    }
 
 	// controllo permessi (il gruppo può eseguire l'azione sull'entità?) getAclPermission()
-	    if( getAclPermission( $t, $a, $i ) ) {
+	if( count( $ks ) == 0 && count( $s ) > 0 ) {
+
+#		echo 'vado in modalità gestione oggetti multipli'.PHP_EOL;
+#		print_r( $s );
+
+				foreach( $s as $x => $y ) {
+# echo 'elaboro il subform '.$x.' di '.$k.PHP_EOL;
+					controller( $c, $mc, $y, $t, $a, NULL, $e, $i[$t][$x], $i['__auth__'] );
+				}
+
+				// controllo diritti
+					} elseif( getAclPermission( $t, $a, $i ) ) {
 
 		// se è stata effettuata una GET senza ID, passo alla modalità view
 		    if( $a === METHOD_GET && ( ! array_key_exists( 'id', $d ) || $vm === true ) ) {
@@ -99,7 +111,7 @@
 				}
 */
 			// log
-			    logWrite( "permessi sufficienti per ${t}/${a}", 'controller', LOG_DEBUG );
+			    logWrite( "permessi sufficienti per ${t}/${a}", 'controller' );
 
 			// debug
 			    // print_r( $d );
@@ -300,8 +312,7 @@
 			    $i['__status__'] = 200;
 			    return $i['__status__'];
 
-		// controllo diritti
-		    } elseif( ! isset( $d['id'] ) || getAclRights( $c, $t, $a, $d['id'], $i, $pi ) != false ) {
+			} elseif( ! isset( $d['id'] ) || getAclRights( $c, $t, $a, $d['id'], $i, $pi ) != false ) {
 
 			// log
 			    logWrite( "diritti sufficienti per ${t}/${a}", 'controller', LOG_DEBUG );
@@ -409,7 +420,7 @@
 					// compongo la condizione WHERE
 					    if( is_array( $tks ) && array_filter( $tks ) ) {
 						$q .= " WHERE " . implode( ' AND ' , $tks );
-// print_r( $tks );
+						// print_r( $tks );
 					    }
 
 				    break;
@@ -538,6 +549,9 @@
 			 * @todo a cosa serve questa cosa qui sopra? inoltre, verificare come si comportano __info__, __err__, e __auth__ in scenari ricorsivi
 			 */
 
+			// debug
+			// print_r( $d );
+
 			// elaborazione dei sottomoduli
 			    switch( strtoupper( $a ) ) {
 				case METHOD_POST:
@@ -546,8 +560,9 @@
 				case METHOD_UPDATE:
 				    foreach( $d as $k => $v ) {
 					if( is_array( $v ) ) {
-					    foreach( $v as $x => $y ) {
-						controller( $c, $mc, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__'] );
+						foreach( $v as $x => $y ) {
+# echo 'elaboro il subform '.$x.' di '.$k.PHP_EOL;
+							controller( $c, $mc, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__'] );
 					    }
 					}
 				    }
