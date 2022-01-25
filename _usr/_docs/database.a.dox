@@ -402,6 +402,7 @@
     anagrafica_indirizzi_view.id                            | -
     anagrafica_indirizzi_view.id_anagrafica                 | -
     anagrafica_indirizzi_view.id_indirizzo                  | -
+    anagrafica_indirizzi_view.indirizzo                     | l'indirizzo
     anagrafica_indirizzi_view.id_ruolo                      | -
     anagrafica_indirizzi_view.ruolo                         | il ruolo dell'indirizzo relativamente all'anagrafica
     anagrafica_indirizzi_view.id_account_inserimento        | -
@@ -555,7 +556,6 @@
     ----------------------------------------------------|---------------------------------------------------------------------------------------
     attivita.id                                         | l'ID dell'attività
     attivita.id_tipologia                               | l'ID della tipologia
-    attivita.id_anagrafica                              | l'ID dell'anagrafica che svolge l'attività
     attivita.id_cliente                                 | l'ID del cliente a cui è riferita l'attività
     attivita.referenti                                  | testo descrittivo del referente (lato cliente) per l'attività
     attivita.id_indirizzo                               | l'ID dell'indirizzo dove è svolta l'attività
@@ -566,6 +566,7 @@
     attivita.data_programmazione                        | la data in cui è programmata l'esecuzione dell'attività
     attivita.ora_inizio_programmazione                  | l'ora in cui è programmato l'inizio dell'esecuzione dell'attività
     attivita.ora_fine_programmazione                    | l'ora in cui è programmata la fine dell'esecuzione dell'attività
+    attivita.id_anagrafica_programmazione               | l'ID dell'anagrafica per cui l'attività è programmata
     attivita.note_programmazione                        | note relative alla data e ora in cui è programmata l'esecuzione dell'attività
     attivita.ore_programmazione                         | numero di ore uomo previste per l'esecuzione dell'attività
     attivita.data_attivita                              | la data in cui si svolge l'attività
@@ -575,9 +576,11 @@
     attivita.ora_fine                                   | l'ora in cui termina l'attività
 	attivita.latitudine_ora_fine                        | la latitudine associata all'invio dell'orario di fine attività
 	attivita.longitudine_ora_fine                       | la longitudine associata all'invio dell'orario di fine attività
+    attivita.id_anagrafica                              | l'ID dell'anagrafica che svolge l'attività
     attivita.ore                                        | numero di ore uomo impiegate per l'esecuzione dell'attività
     attivita.nome                                       | descrizione sintetica dell'attività
-    attivita.testo                                      | descrizione estesa dell'attività
+    attivita.note                                       | descrizione estesa dell'attività
+    attivita.note_cliente                               | descrizione estesa dell'attività per il cliente
     attivita.id_progetto                                | l'ID del progetto cui è riferita l'attività
     attivita.id_todo                                    | l'ID della todo cui si riferisce l'attività
     attivita.id_mastro_provenienza                      | mastro dal quale viene sottratto il valore del campo ore
@@ -594,14 +597,15 @@
     chiave                          | campo                         | tabella e campo collegati     | comportamento
     --------------------------------|-------------------------------|-------------------------------|----------------------
     attivita_ibfk_01_nofollow       | id_tipologia                  | tipologie_attivita.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_02_nofollow       | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
-    attivita_ibfk_03_nofollow       | id_cliente                    | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_04_nofollow       | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
-    attivita_ibfk_05_nofollow       | id_luogo                      | luoghi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
-    attivita_ibfk_06_nofollow       | id_progetto                   | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_07_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_08_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_09_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_02_nofollow       | id_cliente                    | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_03_nofollow       | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_04_nofollow       | id_luogo                      | luoghi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_05_nofollow       | id_anagrafica_programmazione  | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_06_nofollow       | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    attivita_ibfk_07_nofollow       | id_progetto                   | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_08_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_09_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_10_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     attivita_ibfk_98_nofollow       | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     attivita_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -612,8 +616,6 @@
     attivita_view.id                                | -
     attivita_view.id_tipologia                      | -
     attivita_view.tipologia                         | -
-    attivita_view.id_anagrafica                     | -
-    attivita_view.anagrafica                        | l'anagrafica che esegue l'attività
     attivita_view.id_cliente                        | -
     attivita_view.cliente                           | il cliente associato all'attività
     attivita_view.referenti                         | i referenti per il cliente associato all'attività
@@ -626,6 +628,8 @@
     attivita_view.data_programmazione               | -
     attivita_view.ora_inizio_programmazione         | -
     attivita_view.ora_fine_programmazione           | -
+    attivita_view.id_anagrafica_programmazione      | -
+    attivita_view.anagrafica_programmazione         | l'anagrafica per cui l'attività è programmata
     attivita_view.ore_programmazione                | -
     attivita_view.data_attivita                     | -
     attivita_view.giorno_attivita                   | il giorno in cui si è svolta l'attività
@@ -637,6 +641,8 @@
     attivita_view.ora_fine                          | -
     attivita_view.latitudine_ora_fine               | -
     attivita_view.longitudine_ora_fine              | -
+    attivita_view.id_anagrafica                     | -
+    attivita_view.anagrafica                        | l'anagrafica che esegue l'attività
     attivita_view.ore                               | -
     attivita_view.nome                              | -
     attivita_view.id_progetto                       | -

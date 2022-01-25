@@ -679,6 +679,7 @@
     progetti_anagrafica.id_anagrafica             | l'ID dell'anagrafica
     progetti_anagrafica.id_ruolo                  | l'ID del ruolo svolto dall'anagrafica nel progetto
     progetti_anagrafica.ordine                    | campo di ordinamento
+    progetti_anagrafica.se_sostituto              | flag che indica se l'anagrafica collegata al progetto è di un sotituto
     progetti_anagrafica.id_account_inserimento    | l'ID dell'account che ha inserito la riga
     progetti_anagrafica.timestamp_inserimento     | la timestamp dell'inserimento della riga
     progetti_anagrafica.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
@@ -706,6 +707,7 @@
     progetti_anagrafica_view.id_ruolo                 | -
     progetti_anagrafica_view.ruolo                    | il ruolo dell'anagrafica nel progetto
     progetti_anagrafica_view.ordine                   | -
+    progetti_anagrafica_view.se_sostituto             | -
     progetti_anagrafica_view.id_account_inserimento   | -
     progetti_anagrafica_view.id_account_aggiornamento | -
     progetti_anagrafica_view.__label__                | etichetta descrittiva dell'associazione fra progetto e anagrafica

@@ -379,6 +379,13 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		anagrafica_indirizzi.id,
 		anagrafica_indirizzi.id_anagrafica,
 		anagrafica_indirizzi.id_indirizzo,
+		concat(
+			indirizzi.indirizzo,
+			' ',
+			comuni.nome,
+			' ',
+			provincie.sigla
+		) AS indirizzo,
 		anagrafica_indirizzi.id_ruolo,
 		ruoli_indirizzi.nome AS ruolo,
 		anagrafica_indirizzi.id_account_inserimento,
@@ -519,8 +526,6 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.id,
 		attivita.id_tipologia,
 		tipologie_attivita.nome AS tipologia,
-		attivita.id_anagrafica,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		attivita.id_cliente,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
 		attivita.id_indirizzo,
@@ -532,6 +537,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.data_programmazione,
 		attivita.ora_inizio_programmazione,
 		attivita.ora_fine_programmazione,
+		attivita.id_anagrafica_programmazione,
+		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS anagrafica_programmazione,
 		attivita.ore_programmazione,
 		attivita.data_attivita,
 		day( data_attivita ) as giorno_attivita,
@@ -543,6 +550,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.ora_fine,
 		attivita.latitudine_ora_fine,
 		attivita.longitudine_ora_fine,
+		attivita.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		attivita.ore,
 		attivita.nome,
 		attivita.id_progetto,
@@ -567,6 +576,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = attivita.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = attivita.id_cliente
+		LEFT JOIN anagrafica AS a3 ON a3.id = attivita.id_anagrafica_programmazione
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
 		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
 		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
@@ -2711,6 +2721,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 			' ',
 			progetti.id,
 			progetti.nome,
+			' cliente ',
 			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
 		) AS __label__
 	FROM progetti
@@ -3035,6 +3046,7 @@ CREATE OR REPLACE VIEW progetti_anagrafica_view AS
 		progetti_anagrafica.id_ruolo,
 		ruoli_anagrafica.nome as ruolo,
 		progetti_anagrafica.ordine,
+		progetti_anagrafica.se_sostituto,
 		progetti_anagrafica.id_account_inserimento,
 		progetti_anagrafica.id_account_aggiornamento,
  		concat_ws(
@@ -4041,7 +4053,7 @@ CREATE OR REPLACE VIEW task_view AS
 		task.delay,
 		task.token,
 		task.timestamp_esecuzione,
-		from_unixtime( task.timestamp_esecuzione, '%Y-%m-%d' ) AS data_ora_esecuzione,
+		from_unixtime( task.timestamp_esecuzione, '%Y-%m-%d %H:%i' ) AS data_ora_esecuzione,
 		task.id_account_inserimento,
 		task.id_account_aggiornamento,
 		CONCAT(

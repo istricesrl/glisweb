@@ -90,7 +90,7 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
 
 .view-table th {
     border-bottom: 1px solid #cccccc;
-    padding: 0px;
+    padding: 0px 5px;
 }
 
 .view-table th select {
@@ -118,7 +118,7 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     border: 0px;
     display: block;
     font-weight: bold;
-    padding: 2px 6px;
+    padding: 0px 5px;
 }
 
 .view-table thead tr th select:hover {

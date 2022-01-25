@@ -23,18 +23,17 @@
     $ct['view']['cols'] = array(
 		'id' => '#',
         'data_attivita' => 'data',
+        'tipologia' => 'tipologia',
         'anagrafica' => 'persona',
         'nome' => 'attivita',
-        'ore' => 'ore',
-        '__label__' => 'tipologia'
+        'ore' => 'ore'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    'anagrafica' => 'text-left',
-	    'nome' => 'text-left',
-	    'priorita' => 'text-left',
+	    'nome' => 'text-left'
 	);
     
     // pagina per la gestione degli oggetti esistenti

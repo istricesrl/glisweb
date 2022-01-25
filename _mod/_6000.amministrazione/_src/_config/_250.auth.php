@@ -47,8 +47,16 @@
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
-		'righe_fatture' => array(
+		'righe_proforma' => array(
 		    CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+    'progetti_amministrazione' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+     'progetti_amministrazione_archivio' => array(
+            CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         )
         )

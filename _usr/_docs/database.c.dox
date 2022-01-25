@@ -283,6 +283,7 @@
     categorie_risorse.tema_css                      | il tema da applicare alla categoria per la pubblicazione sul web
     categorie_risorse.se_sitemap                    | flag che indica se la categoria va inclusa o no nella sitemap
     categorie_risorse.se_cacheable                  | flag che indica se la categoria può essere salvata nella cache statica
+    categorie_risorse.id_sito                       | l'ID del sito genitore della categoria risorse
     categorie_risorse.id_pagina                     | l'ID della pagina genitore della categoria per la pubblicazione sul web
     categorie_risorse.id_account_inserimento        | l'ID dell'account che ha inserito la riga
     categorie_risorse.timestamp_inserimento         | la timestamp dell'inserimento della riga

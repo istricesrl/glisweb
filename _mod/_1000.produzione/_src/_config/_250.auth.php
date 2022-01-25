@@ -23,6 +23,18 @@
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),
+            'progetti_archivio' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
+            ),
+            'progetti_produzione' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
+            ),
+            'progetti_produzione_archivio' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
+            ),
             'categorie_progetti' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
@@ -32,14 +44,6 @@
                 CONTROL_FILTERED => array( 'staff' )
             ),
             'progetti_categorie' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
-            ),
-            'progetti_eliminare' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
-            ),
-            'progetti_produzione' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),

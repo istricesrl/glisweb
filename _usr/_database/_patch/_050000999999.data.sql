@@ -18,6 +18,15 @@ REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `not
 (7,	1,	NULL,	'lead',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (8,	1,	NULL,	'clienti',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+--| 050000004300
+
+-- categorie_progetti
+-- tipologia: tabella gestita
+-- verifica: 2021-06-02 19:40 Fabio Mosti
+INSERT INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `se_ordinario`, `se_straordinario`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'ordinario',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'straordinario',	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+
 --| 050000005100
 
 -- colori
@@ -900,6 +909,8 @@ INSERT IGNORE INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, 
 -- tipologie_progetti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+INSERT INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`, `se_contratto`, `se_forfait`) VALUES
+(1,	NULL,	NULL,	'standard',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055400
 
@@ -932,6 +943,10 @@ REPLACE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_todo
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000056800
 

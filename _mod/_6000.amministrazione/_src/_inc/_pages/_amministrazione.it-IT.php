@@ -32,7 +32,7 @@
 	'etc'			=> array( 'tabs'	=> array(   'proforma.amministrazione.view' , 'righe.proforma.amministrazione.view') ),
 	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'proforma' ),
-													'priority'	=> '010' ) ) )	
+													'priority'	=> '040' ) ) )	
 	);
 
 	// vista righe proforma
@@ -137,7 +137,7 @@
 		'etc'			=> array( 'tabs'	=> array(   'fatture.amministrazione.view', 'righe.fatture.amministrazione.view' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'fatture' ),
-														'priority'	=> '020' ) ) )	
+														'priority'	=> '050' ) ) )	
 	);
 
 	// vista righe proforma

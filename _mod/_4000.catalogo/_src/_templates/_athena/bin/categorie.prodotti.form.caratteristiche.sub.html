@@ -26,6 +26,7 @@
                 <span class="label-top">testo</span>
                 {{ frm.input( table, subtable, i, 'testo', '', '', request, '', '', '', '', disabled  ) }}
             </div>
+<!--
             <div class="col col-md-auto">
                 <span class="label-top">presente</span>
                 {{ frm.select( table, subtable, i, 'se_non_presente', '', etc.select.se_non_presente, request, '', '', '', '', '', disabled ) }}
@@ -34,6 +35,7 @@
                 <span class="label-top">visibile</span>
                 {{ frm.select( table, subtable, i, 'se_visibile', '', etc.select.se_visibile, request, '', '', '', '', '', disabled ) }}
             </div>
+-->
             {% if r.id %}
             <div class="col-auto text-right remove-on-duplicate d-print-none">
             {{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}

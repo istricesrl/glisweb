@@ -58,7 +58,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_produzione = 1' );
+        'SELECT id, __label__ FROM tipologie_attivita_view' );
 
     // tendina tipologia inps
 	$ct['etc']['select']['id_tipologia_inps'] = mysqlCachedIndexedQuery(
@@ -104,19 +104,11 @@
 	);
 
     // tendina progetti
-	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) {
 	    $ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE ( timestamp_chiusura IS NULL OR id = ? ) ORDER BY __label__', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) );
-	} else {
-	    $ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE timestamp_chiusura IS NULL ORDER BY __label__' );
-	}
+            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view ORDER BY __label__' );
 
     // tendina todo
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) {
@@ -124,17 +116,17 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_completa_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
+            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? )', 
             array( 
-                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ), 
-                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] )
+            )
             );
 	} else {
 	    $ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_completa_view' );
+            'SELECT id, __label__ FROM todo_view' );
 	}
 
     // tendina indirizzi
