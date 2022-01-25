@@ -39,7 +39,7 @@
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 
     if( empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_chiusura'] ) ){
-        
+
     // aggiorna data e ora
 	$ct['page']['contents']['metro']['amministrazione'][] = array(
         'host' => $ct['site']['url'],
@@ -110,3 +110,12 @@
 
     }
 
+    // aggrega righe
+	$ct['page']['contents']['metro']['general'][] = array(
+        'host' => $ct['site']['url'],
+	    'ws' => $base . '_documenti.aggrega.righe.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+	    'icon' => NULL,
+	    'fa' => 'fa-compress',
+	    'title' => 'aggrega righe',
+	    'text' => 'aggrega a questo documento le righe non associate'
+	);
