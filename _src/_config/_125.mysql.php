@@ -244,9 +244,10 @@
 		
 								$pId = substr( $row, 4, 12 );
 								if( $pId == '------------' ) { $pId = date( 'YmdHis' ); }
-								$pQuery = null;
 
-								// echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
+                $pQuery = null;
+
+                // echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
 								
 							} elseif( substr( trim( $row ), 0, 2 ) !== '--' ) {
 		
