@@ -25,34 +25,38 @@
         // print_r( readFromFile( $f ) );
 
         // elaboro i dati
-        foreach( csv2array( readFromFile( $f ), ';' ) as $riga ) {
+        if( ! isset( $_REQUEST[ $table ] ) ) {
 
-            // TODO
-            // non c'è modo di far confluire questi dati nella controller della request
-            // popolando $_REQUEST[ tabella ][ n ]...
-            $riga['__method__'] = strtoupper( $action );
-#            $_REQUEST[ $table ]['__method__'] = strtoupper( $action );
+            foreach( csv2array( readFromFile( $f ), ';' ) as $riga ) {
 
-            // debug
-            // print_r( $riga );
-/*
-            // attivazione controller
-            controller(
-                $cf['mysql']['connection'],				// connessione al database
-                $cf['memcache']['connection'],			// connessione a memcache
-                $riga,							// blocco dati di lavoro
-                $table,							// nome dell'entità su cui lavorare
-                strtoupper( $action ),				// metodo da applicare
-                NULL						// campo per la ricorsione
-            );
-*/
+                // TODO
+                // non c'è modo di far confluire questi dati nella controller della request
+                // popolando $_REQUEST[ tabella ][ n ]...
+                $riga['__method__'] = strtoupper( $action );
+    #            $_REQUEST[ $table ]['__method__'] = strtoupper( $action );
 
-            $_REQUEST[ $table ][] = $riga;
+                // debug
+                // print_r( $riga );
+    /*
+                // attivazione controller
+                controller(
+                    $cf['mysql']['connection'],				// connessione al database
+                    $cf['memcache']['connection'],			// connessione a memcache
+                    $riga,							// blocco dati di lavoro
+                    $table,							// nome dell'entità su cui lavorare
+                    strtoupper( $action ),				// metodo da applicare
+                    NULL						// campo per la ricorsione
+                );
+    */
+
+                $_REQUEST[ $table ][] = $riga;
+
+            }
+
+            // elimino il file importato
+            deleteFile( $f );
 
         }
-
-        // elimino il file importato
-        deleteFile( $f );
 
     }
 
