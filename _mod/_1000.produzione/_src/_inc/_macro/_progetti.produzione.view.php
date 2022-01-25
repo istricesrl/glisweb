@@ -63,12 +63,12 @@
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_progetti_view' );
 
-
-
+/*
     // preset filtro aperti
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['chiuso']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['chiuso']['EQ'] = 0;
     }
- 
-       // macro di default
+ */
+    
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

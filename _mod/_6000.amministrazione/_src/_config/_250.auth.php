@@ -42,6 +42,14 @@
 		'fatture' => array(
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
+        ),
+        'progetti_amministrazione' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'progetti_amministrazione_archivio' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         )
         )
 	);

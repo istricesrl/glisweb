@@ -252,7 +252,6 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
 CREATE TABLE IF NOT EXISTS `attivita` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `id_anagrafica` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
   `referenti` char(255) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
@@ -263,6 +262,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `data_programmazione` date DEFAULT NULL,
   `ora_inizio_programmazione` time DEFAULT NULL,
   `ora_fine_programmazione` time DEFAULT NULL,
+  `id_anagrafica_programmazione` int(11) DEFAULT NULL,
   `note_programmazione` text,
   `ore_programmazione` decimal(5,2) DEFAULT NULL,
   `data_attivita` date DEFAULT NULL,
@@ -272,14 +272,15 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `ora_fine` time DEFAULT NULL,
   `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,
   `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
   `ore` decimal(5,2) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `testo` text,
   `id_progetto` char(32) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
-  `token` char(128) NOT NULL,
+  `token` char(128) DEFAULT NULL,
   `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -1537,7 +1538,7 @@ CREATE TABLE IF NOT EXISTS `progetti` (
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_cliente` int(11) NOT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `note` text,
   `entrate_previste` decimal(16,2) DEFAULT NULL,
   `ore_previste` decimal(16,2) DEFAULT NULL,
@@ -1571,6 +1572,7 @@ CREATE TABLE IF NOT EXISTS `progetti_anagrafica` (
   `id_anagrafica` int(11) NOT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `se_sostituto` int(1) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
@@ -1727,7 +1729,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
 -- tipologia: tabella relazione
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_progetto_collegato` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1738,7 +1740,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
 -- tipologia: tabella relazione
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE TABLE IF NOT EXISTS `relazioni_software` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_software` int(11) DEFAULT NULL,
   `id_software_collegato` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

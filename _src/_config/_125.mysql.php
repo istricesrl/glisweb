@@ -246,8 +246,8 @@
 								if( $pId == '------------' ) { $pId = date( 'YmdHis' ); }
 
                 $pQuery = null;
-	
-								// echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
+
+                // echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
 								
 							} elseif( substr( trim( $row ), 0, 2 ) !== '--' ) {
 		

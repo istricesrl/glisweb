@@ -22,25 +22,29 @@
 
     $ct['view']['cols'] = array(
 	    'id' => '#',
-	    'pianificazione' => 'pianificato',
-	    'priorita' => 'priorità',
-	    'nome' => 'attività',
-	    'responsabile' => 'assegnato a',
-	    'progresso' => 'ore',
-	    'completato' => 'stato',
-	    'id_priorita' => 'id_priorita'
+#	    'data_programmazione' => 'pianificato',
+#	    'priorita' => 'priorità',
+		'tipologia' => 'tipologia',
+	    'nome' => 'titolo',
+	    'anagrafica' => 'assegnato a',
+		'settimana_programmazione' => 'settimana',
+		'anno_programmazione' => 'anno'
+#	    'progresso' => 'ore',
+#	    'completato' => 'stato',
+#	    'id_priorita' => 'id_priorita'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    'id_priorita' => 'd-none',
-	    'pianificazione' => 'text-left no-wrap',
+#		'completato' => 'd-none',
+	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
 	    'priorita' => 'text-left',
-	    'responsabile' => 'text-left no-wrap d-none d-sm-table-cell',
+	    'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',
 	    'progresso' => 'text-right no-wrap d-none d-sm-table-cell',
-	    'completato' => 'text-left'
+#	    'completato' => 'text-left'
 	);
     
     // pagina per la gestione degli oggetti esistenti
@@ -58,6 +62,12 @@
     }
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+	// preset ordinamento
+	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'] ) ) {
+	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['anno_programmazione'] = 'ASC';
+	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['settimana_programmazione'] = 'ASC';
+    }
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

@@ -19,7 +19,7 @@
 
 
     // tabella della vista
-	$ct['view']['table'] = 'progetti_eliminare';
+	$ct['view']['table'] = 'progetti_amministrazione_archivio';
 
     // id della vista
  #   $ct['view']['id'] = md5( $ct['view']['table'] );
@@ -31,7 +31,7 @@
 	$ct['view']['open']['table'] = 'progetti';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'progetti.produzione.form';
+	$ct['view']['open']['page'] = 'progetti.amministrazione.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(
@@ -50,7 +50,7 @@
     );
 
     // inclusione filtri speciali
-	$ct['etc']['include']['filters'] = 'inc/progetti.produzione.view.filters.html';
+	$ct['etc']['include']['filters'] = 'inc/progetti.amministrazione.view.filters.html';
 
      // tendina clienti
      $ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
@@ -65,11 +65,12 @@
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_progetti_view' );
 
-   
+/*   
     // preset filtro aperti
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['chiuso']['EQ'] ) ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['chiuso']['EQ'] = 0;
     }
- 
+*/
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

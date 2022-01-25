@@ -30,14 +30,22 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'todo.form', 
-														'todo.form.attivita',
-														'todo.form.documenti',
-														'todo.form.pianificazioni',
-														'todo.form.feedback',
+#														'todo.form.attivita',
+#														'todo.form.documenti',
+# NOTA questa scheda dovrebbe essere collegata al modulo pianificazioni
+#														'todo.form.pianificazioni',
+# NOTA questa scheda dovrebbe essere collegata al modulo qualita
+#														'todo.form.feedback',
+														'todo.form.chiusura',
 														'todo.form.archiviazione',
 														'todo.form.stampe',
 														'todo.form.tools' ) )
 	);
+
+	// RELAZIONI CON IL MODULO ATTIVITA
+	if( in_array( "1100.attivita", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'todo.form', $p['todo.form']['etc']['tabs'], 'todo.form.attivita' );
+	}
 
 	$p['todo.form.attivita'] = array(
 	    'sitemap'		=> false,
@@ -99,6 +107,19 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_todo.form.stampe.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
+	);
+
+	// gestione progetti chiusura
+	$p['todo.form.chiusura'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'chiusura' ),
+		'h1'			=> array( $l		=> 'chiusura' ),
+		'parent'		=> array( 'id'		=> 'todo.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.chiusura.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.chiusura.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 	);
 
 	// gestione anagrafica stampe

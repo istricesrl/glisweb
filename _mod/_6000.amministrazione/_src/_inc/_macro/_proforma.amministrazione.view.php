@@ -29,19 +29,24 @@
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
-        'nome' => 'nome',
+        'numero' => 'num.',
+        'sezionale' => 'sez.',
         'data' => 'data',
         'emittente' => 'emittente',
-        'destinatario' => 'destinatario'
+        'destinatario' => 'destinatario',
+        '__label__' => 'nome'
     );
 
     // stili della vista
     $ct['view']['class'] = array(
         'nome' => 'text-left',
-        'id' => 'text-left',
+        'numero' => 'text-left',
         'data' => 'text-left',
+        '__label__' => 'text-left',
+        'destinatario' => 'text-left',
         'emittente' => 'text-left',
-        'destinatario' => 'text-left'
+        'tipologia' => 'text-left',
+        'totale' => 'text-right' 
     );
 
     // macro di default

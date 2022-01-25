@@ -45,6 +45,7 @@
 
 	// debug
 		// var_dump( $d );
+		// print_r( $d );
 
 	// modifico in NULL tutti i valori vuoti
 	    // $d = array_map( 'empty2null', $d );
@@ -169,6 +170,7 @@
 					}
 # PERCHÉ OR?					$whr[] = '(' . implode( ' OR ', $cond ) . ')';
 					$whr[] = '(' . implode( ' AND ', $cond ) . ')';
+// print_r( $cond );
 				}
 
 			
@@ -243,6 +245,7 @@
 			// aggiungo le clausole WHERE alla query
 			    if( ! empty( $whr ) ) {
 				$q .= ' WHERE ' . implode( ' AND ', $whr );
+// print_r( $whr );
 			    }
 
 			// raggruppamenti della vista
@@ -406,6 +409,7 @@
 					// compongo la condizione WHERE
 					    if( is_array( $tks ) && array_filter( $tks ) ) {
 						$q .= " WHERE " . implode( ' AND ' , $tks );
+// print_r( $tks );
 					    }
 
 				    break;
@@ -620,6 +624,9 @@
 				    case METHOD_REPLACE:
 				    case METHOD_UPDATE:
 					$w = mysqlSelectRow( $c, "SELECT * FROM ${t}$rm WHERE id = ?", array( array( 's' => $d['id'] ) ) );
+// echo "${t}$rm";
+// echo $d['id'];
+// print_r( $d );
 // ATTENZIONE		if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $d, $w ); }
 					if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $w, $d ); }
 				    break;
