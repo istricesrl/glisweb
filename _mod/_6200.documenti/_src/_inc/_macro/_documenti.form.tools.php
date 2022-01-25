@@ -21,7 +21,7 @@
     $ct['form']['table'] = 'documenti';
 
     // percorsi
-	$base = 'task/6200.documenti/';
+	$base = '_mod/_6200/_documenti/_src/_api/_task';
 
     // NOTA la variabile $base causa problemi nel multi sito fatta in questo modo, per cui ho commentato tutto
 
@@ -39,10 +39,11 @@
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 
     if( empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_chiusura'] ) ){
+        
     // aggiorna data e ora
 	$ct['page']['contents']['metro']['amministrazione'][] = array(
         'host' => $ct['site']['url'],
-	    'ws' => $base . 'chiusura.documento?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+	    'ws' => $base . 'chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
 	    'icon' => NULL,
 	    'fa' => 'fa-check-square-o',
 	    'title' => 'chiudi documento',
@@ -52,7 +53,7 @@
         // TODO basarsi sui flag e non sull'id_tipologia
         $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
-            'ws' => $base . 'fattura.da.proforma?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'ws' => $base . 'fattura.da.proforma.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
             'icon' => NULL,
             'fa' => 'fa-eur',
             'title' => 'crea fattura',

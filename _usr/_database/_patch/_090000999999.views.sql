@@ -1418,7 +1418,7 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
-   WHERE documenti.id_tipologia = 1
+   WHERE tipologie_documenti.se_fattura = 1
 ;
 
 --| 090000015000
@@ -2649,6 +2649,7 @@ CREATE OR REPLACE VIEW `proforma_view` AS
 		documenti.id_tipologia,
 		tipologie_documenti.nome AS tipologia,
 		documenti.numero,
+		documenti.sezionale,
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
@@ -2681,7 +2682,7 @@ CREATE OR REPLACE VIEW `proforma_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-   WHERE documenti.id_tipologia = 5
+   WHERE tipologie_documenti.se_pro_forma = 1
 ;
 
 --| 090000027000
@@ -3388,13 +3389,13 @@ CREATE OR REPLACE VIEW reparti_view AS
 
 --| 090000031800
 
--- risorse_view
+-- righe_fatture_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `righe_fatture_view`;
 
 --| 090000031801
 
--- righe_proforma_view
+-- righe_fatture_view
 -- tipologia: tabella gestita
 -- verifica: 2021-10-09 16:02 Fabio Mosti
 CREATE OR REPLACE VIEW `righe_fatture_view` AS
@@ -3465,12 +3466,12 @@ CREATE OR REPLACE VIEW `righe_fatture_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-		WHERE documenti_articoli.id_tipologia = 1
+		WHERE tipologie_documenti.se_fattura = 1
 ;
 
 --| 090000031850
 
--- risorse_view
+-- righe_proforma_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `righe_proforma_view`;
 
@@ -3547,7 +3548,7 @@ CREATE OR REPLACE VIEW `righe_proforma_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-		WHERE documenti_articoli.id_tipologia = 5
+		WHERE tipologie_documenti.se_pro_forma = 1
 ;
 
 --| 090000032000

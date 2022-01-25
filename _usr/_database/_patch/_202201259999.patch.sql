@@ -71,7 +71,7 @@ CREATE OR REPLACE VIEW `righe_fatture_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-		WHERE documenti_articoli.id_tipologia = 1
+		WHERE tipologie_documenti.se_fattura = 1
 ;
 
 --| 202201250080
@@ -143,7 +143,7 @@ CREATE OR REPLACE VIEW `righe_proforma_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-		WHERE documenti_articoli.id_tipologia = 5
+		WHERE tipologie_documenti.se_pro_forma = 1
 ;
 
 --| 202201250090
@@ -254,4 +254,114 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN listini ON listini.id = pagamenti.id_listino
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
 ;
+
+--| 202201250110
+REPLACE INTO `tipologie_documenti` (`id`, `nome`, `codice`, `se_fattura`, `se_nota_credito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `stampa_xml`, `stampa_pdf`) VALUES
+(1,	'fattura',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	'fattura accompagnatoria',	'TD01',	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	'nota di credito',	'TD04',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	'documento di trasporto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	'pro forma',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	'offerta',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(7,	'ordine',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	'ricevuta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	'scontrino',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10, 'documento di ritiro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(11, 'consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12, 'documento di reso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 202201250120
+CREATE OR REPLACE VIEW `fatture_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
+		documenti.id_coupon,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
+   WHERE tipologie_documenti.se_fattura = 1
+;
+
+--| 202201250130
+CREATE OR REPLACE VIEW `proforma_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   WHERE tipologie_documenti.se_pro_forma = 1
+;
+
 --| FINE

@@ -77,6 +77,18 @@
 
             break;
 
+            case 5:
+
+                $ct['page']['contents']['metro']['anteprima'][] = array(
+                    'target' => '_blank' ,
+                    'url' => $base . '_fattura.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'icon' => NULL,
+                    'fa' => 'fa-file-pdf-o',
+                    'title' => 'stampa PDF',
+                    'text' => 'stampa una copia di cortesia della proforma in formato PDF'
+                );
+
+            break;
         }
 
     }
