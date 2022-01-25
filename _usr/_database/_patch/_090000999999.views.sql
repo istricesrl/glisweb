@@ -1266,6 +1266,15 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		tipologie_documenti.nome AS tipologia,
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
+        concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data
+		) AS documento,
 		documenti_articoli.data,
 		documenti_articoli.id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
@@ -1308,6 +1317,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		) AS __label__
 	FROM
 		documenti_articoli
+        LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
@@ -1317,6 +1327,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
 ;
+
 
 --| 090000012800
 
@@ -3375,13 +3386,22 @@ DROP TABLE IF EXISTS `righe_fatture_view`;
 -- tipologia: tabella gestita
 -- verifica: 2021-10-09 16:02 Fabio Mosti
 CREATE OR REPLACE VIEW `righe_fatture_view` AS
-    SELECT
+       SELECT
 		documenti_articoli.id,
 		documenti_articoli.id_genitore,
 		documenti_articoli.id_tipologia,
 		tipologie_documenti.nome AS tipologia,
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
+        concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data
+		) AS documento,
 		documenti_articoli.data,
 		documenti_articoli.id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
@@ -3424,6 +3444,7 @@ CREATE OR REPLACE VIEW `righe_fatture_view` AS
 		) AS __label__
 	FROM
 		documenti_articoli
+        LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
@@ -3432,7 +3453,7 @@ CREATE OR REPLACE VIEW `righe_fatture_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-		WHERE documenti_articoli.id_tipologia = 5
+		WHERE documenti_articoli.id_tipologia = 1
 ;
 
 --| 090000031850
@@ -3447,13 +3468,22 @@ DROP TABLE IF EXISTS `righe_proforma_view`;
 -- tipologia: tabella gestita
 -- verifica: 2021-10-09 16:02 Fabio Mosti
 CREATE OR REPLACE VIEW `righe_proforma_view` AS
-    SELECT
+        SELECT
 		documenti_articoli.id,
 		documenti_articoli.id_genitore,
 		documenti_articoli.id_tipologia,
 		tipologie_documenti.nome AS tipologia,
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
+        concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data
+		) AS documento,
 		documenti_articoli.data,
 		documenti_articoli.id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
@@ -3496,6 +3526,7 @@ CREATE OR REPLACE VIEW `righe_proforma_view` AS
 		) AS __label__
 	FROM
 		documenti_articoli
+        LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia

@@ -18,20 +18,17 @@
      */
 
     // tabella della vista
-    $ct['view']['table'] = 'documenti_articoli';
-    
-    // id della vista
-   # $ct['view']['id'] = md5( $ct['view']['table'] );
+    $ct['view']['table'] = 'righe_fatture';
 
-    // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'documenti.articoli.form';
+    $ct['view']['open']['page'] = 'fatture.amministrazione.righe.form';
+    $ct['view']['open']['table'] = 'documenti_articoli';
 
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
         'data' => 'data',
         'documento' => 'documento',
-        'tipologia' => 'tipologia',
+    #    'tipologia' => 'tipologia',
         'nome' => 'nome',
         'id_articolo' => 'articolo',
         'quantita' => 'quantità',

@@ -29,7 +29,7 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'data' => 'data',
-    #    'documento' => 'documento',
+        'documento' => 'documento',
     #    'tipologia' => 'tipologia',
         'nome' => 'nome',
         'id_articolo' => 'articolo',

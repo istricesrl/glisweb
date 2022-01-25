@@ -152,6 +152,7 @@
     documenti_articoli_view.tipologia                       | la tipologia del documento collegato alla riga
     documenti_articoli_view.ordine                          | -
     documenti_articoli_view.id_documento                    | -
+    documenti_articoli_view.documento                       | il nome del documento associato alla riga
     documenti_articoli_view.data                            | -
     documenti_articoli_view.id_emittente                    | -
     documenti_articoli_view.id_emittente                    | -
