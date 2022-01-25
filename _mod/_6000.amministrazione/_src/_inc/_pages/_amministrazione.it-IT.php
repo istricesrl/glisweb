@@ -59,6 +59,7 @@
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'proforma.amministrazione.form',
 														'proforma.amministrazione.form.righe',
+														'proforma.amministrazione.form.pagamenti',
 														'proforma.amministrazione.form.stampe',
 														'proforma.amministrazione.form.tools' ) )
 	);
@@ -72,6 +73,18 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.righe.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.form.righe.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.form']['etc']['tabs'] )
+	);
+
+	// gestione pagamenti fatture
+	$p['proforma.amministrazione.form.pagamenti'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'pagamenti' ),
+	    'h1'			=> array( $l		=> 'pagamenti' ),
+	    'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.pagamenti.html' ),
+	    'macro'			=> array( $m_d.'_src/_inc/_macro/_documenti.form.pagamenti.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.form']['etc']['tabs'] )
 	);
 
