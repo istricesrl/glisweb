@@ -64,6 +64,15 @@
                 $status['new']
             );
 
+            if( isset($status['new']) && !empty($status['new']) ){
+                
+                mysqlQuery( 
+                    $cf['mysql']['connection'], 
+                    'INSERT INTO relazioni_documenti (id_documento, id_documento_collegato) VALUES ( ?, ? )',
+                    array( array( 's' => $status['current']['id'] ), array( 's' => $status['new']['id'] ) )
+                );
+
+            }
             
             // aggiornamento vista statica
             // mysqlQuery( $c, 'CALL anagrafica_view_static( ? )', array( array( 's' => $d['id'] ) ) );

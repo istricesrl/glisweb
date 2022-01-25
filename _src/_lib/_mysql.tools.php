@@ -729,7 +729,7 @@
      *
 	 * TODO: creare un meccanismo di sostituzione intelligente dei valori dei campi (oltre al settaggio manuale)
      */
-    function mysqlDuplicateRow( $c, $t, $o, $n = NULL, $x = array() ) {
+    function mysqlDuplicateRow( $c, $t, $o, $n = NULL, $x = array(), &$y = array() ) {
 
 		// salvo l'id
 		$id = isset( $x['id'] ) ? $x['id'] : null;
@@ -762,6 +762,12 @@
 		if( empty( $n ) ){
 			$n = $id;
 		}
+
+	// popolo l'oggetto
+		$y = mysqlSelectRow(
+			$c, 'SELECT * FROM ' . $t . ' WHERE id = ?',
+			array( array( 's' => $n ) )
+		);
 
 	// debug
 		// echo $q . PHP_EOL;
