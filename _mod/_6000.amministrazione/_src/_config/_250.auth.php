@@ -42,6 +42,14 @@
 		'fatture' => array(
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
+        ),
+		'righe_proforma' => array(
+		    CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+		'righe_fatture' => array(
+		    CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
         )
         )
 	);

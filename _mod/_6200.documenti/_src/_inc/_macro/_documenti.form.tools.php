@@ -74,24 +74,27 @@
 
         if( !empty( $id_documento ) ){
         
-        $ct['page']['contents']['metro']['amministrazione'][] = array(
-            'url' => $cf['contents']['pages']['documenti.form']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$id_documento.'&__backurl__='.$ct['page']['backurl'][ LINGUA_CORRENTE ],
-            'icon' => NULL,
-            'fa' => 'fa-external-link',
-            'title' => 'apri la fattura #'.$id_documento,
-            'text' => 'apri la fattura corrispondente a questa proforma'
-        );
+            // TODO basarsi sui flag e non sull'id_tipologia
+            $ct['page']['contents']['metro']['amministrazione'][] = array(
+                'url' => $cf['contents']['pages']['documenti.form']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$id_documento.'&__backurl__='.$ct['page']['backurl'][ LINGUA_CORRENTE ],
+                'icon' => NULL,
+                'fa' => 'fa-external-link',
+                'title' => 'apri la fattura #'.$id_documento,
+                'text' => 'apri la fattura corrispondente a questa proforma'
+            );
+
         } else {
-        // TODO basarsi sui flag e non sull'id_tipologia
-        $ct['page']['contents']['metro']['amministrazione'][] = array(
-            'host' => $ct['site']['url'],
-            'ws' => $base . '_fattura.da.proforma.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-            'callback' => 'function(){location.reload();}',
-            'icon' => NULL,
-            'fa' => 'fa-eur',
-            'title' => 'crea fattura',
-            'text' => 'crea la fattura corrispondente a questa proforma'
-        );
+
+            // TODO basarsi sui flag e non sull'id_tipologia
+            $ct['page']['contents']['metro']['amministrazione'][] = array(
+                'host' => $ct['site']['url'],
+                'ws' => $base . '_fattura.da.proforma.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                'callback' => 'function(){location.reload();}',
+                'icon' => NULL,
+                'fa' => 'fa-eur',
+                'title' => 'crea fattura',
+                'text' => 'crea la fattura corrispondente a questa proforma'
+            );
         }
 
     }
