@@ -109,7 +109,7 @@
 	// gestione prodotti articoli
 	$p['prodotti.form.articoli'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'articoli' ),
+	    'title'		=> array( $l		=> 'articoli prodotto' ),
 	    'h1'		=> array( $l		=> 'articoli' ),
 	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.articoli.html' ),
@@ -240,7 +240,7 @@
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'articoli' ),
 	    'h1'			=> array( $l		=> 'articoli' ),
-	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_articoli.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'articoli.view' , 'articoli.stampe' ) ),
