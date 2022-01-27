@@ -1418,7 +1418,7 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
-   WHERE tipologie_documenti.se_fattura = 1
+   WHERE tipologie_documenti.id = 1
 ;
 
 --| 090000015000
@@ -3466,7 +3466,7 @@ CREATE OR REPLACE VIEW `righe_fatture_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-		WHERE tipologie_documenti.se_fattura = 1
+		WHERE tipologie_documenti.id = 1
 ;
 
 --| 090000031850
