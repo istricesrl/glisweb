@@ -28,7 +28,7 @@
 		$cf['mysql']['connection'],
 		'SELECT path FROM immagini '.
 		'INNER JOIN anagrafica ON immagini.id_anagrafica = anagrafica.id '.
-		'WHERE immagini.id_ruolo = 18 '.
+		'WHERE immagini.id_ruolo = 7 '.
 		'AND anagrafica.id = ? '.
 		'LIMIT 1',
 		array(
