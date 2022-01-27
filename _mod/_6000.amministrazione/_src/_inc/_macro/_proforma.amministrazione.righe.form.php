@@ -162,8 +162,7 @@
 			$cf['memcache']['index'],
 			$cf['memcache']['connection'],
 			$cf['mysql']['connection'],
-			'SELECT id, __label__ FROM documenti_articoli_view WHERE id_genitore IS NULL',
-			array( array( 's' => $documento ) )
+			'SELECT id, __label__ FROM documenti_articoli_view WHERE id_genitore IS NULL'
 		);
 	} else {
 
