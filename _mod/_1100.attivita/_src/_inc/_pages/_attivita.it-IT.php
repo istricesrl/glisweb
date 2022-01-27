@@ -58,7 +58,7 @@
 		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
 
-
+/*
 
 	// vista turni
 	$p['turni.view'] = array(
@@ -73,7 +73,7 @@
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'turni' ),
 																		'priority'	=> '110' ) ) )	
 	);
-
+*/
 
 	// turni tools
 	/*$p['turni.tools'] = array(
@@ -89,7 +89,7 @@
 	);
 	*/
 
-
+/*
 	// pagina schema
 	$p['turni.schema'] = array(
 		'sitemap'		=> false,
@@ -127,7 +127,6 @@
 		'etc'			=> array( 'tabs'	=> $p['turni.form']['etc']['tabs'] )
 	);
 
-/*
 	// vista categorie attività - ripristinato solo per todo
 	$p['categorie.attivita.view'] = array(
 		'sitemap'		=> false,

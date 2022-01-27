@@ -30,6 +30,8 @@
             $row = array_combine( $data[0], $row );
         }
 
+        array_shift( $data );
+
         return $data;
 
     }

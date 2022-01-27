@@ -88,6 +88,18 @@
      *
      * input tramite file di testo
      * ---------------------------
+     * Il framework supporta l'inserimento di dati da file CSV caricati in /var/spool/import; il file deve contenere i dati in formato CSV
+     * separati da punto e virgola, e nella prima riga devono essere riportati i nomi delle colonne della tabella su cui si desidera caricare
+     * i dati.
+     * 
+     * Il sistema di inserimento tramite CSV sfrutta la modalità di gestione oggetti multipli della funzione controller() e richiede che il
+     * nome del file renda esplicita l'operazione richiesta e la tabella su cui si desidera lavorare:
+     * 
+     * <metodo>.<tabella>.csv
+     * 
+     * 
+     * 
+     * 
      * TODO ESEMPI DI FILE
      *
      *

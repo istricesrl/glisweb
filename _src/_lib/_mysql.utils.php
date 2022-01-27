@@ -1,20 +1,50 @@
 <?php
 
-    function trovaIdComune( $c, $p = NULL ) {
+    function trovaIdComune( $comune ) {
 
         global $cf;
 
-        $comuni = mysqlQuery(
+        return mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT * FROM comuni WHERE nome = ?',
-            array( array( 's' => $c ) )
+            'SELECT id FROM comuni WHERE nome = ?',
+            array( array( 's' => $comune ) )
         );
 
-        if( ! empty( $comuni[0]['id'] ) ) {
-            return $comuni[0]['id'];
-        } else {
-            return NULL;
-        }
+    }
+
+    function trovaIdTipologiaAttivita( $attivita ) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM tipologie_attivita WHERE nome = ?',
+            array( array( 's' => $attivita ) )
+        );
+
+    }
+
+    function trovaIdAnagraficaPerDenominazione( $denominazione ) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM anagrafica WHERE denominazione = ?',
+            array( array( 's' => $denominazione ) )
+        );
+
+    }
+
+    function trovaIdMatricola( $matricola ) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM matricole WHERE matricola = ?',
+            array( array( 's' => $matricola ) )
+        );
 
     }
 

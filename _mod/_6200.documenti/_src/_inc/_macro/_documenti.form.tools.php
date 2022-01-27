@@ -61,6 +61,7 @@
         );
     }
 
+
     if(  $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] == 1 ){
     // invio fattura elettronica
 	$ct['page']['contents']['metro']['amministrazione'][] = array(
@@ -109,6 +110,7 @@
         }
 
     }
+
 
     // aggrega righe
 	$ct['page']['contents']['metro']['general'][] = array(
