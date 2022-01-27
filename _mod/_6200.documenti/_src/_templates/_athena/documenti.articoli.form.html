@@ -152,12 +152,10 @@
 				<span class="label-top remove-after-duplicate">documento</span>
 				{{ frm.selectBox( table, '', '', 'id_documento', '', etc.select.id_documenti, request, default_documento, 1, '', '', 'font-awesome', 'documenti.form', 'documenti.form', 'documenti', 'id_documento', page, pages, ietf, 'documenti' ) }}
 			</div>
-			 {% if ( request[ table ].id) or default_documento %}
 			<div class="col-md-6 col">
 				<span class="label-top remove-after-duplicate">riga genitore</span>
 				{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.id_righe_genitori, request, '', '', '', '', 'font-awesome', 'documenti.articoli.form', 'documenti.articoli.form', 'documenti_articoli', 'id_genitore', page, pages, ietf) }}
 			</div>
-			{% endif %}
 		</div>
 
 		{% if '1000.produzione' in mods.active.array %}

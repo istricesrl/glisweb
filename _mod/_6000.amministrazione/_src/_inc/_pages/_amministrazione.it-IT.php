@@ -97,7 +97,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.righe.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.righe.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'proforma.amministrazione.righe.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'proforma.amministrazione.righe.form', 'proforma.amministrazione.righe.form.aggregate' ) )
+	);
+
+	// gestione 
+	$p['proforma.amministrazione.righe.form.aggregate'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'righe aggregate' ),
+		'h1'			=> array( $l		=> 'righe aggregate' ),
+		'parent'		=> array( 'id'		=> 'righe.proforma.amministrazione.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.aggregate.html' ),
+		'macro'			=> array( $m_d.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.righe.form']['etc']['tabs'] )
 	);
 
 	// gestione tools proforma
@@ -202,7 +214,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.righe.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.righe.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.righe.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.righe.form', 'fatture.amministrazione.righe.form.aggregate' ) )
+	);
+
+	// gestione tools documenti_articoli - attivita
+	$p['fatture.amministrazione.righe.form.aggregate'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'righe aggregate' ),
+			'h1'			=> array( $l		=> 'righe aggregate' ),
+			'parent'		=> array( 'id'		=> 'righe.fatture.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.aggregate.html' ),
+			'macro'			=> array( $m_d.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.righe.form']['etc']['tabs'] )
 	);
 
 	// gestione tools fatture
