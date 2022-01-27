@@ -41,7 +41,6 @@
 		'etc'			=> array( 'tabs'	=> $p['mastri.form']['etc']['tabs'] )
 	);
 
-
 	// vista movimenti mastri
 	$p['mastri.form.movimenti'] = array(
 	    'sitemap'		=> false,
@@ -80,6 +79,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['mastri.form']['etc']['tabs'] )
 	);
 
+/*
 	if( in_array( "1000.produzione", $cf['mods']['active']['array'] ) ){
 
 		// inserimento della tab 'progetti.produzione.form.certificazioni' nelle pagine di form produzione
@@ -137,3 +137,4 @@
 		);
 
 	}
+*/

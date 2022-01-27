@@ -22,6 +22,41 @@
 
 	}
 
+	// verifica se esiste un attributo
+	$.fn.hasAttr = function( name ) {  
+		var attr = this.attr( name );
+		if (typeof attr !== typeof undefined && attr !== false) {
+			console.log( name + ' presente' );
+			return true;
+		}
+		return false;
+	};
+
+	 // abilita un attributo se assente e lo disabilita se presente
+	$.fn.toggleAttribute = function( a ) {
+
+		var el = $(this).get(0);
+	    var e = this;
+
+		$( e ).find(':input').each( function( i, obj ) {
+			console.log( $( obj ) );
+			if( $( obj ).hasAttr('disabled') ) {
+				console.log( 'rimuovo disabled ' + $( obj ).attr( 'id' ) );
+				$( obj ).removeAttr( "disabled" );
+			} else {
+				console.log( 'aggiungo disabled ' + $( obj ).attr( 'id' ) );
+				$( obj ).attr( "disabled", true );
+			}
+		});
+
+	    // console.log( el );
+		// console.log( e );
+	    // console.log( this );
+	    // console.log( $(this) );
+
+
+	}
+
 	// restituisce un nome di file al netto del path
 	function basename(path) {
 		return path.split(/[\\/]/).pop();

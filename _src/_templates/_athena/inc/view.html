@@ -13,9 +13,15 @@
 	    {% if page.parents.path|length() > 1 and view.dashboard.sezione %}
 	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#reset').val(1);$('#form-{{ view.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ view.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
 	    {% endif %}
+		{% if etc.include.insert %}
+	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#{{ view.id }}-insert').toggleAttribute('disabled');$('#{{ view.id }}-insert').slideToggle(400,'swing');"><i class="fa fa-plus-circle"></i></button>
+	    {% endif %}
 	</div>
     </div>
     {% endif %}
+    {% if etc.include.insert %}
+	{% include etc.include.insert %}
+	{% endif %}
     {% if view.data %}
     <div class="form-row">
 	<div class="col-md-12 text-center table-responsive">

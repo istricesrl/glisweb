@@ -18,25 +18,23 @@
      */
 
     // tabella della vista
-    $ct['view']['table'] = 'mastri';
-    
-    // id della vista
-   # $ct['view']['id'] = md5( $ct['view']['table'] );
+    $ct['view']['table'] = 'conti';
+
+    // tabella per la gestione degli oggetti esistenti
+	$ct['view']['open']['table'] = 'mastri';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'mastri.form';
+	$ct['view']['open']['page'] = 'conti.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'tipologia' => 'tipologia',
         '__label__' => 'nome'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
         'id' => 'text-center d-md-table-cell',
-        'tipologia' =>'text-left',
         '__label__' => 'text-left'
     );
 

@@ -139,6 +139,14 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     border-top-right-radius: 5px;
 }
 
+.view-insert {
+    background-color: #eeeeee;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    padding: 0px 10px;
+    padding-top: 10px;
+}
+
 .view-controls {
     border-top: 1px solid #dddddd;
     padding-top: 10px;

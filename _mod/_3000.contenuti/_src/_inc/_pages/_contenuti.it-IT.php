@@ -17,7 +17,7 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'contenuti' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'contenuti' ),
-									'priority'	=> '300' ) ) )	
+									'priority'	=> '800' ) ) )	
 	);
 
     // vista pagine
