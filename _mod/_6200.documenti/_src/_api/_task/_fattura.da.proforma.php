@@ -19,7 +19,6 @@
 
         // seleziono il documento da duplicare
         // TODO basarsi sui flag delle tipologie e non sull'id_tipologia
-        // TODO aggiungere un AND per verificare che la proforma non sia già stata convertita
         $status['current'] = mysqlSelectRow(
             $cf['mysql']['connection'],
             'SELECT * FROM documenti WHERE id = ? AND id_tipologia = 5',

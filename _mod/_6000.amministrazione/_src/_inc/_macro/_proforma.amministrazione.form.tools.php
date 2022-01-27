@@ -84,7 +84,7 @@
         
             // TODO basarsi sui flag e non sull'id_tipologia
             $ct['page']['contents']['metro']['amministrazione'][] = array(
-                'url' => $cf['contents']['pages']['documenti.form']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$id_documento.'&__backurl__='.$ct['page']['backurl'][ LINGUA_CORRENTE ],
+                'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$id_documento.'&__backurl__='.$ct['page']['backurl'][ LINGUA_CORRENTE ],
                 'icon' => NULL,
                 'fa' => 'fa-external-link',
                 'title' => 'apri la fattura #'.$id_documento,
