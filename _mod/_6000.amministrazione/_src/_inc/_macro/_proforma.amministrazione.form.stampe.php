@@ -32,6 +32,18 @@
     if( isset( $_REQUEST[ $ct['form']['table'] ] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ){
 
         switch ( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ){
+            case 5:
+
+                $ct['page']['contents']['metro']['general'][] = array(
+                    'target' => '_blank' ,
+                    'url' => $base . '_proforma.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'icon' => NULL,
+                    'fa' => 'fa-file-pdf-o',
+                    'title' => 'stampa PDF',
+                    'text' => 'stampa una copia di cortesia della proforma in formato PDF'
+                );
+
+            break;
             case 10:
                 $ct['page']['contents']['metro']['general'][] = array(
                     'target' => '_blank' ,
@@ -61,6 +73,7 @@
                     'text' => 'stampa il modulo di consegna hardware da far firmare al cliente'
                 ); 
             break;
+
 
         }
 

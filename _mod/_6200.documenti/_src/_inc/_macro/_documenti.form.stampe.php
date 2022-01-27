@@ -81,7 +81,7 @@
 
                 $ct['page']['contents']['metro']['anteprima'][] = array(
                     'target' => '_blank' ,
-                    'url' => $base . '_fattura.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'url' => $base . '_proforma.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
                     'fa' => 'fa-file-pdf-o',
                     'title' => 'stampa PDF',
