@@ -201,7 +201,7 @@
 {% if not vl %}{% set vl = default %}{% endif %}
 {% if disabled %}
 <input  type="hidden" name="{{ nm }}" value="{{ vl }}">
-<div class="form-control-plaintext {{ class }}">{{ vl }}</div>
+<div class="form-control-plaintext {{ class }}">{{ vl | raw }}</div>
 {% else %}
 <textarea   placeholder="{{ placeholder }}" name="{{ nm }}" id="{{ id }}" {% if height %}height="{{ height }}"{% else %}style="min-height: {{ rows * 30 }}px;"{% endif %} class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" placeholder="{{ placeholder }}" {% if console %}console="{{ console }}"{% endif %} {% if required %}required{% endif %}>{{ vl }}</textarea>
 {% endif %}
