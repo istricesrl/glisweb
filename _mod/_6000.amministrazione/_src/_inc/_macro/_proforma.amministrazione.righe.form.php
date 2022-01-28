@@ -145,6 +145,10 @@
 		$documento = $_REQUEST[ $ct['form']['table'] ]['id_documento'];
 	} elseif( isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_documento'] ) ) {
 		$documento = $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_documento'];
+		$riga = mysqlSelectRow($cf['mysql']['connection'],'SELECT * FROM documenti WHERE id = ?', array( array( 's' => $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_documento'] ) ));
+		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_documento'] = $riga['id'];
+		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] = $riga['id_emittente'];
+		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_destinatario'] = $riga['id_destinatario'];
 	} elseif(  isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_genitore'] ) ) {
 		$riga = mysqlSelectRow($cf['mysql']['connection'],'SELECT * FROM documenti_articoli WHERE id = ?', array( array( 's' => $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_genitore'] ) ));
 		$documento =  $riga['id_documento'];
@@ -196,5 +200,11 @@
     );
 	}
 
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_genitore'] ) && !empty($_REQUEST[ $ct['form']['table'] ]['id_genitore']) ){
+		$ct['page']['etc']['tabs'] = array_diff(
+			$ct['page']['etc']['tabs'],
+			['proforma.amministrazione.righe.form.aggregate']
+		);
+	}
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
