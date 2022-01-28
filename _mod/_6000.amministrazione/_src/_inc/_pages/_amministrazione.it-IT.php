@@ -60,6 +60,7 @@
 		'etc'			=> array( 'tabs'	=> array(	'proforma.amministrazione.form',
 														'proforma.amministrazione.form.righe',
 														'proforma.amministrazione.form.pagamenti',
+														'proforma.amministrazione.form.chiusura',
 														'proforma.amministrazione.form.stampe',
 														'proforma.amministrazione.form.tools' ) )
 	);
@@ -110,6 +111,19 @@
 		'macro'			=> array( $m_d.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.righe.form']['etc']['tabs'] )
+	);
+
+	// gestione tools proforma
+	$p['proforma.amministrazione.form.chiusura'] = array(
+	    'sitemap'		=> false,
+        'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+	    'title'			=> array( $l		=> 'chiusura' ),
+	    'h1'			=> array( $l		=> 'chiusura' ),
+	    'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.chiusura.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.form.tools.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.form']['etc']['tabs'] )
 	);
 
 	// gestione tools proforma

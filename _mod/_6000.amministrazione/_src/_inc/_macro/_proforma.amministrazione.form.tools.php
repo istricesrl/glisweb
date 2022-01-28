@@ -38,40 +38,32 @@
     // macro per l'apertura dei modal
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 
-
+    // amministrazione documento
     if( empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_chiusura'] ) ){
-	$ct['page']['contents']['metro']['amministrazione'][] = array(
-        'host' => $ct['site']['url'],
-	    'ws' => $base . 'chiusura.documento.phps?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-	    'icon' => NULL,
-	    'fa' => 'fa-check-square-o',
-	    'title' => 'chiudi documento',
-	    'text' => 'chiudi con data e ora attuale il documento'
-	);
-    } else {
-        
+
+        // chiusura documento
         $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
-            'ws' => $base . 'fattura.da.proforma.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'ws' => $base . 'chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
             'icon' => NULL,
-            'fa' => 'fa-eur',
-            'title' => 'crea fattura',
-            'text' => 'crea la fattura corrispondente a questa proforma'
+            'fa' => 'fa-check-square-o',
+            'title' => 'chiudi documento',
+            'text' => 'chiudi con data e ora attuale il documento'
         );
-    }
 
-    // aggrega righe
-	$ct['page']['contents']['metro']['general'][] = array(
-        'host' => $ct['site']['url'],
-	    'ws' => $base . '_documenti.aggrega.righe.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-	    'icon' => NULL,
-	    'fa' => 'fa-compress',
-	    'title' => 'aggrega righe',
-	    'text' => 'aggrega a questo documento tutte le righe non associate'
-	);
+        // aggregazione righe
+        $ct['page']['contents']['metro']['amministrazione'][] = array(
+            'host' => $ct['site']['url'],
+            'ws' => $base . '_documenti.aggrega.righe.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'icon' => NULL,
+            'fa' => 'fa-compress',
+            'title' => 'aggrega righe',
+            'text' => 'aggrega a questo documento tutte le righe non associate'
+        );
 
-    if( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] == 5 ) {
+    } else {
 
+        // documento collegato
         $id_documento = mysqlSelectValue( 
             $cf['mysql']['connection'], 
             'SELECT id_documento_collegato FROM relazioni_documenti '.
@@ -80,7 +72,7 @@
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
         );
 
-        if( !empty( $id_documento ) ){
+        if( ! empty( $id_documento ) ){
         
             // TODO basarsi sui flag e non sull'id_tipologia
             $ct['page']['contents']['metro']['amministrazione'][] = array(
