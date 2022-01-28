@@ -31,6 +31,8 @@
     documenti.progressivo_invio             | il progressivo di invio del documento
     documenti.id_coupon                     | l'ID del coupon associato al documento
     documenti.note                          | note aggiuntive sul documento
+    documenti.timestamp_chiusura            | la timestamp della chiusura del documentato 
+    documenti.note_chiusura                 | note relative alla chiusura documento
     documenti.id_account_inserimento        | l'ID dell'account che ha inserito la riga
     documenti.timestamp_inserimento         | la timestamp dell'inserimento della riga
     documenti.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
@@ -72,6 +74,8 @@
     documenti_view.timestamp_invio                  | -
     documenti_view.progressivo_invio                | -
     documenti_view.id_coupon                        | -
+    documenti_view.timestamp_chiusura               | -
+    documenti_view.data_ora_chiusura                | chiusra del documento in formato Y-m-d H:i
     documenti_view.id_account_inserimento           | -
     documenti_view.id_account_aggiornamento         | -
     documenti_view.__label__                        | l'etichetta descrittiva del documento

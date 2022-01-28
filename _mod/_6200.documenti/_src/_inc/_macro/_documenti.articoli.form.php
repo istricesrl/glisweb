@@ -168,7 +168,8 @@
 			$cf['memcache']['index'],
 			$cf['memcache']['connection'],
 			$cf['mysql']['connection'],
-			'SELECT id, __label__ FROM documenti_articoli_view WHERE id_genitore IS NULL'
+			'SELECT id, __label__ FROM documenti_articoli_view WHERE id_genitore IS NULL AND id <> ?',
+			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
 		);
 	} else {
 
@@ -176,8 +177,8 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM documenti_articoli_view WHERE id_documento = ? AND id_genitore IS NULL',
-		array( array( 's' => $documento ) )
+        'SELECT id, __label__ FROM documenti_articoli_view WHERE id_documento = ? AND id_genitore IS NULL AND id <> ?',
+		array( array( 's' => $documento ), array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
     );
 
 	}
