@@ -9149,7 +9149,7 @@ CREATE TABLE `orari_contratti` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_contratto` int(11) NOT NULL,
   `turno` int(11) DEFAULT '1',
-  `id_giorno` int(11) NOT NULL,
+  `id_giorno` int(11) DEFAULT NULL,
   `ora_inizio` time DEFAULT NULL,
   `ora_fine` time DEFAULT NULL,
   `id_costo` int(11) NOT NULL,
@@ -9521,6 +9521,8 @@ CREATE TABLE `periodi_variazioni_attivita` (
   KEY `timestamp_creazione_cartellino` (`timestamp_creazione_cartellino`),
   KEY `timestamp_controllo_attivita` (`timestamp_controllo_attivita`),
   KEY `token` (`token`),
+  KEY `data_inizio` (`data_inizio`),
+  KEY `data_fine` (`data_fine`),
   CONSTRAINT `periodi_variazioni_attivita_ibfk_1` FOREIGN KEY (`id_variazione`) REFERENCES `variazioni_attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9534,6 +9536,11 @@ DROP TABLE IF EXISTS `periodi_variazioni_attivita_view`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `periodi_variazioni_attivita_view` (
+  `id_anagrafica` tinyint NOT NULL,
+  `anagrafica` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `approvata` tinyint NOT NULL,
   `id` tinyint NOT NULL,
   `id_variazione` tinyint NOT NULL,
   `data_inizio` tinyint NOT NULL,
@@ -14160,6 +14167,70 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Temporary table structure for view `ticket_archivio_view`
+--
+
+DROP TABLE IF EXISTS `ticket_archivio_view`;
+/*!50001 DROP VIEW IF EXISTS `ticket_archivio_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `ticket_archivio_view` (
+  `id` tinyint NOT NULL,
+  `data_ora_apertura` tinyint NOT NULL,
+  `id_cliente` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `id_priorita` tinyint NOT NULL,
+  `priorita` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `data_apertura` tinyint NOT NULL,
+  `id_responsabile` tinyint NOT NULL,
+  `responsabile` tinyint NOT NULL,
+  `testo` tinyint NOT NULL,
+  `timestamp_completamento` tinyint NOT NULL,
+  `testo_completamento` tinyint NOT NULL,
+  `data_ora_completamento` tinyint NOT NULL,
+  `completato` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `ticket_lavoro_view`
+--
+
+DROP TABLE IF EXISTS `ticket_lavoro_view`;
+/*!50001 DROP VIEW IF EXISTS `ticket_lavoro_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `ticket_lavoro_view` (
+  `id` tinyint NOT NULL,
+  `data_ora_apertura` tinyint NOT NULL,
+  `id_cliente` tinyint NOT NULL,
+  `cliente` tinyint NOT NULL,
+  `id_progetto` tinyint NOT NULL,
+  `progetto` tinyint NOT NULL,
+  `id_tipologia` tinyint NOT NULL,
+  `tipologia` tinyint NOT NULL,
+  `id_priorita` tinyint NOT NULL,
+  `priorita` tinyint NOT NULL,
+  `nome` tinyint NOT NULL,
+  `data_apertura` tinyint NOT NULL,
+  `id_responsabile` tinyint NOT NULL,
+  `responsabile` tinyint NOT NULL,
+  `testo` tinyint NOT NULL,
+  `timestamp_completamento` tinyint NOT NULL,
+  `testo_completamento` tinyint NOT NULL,
+  `data_ora_completamento` tinyint NOT NULL,
+  `completato` tinyint NOT NULL,
+  `__label__` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `ticket_view`
 --
 
@@ -15730,8 +15801,7 @@ CREATE TABLE `todo` (
   `ore_previste` decimal(5,2) DEFAULT NULL,
   `testo_ore_previste` text,
   `anno_previsto` year(4) DEFAULT NULL,
-  `settimana_prevista` imysqldump: Couldn't execute 'show create table `todo_archivio_view`': View '__glisweb__.todo_archivio_view' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them (1356)
-nt(11) DEFAULT NULL,
+  `settimana_prevista` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
   `testo_pianificazione` text,
   `id_responsabile` int(11) DEFAULT NULL,
@@ -15771,7 +15841,8 @@ nt(11) DEFAULT NULL,
   KEY `id_pianificazione` (`id_pianificazione`),
   KEY `id_indirizzo` (`id_indirizzo`),
   KEY `data_programmazione` (`data_programmazione`),
-  KEY `id_mastro_attivita_default` (`id_mastro_attivita_default`),
+  KEY `id_mastro_attivita_default` (`id_mastro_attimysqldump: Couldn't execute 'show create table `todo_archivio_view`': View '__glisweb__.todo_archivio_view' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them (1356)
+vita_default`),
   KEY `id_contatto` (`id_contatto`),
   KEY `id_anagrafica_feedback` (`id_anagrafica_feedback`),
   CONSTRAINT `todo_ibfk_10_nofollow` FOREIGN KEY (`id_contatto`) REFERENCES `contatti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
