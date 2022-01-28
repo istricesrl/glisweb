@@ -38,86 +38,83 @@
     // macro per l'apertura dei modal
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 
-    if( empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_chiusura'] ) ){
+    if( empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_chiusura'] ) ) {
 
-    // aggiorna data e ora
-	$ct['page']['contents']['metro']['amministrazione'][] = array(
-        'host' => $ct['site']['url'],
-	    'ws' => $base . 'chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-	    'icon' => NULL,
-	    'fa' => 'fa-check-square-o',
-	    'title' => 'chiudi documento',
-	    'text' => 'chiudi con data e ora attuale il documento'
-	);
-    } elseif( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] == 5 ) {
-        // TODO basarsi sui flag e non sull'id_tipologia
+        // aggiorna data e ora
         $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
-            'ws' => $base . 'fattura.da.proforma.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'ws' => $base . 'chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
             'icon' => NULL,
-            'fa' => 'fa-eur',
-            'title' => 'crea fattura',
-            'text' => 'crea la fattura corrispondente a questa proforma'
-        );
-    }
-
-
-    if(  $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] == 1 ){
-    // invio fattura elettronica
-	$ct['page']['contents']['metro']['amministrazione'][] = array(
-        'host' => $ct['site']['url'],
-	  //  'ws' => $base . '.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-	    'icon' => NULL,
-	    'fa' => 'fa-check-square-o',
-	    'title' => 'invia fattura elettronica',
-	    'text' => 'invia tramite archivum la fattura'
-	);
-    }
-
-    if( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] == 5 ) {
-
-        $id_documento = mysqlSelectValue( 
-            $cf['mysql']['connection'], 
-            'SELECT id_documento_collegato FROM relazioni_documenti '.
-            'LEFT JOIN documenti ON documenti.id = relazioni_documenti.id_documento_collegato '.
-            'WHERE relazioni_documenti.id_documento = ? AND documenti.id_tipologia = 1',
-            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
+            'fa' => 'fa-check-square-o',
+            'title' => 'chiudi documento',
+            'text' => 'chiudi con data e ora attuale il documento'
         );
 
-        if( !empty( $id_documento ) ){
-        
-            // TODO basarsi sui flag e non sull'id_tipologia
-            $ct['page']['contents']['metro']['amministrazione'][] = array(
-                'url' => $cf['contents']['pages']['documenti.form']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$id_documento.'&__backurl__='.$ct['page']['backurl'][ LINGUA_CORRENTE ],
-                'icon' => NULL,
-                'fa' => 'fa-external-link',
-                'title' => 'apri la fattura #'.$id_documento,
-                'text' => 'apri la fattura corrispondente a questa proforma'
-            );
+        // aggrega righe
+        $ct['page']['contents']['metro']['general'][] = array(
+            'host' => $ct['site']['url'],
+            'ws' => $base . '_documenti.aggrega.righe.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'icon' => NULL,
+            'fa' => 'fa-compress',
+            'title' => 'aggrega righe',
+            'text' => 'aggrega a questo documento le righe non associate'
+        );
 
-        } else {
+    } else {
 
-            // TODO basarsi sui flag e non sull'id_tipologia
-            $ct['page']['contents']['metro']['amministrazione'][] = array(
-                'host' => $ct['site']['url'],
-                'ws' => $base . '_fattura.da.proforma.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-                'callback' => 'function(){location.reload();}',
-                'icon' => NULL,
-                'fa' => 'fa-eur',
-                'title' => 'crea fattura',
-                'text' => 'crea la fattura corrispondente a questa proforma'
+        // azioni possibili per proforma chiusa 
+        if( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] == 5 ) {
+
+            // creo la fattura dalla proforma
+            $id_documento = mysqlSelectValue( 
+                $cf['mysql']['connection'], 
+                'SELECT id_documento_collegato FROM relazioni_documenti '.
+                'LEFT JOIN documenti ON documenti.id = relazioni_documenti.id_documento_collegato '.
+                'WHERE relazioni_documenti.id_documento = ? AND documenti.id_tipologia = 1',
+                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
             );
+    
+            // creazione fattura da proforma
+            if( ! empty( $id_documento ) ) {
+            
+                $ct['page']['contents']['metro']['amministrazione'][] = array(
+                    'url' => $cf['contents']['pages']['documenti.form']['url'][ $cf['localization']['language']['ietf'] ].'?documenti[id]='.$id_documento.'&__backurl__='.$ct['page']['backurl'][ LINGUA_CORRENTE ],
+                    'icon' => NULL,
+                    'fa' => 'fa-external-link',
+                    'title' => 'apri la fattura #'.$id_documento,
+                    'text' => 'apri la fattura corrispondente a questa proforma'
+                );
+    
+            } else {
+    
+                $ct['page']['contents']['metro']['amministrazione'][] = array(
+                    'host' => $ct['site']['url'],
+                    'ws' => $base . '_fattura.da.proforma.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'callback' => 'function(){location.reload();}',
+                    'icon' => NULL,
+                    'fa' => 'fa-eur',
+                    'title' => 'crea fattura',
+                    'text' => 'crea la fattura corrispondente a questa proforma'
+                );
+
+            }
+    
         }
 
+        // azioni possibili per fattura chiusa 
+        if( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] == 1 ) {
+
+            // invio la fattura allo SDI
+            $ct['page']['contents']['metro']['amministrazione'][] = array(
+                'host' => $ct['site']['url'],
+              //  'ws' => $base . '.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                'icon' => NULL,
+                'fa' => 'fa-check-square-o',
+                'title' => 'invia fattura elettronica',
+                'text' => 'invia tramite archivum la fattura'
+            );
+        
+        }
+
+
     }
-
-
-    // aggrega righe
-	$ct['page']['contents']['metro']['general'][] = array(
-        'host' => $ct['site']['url'],
-	    'ws' => $base . '_documenti.aggrega.righe.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-	    'icon' => NULL,
-	    'fa' => 'fa-compress',
-	    'title' => 'aggrega righe',
-	    'text' => 'aggrega a questo documento le righe non associate'
-	);

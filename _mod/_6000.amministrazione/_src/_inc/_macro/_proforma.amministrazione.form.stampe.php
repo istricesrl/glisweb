@@ -24,8 +24,11 @@
 	$base = $ct['site']['url'].'_mod/_6200.documenti/_src/_api/_print/';
 
     $ct['page']['contents']['metros'] = array(
-        'general' => array(
-        'label' => ''
+        'pdf' => array(
+        'label' => 'stampe PDF'
+        ),
+        'xml' => array(
+            'label' => 'stampe XML'
         )
     );
 
@@ -34,7 +37,7 @@
         switch ( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ){
             case 5:
 
-                $ct['page']['contents']['metro']['general'][] = array(
+                $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
                     'url' => $base . '_proforma.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
@@ -44,6 +47,7 @@
                 );
 
             break;
+/*
             case 10:
                 $ct['page']['contents']['metro']['general'][] = array(
                     'target' => '_blank' ,
@@ -73,7 +77,7 @@
                     'text' => 'stampa il modulo di consegna hardware da far firmare al cliente'
                 ); 
             break;
-
+*/
 
         }
 

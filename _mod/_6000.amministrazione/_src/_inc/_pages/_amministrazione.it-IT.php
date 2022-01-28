@@ -194,6 +194,7 @@
 		'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.form',
 														'fatture.amministrazione.form.righe',
 														'fatture.amministrazione.form.pagamenti',
+														'fatture.amministrazione.form.chiusura',
 														'fatture.amministrazione.form.stampe',
 														'fatture.amministrazione.form.tools' ) )
 	);
@@ -244,6 +245,19 @@
 			'macro'			=> array( $m_d.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.righe.form']['etc']['tabs'] )
+	);
+
+	// gestione tools proforma
+	$p['fatture.amministrazione.form.chiusura'] = array(
+	    'sitemap'		=> false,
+        'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+	    'title'			=> array( $l		=> 'chiusura' ),
+	    'h1'			=> array( $l		=> 'chiusura' ),
+	    'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.chiusura.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.tools.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
 	);
 
 	// gestione tools fatture

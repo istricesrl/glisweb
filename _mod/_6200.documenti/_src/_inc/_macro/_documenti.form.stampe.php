@@ -24,11 +24,11 @@
 	$base = $ct['site']['url'].'_mod/_6200.documenti/_src/_api/_print/';
 
     $ct['page']['contents']['metros'] = array(
-        'anteprima' => array(
-        'label' => 'anteprima'
+        'pdf' => array(
+        'label' => 'stampe PDF'
         ),
-        'download' => array(
-            'label' => 'download'
+        'xml' => array(
+            'label' => 'stampe XML'
         )
     );
 
@@ -39,7 +39,7 @@
             case 1:
             case 2:
 
-                $ct['page']['contents']['metro']['anteprima'][] = array(
+                $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
                     'url' => $base . '_fattura.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
@@ -48,27 +48,9 @@
                     'text' => 'stampa una copia di cortesia della fattura in formato PDF'
                 );
 
-                $ct['page']['contents']['metro']['anteprima'][] = array(
+                $ct['page']['contents']['metro']['xml'][] = array(
                     'target' => '_blank' ,
                     'url' => $base . '_fattura.xml.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
-                    'icon' => NULL,
-                    'fa' => 'fa-file-code-o',
-                    'title' => 'stampa XML',
-                    'text' => 'stampa la fattura in formato XML'
-                );
-
-                $ct['page']['contents']['metro']['download'][] = array(
-                    'target' => '_blank' ,
-                    'url' => $base . '_fattura.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'].'&d=1',
-                    'icon' => NULL,
-                    'fa' => 'fa-file-pdf-o',
-                    'title' => 'stampa PDF',
-                    'text' => 'stampa una copia di cortesia della fattura in formato PDF'
-                );
-
-                $ct['page']['contents']['metro']['download'][] = array(
-                    'target' => '_blank' ,
-                    'url' => $base . '_fattura.xml.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'].'&d=1',
                     'icon' => NULL,
                     'fa' => 'fa-file-code-o',
                     'title' => 'stampa XML',
@@ -79,7 +61,7 @@
 
             case 5:
 
-                $ct['page']['contents']['metro']['anteprima'][] = array(
+                $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
                     'url' => $base . '_proforma.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
