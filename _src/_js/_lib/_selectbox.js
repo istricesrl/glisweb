@@ -48,6 +48,16 @@
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'placeholder-api' ) ) {
 			$( box ).val( $( select ).attr( 'placeholder-api' ) );
+			$( box ).on( "click", function() {
+				if( $( box ).val() == $( select ).attr( 'placeholder-api' ) ){
+					$( box ).val('');
+				}
+			});
+			$( box ).on( "focusout", function() {
+				if( $( box ).val() == ''){
+					$( box ).val( $( select ).attr( 'placeholder-api' ) );
+				}
+			});
 		} else {
 			box.val( current );
 		}
