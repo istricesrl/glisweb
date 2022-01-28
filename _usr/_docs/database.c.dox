@@ -240,6 +240,8 @@
     categorie_progetti.ordine                       | campo di ordinamento
     categorie_progetti.nome                         | il nome della categoria
     categorie_progetti.note                         | note aggiuntive sulla categoria
+    categorie_progetti.se_ordinario                 | flag che indica se la categoria di progetti è di tipo ordinario
+    categorie_progetti.se_straordinario             | flag che indica se la categoria di progetti è di tipo straordinario
     categorie_progetti.id_account_inserimento       | l'ID dell'account che ha inserito la riga
     categorie_progetti.timestamp_inserimento        | la timestamp dell'inserimento della riga
     categorie_progetti.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
@@ -261,6 +263,8 @@
     categorie_progetti_view.id_genitore                     | -
     categorie_progetti_view.ordine                          | -
     categorie_progetti_view.nome                            | -
+    categorie_progetti_view.se_ordinario                    | -
+    categorie_progetti_view.se_straordinario                | -
     categorie_progetti_view.figli                           | il numero di categorie figlie di questa categoria
     categorie_progetti_view.membri                          | il numero di eventi collegati a questa categoria
     categorie_progetti_view.id_account_inserimento          | -
