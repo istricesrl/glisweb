@@ -684,11 +684,18 @@
 			// aggiungo il campo di relazione alle sostituzioni
 			$x['t'][$t]['t'][ $ksr['TABLE_NAME'] ]['f'][ $ksr['COLUMN_NAME'] ] = $id;
 
+			if( isset( $x['t'][$t]['t'][ $ksr['TABLE_NAME'] ]['r'] ) ) {
+				$whr = ' AND ' . implode( ' AND ', $x['t'][$t]['t'][ $ksr['TABLE_NAME'] ]['r'] );
+				die( $whr );
+			} else {
+				$whr = NULL;
+			}
+
 		#	echo "valore attuale di x". PHP_EOL;
 		#	print_r($x);
 
 			// compongo la query di ricerca relazioni
-			$q = 'SELECT * FROM ' . $ksr['TABLE_NAME'] . ' WHERE ' . $ksr['COLUMN_NAME'] . ' = "' . $o . '"';
+			$q = 'SELECT * FROM ' . $ksr['TABLE_NAME'] . ' WHERE ' . $ksr['COLUMN_NAME'] . ' = "' . $o . '" ' . $whr;
 
 			// trovo le righe collegate
 			$rls = mysqlQuery( $c, $q );
@@ -754,7 +761,7 @@
 	    $values[] = array( 's' => $o );
 
 	// composizione della query
-	    $q = 'INSERT INTO ' . $t . ' (' . implode( ',', $fieldsInsert ) . ') SELECT ' . str_repeat( '?,', count( $fieldsChanged ) ) . implode( ',', $fieldsCopied ) . ' FROM ' . $t . ' WHERE id = ?';
+	    $q = 'INSERT IGNORE INTO ' . $t . ' (' . implode( ',', $fieldsInsert ) . ') SELECT ' . str_repeat( '?,', count( $fieldsChanged ) ) . implode( ',', $fieldsCopied ) . ' FROM ' . $t . ' WHERE id = ?';
 
 	// esecuzione della query
 		$n = mysqlQuery( $c, $q, $values );

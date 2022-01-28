@@ -43,7 +43,7 @@
         // aggiorna data e ora
         $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
-            'ws' => $base . 'chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'ws' => $base . '_chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
             'icon' => NULL,
             'fa' => 'fa-check-square-o',
             'title' => 'chiudi documento',
