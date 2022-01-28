@@ -2310,6 +2310,15 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.note,
 		pagamenti.note_pagamento,
 		pagamenti.id_documento,
+        concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data
+		) AS documento,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
 		pagamenti.id_mastro_destinazione,
@@ -2334,6 +2343,8 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN iva ON iva.id = pagamenti.id_iva
 		LEFT JOIN listini ON listini.id = pagamenti.id_listino
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
+		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 ;
 
 --| 090000023200
