@@ -45,6 +45,7 @@
         $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
             'ws' => $base . '_chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'callback' => 'function(){location.reload();}',
             'icon' => NULL,
             'fa' => 'fa-check-square-o',
             'title' => 'chiudi documento',
