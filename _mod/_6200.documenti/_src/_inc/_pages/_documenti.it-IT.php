@@ -30,8 +30,9 @@
 		'js'			=> array( 'internal' => array( '_mod/_6200.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 
-														'documenti.form.righe', 
+														'documenti.form.righe',
 														'documenti.form.pagamenti',
+														'documenti.form.chiusura',
 														'documenti.form.stampe',
 														'documenti.form.tools' ) )
 	);
@@ -68,6 +69,19 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.pagamenti.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.pagamenti.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
+	);
+
+	// gestione chiusura documenti
+	$p['documenti.form.chiusura'] = array(
+	    'sitemap'		=> false,
+        'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+	    'title'			=> array( $l		=> 'chiusura' ),
+	    'h1'			=> array( $l		=> 'chiusura' ),
+	    'parent'		=> array( 'id'		=> 'documenti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.chiusura.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.chiusura.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
@@ -119,7 +133,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form','documenti.articoli.form.attivita', 'documenti.articoli.form.tools' ) )
+		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form','documenti.articoli.form.aggregate','documenti.articoli.form.attivita', 'documenti.articoli.form.tools' ) )
 	);
 
 	// gestione tools documenti_articoli - attivita
@@ -132,6 +146,18 @@
 		'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.attivita.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
+	);
+
+	// gestione tools documenti_articoli - attivita
+	$p['documenti.articoli.form.aggregate'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'righe aggregate' ),
+			'h1'			=> array( $l		=> 'righe aggregate' ),
+			'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.aggregate.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
 	);
 
 	// gestione tools documenti_articoli

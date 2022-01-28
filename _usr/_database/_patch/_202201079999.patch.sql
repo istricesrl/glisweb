@@ -7,7 +7,6 @@ ALTER TABLE `documenti` DROP INDEX `indice`;
 
 --| 202201070010
 ALTER TABLE `documenti`
-
 ADD `sezionale` CHAR(6) NULL DEFAULT NULL AFTER `numero`, 
 ADD `codice_archivium` char(64) NULL AFTER `id_sede_destinatario`,
 ADD `codice_sdi` char(64) NULL AFTER `codice_archivium`,
@@ -31,19 +30,16 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		tipologie_documenti.nome AS tipologia,
 		documenti.numero,
 		documenti.sezionale,
-		documenti.codice_sdi,
-		documenti.codice_archivium,
-		documenti.progressivo_invio,
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		documenti.codice_archivium
-    	documenti.codice_sdi
-    	documenti.timestamp_invio
-    	documenti.progressivo_invio
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
 		documenti.id_coupon,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
@@ -330,10 +326,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		documenti.codice_archivium
-    	documenti.codice_sdi
-    	documenti.timestamp_invio
-    	documenti.progressivo_invio
+    	documenti.timestamp_invio,
 		documenti.id_coupon,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
@@ -380,10 +373,7 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		documenti.codice_archivium
-    	documenti.codice_sdi
-    	documenti.timestamp_invio
-    	documenti.progressivo_invio
+    	documenti.timestamp_invio,
 		documenti.id_coupon,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,

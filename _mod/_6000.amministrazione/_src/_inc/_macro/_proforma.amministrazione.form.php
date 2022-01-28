@@ -43,7 +43,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1'
 	);
 
 	// tendina coupon
@@ -84,5 +84,9 @@
 	    );
 	   } 
 
+	if( !isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] ) && !isset( $_REQUEST['__latest__'][ $ct['form']['table'] ]['id_emittente'] ) && !empty( $ct['etc']['select']['id_mittenti'] ) ){
+		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] = $ct['etc']['select']['id_mittenti'][0]['id'];
+	}
+	
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

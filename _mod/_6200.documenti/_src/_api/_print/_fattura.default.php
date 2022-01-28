@@ -131,7 +131,7 @@
     $doc['pagamenti'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT modalita_pagamento.codice AS codice_pagamento, '.
-        'date_format( timestamp_scadenza, "%Y-%m-%d" ) AS data_standard, '.
+        'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
         '( importo_netto_totale + ( importo_netto_totale / 100 * iva.aliquota ) ) AS importo_lordo_totale  '.
         'FROM pagamenti '.
         'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.

@@ -49,7 +49,7 @@
 		'mastro_destinazione' => 'carico',
         'quantita' => 'quantità',
         'importo_netto_totale' => 'importo netto',
-	#	'totale_riga' => 'totale',
+		'id_genitore' => 'aggregata a',
 		'id_documento' => 'id_documento'
 	);
 

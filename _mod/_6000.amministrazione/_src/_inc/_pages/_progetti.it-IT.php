@@ -6,6 +6,7 @@
     // modulo di questo file
 	$m = DIR_MOD . '_6000.amministrazione/';
 
+	if( in_array( "1000.produzione", $cf['mods']['active']['array'] ) ) {
 	// vista progetti
 	$p['progetti.amministrazione.view'] = array(
 	    'sitemap'		=> false,
@@ -157,3 +158,4 @@
         'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] ),
         'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
     );
+	}

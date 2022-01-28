@@ -30,7 +30,7 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'data' => 'data',
-    #    'documento' => 'documento',
+        'documento' => 'documento',
         'tipologia' => 'tipologia',
         'nome' => 'nome',
         'id_articolo' => 'articolo',
@@ -49,10 +49,9 @@
         'totale_riga' => 'text-right',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
-        'data_lavorazione' => 'text-left', 
+        'data' => 'no-wrap', 
         'tipologia' => 'text-left',
         'specifiche' => 'text-left',
-        'data_lavorazione' => 'no-wrap',
         'documento' => 'text-left no-wrap'
     );
 

@@ -2288,18 +2288,21 @@ CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
 -- tipologie_mastri
 -- tipologia: tabella di supporto
 -- verifica: 2021-10-15 17:30 Fabio Mosti
-CREATE TABLE IF NOT EXISTS `tipologie_mastri` (
-  `id` int(11) NOT NULL,
-  `id_genitore` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
+CREATE TABLE `tipologie_mastri` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_genitore` int DEFAULT NULL,
+  `ordine` int DEFAULT NULL,
   `nome` char(64) NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `se_magazzino` int DEFAULT NULL,
+  `se_conto` int DEFAULT NULL,
+  `se_registro` int DEFAULT NULL,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
 
 --| 010000053800
 

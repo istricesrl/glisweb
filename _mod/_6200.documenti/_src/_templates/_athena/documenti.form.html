@@ -117,7 +117,7 @@
 			</div>
 		</div>
 
-		{% if request[ table ].id_tipologia == 1 and archivium.profiles %}
+		{% if request[ table ].id_tipologia == 1 and archivium.profile %}
 		<legend>fatturazione elettronica</legend>
 		<div class="form-group form-row">
 			<div class="col-12 col-md-4">
@@ -136,9 +136,11 @@
 				{{ frm.inputDisabled( table, '', '', 'progressivo_invio', '', '', request ) }}	
 				{% endif %}
 			</div>
-			<div class="col-12 col-md-auto">{{ frm.button(  'OTTIENI PROGRESSIVO' ,'button','btn btn-secondary btn-sm btn-block', 'getProgressivoInvioFattura(\'documenti_progressivo_invio\');','ottieni in modo automatico il progressivo' ) }}
+			{% if not request[ table ].codice_archivium %}
+			<div class="col-12 col-md-auto">
+				{{ frm.button(  'OTTIENI PROGRESSIVO' ,'button','btn btn-secondary btn-sm btn-block', 'getProgressivoInvioFattura(\'documenti_progressivo_invio\');','ottieni in modo automatico il progressivo' ) }}
 			</div>
-			
+			{% endif %}
 		</div>
 		{% endif %}
 

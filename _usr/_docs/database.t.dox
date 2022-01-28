@@ -493,6 +493,9 @@
     tipologie_mastri.nome                        | il nome della tipologia
     tipologie_mastri.html_entity                 | entità HTML che rappresenta visivamente la tipologia
     tipologie_mastri.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_mastri.se_magazzino                | flag che indica se la tipologia mastro fa riferimento a dei movimenti di magazzino
+    tipologie_mastri.se_conto                    | flag che indica se la tipologia mastro fa riferimento a dei movimenti monetari
+    tipologie_mastri.se_registro                 | flag che indica se la tipologia mastro fa riferimento a dei movimenti orari
     tipologie_mastri.id_account_inserimento      | l'ID dell'account che ha inserito la riga
     tipologie_mastri.timestamp_inserimento       | la timestamp dell'inserimento della riga
     tipologie_mastri.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
@@ -516,6 +519,9 @@
     tipologie_mastri_view.nome                          | -
     tipologie_mastri_view.html_entity                   | -
     tipologie_mastri_view.font_awesome                  | -
+    tipologie_mastri_view.se_magazzino                  | -
+    tipologie_mastri_view.se_conto                      | -
+    tipologie_mastri_view.se_registro                   | -
     tipologie_mastri_view.id_account_inserimento        | -
     tipologie_mastri_view.id_account_aggiornamento      | -
     tipologie_mastri_view.__label__                     | etichetta descrittiva della tipologia
