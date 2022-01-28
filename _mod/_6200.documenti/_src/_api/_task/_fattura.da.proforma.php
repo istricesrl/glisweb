@@ -40,6 +40,13 @@
                     'documenti' => array(
                         't' => array(
                             'documenti_articoli' => array(
+                                't' => array(
+                                    'documenti_articoli' => array(
+                                        'f' => array(
+                                            'id_tipologia' => 1
+                                        )
+                                    )
+                                ),
                                 'f' => array(
                                     'id_tipologia' => 1
                                 )
