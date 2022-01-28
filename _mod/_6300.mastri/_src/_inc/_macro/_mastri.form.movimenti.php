@@ -13,11 +13,13 @@
 
     // tabella gestita
     $ct['form']['table'] = 'mastri';
+    $ct['view']['data']['__report_mode__'] = 1;
     
-    // mastro quantitativo
-    if( $_REQUEST['mastri']['id_tipologia'] == 4 || $_REQUEST['mastri']['id_tipologia'] == 2 ){
+    // magazzino
+    if( in_array( $_REQUEST['mastri']['id_tipologia'], array( 1 ) ) ) {
+
     // tabella della vista
-	$ct['view']['table'] = '__report_mastri__';
+	$ct['view']['table'] = '__report_movimenti_magazzini__';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.articoli.form';
@@ -27,39 +29,51 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-        'data_lavorazione' => 'data',
-	    'descrizione' => 'riga',
-        'id_articolo' => 'articolo',
-        'quantita' => 'quantità',
-        'importo' => 'importo',
-        'id_listino' => 'id_listino',
+#        'data_lavorazione' => 'data',
+#	    'descrizione' => 'riga',
+#        'id_articolo' => 'articolo',
+#        'quantita' => 'quantità',
+#        'importo' => 'importo',
+#        'id_listino' => 'id_listino',
         'id_riga' => 'id_riga',
-        'cliente' => 'cliente',
-        'id_emittente' => 'emittente',
-        'id_tipologia' => 'id_tipologia',
-        'id_todo' => 'todo',
-        'progetto' => 'progetto',
-        'matricola' => 'matricola'
+#        'cliente' => 'cliente',
+#        'id_emittente' => 'emittente',
+#        'id_tipologia' => 'id_tipologia',
+#        'id_todo' => 'todo',
+#        'progetto' => 'progetto',
+#        'matricola' => 'matricola'
+'data' => 'data',
+'tipologia' => 'tipologia',
+'numero' => 'numero',
+'id_articolo' => 'codice',
+'articolo' => 'descrizione',
+'matricola' => 'matricola',
+'carico' => 'carico',
+'scarico' => 'scarico',
+
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none',
         'id_riga' => 'd-none',
-        'id_listino' => 'd-none',
-        'id_tipologia' => 'd-none',
-        'id_emittente' => 'd-none',
-        'data_lavorazione' => 'text-left',
-	    'descrizione' => 'text-left',
-        'id_articolo' => 'text-left',
-        'importo' => 'text-right',
-        'cliente' => 'text-left',
-        'emittente' => 'text-left'
-	);
+#        'id_listino' => 'd-none',
+#        'id_tipologia' => 'd-none',
+#        'id_emittente' => 'd-none',
+#        'data_lavorazione' => 'text-left',
+#	    'descrizione' => 'text-left',
+#        'id_articolo' => 'text-left',
+#        'importo' => 'text-right',
+#        'cliente' => 'text-left',
+#        'emittente' => 'text-left'
+'articolo' => 'text-left',
+);
 
-    $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
+#    $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
+
     } 
-        
+
+/*
     // mastro orario
     if( $_REQUEST['mastri']['id_tipologia'] == 3 ){
     
@@ -150,7 +164,6 @@
             );
         }
 
-    $ct['view']['data']['__report_mode__'] = 1;
 
     // id della vista
    # $ct['view']['id'] = md5( $ct['view']['table'] );
@@ -195,6 +208,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM listini_view'
 	);
+*/
 
     // preset filtro mastro corrente
 	$ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];

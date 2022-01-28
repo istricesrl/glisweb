@@ -2071,6 +2071,9 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		mastri.id_tipologia,
 		tipologie_mastri.nome AS tipologia,
 		mastri.nome,
+		mastri.se_magazzino,
+		mastri.se_conto,
+		mastri.se_registro,
 		mastri_path( mastri.id ) AS __label__
 	FROM mastri
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
@@ -4370,6 +4373,9 @@ CREATE OR REPLACE VIEW `tipologie_mastri_view` AS
 		tipologie_mastri.nome,
 		tipologie_mastri.html_entity,
 		tipologie_mastri.font_awesome,
+		tipologie_mastri.se_magazzino,
+		tipologie_mastri.se_conto,
+		tipologie_mastri.se_registro,
 		tipologie_mastri.id_account_inserimento,
 		tipologie_mastri.id_account_aggiornamento,
 		tipologie_mastri_path( tipologie_mastri.id ) AS __label__
