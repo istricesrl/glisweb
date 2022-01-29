@@ -71,6 +71,8 @@
 	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.form',
 															'anagrafica.form.informazioni',
 															'anagrafica.form.relazioni',
+// questa scheda va attivata se è attivo il modulo certificazioni
+//															'anagrafica.form.certificazioni',
 //															'anagrafica.form.amministrazione',
 //															'anagrafica.form.collaboratori',
 															'anagrafica.form.cliente',
@@ -81,7 +83,6 @@
 //															'anagrafica.form.struttura',
 //															'anagrafica.form.attivita',
 //															'anagrafica.form.promemoria',
-//															'anagrafica.form.certificazioni',
 															'anagrafica.form.immagini',
 															'anagrafica.form.video',
 															'anagrafica.form.audio',
@@ -91,6 +92,11 @@
 															'anagrafica.form.stampe',
 															'anagrafica.form.tools' ) )
 	);
+
+	// RELAZIONI CON IL MODULO CERTIFICAZIONI
+	if( in_array( "6700.certificazioni", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.certificazioni' );
+	}
 
     // gestione anagrafica informazioni
 	$p['anagrafica.form.informazioni'] = array(

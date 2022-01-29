@@ -47,10 +47,12 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
+<!--
             <div class="col-12 col-md-2">
                 <span class="label-top">tipologia</span>
                 {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_certificazioni, request ) }}
             </div>
+-->
             <div class="col-12 col-md">
                 <span class="label-top">nome</span>
                 {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}

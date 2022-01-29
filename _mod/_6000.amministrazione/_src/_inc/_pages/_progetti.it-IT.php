@@ -83,6 +83,7 @@
 
 	// gestione todo progetti
 	// in relazione con il modulo todo
+	// TODO spostare con la sua macro e il suo schema nel modulo todo
 	$p['progetti.amministrazione.form.todo'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'todo' ),
@@ -96,6 +97,7 @@
 
 	// gestione attività progetti
 	// in relazione con il modulo attivita
+	// TODO spostare con la sua macro e il suo schema nel modulo attivita
 	$p['progetti.amministrazione.form.attivita'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'attivita' ),
@@ -108,6 +110,8 @@
 	);
 
     // gestione progetti accettazione
+	// in relazione con il modulo commerciale
+	// TODO spostare con la sua macro e il suo schema nel modulo commerciale
     $p['progetti.amministrazione.form.accettazione'] = array(
         'sitemap'		=> false,
         'icon'		=> '<i class="fa fa-handshake-o" aria-hidden="true"></i>',

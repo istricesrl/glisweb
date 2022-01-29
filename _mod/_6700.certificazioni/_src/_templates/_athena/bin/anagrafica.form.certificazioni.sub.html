@@ -23,9 +23,15 @@
 			{{ frm.selectRequired( table, subtable, i, 'id_certificazione', '', etc.select.certificazioni, request, '', '', '', disabled ) }}
         </div>	
 		<div class="col-12 col-md">
+            <span class="label-top">numero/codice</span>
+			{{ frm.input( table, subtable, i, 'codice', '', '', request, '', '', '', '', disabled ) }}
+		</div>
+<!--
+		<div class="col-12 col-md">
             <span class="label-top">emittente</span>
 			{{ frm.select( table, subtable, i, 'id_emittente', '', etc.select.emittenti, request, '', '', '', '', '', disabled ) }}
         </div>
+-->
 		<div class="col-12 col-md-auto">
             <span class="label-top">data emissione</span>
 			{{ frm.date( table, subtable, i, 'data_emissione', '', '', request, '', '', '', '', disabled ) }}
@@ -41,7 +47,10 @@
 
         {% if r.id %}
 		<div class="col-auto p-0 pl-1">
-			<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.certificazioni.form'].url[ lang ]~'?anagrafica_certificazioni[id]='~r.id }}')"><i class="fa fa-pencil"></i></button>
+			<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.certificazioni.form'].url[ lang ]~'?anagrafica_certificazioni[id]='~r.id~'&__backurl__='~page.backurl[lang] }}','_self')"><i class="fa fa-pencil"></i></button>
+		</div>
+		<div class="col-auto p-0 pl-1">
+			<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.certificazioni.form.file'].url[ lang ]~'?anagrafica_certificazioni[id]='~r.id~'&__backurl__='~page.backurl[lang] }}','_self')"><i class="fa fa-folder-open-o"></i></button>
 		</div>
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 			{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
