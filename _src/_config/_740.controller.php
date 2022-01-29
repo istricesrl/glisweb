@@ -27,7 +27,7 @@
         // elaboro i dati
         if( ! isset( $_REQUEST[ $table ] ) ) {
 
-            foreach( csv2array( readFromFile( $f ), ';' ) as $riga ) {
+            foreach( csvFile2array( $f, ';' ) as $riga ) {
 
                 // TODO
                 // non c'è modo di far confluire questi dati nella controller della request

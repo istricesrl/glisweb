@@ -37,14 +37,14 @@
 	$f	= DIR_TMP . time() . '.test';
 
     // test scrittura su file
-	$r	= array2csv( $d1, $f );
+	$r	= array2csvFile( $d1, $f );
 
     // output
 	$tx	.= PHP_EOL;
 	$tx	.= 'contenuto del file ' . $f . ': ' . PHP_EOL . PHP_EOL;
 	$tx	.= readStringFromFile( $f );
 
-	$d2	= csv2array( readFromFile( $f ) );
+	$d2	= csvFile2array( $f );
 
     // output
 	$tx	.= PHP_EOL;

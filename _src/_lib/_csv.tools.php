@@ -11,6 +11,26 @@
      */
 
     /**
+     * legge un file CSV e restituisce un array associativo
+     *
+     *
+     * @todo documentare
+     *
+     */
+    function csvFile2array( $file ) {
+
+        // leggo il contenuto grezzo del file
+        $grezzo = readFromFile( $file );
+
+        // faccio il parsing CSV di ogni riga
+        $lavorato = csv2array( $grezzo );
+
+        // restituisco l'array associativo
+        return( $lavorato );
+
+    }
+
+    /**
      * converte un array di stringhe CSV in un array associativo
      * 
      * prende in input un array di stringhe CSV e restituisce un array di array
@@ -41,15 +61,54 @@
      * @todo servirebbe una versione con un parametro solo $data che ritorna la stringa CSV
      * @todo documentare
      *
+     * function array2csv( $data, $file ) {
+	 * $h = openFile( $file );
+     * fputcsv( $h, array_keys( $data[0] ) );
+     * foreach( $data as $row ) {
+     * fputcsv( $h, $row );
+     * }
+     * }
+     * 
      */
-    function array2csv( $data, $file ) {
+    function array2csvFile( $data, $file, $mode = FILE_WRITE_OVERWRITE ) {
 
-	$h = openFile( $file );
+        $h = openFile( $file, $mode );
+    
+        $h = openFile( $file );
+        fputcsv( $h, array_keys( $data[0] ) );
+    
+        foreach( $data as $row ) {
+            fputcsv( $h, $row );
+        }
+    
+    }
 
-    fputcsv( $h, array_keys( $data[0] ) );
+    /**
+     * trasforma un array associativo in un array di stringhe CSV
+     *
+     *
+     * @todo documentare
+     *
+     */
+    function array2csv( $data ) {
 
-    foreach( $data as $row ) {
-	    fputcsv( $h, $row );
-	}
+        $csv = array();
+
+        array_unshift( $data, array_keys( $data[0] ) );
+
+        $h = fopen('php://memory', 'r+');
+
+        foreach( $data as $row ) {
+            fputcsv( $h, $row );
+        }
+
+        rewind($h);
+
+        while( $buf = fgets($h) ) {
+            $csv[] = $buf;
+        }
+
+        fclose($h);
+        return $csv;
 
     }

@@ -28,7 +28,7 @@
 		$cf['redirect'][ $valori[0] ][ $valori[1] ] = $valori[2];
 	    }
 */
-	    $r = csv2array( readFromFile( FILE_REDIRECT ) );
+	    $r = csvFile2array( FILE_REDIRECT );
 
 	}
 
