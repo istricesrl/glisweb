@@ -48,8 +48,9 @@
 	    }
 
 	    // prelevo il valore corrente
-		// NOTA perché .text() e non .html()?
-	    var current = $( select ).find( 'option:selected' ).text().trim();
+		  // NOTA perché .text() e non .html()?
+
+    var current = $( select ).find( 'option:selected' ).text().trim();
 		var currvalue = $( select ).val();
 
 	    // imposto il valore corrente
@@ -107,6 +108,21 @@
 		    // $( select ).val([]);
 
 		    // log
+/* da output-tidy
+		    // TODO appendo alla lista un <li> per ogni <option> della select
+		    select.find('option').each( function( idx, el ) {
+			var opzione = $( el ).html().trim();
+			var valore = $( el ).attr( 'value' );
+			// $( el ).prop( 'selected', false );
+			// console.log( opzione + ' -> ' + valore );
+			// TODO filtro le opzioni in base al opzione del campo input
+			if( opzione.toLowerCase().indexOf( filtro.toLowerCase() ) >= 0 ) {
+				// console.log( opzione + ' -> ' + filtro );
+				if( valore == currvalue ) {
+					var classe = ' class="selected"';
+				} else {
+					var classe = '';
+*/
 			 console.log( 'filtro: ' + filtro );
 			 console.log( 'api: ' + $( select ).attr( 'populate-api' ) );
 
@@ -197,12 +213,13 @@
 					}
 					var li = '<li value="' + valore + '"' + classe + '>' + opzione + '</li>';
 					lista.append( li );
-				}
+
+        }
 				});
 
 				// TODO bind dell'evento click sulle opzioni per il cambio del valore della select
 				lista.find('li').each( function( idxl, li ) {
-				var opzione = $( li ).html();
+				var opzione = $( li ).html().trim();
 				var valore = $( li ).attr( 'value' );
 				$( li ).bind( 'click', function() {
 					$( select ).val( valore );
@@ -216,13 +233,31 @@
 				// console.log( 'bind a ' + valore + ' di ' + opzione );
 				});
 
-	/*
+	/* da output-tidy
 			// segnalazione visiva trovato o non trovato
 			if( found == false ) {
 				$( box ).css( 'background-color', '#eeeeee' );
 			} else {
 				$( box ).css( 'background-color', '#ffffff' );
 			}
+		    });
+
+		    // TODO bind dell'evento click sulle opzioni per il cambio del valore della select
+		    lista.find('li').each( function( idxl, li ) {
+			var opzione = $( li ).html().trim();
+			console.log(opzione);
+			var valore = $( li ).attr( 'value' );
+			$( li ).bind( 'click', function() {
+			    $( select ).val( valore );
+			    $( box ).val( opzione );
+				$( box ).addClass( 'combobox-base-background' );
+				$( box ).removeClass( 'combobox-active-background' );
+			    // $( box ).css( 'background-color', '#ffffff' );
+			    $( lista ).hide();
+			    // console.log( 'valore della select al click -> ' + $( select ).val() );
+			});
+			// console.log( 'bind a ' + valore + ' di ' + opzione );
+		    });
 	*/
 
 				// mostro la lista

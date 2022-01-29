@@ -64,3 +64,14 @@
 	    str_pad( $curMemory, 15, ' ', STR_PAD_LEFT ) . ' → ' . str_replace( '->', '→', $c );
 
     }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function timerGet( &$a ) {
+
+        // TODO restituisce la durata di esecuzione di un timer in secondi
+
+    }

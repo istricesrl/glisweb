@@ -11,8 +11,10 @@ gtag( 'js', new Date() );
 gtag( 'config', '{{ google.profile.analytics.ua }}'{% if google.profile.analytics.anonymous %}, { 'anonymize_ip': true }{% endif %} );
 </script>
 {% else %}
-<!-- profilo Analytics settato {% if google.profile.analytics.anonymous %}anonimo{% else %}identificativo{% endif %}/{% if privacy.cookie.terzi.analitici.identificativi.GoogleAnalytics.consenso %}consenso prestato{% else %}consenso non prestato{% endif %} -->
+<script>
+  /* profilo Analytics settato {% if google.analytics.profile.anonymous %}anonimo{% else %}identificativo{% endif %}/{% if privacy.cookie.terzi.analitici.identificativi.GoogleAnalytics.consenso %}consenso prestato{% else %}consenso non prestato{% endif %} */
+</script>
 {% endif %}
 {% else %}
-<!-- profilo Analytics non settato -->
+<script>/* profilo Analytics non settato */</script>
 {% endif %}
