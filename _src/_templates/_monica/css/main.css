@@ -16,7 +16,7 @@ main p {
     margin: 0.5em 0em;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
     margin: 0px;
 }
 
@@ -32,9 +32,17 @@ h3 {
     font-size: 1.25em;
 }
 
+h4, h5 {
+    font-size: 1em;
+}
+
 .logo img {
     height: 5em;
     padding: 0.5em;
+}
+
+div.jumbotron {
+    min-height: 16em;
 }
 
 a.nav-link, a.nav-link:visited {
@@ -42,6 +50,24 @@ a.nav-link, a.nav-link:visited {
 }
 
 a.nav-link:active, a.nav-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+a, a:visited {
+    color: #666666;
+}
+
+a:active, a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #ffffff;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
     color: #ffffff;
     text-decoration: underline;
 }
@@ -60,6 +86,7 @@ nav {
 
 footer {
     font-size: 0.8em;
+    padding: 1em 0em;
 }
 
 footer p {

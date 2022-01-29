@@ -19,7 +19,7 @@
 
     // tendina contratti
         $ct['etc']['select']['contratti'] = mysqlCachedIndexedQuery(
-        $cf['cache']['index'],
+        $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
         'SELECT id, __label__ FROM contratti_view'
@@ -30,12 +30,13 @@
         $ct['etc']['select']['turni'][] =  array( 'id' => $turno, '__label__' => $turno );
     }
 
+
     //tendina periodi
     $ct['etc']['select']['periodi'] = array(
     //    array( 'id' => 0, '__label__' => 'non si ripete' ),
-    //    array( 'id' => 1, '__label__' => 'giorno' ),
-        array( 'id' => 2, '__label__' => 'settimana' ),
-        array( 'id' => 3, '__label__' => 'mese' ),
+    //    array( 'id' => 1, '__label__' => 'giorni' ),
+        array( 'id' => 2, '__label__' => 'settimane' ),
+        array( 'id' => 3, '__label__' => 'mesi' ),
     //    array( 'id' => 4, '__label__' => 'anno' )
     );
 

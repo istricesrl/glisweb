@@ -44,10 +44,12 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
+	    <input type="hidden" id="se_mail" name="{{ table }}[se_mail]" value="1">
+
         {# MODULO PRINCIPALE #}
         <fieldset>
         <legend>dati generali <small>{{ legend }}</small></legend>
-    
+
         <div class="form-group form-row">
             <div class="col-12 col-md-4">
                 <span class="label-top ">nome</span>
@@ -59,7 +61,7 @@
             </div>
             <div class="col-12 col-md-4">
                 <span class="label-top ">tipo render del template</span>
-                {{ frm.selectRequired( table, '', '', 'type', '', etc.select.types, request ) }}  
+                {{ frm.selectRequired( table, '', '', 'tipo', '', etc.select.types, request ) }}  
             </div>
         </div>
 

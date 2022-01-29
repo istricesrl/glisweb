@@ -59,9 +59,9 @@
 	$curMemory = str_pad( writeByte( memory_get_usage( true ) ), 11, '-', STR_PAD_LEFT );
 
 	$a[ 'T'.str_replace(',','.',sprintf('%024.21f',$curTime )) ] = 
-	    str_replace(',','.',sprintf( '%0.3f', $curTime )) .
-	    ' (+' . $curDelta . ' ' . $curCheck . ') ' .
-	    $curMemory . ' → ' . str_replace( '->', '→', $c );
+	    str_pad( str_replace(',','.',sprintf( '%0.3f', $curTime )), 7, ' ', STR_PAD_LEFT ) .
+	    str_pad( '(+' . $curDelta . ' ' . $curCheck . ')', 15, ' ', STR_PAD_LEFT ) .
+	    str_pad( $curMemory, 15, ' ', STR_PAD_LEFT ) . ' → ' . str_replace( '->', '→', $c );
 
     }
 

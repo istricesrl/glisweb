@@ -139,6 +139,7 @@
 
 		    $m  = 'impossibile creare ' . $f;
 		    error_log( $m );
+            return false;
 
 		}
 
@@ -207,8 +208,18 @@
 
 	fullPath( $f );
 	$d = dirname( $f );
-	checkFolder( $d );
-	closeFile( openFile( $f ) );
+
+    if( checkFolder( $d ) ) {
+
+        if( closeFile( openFile( $f ) ) ) {
+
+            return true;
+
+        }
+
+    }
+
+    return false;
 
     }
 
@@ -510,7 +521,7 @@
      * @todo documentare
      *
      */
-    function getFilteredFileList( $d , $f = '*' ) {
+    function getFilteredFileList( $d , $f = '*', $s = false ) {
 
 	fullPath( $d );
 
@@ -521,7 +532,10 @@
 	foreach( $a as $t ) {
 	    if( is_file( $t ) ) {
 		shortPath( $t );
-		$r[] = $t;
+        if( $s !== false ) {
+            $t = basename( $t );
+        }
+        $r[] = $t;
 	    }
 	}
 
@@ -548,6 +562,33 @@
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function getFilteredDirList( $d, $f = '*', $s = false ) {
+
+        fullPath( $d );
+
+        $a = glob( $d . $f , GLOB_BRACE );
+    
+        $r = array();
+    
+        foreach( $a as $t ) {
+            if( is_dir( $t ) ) {
+            shortPath( $t );
+            if( $s !== false ) {
+                $t = basename( $t );
+            }
+            $r[] = $t;
+            }
+        }
+    
+        return $r;
+    
+    }
+       
     /**
      *
      * @todo documentare
@@ -661,7 +702,7 @@
 	fullPath( $f2 );
 	checkFolder( dirname( $f2 ) );
 
-	return rename( $f1, $f2 );
+	return @rename( $f1, $f2 );
 
     }
 
@@ -861,4 +902,45 @@
      */
     function array2file( $f, $a ) {
 	return writeToFile( trim( implode( PHP_EOL, str_replace( PHP_EOL, NULL, $a ) ) ), $f );
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function array2keyValueFile( $f, $a ) {
+
+        $t = NULL;
+
+        foreach( $a as $k => $v ) {
+            $t .= $k . '="' . trim( $v, " \n\r\t\v\0\"") . '"' . PHP_EOL;
+        }
+
+        return writeToFile( $t, $f );
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function keyValueFile2array( $f ) {
+
+        $a = file2array( $f );
+
+        $j = array();
+
+        foreach( $a as $r ) {
+
+            $s = explode( '=', $r );
+            if( count( $s ) == 2 ) {
+                $j[ $s[0] ] = trim( $s[1], " \n\r\t\v\0\"");
+            }
+
+        }
+
+        return $j;
+
     }

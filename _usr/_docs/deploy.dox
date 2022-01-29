@@ -1,0 +1,46 @@
+/*!
+
+    \page deploy strategie di deploy del framework
+
+    Descrizione delle strategie di deploy del framework.
+
+    introduzione
+    ============
+
+    il versionamento semantico 
+    ==========================
+
+    major release
+    -------------
+
+    minor release
+    -------------
+
+    patch release
+    -------------
+
+    il deploy a tre step
+    ====================
+
+    developement
+    ------------
+
+    testing
+    -------
+
+    production
+    ----------
+
+    modalità di deploy
+    ==================
+
+    deploy manuale
+    --------------
+
+    Phing
+    -----
+
+    Kubernetes
+    ----------
+
+*/

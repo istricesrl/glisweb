@@ -44,12 +44,12 @@
 {% endmacro %}
 
 {% macro video( page, lang, site, role, num ) %}
-{% if page.contents.video[ role ][ num ].id_tipologia_embed == 3 %}
+{% if page.contents.video[ role ][ num ].id_embed == 3 %}
 {% if not page.contents.video[ role ][ num ].ratio %}{% set rt = '16by9' %}{% else %}{% set rt = page.contents.video[ role ][ num ].ratio %}{% endif %}
 <div class="embed-responsive embed-responsive-{{ rt }}">
     <iframe class="embed-responsive-item lazyload" data-src="https://www.youtube.com/embed/{{ page.contents.video[ role ][ num ].codice_embed }}?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
 </div>
-{% elseif page.contents.video[ role ][ num ].id_tipologia_embed == 2 %}
+{% elseif page.contents.video[ role ][ num ].id_embed == 2 %}
 VIMEO
 {% else %}
 <video controls width="100%">
@@ -170,85 +170,86 @@ window.addEventListener( 'DOMContentLoaded', function() {
 
 {% macro jumbotron( page, lang, site, name, class, img ) %}
 {% import _self as cms %}
-<div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); background-size: cover;">
+<div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); background-size: cover; background-position: center;">
     <div class="container">
-	<div class="row">
-	    <div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">
-		{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] }}</h3>{% elseif page.h3[ lang ] %}<h3>{{ page.h3[ lang ]|raw }}</h3>{% endif %}
-		{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-		{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] }}</h1>{% elseif page.h1[ lang ] %}<h1>{{ page.h1[ lang ]|raw }}</h1>{% endif %}
-		{% if page.metadati.jt_h1_href %}</a>{% endif %}
-		{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] }}</h2>{% elseif page.h2[ lang ] %}<h2>{{ page.h2[ lang ]|raw }}</h2>{% endif %}
-		{% if page.metadati.jt_content[ lang ] %}
-		<div class="contents">
-		    {{ page.metadati.jt_content[ lang ]|raw }}
-		    {% if page.metadati.jt_action[ lang ] %}
-		    <p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
-		    {% endif %}
+		<div class="row">
+			<div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">
+				{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% endif %}
+				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1_href %}</a>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+				{% if page.metadati.jt_content[ lang ] %}
+				<div class="contents">
+					{{ page.metadati.jt_content[ lang ]|raw }}
+					{% if page.metadati.jt_action[ lang ] %}
+					<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
+					{% endif %}
+				</div>
+				{% endif %}
+			</div>
 		</div>
-		{% endif %}
-	    </div>
-	</div>
     </div>
 </div>
 {% if img %}
 <div class="d-block d-lg-none">
-    <div class="jumbotron">
-	<div class="container">
-	    <div class="row">
-		<div class="col">
-		    {% if page.metadati.jt_h3 %}<h3>{{ page.metadati.jt_h3 }}</h3>{% elseif page.h3 %}<h3>{{ page.h3[ lang ]|raw }}</h3>{% endif %}
-		</div>
+    <div class="jumbotron-responsive">
+		<div class="container">
+		    <div class="row">
+			<div class="col">
+		    	{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% endif %}
+			</div>
 	    </div>
 	</div>
-    </div>
-    {{ cms.image( page, lang, site, 'jumbotron', 10, img ) }}
-    <div class="jumbotron">
+</div>
+{{ cms.picture( page.contents.images.jumbotron|first(), lang, site, img ) }}
+<div class="jumbotron-responsive">
 	<div class="container">
 	    <div class="row">
-		<div class="col">
-		    {% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-		    {% if page.metadati.jt_h1 %}<h2>{{ page.metadati.jt_h1 }}</h1>{% elseif page.h1 %}<h1>{{ page.h1[ lang ]|raw }}</h1>{% endif %}
-		    {% if page.metadati.jt_h1_href %}</a>{% endif %}
-		    {% if page.metadati.jt_h2 %}<h1>{{ page.metadati.jt_h2 }}</h2>{% elseif page.h2 %}<h2>{{ page.h2[ lang ]|raw }}</h2>{% endif %}
-		</div>
+			<div class="col">
+				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1_href %}</a>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+			</div>
 	    </div>
 	    {% if page.metadati.jt_content[ lang ] %}
 	    <div class="row">
-		<div class="col">
-		    <div class="contents">
-			{{ page.metadati.jt_content[ lang ]|raw }}
-			{% if page.metadati.jt_action[ lang ] %}
-			<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
-			{% endif %}
-		    </div>
-		</div>
+			<div class="col">
+				<div class="contents">
+					{{ page.metadati.jt_content[ lang ]|raw }}
+					{% if page.metadati.jt_action[ lang ] %}
+					<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
+					{% endif %}
+				</div>
+			</div>
 	    </div>
 	    {% endif %}
-	</div>
     </div>
+</div>
 </div>
 {% endif %}
 {% endmacro %}
 
-{% macro carousel( page, lang, site, name, interval, set ) %}
+{% macro carousel( page, lang, site, name, interval, set, role ) %}
 {% import _self as cms %}
 <div id="{{ name }}" class="carousel slide {{ name }}" data-ride="carousel" data-interval="{{ interval }}">
-    {% if page.contents.images.carousel|length > 1 %}
+	{% if not role %}{% set role = 'carousel' %}{% endif %}
+    {% if page.contents.images[ role ]|length > 1 %}
     <ol class="carousel-indicators">
-	{% for i in 0..( page.contents.images.carousel|length - 1 ) %}
+	{% for i in 0..( page.contents.images[ role ]|length - 1 ) %}
 	<li data-target="#{{ name }}" data-slide-to="{{ i }}" class="{% if i == 0 %}active{% endif %}"></li>
 	{% endfor %}
     </ol>
     {% endif %}
     {% set i = 0 %}
     <div class="carousel-inner">
-	{% for img in page.contents.images.carousel %}
+	{% for img in page.contents.images[ role ] %}
 	<div class="carousel-item{% if i == 0 %} active{% endif %}">
 	    {% if img.metadati.link %}<a href="{{ img.metadati.link[ lang ] }}"{% if img.metadati.target %} target="{{ img.metadati.target }}"{% endif %}>{% endif %}
 	    {{ cms.picture( img, lang, site, set ) }}
 	    {% if img.h1 or img.h2 or img.cappello %}
-	    <div class="{% if img.metadati.captionClasses %}{{ img.metadati.captionClasses }}{% else %}carousel-caption{% endif %}">
+	    <div class="{% if img.metadati.captionClasses[ lang ] %}{{ img.metadati.captionClasses[ lang ] }}{% else %}carousel-caption{% endif %}">
 		{% if img.h1 %}<h1>{{ img.h1[ lang ]|raw }}</h1>{% endif %}
 		{% if img.h2 %}<h2>{{ img.h2[ lang ]|raw }}</h2>{% endif %}
 		{% if img.cappello %}<p>{{ img.cappello[ lang ]|raw }}</p>{% endif %}
@@ -259,7 +260,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	{% set i = i + 1 %}
 	{% endfor %}
     </div>
-    {% if page.contents.images.carousel|length > 1 %}
+    {% if page.contents.images[ role ]|length > 1 %}
     <a class="carousel-control-prev" href="#{{ name }}" role="button" data-slide="prev">
 	<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 	<span class="sr-only">Previous</span>
@@ -308,14 +309,18 @@ window.addEventListener( 'DOMContentLoaded', function() {
 </script>
 {% endmacro %}
 
-{% macro gallery2colorbox( page, lang, site, name, set ) %}
+{% macro gallery2colorbox( page, lang, site, name, set, image, class, cols, trans ) %}
+{% import _self as cms %}
+{% if not trans %}{% set trans = 'elastic' %}{% endif %}
+{% if not cols %}{% set md = 3 %}{% else %}{% set md = ( 12 / cols )|round %}{% endif %}
+{% if md > 2 %}{% set col = 6 %}{% else %}{% set col = 12 %}{% endif %}
+{% if not class %}{% set class = ' d-flex justify-content-center' %}{% endif %}
 {% set alert = '' %}
-<div id="{{ name }}" class="row g2cb" style="display: none;">
+<div id="{{ name }}" class="row g2cb {{ class }}" style="display: none;">
     {% for k in set %}
     {% for img in page.contents.images[ k ] %}
-    <div class="col col-md-3"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
-	<img src="{{ site.root }}{{ img.path }}" class="img-fluid mb-3">
-	{# TODO provare a usare la macro standard picture #}
+    <div class="col-{{ col }} col-md-{{ md }}"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
+		{{ cms.picture( img, lang, site, image, '', '', 'img-fluid mb-4' ) }}
     </a></div>
     {% else %}
     {% set alert = alert ~ '<p><strong>ATTENZIONE!</strong> immagini mancanti per ' ~ k ~ '</p>' %}
@@ -326,10 +331,37 @@ window.addEventListener( 'DOMContentLoaded', function() {
 <script defer>
     window.addEventListener( 'DOMContentLoaded', function() {
 
-	$('.g2cb-gallery').colorbox({ width: "90%", height: "90%", rel: "g2cb-gallery", transition: "none" });
+		$('.g2cb-gallery').colorbox({
+			width: "90%",
+			height: "90%",
+			rel: "g2cb-gallery",
+			transition: "{{ trans }}"
+		});
 
-	$('.g2cb').fadeIn();
+		$('.g2cb').fadeIn();
 
     });
 </script>
+{% endmacro %}
+
+{% macro numeroverde( num ) %}
+<div class="numero-verde">
+	<div class="telefono"><i class="fa fa-phone" aria-hidden="true"></i></div>
+	<p class="etichetta">numero verde</p><a href="tel:{{ num }}">{{ num }}</a>
+</div>
+{% endmacro %}
+
+{% macro shareBtn( social, url, img, txt, class ) %}
+{% if social == 'facebook' %}
+{% set a = 'https://www.facebook.com/sharer/sharer.php?u=' ~ url %}
+{% elseif social == 'twitter' %}
+{% set a = 'https://twitter.com/intent/tweet?url=' ~ url ~ '&text=' ~ txt %}
+{% elseif social == 'pinterest' %}
+{% set a = 'http://pinterest.com/pin/create/button/?url=' ~ url ~ '&media=' ~ img ~ '&description=' ~ txt %}
+{% elseif social == 'linkedin' %}
+{% set a = 'http://www.linkedin.com/shareArticle?mini=true&url=' ~ url ~ '&title=' ~ txt %}
+{% elseif social == 'tumblr' %}
+{% set a = 'http://www.tumblr.com/share?v=3&u=' ~ url ~ '&t=' ~ txt %}
+{% endif %}
+<a class="btn {{ class }}" target="_blank" href="{{ a }}"></a>
 {% endmacro %}

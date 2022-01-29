@@ -71,6 +71,7 @@
     browser            | NULL                   | browser.html                   | _src/_inc/_macro/_browser.php
     dashboard          | NULL                   | dashboard.html                 | _src/_inc/_macro/_dashboard.php
     delete             | NULL                   | delete.html                    | _src/_inc/_macro/_delete.php
+    password.reset     | NULL                   | password.reset.html            | _src/_inc/_macro/_password.reset.php
     strumenti          | NULL                   | strumenti.html                 | _src/_inc/_macro/_strumenti.php
 
     Alcuni esempi di pagine view:
@@ -104,6 +105,12 @@
     ID pagina             | ID parent              | schema                            | macro
     ----------------------|------------------------|-----------------------------------|------------------------------------------------
     gruppi.form.membri    | gruppi.view            | gruppi.form.membri.html           | _src/_inc/_macro/_gruppi.form.membri.php che include _src/_inc/_macro/_default.form.php
+
+    Alcuni esempi di pagine tools:
+
+    ID pagina             | ID parent              | schema                            | macro
+    ----------------------|------------------------|-----------------------------------|------------------------------------------------
+    anagrafica.tools      | anagrafica.view        | default.tools.html                | _src/_inc/_macro/_anagrafica.tools.php che include _default.tools.php
 
     Volendo creare una nuova pagina di una data tipologia, si può anche per brevità partire dalla copia dei file di una delle pagine sopra citate ad esempio.    
 
@@ -145,14 +152,33 @@
     view.table              | il nome dell'entità su cui lavorare, di solito una tabella del database (ma potrebbe anche trattarsi di una view virtuale, vedi \ref database "la documentazione relativa al database" per ulteriori dettagli)
     view.cols               | un array associativo in cui le chiavi rappresentano i nomi dei campi del database mentre i valori le etichette da porre in intestazione di tabella
     view.class              | un array associativo in cui le chiavi rappresentano i nomi dei campi del database mentre i valori le classi CSS da applicare alle celle della relativa colonna
+    view.onclick            | un array associativo in cui le chiavi rappresentano i nomi dei campi del database mentre i valori il codice Javascript da assegnare alla colonna
     view.open.page          | l'ID della pagina a cui portare l'utente quando fa click su una riga; il link porta con sé la query string <entità>[id]=<idEntità> (di solito una pagina di tipo form con ID form_<entità>)
     view.open.table         | il nome della tabella del database da utilizzare per aprire la riga; questo è necessario soprattutto quando la view fa riferimento a un'entità virtuale (vedi \ref database "la documentazione relativa al database")
+    view.insert.page        | l'ID della pagina a cui portare l'utente quando fa clic sul + per inserire una riga, la _default.view.php gli assegna di default il valore di view.open.page se non diversamente specificato e se si hanno permessi sufficeinti;
+    view.insert.path        | il percorso della pagina di inserimento calcolato in base al view.insert.page
 
     Si noti che l'intestazione delle colonne dichiarate in entità.view.php è molto importante in quanto lavorano sulla select che andarà a estrarre le colonne da mostrare nella view. Non è detto che le colonne dichiarate debbano essere visibili
     nella view, queste possono essere anche nascoste nel caso in cui si voglia filtrare la view senza mostrare effettivamente il campo.
 
+    La chiave view.onclick può essere utilizzata per assegnare comportamenti arbitrari alle colonne della view, posto di bloccare la propagazione del click, ad esempio:
+
+    \code{.php}
+    // click della vista
+    $ct['view']['onclick'] = array(
+        'mail' => 'event.stopPropagation(); alert("esempio");'
+    );
+    \endcode
+
     Visto il ruolo fondamentale che gioca nella composizione della vista, si studi attentamente anche la struttura dell'array
     $cf['request']['__view__'] nella \ref variabili "documentazione relativa alle variabili del framework".
+
+    La chiave view.insert.path decreta la presenza o meno del pulsante + per l'inserimento di una nuova riga a partire da una vista.
+    Per far si che non sia possibile inserire un nuovo elementi nonostante si abbiano permessi sufficienti basterà inserire il seguente codice dopo aver incluso la _default.view.php
+    \code{.php}
+    // nascondere il button + per l'inserimento di una nuova riga
+    $ct['view']['insert']['path'] = NULL;
+    \endcode
 
     le pagine form
     --------------
@@ -345,6 +371,26 @@
     - creare se necessario la macro PHP
     - creare lo schema Twig
     - creare se necessario il file Twig per le subform
+
+    le pagine tools
+    ---------------
+    Le pagine tools fanno solitamente largo uso della macro Twig _src/_templates/_athena/inc/metro.html per rappresentare
+    all'utente elementi interattivi e dati. Esaminando il codice della macro si noterà che, per quanto riguarda i primi, ci
+    sono diverse strategie che possono essere adottate sia relativamente all'esperienza utente sia relativamente all'azione
+    da scatenare in risposta all'interazione dell'utente. Riassumendo, al click su un bottone metro è possibile avere:
+
+    - l'apertura diretta di un URL (link HTML) nel caso la configurazione del bottone contenga il parametro 'url'
+    - l'apertura di un modal, nel caso la configurazione del bottone contenga il parametro 'modal' con le relative sottochiavi 'id' e 'include'
+    - la chiamata asincrona di un URL, nel caso la configurazione del bottone contenga il parametro 'ws' con le relative sotto chiavi
+    - codice arbitrario nel caso sia specificato il parametro 'include' che indica il percorso del file Twig da includere
+
+    Si noti che l'inclusione del codice dei modal avviene in _src/_html/_inc/_page.close.html per l'array principale $ct['page']['contents']['modals']
+    e che i modal dichiarati dai bottoni metro vengono fatti confluire in questo array in _src/_inc/_macro/_default.tools.php. Convenzionalmente,
+    la nomenclatura dei file Twig che contengono il codice dei modal è <pagina>.modal.<ruolo>.html ed essi vengono collocati nella sotto cartella
+    inc/ del template.
+
+    meccaniche del template
+    =======================
 
     il meccanismo di cancellazione
     ------------------------------

@@ -43,6 +43,7 @@
     --------------------------|---------------------------------------------------------------------------------------
     bin/                      | contiene le macro Twig del template (quelle che vengono importate)
     css/                      | contiene i fogli di stile CSS del template
+    css/themes/               | contiene i fogli di stile CSS dei temi del template
     etc/                      | contiene i file di configurazione del template
     ext/                      | contiene i file Twig di base del template, che vengono poi estesi dagli schemi
     img/                      | contiene gli elementi grafici del template
@@ -202,7 +203,7 @@
 
     libreria                          | codice per l'inclusione                      | descrizione
     ----------------------------------|----------------------------------------------|------------------------------------------------------
-    _src/_html/_bin/_default.html     | {% import '_bin/_default.html' as cms %}    | contiene macro per renderizzare i contenuti delle pagine web
+    _src/_html/_bin/_default.html     | {% import '_bin/_default.html' as cms %}     | contiene macro per renderizzare i contenuti delle pagine web
     _src/_html/_bin/_form.html        | {% import '_bin/_form.html' as frm %}        | contiene macro per creare gli elementi dei form
     _src/_html/_bin/_navigation.html  | {% import '_bin/_navigation.html' as frm %}  | contiene macro per creare gli elementi di navigazione delle pagine
 
@@ -237,8 +238,12 @@
     jQuery 3.5.1           | -                                                                                             | external[] = https://code.jquery.com/jquery-3.5.1.min.js
     jQueryUI 1.12.1        | external[] = https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css                  | external[] = https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
     FontAwesome 4.7        | external[] = https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css   | -
+    Lazysizes 5.2.0        | -                                                                                             | external[] = https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.0/lazysizes.min.js
     OpenLayers 5.3.0       | external[] = https://openlayers.org/en/v5.3.0/css/ol.css                                      | external[] = https://openlayers.org/en/v5.3.0/build/ol.js
     Popper.js              | -                                                                                             | external[] = https://unpkg.com/@popperjs/core@2
+
+    Si noti che i CSS possono essere inclusi anche come preload anziché come external, per massimizzare la velocità di caricamento. La libreria Lazysizes è richiesta
+    per il lazy loading delle immagini.
 
     librerie interne
     ----------------
@@ -268,7 +273,7 @@
           "it-IT": "sito di esempio"
         },
         "metadata":{
-            "theme": "css/themes/green.css"
+            "theme": "themes/green.css"
         },
         "protocols": {
           "TEST": "http",
@@ -293,7 +298,7 @@
     }
     \endcode
 
-    Oppure a livello di pagina:
+    Oppure a livello di pagina sia nel PHP che nel JSON come in questo esempio:
 
     \code{.json}
     "contents": {
@@ -303,16 +308,29 @@
           "title": { "it-IT": "test da Json" },
           "h1": { "it-IT": "pagina di test da configurazione Json" },
           "parent": { "id": null },
-          "template": { "path": "_src/_templates/_athena/", "theme": "css/themes/green.css" },
+          "template": { "path": "_src/_templates/_athena/", "theme": "themes/green.css" },
           "menu": {
             "main": {
-              "label": { "it-IT": "test Json" },
-              "priority": 10
+              "": {
+                "label": { "it-IT": "test Json" },
+                "priority": 10
+              }
             }
           }
         }
       }
     }
+    \endcode
+
+    I temi sono essenzialmente dei file CSS salvati nella sottocartella css/themes/ del template.
+
+    link interni
+    ------------
+    Dal momento che i template hanno visibilità sull'array di configurazione, è facile creare link interni in maniera dinamica, così da non doverli aggiornare
+    all'eventuale cambiamento del percorso di destinazione; per farlo è sufficiente utilizzare l'url memorizzato nell'array $ct, ad esempio:
+
+    \code{.html}
+    <p><a href="{{ pages.4.url[ localization.language.ietf ] }}">esempio di link interno</a></p>
     \endcode
 
 */

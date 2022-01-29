@@ -42,7 +42,10 @@
 	    ),
 	    'log' => array(
 		'label' => 'gestione di log e storage'
-	    )
+	    ),
+		'static' => array(
+			'label' => 'gestione delle viste statiche'
+		)
 	);
 
     // aggiornamento cache
@@ -140,6 +143,23 @@
 	    );
 	}
 
+	$ct['page']['contents']['metro']['static'][] = array(
+		'modal' => array('id' => 'refresh', 'include' => 'bin/refresh.view.static.html', 'onclick' => 'updateButton();'),
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'ripopola view static',
+		'text' => 'ripopola una o tutte le view static presenti nel database'
+	    );
+
+	// elenco delle view statiche
+	$ct['etc']['static_view'] = mysqlCachedQuery(	   
+		$cf['memcache']['connection'], 
+		$cf['mysql']['connection'], 
+		'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME LIKE "%_static" AND table_schema = database()');	
+
     // debug
 	// print_r( $_SESSION );
 	// echo DIRECTORY_CACHE . 'twig';
+
+	// macro di default
+    require DIR_SRC_INC_MACRO . '_default.tools.php';

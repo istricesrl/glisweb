@@ -32,6 +32,30 @@
 
     // array dei permessi
 	$cf['auth']['permissions'] = array(
+	/*	'__acl_anagrafica__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_todo__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_progetti__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_progetti_produzione__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_documenti__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_documenti_articoli__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_scadenze__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
+		'__acl_contatti__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),*/
 	    'account' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
@@ -42,10 +66,12 @@
 		CONTROL_FULL => array( 'roots' )
 	    ),
 	    'anagrafica' => array(
-		CONTROL_FULL => array( 'roots' ),
-		CONTROL_FILTERED => array( 'staff' )
+		CONTROL_FULL => array( 'roots','staff' )
 	    ),
-	    'anagrafica_archiviati' => array(
+	    'anagrafica_attivi' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+			),
+			'anagrafica_archiviati' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
@@ -53,19 +79,20 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
+		'anagrafica_certificazioni' => array(
+            CONTROL_FULL => array( 'roots' )
+        ),
 	    'anagrafica_cittadinanze' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'anagrafica_clienti' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
 		'anagrafica_condizioni_pagamento' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 		),
 		'anagrafica_indirizzi' => array(
-		CONTROL_FULL => array( 'roots' )
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
 		),
 		'anagrafica_modalita_pagamento' => array(
 		CONTROL_FULL => array( 'roots' ),
@@ -88,11 +115,15 @@
 	    'categorie_anagrafica' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
+		'categorie_attivita' => array(
+		CONTROL_FULL => array( 'roots' )
+		),
 	    'comuni' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 	    'contenuti' => array(
-		CONTROL_FULL => array( 'roots' )
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
 		),
 #	    'cron' => array(
 #		CONTROL_FULL => array( 'roots' )
@@ -115,17 +146,17 @@
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'immagini_anagrafica' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#	    ),
+	    'immagini_anagrafica' => array(
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
+	    ),
 	    'indirizzi' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-#	    'job' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'job' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'luoghi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -143,18 +174,20 @@
 			CONTROL_FULL => array( 'roots' )
 	    ),
 	    'metadati' => array(
-		CONTROL_FULL => array( 'roots' )
+		CONTROL_FULL => array( 'roots' ),
+		CONTROL_FILTERED => array( 'staff' )
 		),
 		'pianificazioni' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
-		'progetti' => array(
-			CONTROL_FULL => array( 'roots' )
-		),
 		'progetti_anagrafica' => array(
-			CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
 		),
-	    'pubblicazione' => array(
+		'progetti_certificazioni' => array(
+            CONTROL_FULL => array( 'roots' )
+        ),
+	    'pubblicazioni' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
 #	    'prezzi' => array(
@@ -175,11 +208,15 @@
 #	    'sms_sent' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
+		'task' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
 	    'telefoni' => array(
 		CONTROL_FULL => array( 'roots' ),
 		CONTROL_FILTERED => array( 'staff' )
 	    ),
-	    'template_mail' => array(
+	    'template' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
 	    'test' => array(
@@ -191,16 +228,26 @@
 #	    'tipologie_attivita' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'tipologie_crm' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
-	    'tipologie_crm' => array(
+	    'ranking' => array(
 		CONTROL_FULL => array( 'roots' )
+		),
+		'todo' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
+		'todo_archivio' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
+		'todo_completa' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
 		),
 		'turni' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
 	    'video' => array(
-			CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
 		)
 	);

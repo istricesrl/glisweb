@@ -18,16 +18,25 @@
 	    die( '[FAIL] versione di PHP (' . PHP_VERSION . ') non supportata: ' . PHP_VERSION . PHP_EOL );
 	}
 
-    // versione del framework
-	if( version_compare( VERSION_CURRENT, VERSION_LATEST ) == 0 ) {
-	    echo '[ OK ] framework aggiornato alla stable (' . VERSION_CURRENT . ')' . PHP_EOL;
-	} elseif( version_compare( VERSION_CURRENT, VERSION_LATEST ) == -1 ) {
-	    echo '[WARN] stai usando una versione obsoleta (' . VERSION_CURRENT . ') rispetto alla stable ' . VERSION_LATEST . PHP_EOL;
+    // release del framework
+	if( version_compare( RELEASE_CURRENT, RELEASE_LATEST ) == 0 ) {
+	    echo '[ OK ] framework aggiornato alla release stable (' . RELEASE_CURRENT . ')' . PHP_EOL;
+	} elseif( version_compare( RELEASE_CURRENT, RELEASE_LATEST ) == -1 ) {
+	    echo '[WARN] stai usando una release obsoleta (' . RELEASE_CURRENT . ') rispetto alla stable ' . RELEASE_LATEST . PHP_EOL;
 	} else {
-	    echo '[INFO] stai usando una versione di sviluppo (' . VERSION_CURRENT . ') superiore alla stable ' . VERSION_LATEST . PHP_EOL;
+	    echo '[INFO] stai usando una release di sviluppo (' . RELEASE_CURRENT . ') superiore alla stable ' . RELEASE_LATEST . PHP_EOL;
 	}
 
-    // output
+    // versione del framework
+	if( VERSION_CURRENT == VERSION_LATEST ) {
+	    echo '[ OK ] framework aggiornato (' . VERSION_CURRENT . ')' . PHP_EOL;
+	} elseif( VERSION_CURRENT < VERSION_LATEST ) {
+	    echo '[WARN] stai usando una versione obsoleta (' . VERSION_CURRENT . ') rispetto a ' . VERSION_LATEST . PHP_EOL;
+	} else {
+	    echo '[INFO] stai usando una versione di sviluppo (' . VERSION_CURRENT . ') superiore a ' . VERSION_LATEST . PHP_EOL;
+	}
+
+	// output
 	echo PHP_EOL;
 
     // directory base
@@ -37,38 +46,44 @@
 	    echo '[ -- ] directory base: ' . DIR_BASE . PHP_EOL;
 	}
 
-    // directory da controllare
-	$dirs = array( 'var/', 'var/log/', 'tmp/' );
-
     // permessi di scrittura
-	foreach( $dirs as $dir ) {
-	    if( is_dir( DIR_BASE . $dir ) && is_writeable( DIR_BASE . $dir ) ) {
-		echo '[ OK ] posso scrivere su ' . $dir . PHP_EOL;
+	foreach( array_keys( $cf['debug']['fs']['folders'] ) as $dir ) {
+	    if( is_dir( $dir ) && is_writeable( $dir ) ) {
+		echo '[ OK ] posso scrivere su ' . shortPath( $dir ) . PHP_EOL;
 	    } else {
-		die( '[FAIL] non posso scrivere su ' . $dir . PHP_EOL );
+		die( '[FAIL] non posso scrivere su ' . shortPath( $dir ) . PHP_EOL );
 	    }
 	}
 
-    // file di configurazione JSON
-	if( ! file_exists( DIR_BASE . 'src/config/external/config.json' ) ) {
-	    echo '[ -- ] file /src/config/external/config.json non trovato' . PHP_EOL;
-	    if( ! file_exists( DIR_BASE . 'src/config.json' ) ) {
-		echo '[ -- ] file /src/config.json non trovato' . PHP_EOL;
+    // permessi di scrittura
+	foreach( array_keys( $cf['debug']['fs']['files'] ) as $file ) {
+	    if( is_writeable( $file ) ) {
+		echo '[ OK ] posso scrivere su ' . shortPath( $file ) . PHP_EOL;
 	    } else {
-		echo '[ -- ] file /src/config.json trovato' . PHP_EOL;
+		die( '[FAIL] non posso scrivere su ' . shortPath( $file ) . PHP_EOL );
+	    }
+	}
+
+	// file di configurazione JSON
+	if( ! file_exists( DIR_BASE . 'src/config/external/config.json' ) ) {
+	    echo '[ -- ] file src/config/external/config.json non trovato' . PHP_EOL;
+	    if( ! file_exists( DIR_BASE . 'src/config.json' ) ) {
+		echo '[ -- ] file src/config.json non trovato' . PHP_EOL;
+	    } else {
+		echo '[ -- ] file src/config.json trovato' . PHP_EOL;
 		if( jsonCheck( readFromFile( 'src/config.json', FILE_READ_AS_STRING ) ) ) {
-		    echo '[ OK ] file /src/config.json sintatticamente corretto' . PHP_EOL;
+		    echo '[ OK ] file src/config.json sintatticamente corretto' . PHP_EOL;
 		} else {
-		    die( '[FAIL] file /src/config.json corrotto o malformato' . PHP_EOL );
+		    die( '[FAIL] file src/config.json corrotto o malformato' . PHP_EOL );
 		}
 	    }
 	} else {
-	    echo '[ -- ] file /src/config.json ignorato' . PHP_EOL;
-	    echo '[ -- ] file /src/config/external/config.json trovato' . PHP_EOL;
+	    echo '[ -- ] file src/config.json ignorato' . PHP_EOL;
+	    echo '[ -- ] file src/config/external/config.json trovato' . PHP_EOL;
 	    if( jsonCheck( readFromFile( 'src/config/external/config.json', FILE_READ_AS_STRING ) ) ) {
-		echo '[ OK ] file /src/config/external/config.json sintatticamente corretto' . PHP_EOL;
+		echo '[ OK ] file src/config/external/config.json sintatticamente corretto' . PHP_EOL;
 	    } else {
-		die( '[FAIL] file /src/config/external/config.json corrotto o malformato' . PHP_EOL );
+		die( '[FAIL] file src/config/external/config.json corrotto o malformato' . PHP_EOL );
 	    }
 	}
 
@@ -127,14 +142,14 @@
 
     // aggiornamento della sitemap
 	if( empty( $cf['sitemap']['updated'] ) ) {
-	    echo '[WARN] sitemap non presente' . PHP_EOL;
+	    echo '[INFO] sitemap non presente' . PHP_EOL;
 	} else {
 	    echo '[ -- ] ultimo aggiornamento della sitemap: ' . date( 'Y-m-d H:i:s', $cf['sitemap']['updated'] ) . PHP_EOL;
 	}
 
     // aggiornamento delle pagine
 	if( empty( $cf['contents']['updated'] ) ) {
-	    echo '[WARN] data di aggiornamento dei contenuti non disponibile' . PHP_EOL;
+	    echo '[INFO] data di aggiornamento dei contenuti non disponibile' . PHP_EOL;
 	} else {
 	    echo '[ -- ] ultimo aggiornamento dei contenuti: ' . date( 'Y-m-d H:i:s', $cf['contents']['updated'] ) . PHP_EOL;
 	}
@@ -206,6 +221,7 @@
 			echo '[ OK ] connessione MySQL su ' . $cf['mysql']['server']['address'] . ':' . $cf['mysql']['server']['port'] . ' presente' . PHP_EOL;
 			echo '[ -- ] versione del server MySQL: ' . $cf['mysql']['server']['version'] . PHP_EOL;
 			echo '[ -- ] database selezionato: ' . $cf['mysql']['server']['db'] . PHP_EOL;
+/*
 			echo '[ -- ] livello di patch: ' . $cf['mysql']['profile']['patch']['current'] . PHP_EOL;
 			if( $cf['mysql']['profile']['patch']['current'] == $cf['mysql']['profile']['patch']['latest'] ) {
 				echo '[ OK ] database aggiornato alla patch: ' . $cf['mysql']['profile']['patch']['latest'] . PHP_EOL;
@@ -218,7 +234,8 @@
 			foreach( $fails as $fail ) {
 				echo '[WARN] applicare manualmente la patch: ' . basename( $fail ) . PHP_EOL;
 			}
-	    } else {
+*/
+		} else {
 			echo( '[FAIL] connessione assente' . PHP_EOL );
 	    }
 	} else {

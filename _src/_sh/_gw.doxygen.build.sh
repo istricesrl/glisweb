@@ -13,6 +13,11 @@ cd $RL
 ## informazioni
 echo "lavoro su: $(pwd)"
 
+## pulizia
+rm -rf _usr/_docs/_build/*
+mkdir -p _usr/_docs/_build/html
+mkdir -p _usr/_docs/_build/latex
+
 ## pacchetti richiesti
 apt-get install doxygen
 apt-get install texlive-latex-base texlive-latex-extra

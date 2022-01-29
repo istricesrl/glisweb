@@ -1,1 +1,0 @@
-ALTER TABLE `task` ADD `id_luogo` INT NULL DEFAULT NULL AFTER `id_progetto`, ADD INDEX (`id_luogo`) ;

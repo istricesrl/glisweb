@@ -47,16 +47,13 @@
             <legend>archiviazione del contatto</legend>
             <div class="form-group form-row">
                 <div class="col-12 col-md-auto">
-                <span class="label-top">data cessazione</span>{{ frm.date( table, '', '', 'data_cessazione','','',request ) }}
+                <span class="label-top">data archiviazione</span>{{ frm.date( table, '', '', 'data_archiviazione','','',request ) }}
                 </div>
                 <div class="col-1 col-md" >
-                    <span class="label-top">note cessazione</span>{{ frm.textarea( table, '', '', 'note_cessazione', 'note cessazione', 3, request ) }}
+                    <span class="label-top">note archiviazione</span>{{ frm.textarea( table, '', '', 'note_archiviazione', '', 3, request ) }}
                 </div>
-    
             </div>
-    
-            </fieldset>
-    
+        </fieldset>
 
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

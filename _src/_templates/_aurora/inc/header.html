@@ -1,3 +1,7 @@
 {% import '_bin/_navigation.html' as nav %}
 
-<div>{{ nav.lineBreadcrumbs( page.template.breadcrumbs, localization.language.ietf ) }}</div>
+{% if page.template.breadcrumbs %}
+<header>
+    <div>{{ nav.lineBreadcrumbs( page.template.breadcrumbs, localization.language.ietf ) }}</div>
+</header>
+{% endif %}

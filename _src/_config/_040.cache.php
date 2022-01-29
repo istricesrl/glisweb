@@ -55,16 +55,16 @@
 	define( 'MEMCACHE_UNIQUE_SEED'			, strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
 
     // costanti per i blocchi di dati da salvare in cache
-	define( 'CONTENTS_PAGES_DATA'			, 'CONTENTS_PAGES_DATA' );
-	define( 'CONTENTS_PAGES_UPDATED'		, 'CONTENTS_PAGES_UPDATED' );
-	define( 'CONTENTS_PAGES_CACHED'		, 'CONTENTS_PAGES_CACHED' );
-	define( 'CONTENTS_INDEX_KEY'			, 'CONTENTS_INDEX_KEY' );
-	define( 'CONTENTS_TREE_KEY'			, 'CONTENTS_TREE_KEY' );
-	define( 'CONTENTS_PAGES_KEY'			, 'CONTENTS_PAGES_KEY' );
-	define( 'CONTENTS_SHORTCUTS_KEY'		, 'SHORTCUTS_PAGES_KEY' );
+	define( 'CONTENTS_PAGES_DATA'			    , 'CONTENTS_PAGES_DATA' );
+	define( 'CONTENTS_PAGES_UPDATED'		    , 'CONTENTS_PAGES_UPDATED' );
+	define( 'CONTENTS_PAGES_CACHED'		        , 'CONTENTS_PAGES_CACHED' );
+	define( 'CONTENTS_INDEX_KEY'			    , 'CONTENTS_INDEX_KEY' );
+	define( 'CONTENTS_TREE_KEY'			        , 'CONTENTS_TREE_KEY' );
+	define( 'CONTENTS_PAGES_KEY'			    , 'CONTENTS_PAGES_KEY' );
+	define( 'CONTENTS_SHORTCUTS_KEY'		    , 'SHORTCUTS_PAGES_KEY' );
 
     // server memcache disponibili
-	$cf['memcache']['servers']			= array();
+	$cf['memcache']['servers']			        = array();
 
     // profili di funzionamento del sistema memcache
 	$cf['memcache']['profiles'][ DEVELOPEMENT ]	=
@@ -72,7 +72,7 @@
 	$cf['memcache']['profiles'][ PRODUCTION ]	= array();
 
     // connessioni disponibili
-	$cf['memcache']['connections']			= array();
+	$cf['memcache']['connections']			    = array();
 
     // configurazione extra
 	if( isset( $cx['memcache'] ) ) {
@@ -80,7 +80,7 @@
 	}
 
     // collegamento all'array $ct
-	$ct['memcache']					= &$cf['memcache'];
+	$ct['memcache']					            = &$cf['memcache'];
 
     // server redis disponibili
 	$cf['redis']['servers']				= array();

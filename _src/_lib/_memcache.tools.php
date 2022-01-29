@@ -26,6 +26,16 @@
 
     }
 
+    function memcacheAddKeyAgeSuffix( $k ) {
+
+        if( substr( $k, -4 ) != '_AGE' ) {
+            $k .= '_AGE';
+        }
+
+        return $k;
+
+    }
+
     /**
      *
      * @todo documentare
@@ -37,7 +47,7 @@
 
         if( empty( $conn ) ) {
 
-            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
+            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
 
             return false;
 
@@ -50,8 +60,8 @@
             if( $r == false ) {
                 logWrite( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
             } else {
-                memcacheWrite( $conn, $key . '_AGE', time() );
-                logWrite( 'scrittura effettuata, chiave: ' . $key, 'memcache', LOG_DEBUG );
+                $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), time(), $ttl );
+                logWrite( 'scrittura effettuata, chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache' );
             }
 
             return $r;
@@ -67,7 +77,7 @@
      */
     function memcacheGetKeyAge( $conn, $key ) {
 
-        return memcacheRead( $conn, $key . '_AGE' );
+        return memcacheRead( $conn, memcacheAddKeyAgeSuffix( $key ) );
 
     }
 
@@ -82,7 +92,7 @@
 
 	if( empty( $conn ) ) {
 
-		logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache', LOG_ERR );
+		logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
 
 		return false;
 
@@ -91,9 +101,9 @@
 		$r = $conn->get( $key );
 
 		if( $r == false ) {
-		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache', LOG_DEBUG );
+		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
 		} else {
-		    logWrite( 'lettura effettuata, chiave: ' . $key, 'memcache', LOG_DEBUG );
+		    logWrite( 'lettura effettuata, chiave: ' . $key, 'memcache' );
 		}
 
 		return $r;
@@ -111,7 +121,11 @@
 
 	memcacheUniqueKey( $key );
 
-	return $conn->delete( $key );
+    if( ! empty( $conn ) ) {
+        return $conn->delete( $key );
+    } else {
+        return false;
+    }
 
     }
 

@@ -92,29 +92,53 @@
 	    $cf['common']['license']['id']		= NULL;
 	}
 
-    // controllo aggiornamento
-	if( ! file_exists( FILE_LATEST_UPDATE ) || filemtime( FILE_LATEST_UPDATE ) < strtotime( '-1 week' ) ) {
-	    $latest = restCall(
-		'https://glisweb.videoarts.it/current.release',
-		METHOD_GET,
-		array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'] ),
-		MIME_APPLICATION_JSON,
-		MIME_TEXT_PLAIN
+    // controllo aggiornamento release
+	if( ! file_exists( FILE_LATEST_RELEASE ) || filesize( FILE_LATEST_RELEASE ) == 0 || filemtime( FILE_LATEST_RELEASE ) < strtotime( '-1 week' ) ) {
+	    $latestRelease = restCall(
+            'https://glisweb.videoarts.it/current.release',
+            METHOD_GET,
+            array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'] ),
+            MIME_APPLICATION_JSON,
+            MIME_TEXT_PLAIN
 	    );
-	    writeToFile( $latest, FILE_LATEST_UPDATE );
+        writeToFile( $latestRelease, FILE_LATEST_RELEASE );
+    }
+
+    // controllo aggiornamento versione
+    if( ! file_exists( FILE_LATEST_VERSION ) || filesize( FILE_LATEST_VERSION ) == 0 || filemtime( FILE_LATEST_VERSION ) < strtotime( '-1 week' ) ) {
+        $latestVersion = restCall(
+            'https://glisweb.videoarts.it/current.version',
+            METHOD_GET,
+            array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'], 'release' => $latestRelease ),
+            MIME_APPLICATION_JSON,
+            MIME_TEXT_PLAIN
+        );
+        writeToFile( $latestVersion, FILE_LATEST_VERSION );
 	}
 
     // versione corrente del framework
     $cf['common']['version']['current'] = trim( readStringFromFile( FILE_CURRENT_VERSION ) );
 
+    // release corrente del framework
+    $cf['common']['release']['current'] = trim( readStringFromFile( FILE_CURRENT_RELEASE ) );
+
     // costante per la versione corrente del framework
     define( 'VERSION_CURRENT'		, $cf['common']['version']['current'] );
 
+    // costante per la versione corrente del framework
+    define( 'RELEASE_CURRENT'		, $cf['common']['release']['current'] );
+
     // versione aggiornata del framework
-	$cf['common']['version']['latest'] = trim( readStringFromFile( FILE_LATEST_UPDATE ) );
+	$cf['common']['version']['latest'] = trim( readStringFromFile( FILE_LATEST_VERSION ) );
+
+    // release aggiornata del framework
+	$cf['common']['release']['latest'] = trim( readStringFromFile( FILE_LATEST_RELEASE ) );
 
     // costante per la versione aggiornata del framework
     define( 'VERSION_LATEST'		, $cf['common']['version']['latest'] );
+
+    // costante per la release aggiornata del framework
+    define( 'RELEASE_LATEST'		, $cf['common']['release']['latest'] );
 
     // link al manuale utente
 	$cf['common']['docs']['user']['html'] = array(

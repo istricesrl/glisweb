@@ -13,9 +13,15 @@
 	    {% if page.parents.path|length() > 1 and view.dashboard.sezione %}
 	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#reset').val(1);$('#form-{{ view.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ view.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
 	    {% endif %}
+		{% if etc.include.insert %}
+	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#{{ view.id }}-insert').toggleAttribute('disabled');$('#{{ view.id }}-insert').slideToggle(400,'swing');"><i class="fa fa-plus-circle"></i></button>
+	    {% endif %}
 	</div>
     </div>
     {% endif %}
+    {% if etc.include.insert %}
+	{% include etc.include.insert %}
+	{% endif %}
     {% if view.data %}
     <div class="form-row">
 	<div class="col-md-12 text-center table-responsive">
@@ -29,7 +35,7 @@
 			<th class="{{ view.class[key] }}">
 			    {% if view.cols[ key ] %}
 			    <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
-			    <select class="fa-select form-control form-control-sm hidden-print" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+			    <select class="fa-select form-control form-control-sm hidden-print {{ view.class[key] }}" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
 				<option value="">{{ view.cols[ key ] }}</option>
 				<option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
 				<option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
@@ -46,7 +52,7 @@
 		    <tr{% if view.open.path %} onClick="window.open('{{ view.open.path }}?{% if row[ view.open.field ] %}{{ view.open.table }}[id]={{ row[ view.open.field ] }}{% endif %}{% if view.master.table %}&{{ view.master.table }}[id]={{ row[ view.master.field ] }}{% endif %}{% for tbl,flds in view.open.extra %}{% for fld in flds %}&{{tbl}}[{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% for tbl,flds in view.open.preset %}{% for fld in flds %}&__preset__[{{tbl}}][{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"{% endif %}>
 			{# for key,col in view.cols #}
 			{% for key in view.fields %}
-			<td class="{{ view.class[key] }}">{{ row[key]|raw }}</td>
+			<td class="{{ view.class[key] }}"{% if view.onclick[key] %} onclick="{{ view.onclick[key] }}"{% endif %}>{{ row[key]|raw }}</td>
 			{% endfor %}
 		    </tr>
 		    {% endfor %}

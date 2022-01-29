@@ -88,6 +88,18 @@
      *
      * input tramite file di testo
      * ---------------------------
+     * Il framework supporta l'inserimento di dati da file CSV caricati in /var/spool/import; il file deve contenere i dati in formato CSV
+     * separati da punto e virgola, e nella prima riga devono essere riportati i nomi delle colonne della tabella su cui si desidera caricare
+     * i dati.
+     * 
+     * Il sistema di inserimento tramite CSV sfrutta la modalità di gestione oggetti multipli della funzione controller() e richiede che il
+     * nome del file renda esplicita l'operazione richiesta e la tabella su cui si desidera lavorare:
+     * 
+     * <metodo>.<tabella>.csv
+     * 
+     * 
+     * 
+     * 
      * TODO ESEMPI DI FILE
      *
      *
@@ -244,7 +256,7 @@
 	// print_r( $_GET );
 
     // timer
-	timerCheck( $cf['speed'], ' -> inizio lavoro controller' );
+	timerCheck( $cf['speed'], '-> inizio lavoro controller' );
 
     // esamino la coda
 	foreach( $_REQUEST as $k => &$v ) {
@@ -256,7 +268,7 @@
 			if( substr( $k, 0, 2 ) !== '__' && strlen( $k ) > 1 ) {
 
 			    // log
-				logWrite( 'blocco dati ricevuto: ' . $k . '/' . $_SERVER['REQUEST_METHOD'], 'controller', LOG_INFO );
+				logWrite( 'blocco dati ricevuto: ' . $k . '/' . $_SERVER['REQUEST_METHOD'], 'controller' );
 
 			    // debug
 				// echo $k . '/' . $_SERVER['REQUEST_METHOD'] . PHP_EOL;
@@ -264,6 +276,7 @@
 			    // attivazione controller
 				$cf['controller']['status'][ $k ] = controller(
 				    $cf['mysql']['connection'],				// connessione al database
+				    $cf['memcache']['connection'],			// connessione a memcache
 				    $v,							// blocco dati di lavoro
 				    $k,							// nome dell'entità su cui lavorare
 				    $_SERVER['REQUEST_METHOD'],				// metodo da applicare
@@ -273,14 +286,16 @@
 				);
 
 			    // debug
+                // echo $k;
 				// print_r( $_SESSION );
 				// print_r( $_REQUEST );
 				// print_r( $_REQUEST['__err__'] );
 				// print_r( $_REQUEST['__info__'] );
 				// if( $k == 'prodotti' ) { print_r( $v ); }
+                // if( ! array_key_exists( $k, $_REQUEST['__info__'] ) ) { echo $k . 'non è in ' . print_r( $_REQUEST['__info__'], true ); }
 
 			    // timer
-				timerCheck( $cf['speed'], ' -> fine elaborazione blocco ' . $k );
+				timerCheck( $cf['speed'], '-> fine elaborazione blocco ' . $k );
 
 			}
 
@@ -300,3 +315,10 @@
     // collegamenti speciali
 	$ct['get']				= &$_GET;
 	$ct['post']				= &$_POST;
+
+    // debug
+    // print_r( $_SESSION );
+    // print_r( $_REQUEST );
+    // print_r( $_REQUEST['__err__'] );
+    // print_r( $_REQUEST['__info__'] );
+    // die();

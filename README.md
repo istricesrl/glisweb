@@ -12,7 +12,11 @@ complessi.
 GlisWeb è un framework leggero, ampiamente personalizzabile, pensato per realizzare siti e web application
 nativamente rispettose degli standard e delle migliori pratiche vigenti nel mondo del web.
 
-## installazione
+# installazione
+GlisWeb può essere installato per due finalità distinte, per utilizzarlo nella realizzazione di un proprio progetto
+oppure per contribuire allo sviluppo del framework. Poiché il primo caso è il più comune, iniziamo da quello.
+
+## installazione per lo sviluppo di nuovi progetti
 Potete installare GlisWeb semplicemente clonando il repository nella document root del vostro server web
 (o del vostro sito se il server gestisce più siti); potete anche scaricare il sorgente e caricarlo sul vostro
 server via FTP se utilizzate un hosting condiviso che non vi dà la possibilità di lanciare comandi via SSH.
@@ -67,19 +71,41 @@ Un video sull'installazione di GlisWeb è anche disponibile a questo indirizzo h
 
 [![Watch the video](https://img.youtube.com/vi/xzERaj20HJA/maxresdefault.jpg)](https://youtu.be/xzERaj20HJA)
 
-## configurazione
+Se sul server che state utilizzando è installato il progetto Calabash (https://github.com/istricesrl/calabash)
+potete installare GlisWeb semplicemente lanciando dalla document root del progetto il comando:
+
+    va.glisweb.install.sh .
+
+Se desiderate la versione di sviluppo utilizzate:
+
+    va.glisweb.install.sh . develop
+
+L'aggiornamento delle librerie con Composer sarà già stato effettuato dallo script.
+
+## installazione per contribuire al progetto
+Se desiderate contribuire al progetto GlisWeb e siete in possesso di una chiave valida per il repository, potete seguire queste
+istruzioni per installare il framework in modalità sviluppatore. Per prima cosa procuratevi il progetto Calabash (vedi sopra)
+e installate il framework con il comando:
+
+    va.glisweb.clone.sh /percorso/document/root
+
+Vi verrà chiesto se volete fare il setup dell'ambiente LAMP, se sul vostro computer non è già installato l'ambiente LAMP potete
+rispondere di sì e lo script provvederà a installarlo e configurarlo per voi. Successivamente, la procedura vi chiederà anche se
+desiderate creare un database per il framework, e infine vi proporrà di avviare la configurazione guidata.
+
+# configurazione
 Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
 che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
 verrà letto automaticamente dal framework. Per qualsiasi dubbio fate riferimento alla documentazione in _usr/_docs/
 oppure se preferite potete fare il build con Doxigen dei file (utilizzando lo scritp _src/_sh/_gw.doxygen.build.sh) in modo
 da poterli visualizzare via web, aggiungendo all'URL del vostro deploy il path _usr/_docs/_build/html/.
 
-### esempi
+## esempi
 Ricordate inoltre che trovate numerosi esempi e file utili nella cartella _usr/_examples/, che è un'ottima base di
 partenza per iniziare a capire come funziona GlisWeb. Alcuni degli strumenti che troverete in questa cartella vi saranno
 molto utili anche quando sarete divenuti più esperti!
 
-## utilizzo
+# utilizzo
 Utilizzare GlisWeb è semplice e intuitivo! Una guida per gli utenti è in fase di sviluppo ed è disponibile a questo
 indirizzo http://s-url.it/gliswebdocs inoltre stiamo pubblicando una serie di video tutorial su questa playlist di YouTube
 http://s-url.it/gliswebvideos.

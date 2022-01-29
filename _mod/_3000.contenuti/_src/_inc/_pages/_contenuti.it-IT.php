@@ -14,10 +14,10 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contenuti.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_contenuti.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'contenuti' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'contenuti' ),
-									'priority'	=> '300' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'contenuti' ),
+									'priority'	=> '800' ) ) )	
 	);
 
     // vista pagine
@@ -31,8 +31,8 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'pagine.view',
 									'pagine.tools' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'pagine' ),
-									'priority'	=> '010' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'pagine' ),
+									'priority'	=> '010' ) ) )	
     );
 
     // tools pagine
@@ -119,8 +119,8 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'redirect.view',
 									'redirect.stats' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'redirect' ),
-									'priority'	=> '070' ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'redirect' ),
+									'priority'	=> '070' ) ) )										
     );
 
 	// statistiche redirect

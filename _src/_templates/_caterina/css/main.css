@@ -7,6 +7,7 @@ body {
 
 footer {
     font-size: 0.8em;
+    padding: 1em 0em;
 }
 
 footer p {
@@ -14,10 +15,10 @@ footer p {
 }
 
 header, nav, main, footer {
-    padding: 0.5em;
+/*    padding: 0.5em; */
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
     margin: 0px;
 }
 
@@ -33,26 +34,36 @@ h3 {
     font-size: 1.25em;
 }
 
+h4, h5 {
+    font-size: 1em;
+}
+
 nav {
-    margin-top: 1.5em;
-    padding: 0em 0.5em;
+}
+
+div.wrapper > .row {
+    margin: 1.5em 0em;
+}
+
+div.jumbotron {
+    min-height: 16em;
 }
 
 a, a:visited {
-    color: #6600cc;
+    color: #666666;
 }
 
 a:active, a:hover {
-    color: #6600cc;
+    color: #666666;
     text-decoration: underline !important;
 }
 
 a.breadcrumb-link, a.breadcrumb-link:visited {
-    color: #d580ff;
+    color: #dddddd;
 }
 
 a.breadcrumb-link:active, a.breadcrumb-link:hover {
-    color: #d580ff;
+    color: #dddddd;
     text-decoration: underline;
 }
 
@@ -60,10 +71,6 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     background-color: #ffffff;
     color: #000000;
     position: relative;
-}
-
-.img-fluid {
-    width: 100%;
 }
 
 .nav-link {
@@ -109,4 +116,20 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
 
 .breadcrumb-link, .nav-link {
     white-space: nowrap;
+}
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+}
+
+@media (min-width: 1200px) {
+    
 }

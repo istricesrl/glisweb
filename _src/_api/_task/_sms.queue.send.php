@@ -23,7 +23,7 @@
 	logWrite( 'richiesta di elaborazione della coda degli SMS in uscita', 'sms', LOG_DEBUG );
 
     // chiave di lock
-	$status['token'] = getToken();
+	$status['token'] = getToken( __FILE__ );
 
 	// modalità di evasione (specifica sms, evasione forzata, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {
@@ -182,7 +182,7 @@
 	} else {
 
 	    // log
-		logWrite( 'nessun SMS in coda da processare', 'sms', LOG_INFO );
+		logWrite( 'nessun SMS in coda da processare', 'sms' );
 
 	    // status
 		$status['info'][] = 'nessun SMS in coda da processare';

@@ -1,0 +1,178 @@
+/*!
+
+    \page moduli_ecommerce modulo e-commerce del framework
+
+    Panoramica del modulo e-commerce del framework.
+
+    introduzione
+    ============
+
+
+
+    tabelle
+    -------
+
+
+
+    gestione dei dati in ingresso
+    -----------------------------
+    Come già visto per il modulo contatti, anche il modulo e-commerce dovendo gestire dati provenienti dal front-end ha una propria controller
+    specializzata. Questa controller, implementata nel file _mod/_4170.ecommerce/_src/_config/_750.controller.php, viene attivata dalla chiave
+    __carrello__ e si occupa di gestire sia la testata che le righe del carrello.
+
+    il flusso di acquisto
+    =====================
+    Il caso più comune di flusso di acquisto è quello che prevede l'aggiunta di prodotti al carrello, la conferma dei dati, la chiusura del carrello;
+    tale chiusura può avvenire in diversi modi secondo la modalità di pagamento selezionata, e principalmente i casi qui sono due ovvero la chiusura
+    diretta, utilizzata per modalità quali il contrassegno e il bonifico, e quella tramite provider di pagamento esterno, usata per PayPal, carte di
+    credito, e simili. Esistono e-commerce semplificati in cui vari passaggi sono riassunti in uno solo ma in tutti i casi è al minimo presente una
+    pagina per l'inserimento dei dati e una pagina di riepilogo che prepara la chiusura dell'ordine.
+
+    Fra gli esempi del framework è presente una struttura elementare che riproduce questo schema, costituita dai file:
+
+    - _usr/_examples/_ecommerce/_acquisto.01.php che simula una pagina prodotto tramite la quale è possibile aggiungere un prodotto al carrello
+    - _usr/_examples/_ecommerce/_acquisto.02.php che simula la pagina di inserimento dati del carrello
+    - _usr/_examples/_ecommerce/_acquisto.03.php che simula la pagina di riepilogo del carrello che prepara la chiusura dell'ordine
+    - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento, la cui controller deve capire se c'è stato un successo o un fallimento
+    - _usr/_examples/_ecommerce/_esito.ck.php che simula la pagina di chiusura diretta del carrello
+    - _usr/_examples/_ecommerce/_esito.ok.php che simula la pagina di esito positivo del pagamento
+    - _usr/_examples/_ecommerce/_esito.ko.php che simula la pagina di esito negativo del pagamento
+
+    le pagine di prodotto
+    ---------------------
+
+    la pagina di inserimento dati del carrello
+    ------------------------------------------
+
+    la pagina di riepilogo del carrello
+    -----------------------------------
+
+    [...] volendo saltare la pagina di riepilogo è possibile inserire un submit() del form all'onload della pagina direttamente nello schema Twig.
+
+    la pagina di esito generico di pagamento
+    ----------------------------------------
+
+    [...] visualizza un contenuto diverso secondo se rileva un successo o un fallimento nel pagamento
+    [...] imposta la timestamp_checkout solo in caso di esito positivo (è comunque reimpostata dal listener)
+    [...] non chiama le macro di successo (vengono chiamate dal listener)
+    [...] scrive sul log del carrello
+
+    la pagina di esito positivo di pagamento
+    ----------------------------------------
+
+    [...] imposta la timestamp_checkout (è comumque reimpostata dal listener)
+    [...] non chiama le macro di successo (vengono chiamate dal listener)
+    [...] scrive sul log del carrello
+
+    la pagina di esito negativo di pagamento
+    ----------------------------------------
+
+    [...] non imposta la timestamp_checkout
+    [...] non chiama le macro di successo
+    [...] scrive sul log del carrello
+
+    la pagina di chiusura diretta del carrello
+    ------------------------------------------
+
+    [...] imposta la timestamp_checkout
+    [...] chiama le macro di successo
+    [...] scrive sul log del carrello
+
+    il carrello
+    ===========
+
+    struttura del carrello
+    ----------------------
+
+    calcolo del costo totale degli articoli
+    ---------------------------------------
+
+    [...] l'aliquota IVA applicata agli articoli dipende in prima istanza dall'aliquota IVA associata agli articoli stessi, e in subordine
+    all'aliquota applicabile all'utente (ad es. utenti che beneficiano di esenzioni specifiche) oppure dal paese di spedizione degli articoli
+    acquistati (ad es. spedizione all'estero).
+
+    [...] il listino utilizzato per il calcolo dei prezzi è quello impostato nel carrello, e può dipendere dall'utente collegato, dal paese di
+    destinazione degli articoli acquistati, e da altri fattori custom.
+
+    [...] eventuali variazioni di prezzo applicabili agli articoli acquistati sono considerate dalla funzione calcolaPrezzoNettoArticolo() e di
+    conseguenza anche dalla funzione calcolaPrezzoLordoArticolo() che utilizza a sua volta la calcolaPrezzoNettoArticolo().
+
+    calcolo dei coupon
+    ------------------
+
+    calcolo dei costi di spedizione
+    -------------------------------
+
+    il checkout
+    ===========
+    Il checkout è propriamente la chiusura dell'ordine, che può essere contestuale al pagamento, ad esempio nei pagamenti online tramite
+    Nexi, PayPal o simili, oppure precedente, nel caso si utilizzino sistemi di pagamento offline quali contrassegno, bonifico bancario o simili;
+    in quest'ultimo caso, il pagamento andrà registrato manualmente una volta che sia effettivamente avvenuto.
+
+    Il ruolo del checkout è quello di concludere le operazioni di ordine e liberare la sessione per l'apertura di un nuovo carrello; questo avviene
+    nel file _src/_config/_710.session.php del modulo e-commerce. Una volta che la timestamp_checkout è stata valorizzata, l'ordine si considera
+    inviato ed è possibile procedere con un nuovo ordine.
+
+    Nel caso di pagamenti online quali PayPal, Nexi, eccetera, la timestamp_checkout è valorizzata nei rispettivi listener collocati nella cartella
+    _src/_api/ del modulo e-commerce e, per maggiore sicurezza, nelle macro di pagina _src/_inc/_macro/_carrello.esito.php o
+    _src/_inc/_macro/_carrello.successo.php; nel caso invece dei pagamenti offline, la valorizzazione della timestamp_checkout è effettuata nella
+    macro di pagina _src/_inc/_macro/_carrello.successo.php. Il motivo per cui nel caso dei pagamenti online la timestamp_checkout viene valorizzata
+    nella macro di pagina oltre che nel listener è che può verificarsi un'apprezzabile latenza fra la chiusura dell'ordine, con relativo ritorno
+    dell'utente al sito, e la chiamata in background al listener da parte del provider di pagamento. Per evitare che in questa finestra di tempo
+    l'utente possa volontariamente o accidentalmente modificare il carrello, la timestamp_checkout viene valorizzata non appena l'utente stesso
+    ritorna al sito, così da minimizzare il rischio di manomissioni o errori.
+
+    il processo di pagamento
+    ========================
+
+    pagamento in contrassegno
+    -------------------------
+
+    pagamento tramite bonifico bancario
+    -----------------------------------
+
+    pagamento tramite PayPal
+    ------------------------
+    Il pagamento tramite PayPal (tecnicamente PayPal Payments Standard tramite HTML form) avviene inviando un pacchetto dati POST all'endpoint PayPal
+    predisposto alla gestione dei pagamenti, che si occuperà di interagire con l'utente per finalizzare la transazione. Una volta concluso con successo
+    il pagamento, PayPal rimanderà l'utente sulla pagina del sito specificata fra i parametri del form, e in background effettuerà una chiamata all'API
+    del sito predisposta per la gestione delle informazioni di conferma di PayPal (_src/_api/_paypal.listener.php), il cui compito è resistrare sul
+    carrello l'avvenuto pagamento; per ulteriori dettagli si rimanda ai commenti al codice dell'API stessa.
+
+    Il lavoro del framework relativamente a questa forma di pagamento si riassume quindi nella compilazione del form con i dati corretti (compito svolto
+    dalla pagina di riepilogo del carrello), al suo invio a PayPal, e alla gestione delle informazioni di ritorno tramite l'API vista sopra.
+
+    pagamento tramite Nexi
+    ----------------------
+
+    [...] Nexi si comporta come PayPal per esito e annullamento (vedi https://ecommerce.nexi.it/specifiche-tecniche/codicebase.html)
+
+    personalizzazione delle pagine del carrello
+    ===========================================
+
+    personalizzazione delle pagine del carrello specifica per sito
+    --------------------------------------------------------------
+
+    \code{.json}
+    "sites": {
+      "1": {
+        [...]
+        "contents": {
+          "pages": {
+            "carrello_successo": {
+              "template": "path/per/il/template/",
+              "schema": "schema.custom.html",
+              "theme": "tema.custom.css"
+            },
+            [...]
+          }
+        },
+        [...]
+      }
+    }
+    \endcode
+
+    guida all'implementazione di nuove forme di pagamento
+    =====================================================
+
+*/

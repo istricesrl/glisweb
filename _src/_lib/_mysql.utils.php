@@ -1,65 +1,96 @@
 <?php
 
-    function trovaIdComune( $c, $p = NULL ) {
+    function trovaIdComune( $comune ) {
 
         global $cf;
 
-        $comuni = mysqlQuery(
+        return mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT * FROM comuni WHERE nome = ?',
-            array( array( 's' => $c ) )
+            'SELECT id FROM comuni WHERE nome = ?',
+            array( array( 's' => $comune ) )
         );
 
-        if( ! empty( $comuni[0]['id'] ) ) {
-            return $comuni[0]['id'];
-        } else {
-            return NULL;
-        }
-
     }
 
-    function aggiungiImmagini( &$p, $f, $id, $r = null ) {
-
-        aggiungiDati( $p, $f, $id, 'immagini', $r );
-
-    }
-
-    function aggiungiVideo( &$p, $f, $id, $r = null ) {
-
-        aggiungiDati( $p, $f, $id, 'video', $r );
-
-    }
-
-    function aggiungiAudio( &$p, $f, $id, $r = null ) {
-
-        aggiungiDati( $p, $f, $id, 'audio', $r );
-
-    }
-
-    function aggiungiFile( &$p, $f, $id, $r = null ) {
-
-        aggiungiDati( $p, $f, $id, 'file', $r );
-
-    }
-
-    function aggiungiRecensioni( &$p, $f, $id, $r = null ) {
-
-        aggiungiDati( $p, $f, $id, 'recensioni', $r );
-
-    }
-
-    function aggiungiDati( &$p, $f, $id, $t, $r = null ) {
+    function trovaIdTipologiaAttivita( $attivita ) {
 
         global $cf;
 
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM tipologie_attivita WHERE nome = ?',
+            array( array( 's' => $attivita ) )
+        );
+
+    }
+
+    function trovaIdAnagraficaPerDenominazione( $denominazione ) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM anagrafica WHERE denominazione = ?',
+            array( array( 's' => $denominazione ) )
+        );
+
+    }
+
+    function trovaIdMatricola( $matricola ) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM matricole WHERE matricola = ?',
+            array( array( 's' => $matricola ) )
+        );
+
+    }
+
+    function aggiungiImmagini( &$p, $id, $f, $r = null ) {
+
+        aggiungiDati( $p, $id, $f, 'immagini', $r );
+
+    }
+
+    function aggiungiVideo( &$p, $id, $f, $r = null ) {
+
+        aggiungiDati( $p, $id, $f, 'video', $r );
+
+    }
+
+    function aggiungiAudio( &$p, $id, $f, $r = null ) {
+
+        aggiungiDati( $p, $id, $f, 'audio', $r );
+
+    }
+
+    function aggiungiFile( &$p, $id, $f, $r = null ) {
+
+        aggiungiDati( $p, $id, $f, 'file', $r );
+
+    }
+
+    function aggiungiRecensioni( &$p, $id, $f, $r = null ) {
+
+        aggiungiDati( $p, $id, $f, 'recensioni', $r );
+
+    }
+
+    function aggiungiDati( &$p, $id, $f, $t, $r = null ) {
+
+        global $cf;
+    
         switch( $t ) {
             case 'immagini':
-                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
+#                $tc = 'immagini.orientamento, immagini.taglio, immagini.anno, immagini.path_alternativo FROM immagini ';
+                $tc = 'immagini.orientamento, immagini.taglio, immagini.path_alternativo FROM immagini ';
                 $tf = 'id_immagine';
                 $tk = 'images';
             break;
             case 'video':
-                $tc = 'video.id_tipologia_embed, video.codice_embed FROM video ';
+                $tc = 'video.id_embed, video.codice_embed FROM video ';
                 $tf = 'id_video';
                 $tk = 'video';
             break;
@@ -75,7 +106,7 @@
                 $tk = 'files';
             break;
         }
-
+    
         $cnt = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT contenuti.title, contenuti.h1, contenuti.h2, contenuti.h3, '.
@@ -94,14 +125,15 @@
                 array( 's' => $id )
             )
         );
-
+    
         foreach( $cnt as $cn ) {
-
+    
             $im = array(
                 'id'                => $cn['id'],
                 'nome'              => $cn['nome'],
                 'path'              => ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ),
-                'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ) ),
+            #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path'] : array( $cn['main_ietf'] => $cn['path'] ) ),     // commentata questa riga, sostituita con la seguente
+                'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path'] ) : array( $cn['main_ietf'] => findFileType( $cn['path'] ) ),      // vedere issue #419
                 'title'		        => array( $cn['ietf']	=> $cn['title'] ),
                 'h1'		        => array( $cn['ietf']	=> $cn['h1'] ),
                 'h2'		        => array( $cn['ietf']	=> $cn['h2'] ),
@@ -114,15 +146,22 @@
                     array( $cn['meta_nome'] => array( $cn['meta_ietf'] => $cn['meta_testo'] ) )
                 )
             );
-
+    
             switch( $t ) {
                 case 'immagini':
                     $im = array_replace_recursive( $im, array(
                         'taglio'            => $cn['taglio'],
                         'path_alternativo'  => ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ),
-                        'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),
-                        'orientamento'      => $cn['orientamento'],
-                        'anno'              => $cn['anno']
+                    #    'mimetype'          => findFileType( ( empty( $cn['main_ietf'] ) ) ? $cn['path_alternativo'] : array( $cn['main_ietf'] => $cn['path_alternativo'] ) ),     // commentata questa riga, sostituita con la seguente
+                        'mimetype'          => ( empty( $cn['main_ietf'] ) ) ? findFileType( $cn['path_alternativo'] ) : array( $cn['main_ietf'] => findFileType( $cn['path_alternativo'] ) ),      // vedere issue #419
+                        'orientamento'      => $cn['orientamento']
+                     #   'anno'              => $cn['anno']
+                    ) );
+                break;
+                case 'video':
+                    $im = array_replace_recursive( $im, array(
+                    'codice_embed'            => $cn['codice_embed'],
+                    'id_embed'              => $cn['id_embed']
                     ) );
                 break;
             }
@@ -135,5 +174,187 @@
                 $p['contents'][ $tk ][ $cn['ruolo'] ][ $cn['ordine'] ] = $im;
             }
         }
+    
+    }
+    
+
+    function aggiungiMacro( &$p, $id, $f ) {
+
+        global $cf;
+        
+        $p['macro'] = array_merge(
+            mysqlSelectColumn(
+                'macro',
+                $cf['mysql']['connection'],
+                'SELECT macro FROM macro '.
+                'WHERE ' . $f . ' = ?',
+                array(
+                    array( 's' => $id )
+                )
+            ),
+            ( ( isset( $p['macro'] ) ) ?  $p['macro'] : array() )
+        );
+
+    }
+
+    function aggiungiMenu(&$p, $id, $f){
+
+        global $cf;
+
+        $mnu = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT menu.*, lingue.ietf FROM menu ' .
+                'INNER JOIN lingue ON lingue.id = menu.id_lingua ' .
+                'WHERE ' . $f . ' = ?',
+            array(
+                array('s' => $id)
+            )
+        );
+
+        foreach ($mnu as $mn) {
+            $p = array_replace_recursive(
+                $p,
+                array(
+                    'menu'    => array(
+                        $mn['menu']    => array(
+                            $mn['ancora'] => array(
+                                'label'        => array($mn['ietf'] => $mn['nome']),
+                                'subpages'    => $mn['sottopagine'],
+                                'ancora'    => (isset($mn['ancora'])) ? $mn['ancora'] : NULL,
+                                'target'    => (isset($mn['target'])) ? $mn['target'] : NULL,
+                                'priority'    => $mn['ordine']
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }
+
+    function aggiungiMetadati( &$p, $id, $f ) {
+
+        global $cf;
+        
+        $meta = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT metadati.*, lingue.ietf FROM metadati '.
+            'LEFT JOIN lingue ON lingue.id = metadati.id_lingua '.
+            'WHERE ' . $f . ' = ?',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        foreach( $meta as $mta ) {
+            if( empty( $mta['ietf'] ) ) {
+                $p['metadati'][ $mta['nome'] ] = $mta['testo'];
+            } else {
+                $p['metadati'][ $mta['nome'] ][ $mta['ietf'] ] = $mta['testo'];
+            }
+        }
+
+    }
+
+    /**
+     * NOTA perché questa funzione era commentata?
+     */
+    function aggiungiGruppi( &$p, $id, $f = 'id_pagina', $t = 'pagine_gruppi' ) {
+
+        // TODO l'assetto dei gruppi cambierà, probabilmente per usare le ACL
+
+        global $cf;
+
+        $groups = mysqlSelectColumn(
+            'nome',
+            $cf['mysql']['connection'],
+            'SELECT gruppi.nome FROM gruppi '.
+            'INNER JOIN pagine_gruppi ON gruppi.id = pagine_gruppi.id_gruppo '.
+            'WHERE pagine_gruppi.id_pagina = ?',
+            array(
+                array( 's' => $id )
+            )
+        );				
+
+        if( ! empty( $groups ) ) {
+            $p['auth']['groups']	= $groups;
+        }
+
+    }
+
+    function aggiungiContenuti( &$p, $id, $f ) {
+
+        global $cf;
+
+        $cnt = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT contenuti.*, lingue.ietf FROM contenuti '.
+            'INNER JOIN lingue ON lingue.id = contenuti.id_lingua '.
+            'WHERE ' . $f . ' = ?',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        foreach( $cnt as $cn ) {
+            $p = array_replace_recursive( $p,
+                array(
+                    'short'             => array( $cn['ietf']	=> $cn['path_custom'] ),
+                    'forced'	        => array( $cn['ietf']	=> $cn['url_custom'] ),
+                    'custom'	        => array( $cn['ietf']	=> $cn['rewrite_custom'] ),
+                    'title'	            => array( $cn['ietf']	=> $cn['title'] ),
+                    'h1'	            => array( $cn['ietf']	=> $cn['h1'] ),
+                    'h2'	            => array( $cn['ietf']	=> $cn['h2'] ),
+                    'h3'	            => array( $cn['ietf']	=> $cn['h3'] ),
+                    'og_type'	        => array( $cn['ietf']	=> $cn['og_type'] ),
+                    'og_title'	        => array( $cn['ietf']	=> $cn['og_title'] ),
+                    'og_image'	        => array( $cn['ietf']	=> $cn['og_image'] ),
+                    'og_audio'	        => array( $cn['ietf']	=> $cn['og_audio'] ),
+                    'og_video'	        => array( $cn['ietf']	=> $cn['og_video'] ),
+                    'og_description'	=> array( $cn['ietf']	=> $cn['og_description'] ),
+                    'og_determiner'     => array( $cn['ietf']	=> $cn['og_determiner'] )
+                )
+            );
+        }
+
+    }
+
+    function triggerOff( $entita, $task = NULL ){
+
+        global $cf;
+
+        logWrite( 'richiesto spegnimento trigger per ' . $entita . ' da task ' . $task , 'cron' );
+
+    #    logWrite( 'spengo i trigger per ' . $entita, 'cron' );
+
+        $troff = mysqlQuery(
+			$cf['mysql']['connection'],
+            'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = 1'
+		);
+    }
+
+    function triggerOn( $entita ){
+        
+        global $cf;
+
+        logWrite( 'accendo i trigger per ' . $entita, 'cron' );
+
+        $tron = mysqlQuery(
+			$cf['mysql']['connection'],
+			'SET @TRIGGER_LAZY_' . strtoupper( $entita ) . ' = NULL'
+		);
+    }
+
+    function trovaTabellaDestinazioneConstraint( $t, $f ) {
+
+        global $cf;
+
+        return mysqlSelectCachedValue(
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+            'SELECT referenced_table_name '.
+            'FROM information_schema.key_column_usage '.
+            'WHERE table_name = ' . $t . ' AND table_schema = database() '.
+            'AND referenced_table_name IS NOT NULL AND column_name = ' . $f
+        );
 
     }

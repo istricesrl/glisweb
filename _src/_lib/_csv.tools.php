@@ -11,20 +11,28 @@
      */
 
     /**
-     *
+     * converte un array di stringhe CSV in un array associativo
+     * 
+     * prende in input un array di stringhe CSV e restituisce un array di array
+     * associativi usando la prima riga per le intestazioni; la riga delle intestazioni
+     * viene eliminata e non viene restituita fra i dati; le righe CSV devono avere
+     * i campi separati da virgola, e tutti i campi di testo delimitati dalle doppie
+     * virgolette
+     * 
+     * 
      * @todo documentare
      *
      */
-    function csv2array( $data ) {
+    function csv2array( $data, $s = ",", $c = "\"", $e = '\\' ) {
 
-	$csv = array_map( 'str_getcsv', $data );
-	array_walk( $csv, function( &$a ) use ( $csv ) {
-	    $a = array_combine( $csv[0], $a );
-	});
+        foreach( $data as &$row ) {
+            $row = str_getcsv( $row, $s, $c, $e );
+            $row = array_combine( $data[0], $row );
+        }
 
-	array_shift( $csv );
+        array_shift( $data );
 
-	return( $csv );
+        return $data;
 
     }
 
@@ -37,8 +45,10 @@
     function array2csv( $data, $file ) {
 
 	$h = openFile( $file );
-	fputcsv( $h, array_keys( $data[0] ) );
-	foreach( $data as $row ) {
+
+    fputcsv( $h, array_keys( $data[0] ) );
+
+    foreach( $data as $row ) {
 	    fputcsv( $h, $row );
 	}
 

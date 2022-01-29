@@ -1,1 +1,0 @@
-ALTER TABLE `progetti_anagrafica` CHANGE `id_progetto` `id_progetto` CHAR(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;

@@ -46,9 +46,17 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md">
                 <span class="label-top">contratto</span>
                 {{ frm.selectBox( table, '', '', 'id_contratto', '', etc.select.contratti, request, '', '', 1, '', '', '', '', '', '', page, pages, ietf ) }}
+            </div>
+        </div>
+
+        {% if request[table].id %}
+        <div class="form-group form-row">
+            <div class="col-12 col-md">
+                <span class="label-top">anagrafica</span>
+                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, etc.id_anagrafica, '', 1, '', '', '', '', '', '', page, pages, ietf ) }}
             </div>
             <div class="col-12 col-md-2">
                 <span class="label-top">data inizio</span>
@@ -64,6 +72,7 @@
             </div>
 
         </div>
+        {% endif %}
        
     </fieldset>
 

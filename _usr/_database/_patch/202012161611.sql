@@ -1,1 +1,0 @@
-ALTER TABLE `contratti` ADD `data_fine_rapporto` DATE NULL DEFAULT NULL AFTER `data_inizio_rapporto`;

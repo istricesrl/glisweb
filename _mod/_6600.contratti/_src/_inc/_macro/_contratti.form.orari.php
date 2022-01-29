@@ -19,7 +19,7 @@
     // tendina per i costi contratto
     if( isset( $_REQUEST['contratti']['id'] ) ) {
         $ct['etc']['select']['costi_contratti'] = mysqlCachedIndexedQuery(
-            $cf['cache']['index'],
+            $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
             'SELECT id, __label__ FROM costi_contratti_view WHERE id_contratto = ?',
@@ -46,9 +46,9 @@
     
     if ( isset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] ) )
     { 
-        // rimuovo gli orari che non appartengono al turno corrente
+        // rimuovo gli orari che non appartengono al turno corrente o che sono relativi alla disponibilità
         foreach( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'] as $k => $v ){
-            if( $v['turno'] != $ct['page']['turno'] ){
+            if( $v['turno'] != $ct['page']['turno'] || $v['se_disponibile'] == 1 ){
                 unset( $_REQUEST[ $ct['form']['table'] ]['orari_contratti'][$k] );
             }
         }

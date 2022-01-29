@@ -19,7 +19,7 @@
     // tendina per i costi contratto
     if( isset( $_REQUEST['contratti']['id'] ) ) {
         $ct['etc']['select']['costi_contratti'] = mysqlCachedIndexedQuery(
-            $cf['cache']['index'],
+            $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
             'SELECT id, __label__ FROM costi_contratti_view WHERE id_contratto = ?',

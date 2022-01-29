@@ -203,7 +203,9 @@
 	if( $cf['contents']['cached'] === false ) {
 
 	    // log
-		logWrite( 'struttura delle pagine NON presente in cache, elaborazione...', 'speed', LOG_ERR );
+        if( ! empty( $cf['memcache']['connection'] ) ) {
+            logWrite( 'struttura delle pagine NON presente in cache, elaborazione...', 'speed', LOG_ERR );
+        }
 
 	    // debug
 		// print_r( $cf['localization']['language'] );
@@ -259,11 +261,11 @@
 #		$cf['contents']['cacheable']['pages'] = true;
 		// TODO? $cf['cache']['todo'][ CONTENTS_PAGES_KEY ] = true;
 
-	    // configurazione extra
-		if( isset( $cf['site']['pages'] ) ) {
-		    $cf['contents']['pages'] = array_replace_recursive(
-                $cf['contents']['pages'],
-                $cf['site']['pages'] );
+	    // configurazione extra per sito
+		if( isset( $cf['site']['contents'] ) ) {
+		    $cf['contents'] = array_replace_recursive(
+                $cf['contents'],
+                $cf['site']['contents'] );
 		}
 
 #11	} else {
@@ -274,8 +276,38 @@
 
 	}
 
+/*
     // TODO questo file non innesca il meccanismo di refresh della cache dei contenuti,
     // vedi _mod/_3000.contenuti/_src/_config/_310.pages.php
+
+    DOVREBBE ESSERE TIPO COSÌ:
+
+    } else {
+
+	    // variabili di lavoro
+		$lingue					= '{' . LINGUE_ATTIVE . '}';
+		$folder					= '{,_}src/{,_}inc/{,_}pages/{,_}*';
+		$mods					= '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/';
+
+	    // ricerca dei files delle pagine
+		$arrayPagineBase			= glob( DIR_BASE . $folder . '.' . $lingue . '.php', GLOB_BRACE );
+		$arrayPagineModuli			= glob( DIR_BASE . $mods . $folder . '.' . $lingue . '.php', GLOB_BRACE );
+
+	    // semplificazione
+		$arrayPagine				= array_unique( array_merge( $arrayPagineBase , $arrayPagineModuli ) );
+
+	    // inclusione dei files delle pagine
+		foreach( $arrayPagine as $pagina ) {
+		    $ts = filemtime( $pagina );
+		    if( $ts > $cf['contents']['updated'] ) {
+			$cf['contents']['updated'] = $ts;
+		    }
+		}
+
+    }
+
+*/
+
 
     // debug
 	// echo '300 STANDARD' . PHP_EOL;

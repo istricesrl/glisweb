@@ -47,23 +47,27 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
+		    <div class="col-auto">
+			<span class="label-top">tipo</span>
+			{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_indirizzi, request ) }}
+			</div>
             <div class="col">
             <span class="label-top ">indirizzo</span>
-                {{ frm.input( table, '', '', 'indirizzo', 'indirizzo (parte nominale)', '', request ) }}
+                {{ frm.input( table, '', '', 'indirizzo', '', '', request ) }}
             </div>
             <div class="col-2 col-md-1">
                 <span class="label-top ">civico</span>
-                {{ frm.input( table, '', '', 'civico', 'n°', '', request ) }}
+                {{ frm.input( table, '', '', 'civico', '', '', request ) }}
             </div>
         </div>
         <div class="form-group form-row">
             <div class="col-3 col-md-1">
             <span class="label-top">cap</span>
-            {{ frm.input( table, '', '', 'cap', 'CAP', '', request ) }}
+            {{ frm.input( table, '', '', 'cap', '', '', request ) }}
             </div>
             <div class="col">
                 <span class="label-top ">località</span>
-                {{ frm.input( table,  '', '', 'localita', 'località', '', request ) }}
+                {{ frm.input( table,  '', '', 'localita', '', '', request ) }}
             </div>
             <div class="col-12 col-md">
             <span class="label-top ">comune</span>
@@ -74,7 +78,7 @@
         <div class="form-group form-row">
             <div class="col">
             <span class="label-top">descrizione e note</span>
-			{{ frm.textarea( table, '', '', 'note', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
+			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
             </div>
         </div>
        

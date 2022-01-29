@@ -28,41 +28,50 @@ else
     echo "stai lavorando su $GITNAME, aggiorno il framework"
 
     # se è specificata una branch di aggiornamento
-    if [[ -z $1 ]]; then
-        BRANCH=master
-    else
+    if [[ -n $1 ]]; then
+
+        # branch da scaricare
         BRANCH=$1
+
+        # scarico Glisweb
+        wget https://github.com/istricesrl/glisweb/archive/$BRANCH.zip
+
+        # pulisco il nome del file zip dai prefissi
+        BRANCHZIP=$( echo $BRANCH | sed -e "s/^feature\///" )
+        BRANCHZIP=$( echo $BRANCHZIP | sed -e "s/^hotfix\///" )
+
+        # pulisco il nome della cartella dai prefissi
+        BRANCHDIR=${BRANCH////-}
+
+        # scompatto Glisweb
+        unzip -qq ./$BRANCHZIP.zip
+
+        # elimino il vecchio framework
+        rm -rf ./_*
+
+        # installo la nuova versione
+        cp -rf ./glisweb-$BRANCHDIR/{.[!.],}* ./
+
+        # elimino la vecchia cartella
+        rm -rf ./glisweb-$BRANCHDIR
+        rm -rf ./$BRANCHZIP.zip
+
+        # installo il .gitignore se è presente un repository .git
+        if [ -f ./_usr/_deploy/_git/.gitignore -a -d ./.git ]; then
+            cp -f ./_usr/_deploy/_git/.gitignore ./.gitignore
+        fi
+
+        # aggiorno composer
+        composer update
+
+        ## permessi
+        ./_src/_sh/_gw.permissions.reset.sh
+
+    else
+
+        # sinossi
+        echo "$0 <branch>"
+
     fi
-
-    # scarico Glisweb
-    wget https://github.com/istricesrl/glisweb/archive/$BRANCH.zip
-
-    # pulisco il nome del file zip dai prefissi
-    BRANCHZIP=$( echo $BRANCH | sed -e "s/^feature\///" )
-    BRANCHZIP=$( echo $BRANCHZIP | sed -e "s/^hotfix\///" )
-
-    # pulisco il nome della cartella dai prefissi
-    BRANCHDIR=${BRANCH////-}
-
-    # scompatto Glisweb
-    unzip ./$BRANCHZIP.zip
-
-    # elimino il vecchio framework
-    rm -rf ./_*
-
-    # installo la nuova versione
-    rsync -a ./glisweb-$BRANCHDIR/* ./
-
-    # elimino la vecchia cartella
-    rm -rf ./glisweb-$BRANCHDIR
-    rm -rf ./$BRANCHZIP.zip
-
-    # installo il .gitignore se è presente un repository .git
-    if [ -f ./_usr/_deploy/_git/.gitignore -a -d ./.git ]; then
-        cp ./_usr/_deploy/_git/.gitignore ./.gitignore
-    fi
-
-    # aggiorno composer
-    composer update
 
 fi

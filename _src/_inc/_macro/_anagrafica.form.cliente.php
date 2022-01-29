@@ -27,15 +27,23 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view WHERE se_agente IS NOT NULL'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_agente IS NOT NULL'
     );
-    
-     // tendina crm
-	$ct['etc']['select']['tipologie_crm'] = mysqlCachedIndexedQuery(
+
+    // tendina responsabile operativo
+	$ct['etc']['select']['responsabili_operativi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_crm_view'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore IS NOT NULL'
+    );
+    
+     // tendina crm
+	$ct['etc']['select']['ranking'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM ranking_view'
 	);
 
     // tendina settori e attività

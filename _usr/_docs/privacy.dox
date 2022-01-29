@@ -1,0 +1,22 @@
+/*!
+
+    \page privacy privacy e cookie del framework
+
+    Panoramica della gestione della privacy e dei cookien del framework.
+
+    introduzione
+    ============
+
+    la pagina delle policy
+    ======================
+
+    impostazione del template
+    -------------------------
+
+    \code{php}
+    $cf['contents']['pages']['privacy']['template'] = array(
+        'path'	=> '_src/_templates/_aurora/', 'schema' => 'default.html'
+    );
+    \endcode
+
+*/

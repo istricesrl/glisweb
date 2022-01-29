@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` ADD `id_tipologia_inps` INT NULL DEFAULT NULL AFTER `id_tipologia`, ADD INDEX (`id_tipologia_inps`) ;

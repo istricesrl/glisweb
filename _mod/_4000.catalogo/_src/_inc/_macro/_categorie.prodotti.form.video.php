@@ -27,18 +27,18 @@
 
     // tendina ruolo video
 	$ct['etc']['select']['ruoli_video'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM ruoli_video_view WHERE se_categorie_prodotti = 1'
     );
     
     // tendina tipologia embed
-	$ct['etc']['select']['tipologie_embed'] = mysqlCachedIndexedQuery(
-	    $cf['cache']['index'],
+	$ct['etc']['select']['embed'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_embed_view  WHERE se_video = 1'
+	    'SELECT id, __label__ FROM embed_view  WHERE se_video = 1'
 	);
 
     // macro di default

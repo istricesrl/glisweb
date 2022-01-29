@@ -1,1 +1,0 @@
-ALTER TABLE `anagrafica` ADD `matricola` CHAR(64) NULL DEFAULT NULL AFTER `codice`, ADD INDEX (`matricola`) ;

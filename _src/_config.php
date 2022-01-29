@@ -193,7 +193,7 @@
      * 400         | configurazioni relative all'URL rewriting
      * 500         | configurazioni relative alla posta
      * 600         | integrazioni con piattaforme di terze parti
-     * 700         | configurazioni relative all'importazione e all'esportazione dei dati
+     * 700         | configurazioni relative all'importazione, all'elaborazione e all'esportazione dei dati
      * 800         | -
      * 900         | operazioni finali
      *
@@ -235,9 +235,12 @@
      * @todo documentare
      *
      */
-	function path2custom( $p ) {
-	    return str_replace( '_', NULL, $p );
-	}
+    function path2custom( $p, $s = NULL ) {
+        $p = str_replace( $_SERVER['DOCUMENT_ROOT'], '§', $p );
+        $p = str_replace(  '_', $s, $p );
+        $p = str_replace( '§', $_SERVER['DOCUMENT_ROOT'], $p );
+        return $p;
+    }
 
     /**
      *
@@ -245,7 +248,7 @@
      *
      */
 	function glob2custom( $p ) {
-	    return str_replace( '_', '{,_}', $p );
+        return path2custom( $p, '{,_}' );
 	}
 
     /**
@@ -285,6 +288,7 @@
 	define( 'DIR_MOD'			, DIR_BASE . '_mod/' );
 	define( 'DIR_SRC'			, DIR_BASE . '_src/' );
 	define( 'DIR_SRC_API'			, DIR_BASE . '_src/_api/' );
+    define( 'DIR_SRC_API_JOB'		, DIR_BASE . '_src/_api/_job/' );
     define( 'DIR_SRC_API_REPORT'		, DIR_BASE . '_src/_api/_report/' );
     define( 'DIR_SRC_API_TASK'		, DIR_BASE . '_src/_api/_task/' );
 	define( 'DIR_SRC_CONFIG'		, DIR_BASE . '_src/_config/' );
@@ -314,18 +318,30 @@
 	define( 'DIR_VAR_CONTENUTI'		, DIR_BASE . 'var/contenuti/' );
 	define( 'DIR_VAR_IMMAGINI'		, DIR_BASE . 'var/immagini/' );
     define( 'DIR_VAR_LOG'			, DIR_BASE . 'var/log/' );
+    define( 'DIR_VAR_LOG_CRON'   , DIR_VAR_LOG . 'cron/' );
+    define( 'DIR_VAR_LOG_JOB'   , DIR_VAR_LOG . 'job/' );
     define( 'DIR_VAR_LOG_MYSQL'   , DIR_VAR_LOG . 'mysql/' );
     define( 'DIR_VAR_LOG_MYSQL_PATCH'   , DIR_VAR_LOG_MYSQL . 'patch/' );
 	define( 'DIR_VAR_LOG_LATEST'		, DIR_BASE . 'var/log/latest/' );
 	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
+    define( 'DIR_VAR_SPOOL'			, DIR_BASE . 'var/spool/' );
+    define( 'DIR_VAR_SPOOL_CART'			, DIR_BASE . 'var/spool/cart/' );
+    define( 'DIR_VAR_SPOOL_DOCS'			, DIR_BASE . 'var/spool/docs/' );
+    define( 'DIR_VAR_SPOOL_IMPORT'			, DIR_BASE . 'var/spool/import/' );
+    define( 'DIR_VAR_SPOOL_MAIL'			, DIR_BASE . 'var/spool/mail/' );
+    define( 'DIR_VAR_SPOOL_PAYMENT'			, DIR_BASE . 'var/spool/payment/' );
+    define( 'DIR_VAR_SPOOL_PRINT'			, DIR_BASE . 'var/spool/print/' );
 
     // file
     define( 'FILE_AUTOLOAD'         ,  DIR_SRC_LIB_EXT . 'autoload.php' );
-	define( 'FILE_CURRENT_VERSION'		, DIR_ETC . '_current.conf' );
+	define( 'FILE_CURRENT_RELEASE'		, DIR_ETC . '_current.release.conf' );
+	define( 'FILE_CURRENT_VERSION'		, DIR_ETC . '_current.version.conf' );
 	define( 'FILE_LATEST_RUN'		, DIR_VAR_LOG_LATEST . 'run.latest.log');
 	define( 'FILE_LATEST_CRON'		, DIR_VAR_LOG_LATEST . 'cron.latest.log');
+	define( 'FILE_LATEST_MYSQL'		, DIR_VAR_LOG_LATEST . 'mysql.latest.log');
 	define( 'FILE_LATEST_SITEMAP'		, DIR_VAR_LOG_LATEST . 'sitemap.latest.log');
-	define( 'FILE_LATEST_UPDATE'		, path2custom( DIR_ETC ) . 'latest.conf' );
+	define( 'FILE_LATEST_RELEASE'		, path2custom( DIR_ETC ) . 'latest.release.conf' );
+	define( 'FILE_LATEST_VERSION'		, path2custom( DIR_ETC ) . 'latest.version.conf' );
 	define( 'FILE_LICENSE'			, path2custom( DIR_ETC ) . 'license.conf' );
 	define( 'FILE_LOREM'			, DIR_ETC . '_lorem.conf' );
 	define( 'FILE_MANUAL_HTML'		, DIR_USR_DOCS_BUILD_HTML . 'index.html' );
@@ -339,13 +355,13 @@
 	define( 'CONTROL_FULL'			, 'FULL' );
 
     // azioni
-	define( 'METHOD_DELETE'			, 'DELETE' );
-	define( 'METHOD_GET'			, 'GET' );
-	define( 'METHOD_PATCH'			, 'PATCH' );
-	define( 'METHOD_POST'			, 'POST' );
-	define( 'METHOD_PUT'			, 'PUT' );
-	define( 'METHOD_REPLACE'		, 'REPLACE' );
-	define( 'METHOD_UPDATE'			, 'UPDATE' );
+	define( 'METHOD_DELETE'			, 'DELETE' );       // cancellazione
+	define( 'METHOD_GET'			, 'GET' );          // lettura
+	define( 'METHOD_PATCH'			, 'PATCH' );        // aggiornamento
+	define( 'METHOD_POST'			, 'POST' );         // inserimento
+	define( 'METHOD_PUT'			, 'PUT' );          // modifica
+	define( 'METHOD_REPLACE'		, 'REPLACE' );      // rimpiazzo
+	define( 'METHOD_UPDATE'			, 'UPDATE' );       // aggiornamento
 
     // costanti per l'identificazione dei database
 	define( 'DB_MYSQL'			, 'MYSQL' );
@@ -369,6 +385,7 @@
 	define( 'MIME_MULTIPART_FORM_DATA'	, 'multipart/form-data' );
 	define( 'MIME_TEXT_PLAIN'		, 'text/plain' );
 	define( 'MIME_TEXT_HTML'		, 'text/html' );
+    define( 'MIME_X_WWW_FORM_URLENCODED',   'application/x-www-form-urlencoded' );
 
     // controllo scrittura
     if( ! is_writeable( DIR_BASE ) ) {
@@ -458,12 +475,13 @@
     // NOTA la lettura dei moduli attivi dalle variabili d'ambiente è obsoleta
 
     // moduli attivi
-	define( 'MODULI_ATTIVI'				, $cf['mods']['active']['string'] );
-	define( 'DIR_MOD_ATTIVI'			, DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
+	define( 'MODULI_ATTIVI'			        	    , $cf['mods']['active']['string'] );
+	define( 'DIR_MOD_ATTIVI'			            , DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
+	define( 'DIR_MOD_ATTIVI_SRC_API_JOB'	        , DIR_MOD_ATTIVI . '_src/_api/_job/' );
 	define( 'DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS'	, DIR_MOD_ATTIVI . '_src/_inc/_controllers/' );
-	define( 'DIR_MOD_ATTIVI_SRC_INC_MACRO'	, DIR_MOD_ATTIVI . '_src/_inc/_macro/' );
-	define( 'DIR_MOD_ATTIVI_SRC_LIB'		, DIR_MOD_ATTIVI . '_src/_lib/' );
-	define( 'DIR_MOD_ATTIVI_ETC_LOC'		, DIR_MOD_ATTIVI . '_etc/_loc/' );
+	define( 'DIR_MOD_ATTIVI_SRC_INC_MACRO'	        , DIR_MOD_ATTIVI . '_src/_inc/_macro/' );
+	define( 'DIR_MOD_ATTIVI_SRC_LIB'		        , DIR_MOD_ATTIVI . '_src/_lib/' );
+	define( 'DIR_MOD_ATTIVI_ETC_LOC'		        , DIR_MOD_ATTIVI . '_etc/_loc/' );
 
     // collego $ct
 	$ct['mods']				= &$cf['mods'];
@@ -471,7 +489,7 @@
     // ricerca dei files di libreria
 	$arrayLibrerieBase			= glob( DIR_SRC_LIB . '_*.*.php' );
 	$arrayLibrerieModuli			= glob( DIR_MOD_ATTIVI_SRC_LIB . '_*.*.php', GLOB_BRACE );
-	$arrayLibrerie				= array_merge( $arrayLibrerieBase , $arrayLibrerieModuli );
+	$arrayLibrerie				= array_unique( array_merge( $arrayLibrerieBase , $arrayLibrerieModuli ) );
 
     /**
      *

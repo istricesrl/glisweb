@@ -19,8 +19,8 @@
 
     /**
      *
-     * @todo documentare
-     *
+     * @questa funzione converte il peso in unità di misura byte in funzione del tipo di file. 
+     *type i : i = 0 fino alla taglia del parametro passato : filesize. finché filesize supera 1024 viene / per 1024 e i incrementa. printf di controllo : con il peso del file finale associato al tipo passato
      */
     function writeByte( $filesize ) {
 
@@ -100,9 +100,18 @@
      * @todo documentare
      *
      */
+    function numeric2null( $s ) {
+        return empty2null( $s, true );
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function empty2null( $s, $numeric = false ) {
 
-	if( $numeric === true && $s == 0 ) {
+	if( $numeric === true && is_numeric( $s ) ) {
 	    return $s;
 	} elseif( empty( $s ) ) {
 	    return NULL;
@@ -331,5 +340,16 @@
         }
 
         return false;
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function m2km( $m ) {
+
+        return $m / 1000;
 
     }

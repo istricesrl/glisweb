@@ -1,1 +1,0 @@
-ALTER TABLE `tipologie_attivita_inps` ADD UNIQUE KEY `unico` (`id`,`id_genitore`,`nome`);

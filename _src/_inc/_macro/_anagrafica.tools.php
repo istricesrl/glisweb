@@ -22,7 +22,7 @@
 	    'icon' => NULL,
 	    'fa' => 'fa-file-excel-o',
 	    'title' => 'esportazione per MailChimp',
-	    'text' => 'esporta i contatti anagrafici in formato CSV'
+	    'text' => 'esporta le e-mail dei contatti anagrafici in formato CSV'
 	);
 
     // esportazione indirizzi anagrafica
@@ -31,7 +31,7 @@
 	    'icon' => NULL,
 	    'fa' => 'fa-file-excel-o',
 	    'title' => 'esportazione indirizzario',
-	    'text' => 'esporta gli indirizzi in formato CSV'
+	    'text' => 'esporta gli indirizzi dei contatti anagrafici in formato CSV'
 	);
 
     // categorie anagrafica
@@ -41,5 +41,5 @@
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
 
-    // gestione default
+	// gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';

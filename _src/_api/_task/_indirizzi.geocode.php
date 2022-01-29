@@ -23,7 +23,7 @@
 	$status['info'][] = 'inizio operazioni di geocode';
 
     // chiave di lock
-	$status['token'] = getToken();
+	$status['token'] = getToken( __FILE__ );
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
@@ -44,9 +44,9 @@
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE indirizzi SET token = ? WHERE ( latitudine IS NULL OR longitudine IS NULL OR cap IS NULL ) '.
-            'AND ( timestamp_geocode IS NULL OR timestamp_aggiornamento IS NULL OR timestamp_aggiornamento > timestamp_geocode ) '.
+            'AND ( timestamp_geolocalizzazione IS NULL OR timestamp_aggiornamento IS NULL OR timestamp_aggiornamento > timestamp_geolocalizzazione ) '.
             'AND token IS NULL '.
-            'ORDER BY timestamp_geocode ASC LIMIT 1',
+            'ORDER BY timestamp_geolocalizzazione ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] )
             )
@@ -116,7 +116,7 @@
             mysqlQuery(
                 $cf['mysql']['connection'],
                 'UPDATE indirizzi '.
-                'SET latitudine = ?, longitudine = ?, cap = ?, timestamp_geocode = unix_timestamp(), '.
+                'SET latitudine = ?, longitudine = ?, cap = ?, timestamp_geolocalizzazione = unix_timestamp(), '.
                 'timestamp_aggiornamento = unix_timestamp(), token = NULL '.
                 'WHERE token = ?',
                 array(
@@ -139,7 +139,7 @@
                 $idZona = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_zona FROM zone_cap WHERE cap = ?', array( array( 's' => $gc['cap'] ) ) );
 
                 if( ! empty( $idZona ) ) {
-                mysqlQuery( $cf['mysql']['connection'], 'UPDATE indirizzi SET id_zona = ? WHERE id = ?', array( array( 's' => $idZona ), array( 's' => $geocode['id'] ) ) );
+                mysqlQuery( $cf['mysql']['connection'], 'UPDATE indirizzi SET id_zona = ? WHERE token = ?', array( array( 's' => $idZona ), array( 's' => $status['token'] ) ) );
                 }
 
             }
@@ -152,7 +152,7 @@
             // aggiornamento database
             mysqlQuery(
                 $cf['mysql']['connection'],
-                'UPDATE indirizzi SET timestamp_geocode = unix_timestamp() WHERE token = ?',
+                'UPDATE indirizzi SET timestamp_geolocalizzazione = unix_timestamp() WHERE token = ?',
                 array(
                     array( 's' => $status['token'] )
                 )

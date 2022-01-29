@@ -1,1 +1,0 @@
-ALTER TABLE `attivita` CHANGE `ora` `ora_inizio` TIME NULL DEFAULT NULL;

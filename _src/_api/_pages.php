@@ -5,6 +5,63 @@
      *
      *
      *
+     * logiche di render ed erogazione dei contenuti
+     * =============================================
+     *
+     *
+     *
+     * tokenizzazione di __rw__ e inclusione del framework
+     * ---------------------------------------------------
+     *
+     *
+     * configurazione del template
+     * ---------------------------
+     *
+     *
+     *
+     * controllo permessi
+     * ------------------
+     *
+     *
+     *
+     * macro di pagina
+     * ---------------
+     *
+     *
+     *
+     * contenuti statici
+     * -----------------
+     *
+     *
+     *
+     * costruzione degli elementi di navigazione
+     * -----------------------------------------
+     *
+     *
+     *
+     * renderizzazione del template
+     * ----------------------------
+     *
+     *
+     *
+     * headers e codici di stato HTTP
+     * ------------------------------
+     *
+     *
+     *
+     *
+     * gestione dei comandi di una lettera
+     * -----------------------------------
+     *
+     *
+     *
+     * cache statica
+     * -------------
+     *
+     *
+     *
+     *
+     *
      * @todo documentare
      *
      * @file
@@ -24,6 +81,7 @@
 	require '../_config.php';
 
     // debug
+	// die('inizio api pages');
 	// ini_set( 'display_errors', 1 );
 	// ini_set( 'display_startup_errors', 1 );
 	// error_reporting( E_ALL );
@@ -47,10 +105,22 @@
 
     // includo il file di configurazione del template
 	if( file_exists( $ct['page']['template']['ini'] ) ) {
+		// sostituisco il file di configurazione del template con la controparte custom se presente
+		if( file_exists( path2custom( $ct['page']['template']['ini'] ) ) ) {
+			$ct['page']['template']['ini'] = path2custom( $ct['page']['template']['ini'] );
+		}
+		// unisco le direttive di configurazione del file a quelle già esistenti
 	    $ct['page'] = array_merge_recursive(
-		$ct['page'],
-		parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
+			$ct['page'],
+			parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
 	    );
+		// includo i file di configurazione aggiuntivi del template
+		foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
+			$ct['page'] = array_merge_recursive(
+				$ct['page'],
+				parse_ini_file( $addCnf, true, INI_SCANNER_RAW )
+			);
+		}
 	} else {
 	    logWrite( 'il file ' . $ct['page']['template']['ini'] . ' non esiste', 'template', LOG_CRIT );
 	    die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') dannaeggiato o mancante' );
@@ -60,14 +130,20 @@
 	appendToFile( 'fine caricamento file INI del template' . PHP_EOL, FILE_LATEST_RUN );
 
 	// aggiunta del tema ai CSS da caricare
+	// TODO testare cosa fa con i vari css/main.css (standard e custom) css/minchia.css (standard e custom) css/themes/sticazzi.css (standard e custom)
 	if( isset( $ct['page']['template']['theme'] ) ) {
-		$ct['page']['css']['template'][] = $ct['page']['template']['theme'];
-		$customTheme = path2custom( $ct['page']['template']['path'] . $ct['page']['template']['theme'] );
-		if( file_exists( DIR_BASE . $customTheme ) ) {
-			$ct['page']['css']['custom'][] = $customTheme;
+		foreach( array( 'css/', 'css/themes/' ) as $tDir ) {
+			$tFile = $ct['page']['template']['path'] . $tDir . $ct['page']['template']['theme'];
+			$tcFile = path2custom( $tFile );
+			if( file_exists( DIR_BASE . $tFile ) ) {
+				$ct['page']['css']['template'][] = $tDir . $ct['page']['template']['theme'];
+			}
+			if( file_exists( DIR_BASE . $tcFile ) ) {
+				$ct['page']['css']['custom'][] = $tcFile;
+			}
 		}
 	}
-	
+
     // log
 	appendToFile( 'inizio controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
 
@@ -128,6 +204,9 @@
 	} elseif( file_exists( $ctFile ) ) {
 	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = readStringFromFile( $ctFile );
 	}
+
+	// debug
+	// var_dump( $ctFile );
 
     // timer
 	timerCheck( $cf['speed'], 'fine inclusione contenuti statici' );
@@ -317,7 +396,7 @@
 		}
 
 		if( ! empty( $ct['page']['template']['theme'] ) ) {
-			echo PHP_EOL . '<!-- teema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
+			echo PHP_EOL . '<!-- tema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
 		}
 
 		switch( $ct['page']['template']['type'] ) {
@@ -480,32 +559,37 @@
 	appendToFile( 'fine invio headers HTTP' . PHP_EOL, FILE_LATEST_RUN );
 
     // TODO documentare i parametri a una sola lettera (sono nei Google Docs?)
+	// i parametri di una lettera sono riservati a DEV e TEST
+	if( SITE_STATUS != PRODUCTION ) {
 
-    // rivelazione dei dati
-	if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
-/*	    array_walk_recursive(
-		$ct,
-		function( &$v, $k ) {
-		    if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
-			$v = '***';
-		    }
-		}
-	    );
-*/	    $tpu = $ct;
-	    foreach( $_REQUEST['u'] as $tu ) {
-		if( isset( $tpu[ $tu ] ) ) {
-		    $tpu = $tpu[ $tu ];
-		}
-	    }
-	    echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
+		// rivelazione dei dati
+		if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
+	/*	    array_walk_recursive(
+			$ct,
+			function( &$v, $k ) {
+				if( in_array( $k, array( 'password', 'private', 'key', 'secret' ) ) ) {
+				$v = '***';
+				}
+			}
+			);
+	*/	    $tpu = $ct;
+			foreach( $_REQUEST['u'] as $tu ) {
+			if( isset( $tpu[ $tu ] ) ) {
+				$tpu = $tpu[ $tu ];
+			}
+			}
+
+      echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
 
 		// timer
 		timerCheck( $cf['speed'], 'fine output di debug' );
 
 	}
 
-    // debug
-	// print_r( $cf );
+		// debug
+		// print_r( $cf );
+
+	}
 
 	// TODO qui inserire la formattazione con Tidy?
 
@@ -568,12 +652,12 @@
     // log
 	if( $flt > 0.75 || memory_get_usage( true ) > ( 1024 * 1024 * 15 ) ) {
 	    writeToFile(
-		$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
-		'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
-		print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
-		'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
-		' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
-		DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
+			$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
+			'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
+			print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
+			'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
+			' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
+			DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
 	    );
 	}
 
