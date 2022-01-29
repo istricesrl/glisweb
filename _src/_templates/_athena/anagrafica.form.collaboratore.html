@@ -48,12 +48,28 @@
         
         <div class="form-group form-row">
 		    <div class="col-12">
-			<span class="label-top">condizioni di collaborazione</span>
-			{{ frm.textarea( table, '', '', 'condizioni_vendita', 'condizioni di collaborazione', 3, request, '', '', 'ckEditor', 200 ) }}
+			<span class="label-top">note di collaborazione</span>
+			{# frm.textarea( table, '', '', 'condizioni_vendita', 'condizioni di collaborazione', 3, request, '', '', 'ckEditor', 200 ) #}
+			{{ frm.textarea( table, '', '', 'note_collaborazione', '', 3, request ) }}
 		    </div>
         </div>
         </fieldset>
 
+	    <fieldset>
+			<legend>dati fiscali</legend>
+	
+			<div class="form-group form-row">
+				<div class="col-12 col-md-6">
+					<span class="label-top">codice fiscale</span>
+					{{ frm.input( table, '', '', 'codice_fiscale', '', '', request ) }}
+					</div>
+				<div class="col-12 col-md-6">
+					<span class="label-top">partita IVA</span>
+					{{ frm.input( table, '', '', 'partita_iva', '', '', request ) }}
+				</div>
+			</div>
+		</fieldset>
+	
         {# SUBFORM IBAN #}
 		{{ dfs.iban( table, 'iban', 'dati bancari', site, page, pages, localization.language.ietf, etc, request, session ) }}
 

@@ -17,14 +17,14 @@
             ['anagrafica.form.cliente','anagrafica.form.offerte']
         );
     }
-
+/*
     if( max( [$seCliente, $seLead, $seProspect, $seFornitore ] ) != true ) {
         $ct['page']['etc']['tabs'] = array_diff(
             $ct['page']['etc']['tabs'],
             ['anagrafica.form.amministrazione']
         );
     }
-
+*/
     if( max( [ $seDipendente, $seCollaboratore, $seInterinale ] ) != true ) {
         $ct['page']['etc']['tabs'] = array_diff(
             $ct['page']['etc']['tabs'],

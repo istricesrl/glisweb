@@ -3941,6 +3941,7 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.id_genitore,
 		ruoli_anagrafica.nome,
 		ruoli_anagrafica.se_organizzazioni,
+		ruoli_anagrafica.se_relazioni,
 		ruoli_anagrafica.se_risorse,
 		ruoli_anagrafica.se_progetti,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__

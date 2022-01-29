@@ -55,9 +55,22 @@
 			<span class="label-top">nome della categoria</span>
 			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 		    </div>
-		</div>
+        </div>
 
 	    </fieldset>
+
+        <fieldset>
+            <legend>ruoli dell'applicazione</legend>
+
+            <div class="form-group form-row">
+                <div class="col-4 col-md-2 col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_gestita', 'azienda gestita', '', request ) }}
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
 
 	    <fieldset>
             <legend>ruoli commerciali</legend>
@@ -119,11 +132,6 @@
                 <div class="col-4 col-md-2 col-form-label">
                     <div class="form-check">
                         {{ frm.checkbox( table, '', '', 'se_agente', 'agente', '', request ) }}
-                    </div>
-                </div>
-                <div class="col-4 col-md-2 col-form-label">
-                    <div class="form-check">
-                        {{ frm.checkbox( table, '', '', 'se_gestita', 'azienda gestita', '', request ) }}
                     </div>
                 </div>
                 <div class="col-4 col-md-2 col-form-label">

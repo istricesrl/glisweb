@@ -1,4 +1,4 @@
-{% macro cittadinanze( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% macro relazioni( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
@@ -15,16 +15,16 @@
 	{{ frm.input( table, subtable, i, 'id_anagrafica', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
 	<div class="form-group form-row">
 	    <div class="col-12 col-md">
-		<span class="label-top">cittadinanza</span>
-		{{ frm.selectBox( table, subtable, i, 'id_stato', '', etc.select.stati, request , '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, '', disabled ) }}
-	    </div>
-	    <div class="col col-md-auto">
-		<span class="label-top">inizio</span>
-		{{ frm.date( table, subtable, i, 'data_inizio', 'data inizio', etc, request, '', '', '', '', disabled ) }}
+		<span class="label-top">anagrafica principale</span>
+		{{ frm.selectBox( table, subtable, i, 'id_anagrafica', '', etc.select.anagrafica, request, request[ table ].id, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, lang, '', disabled ) }}
 		</div>
-	    <div class="col col-md-auto">
-			<span class="label-top">fine</span>
-		{{ frm.date( table, subtable, i, 'data_fine', 'data fine', etc, request, '', 'hidden', '', '', disabled ) }}
+	    <div class="col-auto">
+		<span class="label-top">relazione</span>
+		{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli, request, '', '', '', 1, '', disabled ) }}
+		</div>
+		<div class="col-12 col-md">
+		<span class="label-top">anagrafica collegata</span>
+		{{ frm.selectBox( table, subtable, i, 'id_anagrafica_collegata', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, lang, '', disabled ) }}
 		</div>
 		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">

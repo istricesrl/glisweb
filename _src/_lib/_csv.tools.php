@@ -17,13 +17,13 @@
      * @todo documentare
      *
      */
-    function csvFile2array( $file ) {
+    function csvFile2array( $file, $s = ",", $c = "\"", $e = '\\' ) {
 
         // leggo il contenuto grezzo del file
         $grezzo = readFromFile( $file );
 
         // faccio il parsing CSV di ogni riga
-        $lavorato = csv2array( $grezzo );
+        $lavorato = csv2array( $grezzo, $s, $c, $e );
 
         // restituisco l'array associativo
         return( $lavorato );

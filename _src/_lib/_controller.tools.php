@@ -324,6 +324,7 @@
 			    $before = NULL;
 
 			// recupero dati per confronto prima/dopo
+				if( isset( $d['id'] ) ) {
 			    switch( strtoupper( $a ) ) {
 				case METHOD_PUT:
 				case METHOD_REPLACE:
@@ -331,6 +332,9 @@
 				    $before = md5( serialize( mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) ) ) );
 				break;
 			    }
+#				} else {
+#					print_r( $d );
+				}
 
 			// debug
 			    // echo( print_r( mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) ), true ) ) . PHP_EOL;

@@ -70,10 +70,12 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.form',
 															'anagrafica.form.informazioni',
-															'anagrafica.form.amministrazione',
+															'anagrafica.form.relazioni',
+//															'anagrafica.form.amministrazione',
 //															'anagrafica.form.collaboratori',
 															'anagrafica.form.cliente',
-															'anagrafica.form.contratti',
+// questa scheda va attivata se è attivo il modulo contratti
+//															'anagrafica.form.contratti',
 															'anagrafica.form.fornitore',
 															'anagrafica.form.collaboratore',
 //															'anagrafica.form.struttura',
@@ -170,6 +172,18 @@
 	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.dipendente.html' ),
 	    'macro'				=> array( '_src/_inc/_macro/_anagrafica.form.dipendente.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica dipendente
+	$p['anagrafica.form.relazioni'] = array(
+	    'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'relazioni' ),
+	    'h1'				=> array( $l		=> 'relazioni' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.relazioni.html' ),
+	    'macro'				=> array( '_src/_inc/_macro/_anagrafica.form.relazioni.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);

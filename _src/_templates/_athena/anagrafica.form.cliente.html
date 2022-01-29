@@ -62,28 +62,80 @@
 				{{ frm.selectBox( table, '', '', 'id_responsabile_operativo', '', etc.select.responsabili_operativi, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_responsabile_operativo', page, pages, ietf ) }}
 			</div>
 		</div>
-		
-		<div class="form-group form-row">
-			<div class="col">
-				<span class="label-top">condizioni di vendita</span>
-				{{ frm.textarea( table, '', '', 'condizioni_vendita', '', 3, request ) }}
-			</div>
-		</div>
-
-		<div class="form-group form-row">
-			<div class="col">
-				<span class="label-top">note commerciali</span>
-				{{ frm.textarea( table, '', '', 'note_commerciali', '', 3, request ) }}
-		    </div>
-        </div>
 
 		</fieldset>
 
+	    <fieldset>
+			<legend>note</legend>
+			
+			<div class="form-group form-row">
+				<div class="col">
+					<span class="label-top">note amministrative</span>
+					{{ frm.textarea( table, '', '', 'note_amministrative', '', 3, request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">condizioni di vendita</span>
+					{{ frm.textarea( table, '', '', 'condizioni_vendita', '', 3, request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">note commerciali</span>
+					{{ frm.textarea( table, '', '', 'note_commerciali', '', 3, request ) }}
+				</div>
+			</div>
+		</fieldset>
+			
+		<fieldset>
+			<legend>dati fiscali</legend>
+	
+			<div class="form-group form-row">
+				<div class="col-12 col-md-4">
+					<span class="label-top">codice fiscale</span>
+					{{ frm.input( table, '', '', 'codice_fiscale', '', '', request ) }}
+					</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">partita IVA</span>
+					{{ frm.input( table, '', '', 'partita_iva', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">regime fiscale</span>
+					{{ frm.selectRequired( table, '', '', 'id_regime', '', etc.select.regimi, request, '', 1 ) }}
+				</div>
+			</div>
+			</fieldset>
+	
+			<fieldset>
+				<legend>fatturazione elettronica</legend>
+	
+			<div class="form-group form-row">
+				<div class="col-12 col-md-4">
+					<span class="label-top-disabled">codice archivium</span>
+					{{ frm.inputDisabled( table, '', '', 'codice_archivium', '', '', request ) }}	
+				</div>
+	
+				<div class="col-12 col-md-4">
+					<span class="label-top">cod. destinatario SDI</span>
+					{{ frm.input( table, '', '', 'codice_sdi', '', '', request ) }}
+					</div>
+				
+				<div class="col-12 col-md-4">
+					<span class="label-top">PEC per fatturazione</span>
+					{{ frm.select( table, '', '', 'id_pec_sdi', '', etc.select.pec, request ) }}
+				</div>
+			</div>
+	
+			</fieldset>
+			
 		{# SUBFORM SETTORI E ATTIVITA #}
 		{{ sub.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
 
 		{# SUBFORM IBAN #}
 		{{ dfs.iban( table, 'iban', 'dati bancari', site, page, pages, localization.language.ietf, etc, request, session ) }}
+
+		{# SUBFORM MODALITA PAGAMENTO #}
+		{# sub.modalita_pagamento( table, 'anagrafica_modalita_pagamento', 'modalità di pagamento', site, page, pages, localization.language.ietf, etc, request, session ) #}
+
+		{# SUBFORM CONDIZIONI PAGAMENTO #}
+		{# sub.condizioni_pagamento( table, 'anagrafica_condizioni_pagamento', 'condizioni di pagamento', site, page, pages, localization.language.ietf, etc, request, session ) #}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
