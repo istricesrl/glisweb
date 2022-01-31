@@ -424,6 +424,7 @@
     ruoli_anagrafica.id_genitore           | l'ID del ruolo genitore
     ruoli_anagrafica.nome                  | il nome del ruolo
     ruoli_anagrafica.se_organizzazioni     | flag che indica se il ruolo è pertinente alle organizzazioni
+    ruoli_anagrafica.se_relazioni          | flag che indica se il ruolo è pertinente alle relazioni
     ruoli_anagrafica.se_risorse            | flag che indica se il ruolo è pertinente alle risorse
     ruoli_anagrafica.se_progetti           | flag che indica se il ruolo è pertinente ai progetti
 
@@ -441,6 +442,7 @@
     ruoli_anagrafica_view.id_genitore           | -
     ruoli_anagrafica_view.nome                  | -
     ruoli_anagrafica_view.se_organizzazioni     | -
+    ruoli_anagrafica_view.se_relazioni          | -
     ruoli_anagrafica_view.se_risorse            | -
     ruoli_anagrafica_view.se_progetti           | -
     ruoli_anagrafica_view.__label__             | etichetta descrittiva del ruolo

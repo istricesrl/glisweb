@@ -1837,6 +1837,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_organizzazioni` int(1) DEFAULT NULL,
+  `se_relazioni` int(1) DEFAULT NULL,
   `se_risorse` int(1) DEFAULT NULL,
   `se_progetti` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2298,7 +2299,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
 -- tipologia: tabella di supporto
 -- verifica: 2021-10-15 17:30 Fabio Mosti
 CREATE TABLE `tipologie_mastri` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL,
   `id_genitore` int DEFAULT NULL,
   `ordine` int DEFAULT NULL,
   `nome` char(64) NOT NULL,

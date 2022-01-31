@@ -158,7 +158,7 @@
 					$cf['mysql']['connection'],
 					'SELECT id FROM __patch__ ORDER BY id DESC LIMIT 1'
 				);
-	
+
 				if( empty( $patchLevel ) ) {
 	
 					mysqlQuery(
