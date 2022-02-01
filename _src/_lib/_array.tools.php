@@ -196,21 +196,23 @@
      * @todo documentare
      *
      */
-    function arrayInsertAssoc( $ref, &$data, $array ) {
+    function arrayInsertAssoc( $ref, &$target, $add ) {
 
 	$r = array();
 
-	foreach( $array as $k => $v ) {
+	foreach( $target as $k => $v ) {
 
 	    $r[ $k ] = $v;
 
 	    if( $k == $ref ) {
-		foreach( $data as $y => $j ) {
+		foreach( $add as $y => $j ) {
 		    $r[ $y ] = $j;
 		}
 	    }
 
 	}
+
+    $target = $r;
 
     }
 

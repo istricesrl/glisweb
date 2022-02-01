@@ -1964,7 +1964,7 @@ DROP TABLE IF EXISTS `listini_clienti_view`;
 -- listini_clienti_view
 -- tipologia: tabella gestita
 -- verifica: 2021-09-24 18:20 Fabio Mosti
-CREATE OR REPLACE VIEW `listini_view` AS
+CREATE OR REPLACE VIEW `listini_clienti_view` AS
 	SELECT
 		listini_clienti.id,
 		listini_clienti.id_listino,
@@ -2236,24 +2236,34 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 ;
 
 --| 090000021000
+
 -- matricole
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `matricole_view`;
 
 --| 090000021001
--- matricole
+
+-- matricole_view
 -- tipologia: tabella gestita
 -- verifica: 2021-12-28 16:20 Chiara GDL
 CREATE OR REPLACE VIEW `matricole_view` AS
 	SELECT
-	matricole.id,
-	matricole.id_produttore,
-	matricole.id_marchio,
-	matricole.serial_number,
-	matricole.nome,
-	concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS __label__
+		matricole.id,
+		matricole.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		matricole.id_marchio,
+		marchi.nome AS marchio,
+		matricole.id_articolo,
+		concat_ws( ' ',  articoli.id, prodotti.nome, articoli.nome ) AS articolo,
+		matricole.matricola,
+		matricole.data_scadenza,
+		matricole.nome,
+		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS __label__
 	FROM matricole
-	ORDER BY __label__
+		LEFT JOIN anagrafica AS a1 ON a1.id = matricole.id_produttore
+		LEFT JOIN marchi ON marchi.id = matricole.id_marchio
+		LEFT JOIN articoli ON articoli.id = id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto 
 ;
 
 --| 090000021600
