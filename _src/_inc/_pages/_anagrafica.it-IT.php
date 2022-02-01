@@ -73,7 +73,7 @@
 															'anagrafica.form.relazioni',
 // questa scheda va attivata se è attivo il modulo certificazioni
 //															'anagrafica.form.certificazioni',
-//															'anagrafica.form.amministrazione',
+															'anagrafica.form.amministrazione',
 //															'anagrafica.form.collaboratori',
 															'anagrafica.form.cliente',
 // questa scheda va attivata se è attivo il modulo contratti

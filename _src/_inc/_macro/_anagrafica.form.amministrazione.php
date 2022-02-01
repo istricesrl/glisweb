@@ -30,6 +30,14 @@
 	    'SELECT id, __label__ FROM regimi_view'
 	);
 
+	// tendina settori e attività
+	$ct['etc']['select']['settori'] = mysqlCachedIndexedQuery(
+		$cf['memcache']['index'],
+		$cf['memcache']['connection'],
+		$cf['mysql']['connection'],
+		'SELECT id, __label__ FROM settori_view'
+	);
+	
 	// tendina PEC
 	$ct['etc']['select']['pec'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
