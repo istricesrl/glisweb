@@ -87,35 +87,16 @@
 				<span class="label-top remove-after-duplicate">articolo</span>
 				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
 			</div>
+			<div class="col">
+				<span class="label-top remove-after-duplicate">matricola</span>
+				{{ frm.selectBox( table, '', '', 'id_matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', 'matricole.form', 'matricole.form', 'matricole', 'id_matricola', page, pages, ietf, 'matricole' ) }}
+			</div>
 			<div class="col col-md">
 				<span class="label-top remove-after-duplicate">specifiche</span>
 				{{ frm.input( table, '', '', 'specifiche', '', '', request ) }}
 			</div>
 		</div>
 
-		<legend>valore della riga</legend>
-		<div class="form-group form-row">
-			<div class="col-1">
-				<span class="label-top remove-after-duplicate">importo</span>
-				{{ frm.inputRequired( table, '', '', 'importo_netto_totale', '', '', request ) }}
-			</div>
-			<div class="col-auto">
-				<span class="label-top remove-after-duplicate">reparto</span>
-				{{ frm.select( table, '', '', 'id_reparto', '', etc.select.id_reparti, request, 1 ) }}
-			</div>
-			<div class="col-auto">
-				<span class="label-top remove-after-duplicate">listino</span>
-				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request, 1 ) }}
-			</div>
-			<div class="col">
-				<span class="label-top remove-after-duplicate">matricola</span>
-				{{ frm.selectBox( table, '', '', 'id_matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'matricole' ) }}
-			</div>
-		</div>	
-		<div class="form-group form-row">
-
-
-		</div>
 	{% if  request.__preset__[ table ].id_documento %}
 		{% set default_documento = request.__preset__[ table ].id_documento %}
 	{% elseif  session.__latest__[ table ].id_documento %}

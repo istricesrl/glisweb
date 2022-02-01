@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
   `se_collaboratore` int(1) DEFAULT NULL,
   `se_interno` int(1) DEFAULT NULL,
   `se_esterno` int(1) DEFAULT NULL,
-  `se_agente` int(1) DEFAULT NULL,
+  `se_commerciale` int(1) DEFAULT NULL,
   `se_concorrente` int(1) DEFAULT NULL,
   `se_gestita` int(1) DEFAULT NULL,
   `se_amministrazione` int(1) DEFAULT NULL,

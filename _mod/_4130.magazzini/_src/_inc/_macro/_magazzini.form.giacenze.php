@@ -34,6 +34,11 @@
         'totale' => 'totale'
     );
 
+    // OPZIONE matricole
+    if( ! empty( $cf['matricole']['scadenze'] ) ) {
+        arrayInsertAssoc( 'matricola', $ct['view']['cols'], array( 'data_scadenza' => 'scadenza' ) );
+    }
+
     // stili della vista
     $ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',

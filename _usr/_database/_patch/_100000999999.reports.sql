@@ -17,6 +17,7 @@ SELECT
   articolo,
   id_matricola,
   matricola,
+  data_scadenza,
   sum( carico ) AS carico,
   sum( scarico ) AS scarico,
   coalesce( ( sum( carico ) - sum( scarico ) ), 0 ) AS totale
@@ -28,6 +29,7 @@ SELECT
   articoli.nome AS articolo,
   matricole.id AS id_matricola,
   matricole.matricola,
+  matricole.data_scadenza,
   documenti.data,
   documenti.id_tipologia,
   tipologie_documenti.nome AS tipologia,
@@ -43,6 +45,7 @@ FROM mastri
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+  WHERE documenti_articoli.quantita IS NOT NULL
 UNION
 SELECT
   mastri.id,
@@ -51,6 +54,7 @@ SELECT
   articoli.nome AS articolo,
   matricole.id AS id_matricola,
   matricole.matricola,
+  matricole.data_scadenza,
   documenti.data,
   documenti.id_tipologia,
   tipologie_documenti.nome AS tipologia,
@@ -66,8 +70,9 @@ FROM mastri
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+  WHERE documenti_articoli.quantita IS NOT NULL
 ) AS movimenti
-GROUP BY id, nome, id_articolo, articolo, id_matricola, matricola;
+GROUP BY id, nome, id_articolo, articolo, id_matricola, matricola, data_scadenza;
 
 --| 100000021000
 -- __report_movimenti_magazzini__
@@ -113,6 +118,7 @@ FROM mastri
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+  WHERE documenti_articoli.quantita IS NOT NULL
 UNION
 SELECT
   mastri.id,
@@ -135,6 +141,7 @@ FROM mastri
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+  WHERE documenti_articoli.quantita IS NOT NULL
 ) AS movimenti;
 
 --| FINE FILE
