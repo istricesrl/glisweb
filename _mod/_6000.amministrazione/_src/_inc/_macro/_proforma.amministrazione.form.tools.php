@@ -72,6 +72,20 @@
             'WHERE relazioni_documenti.id_documento = ? AND documenti.id_tipologia = 1',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
         );
+        
+        if( empty( $id_documento ) ){
+            
+            $righe = mysqlQuery( 
+                $cf['mysql']['connection'], 
+                'SELECT DISTINCT righe.id_documento FROM relazioni_documenti_articoli INNER JOIN documenti_articoli ON documenti_articoli.id = relazioni_documenti_articoli.id_documenti_articolo AND documenti_articoli.id_documento = ? LEFT join documenti_articoli AS righe  on righe.id = relazioni_documenti_articoli.id_documenti_articolo_collegato AND righe.id_documento IS NOT NULL',
+                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
+            );
+
+            if( count( $righe ) == 1 ){
+                
+                $id_documento = $righe[0]['id_documento'];
+            }
+        }
 
         if( ! empty( $id_documento ) ){
         

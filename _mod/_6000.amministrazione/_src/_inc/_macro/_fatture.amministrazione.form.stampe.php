@@ -32,6 +32,10 @@
         )
     );
 
+    if(file_exists(DIR_BASE.'mod/6200.documenti/src/api/print/fattura.pdf.php')  ){$file = $ct['site']['url'].'mod/6200.documenti/src/api/print/';}
+    else {$file =$ct['site']['url'].'_mod/_6200.documenti/_src/_api/_print/_';  }
+
+
     if( isset( $_REQUEST[ $ct['form']['table'] ] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ){
 
         switch ( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ){
@@ -71,7 +75,7 @@
 
                 $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
-                    'url' => $base . '_fattura.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'url' => $file . 'fattura.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
                     'fa' => 'fa-file-pdf-o',
                     'title' => 'stampa PDF',

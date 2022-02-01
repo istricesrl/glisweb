@@ -161,7 +161,7 @@
 		$documento = 'ALL';
 	}
 
-	if( $documento == 'ALL' ){
+	if( $documento == 'ALL' && isset(  $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		$ct['etc']['select']['id_righe_genitori'] = mysqlCachedIndexedQuery(
 			$cf['memcache']['index'],
 			$cf['memcache']['connection'],
@@ -169,7 +169,8 @@
 			'SELECT id, __label__ FROM documenti_articoli_view WHERE id_genitore IS NULL AND id <> ?',
 			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
 		);
-	} else {
+		
+	} elseif( isset(  $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
 
 	$ct['etc']['select']['id_righe_genitori'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
@@ -180,6 +181,8 @@
     );
 
 	}
+
+	
 	if( $documento != 'ALL'){
 	$ct['etc']['id_emittente'] = mysqlSelectValue(
         $cf['mysql']['connection'],
