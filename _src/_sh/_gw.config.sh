@@ -96,15 +96,15 @@ if [ -f "$FILE" ]; then
 
 		else
 
-			if [ "$PLACEHOLDER" = "%indirizzo IP del server MySQL%" -a -n $MYSQLIP ]; then
+			if [ "$PLACEHOLDER" = "%indirizzo IP del server MySQL%" -a -n "$MYSQLIP" ]; then
 				VALUE=$MYSQLIP
-			elif [ "$PLACEHOLDER" = "%porta del server MySQL%" -a -n $MYSQLPORT ]; then
+			elif [ "$PLACEHOLDER" = "%porta del server MySQL%" -a -n "$MYSQLPORT" ]; then
 				VALUE=$MYSQLPORT
-			elif [ "$PLACEHOLDER" = "%nome utente del server MySQL%" -a -n $MYSQLUSER ]; then
+			elif [ "$PLACEHOLDER" = "%nome utente del server MySQL%" -a -n "$MYSQLUSER" ]; then
 				VALUE=$MYSQLUSER
-			elif [ "$PLACEHOLDER" = "%password del server MySQL%" -a -n $MYSQLPW ]; then
+			elif [ "$PLACEHOLDER" = "%password del server MySQL%" -a -n "$MYSQLPW" ]; then
 				VALUE=$MYSQLPW
-			elif [ "$PLACEHOLDER" = "%nome del database MySQL%" -a -n $MYSQLDB ]; then
+			elif [ "$PLACEHOLDER" = "%nome del database MySQL%" -a -n "$MYSQLDB" ]; then
 				VALUE=$MYSQLDB
 			else
 
