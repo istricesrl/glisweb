@@ -71,7 +71,7 @@
         'INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto '.
         'INNER JOIN iva ON iva.id = reparti.id_iva '.
         'INNER JOIN udm ON udm.id = documenti_articoli.id_udm '.
-        'WHERE id_documento = ?',
+        'WHERE id_documento = ? AND id_genitore IS NULL',
         array( array( 's' => $doc['id'] ) )
     );
 
@@ -81,7 +81,7 @@
         $riga['qtd'] = ( empty( $riga['quantita'] ) ) ? 1 : $riga['quantita'];
 
         $riga['importo_netto_unitario']         = str_replace( ',', '.', round( ( $riga['importo_netto_totale'] / $riga['qtd'] ), 2 ) );
-        $riga['importo_netto_totale']           = str_replace( ',', '.', round( $riga['importo_netto_totale'] * $riga['qtd'], 2 ) );
+        $riga['importo_netto_totale']           = str_replace( ',', '.', round( $riga['importo_netto_totale'] , 2 ) );
         $riga['importo_iva_totale']             = str_replace( ',', '.', round( $riga['importo_netto_totale'] * ( $riga['aliquota'] / 100 ), 2 ) );
         $riga['importo_lordo_totale']           = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_netto_totale'] + $riga['importo_iva_totale'] ) );
         $riga['aliquota']                       = str_replace( ',', '.', sprintf( '%0.2f', round( $riga['aliquota'], 2 ) ) );
@@ -132,7 +132,7 @@
         $cf['mysql']['connection'],
         'SELECT modalita_pagamento.codice AS codice_pagamento, '.
         'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
-        '( importo_netto_totale + ( importo_netto_totale / 100 * iva.aliquota ) ) AS importo_lordo_totale  '.
+        ' importo_netto_totale AS importo_lordo_totale  '.
         'FROM pagamenti '.
         'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.

@@ -682,10 +682,11 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 		categorie_anagrafica.se_collaboratore,
 		categorie_anagrafica.se_interno,
 		categorie_anagrafica.se_esterno,
-		categorie_anagrafica.se_agente,
 		categorie_anagrafica.se_concorrente,
 		categorie_anagrafica.se_gestita,
 		categorie_anagrafica.se_amministrazione,
+		categorie_anagrafica.se_produzione,
+		categorie_anagrafica.se_commerciale,
 		categorie_anagrafica.se_notizie,
 		count( c1.id ) AS figli,
 		count( anagrafica_categorie.id ) AS membri,
@@ -2249,7 +2250,7 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 	matricole.id,
 	matricole.id_produttore,
 	matricole.id_marchio,
-	matricole.serial_number,
+	matricole.matricola,
 	matricole.nome,
 	concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS __label__
 	FROM matricole
