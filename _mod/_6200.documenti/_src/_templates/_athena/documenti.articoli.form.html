@@ -85,7 +85,7 @@
 			</div>
 			<div class="col-6">
 				<span class="label-top remove-after-duplicate">articolo</span>
-				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
+				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli','', 'chiediPrezzoListino();' ) }}
 			</div>
 			<div class="col col-md">
 				<span class="label-top remove-after-duplicate">specifiche</span>
@@ -209,4 +209,23 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+console.log("ciao");
+
+
+function chiediPrezzoListino() {
+
+	var a = $('#documenti_articoli_id_articolo').val();
+	console.log(a);
+    getws( '/src/api/task/articoli.get.prezzo.php?id_articolo='+id_articolo, '', function( data ) {
+	console.log( data );
+	//$('#righe_documenti_amministrativi_importo_netto_totale').val( totale );
+    });
+    //$('#righe_documenti_amministrativi_importo_netto_totale').val( totale );
+
+}
+</script>
 {% endblock %}

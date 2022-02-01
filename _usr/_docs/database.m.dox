@@ -321,7 +321,7 @@
     matricole.id                       | l'ID della matricola
     matricole.id_marchio               | l'ID del marchio della matricola
     matricole.id_produttore            | l'ID del produttore della matricola
-    matricole.serial_number            | il serial number della matricola
+    matricole.matricola            | il serial number della matricola
     matricole.nome                     | il nome del mastro
     matricole.note                     | note descrittive del mastro
     matricole.id_account_inserimento   | l'ID dell'account che ha inserito la riga
@@ -345,7 +345,7 @@
     matricole_view.id                          | -
     matricole_view.id_marchio                  | -
     matricole_view.id_produttore               | -
-    matricole_view.serial_number               | -
+    matricole_view.matricola               | -
     matricole_view.nome                        | -
     matricole_view.id_account_inserimento      | -
     matricole_view.id_account_aggiornamento    | -

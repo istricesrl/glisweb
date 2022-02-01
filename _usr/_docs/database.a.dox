@@ -190,6 +190,7 @@
     anagrafica.id_pec_sdi                           | l'ID della casella PEC per la fatturazione elettronica dell'anagrafica
     anagrafica.id_regime                            | l'ID del regime fiscale dell'anagrafica
     anagrafica.note_amministrative                  | le note amministrative relative all'anagrafica
+    anagrafica.note_collaborazione                  | le note di collaborazione relative all'anagrafica  
     anagrafica.luogo_nascita                        | il luogo di nascita dell'anagrafica
     anagrafica.stato_nascita                        | lo stato di nascita dell'anagrafica
     anagrafica.id_stato_nascita                     | l'ID dello stato di nascita dell'anagrafica
