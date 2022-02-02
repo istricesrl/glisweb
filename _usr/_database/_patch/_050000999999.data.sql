@@ -8,7 +8,7 @@
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 -- verifica: 2021-05-28 19:56 Fabio Mosti
-REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `note`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_agente`, `se_concorrente`, `se_gestita`, `se_amministrazione`, `se_produzione`, `se_notizie`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `note`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_commerciale`, `se_concorrente`, `se_gestita`, `se_amministrazione`, `se_produzione`, `se_notizie`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'contatti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'collaboratori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	2,	NULL,	'agenti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -217,16 +217,6 @@ REPLACE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 (23,  'MP08', 'bancomat' ),
 (24, 'MP08', 'paypal' );
 
---| 050000028600
-
--- ranking
--- tipologia: tabella assistita
--- verifica: 2021-10-11 17:48 Fabio Mosti
-REPLACE INTO `ranking` (`id`, `nome`, `ordine`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	'GOLD',	    100,	NULL,	NULL,	NULL,	NULL),
-(2,	'SILVER',	200,	NULL,	NULL,	NULL,	NULL),
-(3,	'BRONZE',	300,	NULL,	NULL,	NULL,	NULL);
-
 --| 050000023600
 
 -- periodicita
@@ -302,7 +292,7 @@ REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) V
 (57,	11,	'Pisa',	                            'PI',	'050'),
 (58,	11,	'Arezzo',	                        'AR',	'051'),
 (59,	11,	'Siena',    	                    'SI',	'052'),
-(60,	11,	'Grosseto',	                        'GR',	'053'),
+(60,	11,	'Grosseto',	                        'GR',	'053');
 (61,	11,	'Prato',	                        'PO',	'100'),
 (62,	12,	'Perugia',	                        'PG',	'054'),
 (63,	12,	'Terni',	                        'TR',	'055'),
@@ -353,6 +343,16 @@ REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) V
 (109,	21,	'Olbia-Tempio',	                    'OT',	NULL),
 (110,	21,	'Ogliastra',	                    'OG',	NULL),
 (111,	21,	'Sud Sardegna',	                    'SU',	'111');
+
+--| 050000028600
+
+-- ranking
+-- tipologia: tabella assistita
+-- verifica: 2021-10-11 17:48 Fabio Mosti
+REPLACE INTO `ranking` (`id`, `nome`, `ordine`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'GOLD',	    100,	NULL,	NULL,	NULL,	NULL),
+(2,	'SILVER',	200,	NULL,	NULL,	NULL,	NULL),
+(3,	'BRONZE',	300,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000029800
 

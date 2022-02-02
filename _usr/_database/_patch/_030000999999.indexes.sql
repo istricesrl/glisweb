@@ -331,14 +331,14 @@ ALTER TABLE `categorie_anagrafica`
 	ADD KEY `se_collaboratore` (`se_collaboratore`), 
 	ADD KEY `se_interno` (`se_interno`), 
 	ADD KEY `se_esterno` (`se_esterno`), 
-	ADD KEY `se_agente` (`se_agente`), 
+	ADD KEY `se_commerciale` (`se_commerciale`), 
 	ADD KEY `se_concorrente` (`se_concorrente`), 
 	ADD KEY `se_gestita` (`se_gestita`), 
 	ADD KEY `se_amministrazione` (`se_amministrazione`), 
 	ADD KEY `se_notizie` (`se_notizie`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_lead`,`se_prospect`,`se_cliente`,`se_fornitore`,`se_produttore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_agente`,`se_concorrente`,`se_gestita`,`se_amministrazione`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_lead`,`se_prospect`,`se_cliente`,`se_fornitore`,`se_produttore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_commerciale`,`se_concorrente`,`se_gestita`,`se_amministrazione`);
 
 --| 030000003101
 
@@ -1261,10 +1261,10 @@ ALTER TABLE `matricole`
  	ADD PRIMARY KEY (`id`),
   	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `serial_number` (`serial_number`),
+  	ADD KEY `matricola` (`matricola`),
   	ADD KEY `id_marchio` (`id_marchio`),
   	ADD KEY `id_produttore` (`id_produttore`),
-  	ADD KEY `indice` (`id`,`id_marchio`,`id_produttore`,`serial_number`,`nome`);
+  	ADD KEY `indice` (`id`,`id_marchio`,`id_produttore`,`matricola`,`nome`);
 
 --| 030000021001
 ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

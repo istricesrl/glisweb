@@ -218,7 +218,7 @@
 												// echo $pStatus . HTML_EOL;
 											}
 			
-											$patchLevel = mysqlInsertRow(
+											mysqlInsertRow(
 												$cf['mysql']['connection'],
 												array(
 													'id' => $pId,
@@ -230,6 +230,8 @@
 												false
 											);
 		
+											$patchLevel = $pId;
+
 										} else {
 
 										//	echo 'patch ' . $pId . ' obsoleta rispetto a ' . $patchLevel. PHP_EOL;
