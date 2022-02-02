@@ -1,7 +1,7 @@
 <?php
 
     // modulo di questo file
-	$m = DIR_MOD . '_4130.magazzini/';
+	$m = DIR_MOD . '_6350.magazzini/';
 
 	// vista ddt
    	$p['ddt.magazzini.view'] = array(
