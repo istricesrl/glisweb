@@ -43,6 +43,7 @@
 
 		// invalidazione della cache per l'entità corrente
 		    memcacheCleanFromIndex( $t );
+		    memcacheCleanFromIndex( $t . '_static' );
 
 	    break;
 

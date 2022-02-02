@@ -292,7 +292,7 @@ REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) V
 (57,	11,	'Pisa',	                            'PI',	'050'),
 (58,	11,	'Arezzo',	                        'AR',	'051'),
 (59,	11,	'Siena',    	                    'SI',	'052'),
-(60,	11,	'Grosseto',	                        'GR',	'053');
+(60,	11,	'Grosseto',	                        'GR',	'053'),
 (61,	11,	'Prato',	                        'PO',	'100'),
 (62,	12,	'Perugia',	                        'PG',	'054'),
 (63,	12,	'Terni',	                        'TR',	'055'),
@@ -434,25 +434,29 @@ INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_
 -- ruoli_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:11 Fabio Mosti
-REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `se_organizzazioni`, `se_risorse`, `se_progetti`) VALUES
-(1,	    NULL,	'titolare',	                    1,	    NULL,	NULL),
-(2,	    NULL,	'amministratore',	            1,	    NULL,	NULL),
-(3,	    NULL,	'socio',	                    1,	    NULL,	NULL),
-(4,	    NULL,	'dipendente',	                1,	    NULL,	NULL),
-(5,	    NULL,	'direttore',	                1,	    NULL,	NULL),
-(6,	    NULL,	'presidente',	                1,	    NULL,	NULL),
-(7,	    NULL,	'tesoriere',	                1,	    NULL,	NULL),
-(8,	    NULL,	'coordinatore',	                1,	    NULL,	1),
-(9,	    NULL,	'vicepresidente',	            1,	    NULL,	NULL),
-(10,	NULL,	'vicedirettore',	            1,	    NULL,	NULL),
-(11,	NULL,	'segretario',	                1,	    NULL,	NULL),
-(12,	NULL,	'responsabile amministrativo',	1,	    NULL,	NULL),
-(13,	NULL,	'responsabile acquisti',	    1,	    NULL,	NULL),
-(14,	NULL,	'responsabile operativo',	    1,	    NULL,	NULL),
-(15,	NULL,	'operatore',	                NULL,	NULL,	1),
-(16,	NULL,	'responsabile',	                NULL,	NULL,	1),
-(17,	NULL,	'assistente',	                1,	    NULL,	1),
-(18,	NULL,	'autore',	                    NULL,	1,	    NULL);
+REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`) VALUES
+(1,	NULL,	'titolare',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(2,	NULL,	'amministratore',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(3,	NULL,	'socio',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(4,	NULL,	'dipendente',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(5,	NULL,	'direttore',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(6,	NULL,	'presidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(7,	NULL,	'tesoriere',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(8,	NULL,	'coordinatore',	NULL,	NULL,	1,	NULL,	NULL,	1),
+(9,	NULL,	'vicepresidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(10,	NULL,	'vicedirettore',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(11,	NULL,	'segretario',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(13,	NULL,	'responsabile acquisti',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(14,	NULL,	'responsabile operativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(15,	NULL,	'operatore',	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(16,	NULL,	'responsabile',	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(17,	NULL,	'assistente',	NULL,	NULL,	1,	NULL,	NULL,	1),
+(18,	NULL,	'autore',	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(19,	NULL,	'genitore',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(20,	NULL,	'fratello',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(21,	NULL,	'tutore',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(22,	NULL,	'coniuge',	NULL,	NULL,	NULL,	1,	NULL,	NULL);
 
 --| 050000034200
 

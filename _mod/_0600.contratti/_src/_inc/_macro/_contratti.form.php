@@ -38,14 +38,6 @@
 	    'SELECT id, __label__ FROM tipologie_contratti_view'
     );
     
-    // tendina per le tipologie di attività inps
-    $ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_attivita_inps_view'
-    );
-
     // tendina per le tipologie di qualifiche inps
     $ct['etc']['select']['tipologie_qualifiche_inps'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

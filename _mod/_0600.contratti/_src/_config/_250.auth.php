@@ -36,9 +36,6 @@
         ),
         'tipologie_contratti' => array(
             CONTROL_FULL => array( 'roots' )
-        ),
-        'tipologie_attivita_inps' => array(
-            CONTROL_FULL => array( 'roots' )
         )
 	    )
 	);
