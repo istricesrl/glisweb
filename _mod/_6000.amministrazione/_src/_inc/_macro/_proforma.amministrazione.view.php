@@ -34,15 +34,14 @@
         'data' => 'data',
         'emittente' => 'emittente',
         'destinatario' => 'destinatario',
-        '__label__' => 'nome'
+        'nome' => 'nome'
     );
 
     // stili della vista
-    $ct['view']['class'] = array(
+	$ct['view']['class'] = array(
         'nome' => 'text-left',
-        'numero' => 'text-left',
-        'data' => 'text-left',
-        '__label__' => 'text-left',
+        'data' => 'no-wrap',
+        'nome' => 'text-left',
         'destinatario' => 'text-left',
         'emittente' => 'text-left',
         'tipologia' => 'text-left',
