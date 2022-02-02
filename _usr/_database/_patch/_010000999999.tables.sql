@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `partita_iva` char(32) DEFAULT NULL,
   `codice_sdi` char(32) DEFAULT NULL,
   `id_pec_sdi` int(11) DEFAULT NULL,
+  `codice_archivium` char(16) DEFAULT NULL,
   `id_regime` int(11) DEFAULT NULL,
   `note_amministrative` text,
   `note_collaborazione` text,

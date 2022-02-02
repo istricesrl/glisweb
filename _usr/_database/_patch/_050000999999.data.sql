@@ -854,7 +854,7 @@ REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologia: tabella di supporto
 -- verifica: 2021-12-07 17:00 Chiara GDL
 REPLACE INTO `tipologie_documenti` (`id`, `nome`, `codice`, `se_fattura`, `se_nota_credito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `stampa_xml`, `stampa_pdf`) VALUES
-(1,	'fattura',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(1,	'fattura',	'TD01',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	'fattura accompagnatoria',	'TD01',	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	'nota di credito',	'TD04',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	'documento di trasporto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),

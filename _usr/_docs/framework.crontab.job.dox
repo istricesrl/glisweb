@@ -119,7 +119,7 @@
             // CUSTOM status
             $status['error'][] = 'ID job non trovato';
 
-        } elseif( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
+        } elseif( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
 
             // CUSTOM status
             $status['info'][] = 'iterazione a vuoto su job completato';
@@ -196,8 +196,9 @@
                 if( empty( $job['timestamp_apertura'] ) ) {
                     mysqlQuery(
                         $cf['mysql']['connection'],
-                        'UPDATE job SET timestamp_apertura = ? WHERE id = ?',
+                        'UPDATE job SET totale = ?, timestamp_apertura = ? WHERE id = ?',
                         array(
+                        array( 's' => $job['totale'] ),
                         array( 's' => time() ),
                         array( 's' => $job['id'] )
                         )
@@ -222,53 +223,17 @@
             }
 
             /**
-             * INDICE DI LAVORO
-             * dal momento che è necessario considerare il primo step come step numero zero, è possibile che sia
-             * necessario ridurre di uno l'indice di lavoro nel caso ad esempio in cui si debba accedere a un array
-             * i cui elementi partono appunto da zero - allo step 1 bisogna leggere l'elemento 0; questo non è
-             * sempre necessario e potrebbero esistere job che lavorano su risorse in cui questo allineamento risulta
-             * superfluo oppure in cui sono necessari allineamenti diversi (ad esempio rispetto a una clausola LIMIT)
-             */
-
-            // aggiusto l'indice di lavoro (gli array partono da zero)
-            $widx = $job['corrente'] - 1;
-
-            /**
-             * [...] OMISSIS [...]
-             *
-             * NOTA qui lavoro su $arr[ $widx ] che contiene l'oggetto corrente
-             *
-             */
-
-            // CUSTOM status
-            $status['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
-
-            /**
-             * AGGIORNAMENTO STATUS DEL JOB
-             * una volta eseguito il lavoro dello step, è necessario aggiornare la riga di database del job in modo
-             * che gli step successivi possano riprendere il lavoro da dove è stato interrotto
-             */
-
-            // aggiorno i valori di visualizzazione avanzamento
-            $jobs = mysqlQuery(
-                $cf['mysql']['connection'],
-                'UPDATE job SET totale = ?, corrente = ? WHERE id = ?',
-                array(
-                array( 's' => $job['totale'] ),
-                array( 's' => $job['corrente'] ),
-                array( 's' => $job['id'] )
-                )
-            );
-
-            /**
              * CHIUSURA DEL JOB
              * se il valore della chiave $job['corrente'] a questo punto è equivalente al valore della chiave $job['totale'],
              * allora il job è completato e si può procedere con le operazioni di chiusura, che comprendono il salvataggio
              * della timestamp di completamento, l'avvio di eventuali attività correlate, l'invio di notifiche, eccetera
+             *
+             * Si noti che il controllo viene fatto subito per evitare che un eventuale job con totale vuoto o zero venga
+             * eseguito una volta prima di essere chiuso.
              */
 
             // operazioni di chiusura
-            if( $job['corrente'] == $job['totale'] ) {
+            if( empty( $job['totale'] ) || $job['corrente'] >= $job['totale'] ) {
 
                 // scrivo la timestamp di completamento
                 $jobs = mysqlQuery(
@@ -282,6 +247,46 @@
 
                 // CUSTOM notifiche di fine attività
                     // TODO
+
+            } else {
+
+                /**
+                * INDICE DI LAVORO
+                * dal momento che è necessario considerare il primo step come step numero zero, è possibile che sia
+                * necessario ridurre di uno l'indice di lavoro nel caso ad esempio in cui si debba accedere a un array
+                * i cui elementi partono appunto da zero - allo step 1 bisogna leggere l'elemento 0; questo non è
+                * sempre necessario e potrebbero esistere job che lavorano su risorse in cui questo allineamento risulta
+                * superfluo oppure in cui sono necessari allineamenti diversi (ad esempio rispetto a una clausola LIMIT)
+                */
+
+                // aggiusto l'indice di lavoro (gli array partono da zero)
+                $widx = $job['corrente'] - 1;
+
+                /**
+                * [...] OMISSIS [...]
+                *
+                * NOTA qui lavoro su $arr[ $widx ] che contiene l'oggetto corrente
+                *
+                */
+
+                // CUSTOM status
+                $status['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
+
+                /**
+                * AGGIORNAMENTO STATUS DEL JOB
+                * una volta eseguito il lavoro dello step, è necessario aggiornare la riga di database del job in modo
+                * che gli step successivi possano riprendere il lavoro da dove è stato interrotto
+                */
+
+                // aggiorno i valori di visualizzazione avanzamento
+                $jobs = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE job SET corrente = ? WHERE id = ?',
+                    array(
+                    array( 's' => $job['corrente'] ),
+                    array( 's' => $job['id'] )
+                    )
+                );
 
             }
 
@@ -363,7 +368,7 @@
             // CUSTOM status
             $status['error'][] = 'ID job non trovato';
 
-        } elseif( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
+        } elseif( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
 
             // CUSTOM status
             $status['info'][] = 'iterazione a vuoto su job completato';
@@ -395,12 +400,14 @@
 
             }
 
-            /**
-            * [...] OMISSIS [...]
-            */
-
             // operazioni di chiusura
-            if( $job['corrente'] == $job['totale'] ) {
+            if( empty( $job['totale'] ) || $job['corrente'] >= $job['totale'] ) {
+
+                /**
+                * [...] OMISSIS [...]
+                */
+
+            } else {
 
                 /**
                 * [...] OMISSIS [...]

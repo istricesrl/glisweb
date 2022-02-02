@@ -14,19 +14,29 @@
     // inizializzo l'array del risultato
 	$status = array();
 
-    // seleziono l'ultimo progressivo utilizzato
-    $status['current'] = mysqlSelectValue(
-        $cf['mysql']['connection'],
-        'SELECT coalesce( max( progressivo_invio ), 0 ) FROM documenti'
-    );
+    // se è specificata l'azienda
+    if( ! empty( $_REQUEST['idAzienda'] ) ) {
 
-    // debug
-    $status['new'] = base_convert( $status['current'], 36, 10 );
-    $status['new']++;
-    $status['new'] = base_convert( $status['new'], 10, 36 );
+        // seleziono l'ultimo progressivo utilizzato
+        $status['current'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT coalesce( max( progressivo_invio ), 0 ) FROM documenti WHERE id_emittente = ?',
+            array(
+                array( 's' => $_REQUEST['idAzienda'] )
+            )
+        );
 
-    // propongo un nuovo progressivo
-    $status['new'] = strtoupper( str_pad( $status['new'], 5, '0', STR_PAD_LEFT ) );
+        // debug
+        $status['new'] = base_convert( $status['current'], 36, 10 );
+        $status['new']++;
+        $status['new'] = base_convert( $status['new'], 10, 36 );
+
+        // propongo un nuovo progressivo
+        $status['new'] = strtoupper( str_pad( $status['new'], 5, '0', STR_PAD_LEFT ) );
+
+    } else {
+        $status['new'] = NULL;
+    }
 
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {

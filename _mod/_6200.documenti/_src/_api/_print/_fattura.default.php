@@ -71,7 +71,8 @@
         'INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto '.
         'INNER JOIN iva ON iva.id = reparti.id_iva '.
         'INNER JOIN udm ON udm.id = documenti_articoli.id_udm '.
-        'WHERE id_documento = ? AND id_genitore IS NULL',
+        'WHERE documenti_articoli.id_documento = ? '.
+        'AND documenti_articoli.id_genitore IS NULL',
         array( array( 's' => $doc['id'] ) )
     );
 
@@ -214,10 +215,14 @@
 	    'SELECT * FROM anagrafica WHERE id = ?',
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
-
+/**
+ * NOTA è possibile emettere fattura elettronica verso privati senza SDI e PEC specificando '0000000'
+ * lasciando vuoto il campo PECDestinatario e omettendo il campo IdFiscaleIVA
     // verifico la presenza di SDI o PEC del destinatario
-    if( $dst['codice_sdi'] == '0000000' && empty( $dst['pec_sdi'] ) ) { dieText('PEC e SDI assenti' ); }
-
+    if( $dst['codice_sdi'] == '0000000' && empty( $dst['pec_sdi'] ) ) {
+        dieText('PEC e SDI assenti' );
+    }
+ */
     // denominazione fiscale
     $dst['denominazione_fiscale'] = trim( $dst['nome'] . ' ' . $dst['cognome'] . ' ' . $dst['denominazione'] );
 

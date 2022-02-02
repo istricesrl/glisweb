@@ -27,14 +27,22 @@
 
     // esportazione azienda in Archivium
     if( in_array( 'INVIO_ANAGRAFICA_ARCHIVIUM', $_SESSION['account']['privilegi'] ) ) {
-        $ct['page']['contents']['metro']['archivium'][] = array(
-            'host' => $ct['site']['url'],
-            'ws' => 'task/anagrafica.attivazione.archivium?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-            'icon' => NULL,
-            'fa' => 'fa-cloud-upload',
-            'title' => 'invia anagrafica ad Archivium',
-            'text' => 'attiva la fatturazione elettronica per questa anagrafica'
-        );
+        if( ! empty( $_REQUEST['anagrafica']['se_gestita'] ) ) {
+            if( ! empty( $cf['archivium']['profile'] ) ) {
+                if( ! empty( $_REQUEST['anagrafica']['codice_archivium'] ) ) {
+                    // TODO se è settato il codice archivium, proporre la modifica e non il caricamento
+                } else {
+                    $ct['page']['contents']['metro']['archivium'][] = array(
+                        'host' => $ct['site']['url'],
+                        'ws' => 'task/anagrafica.attivazione.archivium?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                        'icon' => NULL,
+                        'fa' => 'fa-cloud-upload',
+                        'title' => 'invia anagrafica ad Archivium',
+                        'text' => 'attiva la fatturazione elettronica per questa anagrafica'
+                    );
+                }
+            }
+        }
     }
 
     // gestione default

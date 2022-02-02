@@ -171,6 +171,8 @@
         // var_dump( $s );
         // print_r( $r );
 
+        // TODO loggare $r
+
         // salvo l'ID SDI dell'anagrafica
         if( $r['esito'] == 200 ) {
 

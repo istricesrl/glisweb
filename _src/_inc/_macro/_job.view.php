@@ -24,8 +24,8 @@
         '__label__' => 'text-left',
         'totale' => 'text-right',
         'corrente' => 'text-right',
-        'data_ora_esecuzione' => 'text-right',
-        'data_ora_completamento' => 'text-right',
+        'data_ora_esecuzione' => 'text-right no-wrap',
+        'data_ora_completamento' => 'text-right no-wrap',
         'se_foreground' => 'text-center'
     );
 

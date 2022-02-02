@@ -16,7 +16,7 @@
         // status
         $status['error'][] = 'ID job non trovato';
 
-    } elseif( isset( $job['corrente'] ) && $job['corrente'] == $job['totale'] ) {
+    } elseif( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
 
         // status
         $status['info'][] = 'iterazione a vuoto su job completato';
@@ -55,10 +55,11 @@
             if( empty( $job['timestamp_apertura'] ) ) {
                 mysqlQuery(
                     $cf['mysql']['connection'],
-                    'UPDATE job SET timestamp_apertura = ? WHERE id = ?',
+                    'UPDATE job SET totale = ?, timestamp_apertura = ? WHERE id = ?',
                     array(
-                    array( 's' => time() ),
-                    array( 's' => $job['id'] )
+                        array( 's' => $job['totale'] ),
+                        array( 's' => time() ),
+                        array( 's' => $job['id'] )
                     )
                 );
             }
@@ -73,28 +74,8 @@
 
         }
 
-        // aggiusto l'indice di lavoro (gli array partono da zero)
-        $widx = $job['corrente'] - 1;
-
-        // importo la fattura
-        $status['info'][] = archiviumRegistraFePassiva( $arr[ $widx ]['IDArchiviumAzienda'], $arr[ $widx ]['IDArchivium'] );
-
-        // CUSTOM status
-        $status['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
-
-        // aggiorno i valori di visualizzazione avanzamento
-        $jobs = mysqlQuery(
-            $cf['mysql']['connection'],
-            'UPDATE job SET totale = ?, corrente = ? WHERE id = ?',
-            array(
-            array( 's' => $job['totale'] ),
-            array( 's' => $job['corrente'] ),
-            array( 's' => $job['id'] )
-            )
-        );
-
         // operazioni di chiusura
-        if( $job['corrente'] == $job['totale'] ) {
+        if( empty( $job['totale'] ) || $job['corrente'] >= $job['totale'] ) {
 
             // scrivo la timestamp di completamento
             $jobs = mysqlQuery(
@@ -102,6 +83,27 @@
                 'UPDATE job SET timestamp_completamento = ? WHERE id = ?',
                 array(
                 array( 's' => time() ),
+                array( 's' => $job['id'] )
+                )
+            );
+
+        } else {
+
+            // aggiusto l'indice di lavoro (gli array partono da zero)
+            $widx = $job['corrente'] - 1;
+
+            // importo la fattura
+            $status['info'][] = archiviumRegistraFePassiva( $arr[ $widx ]['IDArchiviumAzienda'], $arr[ $widx ]['IDArchivium'] );
+
+            // CUSTOM status
+            $status['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
+
+            // aggiorno i valori di visualizzazione avanzamento
+            $jobs = mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE job SET corrente = ? WHERE id = ?',
+                array(
+                array( 's' => $job['corrente'] ),
                 array( 's' => $job['id'] )
                 )
             );
