@@ -35,7 +35,10 @@
         $status['new'] = strtoupper( str_pad( $status['new'], 5, '0', STR_PAD_LEFT ) );
 
     } else {
+
+        // non restituisco alcun progressivo
         $status['new'] = NULL;
+
     }
 
     // output
