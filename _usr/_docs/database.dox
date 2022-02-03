@@ -76,6 +76,7 @@
     tabella                         | codice    | modello       | gruppo        | descrizione
     --------------------------------|-----------|---------------|---------------|------------------------------
     categorie_anagrafica            | 003100    | ricorsiva     | categorie     | contiene le categorie dell'anagrafica
+    certificazioni                  | 004700    | base          | principale    | contiene le certificazioni
     listini                         | 017200    | base          | principale    | contiene i listini
     ranking                         | 028600    | base          | principale    | contiene i ranking relativi all'anagrafica
     reparti                         | 030800    | base          | principale    | contiene i reparti
@@ -110,6 +111,7 @@
     account_gruppi_attribuzione     | 000300    | relazione     | principale    | mette in relazione account e gruppi per l'attribuzione automatica di entità al gruppo
     anagrafica                      | 000400    | base          | principale    | contiene le anagrafiche
     anagrafica_categorie            | 000500    | relazione     | principale    | mette in relazione anagrafica e categorie_anagrafica
+    anagrafica_certificazioni       | 000600    | relazione     | secondaria    | mette in relazione anagrafica e certificazioni
     anagrafica_cittadinanze         | 000700    | relazione     | principale    | mette in relazione anagrafica e stati
     anagrafica_indirizzi            | 000900    | relazione     | principale    | mette in relazione anagrafica e indirizzi
     anagrafica_settori              | 001200    | relazione     | principale    | mette in relazione anagrafica e settori
@@ -187,6 +189,7 @@
 
     tabella                         | codice    | modello       | gruppo        | descrizione
     --------------------------------|-----------|---------------|---------------|------------------------------
+    relazioni_anagrafica            | 030300    | relazione     | secondario    | mette in relazione anagrafiche e anagrafiche
     relazioni_documenti             | 030400    | relazione     | secondario    | mette in relazione documenti e documenti
     relazioni_documenti_articoli    | 030410    | relazione     | secondario    | mette in relazione documenti_articoli e documenti_articoli
     relazioni_pagamenti             | 030440    | relazione     | secondario    | mette in relazione pagamenti e pagamenti
@@ -200,7 +203,7 @@
 
     modulo      | codice    | tabella
     ------------|-----------|----------------------------------------------------------
-    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, luoghi, mail, mail_out, mail_sent, metadati, periodicita, ranking, regimi, regioni, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
+    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_certificazioni, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, certificazioni, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, luoghi, mail, mail_out, mail_sent, metadati, periodicita, ranking, regimi, regioni, relazioni_anagrafica, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
     CONTATTI    | 0300      | contatti, tipologie_contatti
     PRODUZIONE  | 1000      | categorie_progetti, pianificazioni, progetti, progetti_anagrafica, progetti_categorie, relazioni_progetti, ruoli_anagrafica, tipologie_progetti, todo
     ATTIVITA    | 1100      | attivita, matricole, pianificazioni, tipologie_attivita, todo
@@ -224,6 +227,7 @@
     account_gruppi_attribuzione     | BASE
     anagrafica                      | BASE
     anagrafica_categorie            | BASE
+    anagrafica_certificazioni       | BASE
     anagrafica_cittadinanze         | BASE
     anagrafica_indirizzi            | BASE
     anagrafica_settori              | BASE
@@ -237,6 +241,7 @@
     categorie_prodotti              | PRODOTTI
     categorie_progetti              | PRODUZIONE
     categorie_risorse               | RISORSE
+    certificazioni                  | BASE
     chiavi                          | SOFTWARE
     colori                          | BASE, PRODOTTI
     comuni                          | BASE
@@ -296,6 +301,7 @@
     redirect                        | CONTENUTI
     regimi                          | BASE
     regioni                         | BASE
+    relazioni_anagrafica            | BASE
     relazioni_documenti             | DOCUMENTI, CASSE
     relazioni_documenti_articoli    | DOCUMENTI, CASSE
     relazioni_pagamenti             | DOCUMENTI, CASSE

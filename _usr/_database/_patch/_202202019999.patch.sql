@@ -75,72 +75,6 @@ CREATE TABLE `tipologie_contratti` (
   CONSTRAINT `tipologie_contratti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB;
 
---| 202202010060
-CREATE TABLE `tipologie_durate_inps` (
-  `id` char(32) NOT NULL,
-  `ordine` int DEFAULT NULL,
-  `nome` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` int DEFAULT NULL,
-  `timestamp_inserimento` int DEFAULT NULL,
-  `id_account_aggiornamento` int DEFAULT NULL,
-  `timestamp_aggiornamento` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unica` (`nome`),
-  KEY `ordine` (`ordine`),
-  KEY `nome` (`nome`),
-  KEY `id_account_inserimento` (`id_account_inserimento`),
-  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`),
-  CONSTRAINT `tipologie_durate_inps_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `tipologie_durate_inps_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB;
-
---| 202202010070
-CREATE TABLE `tipologie_orari_inps` (
-  `id` char(32) NOT NULL,
-  `ordine` int DEFAULT NULL,
-  `nome` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` int DEFAULT NULL,
-  `timestamp_inserimento` int DEFAULT NULL,
-  `id_account_aggiornamento` int DEFAULT NULL,
-  `timestamp_aggiornamento` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unica` (`nome`),
-  KEY `ordine` (`ordine`),
-  KEY `nome` (`nome`),
-  KEY `id_account_inserimento` (`id_account_inserimento`),
-  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`),
-  CONSTRAINT `tipologie_orari_inps_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `tipologie_orari_inps_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB;
-
---| 202202010080
-CREATE TABLE `tipologie_qualifiche_inps` (
-  `id` char(32) NOT NULL,
-  `ordine` int DEFAULT NULL,
-  `nome` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `html_entity` char(8) DEFAULT NULL,
-  `font_awesome` char(16) DEFAULT NULL,
-  `id_account_inserimento` int DEFAULT NULL,
-  `timestamp_inserimento` int DEFAULT NULL,
-  `id_account_aggiornamento` int DEFAULT NULL,
-  `timestamp_aggiornamento` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unica` (`nome`),
-  KEY `ordine` (`ordine`),
-  KEY `nome` (`nome`),
-  KEY `id_account_inserimento` (`id_account_inserimento`),
-  KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`),
-  CONSTRAINT `tipologie_qualifiche_inps_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `tipologie_qualifiche_inps_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB;
-
 --| 202202010090
 ALTER TABLE anagrafica ADD `note_amministrative` text NULL AFTER `note_collaborazione`;
 
@@ -157,13 +91,13 @@ ALTER TABLE `relazioni_anagrafica`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
-	ADD KEY `id_anagrafica_collegato` (`id_anagrafica_collegato`),
-	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_anagrafica_collegato`, `id_ruolo`);
+	ADD KEY `id_anagrafica_collegata` (`id_anagrafica_collegata`),
+	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_anagrafica_collegata`, `id_ruolo`);
 
 --| 202202010120
 ALTER TABLE `relazioni_anagrafica`
 ADD CONSTRAINT `relazioni_anagrafica_ibfk_01` FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-ADD CONSTRAINT `relazioni_anagrafica_ibfk_02` FOREIGN KEY (`id_anagrafica_collegato`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `relazioni_anagrafica_ibfk_02` FOREIGN KEY (`id_anagrafica_collegata`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --| 202202010130
 ALTER TABLE ruoli_anagrafica ADD `se_relazioni` int(1) NULL AFTER `se_organizzazioni`;
@@ -216,14 +150,7 @@ ON DUPLICATE KEY UPDATE
 ;
 
 
-CREATE TABLE `certificazioni` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `nome` char(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `id_account_inserimento` int DEFAULT NULL,
-  `timestamp_inserimento` int DEFAULT NULL,
-  `id_account_aggiornamento` int DEFAULT NULL,
-  `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB
+
 
 
 --| FINE

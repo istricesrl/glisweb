@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `codice_sdi` char(32) DEFAULT NULL,
   `id_pec_sdi` int(11) DEFAULT NULL,
   `codice_archivium` char(16) DEFAULT NULL,
+  `codice_archivium` char(16) DEFAULT NULL,
   `id_regime` int(11) DEFAULT NULL,
   `note_amministrative` text,
   `note_collaborazione` text,
@@ -146,6 +147,27 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000000600
+
+-- anagrafica_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+CREATE TABLE `anagrafica_certificazioni` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_certificazione` int DEFAULT NULL,
+  `id_anagrafica` int DEFAULT NULL,
+  `id_emittente` int DEFAULT NULL,
+  `nome` char(1) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `data_emissione` date DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
 
 --| 010000000700
 
@@ -470,6 +492,20 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000004700
+
+-- certificazioni
+-- tipologia: tabella assistita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+CREATE TABLE `certificazioni` (
+  `id` int NOT NULL,
+  `nome` char(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB
+
 --| 010000004800
 
 -- chiavi
@@ -723,14 +759,14 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
 -- verifica: 2022-01-07 14:25 chiara gdl
 CREATE TABLE IF NOT EXISTS `documenti` (
   `id` int(11) NOT NULL,
-  `id_tipologia` int(11) NOT NULL,
-  `numero` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `numero` int(11) DEFAULT NULL,
   `sezionale` char(32) DEFAULT NULL,
-  `data` date NOT NULL,
+  `data` date DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
-  `id_emittente` int(11) NOT NULL,
+  `id_emittente` int(11) DEFAULT NULL,
   `id_sede_emittente` int(11) DEFAULT NULL,
-  `id_destinatario` int(11) NOT NULL,
+  `id_destinatario` int(11) DEFAULT NULL,
   `id_sede_destinatario` int(11) DEFAULT NULL,
   `id_condizione_pagamento` int(11) DEFAULT NULL,
   `codice_archivium` char(64) DEFAULT NULL ,
@@ -1237,6 +1273,7 @@ CREATE TABLE IF NOT EXISTS `menu` (
   `menu` char(32) NOT NULL,
   `nome` char(128) NOT NULL,
   `target` char(16) DEFAULT NULL,
+  `ancora` CHAR(64) DEFAULT NULL,
   `sottopagine` char(32) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -1704,6 +1741,18 @@ CREATE TABLE IF NOT EXISTS `regioni` (
   `id_stato` int(11) NOT NULL,
   `nome` char(32) NOT NULL,
   `codice_istat` char(2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000030300
+
+-- relazioni_anagrafica
+-- tipologia: tabella relazione
+-- verifica: 2022-02-03 11:12 Chiara GDL
+CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
+`id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_anagrafica_collegata` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000030400

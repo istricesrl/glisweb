@@ -8,7 +8,7 @@
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_giacenza_magazzini__`;
 
---| 1000000200001
+--| 100000020001
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini__` AS
 SELECT
   id,

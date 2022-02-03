@@ -188,6 +188,7 @@
     anagrafica.partita_iva                          | la partita IVA dell'anagrafica
     anagrafica.codice_sdi                           | il codice SDI per la fatturazione elettronica dell'anagrafica
     anagrafica.id_pec_sdi                           | l'ID della casella PEC per la fatturazione elettronica dell'anagrafica
+    anagrafica.codice_archivium                     | il codice archivium associato all'anagrafica
     anagrafica.id_regime                            | l'ID del regime fiscale dell'anagrafica
     anagrafica.note_amministrative                  | le note amministrative relative all'anagrafica
     anagrafica.note_collaborazione                  | le note di collaborazione relative all'anagrafica  
@@ -328,6 +329,55 @@
     anagrafica_categorie_view.id_account_inserimento       | -
     anagrafica_categorie_view.id_account_aggiornamento     | -
     anagrafica_categorie_view.__label__                    | etichetta descrittiva dell'associazione fra anagrafica e categoria
+
+    anagrafica_certificazione
+    --------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *anagrafica* con la secondaria *certificazioni*.
+
+    colonna                                                  | descrizione
+    ---------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_certificazione.id                             | l'ID dell'associazione fra anagrafica e certificazione
+    anagrafica_certificazione.id_certificaziona              | l'ID della certificaziona
+    anagrafica_certificazione.id_anagrafica                  | l'ID dell'anagrafica
+    anagrafica_certificazione.id_emittente                   | l'ID dell'anagrafica emittente
+    anagrafica_certificazione.nome			                 | mome della certificazione associata all'anagrafica	
+    anagrafica_certificazione.codice                         | codice della certificazione
+    anagrafica_certificazione.data_emissione		         | data d'emissione della certificazione
+    anagrafica_certificazione.data_scadenza		             | data di scadenza della certificazione
+    anagrafica_certificazione.note			                 | note della certificazione anagrafica
+    anagrafica_certificazione.id_account_inserimento         | l'ID dell'account che ha inserito la riga
+    anagrafica_certificazione.timestamp_inserimento          | la timestamp dell'inserimento della riga
+    anagrafica_certificazione.id_account_aggiornamento       | l'ID dell'ultimo account che ha modificato la riga
+    anagrafica_certificazione.timestamp_aggiornamento        | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                        | campo                        | tabella e campo collegati     | comportamento
+    ----------------------------------------------|------------------------------|-------------------------------|----------------------
+    anagrafica_certificazione_ibfk_01             | id_anagrafica                | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_certificazione_ibfk_02_nofollow    | id_certificaziona            | certificazioni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    anagrafica_certificazione_ibfk_03_nofollow    | id_emittente		         | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
+    anagrafica_certificazione_ibfk_98_nofollow    | id_account_inserimento       | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    anagrafica_certificazione_ibfk_99_nofollow    | id_account_aggiornamento     | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *anagrafica_certificazione_view* relativa alla tabella *anagrafica_certificazione* presenta le seguenti colonne:
+
+    colonna                                                     | descrizione
+    ------------------------------------------------------------|---------------------------------------------------------------------------------------
+    anagrafica_certificazione_view.id                           | -
+    anagrafica_certificazione_view.id_certificaziona            | -
+    anagrafica_certificazione_view.certificazione		        | nome descrittivo della certificazione
+    anagrafica_certificazione_view.id_anagrafica                | -
+    anagrafica_certificazione_view.anagrafica			        | anagrafica collegata alla certificazione
+    anagrafica_certificazione_view.id_emittente                 | -
+    anagrafica_certificazione_view.emittente			        | - 
+    anagrafica_certificazione_view.nome	                        | -
+    anagrafica_certificazione_view.codice			            | -
+    anagrafica_certificazione_view.data_emissione               | -
+    anagrafica_certificazione_view.data_scadenza                | -
+    anagrafica_certificazione_view.id_account_inserimento       | -
+    anagrafica_certificazione_view.id_account_aggiornamento     | -
+    anagrafica_certificazione_view.__label__                    | etichetta descrittiva dell'associazione fra anagrafica e certificaziona
 
     anagrafica_cittadinanze
     -----------------------

@@ -92,6 +92,7 @@ ALTER TABLE `anagrafica`
 	ADD UNIQUE KEY `unica_codice_fiscale` (`codice_fiscale`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_pec_sdi` (`id_pec_sdi`),
+	ADD KEY `codice_archivium` (`codice_archivium`),
 	ADD KEY `id_regime` (`id_regime`),
 	ADD KEY `id_stato_nascita` (`id_stato_nascita`),
 	ADD KEY `id_comune_nascita` (`id_comune_nascita`),
@@ -132,6 +133,31 @@ ALTER TABLE `anagrafica_categorie`
 -- anagrafica_categorie
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000000600
+
+-- anagrafica_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+ALTER TABLE `anagrafica_certificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_certificazione` (`id_certificazione`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_emittente` (`id_emittente`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `codice` (`codice`), 
+	ADD KEY `data_emissione` (`data_emissione`), 
+	ADD KEY `data_scadenza` (`data_scadenza`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_certificazione`, `codice`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
+
+--| 030000000601
+
+-- anagrafica_certificazioni
+-- tipologia: tabella gestita	
+ALTER TABLE `anagrafica_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000000700
 
@@ -429,6 +455,22 @@ ALTER TABLE `categorie_risorse`
 -- categorie_risorse
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000004700
+
+-- certificazioni
+-- tipologia: tabella assistita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+ALTER TABLE `certificazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `indice` (`id`,`nome`); 
+
+--| 030000004701
+
+-- certificazioni
+-- tipologia: tabella assistita
+ALTER TABLE `certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; 
 
 --| 030000004800
 
@@ -1834,6 +1876,23 @@ ALTER TABLE `regioni`
 -- tipologia: tabella standard
 ALTER TABLE `regioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000030300
+
+-- relazioni_anagrafica
+-- tipologia: tabella relazione
+-- verifica: 2022-02-03 11:12 Chiara GDL
+ALTER TABLE `relazioni_anagrafica`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_anagrafica_collegata` (`id_anagrafica_collegata`),
+	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_anagrafica_collegata`, `id_ruolo`);
+
+--| 030000030301
+
+-- relazioni_anagrafica
+-- tipologia: tabella relazione
+ALTER TABLE `relazioni_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000030400
 

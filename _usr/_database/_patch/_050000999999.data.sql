@@ -27,6 +27,18 @@ INSERT INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `se_ord
 (1,	NULL,	NULL,	'ordinario',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'straordinario',	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
+--| 050000004700
+
+-- certificazioni
+-- tipologia: tabella assistita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+INSERT INTO `certificazioni` (`id`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	"carta d\'identità",	NULL,	NULL,	NULL,	NULL),
+(2,	'passaporto',	NULL,	NULL,	NULL,	NULL),
+(3,	'patente di guida',	NULL,	NULL,	NULL,	NULL),
+(4,	'certificato medico agonistico',	NULL,	NULL,	NULL,	NULL),
+(5,	'certificato medico sportivo',	NULL,	NULL,	NULL,	NULL);
+
 --| 050000005100
 
 -- colori
