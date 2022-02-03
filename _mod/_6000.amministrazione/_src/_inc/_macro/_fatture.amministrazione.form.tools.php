@@ -21,7 +21,7 @@
     $ct['form']['table'] = 'documenti';
 
     // percorsi
-	$base = '_mod/_6200.documenti/_src/_api/_task/';
+	$base = '_mod/_0400.documenti/_src/_api/_task/';
 
     // NOTA la variabile $base causa problemi nel multi sito fatta in questo modo, per cui ho commentato tutto
 
@@ -55,12 +55,13 @@
             'text' => 'aggrega a questo documento tutte le righe non associate'
         );
 
-    } else {
+    } elseif( empty( $_REQUEST[ $ct['form']['table'] ]['codice_archivium'] ) ) {
 
         // invio a SDI
         $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
-          //  'ws' => $base . '.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'ws' => $base . '_fattura.invia.sdi.php?idFattura='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'callback' => 'function(){location.reload();}',
             'icon' => NULL,
             'fa' => 'fa-check-square-o',
             'title' => 'invia fattura elettronica',

@@ -1,7 +1,7 @@
 function getProgressivoInvioFattura( id, ida ) {
 
     getws(
-        '/task/6200.documenti/fatture.genera.progressivo.invio?idAzienda='+ida,
+        '/task/0400.documenti/fatture.genera.progressivo.invio?idAzienda='+ida,
         null,
         function( data ) {
 

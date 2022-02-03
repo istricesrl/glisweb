@@ -289,7 +289,7 @@
      * @todo documentare
      * 
      */
-    function archiviumPostInvioFeAttiva( $idAzienda, $xmlFattura, $tipo = 'XML', $mail = NULL  ) {
+    function archiviumPostInvioFeAttiva( $idAzienda, $idFattura, $xmlFattura, $tipo = 'XML', $mail = NULL  ) {
 
         // inizializzazione variabili
         $s      = NULL;
@@ -323,9 +323,15 @@
         if( $r['esito'] == 200 ) {
             mysqlQuery(
                 $cf['mysql']['connection'],
-                'UPDATE documenti SET codice_archivium = ?',
-                array( array( 's' => $r['IDArchivium'] ) )
+                'UPDATE documenti SET codice_archivium = ? '.
+                'WHERE id = ?',
+                array(
+                    array( 's' => $r['IDArchivium'] ),
+                    array( 's' => $idFattura )
+                )
             );
+        } else {
+            logWrite( print_r( $r, true ), 'archivium', LOG_ERR );
         }
 
         /**
@@ -577,5 +583,172 @@
 
         // restituisco il risultato
         return array_replace_recursive( $d, array( '__info__' => $i ) );
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     * 
+     */
+    function archiviumGetListaNoteAttive( $idAzienda, $limit = NULL, $order = NULL, $wildcard = NULL, $params = NULL  ) {
+
+        // inizializzazione variabili
+        $s      = NULL;
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // autenticazione per la chiamata
+        $a      = $cf['archivium']['profile']['id'] . '/' . $cf['archivium']['profile']['apikey'];
+
+        // parametri di ricerca
+        $p      = trim( implode( '/', array( $limit, $order, $wildcard, $params ) ), '/' );
+
+        // endpoint per la chiamata
+        $e      = 'ISC/' . $a . '/NOTAttive/' . $idAzienda . '/list' . ( ( ! empty( $p ) ) ? '/' . $p : NULL );
+
+        // URL per la chiamata
+        $u      = $cf['archivium']['profile']['url'] . $e;
+
+        // effettuo la chiamata
+        $l      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $s );
+
+        // aggiungo l'azienda a ogni elemento dell'array
+        foreach( $l as &$e ) {
+            $e['IDArchiviumAzienda'] = $idAzienda;
+        }
+
+        // debug
+        // var_dump( $u );
+        // var_dump( $s );
+        // print_r( $l );
+
+        // restituisco il risultato
+        return $l;
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     * 
+     */
+    function archiviumRegistraNoteAttive( $idAzienda, $data = NULL ) {
+
+        // valori di default per $dataInizio e $dataFine periodo di download
+        $data = ( empty( $data ) ) ? date( 'Y-m' ) : $data;
+
+        // scarico l'elenco 
+        $l = archiviumGetListaNoteAttive( $idAzienda, 0, 'ID=ASC', 'RIGHT', 'DataIns=' . $data );
+
+        // debug
+        // print_r( $l );
+
+        // TODO registro le note scaricate
+        foreach( $l as &$f ) {
+
+            $f = array_replace_recursive( $f, archiviumRegistraNotaAttiva( $idAzienda, $f['IDArchivium'] ) );
+
+            print_r( $f );
+
+        }
+
+        // restituisco il risultato
+        return $l;
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     * 
+     */
+    function archiviumRegistraNotaAttiva( $idAzienda, $idNota ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // inizializzo l'array delle informazioni
+        $i = array();
+
+        // scarico i dettagli della fattura
+        $d = archiviumGetInfoNotaAttiva( $idAzienda, $idNota );
+
+        // debug
+        // print_r( $d );
+        // print_r( $f );
+
+        // recupero l'ID attività dal codice (TipoNotifica e EsitoNotifica)
+
+        // recupero l'ID fattura dal codice_archivium (IDArchiviumFE)
+
+/*
+        // inserisco l'attività
+        $i = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id' => NULL,
+                'id_tipologia' => 11,
+                'data' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Data']['#'],
+                'numero' => $i['numero'][0],
+                'sezionale' => $i['numero'][1],
+                'codice_archivium' => $d['IDArchivium'],
+                'id_emittente' => $i['idFornitore'],
+                'id_destinatario' => $i['idCliente']
+            ),
+            'attivita'
+        );
+*/
+
+        // restituisco il risultato
+        return array_replace_recursive( $d, array( '__info__' => $i ) );
+
+    }
+
+    /**
+     * NOTA valori del campo TipoNotifica
+     * 
+     * RC Ricevuta di Consegna
+     * MC Mancata Consegna
+     * NS Notifica di Scarto
+     * AT Attestato di presa in carico ma di impossibilità di recapito
+     * DT Decorrenza Termini
+     * EC Notifica di Esito Committente
+     * NE Notifica di Esito
+     * MT Notifica Metadati per FE passiva
+     * 
+     * valori del campo EsitoNotifica
+     * 
+     * EC01/NE01 Notifica di Esito o Esito Committente di accettazione FE
+     * EC02/NE02 Notifica di Esito o Esito Committente di rifiuto FE
+     * 
+     */
+
+    /**
+     *
+     * @todo documentare
+     * 
+     */
+    function archiviumGetInfoNotaAttiva( $idAzienda, $idNota, $index = 'IDArchivium'  ) {
+
+        // inizializzazione variabili
+        $s      = NULL;
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // autenticazione per la chiamata
+        $a      = $cf['archivium']['profile']['id'] . '/' . $cf['archivium']['profile']['apikey'];
+
+        // endpoint per la chiamata
+        $e      = 'ISC/' . $a . '/NOTAttive/' . $idAzienda . '/info/' . $idNota . '/' . $index;
+
+        // URL per la chiamata
+        $u      = $cf['archivium']['profile']['url'] . $e;
+
+        // TODO fare la chiamata
+
+        // TODO restituire il risultato
 
     }

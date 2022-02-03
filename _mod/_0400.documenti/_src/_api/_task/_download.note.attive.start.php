@@ -13,8 +13,8 @@
         $cf['mysql']['connection'],
         'INSERT INTO job ( nome, job, iterazioni, workspace ) VALUES ( ?, ?, ?, ? )',
         array(
-            array( 's' => 'importazione automatica fatture elettroniche passive del ' . date( 'Y/m/d H:i' ) ),
-            array( 's' => '_mod/_0400.documenti/_src/_api/_job/_download.fe.passive.php' ),
+            array( 's' => 'importazione automatica note fatture elettroniche attive del ' . date( 'Y/m/d H:i' ) ),
+            array( 's' => '_mod/_0400.documenti/_src/_api/_job/_download.note.attive.php' ),
             array( 's' => 1 ),
             array( 's' => json_encode(
                 array(

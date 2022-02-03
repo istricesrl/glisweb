@@ -129,7 +129,7 @@
 				{{ frm.inputDisabled( table, '', '', 'codice_sdi', '', '', request ) }}	
 			</div>
 			<div class="col-12 col-md">
-				<span class="label-top">progressivo invio</span>
+				<span class="label-top{% if request[ table ].codice_archivium %}-disabled{% endif %}">progressivo invio</span>
 				{% if not request[ table ].codice_archivium %}
 				{{ frm.input( table, '', '', 'progressivo_invio', '', '', request ) }}	
 				{% else %}

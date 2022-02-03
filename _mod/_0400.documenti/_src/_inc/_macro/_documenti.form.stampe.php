@@ -21,7 +21,7 @@
     $ct['form']['table'] = 'documenti';
 
     // percorsi
-	$base = $ct['site']['url'].'_mod/_6200.documenti/_src/_api/_print/';
+	$base = $ct['site']['url'].'_mod/_0400.documenti/_src/_api/_print/';
 
     $ct['page']['contents']['metros'] = array(
         'pdf' => array(

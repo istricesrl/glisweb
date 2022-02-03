@@ -18,7 +18,7 @@
 
     // prelevo l'XML
     $x = restCall(
-        $cf['site']['url'] . 'print/6200.documenti/fattura.xml',
+        $cf['site']['url'] . 'print/0400.documenti/fattura.xml',
         METHOD_GET,
         array( '__documento__' => $_REQUEST['idFattura'], 'f' => 1 ),
         NULL,
@@ -26,7 +26,7 @@
     );
 
     // chiamo la funzione archiviumPostInsertAzienda()
-    $s = archiviumPostInvioFeAttiva( $_REQUEST['idAzienda'], $x['file'] );
+    $s = archiviumPostInvioFeAttiva( $_REQUEST['idAzienda'], $_REQUEST['idFattura'], $x['file'] );
 
     // output
     $t .= '<pre>' . var_dump( $s ) . '</pre>';

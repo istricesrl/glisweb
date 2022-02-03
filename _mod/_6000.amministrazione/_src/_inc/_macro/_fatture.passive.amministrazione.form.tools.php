@@ -21,7 +21,7 @@
     $ct['form']['table'] = 'documenti';
 
     // percorsi
-	$base = '_mod/_6200.documenti/_src/_api/_task/';
+	$base = '_mod/_0400.documenti/_src/_api/_task/';
 
     // NOTA la variabile $base causa problemi nel multi sito fatta in questo modo, per cui ho commentato tutto
 

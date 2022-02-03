@@ -5,7 +5,7 @@
 
     // modulo di questo file
 	$m = DIR_MOD . '_6000.amministrazione/';
-	$m_d = DIR_MOD . '_6200.documenti/';
+	$m_d = DIR_MOD . '_0400.documenti/';
 
 	// dashboard amministrazione
 	$p['amministrazione'] = array(
@@ -189,7 +189,7 @@
 		'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.php' ),
-		'js'			=> array( 'internal' => array( '_mod/_6200.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
+		'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.form',
 														'fatture.amministrazione.form.righe',

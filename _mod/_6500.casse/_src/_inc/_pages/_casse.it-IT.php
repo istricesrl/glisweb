@@ -39,7 +39,7 @@
 	    'title'		=> array( $l		=> 'documenti' ),
 	    'h1'		=> array( $l		=> 'documenti' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( DIR_MOD . '_6200.documenti/_src/_inc/_macro/_documenti.view.php'  ),
+	    'macro'		=> array( DIR_MOD . '_0400.documenti/_src/_inc/_macro/_documenti.view.php'  ),
 	    'parent'	=> array( 'id'		=> 'casse' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['casse']['etc']['tabs'] )

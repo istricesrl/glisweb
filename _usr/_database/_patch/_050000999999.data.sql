@@ -815,7 +815,8 @@ REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_d
 (4,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_indirizzi.geocode.php',	                                1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (5,	6,	    2,	    6,	    2,	    NULL,	NULL,	'_src/_api/_task/_comuni.importazione.start.php',	                        1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (6,	6,	    6,	    6,	    6,	    NULL,	NULL,	'_src/_api/_task/_settori.importazione.start.php',	                        1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	6,	    5,	    NULL,	NULL,	NULL,	NULL,	'_mod/_6200.documenti/_src/_api/_task/_download.fe.passive.start.php',	    1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(7,	6,	    5,	    NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.fe.passive.start.php',	    1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	7,	    5,	    NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.note.attive.start.php',	    1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050000
 
