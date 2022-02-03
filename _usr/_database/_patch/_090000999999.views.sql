@@ -334,6 +334,43 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_categorie.id_anagrafica
 ;
 
+--| 090000000600
+
+-- anagrafica_certificazioni
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_certificazioni_view`;
+
+--| 090000000601
+
+-- anagrafica_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
+	SELECT
+		anagrafica_certificazioni.id,
+		anagrafica_certificazioni.id_certificazione,
+		certificazioni.nome AS certificazione,
+		anagrafica_certificazioni.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		anagrafica_certificazioni.id_emittente,
+		coalesce( emittente.denominazione , concat( emittente.cognome, ' ', emittente.nome ), '' ) AS emittente,
+		anagrafica_certificazioni.nome,
+		anagrafica_certificazioni.codice,
+		anagrafica_certificazioni.data_emissione,
+		anagrafica_certificazioni.data_scadenza,
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			' / ',
+			certificazioni.nome,
+			' - ',
+			anagrafica_certificazioni.codice
+		) AS __label__
+	FROM anagrafica_certificazioni
+		INNER JOIN anagrafica ON anagrafica.id = anagrafica_certificazioni.id_anagrafica
+		INNER JOIN anagrafica AS emittente ON emittente.id = anagrafica_certificazioni.id_emittente
+		INNER JOIN certificazioni ON certificazioni.id = anagrafica_certificazioni.id_certificazione		
+;
+
 --| 090000000700
 
 -- anagrafica_cittadinanze_view
@@ -832,6 +869,23 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 		LEFT JOIN categorie_risorse AS c1 ON c1.id_genitore = categorie_risorse.id
 		LEFT JOIN risorse_categorie ON risorse_categorie.id_categoria = categorie_risorse.id
 	GROUP BY categorie_risorse.id
+;
+
+--| 090000004700
+-- certificazioni
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `certificazioni_view`;
+
+--| 090000004701
+-- certificazioni
+-- tipologia: tabella assistita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+CREATE OR REPLACE VIEW certificazioni_view AS
+	SELECT
+		certificazioni.id,
+		certificazioni.nome,
+	 	certificazioni.nome AS __label__
+	FROM certificazioni
 ;
 
 --| 090000004800
@@ -2290,6 +2344,7 @@ CREATE OR REPLACE VIEW `menu_view` AS
 		menu.menu,
 		menu.nome,
 		menu.target,
+		menu.ancora,
 		menu.sottopagine,
 		menu.id_account_inserimento,
 		menu.id_account_aggiornamento,
@@ -3392,6 +3447,26 @@ CREATE OR REPLACE VIEW redirect_view AS
 			redirect.destinazione
 		) AS __label__
 	FROM redirect
+;
+
+--| 090000030300
+
+-- relazioni_anagrafica_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_anagrafica_view`;
+
+--| 090000030301
+
+-- relazioni_anagrafica_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_anagrafica_view AS
+	SELECT
+	relazioni_anagrafica.id_anagrafica,
+	relazioni_anagrafica.id_anagrafica_collegata,
+	concat( relazioni_anagrafica.id_anagrafica,' - ', relazioni_anagrafica.id_anagrafica_collegata) AS __label__
+	FROM relazioni_anagrafica
+	ORDER BY __label__
 ;
 
 --| 090000030400

@@ -79,10 +79,18 @@
     documenti_view.id_account_inserimento           | -
     documenti_view.id_account_aggiornamento         | -
     documenti_view.__label__                        | l'etichetta descrittiva del documento
-  
+
+    ddt_view
+    --------------------
+    Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 4, ovvero un documento di tipologia ddt
+
     fatture_view
     --------------------
     Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 1, ovvero un documento di tipologia fattura
+
+    fatture__passive_view
+    --------------------
+    Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 11, ovvero un documento di tipologia fattura passiva
 
     proforma_view
     --------------------

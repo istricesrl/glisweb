@@ -82,7 +82,33 @@
     redirect_view.id_account_inserimento    | -
     redirect_view.id_account_aggiornamento  | -
     redirect_view.__label__                 | etichetta descrittiva del redirect
-    
+
+    relazioni_anagrafica
+    -------
+    Questa tabella *di relazione* contiene le relazioni_anagrafica, intese come entità di collegamento fra *anagrafica* e *anagrafica*.
+
+    colonna                                      | descrizione
+    ---------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_anagrafica.id                      | l'ID della relazione
+    relazioni_anagrafica.id_anagrafica           | l'ID del anagrafica principale
+    relazioni_anagrafica.id_anagrafica_collegato | l'ID del anagrafica collegato al anagrafica principale
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                   | tabella e campo collegati     | comportamento
+    ------------------------------------|-------------------------|-------------------------------|------------------
+    relazioni_anagrafica_ibfk_01        | id_anagrafica            | anagrafica.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_anagrafica_ibfk_02        | id_anagrafica_collegato  | anagrafica.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+
+    La vista *relazioni_anagrafica_view* relativa alla tabella *relazioni_anagrafica* presenta le seguenti colonne:
+
+    colonna                                            | descrizione
+    ---------------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_anagrafica_view.id                       | -
+    relazioni_anagrafica_view.id_anagrafica            | -
+    relazioni_anagrafica_view.id_anagrafica_collegato  | -
+    relazioni_anagrafica_view.__label__                | l'etichetta descrittiva della relazione
+   
     relazioni_documenti
     -------
     Questa tabella *di relazione* contiene le relazioni_documenti, intese come entità di collegamento fra *documenti* e *documenti*.

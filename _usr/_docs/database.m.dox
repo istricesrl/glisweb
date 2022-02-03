@@ -369,6 +369,7 @@
     menu.menu                       | il nome del menu cui appartiene la voce
     menu.nome                       | la voce di menu
     menu.target                     | il valore dell'attributo target della voce di menu
+    menu.ancora                     | il valore dell'attribuito anchor della voce di menu
     menu.sottopagine                | strategia applicata alle sottopagine per la voce di menu
     menu.id_account_inserimento     | l'ID dell'account che ha inserito la riga
     menu.timestamp_inserimento      | la timestamp dell'inserimento della riga
@@ -403,6 +404,7 @@
     menu_view.menu                          | -
     menu_view.nome                          | -
     menu_view.target                        | -
+    menu_view.ancora                        | -
     menu_view.sottopagine                   | -
     menu_view.id_account_inserimento        | -
     menu_view.id_account_aggiornamento      | -
