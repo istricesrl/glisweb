@@ -508,4 +508,8 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 		tipologie_attivita_path( tipologie_attivita.id ) AS __label__
 	FROM tipologie_attivita
 ;
+
+--| 202202041809
+ALTER TABLE `documenti_articoli`
+CHANGE `data` `data` date NULL AFTER `id_documento`;
 --| FINE
