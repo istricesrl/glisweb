@@ -83,10 +83,12 @@
 				<span class="label-top remove-after-duplicate">udm</span>
 				{{ frm.select( table, '', '', 'id_udm', '', etc.select.id_udm, request, default_udm ) }}
 			</div>
+			{% if '4100.prodotti' in mods.active.array %}
 			<div class="col-6">
 				<span class="label-top remove-after-duplicate">articolo</span>
 				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli','', 'chiediPrezzoListino();' ) }}
 			</div>
+			{% endif %}
 			<div class="col col-md">
 				<span class="label-top remove-after-duplicate">specifiche</span>
 				{{ frm.input( table, '', '', 'specifiche', '', '', request ) }}

@@ -55,7 +55,7 @@
             'text' => 'aggrega a questo documento tutte le righe non associate'
         );
 
-    } elseif( empty( $_REQUEST[ $ct['form']['table'] ]['codice_archivium'] ) ) {
+    } elseif( empty( $_REQUEST[ $ct['form']['table'] ]['codice_archivium'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['progressivo_invio'] ) ) {
 
         // invio a SDI
         $ct['page']['contents']['metro']['amministrazione'][] = array(

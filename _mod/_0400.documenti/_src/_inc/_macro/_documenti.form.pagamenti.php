@@ -43,9 +43,10 @@
         'id' => '#',
         'data_ora_scadenza' => 'scadenza',
         'nome' => 'nome',
-		'mastro_provenienza' => 'scarico',
-		'mastro_destinazione' => 'carico',
+#		'mastro_provenienza' => 'scarico',
+#		'mastro_destinazione' => 'carico',
         'importo_netto_totale' => 'importo netto',
+        'data_ora_pagamento' => 'pagato',
 		'id_documento' => 'id_documento'
 	);
 
@@ -63,7 +64,12 @@
 		'id_articolo' => 'text-left'
     );
 
-	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+	// RELAZIONI CON IL MODULO MASTRI
+	if( in_array( "0500.mastri", $cf['mods']['active']['array'] ) ) {
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'mastro_provenienza' => 'scarico', 'mastro_destinazione' => 'carico' ) );
+	}
+
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		// preset filtro righe documento
 		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}

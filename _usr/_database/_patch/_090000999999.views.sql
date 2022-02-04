@@ -3469,6 +3469,30 @@ CREATE OR REPLACE VIEW redirect_view AS
 	FROM redirect
 ;
 
+--| 090000029800
+
+-- regimi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `regimi_view`;
+
+--| 090000029801
+
+-- regimi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-09 15:09 Fabio Mosti
+CREATE OR REPLACE VIEW regimi_view AS
+	SELECT
+		regimi.id,
+		regimi.nome,
+		regimi.codice,
+		concat_ws(
+			' ',
+			regimi.nome,
+			regimi.codice
+		) AS __label__
+	FROM regimi
+;
+
 --| 090000030300
 
 -- relazioni_anagrafica_view
@@ -3587,30 +3611,6 @@ CREATE OR REPLACE VIEW relazioni_software_view AS
 	concat( relazioni_software.id_software,' - ', relazioni_software.id_software_collegato) AS __label__
 	FROM relazioni_software
 	ORDER BY __label__
-;
-
---| 090000029800
-
--- regimi_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `regimi_view`;
-
---| 090000029801
-
--- regimi_view
--- tipologia: tabella gestita
--- verifica: 2021-10-09 15:09 Fabio Mosti
-CREATE OR REPLACE VIEW regimi_view AS
-	SELECT
-		regimi.id,
-		regimi.nome,
-		regimi.codice,
-		concat_ws(
-			' ',
-			regimi.nome,
-			regimi.codice
-		) AS __label__
-	FROM regimi
 ;
 
 --| 090000030200

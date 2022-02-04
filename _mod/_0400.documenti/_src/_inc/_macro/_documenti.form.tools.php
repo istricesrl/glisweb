@@ -21,7 +21,7 @@
     $ct['form']['table'] = 'documenti';
 
     // percorsi
-	$base = '_mod/_6200/_documenti/_src/_api/_task';
+	$base = '/task/0400.documenti/';
 
     // NOTA la variabile $base causa problemi nel multi sito fatta in questo modo, per cui ho commentato tutto
 
@@ -43,7 +43,7 @@
         // aggiorna data e ora
         $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
-            'ws' => $base . '_chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'ws' => $base . 'chiusura.documento?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
             'icon' => NULL,
             'fa' => 'fa-check-square-o',
             'title' => 'chiudi documento',
@@ -53,7 +53,7 @@
         // aggrega righe
         $ct['page']['contents']['metro']['general'][] = array(
             'host' => $ct['site']['url'],
-            'ws' => $base . '_documenti.aggrega.righe.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'ws' => $base . 'documenti.aggrega.righe?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
             'icon' => NULL,
             'fa' => 'fa-compress',
             'title' => 'aggrega righe',
@@ -89,7 +89,7 @@
     
                 $ct['page']['contents']['metro']['amministrazione'][] = array(
                     'host' => $ct['site']['url'],
-                    'ws' => $base . '_fattura.da.proforma.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'ws' => $base . 'fattura.da.proforma?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'callback' => 'function(){location.reload();}',
                     'icon' => NULL,
                     'fa' => 'fa-eur',
@@ -104,17 +104,21 @@
         // azioni possibili per fattura chiusa 
         if( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] == 1 ) {
 
-            // invio la fattura allo SDI
-            $ct['page']['contents']['metro']['amministrazione'][] = array(
-                'host' => $ct['site']['url'],
-              //  'ws' => $base . '.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
-                'icon' => NULL,
-                'fa' => 'fa-check-square-o',
-                'title' => 'invia fattura elettronica',
-                'text' => 'invia tramite archivum la fattura'
-            );
-        
-        }
+            if( empty( $_REQUEST[ $ct['form']['table'] ]['codice_archivium'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['progressivo_invio'] ) ) {
 
+                // invio a SDI
+                $ct['page']['contents']['metro']['amministrazione'][] = array(
+                    'host' => $ct['site']['url'],
+                    'ws' => $base . '_fattura.invia.sdi.php?idFattura='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'callback' => 'function(){location.reload();}',
+                    'icon' => NULL,
+                    'fa' => 'fa-check-square-o',
+                    'title' => 'invia fattura elettronica',
+                    'text' => 'invia tramite archivum la fattura'
+                );
+
+            }
+            
+        }
 
     }

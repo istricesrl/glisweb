@@ -45,8 +45,8 @@
 	    'etc'		=> array( 'tabs'	=> array(	'prodotti.form',
                                                     'prodotti.form.categorie',
 													'prodotti.form.caratteristiche',
-													'prodotti.form.sem',
-													'prodotti.form.testo',
+#													'prodotti.form.sem',
+#													'prodotti.form.testo',
 													'prodotti.form.articoli',
 													'prodotti.form.prezzi',
 													'prodotti.form.immagini',
@@ -57,6 +57,12 @@
 													'prodotti.form.metadati'
 												) )
 	);
+
+	// RELAZIONI CON IL MODULO CONTENUTI
+	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'prodotti.form', $p['prodotti.form']['etc']['tabs'], 'prodotti.form.sem' );
+		arrayInsertSeq( 'prodotti.form.sem', $p['prodotti.form']['etc']['tabs'], 'prodotti.form.testo' );
+	}
 
 	// gestione prodotti categorie
 	$p['prodotti.form.categorie'] = array(
@@ -73,7 +79,7 @@
 	// gestione prodotti caratteristiche
 	$p['prodotti.form.caratteristiche'] = array(
 		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'caratteristiche' ),
+		'title'		=> array( $l		=> 'caratteristiche prodotto' ),
 		'h1'		=> array( $l		=> 'caratteristiche' ),
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.caratteristiche.html' ),
@@ -212,7 +218,7 @@
 	 // vista caratteristiche prodotti
 	 $p['caratteristiche.prodotti.view'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'caratteristiche prodotti' ),
+	    'title'		=> array( $l		=> 'caratteristiche' ),
 	    'h1'		=> array( $l		=> 'caratteristiche' ),
 	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
