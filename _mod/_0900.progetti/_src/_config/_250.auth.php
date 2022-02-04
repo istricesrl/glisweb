@@ -18,45 +18,40 @@
     // array dei permessi
 	$cf['auth']['permissions'] = array_merge_recursive( 
 	    $cf['auth']['permissions'],
-        array(
-            'mastri' => array(
-                CONTROL_FULL => array( 'roots' )
-            ),
-            'magazzini' => array(
+	    array(
+            'progetti' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),
-            'conti' => array(
-                CONTROL_FULL => array( 'roots' )
-            ),
-            'registri' => array(
+            'progetti_archivio' => array(
                 CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
-            '__report_mastri__' => array(
+            'progetti_commerciale' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-            '__report_giacenza_magazzini__' => array(
+            'progetti_commerciale_archivio' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-            '__report_movimenti_magazzini__' => array(
+            'progetti_amministrazione' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-            '__report_giacenza_mastri__' => array(
+            'progetti_amministrazione_archivio' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-            '__report_mastri_orari__' => array(
+            'progetti_produzione' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-            '__report_giacenza_mastri_orari__' => array(
+            'progetti_produzione_archivio' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-            '__report_mastri_quantitativi_gerarchico__' => array(
+            'categorie_progetti' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-            '__report_giacenze_mastri_quantitativi_gerarchico__' => array(
+            'pause_progetti' => array(
                 CONTROL_FULL => array( 'roots' )
-            ) ,
-            '__report_mastri_articoli__' => array(
+            ),
+            'progetti_categorie' => array(
                 CONTROL_FULL => array( 'roots' )
             )
         )

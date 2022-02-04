@@ -1,7 +1,7 @@
 <?php
 
     // modulo di questo file
-	$m = DIR_MOD . '_6300.mastri/';
+	$m = DIR_MOD . '_0500.mastri/';
 
 	// vista mastri
 	$p['mastri.view'] = array(

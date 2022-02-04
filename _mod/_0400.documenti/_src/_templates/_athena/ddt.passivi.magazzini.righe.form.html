@@ -85,7 +85,7 @@
 			</div>
 			<div class="col-6">
 				<span class="label-top remove-after-duplicate">articolo</span>
-				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli','', 'chiediPrezzoListino();' ) }}
+				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
 			</div>
 			<div class="col col-md">
 				<span class="label-top remove-after-duplicate">specifiche</span>
@@ -121,7 +121,6 @@
 	{% elseif  session.__latest__[ table ].id_documento %}
 		{% set default_documento = session.__latest__[ table ].id_documento %}
 	{% endif %}
-
 	{% if  request.__preset__[ table ].id_emittente %}
 		{% set default_emittente = request.__preset__[ table ].id_emittente %}
 	{% elseif session.__latest__[ table ].id_emittente  %}
@@ -152,10 +151,12 @@
 				<span class="label-top remove-after-duplicate">documento</span>
 				{{ frm.selectBox( table, '', '', 'id_documento', '', etc.select.id_documenti, request, default_documento, 1, '', '', 'font-awesome', 'documenti.form', 'documenti.form', 'documenti', 'id_documento', page, pages, ietf, 'documenti' ) }}
 			</div>
+			{% if ( request[ table ].id ) or default_documento %}
 			<div class="col-md-6 col">
 				<span class="label-top remove-after-duplicate">riga genitore</span>
 				{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.id_righe_genitori, request, '', '', '', '', 'font-awesome', 'documenti.articoli.form', 'documenti.articoli.form', 'documenti_articoli', 'id_genitore', page, pages, ietf) }}
 			</div>
+			{% endif %}
 		</div>
 
 		{% if '1000.produzione' in mods.active.array %}
@@ -176,8 +177,7 @@
 				{{ frm.selectBox( table, '', '', 'id_todo', '', etc.select.id_todo, request, default_todo, '', '', '', 'font-awesome', 'todo.form', 'todo.form', 'todo', 'id_todo', page, pages, ietf, 'todo' ) }}
 			</div>
 		</div>	
-		{% endif %}
-
+		{% endif  %}
 		{% if '0500.mastri' in mods.active.array %}
 		<legend>magazzino</legend>
 		{% if  session.__latest__[ table ].id_mastro_provenienza %}
@@ -209,23 +209,4 @@
     </div>
 </section>
 
-{% endblock %}
-
-{% block javascript %}
-<script>
-console.log("ciao");
-
-
-function chiediPrezzoListino() {
-
-	var a = $('#documenti_articoli_id_articolo').val();
-	console.log(a);
-    getws( '/src/api/task/articoli.get.prezzo.php?id_articolo='+id_articolo, '', function( data ) {
-	console.log( data );
-	//$('#righe_documenti_amministrativi_importo_netto_totale').val( totale );
-    });
-    //$('#righe_documenti_amministrativi_importo_netto_totale').val( totale );
-
-}
-</script>
 {% endblock %}
