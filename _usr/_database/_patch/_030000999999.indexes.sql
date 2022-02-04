@@ -268,6 +268,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_luogo` (`id_luogo`), 
 	ADD KEY `id_anagrafica_programmazione` (`id_anagrafica_programmazione`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_documento` (`id_documento`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_todo` (`id_todo`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
