@@ -1,14 +1,14 @@
 <?php
 
     // modulo di questo file
-	$m = DIR_MOD . '_5000.magazzini/';
+	$m = DIR_MOD . '_0400.documenti/';
 
 	// vista ddt
    	$p['ddt.magazzini.view'] = array(
 		'sitemap'		=> false,
 		'title'			=> array( $l		=> 'DDT attivi' ),
 		'h1'			=> array( $l		=> 'DDT attivi' ),
-		'parent'		=> array( 'id'		=> 'magazzini.view' ),
+		'parent'		=> array( 'id'		=> 'logistica' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_ddt.magazzini.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(   'ddt.magazzini.view', 'ddt.passivi.magazzini.view' ) ),

@@ -4,7 +4,7 @@
 	$m = DIR_MOD . '_0500.mastri/';
 
     // RELAZIONI CON IL MODULO PRODUZIONE
-	if( in_array( "61000.amministrazione", $cf['mods']['active']['array'] ) ) {
+	if( in_array( "6000.amministrazione", $cf['mods']['active']['array'] ) ) {
 
 		// vista conti
 		$p['conti.view'] = array(
