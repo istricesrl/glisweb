@@ -18,8 +18,8 @@
             $cf['mysql']['connection'],
             'INSERT INTO job ( nome, job, iterazioni, workspace ) VALUES ( ?, ?, ?, ? )',
             array(
-                array( 's' => 'esportazione ore progetti per tipologia e conto ore ' . $nomemese . ' ' . $_REQUEST['anno'] ),
-                array( 's' => '_mod/_1100.attivita/_src/_api/_job/_report.ore.progetti.tipologie.mastri.php' ),
+                array( 's' => 'esportazione ore progetti ' . $nomemese . ' ' . $_REQUEST['anno'] ),
+                array( 's' => '_mod/_0200.attivita/_src/_api/_job/_report.ore.progetti.php' ),
                 array( 's' => 10 ),
                 array( 's' => json_encode(
                     array(

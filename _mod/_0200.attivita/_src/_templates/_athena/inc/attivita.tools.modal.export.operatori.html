@@ -1,30 +1,31 @@
 {% import '_bin/_form.html' as frm %}
 
 <script>
-    function exportOreProgettiTipologieMastri( t ) {
+    function exportOreOperatori( t ) {
         var form = $( t ).closest('.modal');		
         var mese = form.find('#mese').val();
         var anno = form.find('#anno').val();
 		
-        var call = '{{ site.url }}_mod/_1100.attivita/_src/_api/_task/_report.ore.progetti.tipologie.mastri.start.php?mese='+mese+'&anno='+anno;
+        var call = '{{ site.url }}_mod/_0200.attivita/_src/_api/_task/_report.ore.operatori.start.php?mese='+mese+'&anno='+anno;
 		
 		getws( call,'', function() {
-			$('#progetti-tipologie-mastri').modal('toggle');
+			$('#operatori').modal('toggle');
 		});
 	
 	}
 </script>
 
-<div class="modal" tabindex="-1" role="dialog" id="progetti-tipologie-mastri">
+<div class="modal" tabindex="-1" role="dialog" id="operatori">
     <div class="modal-dialog" role="document">
 	<div class="modal-content">
 	    <div class="modal-header">
-		<h5 class="modal-title">esportazione ore progetti per tipologia e conto ore</h5>
+		<h5 class="modal-title">esportazione ore operatori</h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	    </div>
 	    <div class="modal-body">
 		<div class="container-fluid">
             <div class="form-row mb-3">
+
 				<div class="col">
                     <span class="label-top">mese</span>
                     <select id="mese" class="form-control form-control-sm">
@@ -32,7 +33,8 @@
                         <option value="{{ m.id }}">{{ m.__label__ }}</option>
                     {% endfor %}
                     </select>
-                </div>        
+                </div>
+        
                 <div class="col">
                     <span class="label-top">anno</span>
                     <select id="anno" class="form-control form-control-sm">
@@ -42,12 +44,12 @@
                     </select>
                 </div>
 			</div>
-			{% if etc.report.progetti_tipologie_mastri %}
+			{% if etc.report.operatori %}
 			<div class="form-row">
 				<div class="col">
 					<p><b>elenco report richiesti</b></p>
-					{% for r in etc.report.progetti_tipologie_mastri %}
-					<a href="{{ site.url }}_mod/_1100.attivita/_src/_api/_print/_report.ore.progetti.tipologie.mastri.csv.php?mese={{ r.mese }}&anno={{ r.anno }}" target="_blank">{{ r.nome }} > {{ r.stato }}</a><br>
+					{% for r in etc.report.operatori %}
+					<a href="{{ site.url }}_mod/_0200.attivita/_src/_api/_print/_report.ore.operatori.csv.php?mese={{ r.mese }}&anno={{ r.anno }}" target="_blank">{{ r.nome }} > {{ r.stato }}</a><br>
 					{% endfor %}
 				</div>
 			</div>
@@ -55,7 +57,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="exportOreProgettiTipologieMastri(this);">crea report</button>
+		<button type="button" class="btn btn-secondary btn-sm" onclick="exportOreOperatori(this);">crea report</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

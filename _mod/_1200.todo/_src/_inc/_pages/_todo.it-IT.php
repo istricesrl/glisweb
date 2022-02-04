@@ -43,7 +43,7 @@
 	);
 
 	// RELAZIONI CON IL MODULO ATTIVITA
-	if( in_array( "1100.attivita", $cf['mods']['active']['array'] ) ) {
+	if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 		arrayInsertSeq( 'todo.form', $p['todo.form']['etc']['tabs'], 'todo.form.attivita' );
 	}
 

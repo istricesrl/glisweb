@@ -4,7 +4,7 @@
 	$l = 'it-IT';
 
     // modulo di questo file
-	$m = DIR_MOD . '_1100.attivita/';
+	$m = DIR_MOD . '_0200.attivita/';
 
 	// vista attivita
 	$p['attivita.view'] = array(

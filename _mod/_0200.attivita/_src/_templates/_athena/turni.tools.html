@@ -282,7 +282,7 @@ function setPeriodicita(valore){
             giorni_s_desc.push( $(this).siblings().text() );    // SDF descrizione giorni
         });
 
-        getws('{{ site.url }}/_mod/_1100.attivita/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s+'&__rip_mese_desc__='+rip_mese_desc+'&__giorni_s_desc__='+giorni_s_desc, 
+        getws('{{ site.url }}/_mod/_0200.attivita/_src/_api/_task/_pianifica.turni.php', '__data__='+data+'&__dataf__='+dataf+'&__id_contratto__='+contratto+'&__turno__='+turno+'&__p__='+period+'&__cad__='+cadenza+'&__datafine__='+data_fine+'&__nr__='+ripetizioni_fine+'&__rm__='+rip_mese+'&__ra__='+rip_anno+'&__gs__='+giorni_s+'&__rip_mese_desc__='+rip_mese_desc+'&__giorni_s_desc__='+giorni_s_desc, 
                 function( data ){ 
                     window.open('{{ pages['turni.view'].url[ localization.language.ietf ] }}?__view__[{{ view.id }}][__filters__][id_pianificazione][EQ]='+data['pianificazione']+'&__view__[{{ view.id }}][__filters__][id_contratto][EQ]='+contratto,'_self');
                 }
