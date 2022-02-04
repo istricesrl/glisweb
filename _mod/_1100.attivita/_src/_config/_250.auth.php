@@ -19,9 +19,11 @@
 	$cf['auth']['permissions'] = array_merge_recursive( 
 	    $cf['auth']['permissions'],
 	    array(
-            'attivita_categorie' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
+            'attivita' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'tipologie_attivita' => array(
+                CONTROL_FULL => array( 'roots' )
             )
         )
 	);
