@@ -283,6 +283,7 @@
     --------------------------------|---------------------------------------------------------------------------------------
     mastri.id                       | l'ID del mastro
     mastri.id_tipologia             | l'ID della tipologia del mastro
+    mastri.id_anagrafica_indirizzo  | la collocazione del mastro in riferimento ad un indiizzo di un0'anagrfica
     mastri.nome                     | il nome del mastro
     mastri.note                     | note descrittive del mastro
     mastri.id_account_inserimento   | l'ID dell'account che ha inserito la riga
@@ -296,6 +297,7 @@
     --------------------------------|---------------------------|-------------------------------|----------------------
     mastri_ibfk_01_nofollow         | id_genitore               | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     mastri_ibfk_02_nofollow         | id_tipologia              | tipologie_mastri.id           | ON DELETE NO ACTION ON UPDATE NO ACTION
+    mastri_ibfk_03_nofollow         | id_anagrafica_indirizzo   | anagrafica_indirizzi          | ON DELETE SET NULL ON UPDATE SET NULL 
     mastri_ibfk_98_nofollow         | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     mastri_ibfk_99_nofollow         | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -306,6 +308,8 @@
     mastri_view.id                          | -
     mastri_view.id_tipologia                | -
     mastri_view.tipologia                   | la tipologia del mastro
+    mastri_view.id_anagrafica_indirizzo     | -
+    mastri_view.indirizzo                   | l'indirizzo completo del mastro
     mastri_view.nome                        | -
     mastri_view.note                        | -
     mastri_view.id_account_inserimento      | -
@@ -347,7 +351,11 @@
     -------------------------------------------|---------------------------------------------------------------------------------------
     matricole_view.id                          | -
     matricole_view.id_marchio                  | -
+    matricole_view.marchio                     | il nome del marchio 
     matricole_view.id_produttore               | -
+    matricole_view.produttore                  | l'anagrafica produttore
+    matricole_view.id_articolo                 | -
+    matricole_view.articolo                    | il nome dell'articolo colelgato alla matricola
     matricole_view.matricola                   | -
     matricole_view.nome                        | -
     matricole_view.id_account_inserimento      | -

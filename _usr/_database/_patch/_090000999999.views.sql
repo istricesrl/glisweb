@@ -1308,6 +1308,10 @@ CREATE OR REPLACE VIEW `ddt_view` AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
@@ -1334,6 +1338,8 @@ CREATE OR REPLACE VIEW `ddt_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
    WHERE documenti.id_tipologia = 4
 ;
 
@@ -1369,6 +1375,10 @@ CREATE OR REPLACE VIEW `documenti_view` AS
     	documenti.timestamp_invio,
     	documenti.progressivo_invio,
 		documenti.id_coupon,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
 		documenti.timestamp_chiusura,
 		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
 		documenti.id_account_inserimento,
@@ -1398,6 +1408,8 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
 ;
 
 --| 090000010000
@@ -4567,6 +4579,7 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 		tipologie_attivita.id,
 		tipologie_attivita.id_genitore,
 		tipologie_attivita.ordine,
+		tipologie_attivita.codice,
 		tipologie_attivita.nome,
 		tipologie_attivita.html_entity,
 		tipologie_attivita.font_awesome,

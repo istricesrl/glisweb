@@ -298,6 +298,8 @@ CREATE OR REPLACE VIEW `proforma_view` AS
 --| 202202040140
 ALTER TABLE `matricole` 
 ADD `data_scadenza` date DEFAULT NULL AFTER `matricola`,
+ADD `id_articolo` char(32) DEFAULT NULL AFTER `id_produttore`,
+ADD KEY `id_articolo` (`id_articolo` )
 ;
 
 --| 202202040145
@@ -325,4 +327,185 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto 
 ;
 
+--| 202202041800
+ALTER TABLE `ranking` 
+ADD `note` text DEFAULT NULL AFTER nome;
+
+--| 202202041801
+ALTER TABLE `documenti` 
+ 	ADD `id_mastro_provenienza` int(11) DEFAULT NULL AFTER `id_coupon`,
+ 	ADD `id_mastro_destinazione` int(11) DEFAULT NULL AFTER `id_mastro_provenienza`,
+ 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
+	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD CONSTRAINT `documenti_ibfk_08_nofollow` FOREIGN KEY (`id_mastro_provenienza`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `documenti_ibfk_09_nofollow` FOREIGN KEY (`id_mastro_destinazione`) REFERENCES `mastri` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202202041802
+CREATE OR REPLACE VIEW `documenti_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.esigibilita, 
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
+		documenti.id_coupon,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.timestamp_chiusura,
+		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+;
+
+--| 202202041804
+CREATE OR REPLACE VIEW `ddt_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+   WHERE documenti.id_tipologia = 4
+;
+
+--| 202202041805
+ALTER TABLE `mastri` 
+ADD `id_anagrafica_indirizzo` INT(11) DEFAULT NULL AFTER `id_tipologia`,
+ADD KEY `id_anagrafica_indirizzo` (`id_anagrafica_indirizzo`),
+ADD CONSTRAINT `mastri_ibfk_03_nofollow`    FOREIGN KEY (`id_anagrafica_indirizzo`) REFERENCES `anagrafica_indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+;
+
+--| 202202041806
+CREATE OR REPLACE VIEW `mastri_view` AS
+	SELECT
+		mastri.id,
+		mastri.id_tipologia,
+		tipologie_mastri.nome AS tipologia,
+		mastri.id_anagrafica_indirizzo,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		mastri.nome,
+		tipologie_mastri.se_magazzino,
+		tipologie_mastri.se_conto,
+		tipologie_mastri.se_registro,
+		mastri_path( mastri.id ) AS __label__
+	FROM mastri
+		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
+		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzo
+		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+;
+
+--| 202202041807
+ALTER TABLE tipologie_attivita
+ADD codice char(8) default null after ordine,
+ADD KEY `codice` (`codice`);
+
+--| 202202041808
+CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
+	SELECT
+		tipologie_attivita.id,
+		tipologie_attivita.id_genitore,
+		tipologie_attivita.ordine,
+		tipologie_attivita.codice,
+		tipologie_attivita.nome,
+		tipologie_attivita.html_entity,
+		tipologie_attivita.font_awesome,
+		tipologie_attivita.se_anagrafica,
+		tipologie_attivita.se_agenda,
+		tipologie_attivita.id_account_inserimento,
+		tipologie_attivita.id_account_aggiornamento,
+		tipologie_attivita_path( tipologie_attivita.id ) AS __label__
+	FROM tipologie_attivita
+;
 --| FINE
