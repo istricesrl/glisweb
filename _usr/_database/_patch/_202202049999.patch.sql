@@ -512,4 +512,5 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 --| 202202041809
 ALTER TABLE `documenti_articoli`
 CHANGE `data` `data` date NULL AFTER `id_documento`;
+
 --| FINE
