@@ -35,7 +35,7 @@
 	// gestione righe ddt
 	$p['ddt.magazzini.form.righe'] = array(
 		'sitemap'		=> false,
-		'title'			=> array( $l		=> 'righe_fatture' ),
+		'title'			=> array( $l		=> 'righe DDT' ),
 		'h1'			=> array( $l		=> 'righe' ),
 		'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.magazzini.form.righe.html' ),
@@ -47,7 +47,7 @@
 	// gestione ddt_righe
 	$p['ddt.magazzini.righe.form'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'gestione righe' ),
+	    'title'			=> array( $l		=> 'gestione righe DDT' ),
 	    'h1'			=> array( $l		=> 'gestione' ),
 	    'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.magazzini.righe.form.html' ),
@@ -86,7 +86,7 @@
 	// gestione righe ddt
 	$p['ddt.passivi.magazzini.form.righe'] = array(
 		'sitemap'		=> false,
-		'title'			=> array( $l		=> 'righe_fatture' ),
+		'title'			=> array( $l		=> 'righe DDT passivi' ),
 		'h1'			=> array( $l		=> 'righe' ),
 		'parent'		=> array( 'id'		=> 'ddt.passivi.magazzini.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.passivi.magazzini.form.righe.html' ),
@@ -98,7 +98,7 @@
 	// gestione ddt_righe
 	$p['ddt.passivi.magazzini.righe.form'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'gestione righe' ),
+	    'title'			=> array( $l		=> 'gestione righe DDT passivi' ),
 	    'h1'			=> array( $l		=> 'gestione' ),
 	    'parent'		=> array( 'id'		=> 'ddt.passivi.magazzini.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.passivi.magazzini.righe.form.html' ),
