@@ -423,11 +423,15 @@ ALTER TABLE `categorie_progetti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `se_sitemap` (`se_sitemap`),
+	ADD KEY `se_cacheable` (`se_cacheable`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `se_ordinario`(`se_ordinario`),
 	ADD KEY `se_straordinario`(`se_straordinario`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`, `id_sito`);
 
 --| 030000004301
 
@@ -1417,9 +1421,12 @@ ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `notizie`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `se_sitemap` (`se_sitemap`),
+	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_tipologia`,`nome`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`, `id_sito`);
 
 --| 030000022001
 

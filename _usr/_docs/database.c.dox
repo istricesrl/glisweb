@@ -242,6 +242,13 @@
     categorie_progetti.ordine                       | campo di ordinamento
     categorie_progetti.nome                         | il nome della categoria
     categorie_progetti.note                         | note aggiuntive sulla categoria
+    categorie_progetti.template                     | il template da utilizzare per renderizzare la categoria progetti
+    categorie_progetti.schema_html                  | lo schema da utilizzare per renderizzare la categoria progetti
+    categorie_progetti.tema_css                     | il tema CSS da utilizzare per renderizzare la categoria progetti
+    categorie_progetti.se_sitemap                   | flag che indica se la categoria progetti va inclusa o no nella sitemap
+    categorie_progetti.se_cacheable                 | flag che indica se la categoria progetti può essere salvata nella cache statica
+    categorie_progetti.id_sito                      | l'ID del sito in cui la categoria progetti è pubblicata
+    categorie_progetti.id_pagina                    | l'ID della pagina in cui la categoria progetti è presente
     categorie_progetti.se_ordinario                 | flag che indica se la categoria di progetti è di tipo ordinario
     categorie_progetti.se_straordinario             | flag che indica se la categoria di progetti è di tipo straordinario
     categorie_progetti.id_account_inserimento       | l'ID dell'account che ha inserito la riga
@@ -254,6 +261,7 @@
     chiave                                      | campo                         | tabella e campo collegati         | comportamento
     --------------------------------------------|-------------------------------|-----------------------------------|------------------
     categorie_progetti_ibfk_01_nofollow         | id_genitore                   | categorie_progetti.id             | ON DELETE SET NULL ON UPDATE SET NULL
+    categorie_progetti_ibfk_02                  | id_pagina                     | pagine.id                         | ON DELETE SET NULL ON UPDATE SET NULL
     categorie_progetti_ibfk_98_nofollow         | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     categorie_progetti_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -265,6 +273,13 @@
     categorie_progetti_view.id_genitore                     | -
     categorie_progetti_view.ordine                          | -
     categorie_progetti_view.nome                            | -
+    categorie_progetti_view.template                        | -
+    categorie_progetti_view.schema_html                     | -
+    categorie_progetti_view.tema_css                        | -
+    categorie_progetti_view.se_sitemap                      | -
+    categorie_progetti_view.se_cacheable                    | -
+    categorie_progetti_view.id_sito                         | -
+    categorie_progetti_view.id_pagina                       | -
     categorie_progetti_view.se_ordinario                    | -
     categorie_progetti_view.se_straordinario                | -
     categorie_progetti_view.figli                           | il numero di categorie figlie di questa categoria

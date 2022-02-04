@@ -31,6 +31,7 @@
     documenti.progressivo_invio             | il progressivo di invio del documento
     documenti.id_coupon                     | l'ID del coupon associato al documento
     documenti.note                          | note aggiuntive sul documento
+    documenti.note_cliente                  | note destinate al cliente del documento
     documenti.timestamp_chiusura            | la timestamp della chiusura del documentato 
     documenti.note_chiusura                 | note relative alla chiusura documento
     documenti.id_account_inserimento        | l'ID dell'account che ha inserito la riga

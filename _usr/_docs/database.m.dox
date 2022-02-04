@@ -321,9 +321,11 @@
     matricole.id                       | l'ID della matricola
     matricole.id_marchio               | l'ID del marchio della matricola
     matricole.id_produttore            | l'ID del produttore della matricola
-    matricole.matricola            | il serial number della matricola
+    matricole.matricola                | il serial number della matricola
+    matricole.id_articolo              | l'ID dell'articolo della matricola
     matricole.nome                     | il nome del mastro
     matricole.note                     | note descrittive del mastro
+    matricole.data_scadenza            | la data si scadenza della matricola
     matricole.id_account_inserimento   | l'ID dell'account che ha inserito la riga
     matricole.timestamp_inserimento    | la timestamp dell'inserimento della riga
     matricole.id_account_aggiornamento | l'ID dell'ultimo account che ha modificato la riga
@@ -335,6 +337,7 @@
     --------------------------------|---------------------------|-------------------------------|----------------------
     matricole_ibfk_01_nofollow      | id_marchio                | marchi.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     matricole_ibfk_02_nofollow      | id_produttore             | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
+    matricole_ibfk_03_nofollow      | id_articolo               | articoli.id                   | ON DELETE SET NULL ON UPDATE SET NULL
     matricole_ibfk_98_nofollow      | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     matricole_ibfk_99_nofollow      | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -345,7 +348,7 @@
     matricole_view.id                          | -
     matricole_view.id_marchio                  | -
     matricole_view.id_produttore               | -
-    matricole_view.matricola               | -
+    matricole_view.matricola                   | -
     matricole_view.nome                        | -
     matricole_view.id_account_inserimento      | -
     matricole_view.id_account_aggiornamento    | -

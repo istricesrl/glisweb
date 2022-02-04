@@ -499,15 +499,26 @@ REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categ
 -- ruoli_immagini
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-REPLACE INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
-(1,	NULL,	900,	'immagine',	    NULL,	NULL,	1,	    1,	    1,	    1,	    1,	    1,	    1,	    1,	    1),
-(2,	NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	900,	'sfondo',	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	600,	'gallery',	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	1,      NULL,	1,      NULL,	1),
-(6,	NULL,	100,	'avatar',	    NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	NULL,	300,	'logo',	        NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	NULL,	200,	'carousel',     NULL,	NULL,	NULL,	1,	    NULL,	NULL,	1,      NULL,	1,      NULL,	1);
+INSERT INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
+(1, NULL, 900, 'immagine', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(2, NULL, 300, 'intestazione',NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(3, NULL, 900, 'sfondo', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(4, NULL, 600, 'gallery', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(5, NULL, 600, 'jumbotron', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(6, NULL, 100, 'avatar', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(7, NULL, 300, 'logo', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(8, NULL, 200, 'carousel', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1) ON DUPLICATE KEY UPDATE
+	nome = VALUES( nome ),
+	se_anagrafica = VALUES( se_anagrafica ),
+	se_pagine = VALUES( se_pagine ),
+	se_prodotti = VALUES( se_prodotti ),
+	se_articoli = VALUES( se_articoli ),
+	se_categorie_prodotti = VALUES( se_categorie_prodotti ),
+	se_notizie = VALUES( se_notizie ),
+	se_categorie_notizie = VALUES( se_categorie_notizie ),
+	se_risorse = VALUES( se_risorse ),
+	se_categorie_risorse = VALUES( se_categorie_risorse )
+;
 
 --| 050000034800
 
@@ -944,7 +955,8 @@ INSERT IGNORE INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, 
 -- verifica: 2021-10-15 16:17 Fabio Mosti
 INSERT IGNORE INTO `tipologie_pubblicazioni` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_bozza`, `se_pubblicato`, `se_evidenza`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'bozza',	    NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'pubblicato',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
+(2,	NULL,	NULL,	'pubblicato',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'in evidenza',	    NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055800
 
