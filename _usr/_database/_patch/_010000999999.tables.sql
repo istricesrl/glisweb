@@ -102,7 +102,6 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `codice_sdi` char(32) DEFAULT NULL,
   `id_pec_sdi` int(11) DEFAULT NULL,
   `codice_archivium` char(16) DEFAULT NULL,
-  `codice_archivium` char(16) DEFAULT NULL,
   `id_regime` int(11) DEFAULT NULL,
   `note_amministrative` text,
   `note_collaborazione` text,
@@ -154,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
 -- tipologia: tabella gestita
 -- verifica: 2022-02-03 11:12 Chiara GDL
 CREATE TABLE `anagrafica_certificazioni` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL,
   `id_certificazione` int DEFAULT NULL,
   `id_anagrafica` int DEFAULT NULL,
   `id_emittente` int DEFAULT NULL,
