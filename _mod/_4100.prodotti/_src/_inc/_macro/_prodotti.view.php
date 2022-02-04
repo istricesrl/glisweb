@@ -25,7 +25,7 @@
 
     // campi della vista
 	$ct['view']['cols'] = array(
-        'id' => 'codice',
+        'id' => 'prodotto',
         'nome' => 'nome',
 	    'codice_produttore' => 'codice produttore',
 	    'categorie' => 'categorie'

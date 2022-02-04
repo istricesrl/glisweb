@@ -77,10 +77,12 @@
 					<span class="label-top remove-after-duplicate">listino</span>
 					{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request ) }}
 				</div>
+<!--
 				<div class="col-auto">
 					<span class="label-top remove-after-duplicate">iva</span>
 					{{ frm.select( table, '', '', 'id_iva', '', etc.select.id_iva, request ) }}
 				</div>
+-->
 				<div class="col-auto">
 					<span class="label-top">scadenza</span>
 					{{ frm.datetime( table, '', '', 'timestamp_scadenza', '', '', request)  }}
@@ -93,7 +95,7 @@
 				</div>
 			</div>
 
-
+			{% if '0500.mastri' in mods.active.array %}
 			<legend>conti</legend>
 			{% if  session.__latest__[ table ].id_mastro_provenienza %}
 				{% set default_mp = session.__latest__[ table ].id_mastro_provenienza %}
@@ -111,6 +113,7 @@
 					{{ frm.selectBox( table, '', '', 'id_mastro_destinazione', '', etc.select.id_mastri, request, default_md, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_destinazione', page, pages, ietf ) }}
 				</div>
 			</div>	
+			{% endif %}
 
 			<legend>pagamento</legend>
 			<div class="form-group form-row">

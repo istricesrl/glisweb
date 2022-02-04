@@ -106,4 +106,3 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'ddt.passivi.magazzini.righe.form' ) )
 	);
-
