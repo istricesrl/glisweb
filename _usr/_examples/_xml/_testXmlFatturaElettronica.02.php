@@ -1,0 +1,6 @@
+<?php
+
+    // inclusione del framework
+	require '../../../_src/_config.php';
+
+    echo '<pre>' . print_r( xml2array( readStringFromFile( '_usr/_examples/_xml/_esempio.02.xml' ) ), true ) . '</pre>';

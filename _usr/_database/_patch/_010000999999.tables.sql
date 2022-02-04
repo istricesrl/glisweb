@@ -305,6 +305,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_todo` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `codice_archivium` char(32) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
   `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -760,7 +761,7 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
 CREATE TABLE IF NOT EXISTS `documenti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `numero` int(11) DEFAULT NULL,
+  `numero` char(32) DEFAULT NULL,
   `sezionale` char(32) DEFAULT NULL,
   `data` date DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,

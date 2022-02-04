@@ -261,7 +261,8 @@ ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 -- tipologia: tabella gestita
 -- verifica: 2021-05-27 15:07 Fabio Mosti
 ALTER TABLE `attivita`
-	ADD PRIMARY KEY (`id`), 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`), 
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_cliente` (`id_cliente`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 

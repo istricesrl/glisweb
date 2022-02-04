@@ -453,7 +453,7 @@
         // var_dump( $r );
 
         // restituisco il risultato
-        return $r;
+        return array( 'FatturaElettronica' => ( isset( $r['p:FatturaElettronica'] ) ) ? $r['p:FatturaElettronica'] : $r['FatturaElettronica'] );
 
     }
 
@@ -533,25 +533,25 @@
         // print_r( $f );
 
         // cerco o creo il fornitore
-        $i['idFornitore'] = mysqlInsertRow(
+        $i['idCliente'] = mysqlInsertRow(
             $cf['mysql']['connection'],
             array(
                 'id' => NULL,
                 'denominazione' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'],
                 'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
-                'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['CodiceFiscale']['#']
+                'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
             ),
             'anagrafica'
         );
 
         // cerco o creo il destinatario
-        $i['idCliente'] = mysqlInsertRow(
+        $i['idFornitore'] = mysqlInsertRow(
             $cf['mysql']['connection'],
             array(
                 'id' => NULL,
                 'denominazione' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'],
                 'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
-                'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['CodiceFiscale']['#']
+                'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
             ),
             'anagrafica'
         );
@@ -567,7 +567,7 @@
                 'id_tipologia' => 11,
                 'data' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Data']['#'],
                 'numero' => $i['numero'][0],
-                'sezionale' => $i['numero'][1],
+                'sezionale' => ( isset( $i['numero'][1] ) ? $i['numero'][1] : NULL ),
                 'codice_archivium' => $d['IDArchivium'],
                 'id_emittente' => $i['idFornitore'],
                 'id_destinatario' => $i['idCliente']
@@ -575,9 +575,109 @@
             'documenti'
         );
 
+        // recupero le righe esistenti
+        $idRighe = mysqlSelectColumn(
+            'id',
+            $cf['mysql']['connection'],
+            'SELECT id FROM documenti_articoli WHERE id_documento = ?',
+            array( array( 's' => $i['idDocumento'] ) )
+        );
+
+        // gestisco le righe multiple
+        $arrayRighe = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] ) )
+            ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] )
+            : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'];
+
         // TODO inserisco le righe nella tabella documenti_articoli
+        foreach( $arrayRighe as $row ) {
+
+            // debug
+            print_r( $row );
+
+            // trovo il reparto in base all'aliquota
+            $idReparto = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT id FROM reparti INNER JOIN iva ON iva.id = reparti.id_iva WHERE iva.aliquota = ?',
+                array( array( 's' => $row['AliquotaIVA']['#'] ) )
+            );
+
+            // se il reparto non esiste, lo creo
+            if( empty( $idReparto ) ) {
+
+                $idIva = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM iva WHERE iva.aliquota = ?',
+                    array( array( 's' => $row['AliquotaIVA']['#'] ) )
+                );
+
+                $idReparto = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id' => NULL,
+                        'nome' => 'REPARTO IVA ' . rtrim( $row['AliquotaIVA']['#'], '.0' ) . '%',
+                        'id_iva' => $idIva
+                    ),
+                    'reparti'
+                );
+
+            }
+
+            // inserisco la riga
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'id' => array_shift( $idRighe ),
+                    'ordine' => $row['NumeroLinea']['#'],
+                    'nome' => $row['Descrizione']['#'],
+                    'id_documento' => $i['idDocumento'],
+                    'importo_netto_totale' => $row['PrezzoTotale']['#'],
+                    'id_reparto' => $idReparto
+                ),
+                'documenti_articoli'
+            );
+
+        }
+
+        // recupero i pagamenti esistenti
+        $idPagamenti = mysqlSelectColumn(
+            'id',
+            $cf['mysql']['connection'],
+            'SELECT id FROM pagamenti WHERE id_documento = ?',
+            array( array( 's' => $i['idDocumento'] ) )
+        );
+
+        // gestisco i pagamenti multipli
+        $arrayPagamenti = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] ) )
+            ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] )
+            : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'];
 
         // TODO inserisco le righe nella tabella pagamenti
+        foreach( $arrayPagamenti as $row ) {
+
+            // debug
+            print_r( $row );
+
+            // recupero la modalità di pagamento
+            $idModalita = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT id FROM modalita_pagamento WHERE codice = ?',
+                array( array( 's' => $row['ModalitaPagamento']['#'] ) )
+            );
+
+            // inserisco il pagamento
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'id' => array_shift( $idPagamenti ),
+                    'id_documento' => $i['idDocumento'],
+                    'id_modalita_pagamento' => $idModalita,
+                    'importo_netto_totale' => $row['ImportoPagamento']['#'],
+                    'timestamp_scadenza' => strtotime( $row['DataScadenzaPagamento']['#'] )
+                ),
+                'pagamenti'
+            );
+
+        }
 
         // debug
 
@@ -648,9 +748,9 @@
         // TODO registro le note scaricate
         foreach( $l as &$f ) {
 
-            $f = array_replace_recursive( $f, archiviumRegistraNotaAttiva( $idAzienda, $f['IDArchivium'] ) );
+            $f = array_replace_recursive( $f, archiviumRegistraNotaAttiva( $idAzienda, $f ) );
 
-            print_r( $f );
+            // print_r( $f );
 
         }
 
@@ -664,7 +764,7 @@
      * @todo documentare
      * 
      */
-    function archiviumRegistraNotaAttiva( $idAzienda, $idNota ) {
+    function archiviumRegistraNotaAttiva( $idAzienda, $nota ) {
 
         // globalizzazione di $cf
         global $cf;
@@ -673,33 +773,49 @@
         $i = array();
 
         // scarico i dettagli della fattura
-        $d = archiviumGetInfoNotaAttiva( $idAzienda, $idNota );
+        $d = array_replace_recursive(
+            $nota,
+            archiviumGetInfoNotaAttiva( $idAzienda, $nota['IDArchivium'] )
+        );
 
         // debug
         // print_r( $d );
         // print_r( $f );
 
-        // recupero l'ID attività dal codice (TipoNotifica e EsitoNotifica)
+        // recupero l'ID tipologia attività dal codice (TipoNotifica e EsitoNotifica)
+        $idTipologiaAttivita = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id FROM tipologie_attivita WHERE codice = ?',
+            array( array( 's' => $d['TipoNotifica'] ) )
+        );
 
         // recupero l'ID fattura dal codice_archivium (IDArchiviumFE)
-
-/*
-        // inserisco l'attività
-        $i = mysqlInsertRow(
+        $idFattura = mysqlSelectValue(
             $cf['mysql']['connection'],
-            array(
-                'id' => NULL,
-                'id_tipologia' => 11,
-                'data' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Data']['#'],
-                'numero' => $i['numero'][0],
-                'sezionale' => $i['numero'][1],
-                'codice_archivium' => $d['IDArchivium'],
-                'id_emittente' => $i['idFornitore'],
-                'id_destinatario' => $i['idCliente']
-            ),
-            'attivita'
+            'SELECT id FROM documenti WHERE codice_archivium = ?',
+            array( array( 's' => $d['IDArchiviumFE'] ) )
         );
-*/
+
+        // se ho tutti i dati che mi servono
+        if( ! empty( $idTipologiaAttivita ) && ! empty( $idFattura ) ) {
+
+            // inserisco l'attività
+            $i = mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'id' => NULL,
+                    'id_tipologia' => $idTipologiaAttivita,
+                    'data_attivita' => date( 'Y-m-d', strtotime( $d['DataIns'] ) ),
+                    'ora_inizio' => date( 'H:i:s', strtotime( $d['DataIns'] ) ),
+                    'ora_fine' => date( 'H:i:s', strtotime( $d['DataIns'] ) ),
+                    'nome' => 'notifica di sistema SDI ' . $d['EsitoNotifica'] . ' ' . $d['DescrizioneEsito'],
+                    'id_documento' => $idFattura,
+                    'codice_archivium' => $d['IDArchivium']
+                ),
+                'attivita'
+            );
+
+        }
 
         // restituisco il risultato
         return array_replace_recursive( $d, array( '__info__' => $i ) );
@@ -747,8 +863,15 @@
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;
 
-        // TODO fare la chiamata
+        // effettuo la chiamata
+        $r      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $s );
 
-        // TODO restituire il risultato
+        // debug
+        // var_dump( $u );
+        // var_dump( $s );
+        // print_r( $r );
+
+        // restituisco il risultato
+        return $r;
 
     }

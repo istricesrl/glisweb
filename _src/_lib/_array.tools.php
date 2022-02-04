@@ -290,3 +290,12 @@
         return $a1;
 
     }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function is_associative_array( array $a ) {
+        return count( array_filter( array_keys( $a ), 'is_string' ) ) > 0;
+    }
