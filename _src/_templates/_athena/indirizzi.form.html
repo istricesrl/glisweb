@@ -53,7 +53,7 @@
 			</div>
             <div class="col">
             <span class="label-top ">indirizzo</span>
-                {{ frm.input( table, '', '', 'indirizzo', '', '', request ) }}
+                {{ frm.inputRequired( table, '', '', 'indirizzo', '', '', request ) }}
             </div>
             <div class="col-2 col-md-1">
                 <span class="label-top ">civico</span>
@@ -71,7 +71,7 @@
             </div>
             <div class="col-12 col-md">
             <span class="label-top ">comune</span>
-                {{ frm.selectBox( table, '', '', 'id_comune', 'comune', etc.select.comuni, request ) }}
+                {{ frm.selectBox( table, '', '', 'id_comune', 'comune', etc.select.comuni, request, '', '', 1 ) }}
             </div>
         </div>
 

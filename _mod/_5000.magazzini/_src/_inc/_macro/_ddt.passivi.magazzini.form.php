@@ -39,7 +39,7 @@
 	);
 	
     // tendina mittenti
-	$ct['etc']['select']['id_mittenti'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
@@ -64,7 +64,7 @@
 
     // tendina indirizzi mittenti
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) ){
-	    $ct['etc']['select']['id_sedi_mittente'] = mysqlCachedIndexedQuery(
+	    $ct['etc']['select']['id_sedi_emittente'] = mysqlCachedIndexedQuery(
 	        $cf['memcache']['index'],
 	        $cf['memcache']['connection'],
 	        $cf['mysql']['connection'],

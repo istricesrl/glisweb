@@ -42,11 +42,11 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
 #        'tipologia' => 'tipologia',
-#        'data' => 'data',
+        'data' => 'data',
         'nome' => 'nome',
-		'id_articolo' => 'articolo',
-		'mastro_provenienza' => 'scarico',
-		'mastro_destinazione' => 'carico',
+#		'id_articolo' => 'articolo',
+#		'mastro_provenienza' => 'scarico',
+#		'mastro_destinazione' => 'carico',
         'quantita' => 'quantità',
         'importo_netto_totale' => 'importo netto',
 		'id_genitore' => 'aggregata a',
@@ -62,13 +62,23 @@
         'id_documento' => 'd-none',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
-        'data_lavorazione' => 'text-left no-wrap', 
+        'data' => 'no-wrap', 
 #        'tipologia' => 'text-left',
 		'id_articolo' => 'text-left'
     );
 
+	// RELAZIONI CON IL MODULO MASTRI
+	if( in_array( "0500.mastri", $cf['mods']['active']['array'] ) ) {
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'mastro_provenienza' => 'scarico', 'mastro_destinazione' => 'carico' ) );
+	}
+
+	// RELAZIONI CON IL MODULO PRODOTTI
+	if( in_array( "4100.prodotti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'id_articolo' => 'articolo' ) );
+	}
+
+	// preset filtro righe documento
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-		// preset filtro righe documento
 		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
 

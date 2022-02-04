@@ -45,8 +45,8 @@
 	    'etc'		=> array( 'tabs'	=> array(	'articoli.form',
      //                                               'articoli.form.pubblicazioni',
 													'articoli.form.caratteristiche',
-													'articoli.form.sem',
-													'articoli.form.testo',
+#													'articoli.form.sem',
+#													'articoli.form.testo',
 													'articoli.form.prezzi',
 													'articoli.form.immagini',
 													'articoli.form.video',
@@ -57,6 +57,11 @@
 												) )
 	);
 
+	// RELAZIONI CON IL MODULO CONTENUTI
+	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'articoli.form', $p['articoli.form']['etc']['tabs'], 'articoli.form.sem' );
+		arrayInsertSeq( 'articoli.form.sem', $p['articoli.form']['etc']['tabs'], 'articoli.form.testo' );
+	}
 
 /*
 	// gestione articoli pubblicazioni

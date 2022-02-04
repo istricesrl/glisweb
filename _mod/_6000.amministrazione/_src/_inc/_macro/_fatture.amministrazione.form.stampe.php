@@ -82,14 +82,17 @@
                     'text' => 'stampa una copia di cortesia della fattura in formato PDF'
                 );
 
-                $ct['page']['contents']['metro']['xml'][] = array(
-                    'target' => '_blank' ,
-                    'url' => $base . '_fattura.xml.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
-                    'icon' => NULL,
-                    'fa' => 'fa-file-code-o',
-                    'title' => 'stampa XML',
-                    'text' => 'stampa la fattura in formato XML'
-                );
+                if( ! empty( $_REQUEST[ $ct['form']['table'] ]['progressivo_invio'] ) ) {
+                    $ct['page']['contents']['metro']['xml'][] = array(
+                        'target' => '_blank' ,
+                        'url' => $base . '_fattura.xml.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                        'icon' => NULL,
+                        'fa' => 'fa-file-code-o',
+                        'title' => 'stampa XML',
+                        'text' => 'stampa la fattura in formato XML'
+                    );
+                }
+
 /*
                 $ct['page']['contents']['metro']['download'][] = array(
                     'target' => '_blank' ,

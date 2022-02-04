@@ -57,22 +57,34 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'categorie.prodotti.form',
-													'categorie.prodotti.form.caratteristiche',
-													'categorie.prodotti.form.sem',
-													'categorie.prodotti.form.testo',
-													'categorie.prodotti.form.prodotti',
-													'categorie.prodotti.form.menu',
-													'categorie.prodotti.form.macro',
+#													'categorie.prodotti.form.caratteristiche',
+#													'categorie.prodotti.form.sem',
+#													'categorie.prodotti.form.testo',
+#													'categorie.prodotti.form.prodotti',
+#													'categorie.prodotti.form.menu',
+#													'categorie.prodotti.form.macro',
 													'categorie.prodotti.form.immagini',
 													'categorie.prodotti.form.video',
 													'categorie.prodotti.form.audio',
 													'categorie.prodotti.form.file',
-													'categorie.prodotti.form.metadati',
-													'categorie.prodotti.form.gruppi'
+													'categorie.prodotti.form.metadati'
+#													'categorie.prodotti.form.gruppi'
 												) )
 	);
 
-	
+	// RELAZIONI CON IL MODULO CONTENUTI
+	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'categorie.prodotti.form', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.sem' );
+		arrayInsertSeq( 'categorie.prodotti.form.sem', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.testo' );
+		arrayInsertSeq( 'categorie.prodotti.form.prodotti', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.menu' );
+		arrayInsertSeq( 'categorie.prodotti.form.menu', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.macro' );
+	}
+
+	// RELAZIONI CON IL MODULO PRODOTTI
+	if( in_array( "4100.prodotti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'categorie.prodotti.form', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.prodotti' );
+	}
+
 	// gestione categorie caratteristiche
 	$p['categorie.prodotti.form.caratteristiche'] = array(
 		'sitemap'		=> false,

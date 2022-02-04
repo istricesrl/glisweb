@@ -33,10 +33,10 @@
         'documento' => 'documento',
         'tipologia' => 'tipologia',
         'nome' => 'nome',
-        'id_articolo' => 'articolo',
+#        'id_articolo' => 'articolo',
         'quantita' => 'quantità',
-		'mastro_provenienza' => 'provenienza',
-		'mastro_destinazione' => 'destinazione',
+#		'mastro_provenienza' => 'provenienza',
+#		'mastro_destinazione' => 'destinazione',
         'importo_netto_totale' => 'importo'
     #    'totale_riga' => 'totale',
 	);
@@ -55,7 +55,17 @@
         'documento' => 'text-left no-wrap'
     );
 
-      // inclusione filtri speciali
+	// RELAZIONI CON IL MODULO MASTRI
+	if( in_array( "0500.mastri", $cf['mods']['active']['array'] ) ) {
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'mastro_provenienza' => 'scarico', 'mastro_destinazione' => 'carico' ) );
+	}
+
+	// RELAZIONI CON IL MODULO PRODOTTI
+	if( in_array( "4100.prodotti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'id_articolo' => 'articolo' ) );
+	}
+
+    // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
 
     // tendina categoria
