@@ -37,8 +37,8 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    '__label__' => 'text-left'
-	);
+		'articolo' => 'text-left'
+    );
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

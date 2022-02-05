@@ -28,15 +28,22 @@
         'id' => '#',
         'id_articolo' => 'codice',
         'articolo' => 'descrizione',
-        'matricola' => 'matricola',
         'carico' => 'carico',
         'scarico' => 'scarico',
         'totale' => 'totale'
     );
 
-    // OPZIONE matricole
-    if( ! empty( $cf['matricole']['scadenze'] ) ) {
-        arrayInsertAssoc( 'matricola', $ct['view']['cols'], array( 'data_scadenza' => 'scadenza' ) );
+	// RELAZIONI CON IL MODULO MATRICOLE
+	if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
+
+		// colonna matricola
+		arrayInsertAssoc( 'articolo', $ct['view']['cols'], array( 'matricola' => 'matricola' ) );
+
+        // OPZIONE scadenze
+        if( ! empty( $cf['matricole']['scadenze'] ) ) {
+            arrayInsertAssoc( 'matricola', $ct['view']['cols'], array( 'data_scadenza' => 'scadenza' ) );
+        }
+
     }
 
     // stili della vista

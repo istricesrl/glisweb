@@ -46,5 +46,12 @@
         );
     }
   
-	// macro di default
+    $ct['etc']['select']['id_anagrafica_indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_indirizzi_view'
+	);
+
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

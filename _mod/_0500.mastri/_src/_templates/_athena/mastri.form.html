@@ -60,13 +60,19 @@
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
 			</div>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">indirizzo</span>
+                    {{ frm.selectBox( table, '', '', 'id_anagrafica_indirizzi', '', etc.select.id_anagrafica_indirizzi, request, '', '', '', '', '', '', '', '', '', page, pages, ietf, 'anagrafica_indirizzi' ) }}
+                </div>  
+            </div>
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">note</span>
 				{{ frm.textarea( table, '', '', 'note', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
 				</div>
 			</div>
-	
+
 		<!--legend>ruoli</legend>
 		<div class="form-group form-row">
 			<div class="col-4 col-md-2 col-form-label">

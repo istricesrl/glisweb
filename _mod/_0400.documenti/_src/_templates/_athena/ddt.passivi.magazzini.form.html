@@ -77,7 +77,7 @@
 				<legend>dati emittente</legend>
 				<div class="form-group form-row">
 					<div class="col-12 col-md">
-						<span class="label-top">mittente</span>
+						<span class="label-top">emittente</span>
 						{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_emittente' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 					{% if request[ table ].id %}
@@ -92,12 +92,12 @@
 				<div class="form-group form-row">
 					<div class="col-12 col-md">
 						<span class="label-top">destinatario</span>
-						{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf ) }}
+						{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
 					</div>
 					{% if request[ table ].id %}
 					<div class="col-12 col-md-8">
 						<span class="label-top">sede destinatario</span>
-						{{ frm.selectBox( table, '', '', 'id_sede_destinatario', '', etc.select.id_sedi_destinatario, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_destinatario' , page, pages, ietf, 'indirizzi' ) }}
+						{{ frm.selectBox( table, '', '', 'id_sede_destinatario', '', etc.select.id_sedi_destinatario, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_destinatario' , page, pages, ietf ) }}
 					</div>
 					{% endif %}
 				</div>

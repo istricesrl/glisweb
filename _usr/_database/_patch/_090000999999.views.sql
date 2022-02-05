@@ -430,9 +430,11 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
-			coalesce( anagrafica_indirizzi.note, anagrafica_indirizzi.id_indirizzo ),
-			' / ',
+			tipologie_indirizzi.nome,
+			' ',
 			indirizzi.indirizzo,
+			' ',
+			indirizzi.civico,
 			' ',
 			comuni.nome,
 			' ',
@@ -442,6 +444,7 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
 		LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo
 		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 ;
@@ -1333,14 +1336,131 @@ CREATE OR REPLACE VIEW `ddt_view` AS
 				''
 			)
 		) AS __label__
-    FROM
-		documenti
+    FROM documenti
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
-   WHERE documenti.id_tipologia = 4
+   	WHERE tipologie_documenti.se_trasporto IS NOT NULL
+;
+
+--| 090000009710
+
+-- ddt_attivi_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `ddt_attivi_view`;
+
+--| 090000009711
+
+-- ddt_attivi_view
+-- tipologia: vista virtuale
+-- verifica: 2022-01-28 14:25 chiara gdl
+CREATE OR REPLACE VIEW `ddt_attivi_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+   	WHERE tipologie_documenti.se_trasporto IS NOT NULL
+	   AND anagrafica_check_gestita( a1.id ) IS NOT NULL
+;
+
+--| 090000009720
+
+-- ddt_passivi_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `ddt_passivi_view`;
+
+--| 090000009721
+
+-- ddt_passivi_view
+-- tipologia: vista virtuale
+-- verifica: 2022-01-28 14:25 chiara gdl
+CREATE OR REPLACE VIEW `ddt_passivi_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+   	WHERE tipologie_documenti.se_trasporto IS NOT NULL
+	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
 --| 090000009800
@@ -1462,6 +1582,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.importo_netto_totale,
 		documenti_articoli.id_matricola,
 		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS matricola,
+		matricole.data_scadenza,
 		documenti_articoli.nome,
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,
@@ -1492,7 +1613,6 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
 ;
-
 
 --| 090000012800
 
@@ -2141,11 +2261,33 @@ CREATE OR REPLACE VIEW `magazzini_view` AS
 		mastri.id,
 		mastri.id_tipologia,
 		tipologie_mastri.nome AS tipologia,
+		mastri.id_anagrafica_indirizzi,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		anagrafica_indirizzi.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		mastri.nome,
+		tipologie_mastri.se_magazzino,
+		tipologie_mastri.se_conto,
+		tipologie_mastri.se_registro,
 		mastri_path( mastri.id ) AS __label__
 	FROM mastri
-		INNER JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
-WHERE tipologie_mastri.se_magazzino = 1
+		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
+		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzi
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_indirizzi.id_anagrafica
+		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+	WHERE tipologie_mastri.se_magazzino = 1
 ;
 
 --| 090000018600
@@ -2301,6 +2443,19 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		mastri.id,
 		mastri.id_tipologia,
 		tipologie_mastri.nome AS tipologia,
+		mastri.id_anagrafica_indirizzi,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		anagrafica_indirizzi.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		mastri.nome,
 		tipologie_mastri.se_magazzino,
 		tipologie_mastri.se_conto,
@@ -2308,6 +2463,12 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		mastri_path( mastri.id ) AS __label__
 	FROM mastri
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
+		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzi
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_indirizzi.id_anagrafica
+		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 ;
 
 --| 090000021000

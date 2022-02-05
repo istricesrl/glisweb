@@ -15,9 +15,9 @@
             {{ frm.selectBox( view.open.table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli', 2 ) }}
         </div>
         {% if '4110.matricole' in mods.active.array and matricole.scadenze %}
-        <div class="col">
-            <span class="label-top remove-after-duplicate">matricola</span>
-            {{ frm.selectBox( view.open.table, '', '', 'id_matricola', '', etc.select.id_matricole, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'matricole', 2 ) }}
+        <div class="col-auto">
+            <span class="label-top remove-after-duplicate">scadenza</span>
+            {{ frm.date( view.open.table, '', '', 'data_scadenza', '', '', '', '', '', '', '', 2 ) }}
         </div>
         {% endif %}
         <div class="col">
@@ -25,8 +25,8 @@
             {{ frm.input( view.open.table, '', '', 'nome', '', '', '', '', '', '', '', 2 ) }}
         </div>
         <div class="col">
-            <span class="label-top remove-after-duplicate">scarico da</span>
-            {{ frm.selectBox( view.open.table, '', '', 'id_mastro_provenienza', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'magazzini', 2 ) }}
+            <span class="label-top remove-after-duplicate">carico su</span>
+            {{ frm.selectBox( view.open.table, '', '', 'id_mastro_destinazione', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'magazzini', 2 ) }}
         </div>
         <div class="col-1">
             <span class="label-top remove-after-duplicate">quantità</span>

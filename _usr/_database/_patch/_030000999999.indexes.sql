@@ -1292,7 +1292,7 @@ ALTER TABLE `mastri`
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
  	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_anagrafica_indirizzo` (`id_anagrafica_indirizzo`),
+	ADD KEY `id_anagrafica_indirizzi` (`id_anagrafica_indirizzi`),
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`nome`);
@@ -1310,6 +1310,7 @@ ALTER TABLE `mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-12-28 16:20 Chiara GDL
 ALTER TABLE `matricole`
  	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_scadenza` (`id_articolo`,`data_scadenza`),
   	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `matricola` (`matricola`),

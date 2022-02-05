@@ -99,20 +99,22 @@
 		<div class="form-group form-row">
 			<div class="col-1">
 				<span class="label-top remove-after-duplicate">importo</span>
-				{{ frm.inputRequired( table, '', '', 'importo_netto_totale', '', '', request ) }}
+				{{ frm.input( table, '', '', 'importo_netto_totale', '', '', request ) }}
 			</div>
 			<div class="col-auto">
 				<span class="label-top remove-after-duplicate">reparto</span>
 				{{ frm.select( table, '', '', 'id_reparto', '', etc.select.id_reparti, request, 1 ) }}
 			</div>
-			<div class="col-auto">
+			<div class="col">
 				<span class="label-top remove-after-duplicate">listino</span>
 				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request, 1 ) }}
 			</div>
+			{% if '4110.matricole' in mods.active.array %}
 			<div class="col">
 				<span class="label-top remove-after-duplicate">matricola</span>
 				{{ frm.selectBox( table, '', '', 'id_matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'matricole' ) }}
 			</div>
+			{% endif %}
 		</div>	
 		<div class="form-group form-row">
 

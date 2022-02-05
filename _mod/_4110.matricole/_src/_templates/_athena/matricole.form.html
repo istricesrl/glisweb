@@ -50,13 +50,20 @@
                 <div class="col-12 col-md-4">
                     <span class="label-top">articolo</span>
                     {{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.articoli, request, '', '', '', '', '', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
-		
                 </div>  
                 <div class="col-12 col-md">
                     <span class="label-top">matricola</span>
                     {{ frm.inputRequired( table, '', '', 'matricola', '', '', request ) }}
                 </div>  
             </div>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">nome</span>
+                    {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+                </div>  
+            </div>
+
         </fieldset>
 
         {% if matricole.scadenze %}

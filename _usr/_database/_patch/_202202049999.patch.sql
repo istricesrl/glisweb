@@ -450,9 +450,9 @@ CREATE OR REPLACE VIEW `ddt_view` AS
 
 --| 202202041805
 ALTER TABLE `mastri` 
-ADD `id_anagrafica_indirizzo` INT(11) DEFAULT NULL AFTER `id_tipologia`,
-ADD KEY `id_anagrafica_indirizzo` (`id_anagrafica_indirizzo`),
-ADD CONSTRAINT `mastri_ibfk_03_nofollow`    FOREIGN KEY (`id_anagrafica_indirizzo`) REFERENCES `anagrafica_indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+ADD `id_anagrafica_indirizzi` INT(11) DEFAULT NULL AFTER `id_tipologia`,
+ADD KEY `id_anagrafica_indirizzi` (`id_anagrafica_indirizzi`),
+ADD CONSTRAINT `mastri_ibfk_03_nofollow`    FOREIGN KEY (`id_anagrafica_indirizzi`) REFERENCES `anagrafica_indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ;
 
 --| 202202041806
@@ -461,7 +461,7 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		mastri.id,
 		mastri.id_tipologia,
 		tipologie_mastri.nome AS tipologia,
-		mastri.id_anagrafica_indirizzo,
+		mastri.id_anagrafica_indirizzi,
 		concat_ws(
 			' ',
 			tipologie_indirizzi.nome,
@@ -479,7 +479,7 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		mastri_path( mastri.id ) AS __label__
 	FROM mastri
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
-		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzo
+		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzi
 		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
 		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune

@@ -203,6 +203,7 @@
 
 		// debug
 			// var_dump( mysqli_errno( $c ) );
+			// var_dump( $r );
 
 		// gestione errore
 		    if( mysqli_errno( $c ) ) {
@@ -882,12 +883,14 @@
      */
     function mysqlInsertRow( $c, $r, $t, $d = true ) {
 
-		return mysqlQuery( $c,
+		$i = mysqlQuery( $c,
 			'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
 			.'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
 			.( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
 			array2mysqlStatementParameters( $r )
 		);
+
+		return $i;
 
     }
 

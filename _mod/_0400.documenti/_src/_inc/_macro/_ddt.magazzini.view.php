@@ -18,7 +18,7 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'ddt';
+	$ct['view']['table'] = 'ddt_attivi';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'ddt.magazzini.form';

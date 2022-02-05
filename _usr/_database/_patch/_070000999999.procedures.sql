@@ -37,6 +37,45 @@ CREATE
 
     END;
 
+--| 070000000410
+
+-- anagrafica_check_gestita
+DROP FUNCTION IF EXISTS `anagrafica_check_gestita`;
+
+--| 070000000411
+
+-- anagrafica_check_gestita
+-- verifica: 2021-05-23 15:24 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `anagrafica_check_gestita`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole sapere se è un'azienda gestita
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_anagrafica_path( <id> ) AS path
+
+		DECLARE gestita int( 1 ) DEFAULT NULL;
+
+		SELECT anagrafica_categorie.id
+		FROM anagrafica_categorie
+		INNER JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
+		WHERE anagrafica_categorie.id_anagrafica = p1
+		AND categorie_anagrafica.se_gestita IS NOT NULL
+		INTO gestita;
+
+		RETURN gestita;
+
+END;
+
 --| 070000001000
 
 -- todo_view_static

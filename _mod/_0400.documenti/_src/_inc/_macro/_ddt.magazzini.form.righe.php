@@ -67,6 +67,19 @@
 		'id_articolo' => 'text-left'
     );
 
+	// RELAZIONI CON IL MODULO MATRICOLE
+	if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
+
+		// colonna matricola
+		arrayInsertAssoc( 'id_articolo', $ct['view']['cols'], array( 'matricola' => 'matricola' ) );
+
+		// OPZIONE scadenze
+		if( ! empty( $cf['matricole']['scadenze'] ) ) {
+			arrayInsertAssoc( 'matricola', $ct['view']['cols'], array( 'data_scadenza' => 'scadenza' ) );
+		}
+
+	}
+
     $ct['etc']['include']['insert'] = 'inc/ddt.magazzini.form.righe.insert.html';
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
