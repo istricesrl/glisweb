@@ -16,6 +16,7 @@
     ----------------------------------------|---------------------------------------------------------------------------------------
     ranking.id                              | l'ID del ranking
     ranking.nome                            | il nome del ranking
+    ranking.note                            | le note del ranking
     ranking.ordine                          | campo di ordinamento
     ranking.id_account_inserimento          | l'ID dell'account che ha inserito la riga
     ranking.timestamp_inserimento           | la timestamp dell'inserimento della riga

@@ -425,11 +425,15 @@ ALTER TABLE `categorie_progetti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `se_sitemap` (`se_sitemap`),
+	ADD KEY `se_cacheable` (`se_cacheable`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `se_ordinario`(`se_ordinario`),
 	ADD KEY `se_straordinario`(`se_straordinario`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`, `id_sito`);
 
 --| 030000004301
 
@@ -764,6 +768,8 @@ ALTER TABLE `documenti`
 	ADD KEY `id_sede_destinatario` (`id_sede_destinatario`), 
 	ADD KEY `id_condizione_pagamento` (`id_condizione_pagamento`),
 	ADD KEY `id_coupon` (`id_coupon`),
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
+	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
@@ -1286,6 +1292,7 @@ ALTER TABLE `mastri`
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
  	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_anagrafica_indirizzo` (`id_anagrafica_indirizzo`),
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`nome`);
@@ -1308,6 +1315,7 @@ ALTER TABLE `matricole`
   	ADD KEY `matricola` (`matricola`),
   	ADD KEY `id_marchio` (`id_marchio`),
   	ADD KEY `id_produttore` (`id_produttore`),
+	ADD KEY `id_articolo` (`id_articolo` ),
   	ADD KEY `indice` (`id`,`id_marchio`,`id_produttore`,`matricola`,`nome`);
 
 --| 030000021001
@@ -1419,9 +1427,12 @@ ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `notizie`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `se_sitemap` (`se_sitemap`),
+	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_tipologia`,`nome`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`, `id_sito`);
 
 --| 030000022001
 
@@ -2458,6 +2469,7 @@ ALTER TABLE `tipologie_attivita`
   	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `codice` (`codice`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),

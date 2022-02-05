@@ -235,6 +235,7 @@
     tipologie_attivita.id                           | l'ID della tipologia
     tipologie_attivita.id_genitore                  | l'ID della tipologia genitore
     tipologie_attivita.ordine                       | campo di ordinamento
+    tipologie_attivita.codice                       | il codice della tipologia
     tipologie_attivita.nome                         | il nome della tipologia
     tipologie_attivita.html_entity                  | entità HTML che rappresenta visivamente la tipologia
     tipologie_attivita.font_awesome                 | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
@@ -260,6 +261,7 @@
     tipologie_attivita_view.id                              | -
     tipologie_attivita_view.id_genitore                     | -
     tipologie_attivita_view.ordine                          | -
+    tipologie_attivita_view.codice                          | -
     tipologie_attivita_view.nome                            | -
     tipologie_attivita_view.html_entity                     | -
     tipologie_attivita_view.font_awesome                    | -
