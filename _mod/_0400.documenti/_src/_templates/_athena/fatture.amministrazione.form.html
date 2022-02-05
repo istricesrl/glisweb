@@ -119,31 +119,31 @@
                     {% endif %}
     
                     {% if archivium.profile %}
-                <legend>fatturazione elettronica</legend>
-                <div class="form-group form-row">
-                    <div class="col-12 col-md-4">
-                        <span class="label-top-disabled">codice archivium</span>
-                        {{ frm.inputDisabled( table, '', '', 'codice_archivium', '', '', request ) }}	
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <span class="label-top-disabled">codice sdi</span>
-                        {{ frm.inputDisabled( table, '', '', 'codice_sdi', '', '', request ) }}	
-                    </div>
-                    <div class="col-12 col-md">
-                        <span class="label-top{% if request[ table ].codice_archivium %}-disabled{% endif %}">progressivo invio</span>
+                    <legend>fatturazione elettronica</legend>
+                    <div class="form-group form-row">
+                        <div class="col-12 col-md-4">
+                            <span class="label-top-disabled">codice archivium</span>
+                            {{ frm.inputDisabled( table, '', '', 'codice_archivium', '', '', request ) }}	
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <span class="label-top-disabled">codice sdi</span>
+                            {{ frm.inputDisabled( table, '', '', 'codice_sdi', '', '', request ) }}	
+                        </div>
+                        <div class="col-12 col-md">
+                            <span class="label-top{% if request[ table ].codice_archivium %}-disabled{% endif %}">progressivo invio</span>
+                            {% if not request[ table ].codice_archivium %}
+                            {{ frm.input( table, '', '', 'progressivo_invio', '', '', request ) }}	
+                            {% else %}
+                            {{ frm.inputDisabled( table, '', '', 'progressivo_invio', '', '', request ) }}	
+                            {% endif %}
+                        </div>
                         {% if not request[ table ].codice_archivium %}
-                        {{ frm.input( table, '', '', 'progressivo_invio', '', '', request ) }}	
-                        {% else %}
-                        {{ frm.inputDisabled( table, '', '', 'progressivo_invio', '', '', request ) }}	
+                        <div class="col-12 col-md-auto">
+                            {{ frm.button(  'OTTIENI PROGRESSIVO' ,'button','btn btn-secondary btn-sm btn-block', 'getProgressivoInvioFattura(\'documenti_progressivo_invio\',$(\'#documenti_id_emittente\').val());','ottieni in modo automatico il progressivo' ) }}
+                        </div>
                         {% endif %}
                     </div>
-                    {% if not request[ table ].codice_archivium %}
-                    <div class="col-12 col-md-auto">
-                        {{ frm.button(  'OTTIENI PROGRESSIVO' ,'button','btn btn-secondary btn-sm btn-block', 'getProgressivoInvioFattura(\'documenti_progressivo_invio\',$(\'documenti_id_emittente\').val());','ottieni in modo automatico il progressivo' ) }}
-                    </div>
                     {% endif %}
-                </div>
-                {% endif %}
                 
                 </fieldset>
 

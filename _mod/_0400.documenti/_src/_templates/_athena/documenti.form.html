@@ -139,7 +139,7 @@
 					</div>
 					{% if not request[ table ].codice_archivium %}
 					<div class="col-12 col-md-auto">
-						{{ frm.button(  'OTTIENI PROGRESSIVO' ,'button','btn btn-secondary btn-sm btn-block', 'getProgressivoInvioFattura(\'documenti_progressivo_invio\',$(\'documenti_id_emittente\').val());','ottieni in modo automatico il progressivo' ) }}
+                        {{ frm.button(  'OTTIENI PROGRESSIVO' ,'button','btn btn-secondary btn-sm btn-block', 'getProgressivoInvioFattura(\'documenti_progressivo_invio\',$(\'#documenti_id_emittente\').val());','ottieni in modo automatico il progressivo' ) }}
 					</div>
 					{% endif %}
 				</div>
