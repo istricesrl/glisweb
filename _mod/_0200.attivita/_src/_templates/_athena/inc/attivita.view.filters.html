@@ -54,6 +54,7 @@
 		{% endfor %}
 		</select>
 	</div>
+<!--
 	<div class="col-6 col-md-auto">
 		<span class="label-top">tipologia INPS</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_tipologia_inps][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
@@ -63,6 +64,7 @@
 		{% endfor %}
 		</select>
 	</div>
+-->
 	<div class="col">
 		<div class="label-top">ricerca per parola chiave</div>
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>

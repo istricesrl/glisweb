@@ -43,7 +43,7 @@
 	$ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
         'cliente' => 'text-left d-none d-md-table-cell',
-        'tipologia' => 'text-left',
+#        'tipologia' => 'text-left',
         '__label__' => 'text-left'
     );
 

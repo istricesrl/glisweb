@@ -386,7 +386,9 @@
 	if( isset( $ct['page']['template']['type'] ) ) {
 
 		echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_EOL;
-		
+
+		echo PHP_EOL . '<!-- ID pagina: ' . $ct['page']['id'] . ' -->' . PHP_EOL;
+
 		if( ! empty( $ct['page']['template']['path'] ) ) {
 			echo PHP_EOL . '<!-- template: ' . $ct['page']['template']['path'] . ' -->' . PHP_EOL;
 		}

@@ -53,21 +53,27 @@
 
     // pulitura delle tab
 	if( isset( $ct['page']['etc']['tabs'] ) ) {
+
+        if( ! is_array( $ct['page']['etc']['tabs'] ) ) {
+            $ct['page']['etc']['tabs'] = $cf['contents']['pages'][ $ct['page']['etc']['tabs'] ]['etc']['tabs'];
+        }
+
 	    foreach( $ct['page']['etc']['tabs'] as $key => $tab ) {
-		if( isset( $cf['contents']['pages'][ $tab ]['auth']['groups'] ) &&
-		    ( ! isset( $_SESSION['account']['gruppi'] ) ||
-			count(
-			    array_intersect(
-				$cf['contents']['pages'][ $tab ]['auth']['groups'],
-				$_SESSION['account']['gruppi']
-			    )
-			) == 0
-		    )
-		) {
-		    unset( $ct['page']['etc']['tabs'][ $key ] );
-		}
+            if( isset( $cf['contents']['pages'][ $tab ]['auth']['groups'] ) &&
+                ( ! isset( $_SESSION['account']['gruppi'] ) ||
+                count(
+                    array_intersect(
+                    $cf['contents']['pages'][ $tab ]['auth']['groups'],
+                    $_SESSION['account']['gruppi']
+                    )
+                ) == 0
+                )
+            ) {
+                unset( $ct['page']['etc']['tabs'][ $key ] );
+            }
 	    }
-	}
+
+    }
 
     // attivo i comandi di una lettera soltanto per DEV e TEST
     if( SITE_STATUS != PRODUCTION ) {

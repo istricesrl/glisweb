@@ -84,20 +84,20 @@
         $cf['memcache']['index'], 
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_interno = 1 OR se_cliente = 1');
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1');
 
     // tendina tipologie attività
 	$ct['etc']['select']['tipologie_attivita'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_produzione = 1 ORDER BY id');
-
+/*
     // tendina tipologie attività inps
 	$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_inps_view ORDER BY id');
-
+*/
 
     // preset filtri custom
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno']['EQ'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese']['EQ'] ) ) {

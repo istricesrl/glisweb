@@ -11,7 +11,7 @@
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'attivita' ),
 	    'h1'			=> array( $l		=> 'attività' ),
-	    'parent'		=> array( 'id'		=> 'produzione' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'cartellini', 'attivita.tools' ) ),
@@ -46,6 +46,8 @@
 		'etc'			=> array( 'tabs'	=> array(	'attivita.form' ) )
 	);
 
+/*
+
 	// gestione attivita - feedback
 	$p['attivita.form.feedback'] = array(
 	    'sitemap'		=> false,
@@ -58,7 +60,6 @@
 		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
 
-/*
 
 	// vista turni
 	$p['turni.view'] = array(
