@@ -250,6 +250,9 @@
 			$cf['contents']['updated'] = $ts;
 		    }
 		    require $pagina;
+            if( file_exists( path2custom( $pagina ) ) ) {
+                require path2custom( $pagina );
+            }
 		    $cf['contents']['pages'] = array_replace_recursive( $cf['contents']['pages'], $p );
 		}
 

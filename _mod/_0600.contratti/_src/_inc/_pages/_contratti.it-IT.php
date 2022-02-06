@@ -4,17 +4,19 @@
 	$l = 'it-IT';
 
     // modulo di questo file
-	$m = DIR_MOD . '_6600.contratti/';
+	$m = DIR_MOD . '_0600.contratti/';
 
 	// vista contratti
 	$p['contratti.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'contratti' ),
 	    'h1'		=> array( $l		=> 'contratti' ),
-	    'parent'		=> array( 'id'		=> 'anagrafica.view' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.view.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'contratti.view', 'contratti.scadenze.view', 'contratti.archivio.view' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'contratti.view',
+													'contratti.scadenze.view',
+													'contratti.archivio.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'contratti' ),
 									'priority'	=> '200' ) ) )						
@@ -53,10 +55,13 @@
 	    'parent'		=> array( 'id'		=> 'contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.form.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'contratti.form' ) ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(
+													'contratti.form',
+													'contratti.form.scadenze',
+													'contratti.form.tools' ) )
 	);
-
+/*
 	foreach( range( 1, 9 ) as $i ) {
 		$p['contratti.form']['etc']['tabs'][] = 'contratti.form.orari.'.  $i ;
 	}
@@ -90,6 +95,7 @@
 		'etc'			=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
 		'auth'			=> array( 'groups'	=> array(	'roots' ) )
 	);
+*/
 
 	// gestione contratti tools
 	$p['contratti.form.tools'] = array(

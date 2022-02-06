@@ -14,7 +14,7 @@
 	$ct['form']['table'] = 'contratti';
 	
     // percorsi
-	$base = $ct['site']['url'] . '/_mod/_6600.contratti/_src/_api/_task/';
+	$base = $ct['site']['url'] . '/_mod/_0600.contratti/_src/_api/_task/';
 
 	// tendina giorni
     $ct['etc']['select']['giorni'] = array( 

@@ -11,7 +11,7 @@
         var tb = form.find('#tb').val();
         var tn = form.find('#tn').val();
 
-	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_orari.turno.duplicate.php?id={{ request[table].id }}&tb='+tb+'&tn='+tn;
+	 	var call = '{{ site.url }}_mod/_0600.contratti/_src/_api/_task/_orari.turno.duplicate.php?id={{ request[table].id }}&tb='+tb+'&tn='+tn;
         getws( call,'', function() {
 			$('#duplica-turno').modal('toggle');
 		});

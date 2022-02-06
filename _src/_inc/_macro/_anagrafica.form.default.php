@@ -2,6 +2,7 @@
 
     // die('TEST');
     // print_r( $_REQUEST );
+    // print_r( $ct['page']['etc']['tabs'] );
 
     $seCliente = ( empty( $_REQUEST['anagrafica']['se_cliente'] ) )                 ? false : true;
     $seLead = ( empty( $_REQUEST['anagrafica']['se_lead'] ) )                       ? false : true;

@@ -7,7 +7,7 @@
 <script>
     function eliminaOrari( t ) {
         $('#btneliminaorari').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
-	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_orari.contratto.delete.php?id={{ request[table].id }}';
+	 	var call = '{{ site.url }}_mod/_0600.contratti/_src/_api/_task/_orari.contratto.delete.php?id={{ request[table].id }}';
         getws( call,'', function() {
 			$('#elimina-orari').modal('toggle');
 		});

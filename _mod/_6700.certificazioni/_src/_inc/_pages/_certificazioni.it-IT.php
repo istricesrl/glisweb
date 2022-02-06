@@ -14,8 +14,10 @@
 	    'parent'		=> array( 'id'		=> 'archivio' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_certificazioni.view.php' ),
-	    'etc'		=> array( 'tabs'	=> array( 'certificazioni.view', 'anagrafica.certificazioni.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(
+											'certificazioni.view',
+											'anagrafica.certificazioni.view' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'certificazioni' ),
 									'priority'	=> '210' ) ) )						
 	);
@@ -28,13 +30,13 @@
 	    'parent'		=> array( 'id'		=> 'certificazioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'certificazioni.form.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_certificazioni.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array( 
 											'certificazioni.form',
 #											'certificazioni.form.anagrafica',
 #											'certificazioni.form.progetti',
 											'certificazioni.form.tools'
-											) ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
+											) )
 	);
 
 	// gestione certificazioni tools

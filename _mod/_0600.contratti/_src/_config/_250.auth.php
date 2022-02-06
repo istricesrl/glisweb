@@ -22,10 +22,10 @@
         'contratti' => array(
             CONTROL_FULL => array( 'roots' )
         ),
-        'contratti_archiviati' => array(
+        'contratti_attivi' => array(
             CONTROL_FULL => array( 'roots' )
         ),
-        'contratti_completa' => array(
+        'contratti_archiviati' => array(
             CONTROL_FULL => array( 'roots' )
         ),
         'costi_contratti' => array(

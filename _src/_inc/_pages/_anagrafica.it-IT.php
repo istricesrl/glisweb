@@ -75,9 +75,9 @@
 //															'anagrafica.form.certificazioni',
 															'anagrafica.form.amministrazione',
 //															'anagrafica.form.collaboratori',
-															'anagrafica.form.cliente',
 // questa scheda va attivata se è attivo il modulo contratti
 //															'anagrafica.form.contratti',
+															'anagrafica.form.cliente',
 															'anagrafica.form.fornitore',
 															'anagrafica.form.collaboratore',
 //															'anagrafica.form.struttura',
@@ -96,6 +96,11 @@
 	// RELAZIONI CON IL MODULO CERTIFICAZIONI
 	if( in_array( "6700.certificazioni", $cf['mods']['active']['array'] ) ) {
 		arrayInsertSeq( 'anagrafica.form.relazioni', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.certificazioni' );
+	}
+
+	// RELAZIONI CON IL MODULO TESSERAMENTI
+	if( in_array( "6200.tesseramenti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.tesseramenti' );
 	}
 
     // gestione anagrafica informazioni

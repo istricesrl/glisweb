@@ -9,7 +9,7 @@
         $('#btneliminaturno').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var form = $( t ).closest('.modal');
         var t = form.find('#t').val();
-	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_orari.turno.delete.php?id={{ request[table].id }}&t='+t;
+	 	var call = '{{ site.url }}_mod/_0600.contratti/_src/_api/_task/_orari.turno.delete.php?id={{ request[table].id }}&t='+t;
         getws( call,'', function() {
 			$('#elimina-turno').modal('toggle');
 		});

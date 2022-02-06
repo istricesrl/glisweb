@@ -80,6 +80,11 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     padding: 5px 15px;
 }
 
+.view-table.small-padding th.table-header-static,
+.view-table.small-padding td {
+    padding: 5px;
+}
+
 .view-table td i.fa {
     font-size: 1.5em;
     padding: 0px 5px;

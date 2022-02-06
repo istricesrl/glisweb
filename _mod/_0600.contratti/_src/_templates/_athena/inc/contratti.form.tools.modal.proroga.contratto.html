@@ -13,7 +13,7 @@
 		var id_tipologia = form.find('#_id_tipologia').val();
 		var testo = form.find('#_testo').val();
 
-		var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_contratti.proroga.php?id={{ request[table].id }}&data='+data+'&id_tipologia='+id_tipologia+'&testo='+testo;
+		var call = '{{ site.url }}_mod/_0600.contratti/_src/_api/_task/_contratti.proroga.php?id={{ request[table].id }}&data='+data+'&id_tipologia='+id_tipologia+'&testo='+testo;
 		getws( call,'', function(data) {
 			$('#proroga').modal('toggle');
 		});

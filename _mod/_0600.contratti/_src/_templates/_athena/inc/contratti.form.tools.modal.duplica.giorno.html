@@ -12,7 +12,7 @@
         var gb = form.find('#gb').val();
         var gn = form.find('#gn').val();
 
-	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_orari.giorno.duplicate.php?id={{ request[table].id }}&t='+turno+'&gb='+gb+'&gn='+gn;
+	 	var call = '{{ site.url }}_mod/_0600.contratti/_src/_api/_task/_orari.giorno.duplicate.php?id={{ request[table].id }}&t='+turno+'&gb='+gb+'&gn='+gn;
         getws( call,'', function() {
 			$('#duplica-giorno').modal('toggle');
 		});

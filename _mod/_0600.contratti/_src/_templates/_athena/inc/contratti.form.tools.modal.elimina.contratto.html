@@ -8,7 +8,7 @@
     function eliminaContratto( ) {
 		$('#btneliminacontratto').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 		
-	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_contratti.delete.php?id={{ request[table].id }}';
+	 	var call = '{{ site.url }}_mod/_0600.contratti/_src/_api/_task/_contratti.delete.php?id={{ request[table].id }}';
 
 		getws( call,'', function() {
 			window.open('{{ pages['contratti.view'].path[ localization.language.ietf ] }}', '_self');
