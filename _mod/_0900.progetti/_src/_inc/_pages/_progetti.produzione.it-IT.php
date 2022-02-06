@@ -69,6 +69,11 @@
 															'progetti.produzione.form.tools' ) )
 		);
 
+		// RELAZIONI CON IL MODULO MATRICOLE
+		if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.matricole' );
+		}
+
 		// RELAZIONI CON IL MODULO ATTIVITA
 		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.attivita' );

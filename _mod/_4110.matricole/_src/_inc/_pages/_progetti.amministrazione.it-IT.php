@@ -13,7 +13,7 @@
 		$p['progetti.amministrazione.form.matricole'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'matricole' ),
-			'h1'			=> array( $l		=> 'to-do' ),
+			'h1'			=> array( $l		=> 'matricole' ),
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.amministrazione.form.matricole.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.amministrazione.form.matricole.php' ),

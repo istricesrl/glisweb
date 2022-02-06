@@ -63,6 +63,11 @@
 															'progetti.amministrazione.form.tools' ) )
 		);
 
+		// RELAZIONI CON IL MODULO MATRICOLE
+		if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'progetti.amministrazione.form', $p['progetti.amministrazione.form']['etc']['tabs'], 'progetti.amministrazione.form.matricole' );
+		}
+
 		// RELAZIONI CON IL MODULO ATTIVITA
 		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 			arrayInsertSeq( 'progetti.amministrazione.form', $p['progetti.amministrazione.form']['etc']['tabs'], 'progetti.amministrazione.form.attivita' );
