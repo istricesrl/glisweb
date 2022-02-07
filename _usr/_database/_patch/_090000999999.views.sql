@@ -594,6 +594,16 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		attivita.ore,
 		attivita.nome,
+		attivita.id_documento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			documenti.sezionale,
+			' del ',
+			documenti.data
+		) AS documento,
 		attivita.id_progetto,
 		progetti.nome AS progetto,
 		attivita.id_todo,
@@ -602,6 +612,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		m1.nome AS mastro_provenienza,
 		attivita.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+		attivita.codice_archivium,
 		attivita.token,
 		attivita.id_account_inserimento,
 		attivita.id_account_aggiornamento,
@@ -624,6 +635,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo
 		LEFT JOIN mastri AS m1 ON m1.id = attivita.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
+		LEFT JOIN documenti ON documenti.id = attivita.id_documento
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 ;
 
 --| 090000002100
@@ -2120,6 +2133,45 @@ CREATE OR REPLACE VIEW lingue_view AS
 	FROM lingue
 ;
 
+--| 090000017001
+
+-- liste_view
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `liste_view`;
+
+--| 090000017001
+
+-- liste_view
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE OR REPLACE VIEW `liste_view` AS
+	SELECT
+	liste.id,
+	liste.nome,
+	liste.nome AS __label__
+	FROM liste
+;
+
+--| 090000017100
+
+-- liste_mail
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `liste_mail_view`;
+
+--| 090000017101
+
+-- liste_mail
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE OR REPLACE VIEW `liste_mail_view` AS
+	SELECT
+	liste_mail.id,
+	liste_mail.id_lista,
+	liste_mail.id_mail,
+	concat( liste_mail.id_lista, liste_mail.id_mail ) AS __label__
+	FROM liste_mail
+;
+
 --| 090000017200
 
 -- listini_view
@@ -2406,6 +2458,66 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 			mail_sent.oggetto
 		) AS __label__
 	FROM mail_sent
+;
+
+--| 090000019000
+
+-- mailing
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `mailing_view`;
+
+--| 090000019001
+
+-- mailing
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE OR REPLACE VIEW `mailing_view` AS
+	SELECT
+	mailing.id,
+	mailing.nome,
+	mailing.nome AS __label__
+	FROM mailing
+;
+
+--| 090000019050
+
+-- mailing_liste_view
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `mailing_liste_view`;
+
+--| 090000019051
+
+-- mailing_liste_view
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE OR REPLACE VIEW `mailing_liste_view` AS
+	SELECT
+	mailing_liste.id,
+	mailing_liste.id_lista,
+	mailing_liste.id_mailing,
+	concat( mailing_liste.id_lista, mailing_liste.id_mailing ) AS __label__
+	FROM mailing_liste
+;
+
+--| 090000019100
+
+-- mailing_mail
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `mmailing_mail_view`;
+
+--| 090000019101
+
+-- mailing_mail
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE OR REPLACE VIEW `mailing_mail_view` AS
+	SELECT
+	mailing_mail.id,
+	mailing_mail.id_mailing,
+	mailing_mail.id_mail,
+	mailing_mail.id_mail_out,
+	concat(mailing_mail.id_mailing  , " | ", mailing_mail.id_mail , " | ", mailing_mail.id_mail_out) AS __label__
+	FROM mailing_mail
 ;
 
 --| 090000020200

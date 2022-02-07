@@ -274,6 +274,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_todo` (`id_todo`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `codice_archivium` (`codice_archivium`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`),
@@ -1111,6 +1112,41 @@ ALTER TABLE `lingue`
 -- tipologia: tabella di supporto
 ALTER TABLE `lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000017000
+
+-- liste
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `liste`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`nome`);
+	
+--| 030000017001
+
+-- liste
+-- tipolgia: tabella gestita
+ALTER TABLE `liste` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000017100
+
+-- liste_mail
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `liste_mail`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_lista` (`id_lista`),
+	ADD KEY `id_mail` (`id_mail`),
+	ADD UNIQUE KEY `unica` (`id_lista`,`id_mail`);
+	
+--| 030000017101
+
+-- liste_mail
+-- tipolgia: tabella gestita
+ALTER TABLE `liste_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000017200
 
 -- listini
@@ -1263,6 +1299,59 @@ ALTER TABLE `mail_sent`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
 	ADD KEY `indice` (`id`,`id_mail`,`id_mailing`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
+
+--| 030000019000
+
+-- mailing
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `mailing`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`nome`);
+
+--| 0300000190001
+
+-- mailing
+-- tipolgia: tabella gestita
+ALTER TABLE `mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000019050
+
+-- mailing_liste
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `mailing_liste`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `id_lista` (`id_lista`),
+	ADD UNIQUE KEY `unica` (`id_lista`,`id_mailing`);
+	
+--| 030000019051
+
+-- mailing_liste
+-- tipolgia: tabella gestita
+ALTER TABLE `mailing_liste` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000019100
+
+-- mailing_mail
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `mailing_mail`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `id_mail`(`id_mail`),
+	ADD KEY `id_mail_out` (`id_mail_out`),
+	ADD KEY `indice` (`id`,`id_mailing`, `id_mail`, `id_mail_out` );
+
+--| 030000019101
+
+-- mailing_mail
+-- tipolgia: tabella gestita	
+ALTER TABLE `mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
 
 --| 030000020200
 
