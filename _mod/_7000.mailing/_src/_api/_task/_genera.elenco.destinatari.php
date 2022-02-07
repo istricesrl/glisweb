@@ -5,3 +5,33 @@
      * 
      * 
      */
+
+    // inclusione del framework
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    require '../../../../../_src/_config.php';
+	}
+
+    // inizializzo l'array del risultato
+	$status = array();
+
+    // nome file di default
+    if( isset( $_REQUEST['idMailing'] ) ) { 
+
+        $status['inserimento'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'REPLACE INTO mailing_mail ( id_mailing, id_mail ) '.
+            'SELECT mailing_liste.id_mailing, liste_mail.id_mail '.
+            'FROM liste_mail '.
+            'INNER JOIN mailing_liste ON mailing_liste.id_lista = liste_mail.id_lista '.
+            'WHERE mailing_liste.id_mailing = ?',
+            array(
+                array( 's' => $_REQUEST['idMailing'] )
+            )
+        );
+
+    }
+
+    // output
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    buildJson( $status );
+	}

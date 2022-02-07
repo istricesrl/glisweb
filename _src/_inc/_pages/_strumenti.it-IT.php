@@ -140,7 +140,8 @@
 												'template.mail.form.testo',
 												'template.mail.form.file' ) ),
 	);
-    // form template mail testo
+
+	// form template mail testo
 	$p['template.mail.form.testo'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'testo' ),
@@ -164,7 +165,6 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
-
 
 	// vista job
 	$p['job.view'] = array(

@@ -39,7 +39,7 @@
 	$p['mailing.tools'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'azioni' ),
+	    'title'		=> array( $l		=> 'azioni invii' ),
 	    'h1'		=> array( $l		=> 'azioni' ),
 	    'parent'		=> array( 'id'		=> 'mailing' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
@@ -66,6 +66,31 @@
 												) )
 	);
 
+	// form template mail testo
+	$p['mailing.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'mailing.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mailing.form.testo.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_mailing.form.testo.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mailing.form']['etc']['tabs'] )
+	);
+
+	// gestione template file
+	$p['mailing.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'mailing.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mailing.form.file.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_mailing.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mailing.form']['etc']['tabs'] )
+	);
+
     // vista liste
 	$p['liste.view'] = array(
 	    'sitemap'		=> false,
@@ -85,7 +110,7 @@
 	$p['liste.tools'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'azioni' ),
+	    'title'		=> array( $l		=> 'azioni liste' ),
 	    'h1'		=> array( $l		=> 'azioni' ),
 	    'parent'		=> array( 'id'		=> 'mailing' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),

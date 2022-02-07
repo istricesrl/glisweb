@@ -6,25 +6,25 @@
     if( ! defined( 'CRON_RUNNING' ) && ! defined( 'JOB_RUNNING' ) ) {
 
         // status
-        $status['error'][] = 'questo job non supporta la modalità standalone';
+        $job['workspace']['status']['error'][] = 'questo job non supporta la modalità standalone';
 
         // output
-        buildJson( $status );
+        buildJson( $job['workspace']['status'] );
 
     } elseif( empty( $job['id'] ) ) {
 
         // status
-        $status['error'][] = 'ID job non trovato';
+        $job['workspace']['status']['error'][] = 'ID job non trovato';
 
     } elseif( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
 
         // status
-        $status['info'][] = 'iterazione a vuoto su job completato';
+        $job['workspace']['status']['info'][] = 'iterazione a vuoto su job completato';
 
     } elseif( ! isset( $job['workspace']['data'] ) || empty( $job['workspace']['data'] ) ) {
 
         // status
-        $status['error'][] = 'questo job richiede una data su cui lavorare';
+        $job['workspace']['status']['error'][] = 'questo job richiede una data su cui lavorare';
 
     } else {
 
@@ -82,8 +82,8 @@
                 $cf['mysql']['connection'],
                 'UPDATE job SET timestamp_completamento = ? WHERE id = ?',
                 array(
-                array( 's' => time() ),
-                array( 's' => $job['id'] )
+                    array( 's' => time() ),
+                    array( 's' => $job['id'] )
                 )
             );
 
@@ -93,10 +93,10 @@
             $widx = $job['corrente'] - 1;
 
             // importo la fattura
-            $status['info'][] = archiviumRegistraFePassiva( $arr[ $widx ]['IDArchiviumAzienda'], $arr[ $widx ]['IDArchivium'] );
+            $job['workspace']['status']['info'][] = archiviumRegistraFePassiva( $arr[ $widx ]['IDArchiviumAzienda'], $arr[ $widx ]['IDArchivium'] );
 
             // CUSTOM status
-            $status['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
+            $job['workspace']['status']['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
 
             // aggiorno i valori di visualizzazione avanzamento
             $jobs = mysqlQuery(

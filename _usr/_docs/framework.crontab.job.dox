@@ -55,13 +55,13 @@
             require '../../../_src/_config.php';
 
             // inizializzo l'array del risultato
-            $status = array();
+            $job['workspace']['status'] = array();
 
             // status
-            $status['info'][] = 'inizio operazioni job standalone di test';
+            $job['workspace']['status']['info'][] = 'inizio operazioni job standalone di test';
 
             // chiave di lock
-            $status['token'] = getToken( __FILE__ );
+            $job['workspace']['token'] = getToken( __FILE__ );
 
             /**
              * LOCK DEL JOB
@@ -78,7 +78,7 @@
                     'UPDATE job SET token = ? WHERE id = ? AND '.
                     'timestamp_apertura <= ? OR timestamp_apertura IS NULL AND timestamp_completamento IS NULL AND token IS NULL ',
                     array(
-                        array( 's' => $status['token'] ),
+                        array( 's' => $job['workspace']['token'] ),
                         array( 's' => $_REQUEST['id'] ),
                         array( 's' => time() )
                     )
@@ -89,7 +89,7 @@
                     $cf['mysql']['connection'],
                     'SELECT * FROM job WHERE token = ? ',
                     array(
-                        array( 's' => $status['token'] )
+                        array( 's' => $job['workspace']['token'] )
                     )
                 );
 
@@ -117,22 +117,22 @@
         if( empty( $job['id'] ) ) {
 
             // CUSTOM status
-            $status['error'][] = 'ID job non trovato';
+            $job['workspace']['status']['error'][] = 'ID job non trovato';
 
         } elseif( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
 
             // CUSTOM status
-            $status['info'][] = 'iterazione a vuoto su job completato';
+            $job['workspace']['status']['info'][] = 'iterazione a vuoto su job completato';
 
         } elseif( empty( $job['workspace']['file'] ) ) {
 
             // CUSTOM status
-            $status['error'][] = 'questo job richiede un file su cui lavorare';
+            $job['workspace']['status']['error'][] = 'questo job richiede un file su cui lavorare';
 
         } elseif( empty( $job['workspace']['function'] ) ) {
 
             // CUSTOM status
-            $status['error'][] = 'questo job richiede una funzione da eseguire';
+            $job['workspace']['status']['error'][] = 'questo job richiede una funzione da eseguire';
 
         } else {
 
@@ -270,7 +270,7 @@
                 */
 
                 // CUSTOM status
-                $status['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
+                $job['workspace']['status']['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
 
                 /**
                 * AGGIORNAMENTO STATUS DEL JOB
@@ -358,30 +358,30 @@
         if( ! defined( 'CRON_RUNNING' ) && ! defined( 'JOB_RUNNING' ) ) {
 
             // CUSTOM status
-            $status['error'][] = 'questo job non supporta la modalità standalone';
+            $job['workspace']['status']['error'][] = 'questo job non supporta la modalità standalone';
 
             // output
-            buildJson( $status );
+            buildJson( $job['workspace']['status'] );
 
         } elseif( empty( $job['id'] ) ) {
 
             // CUSTOM status
-            $status['error'][] = 'ID job non trovato';
+            $job['workspace']['status']['error'][] = 'ID job non trovato';
 
         } elseif( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
 
             // CUSTOM status
-            $status['info'][] = 'iterazione a vuoto su job completato';
+            $job['workspace']['status']['info'][] = 'iterazione a vuoto su job completato';
 
         } elseif( empty( $job['workspace']['file'] ) ) {
 
             // CUSTOM status
-            $status['error'][] = 'questo job richiede un file su cui lavorare';
+            $job['workspace']['status']['error'][] = 'questo job richiede un file su cui lavorare';
 
         } elseif( empty( $job['workspace']['function'] ) ) {
 
             // CUSTOM status
-            $status['error'][] = 'questo job richiede una funzione da eseguire';
+            $job['workspace']['status']['error'][] = 'questo job richiede una funzione da eseguire';
 
         } else {
 

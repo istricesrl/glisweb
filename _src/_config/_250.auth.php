@@ -118,10 +118,9 @@
 	    'comuni' => array(
 		CONTROL_FULL => array( 'roots' )
 		),
-#	    'contenuti' => array(
-#		CONTROL_FULL => array( 'roots' ),
-#		CONTROL_FILTERED => array( 'staff' )
-#		),
+	    'contenuti' => array(
+			CONTROL_FULL => array( 'roots' ),
+		),
 #	    'cron' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
@@ -206,9 +205,9 @@
 	    'telefoni' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),
-#	    'template' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'template' => array(
+			CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'test' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
