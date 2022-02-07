@@ -35,7 +35,7 @@
 #			    $cf['mail']['tpl']['DEFAULT_REGISTRAZIONE_ACCOUNT'],
 #			    $cf['mail']['tpl']['NUOVO_ACCOUNT'],
 			    $cf['mail']['tpl']['DEFAULT_NUOVO_ACCOUNT'],
-			    array( 'dati' => array_replace_recursive( $_REQUEST['__signup__'], array( 'tk' => $tk ) ), 'ct' => $ct ),
+			    array( 'dt' => array_replace_recursive( $_REQUEST['__signup__'], array( 'tk' => $tk ) ), 'ct' => $ct ),
 			    strtotime( '+1 minutes' ),
 			    array( $_REQUEST['__signup__']['nome'] . ' ' . $_REQUEST['__signup__']['cognome'] => $_REQUEST['__signup__']['email'] ),
 			    $cf['localization']['language']['ietf']

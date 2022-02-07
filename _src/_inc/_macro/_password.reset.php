@@ -30,7 +30,7 @@
 			$invio = queueMailFromTemplate(
 			    $cf['mysql']['connection'],
 			    $cf['mail']['tpl'][ 'DEFAULT_REIMPOSTAZIONE_PASSWORD'],
-			    array( 'dati' => array( 'tk' => $tk ), 'ct' => $ct ),
+			    array( 'dt' => array( 'tk' => $tk ), 'ct' => $ct ),
 			    strtotime( '+1 minutes' ),
 			    array( $_REQUEST['__pwreset__']['email'] => $_REQUEST['__pwreset__']['email'] ),
 			    $cf['localization']['language']['ietf']
