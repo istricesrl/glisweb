@@ -30,6 +30,8 @@
         // verifico che il documento richiesto sia valido
         if( ! empty( $status['current']['id'] ) ) {
 
+            $default['numero'] =(int)mysqlSelectValue( $cf['mysql']['connection'], 'SELECT MAX(numero ) AS numero FROM documenti WHERE id_tipologia = 1 AND YEAR(data) = ? ',
+                                                        array(  array('s' => date('Y') ) ) ) +1;
             // status
             $status['info'][] = 'procedo con la duplicazione';
             $status['new'] = array();
@@ -52,7 +54,8 @@
                             'pagamenti' => array()
                         ),
                         'f' => array(
-                            'id_tipologia' => 1
+                            'id_tipologia' => 1,
+                            'numero' => $default['numero']
                         )
                     )
                 )

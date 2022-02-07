@@ -632,10 +632,12 @@
     attivita.nome                                       | descrizione sintetica dell'attività
     attivita.note                                       | descrizione estesa dell'attività
     attivita.note_cliente                               | descrizione estesa dell'attività per il cliente
+    attivita.id_documento                               | l'ID del documento a cui è riferita l'attività
     attivita.id_progetto                                | l'ID del progetto cui è riferita l'attività
     attivita.id_todo                                    | l'ID della todo cui si riferisce l'attività
     attivita.id_mastro_provenienza                      | mastro dal quale viene sottratto il valore del campo ore
     attivita.id_mastro_destinazione                     | mastro al quale viene aggiunto il valore del campo ore
+    attivita.codice_archivium                           | il codice_archivium associato all'attivita
     attivita.token                                      | token per il lock software della riga nelle elaborazioni automatiche
     attivita.timestamp_calcolo_sostituti                | la timestamp del momento in cui la riga di attività è stata analizzata per il calcolo dei sostituti
     attivita.id_account_inserimento                     | l'ID dell'account che ha inserito la riga
@@ -653,10 +655,11 @@
     attivita_ibfk_04_nofollow       | id_luogo                      | luoghi.id                     | ON DELETE SET NULL ON UPDATE SET NULL
     attivita_ibfk_05_nofollow       | id_anagrafica_programmazione  | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
     attivita_ibfk_06_nofollow       | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
-    attivita_ibfk_07_nofollow       | id_progetto                   | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_08_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_09_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    attivita_ibfk_10_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_07_nofollow       | id_documento                  | documenti.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_08_nofollow       | id_progetto                   | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_09_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_10_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_11_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     attivita_ibfk_98_nofollow       | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     attivita_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -696,6 +699,8 @@
     attivita_view.anagrafica                        | l'anagrafica che esegue l'attività
     attivita_view.ore                               | -
     attivita_view.nome                              | -
+    attivita_view.id_documento                      | -
+    attivita_view.documento                         | il nome del documento associato all'attività
     attivita_view.id_progetto                       | -
     attivita_view.progetto                          | il nome del progetto associato all'attività
     attivita_view.id_todo                           | -

@@ -516,6 +516,25 @@ ALTER TABLE `licenze_software`
     ADD CONSTRAINT `licenze_software_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `licenze_software_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+--| 060000017000
+
+-- liste
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `liste`
+    ADD CONSTRAINT `liste_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `liste_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 060000017100
+
+-- liste_mail
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `liste_mail`
+ADD CONSTRAINT `liste_mail_ibfk_01_nofollow` FOREIGN KEY (`id_lista`) REFERENCES `liste` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `liste_mail_ibfk_02_nofollow` FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+
 --| 060000017200
 
 -- listini
@@ -594,6 +613,34 @@ ALTER TABLE `mail_sent`
     ADD CONSTRAINT `mail_sent_ibfk_01_nofollow`     FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `mail_sent_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mail_sent_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 060000019000
+
+-- mailing
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `mailing`
+    ADD CONSTRAINT `mailing_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `mailing_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 060000019050
+
+-- mailing_liste
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `mailing_liste`
+ADD CONSTRAINT `mailing_liste_ibfk_02_nofollow` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `mailing_liste_ibfk_01_nofollow` FOREIGN KEY (`id_lista`) REFERENCES `liste` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 060000019100
+
+-- mailing_mail
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL	
+ALTER TABLE `mailing_mail`
+    ADD CONSTRAINT `mailing_mail_ibfk_01_nofollow`     FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `mailing_mail_ibfk_02_nofollow`     FOREIGN KEY (`id_mail`) REFERENCES `mail` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `mailing_mail_ibfk_03_nofollow`     FOREIGN KEY (`id_mail_out`) REFERENCES `mail_out` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --| 060000020200
 

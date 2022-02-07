@@ -301,6 +301,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `nome` char(255) DEFAULT NULL,
   `note` text,
   `note_cliente` text,
+  `id_documento` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
@@ -1055,6 +1056,32 @@ CREATE TABLE IF NOT EXISTS `lingue` (
   `ietf` char(36) COLLATE utf8_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000017000
+
+-- liste
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE TABLE `liste` (
+  `id` int(11) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000017100
+
+-- liste_mail
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE TABLE `liste_mail` (
+  `id` int(11) NOT NULL,
+  `id_lista` int(11) NOT NULL,
+  `id_mail` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000017200
 
 -- listini
@@ -1208,6 +1235,47 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000019000
+
+-- mailing
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ CREATE TABLE `mailing` (
+  `id` int(11) NOT NULL,
+  `nome` char(255) NOT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000019050
+
+-- mailing_liste
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE TABLE `mailing_liste` (
+  `id` int(11) NOT NULL,
+  `id_mailing` int(11) NOT NULL,
+  `id_lista` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000019100
+
+-- mailing_mail
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE TABLE `mailing_mail` (
+  `id` int(11) NOT NULL,
+  `id_mailing` int(11) NOT NULL,
+  `id_mail` int(11) NOT NULL,
+  `id_mail_out` int(11) DEFAULT NULL,
+  `timestamp_generazione` int(11) DEFAULT NULL,
+  `timestamp_invio` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000020200
