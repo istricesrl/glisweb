@@ -1248,7 +1248,7 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
 -- mailing
 -- tipolgia: tabella gestita
 -- verifica: 2022-02-07 15:47 Chiara GDL
- CREATE TABLE `mailing` (
+ CREATE TABLE IF NOT EXISTS `mailing` (
   `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,

@@ -114,4 +114,16 @@ DROP FOREIGN KEY `mailing_mail_ibfk_03_nofollow`;
 ALTER TABLE `mailing_mail`
 ADD CONSTRAINT `mailing_mail_ibfk_03_nofollow`  FOREIGN KEY (`id_mail_out`) REFERENCES `mail_out` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+--| 202202080150
+CREATE OR REPLACE VIEW `mailing_view` AS
+	SELECT
+	mailing.id,
+	mailing.nome,
+	mailing.timestamp_invio,
+	mailing.id_account_inserimento,
+	mailing.id_account_aggiornamento,
+	mailing.nome AS __label__
+	FROM mailing
+;
+
 --| FINE

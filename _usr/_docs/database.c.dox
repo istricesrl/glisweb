@@ -591,6 +591,7 @@
     contenuti.id_notizia                    | l'ID della notizia cui si riferisce la riga (NULL se non presente)
     contenuti.id_categoria_notizie          | l'ID della categoria di notizie cui si riferisce la riga (NULL se non presente)
     contenuti.id_template                   | l'ID del template cui si riferisce la riga (NULL se non presente)
+    contenuti.id_mailing                    | l'ID del miling cui si riferisce la riga (NULL se non presente)
     contenuti.id_colore                     | l'ID del colore cui si riferisce la riga (NULL se non presente)
     contenuti.path_custom                   | alias non canonico della pagina (deve iniziare con slash)
     contenuti.url_custom                    | URL custom a cui far puntare la voce di menù (per i link interni deve iniziare con slash)
@@ -653,7 +654,8 @@
     contenuti_ibfk_17                           | id_notizia                    | notizie.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_18                           | id_categoria_notizie          | categorie_notizie.id              | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_19                           | id_template                   | template.id                       | ON DELETE SET NULL ON UPDATE SET NULL
-    contenuti_ibfk_20                           | id_colore                     | colori.id                         | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_20                           | id_mailing                    | mailing.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_21                           | id_colore                     | colori.id                         | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_98_nofollow                  | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_99_nofollow                  | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -681,6 +683,7 @@
     contenuti_view.id_notizia                   | -
     contenuti_view.id_categoria_notizie         | -
     contenuti_view.id_template                  | -
+    contenuti_view.id_mailing                   | -
     contenuti_view.id_colore                    | -
     contenuti_view.h1                           | -
     contenuti_view.id_account_inserimento       | -

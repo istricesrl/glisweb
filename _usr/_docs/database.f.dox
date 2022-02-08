@@ -23,6 +23,7 @@
     file.id_todo                    | l'ID della todo cui si riferisce al file
     file.id_pagina                  | l'ID della pagina cui si riferisce al file
     file.id_template                | l'ID del template mail cui si riferisce al file
+    file.id_mailing                 | l'ID della mailing cui si riferisce al file
     file.id_notizia                 | l'ID della notizia cui si riferisce al file
     file.id_categoria_notizie       | l'ID della categoria di notizie cui si riferisce al file
     file.id_risorsa                 | l'ID della risorsa cui si riferisce al file
@@ -49,11 +50,12 @@
     file_ibfk_05                    | id_categoria_prodotti         | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_06                    | id_todo                       | todo.id                       | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_07                    | id_pagina                     | pagine.id                     | ON DELETE SET NULL ON UPDATE SET NULL
-    file_ibfk_08                    | id_template                   | template.id              | ON DELETE SET NULL ON UPDATE SET NULL
-    file_ibfk_09                    | id_notizia                    | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
-    file_ibfk_10                    | id_categoria_notizie          | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
-    file_ibfk_11                    | id_risorsa                    | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
-    file_ibfk_12                    | id_categoria_risorse          | categorie_risorse.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_08                    | id_template                   | template.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_09                    | id_mailing                    | mailing.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_10                    | id_notizia                    | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_11                    | id_categoria_notizie          | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_12                    | id_risorsa                    | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_13                    | id_categoria_risorse          | categorie_risorse.id          | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_13_nofollow           | id_lingua                     | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     file_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
@@ -73,6 +75,7 @@
     file_view.id_todo                   | -
     file_view.id_pagina                 | -
     file_view.id_template               | -
+    file_view.id_mailing               | -
     file_view.id_notizia                | -
     file_view.id_categoria_notizie      | -
     file_view.id_risorsa                | -

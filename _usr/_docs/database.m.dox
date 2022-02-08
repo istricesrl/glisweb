@@ -243,6 +243,39 @@
     mail_sent_view.id_account_aggiornamento | -
     mail_sent_view.__label__                | etichetta descrittiva della mail
 
+    mailing
+    ----
+    Questa tabella *gestita* contiene i mailing
+
+    colonna                             | descrizione
+    ------------------------------------|-----------------------------------------------------------------------------------
+    mailing.id                          | l'ID della mailing
+    mailing.nome              	        | il nome della mailing
+    mailing.note                        | note relative alla mailing
+    mailing.timestamp_invio             | il timestamp di invio
+    mailing.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    mailing.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    mailing.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    mailing.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                      | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------|-------------------------------|-------------------------------|----------------------
+    mailing_ibfk_98_nofollow    | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    mailing_ibfk_99_nofollow    | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *mailing_view* relativa alla tabella *mailing* presenta le seguenti colonne:
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    mailing_view.id                         | -
+    mailing_view.nome                       | -
+    mailing_view.timestamp_invio            | -             
+    mailing_view.id_account_inserimento     | -
+    mailing_view.id_account_aggiornamento   | -
+    mailing_view.__label__                  | l'etichetta descrittiva della mailing
+
     marchi
     ------
     Questa tabella *gestita* contiene i marchi gestiti dal framework.

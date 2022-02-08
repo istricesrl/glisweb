@@ -2475,6 +2475,9 @@ CREATE OR REPLACE VIEW `mailing_view` AS
 	SELECT
 	mailing.id,
 	mailing.nome,
+	mailing.timestamp_invio,
+	mailing.id_account_inserimento,
+	mailing.id_account_aggiornamento,
 	mailing.nome AS __label__
 	FROM mailing
 ;

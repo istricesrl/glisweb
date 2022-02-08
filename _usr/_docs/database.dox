@@ -142,12 +142,17 @@
     job                             | 016200    | base          | principale    | contiene i job
     licenze                         | 016600    | base          | principale    | contiene le licenze
     licenze_software                | 016700    | relazione     | secondarie    | mette in relazione licenze e software
+    liste                           | 017000    | base          | principale    | contiene le liste
+    liste_mail                      | 017100    | relazioni     | secondarie    | mette in relazione liste e mail
     listini_clienti                 | 017400    | relazione     | principale    | mette in relazione listini e anagrafica
     luoghi                          | 018000    | ricorsiva     | principale    | contiene i luoghi
     macro                           | 018200    | base          | contenuti     | contiene le macro
     mail                            | 018600    | base          | principale    | contiene gli indirizzi e-mail
     mail_out                        | 018800    | base          | principale    | contiene le mail in uscita
     mail_sent                       | 018900    | base          | principale    | contiene le mail inviate
+    mailing                         | 019000    | base          | principale    | contiene i mailing
+    mailing_mail                    | 019050    | relazione     | secondarie    | mette in relazione mailing e mail
+    mailing_liste                   | 019100    | relazione     | secondarie    | mette in relazione mailing e liste
     marchi                          | 020200    | base          | principale    | contiene i marchi
     mastri                          | 020600    | ricorsiva     | principale    | contiene i mastri
     matricole                       | 021000    | base          | principale    | contiene le matricole
@@ -203,7 +208,7 @@
 
     modulo      | codice    | tabella
     ------------|-----------|----------------------------------------------------------
-    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_certificazioni, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, certificazioni, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, luoghi, mail, mail_out, mail_sent, metadati, periodicita, ranking, regimi, regioni, relazioni_anagrafica, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
+    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_certificazioni, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, certificazioni, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, liste, liste_mail, luoghi, mail, mail_out, mail_sent, mailing, mailing_liste, mailing_mail, metadati, periodicita, ranking, regimi, regioni, relazioni_anagrafica, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
     CONTATTI    | 0300      | contatti, tipologie_contatti
     PRODUZIONE  | 1000      | categorie_progetti, pianificazioni, progetti, progetti_anagrafica, progetti_categorie, relazioni_progetti, ruoli_anagrafica, tipologie_progetti, todo
     ATTIVITA    | 1100      | attivita, matricole, pianificazioni, tipologie_attivita, todo
@@ -267,6 +272,8 @@
     licenze                         | SOFTWARE
     licenze_software                | SOFTWARE
     lingue                          | BASE
+    liste                           | BASE
+    liste_mail                      | BASE
     listini                         | PRODOTTI, DOCUMENTI, CASSE, COUPON
     listini_clienti                 | PRODOTTI, DOCUMENTI, CASSE, COUPON
     luoghi                          | BASE
@@ -274,6 +281,9 @@
     mail                            | BASE
     mail_out                        | BASE
     mail_sent                       | BASE
+    mailing                         | BASE
+    mailing_liste                   | BASE
+    mailing_mail                    | BASE
     marchi                          | PRODOTTI, COUPON
     mastri                          | MAGAZZINI, DOCUMENTI, CASSE
     matricole                       | ATTIVITA, MAGAZZINI, PRODOTTI, DOCUMENTI, CASSE
