@@ -69,7 +69,7 @@
         array( array( 's' => $status['token'] ) )
     );
 
-    // se c'è almeno una geocode da inviare
+    // se c'è almeno un'immagine da scalare'
     if( ! empty( $im ) ) {
 
         // imposto i path
