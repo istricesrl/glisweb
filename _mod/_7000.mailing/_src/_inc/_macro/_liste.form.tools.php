@@ -18,7 +18,7 @@
      */
 
     // tabella della vista
-    $ct['form']['table'] = 'documenti_articoli';
+    $ct['form']['table'] = 'liste';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
