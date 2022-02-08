@@ -618,6 +618,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_template` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
   `id_colore` int(11) DEFAULT NULL,
   `path_custom` char(255) DEFAULT NULL,
   `url_custom` char(255) DEFAULT NULL,
@@ -852,6 +853,7 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_todo` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_template` int(11) DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
@@ -1079,7 +1081,11 @@ CREATE TABLE `liste` (
 CREATE TABLE `liste_mail` (
   `id` int(11) NOT NULL,
   `id_lista` int(11) NOT NULL,
-  `id_mail` int(11) NOT NULL
+  `id_mail` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000017200
@@ -1242,9 +1248,9 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
 -- mailing
 -- tipolgia: tabella gestita
 -- verifica: 2022-02-07 15:47 Chiara GDL
- CREATE TABLE `mailing` (
+ CREATE TABLE IF NOT EXISTS `mailing` (
   `id` int(11) NOT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `timestamp_invio` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1261,7 +1267,11 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
 CREATE TABLE `mailing_liste` (
   `id` int(11) NOT NULL,
   `id_mailing` int(11) NOT NULL,
-  `id_lista` int(11) NOT NULL
+  `id_lista` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000019100
@@ -1274,8 +1284,13 @@ CREATE TABLE `mailing_mail` (
   `id_mailing` int(11) NOT NULL,
   `id_mail` int(11) NOT NULL,
   `id_mail_out` int(11) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
   `timestamp_generazione` int(11) DEFAULT NULL,
-  `timestamp_invio` int(11) DEFAULT NULL
+  `timestamp_invio` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000020200
