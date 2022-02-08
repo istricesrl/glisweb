@@ -230,8 +230,9 @@
 					{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
 				</div>
 			</div>
-			{% if '4100.prodotti' in mods.active.array %}
+			{% if '4100.prodotti' in mods.active.array or '0400.documenti' in mods.active.array %}
 			<div class="form-group form-row">
+				{% if '4100.prodotti' in mods.active.array %}
 				<div class="col-12 col-md">
 					<span class="label-top">matricola</span>
 					{{ frm.selectBox( table, '', '', 'id_matricola', 'matricola', etc.select.matricole, request, '', '','','','','matricole.form','','matricole', 'id_matricola', page, pages, ietf,'matricole' ) }}
@@ -242,7 +243,7 @@
 					{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
 				</div>
 -->
-			{% endif %}
+				{% endif %}
 				{% if '0400.documenti' in mods.active.array %}
 				<div class="col-12 col-md">
 					<span class="label-top">riga</span>
@@ -251,6 +252,7 @@
 				{% endif %}
 				
 			</div>
+			{% endif %}
 			</fieldset>
 
 			{# SUBFORM CATEGORIE #}
