@@ -60,10 +60,10 @@
     // prelevo una riga dalla coda
     $row = mysqlSelectRow(
         $cf['mysql']['connection'],
-        'SELECT mailing.* '.
+        'SELECT mailing.*, '.
 		'mail.indirizzo, concat_ws( \' \', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS destinatario '.
         'FROM mailing_mail '.
-		'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing'.
+		'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing '.
 		'INNER JOIN mail ON mail.id = mailing_mail.id_mail '.
 		'INNER JOIN anagrafica ON anagrafica.id = mail.id_anagrafica '.
         'WHERE token = ? ',
@@ -112,19 +112,19 @@
 			$cf['mysql']['connection'],
 			'SELECT file.*,lingue.ietf FROM file '.
 			'INNER JOIN lingue ON lingue.id = file.id_lingua '.
-			'WHERE file.id_template = ?',
-			array( array( 's' => $tpl['id'] ) )
+			'WHERE file.id_mailing = ?',
+			array( array( 's' => $row['id'] ) )
 		);
 
 		// ciclo sugli allegati
 		foreach( $files as $file ) {
-			$tpl[ $file['ietf'] ]['attach'][ basename( $file['path'] ) ] = DIR_BASE . $file['path'];
+			$tpl[ $file['ietf'] ]['attach'][ basename( $file['path'] ) ] = $file['path'];
 		}
 
 		// invio la mail
 		$invio = queueMailFromTemplate(
 			$cf['mysql']['connection'],
-			$template,
+			$tpl,
 # TODO prelevare i dati dai metadati del mailing                array( 'dt' => array_replace_recursive( $_REQUEST['__profile__'], array( 'tk' => $tk ) ), 'ct' => $ct ),
 			array(),
 			$row['timestamp_invio'],
@@ -163,7 +163,7 @@
         $status['info'][] = 'nessuna mail da generare';
 
         // log
-        logWrite( 'nessuna mail in coda da generare', 'mailer' );
+        logWrite( 'nessuna mail da generare', 'mailer' );
 
     }
 
