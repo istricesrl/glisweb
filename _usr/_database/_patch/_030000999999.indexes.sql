@@ -624,6 +624,7 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
 	ADD KEY `id_template` (`id_template`), 
+	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_colore` (`id_colore`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -864,6 +865,7 @@ ALTER TABLE `file`
 	ADD KEY `id_todo` (`id_todo`), 
 	ADD KEY `id_pagina` (`id_pagina`), 
 	ADD KEY `id_template` (`id_template`), 
+	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
 	ADD KEY `id_risorsa` (`id_risorsa`),
@@ -1139,6 +1141,8 @@ ALTER TABLE `liste_mail`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_lista` (`id_lista`),
 	ADD KEY `id_mail` (`id_mail`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unica` (`id_lista`,`id_mail`);
 	
 --| 030000017101
@@ -1327,6 +1331,8 @@ ALTER TABLE `mailing_liste`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_lista` (`id_lista`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unica` (`id_lista`,`id_mailing`);
 	
 --| 030000019051
@@ -1345,13 +1351,17 @@ ALTER TABLE `mailing_mail`
 	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_mail`(`id_mail`),
 	ADD KEY `id_mail_out` (`id_mail_out`),
-	ADD KEY `indice` (`id`,`id_mailing`, `id_mail`, `id_mail_out` );
+	ADD KEY `token` (`token`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE `unica_mail` (`id_mailing`, `id_mail`)
+	ADD KEY `indice` (`id`,`id_mailing`, `id_mail`, `id_mail_out`, `token` );
 
 --| 030000019101
 
 -- mailing_mail
 -- tipolgia: tabella gestita	
-ALTER TABLE `mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
+ALTER TABLE `mailing_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
 
 --| 030000020200
 

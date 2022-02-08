@@ -2516,6 +2516,7 @@ CREATE OR REPLACE VIEW `mailing_mail_view` AS
 	mailing_mail.id_mailing,
 	mailing_mail.id_mail,
 	mailing_mail.id_mail_out,
+	mailing_mail.token,
 	concat(mailing_mail.id_mailing  , " | ", mailing_mail.id_mail , " | ", mailing_mail.id_mail_out) AS __label__
 	FROM mailing_mail
 ;
