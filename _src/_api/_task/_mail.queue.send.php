@@ -117,8 +117,28 @@
 		// controllo l'esito dell'invio
 		if( $r !== false ) {
 
+			// RELAZIONI CON IL MODULO MAILING
+			if( in_array( "7000.mailing", $cf['mods']['active']['array'] ) ) {
+
+				// aggiorno la riga
+				$ml = mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE mailing_mail '.
+					'SET mailing_mail.timestamp_invio = ? '.
+					'WHERE mailing_mail.id_mail_out = ?',
+					array(
+						array( 's' => time() ),
+						array( 's' => $mail['id'] )
+					)
+				);
+
+				// log
+				logWrite( 'registrato invio della mail #' . $mail['id'] . ' per associazione mailing mail #' . $ml, 'mailing' );
+
+			}
+
 			// log
-			logWrite( 'invio della mail #' . $mail['id'] . ' completato: ' . $r, 'mail', LOG_NOTICE );
+			logWrite( 'invio della mail #' . $mail['id'] . ' completato: ' . $r, 'mail' );
 
 			// sposto la mail nella coda delle inviate
 			$s1 = mysqlQuery(
@@ -130,7 +150,7 @@
 			);
 
 			// log
-			logWrite( 'spostamento della mail #' . $mail['id'] . ' dalla mail_out alla mail_sent completato', 'mail', LOG_NOTICE );
+			logWrite( 'spostamento della mail #' . $mail['id'] . ' dalla mail_out alla mail_sent completato', 'mail' );
 
 			// aggiorno la timestamp di invio
 			$s2 = mysqlQuery(
@@ -143,7 +163,7 @@
 				);
 
 			// log
-			logWrite( 'timestamp di invio della mail #' . $mail['id'] . ' aggiornato', 'mail', LOG_NOTICE );
+			logWrite( 'timestamp di invio della mail #' . $mail['id'] . ' aggiornato', 'mail' );
 
 			// elimino la mail inviata dalla coda delle mail in uscita
 			$s3 = mysqlQuery(
@@ -155,7 +175,7 @@
 			);
 
 			// log
-			logWrite( 'mail #' . $mail['id'] . ' rimossa dalla mail_out', 'mail', LOG_NOTICE );
+			logWrite( 'mail #' . $mail['id'] . ' rimossa dalla mail_out', 'mail' );
 
 		} else {
 

@@ -2154,22 +2154,29 @@ CREATE OR REPLACE VIEW `liste_view` AS
 
 --| 090000017100
 
--- liste_mail
+-- liste_mail_view
 -- tipolgia: tabella gestita
 DROP TABLE IF EXISTS `liste_mail_view`;
 
 --| 090000017101
 
--- liste_mail
+-- liste_mail_view
 -- tipolgia: tabella gestita
 -- verifica: 2022-02-07 15:47 Chiara GDL
 CREATE OR REPLACE VIEW `liste_mail_view` AS
 	SELECT
 	liste_mail.id,
 	liste_mail.id_lista,
+	liste.nome AS lista,
 	liste_mail.id_mail,
+	mail.indirizzo AS mail,
+	mail.id_anagrafica,
+	coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 	concat( liste_mail.id_lista, liste_mail.id_mail ) AS __label__
 	FROM liste_mail
+	INNER JOIN liste ON liste.id = liste_mail.id_lista
+	INNER JOIN mail ON mail.id = liste_mail.id_mail
+	INNER JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
 ;
 
 --| 090000017200
@@ -2504,24 +2511,34 @@ CREATE OR REPLACE VIEW `mailing_liste_view` AS
 
 --| 090000019100
 
--- mailing_mail
+-- mailing_mail_view
 -- tipolgia: tabella gestita
 DROP TABLE IF EXISTS `mmailing_mail_view`;
 
 --| 090000019101
 
--- mailing_mail
+-- mailing_mail_view
 -- tipolgia: tabella gestita
 -- verifica: 2022-02-07 15:47 Chiara GDL
 CREATE OR REPLACE VIEW `mailing_mail_view` AS
 	SELECT
-	mailing_mail.id,
-	mailing_mail.id_mailing,
-	mailing_mail.id_mail,
-	mailing_mail.id_mail_out,
-	mailing_mail.token,
-	concat(mailing_mail.id_mailing  , " | ", mailing_mail.id_mail , " | ", mailing_mail.id_mail_out) AS __label__
+		mailing_mail.id,
+		mailing_mail.id_mailing,
+		mailing.nome AS mailing,
+		mailing_mail.id_mail,
+		mail.indirizzo AS mail,
+		mail.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		mailing_mail.id_mail_out,
+		mailing_mail.timestamp_generazione,
+		from_unixtime( mailing_mail.timestamp_generazione, '%Y-%m-%d' ) AS data_ora_generazione,
+		mailing_mail.timestamp_invio,
+		from_unixtime( mailing_mail.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		concat(mailing_mail.id_mailing  , " | ", mailing_mail.id_mail , " | ", mailing_mail.id_mail_out) AS __label__
 	FROM mailing_mail
+		INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing
+		INNER JOIN mail ON mail.id = mailing_mail.id_mail
+		INNER JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
 ;
 
 --| 090000020200

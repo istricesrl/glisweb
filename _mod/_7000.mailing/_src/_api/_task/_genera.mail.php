@@ -140,7 +140,7 @@
 				$cf['mysql']['connection'],
 				'UPDATE mailing_mail '.
 				'SET mailing_mail.timestamp_generazione = ?, '.
-				'mailing_mail.id_mail_out = ? '.
+				'mailing_mail.id_mail_out = ?, '.
 				'token = NULL '.
 				'WHERE token = ? ',
 				array(

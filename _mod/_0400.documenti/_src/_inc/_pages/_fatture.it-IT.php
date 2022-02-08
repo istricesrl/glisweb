@@ -56,6 +56,11 @@
 															'fatture.amministrazione.form.tools' ) )
 		);
 
+		// RELAZIONI CON IL MODULO ATTIVITA
+		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'fatture.amministrazione.form', $p['fatture.amministrazione.form']['etc']['tabs'], 'fatture.amministrazione.form.attivita' );
+		}
+
 		// gestione righe fatture
 		$p['fatture.amministrazione.form.righe'] = array(
 			'sitemap'		=> false,

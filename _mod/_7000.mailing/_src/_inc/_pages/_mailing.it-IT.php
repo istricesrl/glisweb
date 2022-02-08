@@ -59,14 +59,14 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'mailing.form',
 													'mailing.form.testo',
-													'mailing.form.destinatari',
+													'mailing.form.invio',
 													'mailing.form.file',
 													'mailing.form.metadati',
 													'mailing.form.tools'
 												) )
 	);
 
-	// form template mail testo
+	// form mailing testo
 	$p['mailing.form.testo'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'testo' ),
@@ -78,7 +78,19 @@
 		'etc'		=> array( 'tabs'	=> $p['mailing.form']['etc']['tabs'] )
 	);
 
-	// gestione template file
+	// gestione invio
+	$p['mailing.form.invio'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'invio' ),
+		'h1'		=> array( $l		=> 'invio' ),
+		'parent'		=> array( 'id'		=> 'mailing.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mailing.form.invio.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_mailing.form.invio.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mailing.form']['etc']['tabs'] )
+	);
+
+	// gestione file
 	$p['mailing.form.file'] = array(
 		'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
@@ -89,6 +101,46 @@
 		'macro'		=> array( $m . '_src/_inc/_macro/_mailing.form.file.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mailing.form']['etc']['tabs'] )
+	);
+
+	// gestione file
+	$p['mailing.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'azioni mailing' ),
+		'h1'		=> array( $l		=> 'azioni' ),
+		'parent'		=> array( 'id'		=> 'mailing.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_mailing.form.tools.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mailing.form']['etc']['tabs'] )
+	);
+
+	// form mailing
+	$p['mailing.mail.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione invio' ),
+	    'h1'		=> array( $l		=> 'gestione invio' ),
+	    'parent'		=> array( 'id'		=> 'mailing.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mailing.mail.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mailing.mail.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'mailing.mail.form',
+													'mailing.mail.form.tools'
+												) )
+	);
+
+	// gestione file
+	$p['mailing.mail.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'azioni mail mailing' ),
+		'h1'		=> array( $l		=> 'azioni' ),
+		'parent'		=> array( 'id'		=> 'mailing.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_mailing.mail.form.tools.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mailing.mail.form']['etc']['tabs'] )
 	);
 
     // vista liste
@@ -129,7 +181,46 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_liste.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'liste.form',
+													'liste.form.iscritti',
 													'liste.form.metadati',
 													'liste.form.tools'
+												) )
+	);
+
+	// gestione invio
+	$p['liste.form.iscritti'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'iscritti' ),
+		'h1'		=> array( $l		=> 'iscritti' ),
+	    'parent'		=> array( 'id'		=> 'liste.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'liste.form.iscritti.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_liste.form.iscritti.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['liste.form']['etc']['tabs'] )
+	);
+
+    // tools liste
+	$p['liste.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni gestione liste' ),
+	    'h1'		=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'liste.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_liste.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['liste.form']['etc']['tabs'] )
+    );
+
+    // form liste
+	$p['liste.mail.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione liste mail' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'liste.form' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'liste.mail.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_liste.mail.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'liste.mail.form'
 												) )
 	);
