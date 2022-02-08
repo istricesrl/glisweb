@@ -126,4 +126,26 @@ CREATE OR REPLACE VIEW `mailing_view` AS
 	FROM mailing
 ;
 
+--| 202202080160
+CREATE OR REPLACE VIEW `mailing_mail_view` AS
+	SELECT
+		mailing_mail.id,
+		mailing_mail.id_mailing,
+		mailing.nome AS mailing,
+		mailing_mail.id_mail,
+		mail.indirizzo AS mail,
+		mail.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		mailing_mail.id_mail_out,
+		mailing_mail.timestamp_generazione,
+		from_unixtime( mailing_mail.timestamp_generazione, '%Y-%m-%d' ) AS data_ora_generazione,
+		mailing_mail.timestamp_invio,
+		from_unixtime( mailing_mail.timestamp_invio, '%Y-%m-%d' ) AS data_ora_invio,
+		concat(mailing_mail.id_mailing  , " | ", mailing_mail.id_mail , " | ", mailing_mail.id_mail_out) AS __label__
+	FROM mailing_mail
+		INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing
+		INNER JOIN mail ON mail.id = mailing_mail.id_mail
+		INNER JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
+;
+
 --| FINE
