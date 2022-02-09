@@ -26,7 +26,11 @@
     );
 
     // chiamo la funzione archiviumPostInsertAzienda()
-    $s = archiviumPostInvioFeAttiva( $_REQUEST['idAzienda'], $_REQUEST['idFattura'], $x['file'] );
+    if( ! empty( $x['file'] ) ) {
+        $s = archiviumPostInvioFeAttiva( $_REQUEST['idAzienda'], $_REQUEST['idFattura'], $x['file'] );
+    } else {
+        $t .= '<p>XML fattura vuoto</p>';        
+    }
 
     // output
     $t .= '<pre>' . var_dump( $s ) . '</pre>';

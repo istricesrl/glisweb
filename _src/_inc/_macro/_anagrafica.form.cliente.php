@@ -62,6 +62,15 @@
 	    'SELECT id, __label__ FROM regimi_view'
 	);
 
+	// tendina PEC
+	$ct['etc']['select']['pec'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM mail_view WHERE id_anagrafica = ? AND se_pec = 1',
+        array( array( 's' => $_REQUEST['anagrafica']['id'] ) )
+    );
+    
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 

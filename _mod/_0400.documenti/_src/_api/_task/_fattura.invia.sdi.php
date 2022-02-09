@@ -45,8 +45,12 @@
         // die( '<pre>' . htmlentities( readFromFile( $x['file'], FILE_READ_AS_STRING ) ) . '</pre>' );
 
         // chiamo la funzione archiviumPostInsertAzienda()
-        $status['esito'] = archiviumPostInvioFeAttiva( $idAzienda, $_REQUEST['idFattura'], $x['file'] );
-
+        if( ! empty( $x['file'] ) ) {
+            $status['esito'] = archiviumPostInvioFeAttiva( $idAzienda, $_REQUEST['idFattura'], $x['file'] );
+        } else {
+            $status['err'][] = 'XML fattura vuoto';        
+        }
+    
         // output
         // echo '<pre>' . var_dump( $s ) . '</pre>';
 

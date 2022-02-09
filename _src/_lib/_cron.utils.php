@@ -11,6 +11,22 @@
         return $num;
     }
 
+    function numOfWeeksInYear( $y ) {
+
+        $week_count = date('W', strtotime($y . '-12-31'));
+
+        if ($week_count == '01')
+        {   
+            $week_count = date('W', strtotime($y . '-12-24'));
+        }
+        
+        // echo ($week_count - date('W'));
+        // echo ' weeks left in ' . date('Y') . '!';
+
+        return $week_count;
+
+    }
+
     /**
      * genera attività in base ai parametri
      *
