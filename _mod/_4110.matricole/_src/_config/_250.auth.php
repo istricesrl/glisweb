@@ -21,6 +21,9 @@
 	    array(
             'matricole' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'progetti_matricole' => array(
+                CONTROL_FULL => array( 'roots' )
             )
         )
 	);

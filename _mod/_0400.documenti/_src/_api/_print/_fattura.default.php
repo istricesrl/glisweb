@@ -223,6 +223,12 @@
         dieText('PEC e SDI assenti' );
     }
  */
+
+    // codice SDI di default a '0000000' per i destinatari senza codice SDI
+    if( empty( $dst['codice_sdi'] ) && ! empty( $dst['pec_sdi'] ) ) {
+        $dst['codice_sdi'] = '0000000';
+    }
+
     // denominazione fiscale
     $dst['denominazione_fiscale'] = trim( $dst['nome'] . ' ' . $dst['cognome'] . ' ' . $dst['denominazione'] );
 

@@ -4,7 +4,11 @@
 
 {% macro picture( img, lang, site, set, alt, pictureclass, imgclass ) %}
 {% if img.path %}
+{% if img.path is iterable %}
+{% set path = img.path[ lang ] %}
+{% else %}
 {% set path = img.path %}
+{% endif %}
 {% set path_alternativo = img.path_alternativo %}
 {% set orientamento = img.orientamento %}
 {% set mime = img.mimetype %}
