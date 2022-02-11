@@ -59,7 +59,8 @@
         'id_documento' => 'd-none',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
-        'data_lavorazione' => 'text-left no-wrap', 
+        'data_lavorazione' => 'no-wrap', 
+        'data_ora_pagamento' => 'no-wrap', 
 #        'tipologia' => 'text-left',
 		'id_articolo' => 'text-left'
     );
