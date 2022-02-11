@@ -1904,6 +1904,8 @@ ALTER TABLE `pubblicazioni`
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
 	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `timestamp_inizio` (`timestamp_inizio`), 
 	ADD KEY `timestamp_fine` (`timestamp_fine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),

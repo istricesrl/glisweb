@@ -1774,6 +1774,8 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_progetto` INT(11) DEFAULT NULL, 
+  `id_categoria_progetti` INT(11) DEFAULT NULL, 
   `note` char(254) DEFAULT NULL,
   `timestamp_inizio` int(11) DEFAULT NULL,
   `timestamp_fine` int(11) DEFAULT NULL,

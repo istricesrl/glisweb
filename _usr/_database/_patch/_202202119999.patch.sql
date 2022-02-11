@@ -70,12 +70,41 @@ ADD CONSTRAINT `relazioni_software_ibfk_99_nofollow` FOREIGN KEY (`id_account_ag
 
 --| 202202110060
 ALTER TABLE `pubblicazioni` 
-ADD (`id_progetto`) INT(11) DEFAULT NULL AFTER `id_categoria_risorse`,
-ADD (`id_categoria_progetti`) INT(11) DEFAULT NULL AFTER `id_progetto`,
-ADD INDEX(`id_categoria_progetti`),
-ADD INDEX(`id_progetto`),
+ADD `id_progetto` INT(11) DEFAULT NULL AFTER `id_categoria_risorse`,
+ADD `id_categoria_progetti` INT(11) DEFAULT NULL AFTER `id_progetto`,
+ADD KEY `id_progetto` (`id_progetto`),
+ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 ADD CONSTRAINT `pubblicazioni_ibfk_11`                  FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `pubblicazioni_ibfk_12`                  FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--| 202202110070
+CREATE OR REPLACE VIEW `pubblicazioni_view` AS
+    SELECT
+		pubblicazioni.id,
+		pubblicazioni.id_tipologia,
+		tipologie_pubblicazioni.nome AS tipologia,
+		pubblicazioni.ordine,
+		pubblicazioni.id_prodotto,
+		pubblicazioni.id_articolo,
+		pubblicazioni.id_categoria_prodotti,
+		pubblicazioni.id_notizia,
+		pubblicazioni.id_categoria_notizie,
+		pubblicazioni.id_pagina,
+		pubblicazioni.id_popup,
+		pubblicazioni.id_risorsa,
+		pubblicazioni.id_categoria_risorse,
+		pubblicazioni.id_progetto,
+		pubblicazioni.id_categoria_progetti,
+		pubblicazioni.timestamp_inizio,
+		pubblicazioni.timestamp_fine,
+		concat_ws(
+			' ',
+			tipologie_pubblicazioni.nome,
+			pubblicazioni.timestamp_inizio,
+			pubblicazioni.timestamp_fine
+		) AS __label__
+    FROM pubblicazioni
+		LEFT JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia
+;
 
 --| FINE
