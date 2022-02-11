@@ -1848,7 +1848,11 @@ CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
 `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
-  `id_anagrafica_collegata` int(11) DEFAULT NULL
+  `id_anagrafica_collegata` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000030400
@@ -1859,7 +1863,11 @@ CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
 CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
 `id` int(11) NOT NULL,
   `id_documento` int(11) DEFAULT NULL,
-  `id_documento_collegato` int(11) DEFAULT NULL
+  `id_documento_collegato` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000030410
@@ -1870,7 +1878,11 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
 CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (
 `id` int(11) NOT NULL,
   `id_documenti_articolo` int(11) DEFAULT NULL,
-  `id_documenti_articolo_collegato` int(11) DEFAULT NULL
+  `id_documenti_articolo_collegato` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000030440
@@ -1881,7 +1893,11 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (
 CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
 `id` int(11) NOT NULL,
   `id_pagamento` int(11) DEFAULT NULL,
-  `id_pagamento_collegato` int(11) DEFAULT NULL
+  `id_pagamento_collegato` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000030490
@@ -1892,7 +1908,11 @@ CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
 CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
   `id` int(11) NOT NULL,
   `id_progetto` char(32) DEFAULT NULL,
-  `id_progetto_collegato` char(32) DEFAULT NULL
+  `id_progetto_collegato` char(32) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000030500
@@ -1903,7 +1923,11 @@ CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
 CREATE TABLE IF NOT EXISTS `relazioni_software` (
   `id` int(11) NOT NULL,
   `id_software` int(11) DEFAULT NULL,
-  `id_software_collegato` int(11) DEFAULT NULL
+  `id_software_collegato` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000030800

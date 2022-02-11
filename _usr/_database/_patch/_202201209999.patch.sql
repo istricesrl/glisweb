@@ -2,9 +2,16 @@
 -- PATCH
 --
 
+--| 202201201124
+ALTER TABLE `categorie_risorse`
+ADD `se_sitemap` INT(1) NULL DEFAULT NULL AFTER `tema_css`, 
+ADD `se_cacheable` INT(1) NULL DEFAULT NULL AFTER `se_sitemap`;
+
 --| 202201201125
 ALTER TABLE `categorie_risorse`
-  ADD `id_sito` int(11) DEFAULT NULL AFTER  `se_cacheable`;
+ADD KEY `se_sitemap` (`se_sitemap`),
+ADD KEY `se_cacheable` (`se_cacheable`),
+ADD `id_sito` int(11) DEFAULT NULL AFTER  `se_cacheable`;
 
 --| 202201201126
 CREATE OR REPLACE VIEW categorie_risorse_view AS

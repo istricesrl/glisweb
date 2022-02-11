@@ -1999,6 +1999,8 @@ ALTER TABLE `relazioni_anagrafica`
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_anagrafica_collegata` (`id_anagrafica_collegata`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_anagrafica_collegata`, `id_ruolo`);
 
 --| 030000030301
@@ -2016,6 +2018,8 @@ ALTER TABLE `relazioni_documenti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_documento_collegato` (`id_documento_collegato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_documento`,`id_documento_collegato`);
 
 --| 030000030401
@@ -2033,6 +2037,8 @@ ALTER TABLE `relazioni_documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
 	ADD KEY `id_documenti_articolo_collegato` (`id_documenti_articolo_collegato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`);
 
 --| 030000030411
@@ -2050,6 +2056,8 @@ ALTER TABLE `relazioni_pagamenti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_pagamento` (`id_pagamento`),
 	ADD KEY `id_pagamento_collegato` (`id_pagamento_collegato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_pagamento`,`id_pagamento_collegato`);
 
 --| 030000030441
@@ -2067,6 +2075,8 @@ ALTER TABLE `relazioni_progetti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_progetto_collegato` (`id_progetto_collegato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_progetto`,`id_progetto_collegato`);
 
 --| 030000030491
@@ -2084,6 +2094,8 @@ ALTER TABLE `relazioni_software`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_software` (`id_software`),
 	ADD KEY `id_software_collegato` (`id_software_collegato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_software`,`id_software_collegato`);
 
 --| 030000030501
