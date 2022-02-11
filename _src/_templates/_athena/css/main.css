@@ -520,6 +520,10 @@ header.subform-intestazione {
     color: #ffffff;
 }
 
+#form-login {
+    min-width: 280px;
+}
+
 #form-logout .btn {
     border-radius: 0px;
     font-size: 1.6em;

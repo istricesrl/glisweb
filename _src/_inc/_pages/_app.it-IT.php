@@ -12,7 +12,6 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'macro'		=> array( '_src/_inc/_macro/_app.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'app' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'app' ),
+		'menu'				=> array( 'app'	=> array(	'' => 	array(	'label'		=> array( $l => 'app' ),
 																	'priority'	=> '010' ) ) )
 	);
