@@ -109,7 +109,11 @@
 	$xml->endElement();
 
     // - - - - RegimeFiscale / il regime fiscale del cedente
-	$xml->writeElement( 'RegimeFiscale', $srr['codice'] );
+	if( empty( $srr['codice'] ) ) {
+		die( 'regime fiscale inviante non specificato o errato' );
+	} else {
+		$xml->writeElement( 'RegimeFiscale', $srr['codice'] );
+	}
 
     // - - - /DatiAnagrafici
 	$xml->endElement();

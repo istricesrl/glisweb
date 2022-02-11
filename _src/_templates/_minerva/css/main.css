@@ -111,3 +111,9 @@ div.subnav p {
     font-size: .9em;
     margin: 0px;
 }
+
+#form-login {
+    width: 20%;
+    min-width: 280px;
+    margin: auto;
+}
