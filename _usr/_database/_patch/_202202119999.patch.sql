@@ -68,5 +68,14 @@ ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 ADD CONSTRAINT `relazioni_software_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 ADD CONSTRAINT `relazioni_software_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+--| 202202110060
+ALTER TABLE `pubblicazioni` 
+ADD (`id_progetto`) INT(11) DEFAULT NULL AFTER `id_categoria_risorse`,
+ADD (`id_categoria_progetti`) INT(11) DEFAULT NULL AFTER `id_progetto`,
+ADD INDEX(`id_categoria_progetti`),
+ADD INDEX(`id_progetto`),
+ADD CONSTRAINT `pubblicazioni_ibfk_11`                  FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `pubblicazioni_ibfk_12`                  FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 
 --| FINE
