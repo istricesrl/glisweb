@@ -13,15 +13,21 @@
 
         {% include '_inc/_page.open.html' %}
 
-        <header class="fixed-top">
-            
-            {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
-
+        {% if page.template.menu.app|length > 0 %}
+        <header class="sticky-top">
+            <div class="container-fluid">
+                <div class="row">
+                    {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
+                </div>
+            </div>
         </header>
+        {% endif %}
 
         <main class="d-flex flex-column container-fluid w-100 vh-100">
-            
-            {% block main %}{% endblock %}
+
+            {% block subnav %}{% include 'inc/subnav.html' %}{% endblock %}
+
+            {% block main %}{{ contents.pages.ordini.title[ localization.language.ietf ] }}{% endblock %}
 
         </main>
 

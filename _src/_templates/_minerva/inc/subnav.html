@@ -1,0 +1,26 @@
+{% if page.children %}
+    <div class="row subnav">
+        {% for child in page.children.id %}
+        {% set obj = pages[ child ] %}
+        <div class="col-12 col-md-4">
+            {% if obj.modal %}
+            <a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
+            {% elseif obj.ws %}
+            <a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
+            {% elseif obj.path[ localization.language.ietf ] %}
+            <a href="{{ obj.path[ localization.language.ietf ] }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
+            {% endif %}
+                <div class="media">
+                <div class="media-left">
+                    {{ include( template_from_string( obj.icon ) ) }}
+                </div>
+                <div class="media-body">
+                    <h5 class="media-title">{{ obj.title[ localization.language.ietf ] }}</h5>
+                    <p class="media-text">{{ obj.abstract[ localization.language.ietf ] }}</p>
+                </div>
+                </div>
+            </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
