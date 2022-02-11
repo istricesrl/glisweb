@@ -28,12 +28,12 @@
         'id' => '#',
         'data' => 'data',
         'documento' => 'documento',
-    #    'tipologia' => 'tipologia',
+        'emittente' => 'fornitore',
         'nome' => 'nome',
-        'id_articolo' => 'articolo',
+#        'id_articolo' => 'articolo',
         'quantita' => 'quantità',
-		'mastro_provenienza' => 'provenienza',
-		'mastro_destinazione' => 'destinazione',
+#		'mastro_provenienza' => 'provenienza',
+#		'mastro_destinazione' => 'destinazione',
         'importo_netto_totale' => 'importo'
     #    'totale_riga' => 'totale',
 	);
@@ -44,7 +44,8 @@
         'importo_netto_totale' => 'text-right',
         'quantita' => 'text-right',     
         'totale_riga' => 'text-right',
-        'cliente' => 'text-left',
+        'data' => 'no-wrap', 
+        'destinatario' => 'text-left',
         'emittente' => 'text-left', 
         'data_lavorazione' => 'text-left', 
         'tipologia' => 'text-left',
@@ -53,8 +54,18 @@
         'documento' => 'text-left no-wrap'
     );
 
-      // inclusione filtri speciali
-	$ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
+	// RELAZIONI CON IL MODULO MASTRI
+	if( in_array( "0500.mastri", $cf['mods']['active']['array'] ) ) {
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'mastro_provenienza' => 'scarico', 'mastro_destinazione' => 'carico' ) );
+	}
+
+	// RELAZIONI CON IL MODULO PRODOTTI
+	if( in_array( "4100.prodotti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'id_articolo' => 'articolo' ) );
+	}
+
+    // inclusione filtri speciali
+	$ct['etc']['include']['filters'] = 'inc/righe.fatture.passive.amministrazione.view.filters.html';
 
     // tendina categoria
 	$ct['etc']['select']['tipologie_documenti'] = mysqlCachedQuery(
@@ -63,12 +74,12 @@
 	    'SELECT id, __label__ FROM tipologie_documenti_view'
 	);
 
-     // tendina mittenti
+    // tendina mittenti
 	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_fornitore = 1 ORDER BY __label__'
 	);
 
     // tendina destinatari
@@ -76,7 +87,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1 ORDER BY __label__'
 	);
 
     // tendina articoli

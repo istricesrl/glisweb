@@ -26,30 +26,35 @@
             $joinField = 'id_categoria_prodotti';
             $joinValue = $cf['contents']['page']['metadata']['id_categoria_prodotti'];
             $joinTable = 'categorie_prodotti';
+            $subPages = true;
 
         } elseif( isset( $cf['contents']['page']['metadata']['id_prodotto'] ) ) {
 
             $joinField = 'id_prodotto';
             $joinValue = $cf['contents']['page']['metadata']['id_prodotto'];
             $joinTable = 'prodotti';
-
-        } elseif( isset( $cf['contents']['page']['metadata']['id_notizia'] ) ) {
-
-            $joinField = 'id_notizia';
-            $joinValue = $cf['contents']['page']['metadata']['id_notizia'];
-            $joinTable = 'notizie';
+            $subPages = false;
 
         } elseif( isset( $cf['contents']['page']['metadata']['id_categoria_notizie'] ) ) {
 
             $joinField = 'id_categoria_notizie';
             $joinValue = $cf['contents']['page']['metadata']['id_categoria_notizie'];
             $joinTable = 'categorie_notizie';
+            $subPages = true;
+
+        } elseif( isset( $cf['contents']['page']['metadata']['id_notizia'] ) ) {
+
+            $joinField = 'id_notizia';
+            $joinValue = $cf['contents']['page']['metadata']['id_notizia'];
+            $joinTable = 'notizie';
+            $subPages = false;
 
         } else {
 
             $joinField = 'id_pagina';
             $joinValue = $cf['contents']['page']['id'];
             $joinTable = 'pagine';
+            $subPages = true;
             
         }
 
@@ -157,32 +162,37 @@
         timerCheck( $cf['speed'], '-> fine inserimento recensioni' );
 */
 
-        // prelevo i contenuti principali delle sotto pagine dal database
-        $subCnt = mysqlQuery(
-            $cf['mysql']['connection'],
-            'SELECT ' . $joinTable . '.id,contenuti.cappello,contenuti.abstract '.
-            'FROM ' . $joinTable . ' INNER JOIN contenuti ON contenuti. ' . $joinField . ' = ' . $joinTable . '.id '.
-            'WHERE ' . $joinTable . '.id_genitore = ? AND id_lingua = ?',
-            array(
-                array( 's' => $joinValue ),
-                array( 's' => $cf['localization']['language']['id'] )
-            )
-        );
+        // se la tabella è ricorsiva
+        if( $subPages == true ) {
 
-        // se sono presenti contenuti
-        if( ! empty( $subCnt ) ) {
+            // prelevo i contenuti principali delle sotto pagine dal database
+            $subCnt = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT ' . $joinTable . '.id,contenuti.cappello,contenuti.abstract '.
+                'FROM ' . $joinTable . ' INNER JOIN contenuti ON contenuti. ' . $joinField . ' = ' . $joinTable . '.id '.
+                'WHERE ' . $joinTable . '.id_genitore = ? AND id_lingua = ?',
+                array(
+                    array( 's' => $joinValue ),
+                    array( 's' => $cf['localization']['language']['id'] )
+                )
+            );
 
-            // assegno i sotto contenuti
-            foreach( $subCnt as $sc ) {
+            // se sono presenti contenuti
+            if( ! empty( $subCnt ) ) {
 
-                // assegno i contenuti
-                foreach( array( 'abstract', 'cappello' ) as $k ) {
-                    if( empty( $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] ) ) {
-                        $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] =
-                            "{% import '_bin/_default.html' as cms %}\n\n".
-                            "{% import 'bin/default.html' as def %}\n\n".
-                            $sc[ $k ];
+                // assegno i sotto contenuti
+                foreach( $subCnt as $sc ) {
+
+                    // assegno i contenuti
+                    foreach( array( 'abstract', 'cappello' ) as $k ) {
+                        if( empty( $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] ) ) {
+                            $cf['contents']['pages'][ $sc['id'] ][ $k ][ $cf['localization']['language']['ietf'] ] =
+                                "{% import '_bin/_default.html' as cms %}\n\n".
+                                "{% import 'bin/default.html' as def %}\n\n".
+                                $sc[ $k ];
+                        }
                     }
+
                 }
 
             }

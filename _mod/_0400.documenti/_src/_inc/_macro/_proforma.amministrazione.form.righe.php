@@ -58,6 +58,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
+        'data' => 'no-wrap', 
         'importo_netto_totale' => 'text-right',
         'quantita' => 'text-right',
 		'totale_riga' => 'text-right',

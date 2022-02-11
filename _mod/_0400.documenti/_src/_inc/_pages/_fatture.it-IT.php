@@ -18,8 +18,8 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_fatture.amministrazione.view.php' ),
 			'etc'			=> array( 'tabs'	=> array(   'fatture.amministrazione.view',
-															'fatture.passive.amministrazione.view',
 															'righe.fatture.amministrazione.view',
+															'fatture.passive.amministrazione.view',
 															'righe.fatture.passive.amministrazione.view' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'fatture' ),
@@ -31,7 +31,7 @@
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'righe attive' ),
 			'h1'			=> array( $l		=> 'righe attive' ),
-			'parent'		=> array( 'id'		=> 'amministrazione' ),
+			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_righe.fatture.amministrazione.view.php' ),
 			'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.view']['etc']['tabs'] ),
@@ -64,7 +64,7 @@
 		// gestione righe fatture
 		$p['fatture.amministrazione.form.righe'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe_fatture' ),
+			'title'			=> array( $l		=> 'righe fatture' ),
 			'h1'			=> array( $l		=> 'righe' ),
 			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.righe.html' ),

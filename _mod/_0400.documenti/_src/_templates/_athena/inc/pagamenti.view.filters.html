@@ -1,5 +1,6 @@
 <div class="form-row view-filters d-print-none">
-    <div class="col-12 col-md-auto">
+<!--
+	<div class="col-12 col-md-auto">
 		<span class="label-top">tipologia</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_tipologia][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == "" %}selected{% endif %}>tutte</option>
@@ -8,7 +9,6 @@
 			{% endfor %}
 		</select>
 	</div>
-<!--
 	<div class="col-12 col-md-auto">
 		<span class="label-top">emittente</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_emittente][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
@@ -27,6 +27,8 @@
 			{% endfor %}
 		</select>
 	</div>
+-->
+<!--
 	<div class="col-12 col-md-2">
 		<span class="label-top">articolo</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_articolo][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">

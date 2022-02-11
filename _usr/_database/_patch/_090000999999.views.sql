@@ -2862,6 +2862,10 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		m1.nome AS mastro_provenienza,
 		pagamenti.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		pagamenti.id_iban,
 		pagamenti.importo_netto_totale,
 		pagamenti.id_iva,
@@ -2884,6 +2888,12 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
 		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+	WHERE
+		tipologie_documenti.se_fattura = 1
+		OR
+		tipologie_documenti.se_ricevuta = 1
 ;
 
 --| 090000023200

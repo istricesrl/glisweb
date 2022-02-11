@@ -30,6 +30,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
+        'data' => 'no-wrap', 
 	    '__label__' => 'text-left no-wrap'
     );
     

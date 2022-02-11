@@ -66,6 +66,7 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none',
         'id_riga' => 'd-none',
+        'data' => 'no-wrap', 
 #        'id_listino' => 'd-none',
 #        'id_tipologia' => 'd-none',
 #        'id_emittente' => 'd-none',

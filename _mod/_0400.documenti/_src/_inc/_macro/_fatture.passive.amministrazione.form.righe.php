@@ -45,9 +45,9 @@
 #        'tipologia' => 'tipologia',
 #        'data' => 'data',
         'nome' => 'nome',
-		'id_articolo' => 'articolo',
-		'mastro_provenienza' => 'scarico',
-		'mastro_destinazione' => 'carico',
+#		'id_articolo' => 'articolo',
+#		'mastro_provenienza' => 'scarico',
+#		'mastro_destinazione' => 'carico',
         'quantita' => 'quantità',
         'importo_netto_totale' => 'importo netto',
 		'id_genitore' => 'aggregata a',
@@ -59,6 +59,7 @@
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
         'importo_netto_totale' => 'text-right',
+        'data' => 'no-wrap', 
         'quantita' => 'text-right',
 		'totale_riga' => 'text-right',
         'id_documento' => 'd-none',
@@ -69,6 +70,28 @@
 		'id_articolo' => 'text-left'
     );
 
+	// RELAZIONI CON IL MODULO MASTRI
+	if( in_array( "0500.mastri", $cf['mods']['active']['array'] ) ) {
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'mastro_provenienza' => 'scarico', 'mastro_destinazione' => 'carico' ) );
+	}
+
+	// RELAZIONI CON IL MODULO PRODOTTI
+	if( in_array( "4100.prodotti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'id_articolo' => 'articolo' ) );
+	}
+
+	// RELAZIONI CON IL MODULO MATRICOLE
+	if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
+
+		// colonna matricola
+		arrayInsertAssoc( 'id_articolo', $ct['view']['cols'], array( 'matricola' => 'matricola' ) );
+
+		// OPZIONE scadenze
+		if( ! empty( $cf['matricole']['scadenze'] ) ) {
+			arrayInsertAssoc( 'matricola', $ct['view']['cols'], array( 'data_scadenza' => 'scadenza' ) );
+		}
+
+	}
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		// preset filtro custom progetti aperti

@@ -32,6 +32,8 @@
         'data' => 'data',
         'documento' => 'documento',
         'tipologia' => 'tipologia',
+        'emittente' => 'emittente',
+        'destinatario' => 'destinatario',
         'nome' => 'nome',
 #        'id_articolo' => 'articolo',
         'quantita' => 'quantità',
@@ -75,12 +77,12 @@
 	    'SELECT id, __label__ FROM tipologie_documenti_view'
 	);
 
-     // tendina mittenti
+    // tendina mittenti
 	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1 ORDER BY __label__'
 	);
 
     // tendina destinatari
@@ -88,7 +90,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1 ORDER BY __label__'
 	);
 
     // tendina articoli

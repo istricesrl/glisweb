@@ -57,6 +57,7 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none',
         'id_riga' => 'd-none',
+        'data' => 'no-wrap', 
 #        'id_listino' => 'd-none',
 #        'id_tipologia' => 'd-none',
 #        'id_emittente' => 'd-none',
@@ -107,7 +108,7 @@
         'id_todo' => 'd-none',
         'id_cliente' => 'd-none',
         'id_tipologia' => 'd-none',
-        'data' => 'text-left',
+        'data' => 'no-wrap', 
 	    'nome_attivita' => 'text-left',
         'id_progetto' => 'd-none',
         'importo' => 'text-right',

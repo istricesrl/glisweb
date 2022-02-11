@@ -42,8 +42,8 @@
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
         'numero' => 'text-left',
-        'data' => 'text-left',
         '__label__' => 'text-left',
+        'data' => 'no-wrap', 
         'destinatario' => 'text-left',
         'emittente' => 'text-left',
         'tipologia' => 'text-left',

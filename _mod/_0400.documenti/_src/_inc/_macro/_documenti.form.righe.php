@@ -77,6 +77,19 @@
 		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'id_articolo' => 'articolo' ) );
 	}
 
+	// RELAZIONI CON IL MODULO MATRICOLE
+	if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
+
+		// colonna matricola
+		arrayInsertAssoc( 'id_articolo', $ct['view']['cols'], array( 'matricola' => 'matricola' ) );
+
+		// OPZIONE scadenze
+		if( ! empty( $cf['matricole']['scadenze'] ) ) {
+			arrayInsertAssoc( 'matricola', $ct['view']['cols'], array( 'data_scadenza' => 'scadenza' ) );
+		}
+
+	}
+
 	// preset filtro righe documento
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
