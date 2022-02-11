@@ -800,6 +800,8 @@
     pubblicazioni.id_categoria_notizie        | l'ID della categoria di notizie cui si riferisce la pubblicazione
     pubblicazioni.id_risorsa                  | l'ID della risorsa cui si riferisce la pubblicazione
     pubblicazioni.id_categoria_risorse        | l'ID della categoria di risorse cui si riferisce la pubblicazione
+    pubblicazioni.id_progetto                 | l'ID del progetto cui si riferisce la pubblicazione 
+    pubblicazioni.id_categoria_progetti       | l'ID della categoria di progetti cui si riferisce la pubblicazione
     pubblicazioni.note                        | note aggiuntive sulla pubblicazione
     pubblicazioni.timestamp_inizio            | timestamp di inizio della pubblicazione
     pubblicazioni.timestamp_fine              | timestamp di fine della pubblicazione
@@ -822,6 +824,8 @@
     pubblicazioni_ibfk_08                       | id_categoria_notizie      | categorie_notizie.id              | ON DELETE CASCADE ON UPDATE CASCADE
     pubblicazioni_ibfk_09                       | id_risorsa                | risorse.id                        | ON DELETE CASCADE ON UPDATE CASCADE
     pubblicazioni_ibfk_10                       | id_categoria_risorse      | categorie_risorse.id              | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_11                       | id_progetto               | progetti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    pubblicazioni_ibfk_12                       | id_categoria_progetti     | categorie_progetti.id             | ON DELETE CASCADE ON UPDATE CASCADE
     pubblicazioni_ibfk_98_nofollow              | id_account_inserimento    | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     pubblicazioni_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -842,6 +846,8 @@
     pubblicazioni_view.id_categoria_notizie         | -
     pubblicazioni_view.id_risorsa                   | -
     pubblicazioni_view.id_categoria_risorse         | -
+    pubblicazioni_view.id_progetto                  | -
+    pubblicazioni_view.id_categoria_progetti        | -
     pubblicazioni_view.timestamp_inizio             | -
     pubblicazioni_view.timestamp_fine               | -
     pubblicazioni_view.id_account_inserimento       | -

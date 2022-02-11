@@ -9,6 +9,13 @@ DROP CONSTRAINT `attivita_ibfk_08_nofollow`,
 DROP CONSTRAINT `attivita_ibfk_09_nofollow`,
 DROP CONSTRAINT `attivita_ibfk_10_nofollow`;
 
+--| 202202070006
+ALTER TABLE `attivita`
+DROP  FOREIGN KEY `attivita_ibfk_07_nofollow`,
+DROP  FOREIGN KEY `attivita_ibfk_08_nofollow`,
+DROP  FOREIGN KEY `attivita_ibfk_09_nofollow`,
+DROP  FOREIGN KEY `attivita_ibfk_10_nofollow`;
+
 --| 202202070010
 ALTER TABLE `attivita`
 ADD `id_documento` int NULL AFTER `note_cliente`,
