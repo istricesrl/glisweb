@@ -15,7 +15,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'prodotti.view', 'prodotti.stampe') ),
+	    'etc'		=> array( 'tabs'	=> array(	'prodotti.view', 'articoli.view', 'prodotti.stampe') ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'prodotti' ),
 									'priority'	=> '015' ) ) )	
 	);
@@ -26,7 +26,7 @@
 		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'stampe' ),
 	    'h1'		=> array( $l		=> 'stampe' ),
-	    'parent'		=> array( 'id'		=> 'prodotti' ),
+	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.stampe.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
@@ -193,7 +193,7 @@
 	$p['prodotti.form.stampe'] = array(
 	    'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
-	    'title'				=> array( $l		=> 'stampe' ),
+	    'title'				=> array( $l		=> 'stampe prodotto' ),
 	    'h1'				=> array( $l		=> 'stampe' ),
 	    'parent'			=> array( 'id'		=> 'prodotti.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),

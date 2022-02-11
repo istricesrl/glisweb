@@ -32,7 +32,7 @@
 		'label' => NULL
 	    )
 	);
-
+/*
     if(file_exists(DIR_MOD.'4000.catalogo/src/api/print/manuale.barcode.pdf.php')  ){$file = $cf['site']['url'].'4000.catalogo/src/api/print/manuale.barcode.pdf.php';}
     else {$file = $cf['site']['url'].'/_mod/_4000.catalogo/_src/_api/_print/_manuale.barcode.pdf.php';  }
 
@@ -59,10 +59,11 @@
 
     if(file_exists(DIR_MOD.'4100.prodotti/src/api/print/cartellini.prezzo.articoli.pdf.php')  ){$file_prezzi =  $cf['site']['url'].'mod/4100.prodotti/src/api/print/cartellini.prezzo.articoli.pdf.php';}
     else {$file_prezzi = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_cartellini.prezzo.articoli.pdf.php';  }
-
+*/
+/*
 	$ct['page']['contents']['metro']['general'][] = array(
-  /*      'target' => '_blank' ,
-		'url' => $file_prezzi ,*/
+#      'target' => '_blank' ,
+#		'url' => $file_prezzi ,
 		'modal' => array('id' => 'stampa', 'include' => 'inc/prodotti.stampe.modal.html' ),
 		'icon' => NULL,
 		'fa' => 'fa-file-pdf-o',
@@ -72,6 +73,7 @@
     // debug
 	// print_r( $_SESSION );
 	// echo DIRECTORY_CACHE . 'twig';
+*/
 
 	// macro di default
     require DIR_SRC_INC_MACRO . '_default.tools.php';

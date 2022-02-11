@@ -14,12 +14,13 @@
 	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_articoli.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'articoli.view' , 'articoli.stampe' ) ),
+#		'etc'			=> array( 'tabs'	=> array( 'articoli.view' , 'articoli.stampe' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'articoli' ),
-									'priority'	=> '020' ) ) )
+	    'etc'				=> array( 'tabs'	=> 'prodotti.view' )
+#		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'articoli' ),
+#									'priority'	=> '020' ) ) )
 	);
-
+/*
 	// gestione articoli stampe
 	$p['articoli.stampe'] = array(
 	    'sitemap'			=> false,
@@ -32,7 +33,7 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['articoli.view']['etc']['tabs'] )
 	);
-
+*/
 	// gestione articoli
 	$p['articoli.form'] = array(
 	    'sitemap'		=> false,
