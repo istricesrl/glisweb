@@ -88,18 +88,24 @@
     -------
     Questa tabella *di relazione* contiene le relazioni_anagrafica, intese come entità di collegamento fra *anagrafica* e *anagrafica*.
 
-    colonna                                      | descrizione
-    ---------------------------------------------|---------------------------------------------------------------------------------------
-    relazioni_anagrafica.id                      | l'ID della relazione
-    relazioni_anagrafica.id_anagrafica           | l'ID del anagrafica principale
-    relazioni_anagrafica.id_anagrafica_collegato | l'ID del anagrafica collegato al anagrafica principale
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    relazioni_anagrafica.id                         | l'ID della relazione
+    relazioni_anagrafica.id_anagrafica              | l'ID del anagrafica principale
+    relazioni_anagrafica.id_anagrafica_collegato    | l'ID del anagrafica collegato al anagrafica principale
+    relazioni_anagrafica.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    relazioni_anagrafica.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    relazioni_anagrafica.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    relazioni_anagrafica.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo                   | tabella e campo collegati     | comportamento
-    ------------------------------------|-------------------------|-------------------------------|------------------
-    relazioni_anagrafica_ibfk_01        | id_anagrafica            | anagrafica.id                  | ON DELETE CASCADE ON UPDATE CASCADE
-    relazioni_anagrafica_ibfk_02        | id_anagrafica_collegato  | anagrafica.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                                  | campo                         | tabella e campo collegati      | comportamento
+    ----------------------------------------|-------------------------------|--------------------------------|------------------
+    relazioni_anagrafica_ibfk_01            | id_anagrafica                 | anagrafica.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_anagrafica_ibfk_02            | id_anagrafica_collegato       | anagrafica.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_anagrafica_ibfk_98_nofollow   | id_account_inserimento        | account.id                     | ON DELETE SET NULL ON UPDATE SET NULL
+    relazioni_anagrafica_ibfk_99_nofollow   | id_account_aggiornamento      | account.id                     | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *relazioni_anagrafica_view* relativa alla tabella *relazioni_anagrafica* presenta le seguenti colonne:
 
@@ -119,13 +125,19 @@
     relazioni_documenti.id                       | l'ID della relazione
     relazioni_documenti.id_documento             | l'ID del documento principale
     relazioni_documenti.id_documento_collegato   | l'ID del documento collegato al documento principale
+    relazioni_documenti.id_account_inserimento   | l'ID dell'account che ha inserito la riga
+    relazioni_documenti.timestamp_inserimento    | la timestamp dell'inserimento della riga
+    relazioni_documenti.id_account_aggiornamento | l'ID dell'ultimo account che ha modificato la riga
+    relazioni_documenti.timestamp_aggiornamento  | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo                   | tabella e campo collegati     | comportamento
-    ------------------------------------|-------------------------|-------------------------------|------------------
-    relazioni_documenti_ibfk_01         | id_documento            | documenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
-    relazioni_documenti_ibfk_02         | id_documento_collegato  | documenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                                  | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------------|-------------------------------|-------------------------------|------------------
+    relazioni_documenti_ibfk_01             | id_documento                  | documenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_documenti_ibfk_02             | id_documento_collegato        | documenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_documenti_ibfk_98_nofollow    | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    relazioni_documenti_ibfk_99_nofollow    | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *relazioni_documenti_view* relativa alla tabella *relazioni_documenti* presenta le seguenti colonne:
 
@@ -145,13 +157,19 @@
     relazioni_documenti_articoli.id                                | l'ID della relazione
     relazioni_documenti_articoli.id_documenti_articolo             | l'ID documenti_articolo principale
     relazioni_documenti_articoli.id_documenti_articolo_collegato   | l'ID documenti_articolo collegato al documenti_articolo principale
+    relazioni_documenti_articoli.id_account_inserimento            | l'ID dell'account che ha inserito la riga
+    relazioni_documenti_articoli.timestamp_inserimento             | la timestamp dell'inserimento della riga
+    relazioni_documenti_articoli.id_account_aggiornamento          | l'ID dell'ultimo account che ha modificato la riga
+    relazioni_documenti_articoli.timestamp_aggiornamento           | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                               | campo                   | tabella e campo collegati     | comportamento
-    -------------------------------------|-------------------------|-------------------------------|------------------
-    relazioni_documenti_articoli_ibfk_01 | id_documento            | documenti_articoli.id         | ON DELETE CASCADE ON UPDATE CASCADE
-    relazioni_documenti_articoli_ibfk_02 | id_documento_collegato  | documenti_articoli.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                                              | campo                     | tabella e campo collegati     | comportamento
+    ----------------------------------------------------|---------------------------|-------------------------------|------------------
+    relazioni_documenti_articoli_ibfk_01                | id_documento              | documenti_articoli.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_documenti_articoli_ibfk_02                | id_documento_collegato    | documenti_articoli.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_documenti_articoli_ibfk_98_nofollow       | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    relazioni_documenti_articoli_ibfk_99_nofollow       | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *relazioni_documenti_articoli_view* relativa alla tabella *relazioni_documenti_articoli* presenta le seguenti colonne:
 
@@ -171,13 +189,19 @@
     relazioni_pagamenti.id                       | l'ID della relazione
     relazioni_pagamenti.id_pagamento             | l'ID del pagamento principale
     relazioni_pagamenti.id_pagamento_collegato   | l'ID del pagamento collegato al pagamento principale
+    relazioni_pagamenti.id_account_inserimento   | l'ID dell'account che ha inserito la riga
+    relazioni_pagamenti.timestamp_inserimento    | la timestamp dell'inserimento della riga
+    relazioni_pagamenti.id_account_aggiornamento | l'ID dell'ultimo account che ha modificato la riga
+    relazioni_pagamenti.timestamp_aggiornamento  | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo                   | tabella e campo collegati     | comportamento
-    ------------------------------------|-------------------------|-------------------------------|------------------
-    relazioni_pagamenti_ibfk_01         | id_pagamento            | pagamenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
-    relazioni_pagamenti_ibfk_02         | id_pagamento_collegato  | pagamenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                                  | campo                   | tabella e campo collegati     | comportamento
+    ----------------------------------------|-------------------------|-------------------------------|------------------
+    relazioni_pagamenti_ibfk_01             | id_pagamento            | pagamenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_pagamenti_ibfk_02             | id_pagamento_collegato  | pagamenti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_pagamenti_ibfk_98_nofollow    | id_account_inserimento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    relazioni_pagamenti_ibfk_99_nofollow    | id_account_aggiornamento| account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *relazioni_pagamenti_view* relativa alla tabella *relazioni_pagamenti* presenta le seguenti colonne:
 
@@ -197,13 +221,19 @@
     relazioni_progetti.id                        | l'ID della relazione
     relazioni_progetti.id_progetto               | l'ID del progetto principale
     relazioni_progetti.id_progetto_collegato     | l'ID del progetto collegato al progetto principale
+    relazioni_progetti.id_account_inserimento    | l'ID dell'account che ha inserito la riga
+    relazioni_progetti.timestamp_inserimento     | la timestamp dell'inserimento della riga
+    relazioni_progetti.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
+    relazioni_progetti.timestamp_aggiornamento   | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
-    chiave                              | campo                   | tabella e campo collegati     | comportamento
-    ------------------------------------|-------------------------|-------------------------------|------------------
-    relazioni_progetti_ibfk_01          | id_progetto             | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    relazioni_progetti_ibfk_02          | id_progetto_collegato   | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    chiave                                  | campo                   | tabella e campo collegati     | comportamento
+    ----------------------------------------|-------------------------|-------------------------------|------------------
+    relazioni_progetti_ibfk_01              | id_progetto             | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_progetti_ibfk_02              | id_progetto_collegato   | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_progetti_ibfk_98_nofollow     | id_account_inserimento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    relazioni_progetti_ibfk_99_nofollow     | id_account_aggiornamento| account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *relazioni_progetti_view* relativa alla tabella *relazioni_progetti* presenta le seguenti colonne:
 
@@ -223,6 +253,10 @@
     relazioni_software.id                        | l'ID della relazione
     relazioni_software.id_software               | l'ID del software principale
     relazioni_software.id_software_collegato     | l'ID del software collegato al software principale
+    relazioni_software.id_account_inserimento    | l'ID dell'account che ha inserito la riga
+    relazioni_software.timestamp_inserimento     | la timestamp dell'inserimento della riga
+    relazioni_software.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
+    relazioni_software.timestamp_aggiornamento   | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -230,6 +264,8 @@
     ------------------------------------|-------------------------|-------------------------------|------------------
     relazioni_software_ibfk_01          | id_software             | software.id                   | ON DELETE CASCADE ON UPDATE CASCADE
     relazioni_software_ibfk_02          | id_software_collegato   | software.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    relazioni_software_ibfk_98_nofollow | id_account_inserimento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    relazioni_software_ibfk_99_nofollow | id_account_aggiornamento| account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *relazioni_software_view* relativa alla tabella *relazioni_software* presenta le seguenti colonne:
 

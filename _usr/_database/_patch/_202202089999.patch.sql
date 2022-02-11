@@ -8,6 +8,9 @@ ALTER TABLE `mailing_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --| 202202080010
 ALTER TABLE `contenuti` DROP CONSTRAINT `contenuti_ibfk_21`;
 
+--| 202202080011
+ALTER TABLE `contenuti` DROP FOREIGN KEY `contenuti_ibfk_21`;
+
 --| 202202080015
 ALTER TABLE `contenuti` 
 ADD `id_mailing` int(11) NULL AFTER `id_template`,
@@ -25,6 +28,16 @@ DROP CONSTRAINT `file_ibfk_12`,
 DROP CONSTRAINT `file_ibfk_13_nofollow`,
 DROP CONSTRAINT `file_ibfk_14`,
 DROP CONSTRAINT `file_ibfk_15`;
+
+--| 202202080021
+ALTER TABLE `file`
+DROP FOREIGN KEY `file_ibfk_09`,
+DROP FOREIGN KEY  `file_ibfk_10`,
+DROP FOREIGN KEY  `file_ibfk_11`,
+DROP FOREIGN KEY  `file_ibfk_12`, 
+DROP FOREIGN KEY  `file_ibfk_13_nofollow`,
+DROP FOREIGN KEY  `file_ibfk_14`,
+DROP FOREIGN KEY  `file_ibfk_15`;
 
 --| 202202080030
 ALTER TABLE `file` ADD `id_mailing` int NULL AFTER `id_template`,
@@ -68,6 +81,11 @@ CREATE OR REPLACE VIEW `mailing_mail_view` AS
 ALTER TABLE `mailing_liste`
 DROP CONSTRAINT  `mailing_liste_ibfk_02_nofollow` ,
 ADD CONSTRAINT `mailing_liste_ibfk_02` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202202080071
+ALTER TABLE `mailing_liste`
+DROP FOREIGN KEY   `mailing_liste_ibfk_02_nofollow` ,
+ADD CONSTRAINT `mailing_liste_ibfk_02` FOREIGN KEY (`id_mailing`) REFERENCES `mailing` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 
 --| 202202080080
 ALTER TABLE `mailing_mail`

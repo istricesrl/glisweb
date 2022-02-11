@@ -3710,6 +3710,10 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 		pubblicazioni.id_categoria_notizie,
 		pubblicazioni.id_pagina,
 		pubblicazioni.id_popup,
+		pubblicazioni.id_risorsa,
+		pubblicazioni.id_categoria_risorse,
+		pubblicazioni.id_progetto,
+		pubblicazioni.id_categoria_progetti,
 		pubblicazioni.timestamp_inizio,
 		pubblicazioni.timestamp_fine,
 		concat_ws(
