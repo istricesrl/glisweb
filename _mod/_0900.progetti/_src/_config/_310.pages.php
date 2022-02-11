@@ -93,7 +93,7 @@ if ($cf['contents']['cached'] === false) {
                     );
                     #		    $cf['contents']['pages'][ $id ]['contents']['progetti'] = mysqlQuery(
                     #			$cf['mysql']['connection'],
-                    #			'SELECT id_prodotto AS id FROM progetti_categorie WHERE id_categoria = ?',
+                    #			'SELECT id_progetto AS id FROM progetti_categorie WHERE id_categoria = ?',
                     #			array( array( 's' => $pg['id'] ) )
                     #		    );
 #                }
