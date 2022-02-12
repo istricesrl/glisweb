@@ -883,6 +883,8 @@
      */
     function mysqlInsertRow( $c, $r, $t, $d = true ) {
 
+		$r = array_map( 'empty2null', $r );
+
 		$i = mysqlQuery( $c,
 			'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
 			.'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
