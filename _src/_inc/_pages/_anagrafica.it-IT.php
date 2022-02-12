@@ -99,8 +99,18 @@
 	}
 
 	// RELAZIONI CON IL MODULO TESSERAMENTI
-	if( in_array( "6200.tesseramenti", $cf['mods']['active']['array'] ) ) {
+	if( in_array( "0620.tesseramenti", $cf['mods']['active']['array'] ) ) {
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.tesseramenti' );
+	}
+
+	// RELAZIONI CON IL MODULO ISCRIZIONI
+	if( in_array( "0630.iscrizioni", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.iscrizioni' );
+	}
+
+	// RELAZIONI CON IL MODULO ABBONAMENTI
+	if( in_array( "0640.abbonamenti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.abbonamenti' );
 	}
 
     // gestione anagrafica informazioni

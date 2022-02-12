@@ -4,7 +4,7 @@
 	$l = 'it-IT';
 
     // modulo di questo file
-	$m = DIR_MOD . '_6200.tesseramenti/';
+	$m = DIR_MOD . '_0620.tesseramenti/';
 
     // gestione anagrafica tesseramenti
 	$p['anagrafica.form.tesseramenti'] = array(

@@ -469,7 +469,8 @@ REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `fo
 (19,	NULL,	'genitore',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
 (20,	NULL,	'fratello',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
 (21,	NULL,	'tutore',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(22,	NULL,	'coniuge',	NULL,	NULL,	NULL,	1,	NULL,	NULL);
+(22,	NULL,	'coniuge',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(23,	NULL,	'collega',	NULL,	NULL,	NULL,	1,	NULL,	NULL);
 
 --| 050000034200
 
