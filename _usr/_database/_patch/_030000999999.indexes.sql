@@ -626,6 +626,8 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_template` (`id_template`), 
 	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_colore` (`id_colore`), 
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),	
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_lingua`),

@@ -70,7 +70,7 @@ ADD CONSTRAINT `relazioni_software_ibfk_99_nofollow` FOREIGN KEY (`id_account_ag
 
 --| 202202110060
 ALTER TABLE `pubblicazioni` 
-ADD `id_progetto` INT(11) DEFAULT NULL AFTER `id_categoria_risorse`,
+ADD `id_progetto` char(32) DEFAULT NULL AFTER `id_categoria_risorse`,
 ADD `id_categoria_progetti` INT(11) DEFAULT NULL AFTER `id_progetto`,
 ADD KEY `id_progetto` (`id_progetto`),
 ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
