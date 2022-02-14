@@ -1354,7 +1354,7 @@ ALTER TABLE `mailing_mail`
 	ADD KEY `token` (`token`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE `unica_mail` (`id_mailing`, `id_mail`)
+	ADD UNIQUE `unica_mail` (`id_mailing`, `id_mail`),
 	ADD KEY `indice` (`id`,`id_mailing`, `id_mail`, `id_mail_out`, `token` );
 
 --| 030000019101

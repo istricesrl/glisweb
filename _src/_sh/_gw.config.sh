@@ -160,11 +160,11 @@ if [ -f "$FILE" ]; then
 		echo "ATTENZIONE installare il crontab manualmente"
     fi
 
-	read -p "vuoi creare il database MySQL (s/n)? " SN
+#	read -p "vuoi creare il database MySQL (s/n)? " SN
 
-	if [ "$SN" == "s" ]; then
-		./_src/_sh/_gw.mysql.install.sh $MYSQLIP $MYSQLPORT $MYSQLDB $MYSQLUSER $MYSQLPW
-	fi
+#	if [ "$SN" == "s" ]; then
+#		./_src/_sh/_gw.mysql.install.sh $MYSQLIP $MYSQLPORT $MYSQLDB $MYSQLUSER $MYSQLPW
+#	fi
 
     ./_src/_sh/_gw.permissions.reset.sh
 
