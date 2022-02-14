@@ -177,6 +177,9 @@
 	    array( array( 's' => $doc['id_emittente'] ) )
 	);
 
+    // verifico la presenza del progressivo di invio
+	if( empty( $src['codice_archivium'] ) ) { dieText( 'codice archivium azienda inviante vuoto' ); }
+
     // denominazione fiscale
     $src['denominazione_fiscale'] = trim( $src['nome'] . ' ' . $src['cognome'] . ' ' . $src['denominazione'] );
 
@@ -227,6 +230,11 @@
     // codice SDI di default a '0000000' per i destinatari senza codice SDI
     if( empty( $dst['codice_sdi'] ) && ! empty( $dst['pec_sdi'] ) ) {
         $dst['codice_sdi'] = '0000000';
+    }
+
+    // verifico che il codice SDI risponda al pattern corretto
+    if( ! preg_match( '/[a-zA-Z0-9]+/', $dst['codice_sdi'] ) ) {
+        dieText('valore non corretto per codice SDI: ' . $dst['codice_sdi'] );
     }
 
     // denominazione fiscale

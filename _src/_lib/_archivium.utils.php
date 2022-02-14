@@ -294,6 +294,9 @@
         // inizializzazione variabili
         $s      = NULL;
 
+        // verifiche formali
+        if( empty( $idAzienda ) ) { dieText( 'identificativo azienda vuoto' ); }
+
         // globalizzazione di $cf
         global $cf;
 

@@ -21,6 +21,7 @@
         $status['current'] = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT coalesce( max( progressivo_invio ), 0 ) FROM documenti WHERE id_emittente = ?',
+#            'SELECT coalesce( max( progressivo_invio ), 0 ) FROM documenti WHERE id_emittente IN ( SELECT id FROM anagrafica WHERE codice_fiscale = ( SELECT codice_fiscale FROM anagrafica AS a1 WHERE a1.id = ? ) )',
             array(
                 array( 's' => $_REQUEST['idAzienda'] )
             )
