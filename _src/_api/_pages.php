@@ -176,17 +176,17 @@
 
 				$macroLocal = path2custom( $macro );
 
-				if( file_exists( fullPath( $macro ) ) ) {
-
-					timerCheck( $cf['speed'], fullPath( $macro ) );
-					require fullPath( $macro );
-					appendToFile( 'inclusione macro -> ' . $macro . PHP_EOL, FILE_LATEST_RUN );
-
-				} elseif( file_exists( fullPath( $macroLocal ) ) && $macro !== $macroLocal ) {
+				if( file_exists( fullPath( $macroLocal ) ) && $macro !== $macroLocal ) {
 
 					require fullPath( $macroLocal );
 					timerCheck( $cf['speed'], $macroLocal );
 					appendToFile( 'inclusione macro -> ' . $macroLocal . PHP_EOL, FILE_LATEST_RUN );
+
+				} elseif( file_exists( fullPath( $macro ) ) ) {
+
+					timerCheck( $cf['speed'], fullPath( $macro ) );
+					require fullPath( $macro );
+					appendToFile( 'inclusione macro -> ' . $macro . PHP_EOL, FILE_LATEST_RUN );
 
 				} else {
 

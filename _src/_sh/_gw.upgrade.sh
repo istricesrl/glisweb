@@ -10,8 +10,13 @@ cd $RL
 ## informazioni
 echo "lavoro su: $(pwd)"
 
+## pulizia schermo
+clear
+
 ## prendo il nome del repository
-GITNAME=$( basename $(git remote get-url origin) )
+if [[ -d "./.git" ]]; then
+    GITNAME=$( basename $(git remote get-url origin) )
+fi
 
 ## se sto lavorando sul framework
 if [ -n "$( echo $GITNAME | grep 'glisweb' )" ]; then
@@ -25,10 +30,12 @@ if [ -n "$( echo $GITNAME | grep 'glisweb' )" ]; then
 else
 
     # output
-    echo "stai lavorando su $GITNAME, aggiorno il framework"
+    if [[ -n "$GITNAME" ]]; then
+        echo "stai lavorando su $GITNAME, aggiorno il framework"
+    fi
 
     # se è specificata una branch di aggiornamento
-    if [[ -n $1 ]]; then
+    if [[ -n "$1" ]]; then
 
         # branch da scaricare
         BRANCH=$1
@@ -70,7 +77,7 @@ else
     else
 
         # sinossi
-        echo "$0 <branch>"
+        echo "utilizzo: $0 <branch>"
 
     fi
 

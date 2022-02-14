@@ -77,9 +77,6 @@
 	    'anagrafica_categorie' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),
-#		'anagrafica_certificazioni' => array(
-#            CONTROL_FULL => array( 'roots' )
-#        ),
 	    'anagrafica_cittadinanze' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),
