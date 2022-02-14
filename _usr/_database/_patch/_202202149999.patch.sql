@@ -29,4 +29,10 @@ ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 ADD CONSTRAINT `immagini_ibfk_14` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
 ADD CONSTRAINT `immagini_ibfk_15` FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--| 202202140040
+ALTER TABLE `menu` CHANGE `id_pagina` `id_pagina` INT(11) NULL;
+
+--| 202202140050
+ALTER TABLE `macro` CHANGE `macro` `macro` CHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
 --| FINE
