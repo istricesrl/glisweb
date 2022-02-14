@@ -320,7 +320,7 @@
         // print_r( $r );
 
         // TODO salvo l'ID
-        if( $r['esito'] == 200 ) {
+        if( isset( $r['esito'] ) && $r['esito'] == 200 ) {
             mysqlQuery(
                 $cf['mysql']['connection'],
                 'UPDATE documenti SET codice_archivium = ? '.
@@ -332,6 +332,7 @@
             );
         } else {
             logWrite( print_r( $r, true ), 'archivium', LOG_ERR );
+            $r['esito'] = false;
         }
 
         /**
