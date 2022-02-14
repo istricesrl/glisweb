@@ -1773,7 +1773,7 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
-  `id_progetto` INT(11) DEFAULT NULL, 
+  `id_progetto` char(32) DEFAULT NULL, 
   `id_categoria_progetti` INT(11) DEFAULT NULL, 
   `note` char(254) DEFAULT NULL,
   `timestamp_inizio` int(11) DEFAULT NULL,
@@ -2553,23 +2553,26 @@ CREATE TABLE IF NOT EXISTS `tipologie_popup` (
 -- verifica: 2021-10-15 17:34 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `id` int(11) NOT NULL,
-  `id_genitore` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
+  `id_genitore` int DEFAULT NULL,
+  `ordine` int DEFAULT NULL,
   `nome` char(64) NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_colori` tinyint(1) DEFAULT NULL,
   `se_taglie` tinyint(1) DEFAULT NULL,
   `se_dimensioni` tinyint(1) DEFAULT NULL,
+  `se_volume` tinyint(1) DEFAULT NULL,
+  `se_capacita` tinyint(1) DEFAULT NULL,
+  `se_peso` tinyint(1) DEFAULT NULL,
   `se_imballo` tinyint(1) DEFAULT NULL,
   `se_spedizione` tinyint(1) DEFAULT NULL,
   `se_trasporto` tinyint(1) DEFAULT NULL,
   `se_prodotto` tinyint(1) DEFAULT NULL,
   `se_servizio` tinyint(1) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000055000
