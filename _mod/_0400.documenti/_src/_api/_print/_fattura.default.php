@@ -13,13 +13,14 @@
     // verifico la presenza di un ID documento
     if( ! isset( $_REQUEST['__documento__'] ) || empty( $_REQUEST['__documento__'] ) ) { dieText('ID documento mancante'); }
 
-    // recupero i dati del documento
-	$doc = mysqlSelectRow(
+     // recupero i dati del documento
+     $doc = mysqlSelectRow(
         $cf['mysql']['connection'],
 	    'SELECT documenti.*,  '.
-	    'tipologie_documenti.codice AS codice_tipologia '.
+	    'tipologie_documenti.codice AS codice_tipologia, condizioni_pagamento.codice AS condizioni_pagamento '.
 	    'FROM documenti '.
 	    'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
+        'LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento '.
 	    'WHERE documenti.id = ?',
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
@@ -31,8 +32,12 @@
     $doc['divisa'] = 'EUR';
 
     // TODO
-    $doc['codice_esigibilita'] = 'I';
-
+    if($doc['esigibilita'] != NULL ){
+        $doc['codice_esigibilita'] = $doc['esigibilita'];
+    } else {
+        $doc['codice_esigibilita'] = 'I';
+    }
+    
     /**
      * NOTA Esigibilità Dell’IVA: Immediata, Differita, Scissione
      * Codici IVA fattura elettronica: cosa significa esegibilità dell’IVA? Sono vari i casi in cui è obbligatorio pagare l’IVA per una transazione commerciale,
@@ -45,9 +50,10 @@
      */
 
     // TODO
-    $doc['condizioni_pagamento'] = 'TP01';
-
-    /**
+    if( empty($doc['condizioni_pagamento']) ){
+        $doc['condizioni_pagamento'] = 'TP02';
+    }
+        /**
      * NOTA condizioni di pagamento
      * TP01 Pagamento a rate: viene impostato un pagamento a rate dove è possibile impostare una sola rata, nel caso infatti in cui il cliente non abbia saldato la fattura al momento dell’emissione o sia necessario indicare dei dati Bancari, attraverso questo tipo di pagamento sarà possibile impostare tali dati.
      * TP02 Pagamento completo: va impostato nel caso in cui il pagamento sia stato già completato;

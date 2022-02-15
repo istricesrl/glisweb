@@ -67,6 +67,10 @@
 						<span class="label-top">condizioni pagamento</span>
 						{{ frm.select( table, '', '', 'id_condizione_pagamento', '', etc.select.condizioni_pagamento, request ) }}
 					</div>
+					<div class="col-auto">
+						<span class="label-top">esigibilità</span>
+						{{ frm.selectRequired( table, '', '', 'esigibilita', '', etc.select.esigibilita, request ) }}
+					</div>
 					<div class="col-4 col-md">
 						<span class="label-top">nome</span>
 						{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}

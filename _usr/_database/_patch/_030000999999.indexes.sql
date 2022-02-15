@@ -432,6 +432,8 @@ ALTER TABLE `categorie_progetti`
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `se_ordinario`(`se_ordinario`),
 	ADD KEY `se_straordinario`(`se_straordinario`),
+	ADD KEY `se_materia`(`se_materia`),
+	ADD KEY `se_classe`(`se_classe`),	
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`, `id_sito`);

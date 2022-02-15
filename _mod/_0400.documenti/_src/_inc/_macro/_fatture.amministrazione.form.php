@@ -37,6 +37,13 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM condizioni_pagamento_view'
 	);
+
+	// esigibilità iva
+	$ct['etc']['select']['esigibilita'] = array(
+		array( 'id' => 'I', '__label__'=> 'I - immediata' ),
+		array( 'id' =>'D', '__label__'=> 'D - differita' ),
+		array( 'id' =>'S', '__label__'=> 'S - scissione dei pagamenti')
+	); 
 	
     // tendina mittenti
 	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
@@ -83,6 +90,8 @@
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) )
 	    );
 	   } 
+
+
 
 	if( !isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] ) && !isset( $_REQUEST['__latest__'][ $ct['form']['table'] ]['id_emittente'] ) && !empty( $ct['etc']['select']['id_emittenti'] ) ){
 		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] = $ct['etc']['select']['id_emittenti'][0]['id'];

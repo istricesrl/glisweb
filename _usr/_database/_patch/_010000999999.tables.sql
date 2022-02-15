@@ -464,6 +464,8 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (
   `id_pagina` int(11) DEFAULT NULL,
   `se_ordinario` int(1) DEFAULT NULL,
   `se_straordinario` int(1) DEFAULT NULL,
+  `se_materia` int(1) DEFAULT NULL,
+  `se_classe` int(1) DEFAULT NULL,  
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

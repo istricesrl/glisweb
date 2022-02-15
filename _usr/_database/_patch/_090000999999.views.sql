@@ -851,6 +851,8 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 		categorie_progetti.id_pagina,
 		categorie_progetti.se_straordinario,
 		categorie_progetti.se_ordinario,
+		categorie_progetti.se_materia,
+		categorie_progetti.se_classe,
 		count( c1.id ) AS figli,
 		count( progetti_categorie.id ) AS membri,
 		categorie_progetti.id_account_inserimento,

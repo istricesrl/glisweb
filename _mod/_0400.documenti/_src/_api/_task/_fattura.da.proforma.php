@@ -30,8 +30,13 @@
         // verifico che il documento richiesto sia valido
         if( ! empty( $status['current']['id'] ) ) {
 
-            $default['numero'] =(int)mysqlSelectValue( $cf['mysql']['connection'], 'SELECT MAX(numero ) AS numero FROM documenti WHERE id_tipologia = 1 AND YEAR(data) = ? ',
-                                                        array(  array('s' => date('Y') ) ) ) +1;
+            $default['numero'] =
+            (int) mysqlSelectValue( 
+                $cf['mysql']['connection'], 
+                'SELECT MAX(CONVERT(SUBSTRING_INDEX(numero,\'-\',-1),UNSIGNED INTEGER) ) AS numero FROM documenti WHERE id_tipologia = 1 AND YEAR(data) = ? AND id_emittente = ?',
+                array(  array('s' => date('Y') ), 
+                        array( 's' => $status['current']['id_emittente'] ) ) ) +1;
+
             // status
             $status['info'][] = 'procedo con la duplicazione';
             $status['new'] = array();

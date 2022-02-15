@@ -62,6 +62,13 @@
 	    'SELECT id, __label__ FROM anagrafica_view_static'
 	);
 
+	// esigibilità iva
+	$ct['etc']['select']['esigibilita'] = array(
+		array( 'id' => 'I', '__label__'=> 'I - immediata' ),
+		array( 'id' =>'D', '__label__'=> 'D - differita' ),
+		array( 'id' =>'S', '__label__'=> 'S - scissione dei pagamenti')
+	); 
+
     // tendina indirizzi mittenti
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) ){
 	    $ct['etc']['select']['id_sedi_emittente'] = mysqlCachedIndexedQuery(
