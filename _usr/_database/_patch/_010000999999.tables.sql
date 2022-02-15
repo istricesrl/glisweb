@@ -1147,7 +1147,7 @@ CREATE TABLE IF NOT EXISTS `luoghi` (
 -- verifica: 2021-09-24 18:55 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `macro` (
   `id` int(11) NOT NULL,
-  `id_pagina` int(11) NOT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,

@@ -63,6 +63,7 @@
     pagamenti_view.note                     | -
     pagamenti_view.note_pagamento           | -
     pagamenti_view.id_documento             | -
+    pagamenti_view.documento                | docuemtno a cui è legato il pagamento
     pagamenti_view.id_mastro_provenienza    | -
     pagamenti_view.mastro_provenienza       | il mastro scaricato dalla riga
     pagamenti_view.id_mastro_destinazione   | -
