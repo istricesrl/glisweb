@@ -174,9 +174,6 @@
 #		'progetti_certificazioni' => array(
 #            CONTROL_FULL => array( 'roots' )
 #        ),
-#	    'pubblicazioni' => array(
-#		CONTROL_FULL => array( 'roots' )
-#		),
 #	    'prezzi' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
