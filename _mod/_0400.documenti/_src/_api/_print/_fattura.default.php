@@ -262,6 +262,23 @@
     // indirizzo fiscale
     $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
 
+    // documenti collegati
+    // TODO selezionare in base al ruolo
+    // TODO selezionare solo le fatture
+    // TODO fare la UNION in $dcl anche delle relazioni fra righe (una riga di nota di credito può far riferimento a una o più righe di fattura specifiche e non all'intera fattura)
+    $dcl = mysqlSelectRow(
+        $cf['mysql']['connection'],
+        'SELECT documenti_view.* '.
+        'FROM relazioni_documenti '.
+        'INNER JOIN documenti_view ON documenti_view.id = relazioni_documenti.id_documento_collegato '.
+        'WHERE relazioni_documenti.id_documento = ?',
+        array( array( 's' => $doc['id'] ) )
+    );
+
+    // TODO DDT collegati
+    // cercare i DDT
+    // compilare la sezione <DatiDDT>
+
     // nome del file
 	$outFileName =
 	    $sri['sigla_stato'].                    // va espresso secondo lo standard ISO 3166-1 alpha-2
