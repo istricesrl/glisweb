@@ -415,6 +415,7 @@ select.font-awesome {
 
 .btn-sm {
     font-size: 1em;
+    height: 31px;
 }
 
 .btn-lg {
