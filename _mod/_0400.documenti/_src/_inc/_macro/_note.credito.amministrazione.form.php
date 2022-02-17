@@ -27,7 +27,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_documenti_view WHERE se_fattura = 1'
+	    'SELECT id, __label__ FROM tipologie_documenti_view WHERE se_nota_credito = 1'
 	);
 
 	// tendina condizioni_pagamento

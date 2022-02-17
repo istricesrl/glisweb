@@ -190,7 +190,7 @@
 
 				} else {
 
-					die( 'impossibile trovare la macro di pagina' );
+					die( 'impossibile trovare la macro di pagina ' . $macro );
 
 				}
 

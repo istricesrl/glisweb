@@ -2896,6 +2896,8 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 	WHERE
 		tipologie_documenti.se_fattura = 1
 		OR
+		tipologie_documenti.se_nota_credito = 1
+		OR
 		tipologie_documenti.se_ricevuta = 1
 ;
 
