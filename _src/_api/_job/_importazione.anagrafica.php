@@ -16,7 +16,7 @@
         // status
         $job['workspace']['status']['error'][] = 'ID job non trovato';
 
-    } elseif( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
+    } elseif( isset( $job['corrente'] ) && $job['corrente'] > $job['totale'] ) {
 
         // status
         $job['workspace']['status']['info'][] = 'iterazione a vuoto su job completato';

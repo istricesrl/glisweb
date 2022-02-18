@@ -4,7 +4,8 @@
     function importa() {
 	var data = $('#__upload_____anagrafica__').val();
 	getws('/_src/_api/_task/_importazione.anagrafica.start.php?file='+data);
-	$('#importa_contatti').modal('toggle')
+	$('#importa_contatti').modal('toggle');
+	location.reload();
     }
 </script>
 
@@ -24,7 +25,7 @@
 			</div>
 		    <div class="form-row">
 				<div class="col">
-					<p>scarica il <a href="">modello CSV da compilare</a> per l'importazione</p>
+					<p>scarica il <a href="/_usr/_examples/_csv/anagrafica.import.csv">modello CSV da compilare</a> per l'importazione</p>
 				</div>
 			</div>
 	    </div>

@@ -119,7 +119,7 @@
             // CUSTOM status
             $job['workspace']['status']['error'][] = 'ID job non trovato';
 
-        } elseif( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
+        } elseif( isset( $job['corrente'] ) && $job['corrente'] > $job['totale'] ) {
 
             // CUSTOM status
             $job['workspace']['status']['info'][] = 'iterazione a vuoto su job completato';
@@ -368,7 +368,7 @@
             // CUSTOM status
             $job['workspace']['status']['error'][] = 'ID job non trovato';
 
-        } elseif( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {
+        } elseif( isset( $job['corrente'] ) && $job['corrente'] > $job['totale'] ) {
 
             // CUSTOM status
             $job['workspace']['status']['info'][] = 'iterazione a vuoto su job completato';
