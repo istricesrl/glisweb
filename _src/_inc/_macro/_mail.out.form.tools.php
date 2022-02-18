@@ -37,17 +37,17 @@
 	);
 
     if( ! empty( $cf['smtp']['server'] ) ) {
-    $ct['page']['contents']['metro']['mail'][] = array(
-    'ws' => $base . 'mail.queue.send?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
-    'callback' => 'function() { window.open("' . $cf['contents']['pages']['mail.sent.view']['url'][ LINGUA_CORRENTE ] . '", "_self"); }',
-    'icon' => NULL,
-    'fa' => 'fa-share-square-o',
-    'title' => 'invia immediatamente la mail',
-    'text' => 'forza un tentativo di invio per questa mail'
-    );
+        $ct['page']['contents']['metro']['mail'][] = array(
+        'ws' => $base . 'mail.queue.send?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+        'callback' => 'function() { window.open("' . $cf['contents']['pages']['mail.sent.view']['url'][ LINGUA_CORRENTE ] . '", "_self"); }',
+        'icon' => NULL,
+        'fa' => 'fa-share-square-o',
+        'title' => 'invia immediatamente la mail',
+        'text' => 'forza un tentativo di invio per questa mail'
+        );
     }
 
-	// macro di default
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
     // debug

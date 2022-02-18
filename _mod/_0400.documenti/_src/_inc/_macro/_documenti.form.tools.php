@@ -51,7 +51,7 @@
         );
 
         // aggrega righe
-        $ct['page']['contents']['metro']['general'][] = array(
+        $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
             'ws' => $base . 'documenti.aggrega.righe?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
             'icon' => NULL,
@@ -59,6 +59,20 @@
             'title' => 'aggrega righe',
             'text' => 'aggrega a questo documento le righe non associate'
         );
+
+        // elimina documento
+        if( in_array( 'CANCELLAZIONE_RICORSIVA', array_keys( $_SESSION['account']['privilegi'] ) ) ) {
+            $ct['page']['contents']['metro']['amministrazione'][] = array(
+                'host' => $ct['site']['url'],
+                'ws' => $base . 'documenti.delete?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                'confirm' => true,
+                'callback' => 'function(){window.open(\''.$ct['page']['parent']['path'][ LINGUA_CORRENTE ].'\',\'_self\');}',
+                'icon' => NULL,
+                'fa' => 'fa-trash',
+                'title' => 'elimina documento',
+                'text' => 'elimina questo documento e tutte le righe associate'
+            );
+        }
 
     } else {
 

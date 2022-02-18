@@ -22,8 +22,14 @@
         // leggo il contenuto grezzo del file
         $grezzo = readFromFile( $file );
 
+        // debug
+        logWrite( 'grezzo' . print_r( $grezzo, true ), 'csv' );
+
         // faccio il parsing CSV di ogni riga
         $lavorato = csv2array( $grezzo, $s, $c, $e );
+
+        // debug
+        logWrite( 'lavorato' . print_r( $lavorato, true ), 'csv' );
 
         // restituisco l'array associativo
         return( $lavorato );
@@ -45,12 +51,22 @@
      */
     function csv2array( $data, $s = ",", $c = "\"", $e = '\\' ) {
 
+        logWrite( 'dati pre ' . print_r( $data, true ), 'csv' );
+
         foreach( $data as &$row ) {
             $row = str_getcsv( $row, $s, $c, $e );
-            $row = array_combine( $data[0], $row );
+            if( count( $data[0] ) == count( $row ) ) {
+                $row = array_combine( $data[0], $row );
+            } else {
+                logWrite( 'errore nel numero delle colonne ' . print_r( $data[0], true ) . print_r( $row, true ), 'csv', LOG_ERR );
+            }
         }
 
+        logWrite( 'dati post ' . print_r( $data, true ), 'csv' );
+
         array_shift( $data );
+
+        logWrite( 'dati finally ' . print_r( $data, true ), 'csv' );
 
         return $data;
 

@@ -49,6 +49,7 @@
 			'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.form',
+															'fatture.amministrazione.form.relazioni',
 															'fatture.amministrazione.form.righe',
 															'fatture.amministrazione.form.pagamenti',
 															'fatture.amministrazione.form.chiusura',
@@ -60,6 +61,18 @@
 		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 			arrayInsertSeq( 'fatture.amministrazione.form', $p['fatture.amministrazione.form']['etc']['tabs'], 'fatture.amministrazione.form.attivita' );
 		}
+
+		// gestione relazioni fatture
+		$p['fatture.amministrazione.form.relazioni'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'riferimenti fattura' ),
+			'h1'			=> array( $l		=> 'riferimenti' ),
+			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.relazioni.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.relazioni.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
+		);
 
 		// gestione righe fatture
 		$p['fatture.amministrazione.form.righe'] = array(

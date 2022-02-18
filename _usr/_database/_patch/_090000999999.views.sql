@@ -2038,16 +2038,7 @@ CREATE OR REPLACE VIEW job_view AS
 		from_unixtime( job.timestamp_completamento, '%Y-%m-%d %H:%i' ) AS data_ora_completamento,
 		job.id_account_inserimento,
 		job.id_account_aggiornamento,
-		concat(
-			job.nome,
-			' ',
-			coalesce(
-				concat( job.corrente, ' su ', job.totale, ' fatto' ),
-				'non ancora avviato'
-			),
-			' ',
-			job.job
-		) AS __label__
+		job.nome AS __label__
 	FROM job
 ;
 

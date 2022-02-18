@@ -28,53 +28,37 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'mail' => array(
-		'label' => 'gestione delle mail'
+	    'job' => array(
+		'label' => 'gestione dei job'
 	    )
 	);
 
-	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM mail_sent LIMIT 1' ) > 0 ) {
+	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM job WHERE timestamp_completamento IS NOT NULL LIMIT 1' ) > 0 ) {
 
-        $ct['page']['contents']['metro']['mail'][] = array(
-		'ws' => $base . 'mail.queue.clean.sent',
-        'confirm' => true,
-		'icon' => NULL,
-		'fa' => 'fa-envelope-o',
-		'title' => 'svuotamento coda mail inviate',
-		'text' => 'cancella la coda delle mail inviate'
+        $ct['page']['contents']['metro']['job'][] = array(
+            'ws' => $base . 'job.clean.completed',
+            'callback' => 'function(){window.open(\''.$ct['page']['parent']['path'][ LINGUA_CORRENTE ].'\',\'_self\');}',
+            'icon' => NULL,
+            'fa' => 'fa-trash-o',
+            'title' => 'svuotamento coda job completati',
+            'text' => 'cancella la coda dei job completati'
 	    );
 
-        timerCheck( $cf['speed'], '-> mail in uscita' );
-
     }
 
-	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM mail_out LIMIT 1' ) > 0 ) {
+	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM job LIMIT 1' ) > 0 ) {
 
-        $ct['page']['contents']['metro']['mail'][] = array(
-		'ws' => $base . 'mail.queue.clean.out',
-        'confirm' => true,
-		'icon' => NULL,
-		'fa' => 'fa-exclamation-triangle',
-		'title' => 'svuotamento coda mail in uscita',
-		'text' => 'cancella la coda delle mail in uscita senza inviare'
-		);
-
-        timerCheck( $cf['speed'], '-> mail inviate' );
-
-        if( ! empty( $cf['smtp']['server'] ) ) {
-
-            $ct['page']['contents']['metro']['mail'][] = array(
-            'ws' => $base . 'mail.queue.send?hard=1',
+        $ct['page']['contents']['metro']['job'][] = array(
+            'ws' => $base . 'job.clean',
+            'callback' => 'function(){window.open(\''.$ct['page']['parent']['path'][ LINGUA_CORRENTE ].'\',\'_self\');}',
+            'confirm' => true,
             'icon' => NULL,
-            'fa' => 'fa-share-square-o',
-            'title' => 'elabora coda mail in uscita',
-            'text' => 'forza elaborazione della coda delle mail in uscita'
-            );
-
-        }
-
+            'fa' => 'fa-trash',
+            'title' => 'svuotamento totale coda job',
+            'text' => 'cancella la coda dei job, compresi i job in corso'
+        );
+    
     }
-
 
     // debug
 	// print_r( $_SESSION );

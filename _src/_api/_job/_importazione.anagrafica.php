@@ -99,27 +99,13 @@
             $row = $arr[ $widx ];
 
             // controlli formali
-            if( ! isset( $row['lista'] ) || empty( $row['lista'] ) ) {
-
-                // status
-                $job['workspace']['status']['error'][] = 'nome lista non settato per la riga ' . $job['corrente'];
-
-            } elseif( ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) ) {
+            if( ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) ) {
 
                 // status
                 $job['workspace']['status']['error'][] = 'codice utente e codice fiscale non settati per la riga ' . $job['corrente'];
+                $job['workspace']['status']['error'][] = $row;
 
             } else {
-
-                // trovo l'ID della lista
-                $idLista = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id' => NULL,
-                        'nome' => $row['lista']
-                    ),
-                    'liste'
-                );
 
                 // trovo l'ID dell'anagrafica
                 $idAnagrafica = mysqlInsertRow(
@@ -128,10 +114,15 @@
                         'id' => NULL,
                         'codice' => ( ! empty( $row['codice'] ) ) ? $row['codice'] : NULL,
                         'codice_fiscale' => ( ! empty( $row['codice_fiscale'] ) ) ? $row['codice_fiscale'] : NULL,
+                        'nome' => $row['nome'],
+                        'cognome' => $row['cognome'],
                         'denominazione' => $row['denominazione']
                     ),
                     'anagrafica'
                 );
+
+                // status
+                $job['workspace']['status']['info'][] = 'anagrafica inserita con ID ' . $idAnagrafica . ' per la riga ' . $job['corrente'];
 
                 // trovo l'ID della categoria
                 if( isset( $row['categoria'] ) ) {
@@ -161,21 +152,10 @@
                     array(
                         'id' => NULL,
                         'id_anagrafica' => $idAnagrafica,
-                        'indirizzo' => $row['indirizzo'],
+                        'indirizzo' => $row['mail'],
                         'se_pec' => NULL
                     ),
                     'mail'
-                );
-
-                // iscrivo la mail alla lista
-                $idIscrizione = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id' => NULL,
-                        'id_lista' => $idLista,
-                        'id_mail' => $idMail
-                    ),
-                    'liste_mail'
                 );
 
             }

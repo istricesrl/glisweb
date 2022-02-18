@@ -30,7 +30,7 @@
 		'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 
-														'documenti.form.riferimenti',
+														'documenti.form.relazioni',
 														'documenti.form.righe',
 														'documenti.form.pagamenti',
 														'documenti.form.chiusura',
@@ -39,13 +39,13 @@
 	);
 
 	// gestione tools documenti
-	$p['documenti.form.riferimenti'] = array(
+	$p['documenti.form.relazioni'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'riferimenti documenti' ),
-	    'h1'			=> array( $l		=> 'riferimenti' ),
+	    'title'			=> array( $l		=> 'relazioni documenti' ),
+	    'h1'			=> array( $l		=> 'relazioni' ),
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.riferimenti.html' ),
-	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.riferimenti.php' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.relazioni.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.relazioni.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);

@@ -75,7 +75,7 @@
         }
 
         // operazioni di chiusura
-        if( empty( $job['totale'] ) || $job['corrente'] >= $job['totale'] ) {
+        if( empty( $job['totale'] ) || $job['corrente'] > $job['totale'] ) {
 
             // scrivo la timestamp di completamento
             $jobs = mysqlQuery(
