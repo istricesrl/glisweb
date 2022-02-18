@@ -14,6 +14,9 @@
 
     // print_r( $_REQUEST['articoli'] );
 
+    // se l'articolo non è già salvato, ragiono sul preset
+    if( ! isset( $_REQUEST['articoli']['id_prodotto'] ) ) { $_REQUEST['articoli']['id_prodotto'] =  $_REQUEST['__preset__']['articoli']['id_prodotto']; }
+
     // trovo i flag di prodotto
     $ct['etc']['flags'] = mysqlSelectCachedRow(
         $cf['memcache']['connection'],

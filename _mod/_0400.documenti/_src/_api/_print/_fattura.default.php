@@ -17,9 +17,10 @@
 	$doc = mysqlSelectRow(
         $cf['mysql']['connection'],
 	    'SELECT documenti.*,  '.
-	    'tipologie_documenti.codice AS codice_tipologia '.
+	    'tipologie_documenti.codice AS codice_tipologia, condizioni_pagamento.codice AS codice_pagamento '.
 	    'FROM documenti '.
 	    'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
+        'INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizioni_pagamento '.
 	    'WHERE documenti.id = ?',
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
@@ -45,7 +46,7 @@
      */
 
     // TODO
-    $doc['condizioni_pagamento'] = 'TP01';
+    $doc['condizioni_pagamento'] = $doc['codice_pagamento'];
 
     /**
      * NOTA condizioni di pagamento
