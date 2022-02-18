@@ -128,6 +128,8 @@
                         'id' => NULL,
                         'codice' => ( ! empty( $row['codice'] ) ) ? $row['codice'] : NULL,
                         'codice_fiscale' => ( ! empty( $row['codice_fiscale'] ) ) ? $row['codice_fiscale'] : NULL,
+                        'nome' => $row['nome'],
+                        'cognome' => $row['cognome'],
                         'denominazione' => $row['denominazione']
                     ),
                     'anagrafica'
@@ -161,7 +163,7 @@
                     array(
                         'id' => NULL,
                         'id_anagrafica' => $idAnagrafica,
-                        'indirizzo' => $row['indirizzo'],
+                        'indirizzo' => $row['mail'],
                         'se_pec' => NULL
                     ),
                     'mail'
