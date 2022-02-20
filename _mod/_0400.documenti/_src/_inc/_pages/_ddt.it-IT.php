@@ -48,7 +48,7 @@
 			'etc'			=> array( 'tabs'	=> $p['ddt.magazzini.form']['etc']['tabs'] )
 		);
 
-		// gestione ddt_righe
+		// gestione righe ddt
 		$p['ddt.magazzini.righe.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe DDT' ),

@@ -176,14 +176,14 @@ CREATE TABLE IF NOT EXISTS `progetti_matricole` (
 --| 202202200120
 ALTER TABLE `progetti_matricole`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_progetto`,`id_categoria`,`id_ruolo`), 
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_matricola`,`id_ruolo`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
-	ADD KEY `id_categoria` (`id_categoria`), 
+	ADD KEY `id_matricola` (`id_matricola`), 
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_progetto`,`id_categoria`,`ordine`,`id_ruolo`);
+	ADD KEY `indice` (`id`,`id_progetto`,`id_matricola`,`ordine`,`id_ruolo`);
 
 --| 202202200130
 ALTER TABLE `progetti_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -191,7 +191,7 @@ ALTER TABLE `progetti_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --| 202202200140
 ALTER TABLE `progetti_matricole`
     ADD CONSTRAINT `progetti_matricole_ibfk_01`             FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    ADD CONSTRAINT `progetti_matricole_ibfk_02_nofollow`    FOREIGN KEY (`id_categoria`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `progetti_matricole_ibfk_02_nofollow`    FOREIGN KEY (`id_matricola`) REFERENCES `matricole` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `progetti_matricole_ibfk_03_nofollow`    FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_matricole` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `progetti_matricole_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_matricole_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
@@ -221,4 +221,5 @@ CREATE OR REPLACE VIEW progetti_matricole_view AS
 		LEFT JOIN progetti ON progetti.id = progetti_matricole.id_progetto
 		LEFT JOIN matricole ON matricole.id = progetti_matricole.id_matricola
 ;
+
 --| FINE

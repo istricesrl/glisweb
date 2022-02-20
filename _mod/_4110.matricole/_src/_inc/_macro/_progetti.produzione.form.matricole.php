@@ -19,6 +19,15 @@
     // tabella della vista
 	$ct['view']['table'] = 'progetti_matricole';
 
+    // pagina per la gestione degli oggetti esistenti
+	$ct['view']['open']['page'] = 'progetti.produzione.matricole.form';
+
+    // pagina per l'inserimento di un nuovo oggetto
+	$ct['view']['insert']['page'] = 'progetti.produzione.matricole.form';
+
+    // campo per il preset di apertura
+	$ct['view']['open']['preset']['field'] = 'id_progetto';
+
 	$ct['view']['cols'] = array(
         'id' => '#',
 #        'tipologia' => 'tipologia',
