@@ -81,7 +81,7 @@
 	    );
 	    timerCheck( $cf['speed'], '-> cache Twig' );
 	}
-
+/*
 	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM sms_sent LIMIT 1' ) > 0 ) {
 	    $ct['page']['contents']['metro']['sms'][] = array(
 		'ws' => $base . 'sms.queue.clean.sent',
@@ -103,7 +103,7 @@
 	    );
 	    timerCheck( $cf['speed'], '-> SMS inviati' );
 	}
-
+*/
 	if( count( glob( DIR_VAR_LOG . '{*/,}*.log', GLOB_BRACE ) ) > 0 ) {
 	    $ct['page']['contents']['metro']['log'][] = array(
 			'ws' => $base . 'log.clean',
@@ -114,6 +114,7 @@
 	    );
 	    $ct['page']['contents']['metro']['log'][] = array(
 			'ws' => $base . 'log.clean?hard=1',
+			'confirm' => true,
 			'icon' => NULL,
 			'fa' => 'fa-trash',
 			'title' => 'pulizia totale dei log',
@@ -125,6 +126,7 @@
 	if( count( glob( DIR_TMP . '*' ) ) > 0 ) {
 	    $ct['page']['contents']['metro']['log'][] = array(
 		'ws' => $base . 'tmp.clean',
+		'confirm' => true,
 		'icon' => NULL,
 		'fa' => 'fa-hourglass-end',
 		'title' => 'pulizia dei file temporanei',
