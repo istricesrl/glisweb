@@ -534,6 +534,15 @@ REPLACE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome`, `se
 (4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
 (5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
 
+--| 050000034900
+
+-- ruoli_matricole
+-- tipologia: tabella standard
+-- verifica: 2021-10-12 10:45 Fabio Mosti
+REPLACE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome`) VALUES
+(1,	'attrezzatura',	    '',	    ''),
+(2,	'prodotto',	    '',	    '');
+
 --| 050000035000
 
 -- ruoli_prodotti

@@ -59,6 +59,7 @@
     ruoli_file                      | 034400    | ricorsiva     | ruoli         | contiene i ruoli svolti dai file
     ruoli_immagini                  | 034600    | ricorsiva     | ruoli         | contiene i ruoli svolti dalle immagini
     ruoli_indirizzi                 | 034800    | ricorsiva     | ruoli         | contiene i ruoli svolti dagli indirizzi
+    ruoli_matricole                 | 034900    | ricorsiva     | ruoli         | contiene i ruoli svolti dalle matricole
     ruoli_prodotti                  | 035000    | ricorsiva     | ruoli         | contiene i ruoli svolti dai prodotti
     ruoli_video                     | 035200    | ricorsiva     | ruoli         | contiene i ruoli svolti dai video
     settori                         | 037000    | ricorsiva     | principale    | contiene i settori di attività ATECO
@@ -173,6 +174,7 @@
     progetti                        | 027000    | base          | principale    | contiene i progetti
     progetti_anagrafica             | 027200    | relazione     | principale    | mette in relazione progetti e anagrafica
     progetti_categorie              | 027400    | relazione     | principale    | mette in relazione progetti e categorie_progetti
+    progetti_matricole              | 027800    | relazione     | principale    | mette in relazione progetti e matricole
     pubblicazioni                   | 028400    | base          | principale    | contiene le pubblicazioni
     redirect                        | 029400    | base          | principale    | contiene i redirect HTTP
     risorse                         | 032000    | base          | principale    | contiene le risorse

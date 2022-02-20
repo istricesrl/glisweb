@@ -699,6 +699,35 @@
     ruoli_indirizzi_view.se_domicilio               | -
     ruoli_indirizzi_view.__label__                  | etichetta descrittiva del ruolo
 
+    ruoli_matricole
+    --------------
+    Questa tabella *standard* contiene i ruoli che l'entità *matricole* può svolgere relativamente a diverse entità principali.
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_matricole.id                      | l'ID del ruolo
+    ruoli_matricole.id_genitore             | l'ID del ruolo genitore
+    ruoli_matricole.nome                    | il nome del ruolo
+    ruoli_matricole.html_entity             | entità HTML che rappresenta visivamente il ruolo
+    ruoli_matricole.font_awesome            | classe Font Awesome dell'icona che rappresenta visivamente il ruolo
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati         | comportamento
+    ----------------------------------------|-----------------------|-----------------------------------|------------------
+    ruoli_matricole_ibfk_01                 | id_genitore           | ruoli_matricole.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_matricole_view* relativa alla tabella *ruoli_matricole* presenta le seguenti colonne:
+ 
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_matricole_view.id                         | -
+    ruoli_matricole_view.id_genitore                | -
+    ruoli_matricole_view.nome                       | -
+    ruoli_matricole_view.html_entity                | -
+    ruoli_matricole_view.font_awesome               | -
+    ruoli_matricole_view.__label__                  | etichetta descrittiva del ruolo
+
     ruoli_prodotti
     --------------
     Questa tabella *standard* contiene i ruoli che l'entità *prodotti* può svolgere relativamente a diverse entità principali.

@@ -1742,6 +1742,23 @@ CREATE TABLE IF NOT EXISTS `progetti_categorie` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000027800
+
+-- progetti_matricole
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 14:58 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `progetti_matricole` (
+  `id` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_matricola` int(11) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000028000
 
 -- provincie
@@ -2103,6 +2120,19 @@ CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (
   `se_sede_operativa` int(1) DEFAULT NULL,
   `se_residenza` int(1) DEFAULT NULL,
   `se_domicilio` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000034900
+
+-- ruoli_matricole
+-- tipologia: tabella standard
+-- verifica: 2021-10-12 10:45 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `ruoli_matricole` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(32) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000035000
