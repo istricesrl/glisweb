@@ -5514,6 +5514,8 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 		tipologie_documenti.id,
 		tipologie_documenti.id_genitore,
 		tipologie_documenti.ordine,
+		tipologie_documenti.codice,
+		tipologie_documenti.numerazione,
 		tipologie_documenti.nome,
 		tipologie_documenti.html_entity,
 		tipologie_documenti.font_awesome,

@@ -402,6 +402,7 @@
     tipologie_documenti.id_genitore                 | l'ID della tipologia genitore
     tipologie_documenti.ordine                      | campo di ordinamento
     tipologie_documenti.codice                      | il codice della tipologia
+    tipologie_documenti.numerazione                 | char identificativo della tipologia di numerazione documento
     tipologie_documenti.nome                        | il nome della tipologia
     tipologie_documenti.html_entity                 | entità HTML che rappresenta visivamente la tipologia
     tipologie_documenti.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
@@ -432,6 +433,8 @@
     tipologie_documenti_view.id                             | -
     tipologie_documenti_view.id_genitore                    | -
     tipologie_documenti_view.ordine                         | -
+    tipologie_documenti_view.codice                         | -
+    tipologie_documenti_view.numerazione                    | -
     tipologie_documenti_view.nome                           | -
     tipologie_documenti_view.html_entity                    | -
     tipologie_documenti_view.font_awesome                   | -

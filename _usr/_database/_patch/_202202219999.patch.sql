@@ -1098,4 +1098,62 @@ ON DUPLICATE KEY UPDATE
 	se_prodotto = VALUES(se_prodotto),
 	se_servizio= VALUES(se_servizio);
 
+--| 202202210430
+ALTER TABLE `tipologie_documenti`
+ADD `numerazione` char(1) DEFAULT NULL AFTER `codice`;
+
+--| 202202210440
+INSERT INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `numerazione`, `nome`, `html_entity`, `font_awesome`, `se_fattura`, `se_nota_credito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `stampa_xml`, `stampa_pdf`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'TD01',	'F',	'fattura',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'TD01',	'F',	'fattura accompagnatoria',	NULL,	NULL,	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'TD04',	'F',	'nota di credito',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	NULL,	'T',	'documento di trasporto',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	NULL,	'P',	'pro forma',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	NULL,	'O',	'offerta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	NULL,	NULL,	'E',	'ordine',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	NULL,	NULL,	'R',	'ricevuta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	NULL,	NULL,	'S',	'scontrino',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	NULL,	NULL,	'G',	'documento di ritiro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	NULL,	NULL,	'H',	'documento di consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	NULL,	NULL,	'I',	'documento di reso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL)
+ON DUPLICATE KEY UPDATE
+	id_genitore = VALUES( id_genitore ),
+	ordine = VALUES( ordine ),
+	nome = VALUES(nome),
+	html_entity = VALUES(html_entity),
+	font_awesome = VALUES(font_awesome),
+	codice = VALUES( codice ),
+	numerazione = VALUES(numerazione),
+	se_fattura = VALUES(se_fattura),
+	se_nota_credito = VALUES(se_nota_credito),
+	se_trasporto = VALUES(se_trasporto),
+	se_pro_forma = VALUES(se_pro_forma),
+	se_offerta = VALUES(se_offerta),
+	se_ordine = VALUES(se_ordine),
+	se_ricevuta= VALUES(se_ricevuta);
+
+--| 202202210450
+CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
+	SELECT
+		tipologie_documenti.id,
+		tipologie_documenti.id_genitore,
+		tipologie_documenti.ordine,
+		tipologie_documenti.codice,
+		tipologie_documenti.numerazione,
+		tipologie_documenti.nome,
+		tipologie_documenti.html_entity,
+		tipologie_documenti.font_awesome,
+		tipologie_documenti.se_fattura,
+		tipologie_documenti.se_nota_credito,
+		tipologie_documenti.se_trasporto,
+		tipologie_documenti.se_pro_forma,
+		tipologie_documenti.se_offerta,
+		tipologie_documenti.se_ordine,
+		tipologie_documenti.se_ricevuta,
+		tipologie_documenti.id_account_inserimento,
+		tipologie_documenti.id_account_aggiornamento,
+		tipologie_documenti_path( tipologie_documenti.id ) AS __label__
+	FROM tipologie_documenti
+;
+
 --| FINE

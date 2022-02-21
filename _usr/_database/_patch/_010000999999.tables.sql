@@ -2484,6 +2484,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `codice` char(8) DEFAULT NULL,
+  `numerazione` char(1) DEFAULT NULL,
   `nome` char(255) NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
