@@ -2763,6 +2763,27 @@ ALTER TABLE `tipologie_licenze`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000053300
+
+-- tipologie_luoghi
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 15:30 Chiara GDL
+ALTER TABLE `tipologie_luoghi`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000053301
+
+-- tipologie_luoghi
+-- tipologia: tabella gestita
+ALTER TABLE `tipologie_luoghi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000053400
 
 -- tipologie_mastri

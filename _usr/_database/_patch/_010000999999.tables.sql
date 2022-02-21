@@ -839,6 +839,8 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `quantita` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `importo_netto_totale` decimal(9,2) DEFAULT NULL,
+  `sconto_percentuale` decimal(9,2) DEFAULT NULL,
+  `sconto_valore` decimal(9,2) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `specifiche` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
@@ -2528,6 +2530,24 @@ CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(32) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000053300
+
+-- tipologie_luoghi
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 15:30 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_luoghi` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,

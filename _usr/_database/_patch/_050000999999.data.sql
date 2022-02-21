@@ -917,6 +917,16 @@ INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 (2,	NULL,	NULL,	'viale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'piazza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+--| 050000053300
+
+-- tipologie_luoghi
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 15:30 Chiara GDL
+INSERT INTO `tipologie_luoghi` (`id`, `nome`) VALUES
+(1, 'teatro'),
+(2, 'palestra'),
+(3, 'piscina');
+
 --| 050000053400
 
 -- tipologie_mastri

@@ -1794,6 +1794,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		listini.id_valuta,
 		valute.utf8 AS valuta,
 		documenti_articoli.importo_netto_totale,
+		documenti_articoli.sconto_percentuale,
+		documenti_articoli.sconto_valore,
 		documenti_articoli.id_matricola,
 		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS matricola,
 		matricole.data_scadenza,
@@ -2928,16 +2930,16 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 		matricole.id_marchio,
 		marchi.nome AS marchio,
 		matricole.id_articolo,
-		concat_ws( ' ',  articoli.id, prodotti.nome, articoli.nome ) AS articolo,
+		concat_ws( ' ', articoli.id, prodotti.nome, articoli.nome ) AS articolo,
 		matricole.matricola,
 		matricole.data_scadenza,
 		matricole.nome,
-		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS __label__
+		concat_ws( ' ', articoli.id, prodotti.nome, articoli.nome, matricole.matricola ) AS __label__
 	FROM matricole
 		LEFT JOIN anagrafica AS a1 ON a1.id = matricole.id_produttore
 		LEFT JOIN marchi ON marchi.id = matricole.id_marchio
 		LEFT JOIN articoli ON articoli.id = id_articolo
-		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto 
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto;
 ;
 
 --| 090000021600
@@ -3038,6 +3040,69 @@ CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
 	concat( modalita_pagamento.codice,' - ', modalita_pagamento.nome) AS __label__
 	FROM modalita_pagamento
 	ORDER BY __label__
+;
+
+--| 090000021970
+
+-- note_credito_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `note_credito_view`;
+
+--| 090000021971
+
+-- note_credito_view
+-- tipologia: vista virtuale
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `note_credito_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
+		documenti.id_coupon,
+		documenti.timestamp_chiusura,
+		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
+   WHERE tipologie_documenti.id = 3
 ;
 
 --| 090000022000
@@ -3142,7 +3207,7 @@ DROP TABLE IF EXISTS `pagamenti_view`;
 -- pagamenti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-07 16:00 Chiara GDL
-CREATE OR REPLACE VIEW `pagamenti_view` AS
+CCREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
 		pagamenti.id_tipologia,
@@ -3197,6 +3262,8 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 	WHERE
 		tipologie_documenti.se_fattura = 1
+		OR
+		tipologie_documenti.se_nota_credito = 1
 		OR
 		tipologie_documenti.se_ricevuta = 1
 ;
@@ -4349,6 +4416,8 @@ CREATE OR REPLACE VIEW `righe_fatture_view` AS
 		listini.id_valuta,
 		valute.utf8 AS valuta,
 		documenti_articoli.importo_netto_totale,
+		documenti_articoli.sconto_percentuale,
+		documenti_articoli.sconto_valore,
 		documenti_articoli.id_matricola,
 		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS matricola,
 		documenti_articoli.nome,
@@ -4431,6 +4500,8 @@ CREATE OR REPLACE VIEW `righe_fatture_passive_view` AS
 		listini.id_valuta,
 		valute.utf8 AS valuta,
 		documenti_articoli.importo_netto_totale,
+		documenti_articoli.sconto_percentuale,
+		documenti_articoli.sconto_valore,
 		documenti_articoli.id_matricola,
 		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS matricola,
 		documenti_articoli.nome,
@@ -4513,6 +4584,8 @@ CREATE OR REPLACE VIEW `righe_proforma_view` AS
 		listini.id_valuta,
 		valute.utf8 AS valuta,
 		documenti_articoli.importo_netto_totale,
+		documenti_articoli.sconto_percentuale,
+		documenti_articoli.sconto_valore,
 		documenti_articoli.id_matricola,
 		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS matricola,
 		documenti_articoli.nome,
@@ -5505,6 +5578,34 @@ CREATE OR REPLACE VIEW `tipologie_licenze_view` AS
 		tipologie_licenze.id_account_aggiornamento,
 		tipologie_licenze_path( tipologie_licenze.id ) AS __label__
 	FROM tipologie_licenze
+;
+
+--| 090000053300
+
+-- tipologie_luoghi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `tipologie_luoghi_view`;
+
+--| 090000053301
+
+-- tipologie_luoghi_view
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 15:30 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_luoghi_view` AS
+	SELECT
+		tipologie_luoghi.id,
+		tipologie_luoghi.id_genitore,
+		tipologie_luoghi.ordine,
+		tipologie_luoghi.nome,
+		tipologie_luoghi.html_entity,
+		tipologie_luoghi.font_awesome,
+		tipologie_luoghi.se_magazzino,
+		tipologie_luoghi.se_conto,
+		tipologie_luoghi.se_registro,
+		tipologie_luoghi.id_account_inserimento,
+		tipologie_luoghi.id_account_aggiornamento,
+		tipologie_luoghi_path( tipologie_luoghi.id ) AS __label__
+	FROM tipologie_luoghi
 ;
 
 --| 090000053400

@@ -89,6 +89,7 @@
     tipologie_documenti             | 052600    | base          | tipologie     | contiene le tipologie di documenti
     tipologie_indirizzi             | 053000    | ricorsiva     | tipologie     | contiene le tipologie di indirizzi
     tipologie_licenze               | 053200    | ricorsiva     | tipologie     | contiene le tipologie delle licenze
+    tipologie_luoghi                | 053300    | ricorsiva     | tipologie     | contiene le tipologie di luoghi
     tipologie_mastri                | 053400    | ricorsiva     | tipologie     | contiene le tipologie di mastri
     tipologie_notizie               | 053800    | ricorsiva     | tipologie     | contiene le tipologie di notizie
     tipologie_pagamenti             | 054000    | ricorsiva     | tipologie     | contiene le tipologie dei pagamenti
@@ -212,7 +213,7 @@
 
     modulo      | codice    | tabella
     ------------|-----------|----------------------------------------------------------
-    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_certificazioni, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, certificazioni, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, liste, liste_mail, luoghi, mail, mail_out, mail_sent, mailing, mailing_liste, mailing_mail, metadati, periodicita, ranking, regimi, regioni, relazioni_anagrafica, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
+    BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_certificazioni, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, certificazioni, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, liste, liste_mail, luoghi, mail, mail_out, mail_sent, mailing, mailing_liste, mailing_mail, metadati, periodicita, ranking, regimi, regioni, relazioni_anagrafica, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_luoghi, tipologie_telefoni, tipologie_url, udm, url, valute
     CONTATTI    | 0300      | contatti, tipologie_contatti
     PRODUZIONE  | 1000      | categorie_progetti, contratti,pianificazioni, progetti, progetti_anagrafica, progetti_categorie, relazioni_progetti, rinnovi, ruoli_anagrafica, tipologie_contratti,tipologie_progetti, todo
     ATTIVITA    | 1100      | attivita, matricole, pianificazioni, tipologie_attivita, todo
@@ -352,6 +353,7 @@
     tipologie_documenti             | DOCUMENTI, CASSE
     tipologie_indirizzi             | BASE
     tipologie_licenze               | SOFTWARE
+    tipologie_luoghi                | BASE
     tipologie_mastri                | MAGAZZINI, DOCUMENTI, CASSE
     tipologie_notizie               | NOTIZIE
     tipologie_pagamenti             | DOCUMENTI, CASSE
